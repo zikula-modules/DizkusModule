@@ -289,9 +289,8 @@ function pnForum_adminapi_readforums($args)
         if(isset($forum_id)) {
             return $forums[0];
         }
-        return $forums;
     }
-    return false;    
+    return $forums;
 }
 
 /** 
