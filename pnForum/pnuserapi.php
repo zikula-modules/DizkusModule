@@ -2589,6 +2589,7 @@ function pnForum_userapi_unsubscribe_forum($args)
  * add_favorite_forum
  *
  *@params $args['forum_id'] int the forums id
+ *@params $args['user_id'] int - Optional - the user id
  *@returns void
  */
 function pnForum_userapi_add_favorite_forum($args)
@@ -2598,7 +2599,9 @@ function pnForum_userapi_add_favorite_forum($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $userid = pnUserGetVar('uid');
+    if (!isset($user_id)) {
+        $user_id = (int)pnUserGetVar('uid');
+    }
 
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
@@ -2607,10 +2610,10 @@ function pnForum_userapi_add_favorite_forum($args)
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     
-    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
+    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == false) {
         // add user only if not already a favorite
         $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id) 
-                VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."')";
+                VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."')";
                 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
         pnfCloseDB($result);
@@ -2622,6 +2625,7 @@ function pnForum_userapi_add_favorite_forum($args)
  * remove_favorite_forum
  *
  *@params $args['forum_id'] int the forums id
+ *@params $args['user_id'] int - Optional - the user id
  *@returns void
  */
 function pnForum_userapi_remove_favorite_forum($args)
@@ -2631,18 +2635,18 @@ function pnForum_userapi_remove_favorite_forum($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
   
-    $userid = pnUserGetVar('uid');
+    if (!isset($user_id)) {
+        $user_id = (int)pnUserGetVar('uid');
+    }
     
-    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == true) {
+    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == true) {
         // remove from favorites
         $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']." 
-                WHERE user_id='".(int)pnVarPrepForStore($userid)."' 
+                WHERE user_id='".(int)pnVarPrepForStore($user_id)."' 
                 AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
                 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
         pnfCloseDB($result);
-    } else {
-        return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
     }
     return;
 }

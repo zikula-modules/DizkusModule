@@ -672,7 +672,8 @@ function pnForum_adminapi_reorderforumssave($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
+    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN) && 
+        !pnSecAuthAction(0, 'pnForum::CreateForum', $cat_id . "::", ACCESS_EDIT) ) { 
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
