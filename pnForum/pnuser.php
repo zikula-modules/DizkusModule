@@ -151,21 +151,15 @@ function pnForum_user_reply()
     	 $subscribe_topic, 
     	 $preview, 
     	 $submit,
-    	 $cancel,
-    	 $quote) = pnVarCleanFromInput('topic', 
+    	 $cancel ) = pnVarCleanFromInput('topic', 
     									'post', 
     									'message', 
     									'attach_signature',
     									'subscribe_topic', 
     									'preview',
     									'submit',
-    									'cancel',
-    									'quote');
-    if (!is_numeric($quote)) {
-            unset($quote);
-            unset($post_id);
-    }
-    $quote = ((int)$quote==1) ? true : false;
+    									'cancel');
+
     $post_id = (int)$post_id;
     $topic_id = (int)$topic_id;
     $attach_signature = (int)$attach_signature;
@@ -212,7 +206,6 @@ function pnForum_user_reply()
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
                               array('topic_id'   => $topic_id,
                                     'post_id'    => $post_id,
-                                    'quote'      => $quote,
                                     'last_visit' => $last_visit));
         if($preview==true) {
             $reply['message'] = $message;

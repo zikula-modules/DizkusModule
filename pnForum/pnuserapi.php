@@ -859,42 +859,41 @@ function pnForum_userapi_preparereply($args)
 
     $reply = array();
 
-    if(!empty($post_id)) {
-        // We have a post id, so include that in the checks..
-        $sql = "SELECT f.forum_name,
-                       f.forum_id,
-                       c.cat_id,
-                       c.cat_title,
+    if($post_id<>0) {
+        // We have a post id, so include that in the checks
+        // create a reply with quote
+        $sql = "SELECT f.forum_id,
+                       f.cat_id,
+                       t.topic_id,
                        t.topic_title,
-                       t.topic_status
+                       t.topic_status,
+                       pt.post_text,
+                       p.post_time,
+                       u.pn_uname
                 FROM ".$pntable[pnforum_forums]." AS f, 
                      ".$pntable[pnforum_topics]." AS t, 
                      ".$pntable[pnforum_posts]." AS p,
-                     ".$pntable[pnforum_categories]." AS c
-                WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
-                AND (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
+                     ".$pntable[pnforum_posts_text]." AS pt,
+                     ".$pntable['users']." AS u
+                WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
                 AND (t.forum_id = f.forum_id)
-                AND (p.forum_id = f.forum_id)
                 AND (p.topic_id = t.topic_id)
-                AND (c.cat_id = f.cat_id)";
+                AND (pt.post_id = p.post_id)
+                AND (p.poster_id = u.pn_uid)";
     } else {
-        // No post id, just check forum and topic.
-        $sql = "SELECT f.forum_name,
-                       f.forum_id,
-                       c.cat_id,
-                       c.cat_title,
+        // No post id, just check topic.
+        // reply without quote
+        $sql = "SELECT f.forum_id,
+                       f.cat_id,
+                       t.topic_id,
                        t.topic_title,
                        t.topic_status
                 FROM ".$pntable[pnforum_forums]." AS f, 
-                     ".$pntable[pnforum_topics]." AS t,
-                     ".$pntable[pnforum_categories]." AS c
+                     ".$pntable[pnforum_topics]." AS t
                 WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
-                AND (t.forum_id = f.forum_id)
-                AND (c.cat_id = f.cat_id)";
+                AND (t.forum_id = f.forum_id)";
     }
-
     $result = $dbconn->Execute($sql);
-    
     if($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg());
     }
@@ -905,13 +904,23 @@ function pnForum_userapi_preparereply($args)
         $myrow = $result->GetRowAssoc(false);
     }
     
-    $reply['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
     $reply['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
-    $reply['cat_id'] = pnVarPrepForDisplay($cat_id);
-    $reply['cat_title'] = pnVarPrepForDisplay($myrow['cat_title']);
+    $reply['cat_id'] = pnVarPrepForDisplay($myrow['cat_id']);
     $reply['topic_subject'] = pnVarPrepForDisplay($myrow['topic_title']);
     $reply['topic_status'] = pnVarPrepForDisplay($myrow['topic_status']);
-    $reply['topic_id'] = pnVarPrepForDisplay($topic_id);
+    $reply['topic_id'] = pnVarPrepForDisplay($myrow['topic_id']);
+    // the next line is only producing a valid result, if we get a post_id which
+    // means we are producing a reply with quote
+    if(array_key_exists("post_text", $myrow)) {
+        $text = pn_bbdecode($myrow['post_text']);
+        $text = preg_replace('/(<br[ \/]*?>)/i', "", $text);
+        // just for backwards compatibility
+        $text = undo_make_clickable($text);
+        $text = str_replace("[addsig]", "", $text);
+        $reply['message'] = '[quote='.$myrow['pn_uname'].']'.$text.'[/quote]';
+    } else {
+        $reply['message'] = "";
+    }
 
     // anonymous user has uid=0, but needs pn_uid=1
     if(!pnUserLoggedin()) {
@@ -929,41 +938,6 @@ function pnForum_userapi_preparereply($args)
         return showforumerror( _PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 
-    if($quote==true) {
-        $sql = "SELECT pt.post_text, 
-                       p.post_time, 
-                       u.pn_uname
-                FROM ".$pntable['pnforum_posts']." p,
-                    ".$pntable['users']." u,
-                    ".$pntable['pnforum_posts_text']." pt
-                WHERE p.post_id = '".(int)pnVarPrepForStore($post_id)."'
-                AND p.poster_id = u.pn_uid
-                AND pt.post_id = p.post_id";
-    
-        $r = $dbconn->Execute($sql);
-    
-        if($dbconn->ErrorNo() == 0) {
-            $m = $r->GetRowAssoc(false);
-            // just for backwards compatibility
-            // does read unused smiles tables - do we need this??
-            //$text = desmile($m['post_text']);
-            // just for backwards compatibility
-            $text = pn_bbdecode($m['post_text']);
-//            $text = eregi_replace("\[quote(=.*?)\]", ">>", $text);
-//            $text = eregi_replace("\[/quote\]", "<<", $text);
-            $text = preg_replace('/(<br[ \/]*?>)/i', "", $text);
-            // just for backwards compatibility
-            $text = undo_make_clickable($text);
-            $text = str_replace("[addsig]", "", $text);
-            $reply['message'] = '[quote='.$m['pn_uname'].']'.$text.'[/quote]';
-        } else {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg());
-        }
-        $r->Close();
-    } else {
-        $reply['message'] = "";
-    }
-
     // Topic review (show last 10)
     $sql = "SELECT p.poster_id, 
                    p.post_time, 
@@ -971,13 +945,13 @@ function pnForum_userapi_preparereply($args)
                    t.topic_title
                     FROM $pntable[pnforum_posts_text] pt, $pntable[pnforum_posts] p
                         LEFT JOIN $pntable[pnforum_topics] t ON t.topic_id=p.topic_id
-                        WHERE p.topic_id = '$topic_id' AND p.post_id = pt.post_id
+                        WHERE p.topic_id = '".$reply['topic_id']."' AND p.post_id = pt.post_id
                         ORDER BY p.post_id DESC";
 
     $result = $dbconn->SelectLimit($sql, 10);
 
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql2,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
     }
 
     $reply['topic_review'] = array();
@@ -994,8 +968,8 @@ function pnForum_userapi_preparereply($args)
         $review['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$review['poster_id']));
     
         // TODO extract unixtime directly from MySql
-        $posted_unixtime= strtotime ($review['post_time']);
-        $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+        $review['post_unixtime'] = strtotime ($review['post_time']);
+        $review['post_ml'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($review['post_unixtime']));
     
         $message = $review['post_text'];
         // we use br2nl here for backward compatibility
@@ -1004,8 +978,8 @@ function pnForum_userapi_preparereply($args)
     
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
         $sig = $review['poster_data']['pn_user_sig'];
-        if(!empty($sig)){
-            $message = eregi_replace("\[addsig]$", "\n_________________\n$sig", $message);
+        if(!empty($review['poster_data']['pn_user_sig'])){
+            $message = eregi_replace("\[addsig]$", "\n_________________\n".$review['poster_data']['pn_user_sig'], $message);
         }
         else {
             $message = eregi_replace("\[addsig]$", "", $message);

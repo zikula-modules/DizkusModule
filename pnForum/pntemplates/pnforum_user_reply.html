@@ -75,9 +75,11 @@
 <!--[ /if ]-->
 <input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
 <br /><br />
+<!--[*
 <input type="hidden" name="forum" value="<!--[ $reply.forum_id ]-->">
-<input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->">
 <input type="hidden" name="quote" value="<!--[ $reply.quote ]-->">
+*]-->
+<input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->">
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->">
 <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">&nbsp;<input type="submit" name="cancel" value="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
 </span>
