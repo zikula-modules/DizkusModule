@@ -51,10 +51,6 @@ $search_modules[] = array(
 
 function search_pnForum_opt($vars) 
 {
-    pnModDBInfoLoad('pnForum');
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
-
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
     } 
@@ -78,153 +74,21 @@ function search_pnForum($vars)
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
-
-    pnModDBInfoLoad('pnForum');
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
-
-    $w = search_split_query($vars['q']);
-    $flag = false;
-        
-    $query = "SELECT
-              f.forum_id,
-              f.cat_id,
-              p.forum_id,
-              pt.post_text,
-              pt.post_id,
-              t.forum_id,
-              t.topic_id,
-              t.topic_title,
-              t.topic_replies,
-              t.topic_views,
-              c.cat_title,
-              f.forum_name,
-              p.poster_id,
-              p.post_time 
-              FROM ".$pntable['pnforum_posts']." AS p, 
-                   ".$pntable['pnforum_forums']." AS f,
-                   ".$pntable['pnforum_posts_text']." AS pt, 
-                   ".$pntable['pnforum_topics']." AS t,
-                   ".$pntable['pnforum_categories']." AS c
-              WHERE ";
-            
-    // words
-    foreach($w as $word) {
-        if($flag) {
-            switch($vars['bool']) {
-                case 'AND' :
-                    $query .= ' AND ';
-                    break;
-                case 'OR' :
-                default :
-                    $query .= ' OR ';
-                    break;
-            }
-        }
-
-        // get post_text and match up forums/topics/posts
-        //$query .= '(';
-        $query .= "(pt.post_text LIKE '$word' OR t.topic_title LIKE '$word') \n";
-        $query .= "AND p.post_id=pt.post_id \n";
-        $query .= "AND p.topic_id=t.topic_id \n";
-        $query .= "AND p.forum_id=f.forum_id\n";
-        $query .= "AND c.cat_id=f.cat_id\n";
-        //$query .= ')';
-        $flag = true;
-        
-        //check forums (multiple selection is possible!)
-        if($vars['pnForum_forum'][0]) {
-            $query .= " AND (";
-            $flag = false;
-            foreach($vars['pnForum_forum'] as $w) {
-                if($flag) {
-                    $query .= " OR ";
-                }
-                $query .= "f.forum_id=$w";
-                $flag = true;
-            }
-            $query .= ") ";
-        }
     
-        // authors with adodb
-        if($vars['pnForum_author']) {
-            $search_username = addslashes($vars['pnForum_author']);
-            $result= $dbconn->SelectLimit("SELECT pn_uid FROM $pntable[users] WHERE pn_uname = '$search_username'", 1);
-            $row = $result->GetRowAssoc(false);
-            $author = $row['pn_uid'];
-            if ($author > 0){
-                $query .= " AND p.poster_id=$author \n";
-            } else {
-                $query .= " AND p.poster_id=0 \n";
-            }
-        }
-    }
+    // the search function for pnForum is in our pnuserapi.php
+    $searchresults = pnModAPIFunc('pnForum', 'user', 'forumsearch',
+                                  array('searchfor' => $vars['q'],
+                                        'bool'      => $vars['bool'],
+                                        'forums'    => $vars['pnForum_forum'],
+                                        'author'    => $vars['pnForum_author'],
+                                        'order'     => $vars['pnForum_order']));
 
-    // Not sure this is needed and is not cross DB compat
-    //$query .= " GROUP BY pt.post_id ";
-    
-    $order = $vars['pnForum_order']['0'];
-
-    if ($order == 1){
-        $query .= " ORDER BY pt.post_id DESC";
-    }
-    if ($order == 2){
-        $query .= " ORDER BY t.topic_title";
-    }
-    if ($order == 3){
-        $query .= " ORDER BY f.forum_name";
-    }
-    $result = $dbconn->Execute($query);
-
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
-
-    $total_hits = $result->PO_RecordCount();
-    $searchresults = array();
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $sresult = array();
-            list($sresult['forum_id'],
-                 $sresult['cat_id'],
-                 $sresult['forum_id'],
-                 $sresult['post_text'],
-                 $sresult['post_id'],
-                 $sresult['forum_id'],
-                 $sresult['topic_id'],
-                 $sresult['topic_title'],
-                 $sresult['topic_replies'],
-                 $sresult['topic_views'],
-                 $sresult['cat_title'],
-                 $sresult['forum_name'],
-                 $sresult['poster_id'],
-                 $sresult['post_time']) = $result->fields;
-          //if (pnSecAuthAction(0, 'pnForum::Forum', $sresult['forum_name']."::", ACCESS_READ) && pnSecAuthAction(0, 'pnForum::Category', $sresult['cat_title']."::", ACCESS_READ))     {
- 	        if(allowedtoseecategoryandforum($sresult['cat_id'], $sresult['forum_id'])) {
-                //auth check for forum and category before displaying search result
-                // timezone
-                $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-                $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-                $sresult['topic_title'] = stripslashes($sresult['topic_title']);
-                
-                //without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", "", $sresult['post_text']);
-                
-                //strip_tags is needed here 'cause maybe we cut within a html-tag...
-                $sresult['post_text'] = strip_tags($sresult['post_text']);
-
-                // username
-                $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
-                
-                array_push($searchresults, $sresult);
-            }
-        }
-    }
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign('total_hits', count($searchresults));   //total_hits);
     $pnr->assign('searchresults', $searchresults);
+    $pnr->assign('internalsearch', $vars['internalsearch']);
     $pnr->assign('searchfor', urlencode($vars['q']));
     return $pnr->fetch('pnforum_searchresults.html');
 }
