@@ -13,7 +13,7 @@
 <!--[ if $lastpostcount > 0 ]-->
     <br /><strong><!--[ $lastpostcount ]--> <!--[ pnml name='_PNFORUM_RECENT_POSTS' ]--></strong><br />
     <!--[ foreach item=lastpost from=$lastposts ]-->
-    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id, start=$lastpost.start ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.title_tag ]-->"><!--[ $lastpost.topic_title ]--></a>
+    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id start=$lastpost.start ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.title_tag ]-->"><!--[ $lastpost.topic_title ]--></a>
     <br />
     <!--[ $lastpost.topic_replies ]-->
     <!--[ if $lastpost.topic_replies eq 1 ]-->
