@@ -1830,10 +1830,6 @@ function pnForum_userapi_updatepost($args)
         //
         // we are going to delete message
         //
-        if( !($pn_uid == $poster_id) || 
-             !allowedtomoderatecategoryandforum($cat_id, $forum_id) ){
-            return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
-        }
 
         // delete the post from the posts table
         $sql = "DELETE FROM ".$pntable['pnforum_posts']." 
