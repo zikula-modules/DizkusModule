@@ -42,7 +42,8 @@ function smarty_function_plainbbcode($params, &$smarty)
 	    $lang =  pnVarPrepForOS(pnUserGetLang());
 
         $out = "<br />\n";
-        $out .= ""._PNFORUM_USEBBCODE."<br />\n";
+        $out .= "".pnVarPrepForDisplay(_PNFORUM_USEBBCODE)."<br />\n";
+        $out .= "<a href=\"".pnModURL('pn_bbcode', 'user', 'whatisbbcode')."\" title=\"".pnVarPrepForDisplay(_PNFORUM_WHATISBBCODE)."\">[ ".pnVarPrepForDisplay(_PNFORUM_WHATISBBCODE)." ]</a><br />\n";
         if($images==true) {
             $out .= bb_button("url", _PNFORUM_BBCODE_URL_HINT, "w", "bb_url.gif", $lang);
             $out .= bb_button("email", _PNFORUM_BBCODE_MAIL_HINT, "m", "bb_email.gif", $lang);
