@@ -450,7 +450,7 @@ define('_PNFORUM_SUBSCRIBE_TOPIC','subscribe topic');
 define('_PNFORUM_SYNC_FORUMINDEX', 'Forum index synced');
 define('_PNFORUM_SYNC_POSTSCOUNT', 'Posts counter synced');
 define('_PNFORUM_SYNC_TOPICS', 'Topics synced');
-define('_PNFORUM_SYNC_USERS', 'PostNuke and pnForum users syned');
+define('_PNFORUM_SYNC_USERS', 'PostNuke and pnForum users synchronized');
 
 //
 // T
