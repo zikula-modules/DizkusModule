@@ -44,7 +44,7 @@
         <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
         <!--[ /if ]-->        
         <td headers="col_0">
-            <span class="pn-normal"><a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title ]--></a></span><!--[ $topic.pagination ]-->
+            <span class="pn-normal"><a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarcensor ]--></a></span><!--[ $topic.pagination ]-->
          </td>
         <td headers="col_1" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_replies ]--></span></td>
         <td headers="col_2" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></span></td>
@@ -76,10 +76,5 @@
 <img src="<!--[ $locked.name ]-->"       alt="<!--[ pnml name='_PNFORUM_ISLOCKED' ]-->"> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]-->
 </span>
 <br/><br />
-    
-    
-    
-
-
 
 <!--[ include file='pnforum_user_footer.html' ]-->
