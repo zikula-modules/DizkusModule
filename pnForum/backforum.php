@@ -68,7 +68,8 @@ $sql = "SELECT t.topic_id,
         WHERE t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id
-        ORDER by t.topic_time DESC";
+        ORDER by t.topic_time DESC
+        LIMIT 999";
             
 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
 $result_postmax = $result->PO_RecordCount();
