@@ -808,7 +808,7 @@ function pnForum_userapi_readtopic($args)
             $pn_uid = pnUserGetVar('uid');
             if ($post['poster_data']['pn_uid']==$pn_uid) {
                 // user is allowed to moderate || own post
-                $post['poster_data']['moderate'] = true;
+                $post['poster_data']['edit'] = true;
             }
             if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
                 // user is allowed to reply
@@ -821,8 +821,9 @@ function pnForum_userapi_readtopic($args)
                 $post['poster_data']['seeip'] = true;
             }
             if(allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-                // user is allowed to see ip
+                // user is allowed to moderate
                 $post['poster_data']['moderate'] = true;
+                $post['poster_data']['edit'] = true;
             }
             array_push($topic['posts'], $post);
             $result2->MoveNext();
@@ -2800,7 +2801,7 @@ function pnForum_userapi_get_latest_posts($args)
     $last24hsql     = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ".$part2;
     $lastxhsql      = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL $nohours HOUR) ".$part2;
     $lastvisitsql   = $part1." t.topic_time > '$last_visit' ".$part2;
-    
+
     switch ($selorder) {
         case "1" : $sql = $last24hsql; $text=""._PNFORUM_LAST24.""; break;
         case "2" : $sql = $todaysql; $text=""._PNFORUM_TODAY.""; break;
