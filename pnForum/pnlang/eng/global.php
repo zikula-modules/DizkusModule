@@ -26,6 +26,7 @@ define('_PNFORUM_SEARCHINCLUDE_RESULTS',"Forums");
 define('_PNFORUM_SEARCHINCLUDE_TITLE',"Search forums");
 define('_PNFORUM_SEARCHINCLUDE_VIEWS',"Views");
 
+define('_PNFORUM_PREFS_MINPOSTINGSFORANCHOR', 'Minimum number of before inserting an anchor:<br /><i>An anchor enables the user to go directly to the last posting in a large thread</i>');
 define('_PNFORUM_PREFS_EMAIL', 'Email From Address:<br /><i>(This is the address that will appear on every email sent by the forums)</i>');
 define('_PNFORUM_PREFS_CHARSET', 'Default charset:<br /><i>(This is the charset that will be used in e-mail headers)</i>');
 define('_PNFORUM_PREFS_HOTTOPIC', 'Hot Topic Threshold:');

@@ -86,40 +86,35 @@ function pnForum_admin_preferences()
     
     if(!$submit) {
         $checked = "checked=\"checked\" ";
-        if (pnModGetVar('pnForum', 'post_sort_order') == "ASC")
-        {
+        if (pnModGetVar('pnForum', 'post_sort_order') == "ASC") {
         	$post_sort_order_ascchecked  = $checked;
         	$post_sort_order_descchecked = " ";
         } else {
         	$post_sort_order_ascchecked  = "";
         	$post_sort_order_descchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'show_html') == "yes")
-        {
+        if (pnModGetVar('pnForum', 'show_html') == "yes") {
         	$htmlonchecked = $checked;
         	$htmloffchecked = " ";
         } else {
         	$htmlonchecked = " ";
         	$htmloffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'show_bbcode') == "yes")
-        {
+        if (pnModGetVar('pnForum', 'show_bbcode') == "yes") {
         	$bbcodeonchecked = $checked;
         	$bbcodeoffchecked = " ";
         } else {
         	$bbcodeonchecked = " ";
         	$bbcodeoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'show_smile') == "yes")
-        {
+        if (pnModGetVar('pnForum', 'show_smile') == "yes") {
         	$smileonchecked = $checked;
         	$smileoffchecked = " ";
         } else {
         	$smileonchecked = " ";
         	$smileoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'log_ip') == "yes")
-        {
+        if (pnModGetVar('pnForum', 'log_ip') == "yes") {
         	$logiponchecked = $checked;
         	$logipoffchecked = " ";
         } else {
@@ -128,6 +123,7 @@ function pnForum_admin_preferences()
         }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
+	    $pnr->assign('min_postings_for_anchor', pnModGetVar('pnForum', 'min_postings_for_anchor'));
 	    $pnr->assign('topics_per_page', pnModGetVar('pnForum', 'topics_per_page'));
 	    $pnr->assign('posts_per_page', pnModGetVar('pnForum', 'posts_per_page'));
 	    $pnr->assign('hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
@@ -162,6 +158,7 @@ function pnForum_admin_preferences()
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'min_postings_for_anchor', pnVarPrepForStore(pnVarCleanFromInput('min_postings_for_anchor')));
             pnModSetVar('pnForum', 'topics_per_page', pnVarPrepForStore(pnVarCleanFromInput('topics_per_page')));
             pnModSetVar('pnForum', 'posts_per_page', pnVarPrepForStore(pnVarCleanFromInput('posts_per_page')));
             pnModSetVar('pnForum', 'hot_threshold', pnVarPrepForStore(pnVarCleanFromInput('hot_threshold')));
@@ -189,6 +186,7 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
         } 
         if($actiontype=="RestoreDefaults")  {
+		    pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
 		    pnModSetVar('pnForum', 'posts_per_page', 15);
 		    pnModSetVar('pnForum', 'topics_per_page', 15);
 		    pnModSetVar('pnForum', 'hot_threshold', 20);

@@ -1,5 +1,5 @@
 <?php
 
-include_once("modules/ppnForum/pnlang/deu/global.php");
+include_once("modules/pnForum/pnlang/deu/global.php");
 
 ?>

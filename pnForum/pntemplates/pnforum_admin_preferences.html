@@ -2,6 +2,8 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
+<!--[* pndebug *]-->
+
 <!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <fieldset>
@@ -32,6 +34,10 @@
     	<tr align="left">
     		<td><!--[ pnml name='_PNFORUM_PREFS_TOPICSPERPAGE' html=1 ]--></td>
             <td colspan="2"><input type="text" name="topics_per_page" size="3" maxlength="3" value="<!--[ $topics_per_page ]-->"></td>
+    	</tr>
+    	<tr align="left">
+    		<td><!--[ pnml name='_PNFORUM_PREFS_MINPOSTINGSFORANCHOR' html=1 ]--></td>
+            <td colspan="2"><input type="text" name="min_postings_for_anchor" size="3" maxlength="3" value="<!--[ $min_postings_for_anchor ]-->"></td>
     	</tr>
     	<tr align="left">
     		<td><!--[ pnml name='_PNFORUM_PREFS_POSTSORTORDER' ]--></td>

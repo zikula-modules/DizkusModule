@@ -256,9 +256,10 @@ function pnForum_init()
 	// Bulletin Board settings
 	$module = 'pnForum';
 	$adminmail = pnConfigGetVar('adminmail');
-	
+
 	pnModSetVar('pnForum', 'posts_per_page', 15);
 	pnModSetVar('pnForum', 'topics_per_page', 15);
+	pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
 	pnModSetVar('pnForum', 'hot_threshold', 20);
 	pnModSetVar('pnForum', 'email_from', "$adminmail");
 	pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
@@ -446,8 +447,6 @@ function crossupgrade()
                            'pnforum_users');
         
         for($cnt=0; $cnt<10; $cnt++) {    
-            //$oldtable = $pntable['phpbb14_categories'];
-            //$newtable = $pntable['pnforum_categories'];
             $sql = "INSERT INTO ".$pntable[$newtables[$cnt]]." 
                     SELECT * FROM ".$pntable[$oldtables[$cnt]].";";
             $dbconn->Execute($sql);
@@ -459,4 +458,5 @@ function crossupgrade()
     }    
     return true;
 }
+
 ?>

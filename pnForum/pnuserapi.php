@@ -566,7 +566,8 @@ function pnForum_userapi_readforum($args)
                    t.topic_views, 
                    t.topic_replies, 
                    t.sticky, 
-                   t.topic_status, 
+                   t.topic_status,
+                   t.topic_last_post_id, 
                    u.pn_uname, 
                    u2.pn_uname as last_poster, 
                    p.post_time
@@ -586,8 +587,8 @@ function pnForum_userapi_readforum($args)
     $forum['topics'] = array();
     while(!$result->EOF) {
         $topic = array();
-        $row = $result->GetRowAssoc(false);
-        $topic = $row;
+        $topic = $result->GetRowAssoc(false);
+        //$topic = $row;
         if ($topic['last_poster'] == "Anonymous") {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
         if ($topic['pn_uname'] == "Anonymous") {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
         
@@ -723,6 +724,7 @@ function pnForum_userapi_readtopic($args)
                    t.forum_id, 
                    t.sticky, 
                    t.topic_time,
+                   t.topic_last_post_id,
                    f.forum_name, 
                    f.cat_id, 
                    c.cat_title
@@ -2686,7 +2688,8 @@ function pnForum_userapi_get_latest_posts($args)
                         f.forum_name, 
                         c.cat_id,
                         c.cat_title,
-                        t.topic_replies
+                        t.topic_replies,
+                        t.topic_last_post_id
             FROM        ".$pntable['pnforum_topics']." t
             LEFT JOIN   ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN   ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
@@ -2717,7 +2720,8 @@ function pnForum_userapi_get_latest_posts($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
 
     $posts = array();
-    while ((list($topic_id, $topic_title, $forum_id, $forum_name, $cat_id, $cat_title, $topic_replies) = $result->FetchRow()) ) {
+    while ((list($topic_id, $topic_title, $forum_id, $forum_name, $cat_id, $cat_title, 
+                 $topic_replies, $topic_last_post_id) = $result->FetchRow()) ) {
         $post=array();
         $post['topic_id'] = pnVarPrepForDisplay($topic_id);
         $post['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
@@ -2726,6 +2730,7 @@ function pnForum_userapi_get_latest_posts($args)
         $post['cat_id'] = pnVarPrepForDisplay($cat_id);
         $post['cat_title'] = pnVarPrepForDisplay($cat_title);
         $post['topic_replies'] = pnVarPrepForDisplay($topic_replies);
+        $post['topic_last_post_id'] = pnVarPrepForDisplay($topic_last_post_id);
         
         // check permission before display
         if(allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
