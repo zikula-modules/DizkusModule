@@ -12,8 +12,8 @@ Steffen Voss aka ArschMitOhren (steffen.voss@online.de)
 
 People who contributed code for 2.0.0 or later
 ----------------------------------------------
-Chris Miller aka R3ap3r (code for favorites functions) (chris@bariatricsupportcenter.com)
-
+Chris Miller aka R3ap3r (chris@bariatricsupportcenter.com)
+(code for favorites functions and post sort order in topic view)
 
 
 People who took part in module development
