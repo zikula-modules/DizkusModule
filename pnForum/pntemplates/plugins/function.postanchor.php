@@ -49,7 +49,7 @@ function smarty_function_postanchor($params, &$smarty)
     
     $anchor = "";    
     if($postings >= $min) {
-        $anchor = "#$post_id";
+        $anchor = "#pid$post_id";
     }
     
     if(!empty($assign)) {

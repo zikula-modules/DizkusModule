@@ -162,11 +162,11 @@ function pnForum_user_viewtopic()
                           array('topic_id'   => $topic_id,
                                 'start'      => $start,
                                 'last_visit' => $last_visit));
-
     pnSessionDelVar('highlight');
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign( 'topic', $topic);
+    $pnr->assign( 'post_count', count($topic['posts']));
     $pnr->assign( 'hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
     $pnr->assign( 'loggedin', pnUserLoggedIn());
     $pnr->assign( 'last_visit', $last_visit);

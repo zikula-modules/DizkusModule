@@ -660,7 +660,7 @@ function pnForum_userapi_readforum($args)
         $topic['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                            array('topic' => $topic['topic_id'],
                                                  'start' => (ceil(($topic['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-        $topic['last_post_url_anchor'] = $topic['last_post_url'] . "#" . $topic['topic_last_post_id'];
+        $topic['last_post_url_anchor'] = $topic['last_post_url'] . "#pid" . $topic['topic_last_post_id'];
 
         array_push( $forum['topics'], $topic );
         $result->MoveNext(); 
