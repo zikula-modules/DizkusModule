@@ -154,11 +154,11 @@ function pnfdebug($name="", $data, $die = false)
                 echo "empty<br />";
             }
         } else if(is_bool($data)) {
-            echo ($data==true) ? "true" : "false";
+            echo ($data==true) ? "true<br />" : "false<br />";
         } else {
             echo "$data:<br />";
         }
-        echo "</span>";
+        echo "</span><br />";
         if($die==true) {
             die();
         }
@@ -178,31 +178,37 @@ function pnfsqldebug($sql)
  * pnfOpenDB
  * creates a dbconnection object and returns it to the calling function
  *
- *@params $table (string) name of the table you want to access
+ *@params $table (string) name of the table you want to access, optional
  *@return array consisting:
- *@returns object dbconn obejct for use to execute sql queries
+ * if a tablename is given:
+ *@returns object dbconn object for use to execute sql queries
  *@returns string fully qualified tablename
  *@returns array with field names
+ * if no tablename is given:
+ *@returns object dbconn object for use to execute sql queries
+ *@returns array  pntable array
  *        or false on error
  */
 function pnfOpenDB($tablename)
 {
-    if(!isset($tablename)) return false;
-
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
 
-    $columnname    = $tablename . '_column';
-    if( !array_key_exists($tablename, $pntable) || 
-        !array_key_exists($columnname, $pntable) ) {return false; }
-    // table exists, now get the dbconnection object
-    return array($dbconn, &$pntable[$tablename], &$pntable[$columnname]);
+    if(isset($tablename)) {
+        $columnname = $tablename . '_column';
+        if( !array_key_exists($tablename, $pntable) || 
+            !array_key_exists($columnname, $pntable) ) {return false; }
+        // table exists, now get the dbconnection object
+        return array($dbconn, &$pntable[$tablename], &$pntable[$columnname]);
+    } else {
+        return array($dbconn, $pntable);
+    }
 }
 
 /**
  * pnfCloseDB
- * closes an db connection
+ * closes an db connection opened with pnfOpenDB
  *
  *@params $resobj object as returned by $dbconn->Execute();
  *@returns nothing
@@ -226,17 +232,16 @@ function pnfCloseDB($resobj)
  *@params $debug  bool   true if debug should be activated, default is false
  *@returns object the result of $dbconn->Execute($sql)
  */
-function pnfExecuteSQL(&$dbconn, $sql, $debug=false)
+function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false)
 {
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(_MODARGSERROR, $file, $line);
     }
     $dbconn->debug = $debug;
     $result = $dbconn->Execute($sql);
     $dbconn->debug = $false;
     if($dbconn->ErrorNo() != 0) {
-        $result->Close();
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }

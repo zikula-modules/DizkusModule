@@ -4,16 +4,16 @@
  * ==============================                                       *
  *                                                                      *
  * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
- * http://www.pnforum.de/                                            *
+ * http://www.pnforum.de/                                               *
  ************************************************************************
- * Modified version of: *
+ * Modified version of:                                                 *
  ************************************************************************
  * phpBB version 1.4                                                    *
  * begin                : Wed July 19 2000                              *
  * copyright            : (C) 2001 The phpBB Group                      *
  * email                : support@phpbb.com                             *
  ************************************************************************
- * License *
+ * License                                                              *
  ************************************************************************
  * This program is free software; you can redistribute it and/or modify *
  * it under the terms of the GNU General Public License as published by *
@@ -52,10 +52,10 @@ function pnForum_adminapi_readcategories($args)
     extract($args);
     unset($args);
 
+    list($dbconn, $pntable) = pnfOpenDB();
+
     $categories = array();
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+
 	$cattable = $pntable['pnforum_categories'];
 	$catcolumn = $pntable['pnforum_categories_column'];
 	$where = "";
@@ -67,10 +67,7 @@ function pnForum_adminapi_readcategories($args)
 			FROM $cattable
 			$where 
 			ORDER BY $catcolumn[cat_order]";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext())
         {
@@ -82,7 +79,7 @@ function pnForum_adminapi_readcategories($args)
         }
         usort($categories, 'cmp_catorder');
     }
-	$result->Close();
+    pnfCloseDB($result);
 	if(isset($cat_id)) {
 	    return $categories[0];
 	}
@@ -103,9 +100,8 @@ function pnForum_adminapi_updatecategory($args)
     }
     
     if(isset($cat_title) && isset($cat_id)) {
-    	pnModDBInfoLoad('pnForum');
-    	$dbconn =& pnDBGetConn(true);
-    	$pntable =& pnDBGetTables();
+        list($dbconn, $pntable) = pnfOpenDB();
+
     	$cattable = $pntable['pnforum_categories'];
     	$catcolumn = $pntable['pnforum_categories_column'];
 
@@ -116,11 +112,8 @@ function pnForum_adminapi_updatecategory($args)
     	$sql = "UPDATE $cattable 
     			SET $catcolumn[cat_title]= '$cat_title' 
     			WHERE $catcolumn[cat_id] = '$cat_id'";
-        $result = $dbconn->Execute($sql);
-        if ($dbconn->ErrorNo() != 0) {
-        	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        }
-        $result->Close();
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
         return true;
 	}
     return false;
@@ -140,28 +133,24 @@ function pnForum_adminapi_addcategory($args)
     }
     
     if(isset($cat_title)) {
-	    pnModDBInfoLoad('pnForum');
-	    $dbconn =& pnDBGetConn(true);
-	    $pntable =& pnDBGetTables();
+        list($dbconn, $pntable) = pnfOpenDB();
+
     	$cattable = $pntable['pnforum_categories'];
     	$catcolumn = $pntable['pnforum_categories_column'];
 	    
 	    $cat_title = pnVarPrepForStore($cat_title);
 	    $sql = "SELECT $catcolumn[cat_id] 
 	    		FROM $cattable";
-	    $result = $dbconn->Execute($sql);
-	    if($dbconn->ErrorNo() != 0) {
-	    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	    }
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
 	    $numcats = $result->PO_RecordCount();
+        pnfCloseDB($result);
 	    $neworder = $numcats + 1;
 	    $cat_id = $dbconn->GenID($cattable);
 	    $sql = "INSERT INTO $cattable ($catcolumn[cat_id], $catcolumn[cat_title], $catcolumn[cat_order]) 
 	    		VALUES (" . pnVarPrepForStore($cat_id) . ", '$cat_title', " . pnVarPrepForStore($neworder) . ")";
-	    $result = $dbconn->Execute($sql);
-	    if($dbconn->ErrorNo() != 0) {
-	    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	    }
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
 	    return true;
     }
     return false;
@@ -184,9 +173,8 @@ function pnForum_adminapi_deletecategory($args)
             return showforumerror("loading userapi failed", __FILE__, __LINE__);
         } 
 
-	    pnModDBInfoLoad('pnForum');
-	    $dbconn =& pnDBGetConn(true);
-	    $pntable =& pnDBGetTables();
+        list($dbconn, $pntable) = pnfOpenDB();
+    
     	$cattable = $pntable['pnforum_categories'];
     	$catcolumn = $pntable['pnforum_categories_column'];
 /*
@@ -211,11 +199,8 @@ function pnForum_adminapi_deletecategory($args)
 	    // now we can delete the category
         $sql = "DELETE FROM $cattable 
         		WHERE $catcolumn[cat_id] = $cat_id";
-        $result = $dbconn->Execute($sql);
-        if ($dbconn->ErrorNo() != 0) {
-        	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        }
-        $result->Close();
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
 	    return true;
 	}
 	return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
@@ -230,9 +215,7 @@ function pnForum_adminapi_readforums($args)
     extract($args);
     unset($args);
     
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 	
 	$where = "";
 	if(isset($forum_id)) {
@@ -255,11 +238,8 @@ function pnForum_adminapi_readforums($args)
 			ON c.cat_id=f.cat_id
 			$where					
 			ORDER BY c.cat_order, f.forum_order";
-//echo "sql=:$sql:<br>";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $forums = array();
     if($result->RecordCount()>0) {
@@ -281,10 +261,7 @@ function pnForum_adminapi_readforums($args)
             }
         }
     }
-//echo "<pre>";
-//print_r($forums);
-//echo "</pre>";
-    $result->Close();
+    pnfCloseDB($result);
     if(count($forums)>0) {
         if(isset($forum_id)) {
             return $forums[0];
@@ -302,18 +279,13 @@ function pnForum_adminapi_readmoderators($args)
     extract($args);
     unset($args);
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
    	$sql = "SELECT u.pn_uname, u.pn_uid 
 			FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f 
 			WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id";
-//echo "sql:$sql:<br>";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $mods = array();
     if($result->RecordCount()>0) {
@@ -325,7 +297,7 @@ function pnForum_adminapi_readmoderators($args)
             array_push( $mods, $mod );
         }
     }
-    $result->Close();
+    pnfCloseDB($result);
     return $mods;
 }
 
@@ -338,9 +310,7 @@ function pnForum_adminapi_readusers($args)
     extract($args);
     unset($args);
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
 	$sql = "SELECT n.pn_uid, n.pn_uname 
 			FROM ".$pntable['users']." AS n 
@@ -352,11 +322,8 @@ function pnForum_adminapi_readusers($args)
 		$sql .= "AND n.pn_uid != '".pnVarPrepForStore($mod['uid'])."'";
 	}
 	$sql .= "ORDER BY pn_uname";
-//echo "users sql=:$sql:<br>";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
     $users = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext())
@@ -367,8 +334,7 @@ function pnForum_adminapi_readusers($args)
             array_push( $users, $user );
         }
     }
-//echo count($users) . " gelesen<br>";
-    $result->Close();
+    pnfCloseDB($result);
     return $users;
 
 }
@@ -391,16 +357,8 @@ function pnForum_adminapi_readranks($args)
         }
     }
     asort($filelist);
-//echo "<pre>";
-//print_r($filelist);
-//echo "</pre>";
 
-//    while (list ($key, $file) = each ($filelist)) {
-//            ereg(".gif|.jpg",$file);
-
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 	
 	$rtable = $pntable['pnforum_ranks'];
 	$rcol = $pntable['pnforum_ranks_column'];
@@ -420,11 +378,7 @@ function pnForum_adminapi_readranks($args)
         $sql .="ORDER BY $rcol[rank_title]";
     }
     
-//echo "sql=:$sql:<br>";
-	$result = $dbconn->Execute($sql);
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $ranks = array();
     if($result->RecordCount()>0) {
@@ -452,7 +406,7 @@ function pnForum_adminapi_readranks($args)
     $dummy['rank_style']   = "";
     array_unshift($ranks, $dummy);
     
-    $result->Close();
+    pnfCloseDB($result);
     return array($filelist, $ranks);
 }
 
@@ -469,9 +423,7 @@ function pnForum_adminapi_saverank($args)
     	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
 	// Prep for DB
 	$title = pnVarPrepForStore($title);
@@ -484,14 +436,10 @@ function pnForum_adminapi_saverank($args)
         case 'Add':
             $rank_id = $dbconn->GenID($pntable['pnforum_ranks']);
             $sql = "INSERT INTO ".$pntable['pnforum_ranks']." (rank_id, rank_title, rank_min, rank_max, rank_special, rank_image) VALUES ("
-            . pnVarPrepForStore($rank_id) . ", '$title', '$min_posts', '$max_posts', '$ranktype', '$image')";
-            
-		    $result = $dbconn->Execute($sql);
-            
-		    if($dbconn->ErrorNo() != 0){
-	            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		    }
-        break;
+                   . pnVarPrepForStore($rank_id) . ", '$title', '$min_posts', '$max_posts', '$ranktype', '$image')";
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
+            break;
       case 'Update':
             if($ranktype==1)
             {
@@ -499,22 +447,14 @@ function pnForum_adminapi_saverank($args)
             }else{
                 $sql = "UPDATE ".$pntable['pnforum_ranks']." SET rank_title = '$title', rank_max = '$max_posts', rank_min = '$min_posts', rank_image = '$image' WHERE rank_id = '$rank_id'";
             }
-	        $result = $dbconn->Execute($sql);
-            if($dbconn->ErrorNo() != 0) 
-            {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		    }
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
             break;
         
       case 'Delete':
             $sql = "DELETE FROM ".$pntable['pnforum_ranks']." WHERE rank_id = '$rank_id'";
-
-		    $result = $dbconn->Execute($sql);
-
-            if($dbconn->ErrorNo() != 0) 
-            {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-      		}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
     }
     return;
 }
@@ -528,9 +468,7 @@ function pnForum_adminapi_readrankusers($args)
     extract($args);
     unset($args);
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 	
 	$sql = "SELECT  u.user_id, 
                     p.pn_uname, 
@@ -546,11 +484,7 @@ function pnForum_adminapi_readrankusers($args)
 			  WHERE (r.rank_special=1) AND (u.user_id <>'') AND (p.pn_uname<>'')
 			  ORDER BY p.pn_uname";			
     
-//echo "sql=:$sql:<br>";
-	$result = $dbconn->Execute($sql);
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $users = array();
     if($result->RecordCount()>0) {
@@ -566,8 +500,7 @@ function pnForum_adminapi_readrankusers($args)
             array_push( $users, $user );
         }
     }
-//echo count($users) . " mit rank<br>";
-    $result->Close();
+    pnfCloseDB($result);
     return $users;
 }
 
@@ -576,20 +509,15 @@ function pnForum_adminapi_readrankusers($args)
  */
 function pnForum_adminapi_readnorankusers()
 {
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
+
 	$sql = "SELECT u.user_id, p.pn_uname 
 			  FROM ".$pntable['pnforum_users']." as u 
 			  LEFT JOIN ".$pntable['users']." as p 
 			  ON p.pn_uid=u.user_id
 			  WHERE (u.user_rank=0) and (p.pn_uid<>1) and (u.user_id <> '')
 			  ORDER BY p.pn_uname";			
-//echo "sql=:$sql:<br>";
-	$result = $dbconn->Execute($sql);
-    if($dbconn->ErrorNo() != 0) {
-       return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $users = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext())
@@ -600,8 +528,7 @@ function pnForum_adminapi_readnorankusers()
             array_push( $users, $user );
         }
     }
-//echo count($users) . " ohne rank<br>";
-    $result->Close();
+    pnfCloseDB($result);
     return $users;
 }
 
@@ -622,9 +549,7 @@ function pnForum_adminapi_assignranksave($args)
         return false;
     }
     
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $rank_id = (int)$rank_id;
     $user_id = (int)$user_id;
@@ -637,19 +562,15 @@ function pnForum_adminapi_assignranksave($args)
             $sql = "UPDATE ".$pntable['pnforum_users']."
 	    			SET user_rank='$rank_id' 
 	    			WHERE user_id = '$user_id'";
-	    	$result = $dbconn->Execute($sql);
-	    	if($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	    	}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
             break;
         case 'Delete':
             $sql = "UPDATE ".$pntable['pnforum_users']."
 	    			SET user_rank='0' 
 	    			WHERE user_id = '$user_id'";
-	    	$result = $dbconn->Execute($sql);
-            if($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	    	}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
             break;
 	}
 	return;
@@ -667,9 +588,7 @@ function pnForum_adminapi_reordercategoriessave($args)
     	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $cat_id    = (int)$cat_id;
     $cat_order = (int)$cat_order;
@@ -680,44 +599,34 @@ function pnForum_adminapi_reordercategoriessave($args)
 			$sql = "UPDATE ".$pntable['pnforum_categories']." 
 					SET cat_order = '".pnVarPrepForStore($order)."' 
 					WHERE cat_id = '".pnVarPrepForStore($cat_id)."'";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 			$sql = "UPDATE ".$pntable['pnforum_categories']." 
 					SET cat_order = '".pnVarPrepForStore($cat_order)."' 
 					WHERE cat_order = '".pnVarPrepForStore($order)."' 
 					AND cat_id <> '".pnVarPrepForStore($cat_id)."'";				 		
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 		}
 	} else {
 		$sql = "SELECT cat_id 
 				FROM ".$pntable['pnforum_categories']."";
-		$categories = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
-		$numcategories = $categories->PO_RecordCount();
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+		$numcategories = $result->PO_RecordCount();
+        pnfCloseDB($result);
 		if ($cat_order < $numcategories) {
 			$newno = $cat_order + 1;
 			$sql = "UPDATE ".$pntable['pnforum_categories']." 
 					SET cat_order = '".pnVarPrepForStore($newno)."' 
 					WHERE cat_id = '".pnVarPrepForStore($cat_id)."'";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 			$sql = "UPDATE ".$pntable['pnforum_categories']." 
 					SET cat_order = '".pnVarPrepForStore($cat_order)."' 
 					WHERE cat_order = '".pnVarPrepForStore($newno)."' 
 					AND cat_id <> '".pnVarPrepForStore($cat_id)."'";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 		}
 	}
 	return;
@@ -735,9 +644,7 @@ function pnForum_adminapi_reorderforumssave($args)
     	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $cat_id      = (int)$cat_id;
     $forum_order = (int)$forum_order;
@@ -749,41 +656,34 @@ function pnForum_adminapi_reorderforumssave($args)
 			$sql = "UPDATE ".$pntable['pnforum_forums']." 
 					SET forum_order = $order 
 					WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 			$sql = "UPDATE ".$pntable['pnforum_forums']." 
 					SET forum_order=".$forum_order." 
 					WHERE forum_order = $order 
 					AND forum_id <> '".pnVarPrepForStore($forum_id)."'";				 		
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 		}
 	} else {
 		$sql = "SELECT forum_id 
 				FROM ".$pntable['pnforum_forums']."";
-		$result = $dbconn->Execute($sql);
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 		$numforums = $result->PO_RecordCount();
+        pnfCloseDB($result);
 		if ($forum_order < $numforums) {
 			$newno = $forum_order + 1;
 			$sql = "UPDATE ".$pntable['pnforum_forums']." 
 					SET forum_order = $newno 
 					WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
   			$sql = "UPDATE ".$pntable['pnforum_forums']." 
 					SET forum_order = $forum_order 
 					WHERE forum_order = $newno 
 					AND forum_id <> '".pnVarPrepForStore($forum_id)."'";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 		}
 	}
     return;
@@ -799,20 +699,16 @@ function pnForum_adminapi_sync($args)
     extract($args);
     unset($args);
     
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
 	switch($type) {
 		case 'forum':
 			$sql = "SELECT max(post_id) AS last_post 
                 	FROM ".$pntable['pnforum_posts']." 
                 	WHERE forum_id = ".(int)pnVarPrepForStore($id)."";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	    	}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 			$result_lastpost = $dbconn->Affected_Rows();
+            pnfCloseDB($result);
 			if ($result_lastpost != 0) {
           		list($last_post) = $result->FetchRow();
 			} else {
@@ -822,40 +718,32 @@ function pnForum_adminapi_sync($args)
 			$sql = "SELECT count(post_id) AS total 
 					FROM ".$pntable['pnforum_posts']." 
 					WHERE forum_id = ".(int)pnVarPrepForStore($id)."";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
+            pnfCloseDB($result);
             $total_posts = $row['total'];
 
 			$sql = "SELECT count(topic_id) AS total 
 					FROM ".$pntable['pnforum_topics']." 
 					WHERE forum_id = ".(int)pnVarPrepForStore($id)."";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
+            pnfCloseDB($result);
 			$total_topics = $row["total"];
 			$sql = "UPDATE ".$pntable['pnforum_forums']." 
 					SET forum_last_post_id = '".(int)pnVarPrepForStore($last_post)."', forum_posts = '".(int)pnVarPrepForStore($total_posts)."', forum_topics = '".pnVarPrepForStore($total_topics)."' 
 					WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
-			$dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
 			break;
 
 		case 'topic':
             $sql = "SELECT max(post_id) AS last_post 
             		FROM ".$pntable['pnforum_posts']." 
             		WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 			$result_lastpost = $dbconn->Affected_Rows();
+            pnfCloseDB($result);
 			if ($result_lastpost != 0) {
           		list($last_post) = $result->FetchRow();
 			} else {
@@ -865,21 +753,17 @@ function pnForum_adminapi_sync($args)
             $sql = "SELECT count(post_id) AS total 
             		FROM ".$pntable['pnforum_posts']." 
             		WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             //$row = $result->GetRowAssoc(false);
             list($total_posts) = $result->FetchRow(); // $row["total"];
+            pnfCloseDB($result);
 
             $total_posts -= 1;
             $sql = "UPDATE ".$pntable['pnforum_topics']." 
             		SET topic_replies = '".(int)pnVarPrepForStore($total_posts)."', topic_last_post_id = '".(int)pnVarPrepForStore($last_post)."' 
 		    		WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
-			$dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
             break;
 
     case 'all forums':
@@ -891,10 +775,7 @@ function pnForum_adminapi_sync($args)
     case 'all topics':
             $sql = "SELECT topic_id 
             		FROM ".$pntable['pnforum_topics']."";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             if($result->RecordCount()>0) {
                 for (; !$result->EOF; $result->MoveNext())
                 {
@@ -902,15 +783,13 @@ function pnForum_adminapi_sync($args)
                     pnForum_adminapi_sync(array('id' =>$topic_id, 'type' => "topic"));
                 }
             }
+            pnfCloseDB($result);
             break;
     case 'all posts':
             $sql = "SELECT poster_id, count(poster_id) as total_posts 
 		    		FROM ".$pntable['pnforum_posts']."
 		    		GROUP BY poster_id";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             if($result->RecordCount()>0) {
                 for (; !$result->EOF; $result->MoveNext()) {
                     list($poster_id,
@@ -918,12 +797,10 @@ function pnForum_adminapi_sync($args)
       	    	    $sub_sql = "UPDATE ".$pntable['pnforum_users']." 
       	    	    			SET user_posts = '".(int)pnVarPrepForStore($total_posts)."' 
       	    	    			WHERE user_id = '".(int)pnVarPrepForStore($poster_id)."'";
-                    $dbconn->Execute($sub_sql);
-                    if($dbconn->ErrorNo()<>0) {    
-                    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sub_sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-                    }
+                    $result2 = pnfExecuteSQL($dbconn, $sub_sql, __FILE__, __LINE__);
       	        }
             }
+            pnfCloseDB($result);
             break;
 	case 'users':
             $sql = "SELECT n.pn_uid, 
@@ -932,22 +809,17 @@ function pnForum_adminapi_sync($args)
                     LEFT JOIN ".$pntable['pnforum_users']." AS b 
                     ON b.user_id=n.pn_uid 
                     WHERE b.user_id is NULL";
-			$result = $dbconn->Execute($sql);
-			if($dbconn->ErrorNo()<>0) {    
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             if($result->RecordCount()>0) {
 
                 for (; !$result->EOF; $result->MoveNext()) {
                     list($pn_uid) = $result->fields;
                     $sql2 = "INSERT into ".$pntable['pnforum_users']." (user_id) 
               	             VALUES ('".(int)pnVarPrepForStore($pn_uid)."')";
-                    $dbconn->Execute($sql2);
-                    if($dbconn->ErrorNo()<>0) {    
-                    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql2,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-                    }
+                    $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
       	        } //$result->MoveNext();
             }
+            pnfCloseDB($result);
 	        break;
     default:
             return showforumerror("wrong parameter in sync", __FILE__, __LINE__);
@@ -968,9 +840,7 @@ function pnForum_adminapi_addforum($args)
     	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
 	if(empty($forum_name)) {
 		return showforumerror(_PNFORUM_CREATEFORUM_INCOMPLETE, __FILE__, __LINE__);
@@ -985,11 +855,9 @@ function pnForum_adminapi_addforum($args)
 	$sql = "SELECT max(forum_order) AS highest 
 			FROM ".$pntable['pnforum_forums']." 
 			WHERE cat_id = '$cat_id'";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 	list($highest) = $result->fields;
+    pnfCloseDB($result);
 	$highest++;
 	$forum_id = $dbconn->GenID($pntable['pnforum_forums']);
 	$sql = "INSERT INTO ".$pntable['pnforum_forums']." 
@@ -1003,10 +871,8 @@ function pnForum_adminapi_addforum($args)
 					'".$desc."', 
 					'".$cat_id."', 
 					'".pnVarPrepForStore($highest)."')";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 	$forum = $dbconn->PO_Insert_ID($pntable['pnforum_forums'], 'forum_id');
 	$count = 0;
 	if(is_array($mods) && count($mods)>0) {
@@ -1016,20 +882,10 @@ function pnForum_adminapi_addforum($args)
 	    						user_id) 
 	    					VALUES ('".pnVarPrepForStore($forum)."', 
 	    							'".pnVarPrepForStore($mod)."')";
-	    	$mod_res = $dbconn->Execute($mod_query);
-	    	if($dbconn->ErrorNo() != 0) {
-	    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	    	}
+            $mod_res = pnfExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
+            pnfCloseDB($mod_res);
 	    }
     }
-    /*
-	if(isset($user_query)) {
-		$u_res = $dbconn->Execute($user_query);
-		if($dbconn->ErrorNo() != 0) {
-			return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
-	}
-	*/
 	return;
 }
 
@@ -1045,9 +901,7 @@ function pnForum_adminapi_editforum($args)
     	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
 	// prepare for store
 	$desc = pnVarPrepForStore($desc);
@@ -1058,27 +912,21 @@ function pnForum_adminapi_editforum($args)
 			forum_desc='".$desc."', 
 			cat_id='".$cat_id."' 
 			WHERE forum_id=".$forum_id."";
-	$result = $dbconn->Execute($sql);
-	if($dbconn->ErrorNo() != 0) {
-		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-	}
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 	if(isset($mods) && !empty($mods)) {
 		foreach ($mods as $mod) {
 			$mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']." (forum_id, user_id) VALUES ('".pnVarPrepForStore($forum_id)."', '".pnVarPrepForStore($mod)."')";
-			$mods = $dbconn->Execute($mod_query);
-			if($dbconn->ErrorNo() != 0) {
-        		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
+            $mods = pnfExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
+            pnfCloseDB($mods);
 		}
 	}
 	if(isset($rem_mods) && !empty($rem_mods)) {
 		foreach ($rem_mods as $mod) {
 			$rem_query = "DELETE FROM ".$pntable['pnforum_forum_mods']." 
 						WHERE forum_id = '".pnVarPrepForStore($forum_id)."' AND user_id = '".pnVarPrepForStore($mod)."'";
-			$rem = $dbconn->Execute($rem_query);
-			if($dbconn->ErrorNo() != 0) {
-          		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}	
+            $rem = pnfExecuteSQL($dbconn, $rem_query, __FILE__, __LINE__);
+            pnfCloseDB($rem);
 		}
 	}
 	return;
@@ -1101,90 +949,64 @@ function pnForum_adminapi_deleteforum($args)
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 	
 	if($ok==1) {
         // delet forum
 		$sql = "DELETE FROM ".$pntable['pnforum_forums']." 
 				WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
         // delete mods
 		$sql = "DELETE FROM ".$pntable['pnforum_forum_mods']." 
 				WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
         // delete forum subscription
 		$sql = "DELETE FROM ".$pntable['pnforum_subscription']." 
 				WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
 
         // topics
 		$sql = "SELECT topic_id 
 				FROM ".$pntable['pnforum_topics']." 
 				WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         if($result->RecordCount()>0) {
             for (; !$result->EOF; $result->MoveNext()) {
     			list($topic_id) = $result->fields;
 	    		$sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']." 
 		    			WHERE topic_id = '".pnVarPrepForStore($topic_id)."'";
-			    $del = $dbconn->Execute($sql);
-			    if ($dbconn->ErrorNo() != 0) {
-        		    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			    }
-			    $del->Close();
+                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                pnfCloseDB($del);
 			    $sql = "DELETE FROM ".$pntable['pnforum_topics']." 
 				    	WHERE topic_id = '".pnVarPrepForStore($topic_id)."'";
-			    $del = $dbconn->Execute($sql);
-			    if ($dbconn->ErrorNo() != 0) {
-        		    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			    }
-			    $del->Close();
+                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                pnfCloseDB($del);
 		    }
 		}
-        $result->Close();
+        pnfCloseDB($result);
 
         // posts
 		$sql = "SELECT post_id 
 				FROM ".$pntable['pnforum_posts']." 
 				WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         if($result->RecordCount()>0) {
             for (; !$result->EOF; $result->MoveNext()) {
     			list($post_id) = $result->fields;
 	    		$sql = "DELETE FROM ".$pntable['pnforum_posts_text']." 
 		    			WHERE post_id = '".pnVarPrepForStore($post_id)."'";
-			    $del = $dbconn->Execute($sql);
-			    if ($dbconn->ErrorNo() != 0) {
-        		    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			    }
-			    $del->Close();
+                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                pnfCloseDB($del);
 			    $sql = "DELETE FROM ".$pntable['pnforum_posts']." 
 				    	WHERE post_id = '".pnVarPrepForStore($post_id)."'";
-			    $del = $dbconn->Execute($sql);
-			    if ($dbconn->ErrorNo() != 0) {
-        		    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			    }
-			    $del->Close();
+                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                pnfCloseDB($del);
 		    }
 		}
-        $result->Close();
+        pnfCloseDB($result);
 	}
     return;
 }
