@@ -31,26 +31,6 @@
  * USA                                                                  *
  ************************************************************************/ 
 
-define('_PNFORUM_ACTIVE_FORUMS','top active Forums:');
-define('_PNFORUM_RECENT_POSTS','recent Topics:');
-define('_PNFORUM_ONEREPLY','reply');
-define('_PNFORUM_REPLIES','replies');
-define('_PNFORUM_ACTIVE_POSTERS','top active Posters:');
-define('_PNFORUM_POSTS','posts');
-define('_PNFORUM_CATEGORIES','Categories');
-define('_PNFORUM_FORUMS','Forums');
-define('_PNFORUM_TOPICS','Topics');
-define('_PNFORUM_TOTAL','Total');
+include_once("modules/pnForum/pnlang/eng/global.php");
 
-define('_PNFORUM_ADMIN_FORUMS','Number of Top active forums to be shown (-1=Off)');
-define('_PNFORUM_ADMIN_RECENTPOSTS','Number of Recent topics to be shown (-1=Off)');
-define('_PNFORUM_ADMIN_RECENTPOSTS_OPTION','Recent topics extended options');
-define('_PNFORUM_ADMIN_ON','On');
-define('_PNFORUM_ADMIN_OFF','Off');
-define('_PNFORUM_ADMIN_RECENTPOSTS_REPLIES','Show number of total replies per topic');
-define('_PNFORUM_ADMIN_RECENTPOSTS_DATE','Show date of last reply in topic');
-define('_PNFORUM_ADMIN_RECENTPOSTS_DATEREPLIES','Show total number of replies and date of the last one');
-define('_PNFORUM_ADMIN_POSTERS','Number of Top posters to be shown (-1=Off)');
-define('_PNFORUM_ADMIN_TOTAL','Display Total Statistics');
-define('_PNFORUM_ADMIN_SHORTEN','Shorten display');
 ?>

@@ -31,27 +31,6 @@
  * USA                                                                  *
  ************************************************************************/ 
 
-define('_PNFORUM_ACTIVE_FORUMS','aktivste Foren:');
-define('_PNFORUM_RECENT_POSTS','aktuellste Beiträge:');
-define('_PNFORUM_ONEREPLY','Antwort');
-define('_PNFORUM_REPLIES','Antworten');
-define('_PNFORUM_ACTIVE_POSTERS','aktivste Autoren:');
-define('_PNFORUM_POSTS','Beiträge');
-define('_PNFORUM_CATEGORIES','Kategorien');
-define('_PNFORUM_FORUMS','Foren');
-define('_PNFORUM_TOPICS','Themen');
-define('_PNFORUM_TOTAL','Gesamtstatistik');
+include_once("modules/pnForum/pnlang/deu/global.php");
 
-define('_PNFORUM_ADMIN_FORUMS','Anzahl der aktivsten Foren (-1=aus)');
-define('_PNFORUM_ADMIN_RECENTPOSTS','Anzahl der aktuellsten Beiträge
-(-1=aus)');
-define('_PNFORUM_ADMIN_RECENTPOSTS_OPTION','erweiterte Optionen');
-define('_PNFORUM_ADMIN_ON','an');
-define('_PNFORUM_ADMIN_OFF','aus');
-define('_PNFORUM_ADMIN_RECENTPOSTS_REPLIES','Anzahl der Antworten');
-define('_PNFORUM_ADMIN_RECENTPOSTS_DATE','Datum des letzten Eintrages');
-define('_PNFORUM_ADMIN_RECENTPOSTS_DATEREPLIES','Datum und Antworten');
-define('_PNFORUM_ADMIN_POSTERS','Anzahl der aktivsten Autoren (-1=aus)');
-define('_PNFORUM_ADMIN_TOTAL','Gesamtstatistik');
-define('_PNFORUM_ADMIN_SHORTEN','Kurzanzeige');
 ?>
