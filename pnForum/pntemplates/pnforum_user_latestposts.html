@@ -60,7 +60,7 @@ function func_name() {
             <a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a>
         </td>
         <td>
-            <!--[ $post.post_time ]-->
+            <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
         </td>
     </tr>
     <!--[ /foreach ]-->
