@@ -11,20 +11,35 @@
 
 // copied from includes/language/blocks/eng
 define('_PNFORUM_SEARCHINCLUDE_HITS', 'hits');
+
 define('_RESULTS',"Results");
+
 define('_PNFORUM_SEARCHINCLUDE_AUTHOR',"Author");
+
 define('_PNFORUM_SEARCHINCLUDE_BYDATE',"by date");
+
 define('_PNFORUM_SEARCHINCLUDE_BYTITLE',"by title");
+
 define('_PNFORUM_SEARCHINCLUDE_BYFORUM',"by forum");
+
 define('_PNFORUM_SEARCHINCLUDE_DATE',"Date");
+
 define('_PNFORUM_SEARCHINCLUDE_FORUM',"Category and forum");
+
 define('_PNFORUM_SEARCHINCLUDE_NEWWIN',"Show in new window");
+
 define('_PNFORUM_SEARCHINCLUDE_NOENTRIES',"No messages in forums found");
+
 define('_PNFORUM_SEARCHINCLUDE_ORDER',"Order");
+
 define('_PNFORUM_SEARCHINCLUDE_REPLIES',"Replies");
+
 define('_PNFORUM_SEARCHINCLUDE_RESULTS',"Forums");
+
 define('_PNFORUM_SEARCHINCLUDE_TITLE',"Search forums");
+
 define('_PNFORUM_SEARCHINCLUDE_VIEWS',"Views");
+
 
 define('_PNFORUM_NOAUTH_TOSEE', 'You have no permission to see this category or forum');
 define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of this category or forum');
@@ -49,12 +64,13 @@ define('_PNFORUM_NOAUTH', 'No permission for this action');
 define('_PNFORUM_ADDNEWCATEGORY', '-- add new category --');
 define('_PNFORUM_ADDNEWFORUM', '-- add new forum --');
 define('_PNFORUM_HONORARY_RANK','Honorary rank');
-define('_PNFORUM_ADMINHONORARYASSIGN','Assing honorary rank');
+define('_PNFORUM_ADMINHONORARYASSIGN','Assign honorary rank');
 define('_PNFORUM_NORANK', 'no rank');
-define('_PNFORUM_ADMINHONORARYRANKS','Administrate honorary ranks');
+define('_PNFORUM_ADMINHONORARYRANKS','Administer honorary ranks');
 define('_PNFORUM_ADMINHONORARYRANKS_INFO','Here you can individually assign honorary ranks to specific users.');
 define('_PNFORUM_IMAGE', 'Image');
 define('_PNFORUM_NORANKSINDATABASE', 'no ranks defined');
+
 define('_PNFORUM_DESCRIPTION', 'Description');
 define('_PNFORUM_CURRENT', 'current');
 define('_PNFORUM_NOMODERATORSASSIGNED', 'no moderator assigned');
