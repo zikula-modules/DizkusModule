@@ -982,7 +982,7 @@ function pnForum_userapi_preparereply($args)
             // just for backwards compatibility
             $text = undo_make_clickable($text);
             $text = str_replace("[addsig]", "", $text);
-            $reply['message'] = '[quote]'.$text.'[/quote]';
+            $reply['message'] = '[quote='.$m['pn_uname'].']'.$text.'[/quote]';
         } else {
             return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg());
         }
@@ -1314,10 +1314,7 @@ function pnForum_userapi_preparenewtopic($args)
     $newtopic['subject'] = $subject;
     $newtopic['message'] = $message;
     $newtopic['message_display'] = phpbb_br2nl($message);
-    $sig = $newtopic['poster_data']['pn_user_sig'];
-    if ($sig != ''){
-        $newtopic['message'] .= "<br />_________________<br />$sig";
-    }
+
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
     $newtopic['message_display'] = nl2br($newtopic['message_display']);
 
