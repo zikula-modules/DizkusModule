@@ -424,4 +424,20 @@ function cmp_catorder ($a, $b)
    return (int)$a['cat_order'] > (int)$b['cat_order'];
 }
 
+/**
+ * pnForum_replacesignature
+ *
+ */
+function pnForum_replacesignature($text, $signature="")
+{
+    if (!empty($signature)){
+        $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
+        $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
+        $text = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $signature . $sigend, $text);
+    } else {
+        $text = eregi_replace("\[addsig]$", "", $text);
+    }
+    return $text;
+    
+}
 ?>

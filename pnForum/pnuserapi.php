@@ -857,13 +857,8 @@ function pnForum_userapi_readtopic($args)
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             $post['post_text'] = phpbb_br2nl($post['post_text']);
-            if (!empty($post['poster_data']['pn_user_sig'])){
-                $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
-                $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
-                $post['post_text'] = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_text']);
-            } else {
-                $post['post_text'] = eregi_replace("\[addsig]$", "", $post['post_text']);
-            }
+            $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['pn_user_sig']);
+
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', '', array($post['post_text']));
             $post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_text'])));
@@ -1036,15 +1031,7 @@ function pnForum_userapi_preparereply($args)
         // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
     
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
-//        $sig = $review['poster_data']['pn_user_sig'];
-        if(!empty($review['poster_data']['pn_user_sig'])){
-            $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
-            $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
-            $message = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $review['poster_data']['pn_user_sig'] . $sigend, $message);
-        }
-        else {
-            $message = eregi_replace("\[addsig]$", "", $message);
-        }
+        $message = pnForum_replacesignature($message, $review['poster_data']['pn_user_sig']);
 
         // call hooks for $message
         list($message) = pnModCallHooks('item', 'transform', '', array($message));
@@ -1538,13 +1525,8 @@ function pnForum_userapi_readpost($args)
     }
 
     $post['post_textdisplay'] = phpbb_br2nl($message);
-    if(!empty($post['poster_data']['pn_user_sig']) ){
-        $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
-        $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
-        $post['post_textdisplay'] = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_textdisplay']);
-    } else {
-        $post['post_textdisplay'] = eregi_replace("\[addsig]$", "", $post['post_textdisplay']);
-    }
+    $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array($post['post_textdisplay']));
     $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));

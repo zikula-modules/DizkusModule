@@ -363,7 +363,7 @@ function pnForum_user_editpost()
         }
         if(!empty($message)) {
             $post['post_text'] = $message;
-            $post['post_textdisplay'] = $message;
+            list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array($message));
         }
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
