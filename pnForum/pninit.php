@@ -456,8 +456,7 @@ function crossupgrade()
             	return -1;
             }
         }
-        return true;
     }    
-    return false;
+    return true;
 }
 ?>
