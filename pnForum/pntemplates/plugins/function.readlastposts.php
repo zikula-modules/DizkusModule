@@ -37,10 +37,15 @@
  *@params favorites (bool) if set, only the favorite forums
  *
  */
-function smarty_function_readlastposts($params, &$smarty) 
+function smarty_function_readlastposts($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
+
+    if(!pnModAPILoad('pnForum', 'user')) {
+        $smarty->trigger_error('unable to load pnForum userapi');
+        return;
+    }
 
     $loggedIn = false;
     $uid = 1;
@@ -58,11 +63,11 @@ function smarty_function_readlastposts($params, &$smarty)
         // get the category id and check permissions
 
         // get the category id
-        $sql = "SELECT cat_id 
+        $sql = "SELECT cat_id
                 FROM " . $pntable['pnforum_forums'] . "
                 WHERE forum_id = $forum_id ";
-        
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         if($result->EOF) {
             $result->Close();
             return false;
@@ -75,7 +80,7 @@ function smarty_function_readlastposts($params, &$smarty)
         }
         $whereforum = "t.forum_id = $forum_id AND ";
     }
-    
+
     $wherecanread = '';
     // we only wnat to do this if $canread is set and $whereforum is empty
     if(isset($canread) && $canread && empty($whereforum)) {
@@ -84,7 +89,7 @@ function smarty_function_readlastposts($params, &$smarty)
                        cat_id
                 FROM " . $pntable['pnforum_forums'];
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
         while (!$result->EOF) {
             list($forumID,$cat_id) = $result->fields;
@@ -102,7 +107,7 @@ function smarty_function_readlastposts($params, &$smarty)
     $wherefavorites = '';
     // we only wnat to do this if $favorites is set and $whereforum is empty
     // and the user is logged in. We also don't want to do this if
-    // $wherecanread is set for the same reason.  
+    // $wherecanread is set for the same reason.
     // (Anonymous doesn't have favorites)
     if(isset($favorites) && $favorites && empty($whereforum) && $loggedIn) {
         // get the favorites
@@ -112,7 +117,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 LEFT JOIN " . $pntable['pnforum_forums'] . " f
                 ON f.forum_id = fav.forum_id
                 WHERE fav.user_id = $uid ";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         while (!$result->EOF) {
             list($forumID,$cat_id) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
@@ -139,18 +144,18 @@ function smarty_function_readlastposts($params, &$smarty)
         }
     }
 
-    $sql = "SELECT t.topic_id, 
-                   t.topic_title, 
+    $sql = "SELECT t.topic_id,
+                   t.topic_title,
                    t.topic_replies,
                    t.topic_time,
                    t.topic_last_post_id,
-                   f.forum_id, 
-                   f.forum_name, 
+                   f.forum_id,
+                   f.forum_name,
                    c.cat_title,
                    c.cat_id,
                    pt.poster_id,
                    pt.post_id
-        FROM ".$pntable['pnforum_topics']." as t, 
+        FROM ".$pntable['pnforum_topics']." as t,
                 ".$pntable['pnforum_forums']." as f,
                 ".$pntable['pnforum_posts']." as pt,
                 ".$pntable['pnforum_categories']." as c
@@ -169,16 +174,16 @@ function smarty_function_readlastposts($params, &$smarty)
         $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
         $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
         for (; !$result->EOF; $result->MoveNext()) {
-            list($topic_id, 
-                 $topic_title, 
-                 $topic_replies, 
-                 $topic_time, 
+            list($topic_id,
+                 $topic_title,
+                 $topic_replies,
+                 $topic_time,
                  $topic_last_post_id,
-                 $forum_id, 
-                 $forum_name, 
-                 $cat_title, 
-                 $cat_id, 
-                 $poster_id, 
+                 $forum_id,
+                 $forum_name,
+                 $cat_title,
+                 $cat_id,
+                 $poster_id,
                  $post_id) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
                 $lastpost = array();
@@ -202,7 +207,7 @@ function smarty_function_readlastposts($params, &$smarty)
                     $start = 0;
                 }
                 $lastpost['start'] = $start;
-                if ($poster_id != 1) { 
+                if ($poster_id != 1) {
                     $user_name = pnUserGetVar('uname', $poster_id);
                     if ($user_name == "") {
                         // user deleted from the db?
@@ -212,9 +217,9 @@ function smarty_function_readlastposts($params, &$smarty)
                     $user_name = pnConfigGetVar('anonymous');
                 }
                 $lastpost['poster_name'] = $user_name;
-           
-                $posted_unixtime= strtotime ($lastpost['topic_time']); 
-                $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime)); 
+
+                $posted_unixtime= strtotime ($lastpost['topic_time']);
+                $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
                 $lastpost['posted_time'] =$posted_ml;
                 $lastpost['posted_unixtime'] = $posted_unixtime;
 
