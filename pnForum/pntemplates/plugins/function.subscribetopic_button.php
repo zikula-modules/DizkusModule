@@ -32,7 +32,7 @@ function smarty_function_subscribetopic_button($params, &$smarty)
 
     $userid = pnUserGetVar('uid');
     if (pnUserLoggedIn()) {
-        if (pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE) || pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE)) 
+        if (pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ) || pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ)) 
 	    {
             if(!pnModAPILoad('pnForum', 'user')) {
                 $smarty->trigger_error("subscribetopic_button: unable to load userapi", e_error);
