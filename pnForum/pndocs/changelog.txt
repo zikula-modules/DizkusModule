@@ -3,7 +3,16 @@ PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
-2.0.0.0 (fs)
+2.0.0 RC2 (fs)
+---------------------------------------------------------------------------------------------
+- added forum internal search
+- support for pn_highlight hook
+- configurable signature replacement
+- admin now completely multilingual
+- lots of addons, bug fixes, minor changes, (x)html fixes, code cleanups and refactorization
+
+---------------------------------------------------------------------------------------------
+2.0.0 RC1 (fs)
 ---------------------------------------------------------------------------------------------
 - changed phpBB_14 to pnForum (update from previous phpBB_14 during during module update)
 - fully API compliant now
