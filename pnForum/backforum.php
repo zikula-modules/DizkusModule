@@ -44,7 +44,6 @@ echo "<title>".pnVarPrepForDisplay(pnConfigGetVar('sitename')). " - Forum</title
 echo "<link>".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'main'))."</link>\n";
 echo "<description>".pnVarPrepForDisplay(pnConfigGetVar('sitename')). " - Forum</description>\n";
 echo "<webMaster>".pnVarPrepForDisplay(pnConfigGetVar('adminmail'))."</webMaster>\n";
-echo "</channel>";
 
 /**
  * get database information
@@ -97,6 +96,7 @@ pnfCloseDB($result);
 /**
  * close the channel/rss output
  */
+echo "</channel>";
 echo "</rss>\n";
 
 ?>
