@@ -884,17 +884,17 @@ function pnForum_userapi_preparereply($args)
 
     $reply = array();
 
-    if(!empty($post)) {
+    if(!empty($post_id)) {
         // We have a post id, so include that in the checks..
         $sql = "SELECT f.forum_name,
                        c.cat_id,
                        c.cat_title,
                        t.topic_title,
                        t.topic.status
-                FROM $pntable[pnforum_forums] AS f, 
-                     $pntable[pnforum_topics] AS t, 
-                     $pntable[pnforum_posts] AS p,
-                     $pntable[pnforum_categories] AS c
+                FROM ".$pntable[pnforum_forums]." AS f, 
+                     ".$pntable[pnforum_topics]." AS t, 
+                     ".$pntable[pnforum_posts]." AS p,
+                     ".$pntable[pnforum_categories]." AS c
                 WHERE (f.forum_id = '".(int)pnVarPrepForStore($forum_id)."')
                 AND (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
                 AND (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
@@ -909,9 +909,9 @@ function pnForum_userapi_preparereply($args)
                        c.cat_title,
                        t.topic_title,
                        t.topic_status
-                FROM $pntable[pnforum_forums] AS f, 
-                     $pntable[pnforum_topics] AS t,
-                     $pntable[pnforum_categories] AS c
+                FROM ".$pntable[pnforum_forums]." AS f, 
+                     ".$pntable[pnforum_topics]." AS t,
+                     ".$pntable[pnforum_categories]." AS c
                 WHERE (f.forum_id = '".(int)pnVarPrepForStore($forum_id)."')
                 AND (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
                 AND (t.forum_id = f.forum_id)
@@ -952,7 +952,7 @@ function pnForum_userapi_preparereply($args)
     
 //    if (!pnSecAuthAction(0, 'pnForum::Forum', $reply['forum_name'] ."::", ACCESS_COMMENT) && 
 //        !pnSecAuthAction(0, 'pnForum::Category', $reply['cat_title'] ."::", ACCESS_COMMENT)) {
-    if(!allowedtowritecategoryandforum($reply['cat_id'], $reply['forum_id'])) {
+    if(!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
         return showforumerror( _PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 

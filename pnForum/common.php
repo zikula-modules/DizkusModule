@@ -126,7 +126,7 @@ function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="
         
     	pnMail($msg_To, $msg_Subject, $posted_message, $msg_Headers);
 	}   
-    if(pnSecAuthAction(0, 'phpBB::', '::', ACCESS_ADMIN)) {
+    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
                                 code : $mysql_errno <br />
