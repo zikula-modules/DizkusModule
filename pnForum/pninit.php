@@ -290,12 +290,6 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'posticon', "modules/$module/pnimages/posticon.gif");
 	pnModSetVar('pnForum', 'profile_image', "modules/$module/pnimages/profile.gif");
 	pnModSetVar('pnForum', 'locked_image', "modules/$module/pnimages/lock.gif");
-	pnModSetVar('pnForum', 'locktopic_image', "modules/$module/pnimages/lock_topic.gif");
-	pnModSetVar('pnForum', 'deltopic_image', "modules/$module/pnimages/del_topic.gif");
-	pnModSetVar('pnForum', 'movetopic_image', "modules/$module/pnimages/move_topic.gif");
-	pnModSetVar('pnForum', 'unlocktopic_image', "modules/$module/pnimages/unlock_topic.gif");
-	pnModSetVar('pnForum', 'stickytopic_image', "modules/$module/pnimages/sticky.gif");
-	pnModSetVar('pnForum', 'unstickytopic_image', "modules/$module/pnimages/unsticky.gif");
 	pnModSetVar('pnForum', 'firstnew_image', "modules/$module/pnimages/firstnew.gif");
 	pnModSetVar('pnForum', 'post_sort_order', "ASC");
 	pnModSetVar('pnForum', 'show_html', "yes");
@@ -515,6 +509,13 @@ function pnForum_upgrade_to_2_0_1()
         pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
         return false;
     }
+    // remove unused vars
+	pnModDelVar('pnForum', 'locktopic_image');
+	pnModDelVar('pnForum', 'unlocktopic_image);
+	pnModDelVar('pnForum', 'stickytopic_image');
+	pnModDelVar('pnForum', 'unstickytopic_image');
+	pnModDelVar('pnForum', 'movetopic_image');
+	pnModDelVar('pnForum', 'deltopic_image');
 
     return true;
 }

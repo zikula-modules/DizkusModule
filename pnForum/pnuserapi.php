@@ -507,7 +507,6 @@ function pnForum_userapi_readforum($args)
     $hot_newposts_image = pnModGetVar('pnForum', 'hot_newposts_image');
     $posticon           = pnModGetVar('pnForum', 'posticon');
     $locked_image       = pnModGetVar('pnForum', 'locked_image');
-    $stickytopic_image  = pnModGetVar('pnForum', 'stickytopic_image');
     $firstnew_image     = pnModGetVar('pnForum', 'firstnew_image');
 
     // read moderators
@@ -742,12 +741,19 @@ function pnForum_userapi_readtopic($args)
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
         } 
-
+/*
         $topic['access_comment'] = false;
         if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             $topic['access_comment'] = true;
         } 
+*/        
         $topic['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
+
+        $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
+        $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id']);
+        $topic['access_comment']  = $topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id']);
+        $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']);
+        $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id']);
         
         /**
          * update topic counter

@@ -147,12 +147,6 @@ function pnForum_admin_preferences()
         $pnr->assign('newposts_image', pnModGetVar('pnForum', 'newposts_image'));
         $pnr->assign('hot_newposts_image', pnModGetVar('pnForum', 'hot_newposts_image'));
         $pnr->assign('locked_image', pnModGetVar('pnForum', 'locked_image'));
-        $pnr->assign('locktopic_image', pnModGetVar('pnForum', 'locktopic_image'));
-        $pnr->assign('unlocktopic_image', pnModGetVar('pnForum', 'unlocktopic_image'));
-        $pnr->assign('stickytopic_image', pnModGetVar('pnForum', 'stickytopic_image'));
-        $pnr->assign('unstickytopic_image', pnModGetVar('pnForum', 'unstickytopic_image'));
-        $pnr->assign('movetopic_image', pnModGetVar('pnForum', 'movetopic_image'));
-        $pnr->assign('deltopic_image', pnModGetVar('pnForum', 'deltopic_image'));
         $pnr->assign('post_sort_order_ascchecked', $post_sort_order_ascchecked);
         $pnr->assign('post_sort_order_descchecked', $post_sort_order_descchecked);
         $pnr->assign('htmlonchecked', $htmlonchecked);
@@ -186,12 +180,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'newposts_image', pnVarPrepForStore(pnVarCleanFromInput('newposts_image')));
             pnModSetVar('pnForum', 'hot_newposts_image', pnVarPrepForStore(pnVarCleanFromInput('hot_newposts_image')));
             pnModSetVar('pnForum', 'locked_image', pnVarPrepForStore(pnVarCleanFromInput('locked_image')));
-            pnModSetVar('pnForum', 'locktopic_image', pnVarPrepForStore(pnVarCleanFromInput('locktopic_image')));
-            pnModSetVar('pnForum', 'unlocktopic_image', pnVarPrepForStore(pnVarCleanFromInput('unlocktopic_image')));
-            pnModSetVar('pnForum', 'stickytopic_image', pnVarPrepForStore(pnVarCleanFromInput('stickytopic_image')));
-            pnModSetVar('pnForum', 'unstickytopic_image', pnVarPrepForStore(pnVarCleanFromInput('unstickytopic_image')));
-            pnModSetVar('pnForum', 'movetopic_image', pnVarPrepForStore(pnVarCleanFromInput('movetopic_image')));
-            pnModSetVar('pnForum', 'deltopic_image', pnVarPrepForStore(pnVarCleanFromInput('deltopic_image')));
             pnModSetVar('pnForum', 'post_sort_order', pnVarPrepForStore(pnVarCleanFromInput('post_sort_order')));
             pnModSetVar('pnForum', 'show_html', pnVarPrepForStore(pnVarCleanFromInput('show_html')));
             pnModSetVar('pnForum', 'show_bbcode', pnVarPrepForStore(pnVarCleanFromInput('show_bbcode')));
@@ -217,12 +205,6 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
 		    pnModSetVar('pnForum', 'profile_image', "modules/pnForum/pnimages/profile.gif");
 		    pnModSetVar('pnForum', 'locked_image', "modules/pnForum/pnimages/lock.gif");
-		    pnModSetVar('pnForum', 'locktopic_image', "modules/pnForum/pnimages/lock_topic.gif");
-		    pnModSetVar('pnForum', 'deltopic_image', "modules/pnForum/pnimages/del_topic.gif");
-		    pnModSetVar('pnForum', 'movetopic_image', "modules/pnForum/pnimages/move_topic.gif");
-		    pnModSetVar('pnForum', 'unlocktopic_image', "modules/pnForum/pnimages/unlock_topic.gif");
-		    pnModSetVar('pnForum', 'stickytopic_image', "modules/pnForum/pnimages/sticky.gif");
-		    pnModSetVar('pnForum', 'unstickytopic_image', "modules/pnForum/pnimages/unsticky.gif");
 		    pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
 		    pnModSetVar('pnForum', 'post_sort_order', "ASC");
 		    pnModSetVar('pnForum', 'show_html', "yes");
