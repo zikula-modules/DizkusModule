@@ -4,7 +4,7 @@
  * ==============================                                       *
  *                                                                      *
  * Copyright (c) 2001-2004 by the PN_phpBB14  Module Development Team   *
- * http://www.post-nuke.net/                                            *
+ * http://www.pnforum.de/                                            *
  ************************************************************************
  * Modified version of: *
  ************************************************************************
@@ -37,7 +37,7 @@
  * @copyright 2003 by Andreas Krapohl, Frank Schummertz
  * @package pnForum
  * @license GPL <http://www.gnu.org/licenses/gpl.html> 
- * @link http://www.post-nuke.net
+ * @link http://www.pnforum.de
  *
  ***********************************************************************/
 

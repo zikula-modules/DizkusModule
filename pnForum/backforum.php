@@ -2,7 +2,7 @@
 /**
  * forum backend (with permission check)
  * to be placed in the postnuke root
- * @version $Id:
+ * @version $Id$
  * @author Andreas Krapohl 
  * @copyright 2003 by Andreas Krapohl
  * @package phpBB_14 (aka pnForum) 
