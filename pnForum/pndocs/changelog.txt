@@ -3,6 +3,17 @@ PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
+2.0.1 (fs)
+---------------------------------------------------------------------------------------------
+- bugs fixes, code clean ups
+- new option to create forum or category specific error messages if the user does not have
+  the right to see / view etc.
+- new option in admin panel to prepopulate the "subscribe to topic" checkbox when writing 
+  a new topic or post
+- french language pack incl. button images! Credits go to Franck Barbenoire (fbarbenoire@yahoo.fr)
+  for this contribution.
+
+---------------------------------------------------------------------------------------------
 2.0.1 RC3 (fs)
 ---------------------------------------------------------------------------------------------
 - lots of bugs and html fixes

@@ -1,9 +1,4 @@
-Original phpBB 1.4 script developers:
--------------------------------------
-see http://www.phpbb.com/credits.php for a list of all the people involved in phpBB.
-
-
-PN_phpBB_14 module developers team (current status):
+pnForum module developers team (current status):
 ----------------------------------------------------------
 Andreas Krapohl aka larsneo (larsneo@postnuke.com)
 Jim Hadfield (jhadfiel@oldihc.org)
@@ -14,6 +9,16 @@ People who contributed code for 2.0.0 or later
 ----------------------------------------------
 Chris Miller aka R3ap3r (chris@bariatricsupportcenter.com)
 (code for favorites functions and post sort order in topic view)
+Franck Barbenoire (fbarbenoire@yahoo.fr)
+(french translation and button images)
+
+
+Credits for pre 2.0.0 versions:
+-------------------------------
+
+Original phpBB 1.4 script developers:
+-------------------------------------
+see http://www.phpbb.com/credits.php for a list of all the people involved in phpBB.
 
 
 People who took part in module development
