@@ -2,14 +2,22 @@
 /**
  * english language defines
  * @version $Id$
- * @author Andreas Krapohl, Frank Schummertz 
+ * @author Andreas Krapohl, Frank Schummertz
  * @copyright 2003 by Andreas Krapohl, Frank Schummertz
- * @package pnForum 
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @package pnForum
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  */
 
-define('_PNFORUM_BBCODE_URL_HINT', 'insert a link'); 
+define('_PNFORUM_NOFAVORITES',"No favorites defined");
+define('_PNFORUM_SHOWFAVORITES',"Show favorites");
+define('_PNFORUM_SHOWALLFORUMS',"Show all forums");
+define('_PNFORUM_FAVORITES',"Favorites");
+define('_PNFORUM_ADD_FAVORITE_FORUM',"Add favorite forum");
+define('_PNFORUM_REMOVE_FAVORITE_FORUM',"Remove favorite forum");
+define('_PNFORUM_FAVORITE_STATUS',"Favorite status");
+
+define('_PNFORUM_BBCODE_URL_HINT', 'insert a link');
 define('_PNFORUM_BBCODE_MAIL_HINT', 'insert an email address');
 define('_PNFORUM_BBCODE_IMAGE_HINT', 'insert an image');
 define('_PNFORUM_BBCODE_QUOTE_HINT', 'insert quote');
@@ -281,7 +289,7 @@ define('_PNFORUM_BBCODE_ENTER_LIST_ITEM','Enter the new list item. Note that eac
 define('_PNFORUM_FORUMSINDEX',"Forum-Index");
 define('_PNFORUM_NEW_THREADS',"New Topic");
 
-/** 
+/**
  * new in 1.7.3.1 RC1
  */
 define('_PNFORUM_ADMINUSERRANK_TITLE',"Users Ranks Administration");
@@ -293,7 +301,7 @@ define('_PNFORUM_ADMINUSERRANK_IMAGE',"Image");
 define('_PNFORUM_ADMINUSERRANK_INFO2',"Use this form to add a ranking to the database.");
 define('_PNFORUM_TOPIC_NOEXIST',"Error - The topic you selected does not exist. Please go back and try again.");
 
-/** 
+/**
  * new in 1.7.2.2
  */
 define('_PNFORUM_UP','Up');
@@ -399,7 +407,7 @@ define('_PNFORUM_NOTEDIT',"You can't edit a post that isn't yours.");
 //define('_PNFORUM_NOTIFYBODY2',"\n\nYou are receiving this Email because you are subscribed to be notified of events in %s forums.");
 
 define('_PNFORUM_NOTIFYBODY1','Forums');
-define('_PNFORUM_NOTIFYBODY2','wrote at'); 
+define('_PNFORUM_NOTIFYBODY2','wrote at');
 define('_PNFORUM_NOTIFYBODY3','Reply to this message:');
 define('_PNFORUM_NOTIFYBODY4','Browse thread:');
 define('_PNFORUM_NOTIFYBODY5','You are receiving this Email because you are subscribed to be notified of events in forums at:');
