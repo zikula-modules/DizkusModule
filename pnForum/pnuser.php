@@ -113,11 +113,21 @@ function pnForum_user_viewtopic()
 {
     $topic_id = (int)pnVarCleanFromInput('topic');
     $start    = (int)pnVarCleanFromInput('start');
+    $view     = strtolower(pnVarCleanFromInput('view'));
 
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
+    
+    if(!empty($view) && ($view=="next" || $view=="previous")) {
+        $topic_id = pnModAPIFunc('pnForum', 'user', 'get_previous_or_next_topic_id',
+                                 array('topic_id' => $topic_id,
+                                       'view'     => $view));
+        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', 
+                            array('topic' => $topic_id)));
+        return true;
+    }
     $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
                           array('topic_id'   => $topic_id,
                                 'start'      => $start,

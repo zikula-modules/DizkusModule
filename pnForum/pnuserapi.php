@@ -3181,4 +3181,50 @@ function pnForum_userapi_update_user_post_count($args)
     return true;
 }
 
+/**
+ * get_previous_or_next_topic_id
+ * returns the next or previous topic_id in the same forum of a given topic_id
+ *
+ *@params $args['topic_id'] int the reference topic_id
+ *@params $args['view']     string either "next" or "previous"
+ *@returns int topic_id maybe the same as the reference id if no more topics exist in the selectd direction
+ */
+function pnForum_userapi_get_previous_or_next_topic_id($args)
+{
+    extract($args);
+    unset($args);
+    
+    if(!isset($topic_id) || !isset($view) ) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+
+    pnModDBInfoLoad('pnForum');
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+    
+    switch($view) {
+        case "previous": $math = "<"; $sort = "DESC"; break;
+        case "next":     $math = ">"; $sort = "ASC";break;
+        default: return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+                           
+    $sql = "SELECT t1.topic_id
+            FROM ".$pntable['pnforum_topics']." AS t1
+            INNER JOIN ".$pntable['pnforum_topics']." AS t2
+            WHERE t2.topic_id = ".(int)pnVarPrepForStore($topic_id)."
+              AND t1.topic_time $math t2.topic_time
+              AND t1.forum_id = t2.forum_id
+            ORDER BY t1.topic_id $sort";
+    $result = $dbconn->SelectLimit($sql, 1);
+    if ($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    if(!$result->EOF) {
+        $row = $result->GetRowAssoc(false);
+        $topic_id = $row['topic_id'];
+    }
+    $result->Close();
+    return $topic_id;        
+}
+
 ?>
