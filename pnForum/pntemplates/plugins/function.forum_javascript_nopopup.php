@@ -8,7 +8,7 @@
  * adds some javascript needed for smilies and bbcode
  *
  */
-function smarty_function_forum_javascript($params, &$smarty) 
+function smarty_function_forum_javascript_nopopup($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
@@ -54,9 +54,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "var currentMessage = document.post.message.value;\n";
     $out.= "\n";
     $out.= "if (action == \"url\") {\n";
-    $out.= "var thisURL = prompt(\""._PNFORUM_BBCODE_ENTER_URL."\", \"http://\");\n";
-    $out.= "var thisTitle = prompt(\""._PNFORUM_BBCODE_ENTER_SITE_TITLE."\", \""._PNFORUM_BBCODE_ENTER_PAGE_TITLE."\");\n";
-    $out.= "var urlBBCode = \"[URL=\"+thisURL+\"]\"+thisTitle+\"[/URL]\";\n";
+    $out.= "var urlBBCode = \"[URL=".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_URL)."]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_PAGE_TITLE)."[/URL]\";\n";
     $out.= "revisedMessage = currentMessage+urlBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -64,8 +62,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"email\") {\n";
-    $out.= "var thisEmail = prompt(\""._PNFORUM_BBCODE_ENTER_EMAIL_ADDRESS."\", \"\");\n";
-    $out.= "var emailBBCode = \"[EMAIL]\"+thisEmail+\"[/EMAIL]\";\n";
+    $out.= "var emailBBCode = \"[EMAIL]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_EMAIL_ADDRESS)."[/EMAIL]\";\n";
     $out.= "revisedMessage = currentMessage+emailBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -73,8 +70,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"bold\") {\n";
-    $out.= "var thisBold = prompt(\""._PNFORUM_BBCODE_ENTER_TEXT_BOLD."\", \"\");\n";
-    $out.= "var boldBBCode = \"[B]\"+thisBold+\"[/B]\";\n";
+    $out.= "var boldBBCode = \"[B]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_TEXT_BOLD)."[/B]\";\n";
     $out.= "revisedMessage = currentMessage+boldBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -82,8 +78,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"italic\") {\n";
-    $out.= "var thisItal = prompt(\""._PNFORUM_BBCODE_ENTER_TEXT_ITALIC."\", \"\");\n";
-    $out.= "var italBBCode = \"[I]\"+thisItal+\"[/I]\";\n";
+    $out.= "var italBBCode = \"[I]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_TEXT_ITALIC)."[/I]\";\n";
     $out.= "revisedMessage = currentMessage+italBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -91,8 +86,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"underline\") {\n";
-    $out.= "var thisUL = prompt(\""._PNFORUM_BBCODE_ENTER_TEXT_UNDERLINE."\", \"\");\n";
-    $out.= "var ulBBCode = \"[u]\"+thisUL+\"[/u]\";\n";
+    $out.= "var ulBBCode = \"[u]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_TEXT_UNDERLINE)."[/u]\";\n";
     $out.= "revisedMessage = currentMessage+ulBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -100,8 +94,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"image\") {\n";
-    $out.= "var thisImage = prompt(\""._PNFORUM_BBCODE_ENTER_WEBIMAGE_URL."\", \"http://\");\n";
-    $out.= "var imageBBCode = \"[IMG]\"+thisImage+\"[/IMG]\";\n";
+    $out.= "var imageBBCode = \"[IMG]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_WEBIMAGE_URL)."[/IMG]\";\n";
     $out.= "revisedMessage = currentMessage+imageBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -109,7 +102,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"quote\") {\n";
-    $out.= "var quoteBBCode = \"[QUOTE]  [/QUOTE]\";\n";
+    $out.= "var quoteBBCode = \"[QUOTE][/QUOTE]\";\n";
     $out.= "revisedMessage = currentMessage+quoteBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -117,7 +110,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"code\") {\n";
-    $out.= "var codeBBCode = \"[CODE]  [/CODE]\";\n";
+    $out.= "var codeBBCode = \"[CODE][/CODE]\";\n";
     $out.= "revisedMessage = currentMessage+codeBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -141,8 +134,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "}\n";
     $out.= "\n";
     $out.= "if (action == \"listitem\") {\n";
-    $out.= "var thisItem = prompt(\""._PNFORUM_BBCODE_ENTER_LIST_ITEM."\", \"\");\n";
-    $out.= "var itemBBCode = \"[*]\"+thisItem;\n";
+    $out.= "var itemBBCode = \"[*]".pnVarPrepForDisplay(_PNFORUM_BBCODE_ENTER_LIST_ITEM)."\";\n";
     $out.= "revisedMessage = currentMessage+itemBBCode;\n";
     $out.= "document.post.message.value=revisedMessage;\n";
     $out.= "document.post.message.focus();\n";
@@ -151,7 +143,7 @@ function smarty_function_forum_javascript($params, &$smarty)
     $out.= "\n";
     $out.= "}\n";
     $out.= "</script>\n";
-    $out.= "<noscript>*</noscript>";
+    $out.= "<noscript></noscript>";
     return $out;
 
 }
