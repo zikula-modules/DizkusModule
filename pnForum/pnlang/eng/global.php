@@ -84,7 +84,7 @@ define('_PNFORUM_ADMINHONORARYRANKS','Administer honorary ranks');
 define('_PNFORUM_ADMINRANKS_INFO','This link will allow you to add/edit/delete different user rankings depending of the number of user posts.');
 define('_PNFORUM_ADMINRANKS','Edit user ranks');
 define('_PNFORUM_ADMINUSERRANK_IMAGE','Image');
-define('_PNFORUM_ADMINUSERRANK_INFO','To modify a ranking simply change the values in the text boxes and click the Edit button.<BR>To remove a ranking simply click on the 'Delete' button next to the ranking.');
+define('_PNFORUM_ADMINUSERRANK_INFO','To modify a ranking simply change the values in the text boxes and click the Edit button.<BR>To remove a ranking simply click on the "Delete" button next to the ranking.');
 define('_PNFORUM_ADMINUSERRANK_INFO2','Use this form to add a ranking to the database.');
 define('_PNFORUM_ADMINUSERRANK_MAX','Max posts');
 define('_PNFORUM_ADMINUSERRANK_MIN','Min posts');
