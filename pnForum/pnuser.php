@@ -145,7 +145,6 @@ function pnForum_user_reply()
     } 
    
     list($topic_id, 
-    	 $forum_id, 
     	 $post_id, 
     	 $message,
     	 $attach_signature,
@@ -154,7 +153,6 @@ function pnForum_user_reply()
     	 $submit,
     	 $cancel,
     	 $quote) = pnVarCleanFromInput('topic', 
-    									'forum', 
     									'post', 
     									'message', 
     									'attach_signature',
@@ -163,14 +161,12 @@ function pnForum_user_reply()
     									'submit',
     									'cancel',
     									'quote');
-    
     if (!is_numeric($quote)) {
             unset($quote);
             unset($post_id);
     }
     $quote = ((int)$quote==1) ? true : false;
     $post_id = (int)$post_id;
-    $forum_id = (int)$forum_id;
     $topic_id = (int)$topic_id;
     $attach_signature = (int)$attach_signature;
     $subscribe_topic = (int)$subscribe_topic;
@@ -204,7 +200,6 @@ function pnForum_user_reply()
 
         $start = pnModAPIFunc('pnForum', 'user', 'storereply',
                               array('topic_id'         => $topic_id,
-                                    'forum_id'         => $forum_id,
                                     'message'          => $message,
                                     'attach_signature' => $attach_signature,
                                     'subscribe_topic'  => $subscribe_topic));
@@ -216,7 +211,6 @@ function pnForum_user_reply()
         
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
                               array('topic_id'   => $topic_id,
-                                    'forum_id'   => $forum_id,
                                     'post_id'    => $post_id,
                                     'quote'      => $quote,
                                     'last_visit' => $last_visit));
@@ -597,7 +591,7 @@ function pnForum_user_viewlatest()
                                        array('selorder'   => $selorder,
                                              'nohours'    => $nohours,
                                              'unanswered' => $unanswered,
-                                             'last_visit' => $lastvisit));
+                                             'last_visit' => $last_visit));
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;

@@ -842,7 +842,6 @@ function pnForum_userapi_readtopic($args)
  * preparereply
  * prepapare a reply to a posting by reading the last ten postign in revers order for review
  *
- *@params $args['forum_id'] int the forums id
  *@params $args['topic_id'] int the topics id
  *@params $args['post_id'] int the post id to reply to
  *@params $args['quote'] bool if user wants to qupte or not
@@ -863,6 +862,7 @@ function pnForum_userapi_preparereply($args)
     if(!empty($post_id)) {
         // We have a post id, so include that in the checks..
         $sql = "SELECT f.forum_name,
+                       f.forum_id,
                        c.cat_id,
                        c.cat_title,
                        t.topic_title,
@@ -871,8 +871,7 @@ function pnForum_userapi_preparereply($args)
                      ".$pntable[pnforum_topics]." AS t, 
                      ".$pntable[pnforum_posts]." AS p,
                      ".$pntable[pnforum_categories]." AS c
-                WHERE (f.forum_id = '".(int)pnVarPrepForStore($forum_id)."')
-                AND (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
+                WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
                 AND (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
                 AND (t.forum_id = f.forum_id)
                 AND (p.forum_id = f.forum_id)
@@ -881,6 +880,7 @@ function pnForum_userapi_preparereply($args)
     } else {
         // No post id, just check forum and topic.
         $sql = "SELECT f.forum_name,
+                       f.forum_id,
                        c.cat_id,
                        c.cat_title,
                        t.topic_title,
@@ -888,12 +888,11 @@ function pnForum_userapi_preparereply($args)
                 FROM ".$pntable[pnforum_forums]." AS f, 
                      ".$pntable[pnforum_topics]." AS t,
                      ".$pntable[pnforum_categories]." AS c
-                WHERE (f.forum_id = '".(int)pnVarPrepForStore($forum_id)."')
-                AND (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
+                WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
                 AND (t.forum_id = f.forum_id)
                 AND (c.cat_id = f.cat_id)";
     }
-    
+
     $result = $dbconn->Execute($sql);
     
     if($dbconn->ErrorNo() != 0) {
@@ -901,13 +900,13 @@ function pnForum_userapi_preparereply($args)
     }
     
     if ($result->EOF) {
-        return showforumerror(_PNFORUM_FORUM_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
     
     $reply['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
-    $reply['forum_id'] = pnVarPrepForDisplay($forum_id);
+    $reply['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
     $reply['cat_id'] = pnVarPrepForDisplay($cat_id);
     $reply['cat_title'] = pnVarPrepForDisplay($myrow['cat_title']);
     $reply['topic_subject'] = pnVarPrepForDisplay($myrow['topic_title']);
@@ -1077,11 +1076,29 @@ function pnForum_userapi_storereply($args)
         }
     }
 
+    // read forum_id from topic_id
+    $sql = "SELECT f.forum_id
+            FROM ".$pntable[pnforum_forums]." AS f, 
+                 ".$pntable[pnforum_topics]." AS t
+            WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
+            AND (t.forum_id = f.forum_id)";
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg());
+    }
+    if ($result->EOF) {
+        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+    } else {
+        $myrow = $result->GetRowAssoc(false);
+    }
+    $forum_id = pnVarPrepForStore($myrow['forum_id']);
+
     // Prep for DB
     $time = date("Y-m-d H:i");
     $topic_id = pnVarPrepForStore($topic_id);
     $message = pnVarPrepForStore($message);
-    $forum_id = pnVarPrepForStore($forum_id);
+//    $forum_id = pnVarPrepForStore($forum_id);
     $pn_uid = pnVarPrepForStore($pn_uid);
     $time = pnVarPrepForStore($time);
     $poster_ip = pnVarPrepForStore($poster_ip);
