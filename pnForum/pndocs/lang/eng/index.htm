@@ -1,52 +1,56 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>phpBB_14 Documentation v.1.7.4</title>
+<title>pnForum Documentation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body>
-<p class=MsoPlainText>pnForum v2.0.0 == release date:= x/xx/2004</p>
+<p class=MsoPlainText>pnForum v2.0.0 beta</p>
 <p>----------------------------------------------------------------------</p>
 <p>Table of Contents</p>
 <p>1.<a href="#introduction">Introduction</a><br>
-  = <a href="#101">1.0.1 License</a></p>
-<p>2.<a href="#installation">Installation</a><br>
-  = <a href="#210">2.1 Requirements</a><br>
-  = <a href="#220">2.2 Install preparations</a><br>
-  = <a href="#230">2.3 Installation</a></p>
+  = <a href="#101">1.0.1</a> License</p>
+<p><br>
+  2.<a href="#installation">Installation</a><br>
+  = <a href="#210">2.1</a> Requirements</a><br>
+  = <a href="#220">2.2</a> Install preparations</a><br>
+  = <a href="#230">2.3</a> Installation</a></p>
 <p><br>
   3.<a href="#upgrading">Upgrading</a><br>
-  =3.1. Preparations<br>
-  =3.2. PN_phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .71x)<br>
-  =3.3. PN_phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .70x)<br>
-  =3.4. Forums for PHPNuke 4.4 <br>
-</p>
-<p>4.<a href="#setup">Setup</a><br>
-  = 4.1 Forums Administration<br>
-  = 4.2 Using PostNuke Permissions<br>
-  = 4.3 Setting up the Statistics block<br>
-  = 4.4 Setting up Search Include</p>
+  =<a href="#310"> 3.1</a> Preparations<br>
+  =<a href="#320"> 3.2</a> PN_phpBB_14 versions 1.7.6 (PostNuke .72x)<br>
+  =<a href="#330"> 3.3</a> PN_phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .71x)<br>
+  =<a href="#340"> 3.4</a> PN_phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .70x)<br>
+  =<a href="#350"> 3.5</a> Forums for PHPNuke 4.4</p>
+<p><br>
+  4.<a href="#setup">Setup</a><br>
+  =<a href="#410"> 4.1</a> Forums Administration<br>
+  =<a href="#420"> 4.2</a> Using PostNuke Permissions<br>
+  =<a href="#430"> 4.3</a> Setting up the Statistics block<br>
+  =<a href="#440"> 4.4</a> Setting up Search Include</p>
 <hr>
 <p><a name="introduction"></a><span style='mso-fareast-font-family:"MS Mincho"'>1.0 
   Introduction</span></p>
 <blockquote>
-  <p class="MsoPlainText"><span style='mso-fareast-font-family:"MS Mincho"'>Thank 
-    you for choosing pnForum as your PostNuke forum software. pnForum is based 
-    on the phpBB-forum originally created by '<a href="http://www.phpbb.com/" target="_blank">The 
-    phpBB Group</a>'. We have added an extensive list of features to pnForum 
-    that I am sure you will enjoy. pnForum is designed for use as a module with 
-    PostNuke, .71x and .72x series. (<a href="http://postnuke.com" target="_blank">http://postnuke.com</a>)</span></p>
+  <p class="MsoPlainText"><span style='mso-fareast-font-family:"MS Mincho"'>Thank
+  		 you for choosing pnForum as your PostNuke forum software. pnForum is
+  		based	
+    on the phpBB-forum originally created by '<a href="http://www.phpbb.com/" target="_blank">The
+     phpBB Group</a>'. We have added an extensive list of features to pnForum
+      that I am sure you will enjoy. pnForum is designed for use as a module
+     with 
+    the PostNuke, .75x (<a href="http://postnuke.com" target="_blank">http://postnuke.com</a>)</span></p>
   <p class="MsoPlainText"><span style='mso-fareast-font-family:"MS Mincho"'>We
   		 have spent a lot of time on this product and hope that you find it to
   		be	as 
-    useful as we intended it to be. Support for pnForum can be found at </span><a href="http://pncommunity.de" target="_blank">http://pncommunity.de</a> 
+    useful as we intended it to be. Support for pnForum can be found at </span><a href="http://pncommunity.de/index.htm" target="_blank">http://pncommunity.de</a> 
     with a multilingual FAQ area both for Users and Admins and at <a href="http://snowbankih.tzo.com" target="_blank">http://snowbankih.tzo.com</a> 
     (English only).</p>
-  <p class="MsoPlainText">After you have installed pbpBB_14, we encourage you 
-    to list your web site in the 'Demo' forum on <a href="http://pncommunity.de" target="_blank">http://pncommunity.de</a> 
-    Please mention the language of pnForum on your site, so native speakers can 
-    visit it :)<br>
+  <p class="MsoPlainText">After you have installed pnForum, we encourage you
+  	 to list your web site in the 'Demo' forum on <a href="http://pncommunity.de/index.htm" target="_blank">http://pncommunity.de</a> 
+    Please mention the language of pnForum on your site, so native speakers can
+     visit it :)<br>
     <br style='mso-special-character:line-break'>
     <span style='mso-fareast-font-family:"MS Mincho"'></span></p>
 </blockquote>
@@ -86,13 +90,13 @@
     This is a safe proceedure, since all these files will be restored from the
      new distribution and all forum settings are kept in the database.</p>
   <p>Right now we do do not have a script  designed specifically for backing
-    up the phpBB-modul related tables in your database. And since backup is a
-    good idea
+    up the pnForum-module related tables in your database. And since backup is
+  	a good idea
     for all Phoenix
     tables, we suggest the
     
     use of phpMyAdmin. </p>
- <p>Important Notes: <br>
+  <p>Important Notes: <br>
   1. Due to some changes in BBCode and Smilie-Handling
   within pnForum, it is advised that you install and activate three new modules;
   	pn_bbclick, pn_bbcode and pn_bbsmile. These files are available in the 'Download'
@@ -111,7 +115,7 @@
     Do not rename the pnForum module directory. There are hard coded
      links to its name within this directory.<br>
     You can use any names in your forums when creating links in menublocks. </p>
-  <p>2.3.2. Go to Phoenix Administration panel,<br>
+  <p>2.3.2. Go to the PostNuke Administration panel,<br>
     enter the Modules section. Press the 'Regenerate' link. <br>
     You should see pnForum in the modules list. <br>
     Press 'Initialize' on the right side of the page. This will create the module's 
@@ -119,7 +123,7 @@
     Normally you should get a 'Module initialized' message at the top of the screen. 
     <br>
     Press 'Activate' in pnForum line. <br>
-    This will make pnForum Administration panel visible in Phoenix Administration.<br>
+    This will make pnForum Administration panel visible in PostNuke Administration.<br>
     Then,
     do the same 'Initialize' and 'Activate' procedures with the pn_bbcode, pn_bbclick
     and pn_bbsmile modules.<br>
@@ -129,25 +133,23 @@
     'Deactivate
     | Edit'. Click on 'Edit'. Place a check mark in the three boxes to activate
     pn_bbcode, pn_bbclick and pn_bbsmile. Then save.</p>
-  <p>2.3.3. Go to Phoenix Administration panel. <br>
+  <p>2.3.3. Go to PostNuke Administration panel. <br>
     Select the pnForum link. <br>
     Click on 'Sync forum/topic index'. This will sync the list of users in PostNuke 
     and pnForum.<br>
     Click on the 'Forum Wide Options' link .<br>
     Click on 'Restore defaults'. This will set parameters for pnForum </p>
   <p>2.3.4. Go to Administration/Blocks section. <br>
-    In the appropriate menu block create a new record for your forum. <br>
+    In the appropriate menu block create a new entry for your forum. <br>
     For example 'Forums'. <br>
     Link should be: <br>
-    modules.php?op=modload&amp;name=pnForum&amp;file=index <br>
-    or, <br>
-    [pnForum] <br>
+    {pnForum}<br>
     Save it. </p>
-  <p><a name="235">2.3.5.</a> You're done with the pnForum module installation.<br>
-    pnForum is now administrated using the PostNuke Administration panel. <br>
+  <p>2.3.5. You're done with the pnForum module installation.<br>
+    pnForum is now administered using the PostNuke Administration panel. <br>
     There you can make general forum settings, define new Categories, Forums, 
     Private Forums, User Rights, User Ranks, Honorary Ranks, re-order categories 
-    and forums within them.</p>
+ and forums within them.</p>
   <p>2.3.6 If you have $bgcolor3 and $bgcolor4 as different colors in your theme, 
     then you will get a color change with a 'mouse over' while in the forum index 
     and category views. </p>
@@ -160,11 +162,11 @@
 </blockquote>
 <hr>
 <p class=MsoPlainText><a name="upgrading"></a> 3. Upgrading</p>
-<p>3.1. Preparations</p>
+<p><a name="310"></a>3.1. Preparations</p>
 <blockquote>
   <p>Do preparations as in 2.2.1, 2.2.2</p>
 </blockquote>
-<p>3.2. Upgrading from PN_pnForum versions 1.7.2.1 - 1.7.3.x (PostNuke .71x
+<p><a name="320"></a>3.2. Upgrading from phpBB_14 versions 1.7.2.1 - 1.7.3.x (PostNuke .71x
   and up)</p>
 <blockquote> 
   <p>Copy new files into place.<br>
@@ -172,7 +174,7 @@
     Go to Admin panel/Modules. Use 'regenerate' link.<br>
     Find pnForum module link and use 'Upgrade' link nearby.<br>
     You will need to 'Activate' the module after the page reloads.<br>
-    Delete any old pnForum related blocks you had created and make new ones. <br>
+    Delete any old phpBB_14 related blocks you had created and make new ones. <br>
     Then,
      'Initialize' and 'Activate' the three new modules that were installed;
     pn_bbcode, pn_bbclick and pn_bbsmile modules.<br>
@@ -184,7 +186,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     see <a href="#235">2.3.5</a><br>
     You're done.</p>
 </blockquote>
-<p>3.3. Upgrading from PN_pnForum versions 1.7.2.1 - 1.7.2.x (PostNuke .70x)</p>
+<p><a name="330"></a>3.3. Upgrading from phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .70x)</p>
 <blockquote>
   <p> Due to changes in upgrade procedure between Phoenix releases .70x and .71x, 
     there is no easy and fast way of doing this. <br>
@@ -193,9 +195,9 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     - backup your database (see 'Note:' below)<br>
     - backup pnForum tables <br>
     - drop the database tables and erase following folders:<br>
-    modules/pnForum <br>
-    includes/search/pnForum.php <br>
-    includes/blocks/pnForum.php <br>
+    modules/phpBB_14<br>
+    includes/search/phpBB_14.php <br>
+    includes/blocks/phpBB_14.php <br>
     - follow 2.3.1. (only this step)<br>
     - replace this line in pnversion.php <br>
     $modversion['version'] = '1.7.4';<br>
@@ -208,28 +210,9 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     if your previous version were any from 1.7.0.4 to 1.7.2.0<br>
     - install module as a clean install.<br>
     - drop all pnForum tables<br>
-    - restore your initial pnForum tables from backup copy<br>
+    - restore your initial phpBB_14 tables from backup copy<br>
     - modify pnversion.php with version number you are installing<br>
     - follow 3.2.</p>
-</blockquote>
-<p>3.4. Upgrading from forums for PHPNuke 4.4</p>
-<blockquote>
-  <p> - make a separate backup and drop following tables (be careful!)<br>
-    - copy module sources in place as in clean install<br>
-    - modify pnversion.php with version number you wrote down before using this 
-    table:</p>
-  <p><br>
-    phpnuke 4.4 forums:<br>
-    - install module as a clean install.<br>
-    - drop all pnForum tables.<br>
-    - restore your initial forum tables you dropped from backup copy.<br>
-    - modify pnversion.php with version number of PN_pnForum you are installing.<br>
-    - follow 3.2.<br>
-  </p>
-  <p> Note: Right now there is no script for table backup especially to phpBB-modul 
-    related tables. Since backup is a good idea for all Phoenix tables, we suggest 
-    the use of phpMyAdmin. 
-  </p>
 </blockquote>
 <hr>
 <p><a name="setup"></a>4. Setup</p>
@@ -237,9 +220,9 @@ pn_bbclick and pn_bbsmile. Then save.<br>
   <p>After the initial installation, you will be able to go to the PostNuke Administration 
     panel and select the pnForum icon to administer your forums.</p>
 </blockquote>
-<p>4.1 Forums Administration</p>
+<p><a name="410"></a>4.1 Forums Administration</p>
 <blockquote> 
-  <p> This is where you can administer your php_BB_14 forums.</p>
+  <p> This is where you can administer your pnForum forums.</p>
   <p>4.1.1 pnForum:<br>
     Forum Wide Options allows you to:<br>
     a. Configure who you want the email to come from when someone subscribes to 
@@ -296,24 +279,10 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     previously made. <br>
     'Delete': This will allow you to 'Edit' or 'Delete' any Honorary Ranks that 
     have been previously made. </p>
-  <p>4.1.7 Bad Words Filtering: (NOTE: DEPRECATED IN FUTURE VERSIONS)<br>
-    'Add': Here you can add/edit/delete bad words that will be filtered and replaced 
-    with others on your site. <br>
-    'Edit': Here you can add/edit/delete bad words that will be filtered and replaced 
-    with others on your site. <br>
-    'Delete': Here you can add/edit/delete bad words that will be filtered and 
-    replaced with others on your site. </p>
-  <p>4.1.8 Smilies Administration: (NOTE: DEPRECATED IN FUTURE VERSIONS)<br>
-    'Add': You have the ability to add your own smilies by declaring the directory 
-    and smilie name.<br>
-    'Edit': Allows you can edit the information on a smilie.<br>
-    'Delete': Allows you to delete smilies.<br>
-    Please note that you MUST go to PostNuke admin.php and enable &lt;img&gt; 
-    &quot;Allowed with Parameters&quot; in order for the smilies to work.</p>
 </blockquote>
-<p> 4.2 Using PostNuke permissions with the pnForum bulletin board:</p>
+<p> <a name="420"></a>4.2 Using PostNuke permissions with the pnForum bulletin board:</p>
 <blockquote>
-  <p> This chapter assumes that you already know Phoenix permissions principles. 
+ <p> This chapter assumes that you already know PostNuke permissions principles. 
     <br>
     pnForum implements four levels/instances of controlling access rights to 
     the module. <br>
@@ -324,9 +293,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     StatsBlock <br>
     You are therefore able to control how a user or a user group may use your 
     forum. <br>
-    Note: Earlier versions of pnForum had the option of setting a forumtype to 
-    be 'private|public'. This option is not used any more. Only Phoenix permissions 
-    will be checked when accessed. </p>
+   </p>
   <p>This is also correct regarding moderator access to forums and categories. 
     Moderator access is checked against MODERATE_ACCESS in PostNuke permission 
     system for any given user or group. Setting the moderator parameter inside 
@@ -417,14 +384,14 @@ pn_bbclick and pn_bbsmile. Then save.<br>
   <p>We also suggest looking at the PostNuke permissions documentation :<br>
     <a href="http://sourceforge.net/docman/index.php?group_id=27927" target="_blank">http://sourceforge.net/docman/index.php?group_id=27927</a></p>
 </blockquote>
-<p>4.3 Setting up Statistics/Center block </p>
+<p><a name="430"></a>4.3 Setting up Statistics/Center block </p>
 <blockquote>
   <p>You can activate and place these blocks, using standard Phoenix Blocks administrating. 
     <br>
     Create a either a side block or center block of type 'pnForum/pnForum Statistics'/'pnForum/pnForum Centerblock'.
     Configure it with the PostNuke 'Edit' feature to meet your needs.</p>
 </blockquote>
-<p> 4.4 Setting up Search Include</p>
+<p> <a name="430"></a>4.4 Setting up Search Include</p>
 <blockquote>
   <p>The search routine for pnForum is included in the module core and needs 
     no special set-up to be used with PostNuke.</p>
