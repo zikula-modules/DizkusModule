@@ -41,8 +41,6 @@
  *
  ***********************************************************************/
 
-include_once("modules/pnForum/common.php");
-
 /**
  * init
  *
@@ -67,22 +65,11 @@ function pnForum_centerblock_info()
                   'show_preview' => true);
 }
 
-
-/**
- * add Securityschema
- */
-
 /**
  * display the statsblock
  */ 
 function pnForum_centerblock_display($row)
 {
-	// get some enviroment
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
-    setlocale (LC_TIME, pnConfigGetVar('locale')); 
-    
     //check for Permission
 	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_READ))   { return; }
 
@@ -91,6 +78,5 @@ function pnForum_centerblock_display($row)
     $row['content'] = $pnr->fetch('pnforum_centerblock_display.html');
 	return themesideblock($row);
 }
-
 
 ?>

@@ -41,8 +41,6 @@
  *
  ***********************************************************************/
 
-include_once("modules/pnForum/common.php");
-
 /**
  * init
  *
@@ -73,15 +71,12 @@ function pnForum_statisticsblock_info()
 function pnForum_statisticsblock_display($row)
 {
     //check for Permission
-    if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ 
-        return; 
-    }
+    if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ return; }
     
     $pnr = & new pnRender('pnForum');
     $pnr->caching = false;
     $row['content'] = $pnr->fetch('pnforum_statisticsblock_display.html');
     return themesideblock($row);
-
 }
 
 ?>
