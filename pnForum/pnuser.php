@@ -553,6 +553,7 @@ function pnForum_user_prefs()
             $return_to = (!empty($return_to))? $return_to : "main";
             $favorites = pnModAPIFunc('pnForum', 'user', 'change_favorite_status');
             $params = array();
+            break;
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
             $pnr =& new pnRender('pnForum');
