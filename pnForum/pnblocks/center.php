@@ -49,7 +49,7 @@ include_once "modules/pnForum/common.php";
  */
 function pnForum_centerblock_init()
 {
-    pnSecAddSchema('pnForum_Centerblock:', 'Block title::');
+    pnSecAddSchema('pnForum_Centerblock::', 'Block title::');
 }
 
 /**

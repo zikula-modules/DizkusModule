@@ -47,7 +47,7 @@
  */
 function pnForum_statisticsblock_init()
 {
-    pnSecAddSchema('pnForum_StatisticsBlock:', 'Block title::');
+    pnSecAddSchema('pnForum_StatisticsBlock::', 'Block title::');
 }
 
 /**
