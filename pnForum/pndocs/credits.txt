@@ -8,6 +8,13 @@ PN_phpBB_14 module developers team (current status):
 Andreas Krapohl aka larsneo (larsneo@postnuke.com)
 Jim Hadfield (jhadfiel@oldihc.org)
 Frank Schummertz aka landseer (frank.schummertz@landseer-stuttgart.de)
+Steffen Voss aka ArschMitOhren (steffen.voss@online.de)
+
+People who contributed code for 2.0.0 or later
+----------------------------------------------
+Chris Miller aka R3ap3r (code for favorites functions) (chris@bariatricsupportcenter.com)
+
+
 
 People who took part in module development
 ------------------------------------------

@@ -65,10 +65,11 @@ function pnForum_user_main()
         $favorites = pnModAPIFunc('pnForum', 'user', 'get_favorite_status');
     }
 
+    list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
     if ($loggedIn && $favorites) {
-        $tree = pnModAPIFunc('pnForum', 'user', 'getFavorites', array('user_id' => (int)pnUserGetVar('uid') ));
+        $tree = pnModAPIFunc('pnForum', 'user', 'getFavorites', array('user_id' => (int)pnUserGetVar('uid'),
+                                                                      'last_visit' => $last_visit ));
     } else {
-        list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
         $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
 
         // this needs to be in here because we want to display the favorites
@@ -486,6 +487,12 @@ function pnForum_user_topicadmin()
  */
 function pnForum_user_prefs()
 {
+    $loggedin = pnUserLoggedIn();
+    if(!$loggedin) {
+        pnRedirect(pnModURL('pnForum', 'user', 'main'));
+        return true;
+    }
+    
     $act = pnVarCleanFromInput('act');
     $return_to = pnVarCleanFromInput('return_to');
     $topic_id = (int)pnVarCleanFromInput('topic');
@@ -532,6 +539,7 @@ function pnForum_user_prefs()
             $pnr =& new pnRender('pnForum');
             $pnr->caching = false;
             $pnr->assign( 'last_visit', $last_visit);
+            $pnr->assign( 'loggedin', $loggedin);
             $pnr->assign( 'last_visit_unix', $last_visit_unix);
             $pnr->assign('tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('pnforum_user_prefs.html');

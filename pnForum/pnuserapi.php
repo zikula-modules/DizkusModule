@@ -3197,6 +3197,7 @@ function pnForum_userapi_forumsearch($args)
  * return the list of favorite forums for this user
  *
  *@params $args['user_id'] -Optional- the user id of the person who we want the favorites for
+ *@params $args['last_visit'] timestamp date of last visit
  *@returns array of categories with an array of forums in the catgories
  *
  */
@@ -3216,7 +3217,6 @@ function pnForum_userapi_getfavorites($args)
     
     // lets get all the forums just like we would a normal display
     // we'll figure out which ones aren't needed further down.
-    list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
     $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
     
     // if they are anonymous they can't have favorites
