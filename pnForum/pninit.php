@@ -251,7 +251,7 @@ function pnForum_init()
     }
 
     // creating forum_favorites table
-    $pnforumforumfavoritesstable = $pntable['pnforum_forum_favorites'];
+    $pnforumforumfavoritestable = $pntable['pnforum_forum_favorites'];
     $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
 
     $sql = "CREATE TABLE $pnforumforumfavoritestable (
@@ -337,6 +337,13 @@ function pnForum_delete()
     }
 
     $sql = "DROP TABLE IF EXISTS $pntable[pnforum_forums]";
+    $dbconn->Execute($sql);
+    if ($dbconn->ErrorNo() != 0) {
+        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
+        return false;
+    }
+
+    $sql = "DROP TABLE IF EXISTS $pntable[pnforum_forum_favorites]";
     $dbconn->Execute($sql);
     if ($dbconn->ErrorNo() != 0) {
         pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
