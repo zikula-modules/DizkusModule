@@ -45,17 +45,17 @@ function smarty_function_bbcode($params, &$smarty)
     
         $out = "<br />\n";
         $out .= ""._PNFORUM_USEBBCODE."<br />\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('url');\" onkeypress=\"DoPrompt('url');\"><IMG src=\"$bbcodefolder/b_url.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode URL\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('email');\" onkeypress=\"DoPrompt('email');\"><IMG src=\"$bbcodefolder/b_email.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: Email\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('image');\" onkeypress=\"DoPrompt('image');\"><IMG src=\"$bbcodefolder/b_image.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: Bild Image\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('bold');\" onkeypress=\"DoPrompt('bold');\"><IMG src=\"$bbcodefolder/b_bold.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: bold\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('italic');\" onkeypress=\"DoPrompt('italic');\"><IMG src=\"$bbcodefolder/b_italic.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: italic\"></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('url');\" onkeypress=\"DoPrompt('url');\"><img src=\"$bbcodefolder/b_url.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode URL\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('email');\" onkeypress=\"DoPrompt('email');\"><img src=\"$bbcodefolder/b_email.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: Email\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('image');\" onkeypress=\"DoPrompt('image');\"><img src=\"$bbcodefolder/b_image.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: Bild Image\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('bold');\" onkeypress=\"DoPrompt('bold');\"><img src=\"$bbcodefolder/b_bold.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: bold\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('italic');\" onkeypress=\"DoPrompt('italic');\"><img src=\"$bbcodefolder/b_italic.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: italic\" /></a>\n";
         $out .= "<br/>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('quote');\" onkeypress=\"DoPrompt('quote');\"><IMG src=\"$bbcodefolder/b_quote.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: Quote\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('code');\" onkeypress=\"DoPrompt('code');\"><IMG src=\"$bbcodefolder/b_code.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: Code\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('listopen');\" onkeypress=\"DoPrompt('listopen');\"><IMG src=\"$bbcodefolder/b_listopen.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: List open\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('listitem');\" onkeypress=\"DoPrompt('listitem');\"><IMG src=\"$bbcodefolder/b_listitem.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: Listitem\"></a>\n";
-        $out .= "<a href=\"javascript: x()\" onClick=\"DoPrompt('listclose');\" onkeypress=\"DoPrompt('listclose');\"><IMG src=\"$bbcodefolder/b_listclose.gif\" width=\"59\" height=\"18\" border=\"0\" alt=\"BBCode: List close\"></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('quote');\" onkeypress=\"DoPrompt('quote');\"><img src=\"$bbcodefolder/b_quote.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: Quote\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('code');\" onkeypress=\"DoPrompt('code');\"><img src=\"$bbcodefolder/b_code.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: Code\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('listopen');\" onkeypress=\"DoPrompt('listopen');\"><img src=\"$bbcodefolder/b_listopen.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: List open\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('listitem');\" onkeypress=\"DoPrompt('listitem');\"><img src=\"$bbcodefolder/b_listitem.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: Listitem\" /></a>\n";
+        $out .= "<a href=\"javascript: x()\" onclick=\"DoPrompt('listclose');\" onkeypress=\"DoPrompt('listclose');\"><img src=\"$bbcodefolder/b_listclose.gif\" width=\"59\" height=\"18\" style=\"border:none;\" alt=\"BBCode: List close\" /></a>\n";
 	}
     return $out;
 }

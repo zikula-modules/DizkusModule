@@ -42,7 +42,7 @@ function smarty_function_addtopic_button($params, &$smarty)
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
 	    $authid = pnSecGenAuthKey();
 	    $lang = pnUserGetLang();
-		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\" href=\"". pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id)) . "\"><img src=\"modules/pnForum/pnimages/$lang/post.gif\" alt=\"". pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\"></a>";
+		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\" href=\"". pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id)) . "\"><img src=\"modules/pnForum/pnimages/$lang/post.gif\" alt=\"". pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\" /></a>";
 	}
     return $out;
 }

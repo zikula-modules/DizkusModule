@@ -7,36 +7,37 @@
 <!--[* pndebug *]-->
 
 <!--[ include file='pnforum_user_header.html' ]-->
-
-<form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=newtopic ]-->" method="post">
+<div>
 <strong><!--[ pnml name='_PNFORUM_NEW_THREADS' ]--></strong>
-<br /><br />
+<br />
+<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=newtopic ]-->" method="post">
 <!--[ if $preview eq true ]-->
+<div>
     <strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong>
     <br /><br />
     <table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" align="center" width="100%">
         <tr>
-            <td bgcolor="<!--[ $bgcolor2 ]-->">
+            <td style="background-color:<!--[ $bgcolor2 ]-->;">
                 <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%">
-                    <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+                    <tr style="background-color:<!--[ $bgcolor2 ]-->;text-align:left;">
                         <td width="20%">
-                            <span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
+                            <span class="pnForum-title" style="font-weight:bold;"><!--[ pnml name='_PNFORUM_AUTHOR' ]--></span>
                         </td>
                         <td width="80%">
-                            <span class="pnForum-title"><strong><!--[ $newtopic.subject|pnvarcensor|pnvarprepfordisplay ]--></strong></span>
+                            <span class="pnForum-title" style="font-weight:bold;"><!--[ $newtopic.subject|pnvarcensor|pnvarprepfordisplay ]--></span>
                         </td>
                     </tr>
-                    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+                    <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
                     	<td rowspan="2" valign="top">
                         <!--[ if $loggedin ]-->
                     	    <a href="user.php?op=userinfo&amp;uname=<!--[ $newtopic.poster_data.pn_uname ]-->"><strong><!--[ $newtopic.poster_data.pn_uname ]--></strong></a>
                     	    <!--[  if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                    		<br /><img src="<!--[ $newtopic.poster_data.pn_user_avatar ]-->" alt="<!--[ $newtopic.poster_data.pn_uname ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> >
+                    		<br /><img src="<!--[ $newtopic.poster_data.pn_user_avatar ]-->" alt="<!--[ $newtopic.poster_data.pn_uname ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> />
                     	    <!--[ /if ]-->
                             <!--[ if $newtopic.poster_data.rank ]-->
                                 <br /><strong><!--[ $newtopic.poster_data.rank|pnvarprepfordisplay ]--></strong>
                                 <!--[ if $newtopic.poster_data.rank_image ]-->
-                                    <br /><img src="<!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> >
+                                    <br /><img src="<!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
                                 <!--[ /if ]-->
                             <!--[ /if ]-->
                             <br /><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $newtopic.poster_data.user_posts ]--></span>
@@ -45,42 +46,44 @@
                     		<br /><!--[ pnml name='_PNFORUM_UNREGISTERED' ]-->
                         <!--[ /if ]-->
                         </td>
-                        <td bgcolor="<!--[ $bgcolor1 ]-->">
+                        <td style="background-color:<!--[ $bgcolor1 ]-->;">
                             <!--[ $newtopic.message_display|pnvarprephtmldisplay|pnvarcensor ]-->
                         </td>
                     </tr>
-                    <tr bgcolor="<!--[ $bgcolor3 ]-->">
+                    <tr style="background-color:<!--[ $bgcolor3 ]-->;">
                         <td>&nbsp;</td>
                     </tr>		
                 </table>
             </td>
         </tr>
     </table>
-    <br /><br />
+    </div>
 <!--[ /if ]-->
+<div>
 <label for="phpbb_subject"><!--[ pnml name='_PNFORUM_SUBJECT' ]--></label>:
 <br />
-<input type="text" name="subject" size="80" maxlength="100" id="phpbb_subject" tabindex="0" value="<!--[ $newtopic.subject|pnvarprephtmldisplay ]-->">
+<input type="text" name="subject" size="80" maxlength="100" id="phpbb_subject" tabindex="0" value="<!--[ $newtopic.subject|pnvarprephtmldisplay ]-->" />
 <br /><br />
 <label for="phpbb_body"><!--[ pnml name='_PNFORUM_BODY' ]--></label>:
 <br />
 <textarea name="message" rows="15" cols="80" id="phpbb_body" tabindex="0"><!--[ $newtopic.message|pnvarprepfordisplay ]--></textarea>
-<br /></span>	
+<br />
 <!--[ plainbbcode ]-->
 <!--[ bbsmile  ]-->
 <br /><br />
-<input type="hidden" name="forum"  value="<!--[ $newtopic.forum_id ]-->">
-<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->">
+<input type="hidden" name="forum"  value="<!--[ $newtopic.forum_id ]-->" />
+<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <div style="vertical-align: middle;">
-    <!--[ pnml name='_PNFORUM_OPTIONS' ]--> : <input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
+    <!--[ pnml name='_PNFORUM_OPTIONS' ]--> : <input type="checkbox" name="preview" id="preview" tabindex="0" /><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
     &nbsp;&nbsp;
     <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
     <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
     </button>&nbsp;&nbsp;
-    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onClick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$newtopic.forum_id ]-->'">
+    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$newtopic.forum_id ]-->'">
     <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
     </button>
 </div>
+</div>
 </form>
-
+</div>
 <!--[ include file='pnforum_user_footer.html' ]-->

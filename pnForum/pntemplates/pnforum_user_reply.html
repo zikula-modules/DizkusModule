@@ -7,37 +7,35 @@
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
 
 <!--[* pndebug *]-->
-
+<div>
 <strong><!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnbbsmile|pnvarcensor ]--></strong>
 
 <!--[ if $preview ]-->
-<br />
-<br />
-<strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong>
-<br /><br />
-<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" align="center" width="100%">
+<h2 style="text-align:left;"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></h2>
+<div>
+<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-        <td bgcolor="<!--[ $bgcolor2 ]-->">
+        <td style="background-color:<!--[ $bgcolor2 ]-->;">
             <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%">
-                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-                    <td height="28" width="20%"><span class="pnForum-title">
+                <tr style="background-color:<!--[ $bgcolor2 ]-->;text-align:left;">
+                    <td style="height:28px;width:20%;"><span class="pnForum-title">
                         <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
                     </td>
-                    <td height="28" width="80%"><span class="pnForum-title">
+                    <td style="height:28px;width:80%;"><span class="pnForum-title">
                         <strong><!--[ $reply.topic_subject|pnbbsmile|pnvarcensor ]--></strong></span>
                     </td>
                 </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+                <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
                     <td valign="top">
                     <!--[ if $reply.poster_data.pn_uid neq 1 ]-->  
                         <a href="user.php?op=userinfo&amp;uname=<!--[ $reply.poster_data.pn_uname ]-->"><strong><!--[ $reply.poster_data.pn_uname ]--></strong></a>
 		                <!--[ if $reply.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                            <br /><img src="<!--[ $reply.poster_data.pn_user_avatar ]-->" alt="<!--[ $reply.poster_data.pn_uname ]-->" <!--[ $replyposter_data.pn_user_avatar_attr.3 ]-->>
+                            <br /><img src="<!--[ $reply.poster_data.pn_user_avatar ]-->" alt="<!--[ $reply.poster_data.pn_uname ]-->" <!--[ $replyposter_data.pn_user_avatar_attr.3 ]--> />
 	                    <!--[ /if ]-->
                         <!--[ if $reply.poster_data.rank ]-->
 	                        <br /><strong><!--[ $reply.poster_data.rank|pnvarprepfordisplay ]--></strong>
 			                <!--[ if $reply.poster_data.rank_image ]-->
-                                <br /><img src="<!--[ $reply.poster_data.rank_image ]-->" alt="$review.poster_data.rank" <!--[ $reply.poster_data.rank_image_attr.3 ]-->>
+                                <br /><img src="<!--[ $reply.poster_data.rank_image ]-->" alt="$review.poster_data.rank" <!--[ $reply.poster_data.rank_image_attr.3 ]--> />
 	                        <!--[ /if ]-->
 	                    <!--[ /if ]-->
                         <br /><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $reply.poster_data.user_posts ]-->
@@ -46,83 +44,101 @@
                         <br /><!--[ pnml name='_PNFORUM_UNREGISTERED' ]-->
                     <!--[ /if ]-->
                     </td>
-                    <td bgcolor="<!--[ $bgcolor1 ]-->" valign="top">
+                    <td style="background-color:<!--[ $bgcolor1 ]-->;" valign="top">
                         <!--[ $reply.message|nl2br|pnmodcallhooks|pnvarcensor ]-->
                     </td>
                 </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->">
+                <tr style="background-color:<!--[ $bgcolor3 ]-->;">
                     <td colspan="2">&nbsp;</td>
                 </tr>		
             </table>
         </td>
     </tr>
 </table>
+</div>
 <!--[ /if ]-->
+<!--
+#####
+-->
 
-<br /><br />
-<form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post">
+
+<div>
+<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post">
+<fieldset style="border:none;">
 <textarea name="message" rows="15" cols="80" id="phpbb_body" tabindex="0"><!--[ $reply.message ]--></textarea>
 <br />
-<!--[ plainbbcode ]--><br />
-<!--[ bbsmile ]--><br />
 <br />
 <!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br />
-<input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1"><label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label><br />
+<input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+<label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
+<br />
 <!--[ if $loggedin ]-->
-<input type="checkbox" id="subscribe_topic" name="subscribe_topic"><label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label><br />
+<input type="checkbox" id="subscribe_topic" name="subscribe_topic" />
+<label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
+<br />
 <!--[ /if ]-->
-<input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
+<input type="checkbox" name="preview" id="preview" tabindex="0" />
+<label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
+<input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
+<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <br /><br />
-<input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->">
-<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->">
 <div style="vertical-align: middle;">
     <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
 
     <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
     </button>&nbsp;&nbsp;
-    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onClick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$reply.topic_id ]-->'">
+    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$reply.topic_id ]-->'">
 
     <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
     </button>
+<!--[ plainbbcode ]--><br />
+<!--[ bbsmile ]--><br />
 </div>
+</fieldset>
 </form>
+</div>
 
+
+<!--
+#####
+-->
+<div>
 <br /><br />
 <label for="phpbb_body"><!--[ pnml name='_PNFORUM_BODY' ]--></label>:
 <br />
 
 <br /><br />
-<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" align="center" width="100%">
+<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-        <td bgcolor="<!--[ $bgcolor2 ]-->">
+        <td style="background-color:<!--[ $bgcolor2 ]-->;">
             <table class="pnForum-border" border="0" cellpadding="5" cellspacing="0" width="100%">
-                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-                    <td height="28" width="20%"><span class="pnForum-title">
+                <tr style="background-color:<!--[ $bgcolor2 ]-->;text-align:left;">
+                    <td style="height:28px;width:20%;"><span class="pnForum-title">
                         <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
                     </td>
-                    <td height="28" width="80%"><span class="pnForum-title">
+                    <td style="height:28;width:80%;"><span class="pnForum-title">
                         <strong><!--[ $reply.topic_subject|pnvarcensor ]--></strong></span>
                     </td>
                 </tr>
                 <!--[ foreach item=review from=$reply.topic_review ]-->
-				<tr bgcolor="<!--[ $bgcolor3 ]-->">
+				<tr style="background-color:<!--[ $bgcolor3 ]-->;">
                     <td colspan="2">
 					<!--[ if $review.poster_data.pn_uid neq 1 ]-->  
                         <a href="user.php?op=userinfo&amp;uname=<!--[ $review.poster_data.pn_uname ]-->"><strong><!--[ $review.poster_data.pn_uname ]--></strong></a>
 					<!--[ /if ]-->	
 					</td>
                 </tr>	
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+                <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
                     <td valign="top">
                     <!--[ if $review.poster_data.pn_uid neq 1 ]-->  
                         
 		                <!--[ if $review.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                            <img src="<!--[ $review.poster_data.pn_user_avatar ]-->" alt="<!--[ $review.poster_data.pn_uname ]-->" <!--[ $review.poster_data.pn_user_avatar_attr.3 ]-->>
+                            <img src="<!--[ $review.poster_data.pn_user_avatar ]-->" alt="<!--[ $review.poster_data.pn_uname ]-->" <!--[ $review.poster_data.pn_user_avatar_attr.3 ]--> />
 	                    <!--[ /if ]-->
                         <!--[ if $review.poster_data.rank ]-->
 	                        <br /><strong><!--[ $review.poster_data.rank|pnvarprepfordisplay ]--></strong>
 			                <!--[ if $review.poster_data.rank_image ]-->
-                                <br /><img src="<!--[ $review.poster_data.rank_image ]-->" alt="$review.poster_data.rank" <!--[ $review.poster_data.rank_image_attr.3 ]-->>
+                                <br /><img src="<!--[ $review.poster_data.rank_image ]-->" alt="$review.poster_data.rank" <!--[ $review.poster_data.rank_image_attr.3 ]--> />
 	                        <!--[ /if ]-->
 	                    <!--[ /if ]-->
                         <br /><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $review.poster_data.user_posts ]-->
@@ -131,14 +147,14 @@
                         <br /><!--[ pnml name='_PNFORUM_UNREGISTERED' ]-->
                     <!--[ /if ]-->
                     </td>
-                    <td bgcolor="<!--[ $bgcolor1 ]-->">
+                    <td style="background-color:<!--[ $bgcolor1 ]-->;">
                         <!--[ $review.post_text|nl2br|pnmodcallhooks|pnvarcensor ]-->
                     </td>
                 </tr>
-				<tr bgcolor="<!--[ $bgcolor3 ]-->">
+				<tr style="background-color:<!--[ $bgcolor3 ]-->;">
                     <td colspan="2">&nbsp;</td>
                 </tr>	
-				<tr bgcolor="<!--[ $bgcolor2 ]-->">
+				<tr style="background-color:<!--[ $bgcolor2 ]-->;">
                     <td colspan="2">&nbsp;</td>
                 </tr>
                 <!--[ /foreach ]-->
@@ -147,5 +163,6 @@
         </td>
     </tr>
 </table>
-
+</div>
+</div>
 <!--[ include file='pnforum_user_footer.html' ]-->

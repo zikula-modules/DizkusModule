@@ -44,9 +44,9 @@ function smarty_function_adminlink($params, &$smarty)
         }
         
         if($type=="category") {
-            return "<a href=\"".pnModURL('pnForum', 'admin', 'category', array('cat_id'=>(int)$id))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINCATEDIT)."]</a>";
+            return "<a href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'admin', 'category', array('cat_id'=>(int)$id)))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINCATEDIT)."]</a>";
         } elseif ($type=="forum") {
-            return "<a href=\"".pnModURL('pnForum', 'admin', 'forum', array('forum_id'=>(int)$id))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINFORUMEDIT)."]</a>";
+            return "<a href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'admin', 'forum', array('forum_id'=>(int)$id)))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINFORUMEDIT)."]</a>";
         }
     }
     return;

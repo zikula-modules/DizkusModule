@@ -3,6 +3,18 @@ PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
+2.0.1 RC3 (fs)
+---------------------------------------------------------------------------------------------
+- lots of bugs and html fixes
+- new option to define favorites and switch between showing them or all forums
+- new option to change post order in topic view
+- new option in moving forums in admin 
+  (for those three options the credits go to Chris Miller aka r3ap3r)
+- layout changed significantly
+- templates partly xhtml compliant (also Chris' work...)
+- complete new sets of graphical buttons
+ 
+---------------------------------------------------------------------------------------------
 2.0.0 RC2 (fs)
 ---------------------------------------------------------------------------------------------
 - added forum internal search

@@ -55,23 +55,23 @@ function smarty_function_plainbbcode($params, &$smarty)
             $out .= bb_button("italic", _PNFORUM_BBCODE_ITALIC_HINT, "i", "bb_italic.gif", $lang);
             $out .= bb_button("underline", _PNFORUM_BBCODE_UNDERLINE_HINT, "u", "bb_underline.gif", $lang);
         } else {
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL_HINT)."\" type=\"button\" accesskey=\"w\" name=\"url\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL)." \" style=\"text-decoration: underline; width: 50px;\" onClick=\"DoPrompt('url')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL_HINT)."\" type=\"button\" accesskey=\"m\" name=\"mail\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL)." \" style=\"text-decoration: underline; width: 50px;\" onClick=\"DoPrompt('email')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE_HINT)."\" type=\"button\" accesskey=\"p\" name=\"image\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('image')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE_HINT)."\" type=\"button\" accesskey=\"q\" name=\"quote\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('quote')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE_HINT)."\" type=\"button\" accesskey=\"c\" name=\"code\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('code')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL_HINT)."\" type=\"button\" accesskey=\"w\" name=\"url\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL)." \" style=\"text-decoration: underline; width: 50px;\" onclick=\"DoPrompt('url')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL_HINT)."\" type=\"button\" accesskey=\"m\" name=\"mail\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL)." \" style=\"text-decoration: underline; width: 50px;\" onclick=\"DoPrompt('email')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE_HINT)."\" type=\"button\" accesskey=\"p\" name=\"image\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE)." \" style=\"width: 50px;\" onclick=\"DoPrompt('image')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE_HINT)."\" type=\"button\" accesskey=\"q\" name=\"quote\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE)." \" style=\"width: 50px;\" onclick=\"DoPrompt('quote')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE_HINT)."\" type=\"button\" accesskey=\"c\" name=\"code\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE)." \" style=\"width: 50px;\" onclick=\"DoPrompt('code')\" />\n";
             $out .= "<br/>\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN_HINT)."\" type=\"button\" accesskey=\"l\" name=\"listopen\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listopen')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM_HINT)."\" type=\"button\" accesskey=\"o\" name=\"listitem\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listitem')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE_HINT)."\" type=\"button\" accesskey=\"x\" name=\"listclose\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listclose')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD_HINT)."\" type=\"button\" accesskey=\"b\" name=\"bold\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD)." \" style=\"font-weight:bold; width: 40px;\" onClick=\"DoPrompt('bold')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC_HINT)."\" type=\"button\" accesskey=\"i\" name=\"italic\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC)." \" style=\"font-style: italic; width: 40px;\" onClick=\"DoPrompt('italic')\">\n";
-            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE_HINT)."\" type=\"button\" accesskey=\"u\" name=\"underline\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE)." \" style=\"text-decoration: underline; width: 40px;\" onClick=\"DoPrompt('underline')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN_HINT)."\" type=\"button\" accesskey=\"l\" name=\"listopen\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN)." \" style=\"width: 40px;\" onclick=\"DoPrompt('listopen')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM_HINT)."\" type=\"button\" accesskey=\"o\" name=\"listitem\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM)." \" style=\"width: 40px;\" onclick=\"DoPrompt('listitem')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE_HINT)."\" type=\"button\" accesskey=\"x\" name=\"listclose\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE)." \" style=\"width: 40px;\" onclick=\"DoPrompt('listclose')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD_HINT)."\" type=\"button\" accesskey=\"b\" name=\"bold\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD)." \" style=\"font-weight:bold; width: 40px;\" onclick=\"DoPrompt('bold')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC_HINT)."\" type=\"button\" accesskey=\"i\" name=\"italic\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC)." \" style=\"font-style: italic; width: 40px;\" onclick=\"DoPrompt('italic')\" />\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE_HINT)."\" type=\"button\" accesskey=\"u\" name=\"underline\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE)." \" style=\"text-decoration: underline; width: 40px;\" onclick=\"DoPrompt('underline')\" />\n";
         }
         $out .= "<br />";
         if(pnModGetVar('pn_bbcode', 'color_enabled')=="yes") {
             $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTCOLOR).":\n";
-            $out .= "<select title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_HINT)."\" name=\"fontcolor\" onChange=\"DoColor(this.form.fontcolor.options[this.form.fontcolor.selectedIndex].value)\">\n";
+            $out .= "<select title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_HINT)."\" name=\"fontcolor\" onchange=\"DoColor(this.form.fontcolor.options[this.form.fontcolor.selectedIndex].value)\">\n";
             $out .= "    <option style=\"color:black; background-color: #FFFFFF \" value=\"black\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DEFAULT)."</option>\n";
             $out .= "    <option style=\"color:darkred; background-color: #DEE3E7\" value=\"darkred\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DARKRED)."</option>\n";
             $out .= "    <option style=\"color:red; background-color: #DEE3E7\" value=\"red\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_RED)."</option>\n";
@@ -96,7 +96,7 @@ function smarty_function_plainbbcode($params, &$smarty)
         }
         if(pnModGetVar('pn_bbcode', 'size_enabled')=="yes") {
             $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTSIZE).":\n";
-            $out .= "<select title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_HINT)."\" name=\"fontsize\" onChange=\"DoSize(this.form.fontsize.options[this.form.fontsize.selectedIndex].value)\">\n";
+            $out .= "<select title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_HINT)."\" name=\"fontsize\" onchange=\"DoSize(this.form.fontsize.options[this.form.fontsize.selectedIndex].value)\">\n";
             $out .= "    <option value=\"tiny\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_TINY)."</option>\n";
             $out .= "    <option value=\"small\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_SMALL)."</option>\n";
             $out .= "    <option value=\"normal\" selected=\"selected\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_NORMAL)."</option>\n";
@@ -124,8 +124,8 @@ function bb_button($name, $title, $key, $image, $lang)
     
     return "<button name=\"".pnVarPrepForDisplay($name)."\" type=\"button\" value=\"".pnVarPrepForDisplay($name)."\"
             style=\"border:none; background: transparent;\"
-            accesskey=\"$key\" onClick=\"DoPrompt('".pnVarPrepForDisplay($name)."')\">
-            <img src=\"$imgfile\" ".$attr[3]." alt=\"".pnVarPrepForDisplay($title)."\">
+            accesskey=\"$key\" onclick=\"DoPrompt('".pnVarPrepForDisplay($name)."')\">
+            <img src=\"$imgfile\" ".$attr[3]." alt=\"".pnVarPrepForDisplay($title)."\" />
             </button>";
 }
 

@@ -46,8 +46,9 @@ function smarty_function_jumpbox($params, &$smarty)
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     if(count($forums)>0) {
         $out ='<form action="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
+               <fieldset style="border:none;">
                <label for="pnforum_forum"><strong>' . pnVarPrepForDisplay(_PNFORUM_FORUM) . ': </strong></label>
-               <select name="forum" id="pnforum_forum" onChange="location.href=this.options[this.selectedIndex].value">
+               <select name="forum" id="pnforum_forum" onchange="location.href=this.options[this.selectedIndex].value">
 	           <option value="'.pnModURL('pnForum', 'user', 'main').'">' . pnVarPrepForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
         foreach($forums as $forum) {
             if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
@@ -55,6 +56,7 @@ function smarty_function_jumpbox($params, &$smarty)
             } 
         }
         $out .= '</select>
+        </fieldset>
                  </form>';
     }
     return $out;

@@ -43,7 +43,7 @@ function smarty_function_mailtopic_button($params, &$smarty)
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
 	    $authid = pnSecGenAuthKey();
 	    $lang = pnUserGetLang();
-		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) . "\" href=\"". pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id)) . "\"><img src=\"modules/pnForum/pnimages/$lang/sendto.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) ."\"></a>";
+		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) . "\" href=\"". pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id)) . "\"><img src=\"modules/pnForum/pnimages/$lang/sendto.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) ."\" /></a>";
 	}
     return $out;
 }

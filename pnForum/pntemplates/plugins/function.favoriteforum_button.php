@@ -50,9 +50,9 @@ function smarty_function_favoriteforum_button($params, &$smarty)
             if(pnModAPIFunc('pnForum', 'user', 'get_forum_favorites_status',
                             array('userid'=>$userid, 
                                   'forum_id'=>$forum_id))==false) {
-                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_ADD_FAVORITE_FORUM)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))."\"><img src=\"modules/pnForum/pnimages/$lang/add2favorites.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_ADD_FAVORITE_FORUM)."\"></a>";
+                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_ADD_FAVORITE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/add2favorites.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_ADD_FAVORITE_FORUM)."\" /></a>";
             } else {
-                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))."\"><img src=\"modules/pnForum/pnimages/$lang/removefavorite.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM)."\"></a>";
+                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/removefavorite.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM)."\" /></a>";
             }
         }
     }

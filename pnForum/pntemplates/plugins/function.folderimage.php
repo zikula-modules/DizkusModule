@@ -67,7 +67,7 @@ function smarty_function_folderimage($params, &$smarty)
 
 					$last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
 					$last_post = $last_post." <a href=\"$baseurl&amp;action=viewtopic&amp;topic=".$row['topic_id']."\">"
-								."<img src=\"modules/$ModName/images/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\"></a>";
+								."<img src=\"modules/$ModName/images/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
 				} else {
 					// no posts in forum
 					$last_post = _PNFORUM_NOPOSTS;

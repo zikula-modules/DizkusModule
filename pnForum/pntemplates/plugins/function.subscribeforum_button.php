@@ -51,9 +51,9 @@ function smarty_function_subscribeforum_button($params, &$smarty)
             if(pnModAPIFunc('pnForum', 'user', 'get_forum_subscription_status',
                             array('userid'=>$userid, 
                                   'forum_id'=>$forum_id))==false) {
-                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_FORUM)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))."\"><img src=\"modules/pnForum/pnimages/$lang/f_abo_on.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_FORUM)."\"></a>";
+                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/f_abo_on.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_FORUM)."\" /></a>";
             } else {
-                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))."\"><img src=\"modules/pnForum/pnimages/$lang/f_abo_off.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_FORUM)."\"></a>";
+                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/f_abo_off.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_FORUM)."\" /></a>";
             }
         }
     }

@@ -10,8 +10,8 @@
 
 <table class="pnForum-border" border="0"  cellpadding="5" cellspacing="1" width="100%" summary="<!--[ pnml name='_PNFORUM_FORUMS' ]-->">
     <thead>
-        <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-            <th id="col_0" abbr="<!--[ if $favorites ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan=2 align="left" valign="middle">
+        <tr style="text-align:left;background-color:<!--[ $bgcolor2 ]-->;" align="left">
+            <th id="col_0" abbr="<!--[ if $favorites ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan="2" align="left" valign="middle">
                 <!--[ if $favorites ]-->
                     <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnimg src="showallforums.gif" alt='_PNFORUM_SHOWALLFORUMS' altml=true ]--></a><!--[ /if ]-->
                 <!--[ else ]-->
@@ -26,29 +26,29 @@
     <tbody>
         <!--[ foreach item=category from=$tree ]-->
         <tr align="left" valign="top">
-            <td headers="col_0" colspan="5" bgcolor="<!--[ $bgcolor2 ]-->">
+            <td headers="col_0" colspan="5" style="background-color:<!--[ $bgcolor2 ]-->;">
                 <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->">
                 <strong><!--[ $category.cat_title ]--></strong></a>&nbsp;<!--[ adminlink type=category id=$category.cat_id ]-->
             </td>
         </tr>
         <!--[ if ($view_category eq $category.cat_id) or ($view_category eq -1) ]-->
         <!--[ foreach item=forum from=$category.forums ]-->
-         <tr align="left" valign="top" bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.background='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.background='<!--[ $bgcolor1 ]-->'">
-            <td headers="col_0" align="center" valign="middle" width="2%">
-                <img src="<!--[ $forum.fldr_img ]-->" alt="<!--[ $forum.fldr_alt ]-->" width="<!--[ $forum.fldr_img_attr.0 ]-->" height="<!--[ $forum.fldr_img_attr.1 ]-->"></td>
+         <tr align="left" valign="top" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.background='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.background='<!--[ $bgcolor1 ]-->'">
+            <td headers="col_0" align="center" valign="middle" style="width:2%;">
+                <img src="<!--[ $forum.fldr_img ]-->" alt="<!--[ $forum.fldr_alt ]-->" width="<!--[ $forum.fldr_img_attr.0 ]-->" height="<!--[ $forum.fldr_img_attr.1 ]-->" /></td>
             <td headers="col_0">
                 <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]-->
                 <br /><!--[ $forum.forum_desc ]-->
                 <br /><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]-->
             </td>
-            <td headers="col_1" width="5%" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
-            <td headers="col_2" width="5%" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
-            <td headers="col_3" width="15%" align="center" valign="middle"><!--[ $forum.last_post ]--></td>
+            <td headers="col_1" style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
+            <td headers="col_2" style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
+            <td headers="col_3" style="width:15%;text-align:center;" align="center" valign="middle"><!--[ $forum.last_post ]--></td>
         </tr>
         <!--[ foreachelse ]-->
         <tr>
-            <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->" width="2%">&nbsp;</td>
-            <td headers="col_0" colspan="4" bgcolor="<!--[ $bgcolor1 ]-->" align="left" valign="middle" width="2%">
+            <td headers="col_0" style="background-color:<!--[ $bgcolor1 ]-->;" width="2%">&nbsp;</td>
+            <td headers="col_0" colspan="4" style="background-color:<!--[ $bgcolor1 ]-->;" align="left" valign="middle" width="2%">
                 <span style="padding-left: 5px;"><strong>kein Forum vorhanden</strong></span>
             </td>
         </tr>
@@ -56,7 +56,7 @@
         <!--[ /if ]-->
         <!--[ foreachelse ]-->
         <tr>
-            <td colspan="5" bgcolor="<!--[ $bgcolor1 ]-->">
+            <td colspan="5" style="background-color:<!--[ $bgcolor1 ]-->;">
                 <!--[ if $favorites ]-->
                 <!--[ pnml name='_PNFORUM_NOFAVORITES' ]-->
                 <!--[ else ]-->
@@ -69,7 +69,7 @@
 </table>
 <!--[ forumimage name=newposts_image assign=newposts ]-->
 <!--[ forumimage name=folder_image assign=folder ]-->
-<img src="<!--[ $newposts.name ]-->" alt="newposts_image" width="<!--[ $newposts.width ]-->" height="<!--[ $newposts.height ]-->"> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
-<img src="<!--[ $folder.name ]-->" alt="folder_image" width="<!--[ $folder.width ]-->" height="<!--[ $folder.height ]-->"> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
+<img src="<!--[ $newposts.name ]-->" alt="newposts_image" width="<!--[ $newposts.width ]-->" height="<!--[ $newposts.height ]-->" /> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
+<img src="<!--[ $folder.name ]-->" alt="folder_image" width="<!--[ $folder.width ]-->" height="<!--[ $folder.height ]-->" /> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
 
 <!--[ include file='pnforum_user_footer.html ]-->

@@ -376,7 +376,7 @@ function pnForum_userapi_readcategorytree($args)
                 
                         $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
                         $last_post = $last_post." <a href=\"". pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). "\">"
-                                               ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\"></a>";
+                                               ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
                     } else {
                         // no posts in forum
                         $last_post = _PNFORUM_NOPOSTS;
