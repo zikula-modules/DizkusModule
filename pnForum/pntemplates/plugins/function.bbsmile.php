@@ -31,7 +31,7 @@ function smarty_function_bbsmile($params, &$smarty)
 
 	if(pnModAvailable('pn_bbsmile') && pnModGetVar('pnForum', 'show_smile') == "yes") {
 		//	display smilies and bbcodes
-    	$imagepath = "images/smilies";
+    	$imagepath = pnModGetVar('pn_bbsmile', 'smiliepath');
         $out = "<br />\n";
     	$out .= "<a href=\"javascript: x()\" onClick=\"DoSmilie(' :-) ')\" onkeypress=\"DoSmilie(' :-) ')\" title=':-)'><img src='$imagepath/icon_smile.gif' border='0' hspace='3' vspace='3' alt='Smilie :-)'></a> \n";
     	$out .= "<a href=\"javascript: x()\" onClick=\"DoSmilie(' :-( ')\" onkeypress=\"DoSmilie(' :-( ')\" title=':-('><img src='$imagepath/icon_frown.gif' border='0' hspace='3' vspace='3' alt='Smilie :-('></a> \n";

@@ -8,7 +8,9 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
-<form name="" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
+<form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
+<input type="hidden" name="start" value="<!--[ $start ]-->">
+
 <span class="pn-title"><strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay ]--></strong></span>
 <br /><br />
 <!--[ if $preview eq true ]-->

@@ -285,55 +285,52 @@ function pnForum_userapi_readcategorytree($args)
         $forum['pn_uid']       = $row['pn_uid'];
         $forum['topic_id']     = $row['topic_id'];
         $forum['post_time']    = $row['post_time'];
-//        if(pnSecAuthAction(0, 'pnForum::Category', $cat['cat_title'] ."::", ACCESS_READ)) {
         if(allowedtoseecategoryandforum($cat['cat_id'], $forum['forum_id'])) {
             if(!array_key_exists( $cat['cat_title'], $tree)) {
                 $tree[$cat['cat_title']] = $cat;
             }
             if(!empty($forum['forum_id'])) {
-//              if(pnSecAuthAction(0, 'pnForum::Forum', $forum['forum_name']."::", ACCESS_READ)) {
-                    if ($forum['forum_topics'] != 0) {
-                        // are there new topics since last_visit?
-                        if ($forum['post_time'] > $last_visit) {
-                            // we have new posts
-                            $fldr_img = $newposts_image;
-                            $fldr_alt = _PNFORUM_NEWPOSTS;
-                        } else {
-                            // no new posts
-                            $fldr_img = $folder_image;
-                            $fldr_alt = _PNFORUM_NONEWPOSTS;
-                        }
-                
-                        $posted_unixtime= strtotime ($forum['post_time']);
-                        $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
-                        if ($posted_unixtime) {
-                            if ($forum['pn_uid']==1) {
-                                $username = pnConfigGetVar('anonymous');
-                            } else {
-                                $username = $forum['pn_uname'];
-                            }
-                
-                            $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
-                            $last_post = $last_post." <a href=\"". pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). "\">"
-                                                   ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\"></a>";
-                        } else {
-                            // no posts in forum
-                            $last_post = _PNFORUM_NOPOSTS;
-                        }
+                if ($forum['forum_topics'] != 0) {
+                    // are there new topics since last_visit?
+                    if ($forum['post_time'] > $last_visit) {
+                        // we have new posts
+                        $fldr_img = $newposts_image;
+                        $fldr_alt = _PNFORUM_NEWPOSTS;
                     } else {
-                        // there are no posts in this forum
+                        // no new posts
                         $fldr_img = $folder_image;
                         $fldr_alt = _PNFORUM_NONEWPOSTS;
+                    }
+                
+                    $posted_unixtime= strtotime ($forum['post_time']);
+                    $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+                    if ($posted_unixtime) {
+                        if ($forum['pn_uid']==1) {
+                            $username = pnConfigGetVar('anonymous');
+                        } else {
+                            $username = $forum['pn_uname'];
+                        }
+                
+                        $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
+                        $last_post = $last_post." <a href=\"". pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). "\">"
+                                               ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\"></a>";
+                    } else {
+                        // no posts in forum
                         $last_post = _PNFORUM_NOPOSTS;
                     }
-                    $forum['fldr_img']  = $fldr_img;
-                    $forum['fldr_img_attr'] =  getimagesize($fldr_img);
-                    $forum['fldr_alt']  = $fldr_alt;
-                    $forum['last_post'] = $last_post;
-                    $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
+                } else {
+                    // there are no posts in this forum
+                    $fldr_img = $folder_image;
+                    $fldr_alt = _PNFORUM_NONEWPOSTS;
+                    $last_post = _PNFORUM_NOPOSTS;
+                }
+                $forum['fldr_img']  = $fldr_img;
+                $forum['fldr_img_attr'] =  getimagesize($fldr_img);
+                $forum['fldr_alt']  = $fldr_alt;
+                $forum['last_post'] = $last_post;
+                $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
                 
-                    array_push($tree[$cat['cat_title']]['forums'], $forum);
-//              }
+                array_push($tree[$cat['cat_title']]['forums'], $forum);
             }
         }
         $result->MoveNext();
@@ -424,8 +421,6 @@ function pnForum_userapi_readforum($args)
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
     } 
 
-//    if(!pnSecAuthAction(0, 'pnForum::', ":".$forum_id.":", ACCESS_READ)) {
-
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if($forum==false) {
@@ -436,11 +431,6 @@ function pnForum_userapi_readforum($args)
         return showforumerror(_PNFORUM_NOAUTH_TOSEE, __FILE__, __LINE__);
     } 
     
-//    if ( !pnSecAuthAction(0, 'pnForum::Forum', $forum['forum_name'] . "::", ACCESS_READ) || 
-//        !pnSecAuthAction(0, 'pnForum::Category', $forum['cat_title'] . "::", ACCESS_READ) )   {
-//        return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
-//    } 
-
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
@@ -687,27 +677,14 @@ function pnForum_userapi_readtopic($args)
         $topic['topic_id'] = $topic_id;
         $topic['start'] = $start;
 
-//        if ((!pnSecAuthAction(0, 'pnForum::Forum', $topic['forum_name'] ."::", ACCESS_READ)) || 
-//            (!pnSecAuthAction(0, 'pnForum::Category', $topic['cat_title'] ."::", ACCESS_READ))) {
-//            return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
-//        }
-
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
         } 
-
-//        if ((pnSecAuthAction(0, 'pnForum::Forum', $topic['forum_name'] ."::", ACCESS_COMMENT)) || 
-//            (pnSecAuthAction(0, 'pnForum::Category', $topic['cat_title'] ."::", ACCESS_COMMENT))) {
-//            $topic['access_comment'] = true;
-//        }
 
         $topic['access_comment'] = false;
         if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             $topic['access_comment'] = true;
         } 
-//        if(pnSecAuthAction(0, 'pnForum::', ":".$topic['forum_id'].":", ACCESS_COMMENT)) {
-//            $topic['access_comment'] = true;
-//        }                                                                                                                                              
         $topic['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
         
         /**
@@ -823,27 +800,16 @@ function pnForum_userapi_readtopic($args)
             list($post['post_text']) = pnModCallHooks('item', 'transform', '', array($post['post_text']));
             $post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_text'])));
 
-            //display table footer
-//            if($topic['topic_status'] != 1) {
-                // topic is not locked
             $pn_uid = pnUserGetVar('uid');
             if ($post['poster_data']['pn_uid']==$pn_uid) {
-//                    allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-//                    pnSecAuthAction(0, 'pnForum::Forum', $topic['forum_name'] ."::", ACCESS_MODERATE) || pnSecAuthAction(0, 'pnForum::Category', $topic['cat_title'] ."::", ACCESS_MODERATE)) {
-                    // user is allowed to moderate || own post
+                // user is allowed to moderate || own post
                 $post['poster_data']['moderate'] = true;
             }
-//                if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_COMMENT) || pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_COMMENT)) {
             if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
                 // user is allowed to reply
                 $post['poster_data']['reply'] = true;
             }
-//            } else {
-//                // topic is locked
-//            }
 
-//            if( (pnSecAuthAction(0, 'pnForum::Forum', $topic['forum_name'] ."::", ACCESS_MODERATE) || 
-//                pnSecAuthAction(0, 'pnForum::Category', $topic['cat_title'] ."::", ACCESS_MODERATE) ) && 
             if(allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']) &&
                 pnModGetVar('pnForum', 'log_ip') == "yes") {
                 // user is allowed to see ip
@@ -951,8 +917,6 @@ function pnForum_userapi_preparereply($args)
         return showforumerror(_PNFORUM_NOPOSTLOCK, __FILE__, __LINE__);
     }
     
-//    if (!pnSecAuthAction(0, 'pnForum::Forum', $reply['forum_name'] ."::", ACCESS_COMMENT) && 
-//        !pnSecAuthAction(0, 'pnForum::Category', $reply['cat_title'] ."::", ACCESS_COMMENT)) {
     if(!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
         return showforumerror( _PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
@@ -1304,8 +1268,6 @@ function pnForum_userapi_preparenewtopic($args)
     $newtopic['cat_title']  = pnVarPrepForDisplay($myrow['cat_title']);
 
     // need at least "comment" to add newtopic
-//    if (!pnSecAuthAction(0, 'pnForum::Forum', $newtopic['forum_name'] ."::", ACCESS_COMMENT) && 
-//        !pnSecAuthAction(0, 'pnForum::Category', $newtopic['cat_title'] ."::", ACCESS_COMMENT)) {
     if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
         return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
@@ -1536,15 +1498,11 @@ function pnForum_userapi_readpost($args)
     $post['cat_id']       = pnVarPrepForDisplay($myrow['cat_id']);
     $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
 
-//    if (!pnSecAuthAction(0, 'pnForum::Forum', $post['forum_name'] ."::", ACCESS_COMMENT) && 
-//        !pnSecAuthAction(0, 'pnForum::Category', $post['cat_title'] ."::", ACCESS_COMMENT)) {
     if(!allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
         return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 
     $pn_uid = pnUserGetVar('uid');   
-//    if (pnSecAuthAction(0, 'pnForum::Forum', $post['forum_name'] ."::", ACCESS_MODERATE) || 
-//        pnSecAuthAction(0, 'pnForum::Category', $post['cat_title'] ."::", ACCESS_MODERATE) || 
     if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) ||
         ($pn_uid == $post['poster_data']['pn_uid']))   {
         // user is allowed to edit the post
@@ -1583,8 +1541,6 @@ function pnForum_userapi_readpost($args)
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $topic_id, 'post_id' => $post_id));
 
     $post['moderate'] = false;
-//    if(pnSecAuthAction(0, 'pnForum::Forum', $post['forum_name'] . "::", ACCESS_MODERATE) || 
-//        pnSecAuthAction(0, 'pnForum::Category', $post['cat_title'] ."::", ACCESS_MODERATE) || 
     if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) ||
         ($pn_uid == $post['poster_data']['pn_uid'])) { 
         $post['moderate'] = true; 
@@ -1711,25 +1667,17 @@ function pnForum_userapi_updatepost($args)
     $myrow = $result->GetRowAssoc(false);
     $poster_id = $myrow['pn_uid'];
     $pn_uid = pnUserGetVar('uid');
-//    $forum_id = $myrow['forum_id'];
-//    $topic_id = $myrow['topic_id'];
     $this_post_time = $myrow['post_time'];
     $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
-//  $forum_name = pnVarPrepForDisplay(get_forum_name($forum_id));
-//  $cat_title = pnVarPrepForDisplay(get_category_name($forum_id));
 
     if (!($pn_uid == $poster_id) && 
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-//        !pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE) && 
-//        !pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE)) {
         // user is not allowed to edit post
         return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
     
     if(($topic_status == 1) && 
         allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-//        !pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE) && 
-//        !pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE)) {
         // topic is locked, user is not moderator
         return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
@@ -1743,8 +1691,6 @@ function pnForum_userapi_updatepost($args)
      * it's a submitted page and message is not empty
      */
     
-//    if ( !pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_ADMIN) && 
-//        !pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_ADMIN) ) {
     if(!allowedtoadmincategoryandforum($cat_id, $forum_id)) {
         // if not admin then add a edited by line
         // If it's been edited more than once, there might be old "edited by" strings with
@@ -1765,10 +1711,6 @@ function pnForum_userapi_updatepost($args)
     }
 
     $message = pnVarPrepForStore($message);
-
-//    if (empty($delete)) {
-//        $delete=false;
-//    }
 
     if (empty($delete)) {
         //  topic should not be deleted
@@ -1818,8 +1760,6 @@ function pnForum_userapi_updatepost($args)
                 || ($now_hour == $hour +1 && $now_min - 30 > 0)
                 && ($pn_uid == $poster_id)) || 
                 allowedtomoderatecategoryandforum($cat_id, $forum_id)) ){
-//                pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE || 
-//                pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE)) ) ) {
             return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
         }
         $last_post_in_thread = pnForum_userapi_get_last_boardpost(array('id'=>$topic_id, 'type'=> "time_fix"));
@@ -2033,7 +1973,6 @@ function pnForum_userapi_lockunlocktopic($args)
 
     list($forum_name, $cat_title, $forum_id, $cat_id) = pnForum_userapi_get_forumtitle_and_categorytitle_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-//    if (!pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE) && !pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE)) {
         return showforumerror(_PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
 
@@ -2067,7 +2006,6 @@ function pnForum_userapi_stickyunstickytopic($args)
     $pntable =& pnDBGetTables();
 
     list($forum_name, $cat_title, $forum_id, $cat_id) = pnForum_userapi_get_forumtitle_and_categorytitle_from_topicid(array('topic_id'=>$topic_id));
-//    if (!pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE) && !pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE)) {
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         return showforumerror(_PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
@@ -2148,7 +2086,6 @@ function pnForum_userapi_readuserforums($args)
     
     if(!empty($cat_id) && !empty($forum_id)) {
         if(!allowedtoseecategoryandforum($cat_id, $forum_id)) {
-//    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
             return showforumerror(_PNFORUM_NOAUTH_TOSEE, __FILE__, __LINE__); 
         }
     }
@@ -2199,7 +2136,6 @@ function pnForum_userapi_readuserforums($args)
                   $forum['forum_posts'],
                   $forum['cat_title'],
                   $forum['cat_id'] ) = $result->fields;
-//            if  (pnSecAuthAction(0, 'pnForum::Forum', $forum['forum_name'] . "::", ACCESS_READ) && pnSecAuthAction(0, 'pnForum::Category', $forum['cat_title'] . "::", ACCESS_READ)) {
             if(allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
                 array_push( $forums, $forum );
             }
@@ -2566,7 +2502,6 @@ function pnForum_userapi_subscribe_topic($args)
 
     list($forum_name, $cat_title, $forum_id, $cat_id) = pnForum_userapi_get_forumtitle_and_categorytitle_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-//    if (!pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ) && !pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ)) {
         return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
     }
     
@@ -2637,7 +2572,6 @@ function pnForum_userapi_subscribe_forum($args)
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-//    if (!pnSecAuthAction(0, 'pnForum::Category', $forum['cat_title'] ."::", ACCESS_READ) && !pnSecAuthAction(0, 'pnForum::Forum', $forum['forum_name'] ."::", ACCESS_READ)) {
         return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
     }
     
@@ -2738,8 +2672,6 @@ function pnForum_userapi_prepareemailtopic($args)
      * base security check
      */
     if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-//    if ((!pnSecAuthAction(0, 'pnForum::Forum', $topic['forum_name'] ."::", ACCESS_READ)) || 
-//        (!pnSecAuthAction(0, 'pnForum::Category', $topic['cat_title'] ."::", ACCESS_READ))) {
         return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
     }
     return $topic;
@@ -2847,8 +2779,6 @@ function pnForum_userapi_get_latest_posts($args)
         
         // check permission before display
         if(allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-//        if ((pnSecAuthAction(0, 'pnForum::Forum', $post['forum_name'] ."::", ACCESS_READ))
-//           && (pnSecAuthAction(0, 'pnForum::Category', $post['cat_title'] ."::", ACCESS_READ)))   {
             // get correct page for latest entry
             if ($post_sort_order == "ASC") {
                 $hc_dlink_times = 0;
