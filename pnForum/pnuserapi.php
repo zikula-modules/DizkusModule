@@ -455,8 +455,12 @@ function pnForum_userapi_setcookies()
     } else {
         $temptime = $_COOKIE['phpBBLastVisitTemp'];
     }
-    // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 5 min
-    setcookie('phpBBLastVisitTemp', $temptime, time()+300);
+    if(empty($temptime)) {
+        $temptime = 0;
+    }
+    
+    // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
+    setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
     
     // set vars for all scripts
     $last_visit = ml_ftime("%Y-%m-%d %H:%M",$temptime);
@@ -615,7 +619,7 @@ function pnForum_userapi_readforum($args)
             }
         }
         
-        if($topic_status == 1) {
+        if($topic['topic_status'] == 1) {
             $image = $locked_image;
             $altimage = "locked_image";
         }
@@ -669,7 +673,7 @@ function pnForum_userapi_readforum($args)
         
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ", ";
-                    $pagination .= "<a href=\"".pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start))."\" title=\"$topic_title #$pagenr\">$pagenr</a>";
+                    $pagination .= "<a href=\"".pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start))."\" title=\"" . $topic['topic_title'] . " " . pnVarPrepForDisplay(_PNFORUM_PAGE) . " $pagenr\">$pagenr</a>";
                 }
         
                 $pagenr++;
@@ -851,7 +855,6 @@ function pnForum_userapi_readtopic($args)
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             $post['post_text'] = phpbb_br2nl($post['post_text']);
-            $sig = $posterdata['pn_user_sig'];
             if (!empty($post['poster_data']['pn_user_sig'])){
                     $post['post_text'] = eregi_replace("\[addsig]$", "\n_________________\n".$post['poster_data']['pn_user_sig'], $post['post_text']);
             } else {
@@ -924,10 +927,10 @@ function pnForum_userapi_preparereply($args)
                        pt.post_text,
                        p.post_time,
                        u.pn_uname
-                FROM ".$pntable[pnforum_forums]." AS f, 
-                     ".$pntable[pnforum_topics]." AS t, 
-                     ".$pntable[pnforum_posts]." AS p,
-                     ".$pntable[pnforum_posts_text]." AS pt,
+                FROM ".$pntable['pnforum_forums']." AS f, 
+                     ".$pntable['pnforum_topics']." AS t, 
+                     ".$pntable['pnforum_posts']." AS p,
+                     ".$pntable['pnforum_posts_text']." AS pt,
                      ".$pntable['users']." AS u
                 WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
                 AND (t.forum_id = f.forum_id)
@@ -942,8 +945,8 @@ function pnForum_userapi_preparereply($args)
                        t.topic_id,
                        t.topic_title,
                        t.topic_status
-                FROM ".$pntable[pnforum_forums]." AS f, 
-                     ".$pntable[pnforum_topics]." AS t
+                FROM ".$pntable['pnforum_forums']." AS f, 
+                     ".$pntable['pnforum_topics']." AS t
                 WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
                 AND (t.forum_id = f.forum_id)";
     }
@@ -1556,7 +1559,7 @@ function pnForum_userapi_readpost($args)
     $post['post_text'] = $message;
 
     // allow to edit the subject if first post
-    $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $topic_id, 'post_id' => $post_id));
+    $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
 
     return $post;
 }   

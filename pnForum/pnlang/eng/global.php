@@ -64,6 +64,7 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_PAGE','Page #');
 define('_PNFORUM_ONEREPLY','reply');
 define('_PNFORUM_ACTIVE_FORUMS','top active Forums:');
 define('_PNFORUM_RECENT_POSTS','recent Topics:');

@@ -622,10 +622,10 @@ function pnForum_user_splittopic()
          $newsubject) = pnVarCleanFromInput('post',
                                             'submit', 
                                             'newsubject');
-    
     $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                          array('post_id' => $post_id));
-    if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+
+    if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
