@@ -10,6 +10,9 @@
  */
 
 // copied from includes/language/blocks/eng
+define('_PNFORUM_SEARCHINCLUDE_ALLTOPICS', 'all');
+define('_PNFORUM_SEARCHINCLUDE_LIMIT', 'limit search to');
+define('_PNFORUM_SEARCHINCLUDE_NOLIMIT', 'no limits');
 define('_PNFORUM_SEARCHINCLUDE_HITS', 'hits');
 define('_RESULTS',"Results");
 define('_PNFORUM_SEARCHINCLUDE_AUTHOR',"Author");
@@ -26,6 +29,8 @@ define('_PNFORUM_SEARCHINCLUDE_RESULTS',"Forums");
 define('_PNFORUM_SEARCHINCLUDE_TITLE',"Search forums");
 define('_PNFORUM_SEARCHINCLUDE_VIEWS',"Views");
 
+define('_PNFORUM_PREFS_SIGNATURESTART', 'Start of signature format:');
+define('_PNFORUM_PREFS_SIGNATUREEND', 'End of signature format:');
 define('_PNFORUM_PREFS_MINPOSTINGSFORANCHOR', 'Minimum number of before inserting an anchor:<br /><i>An anchor enables the user to go directly to the last posting in a large thread</i>');
 define('_PNFORUM_PREFS_EMAIL', 'Email From Address:<br /><i>(This is the address that will appear on every email sent by the forums)</i>');
 define('_PNFORUM_PREFS_CHARSET', 'Default charset:<br /><i>(This is the charset that will be used in e-mail headers)</i>');
@@ -64,6 +69,11 @@ define('_PNFORUM_NOAUTH_TOSEE', 'You have no permission to see this category or 
 define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of this category or forum');
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to moderate this category or forum');
+
+define('_PNFORUM_SYNC_FORUMINDEX', 'Forum index synced');
+define('_PNFORUM_SYNC_TOPICS', 'Topics synced');
+define('_PNFORUM_SYNC_POSTSCOUNT', 'Posts counter synced');
+define('_PNFORUM_SYNC_USERS', 'PostNuke and pnForum users syned');
 
 define('_PNFORUM_PAGE','Page #');
 define('_PNFORUM_ONEREPLY','reply');
