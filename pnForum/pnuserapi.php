@@ -2597,6 +2597,10 @@ function pnForum_userapi_add_favorite_forum($args)
     extract($args);
     unset($args);
 
+    if(!pnModAPILoad('pnForum', 'admin')) {
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+    } 
+
     list($dbconn, $pntable) = pnfOpenDB();
 
     if (!isset($user_id)) {
