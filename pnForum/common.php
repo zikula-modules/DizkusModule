@@ -247,6 +247,35 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
 }
 
 /**
+ * pnfSelectLimit 
+ * executes an sql command and returns a part of the result, shows error if necessary
+ *
+ *@params $dbconn object db onnection object
+ *@params $sql    string the sql ommand to execute
+ *@params $limit  int    max number of lines to read
+ *@params $start  int    number of lines to start reading
+ *@params $debug  bool   true if debug should be activated, default is false
+ *@returns object the result of $dbconn->Execute($sql)
+ */
+function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, $line=__LINE__, $debug=false)
+{
+    if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
+        return showforumerror(_MODARGSERROR, $file, $line);
+    }
+    $dbconn->debug = $debug;
+    if( $start<>false && (is_numeric($start) && $start<>0 ) ){
+        $result = $dbconn->SelectLimit($sql, $limit, $start);
+    } else {
+        $result = $dbconn->SelectLimit($sql, $limit);
+    }
+    $dbconn->debug = false;
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+    }
+    return $result;
+}
+
+/**
  * is_serialized
  * checks if a string is a serialized array
  *
@@ -339,32 +368,6 @@ function pnForum_undo_make_clickable($text)
 	$text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
 	$text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
     return $text;
-}
-
-/**
- * Changes a Smiliy <IMG> tag into its corresponding smile
- * TODO: Get rid of golbal variables, and implement a method of distinguishing between :D and :grin: using the <IMG> tag
- *
- * obsolete function, we have pn_bbsmile
- *
- */
-
-function pnForum_desmile($message) 
-{
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
-
-	$url_smiles = pnModGetVar('pnForum', 'url_smiles');
-
-	$sql = "SELECT * FROM ".$pntable['pnforum_smiles']." ";
-
-	if ($getsmiles = mysql_query($sql)){
-		while ($smiles = mysql_fetch_array($getsmiles)) {
-			$message = str_replace("<IMG SRC=\"$url_smiles/$smiles[smile_url]\">", $smiles['code'], $message);
-		}
-	}
-	return($message);
 }
 
 /**
