@@ -14,7 +14,7 @@
  */
 $modversion['name'] = 'pnForum';
 $modversion['id'] = '62';
-$modversion['version'] = '1.8.0';
+$modversion['version'] = '2.0.0';
 $modversion['description'] = 'phpBB-style Bulletin Board';
 $modversion['credits'] = 'pndocs/credits.txt';
 $modversion['help'] = 'pndocs/install.txt';
@@ -26,5 +26,6 @@ $modversion['contact'] = 'andreas AT krapohl DOT net, frank.schummertz AT landse
 $modversion['admin'] = 1;
 $modversion['user'] = 1;
 $modversion['securityschema'] = array('pnForum::Category' => 'Category name::',
-                                      'pnForum::Forum' => 'Forum name::');
+                                      'pnForum::Forum' => 'Forum name::',
+                                      'pnForum::' => 'Category name::Forum name');
 ?>
