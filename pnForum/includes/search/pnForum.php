@@ -223,7 +223,7 @@ function search_pnForum($vars)
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-    $pnr->assign('total_hits', $total_hits);
+    $pnr->assign('total_hits', count($searchresults));   //total_hits);
     $pnr->assign('searchresults', $searchresults);
     return $pnr->fetch('pnforum_searchresults.html');
 }
