@@ -9,7 +9,13 @@
  * @link http://www.pnforum.de
  */
 
-define('_PNFORUM_SETTING', 'Setting'); 
+define('_PNFORUM_FORUM_REORDER','Re-Order');
+define('_PNFORUM_FORUM_EDIT_ORDER','Edit Order');
+define('_PNFORUM_FORUM_EDIT_FORUM','Edit Forum');
+define('_PNFORUM_CHANGE_FORUM_ORDER','Change Forum Order');
+define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','If you only want to move a forum by one position then click on the up or down arrow.  If a forum has an order number of 0 it will be ordered alphabetically by forum name.  The final display order will be Alphabetical Forums (with order=0) then by numerical order.  Click on the order number to assign a new order.');
+
+define('_PNFORUM_SETTING', 'Settings'); 
 define('_PNFORUM_RECENT_POST_ORDER', 'Recent post order in topi view');
 define('_PNFORUM_CHANGE_POST_ORDER','Change Post Order');
 define('_PNFORUM_OLDEST_FIRST','Display the oldest post first');
@@ -154,6 +160,7 @@ define('_PNFORUM_NOAUTH_TOSEE', 'You have no permission to see this category or 
 define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of this category or forum');
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to moderate this category or forum');
+define('_PNFORUM_NOAUTH_TOADMIN', 'You have no permission to admin this module');
 
 define('_PNFORUM_SYNC_FORUMINDEX', 'Forum index synced');
 define('_PNFORUM_SYNC_TOPICS', 'Topics synced');
