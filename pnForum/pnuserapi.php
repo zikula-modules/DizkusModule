@@ -697,6 +697,10 @@ function pnForum_userapi_readtopic($args)
         $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id']);
         
+        // get the next and previous topic_id's for the next / prev button
+        $topic['next_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'next'));
+        $topic['prev_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'previous'));
+
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly 
         $topic['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => pnUserGetVar('uid'), 
