@@ -142,25 +142,27 @@ function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="
  */
 function pnfdebug($name="", $data, $die = false)
 {
-    $type = gettype($data);
-    echo "<span style=\"color: red;\">$name ($type):";
-    if(is_array($data)||is_object($data)) {
-        $size = count($data);
-        if($size>0) {
-            echo "(size=$size entries)<pre>";
-            print_r($data);
-            echo "</pre>:<br />";
+    if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
+        $type = gettype($data);
+        echo "<span style=\"color: red;\">$name ($type):";
+        if(is_array($data)||is_object($data)) {
+            $size = count($data);
+            if($size>0) {
+                echo "(size=$size entries)<pre>";
+                print_r($data);
+                echo "</pre>:<br />";
+            } else {
+                echo "empty<br />";
+            }
+        } else if(is_bool($data)) {
+            echo ($data==true) ? "true" : "false";
         } else {
-            echo "empty<br />";
+            echo "$data:<br />";
         }
-    } else if(is_bool($data)) {
-        echo ($data==true) ? "true" : "false";
-    } else {
-        echo "$data:<br />";
-    }
-    echo "</span>";
-    if($die==true) {
-        die();
+        echo "</span>";
+        if($die==true) {
+            die();
+        }
     }
 }
 
