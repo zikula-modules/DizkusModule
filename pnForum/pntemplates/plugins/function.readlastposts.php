@@ -43,7 +43,7 @@ function smarty_function_readlastposts($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    $loggedIn = 1;
+    $loggedIn = false;
     $uid = 1;
     if (pnUserLoggedIn()) {
         $loggedIn = true;
@@ -84,11 +84,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 FROM " . $pntable['pnforum_forums'];
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
-        if($result->EOF) {
-            pnfCloseDB($result);
-            return;
-        }
-        $wherecanread = '(';
+
         while (!$result->EOF) {
             list($forumID,$cat_id) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
@@ -96,8 +92,9 @@ function smarty_function_readlastposts($params, &$smarty)
             }
             $result->MoveNext();
         }
-        $wherecanread = rtrim($wherecanread, 'OR ');
-        $wherecanread .=') AND ';
+        if (!empty($wherecanread)) {
+            $wherecanread = '(' . rtrim($wherecanread, 'OR ') . ') AND';
+        }
         pnfCloseDB($result);
     }
 
@@ -115,11 +112,6 @@ function smarty_function_readlastposts($params, &$smarty)
                 ON f.forum_id = fav.forum_id
                 WHERE fav.user_id = $uid ";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
-        if($result->EOF) {
-            pnfCloseDB($result);
-            return;
-        }
-        $wherefavorites = '(';
         while (!$result->EOF) {
             list($forumID,$cat_id) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
@@ -127,8 +119,9 @@ function smarty_function_readlastposts($params, &$smarty)
             }
             $result->MoveNext();
         }
-        $wherefavorites = rtrim($wherefavorites, 'OR ');
-        $wherefavorites .=') AND ';
+        if (!empty($wherefavorites)) {
+            $wherefavorites = '(' . rtrim($wherefavorites, 'OR ') . ') AND';
+        }
         pnfCloseDB($result);
     }
 
@@ -170,11 +163,6 @@ function smarty_function_readlastposts($params, &$smarty)
         ORDER by t.topic_time DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, $postmax, false, __FILE__, __LINE__);
-    $result_postmax = $result->PO_RecordCount();
-    if ($result_postmax <= $postmax) {
-        $postmax = $result_postmax;
-    }
-
     $lastposts = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
