@@ -51,7 +51,7 @@ function func_name() {
     <!-- tr bgcolor="< !--[ $bgcolor3 ]-- >" -->
     <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
         <td width="50%">
-            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]--><!--[ postanchor postings=$post.topic_replies+1 post_id=$post.topic_last_post_id ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title ]--></a>
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]--><!--[ postanchor postings=$post.topic_replies+1 post_id=$post.topic_last_post_id ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnbbsmile|pnvarcensor ]--></a>
         </td>
         <td>
             <!--[ $post.topic_replies ]-->
