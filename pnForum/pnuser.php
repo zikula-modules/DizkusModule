@@ -691,7 +691,7 @@ function pnForum_user_splittopic()
 
     if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     if(!empty($submit)) {

@@ -40,6 +40,115 @@
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
+/*
+ * getforumerror
+ *
+ * retrieve a custom error message
+ * @param error_type string The type of error. category, forum, system, etc
+ * @param error_name string The name of the error.  auth_read,  auth_mod, someothertype, etc
+ * @param error_id string The specific identifier for the error.  forum_id, cat_id, etc.  This will change depending on what error_type is set to.
+ * @param default_msg string The message to display if a custom page can't be found
+ * Example: getforumerror('auth_read', '2', 'category', _PNFORUM_NOAUTH_TOREAD);
+ *          This would look for the file:
+ *          pnForum/pntemplates/errors/category/LANG/pnforum_error_auth_read_2.html
+ *          which would be the error message for someone who didn't have read
+ *          access to the category with cat_id = 2;
+ * The default is to look for a forum error, and if the forum doesn't have
+ * a custom error message to look for the error message for the category.
+ *
+ * This is not limited strictly to forum and category errors though.  It can
+ * easily be expanded in the future to accomodate any type by simply creating
+ * the type folder: pnForum/pntemplates/errors/TYPE and placing the
+ * type files in that directory.
+ *
+ * Language specific files should be placed in a language directory below the type directory.  The language directories follow the same naming convention as the pnlang subfolders.
+ *
+ * The default language files do not need to be placed in a language specific folder.  They can be placed directly in the 'errors/TYPE' folder.
+ *
+ * Search order:
+ * 1) errors/type/lang/specificID
+ * 2) errors/type/specificID
+ * IF THE TYPE IS FORUM AND WE HAVEN'T FOUND IT YET CHECK THE CATEGORY
+ * 3) errors/category/lang/categoryID
+ * 4) errors/category/categoryID
+ * 5) errors/type/generic
+ *
+ * Specific files should be named:
+ * pnforum_error_TYPE_ID.html
+ *
+ * Generic files should be named:
+ * pnforum_error_TYPE.html
+ *
+ * Examples:
+ * pnforum_error_auth_overview_2.html (Can see forum 2 or category 2 depending on whether this file is placed in the errors/forum or errors/category directory)
+ * pnforum_error_auth_read.html (Generic file to use when a specific file isn't available
+ * pnforum_error_auth_mod.html  (same as previous)
+ * pnforum_error_auth_admin.html (same as previous)
+ *
+ */
+function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
+{
+	$modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
+//    $baseDir = realpath(pnModGetBaseDir('pnForum')) . '/pntemplates';
+    $baseDir = realpath("modules/" . $modinfo['directory'] . "/pntemplates");
+    $lang = pnUserGetLang();
+    $error_path = 'errors/' . $error_type;
+    $prefix = 'pnforum_error_';
+    $error_type = strtolower($error_type);
+
+    // create the specific filename
+    $specific_error_file = $prefix . $error_name;
+    $specific_error_file .= ($error_id) ? ('_' . $error_id) : '';
+    $specific_error_file .= '.html';
+    
+    // create the generic filename
+    $generic_error_file = $prefix . $error_name . '.html';
+
+    $pnr =& new pnRender('pnForum');
+    $pnr->caching = false;
+
+    // start with a fresh array
+    $test_array = array();
+
+    // first we want the most detailed file.  This one is the exact error
+    // message for the exact id number in the correct language
+    array_push($test_array, $error_path . '/' . $lang . '/' . $specific_error_file);
+    // we didn't find one for our desired language so lets check the
+    // defaults that sit just outside the lang directory
+    array_push($test_array, $error_path . '/' . $specific_error_file);
+
+    // if this is a forum check then we need to check the categories too
+    // in case the forum specific ones don't exist
+    if (($error_type == 'forum') && (is_numeric($error_id))) {
+        $cat_id = pnModAPIFunc('pnForum','user','get_forum_category', array('forum_id'=>$error_id)); 
+        if ($cat_id) {
+            // specific category and specific language
+            array_push($test_array, 'errors/category/' . $lang . '/' . $prefix . $error_name . '_' . $cat_id . '.html');
+            // specific category, default language
+            array_push($test_array, 'errors/category/' . $prefix . $error_name . '_' . $cat_id . '.html');
+        }
+    }
+    // this order is important.
+    // we want to read the category errors before the default forum error.
+    // the category error should be more specific to the chosen forum than
+    // the generic forum error
+    array_push($test_array, $error_path . '/' . $lang . '/' . $generic_error_file);
+    array_push($test_array, $error_path . '/' . $generic_error_file);
+    foreach ($test_array as $test) {
+        if (file_exists($baseDir . '/' . $test) && is_readable($baseDir . '/' . $test)) {
+            // grab the first one we find.
+            // that's why the order above is important
+            return $pnr->fetch($test);
+        }
+    }
+    // we couldn't find a custom message, fall back to the passed in default
+    if ($default_msg) {
+        return $default_msg;
+    }else {
+        // ouch, no custom message and no default.
+        return showforumerror("Error message not found", __FILE__, __LINE__);
+    }
+}
 
 /*
  * showforumerror

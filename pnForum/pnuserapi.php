@@ -495,7 +495,7 @@ function pnForum_userapi_readforum($args)
     }
 
     if(!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(_PNFORUM_NOAUTH_TOSEE, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOSEE), __FILE__, __LINE__);
     } 
 
     list($dbconn, $pntable) = pnfOpenDB();
@@ -724,7 +724,7 @@ function pnForum_userapi_readtopic($args)
         $topic['post_sort_order'] = $post_sort_order;
 
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-            return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
         } 
 /*
         $topic['access_comment'] = false;
@@ -1532,7 +1532,7 @@ function pnForum_userapi_readpost($args)
     $post['post_unixtime'] = strtotime ($post['post_time']);
 
     if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     
     $pn_uid = pnUserGetVar('uid');   
@@ -1660,13 +1660,13 @@ function pnForum_userapi_updatepost($args)
     if (!($pn_uid == $poster_id) && 
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // user is not allowed to edit post
-        return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
     
     if(($topic_status == 1) && 
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // topic is locked, user is not moderator
-        return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     if(trim($message) == '') {
@@ -1993,7 +1993,7 @@ function pnForum_userapi_lockunlocktopic($args)
 
     list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     $new_status = ($mode=="lock") ? 1 : 0; 
@@ -2022,7 +2022,7 @@ function pnForum_userapi_stickyunstickytopic($args)
 
     list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     $new_sticky = ($mode=="sticky") ? 1 : 0; 
@@ -2088,7 +2088,7 @@ function pnForum_userapi_readuserforums($args)
     
     if(!empty($cat_id) && !empty($forum_id)) {
         if(!allowedtoseecategoryandforum($cat_id, $forum_id)) {
-            return showforumerror(_PNFORUM_NOAUTH_TOSEE, __FILE__, __LINE__); 
+            return showforumerror(getforumerror('auth_overview',$forum_id, 'forum', _PNFORUM_NOAUTH_TOSEE), __FILE__, __LINE__);
         }
     }
 
@@ -2474,7 +2474,7 @@ function pnForum_userapi_subscribe_topic($args)
 
     list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     
     if (pnForum_userapi_get_topic_subscription_status(array('userid'=>$userid, 'topic_id'=>$topic_id)) == false) {
@@ -2543,7 +2543,7 @@ function pnForum_userapi_subscribe_forum($args)
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     
     if (pnForum_userapi_get_forum_subscription_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
@@ -2604,7 +2604,7 @@ function pnForum_userapi_add_favorite_forum($args)
                           array('forum_id' => $forum_id));
 
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     
     if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
@@ -2693,7 +2693,7 @@ function pnForum_userapi_prepareemailtopic($args)
      * base security check
      */
     if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     return $topic;
 }
@@ -3399,7 +3399,7 @@ function pnForum_userapi_get_user_post_order($args)
     } else {
         $post_order = pnModGetVar('pnForum', 'post_sort_order');
     }
-    pnfCloseDB($result2);
+    pnfCloseDB($result);
     return $post_order;
 }
 
@@ -3438,4 +3438,40 @@ function pnForum_userapi_change_user_post_order($args)
     pnfCloseDB($result);
     return true;
 } 
+/** 
+ * get_forum_category
+ * Determines the category that a forum belongs to.
+ *
+ *@params forum_id - The forum id to find the category of
+ *@returns int on success, false on failure
+ */
+function pnForum_userapi_get_forum_category($args)
+{
+    extract($args);
+    unset($args);
+    
+    if (!isset($forum_id) || !is_numeric($forum_id)) {
+        return false;
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $forumtable  = $pntable['pnforum_forums'];
+    $forumcol    = $pntable['pnforum_forums_column'];
+
+    $sql = "SELECT $forumcol[cat_id] 
+            FROM  $forumtable
+            WHERE $forumcol[forum_id] = '".(int)pnVarPrepForStore($forum_id)."'";
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    if($result->EOF) {
+        return false;
+    } else {
+        list($cat_id) = $result->fields;
+    }
+    pnfCloseDB($result);
+    return (int)$cat_id;
+}
+
 ?>

@@ -25,5 +25,7 @@ $modversion['author'] = 'Andreas Krapohl, Frank Schummertz';
 $modversion['contact'] = 'http://www.pnforum.de';
 $modversion['admin'] = 1;
 $modversion['user'] = 1;
-$modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:');
+$modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:',
+                                      'pnForum::CreateForum' => 'CategoryID::');
+
 ?>

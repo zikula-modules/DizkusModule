@@ -45,6 +45,10 @@ include_once("modules/pnForum/common.php");
 
 /**
  * readcatgories
+ * read the categories from database, if cat_id is set, only this one will be read
+ *
+ *@params $args['cat_id'] int the category id to read (optional)
+ *@returns array of category information
  *
  */
 function pnForum_adminapi_readcategories($args)
@@ -88,7 +92,10 @@ function pnForum_adminapi_readcategories($args)
 
 /**
  * updatecategory
- *
+ * update a category in database
+ 
+ *@params $args['cat_title'] string category title
+ *@params $args['cat_id'] int category id
  */
 function pnForum_adminapi_updatecategory($args)
 {
@@ -121,7 +128,9 @@ function pnForum_adminapi_updatecategory($args)
 
 /** 
  * addcategory
+ * adds a new category
  *
+ *@params $args['cat_title'] string the categories title
  */
 function pnForum_adminapi_addcategory($args)
 {
@@ -158,6 +167,10 @@ function pnForum_adminapi_addcategory($args)
 
 /**
  * delete a category
+ * deletes a category from db including all forums and posts!
+ *
+ *@params $args['cat_id'] int the id of the category to delete
+ *
  */
 function pnForum_adminapi_deletecategory($args) 
 {
@@ -177,15 +190,7 @@ function pnForum_adminapi_deletecategory($args)
     
         $cattable = $pntable['pnforum_categories'];
         $catcolumn = $pntable['pnforum_categories_column'];
-/*
-        // Confirm authorisation code
-        if (!pnSecConfirmAuthKey()) {
-            include 'header.php';
-            echo _BADAUTHKEY;
-            include 'footer.php';
-            exit;
-        }
-*/
+
         // read all the forums in this category
         $forums = pnForum_adminapi_readforums(array('cat_id' => $cat_id));
         if(is_array($forums) && count($forums)>0) { 
@@ -966,15 +971,22 @@ function pnForum_adminapi_sync($args)
 
 /**
  * addforum
+ * Adds a new forum 
+ *
+ *@params $args['forum_name'] string the forums name 
+ *@params $args['desc'] string the forum description 
+ *@params $args['cat_id'] int the category where the forum shall be added 
+ *@params $args['mods'] array of moderators
+ *@params $args['forum_order'] int the forums order, optional  
+ *@returns int the new forums id 
  *
  */
 function pnForum_adminapi_addforum($args)
 {
-//  $forum_id, $forum_name, $desc, $cat_id, $mods
-// optional - $forum_order
     extract($args);
     unset($args);
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
+    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN) && 
+        !pnSecAuthAction(0, 'pnForum::CreateForum', $cat_id . "::", ACCESS_EDIT) ) { 
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
