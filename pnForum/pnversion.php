@@ -22,7 +22,7 @@ $modversion['changelog'] = 'pndocs/changelog.txt';
 $modversion['license'] = 'pndocs/license.txt';
 $modversion['official'] = 0;
 $modversion['author'] = 'Andreas Krapohl, Frank Schummertz';
-$modversion['contact'] = 'andreas AT krapohl DOT net, frank.schummertz AT landseer-stuttgart DOT de';
+$modversion['contact'] = 'http://www.pnforum.de';
 $modversion['admin'] = 1;
 $modversion['user'] = 1;
 $modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:');
