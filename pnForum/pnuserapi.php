@@ -615,7 +615,7 @@ function pnForum_userapi_readforum($args)
         
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ", ";
-                    $pagination .= "<a href=\"".pnModURL('pnForum', 'user', 'viewtopic', array('start' => $start))."\" title=\"$topic_title #$pagenr\">$pagenr</a>";
+                    $pagination .= "<a href=\"".pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start))."\" title=\"$topic_title #$pagenr\">$pagenr</a>";
                 }
         
                 $pagenr++;
