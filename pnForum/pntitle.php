@@ -13,13 +13,13 @@
  * get the title
  */
 function pnForum_title() {
-    list ($action, $topic, $forum) = pnVarCleanFromInput('action', 'topic', 'forum');
+    list ($func, $topic, $forum) = pnVarCleanFromInput('func', 'topic', 'forum');
 
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
 
-    if ($action == 'viewtopic') {
+    if ($func == 'viewtopic') {
         $column = &$pntable['pnforum_column'];
 	 	$sql = "SELECT t.topic_title, f.forum_name, c.cat_title
                 FROM  ".$pntable['pnforum_topics']." t
@@ -30,7 +30,7 @@ function pnForum_title() {
         list($title,$forum_name,$cat_title) = $result->fields;
         $result->Close();
         $title = $cat_title." :: ".$forum_name." :: ".$title;
-    } elseif ($action == 'viewforum') { 
+    } elseif ($func == 'viewforum') { 
         $column = &$pntable['pnforum_column'];
 		$sql = "SELECT f.forum_name, c.cat_title
                 FROM $pntable[pnforum_forums] f
