@@ -9,7 +9,6 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 
 <form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
-<input type="hidden" name="start" value="<!--[ $start ]-->">
 
 <span class="pn-title"><strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarcensor ]--></strong></span>
 <br /><br />
@@ -80,7 +79,7 @@
 <br />
 <!--[ /if ]-->
 <br />
-<input type="hidden" name="post_id" value="<!--[ $post.post_id ]-->">
+<input type="hidden" name="post"   value="<!--[ $post.post_id ]-->">
 <input type="hidden" name="forum"  value="<!--[ $post.forum_id ]-->">
 <input type="hidden" name="topic"  value="<!--[ $post.topic_id ]-->">
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->">

@@ -56,7 +56,12 @@ function func_name() {
         <td>
             <span class="pn-normal"><!--[ $post.topic_replies ]--></span>
         </td>
-        <!--[ $post.last_boardpost ]-->
+        <td>
+            <span class="pn-normal"><a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a></span>
+        </td>
+        <td>
+            <span class="pn-normal"><!--[ $post.post_time ]--></span>
+        </td>
     </tr>
     <!--[ /foreach ]-->
 </table>

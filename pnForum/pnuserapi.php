@@ -227,6 +227,90 @@ function pnForum_userapi_boardstats($args)
 }
 
 /**
+ * get_last_post_in_topic
+ * gets the last post in a topic, false if no posts
+ *
+ *@params $args['topic_id'] int the topics id
+ *@params $args['id_only'] boolean if true, only return the id, not the complete post information
+ *@returns array with post information of false
+ */
+function pnForum_userapi_get_last_post_in_topic($args)
+{
+    extract($args);
+    unset($args);
+
+    pnModDBInfoLoad('pnForum');
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+    
+    if(isset($topic_id) && is_numeric($topic_id)) {
+        $sql = "SELECT p.post_id 
+                FROM ".$pntable['pnforum_posts']." AS p 
+                WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."' 
+                ORDER BY p.post_time DESC";
+        
+        $result = $dbconn->SelectLimit($sql, 1);
+        if($dbconn->ErrorNo() != 0) {
+            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        }
+        if($result->EOF) {
+            $result->Close();
+            return false;
+        }
+        $row = $result->GetRowAssoc(false);
+        $post_id = $row['post_id'];
+        $result->Close();
+        if($id_only == true) {
+            return $post_id;
+        }        
+        return pnForum_userapi_readpost(array('post_id' => $post_id));
+    }
+    return false;
+}
+
+/**
+ * get_last_post_in_forum
+ * gets the last post in a forum, false if no posts
+ *
+ *@params $args['forum_id'] int the forums id
+ *@params $args['id_only'] boolean if true, only return the id, not the complete post information
+ *@returns array with post information of false
+ */
+function pnForum_userapi_get_last_post_in_forum($args)
+{
+    extract($args);
+    unset($args);
+
+    pnModDBInfoLoad('pnForum');
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+    
+    if(isset($forum_id) && is_numeric($forum_id)) {
+        $sql = "SELECT p.post_id 
+                FROM ".$pntable['pnforum_posts']." AS p 
+                WHERE p.forum_id = '".(int)pnVarPrepForStore($forum_id)."' 
+                ORDER BY p.post_time DESC";
+        
+        $result = $dbconn->SelectLimit($sql, 1);
+        if($dbconn->ErrorNo() != 0) {
+            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        }
+        if($result->EOF) {
+            $result->Close();
+            return false;
+        }
+        $row = $result->GetRowAssoc(false);
+        $post_id = $row['post_id'];
+        $result->Close();
+        if($id_only == true) {
+            return $post_id;
+        }        
+        return pnForum_userapi_readpost(array('post_id' => $post_id));
+    }
+    return false;
+}
+
+/**
  * readcategorytree
  * read all catgories and forums the recent user has access to
  *
@@ -1366,7 +1450,7 @@ function pnForum_userapi_storenewtopic($args)
         $poster_ip = "127.0.0.1";
     }
     
-    $time = (!empty($time)) ? $time : date("Y-m-d H:i");
+    $time = (isset($time)) ? $time : date("Y-m-d H:i");
 
     // Prep for DB
     $subject   = pnVarPrepForStore($subject);
@@ -1483,6 +1567,7 @@ function pnForum_userapi_readpost($args)
                     t.topic_id,
                     t.topic_title, 
                     t.topic_notify,
+                    t.topic_replies,
                     f.forum_id,
                     f.forum_name, 
                     c.cat_title,
@@ -1514,11 +1599,15 @@ function pnForum_userapi_readpost($args)
     $post['topic_id']     = pnVarPrepForDisplay($myrow['topic_id']);
     $post['topic_subject']= pnVarPrepForDisplay($myrow['topic_title']);
     $post['topic_notify'] = pnVarPrepForDisplay($myrow['topic_notify']);
+    $post['topic_replies']= pnVarPrepForDisplay($myrow['topic_replies']);
     $post['forum_id']     = pnVarPrepForDisplay($myrow['forum_id']);
     $post['forum_name']   = pnVarPrepForDisplay($myrow['forum_name']);
     $post['cat_title']    = pnVarPrepForDisplay($myrow['cat_title']);
     $post['cat_id']       = pnVarPrepForDisplay($myrow['cat_id']);
     $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
+    // create unix timestamp
+    $post['post_unixtime'] = strtotime ($post['post_time']);
+
 /*
     if(!allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
         return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
@@ -1601,12 +1690,10 @@ function pnForum_userapi_is_first_post($args)
  * update post
  * updates a posting in the db after editing it
  *
- *@params $args['topic_id'] int the topics id
  *@params $args['post_id'] int the postings id
  *@params $args['subject'] string the subject
  *@params $args['message'] string the text
  *@params $args['delete'] boolean true if the posting is to be deleted
- *@params $args['start'] int the starting posts number on the page we are coming from (for later redirect)
  *@returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
  */
 function pnForum_userapi_updatepost($args)
@@ -1629,18 +1716,23 @@ function pnForum_userapi_updatepost($args)
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
 
-    $sql = "SELECT t.topic_title, 
+    $sql = "SELECT p.poster_id,
+                   p.post_time,
+                   p.topic_id,
+                   p.forum_id,
+                   t.topic_title, 
                    t.topic_status,
-                   t.forum_id, 
-                   f.forum_name, 
-                   f.cat_id, 
-                   c.cat_title
-            FROM  ".$pntable['pnforum_topics']." t
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-
-    $result = $dbconn->Execute($sql);
+                   t.topic_last_post_id,
+                   t.topic_replies,
+                   f.cat_id,
+                   f.forum_last_post_id 
+            FROM  ".$pntable['pnforum_posts']." as p,
+                  ".$pntable['pnforum_topics']." as t,
+                  ".$pntable['pnforum_forums']." as f
+            WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
+              AND (t.topic_id = p.topic_id)
+              AND (f.forum_id = p.forum_id)";
+   $result = $dbconn->Execute($sql);
     
     if($dbconn->ErrorNo() != 0) {
        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
@@ -1652,36 +1744,9 @@ function pnForum_userapi_updatepost($args)
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    
-    $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
-    $forum_name = pnVarPrepForDisplay($myrow['forum_name']);
-    $cat_id = pnVarPrepForDisplay($myrow['cat_id']);
-    $cat_title = pnVarPrepForDisplay($myrow['cat_title']);
-    $topic_subject = pnVarPrepForDisplay($myrow['topic_title']);
-    $topic_status = pnVarPrepForDisplay($myrow['toic_status']);
+    extract($myrow);
 
-    $sql = "SELECT p.*, u.pn_uname, 
-                   u.pn_uid                 
-            FROM ".$pntable['pnforum_posts']." p, 
-                ".$pntable['users']." u 
-            WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')  
-            AND (p.poster_id = u.pn_uid)";
-
-    $result = $dbconn->Execute($sql);
-    
-    if ($dbconn->ErrorNo() != 0) {
-       return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
-    
-    if ($result->PO_RecordCount() <= 0) {
-       return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
-    
-    $myrow = $result->GetRowAssoc(false);
-    $poster_id = $myrow['pn_uid'];
     $pn_uid = pnUserGetVar('uid');
-    $this_post_time = $myrow['post_time'];
-    $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
 
     if (!($pn_uid == $poster_id) && 
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
@@ -1690,7 +1755,7 @@ function pnForum_userapi_updatepost($args)
     }
     
     if(($topic_status == 1) && 
-        allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // topic is locked, user is not moderator
         return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
@@ -1700,41 +1765,36 @@ function pnForum_userapi_updatepost($args)
         return showforumerror( _PNFORUM_EMPTYMSG, __FILE__, __LINE__);
     }
 
-    /**
-     * it's a submitted page and message is not empty
-     */
-    
-    if(!allowedtoadmincategoryandforum($cat_id, $forum_id)) {
-        // if not admin then add a edited by line
-        // If it's been edited more than once, there might be old "edited by" strings with
-        // escaped HTML code in them. We want to fix this up right here:
-        $message = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $message);
-        // who is editing?
-        if(pnUserLoggedIn()) {
-            $editname = pnUserGetVar('uname');
-        } else {
-            $editname = pnConfigGetVar('anonymous');
-        }
-        $message .= " <!-- editby --><br /><br /><em>"._PNFORUM_EDITBY." $editname, $edit_date</em><!-- end editby --> ";
-    }
-
-    // add signature placeholder
-    if ($poster_id <> 1){
-        $message .= "[addsig]";
-    }
-
-    $message = pnVarPrepForStore($message);
-
     if (empty($delete)) {
-        //  topic should not be deleted
-        $topic = $topic_id;
-        $forum = $forum_id;
+        //
+        // update the posting
+        //
+        if(!allowedtoadmincategoryandforum($cat_id, $forum_id)) {
+            // if not admin then add a edited by line
+            // If it's been edited more than once, there might be old "edited by" strings with
+            // escaped HTML code in them. We want to fix this up right here:
+            $message = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $message);
+            // who is editing?
+            if(pnUserLoggedIn()) {
+                $editname = pnUserGetVar('uname');
+            } else {
+                $editname = pnConfigGetVar('anonymous');
+            }
+            $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
+            $message .= "<br /><br /><!-- editby --><br /><br /><em>"._PNFORUM_EDITBY." $editname, $edit_date</em><!-- end editby --> ";
+        }
+    
+        // add signature placeholder
+        if ($poster_id <> 1){
+            $message .= "[addsig]";
+        }
+        $message = pnVarPrepForStore($message);
+
         $sql = "UPDATE ".$pntable['pnforum_posts_text']." 
                 SET post_text = '$message' 
                 WHERE (post_id = '".(int)pnVarPrepForStore($post_id)."')";
         
         $result = $dbconn->Execute($sql);
-        
         if($dbconn->ErrorNo() != 0) {
             return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
         }
@@ -1742,129 +1802,203 @@ function pnForum_userapi_updatepost($args)
         if (!empty ($subject)) { 
             //  topic has a new subject
             if (trim($subject) != '') {
-                //$subject = censor($subject);
-                $subject = pnVarPrepForStore($subject);
+                $subject = pnVarPrepForStore(pnVarCensor($subject));
                 $sql = "UPDATE ".$pntable['pnforum_topics']." 
                         SET topic_title = '$subject' 
                         WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
                 
                 $result = $dbconn->Execute($sql);
-                
                 if ($dbconn->ErrorNo() != 0) {
                     return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
                 }
             }
         }
-        
+        // update done, return now
         return pnModURL('pnForum', 'user', 'viewtopic',
-                        array('topic' => $topic_id,
-                              'start' => $start)); 
+                        array('topic' => $topic_id /*,
+                              'start' => $start*/) ); 
 
     } else {
-        /**
-         * we are going to delete message
-         */
-        $now_hour = date('H');
-        $now_min = date('i');
-        list($hour, $min) = split(':', $time);
-
-        // NOT ((time is good) OR (user is allowed to moderate this forum))
-        if (! ( (($now_hour == $hour && $now_min - 30 < $min) 
-                || ($now_hour == $hour +1 && $now_min - 30 > 0)
-                && ($pn_uid == $poster_id)) || 
-                allowedtomoderatecategoryandforum($cat_id, $forum_id)) ){
+        //
+        // we are going to delete message
+        //
+        if( !($pn_uid == $poster_id) || 
+             !allowedtomoderatecategoryandforum($cat_id, $forum_id) ){
             return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
         }
-        $last_post_in_thread = pnForum_userapi_get_last_boardpost(array('id'=>$topic_id, 'type'=> "time_fix"));
 
-        // get the original author so that we can decrement his postcount later on
-        $result=$dbconn->Execute("SELECT poster_id 
-                                    FROM ".$pntable['pnforum_posts']." 
-                                    WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'");
-        list($pn_uid) = $result->fields;
-            
         // delete the post from the posts table
         $sql = "DELETE FROM ".$pntable['pnforum_posts']." 
                 WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
         
         $result = $dbconn->Execute($sql);
-        
         if ($dbconn->ErrorNo() != 0) {
            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
         }
 
         // delete the post from the posts_text table
-        $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." 
-                WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
-        $result = $dbconn->Execute($sql);
+         $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." 
+                 WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
+         $result = $dbconn->Execute($sql);
+         if ($dbconn->ErrorNo() != 0) {
+            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        }
+       
+        //
+        // there are several possibilities now:
+        // #1 we deleted the last posting in the thread, but their are still others.
+        //    this means we have to update to topic_last_post_id
+        // #2 we deleted the last posting but there is no other posting, this means
+        //    we have to delete the whole topic too
+        // #3 we deleted any other topic in the thread - this means no change at all is
+        //    necessary
+        //
+        // option #1 and #3 mean we have to adjust the topic_replies counter (= -1) too
+        // option #1 and #2 result in changes in the forums table too
+        //
+        // check if the deleted post_id is not the last one (#3)
+        if($post_id <> $topic_last_post_id) {
 
-        if ($dbconn->ErrorNo() != 0) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        } elseif ($last_post_in_thread == $this_post_time) {
-            // update the last posts stats
-            $topic_time_fixed = pnForum_userapi_get_last_boardpost(array('id' => $topic_id, 'type' => 'time_fix'));
+            // the deleted posting was not the last one
+            // adjust the users post count
+            pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+            
+            //
+            // adjust the post counter in the forum, topic counter and last_post_id not changed
+            //
+            $sql = "UPDATE ".$pntable['pnforum_forums']." 
+                    SET forum_posts=forum_posts - 1
+                    WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+            $result = $dbconn->Execute($sql);
+            if ($dbconn->ErrorNo() != 0) {
+                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+            }
+            $result->Close();
+            
+            //
+            //  adjust the topic_replies
+            //
             $sql = "UPDATE ".$pntable['pnforum_topics']." 
-                    SET topic_time = '".pnVarPrepForStore($topic_time_fixed)."' 
+                    SET topic_replies=topic_replies-1 
                     WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
             $result = $dbconn->Execute($sql);
-            if ($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-            }
-        }
-        $topic_removed = false;
-        
-        if(pnForum_userapi_boardstats(array('id' => $topic_id, 'type' => "topic")) == 0) {
-            // it was the last post in the thread, update topics table
-            $sql = "DELETE FROM ".$pntable['pnforum_topics']." 
-                    WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-            $result = $dbconn->Execute($sql);
-            if($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-            }
-            $topic_removed = true;
-        }
-        
-        if(!empty($pn_uid)) {
-            // decrement the author's posting count
-            $sql = "UPDATE ".$pntable['pnforum_users']." 
-                    SET user_posts = user_posts - 1 
-                    WHERE user_id = '".(int)pnVarPrepForStore($pn_uid)."'";
-            $result = $dbconn->Execute($sql);
-            if ($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-            }
-        }
-        pnModAPIFunc('pnForum', 'admin', 'sync',
-                     array('id' => $forum_id,
-                           'type' => 'forum'));
-        if (!$topic_removed) {
-            pnModAPIFunc('pnForum', 'admin', 'sync',
-                         array('id' => $topic_id,
-                               'type' => 'topic'));
-        }
-        
-        // we need to check here if this topic exists
-        $sql = "SELECT * FROM $pntable[pnforum_posts] 
-                WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-        $result = $dbconn->Execute($sql);
-        if ($dbconn->ErrorNo() != 0) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        }
-        
-        if ($result->PO_RecordCount() == 0) {
-            // the post was last in topic, redirect to the forum
-            return pnModURL('pnForum', 'user', 'viewforum',
-                            array('forum' => $forum_id)); 
-        } else {
-            if($result->PO_RecordCount() < $start ) {
-                $start = $start - pnModGetVar('pnForum', 'posts_per_page');
-            }
-            // redirect to the topic
+             if ($dbconn->ErrorNo() != 0) {
+                 return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+             }
+             $result->Close();
+            
+            //
+            // no more actions necessary, just return to the topic and show the last page
+            // after removing the posting the $topic_replies now contains the total number
+            // posts in this topic :-)
+            // $topic_replies - one deleted post + one initial post 
+            // get some enviroment
+            $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+            $times = 0;
+            if (($topic_replies-$posts_per_page)>= 0) { 
+                for ($x = 0; $x < $topic_replies-$posts_per_page; $x+= $posts_per_page) {
+                    $times++; 
+                }
+            } 
+            $start = $times * $posts_per_page;
             return pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id,
                                   'start' => $start)); 
-        }    
+        } else { 
+            //  
+            // check if this was the last post in the topic, if yes, remove topic
+            //
+            $last_topic_post = pnForum_userapi_get_last_post_in_topic(array('topic_id' => $topic_id));
+            $forum_last_post_id = pnForum_userapi_get_last_post_in_forum(array('forum_id' => $forum_id, 'id_only' => true));
+            if($last_topic_post == false) {
+                //
+                // it was the last post in the thread, remove topic
+                //
+                $sql = "DELETE FROM ".$pntable['pnforum_topics']." 
+                        WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                $result = $dbconn->Execute($sql);
+                if($dbconn->ErrorNo() != 0) {
+                    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+                }
+                $result->Close();
+                
+                //
+                // adjust the users post counter
+                //
+                pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+                
+                //
+                // adjust the post and topic counter and forum_last_post_id in the forum
+                //
+                $sql = "UPDATE ".$pntable['pnforum_forums']." 
+                        SET forum_topics=forum_topics - 1, 
+                            forum_posts=forum_posts - 1,
+                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."' 
+                        WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+                $result = $dbconn->Execute($sql);
+                if ($dbconn->ErrorNo() != 0) {
+                    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+                }
+                $result->Close();
+                
+                //
+                // ready to return
+                //
+                return pnModURL('pnForum', 'user', 'viewforum',
+                                array('forum' => $forum_id)); 
+            } else {
+                //
+                // there is at least one posting in this topic
+                // $post contains the data of the last posting
+                //
+                $lastposttime = date("Y-m-d H:i", $last_topic_post['post_unixtime']);
+                $sql = "UPDATE ".$pntable['pnforum_topics']." 
+                        SET topic_time = '".pnVarPrepForStore($lastposttime)."',
+                            topic_last_post_id = '".(int)pnVarPrepForStore($last_topic_post['post_id'])."',
+                            topic_replies=topic_replies-1 
+                        WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                $result = $dbconn->Execute($sql);
+                if ($dbconn->ErrorNo() != 0) {
+                    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+                }
+                $result->Close();
+                //
+                // adjust the users post counter
+                //
+                pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+                //
+                // adjust the post counter in the forum, topi counter not changed
+                //
+                $sql = "UPDATE ".$pntable['pnforum_forums']." 
+                        SET forum_posts=forum_posts - 1,
+                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."' 
+                        WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+                $result = $dbconn->Execute($sql);
+                if ($dbconn->ErrorNo() != 0) {
+                    return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+                }
+                $result->Close();
+                //
+                // after removing the posting the $topic_replies now contains the total number
+                // posts in this topic :-)
+                // $topic_replies - one deleted post + one initial post 
+                // get some enviroment
+                $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+                $times = 0;
+                if (($topic_replies-$posts_per_page)>= 0) { 
+                    for ($x = 0; $x < $topic_replies-$posts_per_page; $x+= $posts_per_page) {
+                        $times++; 
+                    }
+                } 
+                $start = $times * $posts_per_page;
+                return pnModURL('pnForum', 'user', 'viewtopic',
+                                array('topic' => $topic_id,
+                                      'start' => $start)); 
+            }
+        }
     }
+    // we should not get here, but who knows...
+    return pnModURL('pnForum', 'user', 'main');
 }
  
 /**
@@ -1897,15 +2031,19 @@ function pnForum_userapi_get_last_boardpost($args)
     $post_time = $row['post_time'];
     
     // format the return string
-    if ($type == 'topic') {
-        $userlink = "<a href=\"user.php?op=userinfo&amp;uname=".$uname."\">".$uname."</a>";
-        // correct the time
-        $posted_unixtime= strtotime ($post_time);
-        $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
-        $val = "<td><span class=\"pn-normal\">$userlink</span></td><td><span class=\"pn-normal\">$posted_ml</span></td>";
-    }
-    if ($type == 'time_fix') {
-        $val = $post_time;
+    switch($type) {
+        case 'topic':
+            $userlink = "<a href=\"user.php?op=userinfo&amp;uname=".$uname."\">".$uname."</a>";
+            // correct the time
+            $posted_unixtime= strtotime ($post_time);
+            $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+            $val = "<td><span class=\"pn-normal\">$userlink</span></td><td><span class=\"pn-normal\">$posted_ml</span></td>";
+            break;
+        case 'time_fix':
+            $val = $post_time;
+            break;
+        default: 
+            $val = false;
     }
     return($val);   
 }
@@ -1913,7 +2051,7 @@ function pnForum_userapi_get_last_boardpost($args)
 /** 
  * get_viewip_data
  *
- *@params $args['pos_id] int the postings id
+ *@params $args['post_id] int the postings id
  *@returns array with informstion ...
  */
 function pnForum_userapi_get_viewip_data($args)
@@ -2837,8 +2975,24 @@ function pnForum_userapi_get_latest_posts($args)
             $post['start'] = $start;
     
             // get postername and posttime
-            $post['last_boardpost'] = pnForum_userapi_get_last_boardpost(array('id'=>$topic_id, 'type'=> "topic"));
-
+            $sql2 = "SELECT p.post_time, 
+                           u.pn_uname 
+                    FROM ".$pntable['pnforum_posts']." AS p, 
+                         ".$pntable['users']." AS u 
+                    WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."' 
+                    AND p.poster_id = u.pn_uid 
+                    ORDER BY post_time DESC";
+        
+            $result2=$dbconn->SelectLimit($sql2, 1);
+            if($dbconn->ErrorNo() != 0) {
+                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql2,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+            }
+            $row = $result2->GetRowAssoc(false);
+            $post['poster_name'] = $row['pn_uname'];
+            $post['posted_unixtime'] = strtotime ($row['post_time']);
+            $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
+            $result2->Close();
+            
             array_push($posts, $post);
         }
     }
@@ -2981,5 +3135,42 @@ function pnForum_userapi_splittopic($args)
     return $newtopic_id;
 }
 
+/** 
+ * update_user_post_count
+ *
+ *@params $args['user_id'] int the users id
+ *@params $args['mode']    string, either "inc" (+1) or "dec" (-1)
+ *@returns bool true or false
+ */
+function pnForum_userapi_update_user_post_count($args)
+{
+    extract($args);
+    unset($args);
+    
+    pnModDBInfoLoad('pnForum');
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+
+    if(!isset($user_id) || !isset($mode)) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+    if(strtolower($mode)=="inc") {
+        $math = "+";
+    } elseif(strtolower($mode)=="dec") {
+        $math = "-";
+    } else {
+        return false;
+    }
+    
+    $sql = "UPDATE ".$pntable['pnforum_users']." 
+            SET user_posts = user_posts $math 1 
+            WHERE user_id = '".(int)pnVarPrepForStore($user_id)."'";
+    $result = $dbconn->Execute($sql);
+    if ($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    $result->Close();
+    return true;
+}
 
 ?>
