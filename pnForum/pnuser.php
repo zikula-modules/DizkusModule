@@ -538,6 +538,10 @@ function pnForum_user_prefs()
             pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
             pnRedirect(pnModURL('pnForum', 'user', $return_to, array('topic'=>$topic_id)));
             break;
+        case 'showallforums':
+        case 'showfavorites':
+            $favorites = pnModAPIFunc('pnForum', 'user', 'change_favorite_status');
+            pnRedirect(pnModURL('pnForum', 'user', 'main'));
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
             $pnr =& new pnRender('pnForum');
@@ -813,35 +817,6 @@ function pnForum_user_search()
         $pnr->assign('searchstart',  $vars['searchstart']);
         return $pnr->fetch('pnforum_user_searchresults.html');
     }
-}
-
-/**
- * showfavorites
- * switches the main view to favorites only
- *
- */
-function pnForum_user_showfavorites()
-{
-    if(pnUserLoggedIn()) {
-        if(!pnModAPILoad('pnForum', 'user')) {
-            return showforumerror("loading userapi failed", __FILE__, __LINE__);
-        } 
-        $favorites = pnModAPIFunc('pnForum', 'user', 'change_favorite_status');
-    }
-    pnRedirect(pnModURL('pnForum', 'user', 'main'));
-    return true;       
-}
-
-/**
- * showallforums
- * switches the main view to show all forums
- * we simply call showfavorites here, because its the same action :-)
- * this function is only for cosmetic issues
- *
- */
-function pnForum_user_showallforums()
-{
-    pnForum_user_showfavorites();
 }
 
 ?>

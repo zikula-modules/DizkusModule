@@ -13,9 +13,9 @@
         <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
             <th id="col_0" abbr="<!--[ if $favorites ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan=2 align="left" valign="middle">
                 <!--[ if $favorites ]-->
-                    <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnimg src="showallforums.gif" alt='_PNFORUM_SHOWALLFORUMS' altml=true ]--></a><!--[ /if ]-->
+                    <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnimg src="showallforums.gif" alt='_PNFORUM_SHOWALLFORUMS' altml=true ]--></a><!--[ /if ]-->
                 <!--[ else ]-->
-                    <strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=showfavorites ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]-->"><!--[ pnimg src="showfavorites.gif" alt='_PNFORUM_SHOWFAVORITES' altml=true ]--></a><!--[ /if ]-->
+                    <strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]-->"><!--[ pnimg src="showfavorites.gif" alt='_PNFORUM_SHOWFAVORITES' altml=true ]--></a><!--[ /if ]-->
                 <!--[ /if ]-->
             </th>
             <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_TOPICS' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_TOPICS' ]--></strong></th>
