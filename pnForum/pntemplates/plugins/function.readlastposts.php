@@ -153,19 +153,22 @@ function smarty_function_readlastposts($params, &$smarty)
                    f.forum_name,
                    c.cat_title,
                    c.cat_id,
-                   pt.poster_id,
-                   pt.post_id
+                   p.poster_id,
+                   p.post_id,
+                   pt.post_text
         FROM ".$pntable['pnforum_topics']." as t,
                 ".$pntable['pnforum_forums']." as f,
-                ".$pntable['pnforum_posts']." as pt,
+                ".$pntable['pnforum_posts']." as p,
+                ".$pntable['pnforum_posts_text']." as pt,
                 ".$pntable['pnforum_categories']." as c
         WHERE $whereforum
               $whereuser
               $wherefavorites
               $wherecanread
               t.forum_id = f.forum_id AND
-              t.topic_last_post_id = pt.post_id AND
-              f.cat_id = c.cat_id
+              t.topic_last_post_id = p.post_id AND
+              f.cat_id = c.cat_id AND
+              pt.post_id = p.post_id
         ORDER by t.topic_time DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, $postmax, false, __FILE__, __LINE__);
@@ -184,7 +187,8 @@ function smarty_function_readlastposts($params, &$smarty)
                  $cat_title,
                  $cat_id,
                  $poster_id,
-                 $post_id) = $result->fields;
+                 $post_id,
+                 $post_text) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
                 $lastpost = array();
                 $lastpost['topic_id'] = $topic_id;
@@ -199,6 +203,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 $lastpost['cat_title'] = $cat_title;
                 $lastpost['cat_id'] = $cat_id;
                 $lastpost['post_id'] = $post_id;
+                $lastpost['post_text'] = $post_text;
 
                 if($post_sort_order == "ASC") {
                     $start = ((ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
@@ -217,6 +222,11 @@ function smarty_function_readlastposts($params, &$smarty)
                     $user_name = pnConfigGetVar('anonymous');
                 }
                 $lastpost['poster_name'] = $user_name;
+
+                $lastpost['post_text'] = pnForum_replacesignature($lastpost['post_text'], '');
+                // call hooks for $message
+                list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
+                $lastpost['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
 
                 $posted_unixtime= strtotime ($lastpost['topic_time']);
                 $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
