@@ -37,12 +37,13 @@ function smarty_function_subscribetopic_button($params, &$smarty)
                 $smarty->trigger_error("subscribetopic_button: unable to load userapi", e_error);
                 return false;
             }
+            $lang = pnUserGetLang();
             if(pnModAPIFunc('pnForum', 'user', 'get_topic_subscription_status',
                             array('userid'=>$userid, 
                                   'topic_id'=>$topic_id))==false) {
-                $out = "<a href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_topic', 'topic'=>$topic_id))."\">".pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_TOPIC)."</a>";
+                $out = "<a title=\"".pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_TOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_topic', 'topic'=>$topic_id))."\"><img src=\"modules/pnForum/pnimages/$lang/t_abo_on.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_TOPIC)."\"</a>";
             } else {
-                $out = "<a href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_topic', 'topic'=>$topic_id))."\">".pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC)."</a>";
+                $out = "<a title=\"".pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_topic', 'topic'=>$topic_id))."\"><img src=\"modules/pnForum/pnimages/$lang/t_abo_off.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC)."\"</a>";
             }
         }
     }

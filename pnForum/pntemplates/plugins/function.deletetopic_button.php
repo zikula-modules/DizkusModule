@@ -33,7 +33,7 @@ function smarty_function_deletetopic_button($params, &$smarty)
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         $image = pnModGetVar('pnForum', 'deltopic_image');
         $img_attr = getimagesize($image);
-        $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'del', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."</a>&nbsp;&nbsp;&nbsp;";
+        $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'del', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."</a>&nbsp;&nbsp;&nbsp;";
     }
     return $out;
 }

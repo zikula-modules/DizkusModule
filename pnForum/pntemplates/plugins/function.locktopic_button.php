@@ -35,11 +35,11 @@ function smarty_function_locktopic_button($params, &$smarty)
 	    {
             $image = pnModGetVar('pnForum', 'locktopic_image');
 	        $img_attr = getimagesize($image);
-  	        $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'lock', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_LOCKTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_LOCKTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
+  	        $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_LOCKTOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'lock', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_LOCKTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_LOCKTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
 	    } else {
             $image = pnModGetVar('pnForum', 'unlocktopic_image');
 	        $img_attr = getimagesize($image);
-  	        $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'unlock', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_UNLOCKTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_UNLOCKTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
+  	        $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_UNLOCKTOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'unlock', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_UNLOCKTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_UNLOCKTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
 	    }
     }
     return $out;

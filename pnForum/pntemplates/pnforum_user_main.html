@@ -21,7 +21,7 @@
         <!--[ foreach item=category from=$tree ]-->
         <tr align="left" valign="top">
             <td headers="col_0" colspan="5" bgcolor="<!--[ $bgcolor2 ]-->">
-                <span class="pn-phpBB-cat"><a href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->" class="pn-phpBB-cat">
+                <span class="pn-phpBB-cat"><a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->" class="pn-phpBB-cat">
                 <strong><!--[ $category.cat_title ]--></strong></a></span>&nbsp;<!--[ adminlink type=category id=$category.cat_id ]-->
             </td>
         </tr>
@@ -31,7 +31,7 @@
             <td headers="col_0" align="center" valign="middle" width="2%">
                 <img src="<!--[ $forum.fldr_img ]-->" alt="<!--[ $forum.fldr_alt ]-->" width="<!--[ $forum.fldr_img_attr.0 ]-->" height="<!--[ $forum.fldr_img_attr.1 ]-->"></td>
             <td headers="col_0">
-                <span class="pn-title"><a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->" class="pn-title" ><strong><!--[ $forum.forum_name ]--></strong></a></span>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]-->
+                <span class="pn-title"><a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->" class="pn-title" ><strong><!--[ $forum.forum_name ]--></strong></a></span>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]-->
                 <br /><span class="pn-normal"><!--[ $forum.forum_desc ]-->
                 <br /><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]-->
                 </span>

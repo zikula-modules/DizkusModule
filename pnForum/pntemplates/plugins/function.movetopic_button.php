@@ -34,7 +34,7 @@ function smarty_function_movetopic_button($params, &$smarty)
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         $image = pnModGetVar('pnForum', 'movetopic_image');
         $img_attr = getimagesize($image);
-        $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'move', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_MOVETOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_MOVETOPIC)."</a>&nbsp;&nbsp;&nbsp;";
+        $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_MOVETOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'move', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_MOVETOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_MOVETOPIC)."</a>&nbsp;&nbsp;&nbsp;";
     }
     return $out;
 }

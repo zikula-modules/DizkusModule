@@ -14,7 +14,7 @@
 
 <!--[ addtopic_button forum_id=$forum.forum_id cat_id=$forum.cat_id forum_id=$forum.forum_id ]-->
 <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$forum.cat_id  ]-->
-<br />
+<br /><br />
 <a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ $forum.cat_title ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong><br />
 <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:
 <!--[ listforummods moderators=$forum.forum_mods ]-->
@@ -44,7 +44,7 @@
         <td headers="col_0" b-gcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
         <!--[ /if ]-->        
         <td headers="col_0">
-            <span class="pn-normal"><a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->#<!--[ $topic.newest_postid ]-->"><img src="<!--[ $firstnew.name ]-->" width="<!--[ $firstnew.width ]-->" height="<!--[ $firstnew.height ]-->" alt="<!--[ pnml name='_PNFORUM_POST_GOTO_NEWEST' ]-->"></a> <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title ]--></a></span><!--[ $topic.pagination ]-->
+            <span class="pn-normal"><a title="<!--[ pnml name='_PNFORUM_POST_GOTO_NEWEST' ]--> '<!--[ $topic.topic_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->#<!--[ $topic.newest_postid ]-->"><img src="<!--[ $firstnew.name ]-->" width="<!--[ $firstnew.width ]-->" height="<!--[ $firstnew.height ]-->" alt="<!--[ pnml name='_PNFORUM_POST_GOTO_NEWEST' ]--> '<!--[ $topic.topic_title ]-->'"></a> <a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title ]--></a></span><!--[ $topic.pagination ]-->
          </td>
         <td headers="col_1" b-gcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_replies ]--></span></td>
         <td headers="col_2" b-gcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></span></td>

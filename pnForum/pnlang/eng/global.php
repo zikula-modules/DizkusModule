@@ -11,33 +11,19 @@
 
 // copied from includes/language/blocks/eng
 define('_PNFORUM_SEARCHINCLUDE_HITS', 'hits');
-
 define('_RESULTS',"Results");
-
 define('_PNFORUM_SEARCHINCLUDE_AUTHOR',"Author");
-
 define('_PNFORUM_SEARCHINCLUDE_BYDATE',"by date");
-
 define('_PNFORUM_SEARCHINCLUDE_BYTITLE',"by title");
-
 define('_PNFORUM_SEARCHINCLUDE_BYFORUM',"by forum");
-
 define('_PNFORUM_SEARCHINCLUDE_DATE',"Date");
-
 define('_PNFORUM_SEARCHINCLUDE_FORUM',"Category and forum");
-
 define('_PNFORUM_SEARCHINCLUDE_NEWWIN',"Show in new window");
-
 define('_PNFORUM_SEARCHINCLUDE_NOENTRIES',"No messages in forums found");
-
 define('_PNFORUM_SEARCHINCLUDE_ORDER',"Order");
-
 define('_PNFORUM_SEARCHINCLUDE_REPLIES',"Replies");
-
 define('_PNFORUM_SEARCHINCLUDE_RESULTS',"Forums");
-
 define('_PNFORUM_SEARCHINCLUDE_TITLE',"Search forums");
-
 define('_PNFORUM_SEARCHINCLUDE_VIEWS',"Views");
 
 
@@ -46,8 +32,10 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
-define('_PNFORUM_SPLITTOPIC','<img src="modules/pnForum/pnimages/eng/splitit.gif" border="0" alt="split">');
-define('_PNFORUM_SPLITTOPIC_TITLE','Split topic');
+define('_PNFORUM_GOTO_FORUM','go to forum');
+define('_PNFORUM_GOTO_CAT','go to category');
+define('_PNFORUM_GOTO_TOPIC','go to topic');
+define('_PNFORUM_SPLITTOPIC','Split topic');
 define('_PNFORUM_SPLITTOPIC_INFO','This will split the topic before the selected posting.');
 define('_PNFORUM_SPLITTOPIC_NEWTOPIC','Subject for th new topic');
 define('_PNFORUM_SPLIT','Split');
@@ -92,18 +80,23 @@ define('_PNFORUM_POST',"post");
  */
 define('_PNFORUM_POWEREDBY', 'Powered by <a href="http://www.pncommunity.de/">pnForum</a> Version');
 define('_PNFORUM_SEARCH','search pnForum');
+define('_PNFORUM_EDITDELETE', 'edit/delete');
+define('_PNFORUM_EMAIL_TOPIC', 'send as email');
+define('_PNFORUM_REPLY', 'reply');
+define('_PNFORUM_REPLYLOCKED', 'closed');
+define('_PNFORUM_REPLYQUOTE', 'quote');
+define('_PNFORUM_VIEWIP', 'view ip address');
+define('_PNFORUM_NEWTOPIC','new topic');
+define('_PNFORUM_SUBSCRIBE_TOPIC','subscribe topic');
+define('_PNFORUM_UNSUBSCRIBE_TOPIC','unsubscribe topic');
+define('_PNFORUM_SUBSCRIBE_FORUM', 'subscribe forum');
+define('_PNFORUM_UNSUBSCRIBE_FORUM','unsubscribe forum');
+define('_PNFORUM_POST_GOTO_NEWEST','go to the newest post in ');
 
 /**
  * new in 1.7.5
  */
 define('_PNFORUM_PREVIEW','Preview');
-
-/**
- * changed in 1.7.5
- */
-define('_PNFORUM_SUBSCRIBE_FORUM','<img src="modules/pnForum/pnimages/eng/f_abo_on.gif" hspace="5" border="0" vspace="5">');
-define('_PNFORUM_UNSUBSCRIBE_FORUM','<img src="modules/pnForum/pnimages/eng/f_abo_off.gif" hspace="5" border="0" vspace="5">');
-define('_PNFORUM_NEWTOPIC','<img src="modules/pnForum/pnimages/eng/post.gif" border="0" hspace="5" vspace="5">');
 
 /**
  * new in 1.7.5
@@ -115,8 +108,6 @@ define('_PNFORUM_USER_IP', 'User IP');
 define('_PNFORUM_HOST', 'Host');
 define('_PNFORUM_IP_USERNAMES', 'Usernames of users that posted from this IP + post counts');
 define('_PNFORUM_VIEW_IP', 'View IP');
-define('_PNFORUM_SUBSCRIBE_TOPIC','<img src="modules/pnForum/pnimages/eng/t_abo_on.gif" hspace="5" border="0" vspace="5">');
-define('_PNFORUM_UNSUBSCRIBE_TOPIC','<img src="modules/pnForum/pnimages/eng/t_abo_off.gif" hspace="5" border="0" vspace="5">');
 define('_PNFORUM_LATEST','latest posts');
 define('_PNFORUM_OURLATESTPOSTS','Latest Forum-Posts');
 define('_PNFORUM_LASTWEEK','last week');
@@ -156,19 +147,12 @@ define('_PNFORUM_BBCODE_ENTER_TEXT_BOLD','Enter the text that you want to make b
 define('_PNFORUM_BBCODE_ENTER_TEXT_ITALIC','Enter the text that you want to make italic:');
 define('_PNFORUM_BBCODE_ENTER_WEBIMAGE_URL','Enter the URL for the image you want to display:');
 define('_PNFORUM_BBCODE_ENTER_LIST_ITEM','Enter the new list item. Note that each list group must be preceeded by a List Open and must be ended with List Close:');
-define('_PNFORUM_POST_GOTO_NEWEST','Go to the newest post');
 
 /**
  * New in 1.7.3.1 RC2
  */
 define('_PNFORUM_FORUMSINDEX',"Forum-Index");
 define('_PNFORUM_NEW_THREADS',"New Topic");
-define('_PNFORUM_EDITDELETE',"<img src=\"modules/pnForum/pnimages/eng/deledit.gif\" border=\"0\">");
-define('_PNFORUM_EMAIL_TOPIC',"<img src=\"modules/pnForum/pnimages/eng/sendto.gif\" hspace=\"5\" border=\"0\" vspace=\"5\">");
-define('_PNFORUM_REPLY',"<img src=\"modules/pnForum/pnimages/eng/answerto.gif\" border=\"0\">");
-define('_PNFORUM_REPLYLOCKED',"<img src=\"modules/pnForum/pnimages/eng/closedt.gif\" border=\"0\">");
-define('_PNFORUM_REPLYQUOTE',"<img src=\"modules/pnForum/pnimages/eng/answertoz.gif\" border=\"0\">");
-define('_PNFORUM_VIEWIP',"<img src=\"modules/pnForum/pnimages/eng/id.gif\" border=\"0\">");
 
 /** 
  * new in 1.7.3.1 RC1

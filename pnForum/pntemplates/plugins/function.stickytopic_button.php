@@ -35,11 +35,11 @@ function smarty_function_stickytopic_button($params, &$smarty)
    	    {
             $image = pnModGetVar('pnForum', 'stickytopic_image');
 	        $img_attr = getimagesize($image);
-  	        $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'sticky', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_STICKYTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_STICKYTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
+  	        $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_STICKYTOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'sticky', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_STICKYTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_STICKYTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
         }else{
             $image = pnModGetVar('pnForum', 'unstickytopic_image');
 	        $img_attr = getimagesize($image);
-  	        $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'unsticky', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_UNSTICKYTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_UNSTICKYTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
+  	        $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_UNSTICKYTOPIC)."\" href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'unsticky', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_UNSTICKYTOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_UNSTICKYTOPIC)."</a>&nbsp;&nbsp;&nbsp;";
         }
     }
     return $out;
