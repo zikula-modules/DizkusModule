@@ -224,8 +224,8 @@ function pnForum_CloseDB($resobj)
  *@returns boolean true or false
  *
  */
-if(!function_exists('is_serialized')) {
-    function is_serialized( $string ) {
+if(!function_exists('pnForum_is_serialized')) {
+    function pnForum_is_serialized( $string ) {
         if( @unserialize( $string ) == "" ) {
             return false;
         }
