@@ -4,7 +4,7 @@
 <!--[ if $topforumscount > 0 ]-->
     <br /><strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_PNFORUM_ACTIVE_FORUMS' ]--></strong><br />
     <!--[ foreach item=topforum from=$topforums ]-->
-    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topforum.forum_id ]-->" title="<!--[ $topforum.forum_name ]-->"><!--[ $topforum.forum_name ]--></a>&nbsp;(<!--[ $topforum.forum_topics ]-->/<!--[ $topforum.forum_posts ]-->)<br />
+    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topforum.forum_id ]-->" title="<!--[ $topforum.cat_title ]--> :: <!--[ $topforum.forum_name ]-->"><!--[ $topforum.forum_name ]--></a>&nbsp;(<!--[ $topforum.forum_topics ]-->/<!--[ $topforum.forum_posts ]-->)<br />
     <!--[ /foreach ]-->
     <br />
 <!--[ /if ]-->

@@ -40,9 +40,7 @@ function smarty_function_readtopposters($params, &$smarty)
 	unset($params);
 
     // get some enviroment
-    pnModDBInfoLoad('pnForum');
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $postermax = (!empty($maxposters)) ? $maxposters : 3;
 
@@ -52,10 +50,7 @@ function smarty_function_readtopposters($params, &$smarty)
           AND user_posts > 0
           ORDER BY user_posts DESC";
 
-    $result = $dbconn->SelectLimit($sql, $postermax);
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfSelectLimit($dbconn, $sql, $postermax, false, __FILE__, __LINE__);
     $result_postermax = $result->PO_RecordCount();
     if ($result_postermax <= $postermax) {
       $postermax = $result_postermax;
@@ -72,7 +67,7 @@ function smarty_function_readtopposters($params, &$smarty)
             array_push($topposters, $topposter);
         }
     }
-
+    pnfCloseDB($result);
     $smarty->assign('toppostercount', count($topposters));
     $smarty->assign('topposters', $topposters);
     return;

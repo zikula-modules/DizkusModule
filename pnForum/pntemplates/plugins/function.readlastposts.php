@@ -42,32 +42,25 @@ function smarty_function_readlastposts($params, &$smarty)
 	unset($params);
 
     // get some enviroment
-    pnModDBInfoLoad('pnForum');
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $whereforum = "";
     if(!empty($forum_id) && is_numeric($forum_id)) {
         // get the category id and check permissions
-        pnModDBInfoLoad('pnForum');
-        $dbconn =& pnDBGetConn(true);
-        $pntable =& pnDBGetTables();
-        
+
         // get the category id
         $sql = "SELECT cat_id 
                 FROM " . $pntable['pnforum_forums'] . "
                 WHERE forum_id = $forum_id ";
-        $result = $dbconn->Execute($sql);
-        if($dbconn->ErrorNo() != 0) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        }
+        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
         if($result->EOF) {
             $result->Close();
             return false;
         }
         $row = $result->GetRowAssoc(false);
         $cat_id = $row['cat_id'];
-        $result->Close();
+        pnfCloseDB($result);
         if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             return;
         }
@@ -108,10 +101,7 @@ function smarty_function_readlastposts($params, &$smarty)
               f.cat_id = c.cat_id
         ORDER by t.topic_time DESC";
         
-    $result = $dbconn->SelectLimit($sql, $postmax);
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfSelectLimit($dbconn, $sql, $postmax, false, __FILE__, __LINE__);
     $result_postmax = $result->PO_RecordCount();
     if ($result_postmax <= $postmax) {
         $postmax = $result_postmax;
@@ -180,6 +170,7 @@ function smarty_function_readlastposts($params, &$smarty)
             }
         }
     }
+    pnfCloseDB($result);
     $smarty->assign('lastpostcount', count($lastposts));
     $smarty->assign('lastposts', $lastposts);
     return;

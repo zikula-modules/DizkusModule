@@ -40,9 +40,7 @@ function smarty_function_readtopforums($params, &$smarty)
 	unset($params);
 
     // get some enviroment
-    pnModDBInfoLoad('pnForum');
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $forummax = (!empty($maxforums)) ? $maxforums : 5;
     
@@ -56,11 +54,8 @@ function smarty_function_readtopforums($params, &$smarty)
                ".$pntable['pnforum_categories']." AS c
           WHERE f.cat_id = c.cat_id
           ORDER BY forum_posts DESC";
-    
-    $result = $dbconn->SelectLimit($sql, $forummax);
-    if($dbconn->ErrorNo() != 0) {    
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+
+    $result = pnfSelectLimit($dbconn, $sql, $forummax, false, __FILE__, __LINE__);
     $result_forummax = $result->PO_RecordCount();
     if ($result_forummax <= $forummax) {
         $forummax = $result_forummax;
@@ -74,11 +69,12 @@ function smarty_function_readtopforums($params, &$smarty)
             $topforum['forum_name'] = pnVarPrepForDisplay($forum_name);
             $topforum['forum_topics'] = $forum_topics;
             $topforum['forum_posts'] = $forum_posts;
-            $topforum['cat_title'] = $cat_title;
+            $topforum['cat_title'] = pnVarPrepForDisplay($cat_title);
             $topforum['cat_id'] = $cat_id;
             array_push($topforums, $topforum);
         }
     }
+    pnfCloseDB($result);
     $smarty->assign('topforumscount', count($topforums));
     $smarty->assign('topforums', $topforums);
     return;

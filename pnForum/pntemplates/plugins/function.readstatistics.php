@@ -42,28 +42,21 @@ function smarty_function_readstatistics($params, &$smarty)
 	unset($params);
 
     // get some environment
-    pnModDBInfoLoad('pnForum');
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT SUM(forum_topics) AS total_topics, 
           SUM(forum_posts) AS total_posts, 
           COUNT(*) AS total_forums
           FROM ".$pntable['pnforum_forums'];
           
-    $result = $dbconn->Execute($sql);
-    if($dbconn->ErrorNo() != 0) {    
-      return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
-
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
     list ($total_topics,$total_posts,$total_forums) = $result->fields;
+    pnfCloseDB($result);
     
     $sql = "SELECT COUNT(*) FROM ".$pntable['pnforum_categories']."";
-    $result = $dbconn->Execute($sql);
-    if($dbconn->ErrorNo() != 0) {
-       return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
     list ($total_categories) = $result->fields;
+    pnfCloseDB($result);
         
     $smarty->assign('total_categories', $total_categories);
     $smarty->assign('total_topics', $total_topics);

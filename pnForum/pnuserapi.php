@@ -232,10 +232,7 @@ function pnForum_userapi_get_last_post_in_topic($args)
                 WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."' 
                 ORDER BY p.post_time DESC";
         
-        $result = $dbconn->SelectLimit($sql, 1);
-        if($dbconn->ErrorNo() != 0) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        }
+        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
             pnfCloseDB($result);
             return false;
@@ -272,10 +269,7 @@ function pnForum_userapi_get_last_post_in_forum($args)
                 WHERE p.forum_id = '".(int)pnVarPrepForStore($forum_id)."' 
                 ORDER BY p.post_time DESC";
         
-        $result = $dbconn->SelectLimit($sql, 1);
-        if($dbconn->ErrorNo() != 0) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-        }
+        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
             pnfCloseDB($result);
             return false;
@@ -578,11 +572,7 @@ function pnForum_userapi_readforum($args)
             WHERE t.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
             ORDER BY t.sticky DESC, topic_time DESC";
     
-    $result = $dbconn->SelectLimit($sql, $topics_per_page, $start);
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
-
+    $result = pnfSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
     $forum['forum_id'] = $forum_id;
     $forum['topics'] = array();
     while(!$result->EOF) {
@@ -824,15 +814,9 @@ function pnForum_userapi_readtopic($args)
             $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
         } elseif(isset($start)) {
             // $start is given
-            $result2 = $dbconn->SelectLimit($sql2, $posts_per_page, $start);
-            if($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql2,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-            }
+            $result2 = pnfSelectLimit($dbconn, $sql2, $posts_per_page, $start, __FILE__, __LINE__);
         } else {
-            $result2 = $dbconn->SelectLimit($sql2, $posts_per_page);
-            if($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql2,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-            }
+            $result2 = pnfSelectLimit($dbconn, $sql2, $posts_per_page, false, __FILE__, __LINE__);
         }
         while(!$result2->EOF) {
             $row = $result2->GetRowAssoc(false);
@@ -1002,12 +986,7 @@ function pnForum_userapi_preparereply($args)
                         WHERE p.topic_id = '".$reply['topic_id']."' AND p.post_id = pt.post_id
                         ORDER BY p.post_id DESC";
 
-    $result = $dbconn->SelectLimit($sql, 10);
-
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
-
+    $result = pnfSelectLimit($dbconn, $sql, 10, false, __FILE__, __LINE__);
     $reply['topic_review'] = array();
     while(!$result->EOF) {
         $review = array();
@@ -1539,9 +1518,6 @@ function pnForum_userapi_readpost($args)
     //  convert <br /> to \n (since nl2br only inserts additional <br /> we just need to remove them
     //$message = eregi_replace('<br />', "", $message);
     $message = phpbb_br2nl($message);
-    //  convert smilies (just for backwards compatibility)
-    // does read unused smiles tables - do we need this??
-    $message = pnForum_desmile($message);
     //  convert bbcode (just for backwards compatibility)
     $message = pnForum_bbdecode($message);
     //  convert autolinks (just for backwards compatibility)
@@ -1890,7 +1866,7 @@ function pnForum_userapi_get_last_boardpost($args)
             AND p.poster_id = u.pn_uid 
             ORDER BY post_time DESC";
 
-    $result=$dbconn->SelectLimit($sql, 1);
+    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     $row = $result->GetRowAssoc(false);
     pnfCloseDB($result);
     $uname = $row['pn_uname'];
@@ -2746,10 +2722,7 @@ function pnForum_userapi_get_latest_posts($args)
                     AND p.poster_id = u.pn_uid 
                     ORDER BY post_time DESC";
         
-            $result2=$dbconn->SelectLimit($sql2, 1);
-            if($dbconn->ErrorNo() != 0) {
-                return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql2,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-            }
+            $result2 = pnfSelectLimit($dbconn, $sql2, 1, false, __FILE__, __LINE__);
             $row = $result2->GetRowAssoc(false);
             $post['poster_name'] = $row['pn_uname'];
             $post['posted_unixtime'] = strtotime ($row['post_time']);
@@ -2848,10 +2821,7 @@ function pnForum_userapi_splittopic($args)
             FROM ".$pntable['pnforum_posts']."
             WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."' 
             ORDER BY post_time DESC";
-    $result=$dbconn->SelectLimit($sql, 1);
-    if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id) = $result->fields;
     pnfCloseDB($result);
 
@@ -2942,10 +2912,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
               AND t1.forum_id = t2.forum_id
               AND t1.sticky = 0
             ORDER BY t1.topic_time $sort";
-    $result = $dbconn->SelectLimit($sql, 1);
-    if ($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-    }
+    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     if(!$result->EOF) {
         $row = $result->GetRowAssoc(false);
         $topic_id = $row['topic_id'];
@@ -3043,7 +3010,10 @@ function pnForum_userapi_forumsearch($args)
         // authors with adodb
         if($author) {
             $search_username = addslashes($author);
-            $result= $dbconn->SelectLimit("SELECT pn_uid FROM $pntable[users] WHERE pn_uname = '$search_username'", 1);
+            $sql = "SELECT pn_uid 
+                    FROM $pntable[users] 
+                    WHERE pn_uname = '".pnVarPrepForStore($search_username)."'";
+            $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
             pnfCloseDB($result);
             $searchauthor = $row['pn_uid'];
