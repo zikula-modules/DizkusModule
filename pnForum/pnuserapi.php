@@ -819,6 +819,9 @@ function pnForum_userapi_readtopic($args)
                 pnModGetVar('pnForum', 'log_ip') == "yes") {
                 // user is allowed to see ip
                 $post['poster_data']['seeip'] = true;
+            }
+            if(allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'])) {
+                // user is allowed to see ip
                 $post['poster_data']['moderate'] = true;
             }
             array_push($topic['posts'], $post);
