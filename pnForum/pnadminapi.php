@@ -271,7 +271,9 @@ function pnForum_adminapi_readforums($args)
                   $forum['forum_posts'],
                   $forum['cat_title'],
                   $forum['cat_id'] ) = $result->fields;
-            array_push( $forums, $forum );
+            if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+                array_push( $forums, $forum );
+            }
         }
     }
 //echo "<pre>";
