@@ -141,13 +141,6 @@ define('_PNFORUM_PREFS_TOPICICON', 'Topic image:');
 define('_PNFORUM_PREFS_HOTTOPICICON', 'Hot topic image:<br /><i>(Topic with many posts)</i>');
 define('_PNFORUM_PREFS_NEWPOSTSICON', 'New posts image:<br /><i>(Folder with new posts since user\'s last visit)</i>');
 define('_PNFORUM_PREFS_HOTNEWPOSTSICON', 'Topic with both many and new posts image:');
-define('_PNFORUM_PREFS_LOCKEDICON', 'Locked topic Icon:');
-define('_PNFORUM_PREFS_LOCKTOPICICON', 'Lock topic Icon:');
-define('_PNFORUM_PREFS_UNLOCKTOPICICON', 'Unlock locked topic Icon:');
-define('_PNFORUM_PREFS_STICKYTOPICICON', 'Make topic sticky Icon:');
-define('_PNFORUM_PREFS_UNSTICKYTOPICICON', 'Make topic unsticky Icon:');
-define('_PNFORUM_PREFS_MOVETOPICICON', 'Move topic Icon:');
-define('_PNFORUM_PREFS_DELETETOPICICON', 'Delete topic Icon:');
 define('_PNFORUM_PREFS_SAVE', 'Save');
 define('_PNFORUM_PREFS_RESTOREDEFAULTS', 'Restore defaults');
 
