@@ -51,37 +51,44 @@ function smarty_function_plainbbcode($params, &$smarty)
         $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE_HINT)."\" type=\"button\" accesskey=\"u\" name=\"underline\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE)." \" style=\"text-decoration:underline; width: 40px;\" onClick=\"DoPrompt('underline')\">\n";
 
         $out .= "<br />";
-        $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTCOLOR).":\n";
-        $out .= "<select title=\"".pnVarPrepForDisplay(PNFORUM_BBCODE_COLOR_HINT)."\" name=\"fontcolor\" onChange=\"DoColor(this.form.fontcolor.options[this.form.fontcolor.selectedIndex].value)\">\n";
-        $out .= "    <option style=\"color:black; background-color: #FFFFFF \" value=\"black\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DEFAULT)."</option>\n";
-        $out .= "    <option style=\"color:darkred; background-color: #DEE3E7\" value=\"darkred\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DARKRED)."</option>\n";
-        $out .= "    <option style=\"color:red; background-color: #DEE3E7\" value=\"red\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_RED)."</option>\n";
-        $out .= "    <option style=\"color:orange; background-color: #DEE3E7\" value=\"orange\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_ORANGE)."</option>\n";
-        $out .= "    <option style=\"color:brown; background-color: #DEE3E7\" value=\"brown\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_BROWN)."</option>\n";
-        $out .= "\n";
-        $out .= "    <option style=\"color:yellow; background-color: #DEE3E7\" value=\"yellow\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_YELLOW)."</option>\n";
-        $out .= "    <option style=\"color:green; background-color: #DEE3E7\" value=\"green\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_GREEN)."</option>\n";
-        $out .= "    <option style=\"color:olive; background-color: #DEE3E7\" value=\"olive\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_OLIVE)."</option>\n";
-        $out .= "    <option style=\"color:cyan; background-color: #DEE3E7\" value=\"cyan\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_CYAN)."</option>\n";
-        $out .= "    <option style=\"color:blue; background-color: #DEE3E7\" value=\"blue\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_BLUE)."</option>\n";
-        $out .= "    <option style=\"color:darkblue; background-color: #DEE3E7\" value=\"darkblue\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DARKBLUE)."</option>\n";
-        $out .= "\n";
-        $out .= "    <option style=\"color:indigo; background-color: #DEE3E7\" value=\"indigo\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_INDIGO)."</option>\n";
-        $out .= "    <option style=\"color:violet; background-color: #DEE3E7\" value=\"violet\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_VIOLET)."</option>\n";
-        $out .= "    <option style=\"color:white; background-color: #DEE3E7\" value=\"white\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_WHITE)."</option>\n";
-        $out .= "    <option style=\"color:black; background-color: #DEE3E7\" value=\"black\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_BLACK)."</option>\n";
-        $out .= "    <option style=\"color:black; background-color: #DEE3E7\" value=\"#".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_TEXTCOLORCODE)."\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DEFINE)."</option>\n";
-        $out .= "</select>&nbsp;\n";
-        $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTSIZE).":\n";
-        $out .= "<select title=\"".pnVarPrepForDisplay(PNFORUM_BBCODE_SIZE_HINT)."\" name=\"fontsize\" onChange=\"DoSize(this.form.fontsize.options[this.form.fontsize.selectedIndex].value)\">\n";
-        $out .= "    <option value=\"tiny\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_TINY)."</option>\n";
-        $out .= "    <option value=\"small\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_SMALL)."</option>\n";
-        $out .= "    <option value=\"normal\" selected=\"selected\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_NORMAL)."</option>\n";
-        $out .= "    <option value=\"large\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_LARGE)."</option>\n";
-        $out .= "    <option value=\"huge\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_HUGE)."</option>\n";
-        $out .= "    <option value=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_TEXTSIZE)."\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_DEFINE)."</option>\n";
-        $out .= "</select>";
-
+        if(pnModGetVar('pn_bbcode', 'color_enabled')=="yes") {
+            $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTCOLOR).":\n";
+            $out .= "<select title=\"".pnVarPrepForDisplay(PNFORUM_BBCODE_COLOR_HINT)."\" name=\"fontcolor\" onChange=\"DoColor(this.form.fontcolor.options[this.form.fontcolor.selectedIndex].value)\">\n";
+            $out .= "    <option style=\"color:black; background-color: #FFFFFF \" value=\"black\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DEFAULT)."</option>\n";
+            $out .= "    <option style=\"color:darkred; background-color: #DEE3E7\" value=\"darkred\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DARKRED)."</option>\n";
+            $out .= "    <option style=\"color:red; background-color: #DEE3E7\" value=\"red\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_RED)."</option>\n";
+            $out .= "    <option style=\"color:orange; background-color: #DEE3E7\" value=\"orange\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_ORANGE)."</option>\n";
+            $out .= "    <option style=\"color:brown; background-color: #DEE3E7\" value=\"brown\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_BROWN)."</option>\n";
+            $out .= "\n";
+            $out .= "    <option style=\"color:yellow; background-color: #DEE3E7\" value=\"yellow\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_YELLOW)."</option>\n";
+            $out .= "    <option style=\"color:green; background-color: #DEE3E7\" value=\"green\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_GREEN)."</option>\n";
+            $out .= "    <option style=\"color:olive; background-color: #DEE3E7\" value=\"olive\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_OLIVE)."</option>\n";
+            $out .= "    <option style=\"color:cyan; background-color: #DEE3E7\" value=\"cyan\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_CYAN)."</option>\n";
+            $out .= "    <option style=\"color:blue; background-color: #DEE3E7\" value=\"blue\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_BLUE)."</option>\n";
+            $out .= "    <option style=\"color:darkblue; background-color: #DEE3E7\" value=\"darkblue\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DARKBLUE)."</option>\n";
+            $out .= "\n";
+            $out .= "    <option style=\"color:indigo; background-color: #DEE3E7\" value=\"indigo\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_INDIGO)."</option>\n";
+            $out .= "    <option style=\"color:violet; background-color: #DEE3E7\" value=\"violet\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_VIOLET)."</option>\n";
+            $out .= "    <option style=\"color:white; background-color: #DEE3E7\" value=\"white\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_WHITE)."</option>\n";
+            $out .= "    <option style=\"color:black; background-color: #DEE3E7\" value=\"black\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_BLACK)."</option>\n";
+            if(pnModGetVar('pn_bbcode', 'allow_usercolor')=="yes") {
+                $out .= "    <option style=\"color:black; background-color: #DEE3E7\" value=\"#".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_TEXTCOLORCODE)."\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_COLOR_DEFINE)."</option>\n";
+            }
+            $out .= "</select>&nbsp;\n";
+        }
+        if(pnModGetVar('pn_bbcode', 'size_enabled')=="yes") {
+            $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTSIZE).":\n";
+            $out .= "<select title=\"".pnVarPrepForDisplay(PNFORUM_BBCODE_SIZE_HINT)."\" name=\"fontsize\" onChange=\"DoSize(this.form.fontsize.options[this.form.fontsize.selectedIndex].value)\">\n";
+            $out .= "    <option value=\"tiny\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_TINY)."</option>\n";
+            $out .= "    <option value=\"small\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_SMALL)."</option>\n";
+            $out .= "    <option value=\"normal\" selected=\"selected\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_NORMAL)."</option>\n";
+            $out .= "    <option value=\"large\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_LARGE)."</option>\n";
+            $out .= "    <option value=\"huge\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_HUGE)."</option>\n";
+            if(pnModGetVar('pn_bbcode', 'allow_usersize')=="yes") {
+                $out .= "    <option value=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_TEXTSIZE)."\">".pnVarPrepForDisplay(_PNFORUM_BBCODE_SIZE_DEFINE)."</option>\n";
+            }
+            $out .= "</select>";
+        }
 
 
 	}
