@@ -3072,11 +3072,11 @@ function pnForum_userapi_forumsearch($args)
             if($flag) {
                 switch($bool) {
                     case 'AND' :
-                        $query .= ' AND \n';
+                        $query .= ' AND ';
                         break;
                     case 'OR' :
                     default :
-                        $query .= ' OR \n';
+                        $query .= ' OR ';
                         break;
                 }
             }
