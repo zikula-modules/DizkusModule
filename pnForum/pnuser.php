@@ -612,7 +612,7 @@ function pnForum_user_splittopic()
 
     list($post_id,
          $submit, 
-         $newsubject) = pnVarCleanFromInput('post_id',
+         $newsubject) = pnVarCleanFromInput('post',
                                             'submit', 
                                             'newsubject');
     
