@@ -117,9 +117,10 @@ function pnForum_user_viewforum()
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
-                          array('forum_id'   => $forum_id,
-                                'start'      => $start,
-                                'last_visit' => $last_visit));
+                          array('forum_id'        => $forum_id,
+                                'start'           => $start,
+                                'last_visit'      => $last_visit,
+                                'last_visit_unix' => $last_visit_unix));
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;

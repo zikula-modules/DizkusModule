@@ -475,6 +475,7 @@ function pnForum_userapi_setcookies()
  *@params $args['forum_id'] int the forums id
  *@params $args['start'] int number of topic to start with (if on page 1+)
  *@params $args['last_visit'] string users last visit date
+ *@params $args['last_visit_unix'] string users last visit date as timestamp
  *@returns very complex array, see <!--[ debug ]--> for more information 
  */
 function pnForum_userapi_readforum($args)
@@ -588,8 +589,8 @@ function pnForum_userapi_readforum($args)
         if ($topic['last_poster'] == "Anonymous") {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
         if ($topic['pn_uname'] == "Anonymous") {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
         
-        $posted_unixtime= strtotime ($topic['post_time']);
-        $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+        $topic['post_time_unix'] = strtotime ($topic['post_time']);
+        $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
         $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, pnVarPrepForDisplay($posted_ml), pnVarPrepForDisplay($topic['last_poster']));
 
         if($topic['topic_replies'] >= $hot_threshold) {
@@ -615,39 +616,14 @@ function pnForum_userapi_readforum($args)
                 $altimage = "newposts_image";
             }
         }
-/*      
-        if($topic['topic_status'] == 1) {
-            $image = $locked_image;
-            $altimage = "locked_image";
-        }
-*/        
+
         $topic['image'] = $image;
         $topic['altimage'] = $altimage;
         $topic['image_attr'] = getimagesize($image);
-        // go to first new post
-        $newest_post = "";
-        if ($topic['post_time'] > $last_visit){
-            $sql = "SELECT post_id
-                    FROM ".$pntable['pnforum_posts']."
-                    WHERE topic_id='".pnVarPrepForStore($topic['topic_id'])."'
-                    ORDER BY post_time";
-        
-//            $newp = $dbconn->Execute($sql);
-            $newp = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        
-            if (!$newp->EOF) {
-                $temp = $newp->GetRowAssoc(false);
-                $topic['newest_postid'] = $temp['post_id'];
-            }
-            pnfCloseDB($newp);
-        } else {
-            $forum['newest_post'] = '';
-        }
-        
-            // FIX ASAP
-//            $newest_post = '';
+
         // pagination
         $pagination = "";
+        $lastpage=0;
         if($topic['topic_replies']+1 > $posts_per_page) {
             $pagination .= "&nbsp;&nbsp;&nbsp;<span class=\"pn-sub\">(".pnVarPrepForDisplay(_PNFORUM_GOTOPAGE)."&nbsp;";
             $pagenr = 1;
@@ -678,7 +654,14 @@ function pnForum_userapi_readforum($args)
             $pagination .= ")</span>";
         }
         $topic['pagination'] = $pagination;
-        
+        // we now create the url to the last post in the thread. This might
+        // on site 1, 2 or what ever in the thread, depending on topic_replies
+        // count and the posts_per_page setting
+        $topic['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                           array('topic' => $topic['topic_id'],
+                                                 'start' => (ceil(($topic['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+        $topic['last_post_url_anchor'] = $topic['last_post_url'] . "#" . $topic['topic_last_post_id'];
+
         array_push( $forum['topics'], $topic );
         $result->MoveNext(); 
     }
