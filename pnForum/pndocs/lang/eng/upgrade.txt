@@ -1,0 +1,51 @@
+Crossupgrade phpBB_14 -> pnForum
+--------------------------------
+
+First step: create a backup!
+then: save the backup somewehere..
+then: take a deep breath....
+
+
+During the installation all the data fro the old phpBB_14 tabls will be copied to the
+new pnForum tables, so the old data still exist.
+
+These steps have proven to do the upgrade in the best way:
+* remove all user permissions to phpBB_14 to avoind new postings durig the upgrade
+* remove phpBB_14 blocks
+* init pnForum (phpBB_14 must be activated in order to copy the database tables)
+* deactivate phpBB_14
+* activate pnForum
+* recreate new permissions (see new permission schema below)
+* add pnForum blocks
+
+
+The permission schema has been changed:
+
+instead of
+
+phpBB_14:Category Categoryname::
+phpBB_14:Forum Forumname::
+
+we now have
+
+pnForum::  CategoryID:ForumID:
+
+If you want to forbid my guests to access an internal forum (e.g. CategoryID 7, ForumID 12)
+you would use
+
+unreg. User | pnForum:: | 7:12: | none
+
+Moderators for this forum:
+
+Moderatorgroup | pnForum:: | 7:12: | moderate
+
+Is there another Forum (ID 14) in the catgory, you an also use
+
+Moderatorgroup | pnForum:: | 7:(12|14): | moderate
+
+As usual, you need the comment right to write new postings.
+
+Users | pnForum:: | .* | comment
+
+allows all registered users to write in all forums.
+ 
