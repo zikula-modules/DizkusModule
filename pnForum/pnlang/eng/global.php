@@ -46,6 +46,11 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_SPLITTOPIC','<img src="modules/pnForum/pnimages/eng/splitit.gif" border="0" alt="split">');
+define('_PNFORUM_SPLITTOPIC_TITLE','Split topic');
+define('_PNFORUM_SPLITTOPIC_INFO','This will split the topic before the selected posting.');
+define('_PNFORUM_SPLITTOPIC_NEWTOPIC','Subject for th new topic');
+define('_PNFORUM_SPLIT','Split');
 define('_PNFORUM_ADMINRANKS','Edit user ranks');
 define('_PNFORUM_NOFORUMS', 'no forums defined');
 define('_PNFORUM_NOCATEGORIES', 'no categories defined');

@@ -362,9 +362,7 @@ function pnForum_user_editpost()
 
     } else {
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
-                             array('post_id'    => $post_id,
-                                   'topic_id'   => $topic_id,
-                                   'last_visit' => $last_visit));
+                             array('post_id'    => $post_id));
         if(!empty($subject)) {
             $post['topic_subject'] = $subject;
         }
@@ -609,6 +607,45 @@ function pnForum_user_viewlatest()
                                                   'type' => 'all' )));
     return $pnr->fetch('pnforum_user_latestposts.html');
 
+}
+
+/**
+ * splittopic
+ *
+ */
+function pnForum_user_splittopic()
+{
+    if(!pnModAPILoad('pnForum', 'user')) {
+        return showforumerror("loading userapi failed", __FILE__, __LINE__);
+    } 
+
+    list($post_id,
+         $submit, 
+         $newsubject) = pnVarCleanFromInput('post_id',
+                                            'submit', 
+                                            'newsubject');
+    
+    $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+                         array('post_id' => $post_id));
+    if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        // user is not allowed to moderate this forum
+        return showforumerror( _PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+    }
+
+    if(!empty($submit)) {
+        // submit is set, we split the topic now
+        $post['topic_subject'] = $newsubject;
+        $newtopic_id = pnModAPIFunc('pnForum', 'user', 'splittopic',
+                                   array('post' => $post));
+        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+                            array('topic' => $newtopic_id)));
+        
+    } else {
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->assign('post', $post);
+        return $pnr->fetch('pnforum_user_splittopic.html');
+    } 
 }
 
 ?>

@@ -13,7 +13,7 @@
 /**
  * initialize the PostNuke environment 
  */
-include'includes/pnAPI.php'; 
+include 'includes/pnAPI.php'; 
 pnInit(); 
 
 /**

@@ -1472,7 +1472,7 @@ function pnForum_userapi_readpost($args)
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
     
-    // we know about the topic_id, let's find out the forum and catgeory name for permission checks
+    // we know about the post_id, let's find out the forum and catgeory name for permission checks
     $sql = "SELECT p.post_id, 
                     p.post_time, 
                     pt.post_text, 
@@ -1516,19 +1516,16 @@ function pnForum_userapi_readpost($args)
     $post['cat_title']    = pnVarPrepForDisplay($myrow['cat_title']);
     $post['cat_id']       = pnVarPrepForDisplay($myrow['cat_id']);
     $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
-
+/*
     if(!allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
         return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
-
+*/
     $pn_uid = pnUserGetVar('uid');   
+    $post['moderate'] = false;
     if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) ||
-        ($pn_uid == $post['poster_data']['pn_uid']))   {
-        // user is allowed to edit the post
-        $post['access_edit'] = true;
-    } else {
-        //return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
-        $post['access_edit'] = false;
+        ($pn_uid == $post['poster_data']['pn_uid'])) { 
+        $post['moderate'] = true; 
     }
 
     $message_display = nl2br($message);  // phpbb_br2nl($message);
@@ -1559,12 +1556,6 @@ function pnForum_userapi_readpost($args)
     // allow to edit the subject if irst post
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $topic_id, 'post_id' => $post_id));
 
-    $post['moderate'] = false;
-    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) ||
-        ($pn_uid == $post['poster_data']['pn_uid'])) { 
-        $post['moderate'] = true; 
-    }
-     
     return $post;
 }   
 
@@ -2846,5 +2837,124 @@ function pnForum_userapi_usersync()
 	                    'type' => "users"));
     return;
 }
+
+/**
+ * splittopic
+ *
+ *@params $args['post'] array with posting data as returned from readpost()
+ *@returns int id of the new topic
+ */
+function pnForum_userapi_splittopic($args)
+{
+    extract($args);
+    unset($args);
+    
+    pnModDBInfoLoad('pnForum');
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+
+    // it's a submitted page
+    // Confirm authorisation code
+    if (!pnSecConfirmAuthKey()) {
+        return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+    }
+
+    // before we do anything we will read the topic_last_post_id because we will need
+    // this one later (it will become the topic_last_post_id of the new thread)
+    $sql = "SELECT topic_last_post_id,
+                   topic_replies
+            FROM ".$pntable['pnforum_topics']." 
+            WHERE topic_id = '".$post['topic_id']."'";
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    list($old_last_post_id, $old_replies) = $result->fields;
+    $result->Close();
+
+    $time = date("Y-m-d H:i");
+    //  insert values into topics-table
+    $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
+    $sql = "INSERT INTO ".$pntable['pnforum_topics']." 
+            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify) 
+            VALUES 
+            ('".pnVarPrepForStore($topic_id)."', '".pnVarPrepForStore($post['topic_subject'])."', '".$post['poster_data']['pn_uid']."', '".$post['forum_id']."', '$time', '' )";
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    $newtopic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
+    $result->Close();
+
+    // now we need to change the postings:
+    // first step: count the number of posting we have to move
+    $sql = "SELECT COUNT(*) AS total
+            FROM ".$pntable['pnforum_posts']." 
+            WHERE topic_id = '".$post['topic_id']."'
+              AND post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'";
+
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    list($posts_to_move) = $result->fields;
+    $result->Close();
+
+    // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
+    // post_id > $post['post_id']
+    $sql = "UPDATE ".$pntable['pnforum_posts']." 
+            SET topic_id = '$newtopic_id' 
+            WHERE post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'
+            AND topic_id = '".$post['topic_id']."'";
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    $result->Close();
+    // get the new topic_last_pos_id of the old topic
+    $sql = "SELECT post_id
+            FROM ".$pntable['pnforum_posts']."
+            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."' 
+            ORDER BY post_time DESC";
+    $result=$dbconn->SelectLimit($sql, 1);
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    list($new_last_post_id) = $result->fields;
+    $result->Close();
+
+    // update the new topic
+    $newtopic_replies = (int)$posts_to_move - 1;
+    $sql = "UPDATE ".$pntable['pnforum_topics']." 
+            SET topic_replies = '$newtopic_replies',
+                topic_last_post_id = '$old_last_post_id'
+            WHERE topic_id = '$newtopic_id'";
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    $result->Close();
+
+    // update the old topic
+    $old_replies = (int)$old_replies - (int)$posts_to_move; 
+    $sql = "UPDATE ".$pntable['pnforum_topics']." 
+            SET topic_replies = $old_replies,
+                topic_last_post_id = '$new_last_post_id'
+            WHERE topic_id = '".$post['topic_id']."'";
+    $result = $dbconn->Execute($sql);
+    
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    $result->Close();
+    
+    return $newtopic_id;
+}
+
 
 ?>

@@ -65,9 +65,9 @@ function showforumerror($error_text, $file="", $line=0)
         $pnr->assign( 'line', $line);
     }
     $output = $pnr->fetch("pnforum_errorpage.html");
-    if(preg_match("/(api\.php)$/i", $file)<>0)
+    if(preg_match("/(api\.php|common\.php)$/i", $file)<>0)
     {
-        // __FILE__ ends with api.php
+        // __FILE__ ends with api.php or is common.php itself
         include_once("header.php");
         echo $output;
         include_once("footer.php");
@@ -174,17 +174,17 @@ function pnfsqldebug($sql)
 }
 
 /**
- * pnForum_OpenDB
+ * pnfOpenDB
  * creates a dbconnection object and returns it to the calling function
  *
- *@params $table (sting) name of the table you want to access
+ *@params $table (string) name of the table you want to access
  *@return array consisting:
  *@returns object dbconn obejct for use to execute sql queries
  *@returns string fully qualified tablename
  *@returns array with field names
  *        or false on error
  */
-function pnForum_OpenDB($tablename)
+function pnfOpenDB($tablename)
 {
     if(!isset($tablename)) return false;
 
@@ -200,20 +200,44 @@ function pnForum_OpenDB($tablename)
 }
 
 /**
- * pnForum_CloseDB
+ * pnfCloseDB
  * closes an db connection
  *
  *@params $resobj object as returned by $dbconn->Execute();
  *@returns nothing
  *
  */
-function pnForum_CloseDB($resobj)
+function pnfCloseDB($resobj)
 {
     if(is_object($resobj)) 
     {
         $resobj->Close();
     }
     return;
+}
+
+/**
+ * pnfExecuteSQL 
+ * executes an sql command and returns the result, shows error if necessary
+ *
+ *@params $dbconn object db onnection object
+ *@params $sql    string the sql ommand to execute
+ *@params $debug  bool   true if debug should be activated, default is false
+ *@returns object the result of $dbconn->Execute($sql)
+ */
+function pnfExecuteSQL(&$dbconn, $sql, $debug=false)
+{
+    if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+    $dbconn->debug = $debug;
+    $result = $dbconn->Execute($sql);
+    $dbconn->debug = $false;
+    if($dbconn->ErrorNo() != 0) {
+        $result->Close();
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+    }
+    return $result;
 }
 
 /**
