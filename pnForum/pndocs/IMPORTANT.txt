@@ -1,8 +1,0 @@
-UPGRADING FROM < 2.0.0 RC2 to 2.0.1 RC3 (or later)
---------------------------------------------------
-
-Make sure that you upgrade at least pn_bbsmile before upgrading pnForum.
-
-There is modifier used in some of the templates that enables smilies in 
-subjects. Not upgrading the smilie hook will result in an error!
-
