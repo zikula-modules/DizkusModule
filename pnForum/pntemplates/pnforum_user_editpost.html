@@ -10,7 +10,7 @@
 
 <form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
 
-<strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor|pnbbsmile ]--></strong>
+<strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor ]--></strong>
 <br /><br />
 <!--[ if $preview eq true ]-->
     <strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong>
@@ -21,7 +21,7 @@
                 <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%">
                     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
                         <td height="28" width="20%"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span></td>
-                        <td height="28" width="80%"><span class="pnForum-title"><strong><!--[ $post.topic_subject|pnbbsmile|pnvarcensor ]--></strong></span></td>
+                        <td height="28" width="80%"><span class="pnForum-title"><strong><!--[ $post.topic_subject|pnvarcensor ]--></strong></span></td>
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
                         <td rowspan="2" valign="top">

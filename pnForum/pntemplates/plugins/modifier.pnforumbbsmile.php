@@ -54,7 +54,7 @@
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
  */
-function smarty_modifier_pnbbsmile($string)
+function smarty_modifier_pnforumbbsmile($string)
 {
 	$extrainfo = array($string);
 
