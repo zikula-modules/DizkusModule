@@ -87,9 +87,11 @@ function pnForum_centerblock_display($row)
     $params = explode(" ", $vars['cb_parameters']);
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-    foreach($params as $param) {
-        $paramdata = explode("=", $param);
-        $pnr->assign($paramdata[0], $paramdata[1]);
+    if(is_array($params) && count($params)>0) {
+        foreach($params as $param) {
+            $paramdata = explode("=", $param);
+            $pnr->assign($paramdata[0], $paramdata[1]);
+        }
     }
     $row['content'] = $pnr->fetch($vars['cb_template']);
 	return themesideblock($row);
@@ -107,6 +109,9 @@ function pnForum_centerblock_update($row)
          $cb_parameters) = pnVarCleanFromInput('cb_template',
                                                'cb_parameters');
 
+    if(empty($cb_parameters)) { $cb_parameters = ""; }
+    if(empty($cb_template))   { $cb_template = "pnforum_centerblock_display.html"; }
+    
     $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
     return($row);
 } 
