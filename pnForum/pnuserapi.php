@@ -506,7 +506,6 @@ function pnForum_userapi_readforum($args)
     $newposts_image     = pnModGetVar('pnForum', 'newposts_image');
     $hot_newposts_image = pnModGetVar('pnForum', 'hot_newposts_image');
     $posticon           = pnModGetVar('pnForum', 'posticon');
-    $locked_image       = pnModGetVar('pnForum', 'locked_image');
     $firstnew_image     = pnModGetVar('pnForum', 'firstnew_image');
 
     // read moderators
@@ -615,15 +614,15 @@ function pnForum_userapi_readforum($args)
                 $altimage = "newposts_image";
             }
         }
-        
+/*      
         if($topic['topic_status'] == 1) {
             $image = $locked_image;
             $altimage = "locked_image";
         }
+*/        
         $topic['image'] = $image;
         $topic['altimage'] = $altimage;
         $topic['image_attr'] = getimagesize($image);
-        
         // go to first new post
         $newest_post = "";
         if ($topic['post_time'] > $last_visit){

@@ -288,8 +288,6 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'newposts_image', "modules/$module/pnimages/red_folder.gif");
 	pnModSetVar('pnForum', 'hot_newposts_image', "modules/$module/pnimages/hot_red_folder.gif");
 	pnModSetVar('pnForum', 'posticon', "modules/$module/pnimages/posticon.gif");
-	pnModSetVar('pnForum', 'profile_image', "modules/$module/pnimages/profile.gif");
-	pnModSetVar('pnForum', 'locked_image', "modules/$module/pnimages/lock.gif");
 	pnModSetVar('pnForum', 'firstnew_image', "modules/$module/pnimages/firstnew.gif");
 	pnModSetVar('pnForum', 'post_sort_order', "ASC");
 	pnModSetVar('pnForum', 'show_html', "yes");
@@ -516,6 +514,8 @@ function pnForum_upgrade_to_2_0_1()
 	pnModDelVar('pnForum', 'unstickytopic_image');
 	pnModDelVar('pnForum', 'movetopic_image');
 	pnModDelVar('pnForum', 'deltopic_image');
+	pnModDelVar('pnForum', 'locked_image');
+	pnModDelVar('pnForum', 'profile_image');
 
     return true;
 }

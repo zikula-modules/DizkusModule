@@ -58,7 +58,7 @@
 			<!--[ if $stickyControlStart eq 1]-->
 			    <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
 				<td headers="col_0"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
-			<!--[ else ]-->	
+			<!--[ else ]-->
 				<tr bgcolor="<!--[ $bgcolor2 ]-->">
 				<td colspan="6" style="vertical-align: bottom"><strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong></td>
 				</tr>
@@ -71,7 +71,12 @@
 			<!--[ /if ]-->
         <!--[ else ]-->
 			<tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
-		  	<td headers="col_0"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
+		  	<td headers="col_0">
+		  	    <!--[ if $topic.topic_status eq 1 ]-->
+		  	        <!--[ pnimg src="lock.gif" alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
+		  	    <!--[ else ]-->
+		  	        <img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
+                <!--[ /if ]-->
         <!--[ /if ]-->        
         <td headers="col_0">
             <a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarprepfordisplay|pnbbsmile|pnvarcensor ]--></a><!--[ $topic.pagination ]-->
@@ -97,13 +102,12 @@
  <!--[ forumimage name=hot_newposts_image assign=hot_newposts ]-->
  <!--[ forumimage name=folder_image assign=folder ]-->
  <!--[ forumimage name=hot_folder_image assign=hot_folder ]-->
- <!--[ forumimage name=locked_image assign=locked ]-->
 
 <img src="<!--[ $newposts.name ]-->"     alt="<!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> <!--[ $forum.last_visit ]-->"> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
 <img src="<!--[ $hot_newposts.name ]-->" alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->"> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
 <img src="<!--[ $folder.name ]-->"       alt="<!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->"> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
 <img src="<!--[ $hot_folder.name ]-->"   alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->"> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
-<img src="<!--[ $locked.name ]-->"       alt="<!--[ pnml name='_PNFORUM_ISLOCKED' ]-->"> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]-->
+<!--[ pnimg src="lock.gif" alt='_PNFORUM_ISLOCKED' altml=true ]--> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]-->
 
 
 <!--[ include file='pnforum_user_footer.html' ]-->

@@ -146,7 +146,6 @@ function pnForum_admin_preferences()
         $pnr->assign('hot_folder_image', pnModGetVar('pnForum', 'hot_folder_image'));
         $pnr->assign('newposts_image', pnModGetVar('pnForum', 'newposts_image'));
         $pnr->assign('hot_newposts_image', pnModGetVar('pnForum', 'hot_newposts_image'));
-        $pnr->assign('locked_image', pnModGetVar('pnForum', 'locked_image'));
         $pnr->assign('post_sort_order_ascchecked', $post_sort_order_ascchecked);
         $pnr->assign('post_sort_order_descchecked', $post_sort_order_descchecked);
         $pnr->assign('htmlonchecked', $htmlonchecked);
@@ -179,7 +178,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'hot_folder_image', pnVarPrepForStore(pnVarCleanFromInput('hot_folder_image')));
             pnModSetVar('pnForum', 'newposts_image', pnVarPrepForStore(pnVarCleanFromInput('newposts_image')));
             pnModSetVar('pnForum', 'hot_newposts_image', pnVarPrepForStore(pnVarCleanFromInput('hot_newposts_image')));
-            pnModSetVar('pnForum', 'locked_image', pnVarPrepForStore(pnVarCleanFromInput('locked_image')));
             pnModSetVar('pnForum', 'post_sort_order', pnVarPrepForStore(pnVarCleanFromInput('post_sort_order')));
             pnModSetVar('pnForum', 'show_html', pnVarPrepForStore(pnVarCleanFromInput('show_html')));
             pnModSetVar('pnForum', 'show_bbcode', pnVarPrepForStore(pnVarCleanFromInput('show_bbcode')));
@@ -203,8 +201,6 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'newposts_image', "modules/pnForum/pnimages/red_folder.gif");
 		    pnModSetVar('pnForum', 'hot_newposts_image', "modules/pnForum/pnimages/hot_red_folder.gif");
 		    pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
-		    pnModSetVar('pnForum', 'profile_image', "modules/pnForum/pnimages/profile.gif");
-		    pnModSetVar('pnForum', 'locked_image', "modules/pnForum/pnimages/lock.gif");
 		    pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
 		    pnModSetVar('pnForum', 'post_sort_order', "ASC");
 		    pnModSetVar('pnForum', 'show_html', "yes");
