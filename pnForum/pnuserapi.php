@@ -3214,7 +3214,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
             WHERE t2.topic_id = ".(int)pnVarPrepForStore($topic_id)."
               AND t1.topic_time $math t2.topic_time
               AND t1.forum_id = t2.forum_id
-            ORDER BY t1.topic_id $sort";
+            ORDER BY t1.topic_time $sort";
     $result = $dbconn->SelectLimit($sql, 1);
     if ($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
