@@ -191,17 +191,17 @@ function pnForum_userapi_boardstats($args)
         case 'topic':
             $sql = "SELECT count(*) AS total 
                     FROM ".$pntable['pnforum_posts']." 
-                    WHERE topic_id = '".pnVarPrepForStore($id)."'";
+                    WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
             break;
         case 'forumposts':
             $sql = "SELECT count(*) AS total 
                     FROM ".$pntable['pnforum_posts']." 
-                    WHERE forum_id = '".pnVarPrepForStore($id)."'";
+                    WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
             break;
         case 'forumtopics':
             $sql = "SELECT count(*) AS total 
                     FROM ".$pntable['pnforum_topics']." 
-                    WHERE forum_id = '".pnVarPrepForStore($id)."'";
+                    WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
             break;
         default:
         }
@@ -934,7 +934,7 @@ function pnForum_userapi_preparereply($args)
                    t.topic_title
                     FROM $pntable[pnforum_posts_text] pt, $pntable[pnforum_posts] p
                         LEFT JOIN $pntable[pnforum_topics] t ON t.topic_id=p.topic_id
-                        WHERE p.topic_id = '".$reply['topic_id']."' AND p.post_id = pt.post_id
+                        WHERE p.topic_id = '" . (int)pnVarPrepForStore($reply['topic_id']) . "' AND p.post_id = pt.post_id
                         ORDER BY p.post_id DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, 10, false, __FILE__, __LINE__);
@@ -1041,7 +1041,7 @@ function pnForum_userapi_storereply($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    $forum_id = pnVarPrepForStore($myrow['forum_id']);
+    $forum_id = (int)pnVarPrepForStore($myrow['forum_id']);
 
     // Prep for DB
     $time = date("Y-m-d H:i");
@@ -1074,8 +1074,8 @@ function pnForum_userapi_storereply($args)
 
     // update topics-table
     $sql = "UPDATE $pntable[pnforum_topics]
-            SET topic_replies = topic_replies+1, topic_last_post_id = '".pnVarPrepForStore($this_post)."', topic_time = '$time'
-            WHERE topic_id = '$topic_id'";
+            SET topic_replies = topic_replies+1, topic_last_post_id = '".pnVarPrepForStore($this_post)."', topic_time = '".pnVarPrepForStore($time). "'
+            WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1084,7 +1084,7 @@ function pnForum_userapi_storereply($args)
         // user logged in we have to update users-table
         $sql = "UPDATE $pntable[pnforum_users]
                 SET user_posts=user_posts+1
-                WHERE (user_id = $pn_uid)";
+                WHERE (user_id = " . pnVarPrepForStore($pn_uid) . ")";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -1103,7 +1103,7 @@ function pnForum_userapi_storereply($args)
     // update forums-table
     $sql = "UPDATE $pntable[pnforum_forums]
             SET forum_posts = forum_posts+1, forum_last_post_id = '" . pnVarPrepForStore($this_post) . "'
-            WHERE forum_id = '$forum_id'";
+            WHERE forum_id = '" . (int)pnVarPrepForStore($forum_id) ."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1111,7 +1111,7 @@ function pnForum_userapi_storereply($args)
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
     
     // get topic_replies for correct redirect
-    $sql = "SELECT topic_replies FROM $pntable[pnforum_topics] WHERE topic_id = '$topic_id'";
+    $sql = "SELECT topic_replies FROM $pntable[pnforum_topics] WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     list ($topic_replies) = $result->fields;
@@ -1929,7 +1929,7 @@ function pnForum_userapi_get_viewip_data($args)
 
     $sql = "SELECT pn_uid, pn_uname, count(*) AS postcount 
             FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u 
-            WHERE poster_ip='".$m['poster_ip']."' && p.poster_id = u.pn_uid 
+            WHERE poster_ip='".pnVarPrepForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid 
             GROUP BY pn_uid";
     
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
@@ -2065,9 +2065,9 @@ function pnForum_userapi_readuserforums($args)
   
     $where = "";
     if(isset($forum_id)) {
-        $where = "WHERE f.forum_id=$forum_id ";
+        $where = "WHERE f.forum_id=" . pnVarPrepForStore($forum_id) . " ";
     } elseif (isset($cat_id)) {
-        $where = "WHERE c.cat_id=$cat_id ";
+        $where = "WHERE c.cat_id=" . pnVarPrepForStore($cat_id) . " ";
     }
     $sql = "SELECT f.forum_name,
                    f.forum_id,
@@ -2230,7 +2230,7 @@ function pnForum_userapi_deletetopic($args)
         if($row['poster_id'] != -1) {
             $sql2 = "UPDATE ".$pntable['pnforum_users']." 
                      SET user_posts = user_posts - 1 
-                     WHERE user_id = '".$row['poster_id']."'";
+                     WHERE user_id = '".pnVarPrepForStore($row['poster_id'])."'";
             $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);        
             pnfCloseDB($result2);
         }
@@ -2270,7 +2270,7 @@ function pnForum_userapi_deletetopic($args)
         if(isset($set)) {
             $sql .= " OR ";
         }
-        $sql .= "post_id = '".$posts_to_remove[$x]."'";
+        $sql .= "post_id = '". pnVarPrepForStore($posts_to_remove[$x])."'";
         $set = TRUE;
     }
     
@@ -2748,8 +2748,8 @@ function pnForum_userapi_get_latest_posts($args)
     $yesterdaysql   = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ".$part2;
     $todaysql       = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ".$part2;
     $last24hsql     = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ".$part2;
-    $lastxhsql      = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL $nohours HOUR) ".$part2;
-    $lastvisitsql   = $part1." t.topic_time > '$last_visit' ".$part2;
+    $lastxhsql      = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL " . pnVarPrepForStore($nohours) . " HOUR) ".$part2;
+    $lastvisitsql   = $part1." t.topic_time > '" . pnVarPrepForStore($last_visit) . "' ".$part2;
 
     switch ($selorder) {
         case "1" : $sql = $last24hsql; $text=""._PNFORUM_LAST24.""; break;
@@ -2866,7 +2866,7 @@ function pnForum_userapi_splittopic($args)
     $sql = "INSERT INTO ".$pntable['pnforum_topics']." 
             (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify) 
             VALUES 
-            ('".pnVarPrepForStore($topic_id)."', '".pnVarPrepForStore($post['topic_subject'])."', '".$post['poster_data']['pn_uid']."', '".$post['forum_id']."', '$time', '' )";
+            ('".pnVarPrepForStore($topic_id)."', '".pnVarPrepForStore($post['topic_subject'])."', '".pnVarPrepForStore($post['poster_data']['pn_uid'])."', '".pnVarPrepForStore($post['forum_id'])."', '".pnVarPrepForStore($time)."', '' )";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
     $newtopic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
     pnfCloseDB($result);
@@ -2875,7 +2875,7 @@ function pnForum_userapi_splittopic($args)
     // first step: count the number of posting we have to move
     $sql = "SELECT COUNT(*) AS total
             FROM ".$pntable['pnforum_posts']." 
-            WHERE topic_id = '".$post['topic_id']."'
+            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
               AND post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
@@ -2885,7 +2885,7 @@ function pnForum_userapi_splittopic($args)
     // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
     // post_id > $post['post_id']
     $sql = "UPDATE ".$pntable['pnforum_posts']." 
-            SET topic_id = '$newtopic_id' 
+            SET topic_id = '" . pnVarPrepForStore($newtopic_id) . "' 
             WHERE post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'
             AND topic_id = '".$post['topic_id']."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
@@ -2904,17 +2904,17 @@ function pnForum_userapi_splittopic($args)
     $newtopic_replies = (int)$posts_to_move - 1;
     $sql = "UPDATE ".$pntable['pnforum_topics']." 
             SET topic_replies = '$newtopic_replies',
-                topic_last_post_id = '$old_last_post_id'
-            WHERE topic_id = '$newtopic_id'";
+                topic_last_post_id = '" . pnVarPrepForStore($old_last_post_id) . "'
+            WHERE topic_id = '" . pnVarPrepForStore($newtopic_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
     pnfCloseDB($result);
 
     // update the old topic
     $old_replies = (int)$old_replies - (int)$posts_to_move; 
     $sql = "UPDATE ".$pntable['pnforum_topics']." 
-            SET topic_replies = $old_replies,
-                topic_last_post_id = '$new_last_post_id'
-            WHERE topic_id = '".$post['topic_id']."'";
+            SET topic_replies = " . pnVarPrepForStore($old_replies) . ",
+                topic_last_post_id = '" . pnVarPrepForStore($new_last_post_id) . "'
+            WHERE topic_id = '". (int)pnVarPrepForStore($post['topic_id'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
     pnfCloseDB($result);
     
