@@ -23,7 +23,7 @@
                             <span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
                         </td>
                         <td width="80%">
-                            <span class="pn-phpBB-title"><strong><!--[ $newtopic.subject ]--></strong></span>
+                            <span class="pn-phpBB-title"><strong><!--[ $newtopic.subject|pnvarcensor|pnvarprepfordisplay ]--></strong></span>
                         </td>
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
@@ -47,7 +47,7 @@
                         <!--[ /if ]-->
                         </td>
                         <td bgcolor="<!--[ $bgcolor1 ]-->">
-                            <span class="pn-normal"><!--[ $newtopic.message_display|pnvarprephtmldisplay ]--></span>
+                            <span class="pn-normal"><!--[ $newtopic.message_display|pnvarprephtmldisplay|pnvarcensor ]--></span>
                         </td>
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->">
@@ -67,7 +67,7 @@
 <br />
 <textarea name="message" rows="15" cols="80" id="phpbb_body" tabindex="0"><!--[ $newtopic.message|pnvarprepfordisplay ]--></textarea>
 <br /></span>	
-<!--[ allowedhtml ]-->
+<!--[ pnforumallowedhtml ]-->
 <!--[ bbcode ]-->
 <!--[ bbsmile  ]-->
 <br /><br />

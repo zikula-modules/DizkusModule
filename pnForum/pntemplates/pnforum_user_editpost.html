@@ -11,7 +11,7 @@
 <form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
 <input type="hidden" name="start" value="<!--[ $start ]-->">
 
-<span class="pn-title"><strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay ]--></strong></span>
+<span class="pn-title"><strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarcensor ]--></strong></span>
 <br /><br />
 <!--[ if $preview eq true ]-->
     <span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong></span>
@@ -22,7 +22,7 @@
                 <table class="pn-phpBB-border" border="0" cellpadding="5" cellspacing="1" width="100%">
                     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
                         <td height="28" width="20%"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span></td>
-                        <td height="28" width="80%"><span class="pn-phpBB-title"><strong><!--[ $post.topic_subject ]--></strong></span></td>
+                        <td height="28" width="80%"><span class="pn-phpBB-title"><strong><!--[ $post.topic_subject|pnvarcensor ]--></strong></span></td>
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
                         <td rowspan="2" valign="top"><span class="pn-normal"> 
@@ -46,7 +46,7 @@
 
                         </td>
                         <td bgcolor="<!--[ $bgcolor1 ]-->">
-                            <span class="pn-normal"><!--[ $post.message_display|nl2br ]--></span>
+                            <span class="pn-normal"><!--[ $post.message_display|nl2br|pnvarprephtmldisplay|pnvarcensor ]--></span>
                         </td>
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->">
@@ -69,7 +69,7 @@
 <br />	
 <textarea name="message" rows="10" cols="80" id="phpbb_body" tabindex="0"><!--[ $post.message ]--></textarea>
 <br />
-<!--[ allowedhtml ]-->
+<!--[ pnforumallowedhtml ]-->
 <!--[ bbsmile ]-->
 <!--[ bbcode ]-->
 <br /><br />

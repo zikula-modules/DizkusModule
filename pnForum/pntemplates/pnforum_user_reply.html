@@ -8,7 +8,7 @@
 
 <!--[ pndebug ]-->
 
-<span class="pn-title"><strong><!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnvarprepfordisplay ]--></strong></span>
+<span class="pn-title"><strong><!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnvarcensor ]--></strong></span>
 
 <!--[ if $preview ]-->
 <br />
@@ -24,7 +24,7 @@
                         <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
                     </td>
                     <td height="28" width="80%"><span class="pn-phpBB-title">
-                        <strong><!--[ $reply.topic_subject ]--></strong></span>
+                        <strong><!--[ $reply.topic_subject|pnvarcensor ]--></strong></span>
                     </td>
                 </tr>
                 <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
@@ -48,7 +48,7 @@
                     <!--[ /if ]-->
                     </td>
                     <td bgcolor="<!--[ $bgcolor1 ]-->" valign="top">
-                        <span class="pn-normal"><!--[ $reply.message|nl2br|pnmodcallhooks ]--></span>
+                        <span class="pn-normal"><!--[ $reply.message|nl2br|pnmodcallhooks|pnvarcensor ]--></span>
                     </td>
                 </tr>
                 <tr bgcolor="<!--[ $bgcolor3 ]-->">
@@ -64,14 +64,14 @@
 <form name="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post">
 <textarea name="message" rows="15" cols="80" id="phpbb_body" tabindex="0"><!--[ $reply.message ]--></textarea>
 <br /><br />
-<!--[ allowedhtml ]--><br />
+<!--[ pnforumallowedhtml ]--><br />
 <!--[ bbcode ]--><br />
 <!--[ bbsmile ]--><br />
 <br />
 <span class="pn-normal"><!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br />
 <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1"><label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label><br />
 <!--[ if $loggedin ]-->
-<input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1"><label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label><br />
+<input type="checkbox" id="subscribe_topic" name="subscribe_topic"><label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label><br />
 <!--[ /if ]-->
 <input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
 <br /><br />
@@ -97,7 +97,7 @@
                         <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
                     </td>
                     <td height="28" width="80%"><span class="pn-phpBB-title">
-                        <strong><!--[ $reply.topic_subject ]--></strong></span>
+                        <strong><!--[ $reply.topic_subject|pnvarcensor ]--></strong></span>
                     </td>
                 </tr>
                 <!--[ foreach item=review from=$reply.topic_review ]-->
@@ -122,7 +122,7 @@
                     <!--[ /if ]-->
                     </td>
                     <td bgcolor="<!--[ $bgcolor1 ]-->">
-                        <span class="pn-normal"><!--[ $review.post_text|nl2br|pnmodcallhooks ]--></span>
+                        <span class="pn-normal"><!--[ $review.post_text|nl2br|pnmodcallhooks|pnvarcensor ]--></span>
                     </td>
                 </tr>
                 <!--[ /foreach ]-->
