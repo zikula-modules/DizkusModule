@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * printtopic_button plugin
@@ -39,6 +38,7 @@ function smarty_function_printtopic_button($params, &$smarty)
     extract($params); 
 	unset($params);
 
+    include_once('modules/pnForum/common.php');
     $out = "";
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
 	    $lang = pnUserGetLang();

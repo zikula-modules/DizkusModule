@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * post_order_button plugin

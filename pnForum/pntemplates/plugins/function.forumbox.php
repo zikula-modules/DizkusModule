@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * forumbox
@@ -44,6 +43,7 @@ function smarty_function_forumbox($params, &$smarty)
 	$forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
 
 	if(count($forums)>0) {
+        include_once('modules/pnForum/common.php');
 		$out ='<select name="pnForum_forum[]" id="pnForum_forum[]" size="1">';
 		$out.='<option value="" selected>'. _SRCHALLTOPICS .'</option>';
 		foreach($forums as $forum) {

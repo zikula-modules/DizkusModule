@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * favoriteforum_button plugin
@@ -40,6 +39,7 @@ function smarty_function_favoriteforum_button($params, &$smarty)
 	unset($params);
 
     if (pnUserLoggedIn()) {
+        include_once('modules/pnForum/common.php');
         $userid = pnUserGetVar('uid');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(!pnModAPILoad('pnForum', 'user')) {

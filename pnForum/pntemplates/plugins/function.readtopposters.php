@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * readtopposters
@@ -39,6 +38,7 @@ function smarty_function_readtopposters($params, &$smarty)
     extract($params); 
 	unset($params);
 
+    include_once('modules/pnForum/common.php');
     // get some enviroment
     list($dbconn, $pntable) = pnfOpenDB();
 

@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * jumpbox plugin
@@ -45,6 +44,7 @@ function smarty_function_jumpbox($params, &$smarty)
     $out = "";
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     if(count($forums)>0) {
+        include_once('modules/pnForum/common.php');
         $out ='<form action="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
                <fieldset style="border:none;">
                <label for="pnforum_forum"><strong>' . pnVarPrepForDisplay(_PNFORUM_FORUM) . ': </strong></label>

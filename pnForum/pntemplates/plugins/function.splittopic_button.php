@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * splittopic_button plugin
@@ -39,6 +38,7 @@ function smarty_function_splittopic_button($params, &$smarty)
     extract($params); 
 	unset($params);
 
+    include_once('modules/pnForum/common.php');
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         $image = pnModGetVar('pnForum', 'splittopic_image');
         $img_attr = getimagesize($image);

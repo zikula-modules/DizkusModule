@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * readstatistics
@@ -41,6 +40,7 @@ function smarty_function_readstatistics($params, &$smarty)
     extract($params); 
 	unset($params);
 
+    include_once('modules/pnForum/common.php');
     // get some environment
     list($dbconn, $pntable) = pnfOpenDB();
 

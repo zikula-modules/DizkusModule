@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * readlastposts
@@ -49,6 +48,8 @@ function smarty_function_readlastposts($params, &$smarty)
         $loggedIn = true;
         $uid = (int)pnUserGetVar('uid');
     }
+
+    include_once('modules/pnForum/common.php');
     // get some enviroment
     list($dbconn, $pntable) = pnfOpenDB();
 

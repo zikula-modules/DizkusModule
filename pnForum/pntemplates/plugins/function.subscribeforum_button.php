@@ -24,7 +24,6 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-include_once('modules/pnForum/common.php');
 
 /**
  * subscribeforum_button plugin
@@ -42,6 +41,7 @@ function smarty_function_subscribeforum_button($params, &$smarty)
 
     $userid = pnUserGetVar('uid');
     if (pnUserLoggedIn()) {
+        include_once('modules/pnForum/common.php');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(!pnModAPILoad('pnForum', 'user')) {
                 $smarty->trigger_error("subscribetopic_button: unable to load userapi", e_error);
