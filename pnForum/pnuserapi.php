@@ -575,7 +575,8 @@ function pnForum_userapi_readforum($args)
             LEFT JOIN ".$pntable['pnforum_posts']." AS p ON t.topic_last_post_id = p.post_id
             LEFT JOIN ".$pntable['users']." AS u2 ON p.poster_id = u2.pn_uid
             WHERE t.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
-            ORDER BY t.sticky DESC, topic_time DESC";
+            ORDER BY t.sticky DESC, p.post_time DESC";
+//            ORDER BY t.sticky DESC, topic_time DESC";
     
     $result = pnfSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
     $forum['forum_id'] = $forum_id;
@@ -708,7 +709,7 @@ function pnForum_userapi_readtopic($args)
     $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
     $topics_per_page = pnModGetVar('pnForum', 'topics_per_page');
     $posticon = pnModGetVar('pnForum', 'posticon');
-    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+    $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order'); 
 
     $complete = (isset($complete)) ? $complete : false;
 
@@ -736,6 +737,7 @@ function pnForum_userapi_readtopic($args)
         $topic['topic_id'] = $topic_id;
         $topic['start'] = $start;
         $topic['topic_unixtime'] = strtotime ($topic['topic_time']);
+        $topic['post_sort_order'] = $post_sort_order;
 
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
@@ -2610,7 +2612,7 @@ function pnForum_userapi_add_favorite_forum($args)
     }
     
     if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
-        // add user only if not already subscribed to the forum
+        // add user only if not already a favorite
         $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id) 
                 VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."')";
                 
@@ -2636,7 +2638,7 @@ function pnForum_userapi_remove_favorite_forum($args)
     $userid = pnUserGetVar('uid');
     
     if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == true) {
-        // user is subscribed, delete subscription
+        // remove from favorites
         $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']." 
                 WHERE user_id='".(int)pnVarPrepForStore($userid)."' 
                 AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
@@ -3353,4 +3355,95 @@ function pnForum_userapi_change_favorite_status($args)
     return (bool)$newstatus;
 } 
 
+/** 
+ * get_user_post_order
+ * Determines the users desired post order for topics.
+ * Either Newest First or Oldest First
+ * Returns 'ASC' or 'DESC' on success, false on failure.
+ *
+ *@params user_id - The user id of the person who's order we
+ * are trying to determine
+ *@returns string on success, false on failure
+ */
+function pnForum_userapi_get_user_post_order($args)
+{
+    extract($args);
+    unset($args);
+    
+    $loggedIn = pnUserLoggedIn();
+    
+    // if we are passed the user_id then lets use it
+    if (isset($user_id)) {
+        // we got passed the id but it is the anonymous user
+        // and the user isn't logged in, so we return the default order.
+        // We use this check because we may want to call this function
+        // from another module or function as an admin, moderator, etc
+        // so the logged in user may not be the person we want the info about.
+        if ($user_id < 2 || !$loggedIn) {
+            return pnModGetVar('pnForum', 'post_sort_order');
+        }
+    } else {
+        // we didn't get a user_id passed into the function so if
+        // the user is logged in then lets use their id.  If not
+        // then return th default order.
+        if ($loggedIn) {
+            $user_id = pnUserGetVar('uid');
+        } else {
+            return pnModGetVar('pnForum', 'post_sort_order');
+        }
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $sql = "SELECT u.user_post_order 
+            FROM  ".$pntable['pnforum_users']." u
+            WHERE u.user_id = '".(int)pnVarPrepForStore($user_id)."'";
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    if(!$result->EOF) {
+        list($post_order) = $result->fields;
+        $post_order = ($post_order) ? 'DESC' : 'ASC';
+    } else {
+        $post_order = pnModGetVar('pnForum', 'post_sort_order');
+    }
+    pnfCloseDB($result2);
+    return $post_order;
+}
+
+/**
+ * change_user_post_order
+ *
+ * changes the flag in the users table that indicates the users preferred post order: Oldest First (0) or Newest First (1)
+ *@params $args['user_id'] int the users id
+ *@returns bool - true on success, false on failure
+ *
+ */
+function pnForum_userapi_change_user_post_order($args)
+{
+    extract($args);
+    unset($args);
+    
+    // if we didn't get a user_id and the user isn't logged in then
+    // return false because there is no database entry to update
+    if (!isset($user_id) && pnUserLoggedIn()) {
+        $user_id = (int)pnUserGetVar('uid');
+    } else {
+        return false;
+    }
+
+    $post_order = pnModAPIFunc('pnForum','user','get_user_post_order'); 
+
+    $new_post_order = ($post_order=='DESC') ? 0 : 1;
+
+    list($dbconn, $pntable) = pnfOpenDB();
+    $userstable = $pntable['pnforum_users'];
+    $userscol    = $pntable['pnforum_users_column'];
+    $sql = "UPDATE $userstable
+            SET $userscol[user_post_order] = $new_post_order
+            WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+    return true;
+} 
 ?>

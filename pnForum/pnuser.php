@@ -534,6 +534,10 @@ function pnForum_user_prefs()
                          array('forum_id' => $forum_id ));
             pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
             break;
+        case 'change_post_order':
+            pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
+            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('topic'=>$topic_id)));
+            break;
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
             $pnr =& new pnRender('pnForum');
