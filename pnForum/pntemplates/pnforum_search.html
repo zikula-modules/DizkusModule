@@ -4,6 +4,8 @@
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
 
+<input type="hidden" name="pnForum_startnum" value="0">
+
 <div style="padding-left: 3px; background-color: <!--[ $bgcolor2 ]-->;">
     <input type="checkbox" name="active_pnForum" id="active_pnForum" value="1" checked>&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_TITLE' ]-->
 </div>
@@ -14,7 +16,7 @@
     </div>
     <div style="float: left; width: 70%; text-align: left;">
         <select name="pnForum_forum[]" id="pnForum_forum[]" size="1">
-        <option value="" selected><!--[ pnml name='_SRCHALLTOPICS' ]--></option>
+        <option value="" selected><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ALLTOPICS' ]--></option>
         <!--[ foreach item=forum from=$forums ]-->
         <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]--></option>
         <!--[ /foreach ]-->
@@ -39,6 +41,20 @@
         <option value="2"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYTITLE' ]--></option>
         <option value="3"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYFORUM' ]--></option>
         </select>
+    </div>
+</div>
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_LIMIT' ]-->:
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <select name="pnForum_limit" id="pnForum_limit" size="1">
+        <option value="0" selected><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NOLIMIT' ]--></option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        </select>
+        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->
     </div>
 </div>
 <div style="clear:both;"> </div>

@@ -858,9 +858,11 @@ function pnForum_userapi_readtopic($args)
             //$message = phpbb_br2nl($message);
             $post['post_text'] = phpbb_br2nl($post['post_text']);
             if (!empty($post['poster_data']['pn_user_sig'])){
-                    $post['post_text'] = eregi_replace("\[addsig]$", "\n_________________\n".$post['poster_data']['pn_user_sig'], $post['post_text']);
+                $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
+                $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
+                $post['post_text'] = eregi_replace("\[addsig]$", $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_text']);
             } else {
-                    $post['post_text'] = eregi_replace("\[addsig]$", "", $post['post_text']);
+                $post['post_text'] = eregi_replace("\[addsig]$", "", $post['post_text']);
             }
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', '', array($post['post_text']));
@@ -1034,9 +1036,11 @@ function pnForum_userapi_preparereply($args)
         // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
     
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
-        $sig = $review['poster_data']['pn_user_sig'];
+//        $sig = $review['poster_data']['pn_user_sig'];
         if(!empty($review['poster_data']['pn_user_sig'])){
-            $message = eregi_replace("\[addsig]$", "\n_________________\n".$review['poster_data']['pn_user_sig'], $message);
+            $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
+            $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
+            $message = eregi_replace("\[addsig]$", $sigstart . $review['poster_data']['pn_user_sig'] . $sigend, $message);
         }
         else {
             $message = eregi_replace("\[addsig]$", "", $message);
@@ -1535,7 +1539,9 @@ function pnForum_userapi_readpost($args)
 
     $post['post_textdisplay'] = phpbb_br2nl($message);
     if(!empty($post['poster_data']['pn_user_sig']) ){
-        $post['post_textdisplay'] = eregi_replace("\[addsig]$", "\n_________________\n".$post['poster_data']['pn_user_sig'], $post['post_textdisplay']);
+        $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
+        $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
+        $post['post_textdisplay'] = eregi_replace("\[addsig]$", $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_textdisplay']);
     } else {
         $post['post_textdisplay'] = eregi_replace("\[addsig]$", "", $post['post_textdisplay']);
     }
@@ -2975,7 +2981,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
  *@params $args['forums']     array array of forum ids to search in
  *@params $args['author']     string searhc for postings of this author only
  *@params $args['order']      array array of order to display results
- 
+ *@params $args['startnum']   int number of entry to start showing when on page > 1
  *@returns array with search results
  */
 function pnForum_userapi_forumsearch($args)
@@ -2995,8 +3001,8 @@ function pnForum_userapi_forumsearch($args)
 
     //$w = search_split_query($searchfor);
     $flag = false;
-        
-    $query = "SELECT
+/*        
+    $query = "SELECT DISTINCT
               f.forum_id,
               f.cat_id,
               p.forum_id,
@@ -3009,6 +3015,20 @@ function pnForum_userapi_forumsearch($args)
               t.topic_views,
               c.cat_title,
               f.forum_name,
+              p.poster_id,
+              p.post_time 
+*/
+    $query = "SELECT DISTINCT
+              f.forum_id,
+              f.forum_name,
+              f.cat_id,
+              c.cat_title,
+              pt.post_text,
+              pt.post_id,
+              t.topic_id,
+              t.topic_title,
+              t.topic_replies,
+              t.topic_views,
               p.poster_id,
               p.post_time 
               FROM ".$pntable['pnforum_posts']." AS p, 
@@ -3087,27 +3107,26 @@ function pnForum_userapi_forumsearch($args)
     }
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 
-    $total_hits = $result->PO_RecordCount();
+    $total_hits = 0; //$result->PO_RecordCount();
+    $skip_hits = 0; 
     $searchresults = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             $sresult = array();
             list($sresult['forum_id'],
+                 $sresult['forum_name'],
                  $sresult['cat_id'],
-                 $sresult['forum_id'],
+                 $sresult['cat_title'],
                  $sresult['post_text'],
                  $sresult['post_id'],
-                 $sresult['forum_id'],
                  $sresult['topic_id'],
                  $sresult['topic_title'],
                  $sresult['topic_replies'],
                  $sresult['topic_views'],
-                 $sresult['cat_title'],
-                 $sresult['forum_name'],
                  $sresult['poster_id'],
                  $sresult['post_time']) = $result->fields;
- 	        if(allowedtoseecategoryandforum($sresult['cat_id'], $sresult['forum_id'])) {
-                //auth check for forum and category before displaying search result
+     	    if(allowedtoseecategoryandforum($sresult['cat_id'], $sresult['forum_id'])) {
+                // auth check for forum and category before displaying search result
                 // timezone
                 $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
                 $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
@@ -3118,16 +3137,26 @@ function pnForum_userapi_forumsearch($args)
                 
                 //strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
-
+    
                 // username
                 $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
                 
-                array_push($searchresults, $sresult);
+                // check if we have to skip the first $startnum entries or not
+                if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
+                    $skip_hits++;
+                } else {
+                    // check if we have a limit and wether we have reached it or not
+                    if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
+                        array_push($searchresults, $sresult);
+                    }
+                }
+                $total_hits++;
             }
         }
     }
+
     pnfCloseDB($result);
-    return $searchresults;
+    return array($searchresults, $total_hits);
 }
 
 ?>

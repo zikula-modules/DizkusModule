@@ -68,26 +68,43 @@ function search_pnForum($vars)
     if(!isset($vars['active_pnForum'])) {
         return;
     }
-    
-    // just forloading the language defines, this makes a separate lang file for the 
-    // search include obsolete
+
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
     
+    // check if pnForum_searchagain is set. In this case re-use the data stored in a sessionvariable
+    if($vars['pnForum_searchagain'] == 1) {
+        // rescue startnum
+        $startnum = $vars['pnForum_startnum'];
+        $vars = unserialize(pnSessionGetVar('pnForum_searchparams'));
+        $vars['pnForum_startnum'] = $startnum;
+    }
+
+
     // the search function for pnForum is in our pnuserapi.php
-    $searchresults = pnModAPIFunc('pnForum', 'user', 'forumsearch',
-                                  array('searchfor' => $vars['q'],
-                                        'bool'      => $vars['bool'],
-                                        'forums'    => $vars['pnForum_forum'],
-                                        'author'    => $vars['pnForum_author'],
-                                        'order'     => $vars['pnForum_order']));
+    list($searchresults,
+         $total_hits) = pnModAPIFunc('pnForum', 'user', 'forumsearch',
+                                     array('searchfor' => $vars['q'],
+                                           'bool'      => $vars['bool'],
+                                           'forums'    => $vars['pnForum_forum'],
+                                           'author'    => $vars['pnForum_author'],
+                                           'order'     => $vars['pnForum_order'],
+                                           'limit'     => $vars['pnForum_limit'],
+                                           'startnum'  => $vars['pnForum_startnum']));
 
-
+    // store search parameters for later use
+    pnSessionSetVar('pnForum_searchparams', serialize($vars));
+    
+    $urltemplate = "modules.php?op=modload&amp;name=Search&amp;file=index&amp;action=search&amp;active_pnForum=1&amp;pnForum_searchagain=1&amp;pnForum_startnum=%%&amp;total=$total_hits";
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-    $pnr->assign('total_hits', count($searchresults));   //total_hits);
+//    $pnr->assign('hitcount', count($searchresults));   //total_hits);
     $pnr->assign('searchresults', $searchresults);
+    $pnr->assign('total_hits', $total_hits);
+    $pnr->assign('urltemplate', $urltemplate);
+    $pnr->assign('perpage', $vars['pnForum_limit']);
+    $pnr->assign('startnum', $vars['pnForum_startnum']);
     $pnr->assign('internalsearch', $vars['internalsearch']);
     $pnr->assign('searchfor', urlencode($vars['q']));
     return $pnr->fetch('pnforum_searchresults.html');
