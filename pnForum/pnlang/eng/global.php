@@ -72,7 +72,7 @@ define('_PNFORUM_OFFLINE', 'offline');
 define('_PNFORUM_REG_SINCE', 'registered');
 define('_PNFORUM_SEND_PM', 'send PM');
 define('_PNFORUM_PROFILE', 'Profile');
-define('_PNFORUM_LAST_SEEN', 'last visit:');
+define('_PNFORUM_LAST_SEEN', 'last visit');
 
 // copied from includes/language/blocks/eng
 define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'missing search parameters');
