@@ -165,6 +165,8 @@ function smarty_function_readlastposts($params, &$smarty)
     $result = pnfSelectLimit($dbconn, $sql, $postmax, false, __FILE__, __LINE__);
     $lastposts = array();
     if($result->RecordCount()>0) {
+        $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
+        $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
         for (; !$result->EOF; $result->MoveNext()) {
             list($topic_id, 
                  $topic_title, 
@@ -192,17 +194,8 @@ function smarty_function_readlastposts($params, &$smarty)
                 $lastpost['cat_id'] = $cat_id;
                 $lastpost['post_id'] = $post_id;
 
-                $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
-                $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
-                
                 if($post_sort_order == "ASC") {
-                    $hc_dlink_times = 0;
-                    if (($lastpost['topic_replies']+1-$posts_per_page)>= 0) { 
-                        $hc_dlink_times = 0; 
-                        for ($x = 0; $x < $lastpost['topic_replies']+1-$posts_per_page; $x+= $posts_per_page) 
-                        $hc_dlink_times++; 
-                    } 
-                    $start = $hc_dlink_times*$posts_per_page;
+                    $start = ((ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
                 } else {
                     // latest topic is on top anyway...
                     $start = 0;
@@ -227,10 +220,9 @@ function smarty_function_readlastposts($params, &$smarty)
                 // we now create the url to the last post in the thread. This might
                 // on site 1, 2 or what ever in the thread, depending on topic_replies
                 // count and the posts_per_page setting
-                $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
                 $lastpost['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                                       array('topic' => $lastpost['topic_id'],
-                                                            'start' => (ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+                                                            'start' => $start));
                 $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];
 
                 array_push($lastposts, $lastpost);
