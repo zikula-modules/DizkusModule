@@ -268,16 +268,11 @@ function pnForum_user_reply($args=array())
                                   'start' => $start)));
     } else {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
-        
-        $reply_start = false;
-        if(empty($message)) {
-            $reply_start = true;
-        }
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
                               array('topic_id'   => $topic_id,
                                     'post_id'    => $post_id,
                                     'last_visit' => $last_visit,
-                                    'reply_start'=> $reply_start,
+                                    'reply_start'=> empty($message),
                                     'attach_signature' => $attach_signature,
                                     'subscribe_topic'  => $subscribe_topic));
         if($preview==true) {
@@ -343,18 +338,12 @@ function pnForum_user_newtopic($args=array())
     } 
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
-    
-    $topic_start = false;
-    if(empty($subject) && empty($message)) {
-        // subject and messge body are empty, this means we have to start a new topic now
-        $topic_start = true;
-    }
-    
+
     $newtopic = pnModAPIFunc('pnForum', 'user', 'preparenewtopic',
                              array('forum_id'   => $forum_id,
                                    'subject'    => $subject,
                                    'message'    => $message,
-                                   'topic_start'=> $topic_start,
+                                   'topic_start'=> (empty($subject) && empty($message)),
                                    'attach_signature' => $attach_signature,
                                    'subscribe_topic'  => $subscribe_topic));
     if(isset($submit) && !isset($preview)) {
@@ -485,7 +474,6 @@ function pnForum_user_topicadmin($args=array())
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
-
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign('mode', $mode);
@@ -496,6 +484,7 @@ function pnForum_user_topicadmin($args=array())
     if(empty($submit)) {
         switch($mode) {
             case "del":
+            case "delete":
                 $templatename = "pnforum_user_deletetopic.html";
                 break;
             case "move":
@@ -523,6 +512,7 @@ function pnForum_user_topicadmin($args=array())
     } else { // submit is set
         switch($mode) {
             case "del":
+            case "delete":
                 $forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
                 pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id)));
                 return true;
