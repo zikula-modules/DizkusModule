@@ -12,21 +12,21 @@
 <table bgcolor="<!--[ $bgcolor2 ]-->" border="0" cellpadding="3" cellspacing="1" width="100%">
     <thead>
     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-        <th height="28">
+        <th style="width:50%; height:28px;">
             <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
         </th>
-        <th height="28" style="text-align: center;">
+        <th style="width:50%; height:28px; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_SETTING' ]--></strong>
         </th>
     </tr>
     </thead>
     <tbody>
     <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left" valign="top">
-        <td height="28">
+        <td style="width:50%; height:28px;">
             <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
         </td>
-		<td height="28">
-            <strong><!--[ post_order_button return_to=prefs ]--></strong>
+		<td style="width:50%; height:28px; text-align: center;">
+            <!--[ post_order_button return_to=prefs ]-->&nbsp;
         </td>
     </tr>
 	<tbody>
@@ -35,13 +35,13 @@
 <table bgcolor="<!--[ $bgcolor2 ]-->" border="0" cellpadding="3" cellspacing="1" width="100%">
     <thead>
     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-        <th height="28">
+        <th style="width:50%; height:28px;">
             <strong><!--[ pnml name='_PNFORUM_CATEGORY ]--> / <!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
         </th>
-        <th height="28" style="text-align: center;">
+        <th style="width:25%; height:28px; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong>
         </th>
-        <th height="28" style="text-align: center;">
+        <th style="width:25%; height:28px; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_FAVORITE_STATUS' ]--></strong>
         </th>
     </tr>
@@ -54,18 +54,18 @@
         </td>
     </tr>
     <!--[ foreach item=forum from=$category.forums ]-->
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left" valign="top">
-        <td>
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" style="text-align:left; vertical-align:top;">
+        <td width="50%">
           	<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
     	    <br />
         	<!--[ $forum.forum_desc ]-->
         </td>
-        <td width="5%" align="center" valign="middle">
-            <!--[ subscribeforum_button cat_title=$category.cat_title forum_name=$forum.forum_name forum_id=$forum.forum_id return_to=prefs]-->
+        <td style="text-align:center; vertical-align:middle;">
+            <!--[ subscribeforum_button cat_title=$category.cat_title forum_name=$forum.forum_name forum_id=$forum.forum_id return_to=prefs]-->&nbsp;
         </td>
-        <td width="5%" align="center" valign="middle">
-            <!--[ favoriteforum_button forum_id=$forum.forum_id return_to=prefs]-->
-        </td>
+        <td style="text-align:center; vertical-align:middle;">
+            <!--[ favoriteforum_button forum_id=$forum.forum_id return_to=prefs]-->&nbsp;
+		</td>
     </tr>
     
     <!--[ /foreach ]-->
