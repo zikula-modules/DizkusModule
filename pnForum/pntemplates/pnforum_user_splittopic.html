@@ -1,0 +1,44 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<!--[ pndebug ]-->
+
+<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="100%">
+    <tr>
+        <td bgcolor="<!--[ $bgcolor2 ]-->">
+            <table border="0" cellpadding="3" cellspacing="1" width="100%">
+                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+                    <form action="<!--[ pnmodurl modname=pnForum type=user func=splittopic ]-->" method="post">
+                    <input type="hidden" name="post_id" value="<!--[ $post.post_id ]-->">
+                    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->">
+
+                    <td align="center">
+                        <!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->
+                    </td>
+                </tr>
+                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+                    <td align="center">
+                        <!--[ pnml name='_PNFORUM_SPLITTOPIC_INFO' html=1 ]-->
+                    </td>
+	            </tr>
+
+                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+                    <td align="center">
+                        <!--[ pnml name='_PNFORUM_SPLITTOPIC_NEWTOPIC' html=1 ]-->
+                        <input type="text" name="newsubject" value="<!--[ pnml name='_PNFORUM_SPLIT' ]-->: <!--[ $post.topic_subject ]-->" size="40" maxlength="100">
+                    </td>
+	            </tr>
+
+                <tr bgcolor="<!--[ $bgcolor3 ]-->">
+                    <td align="center">
+                        <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->">
+                    </td>
+                </tr>
+                </form>
+            </table>
+        </td>
+    </tr>
+</table>
