@@ -12,7 +12,7 @@
     	    <select name="cat_id">
     	    <option value="-1"><!--[ pnml name='_PNFORUM_ADDNEWCATEGORY' ]--></option>
     	    <!--[ foreach item=category from=$categories ]-->
-    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--></option>
+    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--> (ID: <!--[ $category.cat_id ]-->)</option>
             <!--[ /foreach ]-->
             </select><br />
             <input type="submit" value="<!--[ pnml name='_EDIT' ]-->">
@@ -44,7 +44,7 @@
     	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums ]-->" method="post">
     	    <select name="cat_id">
     	    <!--[ foreach item=category from=$categories ]-->
-    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--></option>
+    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--> (ID: <!--[ $category.cat_id ]-->)</option>
             <!--[ /foreach ]-->
             </select><br />
             <input type="submit" value="<!--[ pnml name='_PNFORUM_REORDER' ]-->">

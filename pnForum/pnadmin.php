@@ -106,8 +106,16 @@ function pnForum_admin_preferences()
         	$slimforumonchecked = " ";
         	$slimforumoffchecked = $checked;
         }
+        if (pnModGetVar('pnForum', 'autosubscribe') == "yes") {
+        	$autosubscribeonchecked = $checked;
+        	$autosubscribeoffchecked = " ";
+        } else {
+        	$autosubscribeonchecked = " ";
+        	$autosubscribeoffchecked = $checked;
+        }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
+        $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
         $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
 	    $pnr->assign('min_postings_for_anchor', pnModGetVar('pnForum', 'min_postings_for_anchor'));
@@ -130,10 +138,13 @@ function pnForum_admin_preferences()
         $pnr->assign('logipoffchecked', $logipoffchecked);
         $pnr->assign('slimforumonchecked', $slimforumonchecked);
         $pnr->assign('slimforumoffchecked', $slimforumoffchecked);
+        $pnr->assign('autosubscribeonchecked', $autosubscribeonchecked);
+        $pnr->assign('autosubscribeoffchecked', $autosubscribeoffchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'autosubscribe', pnVarPrepForStore(pnVarCleanFromInput('autosubscribe')));
             pnModSetVar('pnForum', 'signature_start', pnVarPrepForStore(pnVarCleanFromInput('signature_start')));
             pnModSetVar('pnForum', 'signature_end', pnVarPrepForStore(pnVarCleanFromInput('signature_end')));
             pnModSetVar('pnForum', 'min_postings_for_anchor', pnVarPrepForStore(pnVarCleanFromInput('min_postings_for_anchor')));
@@ -155,6 +166,7 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         } 
         if($actiontype=="RestoreDefaults")  {
+            pnModSetVar('pnForum', 'autosubscribe', 'on');
             pnModSetVar('pnForum', 'signature_start', '<div style="border: 1px solid black;">');
             pnModSetVar('pnForum', 'signature_end', '</div>');
 		    pnModSetVar('pnForum', 'min_postings_for_anchor', 2);

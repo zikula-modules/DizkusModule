@@ -78,14 +78,16 @@ function pnForum_user_main($args=array())
     } else {
         $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
 
-        // this needs to be in here because we want to display the favorites
-        // not go to it if there is only one
-        // check if we have one category and one forum only
-        if(count($tree)==1) {
-            foreach($tree as $catname=>$forumarray) {
-                if(count($forumarray['forums'])==1) {  
-                    pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));  
-                    return true;
+        if(pnModGetVar('pnForum', 'slimforum') == 'yes') {
+            // this needs to be in here because we want to display the favorites
+            // not go to it if there is only one
+            // check if we have one category and one forum only
+            if(count($tree)==1) {
+                foreach($tree as $catname=>$forumarray) {
+                    if(count($forumarray['forums'])==1) {  
+                        pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));  
+                        return true;
+                    }
                 }
             }
         }   
@@ -224,7 +226,6 @@ function pnForum_user_reply($args=array())
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
-
     $post_id = (int)$post_id;
     $topic_id = (int)$topic_id;
     $attach_signature = (int)$attach_signature;
@@ -268,10 +269,17 @@ function pnForum_user_reply($args=array())
     } else {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
         
+        $reply_start = false;
+        if(empty($message)) {
+            $reply_start = true;
+        }
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
                               array('topic_id'   => $topic_id,
                                     'post_id'    => $post_id,
-                                    'last_visit' => $last_visit));
+                                    'last_visit' => $last_visit,
+                                    'reply_start'=> $reply_start,
+                                    'attach_signature' => $attach_signature,
+                                    'subscribe_topic'  => $subscribe_topic));
         if($preview==true) {
             $reply['message'] = $message;
         }
@@ -303,11 +311,15 @@ function pnForum_user_newtopic($args=array())
         	 $subject, 
         	 $cancel,
         	 $submit,
+        	 $attach_signature,
+        	 $subscribe_topic,
         	 $preview) = pnVarCleanFromInput('forum', 
         	  								 'message', 
         									 'subject', 
         									 'cancel',
         									 'submit',
+        									 'attach_signature',
+        									 'subscribe_topic',
         									 'preview');
     }
     
@@ -331,11 +343,20 @@ function pnForum_user_newtopic($args=array())
     } 
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
+    
+    $topic_start = false;
+    if(empty($subject) && empty($message)) {
+        // subject and messge body are empty, this means we have to start a new topic now
+        $topic_start = true;
+    }
+    
     $newtopic = pnModAPIFunc('pnForum', 'user', 'preparenewtopic',
                              array('forum_id'   => $forum_id,
                                    'subject'    => $subject,
-                                   'message'    => $message ));
-
+                                   'message'    => $message,
+                                   'topic_start'=> $topic_start,
+                                   'attach_signature' => $attach_signature,
+                                   'subscribe_topic'  => $subscribe_topic));
     if(isset($submit) && !isset($preview)) {
         // sync the users, so that new pn users get into the pnForum
         // database
@@ -343,9 +364,11 @@ function pnForum_user_newtopic($args=array())
 
         //store the new topic
         $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
-                                 array('forum_id' => $forum_id,
-                                       'subject'  => $subject,
-                                       'message'  => $message));
+                                 array('forum_id'         => $forum_id,
+                                       'subject'          => $subject,
+                                       'message'          => $message,
+                                       'attach_signature' => $attach_signature,
+                                       'subscribe_topic'  => $subscribe_topic));
     	pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
     	                    array('topic' => pnVarPrepForStore($topic_id))));
     	return true;

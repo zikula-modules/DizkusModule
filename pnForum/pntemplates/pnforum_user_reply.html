@@ -69,11 +69,11 @@
 <br />
 <br />
 <!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br />
-<input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+<input type="checkbox" id="attach_signature" name="attach_signature" <!--[ if $reply.attach_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
 <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
 <br />
 <!--[ if $loggedin ]-->
-<input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $reply.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+<input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $reply.subscribe_topic eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
 <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
 <br />
 <!--[ /if ]-->

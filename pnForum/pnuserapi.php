@@ -892,6 +892,9 @@ function pnForum_userapi_readtopic($args)
  *@params $args['post_id'] int the post id to reply to
  *@params $args['quote'] bool if user wants to qupte or not
  *@params $args['last_visit'] string the users last visit data
+ *@params $args['reply_start'] bool true if we start a new reply
+ *@params $args['attach_signature'] int 1=attach signature, otherwise no
+ *@params $args['subscribe_topic'] int =subscribe topic, otherwise no
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
 function pnForum_userapi_preparereply($args)
@@ -965,16 +968,29 @@ function pnForum_userapi_preparereply($args)
     }
 
     // anonymous user has uid=0, but needs pn_uid=1
-    // alo check subscription status here
+    // also check subscription status here
     if(!pnUserLoggedin()) {
         $pn_uid = 1;
-        $reply['is_subscribed'] = false;
+        $reply['attach_signature'] = false;
+        $reply['subscribe_topic'] = false;
     } else {
         $pn_uid = pnUserGetVar('uid');
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly 
-        $reply['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => $pn_uid, 
-                                                                                      'topic_id' => $reply['topic_id']));
+        if($reply_start==true) {
+            $reply['attach_signature'] = true;
+            $reply['subscribe_topic'] = false;
+            $is_subscribed = pnForum_userapi_get_topic_subscription_status(array('userid'   => $pn_uid, 
+                                                                                 'topic_id' => $reply['topic_id']));
+            if(($is_subscribed==true) ||(pnModGetVar('pnForum', 'autosubscribe')=='yes')) {
+                $reply['subscribe_topic'] = true;
+            } else {
+                $reply['subscribe_topic'] = false;
+            }
+        } else {
+            $reply['attach_signature'] = $attach_signature;
+            $reply['subscribe_topic'] = $subscribe_topic;
+        }
     }
     $reply['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
     
@@ -1285,6 +1301,9 @@ function pnForum_userapi_get_forum_favorites_status($args)
  *@params $args['message'] string the text (only set when preview is selected)
  *@params $args['subject'] string the subject (only set when preview is selected)
  *@params $args['forum_id'] int the forums id
+ *@params $args['topic_start'] bool true if we start a new topic
+ *@params $args['attach_signature'] int 1= attach signature, otherwise no
+ *@params $args['subscribe_topic'] int 1= subscribe topic, otherwise no
  *@returns array with information....
  */
 function pnForum_userapi_preparenewtopic($args)
@@ -1328,6 +1347,19 @@ function pnForum_userapi_preparenewtopic($args)
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
     $newtopic['message_display'] = nl2br($newtopic['message_display']);
 
+    if(pnUserLoggedIn()) {
+        if($topic_start==true) {
+            $newtopic['attach_signature'] = true;
+            $newtopic['subscribe_topic']  = (pnModGetVar('pnForum', 'autosubscribe')=='yes') ? true : false;
+        } else {
+            $newtopic['attach_signature'] = $attach_signature;
+            $newtopic['subscribe_topic']  = $subscribe_topic;
+        }
+    } else {
+        $newtopic['attach_signature'] = false;
+        $newtopic['subscribe_topic']  = false;
+    }        
+    
     return $newtopic;
 }
 
@@ -1339,7 +1371,8 @@ function pnForum_userapi_preparenewtopic($args)
  *@params $args['forum_id'] int the forums id
  *@params $args['time'] string (optional) the time, only needed when creating a shadow 
  *                             topic
- *@params $args['no_sig'] bool (optional) if true we do not add a signature
+ *@params $args['attach_signature'] int 1=yes, otherwise no
+ *@params $args['subscribe_topic'] int 1=yes, otherwise no
  *@returns int the new topics id
  */
 function pnForum_userapi_storenewtopic($args)
@@ -1372,13 +1405,9 @@ function pnForum_userapi_storenewtopic($args)
     //  without html-specialchars, bbcode, smilies <br /> and [addsig]
     $posted_message=stripslashes($message);
     
-    //  signature is always on, except anonymous user
     //  anonymous user has uid=0, but needs pn_uid=1
     if(pnUserLoggedin()) {
-        if(is_bool($no_sig) && ($no_sig==true)){
-            // do nothing
-        } else {
-            // add signature
+        if($attach_signature==1) {
             $message .= "[addsig]";
         }
         $pn_uid = pnUserGetVar('uid');
@@ -1456,6 +1485,12 @@ function pnForum_userapi_storenewtopic($args)
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
         pnfCloseDB($result);
+        
+        // update subscription
+        if($subscribe_topic==1) {
+            // user wants to subscribe the new topic
+            pnForum_userapi_subscribe_topic(array('topic_id'=>$topic_id));
+        }
     }
     //  update forums-table
     $sql = "UPDATE $pntable[pnforum_forums] 
@@ -1467,6 +1502,10 @@ function pnForum_userapi_storenewtopic($args)
 
     //  notify for newtopic
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'0'));
+    
+    // delete temporary session var
+    pnSessionDelVar('topic_started');
+    
     //  switch to topic display
     return $topic_id;
 }

@@ -43,6 +43,7 @@
 
 // new
 define('_PNFORUM_START', 'Start');
+define('_PNFORUM_PREFS_AUTOSUBSCRIBE', 'Autosubscribe to new topics or posts');
 
 //
 // alphasorting starts here
