@@ -1104,8 +1104,8 @@ function pnForum_userapi_storereply($args)
 
     // read forum_id from topic_id
     $sql = "SELECT f.forum_id
-            FROM ".$pntable[pnforum_forums]." AS f, 
-                 ".$pntable[pnforum_topics]." AS t
+            FROM ".$pntable['pnforum_forums']." AS f, 
+                 ".$pntable['pnforum_topics']." AS t
             WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
             AND (t.forum_id = f.forum_id)";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
