@@ -35,6 +35,8 @@ function smarty_function_plainbbcode($params, &$smarty)
     extract($params); 
 	unset($params);
 
+    // get lang defines
+    pnModAPILoad('pnForum', 'user');
 	if(pnModAvailable('pn_bbcode')) {	
     	// language 
 	    $lang =  pnVarPrepForOS(pnUserGetLang());

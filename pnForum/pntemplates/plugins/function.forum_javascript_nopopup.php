@@ -13,6 +13,8 @@ function smarty_function_forum_javascript_nopopup($params, &$smarty)
     extract($params); 
 	unset($params);
 
+    // get lang defines
+    pnModAPILoad('pnForum', 'user');
     $out = "<script type=\"text/javascript\">\n";
     $out.= "//<![CDATA[\n";
     $out.= "function x () {\n";
