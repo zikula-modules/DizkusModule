@@ -24,9 +24,15 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+/**
+ * listforummods plugin
+ * lists a forum mods
+ *
+ *@param $params['moderators'] array with key=userid, value=username of moderators
+ *
+ */
 function smarty_function_listforummods($params, &$smarty) 
 {
-// moderators
     extract($params); 
 	unset($params);
 

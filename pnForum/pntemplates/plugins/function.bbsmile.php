@@ -24,6 +24,11 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+/**
+ * bbsmile plugin
+ * shows all available smilies
+ *
+ */
 function smarty_function_bbsmile($params, &$smarty) 
 {
     extract($params); 

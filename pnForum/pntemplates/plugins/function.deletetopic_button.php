@@ -24,7 +24,15 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_id, forum_id, status, topic_id
+include_once('modules/pnForum/common.php');
+
+/**
+ * deletetopic_button
+ * adds a delete topic button
+ *
+ *@param $params['cat_id]   int category id
+ *@param $params['forum_id] int forum id
+ */
 function smarty_function_deletetopic_button($params, &$smarty) 
 {
     extract($params); 

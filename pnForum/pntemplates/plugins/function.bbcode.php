@@ -24,6 +24,11 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+/**
+ * bbcode plugin
+ * shows all available bbcode tags
+ *
+ */
 function smarty_function_bbcode($params, &$smarty) 
 {
     extract($params); 

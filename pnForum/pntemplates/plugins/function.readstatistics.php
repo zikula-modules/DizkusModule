@@ -26,7 +26,16 @@
 
 include_once('modules/pnForum/common.php');
 
-// maxposts
+/**
+ * readstatistics
+ * reads some statistics of the forum 
+ * results are assign to
+ *
+ * $total_categories: total number of categories
+ * $total_topics    : total number of topics 
+ * $total_posts     : total number of posts
+ * $total_forums    : total number of forums
+ */
 function smarty_function_readstatistics($params, &$smarty) 
 {
     extract($params); 

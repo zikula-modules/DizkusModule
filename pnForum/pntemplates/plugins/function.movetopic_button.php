@@ -24,7 +24,16 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_id, forum_id, status, topic_id
+include_once('modules/pnForum/common.php');
+
+/**
+ * movetopic_button plugin
+ * adds the move topic button
+ *
+ *@params $params['cat_id'] int category id
+ *@params $params['forum_id'] int forum id
+ *@params $params['topic_id'] int topic id
+ */
 function smarty_function_movetopic_button($params, &$smarty) 
 {
     extract($params); 

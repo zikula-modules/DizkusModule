@@ -3,6 +3,11 @@
 // Purpose of file: display smilies and bbcodes in forum
 // ----------------------------------------------------------------------
 
+/**
+ * forum_javascript 
+ * adds some javascript needed for smilies and bbcode
+ *
+ */
 function smarty_function_forum_javascript($params, &$smarty) 
 {
     extract($params); 

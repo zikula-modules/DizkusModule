@@ -26,7 +26,14 @@
 
 include_once('modules/pnForum/common.php');
 
-// cat_id, forum_id, topic_id
+/**
+ * mailtopic_button plugin
+ * adds the mail topic button
+ *
+ *@params $params['cat_id'] int category id
+ *@params $params['forum_id'] int forum id
+ *@params $params['topic_id'] int topic id
+ */
 function smarty_function_mailtopic_button($params, &$smarty) 
 {
     extract($params); 

@@ -24,7 +24,15 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_id, forum_id, status, forum_id
+include_once('modules/pnForum/common.php');
+
+/**
+ * addtopic_button
+ * shows a button "new topic" depending in the lang files
+ *
+ *@params $params['cat_id'] int category id
+ *@params $params['forum_id'] int forum id
+ */
 function smarty_function_addtopic_button($params, &$smarty) 
 {
     extract($params); 

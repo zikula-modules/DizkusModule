@@ -24,7 +24,17 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_id, forum_id, return_to
+include_once('modules/pnForum/common.php');
+
+/**
+ * subscribeforum_button plugin
+ * adds the subscribe forum button
+ *
+ *@params $params['cat_id'] int category id
+ *@params $params['forum_id'] int forum id
+ *@params $params['return_to'] string url to return to after subscribing, necessary because
+ *                                    the subscription page can be reached from several places
+ */
 function smarty_function_subscribeforum_button($params, &$smarty) 
 {
     extract($params); 

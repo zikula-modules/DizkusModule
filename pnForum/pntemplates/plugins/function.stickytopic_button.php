@@ -24,7 +24,17 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_id, forum_id, status, topic_id
+include_once('modules/pnForum/common.php');
+
+/**
+ * stickytopic_button plugin
+ * adds the sticky topic button
+ *
+ *@params $params['cat_id'] int category id
+ *@params $params['forum_id'] int forum id
+ *@params $params['topic_id'] int topic id
+ *@params $params['status'] int the topis status
+ */
 function smarty_function_stickytopic_button($params, &$smarty) 
 {
     extract($params); 

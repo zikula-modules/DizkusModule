@@ -24,7 +24,16 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// post_id, cat_id, forum_id
+include_once('modules/pnForum/common.php');
+
+/**
+ * splittopic_button plugin
+ * adds the split topic button
+ *
+ *@params $params['cat_id'] int category id
+ *@params $params['forum_id'] int forum id
+ *@params $params['post_id'] int post id
+ */
 function smarty_function_splittopic_button($params, &$smarty) 
 {
     extract($params); 

@@ -24,6 +24,13 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+include_once('modules/pnForum/common.php');
+
+/**
+ * forumbox
+ * creates a dropdown list with all available forums for the user
+ *
+ */
 function smarty_function_forumbox($params, &$smarty) 
 {
 	extract($params); 
@@ -41,8 +48,7 @@ function smarty_function_forumbox($params, &$smarty)
 		$out.='<option value="" selected>'. _SRCHALLTOPICS .'</option>';
 		foreach($forums as $forum) {
 			if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-				//$out .= '<option value="' $forum[forum_id] .'">'.pnVarPrepForDisplay($forum[cat_title]).' :: '.pnVarPreForDisplay($forum[forum_name].' </option>';
-				$out .= '<option value="'.$forum[forum_id].'">'.pnVarPrepForDisplay($forum[cat_title]).'::'.pnVarPrepForDisplay($forum[forum_name]).'</option>';
+				$out .= '<option value="'.$forum['forum_id'].'">'.pnVarPrepForDisplay($forum['cat_title']).'::'.pnVarPrepForDisplay($forum['forum_name']).'</option>';
 			}
     }
 	$out .= '</select>';

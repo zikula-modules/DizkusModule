@@ -24,6 +24,14 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+include_once('modules/pnForum/common.php');
+
+/**
+ * jumpbox plugin
+ * creates a dropdown list with all available forums for the current user. 
+ * seleting a forum issue a direct forward to the viewforum() function
+ *
+ */
 function smarty_function_jumpbox($params, &$smarty) 
 {
     extract($params); 
@@ -37,10 +45,9 @@ function smarty_function_jumpbox($params, &$smarty)
     $out = "";
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     if(count($forums)>0) {
-    
         $out ='<form action="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
-               <label for="phpbb_forum"><strong>' . pnVarPrepForDisplay(_PNFORUM_FORUM) . ': </strong></label>
-               <select name="forum" id="phpbb_forum" onChange="location.href=this.options[this.selectedIndex].value">
+               <label for="pnforum_forum"><strong>' . pnVarPrepForDisplay(_PNFORUM_FORUM) . ': </strong></label>
+               <select name="forum" id="pnforum_forum" onChange="location.href=this.options[this.selectedIndex].value">
 	           <option value="'.pnModURL('pnForum', 'user', 'main').'">' . pnVarPrepForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
         foreach($forums as $forum) {
             if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
