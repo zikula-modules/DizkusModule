@@ -19,10 +19,10 @@
 <p><br>
   3.<a href="#upgrading">Upgrading</a><br>
   =<a href="#310"> 3.1</a> Preparations<br>
-  =<a href="#320"> 3.2</a> PN_phpBB_14 versions 1.7.6 (PostNuke .72x)<br>
-  =<a href="#330"> 3.3</a> PN_phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .71x)<br>
-  =<a href="#340"> 3.4</a> PN_phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .70x)<br>
-  =<a href="#350"> 3.5</a> Forums for PHPNuke 4.4</p>
+  =<a href="#320"> 3.2</a> phpBB_14 versions 1.7.6 (PostNuke .72x)<br>
+  =<a href="#330"> 3.3</a> phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .71x)<br>
+  =<a href="#340"> 3.4</a> phpBB_14 versions 1.7.2.1 - 1.7.2.x
+(PostNuke .70x)</p>
 <p><br>
   4.<a href="#setup">Setup</a><br>
   =<a href="#410"> 4.1</a> Forums Administration<br>
@@ -159,6 +159,9 @@
   <p>2.3.8 If you use style sheets in your themes, the styles contained in them 
     will be reflected in pnForum. You can also use: pn-phpBB-Title, pn-phpBB-border 
     and pn-phpBB-cat for additional customization of your forums.</p>
+  <p>2.3.9 If you are using AutoTheme; $bgcolor1, $bgcolor2, $bgcolor3, and 
+  	$bgcolor4 are defined in /yourtheme/theme.cfg using the names 'color1', 'color2',
+	'color3' and 'color4'.</p>
 </blockquote>
 <hr>
 <p class=MsoPlainText><a name="upgrading"></a> 3. Upgrading</p>
@@ -166,8 +169,8 @@
 <blockquote>
   <p>Do preparations as in 2.2.1, 2.2.2</p>
 </blockquote>
-<p><a name="320"></a>3.2. Upgrading from phpBB_14 versions 1.7.2.1 - 1.7.3.x (PostNuke .71x
-  and up)</p>
+<p><a name="320"></a>3.2. Upgrading from phpBB_14 versions 1.7.6 (PostNuke
+.72x)</p>
 <blockquote> 
   <p>Copy new files into place.<br>
     Delete the existing file /includes/blocks/pnForum.php<br>
@@ -186,14 +189,35 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     see <a href="#235">2.3.5</a><br>
     You're done.</p>
 </blockquote>
-<p><a name="330"></a>3.3. Upgrading from phpBB_14 versions 1.7.2.1 - 1.7.2.x (PostNuke .70x)</p>
+<p><a name="330"></a>3.3. Upgrading from phpBB_14 versions 1.7.2.1 - 1.7.3.x
+(PostNuke .71x and up)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </p>
+<blockquote> 
+  <p>Copy new files into place.<br>
+    Delete the existing file /includes/blocks/phpBB_14.php<br>
+    Go to PostNuke/Administration/Modules. Use 'regenerate' link.<br>
+    Find pnForum module link and use 'Upgrade' link nearby.<br>
+    You will need to 'Activate' the module after the page reloads.<br>
+    Delete any old phpBB_14 related blocks you had created and make new ones. <br>
+    Then,
+     'Initialize' and 'Activate' the three new modules that were installed;
+    pn_bbcode, pn_bbclick and pn_bbsmile modules.<br>
+Now, while still in the Modules section, the 'Regenerate' or 'List' links. To
+the far right side of the pnForum module listing, you will see 'Deactivate |
+Edit'. Click on 'Edit'. Place a check mark in the three boxes to activate pn_bbcode,
+pn_bbclick and pn_bbsmile. Then save.<br>
+    Also
+    see <a href="#235">2.3.5</a><br>
+    You're done.</p>
+</blockquote>
+<p><a name="340"></a>3.4. Upgrading from phpBB_14 versions 1.7.2.1 - 1.7.2.x
+(PostNuke .70x)</p>
 <blockquote>
   <p> Due to changes in upgrade procedure between Phoenix releases .70x and .71x, 
     there is no easy and fast way of doing this. <br>
     - write a note with the exact pnForum version that you had previously installed 
     <br>
     - backup your database (see 'Note:' below)<br>
-    - backup pnForum tables <br>
+    - backup phpBB_14 tables <br>
     - drop the database tables and erase following folders:<br>
     modules/phpBB_14<br>
     includes/search/phpBB_14.php <br>
@@ -293,7 +317,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     StatsBlock <br>
     You are therefore able to control how a user or a user group may use your 
     forum. <br>
-   </p>
+ </p>
   <p>This is also correct regarding moderator access to forums and categories. 
     Moderator access is checked against MODERATE_ACCESS in PostNuke permission 
     system for any given user or group. Setting the moderator parameter inside 
