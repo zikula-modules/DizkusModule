@@ -44,7 +44,7 @@ function smarty_function_subscribeforum_button($params, &$smarty)
         include_once('modules/pnForum/common.php');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(!pnModAPILoad('pnForum', 'user')) {
-                $smarty->trigger_error("subscribetopic_button: unable to load userapi", e_error);
+                $smarty->trigger_error("subscribetopic_button: unable to load userapi");
                 return false;
             }
             $lang = pnUserGetLang();

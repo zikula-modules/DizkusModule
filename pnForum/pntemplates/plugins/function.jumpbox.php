@@ -37,7 +37,7 @@ function smarty_function_jumpbox($params, &$smarty)
 	unset($params);
 
     if(!pnModAPILoad('pnForum', 'admin')) {
-        $smarty->trigger_error("loading adminapi failed", e_error);
+        $smarty->trigger_error("loading pnForum adminapi failed");
         return;
     } 
 

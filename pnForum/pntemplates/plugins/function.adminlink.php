@@ -39,7 +39,7 @@ function smarty_function_adminlink($params, &$smarty)
 
     if (pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
         if(empty($id) || empty($type)) {
-            $smarty->trigger_error("adminlink: missing parameter(s)", e_error);
+            $smarty->trigger_error("adminlink: missing parameter(s)");
             return;
         }
         

@@ -43,7 +43,7 @@ function smarty_function_favoriteforum_button($params, &$smarty)
         $userid = pnUserGetVar('uid');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(!pnModAPILoad('pnForum', 'user')) {
-                $smarty->trigger_error("favoritesforum_button: unable to load userapi", e_error);
+                $smarty->trigger_error("favoritesforum_button: unable to load userapi");
                 return false;
             }
             $lang = pnUserGetLang();

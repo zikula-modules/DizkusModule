@@ -48,7 +48,7 @@ function smarty_function_boardstats($params, &$smarty)
 	unset($params);
 
     if(!pnModAPILoad('pnForum', 'user')) {
-        $smarty->trigger_error("loading userapi failed", e_error);
+        $smarty->trigger_error("loading pnForum userapi failed");
         return;
     } 
 

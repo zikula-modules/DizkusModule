@@ -60,7 +60,7 @@ function smarty_function_post_order_button($params, &$smarty)
     }
     if (pnUserLoggedIn()) {
         if(!pnModAPILoad('pnForum', 'user')) {
-            $smarty->trigger_error("post_order_button: unable to load userapi", e_error);
+            $smarty->trigger_error("post_order_button: unable to load userapi");
             return false;
         }
         $post_order = pnModAPIFunc('pnForum','user','get_user_post_order'); 

@@ -32,12 +32,12 @@ function smarty_function_folderimage($params, &$smarty)
 	unset($params);
 
     if(!pnModAPILoad('pnForum', 'user')) {
-        $smarty->trigger_error("loading userapi failed", e_error);
+        $smarty->trigger_error("loading pnForum userapi failed");
         return;
     } 
 
     if(empty($forum)) {
-        $smarty->trigger_error("folderimage: missing parameter 'forom'",e_error);
+        $smarty->trigger_error("folderimage: missing parameter 'forom'");
         return false;
     }
     $last_visit = pnSessionGetVar('pnForum_lastvisit');

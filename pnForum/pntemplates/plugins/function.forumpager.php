@@ -39,11 +39,11 @@ function smarty_function_forumpager($params, &$smarty)
 	unset($params);
 
     if(empty($total) || empty($forum_id) || empty($start)) {
-		$smarty->trigger_error(pnVarPrepForDisplay(_MODARGSERROR), e_error);
+		$smarty->trigger_error(pnVarPrepForDisplay(_MODARGSERROR));
 	} 
 
 	if(!pnModAPILoad('pnForum', 'admin')) {
-		$smarty->trigger_error("loading adminapi failed", e_error);
+		$smarty->trigger_error("loading adminapi failed");
 	} 
         
     $topics_per_page  = pnModGetVar('pnForum', 'topics_per_page');

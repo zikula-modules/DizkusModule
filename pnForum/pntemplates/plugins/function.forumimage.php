@@ -32,20 +32,20 @@ function smarty_function_forumimage($params, &$smarty)
 	unset($params);
 
     if(!pnModAPILoad('pnForum', 'user')) {
-        $smarty->trigger_error("loading userapi failed", e_error);
+        $smarty->trigger_error("loading upnForum userapi failed");
         return;
     } 
 
     $assign = (!empty($assign)) ? $assign : 'forumimage';
     
     if(empty($name)) {
-        $smarty->trigger_error("folderimage: missing parameter 'name'",e_error);
+        $smarty->trigger_error("folderimage: missing parameter 'name'");
         return false;
     }
 
     $img = pnModGetVar('pnForum', $name);
     if(empty($name)) {
-        $smarty->trigger_error("folderimage: invalid value for parameter 'name'",e_error);
+        $smarty->trigger_error("folderimage: invalid value for parameter 'name'");
         return false;
     }
     
