@@ -642,6 +642,7 @@ function pnForum_user_viewlatest()
     $pnr->assign('text', $text);
     $pnr->assign('nohours', $nohours);
     $pnr->assign( 'last_visit', $last_visit);
+    $pnr->assign( 'loggedin', pnUserLoggedIn());
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
     $pnr->assign( 'numposts', pnModAPIFunc('pnForum', 'user', 'boardstats',
                                             array('id'   => '0',
