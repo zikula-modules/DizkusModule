@@ -1,0 +1,29 @@
+<!--[*
+// ----------------------------------------------------------------------
+// Source file:  $Source$
+//
+// Last changes from:  $Author$
+//
+// Revision:           $Revision$
+//
+// Date of revision    $Date$
+//
+// ----------------------------------------------------------------------
+*]-->
+
+<!-- [ include file=pnforum_user_header.html ]-->
+<br />
+<fieldset style="width: 100%;">
+    <legend>
+    <!--[pnml name='_PNFORUM_ERROROCCURED']-->
+    </legend>
+    <br /><br />
+    <!--[$error_text]--><br /><br />
+    <!--[ if $file neq "" ]-->File: <!--[ $file ]--><br /><!--[ /if ]-->
+    <!--[ if $line neq "" ]-->Line: <!--[ $line ]--><br /><!--[ /if ]-->
+    <br />
+    <a title="<!--[pnml name='_PNFORUM_ERRORMAILTO']-->" href="mailto:<!--[ $adminmail]-->"><!--[pnml name='_PNFORUM_ERRORMAILTO']--></a>
+    <br /><br />
+</fieldset>
+<br />
+<!--[ include file=pnforum_user_footer.html ]-->

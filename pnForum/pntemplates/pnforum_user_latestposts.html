@@ -1,0 +1,62 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file=pnforum_user_header.html ]-->
+
+<!--[ pndebug ]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+<!--[ pnthemegetvar name=bgcolor4 assign=bgcolor4  ]-->
+
+<script type="text/javascript">
+<!--
+function func_name() {
+    document.latestposts.submit();
+}
+//-->
+</script>
+<noscript>*</noscript>
+<br />
+<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs ]-->"><!--[ pnml name='_PNFORUM_EDITPREFS' ]--></a>
+<br />
+<form name="latestposts" method="post" action="">
+<table border="0" cellpadding="1" cellspacing="1" align="center" width="100%">
+    <tr bgcolor="<!--[ $bgcolor2 ]-->" width="100%">
+        <td colspan="4" align="center"><span class="pn-title"><strong><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</strong></span></td>
+    </tr>
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" width="100%">
+        <td colspan="4" align="center"><span class="pn-normal">
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ] 
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ] 
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ] 
+    		[ <a href="javascript:func_name()"><!--[ pnml name='_PNFORUM_LAST' ]--></a> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0"> <a href="javascript:func_name()"><label for="pnForum_hours"><!--[ pnml name='_PNFORUM_HOURS' ]--></label></a> ]
+    		<br />
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ] 
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ] 
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6" ]-->><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ] 
+    		</span>
+    	</td>
+    </tr>
+</table>
+</form>
+<br /><br />
+<table border="0" cellpadding="3" cellspacing="1" width="100%">
+	<tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+          <td width="50%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></span></td>
+          <td width="15%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></span></td>
+          <td width="15%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span></td>
+          <td width="20%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></span></td>
+	</tr>
+	<!--[ foreach item=post from=$posts ]-->
+    <tr bgcolor="<!--[ $bgcolor3 ]-->">
+        <td width="50%" id="phpbb14_latest<!--[ $post.topic_id ]-->">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->" class="pn-normal" onMouseOver="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onMouseOut="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->'" onfocus="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onblur="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->"><!--[ $post.topic_title ]--></a>
+        </td>
+        <td>
+            <span class="pn-normal"><!--[ $post.topic_replies ]--></span>
+        </td>
+        <!--[ $post.last_boardpost ]-->
+    </tr>
+    <!--[ /foreach ]-->
+</table>

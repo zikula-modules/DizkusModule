@@ -1,0 +1,161 @@
+<!--[*  $Id$  *]-->
+
+<div style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]--></a></div>
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+
+<br />
+<form action="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->" method="post">
+<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="100%">
+    <tr>
+        <td bgcolor="<!--[ $bgcolor2 ]-->">
+        	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="<!--[ $bgcolor1 ]-->">
+            	<tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+            	    <td align="center" colspan="3">Set Forum Wide Options</td>
+            	</tr>
+            	<tr align="left">
+            	    <td align="center" colspan="3"><i>NOTE: These settings will be stored in the database, some images are hardcoded in language defines to be ML</i></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Email From Address:<br /><i>(This is the address that will appear on every email sent by the forums)</i></td>
+            		<td colspan="2"><input type="text" name="email_from" size="30" maxlength="100" value="<!--[ $email_from ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Default charset:<br /><i>(This is the charset that will be used in e-mail headers)</i></td>
+                	<td colspan="2"><input type="text" name="default_lang" size="30" maxlength="30" value="<!--[ $default_lang ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                	<td>Hot Topic Threshold:</td>
+                	<td colspan="2"><input type="text" name="hot_threshold" size="3" maxlength="3" value="<!--[ $hot_threshold ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                	<td>Posts per Page:<br /><i>(This is the number of posts per topic that will be displayed per page of a topic. 15 by default.)</i></td>
+                	<td colspan="2"><input type="text" name="posts_per_page" size="3" maxlength="3" value="<!--[ $posts_per_page ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Topics per Forum:<br /><i>(This is the number of topics per forum that will be displayed per page of a forum. 15 by default.)</i></td>
+                    <td colspan="2"><input type="text" name="topics_per_page" size="3" maxlength="3" value="<!--[ $topics_per_page ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Smiles icons location:<br /><i>&nbsp;</i></td>
+                    <td colspan="2"><input type="text" name="url_smiles" size="50" maxlength="100" value="<!--[ $url_smiles ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Ranks icons location:<br /><i>&nbsp;</i></td>
+                    <td colspan="2"><input type="text" name="url_ranks_images" size="50" maxlength="100" value="<!--[ $url_ranks_images ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Post Icon:<br /><i>&nbsp;</i></td>
+                    <td><img src="<!--[ $posticon ]-->" alt="posticon"></td>
+                    <td><input type="text" name="posticon" size="50" maxlength="100" value="<!--[ $posticon ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>First new post Icon:<br /><i>&nbsp;</i></td>
+                    <td><img src="<!--[ $firstnew_image ]-->" alt="firstnew_image"></td>
+                    <td><input type="text" name="firstnew_image" size="50" maxlength="100" value="<!--[ $firstnew_image ]-->">
+            	</tr>
+            	<tr align="left">
+            		<td>Folder image:<br /><i>&nbsp;</i></td>
+                    <td><img src="<!--[ $folder_image ]-->" alt="folder_image"></td>
+                    <td><input type="text" name="folder_image" size="50" maxlength="100" value="<!--[ $folder_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Hot folder image:<br /><i>(Folder with many posts)</i></td>
+                    <td><img src="<!--[ $hot_folder_image ]-->" alt="hot_folder_image"></td>
+                    <td> <input type="text" name="hot_folder_image" size="50" maxlength="100" value="<!--[  $hot_folder_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>New posts image:<br /><i>(Folder with new posts since user's last visit)</i></td>
+                    <td><img src="<!--[ $newposts_image ]-->" alt="newposts_image"></td>
+                    <td><input type="text" name="newposts_image" size="50" maxlength="100" value="<!--[ $newposts_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Folder with both many and new posts image:<br /><i>&nbsp;</i></td>
+                    <td><img src="<!--[ $hot_newposts_image ]-->" alt="hot_newposts_image"></td>
+                    <td><input type="text" name="hot_newposts_image" size="50" maxlength="100" value="<!--[ $hot_newposts_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Locked Icon:<br /><i>&nbsp;</i></td>
+                    <td><img src="<!--[ $locked_image ]-->" alt="locked_image"></td>
+                    <td><input type="text" name="locked_image" size="50" maxlength="100" value="<!--[ $locked_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Lock topic Icon:<br /><i>(Icon in moderation-panel)</i></td>
+                    <td><img src="<!--[ $locktopic_image ]-->" alt="locktopic_image"></td>
+                    <td><input type="text" name="locktopic_image" size="50" maxlength="100" value="<!--[ $locktopic_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Unlock topic Icon:<br /><i>(Icon in moderation-panel)</i></td>
+                    <td><img src="<!--[ $unlocktopic_image ]-->" alt="unlocktopic_image"></td>
+                    <td><input type="text" name="unlocktopic_image" size="50" maxlength="100" value="<!--[ $unlocktopic_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Make topic sticky Icon:<br /><i>(Icon in moderation-panel)</i></td>
+                    <td><img src="<!--[ $stickytopic_image ]-->" alt="stickytopic_image"></td>
+                    <td><input type="text" name="stickytopic_image" size="50" maxlength="100" value="<!--[ $stickytopic_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Make topic unsticky Icon:<br /><i>(Icon in moderation-panel)</i></td>
+                    <td><img src="<!--[ $unstickytopic_image ]-->" alt="unstickytopic_image"></td>
+                    <td><input type="text" name="unstickytopic_image" size="50" maxlength="100" value="<!--[ $unstickytopic_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Move topic Icon:<br /><i>(Icon in moderation-panel)</i></td>
+                    <td><img src="<!--[ $movetopic_image ]-->" alt="movetopic_image"></td>
+                    <td><input type="text" name="movetopic_image" size="50" maxlength="100" value="<!--[ $movetopic_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+                    <td>Delete topic Icon:<br /><i>(Icon in moderation-panel)</i></td>
+                    <td><img src="<!--[ $deltopic_image ]-->" alt="deltopic_image"></td>
+                    <td><input type="text" name="deltopic_image" size="50" maxlength="100" value="<!--[ $deltopic_image ]-->"></td>
+            	</tr>
+            	<tr align="left">
+            		<td>Posts sorting order:<br /><i>&nbsp;</i></td>
+                    <td colspan="2">
+                        <input type="radio" name="post_sort_order" value="ASC" <!--[ $post_sort_order_ascchecked ]-->>&nbsp;Ascending
+                        <input type="radio" name="post_sort_order" value="DESC" <!--[ $post_sort_order_descchecked ]-->>&nbsp;Descending
+            		</td>
+            	</tr>
+            	<tr align="left">
+            		<td>Show 'Allowed HTML' tags:<br /><i>&nbsp;</i></td>
+                    <td colspan="2">
+                        <input type="radio" name="show_html" value="yes" <!--[ $htmlonchecked ]-->>&nbsp;yes
+                        <input type="radio" name="show_html" value="no" <!--[ $htmloffchecked ]-->>&nbsp;no
+            		</td>
+            	</tr>
+            	<tr align="left">
+            		<td>Show 'BBCode' tags:<br /><i>only when <a href="http://pncommunity.de" target=_blank>pnBBCode</a> hook is installed</i></td>
+                    <td colspan="2">
+                        <input type="radio" name="show_bbcode" value="yes" <!--[ $bbcodeonchecked ]-->>&nbsp;yes
+                        <input type="radio" name="show_bbcode" value="no" <!--[ $bbcodeoffchecked ]-->>&nbsp;no
+            		</td>
+            	</tr>
+            	<tr align="left">
+            		<td>Show Smilies :<br /><i>only when <a href="http://pncommunity.de" target=_blank>pnBBSmile</a> hook is installed</i></td>
+                    <td colspan="2">
+                        <input type="radio" name="show_smile" value="yes" <!--[ $smileonchecked ]-->>&nbsp;yes
+                        <input type="radio" name="show_smile" value="no" <!--[ $smileoffchecked ]-->>&nbsp;no
+            		</td>
+            	</tr>
+            	<tr align="left">
+            		<td>Log IP adresses :<br /><i>&nbsp;</i></td>
+                    <td colspan="2">
+                        <input type="radio" name="log_ip" value="yes" <!--[ $logiponchecked ]-->>&nbsp;yes
+                        <input type="radio" name="log_ip" value="no" <!--[ $logipoffchecked ]-->>&nbsp;no
+            		</td>
+            	</tr>
+            
+            	<tr align="left">
+                	<td align="center" colspan="3">
+                    <input type="radio" name="actiontype" value="Save" checked="checked">&nbsp;Save &nbsp;
+            	    <input type="radio" name="actiontype" value="RestoreDefaults">&nbsp;Restore defaults
+            	    <br /><br />
+                    <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+                	</td>
+            	</tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</form>

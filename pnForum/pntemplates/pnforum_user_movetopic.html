@@ -1,0 +1,49 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<!--[ pndebug ]-->
+
+
+<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="100%">
+    <tr>
+        <td bgcolor="<!--[ $bgcolor2 ]-->">
+            <table border="0" cellpadding="3" cellspacing="1" width="100%">
+                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+                    <form action="<!--[ pnmodurl modname=pnForum type=user func=topicadmin ]-->" method="post">
+                    <input type="hidden" name="mode" value="<!--[ $mode ]-->">
+                    <input type="hidden" name="topic" value="<!--[ $topic_id ]-->">
+                    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->">
+
+                    <td align="center">
+                        <!--[ pnml name='_PNFORUM_MOVETOPIC' ]-->
+                    </td>
+                </tr>
+                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+                    <td align="center">
+                        <!--[ pnml name='_PNFORUM_MOVETOPIC_INFO' html=1 ]-->
+                    </td>
+	            </tr>
+
+                <tr>
+                    <td align="center">
+                       <select name="forum" id="phpbb_forum">
+                        <!--[ foreach item=forum from=$forums ]-->
+        	            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]-->&nbsp;::&nbsp;<!--[ $forum.forum_name ]--></option>
+                        <!--[ /foreach ]-->
+                        </select>
+                    </td>
+                </tr>
+                
+                <tr bgcolor="<!--[ $bgcolor3 ]-->">
+                    <td align="center">
+                        <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_MOVETOPIC' ]-->">
+                    </td>
+                </tr>
+                </form>
+            </table>
+        </td>
+    </tr>
+</table>

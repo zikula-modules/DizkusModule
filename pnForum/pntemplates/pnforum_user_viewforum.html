@@ -1,0 +1,83 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+<!--[ pnthemegetvar name=bgcolor4 assign=bgcolor4  ]-->
+
+ <!--[ forumimage name=firstnew_image assign=firstnew ]-->
+ <!--[ forumimage name=stickytopic_image assign=stickytopic ]-->
+ 
+<!--[ pndebug ]-->
+
+<!--[ include file='pnforum_user_userheader.html' ]-->
+
+<!--[ addtopic_button forum_id=$forum.forum_id cat_title=$forum.cat_title forum_name=$forum.forum_name  ]-->
+<!--[ subscribeforum_button forum_id=$forum.forum_id cat_title=$forum.cat_title forum_name=$forum.forum_name  ]-->
+<br />
+<a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ $forum.cat_title ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong><br />
+<!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:
+<!--[ listforummods moderators=$forum.forum_mods ]-->
+<br /><br />
+<!--[ if $forum.forum_pager ]-->
+<!--[ $forum.forum_pager ]-->
+<!--[ /if ]-->
+
+
+<table class="pn-phpBB-border" border="0" cellpadding="5" cellspacing="1" width="100%" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
+    <thead>
+    <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+	    <th id="col_0" abbr="<!--[ pnml name='_PNFORUM_TOPIC' ]-->" colspan="2" width="56%"><span class="pn-phpBB-title">&nbsp;<strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></span></th>
+        <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_REPLIES' ]-->" width="8%" align="center"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></span></th>
+        <th id="col_2" abbr="<!--[ pnml name='_PNFORUM_POSTER' ]-->" width="10%" align="center"><span class="pn-phpBB-title"><strong>&nbsp;<!--[ pnml name='_PNFORUM_POSTER' ]--></strong></span></th>
+        <th id="col_3" abbr="<!--[ pnml name='_PNFORUM_VIEWS' ]-->" width="6%" align="center"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_VIEWS' ]--></strong></span></th>
+        <th id="col_4" abbr="<!--[ pnml name='_PNFORUM_DATE' ]-->" width="20%" align="center"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_DATE' ]--></strong></span></th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    <!--[ foreach item=topic from=$forum.topics ]-->
+    <tr>
+        <!--[ if $topic.sticky eq 1 ]-->        
+        <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
+        <!--[ else ]-->
+        <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
+        <!--[ /if ]-->        
+        <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" ><span class="pn-normal"><a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->#<!--[ $topic.newest_postid ]-->"><img src="<!--[ $firstnew.name ]-->" width="<!--[ $firstnew.width ]-->" height="<!--[ $firstnew.height ]-->" alt="<!--[ pnml name='_PNFORUM_POST_GOTO_NEWEST' ]-->"></a> <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title ]--></a></span><!--[ $topic.pagination ]--></td>
+        <td headers="col_1" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_replies ]--></span></td>
+        <td headers="col_2" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></span></td>
+        <td headers="col_3" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_views ]--></span></td>
+        <td headers="col_4" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-sub"><!--[ $topic.last_post ]--></span></td>
+    </tr>
+    <!--[ foreachelse ]-->
+    <tr>
+        <td bgcolor="<!--[ $bgcolor3 ]-->" colspan="6" align="center"><!--[ pnml name='_PNFORUM_NOTOPICS' ]--></td>
+    </tr>
+    <!--[ /foreach ]-->
+    </tbody>
+</table>
+<!--[ if $forum.forum_pager ]-->
+<!--[ $forum.forum_pager ]-->
+<!--[ /if ]-->
+<br /><br />
+ <!--[ forumimage name=newposts_image assign=newposts ]-->
+ <!--[ forumimage name=hot_newposts_image assign=hot_newposts ]-->
+ <!--[ forumimage name=folder_image assign=folder ]-->
+ <!--[ forumimage name=hot_folder_image assign=hot_folder ]-->
+ <!--[ forumimage name=locked_image assign=locked ]-->
+
+<span class="pn-normal">
+<img src="<!--[ $newposts.name ]-->"     alt="<!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> <!--[ $forum.last_visit ]-->"> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
+<img src="<!--[ $hot_newposts.name ]-->" alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->"> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
+<img src="<!--[ $folder.name ]-->"       alt="<!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->"> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
+<img src="<!--[ $hot_folder.name ]-->"   alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->"> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
+<img src="<!--[ $locked.name ]-->"       alt="<!--[ pnml name='_PNFORUM_ISLOCKED' ]-->"> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]-->
+</span>
+<br/><br />
+    
+    
+    
+
+
+
+<!--[ include file='pnforum_user_footer.html' ]-->

@@ -1,0 +1,41 @@
+Original phpBB 1.4 script developers:
+-------------------------------------
+see http://www.phpbb.com/credits.php for a list of all the people involved in phpBB.
+
+
+PN_phpBB_14 module developers team (current status):
+----------------------------------------------------------
+Andreas Krapohl aka larsneo (larsneo@postnuke.com)
+Jim Hadfield (jhadfiel@oldihc.org)
+Frank Schummertz aka landseer (frank.schummertz@landseer-stuttgart.de)
+
+People who took part in module development
+------------------------------------------
+Vladimir Shundalov aka navigator (navigator@pwp.ru)
+Thomas Almnes aka thomahawk (thomas.almnes@broadpark.no)
+Mindspin
+Volodymyr Metenchuk (voll@parex.lv)
+Eilko Bronsema (eilko@ebbs.net)
+Massimiliano Tiraboschi (webmaster@postnuke.it)
+Greg (adam_baum@ndezign.com)
+Jeremy Coates (lists@co-comp.co.uk)
+
+
+
+Translation team:
+-----------------
+Deutsch: Jan Hübener, Andreas Krapohl
+Dutch: Henk-Jan (henk@augustinusga.com)
+French: agoramusic
+
+Japan: Kazuyoshi Shinada
+Kor: geogo@hitel.net
+Norvegian: Dag-Asle LangÜ <dagasle@hotmail.com>
+Russian: Shundalov Vladimir (navigator@pwp.ru)
+	 Volodymyr Metenchuk (voll@parex.lv)
+	 Artem Lipounov aka almer
+Spanish: O'scar Fri'as Barranco 
+Zho: Tiberius Teng (tiberius@ms28.hinet.net)
+Italian: Massimiliano Tiraboschi (webmaster@postnuke.it)
+Swedish: Rickard Dahlstrand (rd@tilde.se)
+English: Chris McMahon (chris@mcmahon.co.uk)

@@ -1,0 +1,43 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<div style="padding-left: 3px; background-color: <!--[ $bgcolor2 ]-->;">
+    <input type="checkbox" name="active_pnForum" id="active_pnForum" value="1" checked>&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_TITLE' ]-->
+</div>
+
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_FORUM' ]-->:
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <select name="pnForum_forum[]" id="pnForum_forum[]" size="1">
+        <option value="" selected><!--[ pnml name='_SRCHALLTOPICS' ]--></option>
+        <!--[ foreach item=forum from=$forums ]-->
+        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]--></option>
+        <!--[ /foreach ]-->
+        </select>
+    </div>
+</div>
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]-->:
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <input type="text" name="pnForum_author" id="pnForum_author" size="20" maxlength="255">
+    </div>
+</div>
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ORDER' ]-->:
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <select name="pnForum_order[]" id="pnForum_order[]" size="1">
+        <option value="1" selected><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYDATE' ]--></option>
+        <option value="2"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYTITLE' ]--></option>
+        <option value="3"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYFORUM' ]--></option>
+        </select>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<!--[*  $Id$  *]-->
+
+<div style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]--></a></div>
+<br />
+
+<fieldset style="padding: 15px;">
+    <legend>
+        <strong>pnForum</strong>
+    </legend>
+    <div style="clear: both; width: 98%;">
+        <div style="float: left; width: 45%; text-align: center;">
+            <a title="<!--[ pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO' ]--></a>
+        </div>
+        <div style="float: right; width: 45%; text-align: center;">
+            <a title="<!--[ pnml name='_PNFORUM_ADMINFORUMSYNC_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=syncforums ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSYNC_INFO' ]--></a>
+        </div>
+    </div>
+</fieldset>
+<br />
+<fieldset style="padding: 15px;">
+    <legend>
+        <strong><!--[ pnml name='_PNFORUM_CATEGORY' ]--></strong>
+    </legend>
+    <div style="clear: both; width: 98%;">
+        <div style="float: left; width: 45%; text-align: center;">
+    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=category ]-->" method="post">
+    	    <select name="cat_id">
+    	    <option value="-1"><!--[ pnml name='_PNFORUM_ADDNEWCATEGORY' ]--></option>
+    	    <!--[ foreach item=category from=$categories ]-->
+    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--></option>
+            <!--[ /foreach ]-->
+            </select><br />
+            <input type="submit" value="<!--[ pnml name='_EDIT' ]-->">
+            </form>
+        </div>
+        <div style="float: right; width: 45%; text-align: center;">
+   		    <a title="<!--[ pnml name='_PNFORUM_ADMINCATORDER_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=reordercategories ]-->"><!--[ pnml name='_PNFORUM_REORDER' ]--></a>
+        </div>
+    </div>
+</fieldset>
+<br />
+<fieldset style="padding: 15px;">
+    <legend>
+        <strong><!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
+    </legend>
+    <div style="clear: both; width: 98%;">
+        <div style="float: left; width: 45%; text-align: center;">
+    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=forum ]-->" method="post">
+    	    <select name="forum_id">
+  	        <option value="-1"><!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]--></option>
+    	    <!--[ foreach item=forum from=$forums ]-->
+    	        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]-->::<!--[ $forum.forum_name ]--></option>
+            <!--[ /foreach ]-->
+            </select><br />
+            <input type="submit" value="<!--[ pnml name='_EDIT' ]-->">
+            </form>
+        </div>
+        <div style="float: right; width: 45%; text-align: center;">
+    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums ]-->" method="post">
+    	    <select name="cat_id">
+    	    <!--[ foreach item=category from=$categories ]-->
+    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--></option>
+            <!--[ /foreach ]-->
+            </select><br />
+            <input type="submit" value="<!--[ pnml name='_PNFORUM_REORDER' ]-->">
+            </form>
+        </div>
+    </div>
+</fieldset>
+<br />
+<fieldset style="padding: 15px;">
+    <legend>
+        <strong><!--[ pnml name='_PNFORUM_USERS_RANKS' ]--></strong>
+    </legend>
+    <div style="clear: both; width: 98%; text-align: center;">
+        <div style="float: left; width: 30%; text-align: center;">
+  	    <a title="<!--[ pnml name='_PNFORUM_ADMINRANKS_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=ranks ranktype=0 ]-->"><!--[ pnml name='_EDIT' ]--></a>
+        </div>
+        <div style="float: left; width: 30%; text-align: center;">
+    	    <a title="<!--[ pnml name='_PNFORUM_ADMINHONORARYRANKS_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=ranks ranktype=1 ]-->"><!--[ pnml name='_PNFORUM_ADMINHONORARYRANKS' ]--></a>
+        </div>
+        <div style="float: left; width: 30%; text-align: center;">
+    	    <a title="<!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->"><!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN' ]--></a>
+        </div>
+    </div>
+</fieldset>
+

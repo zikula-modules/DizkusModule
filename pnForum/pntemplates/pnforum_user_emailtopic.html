@@ -1,0 +1,44 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pndebug ]-->
+
+<form action="<!--[ pnmodurl modname=pnForum type=user func=emailtopic ]-->" method="post" name="emailtopic">
+
+  <table border="0" cellpadding="3" cellspacing="1" align="center" width="100%" class="pn-phpBB-border">
+        <!--[ if $error_msg neq '' ]-->
+        <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
+            <td colspan="2">
+                <strong><!--[ pnml name='_PNFORUM_MAILTO_WRONGEMAIL' ]--></strong>
+            </td>
+        </tr>
+        <!--[ /if ]-->
+
+	<tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+		<td>
+		    <strong><!--[ pnml name='_PNFORUM_SENDTO' ]--></strong>
+		</td>
+		<td bgcolor="<!--[ $bgcolor1 ]-->">
+		    <input type="text" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->">
+	    </td>
+	</tr>
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+		<td><strong><!--[ pnml name='_PNFORUM_SUBJECT' ]--></strong></td>
+		<td bgcolor="<!--[ $bgcolor1 ]-->" >
+		    <!--[ $topic.topic_subject ]-->
+		</td>
+    </tr>
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+		<td><strong><!--[ pnml name='_PNFORUM_BODY' ]--></strong></td>
+		<td bgcolor="<!--[ $bgcolor1 ]-->" >
+		    <textarea name="message" rows="10" cols="80"><!--[ $message ]--></textarea>
+		</td>
+    </tr>
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="center">
+		<td colspan="2">
+			<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->">
+    		<input type="hidden" name="topic" VALUE="<!--[ $topic.topic_id ]-->">
+			<input type="submit" name="submit" VALUE="<!--[ pnml name='_PNFORUM_SUBMIT ]-->">
+        </td>
+    </tr>
+</table>
+</form>

@@ -1,0 +1,46 @@
+<!--[*  $Id$  *]-->
+
+<!--[ readtopforums ]-->
+<!--[ if $topforumscount > 0 ]-->
+    <br /><strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_PNFORUM_ACTIVE_FORUMS' ]--></strong><br />
+    <!--[ foreach item=topforum from=$topforums ]-->
+    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topforum.forum_id ]-->" title="<!--[ $topforum.forum_name ]-->"><!--[ $topforum.forum_name ]--></a>&nbsp;(<!--[ $topforum.forum_topics ]-->/<!--[ $topforum.forum_posts ]-->)<br />
+    <!--[ /foreach ]-->
+    <br />
+<!--[ /if ]-->
+
+<!--[ readlastposts ]-->
+<!--[ if $lastpostcount > 0 ]-->
+    <br /><strong><!--[ $lastpostcount ]--> <!--[ pnml name='_PNFORUM_RECENT_POSTS' ]--></strong><br />
+    <!--[ foreach item=lastpost from=$lastposts ]-->
+    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id, start=$lastpost.start ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.title_tag ]-->"><!--[ $lastpost.topic_title ]--></a>
+    <br />
+    <!--[ $lastpost.topic_replies ]-->
+    <!--[ if $lastpost.topic_replies eq 1 ]-->
+         <!--[ pnml name='_PNFORUM_ONEREPLY' ]-->
+    <!--[ else ]-->
+        <!--[ pnml name='_PNFORUM_REPLIES' ]-->
+    <!--[ /if ]-->
+    <br />
+    <!--[ $lastpost.poster_name ]--><br /><!--[ $lastpost.posted_time ]-->
+    <br />
+    <!--[ /foreach ]-->  
+    <br />
+<!--[ /if ]-->
+
+<!--[ readtopposters ]-->
+<!--[ if $toppostercount > 0 ]-->
+    <br /><strong><!--[ $toppostercount ]--> <!--[ pnml name='_PNFORUM_ACTIVE_POSTERS' ]--></strong><br />
+    <!--[ foreach item=topposter from=$topposters ]-->
+        <strong><big>&middot;</big></strong>&nbsp;<a href="user.php?op=userinfo&amp;uname=<!--[ $topposter.user_name ]-->"><!--[ $topposter.user_name ]--></a><br />(<!--[ $topposter.user_posts ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->)<br />
+    <!--[ /foreach ]-->
+    <br />
+<!--[ /if ]-->
+
+<!--[ readstatistics ]-->
+<br /><strong><!--[ pnml name='_PNFORUM_TOTAL' ]-->:</strong><br />
+<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_CATEGORIES' ]-->: <!--[ $total_categories ]--><br />
+<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_FORUMS' ]-->: <!--[ $total_forums ]--><br />
+<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_TOPICS' ]-->: <!--[ $total_topics ]--><br />
+<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $total_posts ]--><br />
+

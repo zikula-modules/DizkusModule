@@ -1,0 +1,163 @@
+<HTML><HEAD>
+
+<TITLE>1. Introduction</TITLE>
+
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF">
+
+<font face="Geneva, Helvetica, Arial">
+
+<hr>
+
+<b>1.0 Intro</b><p>
+
+
+
+Vielen Dank f&uuml;r die Wahl von pnForum als PostNuke Forum. pnForum basiert auf dem phpBB-Forum von '<a href="http://www.phpbb.com" target=_blank>The phpBB Group</a>'. Es wurden in der Zwischenzeit viele neue Funktionen f&uuml;r die Nutzung mit PostNuke hinzugef&uuml;gt. pnForum ist ein Modul zur Nutzung mit der PostNuke .72x Phoenix-Serie. (<a href="http://www.postnuke.com" target=_blank">http://www.postnuke.com</a>).<p>
+
+
+
+Ein internationales Entwicklerteam hat viel Arbeit daran gesetzt, eine m&ouml;glichst gute Integration zu erreichen und die Leistungsst&auml;rke von phpBB optimal mit PostNuke zu verbinden. Die internationale Modulseite mit Supportforen und mehrsprachiger FAQ f&uuml;r Benutzer und Admins ist <a href="http://opensolutions.ru" target=_blank>opensolutions.ru</a> , f&uuml;r den deutschsprachigen Raum ist <a href="http://pncommunity.de" target=_blank>pncommunity.de</a> die Anlaufstelle.<p>
+
+
+
+Es w&auml;re sch&ouml;n, wenn Sie nach der Installation einen Hinweis auf die Verwendung des Moduls in den Referenzseiten bei <a href="http://www.pncommunity.de" target=_blank>pncommunity.de</a>eintragen w&uuml;rden.<p>
+
+
+
+&nbsp;<br>
+
+
+
+<b>1.0.1 Lizenz</b><p>
+
+
+
+This product is protected under the GNU General Public License (GPL). For full details on this license and the rights it grants to you, the user of this software, and to us, the developers, please see the file COPYING that is distributed with this software. Also, for more information on the GPL and the Free Software Foundation visit http://www.fsf.org/ or http://www.gnu.org/
+
+
+
+<hr>
+
+
+
+<b>2. Installation</b><p>
+
+
+
+<b>2.1 Voraussetzungen</b><p>
+
+
+
+pnForum ist ein Modul f&uuml;r die PostNuke .75X-Phoenix-Serie.<br>
+
+Eine funktionsf&auml;hige PostNuke-Installation wird vorausgesetzt.<p> 
+
+
+
+<b>2.2 Vorbereitungen zur Installation</b><p>
+
+
+
+<b>2.2.1. Aktuelle Version</b> <p>
+
+
+
+Vor Installation/Update sollte auf der <a href="http://pncommunity.de" target=_blank>deutschen Modul-Seite</a> die jeweils aktuellste Version aus dem Downloadbereich geladen werden.<p>
+
+
+
+<b>2.2.2. Backup</b><p>
+
+
+
+Vor Installation/Update sollte sowohl ein Backup der Datenbank (wir empfehlen daf&uuml;r die Verwendung von <a href="http://www.phpmyadmin.net/" target=_blank>phpmyadmin</A>) als auch - soweit durch eine vorherige Installation bereits vorhanden - des pnForum-Verzeichnisses in /html/modules gemacht werden. Damit ist sichergestellt, dass auch bei Problemen w&auml;hrend der Installation jederzeit auf den alten Stand zur&uuml;ckgegangen werden kann.<br>
+
+Folgende Verzeichnisse und Dateien sollten nach dem Backup - soweit vorhanden - gel&ouml;scht werden, damit keine Fehler z.B. durch ge&auml;nderte Dateinamen auftreten:<br> 
+
+modules/pnForum <br>
+
+includes/search/pnForum.php  <p>
+
+
+
+Das L&ouml;schen im Filesystem hat keine Auswirkungen auf die Foreneintr&auml;ge und -einstellungen, da diese Informationen ausschliesslich in der Datenbank gespeichert werden.<p>
+
+
+
+<b>2.3. Installation</b><p>
+
+
+
+<b>2.3.1. Upload der Dateien</b><p>
+
+
+
+Nach dem entpacken des phpBB-Archivs steht ein kompletter Verzeichnisbaum zum Upload auf die PostNuke-Seite zur Verf&uuml;gung - es werden dabei lediglich Dateien hinzugef&uuml;gt, andere Module werden davon nicht beeintr&auml;chtigt.<br> 
+
+Das pnForum-Verzeichnis darf <b>nicht</b> umbenannt werden, da teilweise auf Dateien innerhalb davon Referenzen gef&uuml;hrt werden. Der Name des Verweise kann sp&auml;ter im Men&uuml;block individuell eingetragen werden.<p> 
+
+
+
+<b>2.3.2. Initialisierung / Aktivierung bei Neuinstallation</b><p>
+
+Seit der .71-Version von PostNuke erfolgt die Initialisierung und Aktivierung von Modulen innerhalb des Administrationsbereich unter "Module"<br>
+
+Dort zuerst die Liste neu erzeugen, danach erscheint das pnForum-Modul in der Verzeichnisliste. Mit Initialisierung werden die notwendigen Datenbanktabellen erzeugt, bei der Aktivierung werden einige Modulvariablen gesetzt sowie der Link zur Moduladministration im Adminmen&uuml; hinzugef&uuml;gt.<p>
+
+
+
+<b>2.3.3. Upgrade / Aktivierung bei Updates</b><p>
+
+Seit der .71-Version von PostNuke erfolgt das Update von Modulen innerhalb des Administrationsbereich unter "Module"<br>
+
+Dort zuerst die Liste neu erzeugen, danach erscheint das pnForum-Modul in der Verzeichnisliste. Mit Upgrade werden die notwendigen Datenbanktabellen erzeugt, bei der Aktivierung werden einige Modulvariablen gesetzt sowie der Link zur Moduladministration im Adminmen&uuml; hinzugef&uuml;gt.<br>
+
+Bei einer vorhandenen phpBB_14 Installation werden die vorhandenen Daten problemlos nach pnForum übernommen. Folgende Schritte sollten beim Upgrade beachtet werden:<br />
+<ul>
+<li> Allen Benutzern ausser dem Administrator sollten die Zugriffsrechte auf phpBB_14 entzogen werden.</li>
+<li> CenterBlock und Statistikblock löschen</li>
+<li> pnForum initialisieren (phpBB_14 muss für die Übernahme der Daten aktiv sein!), aktivieren</li>
+<li> phpBB_14 deaktivieren, ggf. löschen</li>
+<li> neue Blöcke hinzufügen, Permission neu setzen.
+</ul>
+ <p>
+
+
+
+<b>2.3.4. Modul-Administration</b><p>
+
+Im Administrationsmen&uuml; gibt es nach der Installation einen weiteren Punkt "pnForum" zur Administration des Moduls. Als erstes sollte dort nach einer Installation die Funktion Synchronisation (damit die Benutzer von Rogue mit phpBB abgeglichen werden) durchgef&uuml;hrt sowie unter "forenweite Optionen" die Grundeinstellungen kontrolliert werden.<br>
+
+Sollte der Modullink in der Administration nicht angezeigt werden, in der nuke_modules Tabelle schauen, ob die Werte f&uuml;r pn_admin_capable (1), pn_user_capable (1) und pn_state (3) beim pnForum korrekt gesetzt sind.<p>
+
+
+
+<b>2.3.5. Einbindung des Forums in die PostNuke-Seite</b><p>
+
+Das Forum kann &uuml;ber einen Link in das Hauptmen&uuml; eingebunden werden - im entsprechenden Block eine weitere Zeile hinzuf&uuml;gen, die als Link auf <b>{pnForum}</b> verweist.<p> 
+
+
+
+<b>2.3.6. weitere Konfiguration</b><p>
+
+Nachdem die Grundinstallation abgeschlossen ist, k&ouml;nnen innerhalb der Moduladministration s&auml;mtliche notwendigen Einstellungen vorgenommen werden. Dort k&ouml;nnen Kategorien, Foren, Benutzerr&auml;nge, Ehrenr&auml;nge und Wortfilter bearbeitet werden. In der phpBB-Administration kann ein "Online-Manual" zur weiteren Erkl&auml;rung abgerufen werden.<p>
+
+
+
+<b>2.3.7. Goodies</b><p>
+
+- In den Tabellen des Forumindex und der Kategorieansicht sind sog. 'Hoover-Effekte' zwischen $bgcolor3 und $bgcolor4 des jeweiligen Themes beim &uuml;berfahren der Tabellenzeilen integriert.<br>
+
+- F&uuml;r den Tabellenkopf und die Kategoriezeile in den Tabellen kann ein Hintergrundbild definiert werden. Es sollte 28 Pixel hoch sein und im entsprechenden Theme-Ordner/images als 'cell1.gif' bzw. 'cell2.gif' angelegt sein.<br>
+
+- Es k&ouml;nnen zus&auml;tzliche Style-Sheets im jeweiligen Theme/style/style.css bzw. styleNN.css definiert werden: pn-phpBB-Title, pn-phpBB-boder und pn-phpBB-cat
+
+<hr>
+
+</font>
+
+</BODY>
+
+</HTML>

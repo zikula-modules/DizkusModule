@@ -1,0 +1,26 @@
+<!--[*  $Id$  *]-->
+
+<!--[* pndebug *]-->
+
+<div style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]--></a>
+<br />
+<!--[ pnml name='_PNFORUM_ADMINCATADD' ]-->
+</div>
+<br /><br />
+
+<form name="editcatform" action="<!--[ pnmodurl modname=pnForum type=admin func=category ]-->" method="post">
+<!--[ pnml name='_PNFORUM_CATEGORY ]-->
+<br />
+<input type="text" name="cat_title" value="<!--[ $category.cat_title ]-->" size="50" maxlength="100">
+<input type="hidden" name="cat_id" value="<!--[ $category.cat_id ]-->">
+<!--[ if $category.cat_id neq -1 ]-->
+    <br />
+    <input type="radio" name="actiontype" value="Edit" checked="checked">&nbsp;<!--[ pnml name='_EDIT' ]-->&nbsp;
+    <input type="radio" name="actiontype" value="Delete">&nbsp;<!--[ pnml name='_DELETE' ]-->
+    <br />
+<!--[ else ]-->
+<input type="hidden" name="actiontype" value="Add">
+<!--[ /if ]-->
+<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->">
+<input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+</form>

@@ -1,0 +1,161 @@
+---------------------------------------------------------------------------------------------
+PostNuke pnForum Module changelog
+---------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------
+1.8.0 (fs)
+---------------------------------------------------------------------------------------------
+- changed phpBB_14 to pnForum
+- fully API compliant now
+- using pnRender templates
+- fixed some SQL statements 
+- refactored the code
+- simplified the blocks
+
+---------------------------------------------------------------------------------------------
+1.7.6.0
+---------------------------------------------------------------------------------------------
+Fixes:
+- improvements for use of short urls (viewforum.php, latest.php)
+- fixed redirect when replying to topics with more then one page in reply.php (thx to jn)
+- fixed permission schema in prefs.php (thx to  Michael Cohen)
+- fixed missing input check in viewtopic for $start var (thx to Marc Bradshaw)
+- fixed missing pnVarPrepForDisplay in editpost.php (thx to immof)
+- fixed posting count when deleting posting from other authors in editpost.php (thx to ydb)
+- ported search include to better API compliance
+- removed deprecated stuff in admin.php, adminapi.php and index.php
+- fixed HTML compliance issues (&amp; instead of &) in latest.php, emailtopic.php
+- added display hooks (e.g. rating) to the viewtopic.php
+- added pnTitle.php for title hack by jn (http://sf.net/projects/lottasophie) (thx to STNetwork)
+- improved XTE compliancy / short url implementation (viewtopic.php, modpanel.php, editpost.php, functions.php)
+- improved permission checks and sql-statement (modpanel.php)
+- added /user folder for user's profile page (forum subscriptions)
+- started with wcag/section 508 validation
+- less problems when author was removed from postnuke's main user table
+- fixed pager for large forums
+- added paranoic (int) checks
+- renamed make_jumpbox function
+- preview for new topic, reply topic and edit topic
+- updated check for admin.php called correctly (thx to jn)
+- fixed search query 
+- fixed missing table tag in administration
+- fixed signature in reply preview
+
+---------------------------------------------------------------------------------------------
+1.7.5.0
+---------------------------------------------------------------------------------------------
+Notes:
+- use of pnUserGetVar instead of pnSessionGetVar
+- moved some javascript functions from functions.php to own directory and included them again
+
+Fixes:
+- fixed permission schema in prefs.php (thx to reggi837)
+- fixed output stream in /includes/search/phpBB_14.php (thx to dberansky)
+- fixed some closing HTML tags
+- fixed wrong <?php tag (thx to Cem Eryasar)
+- fixed bbcode [code] tag (moved to hook)
+- fixed globals
+- fixed forum subscription in viewforum
+- optimized all sql-queries
+- major code cleanup in functions.php
+- major filesystem cleanup
+- database cleanup during upgrading
+- updated pninit.php for better install/upgrade/remove functions
+- beautified some /eng icons
+- various E_ALL fixes
+- fix for '/' breaking smilie-code (thx to neurophyre) (moved to hook)
+- cleanup in /admin folder (deprecated)
+- moved notification functions from functions.php to prefs.php
+- added further pnAuthID checks
+- cleanup in message-storing: now nl2br is used only for display, since we use hooks smilies and bbcodes are stored plaintext
+- major cleanup in adminapi.php, fixed various bugs due to incorrect input-cleaning
+
+New Features
+- added 'transform' hooks - this way one can add e.g. autolinks, wiki (bbcode, bbsmile and bbclick hooks available at http://pnforum.de)
+- new centerblock
+- updated /eng bbcode images (thx to Jim)
+- added latest post feature (last week, yesterday, today, 24 hours, x hours, last visit) (thx to timax)
+- added topic based notification (thx to VitSoft, McSim)
+- added config for showing 'Allowed HTML tags' in administration/forumwide settings
+- display of bbcode-tags & smiles configurable (can be set to no even if the hooks are installed)
+- ip-logging can be turned off (due to privacy issues in germany)
+
+IMPORTANT NOTE:
+- since bbcode and smile functions are moved to hooks you'll need the pn_bbcode and pn_bbsmile hooks from http://www.pnforum.de or http://snowbankih.tzo.com
+- with pn_bbclick you can convert url- and mail-adresses to links automatically - might be usefull, too ;)
+- BBCODES AND SMILIES ARE NOT SHOWN WHEN pn_bbcode and pn_bbsmile ARE NOT INSTALLED & ACTIVE!
+
+---------------------------------------------------------------------------------------------
+1.7.4.0
+---------------------------------------------------------------------------------------------
+Notes:
+- ADODB-conversion and query optimization - big thanx to Jeremy Coates
+- layout changed to some phpbb2 style, images multilingual - big thanx to Bernd
+
+New Features:
+- switched over to use of pnVarPrepForDisplay and pnVarHMTLDisplay
+- fixed some pnVarPrepForStore statements
+- added pnVarCensor to output
+- added pnAuthID
+- restored smilie admin
+- various layout fixes
+
+Additional features:
+- you can use some additional style sheets: pn-phpBB-Title, pn-phpBB-border, pn-phpBB-cat
+- you can use background images in tables: cell1.gif for tableheader and cell2.gif for category (to be placed in /themes/YOUR_THEME/images)
+- hoover effects in forum-index and category-view with $bgcolor3 and $bgcolor4
+
+Fixes:
+credits to larsneo, voll, jeremy, tomahawk
+- functions.php: ML support for BBCode alt messages as well as for BBCode popups
+- viewforum.php: ML support for alt 'Go to the last new post'
+- functions.php: minor style fix with "[Email this topic to a friend!]"-link, nicified the HonoraryRanks Admin page, cleaned doble declaration of function
+- adminapi.php: nicified the HonoraryRanks Admin page, fixed rank-admin look, so it's similar to honorary-admin
+- admin.php: nicified the HonoraryRanks Admin page, fixed rank-admin look, so it's similar to honorary-admin
+- reply.php: javascript code was generated before HTML headers, fix for sql-error when no ranks defined
+- editpost.php: fix for topic delete if user edits own post
+- /pnblocks/phpBB_14.php: E_ALL-fixes
+- some more pnConfigGetVar('anonymous') fixes
+- fixed email notification with anonymous posts
+
+Languages:
+currently only /eng and /deu due to some major cleanup - sorry folks...
+
+---------------------------------------------------------------------------------------------
+1.7.3.0
+---------------------------------------------------------------------------------------------
+Notes:
+- DB structure changes - none
+- Module language defines (no new, no changed) 
+- Module block/search include language defines (new-none,changed-none)
+- security schema updated - Only names are used now
+- security schema for statistic block updated (larsneo)
+- security schema for search include updated (larsneo)
+- permissions using chapter rewritten in install.txt (Thomas Almnes)
+- major cleanup in /eng-language file
+
+New features:
+- in statistic block added title tag for mouseover (larsneo)
+- badword-filter restored (Thomas Almnes)
+
+Fixes:
+credits to larsneo, chiesi, mindspin, lucky george, thomas
+- default charset in notification e-mailes is now iso-8859-1
+- fixed missed includes of functions.php in adminapi.php - error reporting was broken
+- viewtopic.php: online-status fixed / added text for icons / switched to pnConfigGetVar('anonymous') / some typofixes / major code-cleanup
+- reply.php: switched to pnConfigGetVar('anonymous') / fix for signature line / category permission added / typo fix / fix for badwords / fix for html in message / major code-cleanup
+- newtopic.php: security schema for category / fix for width / fixed backslahes bug / category permission added / fix for table header / fix for badwords / fix for html in message / major code-cleanup
+- editpost.php: category permission added / fix for width / removed signature from textarea / fix for badwords / fix for html in message / major code-cleanup
+- functions.php: category permission / bbcode fix / code cleanup / fix for link in pageheader viewforum, newtopic / fixed smilie display for more then 20 smilies / fix for badwords / major code-cleanup / fix for BBCode [CODE] display / fix for subscription from indexpage
+- adminapi.php: fix for honorary ranks asign / fix for ranks update / fix for badwords / small typofixes in "add forum" and "edit category"
+- admin.php: fix for badwords
+- pntables.php: fix for badwords
+- pninit.php: fix for badwords
+- index.php: cleanup
+- phpbb.php: E_ALL-fixes, pnConfigGetVar('anonymous') / fixed < / td > bug / restored cookie function
+- /pnblocks/phpBB_14.php: E_ALL-fix
+- viewforum.php: restored cookie functions / restored "Start at the first new post"-icon
+- admin/topic.php: fix for auth-check 'category'
+- default configuration variables are now loaded when module is initialized
+
+
