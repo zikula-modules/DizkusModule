@@ -14,6 +14,7 @@
  * initialize the PostNuke environment 
  */
 include 'includes/pnAPI.php'; 
+include_once 'modules/pnForum/common.php';
 pnInit(); 
 
 /**
@@ -56,41 +57,44 @@ $pntable =& pnDBGetTables();
  * SQL statement to fetch last 10 topics
  */
 $sql = "SELECT t.topic_id, 
-				t.topic_title, 
-    			f.forum_name, 
-				pt.poster_id,
-				c.cat_title
-    	FROM ".$pntable['pnforum_topics']." as t, 
-    			".$pntable['pnforum_forums']." as f,
-				".$pntable['pnforum_posts']." as pt,
-				".$pntable['pnforum_categories']." as c
-    	WHERE t.forum_id = f.forum_id AND
-				t.topic_last_post_id = pt.post_id AND
-				f.cat_id = c.cat_id
-		ORDER by t.topic_time DESC";
-			
+               t.topic_title, 
+               f.forum_id,
+               f.forum_name,
+               p.poster_id,
+               c.cat_id, 
+               c.cat_title
+        FROM ".$pntable['pnforum_topics']." as t, 
+             ".$pntable['pnforum_forums']." as f,
+             ".$pntable['pnforum_posts']." as p,
+             ".$pntable['pnforum_categories']." as c
+        WHERE t.forum_id = f.forum_id AND
+              t.topic_last_post_id = p.post_id AND
+              f.cat_id = c.cat_id
+        ORDER by t.topic_time DESC";
+            
 $result = $dbconn->Execute($sql);
 if($dbconn->ErrorNo() != 0) {
-	die("Error accesing to the database " . $dbconn->ErrorNo() . ": " . $dbconn->ErrorMsg() . "<br />");
+    die("Error accessing to the database " . $dbconn->ErrorNo() . ": " . $dbconn->ErrorMsg() . "<br />");
 }
 $result_postmax = $result->PO_RecordCount();
 if ($result_postmax <= $count) {
-	$count = $result_postmax;
+    $count = $result_postmax;
 }
 $shown_results=0;
 
-while ((list($topic_id, $topic_title, $forum_name, $poster_id, $cat_title) = $result->FetchRow())
-	  		  && ($shown_results < $count) ) {
-	if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ) && 
-		pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ))   { 
-		$shown_results++;
-		$url = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=> $topic_id)));
-		echo "<item>\n";
-		echo "<title>". pnVarPrepHTMLDisplay($topic_title) ."</title>\n";
-		echo "<link>". $url ."</link>\n";
-		echo "<description>$cat_title :: $forum_name</description>\n";
-		echo "</item>\n";
-		$result->MoveNext();
+while ((list($topic_id, $topic_title, $forum_id, $forum_name, $poster_id, $cat_id, $cat_title) = $result->FetchRow())
+              && ($shown_results < $count) ) {
+//  if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ) && 
+//      pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ))   { 
+    if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        $shown_results++;
+        $url = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=> $topic_id)));
+        echo "<item>\n";
+        echo "<title>". pnVarPrepHTMLDisplay($topic_title) ."</title>\n";
+        echo "<link>". $url ."</link>\n";
+        echo "<description>". pnVarPrepForDisplay("$cat_title :: $forum_name") ."</description>\n";
+        echo "</item>\n";
+        $result->MoveNext();
     }
 }
 
