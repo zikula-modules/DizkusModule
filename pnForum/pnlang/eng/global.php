@@ -64,6 +64,12 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_SEARCHRESULTSFOR','Searchresults for');
+define('_PNFORUM_SEARCHFOR','Search for');
+define('_PNFORUM_SEARCHBOOL', 'Connection');
+define('_PNFORUM_SEARCHAND','all words [AND]');
+define('_PNFORUM_SEARCHOR','single words [OR]');
+define('_PNFORUM_SEARCHALLFORUMS', 'alle forums');
 define('_PNFORUM_PREVIOUS_TOPIC','to previous topic');
 define('_PNFORUM_NEXT_TOPIC','to next topic');
 define('_PNFORUM_LASTCHANGE','last change on');
