@@ -58,6 +58,14 @@ function pnForum_centerblock_init()
  */
 function pnForum_centerblock_info()
 {
+    return array( 'module' => 'pnForum',
+                  'text_type' => 'pnForum_centerblock',
+                  'text_type_long' => 'pnForum Centerblock',
+                  'allow_multiple' => true,
+                  'form_content' => false,
+                  'form_refresh' => false,
+                  'show_preview' => true);
+/*
     return array( 'func_display' => 'pnForum_centerblock_display',
                   'text_type' => 'pnForum_centerblock',
                   'text_type_long' => 'pnForum Centerblock',
@@ -65,6 +73,7 @@ function pnForum_centerblock_info()
                   'form_content' => false,
                   'form_refresh' => false,
                   'show_preview' => true);
+*/
 }
 
 /**
