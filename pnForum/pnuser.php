@@ -49,18 +49,24 @@ include_once("modules/pnForum/common.php");
  *
  *@params 'viewcat' int only expand the category, all others shall be hidden / collapsed
  */
-function pnForum_user_main()
+function pnForum_user_main($args=array())
 {
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $viewcat = (int)pnVarCleanFromInput('viewcat');
+        $favorites = (bool)pnVarCleanFromInput('favorites');
+    }
+    $viewcat = (!empty($viewcat)) ? $viewcat : -1;
+    
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
 
-    $viewcat = (int)pnVarCleanFromInput('viewcat');
-    $viewcat = (!empty($viewcat)) ? $viewcat : -1;
-
     $loggedIn = pnUserLoggedIn();
 
-    $favorites = (bool)pnVarCleanFromInput('favorites');
     if($loggedIn && empty($favorites)) {
         $favorites = pnModAPIFunc('pnForum', 'user', 'get_favorite_status');
     }
@@ -105,11 +111,17 @@ function pnForum_user_main()
  *@params 'forum' int the forum id
  *@params 'start' int the posting to start with if on page 1+
  */
-function pnForum_user_viewforum()
+function pnForum_user_viewforum($args=array())
 {
-    $forum_id = (int)pnVarCleanFromInput('forum');
-    $start    = (int)pnVarCleanFromInput('start');
-
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $forum_id = (int)pnVarCleanFromInput('forum');
+        $start    = (int)pnVarCleanFromInput('start');
+    }
+    
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
@@ -136,12 +148,19 @@ function pnForum_user_viewforum()
  * viewtopic
  *
  */
-function pnForum_user_viewtopic()
+function pnForum_user_viewtopic($args=array())
 {
-    $topic_id = (int)pnVarCleanFromInput('topic');
-    $start    = (int)pnVarCleanFromInput('start');
-    $view     = strtolower(pnVarCleanFromInput('view'));
-    $highlight= urldecode(pnVarCleanFromInput('highlight'));
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $topic_id = (int)pnVarCleanFromInput('topic');
+        $start    = (int)pnVarCleanFromInput('start');
+        $view     = strtolower(pnVarCleanFromInput('view'));
+        $highlight= urldecode(pnVarCleanFromInput('highlight'));
+    }
+    
     if(!empty($highlight)) {
         pnSessionSetVar('highlight', pnVarPrepForStore($highlight));
     }
@@ -179,27 +198,32 @@ function pnForum_user_viewtopic()
  * reply
  *
  */
-function pnForum_user_reply()
+function pnForum_user_reply($args=array())
 {
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($topic_id, 
+        	 $post_id, 
+        	 $message,
+        	 $attach_signature,
+        	 $subscribe_topic, 
+        	 $preview, 
+        	 $submit,
+        	 $cancel ) = pnVarCleanFromInput('topic', 
+        									'post', 
+        									'message', 
+        									'attach_signature',
+        									'subscribe_topic', 
+        									'preview',
+        									'submit',
+        									'cancel');
+    }    
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
-   
-    list($topic_id, 
-    	 $post_id, 
-    	 $message,
-    	 $attach_signature,
-    	 $subscribe_topic, 
-    	 $preview, 
-    	 $submit,
-    	 $cancel ) = pnVarCleanFromInput('topic', 
-    									'post', 
-    									'message', 
-    									'attach_signature',
-    									'subscribe_topic', 
-    									'preview',
-    									'submit',
-    									'cancel');
 
     $post_id = (int)$post_id;
     $topic_id = (int)$topic_id;
@@ -214,7 +238,7 @@ function pnForum_user_reply()
     }
     
     $preview = (empty($preview)) ? false : true;
-    
+
     if (empty($submit)) {
         $submit = false;
     	$subject="";
@@ -267,19 +291,25 @@ function pnForum_user_reply()
  * newtopic
  *
  */
-function pnForum_user_newtopic()
+function pnForum_user_newtopic($args=array())
 {
-    list($forum_id, 
-    	 $message, 
-    	 $subject, 
-    	 $cancel,
-    	 $submit,
-    	 $preview) = pnVarCleanFromInput('forum', 
-    	  								 'message', 
-    									 'subject', 
-    									 'cancel',
-    									 'submit',
-    									 'preview');
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($forum_id, 
+        	 $message, 
+        	 $subject, 
+        	 $cancel,
+        	 $submit,
+        	 $preview) = pnVarCleanFromInput('forum', 
+        	  								 'message', 
+        									 'subject', 
+        									 'cancel',
+        									 'submit',
+        									 'preview');
+    }
     
     //	if cancel is submitted move to forum-view
     if(!empty($cancel)) {
@@ -337,19 +367,25 @@ function pnForum_user_newtopic()
  * editpost
  *
  */
-function pnForum_user_editpost()
+function pnForum_user_editpost($args=array())
 {
-    list($post_id, 
-    	 $message, 
-    	 $subject,
-    	 $submit,
-    	 $delete,
-    	 $preview) =  pnVarCleanFromInput('post', 
-                                          'message', 
-                                          'subject',
-                                          'submit',
-                                          'delete',
-                                          'preview');
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($post_id, 
+        	 $message, 
+        	 $subject,
+        	 $submit,
+        	 $delete,
+        	 $preview) =  pnVarCleanFromInput('post', 
+                                              'message', 
+                                              'subject',
+                                              'submit',
+                                              'delete',
+                                              'preview');
+    }
         
     //	if cancel is submitted move to forum-view
     if(!empty($cancel)) {
@@ -407,14 +443,20 @@ function pnForum_user_editpost()
  * topicadmin
  *
  */
-function pnForum_user_topicadmin()
+function pnForum_user_topicadmin($args=array())
 {
-    $topic_id = (int)pnVarCleanFromInput('topic');
-    $post_id  = (int)pnVarCleanFromInput('post');
-    $forum_id = (int)pnVarCleanFromInput('forum');  // for move
-    $mode     = pnVarCleanFromInput('mode');
-    $submit   = pnVarCleanFromInput('submit');
-    $shadow   = pnVarCleanFromInput('createshadowtopic');
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $topic_id = (int)pnVarCleanFromInput('topic');
+        $post_id  = (int)pnVarCleanFromInput('post');
+        $forum_id = (int)pnVarCleanFromInput('forum');  // for move
+        $mode     = pnVarCleanFromInput('mode');
+        $submit   = pnVarCleanFromInput('submit');
+        $shadow   = pnVarCleanFromInput('createshadowtopic');
+    }
     $shadow = (empty($shadow)) ? false : true;
 
     if(!pnModAPILoad('pnForum', 'user')) {
@@ -486,7 +528,7 @@ function pnForum_user_topicadmin()
  * prefs
  *
  */
-function pnForum_user_prefs()
+function pnForum_user_prefs($args=array())
 {
     $loggedin = pnUserLoggedIn();
     if(!$loggedin) {
@@ -494,14 +536,20 @@ function pnForum_user_prefs()
         return true;
     }
     
-    list($act,
-         $return_to,
-         $topic_id,
-         $forum_id ) = pnVarCleanFromInput('act',
-                                           'return_to',
-                                           'topic',
-                                           'forum');
-
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($act,
+             $return_to,
+             $topic_id,
+             $forum_id ) = pnVarCleanFromInput('act',
+                                               'return_to',
+                                               'topic',
+                                               'forum');
+    }
+    
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
@@ -572,13 +620,19 @@ function pnForum_user_prefs()
  * emailtopic
  *
  */
-function pnForum_user_emailtopic()
+function pnForum_user_emailtopic($args=array())
 {
-    $topic_id = (int)pnVarCleanFromInput('topic');
-    $message = pnVarCleanFromInput('message');
-    $sendto_email = pnVarCleanFromInput('sendto_email');
-    $submit = pnVarCleanFromInput('submit');
-
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $topic_id = (int)pnVarCleanFromInput('topic');
+        $message = pnVarCleanFromInput('message');
+        $sendto_email = pnVarCleanFromInput('sendto_email');
+        $submit = pnVarCleanFromInput('submit');
+    }
+    
     if(!pnUserLoggedIn()) {
         return showforumerror(_PNFORUM_NOTLOGGEDIN, __FILE__, __LINE__);
     }
@@ -628,9 +682,15 @@ function pnForum_user_emailtopic()
  * latest
  *
  */
-function pnForum_user_viewlatest()
+function pnForum_user_viewlatest($args=array())
 {
-    list($selorder, $nohours, $unanswered) = pnVarCleanFromInput('selorder', 'nohours', 'unanswered');
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($selorder, $nohours, $unanswered) = pnVarCleanFromInput('selorder', 'nohours', 'unanswered');
+    }
     
     if (!isset($selorder) || !is_numeric($selorder)) {
     	$selorder = 1;
@@ -676,17 +736,24 @@ function pnForum_user_viewlatest()
  * splittopic
  *
  */
-function pnForum_user_splittopic()
+function pnForum_user_splittopic($args=array())
 {
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
 
-    list($post_id,
-         $submit, 
-         $newsubject) = pnVarCleanFromInput('post',
-                                            'submit', 
-                                            'newsubject');
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($post_id,
+             $submit, 
+             $newsubject) = pnVarCleanFromInput('post',
+                                                'submit', 
+                                                'newsubject');
+    }
+    
     $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                          array('post_id' => $post_id));
 
@@ -716,14 +783,21 @@ function pnForum_user_splittopic()
  * prepare print view of the selectd posting or topic
  *
  */
-function pnForum_user_print()
+function pnForum_user_print($args=array())
 {
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
     
-    $post_id  = (int)pnVarCleanFromInput('post');
-    $topic_id = (int)pnVarCleanFromInput('topic');
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $post_id  = (int)pnVarCleanFromInput('post');
+        $topic_id = (int)pnVarCleanFromInput('topic');
+    }
+    
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     if($post_id<>0) {
@@ -765,10 +839,30 @@ function pnForum_user_print()
  * internal search function
  *
  */
-function pnForum_user_search()
+function pnForum_user_search($args=array())
 {
-    $submit = pnVarCleanFromInput('submit');
-    
+    // get the input 
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        $submit = pnVarCleanFromInput('submit');
+        list($vars['searchfor'],
+             $vars['searchbool'],
+             $vars['searchauthor'],
+             $vars['searchforums'],
+             $vars['searchorder'],
+             $vars['searchlimit'],
+             $vars['searchstart'] ) = pnVarCleanFromInput('searchfor',
+                                                          'searchbool',
+                                                          'searchauthor',
+                                                          'searchforums',
+                                                          'searchorder',
+                                                          'searchlimit',
+                                                          'searchstart');
+
+    }
+        
     if(!$submit) {
         if(!pnModAPILoad('pnForum', 'admin')) {
             return showforumerror("loading adminapi failed", __FILE__, __LINE__);
@@ -783,20 +877,6 @@ function pnForum_user_search()
         if(!pnModAPILoad('pnForum', 'user')) {
             return showforumerror("loading userapi failed", __FILE__, __LINE__);
         } 
-
-        list($vars['searchfor'],
-             $vars['searchbool'],
-             $vars['searchauthor'],
-             $vars['searchforums'],
-             $vars['searchorder'],
-             $vars['searchlimit'],
-             $vars['searchstart'] ) = pnVarCleanFromInput('searchfor',
-                                                          'searchbool',
-                                                          'searchauthor',
-                                                          'searchforums',
-                                                          'searchorder',
-                                                          'searchlimit',
-                                                          'searchstart');
 
         if( !is_array($vars['searchforums']) || !is_array($vars['searchorder']) || ($vars['searchbool']<>"AND" && $vars['searchbool']<>"OR") ) {
             return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
