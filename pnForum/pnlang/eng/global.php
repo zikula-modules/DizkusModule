@@ -31,6 +31,7 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_ADMINRANKS','Edit user ranks');
 define('_PNFORUM_NOFORUMS', 'no forums defined');
 define('_PNFORUM_NOCATEGORIES', 'no categories defined');
 define('_PNFORUM_ATTACHSIGNATURE', 'Attach my signature');
@@ -196,7 +197,6 @@ define("_PNFORUM_ADMINFORUMSPANEL","pnForum Administration");
 define("_PNFORUM_ADMINFORUMSYNC","Sync forum/topic index");
 define("_PNFORUM_ADMINFORUMSYNC_INFO","This link will allow you to sync up the forum and topic indexes to fix any discrepancies that might exist");
 define("_PNFORUM_ADMINHONORARYASSIGN_INFO","This link will allow you to assign honorary user rankings to users");
-define("_PNFORUM_ADMINHONORARYRANKS_INFO","This link will allow you to add/edit/delete honorary user rankings, which can be assigned personally to users");
 define("_PNFORUM_ADMINRANKS_INFO","This link will allow you to add/edit/delete different user rankings depending of the number of user posts.");
 define('_PNFORUM_ADMIN_SYNC','Sync');
 define('_PNFORUM_ADMINWORDS','Bad words filtering');
