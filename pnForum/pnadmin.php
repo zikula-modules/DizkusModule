@@ -74,7 +74,7 @@ function pnForum_admin_main()
 function pnForum_admin_preferences()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     $submit = pnVarCleanFromInput('submit');
@@ -182,8 +182,8 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'show_bbcode', pnVarPrepForStore(pnVarCleanFromInput('show_bbcode')));
             pnModSetVar('pnForum', 'show_smile', pnVarPrepForStore(pnVarCleanFromInput('show_smile')));
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
-        }
-        if($actiontype="RestoreDefaults")  {
+        } 
+        if($actiontype=="RestoreDefaults")  {
 		    pnModSetVar('pnForum', 'posts_per_page', 15);
 		    pnModSetVar('pnForum', 'topics_per_page', 15);
 		    pnModSetVar('pnForum', 'hot_threshold', 20);
