@@ -87,6 +87,36 @@ function pnForum_adminapi_readcategories($args)
     if(isset($cat_id)) {
         return $categories[0];
     }
+
+    // we now check the cat_order field in each category entry. Each
+    // cat_order may only appear once there. If we find it more than once, we will adjust
+    // all following cat_orders by incrementing them by 1
+    // the fact that is array is sorted by cat_order simplifies this :-)
+    $last_cat_order = 0;   // for comparison
+    $cat_order_adjust = 0; // holds the number of shifts we have to do
+    for($i=0; $i<count($categories); $i++) {
+        // we leave cat_order = 0 untouched!
+        if($cat_order_adjust>0) {  
+            // we have done at least one change before which means that all foloowing categories
+            // have to be changed too.
+            $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
+            // update db immediately
+            $sql = "UPDATE $cattable 
+                    SET $catcolumn[cat_order]= '".$categories[$i]['cat_order']."' 
+                    WHERE $catcolumn[cat_id] = '".$categories[$i]['cat_id']."'";
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
+        } else if($categories[$i]['cat_order'] == $last_cat_order ) {
+            $cat_order_adjust++;
+            $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
+            $sql = "UPDATE $cattable 
+                    SET $catcolumn[cat_order]= '".$categories[$i]['cat_order']."' 
+                    WHERE $catcolumn[cat_id] = '".$categories[$i]['cat_id']."'";
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
+        }
+        $last_cat_order = $categories[$i]['cat_order'];
+    }
     return $categories;
 }
 
@@ -616,10 +646,16 @@ function pnForum_adminapi_reordercategoriessave($args)
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
-    list($dbconn, $pntable) = pnfOpenDB();
-
+    // read all categories 
+    $categories = pnForum_adminapi_readcategories();
+    if(!is_array($categories) || count($categories)==0) {
+        return showforumerror(_PNFORUM_NOCATEGORIES, __FILE__, __LINE__);
+    }
+    
     $cat_id    = (int)$cat_id;
     $cat_order = (int)$cat_order;
+
+    list($dbconn, $pntable) = pnfOpenDB();
 
     if ($direction=='up') {
         if ($cat_order>1) {
@@ -637,10 +673,12 @@ function pnForum_adminapi_reordercategoriessave($args)
             pnfCloseDB($result);
         }
     } else {
-        $sql = "SELECT cat_id 
+        // shift down
+        $sql = "SELECT COUNT(1) 
                 FROM ".$pntable['pnforum_categories']."";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        $numcategories = $result->PO_RecordCount();
+        list($numcategories) = $result->fields;
+        $numcategories = (int)$numcategories;
         pnfCloseDB($result);
         if ($cat_order < $numcategories) {
             $newno = $cat_order + 1;
