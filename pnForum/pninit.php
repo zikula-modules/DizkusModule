@@ -506,7 +506,7 @@ function pnForum_upgrade_to_2_0_1()
     }
     // remove unused vars
 	pnModDelVar('pnForum', 'locktopic_image');
-	pnModDelVar('pnForum', 'unlocktopic_image);
+	pnModDelVar('pnForum', 'unlocktopic_image');
 	pnModDelVar('pnForum', 'stickytopic_image');
 	pnModDelVar('pnForum', 'unstickytopic_image');
 	pnModDelVar('pnForum', 'movetopic_image');
