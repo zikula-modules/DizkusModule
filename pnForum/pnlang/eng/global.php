@@ -42,6 +42,7 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_START', 'Start');
 
 //
 // alphasorting starts here
