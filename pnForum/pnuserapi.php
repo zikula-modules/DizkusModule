@@ -983,7 +983,7 @@ function pnForum_userapi_preparereply($args)
  *@params $args['forum_id'] int the forums id
  *@params $args['attach_signature'] int 1=yes, otherwise no
  *@params $args['subscribe_topic'] int 1=yes, otherwise no
- *@returns int the number of the posting to show in the topic affter adding 
+ *@returns array(int, int) start parameter and new post_id
  */
 function pnForum_userapi_storereply($args)
 {
@@ -1133,7 +1133,7 @@ function pnForum_userapi_storereply($args)
         // latest topic is on top anyway...
         $start = 0;
     }
-    return $start;
+    return array($start, $this_post);
 } 
 
 /**
@@ -1311,6 +1311,11 @@ function pnForum_userapi_storenewtopic($args)
     // Confirm authorisation code
     if (!pnSecConfirmAuthKey()) {
         return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+    }
+
+    $cat_id = pnForum_userapi_get_forum_category(array('forum_id'=>$forum_id));
+    if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+        return showforumerror(_PNFORUM_NOAUTH_WOWRITE, __FILE__, __LINE__);
     }
 
     if(trim($message)=='' || trim($subject) == '') {
@@ -3450,5 +3455,39 @@ function pnForum_userapi_get_forum_category($args)
     pnfCloseDB($result);
     return (int)$cat_id;
 }
+
+/**
+ * get_page_from_topic_replies
+ * Uses the number of topic_replies and the posts_per_page settings to determine the page
+ * number of the last post in the thread. This is needed for easier navigation.
+ *
+ *@params $args['topic_replies'] int number of topic replies
+ *@return int page number of last posting in the thread
+ */
+function pnForum_userapi_get_page_from_topic_replies($args)
+{
+    extract($args);
+    unset($args);
+    
+    if(!isset($topic_replies) || !is_numeric($topic_replies) ||$topic_replies < 0 ) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+    
+    // get some enviroment
+    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+
+    $times = 0;
+    if ($post_sort_order == "ASC") {
+        if (($topic_replies+1-$posts_per_page)>= 0) { 
+            for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page) {
+                $times++; 
+            }
+        } 
+    }
+    // if not ASC then DESC which means latest topic is on top anyway...
+    return $times * $posts_per_page;
+} 
+
 
 ?>

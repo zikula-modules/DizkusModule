@@ -258,14 +258,15 @@ function pnForum_user_reply($args=array())
         // database
         pnModAPIFunc('pnForum', 'user', 'usersync');
 
-        $start = pnModAPIFunc('pnForum', 'user', 'storereply',
-                              array('topic_id'         => $topic_id,
-                                    'message'          => $message,
-                                    'attach_signature' => $attach_signature,
-                                    'subscribe_topic'  => $subscribe_topic));
+        list($start,
+             $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
+                                       array('topic_id'         => $topic_id,
+                                             'message'          => $message,
+                                             'attach_signature' => $attach_signature,
+                                             'subscribe_topic'  => $subscribe_topic));
         pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id,
-                                  'start' => $start)));
+                                  'start' => $start)) . '#pid' . $post_id);
     } else {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
