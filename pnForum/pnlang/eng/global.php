@@ -14,7 +14,6 @@ define('_PNFORUM_SEARCHINCLUDE_ALLTOPICS', 'all');
 define('_PNFORUM_SEARCHINCLUDE_LIMIT', 'limit search to');
 define('_PNFORUM_SEARCHINCLUDE_NOLIMIT', 'no limits');
 define('_PNFORUM_SEARCHINCLUDE_HITS', 'hits');
-define('_RESULTS',"Results");
 define('_PNFORUM_SEARCHINCLUDE_AUTHOR',"Author");
 define('_PNFORUM_SEARCHINCLUDE_BYDATE',"by date");
 define('_PNFORUM_SEARCHINCLUDE_BYTITLE',"by title");
