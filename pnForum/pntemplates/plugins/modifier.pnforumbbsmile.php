@@ -58,11 +58,10 @@ function smarty_modifier_pnforumbbsmile($string)
 {
 	$extrainfo = array($string);
 
-    $return = "";
     if(pnModAvailable('pn_bbsmile') && pnModAPILoad('pn_bbsmile', 'user')) {
-        list($return) = pnModAPIFunc('pn_bbsmile', 'user', 'transform', array('objectid' => '', 'extrainfo' => $extrainfo));
+        list($string) = pnModAPIFunc('pn_bbsmile', 'user', 'transform', array('objectid' => '', 'extrainfo' => $extrainfo));
     }
-    return $return;                      
+    return $string;                      
 }
 
 ?>
