@@ -180,6 +180,10 @@ function pnForum_adminapi_deletecategory($args)
     }
     
     if(isset($cat_id)) {
+        if(!pnModAPILoad('pnForum', 'user')) {
+            return showforumerror("loading userapi failed", __FILE__, __LINE__);
+        } 
+
 	    pnModDBInfoLoad('pnForum');
 	    $dbconn =& pnDBGetConn(true);
 	    $pntable =& pnDBGetTables();
@@ -199,8 +203,9 @@ function pnForum_adminapi_deletecategory($args)
         if(is_array($forums) && count($forums)>0) { 
             foreach($forums as $forum) {
                 // remove all forums in this category
-                pnForum_userapi_deleteforum(array('forum_id' => $forum['forum_id'],
-                                                  'ok'       => 1));
+                pnModAPIFunc('pnForum', 'user', 'deleteforum',
+                             array('forum_id' => $forum['forum_id'],
+                                   'ok'       => 1));
 		    }  //foreach forum
 	    }
 	    // now we can delete the category
