@@ -34,19 +34,19 @@
  *@param $params['nonextprev'] string if set then do not show nextpage and prevpage text
  *
  */
-function smarty_function_topicpager($params, &$smarty) 
+function smarty_function_topicpager($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
 
-    if(empty($total) || empty($topic_id) || empty($start)) {
+    if(empty($total) || empty($topic_id)) {
 		$smarty->trigger_error(pnVarPrepForDisplay(_MODARGSERROR));
-	} 
+	}
 
 	if(!pnModAPILoad('pnForum', 'admin')) {
 		$smarty->trigger_error("loading pnForum adminapi failed");
-	} 
-        
+	}
+
     $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
     $pager = "";
     if($total > $posts_per_page) {
@@ -70,7 +70,7 @@ function smarty_function_topicpager($params, &$smarty)
             }
             $times++;
         }
-    
+
         if( (($start + $posts_per_page) < $total) && empty($nonextprev) ) {
             $next_page = $start + $posts_per_page;
             $pager .= " <a href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$next_page))) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE).'</a>';

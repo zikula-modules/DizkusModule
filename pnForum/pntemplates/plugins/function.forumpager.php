@@ -33,19 +33,18 @@
  *@param $params['start'] int start value
  *
  */
-function smarty_function_forumpager($params, &$smarty) 
+function smarty_function_forumpager($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
-
-    if(empty($total) || empty($forum_id) || empty($start)) {
-		$smarty->trigger_error(pnVarPrepForDisplay(_MODARGSERROR));
-	} 
+    if(empty($total) || empty($forum_id)) {
+		$smarty->trigger_error('forumpager: missing parameter');
+	}
 
 	if(!pnModAPILoad('pnForum', 'admin')) {
 		$smarty->trigger_error("loading adminapi failed");
-	} 
-        
+	}
+
     $topics_per_page  = pnModGetVar('pnForum', 'topics_per_page');
 
     $count = 1;
@@ -66,11 +65,11 @@ function smarty_function_forumpager($params, &$smarty)
                 }
                 if($x == $start) {
                     $pager .=  "| $count\n";
-    
+
                 } else {
-                    if ( (($count%10)==0) // link if page is multiple of 10 
-                    || ($count==1) // link first page 
-                    || (($x > ($start-6*$topics_per_page)) //link -5 and +5 pages 
+                    if ( (($count%10)==0) // link if page is multiple of 10
+                    || ($count==1) // link first page
+                    || (($x > ($start-6*$topics_per_page)) //link -5 and +5 pages
                     &&($x < ($start+6*$topics_per_page))) ) {
                         $pager .=  " | <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$x)))."\">$count</a>\n";
                     }
@@ -81,7 +80,7 @@ function smarty_function_forumpager($params, &$smarty)
         if($next < $total) {
             $pager .=  " | <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$next)))."\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE)."</a>";
         }
-    
+
         $pager .= "</div>";
         $l_phpbb_showGotopage = 1;
     }
