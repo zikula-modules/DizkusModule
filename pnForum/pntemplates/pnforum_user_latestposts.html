@@ -23,10 +23,10 @@ function func_name() {
 <form name="latestposts" method="post" action="">
 <table border="0" cellpadding="1" cellspacing="1" align="center" width="100%">
     <tr bgcolor="<!--[ $bgcolor2 ]-->" width="100%">
-        <td colspan="4" align="center"><span class="pn-title"><strong><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</strong></span></td>
+        <td colspan="4" align="center"><strong><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</strong></td>
     </tr>
     <tr bgcolor="<!--[ $bgcolor3 ]-->" width="100%">
-        <td colspan="4" align="center"><span class="pn-normal">
+        <td colspan="4" align="center">
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ] 
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ] 
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ] 
@@ -35,7 +35,6 @@ function func_name() {
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ] 
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ] 
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ] 
-    		</span>
     	</td>
     </tr>
 </table>
@@ -43,25 +42,27 @@ function func_name() {
 <br /><br />
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-          <td width="50%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></span></td>
-          <td width="15%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></span></td>
-          <td width="15%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span></td>
-          <td width="20%"><span class="pn-normal"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></span></td>
+          <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
+          <td width="15%"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
+          <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
+          <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
 	</tr>
 	<!--[ foreach item=post from=$posts ]-->
     <tr bgcolor="<!--[ $bgcolor3 ]-->">
         <td width="50%" id="phpbb14_latest<!--[ $post.topic_id ]-->">
-            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->" class="pn-normal" onMouseOver="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onMouseOut="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->'" onfocus="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onblur="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->"><!--[ $post.topic_title ]--></a>
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->" onMouseOver="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onMouseOut="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->'" onfocus="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onblur="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->"><!--[ $post.topic_title ]--></a>
         </td>
         <td>
-            <span class="pn-normal"><!--[ $post.topic_replies ]--></span>
+            <!--[ $post.topic_replies ]-->
         </td>
         <td>
-            <span class="pn-normal"><a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a></span>
+            <a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a>
         </td>
         <td>
-            <span class="pn-normal"><!--[ $post.post_time ]--></span>
+            <!--[ $post.post_time ]-->
         </td>
     </tr>
     <!--[ /foreach ]-->
 </table>
+
+<!--[ include file='pnforum_user_footer.html' ]-->

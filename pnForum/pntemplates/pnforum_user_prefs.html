@@ -15,24 +15,24 @@
             <table border="0" cellpadding="3" cellspacing="1" width="100%">
                 <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
                     <td height="28">
-                        <span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_CATEGORY ]--> / <!--[ pnml name='_PNFORUM_FORUM' ]--></strong></span>
+                        <span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_CATEGORY ]--> / <!--[ pnml name='_PNFORUM_FORUM' ]--></strong></span>
                     </td>
                     <td height="28">
-                        <span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong></span>
+                        <span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong></span>
                     </td>
                 </tr>
                 <!--[ foreach item=category from=$tree ]-->
                 <tr align="left" valign="top">
                     <td colspan="2" height="28">
-                        <span class="pn-title"><strong><!--[ $category.cat_title ]--></strong></span>
+                        <strong><!--[ $category.cat_title ]--></strong>
                     </td>
                 </tr>
                 <!--[ foreach item=forum from=$category.forums ]-->
                 <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left" valign="top">
                     <td>
-                      	<span class="pn-title"><a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a></span>
+                      	<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
                 	    <br />
-                    	<span class="pn-normal"><!--[ $forum.forum_desc ]--></span>
+                    	<!--[ $forum.forum_desc ]-->
                     </td>
                     <td width="5%" align="center" valign="middle">
                         <!--[ subscribeforum_button cat_title=$category.cat_title forum_name=$forum.forum_name forum_id=$forum.forum_id return_to=prefs]-->
@@ -45,3 +45,5 @@
         </td>
     </tr>
 </table>
+
+<!--[ include file='pnforum_user_footer.html' ]-->

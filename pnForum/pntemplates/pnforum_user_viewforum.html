@@ -24,14 +24,14 @@
 <!--[ /if ]-->
 
 
-<table class="pn-phpBB-border" border="0" cellpadding="5" cellspacing="1" width="100%" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
+<table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
     <thead>
     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-	    <th id="col_0" abbr="<!--[ pnml name='_PNFORUM_TOPIC' ]-->" colspan="2" width="56%"><span class="pn-phpBB-title">&nbsp;<strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></span></th>
-        <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_REPLIES' ]-->" width="8%" align="center"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></span></th>
-        <th id="col_2" abbr="<!--[ pnml name='_PNFORUM_POSTER' ]-->" width="10%" align="center"><span class="pn-phpBB-title"><strong>&nbsp;<!--[ pnml name='_PNFORUM_POSTER' ]--></strong></span></th>
-        <th id="col_3" abbr="<!--[ pnml name='_PNFORUM_VIEWS' ]-->" width="6%" align="center"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_VIEWS' ]--></strong></span></th>
-        <th id="col_4" abbr="<!--[ pnml name='_PNFORUM_DATE' ]-->" width="20%" align="center"><span class="pn-phpBB-title"><strong><!--[ pnml name='_PNFORUM_DATE' ]--></strong></span></th>
+	    <th id="col_0" abbr="<!--[ pnml name='_PNFORUM_TOPIC' ]-->" colspan="2" width="56%"><span class="pnForum-title">&nbsp;<strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></span></th>
+        <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_REPLIES' ]-->" width="8%" align="center"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></span></th>
+        <th id="col_2" abbr="<!--[ pnml name='_PNFORUM_POSTER' ]-->" width="10%" align="center"><span class="pnForum-title"><strong>&nbsp;<!--[ pnml name='_PNFORUM_POSTER' ]--></strong></span></th>
+        <th id="col_3" abbr="<!--[ pnml name='_PNFORUM_VIEWS' ]-->" width="6%" align="center"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_VIEWS' ]--></strong></span></th>
+        <th id="col_4" abbr="<!--[ pnml name='_PNFORUM_DATE' ]-->" width="20%" align="center"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_DATE' ]--></strong></span></th>
     </tr>
     </thead>
     
@@ -44,12 +44,12 @@
         <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
         <!--[ /if ]-->        
         <td headers="col_0">
-            <span class="pn-normal"><a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarcensor ]--></a></span><!--[ $topic.pagination ]-->
+            <a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarcensor ]--></a><!--[ $topic.pagination ]-->
          </td>
-        <td headers="col_1" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_replies ]--></span></td>
-        <td headers="col_2" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></span></td>
-        <td headers="col_3" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_views ]--></span></td>
-        <td headers="col_4" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-sub"><!--[ $topic.last_post ]--></span></td>
+        <td headers="col_1" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><!--[ $topic.topic_replies ]--></td>
+        <td headers="col_2" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></td>
+        <td headers="col_3" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><!--[ $topic.topic_views ]--></td>
+        <td headers="col_4" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><!--[ $topic.last_post ]--></td>
     </tr>
     <!--[ foreachelse ]-->
     <tr>
@@ -68,13 +68,10 @@
  <!--[ forumimage name=hot_folder_image assign=hot_folder ]-->
  <!--[ forumimage name=locked_image assign=locked ]-->
 
-<span class="pn-normal">
 <img src="<!--[ $newposts.name ]-->"     alt="<!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> <!--[ $forum.last_visit ]-->"> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
 <img src="<!--[ $hot_newposts.name ]-->" alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->"> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
 <img src="<!--[ $folder.name ]-->"       alt="<!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->"> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
 <img src="<!--[ $hot_folder.name ]-->"   alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->"> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
 <img src="<!--[ $locked.name ]-->"       alt="<!--[ pnml name='_PNFORUM_ISLOCKED' ]-->"> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]-->
-</span>
-<br/><br />
 
 <!--[ include file='pnforum_user_footer.html' ]-->
