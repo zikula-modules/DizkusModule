@@ -9,6 +9,10 @@
  * @link http://www.pnforum.de
  */
 
+define('_PNFORUM_TOP',"Top");
+define('_PNFORUM_BOTTOM',"Bottom");
+define('_PNFORUM_PERSONAL_SETTINGS',"Personal Settings");
+define('_PNFORUM_HOMEPAGE',"Homepage");
 define('_PNFORUM_TOPICLOCKED',"Topic locked");
 define('_PNFORUM_NOFAVORITES',"No favorites defined");
 define('_PNFORUM_SHOWFAVORITES',"Show favorites");
@@ -196,7 +200,6 @@ define('_PNFORUM_VISITCATEGORY', 'visit this category');
 define('_PNFORUM_VISITFORUM', 'visit this forum');
 define('_PNFORUM_FORUMINFO', 'Forum Info');
 define('_PNFORUM_FORUMID', 'Forums ID');
-define('_PNFORUM_OCLOCK', 'o\'clock');
 define('_PNFORUM_RETURNTOTOPIC', 'Back to the topic');
 define('_PNFORUM_QUICKREPLY', 'Quick reply');
 define('_PNFORUM_ONLINE', 'online');
