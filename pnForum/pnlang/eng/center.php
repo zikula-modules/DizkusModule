@@ -31,6 +31,9 @@
  * USA                                                                  *
  ************************************************************************/ 
 
+define('_PNFORUM_CB_TEMPLATENAME', 'Templatename');
+define('_PNFORUM_CB_PARAMETERS', 'Parameters');
+
 define('_PNFORUM_CB_RECENTPOSTS','recent Topics in forum:');
 define('_PNFORUM_CB_REPLY','reply');
 define('_PNFORUM_CB_REPLIES','replies');

@@ -32,7 +32,7 @@ function smarty_function_readstatistics($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    // get some enviroment
+    // get some environment
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();

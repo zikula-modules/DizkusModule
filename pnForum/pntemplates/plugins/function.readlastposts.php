@@ -26,7 +26,15 @@
 
 include_once('modules/pnForum/common.php');
 
-// maxposts
+/**
+ * readlastposts
+ * reads the last $maxposts postings of forum $forum_id and assign them in a
+ * variable lastposts and the number of them in lastpostcount
+ *
+ *@params maxposts (int) number of posts to read, default = 10
+ *@params forum_id (int) forum_id, if not set, all forums
+ *
+ */
 function smarty_function_readlastposts($params, &$smarty) 
 {
     extract($params); 
@@ -36,6 +44,35 @@ function smarty_function_readlastposts($params, &$smarty)
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
+
+    $whereforum = "";
+    if(!empty($forum_id) && is_numeric($forum_id)) {
+        // get the category id and check permissions
+        pnModDBInfoLoad('pnForum');
+        $dbconn =& pnDBGetConn(true);
+        $pntable =& pnDBGetTables();
+        
+        // get the category id
+        $sql = "SELECT cat_id 
+                FROM " . $pntable['pnforum_forums'] . "
+                WHERE forum_id = $forum_id ";
+        $result = $dbconn->Execute($sql);
+        if($dbconn->ErrorNo() != 0) {
+            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        }
+        if($result->EOF) {
+            $result->Close();
+            return false;
+        }
+        $row = $result->GetRowAssoc(false);
+        $cat_id = $row['cat_id'];
+        $result->Close();
+        if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+            return;
+        }
+        $whereforum = "t.forum_id = $forum_id AND ";
+    }
+
     $postmax = (!empty($maxposts)) ? $maxposts : 5;
 
     $sql = "SELECT t.topic_id, 
@@ -52,9 +89,10 @@ function smarty_function_readlastposts($params, &$smarty)
                 ".$pntable['pnforum_forums']." as f,
                 ".$pntable['pnforum_posts']." as pt,
                 ".$pntable['pnforum_categories']." as c
-        WHERE t.forum_id = f.forum_id AND
-                t.topic_last_post_id = pt.post_id AND
-                f.cat_id = c.cat_id
+        WHERE $whereforum
+              t.forum_id = f.forum_id AND
+              t.topic_last_post_id = pt.post_id AND
+              f.cat_id = c.cat_id
         ORDER by t.topic_time DESC";
         
     $result = $dbconn->SelectLimit($sql, $postmax);

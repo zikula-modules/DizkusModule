@@ -41,6 +41,8 @@
  *
  ***********************************************************************/
 
+include_once "modules/pnForum/common.php";
+
 /**
  * init
  *
@@ -66,17 +68,66 @@ function pnForum_centerblock_info()
 }
 
 /**
- * display the statsblock
+ * display the center block
  */ 
 function pnForum_centerblock_display($row)
 {
     //check for Permission
-	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_READ))   { return; }
+	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_READ)){
+	    return; 
+	}
 
+    // Break out options from our content field
+    $vars = pnBlockVarsFromContent($row['content']);
+
+    // check if cb_template is set, if not, use the default centerblock template
+    if(empty($vars['cb_template'])) {
+        $vars['cb_template'] = "pnforum_centerblock_display.html";
+    }
+    $params = explode(" ", $vars['cb_parameters']);
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-    $row['content'] = $pnr->fetch('pnforum_centerblock_display.html');
+    foreach($params as $param) {
+        $paramdata = explode("=", $param);
+        $pnr->assign($paramdata[0], $paramdata[1]);
+    }
+    $row['content'] = $pnr->fetch($vars['cb_template']);
 	return themesideblock($row);
 }
+
+/**
+ * Update the block
+ */
+function pnForum_centerblock_update($row)
+{
+	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+	    return false; 
+	}
+    list($cb_template,
+         $cb_parameters) = pnVarCleanFromInput('cb_template',
+                                               'cb_parameters');
+
+    $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
+    return($row);
+} 
+
+
+/**
+ * Modify the block
+ */
+function pnForum_centerblock_modify($row)
+{ 
+	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+	    return false; 
+	}
+
+    // Break out options from our content field
+    $vars = pnBlockVarsFromContent($row['content']);
+
+    $pnRender = new pnRender('pnForum');
+    $pnRender->caching = false;
+    $pnRender->assign('vars', $vars);
+    return $pnRender->fetch('pnforum_centerblock_config.html');
+} 
 
 ?>
