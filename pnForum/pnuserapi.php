@@ -1095,10 +1095,10 @@ function pnForum_userapi_storereply($args)
         $poster_ip = "127.0.0.1";
     } else {
         // some enviroment for logging ;)
-        if (getenv(HTTP_X_FORWARDED_FOR)){ 
-            $poster_ip=getenv(HTTP_X_FORWARDED_FOR); 
+        if (getenv("HTTP_X_FORWARDED_FOR")){ 
+            $poster_ip=getenv("HTTP_X_FORWARDED_FOR"); 
         } else { 
-            $poster_ip=getenv(REMOTE_ADDR);
+            $poster_ip=getenv("REMOTE_ADDR");
         }
     }
 
@@ -1416,10 +1416,10 @@ function pnForum_userapi_storenewtopic($args)
     }
 
     // some enviroment for logging ;)
-    if (getenv(HTTP_X_FORWARDED_FOR)){ 
-        $poster_ip=getenv(HTTP_X_FORWARDED_FOR); 
+    if (getenv("HTTP_X_FORWARDED_FOR")){ 
+        $poster_ip=getenv("HTTP_X_FORWARDED_FOR"); 
     } else { 
-        $poster_ip=getenv(REMOTE_ADDR);
+        $poster_ip=getenv("REMOTE_ADDR");
     }
     // for privavy issues ip logging can be deactivated
     if (pnModGetVar('pnForum', 'log_ip') == "no") {
@@ -3076,6 +3076,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
  *@params $args['author']     string searhc for postings of this author only
  *@params $args['order']      array array of order to display results
  *@params $args['startnum']   int number of entry to start showing when on page > 1
+ *@params $args['limit']      int number of hits to show per page > 1
  *@returns array with search results
  */
 function pnForum_userapi_forumsearch($args)
@@ -3087,6 +3088,10 @@ function pnForum_userapi_forumsearch($args)
         return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
     }
     
+    if(!isset($limit) || empty($limit)) {
+        $limit = 10;
+    }
+     
     list($dbconn, $pntable) = pnfOpenDB();
 
     $query = "SELECT DISTINCT
