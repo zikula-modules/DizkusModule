@@ -3063,7 +3063,7 @@ function pnForum_userapi_forumsearch($args)
             $row = $result->GetRowAssoc(false);
             pnfCloseDB($result);
             $searchauthor = $row['pn_uid'];
-            if ($author > 0){
+            if ($searchauthor > 0){
                 $query .= " AND p.poster_id=$searchauthor \n";
             } else {
                 $query .= " AND p.poster_id=0 \n";
