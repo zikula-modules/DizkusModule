@@ -31,7 +31,7 @@
  * USA                                                                  *
  ************************************************************************
  *
- * english language defines
+ * french language defines
  * @version $Id$
  * @author various 
  * @copyright 2004 by pnForum team
@@ -54,8 +54,8 @@ define('_PNFORUM_PREFS_AUTOSUBSCRIBE', 'Inscription automatique aux nouveaux suj
 //
 define('_PNFORUM_ACCOUNT_INFORMATION', 'Information des membres - IP et compte');
 define('_PNFORUM_ACTIONS','Actions');
-define('_PNFORUM_ACTIVE_FORUMS','Forums les plus actifs :');
-define('_PNFORUM_ACTIVE_POSTERS','Membres les plus actifs :');
+define('_PNFORUM_ACTIVE_FORUMS','forums les plus actifs :');
+define('_PNFORUM_ACTIVE_POSTERS','membres les plus actifs :');
 define('_PNFORUM_ADD_FAVORITE_FORUM','Ajouter un forum aux favoris');
 define('_PNFORUM_ADD','Ajouter');
 define('_PNFORUM_ADDNEWCATEGORY', '-- ajouter une nouvelle catégorie --');
@@ -322,11 +322,11 @@ define('_PNFORUM_QUICKSELECTFORUM','- selectionner -');
 // R
 //
 define('_PNFORUM_RECENT_POST_ORDER', 'Ordre des messages récents dans les sujets');
-define('_PNFORUM_RECENT_POSTS','Sujets récents :');
+define('_PNFORUM_RECENT_POSTS','sujets récents :');
 define('_PNFORUM_REG_SINCE', 'enregistré depuis');
 define('_PNFORUM_REGISTER','S\'enregistrer');
 define('_PNFORUM_REGISTRATION_NOTE','Note: les membres peuvent s\'inscrire pour recevoir les nouveaux messages');
-define('_PNFORUM_REMOVE_FAVORITE_FORUM','Remove favorite forum');
+define('_PNFORUM_REMOVE_FAVORITE_FORUM','Supprimer des favoris');
 define('_PNFORUM_REMOVE', 'supprimer');
 define('_PNFORUM_REORDER','Réorganiser');
 define('_PNFORUM_REORDERCATEGORIES','Réorganiser les catégories');
@@ -345,7 +345,7 @@ define('_PNFORUM_RETURNTOTOPIC', 'Retour au sujet');
 define('_PNFORUM_SAVEPREFS','Enregistrer vos préférences');
 define('_PNFORUM_SEARCH','chercher dans pnForum');
 define('_PNFORUM_SEARCHALLFORUMS', 'tous les forums');
-define('_PNFORUM_SEARCHAND','tousles mots [AND]');
+define('_PNFORUM_SEARCHAND','tous les mots [AND]');
 define('_PNFORUM_SEARCHBOOL', 'condition logique');
 define('_PNFORUM_SEARCHFOR','Chercher');
 define('_PNFORUM_SEARCHINCLUDE_ALLTOPICS', 'tous');
@@ -366,16 +366,16 @@ define('_PNFORUM_SEARCHINCLUDE_REPLIES','Réponses');
 define('_PNFORUM_SEARCHINCLUDE_RESULTS','Forums');
 define('_PNFORUM_SEARCHINCLUDE_TITLE','Chercher dans les forums');
 define('_PNFORUM_SEARCHINCLUDE_VIEWS','Affichages');
-define('_PNFORUM_SEARCHOR','single words [OR]');
+define('_PNFORUM_SEARCHOR','un seul mot [OR]');
 define('_PNFORUM_SEARCHRESULTSFOR','Résultats de la recherche');
 define('_PNFORUM_SELECTEDITCAT','Selectionnez une categorie');
-define('_PNFORUM_SEND_PM', 'send PM');
+define('_PNFORUM_SEND_PM', 'Envoyer un message privé');
 define('_PNFORUM_SENDTO','Envoyer à');
 define('_PNFORUM_SEPARATOR','&nbsp;::&nbsp;');
-define('_PNFORUM_SETTING', 'Settings'); 
+define('_PNFORUM_SETTING', 'Préférences'); 
 define('_PNFORUM_SHADOWTOPIC_MESSAGE', 'Le message original a été déplacé <a title="moved" href="%s">ici</a>.');
-define('_PNFORUM_SHOWALLFORUMS','Show all forums');
-define('_PNFORUM_SHOWFAVORITES','Show favorites');
+define('_PNFORUM_SHOWALLFORUMS','Afficher tous les forums');
+define('_PNFORUM_SHOWFAVORITES','Afficher les favoris');
 define('_PNFORUM_SMILES','Emoticons :');
 define('_PNFORUM_SPLIT','Scinder');
 define('_PNFORUM_SPLITTOPIC_INFO','Cela scindera le sujet avant le message sélectionné.');
@@ -383,7 +383,7 @@ define('_PNFORUM_SPLITTOPIC_NEWTOPIC','Sujet du nouveau message');
 define('_PNFORUM_SPLITTOPIC','Scinder le sujet');
 define('_PNFORUM_STATSBLOCK','Nombre total de messages :');
 define('_PNFORUM_STATUS', 'Status');
-define('_PNFORUM_STICKY', 'Sticky');
+define('_PNFORUM_STICKY', 'Collé');
 define('_PNFORUM_STICKYTOPIC_INFO', 'Quand vous pressez le bouton de collage à la fin du formulaire, le sujet sera <strong>collé</strong>. Vous pourrez le décoller ultérieurement.');
 define('_PNFORUM_STICKYTOPIC','"Coller" ce sujet');
 define('_PNFORUM_SUBJECT_MAX','(pas plus de 100 symboles)');
