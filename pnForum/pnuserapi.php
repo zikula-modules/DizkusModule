@@ -2937,19 +2937,12 @@ function pnForum_userapi_forumsearch($args)
 {
     extract($args);
     unset($args);
+
+    if( empty($searchfor) && empty($author) ) {
+        return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
+    }
     
     list($dbconn, $pntable) = pnfOpenDB();
-
-    // emulate search_split_query function
-    $w = array();
-    $stripped = pnVarPrepForStore($searchfor);
-    $qwords = explode(' ', $stripped);
-    foreach($qwords as $qword) {
-        $w[] = '%' . $qword . '%';
-    }
-
-    //$w = search_split_query($searchfor);
-    $flag = false;
 
     $query = "SELECT DISTINCT
               f.forum_id,
@@ -2971,57 +2964,67 @@ function pnForum_userapi_forumsearch($args)
                    ".$pntable['pnforum_categories']." AS c
               WHERE ";
             
-    // words
-    foreach($w as $word) {
-        if($flag) {
-            switch($bool) {
-                case 'AND' :
-                    $query .= ' AND ';
-                    break;
-                case 'OR' :
-                default :
-                    $query .= ' OR ';
-                    break;
-            }
-        }
-
-        // get post_text and match up forums/topics/posts
-        $query .= "(pt.post_text LIKE '$word' OR t.topic_title LIKE '$word') \n";
-        $query .= "AND p.post_id=pt.post_id \n";
-        $query .= "AND p.topic_id=t.topic_id \n";
-        $query .= "AND p.forum_id=f.forum_id\n";
-        $query .= "AND c.cat_id=f.cat_id\n";
-        $flag = true;
-        
-        //check forums (multiple selection is possible!)
-        if($forums[0]) {
-            $query .= " AND (";
-            $flag = false;
-            foreach($forums as $forumid) {
-                if($flag) {
-                    $query .= " OR ";
+    $searchfor = pnVarPrepForStore($searchfor);
+    if(!empty($searchfor)) {
+        $flag = false;
+        $words = explode(' ', $searchfor);
+        //foreach($qwords as $qword) {
+        //    $w[] = '%' . $qword . '%';
+        //}
+        $query .= "( ";
+        foreach($words as $word) {
+            if($flag) {
+                switch($bool) {
+                    case 'AND' :
+                        $query .= ' AND \n';
+                        break;
+                    case 'OR' :
+                    default :
+                        $query .= ' OR \n';
+                        break;
                 }
-                $query .= "f.forum_id=$forumid";
-                $flag = true;
             }
-            $query .= ") ";
+            // get post_text and match up forums/topics/posts
+            $query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+            $flag = true;
         }
+        $query .= " ) AND ";
+    } else {
+        // searchfor is empty, we search by author only
+    }
+    $query .= "p.post_id=pt.post_id \n";
+    $query .= "AND p.topic_id=t.topic_id \n";
+    $query .= "AND p.forum_id=f.forum_id\n";
+    $query .= "AND c.cat_id=f.cat_id\n";
     
-        // authors with adodb
-        if($author) {
-            $search_username = addslashes($author);
-            $sql = "SELECT pn_uid 
-                    FROM $pntable[users] 
-                    WHERE pn_uname = '".pnVarPrepForStore($search_username)."'";
-            $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-            $row = $result->GetRowAssoc(false);
-            pnfCloseDB($result);
-            $searchauthor = $row['pn_uid'];
-            if ($searchauthor > 0){
-                $query .= " AND p.poster_id=$searchauthor \n";
-            } else {
-                $query .= " AND p.poster_id=0 \n";
+    //check forums (multiple selection is possible!)
+    if($forums[0]) {
+        $query .= " AND (";
+        $flag = false;
+        foreach($forums as $forumid) {
+            if($flag) {
+                $query .= " OR ";
             }
+            $query .= "f.forum_id=$forumid";
+            $flag = true;
+        }
+        $query .= ") ";
+    }
+    
+    // authors with adodb
+    if($author) {
+        $search_username = addslashes($author);
+        $sql = "SELECT pn_uid 
+                FROM $pntable[users] 
+                WHERE pn_uname = '".pnVarPrepForStore($search_username)."'";
+        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        $row = $result->GetRowAssoc(false);
+        pnfCloseDB($result);
+        $searchauthor = $row['pn_uid'];
+        if ($searchauthor > 0){
+            $query .= " AND p.poster_id=$searchauthor \n";
+        } else {
+            $query .= " AND p.poster_id=0 \n";
         }
     }
 

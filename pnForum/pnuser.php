@@ -718,42 +718,50 @@ function pnForum_user_search()
         if(!pnModAPILoad('pnForum', 'user')) {
             return showforumerror("loading userapi failed", __FILE__, __LINE__);
         } 
-        list($searchfor,
-             $searchbool,
-             $searchauthor,
-             $searchforums,
-             $searchorder,
-             $searchlimit ) = pnVarCleanFromInput('searchfor',
-                                                  'searchbool',
-                                                  'searchauthor',
-                                                  'searchforums',
-                                                  'searchorder',
-                                                  'searchlimit');
 
-        if( !is_array($searchforums) || !is_array($searchorder) || ($searchbool<>"AND" && $searchbool<>"OR")
-            || empty($searchfor) ) {
+        list($vars['searchfor'],
+             $vars['searchbool'],
+             $vars['searchauthor'],
+             $vars['searchforums'],
+             $vars['searchorder'],
+             $vars['searchlimit'],
+             $vars['searchstart'] ) = pnVarCleanFromInput('searchfor',
+                                                          'searchbool',
+                                                          'searchauthor',
+                                                          'searchforums',
+                                                          'searchorder',
+                                                          'searchlimit',
+                                                          'searchstart');
+
+        if( !is_array($vars['searchforums']) || !is_array($vars['searchorder']) || ($vars['searchbool']<>"AND" && $vars['searchbool']<>"OR") ) {
             return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
         }
         
         list($searchresults,
              $total_hits ) = pnModAPIFunc('pnForum', 'user', 'forumsearch',
-                                          array('searchfor' => $searchfor,
-                                                'bool'      => $searchbool,
-                                                'forums'    => $searchforums,
-                                                'author'    => $searchauthor,
-                                                'order'     => $searchorder,
-                                                'limit'     => $searchlimit));
-    
+                                          array('searchfor' => $vars['searchfor'],
+                                                'bool'      => $vars['searchbool'],
+                                                'forums'    => $vars['searchforums'],
+                                                'author'    => $vars['searchauthor'],
+                                                'order'     => $vars['searchorder'],
+                                                'limit'     => $vars['searchlimit'],
+                                                'startnum'  => $vars['searchstart']));
     
         $pnr =& new pnRender('pnForum');
+        $urltemplate = pnModURL('pnForum', 'user', 'search', 
+                                array('searchagain'  => 1,
+                                      'searchstart'  => '%%'));
         $pnr->caching = false;
-        $pnr->assign('total_hits', $totalhits);
+        $pnr->assign('total_hits', $total_hits);
+        $pnr->assign('urltemplate', $urltemplate);
         $pnr->assign('searchresults', $searchresults);
-        $pnr->assign('searchfor', $searchfor);
-        $pnr->assign('searchbool', $searchbool);
-        $pnr->assign('searchauthor', $searchauthor);
-        $pnr->assign('searchforums', $searchforums);
-        $pnr->assign('searchorder', $searchorder);
+        $pnr->assign('searchfor',    $vars['searchfor']);
+        $pnr->assign('searchbool',   $vars['searchbool']);
+        $pnr->assign('searchauthor', $vars['searchauthor']);
+        $pnr->assign('searchforums', $vars['searchforums']);
+        $pnr->assign('searchorder',  $vars['searchorder']);
+        $pnr->assign('searchlimit',  $vars['searchlimit']);
+        $pnr->assign('searchstart',  $vars['searchstart']);
         return $pnr->fetch('pnforum_user_searchresults.html');
     }
 }

@@ -1,7 +1,6 @@
 <!--[*  $Id$  *]-->
 
 <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_RESULTS' ]-->:&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) 
-:<!--[ $internalsearch ]-->:</br />
 <ul>
 <!--[ foreach item=searchresult from=$searchresults ]-->
     <li><a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$searchresult.topic_id highlight=$searchfor ]-->"><!--[ $searchresult.topic_title ]--></a>
@@ -14,5 +13,6 @@
     <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NOENTRIES' ]-->
 <!--[ /foreach ]-->
 </ul>
-<!--[ simplepager urltemplate=$urltemplate startnum=$startnum perpage=$perpage total=$total_hits ]-->
+<!--[ pager rowcount=$total_hits limit=$perpage separator=" " posvar=pnForum_startnum txt_prev="<<" txt_next=">>" ]-->
 <br />
+

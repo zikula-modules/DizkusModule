@@ -230,6 +230,8 @@ function pnfCloseDB($resobj)
  *@params $dbconn object db onnection object
  *@params $sql    string the sql ommand to execute
  *@params $debug  bool   true if debug should be activated, default is false
+ *@params $file   string name of the calling file, important for error reporting
+ *@params $line   int    line in the calling file, important for error reorting
  *@returns object the result of $dbconn->Execute($sql)
  */
 function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false)
@@ -254,6 +256,8 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
  *@params $sql    string the sql ommand to execute
  *@params $limit  int    max number of lines to read
  *@params $start  int    number of lines to start reading
+ *@params $file   string name of the calling file, important for error reporting
+ *@params $line   int    line in the calling file, important for error reorting
  *@params $debug  bool   true if debug should be activated, default is false
  *@returns object the result of $dbconn->Execute($sql)
  */
