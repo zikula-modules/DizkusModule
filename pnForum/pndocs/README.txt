@@ -7,8 +7,6 @@ Take a look at pndocs/changelog.txt
 The current module demo can be seen at http://pncommunity.de
 
 All Installation is easy with the integration in PostNuke API.
-Upgrade from phpBB_14 versions 1.6 - 1.7.0.5, phpNuke 4.4 and 
-Upgrade from phpBB_12 need some tests.
 
 Take a look =)
 larsneo@postnuke.com
