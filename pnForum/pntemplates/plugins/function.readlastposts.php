@@ -120,7 +120,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 }
                 $lastpost['poster_name'] = $user_name;
            
-                $posted_unixtime= strtotime ($topic_time); 
+                $posted_unixtime= strtotime ($lastpost['topic_time']); 
                 $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime)); 
                 $lastpost['posted_time'] =$posted_ml;
                 $lastpost['posted_unixtime'] = $posted_unixtime;
