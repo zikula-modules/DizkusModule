@@ -35,13 +35,6 @@ function smarty_function_addtopic_button($params, &$smarty)
 	    $authid = pnSecGenAuthKey();
 	    $lang = pnUserGetLang();
 		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\" href=\"". pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id)) . "\"><img src=\"modules/pnForum/pnimages/$lang/post.gif\" alt=\"". pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\"></a>";
-	} else {
-		// user is not authorised to comment
-        $out = "<br />" . pnVarPrepForDisplay(_PNFORUM_NOAUTHPOST);
-        // user is not logged in
-        if (!pnUserLoggedIn()){
-        	$out .= pnVarPrepHTMLDisplay(_PNFORUM_SEPARATOR) . "<a  href=\"user.php\">".pnVarPrepForDisplay(_PNFORUM_REGISTER)."</a><br /><br />";
-        }
 	}
     return $out;
 }
