@@ -15,10 +15,10 @@
 <br />
 <strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong>
 <br /><br />
-<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" align="center" width="100%">
+<table class="pnForum-border" border="1" cellpadding="0" cellspacing="0" align="center" width="100%">
     <tr>
         <td bgcolor="<!--[ $bgcolor2 ]-->">
-            <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%">
+            <table class="pnForum-border" border="1" cellpadding="5" cellspacing="1" width="100%">
                 <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
                     <td height="28" width="20%"><span class="pnForum-title">
                         <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
@@ -51,7 +51,7 @@
                     </td>
                 </tr>
                 <tr bgcolor="<!--[ $bgcolor3 ]-->">
-                    <td>&nbsp;</td>
+                    <td colspan="2">&nbsp;</td>
                 </tr>		
             </table>
         </td>
@@ -77,9 +77,11 @@
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->">
 <div style="vertical-align: middle;">
     <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+
     <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
     </button>&nbsp;&nbsp;
     <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onClick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$reply.topic_id ]-->'">
+
     <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
     </button>
 </div>
@@ -93,7 +95,7 @@
 <table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" align="center" width="100%">
     <tr>
         <td bgcolor="<!--[ $bgcolor2 ]-->">
-            <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%">
+            <table class="pnForum-border" border="0" cellpadding="5" cellspacing="0" width="100%">
                 <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
                     <td height="28" width="20%"><span class="pnForum-title">
                         <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
@@ -103,12 +105,19 @@
                     </td>
                 </tr>
                 <!--[ foreach item=review from=$reply.topic_review ]-->
+				<tr bgcolor="<!--[ $bgcolor3 ]-->">
+                    <td colspan="2">
+					<!--[ if $review.poster_data.pn_uid neq 1 ]-->  
+                        <a href="user.php?op=userinfo&amp;uname=<!--[ $review.poster_data.pn_uname ]-->"><strong><!--[ $review.poster_data.pn_uname ]--></strong></a>
+					<!--[ /if ]-->	
+					</td>
+                </tr>	
                 <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
                     <td valign="top">
                     <!--[ if $review.poster_data.pn_uid neq 1 ]-->  
-                        <a href="user.php?op=userinfo&amp;uname=<!--[ $review.poster_data.pn_uname ]-->"><strong><!--[ $review.poster_data.pn_uname ]--></strong></a>
+                        
 		                <!--[ if $review.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                            <br /><img src="<!--[ $review.poster_data.pn_user_avatar ]-->" alt="<!--[ $review.poster_data.pn_uname ]-->" <!--[ $review.poster_data.pn_user_avatar_attr.3 ]-->>
+                            <img src="<!--[ $review.poster_data.pn_user_avatar ]-->" alt="<!--[ $review.poster_data.pn_uname ]-->" <!--[ $review.poster_data.pn_user_avatar_attr.3 ]-->>
 	                    <!--[ /if ]-->
                         <!--[ if $review.poster_data.rank ]-->
 	                        <br /><strong><!--[ $review.poster_data.rank|pnvarprepfordisplay ]--></strong>
@@ -126,10 +135,14 @@
                         <!--[ $review.post_text|nl2br|pnmodcallhooks|pnvarcensor ]-->
                     </td>
                 </tr>
+				<tr bgcolor="<!--[ $bgcolor3 ]-->">
+                    <td colspan="2">&nbsp;</td>
+                </tr>	
+				<tr bgcolor="<!--[ $bgcolor2 ]-->">
+                    <td colspan="2">&nbsp;</td>
+                </tr>
                 <!--[ /foreach ]-->
-                <tr bgcolor="<!--[ $bgcolor3 ]-->">
-                    <td>&nbsp;</td>
-                </tr>		
+                	
             </table>
         </td>
     </tr>
