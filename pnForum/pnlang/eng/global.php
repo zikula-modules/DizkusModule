@@ -39,6 +39,7 @@ define('_PNFORUM_BBCODE_FONTCOLOR', 'Font color');
 
 define('_PNFORUM_BBCODE_ENTER_TEXT_UNDERLINE','enter the underlined text');
 
+
 define('_PNFORUM_BBCODE_COLOR_DEFAULT', 'Standard');
 define('_PNFORUM_BBCODE_COLOR_DARKRED', 'Dark Red');
 define('_PNFORUM_BBCODE_COLOR_RED', 'Red');
@@ -68,11 +69,17 @@ define('_PNFORUM_BBCODE_SIZE_TEXTSIZE', 'enter text size');
 define('_PNFORUM_STICKY', 'Sticky');
 define('_PNFORUM_GOTO_LATEST', 'View latest post');
 define('_PNFORUM_STATUS', 'Status');
+
 define('_PNFORUM_OFFLINE', 'offline');
+
 define('_PNFORUM_REG_SINCE', 'registered');
+
 define('_PNFORUM_SEND_PM', 'send PM');
+
 define('_PNFORUM_PROFILE', 'Profile');
+
 define('_PNFORUM_LAST_SEEN', 'last visit');
+
 
 // copied from includes/language/blocks/eng
 define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'missing search parameters');
@@ -168,7 +175,7 @@ define('_PNFORUM_GOTO_CAT','go to category');
 define('_PNFORUM_GOTO_TOPIC','go to topic');
 define('_PNFORUM_SPLITTOPIC','Split topic');
 define('_PNFORUM_SPLITTOPIC_INFO','This will split the topic before the selected posting.');
-define('_PNFORUM_SPLITTOPIC_NEWTOPIC','Subject for th new topic');
+define('_PNFORUM_SPLITTOPIC_NEWTOPIC','Subject for the new topic');
 define('_PNFORUM_SPLIT','Split');
 define('_PNFORUM_ADMINRANKS','Edit user ranks');
 define('_PNFORUM_NOFORUMS', 'no forums defined');
