@@ -890,7 +890,7 @@ function pnForum_userapi_preparereply($args)
                        c.cat_id,
                        c.cat_title,
                        t.topic_title,
-                       t.topic.status
+                       t.topic_status
                 FROM ".$pntable[pnforum_forums]." AS f, 
                      ".$pntable[pnforum_topics]." AS t, 
                      ".$pntable[pnforum_posts]." AS p,
