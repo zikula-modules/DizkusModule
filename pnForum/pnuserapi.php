@@ -514,53 +514,10 @@ function pnForum_userapi_readforum($args)
     $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
     $forum['last_visit'] = $last_visit;
 
-    // let us calculate GotoPage line here
-    $l_phpbb_showGotopage = 0;
-    if (!empty ($start)) {
-        $topics_start = $start;
-    } else {
-        $topics_start = 0;
-    }
-    
-    $count = 1;
-    $next = $topics_start + $topics_per_page;
-    $previous = $topics_start - $topics_per_page;
-    $l_phpbb_nextpage = "";
+    $forum['topic_start'] = (!empty ($start)) ? $start : 0;
 
-    if($forum['forum_topics'] > $topics_per_page) {
-        // more topcs than we want to see
-        $l_phpbb_nextpage = "<span class=\"pn-sub\">";
-        for($x = 0; $x < $forum['forum_topics']; $x++) {
-            if(($previous >= 0) and ($count == 1)) {
-                $l_phpbb_nextpage .=  "<a href=\"". pnModURL('pnForum', 'user', 'viewforum', array( 'forum'=>$forum['forum_id'], 'start' => $previous))."\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a>';
-                //$l_phpbb_nextpage .= " | ";
-            }
-            if(!($x % $topics_per_page)) {
-                if($x > 0) {
-                    //$l_phpbb_nextpage .= " | ";
-                }
-                if($x == $topics_start) {
-                    $l_phpbb_nextpage .=  "| $count\n";
-    
-                } else {
-                    if ( (($count%10)==0) // link if page is multiple of 10 
-                    || ($count==1) // link first page 
-                    || (($x > ($start-6*$topics_per_page)) //link -5 and +5 pages 
-                    &&($x < ($start+6*$topics_per_page))) ) {
-                        $l_phpbb_nextpage .=  " | <a href=\"".pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum['forum_id'],'start'=>$x))."\">$count</a>\n";
-                    }
-                }
-                $count++;
-            }
-        }
-        if($next < $forum['forum_topics']) {
-            $l_phpbb_nextpage .=  " | <a href=\"".pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum['forum_id'],'start'=>$next))."\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE)."</a>";
-        }
-    
-        $l_phpbb_nextpage .= "</span>";
-        $l_phpbb_showGotopage = 1;
-    }
-    $forum['forum_pager'] = $l_phpbb_nextpage;
+    // forum_pager is obsolete, inform the user about this
+    $forum['forum_pager'] = 'deprecated data field $forum.forum_pager used, please update your template using the forumpager plugin';
     
     $sql = "SELECT t.topic_id, 
                    t.topic_title, 
@@ -765,41 +722,12 @@ function pnForum_userapi_readtopic($args)
             }
             $topic['pages'] = $times;
         }
-        /**
-         * generate pager
-         */
-        $pager = "";
-        if($topic['total_posts'] > $posts_per_page) {
-            if (!isset($start)) { 
-                $start=0;
-            }
-            $times = 1;
-            $pager = "<span class=\"pn-sub\">".pnVarPrepForDisplay(_PNFORUM_GOTOPAGE)." ( ";
-            $last_page = $start - $posts_per_page;
-            if($start > 0) {
-                $pager .= "<a href=\"" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$last_page)) . "\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a> ';
-            }
-            for($x = 0; $x < $topic['total_posts']; $x += $posts_per_page) {
-                if($times != 1) {
-                    $pager .= " | ";
-                }
-                if($start && ($start == $x)) {
-                    $pager .= $times;
-                } else if($start == 0 && $x == 0) {
-                    $pager .= "1";
-                } else {
-                    $pager .= "<a href=\"" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$x)) . "\">$times</a>";
-                }
-                $times++;
-            }
-        
-            if(($start + $posts_per_page) < $total) {
-                $next_page = $start + $posts_per_page;
-                $pager .= " <a href=\"" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$next_page)) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE).'</a>';
-            }
-            $pager .= " ) </span><br />\n";
-        }
-        $topic['topic_pager'] = $pager;
+
+        $topic['post_start'] = (!empty($start)) ? $start : 0;
+
+        // topic_pager is obsolete, inform the user about this
+        $topic['topic_pager'] = 'deprecated data field $topic.topic_pager used, please update your template using the topicpager plugin';
+
         $topic['posts'] = array();
 
         // read posts
@@ -823,13 +751,7 @@ function pnForum_userapi_readtopic($args)
         }
         while(!$result2->EOF) {
             $post = $result2->GetRowAssoc(false);
-/*
-            $post = array();
-            $post['post_id']   = $row['post_id'];
-            $post['poster_id'] = $row['poster_id'];
-            $post['post_time'] = $row['post_time'];
-            $post['post_text'] = $row['post_text'];
-*/            
+
             // check if the user is still in the postnuke db
             $user_name = pnUserGetVar('uname', $post['poster_id']);
             if ($user_name == "") {
@@ -838,18 +760,17 @@ function pnForum_userapi_readtopic($args)
             }
             
             $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' =>$post['poster_id']));
-
-
             $post['posted_unixtime'] = strtotime ($post['post_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
-            $post['post_text'] = phpbb_br2nl($post['post_text']);
+            //$post['post_text'] = phpbb_br2nl($post['post_text']);
             $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['pn_user_sig']);
 
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', '', array($post['post_text']));
             $post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_text'])));
+            //$post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor($post['post_text']));
 
             $pn_uid = pnUserGetVar('uid');
             if ($post['poster_data']['pn_uid']==$pn_uid) {
@@ -1342,10 +1263,10 @@ function pnForum_userapi_preparenewtopic($args)
 
     $newtopic['subject'] = $subject;
     $newtopic['message'] = $message;
-    $newtopic['message_display'] = phpbb_br2nl($message);
+    $newtopic['message_display'] = $message; // phpbb_br2nl($message);
 
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
-    $newtopic['message_display'] = nl2br($newtopic['message_display']);
+    //$newtopic['message_display'] = nl2br($newtopic['message_display']);
 
     if(pnUserLoggedIn()) {
         if($topic_start==true) {

@@ -19,11 +19,7 @@
 <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:
 <!--[ listforummods moderators=$forum.forum_mods ]-->
 <br /><br />
-<!--[ if $forum.forum_pager ]-->
-<!--[ $forum.forum_pager ]-->
-<!--[ /if ]-->
-
-
+<!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
 <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
     <thead>
     <tr style="background-color:<!--[ $bgcolor2 ]-->;text-align:left;">
@@ -94,9 +90,7 @@
     <!--[ /foreach ]-->
     </tbody>
 </table>
-<!--[ if $forum.forum_pager ]-->
-<!--[ $forum.forum_pager ]-->
-<!--[ /if ]-->
+<!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
 <br /><br />
  <!--[ forumimage name=newposts_image assign=newposts ]-->
  <!--[ forumimage name=hot_newposts_image assign=hot_newposts ]-->
