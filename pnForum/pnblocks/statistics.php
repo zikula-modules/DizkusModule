@@ -75,7 +75,6 @@ function pnForum_statisticsblock_info()
                   'form_refresh' => false,
                   'show_preview' => true);
 }
->>>>>>> 1.4
 
 /**
  * display the statisticsblock
