@@ -488,7 +488,8 @@ function pnForum_userapi_readforum($args)
     } 
 
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
-                          array('forum_id' => $forum_id));
+                          array('forum_id' => $forum_id,
+                                'permcheck' => 'nocheck' ));
     if($forum==false) {
         return showforumerror(_PNFORUM_FORUM_NOEXIST, __FILE__, __LINE__);
     }
@@ -821,13 +822,14 @@ function pnForum_userapi_readtopic($args)
             $result2 = pnfSelectLimit($dbconn, $sql2, $posts_per_page, false, __FILE__, __LINE__);
         }
         while(!$result2->EOF) {
-            $row = $result2->GetRowAssoc(false);
+            $post = $result2->GetRowAssoc(false);
+/*
             $post = array();
             $post['post_id']   = $row['post_id'];
             $post['poster_id'] = $row['poster_id'];
             $post['post_time'] = $row['post_time'];
             $post['post_text'] = $row['post_text'];
-            
+*/            
             // check if the user is still in the postnuke db
             $user_name = pnUserGetVar('uname', $post['poster_id']);
             if ($user_name == "") {
@@ -2750,10 +2752,13 @@ function pnForum_userapi_get_latest_posts($args)
                         c.cat_id,
                         c.cat_title,
                         t.topic_replies,
-                        t.topic_last_post_id
+                        t.topic_last_post_id,
+                        p.post_time,
+                        p.poster_id
             FROM        ".$pntable['pnforum_topics']." t
             LEFT JOIN   ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN   ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
+            LEFT JOIN   ".$pntable['pnforum_posts']." AS p on p.post_id = t.topic_last_post_id
             WHERE";
     
     if ($unanswered==1) {
@@ -2782,7 +2787,7 @@ function pnForum_userapi_get_latest_posts($args)
 
     $posts = array();
     while ((list($topic_id, $topic_title, $forum_id, $forum_name, $cat_id, $cat_title, 
-                 $topic_replies, $topic_last_post_id) = $result->FetchRow()) ) {
+                 $topic_replies, $topic_last_post_id, $post_time, $poster_id) = $result->FetchRow()) ) {
         $post=array();
         $post['topic_id'] = pnVarPrepForDisplay($topic_id);
         $post['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
@@ -2792,6 +2797,8 @@ function pnForum_userapi_get_latest_posts($args)
         $post['cat_title'] = pnVarPrepForDisplay($cat_title);
         $post['topic_replies'] = pnVarPrepForDisplay($topic_replies);
         $post['topic_last_post_id'] = pnVarPrepForDisplay($topic_last_post_id);
+        $post['post_time'] = pnVarPrepForDisplay($post_time);
+        $post['poster_id'] = pnVarPrepForDisplay($poster_id);
         
         // check permission before display
         if(allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
@@ -2809,20 +2816,14 @@ function pnForum_userapi_get_latest_posts($args)
                 $start = 0;
             }
             $post['start'] = $start;
-    
-            // get postername and posttime
-            $sql2 = "SELECT p.post_time, 
-                           u.pn_uname 
-                    FROM ".$pntable['pnforum_posts']." AS p, 
-                         ".$pntable['users']." AS u 
-                    WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."' 
-                    AND p.poster_id = u.pn_uid 
-                    ORDER BY post_time DESC";
-        
-            $result2 = pnfSelectLimit($dbconn, $sql2, 1, false, __FILE__, __LINE__);
-            $row = $result2->GetRowAssoc(false);
-            $post['poster_name'] = $row['pn_uname'];
-            $post['posted_unixtime'] = strtotime ($row['post_time']);
+
+            if ($post['poster_id'] == 1) {
+                $post['poster_name'] = pnConfigGetVar('anonymous');
+            } else {
+                $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
+            }
+
+            $post['posted_unixtime'] = strtotime ($post['post_time']);
             $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
             pnfCloseDB($result2);
             
