@@ -695,4 +695,63 @@ function pnForum_user_print()
     exit;
 }
 
+/**
+ * search
+ * internal search function
+ *
+ */
+function pnForum_user_search()
+{
+    $submit = pnVarCleanFromInput('submit');
+    
+    if(!$submit) {
+        if(!pnModAPILoad('pnForum', 'admin')) {
+            return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+        } 
+        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
+    
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->assign('forums', $forums);
+        return $pnr->fetch('pnforum_user_search.html');
+    } else {   // submit is set
+        if(!pnModAPILoad('pnForum', 'user')) {
+            return showforumerror("loading userapi failed", __FILE__, __LINE__);
+        } 
+        list($searchfor,
+             $searchbool,
+             $searchauthor,
+             $searchforums,
+             $searchorder ) = pnVarCleanFromInput('searchfor',
+                                                  'searchbool',
+                                                  'searchauthor',
+                                                  'searchforums',
+                                                  'searchorder');
+
+        if( !is_array($searchforums) || !is_array($searchorder) || ($searchbool<>"AND" && $searchbool<>"OR")
+            || empty($searchfor) ) {
+            return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        }
+        
+        $searchresults = pnModAPIFunc('pnForum', 'user', 'forumsearch',
+                                      array('searchfor' => $searchfor,
+                                            'bool'      => $searchbool,
+                                            'forums'    => $searchforums,
+                                            'author'    => $searchauthor,
+                                            'order'     => $searchorder));
+    
+    
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->assign('total_hits', count($searchresults));   //total_hits);
+        $pnr->assign('searchresults', $searchresults);
+        $pnr->assign('searchfor', $searchfor);
+        $pnr->assign('searchbool', $searchbool);
+        $pnr->assign('searchauthor', $searchauthor);
+        $pnr->assign('searchforums', $searchforums);
+        $pnr->assign('searchorder', $searchorder);
+        return $pnr->fetch('pnforum_user_searchresults.html');
+    }
+}
+
 ?>

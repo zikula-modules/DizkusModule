@@ -1,0 +1,84 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='pnforum_user_header.html' ]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<div style="padding: 3px; text-align: center; background: <!--[ $bgcolor2 ]-->;">
+<h2><!--[ pnml name='_PNFORUM_SEARCH' ]--></h2>
+</div>
+<br />
+
+<form method="post" action="<!--[ pnmodurl modname=pnForum type=user func=search ]-->">
+<div>
+
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <label for="searchfor"><!--[ pnml name='_PNFORUM_SEARCHFOR' ]--></label>:
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <input type="text" name="searchfor" id="searchfor" size="20" maxlength="255" value="" tabindex="0" /> 
+    </div>
+</div>
+
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <label for="searchbool"><!--[ pnml name='_PNFORUM_SEARCHBOOL' ]--></label>&nbsp;:
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <select name="searchbool" size="1" id="searchbool">
+        <option value="AND" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHAND' ]--></option>
+        <option value="OR"><!--[ pnml name='_PNFORUM_SEARCHOR' ]--></option>
+        </select>
+    </div>
+</div>
+
+
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <label for="searchforums"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_FORUM' ]-->:</label>
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <select name="searchforums[]" id="searchforums" size="1">
+        <option value="" selected><!--[ pnml name='_PNFORUM_SEARCHALLFORUMS' ]--></option>
+        <!--[ foreach item=forum from=$forums ]-->
+        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]--></option>
+        <!--[ /foreach ]-->
+        </select>
+    </div>
+</div>
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <label for="searchauthor"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]-->:</label>
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <input type="text" name="searchauthor" id="searchauthor" size="20" maxlength="255">
+    </div>
+</div>
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        <label for="searchorder"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ORDER' ]-->:</label>
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <select name="searchorder[]" id="searchorder" size="1">
+        <option value="1" selected><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYDATE' ]--></option>
+        <option value="2"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYTITLE' ]--></option>
+        <option value="3"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYFORUM' ]--></option>
+        </select>
+    </div>
+</div>
+<div style="clear:both; padding: 4px;">
+    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+        &nbsp;
+    </div>
+    <div style="float: left; width: 70%; text-align: left;">
+        <input type="submit" name="submit" value="<!--[ pnml name='_SEARCH' ]-->" />
+    </div>
+</div>
+<div style="clear:both;"> </div>
+
+</form>
+
+<!--[ include file='pnforum_user_footer.html' ]-->
