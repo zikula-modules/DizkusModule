@@ -9,6 +9,7 @@
  * @link http://www.pnforum.de
  */
 
+define('_PNFORUM_RECENT_POST_ORDER', 'Recent post order in topi view');
 define('_PNFORUM_CHANGE_POST_ORDER','Change Post Order');
 define('_PNFORUM_OLDEST_FIRST','Display the oldest post first');
 define('_PNFORUM_NEWEST_FIRST','Display the newest post first');

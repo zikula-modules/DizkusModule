@@ -44,18 +44,20 @@ function smarty_function_post_order_button($params, &$smarty)
 
     // if we don't know what topic we came from and we don't have a return_to
     // parameter passed then send them back to the main forum list
-    if (!isset($topic_id)) {
+    if (!isset($topic_id) && !isset($return_to)) {
         $topic_id = false;
         $return_to = 'main';
     }
 
     // if we have a numeric topic but no return_to then set the return
     // to viewtopic.  Otherwise return to the main forum view.
-    if (!isset($return_to) && is_numeric($topic_id)) {
+    if (empty($return_to) && is_numeric($topic_id)) {
         $return_to = 'viewtopic';
     } else {
         $topic_id = false;
-        $return_to = 'main';
+        if(!isset($return_to)) {
+            $return_to = 'main';
+        }
     }
     if (pnUserLoggedIn()) {
         if(!pnModAPILoad('pnForum', 'user')) {
