@@ -1283,9 +1283,9 @@ function pnForum_userapi_preparenewtopic($args)
     $newtopic['forum_id'] = $forum_id;
     
     // select forum name and cat title based on forum_id
-    $sql = "SELECT forum_name,
-                   cat_id, 
-                   cat_title
+    $sql = "SELECT f.forum_name,
+                   c.cat_id, 
+                   c.cat_title
             FROM ".$pntable['pnforum_forums']." AS f,
                 ".$pntable['pnforum_categories']." AS c
             WHERE (forum_id = '".(int)pnVarPrepForStore($forum_id)."'
