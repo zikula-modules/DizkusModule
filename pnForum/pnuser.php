@@ -722,28 +722,32 @@ function pnForum_user_search()
              $searchbool,
              $searchauthor,
              $searchforums,
-             $searchorder ) = pnVarCleanFromInput('searchfor',
+             $searchorder,
+             $searchlimit ) = pnVarCleanFromInput('searchfor',
                                                   'searchbool',
                                                   'searchauthor',
                                                   'searchforums',
-                                                  'searchorder');
+                                                  'searchorder',
+                                                  'searchlimit');
 
         if( !is_array($searchforums) || !is_array($searchorder) || ($searchbool<>"AND" && $searchbool<>"OR")
             || empty($searchfor) ) {
             return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
         }
         
-        $searchresults = pnModAPIFunc('pnForum', 'user', 'forumsearch',
-                                      array('searchfor' => $searchfor,
-                                            'bool'      => $searchbool,
-                                            'forums'    => $searchforums,
-                                            'author'    => $searchauthor,
-                                            'order'     => $searchorder));
+        list($searchresults,
+             $total_hits ) = pnModAPIFunc('pnForum', 'user', 'forumsearch',
+                                          array('searchfor' => $searchfor,
+                                                'bool'      => $searchbool,
+                                                'forums'    => $searchforums,
+                                                'author'    => $searchauthor,
+                                                'order'     => $searchorder,
+                                                'limit'     => $searchlimit));
     
     
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
-        $pnr->assign('total_hits', count($searchresults));   //total_hits);
+        $pnr->assign('total_hits', $totalhits);
         $pnr->assign('searchresults', $searchresults);
         $pnr->assign('searchfor', $searchfor);
         $pnr->assign('searchbool', $searchbool);
