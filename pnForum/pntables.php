@@ -133,7 +133,8 @@ function pnForum_pntables()
                                         'user_rank'   => $pnforum_users . '.user_rank',
                                         'user_level'   => $pnforum_users . '.user_level',
                                         'user_lastvisit'   => $pnforum_users . '.user_lastvisit',
-                                        'user_favorites'   => $pnforum_users . '.user_favorites');
+                                        'user_favorites'   => $pnforum_users . '.user_favorites',
+                                        'user_post_order'   => $pnforum_users . '.user_post_order');
 
     // new in 1.7.5
     $pnforum_topic_subscription = pnConfigGetVar('prefix') . '_pnforum_topic_subscription';

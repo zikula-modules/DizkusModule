@@ -225,6 +225,7 @@ function pnForum_init()
             $pnforumuserscolumn[user_level] int(10) unsigned DEFAULT '1' NOT NULL,
             $pnforumuserscolumn[user_lastvisit] timestamp(14),
             $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
+            $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL,
             PRIMARY KEY (user_id))";
 
     $dbconn->Execute($sql);
@@ -499,7 +500,8 @@ function pnForum_upgrade_to_2_0_1()
     $pnforumuserscolumn = &$pntable['pnforum_users_column'];
 
     $sql = "ALTER TABLE $pnforumuserstable
-            ADD $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL";
+            ADD $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
+            ADD $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL";
 
     $dbconn->Execute($sql);
     if ($dbconn->ErrorNo() != 0) {
