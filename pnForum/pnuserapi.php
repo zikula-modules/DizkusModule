@@ -725,6 +725,8 @@ function pnForum_userapi_readforum($args)
  *
  *@params $args['topic_id'] it the topics id
  *@params $args['start'] int number of posting to start with (if on page 1+)
+ *@params $args['complete'] bool if true, reads the complete thread and does not care about
+ *                               the posts_per_page setting, ignores 'start'
  *@params $args['last_visit'] string the users last visit date
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
@@ -738,6 +740,8 @@ function pnForum_userapi_readtopic($args)
     $posticon = pnModGetVar('pnForum', 'posticon');
     $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
 
+    $complete = (isset($complete)) ? $complete : false;
+
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
@@ -746,6 +750,7 @@ function pnForum_userapi_readtopic($args)
                    t.topic_status, 
                    t.forum_id, 
                    t.sticky, 
+                   t.topic_time,
                    f.forum_name, 
                    f.cat_id, 
                    c.cat_title
@@ -765,6 +770,7 @@ function pnForum_userapi_readtopic($args)
         $topic = $result->GetRowAssoc(false);
         $topic['topic_id'] = $topic_id;
         $topic['start'] = $start;
+        $topic['topic_unixtime'] = strtotime ($topic['topic_time']);
 
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
@@ -847,7 +853,9 @@ function pnForum_userapi_readtopic($args)
                 AND p.post_id = pt.post_id
                 ORDER BY p.post_id $post_sort_order";
 
-        if(isset($start)) {
+        if($complete==true) {
+            $result2 = $dbconn->Execute($sql2);
+        } elseif(isset($start)) {
             // $start is given
             $result2 = $dbconn->SelectLimit($sql2, $posts_per_page, $start);
         } else {
@@ -1554,7 +1562,7 @@ function pnForum_userapi_readpost($args)
 {    
     extract($args);
     unset($args);
-    
+
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
@@ -1595,7 +1603,7 @@ function pnForum_userapi_readpost($args)
     $post = array();
     $post['post_id']      = pnVarPrepForDisplay($myrow['post_id']);
     $post['post_time']    = pnVarPrepForDisplay($myrow['post_time']);
-    $message              = pnVarPrepForDisplay($myrow['post_text']);
+    $message              = $myrow['post_text'];
     $post['topic_id']     = pnVarPrepForDisplay($myrow['topic_id']);
     $post['topic_subject']= pnVarPrepForDisplay($myrow['topic_title']);
     $post['topic_notify'] = pnVarPrepForDisplay($myrow['topic_notify']);
@@ -1608,27 +1616,27 @@ function pnForum_userapi_readpost($args)
     // create unix timestamp
     $post['post_unixtime'] = strtotime ($post['post_time']);
 
-/*
-    if(!allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
+    if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
+        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
     }
-*/
+    
     $pn_uid = pnUserGetVar('uid');   
     $post['moderate'] = false;
-    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) ||
-        ($pn_uid == $post['poster_data']['pn_uid'])) { 
+    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) { 
         $post['moderate'] = true; 
     }
 
-    $message_display = nl2br($message);  // phpbb_br2nl($message);
-    $sig = $post['poster_data']['pn_user_sig'];
-    if ($sig != ''){
-        $message_display .= "<br />_________________<br />$sig";
+    $post['post_textdisplay'] = phpbb_br2nl($message);
+    if(!empty($post['poster_data']['pn_user_sig']) ){
+        $post['post_textdisplay'] = eregi_replace("\[addsig]$", "\n_________________\n".$post['poster_data']['pn_user_sig'], $post['post_textdisplay']);
+    } else {
+        $post['post_textdisplay'] = eregi_replace("\[addsig]$", "", $post['post_textdisplay']);
     }
     // call hooks for $message_display ($message remains untouched for the textarea)
-    list($message_display) = pnModCallHooks('item', 'transform', '', array($message_display));
-    $post['message_display'] = nl2br($message_display);
+    list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array($post['post_textdisplay']));
+    $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
 
+    //$message = pnVarPrepForDisplay($message);
     //  remove [addsig]
     $message = eregi_replace("\[addsig]$", "", $message);
     //  remove <!-- editby -->
@@ -1643,9 +1651,9 @@ function pnForum_userapi_readpost($args)
     $message = pn_bbdecode($message);
     //  convert autolinks (just for backwards compatibility)
     $message = undo_make_clickable($message);
-    $post['message'] = $message;
+    $post['post_text'] = $message;
 
-    // allow to edit the subject if irst post
+    // allow to edit the subject if first post
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $topic_id, 'post_id' => $post_id));
 
     return $post;

@@ -348,8 +348,8 @@ function pnForum_user_editpost()
             $post['topic_subject'] = $subject;
         }
         if(!empty($message)) {
-            $post['message'] = $message;
-            $post['message_display'] = $message;
+            $post['post_text'] = $message;
+            $post['post_textdisplay'] = $message;
         }
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
@@ -630,6 +630,55 @@ function pnForum_user_splittopic()
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_splittopic.html');
     } 
+}
+
+/**
+ * print
+ * prepare print view of the selectd posting or topic
+ *
+ */
+function pnForum_user_print()
+{
+    if(!pnModAPILoad('pnForum', 'user')) {
+        return showforumerror("loading userapi failed", __FILE__, __LINE__);
+    } 
+    
+    $post_id  = (int)pnVarCleanFromInput('post');
+    $topic_id = (int)pnVarCleanFromInput('topic');
+    $pnr =& new pnRender('pnForum');
+    $pnr->caching = false;
+    if($post_id<>0) {
+        $post = pnModAPIFunc('pnForum', 'user', 'readpost', 
+                             array('post_id' => $post_id));
+        $pnr->assign('post', $post);
+        $output = $pnr->fetch('pnforum_user_printpost.html');
+    } elseif($topic_id<>0) {
+        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic', 
+                             array('topic_id'  => $topic_id,
+                                   'complete' => true ));
+        $pnr->assign('topic', $topic);
+        $output = $pnr->fetch('pnforum_user_printtopic.html');
+    } else {
+        pnRedirect(pnModURL('pnForum', 'user', 'main'));
+        return true;
+    }        
+    echo "<html>\n";
+    echo "<head>\n";
+    echo "<link rel=\"StyleSheet\" href=\"themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";
+    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('pnForum', 'default_lang') ."\">\n";
+    
+    global $additional_header;
+    if (is_array($additional_header))
+    {
+      foreach ($additional_header as $header)
+        echo "$header\n";
+    }
+    echo "</head>\n";
+    echo "<body class=\"printbody\">\n";
+    echo $output;
+    echo "</body>\n";
+    echo "</html>\n";
+    exit;
 }
 
 ?>

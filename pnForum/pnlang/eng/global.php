@@ -32,6 +32,10 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_LASTCHANGE','last change on');
+define('_PNFORUM_TOPIC_STARTER','started by');
+define('_PNFORUM_PRINT_TOPIC','Print topic');
+define('_PNFORUM_PRINT_POST','Print post');
 define('_PNFORUM_SHADOWTOPIC_MESSAGE', 'The original posting has been moved <a title="moved" href="%s">here</a>.');
 define('_PNFORUM_MOVED_SUBJECT', 'moved');
 define('_PNFORUM_CREATESHADOWTOPIC','Create shadow topic');

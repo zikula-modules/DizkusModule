@@ -45,7 +45,7 @@
 
                         </td>
                         <td bgcolor="<!--[ $bgcolor1 ]-->">
-                            <span class="pn-normal"><!--[ $post.message_display|nl2br|pnvarprephtmldisplay|pnvarcensor ]--></span>
+                            <span class="pn-normal"><!--[ $post.post_textdisplay|nl2br|pnvarprephtmldisplay|pnvarcensor ]--></span>
                         </td>
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->">
@@ -66,7 +66,7 @@
 
 <span class="pn-normal"><label for="phpbb_body"><!--[ pnml name='_PNFORUM_BODY' ]--></label></span>
 <br />	
-<textarea name="message" rows="10" cols="80" id="phpbb_body" tabindex="0"><!--[ $post.message ]--></textarea>
+<textarea name="message" rows="10" cols="80" id="phpbb_body" tabindex="0"><!--[ $post.post_text ]--></textarea>
 <br />
 <!--[ pnforumallowedhtml ]-->
 <!--[ bbsmile ]-->
