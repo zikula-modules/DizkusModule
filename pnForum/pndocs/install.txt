@@ -1,4 +1,4 @@
 $Id$ $Name$
 
-Please look into /pndocs/lang/eng/manual/ folder for the docs.
+Please look into /pndocs/lang/eng/manual.html for the docs.
 
