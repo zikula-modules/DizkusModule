@@ -1021,6 +1021,8 @@ function pnForum_userapi_preparereply($args)
  *@params $args['message'] string the text
  *@params $args['topic_id'] int the topics id
  *@params $args['forum_id'] int the forums id
+ *@params $args['attach_signature'] int 1=yes, 0=no
+ *@params $args['subscribe_topic'] int 1=yes, 0=no
  *@returns int the number of the posting to show in the topic affter adding 
  */
 function pnForum_userapi_storereply($args)
@@ -1047,21 +1049,24 @@ function pnForum_userapi_storereply($args)
     // signature is always on, except anonymous user
     // anonymous user has uid=0, but needs pn_uid=1
     if(pnUserLoggedin()) {
-        $message .= "[addsig]";
+        if($attach_signature==1) {
+            $message .= "[addsig]";
+        }
         $pn_uid = pnUserGetVar('uid');
     } else {
         $pn_uid = 1;
     }
 
-    // some enviroment for logging ;)
-    if (getenv(HTTP_X_FORWARDED_FOR)){ 
-        $poster_ip=getenv(HTTP_X_FORWARDED_FOR); 
-    } else { 
-        $poster_ip=getenv(REMOTE_ADDR);
-    }
-    // for privavy issues ip logging can be deactivated
     if (pnModGetVar('pnForum', 'log_ip') == "no") {
+        // for privavy issues ip logging can be deactivated
         $poster_ip = "127.0.0.1";
+    } else {
+        // some enviroment for logging ;)
+        if (getenv(HTTP_X_FORWARDED_FOR)){ 
+            $poster_ip=getenv(HTTP_X_FORWARDED_FOR); 
+        } else { 
+            $poster_ip=getenv(REMOTE_ADDR);
+        }
     }
 
     // Prep for DB
@@ -1121,6 +1126,15 @@ function pnForum_userapi_storereply($args)
 
         if ($dbconn->ErrorNo() != 0) {
             return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg());
+        }
+        // update subscription
+        if($subscribe_topic==1) {
+            // user wants to subscribe the topic
+            pnForum_userapi_subscribe_topic(array('topic_id'=>$topic_id));
+        } else {
+            // user wants not to subscribe the topic
+            pnForum_userapi_unsubscribe_topic(array('topic_id'=>$topic_id, 
+                                                    'silent'  => true));     
         }
     }
 
@@ -2522,13 +2536,16 @@ function pnForum_userapi_subscribe_topic($args)
  * unsubscribe_topic
  *
  *@params $args['topic_id'] int the topics id
+ *@params $args['silent'] bool true=no error message when not subscribed, simply return void
  *@returns void
  */
 function pnForum_userapi_unsubscribe_topic($args)
 {
     extract($args);
     unset($args);
-    
+
+    $silent = (isset($silent)) ? true : false;
+        
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
@@ -2546,7 +2563,11 @@ function pnForum_userapi_unsubscribe_topic($args)
         }
     } else {
         // user is not subscribed
-        return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
+        if($silent==false) {
+            return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
+        } else {
+            return;
+        }
     }
 }
 

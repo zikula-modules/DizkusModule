@@ -67,9 +67,13 @@
 <!--[ allowedhtml ]--><br />
 <!--[ bbcode ]--><br />
 <!--[ bbsmile ]--><br />
-
-<br /><br />
-<span class="pn-normal"><!--[ pnml name='_PNFORUM_OPTIONS' ]-->: <input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
+<br />
+<span class="pn-normal"><!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br />
+<input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1"><label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label><br />
+<!--[ if $loggedin ]-->
+<input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1"><label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label><br />
+<!--[ /if ]-->
+<input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
 <br /><br />
 <input type="hidden" name="forum" value="<!--[ $reply.forum_id ]-->">
 <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->">

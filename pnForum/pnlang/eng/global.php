@@ -31,6 +31,8 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_ATTACHSIGNATURE', 'Attach my signature');
+define('_PNFORUM_NOTIFYME', 'Notify me when a reply is posted');
 define('_PNFORUM_CATEGORYINFO', 'Category info');
 define('_PNFORUM_VISITCATEGORY', 'visit this category');
 define('_PNFORUM_VISITFORUM', 'visit this forum');

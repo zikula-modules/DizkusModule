@@ -147,7 +147,9 @@ function pnForum_user_reply()
     list($topic_id, 
     	 $forum_id, 
     	 $post_id, 
-    	 $message, 
+    	 $message,
+    	 $attach_signature,
+    	 $subscribe_topic, 
     	 $preview, 
     	 $submit,
     	 $cancel,
@@ -155,7 +157,9 @@ function pnForum_user_reply()
     									'forum', 
     									'post', 
     									'message', 
-    									'preview', 
+    									'attach_signature',
+    									'subscribe_topic', 
+    									'preview',
     									'submit',
     									'cancel',
     									'quote');
@@ -168,6 +172,8 @@ function pnForum_user_reply()
     $post_id = (int)$post_id;
     $forum_id = (int)$forum_id;
     $topic_id = (int)$topic_id;
+    $attach_signature = (int)$attach_signature;
+    $subscribe_topic = (int)$subscribe_topic;
         
     /**
      * if cancel is submitted move to forum-view
@@ -197,14 +203,15 @@ function pnForum_user_reply()
         pnModAPIFunc('pnForum', 'user', 'usersync');
 
         $start = pnModAPIFunc('pnForum', 'user', 'storereply',
-                              array('topic_id' => $topic_id,
-                                    'forum_id' => $forum_id,
-                                    'message'  => $message));
+                              array('topic_id'         => $topic_id,
+                                    'forum_id'         => $forum_id,
+                                    'message'          => $message,
+                                    'attach_signature' => $attach_signature,
+                                    'subscribe_topic'  => $subscribe_topic));
         pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id,
                                   'start' => $start)));
     } else {
-
         list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
         
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
