@@ -199,9 +199,9 @@ function search_pnForum($vars)
                  $sresult['forum_name'],
                  $sresult['poster_id'],
                  $sresult['post_time']) = $result->fields;
-            if (pnSecAuthAction(0, 'pnForum::Forum', $sresult['forum_name']."::", ACCESS_READ) && pnSecAuthAction(0, 'pnForum::Category', $sresult['cat_title']."::", ACCESS_READ))     {
-                //auth check for forum an category before displaying search result
-    
+          //if (pnSecAuthAction(0, 'pnForum::Forum', $sresult['forum_name']."::", ACCESS_READ) && pnSecAuthAction(0, 'pnForum::Category', $sresult['cat_title']."::", ACCESS_READ))     {
+ 	        if(allowedtoseecategoryandforum($sresult['cat_id'], $sresult['forum_id'])) {
+                //auth check for forum and category before displaying search result
                 // timezone
                 $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
                 $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
