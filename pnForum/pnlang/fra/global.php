@@ -405,7 +405,7 @@ define('_PNFORUM_TOP','Top');
 define('_PNFORUM_TOPIC_NOEXIST','Erreur - Le sujet sélectionné n\'existe pas. Retournez en arrière et faites un autre essai.');
 define('_PNFORUM_TOPIC_STARTER','commencé par');
 define('_PNFORUM_TOPIC','Sujet');
-define('_PNFORUM_TOPICLOCKED','Topic locked');
+define( '_PNFORUM_TOPICLOCKED', 'Sujet verrouillé');
 define('_PNFORUM_TOPICS','Sujets');
 define('_PNFORUM_TOTAL','Total');
 
