@@ -6,7 +6,6 @@
 <!--[ pnthemegetvar name=bgcolor4 assign=bgcolor4  ]-->
 
  <!--[ forumimage name=firstnew_image assign=firstnew ]-->
- <!--[ forumimage name=stickytopic_image assign=stickytopic ]-->
  
 <!--[* pndebug *]-->
 
@@ -58,14 +57,14 @@
         <!--[ if $topic.sticky eq 1 ]-->        
 			<!--[ if $stickyControlStart eq 1]-->
 			    <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
-				<td headers="col_0"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
+				<td headers="col_0"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
 			<!--[ else ]-->	
 				<tr bgcolor="<!--[ $bgcolor2 ]-->">
 				<td colspan="6" style="vertical-align: bottom"><strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong></td>
 				</tr>
 				
 				<tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
-				<td headers="col_0"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
+				<td headers="col_0"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
 				
 				
 				<!--[ assign var="stickyControlStart" value="1" ]-->
