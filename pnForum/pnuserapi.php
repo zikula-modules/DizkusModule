@@ -3067,13 +3067,10 @@ function pnForum_userapi_forumsearch($args)
                    ".$pntable['pnforum_categories']." AS c
               WHERE ";
             
-    $searchfor = pnVarPrepForStore($searchfor);
+    $searchfor = pnVarPrepForStore(trim($searchfor));
     if(!empty($searchfor)) {
         $flag = false;
         $words = explode(' ', $searchfor);
-        //foreach($qwords as $qword) {
-        //    $w[] = '%' . $qword . '%';
-        //}
         $query .= "( ";
         foreach($words as $word) {
             if($flag) {
