@@ -10,6 +10,7 @@
  */
 
 // copied from includes/language/blocks/eng
+define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'missing search parameters');
 define('_PNFORUM_SEARCHINCLUDE_ALLTOPICS', 'all');
 define('_PNFORUM_SEARCHINCLUDE_LIMIT', 'limit search to');
 define('_PNFORUM_SEARCHINCLUDE_NOLIMIT', 'no limits');
