@@ -1,0 +1,33 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<!--[ readlastposts forum_id=$forum_id maxposts=$maxposts ]-->
+<!--[ if $lastpostcount > 0 ]-->
+<table width="100%" border="0" cellpadding="3" cellspacing="1">
+    <tr>
+        <td colspan="4" bgcolor="<!--[ $bgcolor2 ]-->">
+            <strong><!--[ $lastpostcount ]-->&nbsp;<!--[ pnml name='_PNFORUM_CB_RECENTPOSTS' ]--></strong>
+        </td>
+    </tr>
+    <!--[ foreach item=lastpost from=$lastposts ]-->
+    <tr>
+        <td bgcolor="<!--[ $bgcolor1 ]-->">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$lastpost.forum_id ]-->"><!--[ $lastpost.forum_name ]--></a>
+        </td>
+        <td bgcolor="<!--[ $bgcolor1 ]-->">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id start=$lastpost.start ]-->"><!--[ $lastpost.topic_title ]--></a>
+        </td>
+        <td bgcolor="<!--[ $bgcolor1 ]-->">
+            <!--[ $lastpost.posted_time ]--><br />
+        </td>
+        <td bgcolor="<!--[ $bgcolor1 ]-->">
+            <a href="user.php?op=userinfo&amp;uname=<!--[ $lastpost.poster_name]-->"><!--[ $lastpost.poster_name ]--></a>
+        </td>
+    </tr>
+    <!--[ /foreach ]-->
+</table>
+<!--[ /if ]-->
+<br /><br />
