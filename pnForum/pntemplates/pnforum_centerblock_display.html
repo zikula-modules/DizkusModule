@@ -4,7 +4,7 @@
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
 
-<!--[ readlastposts ]-->
+<!--[ readlastposts maxpsots=10 ]-->
 <!--[ if $lastpostcount > 0 ]-->
 <table width="100%" border="0" cellpadding="3" cellspacing="1">
     <tr>
@@ -18,7 +18,7 @@
             <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$lastpost.forum_id ]-->"><!--[ $lastpost.forum_name ]--></a>
         </td>
         <td bgcolor="<!--[ $bgcolor1 ]-->">
-            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id ]-->"><!--[ $lastpost.topic_title ]--></a>
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id start=$lastpost.start ]-->"><!--[ $lastpost.topic_title ]--></a>
         </td>
         <td bgcolor="<!--[ $bgcolor1 ]-->">
             <!--[ $lastpost.posted_time ]--><br />
