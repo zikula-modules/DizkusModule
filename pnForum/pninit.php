@@ -228,8 +228,6 @@ function pnForum_init()
             $pnforumuserscolumn[user_rank] int(10) unsigned DEFAULT '0' NOT NULL,
             $pnforumuserscolumn[user_level] int(10) unsigned DEFAULT '1' NOT NULL,
             $pnforumuserscolumn[user_lastvisit] timestamp(14),
-        /*  $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
-            $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL, */
             PRIMARY KEY (user_id))";
 
     $dbconn->Execute($sql);
