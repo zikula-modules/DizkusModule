@@ -739,6 +739,11 @@ function pnForum_userapi_readtopic($args)
         $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id']);
         
+        // get the users topic_subscription status to show it in the quick repliy checkbox
+        // correctly 
+        $topic['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => pnUserGetVar('uid'), 
+                                                                                      'topic_id' => $topic['topic_id']));
+        
         /**
          * update topic counter
          */
@@ -958,10 +963,16 @@ function pnForum_userapi_preparereply($args)
     }
 
     // anonymous user has uid=0, but needs pn_uid=1
+    // alo check subscription status here
     if(!pnUserLoggedin()) {
         $pn_uid = 1;
+        $reply['is_subscribed'] = false;
     } else {
         $pn_uid = pnUserGetVar('uid');
+        // get the users topic_subscription status to show it in the quick repliy checkbox
+        // correctly 
+        $reply['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => $pn_uid, 
+                                                                                      'topic_id' => $reply['topic_id']));
     }
     $reply['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
     
@@ -1027,8 +1038,8 @@ function pnForum_userapi_preparereply($args)
  *@params $args['message'] string the text
  *@params $args['topic_id'] int the topics id
  *@params $args['forum_id'] int the forums id
- *@params $args['attach_signature'] int 1=yes, 0=no
- *@params $args['subscribe_topic'] int 1=yes, 0=no
+ *@params $args['attach_signature'] int 1=yes, otherwise no
+ *@params $args['subscribe_topic'] int 1=yes, otherwise no
  *@returns int the number of the posting to show in the topic affter adding 
  */
 function pnForum_userapi_storereply($args)
