@@ -9,15 +9,15 @@
  * @link http://www.pnforum.de
  */
 
+include_once "modules/pnForum/common.php";
+
 /**
  * get the title
  */
 function pnForum_title() {
     list ($func, $topic, $forum) = pnVarCleanFromInput('func', 'topic', 'forum');
 
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    list($dbconn, $pntable) = pnfOpenDB();
 
     if ($func == 'viewtopic') {
         $column = &$pntable['pnforum_column'];
@@ -26,9 +26,8 @@ function pnForum_title() {
                 LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
                 LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
                 WHERE t.topic_id = '".(int)pnVarPrepForStore($topic)."'";
-		$result = $dbconn->Execute($sql);
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
         list($title,$forum_name,$cat_title) = $result->fields;
-        $result->Close();
         $title = $cat_title." :: ".$forum_name." :: ".$title;
     } elseif ($func == 'viewforum') { 
         $column = &$pntable['pnforum_column'];
@@ -36,13 +35,13 @@ function pnForum_title() {
                 FROM $pntable[pnforum_forums] f
                 LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
                 WHERE forum_id = '".(int)pnVarPrepForStore($forum)."'";
-		$result = $dbconn->Execute($sql);
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
         list($forum_name,$cat_title) = $result->fields;
-        $result->Close();
         $title = $cat_title." :: ".$forum_name;
 	} else {
         $title = 'pnForum';
     }
+    pnfCloseDB($result);
     return  pnConfigGetVar('sitename').' - '.$title;
 }
 ?>
