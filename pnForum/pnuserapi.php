@@ -685,6 +685,7 @@ function pnForum_userapi_readtopic($args)
     if(!$result->EOF) {
         $topic = $result->GetRowAssoc(false);
         $topic['topic_id'] = $topic_id;
+        $topic['start'] = $start;
 
 //        if ((!pnSecAuthAction(0, 'pnForum::Forum', $topic['forum_name'] ."::", ACCESS_READ)) || 
 //            (!pnSecAuthAction(0, 'pnForum::Category', $topic['cat_title'] ."::", ACCESS_READ))) {
@@ -976,8 +977,8 @@ function pnForum_userapi_preparereply($args)
             //$text = desmile($m['post_text']);
             // just for backwards compatibility
             $text = pn_bbdecode($m['post_text']);
-            $text = eregi_replace("\[quote\]", ">>", $text);
-            $text = eregi_replace("\[/quote\]", "<<", $text);
+//            $text = eregi_replace("\[quote(=.*?)\]", ">>", $text);
+//            $text = eregi_replace("\[/quote\]", "<<", $text);
             $text = preg_replace('/(<br[ \/]*?>)/i', "", $text);
             // just for backwards compatibility
             $text = undo_make_clickable($text);
@@ -1636,6 +1637,7 @@ function pnForum_userapi_is_first_post($args)
  *@params $args['subject'] string the subject
  *@params $args['message'] string the text
  *@params $args['delete'] boolean true if the posting is to be deleted
+ *@params $args['start'] int the starting posts number on the page we are coming from (for later redirect)
  *@returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
  */
 function pnForum_userapi_updatepost($args)
@@ -1764,9 +1766,9 @@ function pnForum_userapi_updatepost($args)
 
     $message = pnVarPrepForStore($message);
 
-    if (empty($delete)) {
-        $delete=false;
-    }
+//    if (empty($delete)) {
+//        $delete=false;
+//    }
 
     if (empty($delete)) {
         //  topic should not be deleted
@@ -1800,7 +1802,8 @@ function pnForum_userapi_updatepost($args)
         }
         
         return pnModURL('pnForum', 'user', 'viewtopic',
-                        array('topic' => $topic_id)); 
+                        array('topic' => $topic_id,
+                              'start' => $start)); 
 
     } else {
         /**
@@ -1900,9 +1903,13 @@ function pnForum_userapi_updatepost($args)
             return pnModURL('pnForum', 'user', 'viewforum',
                             array('forum' => $forum_id)); 
         } else {
+            if($result->PO_RecordCount() < $start ) {
+                $start = $start - pnModGetVar('pnForum', 'posts_per_page');
+            }
             // redirect to the topic
             return pnModURL('pnForum', 'user', 'viewtopic',
-                            array('topic' => $topic_id)); 
+                            array('topic' => $topic_id,
+                                  'start' => $start)); 
         }    
     }
 }

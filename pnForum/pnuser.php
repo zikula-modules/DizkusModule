@@ -305,13 +305,15 @@ function pnForum_user_newtopic()
 function pnForum_user_editpost()
 {
     list($post_id, 
-    	 $topic_id, 
+    	 $topic_id,
+    	 $start, 
     	 $message, 
     	 $subject,
     	 $submit,
     	 $delete,
     	 $preview) =  pnVarCleanFromInput('post_id', 
                                           'topic', 
+                                          'start',
                                           'message', 
                                           'subject',
                                           'submit',
@@ -346,7 +348,8 @@ function pnForum_user_editpost()
                                        'topic_id' => $topic_id,
                                        'delete'   => $delete,
                                        'subject'  => $subject,
-                                       'message'  => $message));
+                                       'message'  => $message,
+                                       'start'    => $start));
     	pnRedirect($redirect);
     	return true;
 
@@ -366,6 +369,7 @@ function pnForum_user_editpost()
         $pnr->caching = false;
         $pnr->assign( 'preview', (isset($preview)) ? true : false); 
         $pnr->assign( 'post', $post);
+        $pnr->assign( 'start', $start);
         $pnr->assign( 'loggedin', pnUserLoggedIn());
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
