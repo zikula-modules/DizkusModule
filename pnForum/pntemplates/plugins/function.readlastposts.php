@@ -84,6 +84,7 @@ function smarty_function_readlastposts($params, &$smarty)
                    t.topic_title, 
                    t.topic_replies,
                    t.topic_time,
+                   t.topic_last_post_id,
                    f.forum_id, 
                    f.forum_name, 
                    c.cat_title,
@@ -114,6 +115,7 @@ function smarty_function_readlastposts($params, &$smarty)
                  $topic_title, 
                  $topic_replies, 
                  $topic_time, 
+                 $topic_last_post_id,
                  $forum_id, 
                  $forum_name, 
                  $cat_title, 
@@ -129,6 +131,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 $lastpost['title_tag'] = $topic_title;
                 $lastpost['topic_replies'] = $topic_replies;
                 $lastpost['topic_time'] = $topic_time;
+                $lastpost['topic_last_post_id'] = $topic_last_post_id;
                 $lastpost['poster_id'] = $poster_id;
                 $lastpost['cat_title'] = $cat_title;
                 $lastpost['cat_id'] = $cat_id;
@@ -165,6 +168,16 @@ function smarty_function_readlastposts($params, &$smarty)
                 $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime)); 
                 $lastpost['posted_time'] =$posted_ml;
                 $lastpost['posted_unixtime'] = $posted_unixtime;
+
+                // we now create the url to the last post in the thread. This might
+                // on site 1, 2 or what ever in the thread, depending on topic_replies
+                // count and the posts_per_page setting
+                $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+                $lastpost['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                      array('topic' => $lastpost['topic_id'],
+                                                            'start' => (ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+                $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];
+
                 
                 array_push($lastposts, $lastpost);
             }
