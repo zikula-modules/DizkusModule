@@ -92,12 +92,15 @@ function smarty_function_readlastposts($params, &$smarty)
                 $lastpost['cat_title'] = $cat_title;
                 $lastpost['cat_id'] = $cat_id;
                 $lastpost['post_id'] = $post_id;
+
+                $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+                $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
                 
-                if ($post_sort_order == "ASC") {
+                if($post_sort_order == "ASC") {
                     $hc_dlink_times = 0;
-                    if (($topic_replies+1-$posts_per_page)>= 0) { 
+                    if (($lastpost['topic_replies']+1-$posts_per_page)>= 0) { 
                         $hc_dlink_times = 0; 
-                        for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page) 
+                        for ($x = 0; $x < $lastpost['topic_replies']+1-$posts_per_page; $x+= $posts_per_page) 
                         $hc_dlink_times++; 
                     } 
                     $start = $hc_dlink_times*$posts_per_page;
