@@ -189,13 +189,13 @@ function pnfsqldebug($sql)
  *@returns array  pntable array
  *        or false on error
  */
-function pnfOpenDB($tablename)
+function pnfOpenDB($tablename="")
 {
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
 
-    if(isset($tablename)) {
+    if(!empty($tablename)) {
         $columnname = $tablename . '_column';
         if( !array_key_exists($tablename, $pntable) || 
             !array_key_exists($columnname, $pntable) ) {return false; }
@@ -239,7 +239,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     }
     $dbconn->debug = $debug;
     $result = $dbconn->Execute($sql);
-    $dbconn->debug = $false;
+    $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
