@@ -9,6 +9,7 @@
  * @link http://www.pnforum.de
  */
 
+define('_PNFORUM_TOPICLOCKED',"Topic locked");
 define('_PNFORUM_NOFAVORITES',"No favorites defined");
 define('_PNFORUM_SHOWFAVORITES',"Show favorites");
 define('_PNFORUM_SHOWALLFORUMS',"Show all forums");
