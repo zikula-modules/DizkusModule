@@ -323,7 +323,7 @@ function pnForum_userapi_readcategorytree($args)
             LEFT JOIN ".$pntable['pnforum_forums']." AS f ON f.cat_id=c.cat_id
             LEFT JOIN ".$pntable['pnforum_posts']." AS p ON p.post_id=f.forum_last_post_id
             LEFT JOIN ".$pntable['users']." AS u ON u.pn_uid=p.poster_id
-            ORDER BY c.cat_order, f.forum_order";
+            ORDER BY c.cat_order, f.forum_order, f.forum_name";
     
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 

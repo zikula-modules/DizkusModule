@@ -566,42 +566,71 @@ function pnForum_admin_reordercategories()
 function pnForum_admin_reorderforums()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
+        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
     if(!pnModAPILoad('pnForum', 'admin')) {
         return "loading adminapi failed";
     } 
-    list($direction, $cat_id) = pnVarCleanFromInput('direction', 'cat_id');
+    list($direction,
+            $cat_id,
+            $forum_id,
+            $direction,
+            $editforumorder,
+            $oldorder,
+            $neworder) = pnVarCleanFromInput('direction',
+                'cat_id',
+                'forum_id',
+                'direction',
+                'editforumorder',
+                'oldorder',
+                'neworder');
+    
+    // we are re-sequencing with the arrow keys
+    if (!empty($direction)) {
+        // figure out the new order
+        if ($direction=='up') {
+            $neworder = $oldorder-1;
+        } else {
+            $neworder = $oldorder+1;
+        }
+    }
 
-    if(!empty($cat_id) && is_numeric($cat_id)) {
-        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
-                               array('cat_id' => $cat_id));
-        $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
-                                 array('cat_id' => $cat_id));
-    }
-    if(!$direction) {
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->assign('forums', $forums);
-        $pnr->assign('total_forums', count($forums));
-        $pnr->assign('category', $category);
-        return $pnr->fetch("pnforum_admin_reorderforums.html");
-    } else {
-        list( $forum_order,
-              $forum_id,
-              $direction ) = pnVarCleanFromInput('forum_order',
-                                                 'forum_id',
-                                                 'direction');
+    // we either got the neworder because they were editing
+    // an entry or because they used an arrow key and we calculated
+    // it above
+    if (isset($neworder) && is_numeric($neworder)) {
+        // call the api function to figure out the new sequence for everything
         pnModAPIFunc('pnForum', 'admin', 'reorderforumssave',
-                     array('cat_id'      => $cat_id,
-                           'forum_order' => $forum_order,
-                           'forum_id'    => $forum_id,
-                           'direction'   => $direction));
+                array('cat_id'      => $cat_id,
+                    'forum_id'    => $forum_id,
+                    'neworder'    => $neworder,
+                    'oldorder'    => $oldorder));
     }
-    pnRedirect(pnModURL('pnForum', 'admin', 'reorderforums',
-                        array('cat_id' => $cat_id)));
-    return true;
+
+    // if we have been passed a cat_id then lets figure out which forums
+    // belong to this category, and get the category details
+    if(!empty($cat_id) && is_numeric($cat_id)) {
+        // get the list of forums and their data
+        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                array('cat_id' => $cat_id));
+        // get the category information
+        $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+                array('cat_id' => $cat_id));
+    }
+    
+    // show the list of forums and their order
+    // NOTE: There is no need to do a pnRedirect because we figure
+    // out the forum info after we set the new order if we were editing.
+    $pnr =& new pnRender("pnForum");
+    $pnr->caching = false;
+    $pnr->assign('forums', $forums);
+    // editforumorder is used to determine if we want to edit the forum_order
+    // and contains the forum_id of the forum we want to edit.
+    $pnr->assign('editforumorder', $editforumorder);
+    $pnr->assign('total_forums', count($forums));
+    $pnr->assign('category', $category);
+    return $pnr->fetch("pnforum_admin_reorderforums.html");
 }
 
 ?>

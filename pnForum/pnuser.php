@@ -510,48 +510,48 @@ function pnForum_user_prefs()
             $return_to = (!empty($return_to))? $return_to : "viewtopic";
             pnModAPIFunc('pnForum', 'user', 'subscribe_topic',
                          array('topic_id' => $topic_id ));
-            pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
+            $params = array('topic'=>$topic_id);
             break;
         case 'unsubscribe_topic':
             $return_to = (!empty($return_to))? $return_to : "viewtopic";
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
                          array('topic_id' => $topic_id ));
-            pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
+            $params = array('topic'=>$topic_id);
             break;
         case 'subscribe_forum':
             $return_to = (!empty($return_to))? $return_to : "viewforum";
             pnModAPIFunc('pnForum', 'user', 'subscribe_forum',
                          array('forum_id' => $forum_id ));
-            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
+            $params = array('forum'=>$forum_id);
             break;
         case 'unsubscribe_forum':
             $return_to = (!empty($return_to))? $return_to : "viewforum";
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum',
                          array('forum_id' => $forum_id ));
-            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
+            $params = array('forum'=>$forum_id);
             break;
         case 'add_favorite_forum':
             $return_to = (!empty($return_to))? $return_to : "viewforum";
             pnModAPIFunc('pnForum', 'user', 'add_favorite_forum',
                          array('forum_id' => $forum_id ));
-            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
+            $params = array('forum'=>$forum_id);
             break;
         case 'remove_favorite_forum':
             $return_to = (!empty($return_to))? $return_to : "viewforum";
             pnModAPIFunc('pnForum', 'user', 'remove_favorite_forum',
                          array('forum_id' => $forum_id ));
-            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
+            $params = array('forum'=>$forum_id);
             break;
         case 'change_post_order':
             $return_to = (!empty($return_to))? $return_to : "viewtopic";
             pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
-            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('topic'=>$topic_id)));
+            $params = array('topic'=>$topic_id);
             break;
         case 'showallforums':
         case 'showfavorites':
             $return_to = (!empty($return_to))? $return_to : "main";
             $favorites = pnModAPIFunc('pnForum', 'user', 'change_favorite_status');
-            pnRedirect(pnModURL('pnForum', 'user', $return_to));
+            $params = array();
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
             $pnr =& new pnRender('pnForum');
@@ -562,6 +562,7 @@ function pnForum_user_prefs()
             $pnr->assign('tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('pnforum_user_prefs.html');
     }
+    pnRedirect(pnModURL('pnForum', 'user', $return_to, $params));
     return true;
 }
 

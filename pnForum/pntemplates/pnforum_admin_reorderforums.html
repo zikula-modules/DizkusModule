@@ -17,14 +17,37 @@
     <strong><!--[ pnml name='_PNFORUM_CATEGORY' ]-->:&nbsp;<!--[ $category.cat_title ]--></strong>
     <br />
     <br />
+    <div style="clear: both; with: 90%; padding: 3px;">
+        <!--[ pnml name="_PNFORUM_FORUM_SEQUENCE_DESCRIPTION" ]--><br /><br />
+        <div style="float: left; width: 12%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name="_PNFORUM_FORUM_REORDER" ]--></div>
+        <div style="float: left; width: 25%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 5px;"><!--[ pnml name="_PNFORUM_FORUM_EDIT_ORDER" ]--></div>
+        <div style="float: left; width: 50%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 10px;"><!--[ pnml name="_PNFORUM_FORUM_EDIT_FORUM" ]--></div>
+    </div>
+    <br />
     <!--[ foreach key=currentrow item=forum from=$forums ]-->
-    <div style="clear: both; with: 60%; padding: 3px;">
-        <div style="float: left; width: 5%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;">
-    		<!--[ if $currentrow neq 0 ]--> 
-                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=up forum_id=$forum.forum_id forum_order=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->"></a>
+    <div style="clear: both; with: 90%; padding: 3px;">
+        <div style="float: left; width: 12%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;">
+    		<!--[ if $forum.forum_order ge 1 ]--> 
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=up forum_id=$forum.forum_id oldorder=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->"></a>
     		<!--[ /if ]-->
-    		<!--[ if $currentrow neq $total_forums-1 ]-->
-                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=down forum_id=$forum.forum_id forum_order=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->"></a>
+    		<!--[ if $currentrow neq $total_forums-1 || $forum.forum_order eq 0 ]-->
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=down forum_id=$forum.forum_id oldorder=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->"></a>
+            <!--[ /if ]-->
+        </div>
+        <div style="float: left; width: 25%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 5px;">
+            <!--[ if $editforumorder eq $forum.forum_id ]-->
+            <form action="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums ]-->" method="post" enctype="application/x-www-form-urlencoded">
+            <div>
+            <input size="4" maxlength="4" type="text" name="neworder" value="<!--[ $forum.forum_order ]-->" />
+            <input type="hidden" name="oldorder" value="<!--[ $forum.forum_order ]-->" />
+            <input type="hidden" name="cat_id" value="<!--[ $forum.cat_id ]-->" />
+            <input type="hidden" name="forum_id" value="<!--[ $forum.forum_id ]-->" />
+            <input type="submit" name="submit" value="<!--[ pnml name="_SUBMIT" ]-->" />
+            </div>
+            </form>
+
+            <!--[ else ]-->
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums editforumorder=$forum.forum_id cat_id=$forum.cat_id ]-->" title="<!--[ pnml name="_PNFORUM_CHANGE_FORUM_ORDER" ]-->"><!--[ $forum.forum_order ]--></a>
             <!--[ /if ]-->
         </div>
         <div style="float: left; width: 50%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 10px;">
