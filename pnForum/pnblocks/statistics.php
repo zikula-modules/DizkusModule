@@ -65,17 +65,6 @@ function pnForum_statisticsblock_info()
                   'show_preview' => true);
 }
 
-function pnForum_statisticsblock_info()
-{
-    return array( 'module' => 'pnForum',
-                  'text_type' => 'pnForum_statisticsblock',
-                  'text_type_long' => 'pnForum Statistics',
-                  'allow_multiple' => true,
-                  'form_content' => false,
-                  'form_refresh' => false,
-                  'show_preview' => true);
-}
-
 /**
  * display the statisticsblock
  */ 
