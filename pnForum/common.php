@@ -143,7 +143,7 @@ function pnfdebug($name="", $data, $die = false)
 {
     if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
         $type = gettype($data);
-        echo "<span style=\"color: red;\">$name ($type):";
+        echo "\n<!-- begin debug of $name -->\n<span style=\"color: red;\">$name ($type):";
         if(is_array($data)||is_object($data)) {
             $size = count($data);
             if($size>0) {
@@ -158,7 +158,7 @@ function pnfdebug($name="", $data, $die = false)
         } else {
             echo "$data:<br />";
         }
-        echo "</span><br />";
+        echo "</span><br />\n<!-- end debug of $name -->";
         if($die==true) {
             die();
         }
