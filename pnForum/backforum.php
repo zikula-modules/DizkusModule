@@ -49,9 +49,7 @@ echo "</channel>";
 /**
  * get database information
  */
-pnModDBInfoLoad('pnForum');
-$dbconn =& pnDBGetConn(true);
-$pntable =& pnDBGetTables();
+list($dbconn, $pntable) = pnfOpenDB();
 
 /**
  * SQL statement to fetch last 10 topics
@@ -72,11 +70,9 @@ $sql = "SELECT t.topic_id,
               f.cat_id = c.cat_id
         ORDER by t.topic_time DESC";
             
-$result = $dbconn->Execute($sql);
-if($dbconn->ErrorNo() != 0) {
-    die("Error accessing to the database " . $dbconn->ErrorNo() . ": " . $dbconn->ErrorMsg() . "<br />");
-}
+$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
 $result_postmax = $result->PO_RecordCount();
+
 if ($result_postmax <= $count) {
     $count = $result_postmax;
 }
@@ -84,8 +80,6 @@ $shown_results=0;
 
 while ((list($topic_id, $topic_title, $forum_id, $forum_name, $poster_id, $cat_id, $cat_title) = $result->FetchRow())
               && ($shown_results < $count) ) {
-//  if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ) && 
-//      pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ))   { 
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         $shown_results++;
         $url = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=> $topic_id)));
@@ -97,9 +91,11 @@ while ((list($topic_id, $topic_title, $forum_id, $forum_name, $poster_id, $cat_i
         $result->MoveNext();
     }
 }
+pnfCloseDB($result);
 
 /**
  * close the channel/rss output
  */
 echo "</rss>\n";
+
 ?>
