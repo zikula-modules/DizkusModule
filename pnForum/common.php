@@ -71,11 +71,10 @@ function showforumerror($error_text, $file="", $line=0)
         include_once("header.php");
         echo $output;
         include_once("footer.php");
+        exit;
     }
-    else
-    {
-        return $output;
-    }
+    return $output;
+    
 }
 
 /**
