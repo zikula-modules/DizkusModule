@@ -40,7 +40,7 @@ function smarty_function_addtopic_button($params, &$smarty)
         $out = "<br />" . pnVarPrepForDisplay(_PNFORUM_NOAUTHPOST);
         // user is not logged in
         if (!pnUserLoggedIn()){
-        	$out .= pnVarPrepForDisplay(_PNFORUM_SEPARATOR) . "<a  href=\"user.php\">".pnVarPrepForDisplay(_PNFORUM_REGISTER)."</a><br /><br />";
+        	$out .= pnVarPrepHTMLDisplay(_PNFORUM_SEPARATOR) . "<a  href=\"user.php\">".pnVarPrepForDisplay(_PNFORUM_REGISTER)."</a><br /><br />";
         }
 	}
     return $out;
