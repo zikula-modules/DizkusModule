@@ -43,7 +43,7 @@
 	<!--[ if $topic.sticky eq 0 ]-->
 		<!--[ if $stickyControlStart eq 1]-->
 			<!--[ if $stickyControlEnd eq 0]-->
-				<tr bgcolor="<!--[ $bgcolor2 ]-->">
+				<tr>
 				<td colspan="6">&nbsp;</td>
 				</tr> 
 				<tr bgcolor="<!--[ $bgcolor2 ]-->">
@@ -53,30 +53,33 @@
 			<!--[ /if ]-->
 		<!--[ /if ]-->
 	<!--[ /if ]-->
-    <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
+
         <!--[ if $topic.sticky eq 1 ]-->        
 			<!--[ if $stickyControlStart eq 1]-->
-				<td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
+			    <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
+				<td headers="col_0"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
 			<!--[ else ]-->	
+				<tr bgcolor="<!--[ $bgcolor2 ]-->">
 				<td colspan="6" style="vertical-align: bottom"><strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong></td>
 				</tr>
 				
 				<tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
-				<td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
+				<td headers="col_0"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
 				
 				
 				<!--[ assign var="stickyControlStart" value="1" ]-->
 			<!--[ /if ]-->
         <!--[ else ]-->
-		  	<td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
+			<tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
+		  	<td headers="col_0"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
         <!--[ /if ]-->        
         <td headers="col_0">
             <a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarprepfordisplay|pnbbsmile|pnvarcensor ]--></a><!--[ $topic.pagination ]-->
          </td>
-        <td headers="col_1" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><!--[ $topic.topic_replies ]--></td>
-        <td headers="col_2" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></td>
-        <td headers="col_3" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><!--[ $topic.topic_views ]--></td>
-        <td headers="col_4" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><!--[ $topic.post_time|date_format:"%d.%m.%Y, %H:%M" ]--><br /><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.last_poster ]-->"><!--[ $topic.last_poster ]--></a>&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]--><!--[ postanchor postings=$topic.topic_replies+1 post_id=$topic.topic_last_post_id ]-->"><img src="modules/pnForum/pnimages/icon_latest_topic.gif" alt="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" width="18" height="9"></a></td>
+        <td headers="col_1" align="center" valign="middle"><!--[ $topic.topic_replies ]--></td>
+        <td headers="col_2" align="center" valign="middle"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></td>
+        <td headers="col_3" align="center" valign="middle"><!--[ $topic.topic_views ]--></td>
+        <td headers="col_4" align="center" valign="middle"><!--[ $topic.post_time|date_format:"%d.%m.%Y, %H:%M" ]--><br /><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.last_poster ]-->"><!--[ $topic.last_poster ]--></a>&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]--><!--[ postanchor postings=$topic.topic_replies+1 post_id=$topic.topic_last_post_id ]-->"><img src="modules/pnForum/pnimages/icon_latest_topic.gif" alt="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" width="18" height="9"></a></td>
     </tr>
 	
     <!--[ foreachelse ]-->
