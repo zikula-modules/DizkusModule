@@ -39,17 +39,17 @@
     <!--[ foreach item=topic from=$forum.topics ]-->
     <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
         <!--[ if $topic.sticky eq 1 ]-->        
-        <td headers="col_0" b-gcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
+        <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $stickytopic.name ]-->" alt="sticky" width="<!--[ $stickytopic.width ]-->" height="<!--[ $stickytopic.height ]-->" ></td>
         <!--[ else ]-->
-        <td headers="col_0" b-gcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
+        <td headers="col_0" bgcolor="<!--[ $bgcolor1 ]-->"><img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->"></td>
         <!--[ /if ]-->        
         <td headers="col_0">
             <span class="pn-normal"><a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title ]--></a></span><!--[ $topic.pagination ]-->
          </td>
-        <td headers="col_1" b-gcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_replies ]--></span></td>
-        <td headers="col_2" b-gcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></span></td>
-        <td headers="col_3" b-gcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_views ]--></span></td>
-        <td headers="col_4" b-gcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-sub"><!--[ $topic.last_post ]--></span></td>
+        <td headers="col_1" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_replies ]--></span></td>
+        <td headers="col_2" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.pn_uname]-->"><!--[ $topic.pn_uname ]--></a></span></td>
+        <td headers="col_3" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-normal"><!--[ $topic.topic_views ]--></span></td>
+        <td headers="col_4" bgcolor="<!--[ $bgcolor1 ]-->" align="center" valign="middle"><span class="pn-sub"><!--[ $topic.last_post ]--></span></td>
     </tr>
     <!--[ foreachelse ]-->
     <tr>
