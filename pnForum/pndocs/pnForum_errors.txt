@@ -1,0 +1,122 @@
+This document is an attempt to describe the process used to create custom error messages for use in pnForum.
+
+Custom error messages can be created for each individual category or forum inside pnForum.  You can also create different error messages for each language used on your site without the need to modify any PostNuke or pnForum language files.
+
+pnForum offers 5 basic permission levels:
+1) Overview
+2) Read
+3) Comment
+4) Moderate
+5) Admin
+
+When a user attempts to perform an action in the forum the system checks to insure that the user has the necessary permissions.  Each of the 5 access levels can have a separate error message that can be displayed to the user when they try and access a function in the forums.  If the user tries to moderate a forum that they don't have the necessary permissions to moderate you can display a message telling them that they aren't allowed to moderate this forum and include specific instructions on what is necessary to achieve moderator status.  You can do the same if they are attempting to post to the forum (comment).  If they don't have the necessary access levels to comment then you can display an error message directing them to where they can sign up for a membership, etc that would allow them to post in that particular forum.
+
+
+The error messages must be placed in the proper folder using the proper naming convention for the name of the error file.  The proper folder depends on two things.  One is the language that the error message is written in.  The second is whether this error is an error for the forum category, for a specific forum, or for all forums in general.  All error messages are placed in the:
+modules/pnForum/pntemplates/errors folder.  Underneath the errors folder you will find the following folder hierarchy.
+
+errors -
+       forum
+            -
+            eng
+            deu
+       category
+            -
+            eng
+            deu
+
+The language specific folders must use the same naming convention for the folder name as the rest of the language specific files in PostNuke.
+
+The error messages are named as follows.
+
+pnforum_error_auth_[access level][_[forum id|category id]].html
+
+For example.  If I want to create an error message to be displayed when someone wants to read the forum with a forum ID of 2 but doesn't have read access then I would create the following file.
+errors/forum/pnforum_error_auth_read_2.html
+or
+errors/forum/eng/pnforum_error_auth_read_2.html
+or
+errors/forum/deu/pnforum_error_auth_read_2.html
+
+The reason for the various options is that the system will first look to see if it can find a language specific file for the forum that you are trying to access (in this case forum #2).   If the person that is attempting to read the forum has their language set to German then the system will first check for an error message in:
+errors/forum/deu
+If no German specific file is found then the system will check:
+errors/forum
+to see if it can find a default language file.  If the users language settings were English then the system would first look in:
+errors/forum/eng
+and then in:
+errors/forum
+to find an error file.
+
+The same holds true if I am specifying an error message for a specific forum category.  If I wanted to create an error message when someone tried to read a forum inside the category with category ID = 3 then I would create the following file:
+errors/category/pnforum_error_auth_read_3.html
+or
+errors/category/eng/pnforum_error_auth_read_3.html
+
+For the following section:
+type = [forum|category] (forum or category)
+specificID = [forum ID|category ID] (the forum ID or the category ID)
+lang = the users selected language (eng, deu, etc)
+generic = the filename without any ID specification (example: pnforum_error_auth_read.html or pnforum_auth_mod.html or pnforum_auth_comment.html, etc)
+
+Available access levels include:
+overview
+read
+comment
+mod
+admin
+
+Examples:
+pnforum_error_auth_overview.html
+pnforum_error_auth_read.html
+pnforum_error_auth_comment.html
+pnforum_error_auth_mod.html
+pnforum_error_auth_admin.html
+
+or if this was forum or category ID #1
+pnforum_error_auth_overview_1.html
+pnforum_error_auth_read_1.html
+pnforum_error_auth_comment_1.html
+pnforum_error_auth_mod_1.html
+pnforum_error_auth_admin_1.html
+
+The system will search for error messages in the following order:
+1) errors/type/lang/specificID
+2) errors/type/specificID
+If the type of error message that we are looking for is for a forum and we haven't found an error in one of the above locations we then look in the category for that forum.
+3) errors/category/lang/categoryID
+4) errors/category/categoryID
+If we haven't found an error message in any of the previous locations then check for a general error message
+5) errors/type/lang/generic
+6) errors/type/generic
+
+So for example, if we have a forum with ID #2 that is part of category #3 and a user is attempting to post a message in the forum but they do not have the necessary privledges to post messages in this particular forum then the system will look for the following files in this order:
+1) errors/forum/lang/pnforum_error_auth_comment_2.html
+2) errors/forum/pnforum_error_auth_comment_2.html
+3) errors/category/lang/pnforum_error_auth_comment_3.html
+4) errors/category/pnforum_error_auth_comment_3.html
+5) errors/forum/lang/pnforum_error_auth_comment.html
+6) errors/forum/pnforum_error_auth_comment.html
+
+Let's walk through the previous 6 files and explain what each would contain if it existed.
+1) this file holds the error message in the users chosen language that is specific to forum #2 when the user is attempting to comment but is not allowed to for this forum.
+
+2) this file holds the default message to be displayed when the user is attempting to comment, but is not allowed, that will be shown if a) the user hasn't chosen a specific language, or b) the particular language that was chosen doesn't have an error message available.  The default language for the website should store it's error messages at this level.  If my site is set to use English as the default language then I should NOT create an errors/[forum|category]/lang/eng/pnforum_error_auth_[access level][_[forum id|category id]].html file.  Instead I should create an errors/[forum|category]/pnforum_error_auth_[access level][_[forum id|category id]].html file.
+  Then if a user has their language set to German but there is no specific German file the English version will be displayed instead.  This also holds true if German is the default language and English has been selected by the user.  If the English version can't be found it will default back to the German version.
+  This process also allows the administrator to build an error file that uses the standard PostNuke language defines and use it as the default file.  The error file is created as a standard pnRender (Smarty) template.  Therefore all the standard pnRender (Smarty) plugins and functions can be used inside the template.  This allows you to use the PostNuke language system to display the error message in the correct language by using <!--[ pnml name="_YOUR_ERROR_MESSAGE_DEFINE" ]--> and then placing a:
+define('_YOUR_ERROR_MESSAGE_DEFINE','My cool error message');
+in the appropriate language file for pnForum.
+
+3) this file holds the error message for the category in the specified language.  The system couldn't find an error message for the particular forum so it is now looking to see if there is a specific error message for this category.
+
+4) this file holds the error message for the category in the default language
+
+5) this file holds the default forum error message in the chosen language.  This is a generic error message that is valid for all forums when the user doesn't have a particular access level.  So for this current example it would be the error message displayed when someone doesn't have access to post in a forum.
+
+6) this file holds the default forum error message in the default language.
+
+Since the error messages are pnRender (Smarty) templates any of the pnRender plugins can be used inside the error message.  This allows you to do things such as personalize the error message to the given user.
+
+Hopefully that explains the error message system well enough for you to create your custom error messages.
+
+Good Luck
