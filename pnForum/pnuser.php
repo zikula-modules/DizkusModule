@@ -798,6 +798,7 @@ function pnForum_user_search()
         $pnr->caching = false;
         $pnr->assign('total_hits', $total_hits);
         $pnr->assign('urltemplate', $urltemplate);
+        $pnr->assign('loggedin', pnUserLoggedIn());
         $pnr->assign('searchresults', $searchresults);
         $pnr->assign('searchfor',    $vars['searchfor']);
         $pnr->assign('searchbool',   $vars['searchbool']);
