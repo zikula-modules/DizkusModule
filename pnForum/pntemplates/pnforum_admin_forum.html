@@ -20,7 +20,7 @@
 	    <td bgcolor="<!--[ $bgcolor1 ]-->">
 	        <select name="cat_id">
 	        <!--[ foreach item=category from=$categories ]-->
-	            <option value="<!--[ $category.cat_id ]-->" <!--[ if $forum.cat_id eq $category.cat_id ]-->seleted="selected"<!--[ /if ]--> ><!--[ $category.cat_title ]--></option>
+	            <option value="<!--[ $category.cat_id ]-->" <!--[ if $forum.cat_id eq $category.cat_id ]-->selected="selected"<!--[ /if ]--> ><!--[ $category.cat_title ]--></option>
 	        <!--[ /foreach ]-->
 	        </select>
         </td>
@@ -29,6 +29,24 @@
         <td><!--[ pnml name='_PNFORUM_FORUM' ]-->:</td>
         <td bgcolor="<!--[ $bgcolor1 ]-->"><input type="text" name="forum_name" size="70" maxlength="150" value="<!--[ $forum.forum_name ]-->"></td>
     </tr>
+
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+        <td><!--[ pnml name='_PNFORUM_FORUMID' ]-->:</td>
+        <td bgcolor="<!--[ $bgcolor1 ]-->"><!--[ $forum.forum_id ]--></td>
+    </tr>
+
+    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+        <td><!--[ pnml name='_PNFORUM_FORUMINFO' ]-->:</td>
+        <td bgcolor="<!--[ $bgcolor1 ]-->">
+            <!--[ boardstats type="forumtopics" id=$forum.forum_id assign=topiccount ]-->
+            <!--[ boardstats type="forumposts" id=$forum.forum_id assign=postcount ]-->
+            <a title="<!--[ pnml name='_PNFORUM_VISITFORUM' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->">
+            <!--[ $topiccount ]-->&nbsp;<!--[ if $topiccount eq 1 ]--><!--[ pnml name='_PNFORUM_TOPIC' ]--><!--[ else ]--><!--[ pnml name='_PNFORUM_TOPICS ]--><!--[ /if ]-->&nbsp;/&nbsp;
+            <!--[ $postcount ]-->&nbsp;<!--[ if $postcount eq 1 ]--><!--[ pnml name='_PNFORUM_POST' ]--><!--[ else ]--><!--[ pnml name='_PNFORUM_POSTS ]--><!--[ /if ]-->
+            </a>
+        </td>
+    </tr>
+
     <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
         <td><!--[ pnml name='_PNFORUM_DESCRIPTION' ]-->:</td>
         <td bgcolor="<!--[ $bgcolor1 ]-->"><textarea name="desc" rows="5" cols="75" wrap="soft"><!--[ $forum.forum_desc ]--></textarea></td>
@@ -37,7 +55,7 @@
         <td valign="top"><!--[ pnml name='_PNFORUM_MODERATOR' ]-->:</td>
         <td bgcolor="<!--[ $bgcolor1 ]-->"><b><!--[ pnml name='_PNFORUM_CURRENT' ]-->:</b><br />
         <!--[ foreach item=mod from=$moderators ]-->
-        <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->">&nbsp;<!--[ pnml name='_PNFORUM_REMOVEMOD' ]-->)<br />
+        <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->">&nbsp;<!--[ pnml name='_PNFORUM_REMOVE' ]-->)<br />
         <!--[ foreachelse ]-->
         <!--[ pnml name='_PNFORUM_NOMODERATORSASSIGNED' ]--><br /><br />
         <!--[ /foreach ]-->

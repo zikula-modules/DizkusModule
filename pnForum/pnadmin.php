@@ -289,7 +289,10 @@ function pnForum_admin_category()
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
-        return "loading adminapi failed";
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+    } 
+    if(!pnModAPILoad('pnForum', 'user')) {
+        return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
 
     list($submit, $cat_id) = pnVarCleanFromInput('submit', 'cat_id');
@@ -298,11 +301,23 @@ function pnForum_admin_category()
         if( $cat_id==-1) {
             $category = array('cat_title' => "",
                               'cat_id' => -1);
+            $category['topic_count'] = 0;
+            $category['post_count'] = 0;
         } else {
             $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
+            $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                       array('cat_id' => $cat_id));
+
+            foreach($forums as $forum) {
+                $category['topic_count'] += pnModAPIFunc('pnForum', 'user', 'boardstats',
+                                                         array('type' => 'forumtopics',
+                                                               'id'   => $forum['forum_id']));
+                $category['post_count'] += pnModAPIFunc('pnForum', 'user', 'boardstats',
+                                                        array('type' => 'forumposts',
+                                                              'id'   => $forum['forum_id']));
+            }
         }
-        
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->assign('category', $category );
@@ -339,7 +354,7 @@ function pnForum_admin_forum()
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
-        return "loading adminapi failed";
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
     } 
 
     list($submit, $forum_id) = pnVarCleanFromInput('submit', 'forum_id');
@@ -416,9 +431,10 @@ pnfdebug("mods", $mods, true);
                              array('forum_id'   => $forum_id,
                                    'ok'         => 1 )); 
                 break;    
+            default:
         }
     }
-    pnredirect(pnModURL('pnForum', 'admin', 'main'));
+    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
     return true;
 }
 

@@ -31,6 +31,11 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_CATEGORYINFO', 'Category info');
+define('_PNFORUM_VISITCATEGORY', 'visit this category');
+define('_PNFORUM_VISITFORUM', 'visit this forum');
+define('_PNFORUM_FORUMINFO', 'Forum Info');
+define('_PNFORUM_FORUMID', 'Forums ID');
 define('_PNFORUM_OCLOCK', 'o\'clock');
 define('_PNFORUM_RETURNTOTOPIC', 'Back to the topic');
 define('_PNFORUM_QUICKREPLY', 'Quick reply');
@@ -42,7 +47,7 @@ define('_PNFORUM_ADDNEWFORUM', '-- add new forum --');
 define('_PNFORUM_HONORARY_RANK','Honorary rank');
 define('_PNFORUM_ADMINHONORARYASSIGN','Assing honorary rank');
 define('_PNFORUM_NORANK', 'no rank');
-define('_PNFORUM_ADMINHONORARYRANKS','Administrat honorary ranks');
+define('_PNFORUM_ADMINHONORARYRANKS','Administrate honorary ranks');
 define('_PNFORUM_ADMINHONORARYRANKS_INFO','Here you can individually assign honorary ranks to specific users.');
 define('_PNFORUM_IMAGE', 'Image');
 define('_PNFORUM_NORANKSINDATABASE', 'no ranks defined');
@@ -55,7 +60,7 @@ define('_PNFORUM_REMOVE', 'remove');
 define('_PNFORUM_ERROROCCURED', 'The following error occured:');
 define('_PNFORUM_ERRORMAILTO', 'Send bug report');
 define('_PNFORUM_MORETHAN',"More than");
-define('_PNFORUM_POSTS',"posts");
+define('_PNFORUM_POST',"post");
 
 /**
  * changed in 1.8.0

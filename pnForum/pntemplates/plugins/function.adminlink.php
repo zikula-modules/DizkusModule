@@ -24,29 +24,25 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-
-// type, id, assign (optional)
-function smarty_function_boardstats($params, &$smarty) 
+// id, type
+function smarty_function_adminlink($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        $smarty->trigger_error("loading userapi failed", e_error);
-        return;
-    } 
-
-    $type = (!empty($type)) ? $type : "all";
-    $id   = (!empty($id)) ? $id : "0";
-    
-    $count = pnModAPIFunc('pnForum', 'user', 'boardstats',
-                          array('id'   => $id,
-                                'type' => $type));
-    if(!empty($assign)) {
-        $smarty->assign($assign, $count);
-        return;
+    if (pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
+        if(empty($id) || empty($type)) {
+            $smarty->trigger_error("adminlink: missing parameter(s)", e_error);
+            return;
+        }
+        
+        if($type=="category") {
+            return "<a href=\"".pnModURL('pnForum', 'admin', 'category', array('cat_id'=>(int)$id))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINCATEDIT)."]</a>";
+        } elseif ($type=="forum") {
+            return "<a href=\"".pnModURL('pnForum', 'admin', 'forum', array('forum_id'=>(int)$id))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINFORUMEDIT)."]</a>";
+        }
     }
-    return $count;
+    return;
 }
 
 ?>

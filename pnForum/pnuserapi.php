@@ -215,6 +215,7 @@ function pnForum_userapi_boardstats($args)
                     FROM ".$pntable['pnforum_topics']." 
                     WHERE forum_id = '".pnVarPrepForStore($id)."'";
             break;
+        default:
         }
     $result = $dbconn->Execute($sql);
     if($dbconn->ErrorNo() != 0) {

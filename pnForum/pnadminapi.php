@@ -184,8 +184,20 @@ function pnForum_adminapi_deletecategory($args)
 	    $pntable =& pnDBGetTables();
     	$cattable = $pntable['pnforum_categories'];
     	$catcolumn = $pntable['pnforum_categories_column'];
+    	$posttable = $pntable['pnforum_posts'];
+    	$postcolumn = $pntable['pnforum_posts_column'];
+    	$posttexttable = $pntable['pnforum_posts_text'];
+    	$posttextcolumn = $pntable['pnforum_posts_text_column'];
+    	$cattable = $pntable['pnforum_categories'];
+    	$catcolumn = $pntable['pnforum_categories_column'];
     	$forumtable = $pntable['pnforum_forums'];
     	$forumcolumn = $pntable['pnforum_forums_column'];
+    	$topictable = $pntable['pnforum_topics'];
+    	$topiccolumn = $pntable['pnforum_topics_column'];
+    	$topicsubtable = $pntable['pnforum_topic_subscription'];
+    	$topicsubcolumn = $pntable['pnforum_topic_subscription_column'];
+    	$subscriptiontable = $pntable['pnforum_subscription'];
+    	$subscriptioncolumn = $pntable['pnforum_subscription_column'];
 /*
 	    // Confirm authorisation code
     	if (!pnSecConfirmAuthKey()) {
@@ -195,37 +207,100 @@ function pnForum_adminapi_deletecategory($args)
     	    exit;
     	}
 */
-		$sql = "DELETE FROM $forumtable 
-				WHERE $forumcolumn[forum_id] = $forum_id";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-			return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
-		$sql = "SELECT post_id 
-				FROM ".$pntable['pnforum_posts']." 
-				WHERE forum_id = $forum_id";
-		$result = $dbconn->Execute($sql);
-		if ($dbconn->ErrorNo() != 0) {
-			return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
-		while (!$result->EOF) {
-			list($post_id) = $result->fields;
-			$sql = "DELETE FROM ".$pntable['pnforum_posts_text']." 
-					WHERE post_id = $post_id";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
-			$sql = "DELETE FROM ".$pntable['pnforum_posts']." 
-					WHERE post_id = $post_id";
-			$result = $dbconn->Execute($sql);
-			if ($dbconn->ErrorNo() != 0) {
-				return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-			}
-		}
+        // read all the forums in this category
+        $forums = pnForum_adminapi_readforums(array('cat_id' => $cat_id));
+        if(is_array($forums) && count($forums)>0) { 
+            foreach($forums as $forum) {
+                // remove all forums in this category
+		        $sql = "DELETE FROM $forumtable 
+		        		WHERE $forumcolumn[forum_id] = ".$forum['forum_id']."";
+		        $result = $dbconn->Execute($sql);
+		        if ($dbconn->ErrorNo() != 0) {
+		        	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        }
+		        $result->Close();
+                // delete forum subscription
+                $sql = "DELETE FROM $subscriptiontable
+                		WHERE $subscriptioncolumn[forum_id] = ".$forum['forum_id']."";
+                $result = $dbconn->Execute($sql);
+                if ($dbconn->ErrorNo() != 0) {
+                	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+                }
+		        $result->Close();
+                // get all topis in this forum by topic id
+		        $sql = "SELECT $topiccolumn[topic_id] 
+		        		FROM $topictable 
+		        		WHERE $topiccolumn[forum_id] = ".$forum['forum_id']."";
+		        $result = $dbconn->Execute($sql);
+		        if ($dbconn->ErrorNo() != 0) {
+		        	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        }
+                if($result->RecordCount()>0) {
+                    for (; !$result->EOF; $result->MoveNext()) {
+		        	    list($topic_id) = $result->fields;
+		        	    // delete topic
+		        	    $sql = "DELETE FROM $topictable
+		        	    		WHERE $topiccolumn[topic_id] = $topic_id";
+		        	    $result2 = $dbconn->Execute($sql);
+		        	    if ($dbconn->ErrorNo() != 0) {
+		        	    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        	    }
+    		            $result2->Close();
+		        	    // delete topic subscription
+		        	    $sql = "DELETE FROM $topicsubtable
+		        	    		WHERE $topicsubcolumn[topic_id] = $topic_id";
+		        	    $result3 = $dbconn->Execute($sql);
+		        	    if ($dbconn->ErrorNo() != 0) {
+		        	    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        	    }
+    		            $result3->Close();
+    		        }
+		        }
+		        $result->Close();
+               
+		        // get all posts in this forum by post_id
+		        $sql = "SELECT $postcolumn[post_id] 
+		        		FROM $posttable
+		        		WHERE $postcolumn[forum_id] = ".$forum['forum_id']."";
+		        $result = $dbconn->Execute($sql);
+		        if ($dbconn->ErrorNo() != 0) {
+		        	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        }
+                if($result->RecordCount()>0) {
+                    for (; !$result->EOF; $result->MoveNext()) {
+		        	    list($post_id) = $result->fields;
+		        	    // delete post
+		        	    $sql = "DELETE FROM $posttexttable
+		        	    		WHERE $posttextcolumn[post_id] = $post_id";
+		        	    $result2 = $dbconn->Execute($sql);
+		        	    if ($dbconn->ErrorNo() != 0) {
+		        	    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        	    }
+    		            $result2->Close();
+		        	    // delete post text
+		        	    $sql = "DELETE FROM $posttable
+		        	    		WHERE $postcolumn[post_id] = $post_id";
+		        	    $result3 = $dbconn->Execute($sql);
+		        	    if ($dbconn->ErrorNo() != 0) {
+		        	    	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+		        	    }
+    		            $result3->Close();
+    		        }
+		        }
+		        $result->Close();
+		    }  //foreach forum
+	    }
+	    // now we can delete the category
+        $sql = "DELETE FROM $cattable 
+        		WHERE $catcolumn[cat_id] = $cat_id";
+        $result = $dbconn->Execute($sql);
+        if ($dbconn->ErrorNo() != 0) {
+        	return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+        }
+        $result->Close();
 	    return true;
 	}
-	return false;
+	return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
 }
 
 /**
@@ -978,7 +1053,7 @@ function pnForum_adminapi_addforum($args)
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
 
-	if($forum_name == '' || !is_array($mods)) {
+	if(empty($forum_name)) {
 		return showforumerror(_PNFORUM_CREATEFORUM_INCOMPLETE, __FILE__, __LINE__);
 	}
 	if (!$desc) {
@@ -1015,23 +1090,27 @@ function pnForum_adminapi_addforum($args)
 	}
 	$forum = $dbconn->PO_Insert_ID($pntable['pnforum_forums'], 'forum_id');
 	$count = 0;
-	while(list($mod_number, $mod) = each($mods)) {
-		$mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']." 
-							(forum_id, 
-							user_id) 
-						VALUES ('".pnVarPrepForStore($forum)."', 
-								'".pnVarPrepForStore($mod)."')";
-		$mod_res = $dbconn->Execute($mod_query);
-		if($dbconn->ErrorNo() != 0) {
-			return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
-		}
-	}
+	if(is_array($mods) && count($mods)>0) {
+	    while(list($mod_number, $mod) = each($mods)) {
+	    	$mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']." 
+	    						(forum_id, 
+	    						user_id) 
+	    					VALUES ('".pnVarPrepForStore($forum)."', 
+	    							'".pnVarPrepForStore($mod)."')";
+	    	$mod_res = $dbconn->Execute($mod_query);
+	    	if($dbconn->ErrorNo() != 0) {
+	    		return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
+	    	}
+	    }
+    }
+    /*
 	if(isset($user_query)) {
 		$u_res = $dbconn->Execute($user_query);
 		if($dbconn->ErrorNo() != 0) {
 			return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
 		}
 	}
+	*/
 	return;
 }
 
