@@ -59,9 +59,20 @@ function pnForum_user_main()
     $viewcat = (!empty($viewcat)) ? $viewcat : -1;
     
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
+    $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
+    // check if we have one category and one forum only
+    if(count($tree)==1) {
+        foreach($tree as $catname=>$forumarray) {
+            if(count($forumarray['forums'])==1) {  
+                pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));  
+                return true;
+            }
+        }
+    }   
+
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-    $pnr->assign( 'tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
+    $pnr->assign( 'tree', $tree);
     $pnr->assign( 'view_category', $viewcat);
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);

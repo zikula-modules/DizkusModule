@@ -284,12 +284,12 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'show_bbcode', "yes");
 	pnModSetVar('pnForum', 'show_smile', "yes");
 	pnModSetVar('pnForum', 'log_ip', "yes");
+	pnModSetVar('pnForum', 'slimforum', "no");
 
     // Initialisation successful
     return true;
 
 }
-
 
 /**
  *	Deletes an install of the pnForum module

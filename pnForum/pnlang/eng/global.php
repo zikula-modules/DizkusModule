@@ -29,6 +29,7 @@ define('_PNFORUM_SEARCHINCLUDE_RESULTS',"Forums");
 define('_PNFORUM_SEARCHINCLUDE_TITLE',"Search forums");
 define('_PNFORUM_SEARCHINCLUDE_VIEWS',"Views");
 
+define('_PNFORUM_PREFS_SLIMFORUM', 'Hide category view with one forum only');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Start of signature format:');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'End of signature format:');
 define('_PNFORUM_PREFS_MINPOSTINGSFORANCHOR', 'Minimum number of before inserting an anchor:<br /><i>An anchor enables the user to go directly to the last posting in a large thread</i>');
@@ -75,6 +76,8 @@ define('_PNFORUM_SYNC_TOPICS', 'Topics synced');
 define('_PNFORUM_SYNC_POSTSCOUNT', 'Posts counter synced');
 define('_PNFORUM_SYNC_USERS', 'PostNuke and pnForum users syned');
 
+define('_PNFORUM_STICKY', 'Sticky');
+define('_PNFORUM_GOTO_LATEST', 'View latest post');
 define('_PNFORUM_PAGE','Page #');
 define('_PNFORUM_ONEREPLY','reply');
 define('_PNFORUM_ACTIVE_FORUMS','top active Forums:');

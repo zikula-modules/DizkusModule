@@ -121,6 +121,13 @@ function pnForum_admin_preferences()
         	$logiponchecked = " ";
         	$logipoffchecked = $checked;
         }
+        if (pnModGetVar('pnForum', 'slimforum') == "yes") {
+        	$slimforumonchecked = $checked;
+        	$slimforumoffchecked = " ";
+        } else {
+        	$slimforumonchecked = " ";
+        	$slimforumoffchecked = $checked;
+        }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
@@ -156,6 +163,8 @@ function pnForum_admin_preferences()
         $pnr->assign('smileoffchecked', $smileoffchecked);
         $pnr->assign('logiponchecked', $logiponchecked);
         $pnr->assign('logipoffchecked', $logipoffchecked);
+        $pnr->assign('slimforumonchecked', $slimforumonchecked);
+        $pnr->assign('slimforumoffchecked', $slimforumoffchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
@@ -188,6 +197,7 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'show_bbcode', pnVarPrepForStore(pnVarCleanFromInput('show_bbcode')));
             pnModSetVar('pnForum', 'show_smile', pnVarPrepForStore(pnVarCleanFromInput('show_smile')));
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
+            pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         } 
         if($actiontype=="RestoreDefaults")  {
             pnModSetVar('pnForum', 'signature_start', '<div style="border: 1px solid black;">');
@@ -219,6 +229,7 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'show_bbcode', "yes");
 		    pnModSetVar('pnForum', 'show_smile', "yes");
 		    pnModSetVar('pnForum', 'log_ip', "yes");
+		    pnModSetVar('pnForum', 'slimforum', "no");
         }
     }
     pnRedirect(pnModURL('pnForum', 'admin', 'main'));
