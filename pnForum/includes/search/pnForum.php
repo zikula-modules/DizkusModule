@@ -225,6 +225,7 @@ function search_pnForum($vars)
     $pnr->caching = false;
     $pnr->assign('total_hits', count($searchresults));   //total_hits);
     $pnr->assign('searchresults', $searchresults);
+    $pnr->assign('searchfor', urlencode($vars['q']));
     return $pnr->fetch('pnforum_searchresults.html');
 }
 ?>

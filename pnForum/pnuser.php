@@ -114,7 +114,10 @@ function pnForum_user_viewtopic()
     $topic_id = (int)pnVarCleanFromInput('topic');
     $start    = (int)pnVarCleanFromInput('start');
     $view     = strtolower(pnVarCleanFromInput('view'));
-
+    $highlight= urldecode(pnVarCleanFromInput('highlight'));
+    if(!empty($highlight)) {
+        pnSessionSetVar('highlight', pnVarPrepForStore($highlight));
+    }
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
@@ -133,6 +136,7 @@ function pnForum_user_viewtopic()
                                 'start'      => $start,
                                 'last_visit' => $last_visit));
 
+    pnSessionDelVar('highlight');
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign( 'topic', $topic);
