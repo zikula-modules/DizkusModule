@@ -3,14 +3,15 @@ PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------------
-1.8.0 (fs)
+2.0.0.0 (fs)
 ---------------------------------------------------------------------------------------------
-- changed phpBB_14 to pnForum
+- changed phpBB_14 to pnForum (update from previous phpBB_14 during during module update)
 - fully API compliant now
 - using pnRender templates
 - fixed some SQL statements 
 - refactored the code
 - simplified the blocks
+- added quick answer
 
 ---------------------------------------------------------------------------------------------
 1.7.6.0
