@@ -33,13 +33,11 @@ function smarty_function_pnforumallowedhtml($params, &$smarty)
 {
     extract($params); 
 	unset($params);
-    if(pnModGetVar('pnForum', 'show_html') === "yes") {
-		$out = "<br />".pnVarPrepForDisplay(_ALLOWEDHTML)."<br />";
-		$AllowableHTML = pnConfigGetVar('AllowableHTML');
-		while (list($key, $access, ) = each($AllowableHTML)) {
-			if ($access > 0) $out .= " &lt;".$key."&gt;";
-		}
-	}
+    $out = "<br />".pnVarPrepForDisplay(_ALLOWEDHTML)."<br />";
+    $AllowableHTML = pnConfigGetVar('AllowableHTML');
+    while (list($key, $access, ) = each($AllowableHTML)) {
+    	if ($access > 0) $out .= " &lt;".$key."&gt;";
+    }
     return $out;
 }
 

@@ -352,9 +352,6 @@ define('_PNFORUM_PREFS_POSTSPERPAGE', 'Posts per Page:<br /><i>(This is the numb
 define('_PNFORUM_PREFS_RANKLOCATION', 'Ranks icons location:');
 define('_PNFORUM_PREFS_RESTOREDEFAULTS', 'Restore defaults');
 define('_PNFORUM_PREFS_SAVE', 'Save');
-define('_PNFORUM_PREFS_SHOWALLOWEDHTML', 'Show "Allowed HTML" tags:');
-define('_PNFORUM_PREFS_SHOWBBCODE', 'Show "BBCode" tags:<br /><i>only when <a href="http://www.pncommunity.de">pn_bbcode</a> hook is installed</i>');
-define('_PNFORUM_PREFS_SHOWSMILIES', 'Show Smilies :<br /><i>only when <a href="http://www.pncommunity.de">pn_bbsmile</a> hook is installed</i>');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'End of signature format:');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Start of signature format:');
 define('_PNFORUM_PREFS_SLIMFORUM', 'Hide category view with one forum only');

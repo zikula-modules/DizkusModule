@@ -93,27 +93,6 @@ function pnForum_admin_preferences()
         	$post_sort_order_ascchecked  = "";
         	$post_sort_order_descchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'show_html') == "yes") {
-        	$htmlonchecked = $checked;
-        	$htmloffchecked = " ";
-        } else {
-        	$htmlonchecked = " ";
-        	$htmloffchecked = $checked;
-        }
-        if (pnModGetVar('pnForum', 'show_bbcode') == "yes") {
-        	$bbcodeonchecked = $checked;
-        	$bbcodeoffchecked = " ";
-        } else {
-        	$bbcodeonchecked = " ";
-        	$bbcodeoffchecked = $checked;
-        }
-        if (pnModGetVar('pnForum', 'show_smile') == "yes") {
-        	$smileonchecked = $checked;
-        	$smileoffchecked = " ";
-        } else {
-        	$smileonchecked = " ";
-        	$smileoffchecked = $checked;
-        }
         if (pnModGetVar('pnForum', 'log_ip') == "yes") {
         	$logiponchecked = $checked;
         	$logipoffchecked = " ";
@@ -148,12 +127,6 @@ function pnForum_admin_preferences()
         $pnr->assign('hot_newposts_image', pnModGetVar('pnForum', 'hot_newposts_image'));
         $pnr->assign('post_sort_order_ascchecked', $post_sort_order_ascchecked);
         $pnr->assign('post_sort_order_descchecked', $post_sort_order_descchecked);
-        $pnr->assign('htmlonchecked', $htmlonchecked);
-        $pnr->assign('htmloffchecked', $htmloffchecked);
-        $pnr->assign('bbcodeonchecked', $bbcodeonchecked);
-        $pnr->assign('bbcodeoffchecked', $bbcodeoffchecked);
-        $pnr->assign('smileonchecked', $smileonchecked);
-        $pnr->assign('smileoffchecked', $smileoffchecked);
         $pnr->assign('logiponchecked', $logiponchecked);
         $pnr->assign('logipoffchecked', $logipoffchecked);
         $pnr->assign('slimforumonchecked', $slimforumonchecked);
@@ -179,9 +152,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'newposts_image', pnVarPrepForStore(pnVarCleanFromInput('newposts_image')));
             pnModSetVar('pnForum', 'hot_newposts_image', pnVarPrepForStore(pnVarCleanFromInput('hot_newposts_image')));
             pnModSetVar('pnForum', 'post_sort_order', pnVarPrepForStore(pnVarCleanFromInput('post_sort_order')));
-            pnModSetVar('pnForum', 'show_html', pnVarPrepForStore(pnVarCleanFromInput('show_html')));
-            pnModSetVar('pnForum', 'show_bbcode', pnVarPrepForStore(pnVarCleanFromInput('show_bbcode')));
-            pnModSetVar('pnForum', 'show_smile', pnVarPrepForStore(pnVarCleanFromInput('show_smile')));
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         } 
@@ -203,9 +173,6 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
 		    pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
 		    pnModSetVar('pnForum', 'post_sort_order', "ASC");
-		    pnModSetVar('pnForum', 'show_html', "yes");
-		    pnModSetVar('pnForum', 'show_bbcode', "yes");
-		    pnModSetVar('pnForum', 'show_smile', "yes");
 		    pnModSetVar('pnForum', 'log_ip', "yes");
 		    pnModSetVar('pnForum', 'slimforum', "no");
         }

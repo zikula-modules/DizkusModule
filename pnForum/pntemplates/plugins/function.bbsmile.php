@@ -34,7 +34,7 @@ function smarty_function_bbsmile($params, &$smarty)
     extract($params); 
 	unset($params);
 
-	if(pnModAvailable('pn_bbsmile') && pnModGetVar('pnForum', 'show_smile') == "yes") {
+	if(pnModAvailable('pn_bbsmile')) {
 		//	display smilies and bbcodes
     	$imagepath = pnModGetVar('pn_bbsmile', 'smiliepath');
         $out = "<br />\n";

@@ -34,7 +34,7 @@ function smarty_function_bbcode($params, &$smarty)
     extract($params); 
 	unset($params);
 
-	if(pnModAvailable('pn_bbcode') && pnModGetVar('pnForum', 'show_bbcode') == "yes") {	
+	if(pnModAvailable('pn_bbcode')) {	
     	// get the correct modfolder
     	$modInfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
     	$modDir = pnVarPrepForOS($modInfo['directory']);
