@@ -28,6 +28,7 @@
  * bbcode plugin
  * shows all available bbcode tags
  *
+ *@params $params $images boolean if true then show images instead of text links
  */
 function smarty_function_plainbbcode($params, &$smarty) 
 {
@@ -35,21 +36,38 @@ function smarty_function_plainbbcode($params, &$smarty)
 	unset($params);
 
 	if(pnModAvailable('pn_bbcode')) {	
+    	// language 
+	    $lang =  pnVarPrepForOS(pnUserGetLang());
+
         $out = "<br />\n";
         $out .= ""._PNFORUM_USEBBCODE."<br />\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL_HINT)."\" type=\"button\" accesskey=\"w\" name=\"url\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL)." \" style=\"text-decoration: underline; width: 50px;\" onClick=\"DoPrompt('url')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL_HINT)."\" type=\"button\" accesskey=\"m\" name=\"mail\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL)." \" style=\"text-decoration: underline; width: 50px;\" onClick=\"DoPrompt('email')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE_HINT)."\" type=\"button\" accesskey=\"p\" name=\"image\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('image')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE_HINT)."\" type=\"button\" accesskey=\"q\" name=\"quote\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('quote')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE_HINT)."\" type=\"button\" accesskey=\"c\" name=\"code\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('code')\">\n";
-        $out .= "<br/>\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN_HINT)."\" type=\"button\" accesskey=\"l\" name=\"listopen\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listopen')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM_HINT)."\" type=\"button\" accesskey=\"o\" name=\"listitem\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listitem')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE_HINT)."\" type=\"button\" accesskey=\"x\" name=\"listclose\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listclose')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD_HINT)."\" type=\"button\" accesskey=\"b\" name=\"bold\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD)." \" style=\"font-weight:bold; width: 40px;\" onClick=\"DoPrompt('bold')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC_HINT)."\" type=\"button\" accesskey=\"i\" name=\"italic\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC)." \" style=\"font-style: italic; width: 40px;\" onClick=\"DoPrompt('italic')\">\n";
-        $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE_HINT)."\" type=\"button\" accesskey=\"u\" name=\"underline\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE)." \" style=\"text-decoration: underline; width: 40px;\" onClick=\"DoPrompt('underline')\">\n";
-
+        if($images==true) {
+            $out .= bb_button("url", _PNFORUM_BBCODE_URL_HINT, "w", "bb_url.gif", $lang);
+            $out .= bb_button("email", _PNFORUM_BBCODE_MAIL_HINT, "m", "bb_email.gif", $lang);
+            $out .= bb_button("image", _PNFORUM_BBCODE_IMAGE_HINT, "p", "bb_image.gif", $lang);
+            $out .= bb_button("quote", _PNFORUM_BBCODE_QUOTE_HINT, "q", "bb_quote.gif", $lang);
+            $out .= bb_button("code", _PNFORUM_BBCODE_CODE_HINT, "c", "bb_code.gif", $lang);
+            $out .= "<br/>\n";
+            $out .= bb_button("listopen", _PNFORUM_BBCODE_LISTOPEN_HINT, "l", "bb_openlist.gif", $lang);
+            $out .= bb_button("listitem", _PNFORUM_BBCODE_LISTITEM_HINT, "o", "bb_listitem.gif", $lang);
+            $out .= bb_button("listclose", _PNFORUM_BBCODE_LISTCLOSE_HINT, "x", "bb_closelist.gif", $lang);
+            $out .= bb_button("bold", _PNFORUM_BBCODE_BOLD_HINT, "b", "bb_bold.gif", $lang);
+            $out .= bb_button("italic", _PNFORUM_BBCODE_ITALIC_HINT, "i", "bb_italic.gif", $lang);
+            $out .= bb_button("underline", _PNFORUM_BBCODE_UNDERLINE_HINT, "u", "bb_underline.gif", $lang);
+        } else {
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL_HINT)."\" type=\"button\" accesskey=\"w\" name=\"url\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_URL)." \" style=\"text-decoration: underline; width: 50px;\" onClick=\"DoPrompt('url')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL_HINT)."\" type=\"button\" accesskey=\"m\" name=\"mail\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_MAIL)." \" style=\"text-decoration: underline; width: 50px;\" onClick=\"DoPrompt('email')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE_HINT)."\" type=\"button\" accesskey=\"p\" name=\"image\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_IMAGE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('image')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE_HINT)."\" type=\"button\" accesskey=\"q\" name=\"quote\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_QUOTE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('quote')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE_HINT)."\" type=\"button\" accesskey=\"c\" name=\"code\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_CODE)." \" style=\"width: 50px;\" onClick=\"DoPrompt('code')\">\n";
+            $out .= "<br/>\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN_HINT)."\" type=\"button\" accesskey=\"l\" name=\"listopen\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTOPEN)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listopen')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM_HINT)."\" type=\"button\" accesskey=\"o\" name=\"listitem\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTITEM)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listitem')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE_HINT)."\" type=\"button\" accesskey=\"x\" name=\"listclose\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_LISTCLOSE)." \" style=\"width: 40px;\" onClick=\"DoPrompt('listclose')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD_HINT)."\" type=\"button\" accesskey=\"b\" name=\"bold\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_BOLD)." \" style=\"font-weight:bold; width: 40px;\" onClick=\"DoPrompt('bold')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC_HINT)."\" type=\"button\" accesskey=\"i\" name=\"italic\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_ITALIC)." \" style=\"font-style: italic; width: 40px;\" onClick=\"DoPrompt('italic')\">\n";
+            $out .= "<input title=\"".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE_HINT)."\" type=\"button\" accesskey=\"u\" name=\"underline\" value=\" ".pnVarPrepForDisplay(_PNFORUM_BBCODE_UNDERLINE)." \" style=\"text-decoration: underline; width: 40px;\" onClick=\"DoPrompt('underline')\">\n";
+        }
         $out .= "<br />";
         if(pnModGetVar('pn_bbcode', 'color_enabled')=="yes") {
             $out .= pnVarPrepForDisplay(_PNFORUM_BBCODE_FONTCOLOR).":\n";
@@ -93,6 +111,22 @@ function smarty_function_plainbbcode($params, &$smarty)
 
 	}
     return $out;
+}
+
+function bb_button($name, $title, $key, $image, $lang)
+{
+    if(file_exists("modules/pnForum/pnimages/$lang/$image")) {
+        $imgfile = "modules/pnForum/pnimages/$lang/$image";   
+    } else if(file_exists("modules/pnForum/pnimages/$image")) {
+        $imgfile = "modules/pnForum/pnimages/$image";
+    }
+    $attr = getimagesize($imgfile);
+    
+    return "<button name=\"".pnVarPrepForDisplay($name)."\" type=\"button\" value=\"".pnVarPrepForDisplay($name)."\"
+            style=\"border:none; background: transparent;\"
+            accesskey=\"$key\" onClick=\"DoPrompt('".pnVarPrepForDisplay($name)."')\">
+            <img src=\"$imgfile\" ".$attr[3]." alt=\"".pnVarPrepForDisplay($title)."\">
+            </button>";
 }
 
 ?>
