@@ -43,7 +43,7 @@ function smarty_function_readlastposts($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    $loggedIn = false;
+    $loggedIn = 1;
     $uid = 1;
     if (pnUserLoggedIn()) {
         $loggedIn = true;
