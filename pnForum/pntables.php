@@ -52,32 +52,8 @@ function pnForum_pntables()
     // Initialise table array
     $pntable = array();
 
-    // Get the name for the template item table.  This is not necessary
-    // but helps in the following statements and keeps them readable
-    $pnforum_banlist = pnConfigGetVar('prefix') . '_pnforum_banlist';
-
-    // Set the table name
-    $pntable['pnforum_banlist'] = $pnforum_banlist;
-
     // Set the column names.  Note that the array has been formatted
     // on-screen to be very easy to read by a user.
-
-    $pntable['pnforum_banlist_column'] = array('ban_id'    => $pnforum_banlist . '.ban_id',
-                                        'ban_userid'   => $pnforum_banlist . '.ban_userid',
-                                        'ban_ip'   => $pnforum_banlist . '.ban_ip',
-                                        'ban_start'   => $pnforum_banlist . '.ban_start',
-                                        'ban_end'   => $pnforum_banlist . '.ban_end',
-                                        'ban_time_type'   => $pnforum_banlist . '.ban_time_type');
-
-    $pnforum_access = pnConfigGetVar('prefix') . '_pnforum_access';
-    $pntable['pnforum_access'] = $pnforum_access;
-    $pntable['pnforum_access_column'] = array('access_id'    => $pnforum_access . '.access_id',
-                                        'access_title'   => $pnforum_access . '.access_title');
-
-    $pnforum_events = pnConfigGetVar('prefix') . '_pnforum_events';
-    $pntable['pnforum_events'] = $pnforum_events;
-    $pntable['pnforum_events_column'] = array('event_id'    => $pnforum_events . '.event_id',
-                                        'event_title'   => $pnforum_events . '.event_title');
 
     $pnforum_categories = pnConfigGetVar('prefix') . '_pnforum_categories';
     $pntable['pnforum_categories'] = $pnforum_categories;
@@ -85,12 +61,6 @@ function pnForum_pntables()
                                         'cat_title'   => $pnforum_categories . '.cat_title',
                                         'cat_order'   => $pnforum_categories . '.cat_order');
                                         
-    $pnforum_forum_access = pnConfigGetVar('prefix') . '_pnforum_forum_access';
-    $pntable['pnforum_forum_access'] = $pnforum_forum_access;
-    $pntable['pnforum_forum_access_column'] = array('forum_id'    => $pnforum_forum_access . '.forum_id',
-                                        'user_id'   => $pnforum_forum_access . '.user_id',
-                                        'can_post'   => $pnforum_forum_access . '.can_post');
-                                                                  
     $pnforum_forum_mods = pnConfigGetVar('prefix') . '_pnforum_forum_mods';
     $pntable['pnforum_forum_mods'] = $pnforum_forum_mods;
     $pntable['pnforum_forum_mods_column'] = array('forum_id'    => $pnforum_forum_mods . '.forum_id',
@@ -133,13 +103,6 @@ function pnForum_pntables()
                                         'rank_image'   => $pnforum_ranks . '.rank_image',
                                         'rank_style'   => $pnforum_ranks . '.rank_style');
 
-    $pnforum_smiles = pnConfigGetVar('prefix') . '_pnforum_smiles';
-    $pntable['pnforum_smiles'] = $pnforum_smiles;
-    $pntable['pnforum_smiles_column'] = array('id'    => $pnforum_smiles . '.id',
-                                        'code'   => $pnforum_smiles . '.code',
-                                        'smile_url'   => $pnforum_smiles . '.smile_url',
-                                        'emotion'   => $pnforum_smiles . '.emotion');
-
     $pnforum_subscription = pnConfigGetVar('prefix') . '_pnforum_subscription';
     $pntable['pnforum_subscription'] = $pnforum_subscription;
     $pntable['pnforum_subscription_column'] = array('msg_id'    => $pnforum_subscription . '.msg_id',
@@ -169,27 +132,22 @@ function pnForum_pntables()
                                         'user_posts'   => $pnforum_users . '.user_posts',
                                         'user_rank'   => $pnforum_users . '.user_rank',
                                         'user_level'   => $pnforum_users . '.user_level',
-                                        'user_lastvisit'   => $pnforum_users . '.user_lastvisit');
+                                        'user_lastvisit'   => $pnforum_users . '.user_lastvisit',
+                                        'user_favorites'   => $pnforum_users . '.user_favorites');
 
-            
-    $pnforum_words = pnConfigGetVar('prefix') . '_pnforum_words';
-    $pntable['pnforum_words'] = $pnforum_words;
-    $pntable['pnforum_words_column'] = array('word_id'		=> $pnforum_words . '.word_id',
-	 										'word'				=> $pnforum_words . '.word',
-	 										'replacement'		=> $pnforum_words . '.replacement');
-
-    // these tables defined for removal check
-
-    $pnforum_disallow = pnConfigGetVar('prefix') . '_pnforum_disallow';
-    $pntable['pnforum_disallow'] = $pnforum_disallow;
-    
     // new in 1.7.5
     $pnforum_topic_subscription = pnConfigGetVar('prefix') . '_pnforum_topic_subscription';
     $pntable['pnforum_topic_subscription'] = $pnforum_topic_subscription;
     $pntable['pnforum_topic_subscription_column'] = array('topic_id'		=> $pnforum_topic_subscription . '.topic_id',
 	 										'forum_id'				=> $pnforum_topic_subscription . '.forum_id',
 	 										'user_id'		=> $pnforum_topic_subscription . '.user_id');
-    
+
+    // new in 2.0.1    
+    $pnforum_forum_favorites = pnConfigGetVar('prefix') . '_pnforum_forum_favorites';
+    $pntable['pnforum_forum_favorites'] = $pnforum_forum_favorites;
+    $pntable['pnforum_forum_favorites_column'] = array('forum_id'    => $pnforum_forum_favorites . '.forum_id',
+            'user_id'   => $pnforum_forum_favorites . '.user_id');
+
 
     // Return the table information
     return $pntable;

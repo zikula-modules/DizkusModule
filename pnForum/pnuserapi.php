@@ -295,6 +295,13 @@ function pnForum_userapi_get_last_post_in_forum($args)
  */
 function pnForum_userapi_readcategorytree($args)
 {
+    static $tree;
+
+    // if we have already called this once during the script
+    if (isset($tree)) {
+        return $tree;
+    }
+
     extract($args);
     unset($args);
     
@@ -1228,6 +1235,34 @@ function pnForum_userapi_get_forum_subscription_status($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_subscription']." 
+            WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+    
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $rc = $result->RecordCount();
+    pnfCloseDB($result);
+
+    if($rc>0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * get_forum_favorites_status
+ *
+ *@params $args['userid'] int the users pn_uid
+ *@params $args['forum_id'] int the forums id
+ *@returns bool true if the user is subscribed or false if not
+ */
+function pnForum_userapi_get_forum_favorites_status($args)
+{
+    extract($args);
+    unset($args);
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $sql = "SELECT user_id from ".$pntable['pnforum_forum_favorites']." 
             WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
     
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2520,7 +2555,7 @@ function pnForum_userapi_subscribe_forum($args)
 }
 
 /**
- * subscribe_forum
+ * unsubscribe_forum
  *
  *@params $args['forum_id'] int the forums id
  *@returns void
@@ -2537,6 +2572,67 @@ function pnForum_userapi_unsubscribe_forum($args)
     if (pnForum_userapi_get_forum_subscription_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == true) {
         // user is subscribed, delete subscription
         $sql = "DELETE FROM ".$pntable['pnforum_subscription']." 
+                WHERE user_id='".(int)pnVarPrepForStore($userid)."' 
+                AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
+                
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        pnfCloseDB($result);
+    } else {
+        return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
+    }
+    return;
+}
+/**
+ * add_favorite_forum
+ *
+ *@params $args['forum_id'] int the forums id
+ *@returns void
+ */
+function pnForum_userapi_add_favorite_forum($args)
+{
+    extract($args);
+    unset($args);
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $userid = pnUserGetVar('uid');
+
+    $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                          array('forum_id' => $forum_id));
+
+    if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+        return showforumerror(_PNFORUM_NOAUTH_TOREAD, __FILE__, __LINE__);
+    }
+    
+    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
+        // add user only if not already subscribed to the forum
+        $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id) 
+                VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."')";
+                
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        pnfCloseDB($result);
+    }
+    return;
+}
+
+/**
+ * remove_favorite_forum
+ *
+ *@params $args['forum_id'] int the forums id
+ *@returns void
+ */
+function pnForum_userapi_remove_favorite_forum($args)
+{
+    extract($args);
+    unset($args);
+
+    list($dbconn, $pntable) = pnfOpenDB();
+  
+    $userid = pnUserGetVar('uid');
+    
+    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == true) {
+        // user is subscribed, delete subscription
+        $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']." 
                 WHERE user_id='".(int)pnVarPrepForStore($userid)."' 
                 AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
                 
@@ -3095,5 +3191,161 @@ function pnForum_userapi_forumsearch($args)
     pnfCloseDB($result);
     return array($searchresults, $total_hits);
 }
+
+/**
+ * getfavorites
+ * return the list of favorite forums for this user
+ *
+ *@params $args['user_id'] -Optional- the user id of the person who we want the favorites for
+ *@returns array of categories with an array of forums in the catgories
+ *
+ */
+function pnForum_userapi_getfavorites($args)
+{
+    static $tree;
+
+    extract($args);
+    unset($args);
+    
+    // if we have already gone through this once then don't do it again
+    // if we have a favorites block displayed and are looking at the
+    // forums this will get called twice.
+    if (isset($tree)) {
+        return $tree;
+    }
+    
+    // lets get all the forums just like we would a normal display
+    // we'll figure out which ones aren't needed further down.
+    list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
+    $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
+    
+    // if they are anonymous they can't have favorites
+    if (!pnUserLoggedIn()) {
+        return $tree;
+    }
+
+    if (!isset($user_id)) {
+        $user_id = (int)pnUserGetVar('uid');
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+    
+    $sql = "SELECT f.forum_id
+            FROM ".$pntable['pnforum_forum_favorites']." AS f
+            WHERE f.user_id='" . (int)pnVarPrepForStore($user_id) . "'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    
+    // make sure we start with an empty array
+    $favoritesArray = array();
+    while(!$result->EOF) {
+        list($forum_id) = $result->fields;
+        // add this favorite to the favorites array
+        array_push($favoritesArray, (int)$forum_id);
+        $result->MoveNext();
+    }
+    pnfCloseDB($result);
+    
+    // categoryCount is needed since the categories aren't stored as numerical
+    // indexes.  They are stored as associative arrays.
+    $categoryCount=0;
+    // loop through all the forums and delete all forums that aren't part of
+    // the favorites.
+    $deleteMe = array();
+    foreach ($tree as $categoryIndex=>$category) {
+        // $count is needed because the index changes as we splice the array
+        // but the foreach is working on a copy of the array so the $forumIndex
+        // value will point to non-existent elements in the modified array.
+        $count=0;
+        foreach ($category['forums'] as $forumIndex=>$forum) {
+            // if this isn't one of our favorites then we need to remove it
+            if (!in_array((int)$forum['forum_id'],$favoritesArray,true)){
+                // remove the forum that isn't one of the favorites
+                array_splice($tree[$categoryIndex]['forums'], ($forumIndex - $count) , 1);
+                // increment $count because we will need to subtract this number
+                // from the index the next time around since this many entries\
+                // has been removed from the original array.
+                $count++;
+            }
+        }
+        // lets see if the category is empty.  If it is we don't want to
+        // display it in the favorites
+        if (count($tree[$categoryIndex]['forums'])===0) {
+            $deleteMe[] = $categoryCount;
+        }
+        // increase the index number to keep track of where we are in the array
+        $categoryCount++;
+    }
+
+    // reverse the order so we don't need to do all the crazy subtractions
+    // that we had to do above
+    $deleteMe = array_reverse($deleteMe);
+    foreach ($deleteMe as $category) {
+        // remove the empyt category from the array
+        array_splice($tree, $category , 1);
+    }
+    
+    // return the modified array
+    return $tree;
+}
+
+/**
+ * get_favorite_status
+ *
+ * read the flag fromthe users table that indicates the users last choice: show all forum (0) or favorites only (1)
+ *@params $args['user_id'] int the users id
+ *@returns 0 or 1
+ *
+ */
+function pnForum_userapi_get_favorite_status($args)
+{
+    extract($args);
+    unset($args);
+    
+    if (!isset($user_id)) {
+        $user_id = (int)pnUserGetVar('uid');
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+    $userstable = $pntable['pnforum_users'];
+    $userscol    = $pntable['pnforum_users_column'];
+    $sql = "SELECT $userscol[user_favorites]
+            FROM $userstable 
+            WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    list($favorite) = $result->fields;
+    pnfCloseDB($result);
+    return (bool)$favorite;
+} 
+
+/**
+ * change_favorite_status
+ *
+ * changes the flag in the users table that indicates the users last choice: show all forum (0) or favorites only (1)
+ *@params $args['user_id'] int the users id
+ *@returns 0 or 1
+ *
+ */
+function pnForum_userapi_change_favorite_status($args)
+{
+    extract($args);
+    unset($args);
+    
+    if (!isset($user_id)) {
+        $user_id = (int)pnUserGetVar('uid');
+    }
+
+    $recentstatus = pnForum_userapi_get_favorite_status(array('user_id' => $user_id));
+    $newstatus = ($recentstatus==true) ? 0 : 1;
+
+    list($dbconn, $pntable) = pnfOpenDB();
+    $userstable = $pntable['pnforum_users'];
+    $userscol    = $pntable['pnforum_users_column'];
+    $sql = "UPDATE $userstable
+            SET $userscol[user_favorites] = $newstatus
+            WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+    return (bool)$newstatus;
+} 
 
 ?>

@@ -14,7 +14,7 @@
  */
 $modversion['name'] = 'pnForum';
 $modversion['id'] = '62';
-$modversion['version'] = '2.0.0';
+$modversion['version'] = '2.0.1';
 $modversion['description'] = 'phpBB-style Bulletin Board';
 $modversion['credits'] = 'pndocs/credits.txt';
 $modversion['help'] = 'pndocs/install.txt';

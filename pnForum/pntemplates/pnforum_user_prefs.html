@@ -20,10 +20,13 @@
                     <td height="28">
                         <span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong></span>
                     </td>
+                    <td height="28">
+                        <span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_FAVORITE_STATUS' ]--></strong></span>
+                    </td>
                 </tr>
                 <!--[ foreach item=category from=$tree ]-->
                 <tr align="left" valign="top">
-                    <td colspan="2" height="28">
+                    <td colspan="3" height="28">
                         <strong><!--[ $category.cat_title ]--></strong>
                     </td>
                 </tr>
@@ -36,6 +39,9 @@
                     </td>
                     <td width="5%" align="center" valign="middle">
                         <!--[ subscribeforum_button cat_title=$category.cat_title forum_name=$forum.forum_name forum_id=$forum.forum_id return_to=prefs]-->
+                    </td>
+                    <td width="5%" align="center" valign="middle">
+                        <!--[ favoriteforum_button forum_id=$forum.forum_id return_to=prefs]-->
                     </td>
                 </tr>
                 

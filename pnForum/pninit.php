@@ -224,6 +224,7 @@ function pnForum_init()
             $pnforumuserscolumn[user_rank] int(10) unsigned DEFAULT '0' NOT NULL,
             $pnforumuserscolumn[user_level] int(10) unsigned DEFAULT '1' NOT NULL,
             $pnforumuserscolumn[user_lastvisit] timestamp(14),
+            $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
             PRIMARY KEY (user_id))";
 
     $dbconn->Execute($sql);
@@ -247,6 +248,22 @@ function pnForum_init()
         pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
         return false;
     }
+
+    // creating forum_favorites table
+    $pnforumforumfavoritesstable = $pntable['pnforum_forum_favorites'];
+    $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
+
+    $sql = "CREATE TABLE $pnforumforumfavoritestable (
+                $pnforumforumfavoritescolumn[forum_id] int(10) NOT NULL default '0',
+                $pnforumforumfavoritescolumn[user_id] int(10) NOT NULL default '0',
+                PRIMARY KEY (forum_id, user_id))";
+
+    $dbconn->Execute($sql);
+    if ($dbconn->ErrorNo() != 0) {
+        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
+        return false;
+    }
+
 
     if(crossupgrade()===false) {
         pnForum_delete();
@@ -397,18 +414,17 @@ function pnForum_delete()
  *	of pnForum.  It is accessed via the PostNuke
  *	Admin interface and should not be called directly.
  */
-
 function pnForum_upgrade($oldversion)
 {
+    $ok = true;
     
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
-
 	switch($oldversion) {
+        case '2.0.0':
+             $ok = $ok && pnForum_upgrade_to_2_0_1();
         default: break;			
     }
     
-    return true;
+    return $ok;
 }
 
 /**
@@ -459,4 +475,38 @@ function crossupgrade()
     return true;
 }
 
+function pnForum_upgrade_to_2_0_1()
+{
+	$dbconn =& pnDBGetConn(true);
+	$pntable =& pnDBGetTables();
+	
+    // creating forum_favorites table
+    $pnforumforumfavoritestable = $pntable['pnforum_forum_favorites'];
+    $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
+
+    $sql = "CREATE TABLE $pnforumforumfavoritestable (
+                $pnforumforumfavoritescolumn[forum_id] int(10) NOT NULL default '0',
+                $pnforumforumfavoritescolumn[user_id] int(10) NOT NULL default '0',
+                PRIMARY KEY (forum_id, user_id))";
+
+    $dbconn->Execute($sql);
+    if ($dbconn->ErrorNo() != 0) {
+        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
+        return false;
+    }
+
+    $pnforumuserstable = $pntable['pnforum_users'];
+    $pnforumuserscolumn = &$pntable['pnforum_users_column'];
+
+    $sql = "ALTER TABLE $pnforumuserstable
+            ADD $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL";
+
+    $dbconn->Execute($sql);
+    if ($dbconn->ErrorNo() != 0) {
+        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
+        return false;
+    }
+
+    return true;
+}
 ?>

@@ -11,10 +11,16 @@
 <table class="pnForum-border" border="0"  cellpadding="5" cellspacing="1" width="100%" summary="<!--[ pnml name='_PNFORUM_FORUMS' ]-->">
     <thead>
         <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-            <th id="col_0" abbr="<!--[ pnml name='_PNFORUM_FORUM' ]-->" colspan=2 align="left"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong></span></th>
-            <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_TOPICS' ]-->" align="center"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_TOPICS' ]--></strong></span></th>
-            <th id="col_2" abbr="<!--[ pnml name='_PNFORUM_POSTS' ]-->" align="center"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_POSTS' ]--></strong></span></th>
-            <th id="col_3" abbr="<!--[ pnml name='_PNFORUM_LASTPOST' ]-->" align="center"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_LASTPOST' ]--></strong></span></th>
+            <th id="col_0" abbr="<!--[ if $favorites ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan=2 align="left" valign="middle">
+                <!--[ if $favorites ]-->
+                    <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnimg src="showallforums.gif" alt='_PNFORUM_SHOWALLFORUMS' altml=true ]--></a><!--[ /if ]-->
+                <!--[ else ]-->
+                    <strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong><!--[ if $loggedin eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=showfavorites ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]-->"><!--[ pnimg src="showfavorites.gif" alt='_PNFORUM_SHOWFAVORITES' altml=true ]--></a><!--[ /if ]-->
+                <!--[ /if ]-->
+            </th>
+            <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_TOPICS' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_TOPICS' ]--></strong></th>
+            <th id="col_2" abbr="<!--[ pnml name='_PNFORUM_POSTS' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_POSTS' ]--></strong></th>
+            <th id="col_3" abbr="<!--[ pnml name='_PNFORUM_LASTPOST' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_LASTPOST' ]--></strong></th>
         </tr>
     </thead>
     <tbody>
@@ -51,7 +57,11 @@
         <!--[ foreachelse ]-->
         <tr>
             <td colspan="5" bgcolor="<!--[ $bgcolor1 ]-->">
+                <!--[ if $favorites ]-->
+                <!--[ pnml name='_PNFORUM_NOFAVORITES' ]-->
+                <!--[ else ]-->
                 <!--[ pnml name='_PNFORUM_NO_FORUMS_DB' ]-->
+                <!--[ /if ]-->
             </td>
         </tr>
         <!--[ /foreach ]-->

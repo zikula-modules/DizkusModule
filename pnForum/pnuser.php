@@ -57,26 +57,40 @@ function pnForum_user_main()
 
     $viewcat = (int)pnVarCleanFromInput('viewcat');
     $viewcat = (!empty($viewcat)) ? $viewcat : -1;
-    
-    list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
-    $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
-    // check if we have one category and one forum only
-    if(count($tree)==1) {
-        foreach($tree as $catname=>$forumarray) {
-            if(count($forumarray['forums'])==1) {  
-                pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));  
-                return true;
-            }
-        }
-    }   
 
+    $loggedIn = pnUserLoggedIn();
+
+    $favorites = (bool)pnVarCleanFromInput('favorites');
+    if($loggedIn && empty($favorites)) {
+        $favorites = pnModAPIFunc('pnForum', 'user', 'get_favorite_status');
+    }
+
+    if ($loggedIn && $favorites) {
+        $tree = pnModAPIFunc('pnForum', 'user', 'getFavorites', array('user_id' => (int)pnUserGetVar('uid') ));
+    } else {
+        list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
+        $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
+
+        // this needs to be in here because we want to display the favorites
+        // not go to it if there is only one
+        // check if we have one category and one forum only
+        if(count($tree)==1) {
+            foreach($tree as $catname=>$forumarray) {
+                if(count($forumarray['forums'])==1) {  
+                    pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));  
+                    return true;
+                }
+            }
+        }   
+    }
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+    $pnr->assign( 'favorites', $favorites);
     $pnr->assign( 'tree', $tree);
     $pnr->assign( 'view_category', $viewcat);
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
-    $pnr->assign( 'loggedin', pnUserLoggedIn());
+    $pnr->assign( 'loggedin', $loggedIn);
     $pnr->assign( 'numposts', pnModAPIFunc('pnForum', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
@@ -503,6 +517,16 @@ function pnForum_user_prefs()
                          array('forum_id' => $forum_id ));
             pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
             break;
+        case 'add_favorite_forum':
+            pnModAPIFunc('pnForum', 'user', 'add_favorite_forum',
+                         array('forum_id' => $forum_id ));
+            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
+            break;
+        case 'remove_favorite_forum':
+            pnModAPIFunc('pnForum', 'user', 'remove_favorite_forum',
+                         array('forum_id' => $forum_id ));
+            pnRedirect(pnModURL('pnForum', 'user', $return_to, array('forum'=>$forum_id)));
+            break;
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
             $pnr =& new pnRender('pnForum');
@@ -775,6 +799,35 @@ function pnForum_user_search()
         $pnr->assign('searchstart',  $vars['searchstart']);
         return $pnr->fetch('pnforum_user_searchresults.html');
     }
+}
+
+/**
+ * showfavorites
+ * switches the main view to favorites only
+ *
+ */
+function pnForum_user_showfavorites()
+{
+    if(pnUserLoggedIn()) {
+        if(!pnModAPILoad('pnForum', 'user')) {
+            return showforumerror("loading userapi failed", __FILE__, __LINE__);
+        } 
+        $favorites = pnModAPIFunc('pnForum', 'user', 'change_favorite_status');
+    }
+    pnRedirect(pnModURL('pnForum', 'user', 'main'));
+    return true;       
+}
+
+/**
+ * showallforums
+ * switches the main view to show all forums
+ * we simply call showfavorites here, because its the same action :-)
+ * this function is only for cosmetic issues
+ *
+ */
+function pnForum_user_showallforums()
+{
+    pnForum_user_showfavorites();
 }
 
 ?>
