@@ -9,6 +9,10 @@
  * @link http://www.pnforum.de
  */
 
+define('_PNFORUM_CHANGE_POST_ORDER','Change Post Order');
+define('_PNFORUM_OLDEST_FIRST','Display the oldest post first');
+define('_PNFORUM_NEWEST_FIRST','Display the newest post first');
+
 define('_PNFORUM_TOP',"Top");
 define('_PNFORUM_BOTTOM',"Bottom");
 define('_PNFORUM_PERSONAL_SETTINGS',"Personal Settings");
