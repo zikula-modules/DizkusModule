@@ -393,6 +393,8 @@ function pnForum_user_topicadmin()
     $forum_id = (int)pnVarCleanFromInput('forum');  // for move
     $mode     = pnVarCleanFromInput('mode');
     $submit   = pnVarCleanFromInput('submit');
+    $shadow   = pnVarCleanFromInput('createshadowtopic');
+    $shadow = (empty($shadow)) ? false : true;
 
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
@@ -440,7 +442,9 @@ function pnForum_user_topicadmin()
                 return true;
                 break;
             case "move":
-                pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id'=>$topic_id, 'forum_id' => $forum_id));
+                pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
+                                                                   'forum_id' => $forum_id,
+                                                                   'shadow'   => $shadow ));
                 break;
             case "lock":
             case "unlock":

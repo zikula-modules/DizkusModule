@@ -50,7 +50,7 @@ include_once("modules/pnForum/common.php");
 function pnForum_admin_main()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
@@ -232,7 +232,7 @@ function pnForum_admin_syncforums()
     } 
 
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     $silent = pnVarCleanFromInput('silent');
 	if ($silent != 1) {
@@ -290,7 +290,7 @@ function pnForum_admin_syncforums()
 function pnForum_admin_category()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
@@ -355,7 +355,7 @@ function pnForum_admin_category()
 function pnForum_admin_forum()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
@@ -450,7 +450,7 @@ pnfdebug("mods", $mods, true);
 function pnForum_admin_ranks()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
@@ -510,7 +510,7 @@ function pnForum_admin_ranks()
 function pnForum_admin_assignranks()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
@@ -555,7 +555,7 @@ function pnForum_admin_assignranks()
 function pnForum_admin_reordercategories()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {
@@ -593,7 +593,7 @@ function pnForum_admin_reordercategories()
 function pnForum_admin_reorderforums()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     
     if(!pnModAPILoad('pnForum', 'admin')) {

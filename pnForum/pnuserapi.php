@@ -1309,6 +1309,9 @@ function pnForum_userapi_preparenewtopic($args)
  *@params $args['subject'] string the subject
  *@params $args['message'] string the text
  *@params $args['forum_id'] int the forums id
+ *@params $args['time'] string (optional) the time, only needed when creating a shadow 
+ *                             topic
+ *@params $args['no_sig'] bool (optional) if true we do not add a signature
  *@returns int the new topics id
  */
 function pnForum_userapi_storenewtopic($args)
@@ -1346,7 +1349,12 @@ function pnForum_userapi_storenewtopic($args)
     //  signature is always on, except anonymous user
     //  anonymous user has uid=0, but needs pn_uid=1
     if(pnUserLoggedin()) {
-        $message .= "[addsig]";
+        if(is_bool($no_sig) && ($no_sig==true)){
+            // do nothing
+        } else {
+            // add signature
+            $message .= "[addsig]";
+        }
         $pn_uid = pnUserGetVar('uid');
     } else  {
         $pn_uid = 1;
@@ -1363,7 +1371,7 @@ function pnForum_userapi_storenewtopic($args)
         $poster_ip = "127.0.0.1";
     }
     
-    $time = date("Y-m-d H:i");
+    $time = (!empty($time)) ? $time : date("Y-m-d H:i");
 
     // Prep for DB
     $subject   = pnVarPrepForStore($subject);
@@ -2179,8 +2187,10 @@ function pnForum_userapi_movetopic($args)
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
       
-    // get the old forum id
-    $sql = "SELECT t.forum_id
+    // get the old forum id and old post date
+    $sql = "SELECT t.forum_id,
+                   t.topic_time,
+                   t.topic_title
             FROM  ".$pntable['pnforum_topics']." t
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
     
@@ -2197,7 +2207,9 @@ function pnForum_userapi_movetopic($args)
         $myrow = $result->GetRowAssoc(false);
     }
     
-    $oldforum_id = pnVarPrepForDisplay($myrow['forum_id']);
+    $oldforum_id  = pnVarPrepForDisplay($myrow['forum_id']);
+    $topic_time   = $myrow['topic_time'];
+    $topic_title  = $myrow['topic_title'];
 
     if($oldforum_id <> $forum_id) {
         // set new forum id
@@ -2215,7 +2227,25 @@ function pnForum_userapi_movetopic($args)
         if ($dbconn->ErrorNo() != 0) {
             return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), __FILE__, __LINE__);
         }
-        
+
+        if($shadow==true) {
+            // user wants to have a shadow topic
+            $message = sprintf(_PNFORUM_SHADOWTOPIC_MESSAGE, pnModURL('pnForum','user','viewtopic', array('topic'=> $topic_id)) ); 
+            $subject = "***" . pnVarPrepForDisplay(_PNFORUM_MOVED_SUBJECT) . ": " . $topic_title;
+/*
+pnfdebug('time', $topic_time);
+pnfdebug('oldforum', $oldforum_id);
+pnfdebug('newforum', $forum_id);
+pnfdebug('subject', $subject);
+pnfdebug('message', $message, true);
+*/
+            pnForum_userapi_storenewtopic(array('subject'  => $subject,
+                                                'message'  => $message,
+                                                'forum_id' => $oldforum_id,
+                                                'time'     => $topic_time,
+                                                'no_sig'   => true));
+        }
+
         pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
         pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $oldforum_id, 'type' => 'forum'));
     }
