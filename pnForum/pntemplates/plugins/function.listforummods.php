@@ -31,14 +31,12 @@ function smarty_function_listforummods($params, &$smarty)
 	unset($params);
 
     $out = "";
-    while(list($null, $mods) = each($moderators)) {
-        while(list($mod_id, $mod_name) = each($mods)) {
-            if($count > 0) {
-    	        $out .= ", ";
-    	    }
-    	    $out .= '<a href="user.php?op=userinfo&amp;uname='.pnVarPrepForDisplay($mod_name).'">'.pnVarPrepForDisplay($mod_name).'</a>';
-    	    $count++;
-        }
+    foreach($moderators as $mod_id=>$mod_name) {
+        if($count > 0) {
+	        $out .= ", ";
+	    }
+	    $out .= '<a href="user.php?op=userinfo&amp;uname='.pnVarPrepForDisplay($mod_name).'">'.pnVarPrepForDisplay($mod_name).'</a>';
+	    $count++;
     }
     return $out;
 }
