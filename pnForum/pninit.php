@@ -218,14 +218,18 @@ function pnForum_init()
     $pnforumuserstable = $pntable['pnforum_users'];
     $pnforumuserscolumn = &$pntable['pnforum_users_column'];
 
+    // we do not create the user_favorites and user_post_order fields here because this would
+    // break the upgrade from phpBB_14 to pnForum.
+    // we first create the exact double of the phpBB_14 database layout and copy all data that
+    // we are going to find, then we will extend the tables
     $sql = "CREATE TABLE $pnforumuserstable (
             $pnforumuserscolumn[user_id] int(10) unsigned DEFAULT '0' NOT NULL,
             $pnforumuserscolumn[user_posts] int(10) unsigned DEFAULT '0' NOT NULL,
             $pnforumuserscolumn[user_rank] int(10) unsigned DEFAULT '0' NOT NULL,
             $pnforumuserscolumn[user_level] int(10) unsigned DEFAULT '1' NOT NULL,
             $pnforumuserscolumn[user_lastvisit] timestamp(14),
-            $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
-            $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL,
+        /*  $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
+            $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL, */
             PRIMARY KEY (user_id))";
 
     $dbconn->Execute($sql);
@@ -234,7 +238,7 @@ function pnForum_init()
         return false;
     }
 
-	// creating topic_subsription table (new in 1.7.5)
+	// creating topic_subscription table (new in 1.7.5)
     $pnforumtopicsubscriptiontable = $pntable['pnforum_topic_subscription'];
     $pnforumtopicsubscriptioncolumn = &$pntable['pnforum_topic_subscription_column'];
   
@@ -250,7 +254,7 @@ function pnForum_init()
         return false;
     }
 
-    // creating forum_favorites table
+    // creating forum_favorites table (new on 2.0.1)
     $pnforumforumfavoritestable = $pntable['pnforum_forum_favorites'];
     $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
 
@@ -268,6 +272,22 @@ function pnForum_init()
 
     if(crossupgrade()===false) {
         pnForum_delete();
+        return false;
+    }
+
+    // the upgrade has been successfully done, now we need to extend the users table
+    // with the new fields
+    // (new in 2.0.1)
+    $pnforumuserstable = $pntable['pnforum_users'];
+    $pnforumuserscolumn = &$pntable['pnforum_users_column'];
+
+    $sql = "ALTER TABLE $pnforumuserstable
+            ADD $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
+            ADD $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL";
+
+    $dbconn->Execute($sql);
+    if ($dbconn->ErrorNo() != 0) {
+        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
         return false;
     }
 	
