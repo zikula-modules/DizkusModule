@@ -18,12 +18,12 @@ function func_name() {
 </script>
 
 <form name="latestposts" method="post" action="">
-<table border="0" cellpadding="1" cellspacing="1" align="center" width="100%">
-    <tr bgcolor="<!--[ $bgcolor2 ]-->" width="100%">
-        <td colspan="4" align="center"><strong><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</strong></td>
+<table border="0" cellpadding="1" cellspacing="1" style="text-align: center;" width="100%">
+    <tr style="background: <!--[ $bgcolor2 ]-->;">
+        <td colspan="4" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</strong></td>
     </tr>
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" width="100%">
-        <td colspan="4" align="center">
+    <tr style="background: <!--[ $bgcolor3 ]-->;">
+        <td colspan="4" style="text-align: center;">
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ] 
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ] 
     		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ] 
@@ -38,15 +38,14 @@ function func_name() {
 </form>
 <br /><br />
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
-	<tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
+	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
           <td width="15%"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
           <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
           <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
 	</tr>
 	<!--[ foreach item=post from=$posts ]-->
-    <!-- tr bgcolor="< !--[ $bgcolor3 ]-- >" -->
-    <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
+    <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
         <td width="50%">
             <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]--><!--[ postanchor postings=$post.topic_replies+1 post_id=$post.topic_last_post_id ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnbbsmile|pnvarcensor ]--></a>
         </td>
