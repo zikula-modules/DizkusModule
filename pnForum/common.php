@@ -266,8 +266,12 @@ if(!function_exists('pnForum_is_serialized')) {
  * are implemented.
  * Note: the "i" matching switch is used, so BBCode tags are
  * case-insensitive.
+ *
+ * obsolete function - we have pn_bbcode
+ *
  */
-function pn_bbdecode($message) 
+
+function pnForum_bbdecode($message) 
 {
     // Undo [code]
     $message = preg_replace("#<!-- BBCode Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Code:<HR></TD></TR><TR><TD><PRE>(.*?)</PRE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode End -->#s", "[code]\\1[/code]", $message);
@@ -316,12 +320,16 @@ function pn_bbdecode($message)
     return($message);
 }
 
+
 /**
  * Nathan Codding - Feb 6, 2001
  * Reverses the effects of make_clickable(), for use in editpost.
  * - Does not distinguish between "www.xxxx.yyyy" and "http://aaaa.bbbb" type URLs.
+ *
+ *
+ * obsolete function - we have pn_bbclick
  */
-function undo_make_clickable($text) 
+function pnForum_undo_make_clickable($text) 
 {
 	$text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
 	$text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
@@ -332,10 +340,11 @@ function undo_make_clickable($text)
  * Changes a Smiliy <IMG> tag into its corresponding smile
  * TODO: Get rid of golbal variables, and implement a method of distinguishing between :D and :grin: using the <IMG> tag
  *
- * Obsolete function!!!???
+ * obsolete function, we have pn_bbsmile
  *
  */
-function desmile($message) 
+
+function pnForum_desmile($message) 
 {
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);

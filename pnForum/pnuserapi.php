@@ -1004,10 +1004,10 @@ function pnForum_userapi_preparereply($args)
     // the next line is only producing a valid result, if we get a post_id which
     // means we are producing a reply with quote
     if(array_key_exists("post_text", $myrow)) {
-        $text = pn_bbdecode($myrow['post_text']);
+        $text = pnForum_bbdecode($myrow['post_text']);
         $text = preg_replace('/(<br[ \/]*?>)/i', "", $text);
         // just for backwards compatibility
-        $text = undo_make_clickable($text);
+        $text = pnForum_undo_make_clickable($text);
         $text = str_replace("[addsig]", "", $text);
         $reply['message'] = '[quote='.$myrow['pn_uname'].']'.$text.'[/quote]';
     } else {
@@ -1646,11 +1646,11 @@ function pnForum_userapi_readpost($args)
     $message = phpbb_br2nl($message);
     //  convert smilies (just for backwards compatibility)
     // does read unused smiles tables - do we need this??
-    //$message = desmile($message);
+    $message = pnForum_desmile($message);
     //  convert bbcode (just for backwards compatibility)
-    $message = pn_bbdecode($message);
+    $message = pnForum_bbdecode($message);
     //  convert autolinks (just for backwards compatibility)
-    $message = undo_make_clickable($message);
+    $message = pnForum_undo_make_clickable($message);
     $post['post_text'] = $message;
 
     // allow to edit the subject if first post
@@ -3201,7 +3201,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     pnModDBInfoLoad('pnForum');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
-    
+
     switch($view) {
         case "previous": $math = "<"; $sort = "DESC"; break;
         case "next":     $math = ">"; $sort = "ASC";break;
@@ -3209,11 +3209,12 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     }
                            
     $sql = "SELECT t1.topic_id
-            FROM ".$pntable['pnforum_topics']." AS t1
-            INNER JOIN ".$pntable['pnforum_topics']." AS t2
+            FROM ".$pntable['pnforum_topics']." AS t1,
+                 ".$pntable['pnforum_topics']." AS t2
             WHERE t2.topic_id = ".(int)pnVarPrepForStore($topic_id)."
               AND t1.topic_time $math t2.topic_time
               AND t1.forum_id = t2.forum_id
+              AND t1.sticky = 0
             ORDER BY t1.topic_time $sort";
     $result = $dbconn->SelectLimit($sql, 1);
     if ($dbconn->ErrorNo() != 0) {
