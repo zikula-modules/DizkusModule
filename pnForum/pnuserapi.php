@@ -2983,23 +2983,7 @@ function pnForum_userapi_forumsearch($args)
 
     //$w = search_split_query($searchfor);
     $flag = false;
-/*        
-    $query = "SELECT DISTINCT
-              f.forum_id,
-              f.cat_id,
-              p.forum_id,
-              pt.post_text,
-              pt.post_id,
-              t.forum_id,
-              t.topic_id,
-              t.topic_title,
-              t.topic_replies,
-              t.topic_views,
-              c.cat_title,
-              f.forum_name,
-              p.poster_id,
-              p.post_time 
-*/
+
     $query = "SELECT DISTINCT
               f.forum_id,
               f.forum_name,
@@ -3035,13 +3019,11 @@ function pnForum_userapi_forumsearch($args)
         }
 
         // get post_text and match up forums/topics/posts
-        //$query .= '(';
         $query .= "(pt.post_text LIKE '$word' OR t.topic_title LIKE '$word') \n";
         $query .= "AND p.post_id=pt.post_id \n";
         $query .= "AND p.topic_id=t.topic_id \n";
         $query .= "AND p.forum_id=f.forum_id\n";
         $query .= "AND c.cat_id=f.cat_id\n";
-        //$query .= ')';
         $flag = true;
         
         //check forums (multiple selection is possible!)
@@ -3089,7 +3071,7 @@ function pnForum_userapi_forumsearch($args)
     }
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 
-    $total_hits = 0; //$result->PO_RecordCount();
+    $total_hits = 0;
     $skip_hits = 0; 
     $searchresults = array();
     if($result->RecordCount()>0) {

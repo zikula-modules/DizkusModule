@@ -4,16 +4,16 @@
  * ==============================                                       *
  *                                                                      *
  * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
- * http://www.pnforum.de/                                            *
+ * http://www.pnforum.de/                                               *
  ************************************************************************
- * Modified version of: *
+ * Modified version of:                                                 *
  ************************************************************************
  * phpBB version 1.4                                                    *
  * begin                : Wed July 19 2000                              *
  * copyright            : (C) 2001 The phpBB Group                      *
  * email                : support@phpbb.com                             *
  ************************************************************************
- * License *
+ * License                                                              *
  ************************************************************************
  * This program is free software; you can redistribute it and/or modify *
  * it under the terms of the GNU General Public License as published by *
@@ -438,6 +438,6 @@ function pnForum_replacesignature($text, $signature="")
         $text = eregi_replace("\[addsig]$", "", $text);
     }
     return $text;
-    
 }
+
 ?>
