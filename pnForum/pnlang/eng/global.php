@@ -375,7 +375,7 @@ define('_PNFORUM_QUICKSELECTFORUM','- select -');
 //
 // R
 //
-define('_PNFORUM_RECENT_POST_ORDER', 'Recent post order in topi view');
+define('_PNFORUM_RECENT_POST_ORDER', 'Recent post order in topic view');
 define('_PNFORUM_RECENT_POSTS','recent Topics:');
 define('_PNFORUM_REG_SINCE', 'registered');
 define('_PNFORUM_REGISTER','Register');
