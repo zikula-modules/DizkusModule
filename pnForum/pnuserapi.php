@@ -1270,7 +1270,7 @@ function pnForum_userapi_preparenewtopic($args)
     $newtopic['message_display'] = $message; // phpbb_br2nl($message);
 
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
-    //$newtopic['message_display'] = nl2br($newtopic['message_display']);
+    $newtopic['message_display'] = nl2br($newtopic['message_display']);
 
     if(pnUserLoggedIn()) {
         if($topic_start==true) {
