@@ -136,7 +136,7 @@ function pnForum_admin_preferences()
         $pnr->assign('hot_folder_image', pnModGetVar('pnForum', 'hot_folder_image'));
         $pnr->assign('newposts_image', pnModGetVar('pnForum', 'newposts_image'));
         $pnr->assign('hot_newposts_image', pnModGetVar('pnForum', 'hot_newposts_image'));
-        $pnr->assign('locked_image', pnModGetVar('pnForum', 'hot_newposts_image'));
+        $pnr->assign('locked_image', pnModGetVar('pnForum', 'locked_image'));
         $pnr->assign('locktopic_image', pnModGetVar('pnForum', 'locktopic_image'));
         $pnr->assign('unlocktopic_image', pnModGetVar('pnForum', 'unlocktopic_image'));
         $pnr->assign('stickytopic_image', pnModGetVar('pnForum', 'stickytopic_image'));
