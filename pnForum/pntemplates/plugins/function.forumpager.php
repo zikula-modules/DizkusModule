@@ -37,8 +37,11 @@ function smarty_function_forumpager($params, &$smarty)
 {
     extract($params);
 	unset($params);
-    if(empty($total) || empty($forum_id)) {
+    if(empty($forum_id)) {
 		$smarty->trigger_error('forumpager: missing parameter');
+	}
+	if(empty($total)) {
+	    $total = 0;
 	}
 
 	if(!pnModAPILoad('pnForum', 'admin')) {
