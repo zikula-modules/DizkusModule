@@ -48,9 +48,10 @@ function func_name() {
           <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
 	</tr>
 	<!--[ foreach item=post from=$posts ]-->
-    <tr bgcolor="<!--[ $bgcolor3 ]-->">
-        <td width="50%" id="phpbb14_latest<!--[ $post.topic_id ]-->">
-            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->" onMouseOver="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onMouseOut="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->'" onfocus="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor4 ]-->';" onblur="phpbb14_latest<!--[ $post.topic_id ]-->.style.background='<!--[ $bgcolor3 ]-->"><!--[ $post.topic_title ]--></a>
+    <!-- tr bgcolor="< !--[ $bgcolor3 ]-- >" -->
+    <tr bgcolor="<!--[ $bgcolor1 ]-->" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" onfocus="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onblur="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'" >
+        <td width="50%">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title ]--></a>
         </td>
         <td>
             <!--[ $post.topic_replies ]-->
