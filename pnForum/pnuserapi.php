@@ -245,6 +245,7 @@ function pnForum_userapi_readcategorytree($args)
     
     $sql = "SELECT c.cat_id,
                     c.cat_title,
+                    c.cat_order,
                     f.forum_id,
                     f.forum_name,
                     f.forum_desc,
@@ -277,6 +278,7 @@ function pnForum_userapi_readcategorytree($args)
         $cat['forums'] = array();
         $cat['cat_id']         = $row['cat_id'];
         $cat['cat_title']      = $row['cat_title'];
+        $cat['cat_order']      = $row['cat_order'];
         $forum['forum_id']     = $row['forum_id'];
         $forum['forum_name']   = $row['forum_name'];
         $forum['forum_desc']   = $row['forum_desc'];
@@ -335,6 +337,8 @@ function pnForum_userapi_readcategorytree($args)
             }
         }
         $result->MoveNext();
+        // sort the array by cat_order
+        uasort($tree, 'cmp_catorder');
     }
     return $tree;
 }

@@ -76,6 +76,11 @@ function pnForum_admin_preferences()
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
+
+    if(!pnModAPILoad('pnForum', 'admin')) {
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+    } 
+
     
     $submit = pnVarCleanFromInput('submit');
     

@@ -80,6 +80,7 @@ function pnForum_adminapi_readcategories($args)
                   $category['cat_order'] ) = $result->fields;
             array_push( $categories, $category );
         }
+        usort($categories, 'cmp_catorder');
     }
 	$result->Close();
 	if(isset($cat_id)) {

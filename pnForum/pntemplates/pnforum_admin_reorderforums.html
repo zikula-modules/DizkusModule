@@ -1,37 +1,40 @@
 <!--[*  $Id$  *]-->
 
+<!--[ include file='pnforum_admin_header.html' ]-->
+
 <!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
 
 <!--[ pndebug ]-->
 
-<div style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]--></a>
-<br />
-<!--[ pnml name='_PNFORUM_REORDERFORUMS' ]-->
-<br />
-<br />
-</div>
-<br />
-<strong><!--[ pnml name='_PNFORUM_CATEGORY' ]-->:&nbsp;<!--[ $category.cat_title ]--></strong>
-<br />
-<br />
-<!--[ foreach key=currentrow item=forum from=$forums ]-->
-<div style="clear: both; with: 60%; padding: 3px;">
-    <div style="float: left; width: 5%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;">
-		<!--[ if $currentrow neq 0 ]--> 
-            <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=up forum_id=$forum.forum_id forum_order=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->"></a>
-		<!--[ /if ]-->
-		<!--[ if $currentrow neq $total_forums-1 ]-->
-            <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=down forum_id=$forum.forum_id forum_order=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->"></a>
-        <!--[ /if ]-->
+<fieldset>
+    <legend style="font-weight: bold;">
+        <!--[ pnml name='_PNFORUM_REORDERFORUMS' ]-->
+    </legend>
+    
+    <br />
+    <strong><!--[ pnml name='_PNFORUM_CATEGORY' ]-->:&nbsp;<!--[ $category.cat_title ]--></strong>
+    <br />
+    <br />
+    <!--[ foreach key=currentrow item=forum from=$forums ]-->
+    <div style="clear: both; with: 60%; padding: 3px;">
+        <div style="float: left; width: 5%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;">
+    		<!--[ if $currentrow neq 0 ]--> 
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=up forum_id=$forum.forum_id forum_order=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->"></a>
+    		<!--[ /if ]-->
+    		<!--[ if $currentrow neq $total_forums-1 ]-->
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=down forum_id=$forum.forum_id forum_order=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->"></a>
+            <!--[ /if ]-->
+        </div>
+        <div style="float: left; width: 50%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 10px;">
+            <!--[ $forum.forum_name ]-->
+        </div>
     </div>
-    <div style="float: left; width: 50%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 10px;">
-        <!--[ $forum.forum_name ]-->
+    <!--[ foreachelse ]-->
+    <div style="clear: both; width: 60%; padding: 3px; text-align: center; background-color: <!--[ $bgcolor3 ]-->;">
+        <!--[ pnml name='_PNFORUM_NOFORUMS' ]-->
     </div>
-</div>
-<!--[ foreachelse ]-->
-<div style="clear: both; width: 60%; padding: 3px; text-align: center; background-color: <!--[ $bgcolor3 ]-->;">
-    No forums defined
-</div>
-<!--[ /foreach ]-->
+    <!--[ /foreach ]-->
+
+</fieldset>

@@ -31,6 +31,8 @@ define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of 
 define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
 define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
 
+define('_PNFORUM_NOFORUMS', 'no forums defined');
+define('_PNFORUM_NOCATEGORIES', 'no categories defined');
 define('_PNFORUM_ATTACHSIGNATURE', 'Attach my signature');
 define('_PNFORUM_NOTIFYME', 'Notify me when a reply is posted');
 define('_PNFORUM_CATEGORYINFO', 'Category info');
@@ -41,7 +43,6 @@ define('_PNFORUM_FORUMID', 'Forums ID');
 define('_PNFORUM_OCLOCK', 'o\'clock');
 define('_PNFORUM_RETURNTOTOPIC', 'Back to the topic');
 define('_PNFORUM_QUICKREPLY', 'Quick reply');
-define('_PNFORUM_BACKTOADMIN', 'Back to administration');
 define('_PNFORUM_ONLINE', 'online');
 define('_PNFORUM_NOAUTH', 'No permission for this action');
 define('_PNFORUM_ADDNEWCATEGORY', '-- add new category --');
@@ -191,7 +192,7 @@ define("_PNFORUM_ADMINFORUMOPTIONS","Forum-wide Options");
 define("_PNFORUM_ADMINFORUMOPTIONS_INFO","This link will allow you to set various forum-wide options.");
 define("_PNFORUM_ADMINFORUMORDER","Re-Order Forums");
 define("_PNFORUM_ADMINFORUMORDER_INFO","This allows you to change the order in which your forums display on the index page");
-define("_PNFORUM_ADMINFORUMSPANEL","Forums Administration");
+define("_PNFORUM_ADMINFORUMSPANEL","pnForum Administration");
 define("_PNFORUM_ADMINFORUMSYNC","Sync forum/topic index");
 define("_PNFORUM_ADMINFORUMSYNC_INFO","This link will allow you to sync up the forum and topic indexes to fix any discrepancies that might exist");
 define("_PNFORUM_ADMINHONORARYASSIGN_INFO","This link will allow you to assign honorary user rankings to users");

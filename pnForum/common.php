@@ -376,4 +376,13 @@ function allowedtoadmincategoryandforum($category_id, $forum_id)
     return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_ADMIN);
 }
 
+/**
+ * sorting categories by cat_order (this is a VARCHAR, so we need this function for sorting)
+ *
+ */
+function cmp_catorder ($a, $b) 
+{
+   return (int)$a['cat_order'] > (int)$b['cat_order'];
+}
+
 ?>

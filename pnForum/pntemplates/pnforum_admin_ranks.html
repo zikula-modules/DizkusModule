@@ -1,6 +1,6 @@
 <!--[*  $Id$  *]-->
 
-<div style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]--></a></div>
+<!--[ include file='pnforum_admin_header.html' ]-->
 
 <!--[ pndebug ]-->
 
@@ -8,78 +8,74 @@
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
 
-<script type="text/javascript">
-<!--
-function ShowRankImage(num) {
+<fieldset>
+    <legend style="font-weight: bold;">
+        <!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE' ]-->
+    </legend>
+
+    <script type="text/javascript">
+    <!--
+    function ShowRankImage(num) {
+        
+        var imageobj = document.getElementById('image' + num);
+        var rankobj  = document.getElementById('rank_image' + num);
+        imageobj.src = '<!--[ $url_ranks_images ]-->/' + rankobj.options[rankobj.selectedIndex].value
+        return;
+    }
     
-    var imageobj = document.getElementById('image' + num);
-    var rankobj  = document.getElementById('rank_image' + num);
-    imageobj.src = '<!--[ $url_ranks_images ]-->/' + rankobj.options[rankobj.selectedIndex].value
-    return;
-}
+    //-->
+    </script>
 
-//-->
-</script>
-
-<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="100%">
-    <tr>
-        <td  bgcolor="<!--[ $bgcolor2 ]-->">
-            <table border="0" cellpadding="3" cellspacing="1" width="100%">
-            	<tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-                    <td align="center" colspan="7"><!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE' ]-->
-            		</td>
-            	</tr>
-            	<tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td align="center" colspan="7"><!--[ pnml name='_PNFORUM_ADMINUSERRANK_INFO' html=1 ]--></td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td align="center"><strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE2' html=1 ]--></strong></td>
-                    <td align="center"><strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_MIN' html=1 ]--></strong></td>
-                    <td align="center"><strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_MAX' html=1 ]--></strong></td>
-                    <td align="center"><strong><!--[ pnml name='_PNFORUM_IMAGE' html=1 ]--></strong></td>
-                    <td align="center" colspan="2"><strong><!--[ pnml name='_PNFORUM_ACTIONS' html=1 ]--></strong></td>
-                </tr>
-
-                <!--[ foreach key=num item=rank from=$ranks ]-->
-
-                <form name="Rank<!--[ $num ]-->"action="<!--[ pnmodurl modname=pnForum type=admin func=ranks ]-->" method="post">
-                <input type="hidden" name="ranktype" value="<!--[ $ranktype ]-->">
-                <tr bgcolor="<!--[ $bgcolor1 ]-->" align="center">
-                    <td><input type="text" name="title" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20"></td>
-                    <td><input type="text" name="min_posts" value="<!--[ $rank.rank_min ]-->" maxlength="5" size="4"></td>
-                    <td><input type="text" name="max_posts" value="<!--[ $rank.rank_max ]-->" maxlength="5" size="4"></td>
-                    
-			        <td>
-       		            <select name="image" id="rank_image<!--[ $num ]-->" onchange="ShowRankImage(<!--[ $num ]-->)">
-                        <!--[ foreach item=rankimage from=$rankimages ]-->
-                        <option value="<!--[ $rankimage ]-->" <!--[ if $rankimage eq $rank.rank_image ]-->selected="selected"<!--[ /if ]-->><!--[ $rankimage ]--></option>
-		                <!--[ /foreach ]-->
-			        </select>&nbsp;<img id="image<!--[ $num ]-->" src="<!--[ $url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" alt="rankimage"></td>
-                    <!--[ if $num eq 0 ]-->
-                    <td colspan="2">
-                        <input type="hidden" name="actiontype" value="Add">
-                        <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->">
-                    </td>
-                    <!--[ else ]-->
-                    <td>
-                        <input type="hidden" name="rank_id" value="<!--[ $rank.rank_id ]-->">
-                        <input type="radio" name="actiontype" checked="checked" value="Update"><!--[ pnml name='_EDIT' ]--><br />
-                        <input type="radio" name="actiontype" value="Delete"><!--[ pnml name='_DELETE' ]-->
-                    </td>
-                    <td>
-                        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
-                    </td>
-                    <!--[ /if ]-->
-                </tr>
-                </form>
-                <!--[ foreachelse ]-->
-                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
-                    <td colspan="7">
-                        No Ranks in the Database. You can add one by entering into the form.
-                    </td>
-                </tr>
+    <table border="0" cellpadding="3" cellspacing="1" width="100%">
+    	<tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+            <td align="center" colspan="7"><!--[ pnml name='_PNFORUM_ADMINUSERRANK_INFO' html=1 ]--></td>
+        </tr>
+        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
+            <td align="center"><strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE2' html=1 ]--></strong></td>
+            <td align="center"><strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_MIN' html=1 ]--></strong></td>
+            <td align="center"><strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_MAX' html=1 ]--></strong></td>
+            <td align="center"><strong><!--[ pnml name='_PNFORUM_IMAGE' html=1 ]--></strong></td>
+            <td align="center" colspan="2"><strong><!--[ pnml name='_PNFORUM_ACTIONS' html=1 ]--></strong></td>
+        </tr>
+    
+        <!--[ foreach key=num item=rank from=$ranks ]-->
+    
+        <form name="Rank<!--[ $num ]-->"action="<!--[ pnmodurl modname=pnForum type=admin func=ranks ]-->" method="post">
+        <input type="hidden" name="ranktype" value="<!--[ $ranktype ]-->">
+        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="center">
+            <td><input type="text" name="title" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20"></td>
+            <td><input type="text" name="min_posts" value="<!--[ $rank.rank_min ]-->" maxlength="5" size="4"></td>
+            <td><input type="text" name="max_posts" value="<!--[ $rank.rank_max ]-->" maxlength="5" size="4"></td>
+            
+            <td>
+                <select name="image" id="rank_image<!--[ $num ]-->" onchange="ShowRankImage(<!--[ $num ]-->)">
+                <!--[ foreach item=rankimage from=$rankimages ]-->
+                <option value="<!--[ $rankimage ]-->" <!--[ if $rankimage eq $rank.rank_image ]-->selected="selected"<!--[ /if ]-->><!--[ $rankimage ]--></option>
                 <!--[ /foreach ]-->
-            </table>
-        </td>
-    </tr>
-</table>
+            </select>&nbsp;<img id="image<!--[ $num ]-->" src="<!--[ $url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" alt="rankimage"></td>
+            <!--[ if $num eq 0 ]-->
+            <td colspan="2">
+                <input type="hidden" name="actiontype" value="Add">
+                <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->">
+            </td>
+            <!--[ else ]-->
+            <td>
+                <input type="hidden" name="rank_id" value="<!--[ $rank.rank_id ]-->">
+                <input type="radio" name="actiontype" checked="checked" value="Update"><!--[ pnml name='_EDIT' ]--><br />
+                <input type="radio" name="actiontype" value="Delete"><!--[ pnml name='_DELETE' ]-->
+            </td>
+            <td>
+                <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+            </td>
+            <!--[ /if ]-->
+        </tr>
+        </form>
+        <!--[ foreachelse ]-->
+        <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
+            <td colspan="7">
+                No Ranks in the Database. You can add one by entering into the form.
+            </td>
+        </tr>
+        <!--[ /foreach ]-->
+    </table>
+</fieldset>

@@ -1,89 +1,82 @@
 <!--[*  $Id$  *]-->
 
-<div style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]--></a></div>
+<!--[ include file='pnforum_admin_header.html' ]-->
 
 <!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
 
-<br />
+<fieldset>
+    <legend style="font-weight: bold;">
+        <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN' ]-->
+    </legend>
 
-<!--[ pndebug ]-->
+    <!--[ pndebug ]-->
 
-<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="100%">
-    <tr>
-        <td  bgcolor="<!--[ $bgcolor2 ]-->">
-            <table border="0" cellpadding="3" cellspacing="1" width="100%">
-            	<tr bgcolor="<!--[ $bgcolor2 ]-->" align="LEFT">
-                    <td align="center" colspan="4">
-                        <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN' ]-->
-            		</td>
-            	</tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="LEFT">
-                    <td align="center" colspan="6">
-                        &nbsp;<br>
-                        <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' ]-->
-                    </td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="LEFT">
-                    <td align="center"><b><!--[ pnml name='_PNFORUM_USERNAME' ]--></b></td>
-                    <td align="center"><b><!--[ pnml name='_PNFORUM_HONORARY_RANK' ]--></b></td>
-                    <td align="center" colspan="2"><b><!--[ pnml name='_PNFORUM_ACTIONS' ]--></b></td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor1 ]-->" align="LEFT">
-                    <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
-                    <td align="center">
-                        <select name="user_id">
-                        <!--[ foreach item=user from=$norankusers ]-->
-                        <option value="<!--[ $user.user_id ]-->"><!--[ $user.pn_uname ]--></option>
-                        <!--[ /foreach ]-->
-                        </select>
-                    </td>
-                    <td align="center">
-                        <select name="rank_id">
-                        <option value="0"><!--[ pnml name='_PNFORUM_NORANK' ]--></option>
-                        <!--[ foreach item=rank from=$ranks ]-->
-                        <option value="<!--[ $rank.rank_id ]-->"><!--[ $rank.rank_title ]--></option>
-                        <!--[ /foreach ]-->
-                        </select>
-                    </td>
-                    <td colspan="2" align="center">
-                        <input type="hidden" name="actiontype" value="Add">
-                        <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->">
-                    </td>
-                    </form>
-                </tr>
-                <!--[ foreach item=user from=$rankusers ]-->
-                <tr bgcolor="<!--[ $bgcolor1 ]-->" align="center">
-                    <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
-                    <td bgcolor="<!--[ $bgcolor3 ]-->" >
-                        <!--[ $user.pn_uname ]-->
-                    </td>
-                    <td>
-                        <select name="rank_id">
-                        <!--[ foreach item=rank from=$ranks ]-->
-                        <option value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->selected="selected"<!--[ /if ]-->><!--[ $rank.rank_title ]--></option>
-                        <!--[ /foreach ]-->
-                        </select>
-                    </td>
-                    <td>
-                        <input type="hidden" name="user_id" value="<!--[ $user.user_id ]-->">
-                        <input type="radio" name="actiontype" checked="checked" value="Update"><!--[ pnml name='_EDIT' ]--><br />
-                        <input type="radio" name="actiontype" value="Delete"><!--[ pnml name='_DELETE' ]-->
-                    </td>
-                    <td>
-                        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
-                    </td>
-                    </form>
-                </tr>
-                <!--[ foreachelse ]-->
-                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
-                    <td colspan="7">
-                        No Special Ranks in the Database. You can add one by entering into the form below.
-                    </td>
-                </tr>
+    <table border="0" cellpadding="3" cellspacing="1" width="100%">
+        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="LEFT">
+            <td align="center" colspan="6">
+                &nbsp;<br>
+                <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' ]-->
+            </td>
+        </tr>
+        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="LEFT">
+            <td align="center"><b><!--[ pnml name='_PNFORUM_USERNAME' ]--></b></td>
+            <td align="center"><b><!--[ pnml name='_PNFORUM_HONORARY_RANK' ]--></b></td>
+            <td align="center" colspan="2"><b><!--[ pnml name='_PNFORUM_ACTIONS' ]--></b></td>
+        </tr>
+        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="LEFT">
+            <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
+            <td align="center">
+                <select name="user_id">
+                <!--[ foreach item=user from=$norankusers ]-->
+                <option value="<!--[ $user.user_id ]-->"><!--[ $user.pn_uname ]--></option>
                 <!--[ /foreach ]-->
-            </table>
-        </td>
-    </tr>
-</table>
+                </select>
+            </td>
+            <td align="center">
+                <select name="rank_id">
+                <option value="0"><!--[ pnml name='_PNFORUM_NORANK' ]--></option>
+                <!--[ foreach item=rank from=$ranks ]-->
+                <option value="<!--[ $rank.rank_id ]-->"><!--[ $rank.rank_title ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+            </td>
+            <td colspan="2" align="center">
+                <input type="hidden" name="actiontype" value="Add">
+                <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->">
+            </td>
+            </form>
+        </tr>
+        <!--[ foreach item=user from=$rankusers ]-->
+        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="center">
+            <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
+            <td bgcolor="<!--[ $bgcolor3 ]-->" >
+                <!--[ $user.pn_uname ]-->
+            </td>
+            <td>
+                <select name="rank_id">
+                <!--[ foreach item=rank from=$ranks ]-->
+                <option value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->selected="selected"<!--[ /if ]-->><!--[ $rank.rank_title ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+            </td>
+            <td>
+                <input type="hidden" name="user_id" value="<!--[ $user.user_id ]-->">
+                <input type="radio" name="actiontype" checked="checked" value="Update"><!--[ pnml name='_EDIT' ]--><br />
+                <input type="radio" name="actiontype" value="Delete"><!--[ pnml name='_DELETE' ]-->
+            </td>
+            <td>
+                <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+            </td>
+            </form>
+        </tr>
+        <!--[ foreachelse ]-->
+        <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
+            <td colspan="7">
+                No Special Ranks in the Database. You can add one by entering into the form below.
+            </td>
+        </tr>
+        <!--[ /foreach ]-->
+    </table>
+</fieldset>
