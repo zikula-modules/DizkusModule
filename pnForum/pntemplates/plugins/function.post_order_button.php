@@ -66,9 +66,9 @@ function smarty_function_post_order_button($params, &$smarty)
         $post_order = pnModAPIFunc('pnForum','user','get_user_post_order'); 
         $lang = pnUserGetLang();
         if ($post_order == 'ASC' ) {
-            $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_NEWEST_FIRST)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))."\"><img src=\"modules/pnForum/pnimages/$lang/postorderasc.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER)."\"></a>";
+            $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_NEWEST_FIRST)."\" href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/postorderasc.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER)."\"></a>";
         } else {
-            $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_OLDEST_FIRST)."\" href=\"".pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))."\"><img src=\"modules/pnForum/pnimages/$lang/postorderdesc.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER)."\"></a>";
+            $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_OLDEST_FIRST)."\" href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/postorderdesc.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER)."\"></a>";
         }
     }
     return $out;

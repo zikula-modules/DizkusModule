@@ -57,7 +57,7 @@ function smarty_function_forumpager($params, &$smarty)
         $pager = "<div>" . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . "&nbsp;:&nbsp;";
         for($x = 0; $x < $total; $x++) {
             if(($previous >= 0) and ($count == 1)) {
-                $pager .=  "<a href=\"". pnModURL('pnForum', 'user', 'viewforum', array( 'forum'=>$forum_id, 'start' => $previous))."\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a>';
+                $pager .=  "<a href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array( 'forum'=>$forum_id, 'start' => $previous)))."\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a>';
                 //$pager .= " | ";
             }
             if(!($x % $topics_per_page)) {
@@ -72,14 +72,14 @@ function smarty_function_forumpager($params, &$smarty)
                     || ($count==1) // link first page 
                     || (($x > ($start-6*$topics_per_page)) //link -5 and +5 pages 
                     &&($x < ($start+6*$topics_per_page))) ) {
-                        $pager .=  " | <a href=\"".pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$x))."\">$count</a>\n";
+                        $pager .=  " | <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$x)))."\">$count</a>\n";
                     }
                 }
                 $count++;
             }
         }
         if($next < $total) {
-            $pager .=  " | <a href=\"".pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$next))."\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE)."</a>";
+            $pager .=  " | <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$next)))."\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE)."</a>";
         }
     
         $pager .= "</div>";

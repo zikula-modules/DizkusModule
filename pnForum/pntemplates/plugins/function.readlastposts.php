@@ -221,9 +221,9 @@ function smarty_function_readlastposts($params, &$smarty)
                 // we now create the url to the last post in the thread. This might
                 // on site 1, 2 or what ever in the thread, depending on topic_replies
                 // count and the posts_per_page setting
-                $lastpost['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                                      array('topic' => $lastpost['topic_id'],
-                                                            'start' => $start));
+                $lastpost['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+                                                                array('topic' => $lastpost['topic_id'],
+                                                                      'start' => $start)));
                 $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];
 
                 array_push($lastposts, $lastpost);

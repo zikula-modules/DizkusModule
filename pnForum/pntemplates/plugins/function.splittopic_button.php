@@ -42,7 +42,7 @@ function smarty_function_splittopic_button($params, &$smarty)
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         $image = pnModGetVar('pnForum', 'splittopic_image');
         $img_attr = getimagesize($image);
-        $out = "<a href=\"".pnModURL('pnForum', 'user', 'splittopic', array('post'=>$post_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE)."</a>&nbsp;&nbsp;&nbsp;";
+        $out = "<a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'splittopic', array('post'=>$post_id)))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE)."</a>&nbsp;&nbsp;&nbsp;";
     }
     return $out;
 }

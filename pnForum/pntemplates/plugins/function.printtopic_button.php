@@ -42,7 +42,7 @@ function smarty_function_printtopic_button($params, &$smarty)
     $out = "";
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
 	    $lang = pnUserGetLang();
-		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id)) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
+		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
 	}
     return $out;
 }

@@ -55,7 +55,7 @@ function smarty_function_topicpager($params, &$smarty)
         $pager = "<div>".pnVarPrepForDisplay(_PNFORUM_GOTOPAGE)."&nbsp;:&nbsp;";
         $last_page = $start - $posts_per_page;
         if(($start > 0) && empty($nonextprev) ) {
-            $pager .= "<a href=\"" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$last_page)) . "\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a> ';
+            $pager .= "<a href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$last_page))) . "\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a> ';
         }
         for($x = 0; $x < $total; $x += $posts_per_page) {
             if($times != 1) {
@@ -66,14 +66,14 @@ function smarty_function_topicpager($params, &$smarty)
             } else if($start == 0 && $x == 0) {
                 $pager .= "1";
             } else {
-                $pager .= "<a href=\"" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$x)) . "\">$times</a>";
+                $pager .= "<a href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$x))) . "\">$times</a>";
             }
             $times++;
         }
     
         if( (($start + $posts_per_page) < $total) && empty($nonextprev) ) {
             $next_page = $start + $posts_per_page;
-            $pager .= " <a href=\"" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$next_page)) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE).'</a>';
+            $pager .= " <a href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id,'start'=>$next_page))) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE).'</a>';
         }
         $pager .= " </div>\n";
     }
