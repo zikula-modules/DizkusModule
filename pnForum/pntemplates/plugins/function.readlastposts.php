@@ -33,6 +33,7 @@ include_once('modules/pnForum/common.php');
  *
  *@params maxposts (int) number of posts to read, default = 10
  *@params forum_id (int) forum_id, if not set, all forums
+ *@params user_id  (int) -1 = last postings of current user, otherwise its treated as an user_id
  *
  */
 function smarty_function_readlastposts($params, &$smarty) 
@@ -75,6 +76,17 @@ function smarty_function_readlastposts($params, &$smarty)
 
     $postmax = (!empty($maxposts)) ? $maxposts : 5;
 
+    // user_id set?
+    $whereuser = "";
+    $pn_uid = pnUserGetVar('uid');
+    if(!empty($user_id)) {
+        if($user_id==-1 && pnUserLoggedIn()) {
+            $whereuser = "pt.poster_id = $pn_uid AND ";
+        } else {
+            $whereuser = "pt.poster_id = $user_id AND ";
+        }
+    }
+
     $sql = "SELECT t.topic_id, 
                    t.topic_title, 
                    t.topic_replies,
@@ -90,6 +102,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 ".$pntable['pnforum_posts']." as pt,
                 ".$pntable['pnforum_categories']." as c
         WHERE $whereforum
+              $whereuser
               t.forum_id = f.forum_id AND
               t.topic_last_post_id = pt.post_id AND
               f.cat_id = c.cat_id
