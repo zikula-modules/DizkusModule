@@ -24,13 +24,11 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-function smarty_function_allowedhtml($params, &$smarty) 
+function smarty_function_pnforumallowedhtml($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
-
-	$show_html = pnModGetVar('pnForum', 'show_html');
-	if ($show_html == "yes") {
+  if(pnModGetVar('pnForum', 'show_html') === "yes") {
 		$out = "<br />".pnVarPrepForDisplay(_ALLOWEDHTML)."<br />";
 		$AllowableHTML = pnConfigGetVar('AllowableHTML');
 		while (list($key, $access, ) = each($AllowableHTML)) {
