@@ -24,14 +24,16 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_title, forum_name, topic_id
+include_once('modules/pnForum/common.php');
+
+// cat_id, forum_id, topic_id
 function smarty_function_mailtopic_button($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
 
     $out = "";
-	if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_COMMENT) || pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_COMMENT)) {
+    if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
 	    $authid = pnSecGenAuthKey();
 		$out = "<a href=\"". pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id)) . "\">" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) ."</a>";
 	}

@@ -55,15 +55,10 @@ function pnForum_user_main()
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
 
-    if(!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) {
-        return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__ );
-    }
-
     $viewcat = (int)pnVarCleanFromInput('viewcat');
     $viewcat = (!empty($viewcat)) ? $viewcat : -1;
     
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
-
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign( 'tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
@@ -92,6 +87,7 @@ function pnForum_user_viewforum()
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     } 
+
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     $forum = pnModAPIFunc('pnForum', 'user', 'readforum',

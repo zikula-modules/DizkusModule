@@ -24,14 +24,13 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_title, forum_name, status, topic_id
+// cat_id, forum_id, status, topic_id
 function smarty_function_deletetopic_button($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
 
-    if (pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE) || pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE)) 
-	{
+    if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         $image = pnModGetVar('pnForum', 'deltopic_image');
         $img_attr = getimagesize($image);
         $out = "<a href=\"".pnModURL('pnForum', 'user', 'topicadmin', array('mode'=>'del', 'topic'=>$topic_id))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_DELETETOPIC)."</a>&nbsp;&nbsp;&nbsp;";

@@ -61,8 +61,7 @@ function smarty_function_readtopforums($params, &$smarty)
 
     $topforums = array();
     while (list($forum_id, $forum_name, $forum_topics, $forum_posts, $cat_title, $cat_id) = $result->FetchRow()) {
-        if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ) && 
-            pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ))   {
+        if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             $topforum = array();
             $topforum['forum_id'] = $forum_id;
             $topforum['forum_name'] = pnVarPrepForDisplay($forum_name);

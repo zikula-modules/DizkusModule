@@ -68,9 +68,9 @@ function showforumerror($error_text, $file="", $line=0)
     if(preg_match("/(api\.php)$/i", $file)<>0)
     {
         // __FILE__ ends with api.php
-        include("header.php");
+        include_once("header.php");
         echo $output;
-        include("footer.php");
+        include_once("footer.php");
     }
     else
     {
@@ -174,22 +174,23 @@ function pnfsqldebug($sql)
 }
 
 /**
- * OpenDB
+ * pnForum_OpenDB
  * creates a dbconnection object and returns it to the calling function
  *
  *@params $table (sting) name of the table you want to access
  *@return array consisting:
  *@returns object dbconn obejct for use to execute sql queries
  *@returns string fully qualified tablename
- *@returns string fully qualified tablecolumnname
+ *@returns array with field names
  *        or false on error
  */
-function pnfOpenDB($tablename)
+function pnForum_OpenDB($tablename)
 {
     if(!isset($tablename)) return false;
 
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
+	pnModDBInfoLoad('pnForum');
+	$dbconn =& pnDBGetConn(true);
+	$pntable =& pnDBGetTables();
 
     $columnname    = $tablename . '_column';
     if( !array_key_exists($tablename, $pntable) || 
@@ -199,13 +200,14 @@ function pnfOpenDB($tablename)
 }
 
 /**
+ * pnForum_CloseDB
  * closes an db connection
  *
  *@params $resobj object as returned by $dbconn->Execute();
  *@returns nothing
  *
  */
-function pnfCloseDB($resobj)
+function pnForum_CloseDB($resobj)
 {
     if(is_object($resobj)) 
     {
@@ -242,51 +244,51 @@ if(!function_exists('is_serialized')) {
  */
 function pn_bbdecode($message) 
 {
-		// Undo [code]
-		$message = preg_replace("#<!-- BBCode Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Code:<HR></TD></TR><TR><TD><PRE>(.*?)</PRE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode End -->#s", "[code]\\1[/code]", $message);
-
-		// Undo [quote]
-		$message = preg_replace("#<!-- BBCode Quote Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Quote:<HR></TD></TR><TR><TD><BLOCKQUOTE>(.*?)</BLOCKQUOTE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode Quote End -->#s", "[quote]\\1[/quote]", $message);
-
-		// Undo [b] and [i]
-		$message = preg_replace("#<!-- BBCode Start --><strong>(.*?)</strong><!-- BBCode End -->#s", "[b]\\1[/b]", $message);
-		$message = preg_replace("#<!-- BBCode Start --><I>(.*?)</I><!-- BBCode End -->#s", "[i]\\1[/i]", $message);
-
-		// Undo [url] (both forms)
-		$message = preg_replace("#<!-- BBCode Start --><A HREF=\"http://(.*?)\" TARGET=\"_blank\">(.*?)</A><!-- BBCode End -->#s", "[url=\\1]\\2[/url]", $message);
-
-		// Undo [email]
-		$message = preg_replace("#<!-- BBCode Start --><A HREF=\"mailto:(.*?)\">(.*?)</A><!-- BBCode End -->#s", "[email]\\1[/email]", $message);
-
-		// Undo [img]
-		$message = preg_replace("#<!-- BBCode Start --><IMG SRC=\"http://(.*?)\"><!-- BBCode End -->#s", "[img]http://\\1[/img]", $message);
-		//$message = preg_replace("#<!-- BBCode Start --><IMG SRC=\"(.*?)\"><!-- BBCode End -->#s", "[img]\\1[/img]", $message);
-
-		// Undo lists (unordered/ordered)
-
-		// unordered list code..
-		$matchCount = preg_match_all("#<!-- BBCode ulist Start --><UL>(.*?)</UL><!-- BBCode ulist End -->#s", $message, $matches);
-
-		for ($i = 0; $i < $matchCount; $i++)
-		{
-			$currMatchTextBefore = preg_quote($matches[1][$i]);
-			$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
-
-			$message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
-		}
-
-		// ordered list code..
-		$matchCount = preg_match_all("#<!-- BBCode olist Start --><OL TYPE=([A1])>(.*?)</OL><!-- BBCode olist End -->#si", $message, $matches);
-
-		for ($i = 0; $i < $matchCount; $i++)
-		{
-			$currMatchTextBefore = preg_quote($matches[2][$i]);
-			$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
-
-			$message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
-		}
-
-		return($message);
+    // Undo [code]
+    $message = preg_replace("#<!-- BBCode Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Code:<HR></TD></TR><TR><TD><PRE>(.*?)</PRE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode End -->#s", "[code]\\1[/code]", $message);
+    
+    // Undo [quote]
+    $message = preg_replace("#<!-- BBCode Quote Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Quote:<HR></TD></TR><TR><TD><BLOCKQUOTE>(.*?)</BLOCKQUOTE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode Quote End -->#s", "[quote]\\1[/quote]", $message);
+    
+    // Undo [b] and [i]
+    $message = preg_replace("#<!-- BBCode Start --><strong>(.*?)</strong><!-- BBCode End -->#s", "[b]\\1[/b]", $message);
+    $message = preg_replace("#<!-- BBCode Start --><I>(.*?)</I><!-- BBCode End -->#s", "[i]\\1[/i]", $message);
+    
+    // Undo [url] (both forms)
+    $message = preg_replace("#<!-- BBCode Start --><A HREF=\"http://(.*?)\" TARGET=\"_blank\">(.*?)</A><!-- BBCode End -->#s", "[url=\\1]\\2[/url]", $message);
+    
+    // Undo [email]
+    $message = preg_replace("#<!-- BBCode Start --><A HREF=\"mailto:(.*?)\">(.*?)</A><!-- BBCode End -->#s", "[email]\\1[/email]", $message);
+    
+    // Undo [img]
+    $message = preg_replace("#<!-- BBCode Start --><IMG SRC=\"http://(.*?)\"><!-- BBCode End -->#s", "[img]http://\\1[/img]", $message);
+    //$message = preg_replace("#<!-- BBCode Start --><IMG SRC=\"(.*?)\"><!-- BBCode End -->#s", "[img]\\1[/img]", $message);
+    
+    // Undo lists (unordered/ordered)
+    
+    // unordered list code..
+    $matchCount = preg_match_all("#<!-- BBCode ulist Start --><UL>(.*?)</UL><!-- BBCode ulist End -->#s", $message, $matches);
+    
+    for ($i = 0; $i < $matchCount; $i++)
+    {
+    	$currMatchTextBefore = preg_quote($matches[1][$i]);
+    	$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
+    
+    	$message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
+    }
+    
+    // ordered list code..
+    $matchCount = preg_match_all("#<!-- BBCode olist Start --><OL TYPE=([A1])>(.*?)</OL><!-- BBCode olist End -->#si", $message, $matches);
+    
+    for ($i = 0; $i < $matchCount; $i++)
+    {
+    	$currMatchTextBefore = preg_quote($matches[2][$i]);
+    	$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
+    
+    	$message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
+    }
+    
+    return($message);
 }
 
 /**
@@ -329,8 +331,49 @@ function desmile($message)
 /**
  * removes instances of <br /> since sometimes they are stored in DB :(
  */
-function phpbb_br2nl($str) {
+function phpbb_br2nl($str) 
+{
     return preg_replace("=<br(>|([\s/][^>]*)>)\r?\n?=i", "\n", $str);
+}
+
+/**
+ * allowedtoseecategoryandforum
+ */
+function allowedtoseecategoryandforum($category_id, $forum_id)
+{
+    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_OVERVIEW);
+}
+
+/**
+ * allowedtoreadcategoryandforum
+ */
+function allowedtoreadcategoryandforum($category_id, $forum_id)
+{
+    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_READ);
+}
+
+/**
+ * allowedtowritetocategoryandforum
+ */
+function allowedtowritetocategoryandforum($category_id, $forum_id)
+{
+    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_COMMENT);
+}
+
+/**
+ * allowedtomoderatecategoryandforum
+ */
+function allowedtomoderatecategoryandforum($category_id, $forum_id)
+{
+    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_MODERATE);
+}
+
+/**
+ * allowedtoadmincategoryandforum
+ */
+function allowedtoadmincategoryandforum($category_id, $forum_id)
+{
+    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_ADMIN);
 }
 
 ?>

@@ -79,8 +79,7 @@ function smarty_function_readlastposts($params, &$smarty)
                  $cat_id, 
                  $poster_id, 
                  $post_id) = $result->fields;
-            if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ) && 
-            pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ)) { 
+            if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
                 $lastpost = array();
                 $lastpost['topic_id'] = $topic_id;
                 $lastpost['forum_id'] = $forum_id;

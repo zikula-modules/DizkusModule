@@ -24,7 +24,7 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_title, forum_name, topic_id
+// cat_id, forum_id, topic_id
 function smarty_function_subscribetopic_button($params, &$smarty) 
 {
     extract($params); 
@@ -32,8 +32,7 @@ function smarty_function_subscribetopic_button($params, &$smarty)
 
     $userid = pnUserGetVar('uid');
     if (pnUserLoggedIn()) {
-        if (pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_READ) || pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_READ)) 
-	    {
+        if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(!pnModAPILoad('pnForum', 'user')) {
                 $smarty->trigger_error("subscribetopic_button: unable to load userapi", e_error);
                 return false;

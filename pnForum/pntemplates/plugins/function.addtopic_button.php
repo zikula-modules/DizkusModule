@@ -24,14 +24,14 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_title, forum_name, status, forum_id
+// cat_id, forum_id, status, forum_id
 function smarty_function_addtopic_button($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
 
     $out = "";
-	if (pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_COMMENT) || pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_COMMENT)) {
+    if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
 	    $authid = pnSecGenAuthKey();
 		$out = "<a href=\"". pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id)) . "\">" . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."</a>";
 	} else {

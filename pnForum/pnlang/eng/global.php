@@ -26,6 +26,13 @@ define('_PNFORUM_SEARCHINCLUDE_RESULTS',"Forums");
 define('_PNFORUM_SEARCHINCLUDE_TITLE',"Search forums");
 define('_PNFORUM_SEARCHINCLUDE_VIEWS',"Views");
 
+define('_PNFORUM_NOAUTH_TOSEE', 'You have no permission to see this category or forum');
+define('_PNFORUM_NOAUTH_TOREAD', 'You have no permission to read the content of this category or forum');
+define('_PNFORUM_NOAUTH_TOWRITE', 'You have no permission to write into this category or forum');
+define('_PNFORUM_NOAUTH_TOMODERATE', 'You have no permission to modrate this category or forum');
+
+define('_PNFORUM_OCLOCK', 'o\'clock');
+define('_PNFORUM_RETURNTOTOPIC', 'Back to the topic');
 define('_PNFORUM_QUICKREPLY', 'Quick reply');
 define('_PNFORUM_BACKTOADMIN', 'Back to administration');
 define('_PNFORUM_ONLINE', 'online');
@@ -54,6 +61,7 @@ define('_PNFORUM_POSTS',"posts");
  * changed in 1.8.0
  */
 define('_PNFORUM_POWEREDBY', 'Powered by <a href="http://www.pncommunity.de/">pnForum</a> Version');
+define('_PNFORUM_SEARCH','search pnForum');
 
 /**
  * new in 1.7.5
@@ -93,7 +101,6 @@ define('_PNFORUM_LASTVISIT', 'last visit');
 /**
  * new in 1.7.4
  */
-define('_PNFORUM_SEARCH','search phpBB');
 define('_PNFORUM_NOAUTHPOST','Note: not authorised to post comments');
 define('_PNFORUM_REGISTER','Register');
 

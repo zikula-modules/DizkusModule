@@ -320,7 +320,7 @@ function pnForum_admin_category()
                                                                           'cat_title' => $cat_title));
                 break;
             case "Delete":
-                return showforumerror("not yet implementd", __FILE__, __LINE__);
+                pnModAPIFunc('pnForum', 'admin', 'deletecategory', array('cat_id' => $cat_id));
                 break;
             default:
         }

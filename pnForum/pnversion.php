@@ -4,7 +4,7 @@
  * @version $Id$
  * @author Andreas Krapohl 
  * @copyright 2003 by Andreas Krapohl, 2004 by Frank Schummertz
- * @package phpBB_14 (aka pnForum) 
+ * @package pnForum
  * @license GPL <http://www.gnu.org/licenses/gpl.html> 
  * @link http://www.pnforum.de
  */
@@ -25,7 +25,5 @@ $modversion['author'] = 'Andreas Krapohl, Frank Schummertz';
 $modversion['contact'] = 'andreas AT krapohl DOT net, frank.schummertz AT landseer-stuttgart DOT de';
 $modversion['admin'] = 1;
 $modversion['user'] = 1;
-$modversion['securityschema'] = array('pnForum::Category' => 'Category name::',
-                                      'pnForum::Forum' => 'Forum name::',
-                                      'pnForum::' => 'Category name::Forum name');
+$modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:');
 ?>

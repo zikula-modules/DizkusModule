@@ -24,14 +24,13 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-// cat_title, forum_name, status, topic_id
+// cat_id, forum_id, status, topic_id
 function smarty_function_locktopic_button($params, &$smarty) 
 {
     extract($params); 
 	unset($params);
 
-    if (pnSecAuthAction(0, 'pnForum::Category', "$cat_title::", ACCESS_MODERATE) || pnSecAuthAction(0, 'pnForum::Forum', "$forum_name::", ACCESS_MODERATE)) 
-	{
+    if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
 	    if($status != 1)
 	    {
             $image = pnModGetVar('pnForum', 'locktopic_image');

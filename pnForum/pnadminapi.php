@@ -52,10 +52,6 @@ function pnForum_adminapi_readcategories($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
-    }
-    
     $categories = array();
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
@@ -102,7 +98,7 @@ function pnForum_adminapi_updatecategory($args)
     unset($args);
 
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
     if(isset($cat_title) && isset($cat_id)) {
@@ -139,7 +135,7 @@ function pnForum_adminapi_addcategory($args)
     unset($args);
 
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
     if(isset($cat_title)) {
@@ -179,7 +175,7 @@ function pnForum_adminapi_deletecategory($args)
     unset($args);
     
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
     if(isset($cat_id)) {
@@ -240,10 +236,6 @@ function pnForum_adminapi_readforums($args)
 {
     extract($args);
     unset($args);
-    
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
-    }
     
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
@@ -316,10 +308,6 @@ function pnForum_adminapi_readmoderators($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
-    }
-    
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
@@ -356,10 +344,6 @@ function pnForum_adminapi_readusers($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
-    }
-    
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
@@ -404,10 +388,6 @@ function pnForum_adminapi_readranks($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
-    }
-    
     // read images
     $handle = opendir(pnModGetVar('pnForum', 'url_ranks_images'));
     $filelist = array();
@@ -492,7 +472,7 @@ function pnForum_adminapi_saverank($args)
     unset($args);
     
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
 	pnModDBInfoLoad('pnForum');
@@ -554,10 +534,6 @@ function pnForum_adminapi_readrankusers($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
-    }
-    
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
@@ -606,10 +582,6 @@ function pnForum_adminapi_readrankusers($args)
  */
 function pnForum_adminapi_readnorankusers()
 {
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_READ)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
-    }
-    
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
 	$pntable =& pnDBGetTables();
@@ -649,7 +621,7 @@ function pnForum_adminapi_assignranksave($args)
     unset($args);
     
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
     if(!is_numeric($rank_id) && !is_numeric($user_id) ) {
@@ -698,7 +670,7 @@ function pnForum_adminapi_reordercategoriessave($args)
     unset($args);
     
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
 	pnModDBInfoLoad('pnForum');
@@ -766,7 +738,7 @@ function pnForum_adminapi_reorderforumssave($args)
     unset($args);
     
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
     
 	pnModDBInfoLoad('pnForum');
@@ -999,7 +971,7 @@ function pnForum_adminapi_addforum($args)
     extract($args);
     unset($args);
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
 	pnModDBInfoLoad('pnForum');
@@ -1072,7 +1044,7 @@ function pnForum_adminapi_editforum($args)
     extract($args);
     unset($args);
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
 	pnModDBInfoLoad('pnForum');
@@ -1124,7 +1096,7 @@ function pnForum_adminapi_deleteforum($args)
     extract($args);
     unset($args);
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_NOAUTH, __FILE__, __LINE__); 
+    	return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__); 
     }
 
 	pnModDBInfoLoad('pnForum');

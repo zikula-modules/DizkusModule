@@ -43,7 +43,7 @@ function smarty_function_jumpbox($params, &$smarty)
                <select name="forum" id="phpbb_forum" onChange="location.href=this.options[this.selectedIndex].value">
 	           <option value="'.pnModURL('pnForum', 'user', 'main').'">' . pnVarPrepForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
         foreach($forums as $forum) {
-            if  (pnSecAuthAction(0, 'pnForum::Forum', $forum['forum_name'] . "::", ACCESS_READ) && pnSecAuthAction(0, 'pnForum::Category', $forum['cat_title'] . "::", ACCESS_READ)) {
+            if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
             	$out .= '<option value="' . pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum['forum_id'])) . '">' . $forum['cat_title'] . '&nbsp;::&nbsp;' . $forum['forum_name'] . '</option>';
             } 
         }
