@@ -860,7 +860,7 @@ function pnForum_userapi_readtopic($args)
             if (!empty($post['poster_data']['pn_user_sig'])){
                 $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
                 $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
-                $post['post_text'] = eregi_replace("\[addsig]$", $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_text']);
+                $post['post_text'] = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_text']);
             } else {
                 $post['post_text'] = eregi_replace("\[addsig]$", "", $post['post_text']);
             }
@@ -1040,7 +1040,7 @@ function pnForum_userapi_preparereply($args)
         if(!empty($review['poster_data']['pn_user_sig'])){
             $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
             $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
-            $message = eregi_replace("\[addsig]$", $sigstart . $review['poster_data']['pn_user_sig'] . $sigend, $message);
+            $message = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $review['poster_data']['pn_user_sig'] . $sigend, $message);
         }
         else {
             $message = eregi_replace("\[addsig]$", "", $message);
@@ -1541,7 +1541,7 @@ function pnForum_userapi_readpost($args)
     if(!empty($post['poster_data']['pn_user_sig']) ){
         $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
         $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
-        $post['post_textdisplay'] = eregi_replace("\[addsig]$", $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_textdisplay']);
+        $post['post_textdisplay'] = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $post['poster_data']['pn_user_sig'] . $sigend, $post['post_textdisplay']);
     } else {
         $post['post_textdisplay'] = eregi_replace("\[addsig]$", "", $post['post_textdisplay']);
     }
