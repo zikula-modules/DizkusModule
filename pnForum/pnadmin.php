@@ -123,6 +123,8 @@ function pnForum_admin_preferences()
         }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
+        $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
+        $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
 	    $pnr->assign('min_postings_for_anchor', pnModGetVar('pnForum', 'min_postings_for_anchor'));
 	    $pnr->assign('topics_per_page', pnModGetVar('pnForum', 'topics_per_page'));
 	    $pnr->assign('posts_per_page', pnModGetVar('pnForum', 'posts_per_page'));
@@ -158,6 +160,8 @@ function pnForum_admin_preferences()
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'signature_start', pnVarPrepForStore(pnVarCleanFromInput('signature_start')));
+            pnModSetVar('pnForum', 'signature_end', pnVarPrepForStore(pnVarCleanFromInput('signature_end')));
             pnModSetVar('pnForum', 'min_postings_for_anchor', pnVarPrepForStore(pnVarCleanFromInput('min_postings_for_anchor')));
             pnModSetVar('pnForum', 'topics_per_page', pnVarPrepForStore(pnVarCleanFromInput('topics_per_page')));
             pnModSetVar('pnForum', 'posts_per_page', pnVarPrepForStore(pnVarCleanFromInput('posts_per_page')));
@@ -186,6 +190,8 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
         } 
         if($actiontype=="RestoreDefaults")  {
+            pnModSetVar('pnForum', 'signature_start', '<div style="border: 1px solid black;">');
+            pnModSetVar('pnForum', 'signature_end', '</div>');
 		    pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
 		    pnModSetVar('pnForum', 'posts_per_page', 15);
 		    pnModSetVar('pnForum', 'topics_per_page', 15);
@@ -233,52 +239,32 @@ function pnForum_admin_syncforums()
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
     $silent = pnVarCleanFromInput('silent');
-	if ($silent != 1) {
-		include("header.php");
-		
-		echo "<div align=\"center\">Syncing forum index (This may take a while)<br />";
-	}
 
-	flush();
 	pnModAPIFunc('pnForum', 'admin', 'sync', 
 	             array( 'id'   => NULL,
 	                    'type' => "all forums"));
-	if ($silent != 1) {
-		echo "Forum index synced<br />";
-		echo "Syncing topics (This may take longer!)<br />";
-	}
+	$message = pnVarPrepForDisplay(_PNFORUM_SYNC_FORUMINDEX) . "<br />";
 
-	flush();
 	pnModAPIFunc('pnForum', 'admin', 'sync', 
 	             array( 'id'   => NULL,
 	                    'type' => "all topics"));
-	if ($silent != 1) {
-		echo "Topics synced<br />";
-	}
+	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_TOPICS) . "<br />";
 
-	flush();
 	pnModAPIFunc('pnForum', 'admin', 'sync', 
 	             array( 'id'   => NULL,
 	                    'type' => "all posts"));
-	if ($silent != 1) {
-		echo "Posts counters synced<br />";
-	}
+	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_POSTSCOUNT) . "<br />";
 
-	flush();
 	pnModAPIFunc('pnForum', 'admin', 'sync', 
 	             array( 'id'   => NULL,
 	                    'type' => "users"));
+	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_USERS) . "<br />";
+
 	if ($silent != 1) {
-		echo "PostNuke and pnForum users synced<br />";
-		echo "Done!<br /><br/>";
-		echo "<a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'admin', 'main'))."\">".pnVarPrepForDisplay(_PNFORUM_BACKTOADMIN)."</a></div>";
-	}  
-	if ($silent != 1) {
-		include("footer.php");
-	} else {
-		pnRedirect(pnModURL('pnForum', 'admin', 'main'));
-	    return true;
+        pnSessionSetVar('statusmsg', $message);
 	}
+    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+    return true;
 }
 
 /**
