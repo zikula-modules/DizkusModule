@@ -1,4 +1,4 @@
-<?php 
+<?php
 /************************************************************************
  * pnForum - The Post-Nuke Module                                       *
  * ==============================                                       *
@@ -36,7 +36,7 @@
  * @author Frank Schummertz
  * @copyright 2004 by Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
@@ -49,29 +49,32 @@ $search_modules[] = array(
     'func_opt' => 'search_pnForum_opt'
 );
 
-function search_pnForum_opt($vars) 
+function search_pnForum_opt($vars)
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign('forums', $forums);
-    return $pnr->fetch('pnforum_search.html'); 
+    return $pnr->fetch('pnforum_search.html');
 }
 
 
-function search_pnForum($vars) 
+function search_pnForum($vars)
 {
     if(!isset($vars['active_pnForum'])) {
         return;
     }
+    if(!isset($vars['pnForum_limit']) || empty($vars['pnForum_limit'])) {
+        $vars['pnForum_limit'] = 10;
+    }
 
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    } 
+    }
 
     // the search function for pnForum is in our pnuserapi.php
     list($searchresults,
