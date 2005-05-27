@@ -24,17 +24,6 @@ function DoColor (fontcolor) {
     return;
 }
 
-function DoSmilie(SmilieCode) {
-    var SmilieCode;
-    var revisedMessage;
-    var post = document.getElementById("post");
-    var currentMessage = post.message.value;
-    revisedMessage = currentMessage+SmilieCode;
-    post.message.value=revisedMessage;
-    post.message.focus();
-    return;
-}
-
 function DoPrompt(action) {
     var revisedMessage;
     var post = document.getElementById("post");
@@ -67,7 +56,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "italic") {
         var thisItal = prompt("den kursiven Text angeben", "");
         var italBBCode = "[I]"+thisItal+"[/I]";
@@ -76,7 +65,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "underline") {
         var thisUL = prompt("den unterstrichenenen Text angeben", "");
         var ulBBCode = "[u]"+thisUL+"[/u]";
@@ -85,7 +74,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "image") {
         var thisImage = prompt("URL für das anzuzeigende Bild angeben", "http://");
         var imageBBCode = "[IMG]"+thisImage+"[/IMG]";
@@ -94,7 +83,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "quote") {
         var quoteBBCode = "[QUOTE]  [/QUOTE]";
         revisedMessage = currentMessage+quoteBBCode;
@@ -102,7 +91,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "code") {
         var codeBBCode = "[CODE]  [/CODE]";
         revisedMessage = currentMessage+codeBBCode;
@@ -110,7 +99,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "listopen") {
         var liststartBBCode = "[LIST]";
         revisedMessage = currentMessage+liststartBBCode;
@@ -118,7 +107,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "listclose") {
         var listendBBCode = "[/LIST]";
         revisedMessage = currentMessage+listendBBCode;
@@ -126,7 +115,7 @@ function DoPrompt(action) {
         post.message.focus();
         return;
     }
-    
+
     if (action == "listitem") {
         var thisItem = prompt("Listen-Eintrag angeben. Bitte beachten, dass Listen geöffnet und geschlossen werden müssen", "");
         var itemBBCode = "[*]"+thisItem;

@@ -17,30 +17,32 @@ function func_name() {
 //-->
 </script>
 
+<div style="background: <!--[ $bgcolor2 ]-->; text-align: center;">
+    <h1><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</h1>
+</div>
 <form name="latestposts" method="post" action="">
 <table border="0" cellpadding="1" cellspacing="1" style="text-align: center;" width="100%">
-    <tr style="background: <!--[ $bgcolor2 ]-->;">
-        <td colspan="4" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</strong></td>
-    </tr>
     <tr style="background: <!--[ $bgcolor3 ]-->;">
         <td colspan="4" style="text-align: center;">
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ] 
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ] 
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ] 
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ]
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ]
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ]
     		[ <a href="javascript:func_name()"><!--[ pnml name='_PNFORUM_LAST' ]--></a> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0"> <a href="javascript:func_name()"><label for="pnForum_hours"><!--[ pnml name='_PNFORUM_HOURS' ]--></label></a> ]
     		<br />
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ] 
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ] 
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ] 
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ]
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ]
+    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ]
     	</td>
     </tr>
 </table>
 </form>
-<br /><br />
+<div style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;">
+    <h2><!--[ pnml name='_PNFORUM_FORUMS' ]--></h2>
+</div>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
-          <td width="15%"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
+          <td width="15%" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
           <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
           <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
 	</tr>
@@ -49,7 +51,7 @@ function func_name() {
         <td width="50%">
             <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]--><!--[ postanchor postings=$post.topic_replies+1 post_id=$post.topic_last_post_id ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarcensor ]--></a>
         </td>
-        <td>
+        <td style="text-align: center;">
             <!--[ $post.topic_replies ]-->
         </td>
         <td>
@@ -57,6 +59,46 @@ function func_name() {
         </td>
         <td>
             <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
+        </td>
+    </tr>
+    <!--[ foreachelse ]-->
+    <tr>
+        <td colspan="4" style="text-align: center;">
+            <strong><!--[ pnml name='_PNFORUM_NOPOSTS' ]--></strong>
+        </td>
+    </tr>
+    <!--[ /foreach ]-->
+</table>
+
+<div style="text-align: center; margin-top: 1.5em;">
+    <h2><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></h2>
+</div>
+<table border="0" cellpadding="3" cellspacing="1" width="100%">
+	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
+          <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
+          <td width="15%" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
+          <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
+          <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
+	</tr>
+	<!--[ foreach item=post from=$m2fposts ]-->
+    <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+        <td width="50%">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$post.start ]--><!--[ postanchor postings=$post.topic_replies+1 post_id=$post.topic_last_post_id ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarcensor ]--></a>
+        </td>
+        <td style="text-align: center;">
+            <!--[ $post.topic_replies ]-->
+        </td>
+        <td>
+            <a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a>
+        </td>
+        <td>
+            <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
+        </td>
+    </tr>
+    <!--[ foreachelse ]-->
+    <tr>
+        <td colspan="4" style="text-align: center;">
+            <strong><!--[ pnml name='_PNFORUM_NOPOSTS' ]--></strong>
         </td>
     </tr>
     <!--[ /foreach ]-->

@@ -36,27 +36,27 @@
  * @author Frank Schummertz
  * @copyright 2004 by Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
 
 include_once("modules/pnForum/common.php");
- 
+
 /**
  * the main administration function
- * 
+ *
  */
 function pnForum_admin_main()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     $categories = pnModAPIFunc('pnForum', 'admin', 'readcategories');
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     $pnr =& new pnRender("pnForum");
@@ -69,20 +69,20 @@ function pnForum_admin_main()
 
 /**
  * preferences
- * 
+ *
  */
 function pnForum_admin_preferences()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-   
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     $submit = pnVarCleanFromInput('submit');
-    
+
     if(!$submit) {
         $checked = "checked=\"checked\" ";
         if (pnModGetVar('pnForum', 'post_sort_order') == "ASC") {
@@ -113,6 +113,27 @@ function pnForum_admin_preferences()
         	$autosubscribeonchecked = " ";
         	$autosubscribeoffchecked = $checked;
         }
+        if (pnModGetVar('pnForum', 'm2f_enabled') == "yes") {
+        	$m2f_enabledonchecked = $checked;
+        	$m2f_enabledoffchecked = " ";
+        } else {
+        	$m2f_enabledonchecked = " ";
+        	$m2f_enabledoffchecked = $checked;
+        }
+        if (pnModGetVar('pnForum', 'favorites_enabled') == "yes") {
+        	$favorites_enabledonchecked = $checked;
+        	$favorites_enabledoffchecked = " ";
+        } else {
+        	$favorites_enabledonchecked = " ";
+        	$favorites_enabledoffchecked = $checked;
+        }
+        if (pnModGetVar('pnForum', 'extendedsearch') == "yes") {
+        	$extendedsearchonchecked = $checked;
+        	$extendedsearchoffchecked = " ";
+        } else {
+        	$extendedsearchonchecked = " ";
+        	$extendedsearchoffchecked = $checked;
+        }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
         $pnr->assign('autosubscribe', $autosubscribechecked);
@@ -124,7 +145,6 @@ function pnForum_admin_preferences()
 	    $pnr->assign('hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
 	    $pnr->assign('email_from', pnModGetVar('pnForum', 'email_from'));
 	    $pnr->assign('default_lang', pnModGetVar('pnForum', 'default_lang'));
-        $pnr->assign('url_smiles', pnModGetVar('pnForum', 'url_smiles'));
         $pnr->assign('url_ranks_images', pnModGetVar('pnForum', 'url_ranks_images'));
         $pnr->assign('posticon', pnModGetVar('pnForum', 'posticon'));
         $pnr->assign('firstnew_image', pnModGetVar('pnForum', 'firstnew_image'));
@@ -140,10 +160,19 @@ function pnForum_admin_preferences()
         $pnr->assign('slimforumoffchecked', $slimforumoffchecked);
         $pnr->assign('autosubscribeonchecked', $autosubscribeonchecked);
         $pnr->assign('autosubscribeoffchecked', $autosubscribeoffchecked);
+        $pnr->assign('m2f_enabledonchecked', $m2f_enabledonchecked);
+        $pnr->assign('m2f_enabledoffchecked', $m2f_enabledoffchecked);
+        $pnr->assign('favorites_enabledonchecked', $favorites_enabledonchecked);
+        $pnr->assign('favorites_enabledoffchecked', $favorites_enabledoffchecked);
+        $pnr->assign('extendedsearchonchecked', $extendedsearchonchecked);
+        $pnr->assign('extendedsearchoffchecked', $extendedsearchoffchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'extendedsearch', pnVarPrepForStore(pnVarCleanFromInput('extendedsearch')));
+            pnModSetVar('pnForum', 'favorites_enabled', pnVarPrepForStore(pnVarCleanFromInput('favorites_enabled')));
+            pnModSetVar('pnForum', 'm2f_enabled', pnVarPrepForStore(pnVarCleanFromInput('m2f_enabled')));
             pnModSetVar('pnForum', 'autosubscribe', pnVarPrepForStore(pnVarCleanFromInput('autosubscribe')));
             pnModSetVar('pnForum', 'signature_start', pnVarPrepForStore(pnVarCleanFromInput('signature_start')));
             pnModSetVar('pnForum', 'signature_end', pnVarPrepForStore(pnVarCleanFromInput('signature_end')));
@@ -153,7 +182,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'hot_threshold', pnVarPrepForStore(pnVarCleanFromInput('hot_threshold')));
             pnModSetVar('pnForum', 'email_from', pnVarPrepForStore(pnVarCleanFromInput('email_from')));
             pnModSetVar('pnForum', 'default_lang', pnVarPrepForStore(pnVarCleanFromInput('default_lang')));
-            pnModSetVar('pnForum', 'url_smiles', pnVarPrepForStore(pnVarCleanFromInput('url_smiles')));
             pnModSetVar('pnForum', 'url_ranks_images', pnVarPrepForStore(pnVarCleanFromInput('url_ranks_images')));
             pnModSetVar('pnForum', 'posticon', pnVarPrepForStore(pnVarCleanFromInput('posticon')));
             pnModSetVar('pnForum', 'firstnew_image', pnVarPrepForStore(pnVarCleanFromInput('firstnew_image')));
@@ -164,9 +192,12 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'post_sort_order', pnVarPrepForStore(pnVarCleanFromInput('post_sort_order')));
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
-        } 
+        }
         if($actiontype=="RestoreDefaults")  {
-            pnModSetVar('pnForum', 'autosubscribe', 'on');
+            pnModSetVar('pnForum', 'extendedsearch', 'no');
+            pnModSetVar('pnForum', 'favorites_enabled', 'yes');
+            pnModSetVar('pnForum', 'm2f_enabled', 'yes');
+            pnModSetVar('pnForum', 'autosubscribe', 'yes');
             pnModSetVar('pnForum', 'signature_start', '<div style="border: 1px solid black;">');
             pnModSetVar('pnForum', 'signature_end', '</div>');
 		    pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
@@ -175,7 +206,6 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'hot_threshold', 20);
 		    pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
 		    pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
-		    pnModSetVar('pnForum', 'url_smiles', "modules/pnForum/pnimages/smiles");
 		    pnModSetVar('pnForum', 'url_ranks_images', "modules/pnForum/pnimages/ranks");
 		    pnModSetVar('pnForum', 'folder_image', "modules/pnForum/pnimages/folder.gif");
 		    pnModSetVar('pnForum', 'hot_folder_image', "modules/pnForum/pnimages/hot_folder.gif");
@@ -193,36 +223,36 @@ function pnForum_admin_preferences()
 
 /**
  * syncforums
- * 
+ *
  */
 function pnForum_admin_syncforums()
 {
 
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
     $silent = pnVarCleanFromInput('silent');
 
-	pnModAPIFunc('pnForum', 'admin', 'sync', 
+	pnModAPIFunc('pnForum', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "all forums"));
 	$message = pnVarPrepForDisplay(_PNFORUM_SYNC_FORUMINDEX) . "<br />";
 
-	pnModAPIFunc('pnForum', 'admin', 'sync', 
+	pnModAPIFunc('pnForum', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "all topics"));
 	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_TOPICS) . "<br />";
 
-	pnModAPIFunc('pnForum', 'admin', 'sync', 
+	pnModAPIFunc('pnForum', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "all posts"));
 	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_POSTSCOUNT) . "<br />";
 
-	pnModAPIFunc('pnForum', 'admin', 'sync', 
+	pnModAPIFunc('pnForum', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "users"));
 	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_USERS) . "<br />";
@@ -236,21 +266,21 @@ function pnForum_admin_syncforums()
 
 /**
  * addcategory
- * 
+ *
  */
 function pnForum_admin_category()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     list($submit, $cat_id) = pnVarCleanFromInput('submit', 'cat_id');
     if(!$submit)
     {
@@ -280,7 +310,7 @@ function pnForum_admin_category()
         return $pnr->fetch("pnforum_admin_category.html");
     } else { // submit is set
         list($actiontype, $cat_title) = pnVarCleanFromInput('actiontype', 'cat_title');
-        
+
         switch($actiontype)
         {
             case "Add":
@@ -299,7 +329,7 @@ function pnForum_admin_category()
     }
 }
 
-/** 
+/**
  * forum
  *
  */
@@ -307,34 +337,46 @@ function pnForum_admin_forum()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     list($submit, $forum_id) = pnVarCleanFromInput('submit', 'forum_id');
-    
+
     if(!$submit) {
         //
         if($forum_id==-1) {
-            $forum = array('forum_name'  => "",
-                           'forum_id'    => -1,
-                           'forum_desc'  => "",
-                           'forum_access'=> -1,
-                           'forum_type'  => -1,
-                           'forum_order' => -1,
-                           'cat_title'   => "",
-                           'cat_id'      => -1 );
+            $forum = array('forum_name'       => "",
+                           'forum_id'         => -1,
+                           'forum_desc'       => "",
+                           'forum_access'     => -1,
+                           'forum_type'       => -1,
+                           'forum_order'      => -1,
+                           'cat_title'        => "",
+                           'cat_id'           => -1,
+                           'pop3_active'      => 0,
+                           'pop3_server'      => "",
+                           'pop3_port'        => 110,
+                           'pop3_login'       => "",
+                           'pop3_password'    => "",
+                           'pop3_interval'    => 0,
+                           'pop3_pnuser'      => "",
+                           'pop3_pnpassword'  => "",
+                           'pop3_matchstring' => "");
         } else {
             $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                                   array('forum_id' => $forum_id));
         }
+        $forum['pop3_active_checked'] = ($forum['pop3_active']==1) ? 'checked' : '';
         $moderators = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
                                     array('forum_id' => $forum['forum_id']));
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->assign('forum', $forum);
+        $pnversionnum = _PN_VERSION_NUM;
+        $pnr->assign('minimum760', ($pnversionnum >= '0.7.6.0'));
         $pnr->assign('categories', pnModAPIFunc('pnForum', 'admin', 'readcategories'));
         $pnr->assign('moderators', $moderators);
         $pnr->assign('users', pnModAPIFunc('pnForum', 'admin', 'readusers',
@@ -348,37 +390,112 @@ function pnForum_admin_forum()
              $desc,
              $mods,
              $rem_mods,
-             $actiontype ) = pnVarCleanFromInput('forum_name',
+             $pop3_active,
+             $pop3_server,
+             $pop3_port,
+             $pop3_login,
+             $pop3_password,
+             $pop3_passwordconfirm,
+             $pop3_interval,
+             $pop3_matchstring,
+             $pop3_pnuser,
+             $pop3_pnpassword,
+             $pop3_pnpasswordconfirm,
+             $actiontype,
+             $pop3_test)   = pnVarCleanFromInput('forum_name',
                                                  'forum_id',
                                                  'cat_id',
                                                  'desc',
                                                  'mods',
                                                  'rem_mods',
-                                                 'actiontype'); 
+                                                 'pop3_active',
+                                                 'pop3_server',
+                                                 'pop3_port',
+                                                 'pop3_login',
+                                                 'pop3_password',
+                                                 'pop3_passwordconfirm',
+                                                 'pop3_interval',
+                                                 'pop3_matchstring',
+                                                 'pop3_pnuser',
+                                                 'pop3_pnpassword',
+                                                 'pop3_pnpasswordconfirm',
+                                                 'actiontype',
+                                                 'pop3_test');
+        $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                              array('forum_id' => $forum_id));
+
+        if($pop3_password <> $pop3_passwordconfirm) {
+        	return showforumerror(_PNFORUM_PASSWORDNOMATCH, __FILE__, __LINE__);
+        }
+        // check if user has changed the password
+        if($forum['pop3_password'] == $pop3_password) {
+            // no change necessary
+            $pop3_password = "";
+        } else {
+            $pop3_password = base64_encode($pop3_password);
+        }
+
+        if($pop3_pnpassword <> $pop3_pnpasswordconfirm) {
+        	return showforumerror(_PNFORUM_PASSWORDNOMATCH, __FILE__, __LINE__);
+        }
+        // check if user has changed the password
+        if($forum['pop3_pnpassword'] == $pop3_pnpassword) {
+            // no change necessary
+            $pop3_pnpassword = "";
+        } else {
+            $pop3_pnpassword = base64_encode($pop3_pnpassword);
+        }
         switch($actiontype) {
             case "Add":
-                pnModAPIFunc('pnForum', 'admin', 'addforum',
-                             array('forum_name' => $forum_name,
-                                   'cat_id'     => $cat_id,
-                                   'desc'       => $desc,
-                                   'mods'       => $mods));
+                $forum_id = pnModAPIFunc('pnForum', 'admin', 'addforum',
+                                         array('forum_name'       => $forum_name,
+                                               'cat_id'           => $cat_id,
+                                               'desc'             => $desc,
+                                               'mods'             => $mods,
+                                               'pop3_active'      => $pop3_active,
+                                               'pop3_server'      => $pop3_server,
+                                               'pop3_port'        => $pop3_port,
+                                               'pop3_login'       => $pop3_login,
+                                               'pop3_password'    => $pop3_password,
+                                               'pop3_interval'    => $pop3_interval,
+                                               'pop3_pnuser'      => $pop3_pnuser,
+                                               'pop3_pnpassword'  => $pop3_pnpassword,
+                                               'pop3_matchstring' => $pop3_matchstring));
                 break;
             case "Edit":
                 pnModAPIFunc('pnForum', 'admin', 'editforum',
-                             array('forum_name' => $forum_name,
-                                   'forum_id'   => $forum_id,
-                                   'cat_id'     => $cat_id,
-                                   'desc'       => $desc,
-                                   'mods'       => $mods,
-                                   'rem_mods'   => $rem_mods));
+                             array('forum_name'       => $forum_name,
+                                   'forum_id'         => $forum_id,
+                                   'cat_id'           => $cat_id,
+                                   'desc'             => $desc,
+                                   'mods'             => $mods,
+                                   'rem_mods'         => $rem_mods,
+                                   'pop3_active'      => $pop3_active,
+                                   'pop3_server'      => $pop3_server,
+                                   'pop3_port'        => $pop3_port,
+                                   'pop3_login'       => $pop3_login,
+                                   'pop3_password'    => $pop3_password,
+                                   'pop3_interval'    => $pop3_interval,
+                                   'pop3_pnuser'      => $pop3_pnuser,
+                                   'pop3_pnpassword'  => $pop3_pnpassword,
+                                   'pop3_matchstring' => $pop3_matchstring));
                 break;
             case "Delete":
                 // no security check!!!
                 pnModAPIFunc('pnForum', 'admin', 'deleteforum',
                              array('forum_id'   => $forum_id,
-                                   'ok'         => 1 )); 
-                break;    
+                                   'ok'         => 1 ));
+                break;
             default:
+        }
+        if($pop3_test==1) {
+            $pop3testresult = pnModAPIFunc('pnForum', 'user', 'testpop3connection',
+                                           array('forum_id' => $forum_id));
+            $pnr =& new pnRender('pnForum');
+            $pnr->caching = false;
+            $pnr->assign('messages', $pop3testresult);
+            $pnr->assign('forum_id', $forum_id);
+            return $pnr->fetch('pnforum_admin_pop3test.html');
         }
     }
     pnRedirect(pnModURL('pnForum', 'admin', 'main'));
@@ -393,18 +510,18 @@ function pnForum_admin_ranks()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return "loading adminapi failed";
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     list($submit, $ranktype) = pnVarCleanFromInput('submit', 'ranktype');
 
     if(!is_numeric($ranktype)) {
         return _MODARGSERROR;
     }
-    
+
     list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
                                              array('ranktype' => $ranktype));
 
@@ -454,12 +571,12 @@ function pnForum_admin_assignranks()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return "loading adminapi failed";
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     list($submit) = pnVarCleanFromInput('submit');
 
     $rankusers = pnModAPIFunc('pnForum', 'admin', 'readrankusers');
@@ -468,13 +585,13 @@ function pnForum_admin_assignranks()
                                              array('ranktype' => 1));
     // remove the first rank, its used for adding new ranks only
     array_splice($ranks, 0, 1);
-    
+
     if(!$submit) {
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->assign('url_ranks_images', pnModGetVar('pnForum', 'url_ranks_images'));
-        $pnr->assign('ranks', $ranks); 
-        $pnr->assign('rankimages', $rankimages); 
+        $pnr->assign('ranks', $ranks);
+        $pnr->assign('rankimages', $rankimages);
         $pnr->assign('rankusers', $rankusers);
         $pnr->assign('norankusers', $norankusers);
         return $pnr->fetch("pnforum_admin_assignranks.html");
@@ -500,12 +617,12 @@ function pnForum_admin_reordercategories()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return "loading adminapi failed";
-    } 
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
     }
-    
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
     list($direction) = pnVarCleanFromInput('direction');
 
     $categories = pnModAPIFunc('pnForum', 'admin', 'readcategories');
@@ -539,10 +656,10 @@ function pnForum_admin_reorderforums()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return "loading adminapi failed";
-    } 
+    }
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__); 
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
     list($direction,
@@ -558,7 +675,7 @@ function pnForum_admin_reorderforums()
                 'editforumorder',
                 'oldorder',
                 'neworder');
-    
+
     // we are re-sequencing with the arrow keys
     if (!empty($direction)) {
         // figure out the new order
@@ -591,7 +708,7 @@ function pnForum_admin_reorderforums()
         $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
                 array('cat_id' => $cat_id));
     }
-    
+
     // show the list of forums and their order
     // NOTE: There is no need to do a pnRedirect because we figure
     // out the forum info after we set the new order if we were editing.

@@ -33,15 +33,48 @@
  *
  * english language defines
  * @version $Id$
- * @author various 
+ * @author various
  * @copyright 2004 by pnForum team
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
 
 // new
+define('_PNFORUM_JOINTOPICS', 'Join topics');
+define('_PNFORUM_JOINTOPICS_INFO', 'Joins two topics together');
+define('_PNFORUM_JOINTOPICS_TOTOPIC', 'Target topic');
+
+define('_PNFORUM_MOVEPOST', 'Move post');
+define('_PNFORUM_MOVEPOST_INFO', 'Move a post from one topic to another');
+define('_PNFORUM_MOVEPOST_TOTOPIC', 'Target topic');
+
+define('_PNFORUM_MAIL2FORUMPOSTS', 'Mailinglists');
+define('_PNFORUM_NOSUBJECT', 'no subject');
+define('_PNFORUM_PREFS_USEEXTENDEDFULLTEXTSEARCH', 'Use extended fulltext search (requires MySQL 4.01 or later)');
+define('_PNFORUM_PREFS_FAVORITESENABLED', 'Favorites enabled');
+define('_PNFORUM_PREFS_M2FENABLED', 'Mail2Forum enabled');
+define('_PNFORUM_POP3TESTRESULTS', 'Pop3 test results');
+define('_PNFORUM_BACKTOFORUMADMIN', 'Back to forum admin');
+define('_PNFORUM_WRONGPNVERSIONFORMAIL2FORUM', 'Mail2Forum minimum requirement is PostNuke .760 or later!');
+define('_PNFORUM_MINSHORT', 'min');
+define('_PNFORUM_MAIL2FORUM', 'Mail2Forum');
+define('_PNFORUM_POP3ACTIVE', 'Mail2Forum active');
+define('_PNFORUM_POP3TEST', 'Perform Pop3 test after saving');
+define('_PNFORUM_POP3SERVER', 'Pop3 server');
+define('_PNFORUM_POP3PORT', 'Pop3 port');
+define('_PNFORUM_POP3LOGIN', 'Pop3 login');
+define('_PNFORUM_POP3PASSWORD', 'Pop3 password');
+define('_PNFORUM_POP3PASSWORDCONFIRM', 'Pop3 password confirmation');
+define('_PNFORUM_POP3INTERVAL', 'Poll interval');
+define('_PNFORUM_POP3MATCHSTRING', 'Rule');
+define('_PNFORUM_POP3MATCHSTRINGHINT', 'The rule is a regular expression that the mails subject as to match to avoid spa posigns. An empty rule means no checks!');
+define('_PNFORUM_PASSWORDNOMATCH', 'Passwords do not match, please go back and correct');
+define('_PNFORUM_POP3PNUSER', 'PN username');
+define('_PNFORUM_POP3PNPASSWORD', 'PN password');
+define('_PNFORUM_POP3PNPASSWORDCONFIRM', 'PN password confirmation');
+
 define('_PNFORUM_WHATISBBCODE', 'What is BBCode?');
 define('_PNFORUM_START', 'Start');
 define('_PNFORUM_PREFS_AUTOSUBSCRIBE', 'Autosubscribe to new topics or posts');
@@ -299,7 +332,6 @@ define('_PNFORUM_PREFS_SAVE', 'Save');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'End of signature format:');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Start of signature format:');
 define('_PNFORUM_PREFS_SLIMFORUM', 'Hide category view with one forum only');
-define('_PNFORUM_PREFS_SMILIELOCATION', 'Smiles icons location:');
 define('_PNFORUM_PREFS_TOPICICON', 'Topic image:');
 define('_PNFORUM_PREFS_TOPICSPERPAGE', 'Topics per Forum:<br /><em>(This is the number of topics per forum that will be displayed per page of a forum. 15 by default.)</em>');
 define('_PNFORUM_PREFS_YES', 'Yes');
@@ -370,7 +402,7 @@ define('_PNFORUM_SELECTEDITCAT','Select category');
 define('_PNFORUM_SEND_PM', 'send PM');
 define('_PNFORUM_SENDTO','Send to');
 define('_PNFORUM_SEPARATOR','&nbsp;::&nbsp;');
-define('_PNFORUM_SETTING', 'Settings'); 
+define('_PNFORUM_SETTING', 'Settings');
 define('_PNFORUM_SHADOWTOPIC_MESSAGE', 'The original posting has been moved <a title="moved" href="%s">here</a>.');
 define('_PNFORUM_SHOWALLFORUMS','Show all forums');
 define('_PNFORUM_SHOWFAVORITES','Show favorites');

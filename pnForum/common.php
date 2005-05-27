@@ -36,7 +36,7 @@
  * @author Frank Schummertz
  * @copyright 2004 by Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
@@ -100,7 +100,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     $specific_error_file = $prefix . $error_name;
     $specific_error_file .= ($error_id) ? ('_' . $error_id) : '';
     $specific_error_file .= '.html';
-    
+
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
@@ -120,7 +120,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // if this is a forum check then we need to check the categories too
     // in case the forum specific ones don't exist
     if (($error_type == 'forum') && (is_numeric($error_id))) {
-        $cat_id = pnModAPIFunc('pnForum','user','get_forum_category', array('forum_id'=>$error_id)); 
+        $cat_id = pnModAPIFunc('pnForum','user','get_forum_category', array('forum_id'=>$error_id));
         if ($cat_id) {
             // specific category and specific language
             array_push($test_array, 'errors/category/' . $lang . '/' . $prefix . $error_name . '_' . $cat_id . '.html');
@@ -159,46 +159,43 @@ function showforumerror($error_text, $file="", $line=0)
 {
     // we need to load one core file in order to have the language definitions
     // available
-    if(!pnModAPILoad('pnForum','admin'))
-    {
+    if(!pnModAPILoad('pnForum','admin')) {
         pnModAPILoad('pnForum', 'user');
     }
-    
+
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN))
-    {
+    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         $pnr->assign( 'file', $file);
         $pnr->assign( 'line', $line);
     }
     $output = $pnr->fetch("pnforum_errorpage.html");
-    if(preg_match("/(api\.php|common\.php)$/i", $file)<>0)
-    {
-        // __FILE__ ends with api.php or is common.php itself
+    if(preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
+        // __FILE__ ends with api.php or is common.php or pninit.php
         include_once("header.php");
         echo $output;
         include_once("footer.php");
         exit;
     }
     return $output;
-    
+
 }
 
 /**
  * showforumsqlerror
  * if $sql is not empty then we show message and mail notififcation to site admin
- * if it is empty, then it is not an Error, but just warning and we just show message to a user. 
+ * if it is empty, then it is not an Error, but just warning and we just show message to a user.
  * No mail is generated
- * If current user is admin, then onscreen message also include additional debug information 
+ * If current user is admin, then onscreen message also include additional debug information
  */
 function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="", $line)
 {
-	$adminmail = pnConfigGetVar('adminmail'); 
-	$pagetype = 'error'; 
-    
-	if ($sql != '') {
+	$adminmail = pnConfigGetVar('adminmail');
+	$pagetype = 'error';
+
+	if(!empty($sql)) {
 		// Sending notify e-mail for error
 		$posted_message = "Error occured\n\n";
 		$posted_message .= "SQL statement:\n".$sql."\n";
@@ -220,7 +217,7 @@ function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="
     	$modInfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
     	$msg_XMailer_Header = "X-Mailer: pnForum ".$modVersion."\n";
     	$msg_ContentType_Header = "Content-Type: text/plain;";
-    
+
     	$phpbb_default_charset = pnModGetVar('pnForum', 'default_lang');
     	if ($phpbb_default_charset != '') {
     		$msg_ContentType_Header .= " charset=".$phpbb_default_charset;
@@ -231,9 +228,9 @@ function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="
 		$msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
 		$msg_Headers .= "Reply-To: $msg_To";
         $msg_Subject = "sql error in your pnForum";
-        
+
     	pnMail($msg_To, $msg_Subject, $posted_message, $msg_Headers);
-	}   
+	}
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
@@ -309,7 +306,7 @@ function pnfOpenDB($tablename="")
 
     if(!empty($tablename)) {
         $columnname = $tablename . '_column';
-        if( !array_key_exists($tablename, $pntable) || 
+        if( !array_key_exists($tablename, $pntable) ||
             !array_key_exists($columnname, $pntable) ) {return false; }
         // table exists, now get the dbconnection object
         return array($dbconn, &$pntable[$tablename], &$pntable[$columnname]);
@@ -328,7 +325,7 @@ function pnfOpenDB($tablename="")
  */
 function pnfCloseDB($resobj)
 {
-    if(is_object($resobj)) 
+    if(is_object($resobj))
     {
         $resobj->Close();
     }
@@ -336,7 +333,7 @@ function pnfCloseDB($resobj)
 }
 
 /**
- * pnfExecuteSQL 
+ * pnfExecuteSQL
  * executes an sql command and returns the result, shows error if necessary
  *
  *@params $dbconn object db onnection object
@@ -351,7 +348,10 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    $dbconn->debug = $debug;
+    if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
+        // only admins shall see the debug output
+        $dbconn->debug = $debug;
+    }
     $result = $dbconn->Execute($sql);
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
@@ -361,7 +361,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
 }
 
 /**
- * pnfSelectLimit 
+ * pnfSelectLimit
  * executes an sql command and returns a part of the result, shows error if necessary
  *
  *@params $dbconn object db onnection object
@@ -378,7 +378,10 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    $dbconn->debug = $debug;
+    if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
+        // only admins shall see the debug output
+        $dbconn->debug = $debug;
+    }
     if( $start<>false && (is_numeric($start) && $start<>0 ) ){
         $result = $dbconn->SelectLimit($sql, $limit, $start);
     } else {
@@ -405,7 +408,7 @@ if(!function_exists('pnForum_is_serialized')) {
             return false;
         }
         return true;
-    } 
+    }
 }
 
 /**
@@ -421,52 +424,52 @@ if(!function_exists('pnForum_is_serialized')) {
  *
  */
 
-function pnForum_bbdecode($message) 
+function pnForum_bbdecode($message)
 {
     // Undo [code]
     $message = preg_replace("#<!-- BBCode Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Code:<HR></TD></TR><TR><TD><PRE>(.*?)</PRE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode End -->#s", "[code]\\1[/code]", $message);
-    
+
     // Undo [quote]
     $message = preg_replace("#<!-- BBCode Quote Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Quote:<HR></TD></TR><TR><TD><BLOCKQUOTE>(.*?)</BLOCKQUOTE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode Quote End -->#s", "[quote]\\1[/quote]", $message);
-    
+
     // Undo [b] and [i]
     $message = preg_replace("#<!-- BBCode Start --><strong>(.*?)</strong><!-- BBCode End -->#s", "[b]\\1[/b]", $message);
     $message = preg_replace("#<!-- BBCode Start --><I>(.*?)</I><!-- BBCode End -->#s", "[i]\\1[/i]", $message);
-    
+
     // Undo [url] (both forms)
     $message = preg_replace("#<!-- BBCode Start --><A HREF=\"http://(.*?)\" TARGET=\"_blank\">(.*?)</A><!-- BBCode End -->#s", "[url=\\1]\\2[/url]", $message);
-    
+
     // Undo [email]
     $message = preg_replace("#<!-- BBCode Start --><A HREF=\"mailto:(.*?)\">(.*?)</A><!-- BBCode End -->#s", "[email]\\1[/email]", $message);
-    
+
     // Undo [img]
     $message = preg_replace("#<!-- BBCode Start --><IMG SRC=\"http://(.*?)\"><!-- BBCode End -->#s", "[img]http://\\1[/img]", $message);
     //$message = preg_replace("#<!-- BBCode Start --><IMG SRC=\"(.*?)\"><!-- BBCode End -->#s", "[img]\\1[/img]", $message);
-    
+
     // Undo lists (unordered/ordered)
-    
+
     // unordered list code..
     $matchCount = preg_match_all("#<!-- BBCode ulist Start --><UL>(.*?)</UL><!-- BBCode ulist End -->#s", $message, $matches);
-    
+
     for ($i = 0; $i < $matchCount; $i++)
     {
     	$currMatchTextBefore = preg_quote($matches[1][$i]);
     	$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
-    
+
     	$message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
     }
-    
+
     // ordered list code..
     $matchCount = preg_match_all("#<!-- BBCode olist Start --><OL TYPE=([A1])>(.*?)</OL><!-- BBCode olist End -->#si", $message, $matches);
-    
+
     for ($i = 0; $i < $matchCount; $i++)
     {
     	$currMatchTextBefore = preg_quote($matches[2][$i]);
     	$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
-    
+
     	$message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
     }
-    
+
     return($message);
 }
 
@@ -479,7 +482,7 @@ function pnForum_bbdecode($message)
  *
  * obsolete function - we have pn_bbclick
  */
-function pnForum_undo_make_clickable($text) 
+function pnForum_undo_make_clickable($text)
 {
 	$text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
 	$text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
@@ -489,7 +492,7 @@ function pnForum_undo_make_clickable($text)
 /**
  * removes instances of <br /> since sometimes they are stored in DB :(
  */
-function phpbb_br2nl($str) 
+function phpbb_br2nl($str)
 {
     return preg_replace("=<br(>|([\s/][^>]*)>)\r?\n?=i", "\n", $str);
 }
@@ -538,7 +541,7 @@ function allowedtoadmincategoryandforum($category_id, $forum_id)
  * sorting categories by cat_order (this is a VARCHAR, so we need this function for sorting)
  *
  */
-function cmp_catorder ($a, $b) 
+function cmp_catorder ($a, $b)
 {
    return (int)$a['cat_order'] > (int)$b['cat_order'];
 }
@@ -550,13 +553,29 @@ function cmp_catorder ($a, $b)
 function pnForum_replacesignature($text, $signature="")
 {
     if (!empty($signature)){
-        $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));    
-        $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));    
+        $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));
+        $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));
         $text = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $signature . $sigend, $text);
     } else {
         $text = eregi_replace("\[addsig]$", "", $text);
     }
     return $text;
+}
+
+/**
+ * mailcronecho
+ *
+ */
+function mailcronecho($text)
+{
+    if(pnSessionGetVar('mailcronrunning')==true) {
+        echo $text;
+        if(pnSessionGetVar('mailcrondebug')==true) {
+            echo "<br />";
+        }
+        flush();
+    }
+    return;
 }
 
 ?>

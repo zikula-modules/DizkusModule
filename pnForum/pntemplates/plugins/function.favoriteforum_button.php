@@ -33,12 +33,13 @@
  *@params $params['return_to'] string url to return to after subscribing, necessary because
  *                                    the subscription page can be reached from several places
  */
-function smarty_function_favoriteforum_button($params, &$smarty) 
+function smarty_function_favoriteforum_button($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
 
-    if (pnUserLoggedIn()) {
+    $out = '';
+    if (pnUserLoggedIn() && (pnModGetVar('pnForum', 'favorites_enabled')=='yes') ) {
         include_once('modules/pnForum/common.php');
         $userid = pnUserGetVar('uid');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
@@ -48,7 +49,7 @@ function smarty_function_favoriteforum_button($params, &$smarty)
             }
             $lang = pnUserGetLang();
             if(pnModAPIFunc('pnForum', 'user', 'get_forum_favorites_status',
-                            array('userid'=>$userid, 
+                            array('userid'=>$userid,
                                   'forum_id'=>$forum_id))==false) {
                 $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_ADD_FAVORITE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/add2favorites.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_ADD_FAVORITE_FORUM)."\" /></a>";
             } else {

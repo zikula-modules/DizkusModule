@@ -1,0 +1,38 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<form action="<!--[ pnmodurl modname=pnForum type=init func="interactiveupgrade_to_2_0_2" ]-->" method="post">
+    <div>
+        <div style="height: 3em; vertical-align: middle; width: 90%; background-color: <!--[ $bgcolor1 ]-->; text-align: center;">
+            <h1><!--[ pnml name='_PNFORUM_WELCOMETOINTERACTIVEUPGRADE' ]--></h1><br />
+        </div>
+        <h2>
+        <!--[ pnml name='_PNFORUM_OLDVERSION' ]-->: <!--[ $oldversion ]--><br />
+        <!--[ pnml name='_PNFORUM_NEXTVERSION' ]-->: 2.0.2<br />
+        <!--[ pnml name='_PNFORUM_NEWVERSION' ]-->: <!--[ $newversion ]-->
+        </h2>
+        <div style="border: 1px solid red; padding: 4px; margin: 10px; color: red;">
+            <h2><!--[ pnml name='_PNFORUM_BACKUPHINT' html=1 ]--></h2>
+        </div>
+        <div><!--[ pnml name='_PNFORUM_TO202_HINT' html=1 ]--></div>
+        <div>
+            <input type="radio" name="createindex" id="addindexnow" value="1" checked="checked"/>&nbsp;<label for="addindexnow"><!--[ pnml name='_PNFORUM_TO202_ADDINDEXNOW' ]--></label><br />
+            <input type="radio" name="createindex" id="addindexlater" value="0" />&nbsp;<label for="addindexlater"><!--[ pnml name='_PNFORUM_TO202_ADDINDEXLATER' ]-->:</label><br />
+            <div>
+                <!--[ pnconfiggetvar name=prefix assign=prefix ]-->
+                <pre style="padding-left: 50px; border: 1px solid black;">
+                ALTER TABLE <!--[ $prefix ]-->_pnforum_posts_text ADD FULLTEXT (post_text)<br />
+                ALTER TABLE <!--[ $prefix ]-->_pnforum_topics ADD FULLTEXT (topic_title)
+                </pre>
+            </div>
+            <br />
+
+            <input type="hidden" name="authkey" value="<!--[ $authid ]-->" />
+            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+        </div>
+
+    </div>
+</form>

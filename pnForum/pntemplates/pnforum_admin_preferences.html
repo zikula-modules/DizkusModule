@@ -10,7 +10,7 @@
     <legend style="font-weight: bold;">
         <!--[pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO']-->
     </legend>
-    
+
     <br />
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->" method="post">
     <table border="0" cellpadding="3" cellspacing="1" width="100%">
@@ -75,13 +75,31 @@
                 <input type="radio" name="autosubscribe" value="no" <!--[ $autosubscribeoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
     		</td>
     	</tr>
-
     	<tr align="left">
-    		<td colspan="3" ><!--[ pnml name='_PNFORUM_PREFS_ICONS' html=1 ]--></td>
+    		<td><!--[ pnml name='_PNFORUM_PREFS_M2FENABLED' ]--></td>
+            <td colspan="2">
+                <input type="radio" name="m2f_enabled" value="yes" <!--[ $m2f_enabledonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="m2f_enabled" value="no" <!--[ $m2f_enabledoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+    		</td>
     	</tr>
     	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_SMILIELOCATION' ]--></td>
-            <td colspan="2"><input type="text" name="url_smiles" size="50" maxlength="100" value="<!--[ $url_smiles ]-->"></td>
+    		<td><!--[ pnml name='_PNFORUM_PREFS_FAVORITESENABLED' ]--></td>
+            <td colspan="2">
+                <input type="radio" name="favorites_enabled" value="yes" <!--[ $favorites_enabledonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="favorites_enabled" value="no" <!--[ $favorites_enabledoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+    		</td>
+    	</tr>
+<!--[*
+    	<tr align="left">
+    		<td><!--[ pnml name='_PNFORUM_PREFS_USEEXTENDEDFULLTEXTSEARCH' ]--></td>
+            <td colspan="2">
+                <input type="radio" name="extendedsearch" value="yes" <!--[ $extendedsearchonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="extendedsearch" value="no" <!--[ $extendedsearchoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+    		</td>
+    	</tr>
+*]-->
+    	<tr align="left">
+    		<td colspan="3" ><!--[ pnml name='_PNFORUM_PREFS_ICONS' html=1 ]--></td>
     	</tr>
     	<tr align="left">
     		<td><!--[ pnml name='_PNFORUM_PREFS_RANKLOCATION' ]--></td>

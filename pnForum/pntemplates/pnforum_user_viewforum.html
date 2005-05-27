@@ -6,7 +6,7 @@
 <!--[ pnthemegetvar name=bgcolor4 assign=bgcolor4  ]-->
 
  <!--[ forumimage name=firstnew_image assign=firstnew ]-->
- 
+
 <!--[* pndebug *]-->
 
 <!--[ include file='pnforum_user_header.html' ]-->
@@ -30,9 +30,9 @@
         <th id="col_4" abbr="<!--[ pnml name='_PNFORUM_DATE' ]-->" style="width:20%;text-align:center;"><span class="pnForum-title"><strong><!--[ pnml name='_PNFORUM_DATE' ]--></strong></span></th>
     </tr>
     </thead>
-    
+
     <tbody>
-	
+
 	<!--[ assign var="stickyControlStart" value="0" ]-->
 	<!--[ assign var="stickyControlEnd" value="0" ]-->
     <!--[ foreach item=topic from=$forum.topics ]-->
@@ -41,16 +41,16 @@
 			<!--[ if $stickyControlEnd eq 0]-->
 				<tr>
 				<td colspan="6">&nbsp;</td>
-				</tr> 
+				</tr>
 				<tr style="background-color:<!--[ $bgcolor2 ]-->;">
 				<td colspan="6"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
-				</tr>   
-				<!--[ assign var="stickyControlEnd" value="1" ]-->     		
+				</tr>
+				<!--[ assign var="stickyControlEnd" value="1" ]-->
 			<!--[ /if ]-->
 		<!--[ /if ]-->
 	<!--[ /if ]-->
 
-        <!--[ if $topic.sticky eq 1 ]-->        
+        <!--[ if $topic.sticky eq 1 ]-->
 			<!--[ if $stickyControlStart eq 1]-->
 			    <tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
 				<td headers="col_0" style="width:5%;"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
@@ -58,11 +58,11 @@
 				<tr style="background-color:<!--[ $bgcolor2 ]-->;">
 				<td colspan="6" style="vertical-align: bottom;width:5%;"><strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong></td>
 				</tr>
-				
+
 				<tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
 				<td headers="col_0" style="width:5%;"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
-				
-				
+
+
 				<!--[ assign var="stickyControlStart" value="1" ]-->
 			<!--[ /if ]-->
         <!--[ else ]-->
@@ -73,7 +73,7 @@
 		  	    <!--[ else ]-->
 		  	        <img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->" /></td>
                 <!--[ /if ]-->
-        <!--[ /if ]-->        
+        <!--[ /if ]-->
         <td headers="col_0" style="text-align:left;">
             <a title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarprepfordisplay|pnforumbbsmile|pnvarcensor ]--></a><!--[ $topic.pagination ]-->
          </td>
@@ -82,7 +82,7 @@
         <td headers="col_3" align="center" valign="middle"><!--[ $topic.topic_views ]--></td>
         <td headers="col_4" align="center" valign="middle"><!--[ $topic.post_time|date_format:"%d.%m.%Y, %H:%M" ]--><br /><a href="user.php?op=userinfo&amp;uname=<!--[ $topic.last_poster ]-->"><!--[ $topic.last_poster ]--></a>&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><img src="modules/pnForum/pnimages/icon_latest_topic.gif" alt="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" width="18" height="9" /></a>&nbsp;</td>
     </tr>
-	
+
     <!--[ foreachelse ]-->
     <tr>
         <td style="background-color:<!--[ $bgcolor3 ]-->;" colspan="6" align="center"><!--[ pnml name='_PNFORUM_NOTOPICS' ]--></td>

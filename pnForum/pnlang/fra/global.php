@@ -33,10 +33,10 @@
  *
  * french language defines
  * @version $Id$
- * @author various 
+ * @author various
  * @copyright 2004 by pnForum team
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ************************************************************************
@@ -247,7 +247,7 @@ define('_PNFORUM_NORANKSINDATABASE', 'Pas de titre honorifique');
 define('_PNFORUM_NOSMILES','Il n\'y a pas d\'émoticon dans la base de données');
 define('_PNFORUM_NOTEDIT','Vous ne pouvez pas modifier les messages dont vous n\'êtes pas l\'auteur.');
 define('_PNFORUM_NOTIFYBODY1','Forums');
-define('_PNFORUM_NOTIFYBODY2','écrit à'); 
+define('_PNFORUM_NOTIFYBODY2','écrit à');
 define('_PNFORUM_NOTIFYBODY3','Répondre à ce message : ');
 define('_PNFORUM_NOTIFYBODY4','Faire défiler les fils de discussion :');
 define('_PNFORUM_NOTIFYBODY5','Vous recevez ce message car vous avez demandé à recevoir les messages du forum : ');
@@ -301,7 +301,6 @@ define('_PNFORUM_PREFS_SAVE', 'Enregistrer');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'Marque de fin de signature :');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Marque de début de signature :');
 define('_PNFORUM_PREFS_SLIMFORUM', 'Masquer les catégories contenant un seul forum');
-define('_PNFORUM_PREFS_SMILIELOCATION', 'Emplacements des émoticons :');
 define('_PNFORUM_PREFS_TOPICICON', 'Icône de sujet :');
 define('_PNFORUM_PREFS_TOPICSPERPAGE', 'Nombre de sujets par page :<br /><em>(c\'est le nombre de sujets d\'un forum qui seront affichés par page. La valeur par défaut est 15)</em>');
 define('_PNFORUM_PREFS_YES', 'Oui');
@@ -372,7 +371,7 @@ define('_PNFORUM_SELECTEDITCAT','Selectionnez une categorie');
 define('_PNFORUM_SEND_PM', 'Envoyer un message privé');
 define('_PNFORUM_SENDTO','Envoyer à');
 define('_PNFORUM_SEPARATOR','&nbsp;::&nbsp;');
-define('_PNFORUM_SETTING', 'Préférences'); 
+define('_PNFORUM_SETTING', 'Préférences');
 define('_PNFORUM_SHADOWTOPIC_MESSAGE', 'Le message original a été déplacé <a title="moved" href="%s">ici</a>.');
 define('_PNFORUM_SHOWALLFORUMS','Afficher tous les forums');
 define('_PNFORUM_SHOWFAVORITES','Afficher les favoris');

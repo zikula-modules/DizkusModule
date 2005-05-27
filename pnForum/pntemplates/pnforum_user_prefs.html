@@ -41,17 +41,22 @@
         <th style="width:25%; height:28px; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong>
         </th>
+        <!--[ if $favorites_enabled eq "yes" ]-->
         <th style="width:25%; height:28px; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_FAVORITE_STATUS' ]--></strong>
         </th>
+        <!--[ /if ]-->
     </tr>
     </thead>
     <tbody>
     <!--[ foreach item=category from=$tree ]-->
     <tr align="left" valign="top">
-        <td colspan="3" height="28">
+        <td colspan="2" height="28">
             <strong><!--[ $category.cat_title ]--></strong>
         </td>
+        <!--[ if $favorites_enabled eq "yes" ]-->
+        <td>&nbsp;</td>
+        <!--[ /if ]-->
     </tr>
     <!--[ foreach item=forum from=$category.forums ]-->
     <tr bgcolor="<!--[ $bgcolor3 ]-->" style="text-align:left; vertical-align:top;">
@@ -63,11 +68,13 @@
         <td style="text-align:center; vertical-align:middle;">
             <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;
         </td>
+        <!--[ if $favorites_enabled eq "yes" ]-->
         <td style="text-align:center; vertical-align:middle;">
             <!--[ favoriteforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;
 		</td>
+        <!--[ /if ]-->
     </tr>
-    
+
     <!--[ /foreach ]-->
     <!--[ /foreach ]-->
     </tbody>

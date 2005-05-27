@@ -2,10 +2,10 @@
 /**
  * general module informations
  * @version $Id$
- * @author Andreas Krapohl 
+ * @author Andreas Krapohl
  * @copyright 2003 by Andreas Krapohl, 2004 by Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  */
 
@@ -14,7 +14,7 @@
  */
 $modversion['name'] = 'pnForum';
 $modversion['id'] = '62';
-$modversion['version'] = '2.0.1';
+$modversion['version'] = '2.0.2';
 $modversion['description'] = 'phpBB-style Bulletin Board';
 $modversion['credits'] = 'pndocs/credits.txt';
 $modversion['help'] = 'pndocs/install.txt';

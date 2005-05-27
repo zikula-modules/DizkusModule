@@ -35,12 +35,13 @@
  *@params user_id  (int) -1 = last postings of current user, otherwise its treated as an user_id
  *@params canread (bool) if set, only the forums that we have read access to
  *@params favorites (bool) if set, only the favorite forums
+ *@params show_m2f (bool) if set show postings from mail2forum forums
  *
  */
 function smarty_function_readlastposts($params, &$smarty)
 {
     extract($params);
-	unset($params);
+    unset($params);
 
     if(!pnModAPILoad('pnForum', 'user')) {
         $smarty->trigger_error('unable to load pnForum userapi');
@@ -131,6 +132,13 @@ function smarty_function_readlastposts($params, &$smarty)
         pnfCloseDB($result);
     }
 
+    // if show_m2f is set we show contents of m2f forums where.
+    // forum_pop3_active is set to 1
+    $whereshowm2f = " f.forum_pop3_active = '0' AND";
+    if($show_m2f==true) {
+        $whereshowm2f = '';
+    }
+
     $postmax = (!empty($maxposts)) ? $maxposts : 5;
 
     // user_id set?
@@ -165,86 +173,106 @@ function smarty_function_readlastposts($params, &$smarty)
               $whereuser
               $wherefavorites
               $wherecanread
+              $whereshowm2f
               t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id AND
               pt.post_id = p.post_id
         ORDER by t.topic_time DESC";
 
-    $result = pnfSelectLimit($dbconn, $sql, $postmax, false, __FILE__, __LINE__);
+//    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $postcount = 0;
     $lastposts = array();
-    if($result->RecordCount()>0) {
-        $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
-        $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
-        for (; !$result->EOF; $result->MoveNext()) {
-            list($topic_id,
-                 $topic_title,
-                 $topic_replies,
-                 $topic_time,
-                 $topic_last_post_id,
-                 $forum_id,
-                 $forum_name,
-                 $cat_title,
-                 $cat_id,
-                 $poster_id,
-                 $post_id,
-                 $post_text) = $result->fields;
-            if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-                $lastpost = array();
-                $lastpost['topic_id'] = $topic_id;
-                $lastpost['forum_id'] = $forum_id;
-                $lastpost['forum_name'] = $forum_name;
-                $lastpost['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
-                $lastpost['topic_last_post_id'] = $topic_last_post_id;
-                $lastpost['title_tag'] = $topic_title;
-                $lastpost['topic_replies'] = $topic_replies;
-                $lastpost['topic_time'] = $topic_time;
-                $lastpost['poster_id'] = $poster_id;
-                $lastpost['cat_title'] = $cat_title;
-                $lastpost['cat_id'] = $cat_id;
-                $lastpost['post_id'] = $post_id;
-                $lastpost['post_text'] = $post_text;
 
-                if($post_sort_order == "ASC") {
-                    $start = ((ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
-                } else {
-                    // latest topic is on top anyway...
-                    $start = 0;
-                }
-                $lastpost['start'] = $start;
-                if ($poster_id != 1) {
-                    $user_name = pnUserGetVar('uname', $poster_id);
-                    if ($user_name == "") {
-                        // user deleted from the db?
+    $startreadat = 0;
+    $postmaxread = false;
+
+    do {
+        // if the user wants to see the last x postings we read 5 * x because
+        // we might get to forums he is not allowed to see
+        $result = pnfSelectLimit($dbconn, $sql, $postmax * 5 , $startreadat, __FILE__, __LINE__);
+
+        if($result->RecordCount()>0) {
+            $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
+            $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
+            for (; !$result->EOF; $result->MoveNext()) {
+                list($topic_id,
+                     $topic_title,
+                     $topic_replies,
+                     $topic_time,
+                     $topic_last_post_id,
+                     $forum_id,
+                     $forum_name,
+                     $cat_title,
+                     $cat_id,
+                     $poster_id,
+                     $post_id,
+                     $post_text) = $result->fields;
+                if(allowedtoreadcategoryandforum($cat_id, $forum_id) && $postcount < $postmax) {
+                    $postcount++;
+                    $lastpost = array();
+                    $lastpost['topic_id'] = $topic_id;
+                    $lastpost['forum_id'] = $forum_id;
+                    $lastpost['forum_name'] = $forum_name;
+                    $lastpost['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
+                    $lastpost['topic_last_post_id'] = $topic_last_post_id;
+                    $lastpost['title_tag'] = $topic_title;
+                    $lastpost['topic_replies'] = $topic_replies;
+                    $lastpost['topic_time'] = $topic_time;
+                    $lastpost['poster_id'] = $poster_id;
+                    $lastpost['cat_title'] = $cat_title;
+                    $lastpost['cat_id'] = $cat_id;
+                    $lastpost['post_id'] = $post_id;
+                    $lastpost['post_text'] = $post_text;
+
+                    if($post_sort_order == "ASC") {
+                        $start = ((ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
+                    } else {
+                        // latest topic is on top anyway...
+                        $start = 0;
+                    }
+                    $lastpost['start'] = $start;
+                    if ($poster_id != 1) {
+                        $user_name = pnUserGetVar('uname', $poster_id);
+                        if ($user_name == "") {
+                            // user deleted from the db?
+                            $user_name = pnConfigGetVar('anonymous');
+                        }
+                    } else {
                         $user_name = pnConfigGetVar('anonymous');
                     }
-                } else {
-                    $user_name = pnConfigGetVar('anonymous');
+                    $lastpost['poster_name'] = $user_name;
+
+                    $lastpost['post_text'] = pnForum_replacesignature($lastpost['post_text'], '');
+                    // call hooks for $message
+                    list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
+                    $lastpost['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
+
+                    $posted_unixtime= strtotime ($lastpost['topic_time']);
+                    $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+                    $lastpost['posted_time'] =$posted_ml;
+                    $lastpost['posted_unixtime'] = $posted_unixtime;
+
+                    // we now create the url to the last post in the thread. This might
+                    // on site 1, 2 or what ever in the thread, depending on topic_replies
+                    // count and the posts_per_page setting
+                    $lastpost['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                          array('topic' => $lastpost['topic_id'],
+                                                                'start' => $start));
+                    $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];
+
+                    array_push($lastposts, $lastpost);
                 }
-                $lastpost['poster_name'] = $user_name;
-
-                $lastpost['post_text'] = pnForum_replacesignature($lastpost['post_text'], '');
-                // call hooks for $message
-                list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
-                $lastpost['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
-
-                $posted_unixtime= strtotime ($lastpost['topic_time']);
-                $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
-                $lastpost['posted_time'] =$posted_ml;
-                $lastpost['posted_unixtime'] = $posted_unixtime;
-
-                // we now create the url to the last post in the thread. This might
-                // on site 1, 2 or what ever in the thread, depending on topic_replies
-                // count and the posts_per_page setting
-                $lastpost['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                                      array('topic' => $lastpost['topic_id'],
-                                                            'start' => $start));
-                $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];
-
-                array_push($lastposts, $lastpost);
+                if( $postcount >= $postmax ) {
+                    $postmaxread = true;
+                    break;
+                }
             }
+            // prepare the next round of reading topics
+            $startreadat = $postcount;
         }
-    }
+    } while($postmaxread==false);
+
     pnfCloseDB($result);
     $smarty->assign('lastpostcount', count($lastposts));
     $smarty->assign('lastposts', $lastposts);

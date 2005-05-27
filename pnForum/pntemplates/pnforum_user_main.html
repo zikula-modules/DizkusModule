@@ -2,8 +2,6 @@
 
 <!--[ include file=pnforum_user_header.html ]-->
 
-<!--[* pndebug *]-->
-
 <!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
 <!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
@@ -43,7 +41,7 @@
             </td>
             <td headers="col_1" style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
             <td headers="col_2" style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
-            <td headers="col_3" style="width:15%;text-align:center;" align="center" valign="middle"><!--[ $forum.last_post ]--></td>
+            <td headers="col_3" style="width:15%;text-align:center;" align="center" valign="middle"><!--[ $forum.last_post|pnvarprephtmldisplay ]--></td>
         </tr>
         <!--[ foreachelse ]-->
         <tr>

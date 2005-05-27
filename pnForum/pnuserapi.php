@@ -36,7 +36,7 @@
  * @author Frank Schummertz
  * @copyright 2004 by Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
@@ -55,46 +55,36 @@ function pnForum_userapi_get_userdata_from_id($args)
 {
     extract($args);
     unset($args);
-    
-    list($dbconn, $pntable) = pnfOpenDB();
-    
-    $phpbbusercol = $pntable['pnforum_users_column'];
-    $phpbbusercolkeys = array_keys($phpbbusercol);
-    $usercol    = $pntable['users_column'];
-    $usercolkeys    = array_keys($usercol);
 
-    $user = array();    
+    // get the core user data
+    $userdata = pnUserGetVars($userid);
+    if($userdata==false) {
+        return showforumerror("" . _PNFORUM_NOUSER_OR_POST . "(user id: $userid)", __FILE__, __LINE__);
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $pnfusercol = $pntable['pnforum_users_column'];
+
     $sql = "SELECT ";
+    $flag = false;
     $prefix = pnConfigGetVar('prefix');
-    $keycount = count($phpbbusercolkeys);
-    for($cnt=0; $cnt<$keycount; $cnt++) {
-        $key = str_replace($prefix . "_pnforum_users.", "", $phpbbusercol[$phpbbusercolkeys[$cnt]]);
-        $sql .= "b." . $key . ", ";
-        $userkeys[] = $key;
-    }
-    $keycount = count($usercolkeys);
-    for($cnt=0; $cnt<$keycount; $cnt++) {
-        $key = str_replace($prefix . "_users.", "", $usercol[$usercolkeys[$cnt]]);
-        $sql .= "n." . $key;
-        $userkeys[] = $key;
-        if($cnt <> $keycount-1) {
-            $sql .=", ";
-        } else {
-            $sql .= " ";
+    foreach($pnfusercol as $pnfuserfield) {
+        if($flag==true) {
+            $sql .= ", ";
         }
+        $sql .= "$pnfuserfield as " . str_replace($prefix . "_pnforum_users.", "", $pnfuserfield) . "\n";
+        $flag = true;
     }
-    $sql .= "FROM ".$pntable['users']." AS n 
-             LEFT JOIN ".$pntable['pnforum_users']." AS b ON b.user_id=n.pn_uid 
-             WHERE n.pn_uid='".(int)pnVarPrepForStore($userid)."'";
+
+    $sql .= "FROM ".$pntable['pnforum_users']."
+             WHERE " . $pnfusercol['user_id'] . "='" . (int)pnVarPrepForStore($userid) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    
+
     if(!$result->EOF) {
-        $userdata = array();
-        for($i=0; $i<count($userkeys); $i++) {
-            $userdata[$userkeys[$i]] = $result->fields[$i];
-        }
+        $userdata = array_merge($userdata, $result->GetRowAssoc(false));
         pnfCloseDB($result);
-        
+
         // set some basic data
         $userdata['moderate'] = false;
         $userdata['reply'] = false;
@@ -110,7 +100,7 @@ function pnForum_userapi_get_userdata_from_id($args)
         } elseif ($userdata['user_posts'] != 0) {
             $sql = "SELECT rank_title, rank_image
                     FROM ".$pntable['pnforum_ranks']."
-                    WHERE rank_min <= '".(int)pnVarPrepForStore($userdata['user_posts'])."' 
+                    WHERE rank_min <= '".(int)pnVarPrepForStore($userdata['user_posts'])."'
                     AND rank_max >= '".(int)pnVarPrepForStore($userdata['user_posts'])."'";
         }
         $rank_result = pnfExecuteSQL($dbconn, $sql);
@@ -129,7 +119,7 @@ function pnForum_userapi_get_userdata_from_id($args)
             $rank_result->MoveNext();
         }
         pnfCloseDB($rank_result);
-        
+
         //
         // user name and avatar
         //
@@ -176,32 +166,51 @@ function pnForum_userapi_boardstats($args)
 {
     extract($args);
     unset($args);
-    
+
     list($dbconn, $pntable) = pnfOpenDB();
 
     switch($type) {
         case 'all':
-            $sql = "SELECT SUM(forum_posts) as total 
-                    FROM ".$pntable['pnforum_forums'].""; 
+            $sql = "SELECT SUM(forum_posts) as total
+                    FROM ".$pntable['pnforum_forums']."";
             break;
         case 'category':
-            $sql = "SELECT count(*) AS total 
+            $sql = "SELECT count(*) AS total
                     FROM ".$pntable['pnforum_categories']."";
             break;
         case 'topic':
-            $sql = "SELECT count(*) AS total 
-                    FROM ".$pntable['pnforum_posts']." 
+            $sql = "SELECT count(*) AS total
+                    FROM ".$pntable['pnforum_posts']."
                     WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
             break;
         case 'forumposts':
-            $sql = "SELECT count(*) AS total 
-                    FROM ".$pntable['pnforum_posts']." 
+            $sql = "SELECT count(*) AS total
+                    FROM ".$pntable['pnforum_posts']."
                     WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
             break;
         case 'forumtopics':
-            $sql = "SELECT count(*) AS total 
-                    FROM ".$pntable['pnforum_topics']." 
+            $sql = "SELECT count(*) AS total
+                    FROM ".$pntable['pnforum_topics']."
                     WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
+            break;
+        case 'allposts':
+            $sql = "SELECT count(*) AS total
+                    FROM ".$pntable['pnforum_posts']."";
+            break;
+        case 'alltopics':
+            $sql = "SELECT count(*) AS total
+                    FROM ".$pntable['pnforum_topics']."";
+            break;
+        case 'allmembers':
+            $sql = "SELECT count(*) AS total
+                    FROM ".$pntable['pnforum_users']."";
+            break;
+        case 'lastmember':
+            $sql = "SELECT u.pn_uname
+                    FROM ".$pntable['users']." AS u
+                    LEFT JOIN ".$pntable['pnforum_users']." AS p ON u.pn_uid=p.user_id
+                    ORDER BY p.user_id DESC
+                    LIMIT 1";
             break;
         default:
         }
@@ -223,15 +232,15 @@ function pnForum_userapi_get_last_post_in_topic($args)
 {
     extract($args);
     unset($args);
-    
+
     list($dbconn, $pntable) = pnfOpenDB();
-  
+
     if(isset($topic_id) && is_numeric($topic_id)) {
-        $sql = "SELECT p.post_id 
-                FROM ".$pntable['pnforum_posts']." AS p 
-                WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."' 
+        $sql = "SELECT p.post_id
+                FROM ".$pntable['pnforum_posts']." AS p
+                WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."'
                 ORDER BY p.post_time DESC";
-        
+
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
             pnfCloseDB($result);
@@ -242,7 +251,7 @@ function pnForum_userapi_get_last_post_in_topic($args)
         pnfCloseDB($result);
         if($id_only == true) {
             return $post_id;
-        }        
+        }
         return pnForum_userapi_readpost(array('post_id' => $post_id));
     }
     return false;
@@ -260,15 +269,15 @@ function pnForum_userapi_get_last_post_in_forum($args)
 {
     extract($args);
     unset($args);
-    
+
     list($dbconn, $pntable) = pnfOpenDB();
-    
+
     if(isset($forum_id) && is_numeric($forum_id)) {
-        $sql = "SELECT p.post_id 
-                FROM ".$pntable['pnforum_posts']." AS p 
-                WHERE p.forum_id = '".(int)pnVarPrepForStore($forum_id)."' 
+        $sql = "SELECT p.post_id
+                FROM ".$pntable['pnforum_posts']." AS p
+                WHERE p.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
                 ORDER BY p.post_time DESC";
-        
+
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
             pnfCloseDB($result);
@@ -279,7 +288,7 @@ function pnForum_userapi_get_last_post_in_forum($args)
         pnfCloseDB($result);
         if($id_only == true) {
             return $post_id;
-        }        
+        }
         return pnForum_userapi_readpost(array('post_id' => $post_id));
     }
     return false;
@@ -304,9 +313,9 @@ function pnForum_userapi_readcategorytree($args)
 
     extract($args);
     unset($args);
-    
+
     list($dbconn, $pntable) = pnfOpenDB();
-    
+
     $sql = "SELECT c.cat_id,
                     c.cat_title,
                     c.cat_order,
@@ -324,12 +333,12 @@ function pnForum_userapi_readcategorytree($args)
             LEFT JOIN ".$pntable['pnforum_posts']." AS p ON p.post_id=f.forum_last_post_id
             LEFT JOIN ".$pntable['users']." AS u ON u.pn_uid=p.poster_id
             ORDER BY c.cat_order, f.forum_order, f.forum_name";
-    
+
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $folder_image = pnModGetVar('pnForum', 'folder_image');
     $newposts_image = pnModGetVar('pnForum', 'newposts_image');
-    
+
     $tree = array();
     while(!$result->EOF) {
         $row = $result->GetRowAssoc(false);
@@ -364,7 +373,7 @@ function pnForum_userapi_readcategorytree($args)
                         $fldr_img = $folder_image;
                         $fldr_alt = _PNFORUM_NONEWPOSTS;
                     }
-                
+
                     $posted_unixtime= strtotime ($forum['post_time']);
                     $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
                     if ($posted_unixtime) {
@@ -373,7 +382,7 @@ function pnForum_userapi_readcategorytree($args)
                         } else {
                             $username = $forum['pn_uname'];
                         }
-                
+
                         $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
                         $last_post = $last_post." <a href=\"". pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). "\">"
                                                ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
@@ -392,7 +401,7 @@ function pnForum_userapi_readcategorytree($args)
                 $forum['fldr_alt']  = $fldr_alt;
                 $forum['last_post'] = $last_post;
                 $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
-                
+
                 array_push($tree[$cat['cat_title']]['forums'], $forum);
             }
         }
@@ -417,9 +426,9 @@ function pnForum_userapi_get_moderators($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT u.pn_uname, u.pn_uid 
-            FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f 
-            WHERE f.forum_id = '".(int)pnVarPrepForStore($forum_id)."' 
+    $sql = "SELECT u.pn_uname, u.pn_uid
+            FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
+            WHERE f.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
             AND u.pn_uid = f.user_id";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -438,9 +447,9 @@ function pnForum_userapi_get_moderators($args)
  * setcookies
  * reads the cookie, updates it and returns the last visit date in readable (%Y-%m-%d %H:%M)
  * and unix time format
- * 
+ *
  *@params none
- *@returns array of (readable last visits data, unix time last visit date) 
+ *@returns array of (readable last visits data, unix time last visit date)
  *
  */
 function pnForum_userapi_setcookies()
@@ -450,7 +459,7 @@ function pnForum_userapi_setcookies()
      * set LastVisit cookie, which always gets the current time and lasts one year
      */
     setcookie('phpBBLastVisit', time(), time()+31536000);
-    
+
     if (!isset ($_COOKIE['phpBBLastVisitTemp'])){
         $temptime = $_COOKIE['phpBBLastVisit'];
     } else {
@@ -459,10 +468,10 @@ function pnForum_userapi_setcookies()
     if(empty($temptime)) {
         $temptime = 0;
     }
-    
+
     // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
     setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
-    
+
     // set vars for all scripts
     $last_visit = ml_ftime("%Y-%m-%d %H:%M",$temptime);
     return array($last_visit, $temptime);
@@ -476,7 +485,7 @@ function pnForum_userapi_setcookies()
  *@params $args['start'] int number of topic to start with (if on page 1+)
  *@params $args['last_visit'] string users last visit date
  *@params $args['last_visit_unix'] string users last visit date as timestamp
- *@returns very complex array, see <!--[ debug ]--> for more information 
+ *@returns very complex array, see <!--[ debug ]--> for more information
  */
 function pnForum_userapi_readforum($args)
 {
@@ -485,7 +494,7 @@ function pnForum_userapi_readforum($args)
 
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
 
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id,
@@ -496,7 +505,7 @@ function pnForum_userapi_readforum($args)
 
     if(!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOSEE), __FILE__, __LINE__);
-    } 
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -518,16 +527,16 @@ function pnForum_userapi_readforum($args)
 
     // forum_pager is obsolete, inform the user about this
     $forum['forum_pager'] = 'deprecated data field $forum.forum_pager used, please update your template using the forumpager plugin';
-    
-    $sql = "SELECT t.topic_id, 
-                   t.topic_title, 
-                   t.topic_views, 
-                   t.topic_replies, 
-                   t.sticky, 
+
+    $sql = "SELECT t.topic_id,
+                   t.topic_title,
+                   t.topic_views,
+                   t.topic_replies,
+                   t.sticky,
                    t.topic_status,
-                   t.topic_last_post_id, 
-                   u.pn_uname, 
-                   u2.pn_uname as last_poster, 
+                   t.topic_last_post_id,
+                   u.pn_uname,
+                   u2.pn_uname as last_poster,
                    p.post_time
             FROM ".$pntable['pnforum_topics']." AS t
             LEFT JOIN ".$pntable['users']." AS u ON t.topic_poster = u.pn_uid
@@ -536,7 +545,7 @@ function pnForum_userapi_readforum($args)
             WHERE t.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
             ORDER BY t.sticky DESC, p.post_time DESC";
 //            ORDER BY t.sticky DESC, topic_time DESC";
-    
+
     $result = pnfSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
     $forum['forum_id'] = $forum_id;
     $forum['topics'] = array();
@@ -546,7 +555,7 @@ function pnForum_userapi_readforum($args)
         //$topic = $row;
         if ($topic['last_poster'] == "Anonymous") {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
         if ($topic['pn_uname'] == "Anonymous") {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
-        
+
         $topic['post_time_unix'] = strtotime ($topic['post_time']);
         $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
         $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, pnVarPrepForDisplay($posted_ml), pnVarPrepForDisplay($topic['last_poster']));
@@ -588,7 +597,7 @@ function pnForum_userapi_readforum($args)
             $skippages = 0;
             for($x = 0; $x < $topic['topic_replies'] + 1; $x += $posts_per_page) {
                 $lastpage = (($x + $posts_per_page) >= $topic['topic_replies'] + 1);
-        
+
                 if($lastpage) {
                     $start = $x;
                 } else {
@@ -596,17 +605,17 @@ function pnForum_userapi_readforum($args)
                         $start = $x;
                     }
                 }
-        
+
                 if($pagenr > 3 && $skippages != 1 && !$lastpage) {
                     $pagination .= ", ... ";
                     $skippages = 1;
                 }
-        
+
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ", ";
                     $pagination .= "<a href=\"".pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start))."\" title=\"" . $topic['topic_title'] . " " . pnVarPrepForDisplay(_PNFORUM_PAGE) . " $pagenr\">$pagenr</a>";
                 }
-        
+
                 $pagenr++;
             }
             $pagination .= ")</span>";
@@ -621,7 +630,7 @@ function pnForum_userapi_readforum($args)
         $topic['last_post_url_anchor'] = $topic['last_post_url'] . "#pid" . $topic['topic_last_post_id'];
 
         array_push( $forum['topics'], $topic );
-        $result->MoveNext(); 
+        $result->MoveNext();
     }
     pnfCloseDB($result);
 
@@ -631,7 +640,7 @@ function pnForum_userapi_readforum($args)
     return $forum;
 }
 
-/** 
+/**
  * readtopic
  * reads a topic with the last posts_per_page answers (incl the initial posting when on page #1)
  *
@@ -650,20 +659,20 @@ function pnForum_userapi_readtopic($args)
     $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
     $topics_per_page = pnModGetVar('pnForum', 'topics_per_page');
     $posticon = pnModGetVar('pnForum', 'posticon');
-    $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order'); 
+    $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order');
 
     $complete = (isset($complete)) ? $complete : false;
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT t.topic_title, 
-                   t.topic_status, 
-                   t.forum_id, 
-                   t.sticky, 
+    $sql = "SELECT t.topic_title,
+                   t.topic_status,
+                   t.forum_id,
+                   t.sticky,
                    t.topic_time,
                    t.topic_last_post_id,
-                   f.forum_name, 
-                   f.cat_id, 
+                   f.forum_name,
+                   f.cat_id,
                    c.cat_title
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
@@ -671,7 +680,6 @@ function pnForum_userapi_readtopic($args)
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
     $topic = array();
     if(!$result->EOF) {
         $topic = $result->GetRowAssoc(false);
@@ -682,13 +690,13 @@ function pnForum_userapi_readtopic($args)
 
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
-        } 
+        }
 /*
         $topic['access_comment'] = false;
         if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             $topic['access_comment'] = true;
-        } 
-*/        
+        }
+*/
         $topic['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
 
         $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
@@ -696,16 +704,16 @@ function pnForum_userapi_readtopic($args)
         $topic['access_comment']  = $topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id']);
-        
+
         // get the next and previous topic_id's for the next / prev button
         $topic['next_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'next'));
         $topic['prev_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'previous'));
 
         // get the users topic_subscription status to show it in the quick repliy checkbox
-        // correctly 
-        $topic['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => pnUserGetVar('uid'), 
+        // correctly
+        $topic['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => pnUserGetVar('uid'),
                                                                                       'topic_id' => $topic['topic_id']));
-        
+
         /**
          * update topic counter
          */
@@ -718,7 +726,7 @@ function pnForum_userapi_readtopic($args)
          * more then one page in this topic?
          */
         $topic['total_posts'] = pnForum_userapi_boardstats(array('id'=>$topic_id, 'type'=>"topic"));
-        
+
         if($topic['total_posts'] > $posts_per_page) {
             $times = 0;
             for($x = 0; $x < $topic['total_posts']; $x += $posts_per_page) {
@@ -735,9 +743,9 @@ function pnForum_userapi_readtopic($args)
         $topic['posts'] = array();
 
         // read posts
-        $sql2 = "SELECT p.post_id, 
-                        p.poster_id, 
-                        p.post_time, 
+        $sql2 = "SELECT p.post_id,
+                        p.poster_id,
+                        p.post_time,
                         pt.post_text
                 FROM ".$pntable['pnforum_posts']." p,
                      ".$pntable['pnforum_posts_text']." pt
@@ -762,7 +770,7 @@ function pnForum_userapi_readtopic($args)
                 // user deleted from the db?
                 $post['poster_id'] = '1';
             }
-            
+
             $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' =>$post['poster_id']));
             $post['posted_unixtime'] = strtotime ($post['post_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
@@ -805,11 +813,11 @@ function pnForum_userapi_readtopic($args)
         return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
     }
     pnfCloseDB($result);
-    
+
     return $topic;
 }
 
-/** 
+/**
  * preparereply
  * prepapare a reply to a posting by reading the last ten postign in revers order for review
  *
@@ -842,8 +850,8 @@ function pnForum_userapi_preparereply($args)
                        pt.post_text,
                        p.post_time,
                        u.pn_uname
-                FROM ".$pntable['pnforum_forums']." AS f, 
-                     ".$pntable['pnforum_topics']." AS t, 
+                FROM ".$pntable['pnforum_forums']." AS f,
+                     ".$pntable['pnforum_topics']." AS t,
                      ".$pntable['pnforum_posts']." AS p,
                      ".$pntable['pnforum_posts_text']." AS pt,
                      ".$pntable['users']." AS u
@@ -860,7 +868,7 @@ function pnForum_userapi_preparereply($args)
                        t.topic_id,
                        t.topic_title,
                        t.topic_status
-                FROM ".$pntable['pnforum_forums']." AS f, 
+                FROM ".$pntable['pnforum_forums']." AS f,
                      ".$pntable['pnforum_topics']." AS t
                 WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
                 AND (t.forum_id = f.forum_id)";
@@ -873,7 +881,7 @@ function pnForum_userapi_preparereply($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    
+
     $reply['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
     $reply['cat_id'] = pnVarPrepForDisplay($myrow['cat_id']);
     $reply['topic_subject'] = pnVarPrepForDisplay($myrow['topic_title']);
@@ -901,11 +909,11 @@ function pnForum_userapi_preparereply($args)
     } else {
         $pn_uid = pnUserGetVar('uid');
         // get the users topic_subscription status to show it in the quick repliy checkbox
-        // correctly 
+        // correctly
         if($reply_start==true) {
             $reply['attach_signature'] = true;
             $reply['subscribe_topic'] = false;
-            $is_subscribed = pnForum_userapi_get_topic_subscription_status(array('userid'   => $pn_uid, 
+            $is_subscribed = pnForum_userapi_get_topic_subscription_status(array('userid'   => $pn_uid,
                                                                                  'topic_id' => $reply['topic_id']));
             if(($is_subscribed==true) ||(pnModGetVar('pnForum', 'autosubscribe')=='yes')) {
                 $reply['subscribe_topic'] = true;
@@ -918,19 +926,19 @@ function pnForum_userapi_preparereply($args)
         }
     }
     $reply['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
-    
+
     if($reply['topic_status']==1) {
         return showforumerror(_PNFORUM_NOPOSTLOCK, __FILE__, __LINE__);
     }
-    
+
     if(!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
         return showforumerror( _PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 
     // Topic review (show last 10)
-    $sql = "SELECT p.poster_id, 
-                   p.post_time, 
-                   pt.post_text, 
+    $sql = "SELECT p.poster_id,
+                   p.post_time,
+                   pt.post_text,
                    t.topic_title
                     FROM $pntable[pnforum_posts_text] pt, $pntable[pnforum_posts] p
                         LEFT JOIN $pntable[pnforum_topics] t ON t.topic_id=p.topic_id
@@ -942,31 +950,31 @@ function pnForum_userapi_preparereply($args)
     while(!$result->EOF) {
         $review = array();
         $row = $result->GetRowAssoc(false);
-        $review = $row;            
+        $review = $row;
         $review['user_name'] = pnUserGetVar('uname', $review['poster_id']);
         if ($review['user_name'] == "") {
             // user deleted from the db?
             $review['poster_id'] = 1;
         }
-    
+
         $review['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$review['poster_id']));
-    
+
         // TODO extract unixtime directly from MySql
         $review['post_unixtime'] = strtotime ($review['post_time']);
         $review['post_ml'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($review['post_unixtime']));
-    
+
         $message = $review['post_text'];
         // we use br2nl here for backward compatibility
         $message = phpbb_br2nl($message);
         // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
-    
+
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
         $message = pnForum_replacesignature($message, $review['poster_data']['pn_user_sig']);
 
         // call hooks for $message
         list($message) = pnModCallHooks('item', 'transform', '', array($message));
         $review['post_text'] = $message;
-        
+
         array_push($reply['topic_review'], $review);
         $result->MoveNext();
     }
@@ -1020,16 +1028,16 @@ function pnForum_userapi_storereply($args)
         $poster_ip = "127.0.0.1";
     } else {
         // some enviroment for logging ;)
-        if (getenv("HTTP_X_FORWARDED_FOR")){ 
-            $poster_ip=getenv("HTTP_X_FORWARDED_FOR"); 
-        } else { 
+        if (getenv("HTTP_X_FORWARDED_FOR")){
+            $poster_ip=getenv("HTTP_X_FORWARDED_FOR");
+        } else {
             $poster_ip=getenv("REMOTE_ADDR");
         }
     }
 
     // read forum_id from topic_id
     $sql = "SELECT f.forum_id
-            FROM ".$pntable['pnforum_forums']." AS f, 
+            FROM ".$pntable['pnforum_forums']." AS f,
                  ".$pntable['pnforum_topics']." AS t
             WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
             AND (t.forum_id = f.forum_id)";
@@ -1095,8 +1103,8 @@ function pnForum_userapi_storereply($args)
             pnForum_userapi_subscribe_topic(array('topic_id'=>$topic_id));
         } else {
             // user wants not to subscribe the topic
-            pnForum_userapi_unsubscribe_topic(array('topic_id'=>$topic_id, 
-                                                    'silent'  => true));     
+            pnForum_userapi_unsubscribe_topic(array('topic_id'=>$topic_id,
+                                                    'silent'  => true));
         }
     }
 
@@ -1109,32 +1117,11 @@ function pnForum_userapi_storereply($args)
     pnfCloseDB($result);
 
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
-    
-    // get topic_replies for correct redirect
-    $sql = "SELECT topic_replies FROM $pntable[pnforum_topics] WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    list ($topic_replies) = $result->fields;
-    pnfCloseDB($result);
-
-    // get some enviroment
-    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
-    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
-
-    if ($post_sort_order == "ASC") {
-        $hc_dlink_times = 0;
-        if (($topic_replies+1-$posts_per_page)>= 0) { 
-            $hc_dlink_times = 0; 
-            for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page) 
-            $hc_dlink_times++; 
-        } 
-        $start = $hc_dlink_times*$posts_per_page;
-    } else {
-        // latest topic is on top anyway...
-        $start = 0;
-    }
+    // get the last topic page
+    $start = pnForum_userapi_get_last_topic_page(array('topic_id' => $topic_id));
     return array($start, $this_post);
-} 
+}
 
 /**
  * get_topic_subscription_status
@@ -1150,7 +1137,7 @@ function pnForum_userapi_get_topic_subscription_status($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT user_id from ".$pntable['pnforum_topic_subscription']." 
+    $sql = "SELECT user_id from ".$pntable['pnforum_topic_subscription']."
             WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1178,9 +1165,9 @@ function pnForum_userapi_get_forum_subscription_status($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT user_id from ".$pntable['pnforum_subscription']." 
+    $sql = "SELECT user_id from ".$pntable['pnforum_subscription']."
             WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
-    
+
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
     pnfCloseDB($result);
@@ -1206,9 +1193,9 @@ function pnForum_userapi_get_forum_favorites_status($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT user_id from ".$pntable['pnforum_forum_favorites']." 
+    $sql = "SELECT user_id from ".$pntable['pnforum_forum_favorites']."
             WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
-    
+
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
     pnfCloseDB($result);
@@ -1240,16 +1227,16 @@ function pnForum_userapi_preparenewtopic($args)
 
     $newtopic = array();
     $newtopic['forum_id'] = $forum_id;
-    
+
     // select forum name and cat title based on forum_id
     $sql = "SELECT f.forum_name,
-                   c.cat_id, 
+                   c.cat_id,
                    c.cat_title
             FROM ".$pntable['pnforum_forums']." AS f,
                 ".$pntable['pnforum_categories']." AS c
             WHERE (forum_id = '".(int)pnVarPrepForStore($forum_id)."'
             AND f.cat_id=c.cat_id)";
-    
+
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $myrow = $result->GetRowAssoc(false);
     pnfCloseDB($result);
@@ -1283,8 +1270,8 @@ function pnForum_userapi_preparenewtopic($args)
     } else {
         $newtopic['attach_signature'] = false;
         $newtopic['subscribe_topic']  = false;
-    }        
-    
+    }
+
     return $newtopic;
 }
 
@@ -1294,7 +1281,7 @@ function pnForum_userapi_preparenewtopic($args)
  *@params $args['subject'] string the subject
  *@params $args['message'] string the text
  *@params $args['forum_id'] int the forums id
- *@params $args['time'] string (optional) the time, only needed when creating a shadow 
+ *@params $args['time'] string (optional) the time, only needed when creating a shadow
  *                             topic
  *@params $args['attach_signature'] int 1=yes, otherwise no
  *@params $args['subscribe_topic'] int 1=yes, otherwise no
@@ -1307,16 +1294,11 @@ function pnForum_userapi_storenewtopic($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    // it's a submitted page
-    // Confirm authorisation code
-    if (!pnSecConfirmAuthKey()) {
-        return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+    $cat_id = pnForum_userapi_get_forum_category(array('forum_id' => $forum_id));
+    if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+        return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 
-    $cat_id = pnForum_userapi_get_forum_category(array('forum_id'=>$forum_id));
-    if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_PNFORUM_NOAUTH_WOWRITE, __FILE__, __LINE__);
-    }
 
     if(trim($message)=='' || trim($subject) == '') {
         // either message or subject is empty
@@ -1326,15 +1308,15 @@ function pnForum_userapi_storenewtopic($args)
     /*
     it's a submitted page and message and subject are not empty
     */
-    
+
     //  do a censor on subject and message
     // $subject = censor($subject);
     // $message = censor($message);
-    
-    //  grab message for notification 
+
+    //  grab message for notification
     //  without html-specialchars, bbcode, smilies <br /> and [addsig]
     $posted_message=stripslashes($message);
-    
+
     //  anonymous user has uid=0, but needs pn_uid=1
     if(pnUserLoggedin()) {
         if($attach_signature==1) {
@@ -1346,16 +1328,16 @@ function pnForum_userapi_storenewtopic($args)
     }
 
     // some enviroment for logging ;)
-    if (getenv("HTTP_X_FORWARDED_FOR")){ 
-        $poster_ip=getenv("HTTP_X_FORWARDED_FOR"); 
-    } else { 
+    if (getenv("HTTP_X_FORWARDED_FOR")){
+        $poster_ip=getenv("HTTP_X_FORWARDED_FOR");
+    } else {
         $poster_ip=getenv("REMOTE_ADDR");
     }
     // for privavy issues ip logging can be deactivated
     if (pnModGetVar('pnForum', 'log_ip') == "no") {
         $poster_ip = "127.0.0.1";
     }
-    
+
     $time = (isset($time)) ? $time : date("Y-m-d H:i");
 
     // Prep for DB
@@ -1368,21 +1350,21 @@ function pnForum_userapi_storenewtopic($args)
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
-    $sql = "INSERT INTO ".$pntable['pnforum_topics']." 
-            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify) 
-            VALUES 
+    $sql = "INSERT INTO ".$pntable['pnforum_topics']."
+            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify)
+            VALUES
             ('".pnVarPrepForStore($topic_id)."','$subject', '$pn_uid', '$forum_id', '$time', '' )";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
-    //  insert values into posts-table   
+    //  insert values into posts-table
     $topic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
-    
+
     $post_id = $dbconn->GenID($pntable['pnforum_posts']);
-    $sql = "INSERT INTO ".$pntable['pnforum_posts']." 
-            (post_id, topic_id, forum_id, poster_id, post_time, poster_ip) 
-            VALUES 
+    $sql = "INSERT INTO ".$pntable['pnforum_posts']."
+            (post_id, topic_id, forum_id, poster_id, post_time, poster_ip)
+            VALUES
             ('".pnVarPrepForStore($post_id)."', '".pnVarPrepForStore($topic_id)."', '$forum_id', '$pn_uid', '$time', '$poster_ip')";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1392,30 +1374,30 @@ function pnForum_userapi_storenewtopic($args)
     if($post_id)
     {
         //  insert values into posts_text-table
-        $sql = "INSERT INTO ".$pntable['pnforum_posts_text']." 
-                (post_id, post_text) 
+        $sql = "INSERT INTO ".$pntable['pnforum_posts_text']."
+                (post_id, post_text)
                 VALUES ('".pnVarPrepForStore($post_id)."', '$message')";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
         //  updates topics-table
-        $sql = "UPDATE ".$pntable['pnforum_topics']." 
-                SET topic_last_post_id = '".pnVarPrepForStore($post_id)."' 
+        $sql = "UPDATE ".$pntable['pnforum_topics']."
+                SET topic_last_post_id = '".pnVarPrepForStore($post_id)."'
                 WHERE topic_id = '".pnVarPrepForStore($topic_id)."'";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
 
     if(pnUserLoggedin()) {
         // user logged in we have to update users-table
-        $sql = "UPDATE $pntable[pnforum_users] 
-                SET user_posts=user_posts+1 
+        $sql = "UPDATE $pntable[pnforum_users]
+                SET user_posts=user_posts+1
                 WHERE (user_id = $pn_uid)";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
-        
+
         // update subscription
         if($subscribe_topic==1) {
             // user wants to subscribe the new topic
@@ -1423,19 +1405,19 @@ function pnForum_userapi_storenewtopic($args)
         }
     }
     //  update forums-table
-    $sql = "UPDATE $pntable[pnforum_forums] 
-            SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = '" . pnVarPrepForStore($post_id) . "' 
+    $sql = "UPDATE $pntable[pnforum_forums]
+            SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = '" . pnVarPrepForStore($post_id) . "'
             WHERE forum_id = '$forum_id'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     //  notify for newtopic
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'0'));
-    
+
     // delete temporary session var
     pnSessionDelVar('topic_started');
-    
+
     //  switch to topic display
     return $topic_id;
 }
@@ -1448,23 +1430,23 @@ function pnForum_userapi_storenewtopic($args)
  *@returns array with posting information...
  */
 function pnForum_userapi_readpost($args)
-{    
+{
     extract($args);
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-  
+
     // we know about the post_id, let's find out the forum and catgeory name for permission checks
-    $sql = "SELECT p.post_id, 
-                    p.post_time, 
-                    pt.post_text, 
-                    p.poster_id, 
+    $sql = "SELECT p.post_id,
+                    p.post_time,
+                    pt.post_text,
+                    p.poster_id,
                     t.topic_id,
-                    t.topic_title, 
+                    t.topic_title,
                     t.topic_notify,
                     t.topic_replies,
                     f.forum_id,
-                    f.forum_name, 
+                    f.forum_name,
                     c.cat_title,
                     c.cat_id
             FROM ".$pntable['pnforum_posts']." p
@@ -1472,9 +1454,9 @@ function pnForum_userapi_readpost($args)
             LEFT JOIN ".$pntable['pnforum_posts_text']." pt ON pt.post_id = p.post_id
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." c ON c.cat_id = f.cat_id
-            WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')"; 
+            WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
@@ -1503,11 +1485,11 @@ function pnForum_userapi_readpost($args)
     if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
-    
-    $pn_uid = pnUserGetVar('uid');   
+
+    $pn_uid = pnUserGetVar('uid');
     $post['moderate'] = false;
-    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) { 
-        $post['moderate'] = true; 
+    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+        $post['moderate'] = true;
     }
 
     $post['post_textdisplay'] = phpbb_br2nl($message);
@@ -1535,10 +1517,10 @@ function pnForum_userapi_readpost($args)
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
 
     return $post;
-}   
+}
 
 /**
- * Check if this is the first post in a topic. 
+ * Check if this is the first post in a topic.
  *
  *@params $args['topic_id'] int the topics id
  *@params $args['post_id'] int the postings id
@@ -1552,11 +1534,11 @@ function pnForum_userapi_is_first_post($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']." 
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."' 
-            ORDER BY post_id 
+    $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']."
+            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'
+            ORDER BY post_id
             LIMIT 1";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         list($read_post_id) = $result->fields;
@@ -1593,7 +1575,7 @@ function pnForum_userapi_updatepost($args)
 
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -1601,19 +1583,19 @@ function pnForum_userapi_updatepost($args)
                    p.post_time,
                    p.topic_id,
                    p.forum_id,
-                   t.topic_title, 
+                   t.topic_title,
                    t.topic_status,
                    t.topic_last_post_id,
                    t.topic_replies,
                    f.cat_id,
-                   f.forum_last_post_id 
+                   f.forum_last_post_id
             FROM  ".$pntable['pnforum_posts']." as p,
                   ".$pntable['pnforum_topics']." as t,
                   ".$pntable['pnforum_forums']." as f
             WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
               AND (t.topic_id = p.topic_id)
               AND (f.forum_id = p.forum_id)";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
@@ -1626,13 +1608,13 @@ function pnForum_userapi_updatepost($args)
 
     $pn_uid = pnUserGetVar('uid');
 
-    if (!($pn_uid == $poster_id) && 
+    if (!($pn_uid == $poster_id) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // user is not allowed to edit post
         return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
-    
-    if(($topic_status == 1) && 
+
+    if(($topic_status == 1) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // topic is locked, user is not moderator
         return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
@@ -1661,36 +1643,36 @@ function pnForum_userapi_updatepost($args)
             $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
             $message .= "<br /><br /><!-- editby --><br /><br /><em>"._PNFORUM_EDITBY." $editname, $edit_date</em><!-- end editby --> ";
         }
-    
+
         // add signature placeholder
         if ($poster_id <> 1){
             $message .= "[addsig]";
         }
         $message = pnVarPrepForStore($message);
 
-        $sql = "UPDATE ".$pntable['pnforum_posts_text']." 
-                SET post_text = '$message' 
+        $sql = "UPDATE ".$pntable['pnforum_posts_text']."
+                SET post_text = '$message'
                 WHERE (post_id = '".(int)pnVarPrepForStore($post_id)."')";
-        
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
-        if (!empty ($subject)) { 
+        if (!empty ($subject)) {
             //  topic has a new subject
             if (trim($subject) != '') {
                 $subject = pnVarPrepForStore(pnVarCensor($subject));
-                $sql = "UPDATE ".$pntable['pnforum_topics']." 
-                        SET topic_title = '$subject' 
+                $sql = "UPDATE ".$pntable['pnforum_topics']."
+                        SET topic_title = '$subject'
                         WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-                
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
             }
         }
         // update done, return now
         return pnModURL('pnForum', 'user', 'viewtopic',
                         array('topic' => $topic_id /*,
-                              'start' => $start*/) ); 
+                              'start' => $start*/) );
 
     } else {
         //
@@ -1698,16 +1680,16 @@ function pnForum_userapi_updatepost($args)
         //
 
         // delete the post from the posts table
-        $sql = "DELETE FROM ".$pntable['pnforum_posts']." 
+        $sql = "DELETE FROM ".$pntable['pnforum_posts']."
                 WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
-        
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
-        
+
         // delete the post from the posts_text table
-        $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." 
+        $sql = "DELETE FROM ".$pntable['pnforum_posts_text']."
                 WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
         //
         // there are several possibilities now:
@@ -1727,44 +1709,44 @@ function pnForum_userapi_updatepost($args)
             // the deleted posting was not the last one
             // adjust the users post count
             pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
-            
+
             //
             // adjust the post counter in the forum, topic counter and last_post_id not changed
             //
-            $sql = "UPDATE ".$pntable['pnforum_forums']." 
+            $sql = "UPDATE ".$pntable['pnforum_forums']."
                     SET forum_posts=forum_posts - 1
                     WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
-            
+
             //
             //  adjust the topic_replies
             //
-            $sql = "UPDATE ".$pntable['pnforum_topics']." 
-                    SET topic_replies=topic_replies-1 
+            $sql = "UPDATE ".$pntable['pnforum_topics']."
+                    SET topic_replies=topic_replies-1
                     WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
-            
+
             //
             // no more actions necessary, just return to the topic and show the last page
             // after removing the posting the $topic_replies now contains the total number
             // posts in this topic :-)
-            // $topic_replies - one deleted post + one initial post 
+            // $topic_replies - one deleted post + one initial post
             // get some enviroment
             $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
             $times = 0;
-            if (($topic_replies-$posts_per_page)>= 0) { 
+            if (($topic_replies-$posts_per_page)>= 0) {
                 for ($x = 0; $x < $topic_replies-$posts_per_page; $x+= $posts_per_page) {
-                    $times++; 
+                    $times++;
                 }
-            } 
+            }
             $start = $times * $posts_per_page;
             return pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id,
-                                  'start' => $start)); 
-        } else { 
-            //  
+                                  'start' => $start));
+        } else {
+            //
             // check if this was the last post in the topic, if yes, remove topic
             //
             $last_topic_post = pnForum_userapi_get_last_post_in_topic(array('topic_id' => $topic_id));
@@ -1773,44 +1755,44 @@ function pnForum_userapi_updatepost($args)
                 //
                 // it was the last post in the thread, remove topic
                 //
-                $sql = "DELETE FROM ".$pntable['pnforum_topics']." 
+                $sql = "DELETE FROM ".$pntable['pnforum_topics']."
                         WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
-                
+
                 //
                 // adjust the users post counter
                 //
                 pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
-                
+
                 //
                 // adjust the post and topic counter and forum_last_post_id in the forum
                 //
-                $sql = "UPDATE ".$pntable['pnforum_forums']." 
-                        SET forum_topics=forum_topics - 1, 
+                $sql = "UPDATE ".$pntable['pnforum_forums']."
+                        SET forum_topics=forum_topics - 1,
                             forum_posts=forum_posts - 1,
-                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."' 
+                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."'
                         WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
-                
+
                 //
                 // ready to return
                 //
                 return pnModURL('pnForum', 'user', 'viewforum',
-                                array('forum' => $forum_id)); 
+                                array('forum' => $forum_id));
             } else {
                 //
                 // there is at least one posting in this topic
                 // $post contains the data of the last posting
                 //
                 $lastposttime = date("Y-m-d H:i", $last_topic_post['post_unixtime']);
-                $sql = "UPDATE ".$pntable['pnforum_topics']." 
+                $sql = "UPDATE ".$pntable['pnforum_topics']."
                         SET topic_time = '".pnVarPrepForStore($lastposttime)."',
                             topic_last_post_id = '".(int)pnVarPrepForStore($last_topic_post['post_id'])."',
-                            topic_replies=topic_replies-1 
+                            topic_replies=topic_replies-1
                         WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
 
                 //
@@ -1821,43 +1803,43 @@ function pnForum_userapi_updatepost($args)
                 //
                 // adjust the post counter in the forum, topi counter not changed
                 //
-                $sql = "UPDATE ".$pntable['pnforum_forums']." 
+                $sql = "UPDATE ".$pntable['pnforum_forums']."
                         SET forum_posts=forum_posts - 1,
-                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."' 
+                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."'
                         WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
 
                 //
                 // after removing the posting the $topic_replies now contains the total number
                 // posts in this topic :-)
-                // $topic_replies - one deleted post + one initial post 
+                // $topic_replies - one deleted post + one initial post
                 // get some enviroment
                 $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
                 $times = 0;
-                if (($topic_replies-$posts_per_page)>= 0) { 
+                if (($topic_replies-$posts_per_page)>= 0) {
                     for ($x = 0; $x < $topic_replies-$posts_per_page; $x+= $posts_per_page) {
-                        $times++; 
+                        $times++;
                     }
-                } 
+                }
                 $start = $times * $posts_per_page;
                 return pnModURL('pnForum', 'user', 'viewtopic',
                                 array('topic' => $topic_id,
-                                      'start' => $start)); 
+                                      'start' => $start));
             }
         }
     }
     // we should not get here, but who knows...
     return pnModURL('pnForum', 'user', 'main');
 }
- 
+
 /**
  * Returns the most recent post in a forum, or a topic
  *
  * What does this function really do???
  *
  *@params $args['id'] int the id, defined by 'type' parameter
- *@params $args['type'] string, either topic of timefix 
+ *@params $args['type'] string, either topic of timefix
  *returns ???
  */
 function pnForum_userapi_get_last_boardpost($args)
@@ -1867,10 +1849,10 @@ function pnForum_userapi_get_last_boardpost($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT p.post_time, u.pn_uname 
-            FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u 
-            WHERE p.topic_id = '".(int)pnVarPrepForStore($id)."' 
-            AND p.poster_id = u.pn_uid 
+    $sql = "SELECT p.post_time, u.pn_uname
+            FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
+            WHERE p.topic_id = '".(int)pnVarPrepForStore($id)."'
+            AND p.poster_id = u.pn_uid
             ORDER BY post_time DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
@@ -1878,7 +1860,7 @@ function pnForum_userapi_get_last_boardpost($args)
     pnfCloseDB($result);
     $uname = $row['pn_uname'];
     $post_time = $row['post_time'];
-    
+
     // format the return string
     switch($type) {
         case 'topic':
@@ -1891,13 +1873,13 @@ function pnForum_userapi_get_last_boardpost($args)
         case 'time_fix':
             $val = $post_time;
             break;
-        default: 
+        default:
             $val = false;
     }
-    return($val);   
+    return($val);
 }
- 
-/** 
+
+/**
  * get_viewip_data
  *
  *@params $args['post_id] int the postings id
@@ -1911,12 +1893,12 @@ function pnForum_userapi_get_viewip_data($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $viewip = array();
-    
-    $sql = "SELECT u.pn_uname, p.poster_ip 
-            FROM ".$pntable['users']." u, ".$pntable['pnforum_posts']." p 
-            WHERE p.post_id = '".(int)pnVarPrepForStore($post_id)."'  
+
+    $sql = "SELECT u.pn_uname, p.poster_ip
+            FROM ".$pntable['users']." u, ".$pntable['pnforum_posts']." p
+            WHERE p.post_id = '".(int)pnVarPrepForStore($post_id)."'
             AND u.pn_uid = p.poster_id";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // TODO we have valid user here, but he didn't has posts
         return showforumerror(_PNFORUM_NOUSER_OR_POST, __FILE__, __LINE__);
@@ -1927,12 +1909,12 @@ function pnForum_userapi_get_viewip_data($args)
     $viewip['poster_ip']   = $row['poster_ip'];
     $viewip['poster_host'] = gethostbyaddr($row['poster_ip']);
 
-    $sql = "SELECT pn_uid, pn_uname, count(*) AS postcount 
-            FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u 
-            WHERE poster_ip='".pnVarPrepForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid 
+    $sql = "SELECT pn_uid, pn_uname, count(*) AS postcount
+            FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
+            WHERE poster_ip='".pnVarPrepForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid
             GROUP BY pn_uid";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $viewip['users'] = array();
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
@@ -1949,10 +1931,10 @@ function pnForum_userapi_get_viewip_data($args)
 
 /**
  * lockunlocktopic
- * 
+ *
  *@params $args['topic_id'] int the topics id
  *@returns void
- */    
+ */
 function pnForum_userapi_lockunlocktopic($args)
 {
     extract($args);
@@ -1965,23 +1947,23 @@ function pnForum_userapi_lockunlocktopic($args)
         return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-    $new_status = ($mode=="lock") ? 1 : 0; 
+    $new_status = ($mode=="lock") ? 1 : 0;
 
-    $sql = "UPDATE ".$pntable['pnforum_topics']." 
-            SET topic_status = $new_status 
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
+            SET topic_status = $new_status
             WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return;
 }
 
 /**
  * stickyunstickytopic
- * 
+ *
  *@params $args['topic_id'] int the topics id
  *@returns void
- */    
+ */
 function pnForum_userapi_stickyunstickytopic($args)
 {
     extract($args);
@@ -1994,13 +1976,13 @@ function pnForum_userapi_stickyunstickytopic($args)
         return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-    $new_sticky = ($mode=="sticky") ? 1 : 0; 
+    $new_sticky = ($mode=="sticky") ? 1 : 0;
 
-    $sql = "UPDATE ".$pntable['pnforum_topics']." 
-            SET sticky = '$new_sticky' 
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
+            SET sticky = '$new_sticky'
             WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return;
 }
@@ -2026,8 +2008,8 @@ function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
@@ -2035,10 +2017,10 @@ function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    
+
     $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
     $cat_id = pnVarPrepForDisplay($myrow['cat_id']);
-    
+
     return array( $forum_id, $cat_id);
 }
 
@@ -2054,7 +2036,7 @@ function pnForum_userapi_readuserforums($args)
 {
     extract($args);
     unset($args);
-    
+
     if(!empty($cat_id) && !empty($forum_id)) {
         if(!allowedtoseecategoryandforum($cat_id, $forum_id)) {
             return showforumerror(getforumerror('auth_overview',$forum_id, 'forum', _PNFORUM_NOAUTH_TOSEE), __FILE__, __LINE__);
@@ -2062,7 +2044,7 @@ function pnForum_userapi_readuserforums($args)
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
-  
+
     $where = "";
     if(isset($forum_id)) {
         $where = "WHERE f.forum_id=" . pnVarPrepForStore($forum_id) . " ";
@@ -2077,15 +2059,15 @@ function pnForum_userapi_readuserforums($args)
                    f.forum_order,
                    f.forum_topics,
                    f.forum_posts,
-                   c.cat_title, 
+                   c.cat_title,
                    c.cat_id
             FROM ".$pntable['pnforum_forums']." AS f
             LEFT JOIN ".$pntable['pnforum_categories']." AS c
             ON c.cat_id=f.cat_id
-            $where                  
+            $where
             ORDER BY c.cat_order, f.forum_order";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $forums = array();
     if($result->RecordCount()>0) {
@@ -2111,7 +2093,7 @@ function pnForum_userapi_readuserforums($args)
     if(isset($forum_id)) {
         return $forums[0];
     }
-    return $forums;    
+    return $forums;
 }
 
 /**
@@ -2126,21 +2108,21 @@ function pnForum_userapi_movetopic($args)
 {
     extract($args);
     unset($args);
-    
+
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
-      
+
     // get the old forum id and old post date
     $sql = "SELECT t.forum_id,
                    t.topic_time,
                    t.topic_title
             FROM  ".$pntable['pnforum_topics']." t
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
@@ -2148,28 +2130,28 @@ function pnForum_userapi_movetopic($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    
+
     $oldforum_id  = pnVarPrepForDisplay($myrow['forum_id']);
     $topic_time   = $myrow['topic_time'];
     $topic_title  = $myrow['topic_title'];
 
     if($oldforum_id <> $forum_id) {
         // set new forum id
-        $sql = "UPDATE ".$pntable['pnforum_topics']." 
-                SET forum_id = '".(int)pnVarPrepForStore($forum_id)."' 
+        $sql = "UPDATE ".$pntable['pnforum_topics']."
+                SET forum_id = '".(int)pnVarPrepForStore($forum_id)."'
                 WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
-        $sql = "UPDATE ".$pntable['pnforum_posts']." 
-                SET forum_id = '".(int)pnVarPrepForStore($forum_id)."' 
+        $sql = "UPDATE ".$pntable['pnforum_posts']."
+                SET forum_id = '".(int)pnVarPrepForStore($forum_id)."'
                 WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
         if($shadow==true) {
             // user wants to have a shadow topic
-            $message = sprintf(_PNFORUM_SHADOWTOPIC_MESSAGE, pnModURL('pnForum','user','viewtopic', array('topic'=> $topic_id)) ); 
+            $message = sprintf(_PNFORUM_SHADOWTOPIC_MESSAGE, pnModURL('pnForum','user','viewtopic', array('topic'=> $topic_id)) );
             $subject = "***" . pnVarPrepForDisplay(_PNFORUM_MOVED_SUBJECT) . ": " . $topic_title;
 
             pnForum_userapi_storenewtopic(array('subject'  => $subject,
@@ -2194,10 +2176,10 @@ function pnForum_userapi_deletetopic($args)
 {
     extract($args);
     unset($args);
-    
+
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -2205,8 +2187,8 @@ function pnForum_userapi_deletetopic($args)
     $sql = "SELECT t.forum_id
             FROM  ".$pntable['pnforum_topics']." t
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
@@ -2214,24 +2196,24 @@ function pnForum_userapi_deletetopic($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    
+
     $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
 
     // Update the users's post count, this might be slow on big topics but it makes other parts of the
     // forum faster so we win out in the long run.
-    $sql = "SELECT poster_id, post_id 
-            FROM ".$pntable['pnforum_posts']." 
+    $sql = "SELECT poster_id, post_id
+            FROM ".$pntable['pnforum_posts']."
             WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
         if($row['poster_id'] != -1) {
-            $sql2 = "UPDATE ".$pntable['pnforum_users']." 
-                     SET user_posts = user_posts - 1 
+            $sql2 = "UPDATE ".$pntable['pnforum_users']."
+                     SET user_posts = user_posts - 1
                      WHERE user_id = '".pnVarPrepForStore($row['poster_id'])."'";
-            $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);        
+            $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
             pnfCloseDB($result2);
         }
         $result->MoveNext();
@@ -2239,12 +2221,12 @@ function pnForum_userapi_deletetopic($args)
     pnfCloseDB($result);
 
     // Get the post ID's we have to remove.
-    $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']." 
+    $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']."
             WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-        
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
 
-    // we need to put a check here if we have more posts...     
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    // we need to put a check here if we have more posts...
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
         $posts_to_remove[] = $row['post_id'];
@@ -2252,19 +2234,19 @@ function pnForum_userapi_deletetopic($args)
     }
     pnfCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['pnforum_posts']." 
+    $sql = "DELETE FROM ".$pntable['pnforum_posts']."
             WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['pnforum_topics']." 
+    $sql = "DELETE FROM ".$pntable['pnforum_topics']."
             WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-      
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." 
+    $sql = "DELETE FROM ".$pntable['pnforum_posts_text']."
             WHERE ";
     for($x = 0; $x < count($posts_to_remove); $x++) {
         if(isset($set)) {
@@ -2273,12 +2255,12 @@ function pnForum_userapi_deletetopic($args)
         $sql .= "post_id = '". pnVarPrepForStore($posts_to_remove[$x])."'";
         $set = TRUE;
     }
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
-    return $forum_id;     
+    return $forum_id;
 
 }
 
@@ -2288,7 +2270,7 @@ function pnForum_userapi_deletetopic($args)
  *@params $args['topic_id'] int the topics id
  *@params $args['poster_id'] int the users pn_uid
  *@params $args['post_message'] string the text
- *@params $args['type'] int, 0=new message, 2=reply 
+ *@params $args['type'] int, 0=new message, 2=reply
  *@returns void
  */
 function pnForum_userapi_notify_by_email($args)
@@ -2297,7 +2279,7 @@ function pnForum_userapi_notify_by_email($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-  
+
     setlocale (LC_TIME, pnConfigGetVar('locale'));
     $modInfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
     $ModName = pnVarPrepForStore($modInfo['directory']);
@@ -2321,19 +2303,19 @@ function pnForum_userapi_notify_by_email($args)
     $msg_ContentType_Header .= "\n";
 
     // normal notification
-    $sql = "SELECT t.topic_title,  
-                   t.topic_poster,  
-                   t.topic_time, 
-                   f.cat_id, 
-                   c.cat_title, 
-                   f.forum_name, 
-                   f.forum_id                   
-            FROM  ".$pntable['pnforum_topics']." t 
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON t.forum_id = f.forum_id 
-            LEFT JOIN ".$pntable['pnforum_categories']." c ON f.cat_id = c.cat_id 
+    $sql = "SELECT t.topic_title,
+                   t.topic_poster,
+                   t.topic_time,
+                   f.cat_id,
+                   c.cat_title,
+                   f.forum_name,
+                   f.forum_id
+            FROM  ".$pntable['pnforum_topics']." t
+            LEFT JOIN ".$pntable['pnforum_forums']." f ON t.forum_id = f.forum_id
+            LEFT JOIN ".$pntable['pnforum_categories']." c ON f.cat_id = c.cat_id
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
@@ -2347,7 +2329,7 @@ function pnForum_userapi_notify_by_email($args)
     $topic_time_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic_unixtime));
 
     $poster_name = pnUserGetVar('uname',$poster_id);
-  
+
     $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
     $forum_name = pnVarPrepForDisplay($myrow['forum_name']);
     $category_name = pnVarPrepForDisplay($myrow['cat_title']);
@@ -2366,7 +2348,7 @@ function pnForum_userapi_notify_by_email($args)
     $sql = "SELECT user_id
             FROM ".$pntable['pnforum_subscription']."
             WHERE forum_id=".pnVarPrepForStore($forum_id)."";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $recipients = array();
     // check if list is empty - then do nothing
@@ -2384,11 +2366,11 @@ function pnForum_userapi_notify_by_email($args)
     pnfCloseDB($result);
 
     //  get list of topic_subscribers
-    $sql = "SELECT user_id 
-            FROM ".$pntable['pnforum_topic_subscription']." 
+    $sql = "SELECT user_id
+            FROM ".$pntable['pnforum_topic_subscription']."
             WHERE topic_id=".(int)pnVarPrepForStore($topic_id)."";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
@@ -2407,7 +2389,7 @@ function pnForum_userapi_notify_by_email($args)
             // set reply-to to his own adress ;)
             $msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
             $msg_Headers .= "Reply-To: $email"; //.$subscriber_userdata['pn_email'];
-        
+
             $message = _PNFORUM_NOTIFYBODY1." ".pnConfigGetVar('sitename')."\n"
                     . "$category_name :: $forum_name ::.. $topic_subject\n\n"
                     . "$poster_name ".pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2)." $topic_time_ml\n"
@@ -2419,7 +2401,7 @@ function pnForum_userapi_notify_by_email($args)
                     . _PNFORUM_NOTIFYBODY4."\n"
                     . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id))."\n"
                     . "\n"
-                    . _PNFORUM_NOTIFYBODY5." ".pnGetBaseURL(); 
+                    . _PNFORUM_NOTIFYBODY5." ".pnGetBaseURL();
             pnMail($email, $msg_Subject, $message, $msg_Headers);
         }
     }
@@ -2445,12 +2427,12 @@ function pnForum_userapi_subscribe_topic($args)
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
-    
+
     if (pnForum_userapi_get_topic_subscription_status(array('userid'=>$userid, 'topic_id'=>$topic_id)) == false) {
         // add user only if not already subscribed to the topic
-        $sql = "INSERT INTO ".$pntable['pnforum_topic_subscription']." (user_id, forum_id, topic_id) 
+        $sql = "INSERT INTO ".$pntable['pnforum_topic_subscription']." (user_id, forum_id, topic_id)
                 VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."','".(int)pnVarPrepForStore($topic_id)."')";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
     return;
@@ -2476,10 +2458,10 @@ function pnForum_userapi_unsubscribe_topic($args)
 
     if (pnForum_userapi_get_topic_subscription_status(array('userid'=>$userid, 'topic_id'=>$topic_id)) == true) {
         // user is subscribed, delete subscription
-        $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']." 
-                WHERE user_id='".(int)pnVarPrepForStore($userid)."' 
-                AND topic_id='".(int)pnVarPrepForStore($topic_id)."'";              
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+        $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']."
+                WHERE user_id='".(int)pnVarPrepForStore($userid)."'
+                AND topic_id='".(int)pnVarPrepForStore($topic_id)."'";
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     } else {
         // user is not subscribed
@@ -2508,19 +2490,19 @@ function pnForum_userapi_subscribe_forum($args)
 
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
-    
+
     if (pnForum_userapi_get_forum_subscription_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
         // add user only if not already subscribed to the forum
-        $sql = "INSERT INTO ".$pntable['pnforum_subscription']." (user_id, forum_id) 
+        $sql = "INSERT INTO ".$pntable['pnforum_subscription']." (user_id, forum_id)
                 VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."')";
-                
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
     return;
@@ -2538,16 +2520,16 @@ function pnForum_userapi_unsubscribe_forum($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-  
+
     $userid = pnUserGetVar('uid');
-    
+
     if (pnForum_userapi_get_forum_subscription_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == true) {
         // user is subscribed, delete subscription
-        $sql = "DELETE FROM ".$pntable['pnforum_subscription']." 
-                WHERE user_id='".(int)pnVarPrepForStore($userid)."' 
+        $sql = "DELETE FROM ".$pntable['pnforum_subscription']."
+                WHERE user_id='".(int)pnVarPrepForStore($userid)."'
                 AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
-                
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     } else {
         return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
@@ -2568,7 +2550,7 @@ function pnForum_userapi_add_favorite_forum($args)
 
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -2582,13 +2564,13 @@ function pnForum_userapi_add_favorite_forum($args)
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
-    
+
     if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == false) {
         // add user only if not already a favorite
-        $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id) 
+        $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id)
                 VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."')";
-                
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
     return;
@@ -2607,18 +2589,18 @@ function pnForum_userapi_remove_favorite_forum($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-  
+
     if (!isset($user_id)) {
         $user_id = (int)pnUserGetVar('uid');
     }
-    
+
     if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == true) {
         // remove from favorites
-        $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']." 
-                WHERE user_id='".(int)pnVarPrepForStore($user_id)."' 
+        $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']."
+                WHERE user_id='".(int)pnVarPrepForStore($user_id)."'
                 AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
-                
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
     return;
@@ -2637,19 +2619,19 @@ function pnForum_userapi_prepareemailtopic($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-    
-    $sql = "SELECT t.topic_title, 
+
+    $sql = "SELECT t.topic_title,
                    t.topic_id,
-                   t.forum_id, 
-                   f.forum_name, 
-                   f.cat_id, 
+                   t.forum_id,
+                   f.forum_name,
+                   f.cat_id,
                    c.cat_title
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-    
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
@@ -2658,14 +2640,14 @@ function pnForum_userapi_prepareemailtopic($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    
+
     $topic['topic_id'] = pnVarPrepForDisplay($myrow['topic_id']);
     $topic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
     $topic['cat_title'] = pnVarPrepForDisplay($myrow['cat_title']);
     $topic['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
     $topic['cat_id'] = pnVarPrepForDisplay($myrow['cat_id']);
     $topic['topic_subject'] = pnVarPrepForDisplay(pnVarCensor($myrow['topic_title']));
-    
+
     /**
      * base security check
      */
@@ -2693,7 +2675,7 @@ function pnForum_userapi_emailtopic($args)
     }
 
     $sender_name = pnUserGetVar('uname');
-    $sender_email = pnUserGetVar('email');          
+    $sender_email = pnUserGetVar('email');
     if (!pnUserLoggedIn()) {
         $sender_name = pnConfigGetVar('anonymous');
         $sender_email = pnModGetVar('pnForum', 'email_from');
@@ -2717,15 +2699,16 @@ function pnForum_userapi_get_latest_posts($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-    
+
     $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
     $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
-    
+
     // some tricky sql
     $part1 = "SELECT    t.topic_id,
                         t.topic_title,
                         f.forum_id,
-                        f.forum_name, 
+                        f.forum_name,
+                        f.forum_pop3_active,
                         c.cat_id,
                         c.cat_title,
                         t.topic_replies,
@@ -2737,13 +2720,13 @@ function pnForum_userapi_get_latest_posts($args)
             LEFT JOIN   ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
             LEFT JOIN   ".$pntable['pnforum_posts']." AS p on p.post_id = t.topic_last_post_id
             WHERE";
-    
+
     if ($unanswered==1) {
         $part2 = "AND t.topic_replies='0' ORDER BY t.topic_time DESC";
     } else {
         $part2 = "ORDER BY t.topic_time DESC";
     }
-    
+
     $lastweeksql    = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) < 8 ".$part2;
     $yesterdaysql   = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ".$part2;
     $todaysql       = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ".$part2;
@@ -2760,10 +2743,11 @@ function pnForum_userapi_get_latest_posts($args)
         case "6" : $sql = $lastvisitsql; $text=""._PNFORUM_LASTVISIT." ".ml_ftime(_DATETIMEBRIEF, $temptime).""; break;
         default : $sql = $last24sql; break;
     }
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $posts = array();
-    while ((list($topic_id, $topic_title, $forum_id, $forum_name, $cat_id, $cat_title, 
+    $m2fposts = array();
+    while ((list($topic_id, $topic_title, $forum_id, $forum_name, $pop3_active, $cat_id, $cat_title,
                  $topic_replies, $topic_last_post_id, $post_time, $poster_id) = $result->FetchRow()) ) {
         $post=array();
         $post['topic_id'] = pnVarPrepForDisplay($topic_id);
@@ -2776,17 +2760,17 @@ function pnForum_userapi_get_latest_posts($args)
         $post['topic_last_post_id'] = pnVarPrepForDisplay($topic_last_post_id);
         $post['post_time'] = pnVarPrepForDisplay($post_time);
         $post['poster_id'] = pnVarPrepForDisplay($poster_id);
-        
+
         // check permission before display
         if(allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
             // get correct page for latest entry
             if ($post_sort_order == "ASC") {
                 $hc_dlink_times = 0;
-                if (($topic_replies+1-$posts_per_page)>= 0) { 
-                    $hc_dlink_times = 0; 
-                    for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page) 
-                    $hc_dlink_times++; 
-                } 
+                if (($topic_replies+1-$posts_per_page)>= 0) {
+                    $hc_dlink_times = 0;
+                    for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page)
+                    $hc_dlink_times++;
+                }
                 $start = $hc_dlink_times*$posts_per_page;
             } else {
                 // latest topic is on top anyway...
@@ -2803,14 +2787,18 @@ function pnForum_userapi_get_latest_posts($args)
             $post['posted_unixtime'] = strtotime ($post['post_time']);
             $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
             pnfCloseDB($result2);
-            
-            array_push($posts, $post);
+
+            if((int)$pop3_active == 0) {
+                array_push($posts, $post);
+            } else {
+                array_push($m2fposts, $post);
+            }
         }
     }
     pnfCloseDB($result);
-    return array($posts, $text);
+    return array($posts, $m2fposts, $text);
 }
-  
+
 /**
  * usersync
  * stub function for syncing new pn users to pnforum
@@ -2822,8 +2810,8 @@ function pnForum_userapi_usersync()
 {
     if(!pnModAPILoad('pnForum', 'admin')) {
         return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    } 
-  	pnModAPIFunc('pnForum', 'admin', 'sync', 
+    }
+  	pnModAPIFunc('pnForum', 'admin', 'sync',
                  array( 'id'   => NULL,
 	                    'type' => "users"));
     return;
@@ -2852,9 +2840,9 @@ function pnForum_userapi_splittopic($args)
     // this one later (it will become the topic_last_post_id of the new thread)
     $sql = "SELECT topic_last_post_id,
                    topic_replies
-            FROM ".$pntable['pnforum_topics']." 
+            FROM ".$pntable['pnforum_topics']."
             WHERE topic_id = '".$post['topic_id']."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     list($old_last_post_id, $old_replies) = $result->fields;
     pnfCloseDB($result);
@@ -2863,38 +2851,38 @@ function pnForum_userapi_splittopic($args)
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
-    $sql = "INSERT INTO ".$pntable['pnforum_topics']." 
-            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify) 
-            VALUES 
+    $sql = "INSERT INTO ".$pntable['pnforum_topics']."
+            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify)
+            VALUES
             ('".pnVarPrepForStore($topic_id)."', '".pnVarPrepForStore($post['topic_subject'])."', '".pnVarPrepForStore($post['poster_data']['pn_uid'])."', '".pnVarPrepForStore($post['forum_id'])."', '".pnVarPrepForStore($time)."', '' )";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $newtopic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
     pnfCloseDB($result);
 
     // now we need to change the postings:
     // first step: count the number of posting we have to move
     $sql = "SELECT COUNT(*) AS total
-            FROM ".$pntable['pnforum_posts']." 
+            FROM ".$pntable['pnforum_posts']."
             WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
               AND post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($posts_to_move) = $result->fields;
     pnfCloseDB($result);
 
     // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
     // post_id > $post['post_id']
-    $sql = "UPDATE ".$pntable['pnforum_posts']." 
-            SET topic_id = '" . pnVarPrepForStore($newtopic_id) . "' 
+    $sql = "UPDATE ".$pntable['pnforum_posts']."
+            SET topic_id = '" . pnVarPrepForStore($newtopic_id) . "'
             WHERE post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'
             AND topic_id = '".$post['topic_id']."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     // get the new topic_last_pos_id of the old topic
     $sql = "SELECT post_id
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."' 
+            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
             ORDER BY post_time DESC";
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id) = $result->fields;
@@ -2902,26 +2890,26 @@ function pnForum_userapi_splittopic($args)
 
     // update the new topic
     $newtopic_replies = (int)$posts_to_move - 1;
-    $sql = "UPDATE ".$pntable['pnforum_topics']." 
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_replies = '$newtopic_replies',
                 topic_last_post_id = '" . pnVarPrepForStore($old_last_post_id) . "'
             WHERE topic_id = '" . pnVarPrepForStore($newtopic_id) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     // update the old topic
-    $old_replies = (int)$old_replies - (int)$posts_to_move; 
-    $sql = "UPDATE ".$pntable['pnforum_topics']." 
+    $old_replies = (int)$old_replies - (int)$posts_to_move;
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_replies = " . pnVarPrepForStore($old_replies) . ",
                 topic_last_post_id = '" . pnVarPrepForStore($new_last_post_id) . "'
             WHERE topic_id = '". (int)pnVarPrepForStore($post['topic_id'])."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
-    
+
     return $newtopic_id;
 }
 
-/** 
+/**
  * update_user_post_count
  *
  *@params $args['user_id'] int the users id
@@ -2943,13 +2931,13 @@ function pnForum_userapi_update_user_post_count($args)
     } elseif(strtolower($mode)=="dec") {
         $math = "-";
     } else {
-        return false;
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
-    
-    $sql = "UPDATE ".$pntable['pnforum_users']." 
-            SET user_posts = user_posts $math 1 
+
+    $sql = "UPDATE ".$pntable['pnforum_users']."
+            SET user_posts = user_posts $math 1
             WHERE user_id = '".(int)pnVarPrepForStore($user_id)."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return true;
 }
@@ -2966,7 +2954,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
 {
     extract($args);
     unset($args);
-    
+
     if(!isset($topic_id) || !isset($view) ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
@@ -2978,7 +2966,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
         case "next":     $math = ">"; $sort = "ASC";break;
         default: return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
-                           
+
     $sql = "SELECT t1.topic_id
             FROM ".$pntable['pnforum_topics']." AS t1,
                  ".$pntable['pnforum_topics']." AS t2
@@ -2993,7 +2981,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
         $topic_id = $row['topic_id'];
     }
     pnfCloseDB($result);
-    return $topic_id;        
+    return $topic_id;
 }
 
 /**
@@ -3017,12 +3005,140 @@ function pnForum_userapi_forumsearch($args)
     if( empty($searchfor) && empty($author) ) {
         return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
     }
-    
+
     if(!isset($limit) || empty($limit)) {
         $limit = 10;
     }
-     
+
     list($dbconn, $pntable) = pnfOpenDB();
+
+    $searchfor = pnVarPrepForStore(trim($searchfor));
+    // partial sql stored in $wherematch
+    $wherematch = '';
+    // selectmatch contains almost the same as wherematch without the last AND and
+    // will be used in the SELECT part like ... selectmatch as score
+    // to enable ordering the results by score
+    $selectmatch = '';
+    if(!empty($searchfor)) {
+        /*
+        if($bool == 'AND') {
+            // AND
+            $wherematch = "(MATCH pt.post_text AGAINST ('$searchfor') OR MATCH t.topic_title AGAINST ('$searchfor')) \n";
+            $selectmatch = ", MATCH pt.post_text AGAINST ('$searchfor') as textscore, MATCH t.topic_title AGAINST ('$searchfor') as subjectscore \n";
+        } else {
+            // OR
+            $flag = false;
+            $words = explode(' ', $searchfor);
+            $wherematch .= "( ";
+            foreach($words as $word) {
+                if($flag) {
+                    $wherematch .= ' OR ';
+                }
+                $word = pnVarPrepForStore($word);
+                // get post_text and match up forums/topics/posts
+                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+                $flag = true;
+            }
+            $wherematch .= " ) ";
+        }
+        $wherematch .= " AND ";
+        */
+        $flag = false;
+        $words = explode(' ', $searchfor);
+        $wherematch = "( ";
+        foreach($words as $word) {
+            if($flag==true) {
+                switch(strtolower($bool)) {
+                    case 'or':
+                        $wherematch .= ' OR ';
+                        break;
+                    case 'and':
+                    default:
+                        $wherematch .= 'AND ';
+                }
+            }
+            $word = pnVarPrepForStore($word);
+            // get post_text and match up forums/topics/posts
+            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+            $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+            $flag = true;
+        }
+        $wherematch .= " ) AND ";
+        /*
+        $flag = false;
+        $words = explode(' ', $searchfor);
+        $query .= "( ";
+        foreach($words as $word) {
+            if($flag==true) {
+                switch(strtolower($bool)) {
+                    case 'or':
+                        $query .= ' OR ';
+                        break;
+                    case 'and':
+                    default:
+                        $query .= 'AND ';
+                }
+            }
+            $word = pnVarPrepForStore($word);
+            // get post_text and match up forums/topics/posts
+            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+            $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+            $flag = true;
+        }
+        $query .= " ) ";
+        $query .= " AND ";
+        */
+    } else {
+        // searchfor is empty, we search by author only
+    }
+
+    //check forums (multiple selection is possible!)
+    // partial sql stored in $whereforum
+    $whereforums = '';
+    if($forums[0]) {
+        $whereforums = " AND (";
+        $flag = false;
+        foreach($forums as $forumid) {
+            if($flag) {
+                $whereforums .= " OR ";
+            }
+            $whereforums .= "f.forum_id= " . pnVarPrepForStore($forumid) . " ";
+            $flag = true;
+        }
+        $whereforums .= ") ";
+    }
+
+    // authors with adodb
+    // partial sql stored in $whereauthor
+    $whereauthor = '';
+    if($author) {
+        $searchuid = pnUserGetIDFromName($author);
+        if(is_numeric($searchuid)) {
+            $whereauthor = " AND p.poster_id=$searchuid \n";
+        } else {
+            $whereauthor = ''; // " AND p.poster_id=0 \n";
+        }
+    }
+
+    // Not sure this is needed and is not cross DB compat
+    //$query .= " GROUP BY pt.post_id ";
+
+    $searchorder = $order['0'];
+    // search order, partial sql stored in $searchordersql
+    $orderbyscore = '';
+    if(!empty($selectmatch)) {
+        $orderbyscore = 'textscore DESC, subjectscore DESC,';
+    }
+    if ($searchorder == 1){
+        $searchordersql = " ORDER BY $orderbyscore pt.post_id DESC";
+    }
+    if ($searchorder == 2){
+        $searchordersql = " ORDER BY $orderbyscore t.topic_title";
+    }
+    if ($searchorder == 3){
+        $searchordersql = " ORDER BY $orderbyscore f.forum_name";
+    }
 
     $query = "SELECT DISTINCT
               f.forum_id,
@@ -3036,93 +3152,29 @@ function pnForum_userapi_forumsearch($args)
               t.topic_replies,
               t.topic_views,
               p.poster_id,
-              p.post_time 
-              FROM ".$pntable['pnforum_posts']." AS p, 
+              p.post_time
+              $selectmatch
+              FROM ".$pntable['pnforum_posts']." AS p,
                    ".$pntable['pnforum_forums']." AS f,
-                   ".$pntable['pnforum_posts_text']." AS pt, 
+                   ".$pntable['pnforum_posts_text']." AS pt,
                    ".$pntable['pnforum_topics']." AS t,
                    ".$pntable['pnforum_categories']." AS c
-              WHERE ";
-            
-    $searchfor = pnVarPrepForStore(trim($searchfor));
-    if(!empty($searchfor)) {
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $query .= "( ";
-        foreach($words as $word) {
-            if($flag) {
-                switch($bool) {
-                    case 'AND' :
-                        $query .= ' AND ';
-                        break;
-                    case 'OR' :
-                    default :
-                        $query .= ' OR ';
-                        break;
-                }
-            }
-            // get post_text and match up forums/topics/posts
-            $query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $flag = true;
-        }
-        $query .= " ) AND ";
-    } else {
-        // searchfor is empty, we search by author only
-    }
-    $query .= "p.post_id=pt.post_id \n";
-    $query .= "AND p.topic_id=t.topic_id \n";
-    $query .= "AND p.forum_id=f.forum_id\n";
-    $query .= "AND c.cat_id=f.cat_id\n";
-    
-    //check forums (multiple selection is possible!)
-    if($forums[0]) {
-        $query .= " AND (";
-        $flag = false;
-        foreach($forums as $forumid) {
-            if($flag) {
-                $query .= " OR ";
-            }
-            $query .= "f.forum_id=$forumid";
-            $flag = true;
-        }
-        $query .= ") ";
-    }
-    
-    // authors with adodb
-    if($author) {
-        $search_username = addslashes($author);
-        $sql = "SELECT pn_uid 
-                FROM $pntable[users] 
-                WHERE pn_uname = '".pnVarPrepForStore($search_username)."'";
-        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-        $row = $result->GetRowAssoc(false);
-        pnfCloseDB($result);
-        $searchauthor = $row['pn_uid'];
-        if ($searchauthor > 0){
-            $query .= " AND p.poster_id=$searchauthor \n";
-        } else {
-            $query .= " AND p.poster_id=0 \n";
-        }
-    }
+              WHERE
+              $wherematch
+              p.post_id=pt.post_id
+              AND p.topic_id=t.topic_id
+              AND p.forum_id=f.forum_id
+              AND c.cat_id=f.cat_id
+              $whereforums
+              $whereauthor
+              $searchordersql";
 
-    // Not sure this is needed and is not cross DB compat
-    //$query .= " GROUP BY pt.post_id ";
-    
-    $searchorder = $order['0'];
 
-    if ($searchorder == 1){
-        $query .= " ORDER BY pt.post_id DESC";
-    }
-    if ($searchorder == 2){
-        $query .= " ORDER BY t.topic_title";
-    }
-    if ($searchorder == 3){
-        $query .= " ORDER BY f.forum_name";
-    }
+
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 
     $total_hits = 0;
-    $skip_hits = 0; 
+    $skip_hits = 0;
     $searchresults = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
@@ -3145,21 +3197,31 @@ function pnForum_userapi_forumsearch($args)
                 $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
                 $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
-                
+
                 //without signature
                 $sresult['post_text'] = eregi_replace("\[addsig]$", "", $sresult['post_text']);
-                
+
                 //strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
-    
+
                 // username
                 $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
-                
+
+                /* THIS PART IS NOT WORKING ATM!!! DO NOT USE IT!!!
+                // we now create the url to the last post in the thread. This might
+                // on site 1, 2 or what ever in the thread, depending on topic_replies
+                // count and the posts_per_page setting
+                $sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                   array('topic' => $sresult['topic_id'],
+                                                         'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+                $sresult['last_post_url_anchor'] = $sresult['last_post_url'] . "#pid" . $sresult['topic_last_post_id'];
+                */
+
                 // check if we have to skip the first $startnum entries or not
                 if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
                     $skip_hits++;
                 } else {
-                    // check if we have a limit and wether we have reached it or not
+                    // check if we have a limit and if we have reached it or not
                     if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
                         array_push($searchresults, $sresult);
                     }
@@ -3188,18 +3250,18 @@ function pnForum_userapi_getfavorites($args)
 
     extract($args);
     unset($args);
-    
+
     // if we have already gone through this once then don't do it again
     // if we have a favorites block displayed and are looking at the
     // forums this will get called twice.
     if (isset($tree)) {
         return $tree;
     }
-    
+
     // lets get all the forums just like we would a normal display
     // we'll figure out which ones aren't needed further down.
     $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
-    
+
     // if they are anonymous they can't have favorites
     if (!pnUserLoggedIn()) {
         return $tree;
@@ -3210,12 +3272,12 @@ function pnForum_userapi_getfavorites($args)
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
-    
+
     $sql = "SELECT f.forum_id
             FROM ".$pntable['pnforum_forum_favorites']." AS f
             WHERE f.user_id='" . (int)pnVarPrepForStore($user_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    
+
     // make sure we start with an empty array
     $favoritesArray = array();
     while(!$result->EOF) {
@@ -3225,7 +3287,7 @@ function pnForum_userapi_getfavorites($args)
         $result->MoveNext();
     }
     pnfCloseDB($result);
-    
+
     // categoryCount is needed since the categories aren't stored as numerical
     // indexes.  They are stored as associative arrays.
     $categoryCount=0;
@@ -3264,7 +3326,7 @@ function pnForum_userapi_getfavorites($args)
         // remove the empyt category from the array
         array_splice($tree, $category , 1);
     }
-    
+
     // return the modified array
     return $tree;
 }
@@ -3281,7 +3343,7 @@ function pnForum_userapi_get_favorite_status($args)
 {
     extract($args);
     unset($args);
-    
+
     if (!isset($user_id)) {
         $user_id = (int)pnUserGetVar('uid');
     }
@@ -3290,13 +3352,13 @@ function pnForum_userapi_get_favorite_status($args)
     $userstable = $pntable['pnforum_users'];
     $userscol    = $pntable['pnforum_users_column'];
     $sql = "SELECT $userscol[user_favorites]
-            FROM $userstable 
+            FROM $userstable
             WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($favorite) = $result->fields;
     pnfCloseDB($result);
     return (bool)$favorite;
-} 
+}
 
 /**
  * change_favorite_status
@@ -3310,7 +3372,7 @@ function pnForum_userapi_change_favorite_status($args)
 {
     extract($args);
     unset($args);
-    
+
     if (!isset($user_id)) {
         $user_id = (int)pnUserGetVar('uid');
     }
@@ -3327,9 +3389,9 @@ function pnForum_userapi_change_favorite_status($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return (bool)$newstatus;
-} 
+}
 
-/** 
+/**
  * get_user_post_order
  * Determines the users desired post order for topics.
  * Either Newest First or Oldest First
@@ -3343,9 +3405,9 @@ function pnForum_userapi_get_user_post_order($args)
 {
     extract($args);
     unset($args);
-    
+
     $loggedIn = pnUserLoggedIn();
-    
+
     // if we are passed the user_id then lets use it
     if (isset($user_id)) {
         // we got passed the id but it is the anonymous user
@@ -3369,7 +3431,7 @@ function pnForum_userapi_get_user_post_order($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT u.user_post_order 
+    $sql = "SELECT u.user_post_order
             FROM  ".$pntable['pnforum_users']." u
             WHERE u.user_id = '".(int)pnVarPrepForStore($user_id)."'";
 
@@ -3397,7 +3459,7 @@ function pnForum_userapi_change_user_post_order($args)
 {
     extract($args);
     unset($args);
-    
+
     // if we didn't get a user_id and the user isn't logged in then
     // return false because there is no database entry to update
     if (!isset($user_id) && pnUserLoggedIn()) {
@@ -3406,7 +3468,7 @@ function pnForum_userapi_change_user_post_order($args)
         return false;
     }
 
-    $post_order = pnModAPIFunc('pnForum','user','get_user_post_order'); 
+    $post_order = pnModAPIFunc('pnForum','user','get_user_post_order');
 
     $new_post_order = ($post_order=='DESC') ? 0 : 1;
 
@@ -3419,8 +3481,8 @@ function pnForum_userapi_change_user_post_order($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return true;
-} 
-/** 
+}
+/**
  * get_forum_category
  * Determines the category that a forum belongs to.
  *
@@ -3431,7 +3493,7 @@ function pnForum_userapi_get_forum_category($args)
 {
     extract($args);
     unset($args);
-    
+
     if (!isset($forum_id) || !is_numeric($forum_id)) {
         return false;
     }
@@ -3441,7 +3503,7 @@ function pnForum_userapi_get_forum_category($args)
     $forumtable  = $pntable['pnforum_forums'];
     $forumcol    = $pntable['pnforum_forums_column'];
 
-    $sql = "SELECT $forumcol[cat_id] 
+    $sql = "SELECT $forumcol[cat_id]
             FROM  $forumtable
             WHERE $forumcol[forum_id] = '".(int)pnVarPrepForStore($forum_id)."'";
 
@@ -3468,26 +3530,600 @@ function pnForum_userapi_get_page_from_topic_replies($args)
 {
     extract($args);
     unset($args);
-    
+
     if(!isset($topic_replies) || !is_numeric($topic_replies) ||$topic_replies < 0 ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
-    
+
     // get some enviroment
     $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
     $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
 
     $times = 0;
     if ($post_sort_order == "ASC") {
-        if (($topic_replies+1-$posts_per_page)>= 0) { 
+        if (($topic_replies+1-$posts_per_page)>= 0) {
             for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page) {
-                $times++; 
+                $times++;
             }
-        } 
+        }
     }
     // if not ASC then DESC which means latest topic is on top anyway...
     return $times * $posts_per_page;
-} 
+}
 
+/**
+ * cron
+ *
+ *@params $args['forum'] array with forum information
+ *@params $args['force'] boolean if true force connection no matter of active setting or interval
+ *@returns none
+ */
+function pnForum_userapi_mailcron($args)
+{
+    extract($args);
+    unset($args);
+
+    if(pnModGetVar('pnForum', 'm2f_enabled') <> 'yes') {
+        return;
+    }
+
+    $force = (isset($force)) ? (boolean)$force : false;
+
+    include_once "modules/pnForum/pnincludes/pop3.php";
+    if( (($forum['pop3_active']==1) && ($forum['pop3_last_connect']<=time()-($forum['pop3_interval']*60)) ) || ($force==true) ) {
+        mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n");
+        // get new mails for this forum
+        $pop3 =& new pop3_class;
+        $pop3->hostname = $forum['pop3_server'];
+        $pop3->port     = $forum['pop3_port'];
+        $error = "";
+
+        // open connection to pop3 server
+        if(($error = $pop3->Open())=="") {
+            mailcronecho("connected to the pop3 server '".$pop3->hostname."'.\n");
+            // login to pop3 server
+            if(($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=="") {
+                mailcronecho( "user '" . $forum['pop3_login'] . "' logged into pop3 server '".$pop3->hostname."'.\n");
+                // check for message
+                if(($error = $pop3->Statistics($messages,$size))=="") {
+                    mailcronecho("there are $messages messages in the mail box with a total of $size bytes.\n");
+                    // get message list...
+                    $result = $pop3->ListMessages("",1);
+                    if(is_array($result) && count($result)>0) {
+                        // logout the currentuser
+                        mailcronecho("logging out '" . pnUserGetVar('uname') . "' from pn\n");
+                        pnUserLogOut();
+                        // login the correct user
+                        if(pnUserLogIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
+                            if(!pnSecAuthAction(0, "pnForum::", $forum['category'] . ": " . $forum['forum_id'] .":", ACCESS_COMMENT)) {
+                                mailcronecho("stop: insufficient permissions for " . $forum['pop3_pnuser'] . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ")");
+                                pnUserLogOut();
+                                return false;
+                            }
+                            mailcronecho("adding new posts as user '" . $forum['pop3_pnuser'] . "' now\n");
+                            // .cycle through the message list
+                            for($cnt=1; $cnt<=count($result); $cnt++) {
+                                if(($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1))=="") {
+                                    // echo "Message $i:\n---Message headers starts below---\n";
+                                    $subject = '';
+                                    $from = '';
+                                    $msgid = '';
+                                    $replyto = '';
+                                    foreach($headers as $header) {
+                                        //echo htmlspecialchars($header),"\n";
+                                        // get subject
+                                        $header = strtolower($header);
+                                        if(strpos($header, 'subject:')===0) {
+                                            $subject = trim(strip_tags(substr($header, 8)));
+                                        }
+                                        // get sender
+                                        if(strpos($header, 'from:')===0) {
+                                            $from = trim(strip_tags(substr($header, 5)));
+                                        }
+                                        // get msgid from In-Reply-To: if this is an nswer to a prior
+                                        // posting
+                                        if(strpos($header, 'in-reply-to:')===0) {
+                                            $replyto = trim(strip_tags(substr($header, 12)));
+                                        }
+                                        // this msg id
+                                        if(strpos($header, 'message-id:')===0) {
+                                            $msgid = trim(strip_tags(substr($header, 11)));
+                                        }
+
+                                    }
+                                    if(empty($subject)) {
+                                        $subject = pnVarPrepForDisplay(_PNFORUM_NOSUBJECT);
+                                    }
+
+                                    // check if subject matches our matchstring
+                                    if( empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject)<>0) ) {
+                                        $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
+                                        if(!empty($replyto)) {
+                                            // this seems to be a reply, we find the original posting
+                                            // and store this mail in the same thread
+                                            $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topic_by_postmsgid',
+                                                                     array('msgid' => $replyto));
+                                            if(is_boolean($topic_id) && $topic_id==false) {
+                                                // msgid not found, we clear replyto to create a new topic
+                                                $replyto = '';
+                                            } else {
+                                                // topic_id found, add this posting as a reply there
+                                                list($start,
+                                                     $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
+                                                                               array('topic_id'         => $topic_id,
+                                                                                     'message'          => $message,
+                                                                                     'attach_signature' => 1,
+                                                                                     'subscribe_topic'  => 0,
+                                                                                     'msgid'            => $msgid));
+                                                mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n");
+                                            }
+                                        }
+
+                                        // check again for replyto and create a new topic
+                                        if(empty($replyto)) {
+                                            // store message in forum
+                                            $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+                                                                     array('subject'          => $subject,
+                                                                           'message'          => $message,
+                                                                           'forum_id'         => $forum['forum_id'],
+                                                                           'attach_signature' => 1,
+                                                                           'subscribe_topic'  => 0,
+                                                                           'msgid'            => $msgid ));
+                                            mailcronecho("added new topic '$subject' (topic=$topic_id) to forum '".$forum['forum_name'] ."'\n");
+                                        }
+                                    } else {
+                                        mailcronecho("mail subject '$subject' does not match requirement - ignored!");
+                                    }
+                                    // mark message for deletion
+                                    $pop3->DeleteMessage($cnt);
+                                }
+                            }
+                        } else {
+                            mailcronecho("error: cannot login user '". $forum['pop3_pnuser'] ."' to pn\n");
+                        }
+                        // close pop3 connection and finally delete messages
+                        if($error=="" && ($error=$pop3->Close())=="") {
+                            mailcronecho("disconnected from the POP3 server '".$pop3->hostname."'.\n");
+                        }
+                    } else {
+                        $error = $result;
+                    }
+                }
+            }
+        }
+        if(!empty($error)) {
+            mailcronecho( "error: ",htmlspecialchars($error) . "\n");
+        }
+
+        // store the timestamp of the last connection to the database
+        list($dbconn, $pntable) = pnfOpenDB();
+        $sql = "UPDATE ".$pntable['pnforum_forums']."
+                SET forum_pop3_lastconnect='". pnVarPrepForStore(time()) . "'
+                WHERE forum_id=" . pnVarPrepForStore($forum['forum_id']) . "";
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+
+    }
+    return;
+}
+
+/**
+ * testpop3connection
+ *
+ *@params $args['forum_id'] int the id of the forum to test the pop3 connection
+ *@returns array of messages from pop3 connection test
+ *
+ */
+function pnForum_userapi_testpop3connection($args)
+{
+    extract($args);
+    unset($args);
+
+    if( !isset($forum_id) || !is_numeric($forum_id)) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+
+    if(!pnModAPILoad('pnForum', 'admin')) {
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+    }
+
+    $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                          array('forum_id' => $forum_id));
+    include_once "modules/pnForum/pnincludes/pop3.php";
+
+    $pop3 =& new pop3_class;
+    $pop3->hostname = $forum['pop3_server'];
+    $pop3->port     = $forum['pop3_port'];
+
+    $error = "";
+    $pop3messages = array();
+    if(($error=$pop3->Open())=="") {
+        $pop3messages[] = "connected to the POP3 server '".$pop3->hostname."'";
+        if(($error=$pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=="") {
+            $pop3messages[] = "user '" . $forum['pop3_login'] . "' logged in";
+            if(($error=$pop3->Statistics($messages,$size))=="") {
+                $pop3messages[] = "there are $messages messages in the mail box with a total of $size bytes.";
+                $result=$pop3->ListMessages("",1);
+                if(is_array($result) && count($result)>0) {
+                    for($cnt=1; $cnt<=count($result); $cnt++) {
+                        if(($error=$pop3->RetrieveMessage($cnt, $headers, $body, -1))=="") {
+                            foreach($headers as $header) {
+                                if(strpos(strtolower($header), 'subject:')===0) {
+                                    $subject = trim(strip_tags(substr($header, 8)));
+                                }
+                            }
+                        }
+                    }
+                    if($error=="" && ($error=$pop3->Close())=="") {
+                        $pop3messages[] = "disconnected from the POP3 server '".$pop3->hostname."'.\n";
+                    }
+
+                } else {
+                    $error=$result;
+                }
+            }
+        }
+    }
+    if(!empty($error)) {
+        $pop3messages[] = "error: " . htmlspecialchars($error);
+    }
+
+    return $pop3messages;
+}
+
+/**
+ * get_topic_by_postmsgid
+ * gets a topic_idfrom the postings msgid
+ *
+ *@params $args['msgid'] string the msgid
+ *@returns int topic_id or false if not found
+ *
+ */
+function pnForum_userapi_get_topic_by_postmsgid($args)
+{
+    extract($args);
+    unset($args);
+
+    if(!isset($msgid) || empty($msgid)) {
+        return showforumerror(_MODSRGSERROR, __FILE__, __LINE__);
+    }
+
+    $topic_id = false;
+
+    list($dbconn, $pntable) = pnfOpenDB();
+    $poststable = $pntable['pnforum_posts'];
+    $postscolumn = $pntable['pnforum_posts_column'];
+
+    $sql = "SELECT $postscolumn[topic_id]
+            FROM $poststable
+            WHERE $postscolumn[post_msgid]='" . pnVarPrepForStore($msgid) . "'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    if(!$result->EOF) {
+        list($topic_id) = $result->fields;
+        pnfCloseDB($result);
+    }
+    return $topic_id;
+}
+
+/**
+ * movepost
+ *
+ *@params $args['post'] array with posting data as returned from readpost()
+ *@params $args['to_topic']
+ *@returns int id of the new topic
+ */
+function pnForum_userapi_movepost($args)
+{
+    extract($args); // $post, $to_topic
+    unset($args);
+    // 1 . update topic_id, post_time in posts table
+    // for post[post_id]
+    // 2 . update topic_replies in nuke_pnforum_topics ( COUNT )
+    // for old_topic
+    // 3 . update topic_last_post_id in nuke_pnforum_topics
+    // for old_topic
+    // 4 . update topic_replies in nuke_pnforum_topics ( COUNT )
+    // 5 . update topic_last_post_id in nuke_pnforum_topics if necessary
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    // 1 . update topic_id in posts table
+
+   	$sql = "UPDATE ".$pntable['pnforum_posts']."
+            SET topic_id='".(int)pnVarPrepForStore($to_topic)."'
+            WHERE (post_id = '".(int)pnVarPrepForStore($post['post_id'])."')";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // for to_topic
+    // 2 . update topic_replies in nuke_pnforum_topics ( COUNT )
+    // 3 . update topic_last_post_id in nuke_pnforum_topics
+    // get the new topic_last_post_id of to_topic
+    $sql = "SELECT post_id, post_time
+            FROM ".$pntable['pnforum_posts']."
+            WHERE topic_id = '".(int)pnVarPrepForStore($to_topic)."'
+            ORDER BY post_time DESC";
+    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    list($to_last_post_id, $to_post_time) = $result->fields;
+    pnfCloseDB($result);
+
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
+            SET topic_replies = topic_replies + 1,
+				topic_last_post_id='".(int)pnVarPrepForStore($to_last_post_id)."',
+				topic_time='".pnVarPrepForStore($to_post_time)."'
+            WHERE topic_id='".(int)pnVarPrepForStore($to_topic)."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // for old topic ($post[topic_id]
+    // 4 . update topic_replies in nuke_pnforum_topics ( COUNT )
+    // 5 . update topic_last_post_id in nuke_pnforum_topics if necessary
+
+    // Se obtiene el valor de topic_last_pos_id en el topic antiguo
+    // get the new topic_last_post_id of the old topic
+    $sql = "SELECT post_id, post_time
+            FROM ".$pntable['pnforum_posts']."
+            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
+            ORDER BY post_time DESC";
+    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    list($old_last_post_id, $old_post_time) = $result->fields;
+    pnfCloseDB($result);
+
+    // update
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
+            SET topic_replies = topic_replies - 1,
+				topic_last_post_id = '".(int)pnVarPrepForStore($old_last_post_id)."',
+				topic_time='".pnVarPrepForStore($old_post_time)."'
+            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    return pnForum_userapi_get_last_topic_page(array('topic_id' => $post['topic_id']));
+}
+
+/**
+ * get_last_topic_page
+ * returns the number of the ast page of the topic if more than posts_per_page entries
+ * for use as the start parameter in urls
+ *
+ *@params $args['topic_id'] int the topic id
+ *@returns nt the page number
+ */
+function pnForum_userapi_get_last_topic_page($args)
+{
+    extract($args);
+    unset($args);
+
+    if(!isset($topic_id) || !is_numeric($topic_id)) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    // get topic_replies for correct redirect (start parameter)
+    $sql = "SELECT topic_replies FROM " . $pntable[pnforum_topics] . " WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    list ($topic_replies) = $result->fields;
+    pnfCloseDB($result);
+
+    // get some enviroment
+    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+
+    if ($post_sort_order == "ASC") {
+        $hc_dlink_times = 0;
+        if (($topic_replies+1-$posts_per_page)>= 0) {
+            $hc_dlink_times = 0;
+            for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page)
+            $hc_dlink_times++;
+        }
+        $start = $hc_dlink_times*$posts_per_page;
+    } else {
+        // latest topic is on top anyway...
+        $start = 0;
+    }
+    return $start;
+}
+
+/**
+ * jointopics
+ * joins two topics together
+ *
+ *@params $args['from_topic_id'] int this topic get integrated into to_topic
+ *@params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
+ */
+function pnForum_userapi_jointopics($args)
+{
+	extract($args); // $new_topic, $old_topic (parameters)
+   	unset($args);
+
+	if (!pnSecConfirmAuthKey()) {
+      	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+    }
+
+	// check if from_topic exists. this function will return an error if not
+	$from_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false));
+    if(!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
+        // user is not allowed to moderate this forum
+        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+    }
+	// check if to_topic exists. this function will return an error if not
+    $to_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false));
+    if(!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
+        // user is not allowed to moderate this forum
+        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+    }
+
+	list($dbconn, $pntable) = pnfOpenDB();
+
+    // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
+    // and from_topic['forum_id'] to to_topic['forum_id']
+    $sql = "UPDATE ".$pntable['pnforum_posts']."
+            SET topic_id = '".(int)pnVarPrepForStore($to_topic['topic_id'])."',
+				forum_id = '".(int)pnVarPrepForStore($to_topic['forum_id'])."'
+            WHERE topic_id='".(int)pnVarPrepForStore($from_topic['topic_id'])."'";
+	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // to_topic['topic_replies'] must be incremented by from_topic['topic_replies'] + 1 (initial
+    // posting
+    // update to_topic['topic_time'] and to_topic['topic_last_post_id']
+    // get new topic_time and topic_last_post_id
+    $sql = "SELECT post_id, post_time
+            FROM ".$pntable['pnforum_posts']."
+            WHERE topic_id = '".(int)pnVarPrepForStore($to_topic['topic_id'])."'
+            ORDER BY post_time DESC";
+    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    list($new_last_post_id, $new_post_time) = $result->fields;
+    pnfCloseDB($result);
+    $topic_replies = $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1;
+
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
+            SET topic_replies = '".(int)pnVarPrepForStore($topic_replies)."',
+				topic_last_post_id='".(int)pnVarPrepForStore($new_last_post_id)."',
+				topic_time='".pnVarPrepForStore($new_post_time)."'
+            WHERE topic_id='".(int)pnVarPrepForStore($to_topic['topic_id'])."'";
+	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // delete from_topic from pnforum_topics
+	$sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)pnVarPrepForStore($from_topic['topic_id'])."'";
+	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // update forums table
+    // get topics count: decrement from_topic['forum_id']'s topic count by 1
+    $sql = "UPDATE ".$pntable['pnforum_forums']."
+            SET forum_topics = forum_topics - 1,
+            WHERE forum_id='".(int)pnVarPrepForStore($from_topic['forum_id'])."'";
+	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // get posts count: if both topics are in the same forum, we just have to increment
+    // the post count by 1 for the initial postig that is now part of the to_topic,
+    // if they are in different forums, we have to decrement the post count
+    // in from_topic's forum and increment it in to_topic's forum by from_topic['topic_replies'] + 1
+    // for the initial posting
+    // get last_post: if both topics are in the same forum, everything stays
+    // as-is, if not, we update both, even if it is not necessary
+
+    if($from_topic['forum_id'] == $to_topic['forum_id']) {
+        // same forum
+        $sql = "UPDATE ".$pntable['pnforum_forums']."
+                SET forum_posts = forum_posts + 1,
+                WHERE forum_id='".(int)pnVarPrepForStore($to_topic['forum_id'])."'";
+    	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+    } else {
+        // different forum
+        // get last post in forums
+        $sql = "SELECT post_id
+                FROM ".$pntable['pnforum_posts']."
+                WHERE forum_id = '".(int)pnVarPrepForStore($from_topic['forum_id'])."'
+                ORDER BY post_time DESC";
+        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        list($from_forum_last_post_id) = $result->fields;
+        pnfCloseDB($result);
+        $sql = "SELECT post_id
+                FROM ".$pntable['pnforum_posts']."
+                WHERE forum_id = '".(int)pnVarPrepForStore($to_topic['forum_id'])."'
+                ORDER BY post_time DESC";
+        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        list($to_forum_last_post_id) = $result->fields;
+        pnfCloseDB($result);
+        $post_count_difference = (int)pnVarPrepForStore($from_topic['topic_replies']+1);
+        // decrement from_topic's forum post_count
+        $sql = "UPDATE ".$pntable['pnforum_forums']."
+                SET forum_posts = forum_posts - $post_count_difference,
+                    forum_last_post_id = '" . (int)pnVarPrepForStore($from_forum_last_post) . "'
+                WHERE forum_id='".(int)pnVarPrepForStore($from_topic['forum_id'])."'";
+    	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+        $sql = "UPDATE ".$pntable['pnforum_forums']."
+                SET forum_posts = forum_posts + $post_count_difference,
+                    forum_last_post_id = '" . (int)pnVarPrepForStore($to_forum_last_post) . "'
+                WHERE forum_id='".(int)pnVarPrepForStore($to_topic['forum_id'])."'";
+    	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+    }
+
+
+
+/*
+// 1. Select all posts to move from pnforum_posts table
+	$sql = "SELECT post_id,topic_id,forum_id,poster_id,post_time,poster_ip
+	   	    FROM ".$pntable['pnforum_posts']."
+		    WHERE topic_id='".(int)pnVarPrepForStore($post['old_topic'])."'";
+	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+// 2. Updated date for all moved posts
+	$time = date("Y-m-d H:i");
+// 3. Make a loop with all readed posts: Readed post = moved post
+	while(!$result->EOF) {
+		$readedPost = $result->GetRowAssoc(false);
+		// Every post is inserted at the end of the table pnforum_post, so we are sure every message
+		// is moved in the correct order and with the right date
+		$sql = "INSERT INTO ".$pntable['pnforum_posts']." (topic_id,forum_id,poster_id,post_time,poster_ip)
+				VALUES ('".(int)pnVarPrepForStore($post['new_topic'])."',
+				'".(int)pnVarPrepForStore($readedPost['forum_id'])."',
+				'".(int)pnVarPrepForStore($readedPost['poster_id'])."',
+				'".pnVarPrepForStore($time)."',
+				'".pnVarPrepForStore($readedPost['poster_ip'])."')";
+		$result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+		pnfCloseDB($result2);
+		// We get the new post_id from the moved post
+		$last_post_id = $dbconn->PO_Insert_ID($pntable['pnforum_posts'], 'post_id');
+		// Read post text using old post_id (post_id before move)
+		$sql = "SELECT post_text FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)pnVarPrepForStore($readedPost['post_id'])."'";
+		$result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+		list($post_text) = $result2->fields;
+		pnfCloseDB($result2);
+		// Text post is inserted at the end of the post_text table using new post_id values
+		$sql = "INSERT INTO ".$pntable['pnforum_posts_text']." (post_id,post_text) VALUES ('".(int)pnVarPrepForStore($last_post_id)."','".pnVarPrepForStore($post_text)."')";
+		$result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+		pnfCloseDB($result2);
+		// At this moment we have the post duplicated: in the old Topic and in the new Topic
+		// Delete old post_text in old Topic
+		$sql = "DELETE FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)pnVarPrepForStore($readedPost['post_id'])."'";
+		$result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+		pnfCloseDB($result2);
+		// Delete old post in old Topic
+		$sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE post_id='".(int)pnVarPrepForStore($readedPost['post_id'])."'";
+		$result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+		pnfCloseDB($result2);
+		// Siguiente post
+		$result->MoveNext();
+    }
+    pnfCloseDB($result);
+// We can delete all moved posts just with 1 SQL for each table...
+	//$sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)pnVarPrepForStore($post['old_topic'])."'";
+	//$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+	//pnfCloseDB($result);
+// All posts should be moved, we don't need old Topic data
+// 4. Detele the old Topic from pnforum_topics
+	$sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)pnVarPrepForStore($post['old_topic'])."'";
+	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+	pnfCloseDB($result);
+// Sync
+// 6. Update last_post_id & topic_replies values of the Topic with the moved posts in pnforum_topics
+// 6.1. topic_replies : Count number of posts
+	$sql = "SELECT COUNT(*) FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)pnVarPrepForStore($post['new_topic'])."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    list($topic_replies) = $result->fields;
+    pnfCloseDB($result);
+// 6.2. last_post_id : we get from last loop :)
+
+// 6.3. Update
+    $sql = "UPDATE ".$pntable['pnforum_topics']."
+            SET topic_replies = '".(int)pnVarPrepForStore($topic_replies)."',
+				topic_last_post_id='".(int)pnVarPrepForStore($last_post_id)."',
+				topic_time='".pnVarPrepForStore($time)."'
+            WHERE topic_id='".(int)pnVarPrepForStore($post['new_topic'])."'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+// 7. All done, return $topic_id of the Topic with moved posts
+*/
+    return $to_topic['topic_id'];
+}
 
 ?>

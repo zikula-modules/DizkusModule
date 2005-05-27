@@ -33,14 +33,14 @@
  *
  * initialize module
  * @version $Id$
- * @author Andreas Krapohl 
+ * @author Andreas Krapohl
  * @copyright 2003 by Andreas Krapohl, Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
- 
+
 include_once("modules/pnForum/common.php");
 
 /**
@@ -48,14 +48,13 @@ include_once("modules/pnForum/common.php");
  *
  *	This function will initialize a new installation of pnForum.
  *	It is accessed via the PostNuke Admin interface and should
- *	not be called directly. 
+ *	not be called directly.
  */
- 
+
 function pnForum_init()
 {
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
-	
+    list($dbconn, $pntable) = pnfOpenDB();
+
     // creating categories table
     $pnforumcategoriestable = $pntable['pnforum_categories'];
     $pnforumcategoriescolumn = &$pntable['pnforum_categories_column'];
@@ -65,12 +64,8 @@ function pnForum_init()
                 $pnforumcategoriescolumn[cat_title] varchar(100) default NULL,
                 $pnforumcategoriescolumn[cat_order] varchar(10) default NULL,
                 PRIMARY KEY (cat_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating forum_mods table
     $pnforumforummodstable = $pntable['pnforum_forum_mods'];
@@ -79,12 +74,8 @@ function pnForum_init()
     $sql = "CREATE TABLE $pnforumforummodstable (
                 $pnforumforummodscolumn[forum_id] int(10) NOT NULL default '0',
                 $pnforumforummodscolumn[user_id] int(10) NOT NULL default '0')";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating forums table
     $pnforumforumstable = $pntable['pnforum_forums'];
@@ -103,12 +94,8 @@ function pnForum_init()
             $pnforumforumscolumn[forum_order] mediumint(8) unsigned,
             PRIMARY KEY (forum_id),
             KEY forum_last_post_id (forum_last_post_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating posts table
     $pnforumpoststable = $pntable['pnforum_posts'];
@@ -126,12 +113,8 @@ function pnForum_init()
             KEY forum_id(forum_id),
             KEY topic_id(topic_id),
             KEY poster_id(poster_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating posts text table
     $pnforumpoststexttable = $pntable['pnforum_posts_text'];
@@ -141,12 +124,8 @@ function pnForum_init()
             $pnforumpoststextcolumn[post_id] int(10) NOT NULL default '0',
             $pnforumpoststextcolumn[post_text] text,
 			PRIMARY KEY  (post_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating subscription table
     $pnforumsubscriptiontable = $pntable['pnforum_subscription'];
@@ -157,12 +136,8 @@ function pnForum_init()
             $pnforumsubscriptioncolumn[forum_id] int(10) NOT NULL default '0',
             $pnforumsubscriptioncolumn[user_id] int(10) NOT NULL default '0',
             PRIMARY KEY (msg_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating ranks table
     $pnforumrankstable = $pntable['pnforum_ranks'];
@@ -179,12 +154,8 @@ function pnForum_init()
             PRIMARY KEY (rank_id),
             KEY rank_min (rank_min),
             KEY rank_max (rank_max))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating topics table
     $pnforumtopicstable = $pntable['pnforum_topics'];
@@ -207,12 +178,8 @@ function pnForum_init()
             PRIMARY KEY (topic_id),
             KEY forum_id (forum_id),
             KEY topic_last_post_id (topic_last_post_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // creating users table
     $pnforumuserstable = $pntable['pnforum_users'];
@@ -229,29 +196,32 @@ function pnForum_init()
             $pnforumuserscolumn[user_level] int(10) unsigned DEFAULT '1' NOT NULL,
             $pnforumuserscolumn[user_lastvisit] timestamp(14),
             PRIMARY KEY (user_id))";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
 	// creating topic_subscription table (new in 1.7.5)
     $pnforumtopicsubscriptiontable = $pntable['pnforum_topic_subscription'];
     $pnforumtopicsubscriptioncolumn = &$pntable['pnforum_topic_subscription_column'];
-  
+
 	$sql = "CREATE TABLE $pnforumtopicsubscriptiontable (
 			$pnforumtopicsubscriptioncolumn[topic_id] int(10) DEFAULT '0' NOT NULL,
 			$pnforumtopicsubscriptioncolumn[forum_id] int(10) DEFAULT '0' NOT NULL,
 			$pnforumtopicsubscriptioncolumn[user_id] int(10) DEFAULT '0' NOT NULL
 			)";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
+    if(crossupgrade()===false) {
+        pnForum_delete();
         return false;
     }
 
+    $upgrade_to_201 = pnForum_upgrade_to_2_0_1();
+    if($upgrade_to_201 <> true) {
+        return false;
+    }
+
+    /*
     // creating forum_favorites table (new on 2.0.1)
     $pnforumforumfavoritestable = $pntable['pnforum_forum_favorites'];
     $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
@@ -260,18 +230,9 @@ function pnForum_init()
                 $pnforumforumfavoritescolumn[forum_id] int(10) NOT NULL default '0',
                 $pnforumforumfavoritescolumn[user_id] int(10) NOT NULL default '0',
                 PRIMARY KEY (forum_id, user_id))";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
-
-
-    if(crossupgrade()===false) {
-        pnForum_delete();
-        return false;
-    }
 
     // the upgrade has been successfully done, now we need to extend the users table
     // with the new fields
@@ -288,18 +249,22 @@ function pnForum_init()
         pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
         return false;
     }
-	
+    */
+/*
+    // upgrade to 2.0.2
+    $upgrade_to_202 = pnForum_upgrade_to_2_0_2();
+    if($upgrade_to_202 <> true) {
+        return false;
+    }
+*/
 	// Bulletin Board settings
 	$module = 'pnForum';
-	$adminmail = pnConfigGetVar('adminmail');
-
 	pnModSetVar('pnForum', 'posts_per_page', 15);
 	pnModSetVar('pnForum', 'topics_per_page', 15);
 	pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
 	pnModSetVar('pnForum', 'hot_threshold', 20);
-	pnModSetVar('pnForum', 'email_from', "$adminmail");
+	pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
 	pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
-	pnModSetVar('pnForum', 'url_smiles', "modules/$module/pnimages/smiles");
 	pnModSetVar('pnForum', 'url_ranks_images', "modules/$module/pnimages/ranks");
 	pnModSetVar('pnForum', 'folder_image', "modules/$module/pnimages/folder.gif");
 	pnModSetVar('pnForum', 'hot_folder_image', "modules/$module/pnimages/hot_folder.gif");
@@ -416,7 +381,7 @@ function pnForum_delete()
     	pnSessionSetVar('errormsg', $dbconn->ErrorMsg() . " : $sql");
     	return -1;
     }
-	
+
 
     // Deletion successful
     return true;
@@ -432,13 +397,17 @@ function pnForum_delete()
 function pnForum_upgrade($oldversion)
 {
     $ok = true;
-    
+
 	switch($oldversion) {
         case '2.0.0':
-             $ok = $ok && pnForum_upgrade_to_2_0_1();
-        default: break;			
+            // upgrade to 2.0.1
+            $ok = $ok && pnForum_upgrade_to_2_0_1();
+        case '2.0.1':
+            // upgrade to 2.0.2
+            $ok = $ok && pnForum_upgrade_to_2_0_2(true);
+        default: break;
     }
-    
+
     return $ok;
 }
 
@@ -452,10 +421,9 @@ function pnForum_upgrade($oldversion)
 function crossupgrade()
 {
     if(pnModAvailable('phpBB_14')) {
-        pnModDBInfoLoad('phpBB_14');  
-    	$dbconn =& pnDBGetConn(true);
-	    $pntable =& pnDBGetTables();
-    
+        pnModDBInfoLoad('phpBB_14');
+	    list($dbconn, $pntable) = pnfOpenDB();
+
         $oldtables = array('phpbb14_categories',
                            'phpbb14_forums',
                            'phpbb14_forum_mods',
@@ -476,25 +444,21 @@ function crossupgrade()
                            'pnforum_topic_subscription',
                            'pnforum_topics',
                            'pnforum_users');
-        
-        for($cnt=0; $cnt<10; $cnt++) {    
-            $sql = "INSERT INTO ".$pntable[$newtables[$cnt]]." 
+
+        for($cnt=0; $cnt<10; $cnt++) {
+            $sql = "INSERT INTO ".$pntable[$newtables[$cnt]]."
                     SELECT * FROM ".$pntable[$oldtables[$cnt]].";";
-            $dbconn->Execute($sql);
-            if ($dbconn->ErrorNo() != 0) {
-            	pnSessionSetVar('errormsg', $dbconn->ErrorMsg() . " : $sql");
-            	return -1;
-            }
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
         }
-    }    
+    }
     return true;
 }
 
 function pnForum_upgrade_to_2_0_1()
 {
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
-	
+    list($dbconn, $pntable) = pnfOpenDB();
+
     // creating forum_favorites table
     $pnforumforumfavoritestable = $pntable['pnforum_forum_favorites'];
     $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
@@ -504,11 +468,8 @@ function pnForum_upgrade_to_2_0_1()
                 $pnforumforumfavoritescolumn[user_id] int(10) NOT NULL default '0',
                 PRIMARY KEY (forum_id, user_id))";
 
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     $pnforumuserstable = $pntable['pnforum_users'];
     $pnforumuserscolumn = &$pntable['pnforum_users_column'];
@@ -517,11 +478,9 @@ function pnForum_upgrade_to_2_0_1()
             ADD $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
             ADD $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL";
 
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
     // remove unused vars
 	pnModDelVar('pnForum', 'locktopic_image');
 	pnModDelVar('pnForum', 'unlocktopic_image');
@@ -537,4 +496,130 @@ function pnForum_upgrade_to_2_0_1()
 
     return true;
 }
+
+function pnForum_upgrade_to_2_0_2($createindex=true)
+{
+    if(pnSessionGetVar('upgrade_to_202_done') == 1) {
+        return true;
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $pnforumforumstable = $pntable['pnforum_forums'];
+    $pnforumforumscolumn = &$pntable['pnforum_forums_column'];
+
+    $sql = "ALTER TABLE $pnforumforumstable
+            ADD $pnforumforumscolumn[forum_pop3_active]      INT(1) DEFAULT '0' NOT NULL,
+            ADD $pnforumforumscolumn[forum_pop3_server]      VARCHAR(60),
+            ADD $pnforumforumscolumn[forum_pop3_port]        INT(5) DEFAULT '110' NOT NULL,
+            ADD $pnforumforumscolumn[forum_pop3_login]       VARCHAR(60),
+            ADD $pnforumforumscolumn[forum_pop3_password]    VARCHAR(60),
+            ADD $pnforumforumscolumn[forum_pop3_interval]    INT(4) DEFAULT '0' NOT NULL,
+            ADD $pnforumforumscolumn[forum_pop3_lastconnect] INT(11) DEFAULT '0' NOT NULL,
+            ADD $pnforumforumscolumn[forum_pop3_pnuser]      VARCHAR(60),
+            ADD $pnforumforumscolumn[forum_pop3_pnpassword]  VARCHAR(40),
+            ADD $pnforumforumscolumn[forum_pop3_matchstring] VARCHAR(255)";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    $pnforumpoststable = $pntable['pnforum_posts'];
+    $pnforumpostscolumn = &$pntable['pnforum_posts_column'];
+    $sql = "ALTER TABLE $pnforumpoststable
+            ADD $pnforumpostscolumn[post_msgid] VARCHAR(100) ,
+            ADD INDEX post_msgid( post_msgid )";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // check the result from the interactive upgrade
+    if($createindex == true) {
+        $pnforumtopicstable = $pntable['pnforum_topics'];
+        $sql = "ALTER TABLE $pnforumtopicstable
+                ADD FULLTEXT (topic_title)";
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+
+        $pnforumpoststexttable = $pntable['pnforum_posts_text'];
+        $sql = "ALTER TABLE $pnforumpoststexttable
+                ADD FULLTEXT (post_text)";
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+    }
+
+    // no longer needed
+	pnModDelVar('pnForum', 'url_smiles');
+
+    // new
+    pnModSetVar('pnForum', 'extendedsearch', 'no');
+    pnModSetVar('pnForum', 'm2f_enabled', 'yes');
+    pnModSetVar('pnForum', 'favorites_enabled', 'yes');
+
+    // set a session to indicate that the upgrade is done
+    pnSessionSetVar('upgrade_to_202_done', 1);
+
+    return true;
+}
+
+/**
+ * interactiveupgrade
+ *
+ *
+ */
+function pnForum_init_interactiveupgrade($args)
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    extract($args);
+    unset($args);
+
+    global $modversion;
+    include_once('modules/pnForum/pnversion.php');
+
+    $authid = pnSecGenAuthKey('Modules');
+    switch($oldversion) {
+        case '2.0.1':
+            $templatefile = 'pnforum_upgrade_202.html';
+            break;
+        default:
+            // no interactive upgrade for version < 2.0.1
+            // or latest step reached
+            pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
+            return true;
+    }
+
+    $pnr =& new pnRender('pnForum');
+    $pnr->caching = false;
+    $pnr->assign('oldversion', $oldversion);
+    $pnr->assign('newversion', $modversion['version']);
+    $pnr->assign('authid', $authid);
+    return $pnr->fetch($templatefile);
+}
+
+/**
+ * interactiveupgrade_to_2_0_2
+ *
+ */
+function pnForum_init_interactiveupgrade_to_2_0_2()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    list($submit, $createindex) = pnVarCleanFromInput('submit', 'createindex');
+
+    if(!empty($submit)) {
+        $createindex = ($createindex==1) ? true : false;
+        $result = pnForum_upgrade_to_2_0_2($createindex);
+        if($result<>true) {
+            return showforumerror(_PNFORUM_TO202_FAILED, __FILE__, __LINE__);
+        }
+        pnSessionSetVar('upgrade_to_2_0_2_done', 1 );
+        pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.0.2' )));
+        return true;
+    }
+    pnRedirect(pnModURL('Modules', 'admin', 'view'));
+    return true;
+}
+
 ?>

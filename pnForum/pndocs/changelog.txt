@@ -2,13 +2,23 @@
 PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
+
+---------------------------------------------------------------------------------------------
+2.0.2 (fs)
+---------------------------------------------------------------------------------------------
+- fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
+- added mail2forum feature
+- forum search now with FULLTEXT index
+- bug fixes, cleanips (as usual)
+- new option to turn off the favorites system
+
 ---------------------------------------------------------------------------------------------
 2.0.1 (fs)
 ---------------------------------------------------------------------------------------------
 - bugs fixes, code clean ups
 - new option to create forum or category specific error messages if the user does not have
   the right to see / view etc.
-- new option in admin panel to prepopulate the "subscribe to topic" checkbox when writing 
+- new option in admin panel to prepopulate the "subscribe to topic" checkbox when writing
   a new topic or post
 - french language pack incl. button images! Credits go to Franck Barbenoire (fbarbenoire@yahoo.fr)
   for this contribution.
@@ -19,12 +29,12 @@ PostNuke pnForum Module changelog
 - lots of bugs and html fixes
 - new option to define favorites and switch between showing them or all forums
 - new option to change post order in topic view
-- new option in moving forums in admin 
+- new option in moving forums in admin
   (for those three options the credits go to Chris Miller aka r3ap3r)
 - layout changed significantly
 - templates partly xhtml compliant (also Chris' work...)
 - complete new sets of graphical buttons
- 
+
 ---------------------------------------------------------------------------------------------
 2.0.0 RC2 (fs)
 ---------------------------------------------------------------------------------------------
@@ -40,7 +50,7 @@ PostNuke pnForum Module changelog
 - changed phpBB_14 to pnForum (update from previous phpBB_14 during during module update)
 - fully API compliant now
 - using pnRender templates
-- fixed some SQL statements 
+- fixed some SQL statements
 - refactored the code
 - simplified the blocks
 - added quick answer
@@ -70,7 +80,7 @@ Fixes:
 - renamed make_jumpbox function
 - preview for new topic, reply topic and edit topic
 - updated check for admin.php called correctly (thx to jn)
-- fixed search query 
+- fixed search query
 - fixed missing table tag in administration
 - fixed signature in reply preview
 
@@ -159,7 +169,7 @@ currently only /eng and /deu due to some major cleanup - sorry folks...
 ---------------------------------------------------------------------------------------------
 Notes:
 - DB structure changes - none
-- Module language defines (no new, no changed) 
+- Module language defines (no new, no changed)
 - Module block/search include language defines (new-none,changed-none)
 - security schema updated - Only names are used now
 - security schema for statistic block updated (larsneo)

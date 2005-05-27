@@ -19,7 +19,7 @@
         <label for="searchfor"><!--[ pnml name='_PNFORUM_SEARCHFOR' ]--></label>:
     </div>
     <div style="float: left; width: 70%; text-align: left;">
-        <input type="text" name="searchfor" id="searchfor" size="20" maxlength="255" value="" tabindex="0" /> 
+        <input type="text" name="searchfor" id="searchfor" size="20" maxlength="255" value="" tabindex="0" />
     </div>
 </div>
 
@@ -42,7 +42,7 @@
     </div>
     <div style="float: left; width: 70%; text-align: left;">
         <select name="searchforums[]" id="searchforums" size="1">
-        <option value="" selected><!--[ pnml name='_PNFORUM_SEARCHALLFORUMS' ]--></option>
+        <option value="" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHALLFORUMS' ]--></option>
         <!--[ foreach item=forum from=$forums ]-->
         <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]--></option>
         <!--[ /foreach ]-->
