@@ -97,7 +97,7 @@ function pnForum_pntables()
                                              'poster_id'  => $pnforum_posts . '.poster_id',
                                              'post_time'  => $pnforum_posts . '.post_time',
                                              'poster_ip'  => $pnforum_posts . '.poster_ip',
-                                             'post_msgid' => $pnforum_posts . '.msgid');
+                                             'post_msgid' => $pnforum_posts . '.post_msgid');
 
     $pnforum_posts_text = pnConfigGetVar('prefix') . '_pnforum_posts_text';
     $pntable['pnforum_posts_text'] = $pnforum_posts_text;
