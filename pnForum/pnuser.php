@@ -288,7 +288,7 @@ function pnForum_user_reply($args=array())
                                     'attach_signature' => $attach_signature,
                                     'subscribe_topic'  => $subscribe_topic));
         if($preview==true) {
-            $reply['message'] = $message;
+            $reply['message'] = pnfVarPrepHTMLDisplay($message);
         }
 
         $pnr =& new pnRender('pnForum');

@@ -190,6 +190,7 @@ function smarty_function_readlastposts($params, &$smarty)
     do {
         // if the user wants to see the last x postings we read 5 * x because
         // we might get to forums he is not allowed to see
+        // we do this until we got the requested number of postings
         $result = pnfSelectLimit($dbconn, $sql, $postmax * 5 , $startreadat, __FILE__, __LINE__);
 
         if($result->RecordCount()>0) {

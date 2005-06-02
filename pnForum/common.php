@@ -578,4 +578,25 @@ function mailcronecho($text)
     return;
 }
 
+/**
+ * pnfVarPrepHTMLDisplay
+ * removes the  [code]...[/code] before really calling pnVarPrepHTMLDisplay()
+ *
+ */
+function pnfVarPrepHTMLDisplay($text)
+{
+    // remove code tags
+    $codecount1 = preg_match_all("/\[code(.*)\](.*)\[\/code\]/si", $text, $codes1);
+    for($i=0; $i < $codecount1; $i++) {
+        $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " PNFORUMCODEREPLACEMENT{$i} ", $text, 1);
+    }
+    // the real work
+    $text = pnVarPrepHTMLDisplay($text);
+    // re-insert code tags
+    for ($i = 0; $i < $codecount1; $i++) {
+        $text = preg_replace("/ PNFORUMCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
+    }
+    return $text;
+}
+
 ?>
