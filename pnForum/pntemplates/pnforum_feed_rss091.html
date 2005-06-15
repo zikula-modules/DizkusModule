@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
+ "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+
+<!--
+Possible parameters for backforum.php
+
+-> forum_id  read new postings in this forum only
+-> count     number of postings to read, default 10
+-> feed      type of feed to deliver, e.g. atom which needs a template
+             pnforum_feed_atom.html to work
+             default: rss091
+
+pnForum permission still apply! The forum access will be tested against
+an unregistered user.
+
+-->
+
+<rss version="0.91">
+<channel>
+<title><!--[ $sitename|pnvarprepfordisplay ]--> - <!--[ $forum_name|pnvarprepfordisplay ]--></title>
+<link><!--[ $forum_link|pnvarprepfordisplay ]--></link>
+<description><!--[ $sitename|pnvarprepfordisplay ]--> - <!--[ $forum_name|pnvarprepfordisplay ]--></description>
+<webMaster><!--[ $adminmail|pnvarprepfordisplay ]--></webMaster>
+
+<!--[ foreach item=post from=$posts ]-->
+    <item>
+    <title><!--[ $post.topic_title|pnvarprepfordisplay ]--></title>
+    <link><!--[ $post.last_post_url|pnvarprepfordisplay ]--></link>
+    <description><!--[ $post.cat_title|pnvarprepfordisplay ]--> :: <!--[ $post.forum_name|pnvarprepfordisplay ]--></description>
+    </item>
+<!--[ /foreach ]-->
+
+</channel>
+</rss>
