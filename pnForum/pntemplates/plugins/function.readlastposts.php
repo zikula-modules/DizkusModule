@@ -40,6 +40,7 @@
  */
 function smarty_function_readlastposts($params, &$smarty)
 {
+$time_start= microtime_float();
     extract($params);
     unset($params);
 
@@ -186,12 +187,13 @@ function smarty_function_readlastposts($params, &$smarty)
 
     $startreadat = 0;
     $postmaxread = false;
-
+$temp_counter = 0;
     do {
+$temp_counter++;
         // if the user wants to see the last x postings we read 5 * x because
         // we might get to forums he is not allowed to see
         // we do this until we got the requested number of postings
-        $result = pnfSelectLimit($dbconn, $sql, $postmax * 5 , $startreadat, __FILE__, __LINE__);
+        $result = pnfSelectLimit($dbconn, $sql, $postmax * 2 , $startreadat, __FILE__, __LINE__);
 
         if($result->RecordCount()>0) {
             $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
@@ -277,6 +279,10 @@ function smarty_function_readlastposts($params, &$smarty)
     pnfCloseDB($result);
     $smarty->assign('lastpostcount', count($lastposts));
     $smarty->assign('lastposts', $lastposts);
+$time_end = microtime_float();
+$time_used = $time_end - $time_start;
+pnfdebug('time needed for readlastposts', $time_used);
+pnfdebug('counter', $temp_counter);
     return;
 }
 

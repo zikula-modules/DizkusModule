@@ -1,0 +1,26 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<!--[ include file='pnforum_user_header.html' ]-->
+<!--[* pndebug *]-->
+
+<fieldset>
+    <legend>
+        <!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE' ]-->
+    </legend>
+
+    <form action="<!--[ pnmodurl modname=pnForum type=user func=report ]-->" method="post">
+    <input type="hidden" name="post" value="<!--[ $post.post_id ]-->">
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->">
+    <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: left;">
+        <!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_INFO' html=1 ]--><br />
+        <textarea rows="6" cols="60" name="comment"></textarea><br />
+        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+    </div>
+    </form>
+</fieldset>
+
+<!--[ include file='pnforum_user_footer.html' ]-->

@@ -249,7 +249,7 @@ function pnfdebug($name="", $data, $die = false)
 {
     if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
         $type = gettype($data);
-        echo "\n<!-- begin debug of $name -->\n<span style=\"color: red;\">$name ($type";
+        echo "\n<!-- begin debug of $name -->\n<div style=\"color: red;\">$name ($type";
         if(is_array($data)||is_object($data)) {
             $size = count($data);
             if($size>0) {
@@ -267,7 +267,7 @@ function pnfdebug($name="", $data, $die = false)
         } else {
             echo ") :$data:<br />";
         }
-        echo "</span><br />\n<!-- end debug of $name -->";
+        echo "</div><br />\n<!-- end debug of $name -->";
         if($die==true) {
             die();
         }
@@ -597,6 +597,45 @@ function pnfVarPrepHTMLDisplay($text)
         $text = preg_replace("/ PNFORUMCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
     }
     return $text;
+}
+
+/**
+ * microtime_float
+ * used for debug purposes only
+ *
+ */
+if(!function_exists("microtime_float")) {
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
+}
+
+/**
+ * useragent_is_bot
+ * check if the useragent is a bot (blacklisted)
+ *
+ * returns bool
+ *
+ */
+function useragent_is_bot()
+{
+    // check the user agent - if it is a bot, return immediately
+    $robotslist = array ( "ia_archiver",
+                          "googlebot",
+                          "mediapartners-google",
+                          "yahoo!",
+                          "msnbot",
+                          "jeeves",
+                          "lycos");
+    $useragent = pnServerGetVar('HTTP_USER_AGENT');
+    for($cnt=0; $cnt < count($robotslist); $cnt++) {
+        if(strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
+            return true;
+        }
+    }
+    return false;
 }
 
 ?>

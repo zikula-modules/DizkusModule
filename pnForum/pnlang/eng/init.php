@@ -47,9 +47,10 @@ define('_PNFORUM_NEWVERSION', 'new version');
 define('_PNFORUM_NEXTVERSION', 'next version');
 
 define('_PNFORUM_BACKUPHINT', 'Create a database dump before<br/>performing this upgrade step!');
-define('_PNFORUM_TO202_HINT', 'This upgrade contains several database changes including the creation of two index fields to inrease the fulltext search prformance. This might lead you into troubles in shard hosting environments with a large amount of postings in the database!');
-define('_PNFORUM_TO202_ADDINDEXNOW', 'Create index fields now');
-define('_PNFORUM_TO202_ADDINDEXLATER', 'Create index fields manually with phpmyadmin etc.');
+define('_PNFORUM_UPGRADE_ADDINDEXNOW', 'Create index fields now');
+define('_PNFORUM_UPGRADE_ADDINDEXLATER', 'Create index fields manually with phpmyadmin etc.');
+
+define('_PNFORUM_TO202_HINT', 'This upgrade contains several database changes including the creation of two index fields to inrease the fulltext search performance. This might lead you into trouble in shared hosting environments with a large amount of postings in the database!');
 define('_PNFORUM_TO202_FAILED', 'Upgrade to pnForum 2.0.2 failed');
 
 ?>

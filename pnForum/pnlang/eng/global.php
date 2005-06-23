@@ -42,6 +42,13 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_MODERATION_NOTICE', 'Moderation request');
+define('_PNFORUM_NOTIFYMODERATORTITLE', 'Notify a moderator about a posting');
+define('_PNFORUM_REPORTINGUSERNAME', 'Reporting user');
+define('_PNFORUM_NOTIFYMODBODY1', 'Request for moderation');
+define('_PNFORUM_NOTIFYMODBODY2', 'Comment');
+define('_PNFORUM_NOTIFYMODBODY3', 'Link to topic');
+define('_PNFORUM_NOTIFYMODERATOR', 'notify moderator');
 define('_PNFORUM_JOINTOPICS', 'Join topics');
 define('_PNFORUM_JOINTOPICS_INFO', 'Joins two topics together');
 define('_PNFORUM_JOINTOPICS_TOTOPIC', 'Target topic');

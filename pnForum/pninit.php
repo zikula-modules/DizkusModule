@@ -221,42 +221,12 @@ function pnForum_init()
         return false;
     }
 
-    /*
-    // creating forum_favorites table (new on 2.0.1)
-    $pnforumforumfavoritestable = $pntable['pnforum_forum_favorites'];
-    $pnforumforumfavoritescolumn = &$pntable['pnforum_forum_favorites_column'];
-
-    $sql = "CREATE TABLE $pnforumforumfavoritestable (
-                $pnforumforumfavoritescolumn[forum_id] int(10) NOT NULL default '0',
-                $pnforumforumfavoritescolumn[user_id] int(10) NOT NULL default '0',
-                PRIMARY KEY (forum_id, user_id))";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
-
-
-    // the upgrade has been successfully done, now we need to extend the users table
-    // with the new fields
-    // (new in 2.0.1)
-    $pnforumuserstable = $pntable['pnforum_users'];
-    $pnforumuserscolumn = &$pntable['pnforum_users_column'];
-
-    $sql = "ALTER TABLE $pnforumuserstable
-            ADD $pnforumuserscolumn[user_favorites] int(1) DEFAULT '0' NOT NULL,
-            ADD $pnforumuserscolumn[user_post_order] int(1) DEFAULT '0' NOT NULL";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
-    */
-/*
     // upgrade to 2.0.2
     $upgrade_to_202 = pnForum_upgrade_to_2_0_2();
     if($upgrade_to_202 <> true) {
         return false;
     }
-*/
+
 	// Bulletin Board settings
 	$module = 'pnForum';
 	pnModSetVar('pnForum', 'posts_per_page', 15);
@@ -455,6 +425,10 @@ function crossupgrade()
     return true;
 }
 
+/**
+ * upgrade to v2.0.1
+ *
+ */
 function pnForum_upgrade_to_2_0_1()
 {
     list($dbconn, $pntable) = pnfOpenDB();
@@ -497,6 +471,10 @@ function pnForum_upgrade_to_2_0_1()
     return true;
 }
 
+/**
+ * upgrade to v2.0.2
+ *
+ */
 function pnForum_upgrade_to_2_0_2($createindex=true)
 {
     if(pnSessionGetVar('upgrade_to_202_done') == 1) {
@@ -544,6 +522,32 @@ function pnForum_upgrade_to_2_0_2($createindex=true)
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
+
+    // adding index fields to subscription tables
+    $pnforumsubscriptiontable = $pntable['pnforum_subscription'];
+    $pnforumsubscriptioncolumn = &$pntable['pnforum_subscription_column'];
+    $sql = "ALTER TABLE $pnforumsubscriptiontable
+            ADD INDEX forum_id( forum_id ),
+            ADD INDEX user_id( user_id)";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    $pnforumtopicsubscriptiontable = $pntable['pnforum_topic_subscription'];
+    $pnforumtopicsubscriptioncolumn = &$pntable['pnforum_topic_subscription_column'];
+    $sql = "ALTER TABLE $pnforumtopicsubscriptiontable
+            ADD INDEX topic_id( topic_id ),
+            ADD INDEX forum_id( forum_id ),
+            ADD INDEX user_id( user_id)";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    $pnforummodstable = $pntable['pnforum_forum_mods'];
+    $pnforummodscolumn = &$pntable['pnforum_forum_mods_column'];
+    $sql = "ALTER TABLE $pnforummodstable
+            ADD INDEX forum_id( forum_id ),
+            ADD INDEX user_id( user_id)";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
 
     // no longer needed
 	pnModDelVar('pnForum', 'url_smiles');

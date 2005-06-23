@@ -64,6 +64,7 @@ function pnForum_user_main($args=array())
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     }
+pnModAPIFunc('pnForum', 'user', 'execeptiontest');
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
     $loggedIn = pnUserLoggedIn();
@@ -278,6 +279,7 @@ function pnForum_user_reply($args=array())
         pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id,
                                   'start' => $start)) . '#pid' . $post_id);
+        return true;
     } else {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
@@ -828,7 +830,7 @@ function pnForum_user_splittopic($args=array())
 
 /**
  * print
- * prepare print view of the selectd posting or topic
+ * prepare print view of the selected posting or topic
  *
  */
 function pnForum_user_print($args=array())
@@ -846,40 +848,54 @@ function pnForum_user_print($args=array())
         $topic_id = (int)pnVarCleanFromInput('topic');
     }
 
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
-    if($post_id<>0) {
-        $post = pnModAPIFunc('pnForum', 'user', 'readpost',
-                             array('post_id' => $post_id));
-        $pnr->assign('post', $post);
-        $output = $pnr->fetch('pnforum_user_printpost.html');
-    } elseif($topic_id<>0) {
-        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
-                             array('topic_id'  => $topic_id,
-                                   'complete' => true ));
-        $pnr->assign('topic', $topic);
-        $output = $pnr->fetch('pnforum_user_printtopic.html');
+    if(useragent_is_bot() == true) {
+        if($post_id <> 0 ) {
+            $topic_id =pnModAPIFunc('pnForum', 'user', 'get_topicid_by_postid',
+                                    array('post_id' => $post_id));
+        }
+        if(($topic_id <> 0) && ($topic_id<>false)) {
+            return pnForum_user_viewtopic(array('topic' => $topic_id,
+                                                'start'   => 0));
+        } else {
+            pnRedirect(pnModURL('pnForum', 'user', 'main'));
+            return true;
+        }
     } else {
-        pnRedirect(pnModURL('pnForum', 'user', 'main'));
-        return true;
-    }
-    echo "<html>\n";
-    echo "<head>\n";
-    echo "<link rel=\"StyleSheet\" href=\"themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";
-    echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('pnForum', 'default_lang') ."\">\n";
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        if($post_id<>0) {
+            $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+                                 array('post_id' => $post_id));
+            $pnr->assign('post', $post);
+            $output = $pnr->fetch('pnforum_user_printpost.html');
+        } elseif($topic_id<>0) {
+            $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+                                 array('topic_id'  => $topic_id,
+                                       'complete' => true ));
+            $pnr->assign('topic', $topic);
+            $output = $pnr->fetch('pnforum_user_printtopic.html');
+        } else {
+            pnRedirect(pnModURL('pnForum', 'user', 'main'));
+            return true;
+        }
+        echo "<html>\n";
+        echo "<head>\n";
+        echo "<link rel=\"StyleSheet\" href=\"themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";
+        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('pnForum', 'default_lang') ."\">\n";
 
-    global $additional_header;
-    if (is_array($additional_header))
-    {
-      foreach ($additional_header as $header)
-        echo "$header\n";
+        global $additional_header;
+        if (is_array($additional_header))
+        {
+          foreach ($additional_header as $header)
+            echo "$header\n";
+        }
+        echo "</head>\n";
+        echo "<body class=\"printbody\">\n";
+        echo $output;
+        echo "</body>\n";
+        echo "</html>\n";
+        exit;
     }
-    echo "</head>\n";
-    echo "<body class=\"printbody\">\n";
-    echo $output;
-    echo "</body>\n";
-    echo "</html>\n";
-    exit;
 }
 
 /**
@@ -1122,6 +1138,54 @@ function pnForum_user_moderateforum($args=array())
         return true;
     // Dann kommen die eigentlichen funktionen ....
     }
+}
+
+/**
+ * report
+ * notify a moderator about a posting
+ *
+ *@params $post int post_id
+ *@params $comment string comment of reporter
+ *
+ */
+function pnForum_user_report($args)
+{
+    // get the input
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($post_id,
+             $comment,
+             $submit) = pnVarCleanFromInput('post',
+                                            'comment',
+                                            'submit');
+    }
+
+    if(!pnModAPILoad('pnForum', 'user')) {
+        return showforumerror("loading userapi failed", __FILE__, __LINE__);
+    }
+
+    $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+                         array('post_id' => $post_id));
+
+    if(!$submit) {
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->assign('post', $post);
+        return $pnr->fetch('pnforum_user_notifymod.html');
+    } else {   // submit is set
+        pnModAPIFunc('pnForum', 'user', 'notify_moderator',
+                     array('post'    => $post,
+                           'comment' => $comment));
+        $start = pnModAPIFunc('pnForum', 'user', 'get_page_from_topic_replies',
+                              array('topic_replies' => $post['topic_replies']));
+        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+                            array('topic' => $post['topic_id'],
+                                  'start' => $start)));
+        return true;
+    }
+
 }
 
 ?>
