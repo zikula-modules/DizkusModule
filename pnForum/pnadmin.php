@@ -127,13 +127,6 @@ function pnForum_admin_preferences()
         	$favorites_enabledonchecked = " ";
         	$favorites_enabledoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'extendedsearch') == "yes") {
-        	$extendedsearchonchecked = $checked;
-        	$extendedsearchoffchecked = " ";
-        } else {
-        	$extendedsearchonchecked = " ";
-        	$extendedsearchoffchecked = $checked;
-        }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
         $pnr->assign('autosubscribe', $autosubscribechecked);
@@ -164,13 +157,10 @@ function pnForum_admin_preferences()
         $pnr->assign('m2f_enabledoffchecked', $m2f_enabledoffchecked);
         $pnr->assign('favorites_enabledonchecked', $favorites_enabledonchecked);
         $pnr->assign('favorites_enabledoffchecked', $favorites_enabledoffchecked);
-        $pnr->assign('extendedsearchonchecked', $extendedsearchonchecked);
-        $pnr->assign('extendedsearchoffchecked', $extendedsearchoffchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
-            pnModSetVar('pnForum', 'extendedsearch', pnVarPrepForStore(pnVarCleanFromInput('extendedsearch')));
             pnModSetVar('pnForum', 'favorites_enabled', pnVarPrepForStore(pnVarCleanFromInput('favorites_enabled')));
             pnModSetVar('pnForum', 'm2f_enabled', pnVarPrepForStore(pnVarCleanFromInput('m2f_enabled')));
             pnModSetVar('pnForum', 'autosubscribe', pnVarPrepForStore(pnVarCleanFromInput('autosubscribe')));
@@ -194,7 +184,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         }
         if($actiontype=="RestoreDefaults")  {
-            pnModSetVar('pnForum', 'extendedsearch', 'no');
             pnModSetVar('pnForum', 'favorites_enabled', 'yes');
             pnModSetVar('pnForum', 'm2f_enabled', 'yes');
             pnModSetVar('pnForum', 'autosubscribe', 'yes');
@@ -217,6 +206,53 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'log_ip', "yes");
 		    pnModSetVar('pnForum', 'slimforum', "no");
         }
+    }
+    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+}
+
+/**
+ * advancedpreferences
+ *
+ */
+function pnForum_admin_advancedpreferences()
+{
+    if(!pnModAPILoad('pnForum', 'admin')) {
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+    }
+
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    $submit = pnVarCleanFromInput('submit');
+
+    if(!$submit) {
+        list($dbconn, $pntable) = pnfOpenDB();
+        $sql = "SELECT  VERSION()";
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        list($dbversion) = $result->fields;
+        pnfCloseDB($result);
+
+        $checked = "checked=\"checked\" ";
+     	$fulltextindex_checked  = "";
+        $extendedsearch_checked = "";
+        if (pnModGetVar('pnForum', 'fulltextindex') == "1") {
+        	$fulltextindex_checked  = $checked;
+        }
+        if (pnModGetVar('pnForum', 'extendedsearch') == "1") {
+        	$extendedsearch_checked = $checked;
+        }
+        $pnr =& new pnRender("pnForum");
+        $pnr->cachung = false;
+        $pnr->assign('dbversion', $dbversion);
+        $pnr->assign('dbtype', $dbconn->databaseType);
+        $pnr->assign('dbname', $dbconn->databaseName);
+        $pnr->assign('fulltextindex_checked', $fulltextindex_checked);
+        $pnr->assign('extendedsearch_checked', $extendedsearch_checked);
+        return $pnr->fetch( "pnforum_admin_advancedpreferences.html");
+    } else { // submit is set
+        pnModSetVar('pnForum', 'fulltextindex', pnVarPrepForStore(pnVarCleanFromInput('fulltextindex')));
+        pnModSetVar('pnForum', 'extendedsearch', pnVarPrepForStore(pnVarCleanFromInput('extendedsearch')));
     }
     pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
@@ -380,6 +416,8 @@ function pnForum_admin_forum()
         $pnr->assign('categories', pnModAPIFunc('pnForum', 'admin', 'readcategories'));
         $pnr->assign('moderators', $moderators);
         $pnr->assign('users', pnModAPIFunc('pnForum', 'admin', 'readusers',
+                                            array('moderators' => $moderators)));
+        $pnr->assign('groups', pnModAPIFunc('pnForum', 'admin', 'readgroups',
                                             array('moderators' => $moderators)));
         return $pnr->fetch("pnforum_admin_forum.html");
     } else {

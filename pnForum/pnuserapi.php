@@ -671,6 +671,7 @@ function pnForum_userapi_readtopic($args)
                    t.forum_id,
                    t.sticky,
                    t.topic_time,
+                   t.topic_replies,
                    t.topic_last_post_id,
                    f.forum_name,
                    f.cat_id,
@@ -2306,30 +2307,28 @@ function pnForum_userapi_notify_by_email($args)
     extract($args);
     unset($args);
 
+    if(!pnModAvailable('Mailer') || !pnModAPILoad('Mailer', 'user')) {
+        return false;
+    }
+
     list($dbconn, $pntable) = pnfOpenDB();
 
     setlocale (LC_TIME, pnConfigGetVar('locale'));
-    $modInfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
-    $ModName = pnVarPrepForStore($modInfo['directory']);
-    $modVersion = pnVarPrepForStore($modInfo['version']);
+    $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
 
-    // generate the mailheader
+    // generate the mailheader info
     $email_from = pnModGetVar('pnForum', 'email_from');
     if ($email_from == "") {
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
     }
-
-    $msg_From_Header = 'From: ' . pnConfigGetVar('sitename') . '<' . $email_from . ">\n";
-    $msg_XMailer_Header = 'X-Mailer: ' . $ModName . ' ' . $modVersion . "\n";
-    $msg_ContentType_Header = 'Content-Type: text/plain;';
-
+/*
     $pnforum_default_charset = pnModGetVar('pnForum', 'default_lang');
     if(!empty($pnforum_default_charset)) {
         $msg_ContentType_Header .= ' charset='.$pnforum_default_charset;
     }
     $msg_ContentType_Header .= "\n";
-
+*/
     // normal notification
     $sql = "SELECT t.topic_title,
                    t.topic_poster,
@@ -2365,12 +2364,12 @@ function pnForum_userapi_notify_by_email($args)
 
     if ($type == 0) {
         // New message
-        $msg_Subject= '';
+        $subject= '';
     } elseif ($type == 2) {
         // Reply
-        $msg_Subject= 'Re: ';
+        $subject= 'Re: ';
     }
-    $msg_Subject .= "$category_name :: $forum_name :: $topic_subject";
+    $subject .= "$category_name :: $forum_name :: $topic_subject";
 
     //  get list of forum subscribers
     $sql = "SELECT user_id
@@ -2411,26 +2410,40 @@ function pnForum_userapi_notify_by_email($args)
         }
     }
     pnfCloseDB($result);
+    $sitename = pnConfigGetVar('sitename');
+
+    $message = _PNFORUM_NOTIFYBODY1 . ' '. $sitename . "\n"
+            . "$category_name :: $forum_name ::.. $topic_subject\n\n"
+            . "$poster_name ".pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2)." $topic_time_ml\n"
+            . "---------------------------------------------------------------------\n"
+            . "".pnVarCensor(strip_tags($post_message))."\n"
+            . "---------------------------------------------------------------------\n\n"
+            . _PNFORUM_NOTIFYBODY3."\n"
+            . pnModURL('pnForum', 'user', 'reply', array('topic'=>$topic_id,'forum'=>$forum_id))."\n\n"
+            . _PNFORUM_NOTIFYBODY4."\n"
+            . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id))."\n"
+            . "\n"
+            . _PNFORUM_NOTIFYBODY5." ".pnGetBaseURL();
 
     if(count($recipients)>0) {
-        foreach($recipients as $uid=>$email) {
-            // set reply-to to his own adress ;)
-            $msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
-            $msg_Headers .= "Reply-To: $email"; //.$subscriber_userdata['pn_email'];
+        foreach($recipients as $uid => $email_to) {
+            $toname = pnUserGetVar('name', $uid);
+            $toname = (!empty($toname)) ? $toname : pnUserGetVar('uname', $uid);
 
-            $message = _PNFORUM_NOTIFYBODY1." ".pnConfigGetVar('sitename')."\n"
-                    . "$category_name :: $forum_name ::.. $topic_subject\n\n"
-                    . "$poster_name ".pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2)." $topic_time_ml\n"
-                    . "---------------------------------------------------------------------\n"
-                    . "".pnVarCensor(strip_tags($post_message))."\n"
-                    . "---------------------------------------------------------------------\n\n"
-                    . _PNFORUM_NOTIFYBODY3."\n"
-                    . pnModURL('pnForum', 'user', 'reply', array('topic'=>$topic_id,'forum'=>$forum_id))."\n\n"
-                    . _PNFORUM_NOTIFYBODY4."\n"
-                    . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id))."\n"
-                    . "\n"
-                    . _PNFORUM_NOTIFYBODY5." ".pnGetBaseURL();
-            pnMail($email, $msg_Subject, $message, $msg_Headers);
+            $args = array( 'fromname'    => $sitename,
+                           'fromaddress' => $email_from,
+                           'toname'      => $toname,
+                           'toaddress'   => $email_to,
+                           'subject'     => $subject,
+                           'body'        => $message,
+                           'headers'     => array('X-UserID: ' . $uid,
+                                                  'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
+            pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+            // set reply-to to his own adress ;)
+            //$msg_Headers = $msg_From_Header . $msg_XMailer_Header . $msg_ContentType_Header;
+            //$msg_Headers .= "Reply-To: $email"; //.$subscriber_userdata['pn_email'];
+
+            //pnMail($email, $msg_Subject, $message, $msg_Headers);
         }
     }
     return;
@@ -3018,9 +3031,12 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     return $topic_id;
 }
 
+
 /**
  * forumsearch
- * the function that will search the forum
+ * This is a wrapper function for forumsearch_fulltext() or forumsearch_nonfulltext()
+ * depending on the database type.
+ * Alle parameters will be passed to this final search function as-is
  *
  *@params $args['searchfor']  string the search term
  *@params $args['bool']       string 'AND' or 'OR'
@@ -3032,6 +3048,35 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
  *@returns array with search results
  */
 function pnForum_userapi_forumsearch($args)
+{
+    // check mod var for fulltext support
+    $fulltextindex = pnModGetVar('pnForum', 'fulltextindex');
+    if($fulltextindex == 1) {
+        // fulltext index
+        return pnModAPIFunc('pnForum', 'user', 'forumsearch_fulltext', $args);
+    } else {
+        // no fulltext index
+        return pnModAPIFunc('pnForum', 'user', 'forumsearch_nonfulltext', $args);
+    }
+    // wtf are we doing here..
+    return false;
+
+}
+
+/**
+ * forumsearch_nonfulltext
+ * the function that will search the forum
+ *
+ *@params $args['searchfor']  string the search term
+ *@params $args['bool']       string 'AND' or 'OR'
+ *@params $args['forums']     array array of forum ids to search in
+ *@params $args['author']     string search for postings of this author only
+ *@params $args['order']      array array of order to display results
+ *@params $args['startnum']   int number of entry to start showing when on page > 1
+ *@params $args['limit']      int number of hits to show per page > 1
+ *@returns array with search results
+ */
+function pnForum_userapi_forumsearch_nonfulltext($args)
 {
     extract($args);
     unset($args);
@@ -3195,8 +3240,21 @@ function pnForum_userapi_forumsearch($args)
     return array($searchresults, $total_hits);
 }
 
-/*
-function pnForum_userapi_forumsearch($args)
+/**
+ * forumsearch_fulltext
+ * the function that will search the forum using fulltext indices - does not work on
+ * InnoDB databases!!!
+ *
+ *@params $args['searchfor']  string the search term
+ *@params $args['bool']       string 'AND' or 'OR'
+ *@params $args['forums']     array array of forum ids to search in
+ *@params $args['author']     string searhc for postings of this author only
+ *@params $args['order']      array array of order to display results
+ *@params $args['startnum']   int number of entry to start showing when on page > 1
+ *@params $args['limit']      int number of hits to show per page > 1
+ *@returns array with search results
+ */
+function pnForum_userapi_forumsearch_fulltext_($args)
 {
     extract($args);
     unset($args);
@@ -3219,30 +3277,30 @@ function pnForum_userapi_forumsearch($args)
     // to enable ordering the results by score
     $selectmatch = '';
     if(!empty($searchfor)) {
-//
-//        if($bool == 'AND') {
-//            // AND
-//            $wherematch = "(MATCH pt.post_text AGAINST ('$searchfor') OR MATCH t.topic_title AGAINST ('$searchfor')) \n";
-//            $selectmatch = ", MATCH pt.post_text AGAINST ('$searchfor') as textscore, MATCH t.topic_title AGAINST ('$searchfor') as subjectscore \n";
-//        } else {
-//            // OR
-//            $flag = false;
-//            $words = explode(' ', $searchfor);
-//            $wherematch .= "( ";
-//            foreach($words as $word) {
-//                if($flag) {
-//                    $wherematch .= ' OR ';
-//                }
-//                $word = pnVarPrepForStore($word);
-//                // get post_text and match up forums/topics/posts
-//                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-//                $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
-//                $flag = true;
-//            }
-//            $wherematch .= " ) ";
-//        }
-//        $wherematch .= " AND ";
-//
+
+        if($bool == 'AND') {
+            // AND
+            $wherematch = "(MATCH pt.post_text AGAINST ('$searchfor') OR MATCH t.topic_title AGAINST ('$searchfor')) \n";
+            $selectmatch = ", MATCH pt.post_text AGAINST ('$searchfor') as textscore, MATCH t.topic_title AGAINST ('$searchfor') as subjectscore \n";
+        } else {
+            // OR
+            $flag = false;
+            $words = explode(' ', $searchfor);
+            $wherematch .= "( ";
+            foreach($words as $word) {
+                if($flag) {
+                    $wherematch .= ' OR ';
+                }
+                $word = pnVarPrepForStore($word);
+                // get post_text and match up forums/topics/posts
+                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+                $flag = true;
+            }
+            $wherematch .= " ) ";
+        }
+        $wherematch .= " AND ";
+
         $flag = false;
         $words = explode(' ', $searchfor);
         $wherematch = "( ";
@@ -3264,30 +3322,30 @@ function pnForum_userapi_forumsearch($args)
             $flag = true;
         }
         $wherematch .= " ) AND ";
-////////
-//        $flag = false;
-//        $words = explode(' ', $searchfor);
-//        $query .= "( ";
-//        foreach($words as $word) {
-//            if($flag==true) {
-//                switch(strtolower($bool)) {
-//                    case 'or':
-//                        $query .= ' OR ';
-//                        break;
-//                    case 'and':
-//                    default:
-//                        $query .= 'AND ';
-//                }
-//            }
-//            $word = pnVarPrepForStore($word);
-//            // get post_text and match up forums/topics/posts
-//            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-//            $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
-//            $flag = true;
-//        }
-//        $query .= " ) ";
-//        $query .= " AND ";
-////////////////
+
+            $flag = false;
+            $words = explode(' ', $searchfor);
+            $query .= "( ";
+            foreach($words as $word) {
+                if($flag==true) {
+                    switch(strtolower($bool)) {
+                        case 'or':
+                            $query .= ' OR ';
+                            break;
+                        case 'and':
+                        default:
+                            $query .= 'AND ';
+                    }
+                }
+                $word = pnVarPrepForStore($word);
+                // get post_text and match up forums/topics/posts
+                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+                $flag = true;
+            }
+            $query .= " ) ";
+            $query .= " AND ";
+
     } else {
         // searchfor is empty, we search by author only
     }
@@ -3433,7 +3491,7 @@ function pnForum_userapi_forumsearch($args)
     pnfCloseDB($result);
     return array($searchresults, $total_hits);
 }
-*/
+
 /**
  * getfavorites
  * return the list of favorite forums for this user
@@ -4167,6 +4225,7 @@ function pnForum_userapi_get_last_topic_page($args)
  */
 function pnForum_userapi_jointopics($args)
 {
+pnfdebug('args',$args);
 	extract($args); // $new_topic, $old_topic (parameters)
    	unset($args);
 
@@ -4209,6 +4268,7 @@ function pnForum_userapi_jointopics($args)
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id, $new_post_time) = $result->fields;
     pnfCloseDB($result);
+
     $topic_replies = $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
@@ -4227,7 +4287,7 @@ function pnForum_userapi_jointopics($args)
     // update forums table
     // get topics count: decrement from_topic['forum_id']'s topic count by 1
     $sql = "UPDATE ".$pntable['pnforum_forums']."
-            SET forum_topics = forum_topics - 1,
+            SET forum_topics = forum_topics - 1
             WHERE forum_id='".(int)pnVarPrepForStore($from_topic['forum_id'])."'";
 	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -4243,7 +4303,7 @@ function pnForum_userapi_jointopics($args)
     if($from_topic['forum_id'] == $to_topic['forum_id']) {
         // same forum
         $sql = "UPDATE ".$pntable['pnforum_forums']."
-                SET forum_posts = forum_posts + 1,
+                SET forum_posts = forum_posts + 1
                 WHERE forum_id='".(int)pnVarPrepForStore($to_topic['forum_id'])."'";
     	$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -4408,12 +4468,14 @@ function pnForum_userapi_notify_moderator($args)
       	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
     }
 
-    setlocale (LC_TIME, pnConfigGetVar('locale'));
-    $modInfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
-    $ModName = pnVarPrepForStore($modInfo['directory']);
-    $modVersion = pnVarPrepForStore($modInfo['version']);
+    if(!pnModAPILoad('pnForum', 'admin')) {
+        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
+    }
 
-    $mods = pnModAPIFunc('pnForum', 'user', 'get_moderators',
+    setlocale (LC_TIME, pnConfigGetVar('locale'));
+    $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
+
+    $mods = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
                          array('forum_id' => $post['forum_id']));
 
     // generate the mailheader
@@ -4422,7 +4484,7 @@ function pnForum_userapi_notify_moderator($args)
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
     }
-
+/*
     $msg_From_Header = 'From: ' . pnConfigGetVar('sitename') . '<' . $email_from . ">\n";
     $msg_XMailer_Header = 'X-Mailer: ' . $ModName . ' ' . $modVersion . "\n";
     $msg_ContentType_Header = 'Content-Type: text/plain;';
@@ -4433,20 +4495,41 @@ function pnForum_userapi_notify_moderator($args)
     }
     $msg_ContentType_Header .= "\n";
     $msg_Subject .= pnVarPrepForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
+*/
+    $subject .= pnVarPrepForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
+    $sitename = pnConfigGetVar('sitename');
 
     $recipients = array();
     // check if list is empty - then do nothing
     // we create an array of recipients here
     $admin_is_mod = false;
     if(is_array($mods) && count($mods) <> 0) {
-        foreach($mods as $mod_uid => $mod_uname) {
-            $mod_email = pnUserGetVar('email', $mod_uid);
-            if(!empty($mod_email)) {
-                array_push($recipients, $mod_email);
-            }
-            if($mod_uid==2) {
-                // admin is also moderator
-                $admin_is_mod = true;
+        foreach($mods as $mod) {
+            if($mod['uid'] > 1000000) {
+                // mod_uid is gid
+                $group = pnModAPIFunc('Groups', 'user', 'get', array('gid' => (int)$mod['uid'] - 1000000));
+                if($group <> false) {
+                    foreach($group['members'] as $gm_uid) {
+                        $mod_email = pnUserGetVar('email', $gm_uid);
+                        if(!empty($mod_email)) {
+                            array_push($recipients, $mod_email);
+                        }
+                        if($gm_uid==2) {
+                            // admin is also moderator
+                            $admin_is_mod = true;
+                        }
+                    }
+                }
+
+            } else {
+                $mod_email = pnUserGetVar('email', $mod['uid']);
+                if(!empty($mod_email)) {
+                    array_push($recipients, $mod_email);
+                }
+                if($mod['uid']==2) {
+                    // admin is also moderator
+                    $admin_is_mod = true;
+                }
             }
         }
     }
@@ -4462,32 +4545,41 @@ function pnForum_userapi_notify_moderator($args)
                           array('topic_replies' => $post['topic_replies'],
                                 'start'         => $start));
 
+    $message = _PNFORUM_NOTIFYMODBODY1 . ' ' . pnConfigGetVar('sitename') . "\n"
+            . $post['cat_title'] . '::' . $post['forum_name'] . '::' . $post['topic_rawsubject'] . "\n\n"
+            . _PNFORUM_REPORTINGUSERNAME . ": $reporting_username \n"
+            . _PNFORUM_NOTIFYMODBODY2 . ": \n"
+            . $comment . " \n\n"
+            . "---------------------------------------------------------------------\n"
+            . strip_tags($post['post_text']) . " \n"
+            . "---------------------------------------------------------------------\n\n"
+            . _PNFORUM_NOTIFYMODBODY3 . ":\n"
+            . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
+            . "\n";
     if(count($recipients)>0) {
-        foreach($recipients as $email) {
+        foreach($recipients as $email_to) {
+            $toname = pnUserGetVar('name', $uid);
+            $toname = (!empty($toname)) ? $toname : pnUserGetVar('uname', $uid);
+
+            $args = array( 'fromname'    => $sitename,
+                           'fromaddress' => $email_from,
+                           'toname'      => $email_to,
+                           'toaddress'   => $email_to,
+                           'subject'     => $subject,
+                           'body'        => $message,
+                           'headers'     => array('X-UserID: ' . $uid,
+                                                  'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
+            pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+/*
             // set reply-to to his own adress ;)
             $msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
             $msg_Headers .= "Reply-To: $email";
 
-            $message = _PNFORUM_NOTIFYMODBODY1 . ' ' . pnConfigGetVar('sitename') . "\n"
-                    . $post['cat_title'] . '::' . $post['forum_name'] . '::' . $post['topic_rawsubject'] . "\n\n"
-                    . _PNFORUM_REPORTINGUSERNAME . ": $reporting_username \n"
-                    . _PNFORUM_NOTIFYMODBODY2 . ": \n"
-                    . $comment . " \n\n"
-                    . "---------------------------------------------------------------------\n"
-                    . strip_tags($post['post_text']) . " \n"
-                    . "---------------------------------------------------------------------\n\n"
-                    . _PNFORUM_NOTIFYMODBODY3 . ":\n"
-                    . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
-                    . "\n";
             pnMail($email, $msg_Subject, $message, $msg_Headers);
+*/
         }
     }
     return;
 }
 
-function pnForum_userapi_execeptiontest($args)
-{
-    pnThrowException('exceptiontest reached via pnThrowException', 0, __FILE__, __LINE__, PN_MODULE_EXCEPTION, false);
-    return;
-}
 ?>

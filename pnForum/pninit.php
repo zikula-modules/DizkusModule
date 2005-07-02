@@ -521,7 +521,14 @@ function pnForum_upgrade_to_2_0_2($createindex=true)
                 ADD FULLTEXT (post_text)";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
+
+        // fulltext index created, set special forum modvar
+        pnModSetVar('pnForum', 'fulltextindex', 1);
+    } else {
+        // no fulltext index created, set special forum modvar
+        pnModSetVar('pnForum', 'fulltextindex', 0);
     }
+    pnModSetVar('pnForum', 'extendedsearch', 0);
 
     // adding index fields to subscription tables
     $pnforumsubscriptiontable = $pntable['pnforum_subscription'];

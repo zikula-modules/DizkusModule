@@ -350,7 +350,7 @@ function pnForum_adminapi_readforums($args)
 
 /**
  * readmoderators
- *
+ * $forum_id
  */
 function pnForum_adminapi_readmoderators($args)
 {
@@ -361,7 +361,8 @@ function pnForum_adminapi_readmoderators($args)
 
     $sql = "SELECT u.pn_uname, u.pn_uid
             FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
-            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id";
+            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
+            AND f.user_id<1000000";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -372,10 +373,30 @@ function pnForum_adminapi_readmoderators($args)
             $mod = array();
             list( $mod['uname'],
                   $mod['uid'] ) = $result->fields;
-            array_push( $mods, $mod );
+            array_push($mods, $mod);
         }
     }
     pnfCloseDB($result);
+
+    $sql = "SELECT g.pn_name, g.pn_gid
+            FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
+            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
+            AND f.user_id>1000000";
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    if($result->RecordCount()>0) {
+        for (; !$result->EOF; $result->MoveNext())
+        {
+            $mod = array();
+            list( $mod['uname'],
+                  $mod['uid'] ) = $result->fields;
+            $mod['uid'] = $mod['uid'] + 1000000;
+            array_unshift($mods, $mod);
+        }
+    }
+    pnfCloseDB($result);
+
     return $mods;
 }
 
@@ -397,7 +418,10 @@ function pnForum_adminapi_readusers($args)
             WHERE n.pn_uid != 1 ";
 
     foreach($moderators as $mod) {
-        $sql .= "AND n.pn_uid != '".pnVarPrepForStore($mod['uid'])."'";
+        if($mod['uid']<=1000000) {
+            // mod uids > 1000000 are groups
+            $sql .= "AND n.pn_uid != '".pnVarPrepForStore($mod['uid'])."'";
+        }
     }
     $sql .= "ORDER BY pn_uname";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -414,6 +438,56 @@ function pnForum_adminapi_readusers($args)
     }
     pnfCloseDB($result);
     return $users;
+}
+
+/**
+ * readgroups
+ *
+ */
+function pnForum_adminapi_readgroups($args)
+{
+    extract($args);
+    unset($args);
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    // read groups
+    $sql = "SELECT g.pn_gid, g.pn_name
+            FROM ".$pntable['groups']." AS g ";
+
+    $where_flag = false;
+    $group_flag = false;
+    foreach($moderators as $mod) {
+        if($mod['uid']>1000000) {
+            // mod uids > 1000000 are groups
+            if(!$where_flag) {
+                $sql .= 'WHERE ';
+                $where_flag = true;
+            }
+            if($group_flag) {
+                $sql .= ' AND ';
+            }
+            $sql .= "g.pn_gid != '".pnVarPrepForStore((int)$mod['uid']-1000000)."' ";
+            $group_flag = true;
+        }
+    }
+    $sql .= "ORDER BY g.pn_name";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    $groups = array();
+    if($result->RecordCount()>0) {
+        for (; !$result->EOF; $result->MoveNext())
+        {
+            $group = array();
+            list( $group['gid'],
+                  $group['name'] ) = $result->fields;
+            $group['gid'] = $group['gid'] + 1000000;
+            array_push( $groups, $group );
+        }
+    }
+    pnfCloseDB($result);
+
+    return $groups;
 
 }
 

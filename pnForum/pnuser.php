@@ -64,7 +64,6 @@ function pnForum_user_main($args=array())
     if(!pnModAPILoad('pnForum', 'user')) {
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     }
-pnModAPIFunc('pnForum', 'user', 'execeptiontest');
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
     $loggedIn = pnUserLoggedIn();
@@ -105,6 +104,7 @@ pnModAPIFunc('pnForum', 'user', 'execeptiontest');
     }
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+$pnr->add_core_data();
     $pnr->assign( 'favorites', $favorites);
     $pnr->assign( 'tree', $tree);
     $pnr->assign( 'view_category', $viewcat);
@@ -554,8 +554,8 @@ function pnForum_user_topicadmin($args=array())
                 break;
             case "join":
                 $to_topic_id = pnVarCleanFromInput('to_topic_id');
-                pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic' => $topic_id,
-                                                                    'to_topic'   => $to_topic_id));
+                pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic_id' => $topic_id,
+                                                                    'to_topic_id'   => $to_topic_id));
                 pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $to_topic_id)));
                 break;
             default:
@@ -949,6 +949,17 @@ function pnForum_user_search($args=array())
         if(!is_array($vars['searchforums']) || !is_array($vars['searchorder']) || ($vars['searchbool']<>"AND" && $vars['searchbool']<>"OR") ) {
             return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
         }
+
+        // check mod var for extendedsearch support
+        $extendedsearch = pnModGetVar('pnForum', 'extendedsearch');
+        if($extendedsearch == 1) {
+            // extendedsearch
+            return pnModAPIFunc('pnForum', 'user', 'forumsearch_boolean', $args);
+        } else {
+            // no extendedsearch
+            return pnModAPIFunc('pnForum', 'user', 'forumsearch', $args);
+        }
+
 
         list($searchresults,
              $total_hits ) = pnModAPIFunc('pnForum', 'user', 'forumsearch',
