@@ -14,18 +14,18 @@
     <!--[* pndebug *]-->
 
     <table border="0" cellpadding="3" cellspacing="1" width="100%">
-        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="LEFT">
+        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
             <td align="center" colspan="6">
-                &nbsp;<br>
+                &nbsp;<br />
                 <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' ]-->
             </td>
         </tr>
-        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="LEFT">
+        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
             <td align="center"><b><!--[ pnml name='_PNFORUM_USERNAME' ]--></b></td>
             <td align="center"><b><!--[ pnml name='_PNFORUM_HONORARY_RANK' ]--></b></td>
             <td align="center" colspan="2"><b><!--[ pnml name='_PNFORUM_ACTIONS' ]--></b></td>
         </tr>
-        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="LEFT">
+        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="left">
             <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
             <td align="center">
                 <select name="user_id">
@@ -74,7 +74,7 @@
         <!--[ foreachelse ]-->
         <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
             <td colspan="7">
-                No Special Ranks in the Database. You can add one by entering into the form below.
+                <!--[ pnml name='_PNFORUM_NOSPECIALRANKSINDATABASE' ]-->
             </td>
         </tr>
         <!--[ /foreach ]-->

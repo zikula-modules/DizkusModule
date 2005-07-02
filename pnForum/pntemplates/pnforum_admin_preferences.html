@@ -11,139 +11,105 @@
         <!--[pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO']-->
     </legend>
 
-    <br />
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->" method="post">
-    <table border="0" cellpadding="3" cellspacing="1" width="100%">
+    <div style="padding-top: 1em; padding-bottom: 1em;">
+        <dl>
+            <dt class="pnfadmin"><label for="email_from"><!--[ pnml name='_PNFORUM_PREFS_EMAIL' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="email_from" name="email_from" size="30" maxlength="100" value="<!--[ $email_from ]-->" /></dd>
 
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_EMAIL' html=1 ]--></td>
-    		<td colspan="2"><input type="text" name="email_from" size="30" maxlength="100" value="<!--[ $email_from ]-->"></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_CHARSET' html=1 ]--></td>
-        	<td colspan="2"><input type="text" name="default_lang" size="30" maxlength="30" value="<!--[ $default_lang ]-->"></td>
-    	</tr>
-    	<tr align="left">
-        	<td><!--[ pnml name='_PNFORUM_PREFS_HOTTOPIC' html=1 ]--></td>
-        	<td colspan="2"><input type="text" name="hot_threshold" size="3" maxlength="3" value="<!--[ $hot_threshold ]-->"></td>
-    	</tr>
-    	<tr align="left">
-        	<td><!--[ pnml name='_PNFORUM_PREFS_POSTSPERPAGE' html=1 ]--></td>
-        	<td colspan="2"><input type="text" name="posts_per_page" size="3" maxlength="3" value="<!--[ $posts_per_page ]-->"></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_TOPICSPERPAGE' html=1 ]--></td>
-            <td colspan="2"><input type="text" name="topics_per_page" size="3" maxlength="3" value="<!--[ $topics_per_page ]-->"></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_MINPOSTINGSFORANCHOR' html=1 ]--></td>
-            <td colspan="2"><input type="text" name="min_postings_for_anchor" size="3" maxlength="3" value="<!--[ $min_postings_for_anchor ]-->"></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_SIGNATURESTART' html=1 ]--></td>
-            <td colspan="2"><textarea name="signature_start" rows="2" cols="40"><!--[ $signature_start ]--></textarea></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_SIGNATUREEND' html=1 ]--></td>
-            <td colspan="2"><textarea name="signature_end" rows="2" cols="40"><!--[ $signature_end ]--></textarea></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_POSTSORTORDER' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="post_sort_order" value="ASC" <!--[ $post_sort_order_ascchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_ASCENDING' ]-->
-                <input type="radio" name="post_sort_order" value="DESC" <!--[ $post_sort_order_descchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_DESCENDING' ]-->
-    		</td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_LOGIP' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="log_ip" value="yes" <!--[ $logiponchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
-                <input type="radio" name="log_ip" value="no" <!--[ $logipoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
-    		</td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_SLIMFORUM' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="slimforum" value="yes" <!--[ $slimforumonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
-                <input type="radio" name="slimforum" value="no" <!--[ $slimforumoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
-    		</td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_AUTOSUBSCRIBE' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="autosubscribe" value="yes" <!--[ $autosubscribeonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
-                <input type="radio" name="autosubscribe" value="no" <!--[ $autosubscribeoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
-    		</td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_M2FENABLED' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="m2f_enabled" value="yes" <!--[ $m2f_enabledonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
-                <input type="radio" name="m2f_enabled" value="no" <!--[ $m2f_enabledoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
-    		</td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_FAVORITESENABLED' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="favorites_enabled" value="yes" <!--[ $favorites_enabledonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
-                <input type="radio" name="favorites_enabled" value="no" <!--[ $favorites_enabledoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
-    		</td>
-    	</tr>
-<!--[*
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_USEEXTENDEDFULLTEXTSEARCH' ]--></td>
-            <td colspan="2">
-                <input type="radio" name="extendedsearch" value="yes" <!--[ $extendedsearchonchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
-                <input type="radio" name="extendedsearch" value="no" <!--[ $extendedsearchoffchecked ]-->>&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
-    		</td>
-    	</tr>
-*]-->
-    	<tr align="left">
-    		<td colspan="3" ><!--[ pnml name='_PNFORUM_PREFS_ICONS' html=1 ]--></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_RANKLOCATION' ]--></td>
-            <td colspan="2"><input type="text" name="url_ranks_images" size="50" maxlength="100" value="<!--[ $url_ranks_images ]-->"></td>
-    	</tr>
-    	<tr align="left">
-            <td><!--[ pnml name='_PNFORUM_PREFS_POSTICON' ]--></td>
-            <td><img src="<!--[ $posticon ]-->" alt="posticon"></td>
-            <td><input type="text" name="posticon" size="50" maxlength="100" value="<!--[ $posticon ]-->"></td>
-    	</tr>
-    	<tr align="left">
-            <td><!--[ pnml name='_PNFORUM_PREFS_FIRSTNEWPOSTICON' ]--></td>
-            <td><img src="<!--[ $firstnew_image ]-->" alt="firstnew_image"></td>
-            <td><input type="text" name="firstnew_image" size="50" maxlength="100" value="<!--[ $firstnew_image ]-->">
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_TOPICICON' ]--></td>
-            <td><img src="<!--[ $folder_image ]-->" alt="folder_image"></td>
-            <td><input type="text" name="folder_image" size="50" maxlength="100" value="<!--[ $folder_image ]-->"></td>
-    	</tr>
-    	<tr align="left">
-            <td><!--[ pnml name='_PNFORUM_PREFS_HOTTOPICICON' html=1 ]--></td>
-            <td><img src="<!--[ $hot_folder_image ]-->" alt="hot_folder_image"></td>
-            <td> <input type="text" name="hot_folder_image" size="50" maxlength="100" value="<!--[  $hot_folder_image ]-->"></td>
-    	</tr>
-    	<tr align="left">
-    		<td><!--[ pnml name='_PNFORUM_PREFS_NEWPOSTSICON' html=1 ]--></td>
-            <td><img src="<!--[ $newposts_image ]-->" alt="newposts_image"></td>
-            <td><input type="text" name="newposts_image" size="50" maxlength="100" value="<!--[ $newposts_image ]-->"></td>
-    	</tr>
-    	<tr align="left">
-            <td><!--[ pnml name='_PNFORUM_PREFS_HOTNEWPOSTSICON' ]--></td>
-            <td><img src="<!--[ $hot_newposts_image ]-->" alt="hot_newposts_image"></td>
-            <td><input type="text" name="hot_newposts_image" size="50" maxlength="100" value="<!--[ $hot_newposts_image ]-->"></td>
-    	</tr>
-    	<tr align="left">
-        	<td align="center" colspan="3">
+            <dt class="pnfadmin"><label for="default_lang"><!--[ pnml name='_PNFORUM_PREFS_CHARSET' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="default_lang" name="default_lang" size="30" maxlength="30" value="<!--[ $default_lang ]-->" /></dd>
+
+            <dt class="pnfadmin"><label for="hot_threshold"><!--[ pnml name='_PNFORUM_PREFS_HOTTOPIC' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="hot_threshold" name="hot_threshold" size="3" maxlength="3" value="<!--[ $hot_threshold ]-->" /></dd>
+
+            <dt class="pnfadmin"><label for="posts_per_page"><!--[ pnml name='_PNFORUM_PREFS_POSTSPERPAGE' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="posts_per_page" name="posts_per_page" size="3" maxlength="3" value="<!--[ $posts_per_page ]-->" /></dd>
+
+            <dt class="pnfadmin"><label for="topics_per_page"><!--[ pnml name='_PNFORUM_PREFS_TOPICSPERPAGE' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="topics_per_page" name="topics_per_page" size="3" maxlength="3" value="<!--[ $topics_per_page ]-->" /></dd>
+
+            <dt class="pnfadmin"><label for="min_postings_for_anchor"><!--[ pnml name='_PNFORUM_PREFS_MINPOSTINGSFORANCHOR' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="min_postings_for_anchor" name="min_postings_for_anchor" size="3" maxlength="3" value="<!--[ $min_postings_for_anchor ]-->" /></dd>
+
+            <dt class="pnfadmin"><label for="signature_start"><!--[ pnml name='_PNFORUM_PREFS_SIGNATURESTART' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><textarea id="signature_start" name="signature_start" rows="2" cols="40"><!--[ $signature_start ]--></textarea></dd>
+
+            <dt class="pnfadmin"><label for="signature_end"><!--[ pnml name='_PNFORUM_PREFS_SIGNATUREEND' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><textarea id="signature_end" name="signature_end" rows="2" cols="40"><!--[ $signature_end ]--></textarea></dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_POSTSORTORDER' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="post_sort_order" value="ASC" <!--[ $post_sort_order_ascchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_ASCENDING' ]-->
+                <input type="radio" name="post_sort_order" value="DESC" <!--[ $post_sort_order_descchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_DESCENDING' ]-->
+            </dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_LOGIP' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="log_ip" value="yes" <!--[ $logiponchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="log_ip" value="no" <!--[ $logipoffchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+            </dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_SLIMFORUM' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="slimforum" value="yes" <!--[ $slimforumonchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="slimforum" value="no" <!--[ $slimforumoffchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+            </dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_AUTOSUBSCRIBE' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="autosubscribe" value="yes" <!--[ $autosubscribeonchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="autosubscribe" value="no" <!--[ $autosubscribeoffchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+            </dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_M2FENABLED' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="m2f_enabled" value="yes" <!--[ $m2f_enabledonchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="m2f_enabled" value="no" <!--[ $m2f_enabledoffchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+            </dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_FAVORITESENABLED' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="favorites_enabled" value="yes" <!--[ $favorites_enabledonchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="favorites_enabled" value="no" <!--[ $favorites_enabledoffchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+            </dd>
+        </dl>
+
+        <div class="pnfadminrow98">
+            <!--[ pnml name='_PNFORUM_PREFS_ICONS' html=1 ]-->
+        </div>
+
+        <dl>
+            <dt class="pnfadmin"><label for="url_ranks_images"><!--[ pnml name='_PNFORUM_PREFS_RANKLOCATION' ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="url_ranks_images" name="url_ranks_images" size="40" maxlength="100" value="<!--[ $url_ranks_images ]-->" /></dd>
+
+            <dt class="pnfadmin"><label for="posticon"><!--[ pnml name='_PNFORUM_PREFS_POSTICON' ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="posticon" name="posticon" size="40" maxlength="100" value="<!--[ $posticon ]-->" />&nbsp;<img src="<!--[ $posticon ]-->" alt="posticon" /></dd>
+
+            <dt class="pnfadmin"><label for="firstnew_image"><!--[ pnml name='_PNFORUM_PREFS_FIRSTNEWPOSTICON' ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="firstnew_image" name="firstnew_image" size="40" maxlength="100" value="<!--[ $firstnew_image ]-->" />&nbsp;<img src="<!--[ $firstnew_image ]-->" alt="firstnew_image" /></dd>
+
+            <dt class="pnfadmin"><label for="folder_image"><!--[ pnml name='_PNFORUM_PREFS_TOPICICON' ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="folder_image" name="folder_image" size="40" maxlength="100" value="<!--[ $folder_image ]-->" />&nbsp;<img src="<!--[ $folder_image ]-->" alt="folder_image" /></dd>
+
+            <dt class="pnfadmin"><label for="hot_folder_image"><!--[ pnml name='_PNFORUM_PREFS_HOTTOPICICON' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="hot_folder_image" name="hot_folder_image" size="40" maxlength="100" value="<!--[  $hot_folder_image ]-->" />&nbsp;<img src="<!--[ $hot_folder_image ]-->" alt="hot_folder_image" /></dd>
+
+            <dt class="pnfadmin"><label for="newposts_image"><!--[ pnml name='_PNFORUM_PREFS_NEWPOSTSICON' html=1 ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="newposts_image" name="newposts_image" size="40" maxlength="100" value="<!--[ $newposts_image ]-->" />&nbsp;<img src="<!--[ $newposts_image ]-->" alt="newposts_image" /></dd>
+
+            <dt class="pnfadmin"><label for="hot_newposts_image"><!--[ pnml name='_PNFORUM_PREFS_HOTNEWPOSTSICON' ]--></label></dt>
+            <dd class="pnfadmin"><input type="text" id="hot_newposts_image" name="hot_newposts_image" size="40" maxlength="100" value="<!--[ $hot_newposts_image ]-->" />&nbsp;<img src="<!--[ $hot_newposts_image ]-->" alt="hot_newposts_image" /></dd>
+        </dl>
+
+        <div class="pnfadminrow98">
             <input type="radio" name="actiontype" value="Save" checked="checked">&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]-->&nbsp;
-    	    <input type="radio" name="actiontype" value="RestoreDefaults">&nbsp;<!--[ pnml name='_PNFORUM_PREFS_RESTOREDEFAULTS' ]-->
-    	    <br /><br />
+            <input type="radio" name="actiontype" value="RestoreDefaults">&nbsp;<!--[ pnml name='_PNFORUM_PREFS_RESTOREDEFAULTS' ]-->
+            <br /><br />
             <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
-        	</td>
-    	</tr>
-    </table>
+        </div>
+
+    </div>
     </form>
-    <br />
+
 </fieldset>

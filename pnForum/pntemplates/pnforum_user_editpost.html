@@ -49,25 +49,25 @@
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->">
                         <td>&nbsp;</td>
-                    </tr>		
+                    </tr>
                 </table>
             </td>
         </tr>
     </table>
     <br /><br />
-<!--[ /if ]--> 
+<!--[ /if ]-->
 <!--[ if $post.moderate eq true ]-->
-<label for="phpbb_subject"><!--[ pnml name='_PNFORUM_SUBJECT' ]--></label>
+<label for="subject"><!--[ pnml name='_PNFORUM_SUBJECT' ]--></label>
 <br />
-<input type="text" size="50" maxlength="100" name="subject" id="phpbb_subject" tabindex="0" value="<!--[ $post.topic_subject ]-->">
+<input type="text" size="50" maxlength="100" name="subject" id="subject" tabindex="0" value="<!--[ $post.topic_subject ]-->">
 <br /><br />
 <!--[ /if ]-->
 
-<label for="phpbb_body"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
-<br />	
-<textarea name="message" rows="10" cols="80" id="phpbb_body" tabindex="0"><!--[ $post.post_text ]--></textarea>
+<label for="message"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
 <br />
-<!--[ plainbbcode ]-->
+<textarea name="message" rows="10" cols="80" id="message" tabindex="0"><!--[ $post.post_text ]--></textarea>
+<br />
+<!--[ plainbbcode textfieldid=message ]-->
 <!--[ bbsmile ]-->
 <br /><br />
 <!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br/><input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>

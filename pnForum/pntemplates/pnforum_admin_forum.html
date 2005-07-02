@@ -55,13 +55,16 @@
             <td valign="top"><!--[ pnml name='_PNFORUM_MODERATOR' ]-->:</td>
             <td bgcolor="<!--[ $bgcolor1 ]-->"><b><!--[ pnml name='_PNFORUM_CURRENT' ]-->:</b><br />
             <!--[ foreach item=mod from=$moderators ]-->
-            <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->">&nbsp;<!--[ pnml name='_PNFORUM_REMOVE' ]-->)<br />
+            <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;<!--[ if $mod.uid > 1000000 ]-->(<!--[ pnml name='_PNFORUM_GROUP' ]-->)<!--[ /if ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->">&nbsp;<!--[ pnml name='_PNFORUM_REMOVE' ]-->)<br />
             <!--[ foreachelse ]-->
             <!--[ pnml name='_PNFORUM_NOMODERATORSASSIGNED' ]--><br /><br />
             <!--[ /foreach ]-->
             <b><!--[ pnml name='_PNFORUM_ADD' ]-->:</b><br />
             <select name="mods[]" size="10" multiple>
             <option value="0"><!--[ pnml name='_PNFORUM_NONE' ]--></option>
+            <!--[ foreach item=group from=$groups ]-->
+            <option value="<!--[ $group.gid ]-->"><!--[ $group.name|pnvarprepfordisplay ]--> (<!--[ pnml name='_PNFORUM_GROUP' ]-->)</option>
+            <!--[ /foreach ]-->
             <!--[ foreach item=user from=$users ]-->
             <option value="<!--[ $user.uid ]-->"><!--[ $user.uname|pnvarprepfordisplay ]--></option>
             <!--[ /foreach ]-->

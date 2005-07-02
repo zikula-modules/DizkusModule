@@ -57,7 +57,7 @@ function func_name() {
         <td>
             <a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a>
         </td>
-        <td>
+        <td><!--[* %d.%m.%Y, %H:%M" *]-->
             <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
         </td>
     </tr>
