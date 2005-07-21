@@ -20,21 +20,18 @@ function func_name() {
 <div style="background: <!--[ $bgcolor2 ]-->; text-align: center;">
     <h1><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</h1>
 </div>
-<form name="latestposts" method="post" action="">
-<table border="0" cellpadding="1" cellspacing="1" style="text-align: center;" width="100%">
-    <tr style="background: <!--[ $bgcolor3 ]-->;">
-        <td colspan="4" style="text-align: center;">
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ]
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ]
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ]
-    		[ <a href="javascript:func_name()"><!--[ pnml name='_PNFORUM_LAST' ]--></a> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0"> <a href="javascript:func_name()"><label for="pnForum_hours"><!--[ pnml name='_PNFORUM_HOURS' ]--></label></a> ]
-    		<br />
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ]
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ]
-    		[ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ]
-    	</td>
-    </tr>
-</table>
+<form name="latestposts" method="post" action="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->">
+<div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
+    [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ]
+    [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ]
+    [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ]
+    [ <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><!--[ pnml name='_PNFORUM_LAST' ]--></button> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0" /> <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><label for="pnForum_hours"><!--[ pnml name='_PNFORUM_HOURS' ]--></label></button> ]
+</div>
+<div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
+    [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ]
+    [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ]
+    [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ]
+</div>
 </form>
 <div style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;">
     <h2><!--[ pnml name='_PNFORUM_FORUMS' ]--></h2>
