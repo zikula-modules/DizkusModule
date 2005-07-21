@@ -45,7 +45,7 @@ function smarty_function_printtopic_button($params, &$smarty)
         if(function_exists('pnThemeInfo')) {
             $themeinfo = pnThemeInfo('Printer');
             if($themeinfo['active']) {
-                $out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id))) . "&theme=Printer\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
+                $out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
             } else {
                 $out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
             }
