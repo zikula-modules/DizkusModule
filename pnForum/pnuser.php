@@ -104,7 +104,7 @@ function pnForum_user_main($args=array())
     }
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-$pnr->add_core_data();
+//$pnr->add_core_data();
     $pnr->assign( 'favorites', $favorites);
     $pnr->assign( 'tree', $tree);
     $pnr->assign( 'view_category', $viewcat);
@@ -595,7 +595,7 @@ function pnForum_user_prefs($args=array())
         return showforumerror("loading userapi failed", __FILE__, __LINE__);
     }
 
-    $return_to = 'main';
+    //$return_to = 'main';
     switch($act) {
         case 'subscribe_topic':
             $return_to = (!empty($return_to))? $return_to : "viewtopic";
@@ -1183,6 +1183,7 @@ function pnForum_user_report($args)
     if(!$submit) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->assign('loggedin', pnUserLoggedIn());
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_notifymod.html');
     } else {   // submit is set
@@ -1197,6 +1198,52 @@ function pnForum_user_report($args)
         return true;
     }
 
+}
+
+/**
+ * topicsubscriptions
+ * manage the users topic subscription
+ *
+ *@params for
+ *
+ */
+function pnForum_user_topicsubscriptions($args)
+{
+    // get the input
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($topic_id,
+             $submit) = pnVarCleanFromInput('topic_id',
+                                            'submit');
+    }
+
+    if(!pnModAPILoad('pnForum', 'user')) {
+        return showforumerror("loading userapi failed", __FILE__, __LINE__);
+    }
+
+    $subscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions');
+    if(!$submit) {
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->assign('loggedin', pnUserLoggedIn());
+        $pnr->assign('subscriptions', $subscriptions);
+        return $pnr->fetch('pnforum_user_topicsubscriptions.html');
+    } else {  // submit is set
+        if(!pnSecConfirmAuthKey()) {
+            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
+        foreach($subscriptions as $subscription) {
+            if(!array_key_exists($subscription['topic_id'], $topic_id)) {
+                pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
+                             array('topic_id' => $subscription['topic_id'],
+                                   'silent'   => true));
+            }
+        }
+        pnRedirect(pnModURL('pnForum', 'user', 'topicsubscriptions'));
+        return true;
+    }
 }
 
 ?>

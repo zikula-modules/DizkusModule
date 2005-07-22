@@ -1,0 +1,55 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file=pnforum_user_header.html ]-->
+
+<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
+<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
+<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
+
+<h1><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS_HINT' ]--></h1>
+<form action="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" method="post">
+<div>
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
+    <table style="width: 99%; padding: 0; margin: 0, border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>
+                    <!--[ pnml name='_PNFORUM_TOPIC' ]-->
+                </th>
+                <th>
+                    <!--[ pnml name='_PNFORUM_POSTER' ]-->
+                </th>
+                <th>
+                    <!--[ pnml name='_PNFORUM_ACTIONS' ]-->
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--[ foreach item=subscription from=$subscriptions ]-->
+            <tr style="width: 99;">
+                <td style="width: 60%">
+                    <a href="<!--[ $subscription.last_post_url_anchor ]-->" title="<!--[ $subscription.forum_name ]--> :: <!--[ $subscription.topic_title ]-->"><!--[ $subscription.topic_title|pnvarcensor|pnvarprepfordisplay ]--></a>
+                </td>
+                <td style="width: 25; text-align: center;">
+                    <!--[ $subscription.poster_name|profilelink ]-->
+                </td>
+                <td style="width: 10%; text-align: center;">
+                    <input type="checkbox" name="topic_id[<!--[ $subscription.topic_id ]-->]" checked="checked" value="1" />
+                </td>
+            </tr>
+            <!--[ foreachelse ]-->
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    <!--[ pnml name='_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND ]-->
+                </td>
+            </tr>
+            <!--[ /foreach ]-->
+        </tbody>
+    </table>
+    <div style="margin: 2em 0 2em 0;">
+        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+    </div>
+</div>
+</form>
+
+<!--[ include file=pnforum_user_footer.html ]-->

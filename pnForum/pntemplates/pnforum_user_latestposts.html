@@ -25,7 +25,7 @@ function func_name() {
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ]
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ]
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ]
-    [ <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><!--[ pnml name='_PNFORUM_LAST' ]--></button> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0" /> <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><label for="pnForum_hours"><!--[ pnml name='_PNFORUM_HOURS' ]--></label></button> ]
+    [ <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><!--[ pnml name='_PNFORUM_LAST' ]--></button> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0" /> <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><!--[ pnml name='_PNFORUM_HOURS' ]--></button> ]
 </div>
 <div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ]
@@ -52,7 +52,7 @@ function func_name() {
             <!--[ $post.topic_replies ]-->
         </td>
         <td>
-            <a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a>
+            <!--[ $post.poster_name|profilelink ]-->
         </td>
         <td><!--[* %d.%m.%Y, %H:%M" *]-->
             <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
@@ -86,7 +86,7 @@ function func_name() {
             <!--[ $post.topic_replies ]-->
         </td>
         <td>
-            <a title="<!--[ $post.poster_name ]-->" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_name ]-->"><!--[ $post.poster_name ]--></a>
+            <!--[ $post.poster_name|profilelink ]-->
         </td>
         <td>
             <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->

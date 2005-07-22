@@ -8,29 +8,29 @@
 
 <!--[* pndebug *]-->
 
-<br />
-<table bgcolor="<!--[ $bgcolor2 ]-->" border="0" cellpadding="3" cellspacing="1" width="100%">
-    <thead>
-    <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-        <th style="width:50%; height:28px;">
-            <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
-        </th>
-        <th style="width:50%; height:28px; text-align: center;">
-            <strong><!--[ pnml name='_PNFORUM_SETTING' ]--></strong>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left" valign="top">
-        <td style="width:50%; height:28px;">
-            <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
-        </td>
-		<td style="width:50%; height:28px; text-align: center;">
-            <!--[ post_order_button return_to=prefs ]-->&nbsp;
-        </td>
-    </tr>
-	<tbody>
-</table>
+<h1 style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_SETTING' ]--></strong></h1>
+
+<div class="pnfadminrow98" style="background: <!--[ $bgcolor2 ]-->; height: 1.2em;">
+    <div class="pnfadmincol49" style="margin-left: 5px;">
+        <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
+    </div>
+    <div class="pnfadmincol49" style="text-align: center;">
+        <!--[ post_order_button return_to=prefs ]-->&nbsp;
+    </div>
+</div>
+
+<div class="pnfadminrow98" style="background: <!--[ $bgcolor2 ]-->; height: 1.2em;">
+    <div class="pnfadmincol49" style="margin-left: 5px;">
+        <strong><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></strong>
+    </div>
+    <div class="pnfadmincol49" style="text-align: center;">
+        <a href="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnimg src="managetopicsubscriptions.gif" altml=true alt="_PNFORUM_MANAGETOPICSUBSCRIPTIONS" ]--></a>
+    </div>
+</div>
+
+
+<div style="clear: both;"></div>
+
 <br />
 <table bgcolor="<!--[ $bgcolor2 ]-->" border="0" cellpadding="3" cellspacing="1" width="100%">
     <thead>
@@ -66,7 +66,7 @@
         	<!--[ $forum.forum_desc ]-->
         </td>
         <td style="text-align:center; vertical-align:middle;">
-            <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;
+            <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;<br />
         </td>
         <!--[ if $favorites_enabled eq "yes" ]-->
         <td style="text-align:center; vertical-align:middle;">

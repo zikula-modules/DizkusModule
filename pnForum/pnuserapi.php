@@ -2439,14 +2439,92 @@ function pnForum_userapi_notify_by_email($args)
                            'headers'     => array('X-UserID: ' . $uid,
                                                   'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-            // set reply-to to his own adress ;)
-            //$msg_Headers = $msg_From_Header . $msg_XMailer_Header . $msg_ContentType_Header;
-            //$msg_Headers .= "Reply-To: $email"; //.$subscriber_userdata['pn_email'];
-
-            //pnMail($email, $msg_Subject, $message, $msg_Headers);
         }
     }
     return;
+}
+
+/**
+ * get_topic_subscriptions
+ *
+ *@params none
+ *@returns array with topic ids, may be empty
+ */
+function pnForum_userapi_get_topic_subscriptions($args)
+{
+    extract($args);
+    unset($args);
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $userid = pnUserGetVar('uid');
+
+    $tstable = $pntable['pnforum_topic_subscription'];
+    $tscolumn = $pntable['pnforum_topic_subscription_column'];
+    $topicstable = $pntable['pnforum_topics'];
+    $topicscolumn = $pntable['pnforum_topics_column'];
+    $forumstable = $pntable['pnforum_forums'];
+    $forumscolumn = $pntable['pnforum_forums_column'];
+    $userstable = $pntable['users'];
+    $userscolumn = $pntable['users_column'];
+
+    // read the topic ids
+    $sql = "SELECT ts.topic_id,
+                   ts.forum_id,
+                   t.topic_title,
+                   t.topic_poster,
+                   t.topic_time,
+                   t.topic_replies,
+                   t.topic_last_post_id,
+                   u.pn_uname,
+                   f.forum_name
+            FROM $tstable AS ts,
+                 $topicstable AS t,
+                 $userstable AS u,
+                 $forumstable AS f
+            WHERE (ts.user_id='".(int)pnVarPrepForStore($userid)."'
+              AND t.topic_id=ts.topic_id
+              AND u.pn_uid=ts.user_id
+              AND f.forum_id=ts.forum_id)
+            ORDER BY ts.forum_id, ts.topic_id";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    $subscriptions = array();
+    $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
+    $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
+
+    while (!$result->EOF) {
+        $row = $result->GetRowAssoc(false);
+        $subscription = array('topic_id'           => $row['topic_id'],
+                              'forum_id'           => $row['forum_id'],
+                              'topic_title'        => $row['topic_title'],
+                              'topic_poster'       => $row['topic_poster'],
+                              'topic_time'         => $row['topic_time'],
+                              'topic_replies'      => $row['topic_replies'],
+                              'topic_last_post_id' => $row['topic_last_post_id'],
+                              'poster_name'        => $row['pn_uname'],
+                              'forum_name'         => $row['forum_name']);
+        if($post_sort_order == "ASC") {
+            $start = ((ceil(($subscription['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
+        } else {
+            // latest topic is on top anyway...
+            $start = 0;
+        }
+        // we now create the url to the last post in the thread. This might
+        // on site 1, 2 or what ever in the thread, depending on topic_replies
+        // count and the posts_per_page setting
+        $subscription['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                  array('topic' => $subscription['topic_id'],
+                                                        'start' => $start));
+        $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . "#pid" . $subscription['topic_last_post_id'];
+
+        array_push($subscriptions, $subscription);
+        $result->MoveNext();
+    }
+
+    pnfCloseDB($result);
+
+    return $subscriptions;
 }
 
 /**

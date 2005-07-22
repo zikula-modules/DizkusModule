@@ -42,6 +42,9 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_MANAGETOPICSUBSCRIPTIONS_HINT', 'Here you can manage your topic subscriptions.');
+define('_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND', 'no topic subscriptions found');
+define('_PNFORUM_MANAGETOPICSUBSCRIPTIONS', 'Manage topic subscriptions');
 define('_PNFORUM_GROUP', 'Group');
 define('_PNFORUM_NOSPECIALRANKSINDATABASE', 'No Special Ranks in the Database. You can add one by entering into the form below.');
 define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Use extended fulltext search in internal search');
