@@ -212,10 +212,6 @@ function pnForum_adminapi_deletecategory($args)
     }
 
     if(isset($cat_id)) {
-        if(!pnModAPILoad('pnForum', 'user')) {
-            return showforumerror("loading userapi failed", __FILE__, __LINE__);
-        }
-
         list($dbconn, $pntable) = pnfOpenDB();
 
         $cattable = $pntable['pnforum_categories'];

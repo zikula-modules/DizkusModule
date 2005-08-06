@@ -492,10 +492,6 @@ function pnForum_userapi_readforum($args)
     extract($args);
     unset($args);
 
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id,
                                 'permcheck' => 'nocheck' ));
@@ -1602,10 +1598,6 @@ function pnForum_userapi_updatepost($args)
         return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
     }
 
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT p.poster_id,
@@ -2138,10 +2130,6 @@ function pnForum_userapi_movetopic($args)
     extract($args);
     unset($args);
 
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     // get the old forum id and old post date
@@ -2205,10 +2193,6 @@ function pnForum_userapi_deletetopic($args)
 {
     extract($args);
     unset($args);
-
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -2307,10 +2291,6 @@ function pnForum_userapi_notify_by_email($args)
     extract($args);
     unset($args);
 
-    if(!pnModAvailable('Mailer') || !pnModAPILoad('Mailer', 'user')) {
-        return false;
-    }
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     setlocale (LC_TIME, pnConfigGetVar('locale'));
@@ -2371,10 +2351,15 @@ function pnForum_userapi_notify_by_email($args)
     }
     $subject .= "$category_name :: $forum_name :: $topic_subject";
 
-    //  get list of forum subscribers
-    $sql = "SELECT user_id
-            FROM ".$pntable['pnforum_subscription']."
-            WHERE forum_id=".pnVarPrepForStore($forum_id)."";
+    //  get list of forum subscribers with non-empty emails
+    $sql = "SELECT DISTINCT u.pn_email,
+                            u.pn_name,
+                            u.pn_uname
+            FROM " . $pntable['users'] . " as u,
+                 " . $pntable['pnforum_subscription'] . " as fs
+            WHERE fs.forum_id=".pnVarPrepForStore($forum_id)."
+              AND u.pn_uid = fs.user_id
+              AND u.pn_email <> ''";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $recipients = array();
@@ -2382,34 +2367,39 @@ function pnForum_userapi_notify_by_email($args)
     // we create an array of recipients here
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid) = $result->fields;
-            // get e-mail address by uid
-            //check if the recipient is already in our list to avoid dupes
-            if(!array_key_exists($pn_uid, $recipients)) {
-                $recipients[$pn_uid] = pnUserGetVar('email', $pn_uid);
+            list($pn_email, $pn_name, $pn_uname) = $result->fields;
+            if(!empty($pn_name)) {
+                $recipients[$pn_email] = $pn_name;
+            } else {
+                $recipients[$pn_email] = $pn_uname;
             }
         }
     }
     pnfCloseDB($result);
 
-    //  get list of topic_subscribers
-    $sql = "SELECT user_id
-            FROM ".$pntable['pnforum_topic_subscription']."
-            WHERE topic_id=".(int)pnVarPrepForStore($topic_id)."";
-
+    //  get list of topic_subscribers with non-empty emails
+    $sql = "SELECT DISTINCT u.pn_email,
+                            u.pn_name,
+                            u.pn_uname
+            FROM " . $pntable['users'] . " as u,
+                 " . $pntable['pnforum_topic_subscription'] . " as ts
+            WHERE ts.topic_id=".pnVarPrepForStore($topic_id)."
+              AND u.pn_uid = ts.user_id
+              AND u.pn_email <> ''";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid) = $result->fields;
-            // get e-mail address by uid
-            //check if the recipient is already in our list to avoid dupes
-            if(!array_key_exists($pn_uid, $recipients)) {
-                $recipients[$pn_uid] = pnUserGetVar('email', $pn_uid);
+            list($pn_email, $pn_name, $pn_uname) = $result->fields;
+            if(!empty($pn_name)) {
+                $recipients[$pn_email] = $pn_name;
+            } else {
+                $recipients[$pn_email] = $pn_uname;
             }
         }
     }
     pnfCloseDB($result);
+
     $sitename = pnConfigGetVar('sitename');
 
     $message = _PNFORUM_NOTIFYBODY1 . ' '. $sitename . "\n"
@@ -2426,9 +2416,9 @@ function pnForum_userapi_notify_by_email($args)
             . _PNFORUM_NOTIFYBODY5." ".pnGetBaseURL();
 
     if(count($recipients)>0) {
-        foreach($recipients as $uid => $email_to) {
-            $toname = pnUserGetVar('name', $uid);
-            $toname = (!empty($toname)) ? $toname : pnUserGetVar('uname', $uid);
+        foreach($recipients as $email_to => $toname) {
+            //$toname = pnUserGetVar('name', $uid);
+            //$toname = (!empty($toname)) ? $toname : pnUserGetVar('uname', $uid);
 
             $args = array( 'fromname'    => $sitename,
                            'fromaddress' => $email_from,
@@ -2607,9 +2597,6 @@ function pnForum_userapi_subscribe_forum($args)
 
     $userid = pnUserGetVar('uid');
 
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
@@ -2666,10 +2653,6 @@ function pnForum_userapi_add_favorite_forum($args)
 {
     extract($args);
     unset($args);
-
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -2933,9 +2916,6 @@ function pnForum_userapi_get_latest_posts($args)
  */
 function pnForum_userapi_usersync()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
   	pnModAPIFunc('pnForum', 'admin', 'sync',
                  array( 'id'   => NULL,
 	                    'type' => "users"));
@@ -3125,8 +3105,20 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
  *@params $args['limit']      int number of hits to show per page > 1
  *@returns array with search results
  */
-function pnForum_userapi_forumsearch($args)
+function pnForum_userapi_forumsearch($args=array())
 {
+    // check params. if searchfor is not set, try get read the last search options from
+    // a session variable
+    if(!isset($args['searchfor']) || empty($args['searchfor'])) {
+        // save startnum
+        $startnum = $args['startnum'];
+        $args = unserialize(pnSessionGetVar('lastforumsearch'));
+        $args['startnum'] = $startnum;
+    } else {
+        // searchfor is set, seems to be a new search. store it for later use
+        pnSessionSetVar('lastforumsearch', serialize($args));
+    }
+
     // check mod var for fulltext support
     $fulltextindex = pnModGetVar('pnForum', 'fulltextindex');
     if($fulltextindex == 1) {
@@ -3144,6 +3136,8 @@ function pnForum_userapi_forumsearch($args)
 /**
  * forumsearch_nonfulltext
  * the function that will search the forum
+ *
+ * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL pnForum_userapi_forumsearch INSTEAD
  *
  *@params $args['searchfor']  string the search term
  *@params $args['bool']       string 'AND' or 'OR'
@@ -3322,6 +3316,8 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
  * forumsearch_fulltext
  * the function that will search the forum using fulltext indices - does not work on
  * InnoDB databases!!!
+ *
+ * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL pnForum_userapi_forumsearch INSTEAD
  *
  *@params $args['searchfor']  string the search term
  *@params $args['bool']       string 'AND' or 'OR'
@@ -4058,10 +4054,6 @@ function pnForum_userapi_testpop3connection($args)
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     include_once "modules/pnForum/pnincludes/pop3.php";
@@ -4544,10 +4536,6 @@ function pnForum_userapi_notify_moderator($args)
 
 	if (!pnSecConfirmAuthKey()) {
       	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
-    }
-
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
     }
 
     setlocale (LC_TIME, pnConfigGetVar('locale'));

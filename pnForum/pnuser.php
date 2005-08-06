@@ -61,10 +61,6 @@ function pnForum_user_main($args=array())
     }
     $viewcat = (!empty($viewcat)) ? $viewcat : -1;
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
     $loggedIn = pnUserLoggedIn();
     if(pnModGetVar('pnForum', 'favorites_enabled')=='yes') {
@@ -104,7 +100,7 @@ function pnForum_user_main($args=array())
     }
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-//$pnr->add_core_data();
+    $pnr->add_core_data();
     $pnr->assign( 'favorites', $favorites);
     $pnr->assign( 'tree', $tree);
     $pnr->assign( 'view_category', $viewcat);
@@ -135,10 +131,6 @@ function pnForum_user_viewforum($args=array())
         $start    = (int)pnVarCleanFromInput('start');
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
@@ -149,6 +141,7 @@ function pnForum_user_viewforum($args=array())
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign( 'forum', $forum);
     $pnr->assign( 'hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
     $pnr->assign( 'loggedin', pnUserLoggedIn());
@@ -171,15 +164,8 @@ function pnForum_user_viewtopic($args=array())
         $topic_id = (int)pnVarCleanFromInput('topic');
         $start    = (int)pnVarCleanFromInput('start');
         $view     = strtolower(pnVarCleanFromInput('view'));
-//        $highlight= urldecode(pnVarCleanFromInput('highlight'));
     }
 
-//    if(!empty($highlight)) {
-//        pnSessionSetVar('highlight', pnVarPrepForStore($highlight));
-//    }
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     if(!empty($view) && ($view=="next" || $view=="previous")) {
@@ -194,10 +180,10 @@ function pnForum_user_viewtopic($args=array())
                           array('topic_id'   => $topic_id,
                                 'start'      => $start,
                                 'last_visit' => $last_visit));
-//    pnSessionDelVar('highlight');
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign( 'topic', $topic);
     $pnr->assign( 'post_count', count($topic['posts']));
     $pnr->assign( 'hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
@@ -235,9 +221,7 @@ function pnForum_user_reply($args=array())
         									'submit',
         									'cancel');
     }
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
+
     $post_id = (int)$post_id;
     $topic_id = (int)$topic_id;
     $attach_signature = (int)$attach_signature;
@@ -295,6 +279,7 @@ function pnForum_user_reply($args=array())
 
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign( 'reply', $reply);
         $pnr->assign( 'preview', $preview);
         $pnr->assign( 'loggedin', pnUserLoggedIn());
@@ -347,10 +332,6 @@ function pnForum_user_newtopic($args=array())
     	$message="";
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     $newtopic = pnModAPIFunc('pnForum', 'user', 'preparenewtopic',
@@ -386,6 +367,7 @@ function pnForum_user_newtopic($args=array())
         // new topic
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign( 'preview', (isset($preview)) ? true : false);
         $pnr->assign( 'newtopic', $newtopic);
         $pnr->assign( 'loggedin', pnUserLoggedIn());
@@ -434,9 +416,6 @@ function pnForum_user_editpost($args=array())
     	$message="";
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     if(isset($submit) && !isset($preview)) {
@@ -462,6 +441,7 @@ function pnForum_user_editpost($args=array())
         }
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign( 'preview', (isset($preview)) ? true : false);
         $pnr->assign( 'post', $post);
         $pnr->assign( 'loggedin', pnUserLoggedIn());
@@ -491,14 +471,11 @@ function pnForum_user_topicadmin($args=array())
     }
     $shadow = (empty($shadow)) ? false : true;
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign('mode', $mode);
     $pnr->assign('topic_id', $topic_id);
-    $pnr->assign('loggedin', pnUserLoggedIn());
     $pnr->assign('last_visit', $last_visit);
     $pnr->assign('last_visit_unix', $last_visit_unix);
 
@@ -591,10 +568,6 @@ function pnForum_user_prefs($args=array())
                                                'forum');
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     //$return_to = 'main';
     switch($act) {
         case 'subscribe_topic':
@@ -654,6 +627,7 @@ function pnForum_user_prefs($args=array())
             list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
             $pnr =& new pnRender('pnForum');
             $pnr->caching = false;
+            $pnr->add_core_data();
             $pnr->assign( 'last_visit', $last_visit);
             $pnr->assign( 'favorites_enabled', pnModGetVar('pnForum', 'favorites_enabled'));
             $pnr->assign( 'loggedin', $loggedin);
@@ -686,10 +660,6 @@ function pnForum_user_emailtopic($args=array())
         return showforumerror(_PNFORUM_NOTLOGGEDIN, __FILE__, __LINE__);
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     if(!empty($submit)) {
@@ -717,6 +687,7 @@ function pnForum_user_emailtopic($args=array())
     } else {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('topic', $topic);
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
@@ -754,10 +725,6 @@ function pnForum_user_viewlatest($args=array())
     	$selorder = 5;
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     list($posts, $m2fposts, $text) = pnModAPIFunc('pnForum', 'user', 'get_latest_posts',
@@ -768,6 +735,7 @@ function pnForum_user_viewlatest($args=array())
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign('posts', $posts);
     $pnr->assign('m2fposts', $m2fposts);
     $pnr->assign('text', $text);
@@ -788,10 +756,6 @@ function pnForum_user_viewlatest($args=array())
  */
 function pnForum_user_splittopic($args=array())
 {
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -823,6 +787,7 @@ function pnForum_user_splittopic($args=array())
     } else {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_splittopic.html');
     }
@@ -835,10 +800,6 @@ function pnForum_user_splittopic($args=array())
  */
 function pnForum_user_print($args=array())
 {
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -928,21 +889,14 @@ function pnForum_user_search($args=array())
     }
 
     if(!$submit) {
-        if(!pnModAPILoad('pnForum', 'admin')) {
-            return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-        }
         $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
 
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
-        $pnr->assign('loggedin', pnUserLoggedIn());
+        $pnr->add_core_data();
         $pnr->assign('forums', $forums);
         return $pnr->fetch('pnforum_user_search.html');
     } else {   // submit is set
-        if(!pnModAPILoad('pnForum', 'user')) {
-            return showforumerror("loading userapi failed", __FILE__, __LINE__);
-        }
-
         if(!isset($vars['searchlimit']) || empty($vars['searchlimit'])) {
             $vars['searchlimit'] = 10;
         }
@@ -976,9 +930,9 @@ function pnForum_user_search($args=array())
                                 array('searchagain'  => 1,
                                       'searchstart'  => '%%'));
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('total_hits', $total_hits);
         $pnr->assign('urltemplate', $urltemplate);
-        $pnr->assign('loggedin', pnUserLoggedIn());
         $pnr->assign('searchresults', $searchresults);
         $pnr->assign('searchfor',    $vars['searchfor']);
         $pnr->assign('searchbool',   $vars['searchbool']);
@@ -999,10 +953,6 @@ function pnForum_user_search($args=array())
  */
 function pnForum_user_movepost($args=array())
 {
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1039,8 +989,8 @@ function pnForum_user_movepost($args=array())
     } else {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('post', $post);
-        $pnr->assign('loggedin', pnUserLoggedIn());
         return $pnr->fetch('pnforum_user_movepost.html');
     }
 }
@@ -1067,10 +1017,6 @@ function pnForum_user_jointopics($args=array())
 											       'from_topic_id');
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-pnfdebug('pid', $post_id, true);
     $post = pnModAPIFunc('pnForum', 'user', 'readpost', array('post_id' => $post_id));
 
     if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
@@ -1081,8 +1027,8 @@ pnfdebug('pid', $post_id, true);
     if(!$submit) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('post', $post);
-        $pnr->assign('loggedin', pnUserLoggedIn());
         return $pnr->fetch('pnforum_user_jointopics.html');
     } else {
 		// check if from_topic exists. this function will return an error if not
@@ -1115,10 +1061,6 @@ function pnForum_user_moderateforum($args=array())
 
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
                           array('forum_id'        => $forum_id,
                                 'start'           => $start,
@@ -1133,6 +1075,7 @@ function pnForum_user_moderateforum($args=array())
     if(!$submit) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('forum_id', $forum_id);
         $pnr->assign('forum',$forum);
         $pnr->assign('mode',$mode);
@@ -1173,17 +1116,13 @@ function pnForum_user_report($args)
                                             'submit');
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                          array('post_id' => $post_id));
 
     if(!$submit) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
-        $pnr->assign('loggedin', pnUserLoggedIn());
+        $pnr->add_core_data();
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_notifymod.html');
     } else {   // submit is set
@@ -1219,15 +1158,11 @@ function pnForum_user_topicsubscriptions($args)
                                             'submit');
     }
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     $subscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions');
     if(!$submit) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
-        $pnr->assign('loggedin', pnUserLoggedIn());
+        $pnr->add_core_data();
         $pnr->assign('subscriptions', $subscriptions);
         return $pnr->fetch('pnforum_user_topicsubscriptions.html');
     } else {  // submit is set

@@ -49,10 +49,6 @@ include_once("modules/pnForum/common.php");
  */
 function pnForum_admin_main()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -61,6 +57,7 @@ function pnForum_admin_main()
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     $pnr =& new pnRender("pnForum");
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign('total_categories', count($categories));
     $pnr->assign('categories', $categories);
     $pnr->assign('forums', $forums);
@@ -73,10 +70,6 @@ function pnForum_admin_main()
  */
 function pnForum_admin_preferences()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -129,6 +122,7 @@ function pnForum_admin_preferences()
         }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
+        $pnr->add_core_data();
         $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
         $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
@@ -216,10 +210,6 @@ function pnForum_admin_preferences()
  */
 function pnForum_admin_advancedpreferences()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -244,6 +234,7 @@ function pnForum_admin_advancedpreferences()
         }
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
+        $pnr->add_core_data();
         $pnr->assign('dbversion', $dbversion);
         $pnr->assign('dbtype', $dbconn->databaseType);
         $pnr->assign('dbname', $dbconn->databaseName);
@@ -263,11 +254,6 @@ function pnForum_admin_advancedpreferences()
  */
 function pnForum_admin_syncforums()
 {
-
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -306,13 +292,6 @@ function pnForum_admin_syncforums()
  */
 function pnForum_admin_category()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -342,6 +321,7 @@ function pnForum_admin_category()
         }
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('category', $category );
         return $pnr->fetch("pnforum_admin_category.html");
     } else { // submit is set
@@ -371,10 +351,6 @@ function pnForum_admin_category()
  */
 function pnForum_admin_forum()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -410,6 +386,7 @@ function pnForum_admin_forum()
                                     array('forum_id' => $forum['forum_id']));
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('forum', $forum);
         $pnversionnum = _PN_VERSION_NUM;
         $pnr->assign('minimum760', ($pnversionnum >= '0.7.6.0'));
@@ -531,6 +508,7 @@ function pnForum_admin_forum()
                                            array('forum_id' => $forum_id));
             $pnr =& new pnRender('pnForum');
             $pnr->caching = false;
+            $pnr->add_core_data();
             $pnr->assign('messages', $pop3testresult);
             $pnr->assign('forum_id', $forum_id);
             return $pnr->fetch('pnforum_admin_pop3test.html');
@@ -546,10 +524,6 @@ function pnForum_admin_forum()
  */
 function pnForum_admin_ranks()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return "loading adminapi failed";
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -566,7 +540,7 @@ function pnForum_admin_ranks()
     if(!$submit) {
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
-        $pnr->assign('url_ranks_images', pnModGetVar('pnForum', 'url_ranks_images'));
+        $pnr->add_core_data();
         $pnr->assign('ranks', $ranks);
         $pnr->assign('ranktype', $ranktype);
         $pnr->assign('rankimages', $rankimages);
@@ -607,10 +581,6 @@ function pnForum_admin_ranks()
  */
 function pnForum_admin_assignranks()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return "loading adminapi failed";
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -627,7 +597,7 @@ function pnForum_admin_assignranks()
     if(!$submit) {
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
-        $pnr->assign('url_ranks_images', pnModGetVar('pnForum', 'url_ranks_images'));
+        $pnr->add_core_data();
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
         $pnr->assign('rankusers', $rankusers);
@@ -653,10 +623,6 @@ function pnForum_admin_assignranks()
  */
 function pnForum_admin_reordercategories()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return "loading adminapi failed";
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -668,6 +634,7 @@ function pnForum_admin_reordercategories()
     if(!$direction) {
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('total_categories', count($categories));
         $pnr->assign('categories', $categories);
         return $pnr->fetch("pnforum_admin_reordercategories.html");
@@ -692,10 +659,6 @@ function pnForum_admin_reordercategories()
  */
 function pnForum_admin_reorderforums()
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return "loading adminapi failed";
-    }
-
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
@@ -752,6 +715,7 @@ function pnForum_admin_reorderforums()
     // out the forum info after we set the new order if we were editing.
     $pnr =& new pnRender("pnForum");
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign('forums', $forums);
     // editforumorder is used to determine if we want to edit the forum_order
     // and contains the forum_id of the forum we want to edit.

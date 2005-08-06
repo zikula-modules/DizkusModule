@@ -6,11 +6,17 @@ PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 2.0.2 (fs)
 ---------------------------------------------------------------------------------------------
+This version needs .760 or later!
+Important changes:
+- $loggedin in templates has been replaced with $pncore.logged_in. Customized templates
+  need to be updated!
+
 - fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
 - added mail2forum feature
 - forum search now with FULLTEXT index
-- bug fixes, cleanips (as usual)
+- bug fixes, cleanups (as usual)
 - new option to turn off the favorites system
+- easier topic subscription management for the user
 
 ---------------------------------------------------------------------------------------------
 2.0.1 (fs)
