@@ -1,0 +1,255 @@
+/*  $Id$  */
+
+.pnForum-title {
+    font-size: 12px;
+}
+
+.pnForum-border {
+    border: border-collapse;
+
+}
+
+a.pnForum_links {
+    background: red;
+    border: 1px solid blue;
+    color: yellow;
+}
+
+div.pnfadminrow98 {
+    clear: both;
+    width: 98%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+div.pnfadmincol49,  div.pnfadmincol33,  div.pnfadmincol24,  div.pnfadmincol22,  div.pnfadmincol16,  div.pnfadmincol12,
+div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
+    float: left;
+}
+
+div.pnfadmincol49, div.pnfadmincol33, div.pnfadmincol24, div.pnfadmincol22, div.pnfadmincol16, div.pnfadmincol12 {
+    text-align: left;
+}
+
+div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
+    text-align: center;
+ }
+
+div.pnfadmincol49, div.pnfadmincol49c {
+    width: 49%;
+}
+
+div.pnfadmincol33, div.pnfadmincol33c {
+    width: 33%;
+}
+
+div.pnfadmincol24, div.pnfadmincol24c {
+    width: 24%;
+}
+
+div.pnfadmincol22, div.pnfadmincol22c {
+    width: 22%;
+}
+
+div.pnfadmincol16, div.pnfadmincol16c {
+    width: 16%;
+}
+
+div.pnfadmincol12, div.pnfadmincol12c {
+    width: 12%;
+}
+
+div.pnfadminclear {
+    clear: both;
+}
+
+dt.pnfadmin {
+    clear: both;
+    width: 40%;
+    float: left;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+dd.pnfadmin {
+    width: 40%;
+    float: left;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.pnfuserrow98 {
+    clear: both;
+    width: 98%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.pnfusercol25 {
+    width: 25%;
+    float: left;
+}
+
+.pnfusercol49 {
+    width: 49%;
+    float: left;
+}
+
+.pnfusercol66 {
+    width: 66%;
+    float: left;
+}
+
+.pnfusercol33 {
+    width: 33%;
+    float: left;
+}
+
+.pnfusercol60 {
+    width: 60%;
+    float: left;
+}
+
+.pnfusercol30 {
+    width: 30%;
+    float: left;
+}
+
+.pnfusercol75 {
+    width: 75%;
+    float: left;
+}
+
+.pnfusercol37 {
+    width: 37%;
+    float: left;
+}
+
+fieldset {
+    font-size: 1em;
+    padding: 3px;
+    margin: 3px;
+}
+
+legend {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.displayhook {
+    clear: both;
+    padding: 5px;
+    text-align: center;
+}
+
+.post-header-row, post-bottom-row {
+    clear: both;
+    width: 98%;
+}
+.post-header-left {
+    clear: both;
+    width: 24%;
+    float: left;
+    height: 2em;
+    text-align: left;
+    padding-left: 3px;
+    padding-top: 0.5em;
+}
+
+.post-header-right {
+    width: 74%;
+    float: left;
+    height: 2em;
+    text-align: right;
+    padding-right: 5px;
+    padding-top: 0.5em;
+}
+
+.post-title-left {
+    clear: both;
+    width: 24%;
+    float: left;
+    text-align: left;
+    padding-left: 3px;
+}
+
+.post-title-right {
+    width: 74%;
+    float: left;
+    text-align: left;
+    padding-left: 3px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.post-content-row {
+    clear: both:
+    width: 98%;
+}
+
+.post-userinfo {
+    clear: both;
+    width: 24%;
+    float: left;
+    padding: 3px;
+    text-align: left;
+    overflow: visible;
+}
+
+.post-text {
+    width: 74%;
+    float: left;
+    text-align: left;
+    padding: 3px;
+    overflow: visible;
+}
+
+.post-bottom-left {
+    clear: both;
+    width: 24%;
+    float: left;
+    text-align: left;
+    padding-left: 3px;
+}
+
+.post-bottom-right {
+    width: 74%;
+    float: left;
+    text-align: left;
+    padding-left: 3px;
+}
+
+.post-bottom2 {
+    clear: both;
+    width: 98%;
+    float: left;
+    text-align: right;
+    padding-right: 3px;
+}
+
+.post-bottom-userinfo {
+    width: 49%;
+    text-align: left;
+    float: left;
+    padding-left: 5px;
+}
+
+.post-bottom-useroptions {
+    width: 49%;
+    text-align: right;
+    float: right;"
+    padding-right: 5px;
+}
+
+.quickreply-options,quickreply-options-header {
+    clear: both;
+    width: 30%;
+    float: left;
+    text-align: left;
+}
+
+.quickreply-text, quickreply-text-header {
+    width: 66%;
+    float: left;
+}
+
