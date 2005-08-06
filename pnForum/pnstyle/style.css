@@ -5,7 +5,7 @@
 }
 
 .pnForum-border {
-    border: border-collapse;
+    border-collapse: collapse;
 
 }
 
@@ -183,7 +183,7 @@ legend {
 }
 
 .post-content-row {
-    clear: both:
+    clear: both;
     width: 98%;
 }
 
@@ -237,7 +237,7 @@ legend {
 .post-bottom-useroptions {
     width: 49%;
     text-align: right;
-    float: right;"
+    float: right;
     padding-right: 5px;
 }
 
