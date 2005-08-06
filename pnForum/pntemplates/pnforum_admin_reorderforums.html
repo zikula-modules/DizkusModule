@@ -2,17 +2,13 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
-<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
-<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
-
 <!--[* pndebug *]-->
 
 <fieldset>
     <legend style="font-weight: bold;">
         <!--[ pnml name='_PNFORUM_REORDERFORUMS' ]-->
     </legend>
-    
+
     <br />
     <strong><!--[ pnml name='_PNFORUM_CATEGORY' ]-->:&nbsp;<!--[ $category.cat_title ]--></strong>
     <br />
@@ -27,11 +23,11 @@
     <!--[ foreach key=currentrow item=forum from=$forums ]-->
     <div style="clear: both; with: 90%; padding: 3px;">
         <div style="float: left; width: 12%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;">
-    		<!--[ if $forum.forum_order ge 1 ]--> 
-                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=up forum_id=$forum.forum_id oldorder=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->"></a>
+    		<!--[ if $forum.forum_order ge 1 ]-->
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=up forum_id=$forum.forum_id oldorder=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->" /></a>
     		<!--[ /if ]-->
     		<!--[ if $currentrow neq $total_forums-1 || $forum.forum_order eq 0 ]-->
-                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=down forum_id=$forum.forum_id oldorder=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->"></a>
+                <a href="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums direction=down forum_id=$forum.forum_id oldorder=$forum.forum_order cat_id=$category.cat_id ]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->" /></a>
             <!--[ /if ]-->
         </div>
         <div style="float: left; width: 25%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 5px;">

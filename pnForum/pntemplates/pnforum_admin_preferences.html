@@ -4,8 +4,6 @@
 
 <!--[* pndebug *]-->
 
-<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
-<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
 <fieldset>
     <legend style="font-weight: bold;">
         <!--[pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO']-->
@@ -33,10 +31,10 @@
             <dd class="pnfadmin"><input type="text" id="min_postings_for_anchor" name="min_postings_for_anchor" size="3" maxlength="3" value="<!--[ $min_postings_for_anchor ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="signature_start"><!--[ pnml name='_PNFORUM_PREFS_SIGNATURESTART' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><textarea id="signature_start" name="signature_start" rows="2" cols="40"><!--[ $signature_start ]--></textarea></dd>
+            <dd class="pnfadmin"><textarea id="signature_start" name="signature_start" rows="2" cols="40"><!--[ $signature_start|pnvarprepfordisplay ]--></textarea></dd>
 
             <dt class="pnfadmin"><label for="signature_end"><!--[ pnml name='_PNFORUM_PREFS_SIGNATUREEND' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><textarea id="signature_end" name="signature_end" rows="2" cols="40"><!--[ $signature_end ]--></textarea></dd>
+            <dd class="pnfadmin"><textarea id="signature_end" name="signature_end" rows="2" cols="40"><!--[ $signature_end|pnvarprepfordisplay ]--></textarea></dd>
 
             <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_POSTSORTORDER' ]--></dt>
             <dd class="pnfadmin">
@@ -103,10 +101,10 @@
         </dl>
 
         <div class="pnfadminrow98">
-            <input type="radio" name="actiontype" value="Save" checked="checked">&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]-->&nbsp;
-            <input type="radio" name="actiontype" value="RestoreDefaults">&nbsp;<!--[ pnml name='_PNFORUM_PREFS_RESTOREDEFAULTS' ]-->
+            <input type="radio" name="actiontype" value="Save" checked="checked" />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]-->&nbsp;
+            <input type="radio" name="actiontype" value="RestoreDefaults" />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_RESTOREDEFAULTS' ]-->
             <br /><br />
-            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
         </div>
 
     </div>

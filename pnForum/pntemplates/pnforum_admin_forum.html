@@ -3,16 +3,12 @@
 <!--[ include file='pnforum_admin_header.html' ]-->
 <!--[* pndebug *]-->
 
-<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
-<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
-<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
-
 <fieldset>
     <legend style="font-weight: bold;">
         <!--[ pnml name='_PNFORUM_EDITFORUMS' ]-->
     </legend>
 
-    <form style="name="editforumform" action="<!--[ pnmodurl modname=pnForum type=admin func=forum ]-->" method="post">
+    <form name="editforumform" action="<!--[ pnmodurl modname=pnForum type=admin func=forum ]-->" method="post">
 
     <table border="0" cellpadding="3" cellspacing="1" width="100%">
         <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
@@ -27,7 +23,7 @@
         </tr>
         <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
             <td><!--[ pnml name='_PNFORUM_FORUM' ]-->:</td>
-            <td bgcolor="<!--[ $bgcolor1 ]-->"><input type="text" name="forum_name" size="70" maxlength="150" value="<!--[ $forum.forum_name ]-->"></td>
+            <td bgcolor="<!--[ $bgcolor1 ]-->"><input type="text" name="forum_name" size="70" maxlength="150" value="<!--[ $forum.forum_name ]-->" /></td>
         </tr>
 
         <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
@@ -49,13 +45,13 @@
 
         <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
             <td><!--[ pnml name='_PNFORUM_DESCRIPTION' ]-->:</td>
-            <td bgcolor="<!--[ $bgcolor1 ]-->"><textarea name="desc" rows="5" cols="75" wrap="soft"><!--[ $forum.forum_desc ]--></textarea></td>
+            <td bgcolor="<!--[ $bgcolor1 ]-->"><textarea name="desc" rows="5" cols="75"><!--[ $forum.forum_desc ]--></textarea></td>
         </tr>
         <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
             <td valign="top"><!--[ pnml name='_PNFORUM_MODERATOR' ]-->:</td>
             <td bgcolor="<!--[ $bgcolor1 ]-->"><b><!--[ pnml name='_PNFORUM_CURRENT' ]-->:</b><br />
             <!--[ foreach item=mod from=$moderators ]-->
-            <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;<!--[ if $mod.uid > 1000000 ]-->(<!--[ pnml name='_PNFORUM_GROUP' ]-->)<!--[ /if ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->">&nbsp;<!--[ pnml name='_PNFORUM_REMOVE' ]-->)<br />
+            <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;<!--[ if $mod.uid > 1000000 ]-->(<!--[ pnml name='_PNFORUM_GROUP' ]-->)<!--[ /if ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->" />&nbsp;<!--[ pnml name='_PNFORUM_REMOVE' ]-->)<br />
             <!--[ foreachelse ]-->
             <!--[ pnml name='_PNFORUM_NOMODERATORSASSIGNED' ]--><br /><br />
             <!--[ /foreach ]-->
@@ -83,7 +79,7 @@
                         <label for="pop3_active"><!--[ pnml name='_PNFORUM_POP3ACTIVE' ]--></label>:
                     </div>
                     <div style="text-align:left; width: 40%; float: left;">
-                        <input type="checkbox" id="pop3_active" name="pop3_active" value="1" <!--[ $forum.pop3_active_checked ]-->/>
+                        <input type="checkbox" id="pop3_active" name="pop3_active" value="1" <!--[ $forum.pop3_active_checked ]--> />
                     </div>
                 </div>
                 <div style="height: 2em; padding: 2px;">
@@ -188,17 +184,17 @@
             <td valign="top"><!--[ pnml name='_PNFORUM_ACTIONS' ]-->:</td>
             <td align="left">
                 <!--[ if $forum.forum_id neq -1 ]-->
-                    <input type="radio" name="actiontype" value="Edit" checked="checked">&nbsp;<!--[ pnml name='_EDIT' ]-->&nbsp;
-                    <input type="radio" name="actiontype" value="Delete">&nbsp;<!--[ pnml name='_DELETE' ]-->
+                    <input type="radio" name="actiontype" value="Edit" checked="checked" />&nbsp;<!--[ pnml name='_EDIT' ]-->&nbsp;
+                    <input type="radio" name="actiontype" value="Delete" />&nbsp;<!--[ pnml name='_DELETE' ]-->
                 <!--[ else ]-->
-                    <input type="hidden" name="actiontype" value="Add"><!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]-->
+                    <input type="hidden" name="actiontype" value="Add" /><!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]-->
                 <!--[ /if ]-->
             </td>
         </tr>
         <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
             <td align="center" colspan="2">
-                    <input type="hidden" name="forum_id" value="<!--[ $forum.forum_id ]-->">
-                    <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
+                <input type="hidden" name="forum_id" value="<!--[ $forum.forum_id ]-->" />
+                <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
             </td>
         </tr>
     </table>

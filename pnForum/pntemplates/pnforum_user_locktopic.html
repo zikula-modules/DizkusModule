@@ -1,9 +1,5 @@
 <!--[*  $Id$  *]-->
 
-<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
-<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
-<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
-
 <!--[ include file='pnforum_user_header.html' ]-->
 <!--[* pndebug *]-->
 
@@ -17,16 +13,16 @@
     </legend>
 
     <form action="<!--[ pnmodurl modname=pnForum type=user func=topicadmin ]-->" method="post">
-    <input type="hidden" name="mode" value="<!--[ $mode ]-->">
-    <input type="hidden" name="topic" value="<!--[ $topic_id ]-->">
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->">
+    <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
+    <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
     <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: center;">
         <!--[ if $mode eq "lock" ]-->
             <!--[ pnml name='_PNFORUM_LOCKTOPIC_INFO' html=1 ]--><br />
-            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->">
+            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" />
         <!--[ else ]-->
             <!--[ pnml name='_PNFORUM_UNLOCKTOPIC_INFO' html=1 ]--><br />
-            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->">
+            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" />
         <!--[ /if ]-->
     </div>
     </form>

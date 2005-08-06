@@ -2,81 +2,77 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
-<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
-<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
-
 <fieldset>
     <legend style="font-weight: bold;">
         <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN' ]-->
     </legend>
 
-    <!--[* pndebug *]-->
+    <div class="pnfadminrow98" style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+        <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' html=1 ]-->
+    </div>
 
-    <table border="0" cellpadding="3" cellspacing="1" width="100%">
-        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-            <td align="center" colspan="6">
-                &nbsp;<br />
-                <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' ]-->
-            </td>
-        </tr>
-        <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-            <td align="center"><b><!--[ pnml name='_PNFORUM_USERNAME' ]--></b></td>
-            <td align="center"><b><!--[ pnml name='_PNFORUM_HONORARY_RANK' ]--></b></td>
-            <td align="center" colspan="2"><b><!--[ pnml name='_PNFORUM_ACTIONS' ]--></b></td>
-        </tr>
-        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="left">
-            <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
-            <td align="center">
-                <select name="user_id">
-                <!--[ foreach item=user from=$norankusers ]-->
-                <option value="<!--[ $user.user_id ]-->"><!--[ $user.pn_uname ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-            </td>
-            <td align="center">
-                <select name="rank_id">
-                <option value="0"><!--[ pnml name='_PNFORUM_NORANK' ]--></option>
-                <!--[ foreach item=rank from=$ranks ]-->
-                <option value="<!--[ $rank.rank_id ]-->"><!--[ $rank.rank_title ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-            </td>
-            <td colspan="2" align="center">
-                <input type="hidden" name="actiontype" value="Add">
-                <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->">
-            </td>
-            </form>
-        </tr>
-        <!--[ foreach item=user from=$rankusers ]-->
-        <tr bgcolor="<!--[ $bgcolor1 ]-->" align="center">
-            <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
-            <td bgcolor="<!--[ $bgcolor3 ]-->" >
-                <!--[ $user.pn_uname ]-->
-            </td>
-            <td>
-                <select name="rank_id">
-                <!--[ foreach item=rank from=$ranks ]-->
-                <option value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->selected="selected"<!--[ /if ]-->><!--[ $rank.rank_title ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-            </td>
-            <td>
-                <input type="hidden" name="user_id" value="<!--[ $user.user_id ]-->">
-                <input type="radio" name="actiontype" checked="checked" value="Update"><!--[ pnml name='_EDIT' ]--><br />
-                <input type="radio" name="actiontype" value="Delete"><!--[ pnml name='_DELETE' ]-->
-            </td>
-            <td>
-                <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->">
-            </td>
-            </form>
-        </tr>
-        <!--[ foreachelse ]-->
-        <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
-            <td colspan="7">
-                <!--[ pnml name='_PNFORUM_NOSPECIALRANKSINDATABASE' ]-->
-            </td>
-        </tr>
-        <!--[ /foreach ]-->
-    </table>
+    <div class="pnfadminrow98">
+        <div class="pnfadmincol33c">
+            <strong><!--[ pnml name='_PNFORUM_USERNAME' html=1 ]--></strong>
+        </div>
+        <div class="pnfadmincol33c">
+            <strong><!--[ pnml name='_PNFORUM_HONORARY_RANK' html=1 ]--></strong>
+        </div>
+        <div class="pnfadmincol33c">
+            <strong><!--[ pnml name='_PNFORUM_ACTIONS' html=1 ]--></strong>
+        </div>
+    </div>
+
+    <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
+    <div class="pnfadminrow98">
+        <div class="pnfadmincol33c">
+            <select name="user_id">
+            <!--[ foreach item=user from=$norankusers ]-->
+            <option value="<!--[ $user.user_id ]-->"><!--[ $user.pn_uname|pnvarprepfordisplay ]--></option>
+            <!--[ /foreach ]-->
+            </select>
+        </div>
+        <div class="pnfadmincol33c">
+            <select name="rank_id">
+            <option value="0"><!--[ pnml name='_PNFORUM_NORANK' ]--></option>
+            <!--[ foreach item=rank from=$ranks ]-->
+            <option value="<!--[ $rank.rank_id ]-->"><!--[ $rank.rank_title ]--></option>
+            <!--[ /foreach ]-->
+            </select>
+        </div>
+        <div class="pnfadmincol33c">
+            <input type="hidden" name="actiontype" value="Add" />
+            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->" />
+        </div>
+    </div>
+    </form>
+
+    <!--[ foreach item=user from=$rankusers ]-->
+    <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
+    <div class="pnfadminrow98">
+        <div class="pnfadmincol33c">
+            <!--[ $user.pn_uname|pnvarprepfordisplay ]-->
+        </div>
+        <div class="pnfadmincol33c">
+            <select name="rank_id">
+            <!--[ foreach item=rank from=$ranks ]-->
+            <option value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->selected="selected"<!--[ /if ]-->><!--[ $rank.rank_title ]--></option>
+            <!--[ /foreach ]-->
+            </select>
+        </div>
+        <div class="pnfadmincol16c">
+            <input type="hidden" name="user_id" value="<!--[ $user.user_id ]-->" />
+            <input type="radio" name="actiontype" checked="checked" value="Update" /><!--[ pnml name='_EDIT' ]--><br />
+            <input type="radio" name="actiontype" value="Delete" /><!--[ pnml name='_DELETE' ]-->
+        </div>
+        <div class="pnfadmincol16c">
+            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+        </div>
+    </div>
+    </form>
+    <!--[ foreachelse ]-->
+    <div class="pnfadminrow">
+        <!--[ pnml name='_PNFORUM_NOSPECIALRANKSINDATABASE' ]-->
+    </div>
+    <!--[ /foreach ]-->
 </fieldset>

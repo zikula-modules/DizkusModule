@@ -2,10 +2,6 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<!--[ pnthemegetvar name=bgcolor1 assign=bgcolor1  ]-->
-<!--[ pnthemegetvar name=bgcolor2 assign=bgcolor2  ]-->
-<!--[ pnthemegetvar name=bgcolor3 assign=bgcolor3  ]-->
-
 <!--[* pndebug *]-->
 
 <fieldset>
@@ -17,11 +13,11 @@
 <!--[ foreach key=currentrow item=cat from=$categories ]-->
 <div style="clear: both; with: 60%; padding: 3px;">
     <div style="float: left; width: 5%; text-align: center; background-color: <!--[ $bgcolor2 ]-->;">
-		<!--[ if $currentrow neq 0 ]--> 
-            <a href="<!--[ pnmodurl modname=pnForum type=admin func=reordercategories direction=up cat_id=$cat.cat_id cat_order=$cat.cat_order]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->"></a>
+		<!--[ if $currentrow neq 0 ]-->
+            <a href="<!--[ pnmodurl modname=pnForum type=admin func=reordercategories direction=up cat_id=$cat.cat_id cat_order=$cat.cat_order]-->"><img src="images/global/up.gif" alt="<!--[ pnml name='_PNFORUM_UP' ]-->" /></a>
 		<!--[ /if ]-->
 		<!--[ if $currentrow neq $total_categories-1 ]-->
-            <a href="<!--[ pnmodurl modname=pnForum type=admin func=reordercategories direction=down cat_id=$cat.cat_id cat_order=$cat.cat_order]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->"></a>
+            <a href="<!--[ pnmodurl modname=pnForum type=admin func=reordercategories direction=down cat_id=$cat.cat_id cat_order=$cat.cat_order]-->"><img src="images/global/down.gif" alt="<!--[ pnml name='_PNFORUM_DOWN' ]-->" /></a>
         <!--[ /if ]-->
     </div>
     <div style="float: left; width: 50%; background-color: <!--[ $bgcolor3 ]-->; padding-left: 10px;">
