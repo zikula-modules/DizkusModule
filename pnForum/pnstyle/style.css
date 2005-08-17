@@ -22,18 +22,22 @@ div.pnfadminrow98 {
     padding-bottom: 1em;
 }
 
-div.pnfadmincol49,  div.pnfadmincol33,  div.pnfadmincol24,  div.pnfadmincol22,  div.pnfadmincol16,  div.pnfadmincol12,
-div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
+div.pnfadmincol66,  div.pnfadmincol49,  div.pnfadmincol33,  div.pnfadmincol24,  div.pnfadmincol22,  div.pnfadmincol16,  div.pnfadmincol12,
+div.pnfadmincol66c, div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
     float: left;
 }
 
-div.pnfadmincol49, div.pnfadmincol33, div.pnfadmincol24, div.pnfadmincol22, div.pnfadmincol16, div.pnfadmincol12 {
+div.pnfadmincol66, div.pnfadmincol49, div.pnfadmincol33, div.pnfadmincol24, div.pnfadmincol22, div.pnfadmincol16, div.pnfadmincol12 {
     text-align: left;
 }
 
-div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
+div.pnfadmincol66c, div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
     text-align: center;
  }
+
+div.pnfadmincol66, div.pnfadmincol66c {
+    width: 66%;
+}
 
 div.pnfadmincol49, div.pnfadmincol49c {
     width: 49%;

@@ -201,7 +201,7 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'slimforum', "no");
         }
     }
-    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
 
 /**
@@ -245,7 +245,7 @@ function pnForum_admin_advancedpreferences()
         pnModSetVar('pnForum', 'fulltextindex', pnVarPrepForStore(pnVarCleanFromInput('fulltextindex')));
         pnModSetVar('pnForum', 'extendedsearch', pnVarPrepForStore(pnVarCleanFromInput('extendedsearch')));
     }
-    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
 
 /**
@@ -282,8 +282,7 @@ function pnForum_admin_syncforums()
 	if ($silent != 1) {
         pnSessionSetVar('statusmsg', $message);
 	}
-    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
-    return true;
+    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
 
 /**
@@ -341,7 +340,7 @@ function pnForum_admin_category()
                 break;
             default:
         }
-        pnRedirect(pnModUrl('pnForum', 'admin', 'main'));
+        return pnRedirect(pnModUrl('pnForum', 'admin', 'main'));
     }
 }
 
@@ -388,8 +387,6 @@ function pnForum_admin_forum()
         $pnr->caching = false;
         $pnr->add_core_data();
         $pnr->assign('forum', $forum);
-        $pnversionnum = _PN_VERSION_NUM;
-        $pnr->assign('minimum760', ($pnversionnum >= '0.7.6.0'));
         $pnr->assign('categories', pnModAPIFunc('pnForum', 'admin', 'readcategories'));
         $pnr->assign('moderators', $moderators);
         $pnr->assign('users', pnModAPIFunc('pnForum', 'admin', 'readusers',
@@ -514,8 +511,7 @@ function pnForum_admin_forum()
             return $pnr->fetch('pnforum_admin_pop3test.html');
         }
     }
-    pnRedirect(pnModURL('pnForum', 'admin', 'main'));
-    return true;
+    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
 
 /**
@@ -571,8 +567,7 @@ function pnForum_admin_ranks()
                                                             'max_posts' => $max_posts,
                                                             'image'     => $image));
     }
-    pnRedirect(pnModURL('pnForum','admin', 'ranks', array('ranktype' => $ranktype)));
-    return true;
+    return pnRedirect(pnModURL('pnForum','admin', 'ranks', array('ranktype' => $ranktype)));
 }
 
 /**
@@ -613,8 +608,7 @@ function pnForum_admin_assignranks()
                                                                   'rank_id'   => $rank_id,
                                                                   'user_id'   => $user_id));
     }
-    pnRedirect(pnModURL('pnForum','admin', 'assignranks'));
-    return true;
+    return pnRedirect(pnModURL('pnForum','admin', 'assignranks'));
 }
 
 /**
@@ -649,8 +643,7 @@ function pnForum_admin_reordercategories()
                            'cat_order' => $cat_order,
                            'direction' => $direction));
     }
-    pnRedirect(pnModURL('pnForum', 'admin', 'reordercategories'));
-    return true;
+    return pnRedirect(pnModURL('pnForum', 'admin', 'reordercategories'));
 }
 
 /**
