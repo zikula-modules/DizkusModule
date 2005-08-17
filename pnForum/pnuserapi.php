@@ -324,6 +324,9 @@ function pnForum_userapi_readcategorytree($args)
                     f.forum_desc,
                     f.forum_topics,
                     f.forum_posts,
+                    f.forum_last_post_id,
+                    t.topic_title,
+                    t.topic_replies,
                     u.pn_uname,
                     u.pn_uid,
                     p.topic_id,
@@ -331,13 +334,15 @@ function pnForum_userapi_readcategorytree($args)
             FROM ".$pntable['pnforum_categories']." AS c
             LEFT JOIN ".$pntable['pnforum_forums']." AS f ON f.cat_id=c.cat_id
             LEFT JOIN ".$pntable['pnforum_posts']." AS p ON p.post_id=f.forum_last_post_id
+            LEFT JOIN ".$pntable['pnforum_topics']." AS t ON t.topic_id=p.topic_id
             LEFT JOIN ".$pntable['users']." AS u ON u.pn_uid=p.poster_id
             ORDER BY c.cat_order, f.forum_order, f.forum_name";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    $folder_image = pnModGetVar('pnForum', 'folder_image');
+    $folder_image   = pnModGetVar('pnForum', 'folder_image');
     $newposts_image = pnModGetVar('pnForum', 'newposts_image');
+    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
 
     $tree = array();
     while(!$result->EOF) {
@@ -345,18 +350,21 @@ function pnForum_userapi_readcategorytree($args)
         $cat   = array();
         $forum = array();
         $cat['forums'] = array();
-        $cat['cat_id']         = $row['cat_id'];
-        $cat['cat_title']      = $row['cat_title'];
-        $cat['cat_order']      = $row['cat_order'];
-        $forum['forum_id']     = $row['forum_id'];
-        $forum['forum_name']   = $row['forum_name'];
-        $forum['forum_desc']   = $row['forum_desc'];
-        $forum['forum_topics'] = $row['forum_topics'];
-        $forum['forum_posts']  = $row['forum_posts'];
-        $forum['pn_uname']     = $row['pn_uname'];
-        $forum['pn_uid']       = $row['pn_uid'];
-        $forum['topic_id']     = $row['topic_id'];
-        $forum['post_time']    = $row['post_time'];
+        $cat['cat_id']                = $row['cat_id'];
+        $cat['cat_title']             = $row['cat_title'];
+        $cat['cat_order']             = $row['cat_order'];
+        $forum['forum_id']            = $row['forum_id'];
+        $forum['forum_name']          = $row['forum_name'];
+        $forum['forum_desc']          = $row['forum_desc'];
+        $forum['forum_topics']        = $row['forum_topics'];
+        $forum['forum_posts']         = $row['forum_posts'];
+        $forum['forum_last_post_id']  = $row['forum_last_post_id'];
+        $topic_title                  = $row['topic_title'];
+        $topic_replies                = $row['topic_replies'];
+        $forum['pn_uname']            = $row['pn_uname'];
+        $forum['pn_uid']              = $row['pn_uid'];
+        $forum['topic_id']            = $row['topic_id'];
+        $forum['post_time']           = $row['post_time'];
         if(allowedtoseecategoryandforum($cat['cat_id'], $forum['forum_id'])) {
             if(!array_key_exists( $cat['cat_title'], $tree)) {
                 $tree[$cat['cat_title']] = $cat;
@@ -386,10 +394,30 @@ function pnForum_userapi_readcategorytree($args)
                         $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
                         $last_post = $last_post." <a href=\"". pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). "\">"
                                                ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
+                        // new in 2.0.2 - no more preformattd output
+                        $last_post_data['name']     = $username;
+                        $last_post_data['subject']  = $topic_title;
+                        $last_post_data['time']     = $posted_ml;
+                        $last_post_data['unixtime'] = $posted_unixtime;
+                        $last_post_data['topic']    = $forum['topic_id'];
+                        $last_post_data['post']     = $forum['forum_last_post_id'];
+                        $last_post_data['url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                                    array('topic' => $forum['topic_id'],
+                                                                          'start' => (ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page));
+                        $last_post_data['url_anchor'] = $last_post_data['url'] . "#pid" . $forum['forum_last_post_id'];
                     } else {
                         // no posts in forum
                         $last_post = _PNFORUM_NOPOSTS;
+                        $last_post_data['name']       = '';
+                        $last_post_data['subject']    = '';
+                        $last_post_data['time']       = '';
+                        $last_post_data['unixtime']   = '';
+                        $last_post_data['topic']      = '';
+                        $last_post_data['post']       = '';
+                        $last_post_data['url']        = '';
+                        $last_post_data['url_anchor'] = '';
                     }
+                    $forum['last_post_data'] = $last_post_data;
                 } else {
                     // there are no posts in this forum
                     $fldr_img = $folder_image;
@@ -428,18 +456,37 @@ function pnForum_userapi_get_moderators($args)
 
     $sql = "SELECT u.pn_uname, u.pn_uid
             FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
-            WHERE f.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
-            AND u.pn_uid = f.user_id";
+            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
+            AND f.user_id<1000000";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $mods = array();
-    while(!$result->EOF) {
-        $row = $result->GetRowAssoc(false);
-        $mods[$row['pn_uid']] = $row['pn_uname'];
-        $result->MoveNext();
+    if($result->RecordCount()>0) {
+        for (; !$result->EOF; $result->MoveNext()){
+            list( $uname,
+                  $uid ) = $result->fields;
+            $mods[$uid] = $uname;
+        }
     }
     pnfCloseDB($result);
+
+    $sql = "SELECT g.pn_name, g.pn_gid
+            FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
+            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
+            AND f.user_id>1000000";
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    if($result->RecordCount()>0) {
+        for (; !$result->EOF; $result->MoveNext()) {
+            list( $gname,
+                  $gid ) = $result->fields;
+            $mods[$gid + 1000000] = $gname;
+        }
+    }
+    pnfCloseDB($result);
+
     return $mods;
 }
 

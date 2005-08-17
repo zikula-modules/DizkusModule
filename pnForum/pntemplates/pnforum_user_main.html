@@ -38,13 +38,13 @@
             </td>
             <td headers="col_1" style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
             <td headers="col_2" style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
-            <td headers="col_3" style="width:15%;text-align:center;" align="center" valign="middle"><!--[ $forum.last_post|pnvarprephtmldisplay ]--></td>
+            <td headers="col_3" style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pndate_format:datetimebrief ]--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|profilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_PNFORUM_NOPOSTS' ]--><!--[ /if ]--></td>
         </tr>
         <!--[ foreachelse ]-->
         <tr>
             <td headers="col_0" style="background-color:<!--[ $bgcolor1 ]-->;" width="2%">&nbsp;</td>
             <td headers="col_0" colspan="4" style="background-color:<!--[ $bgcolor1 ]-->;" align="left" valign="middle" width="2%">
-                <span style="padding-left: 5px;"><strong>kein Forum vorhanden</strong></span>
+                <span style="padding-left: 5px;"><strong><!--[ pnml name='_PNFORUM_NOFORUMS' ]--></strong></span>
             </td>
         </tr>
         <!--[ /foreach ]-->
