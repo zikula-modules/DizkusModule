@@ -31,9 +31,9 @@
  *@param $params['moderators'] array with key=userid, value=username of moderators
  *
  */
-function smarty_function_listforummods($params, &$smarty) 
+function smarty_function_listforummods($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
 
     $out = "";
@@ -41,7 +41,11 @@ function smarty_function_listforummods($params, &$smarty)
         if($count > 0) {
 	        $out .= ", ";
 	    }
-	    $out .= '<a href="user.php?op=userinfo&amp;uname='.pnVarPrepForDisplay($mod_name).'">'.pnVarPrepForDisplay($mod_name).'</a>';
+	    if($mod_id < 1000000) {
+	        $out .= '<a title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . pnVarPrepForDisplay($mod_name) . '" href="user.php?op=userinfo&amp;uname='.pnVarPrepForDisplay($mod_name).'">'.pnVarPrepForDisplay($mod_name).'</a>';
+	    } else {
+	        $out .= pnVarPrepForDisplay($mod_name);
+	    }
 	    $count++;
     }
     return $out;
