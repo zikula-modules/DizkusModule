@@ -91,8 +91,7 @@ function pnForum_user_main($args=array())
             if(count($tree)==1) {
                 foreach($tree as $catname=>$forumarray) {
                     if(count($forumarray['forums'])==1) {
-                        pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));
-                        return true;
+                        return pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));
                     }
                 }
             }
@@ -172,9 +171,8 @@ function pnForum_user_viewtopic($args=array())
         $topic_id = pnModAPIFunc('pnForum', 'user', 'get_previous_or_next_topic_id',
                                  array('topic_id' => $topic_id,
                                        'view'     => $view));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id)));
-        return true;
     }
     $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
                           array('topic_id'   => $topic_id,
@@ -231,7 +229,7 @@ function pnForum_user_reply($args=array())
      * if cancel is submitted move to forum-view
      */
     if(!empty($cancel)) {
-    	pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=> $topic_id)));
+    	return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=> $topic_id)));
     }
 
     $preview = (empty($preview)) ? false : true;
@@ -260,10 +258,9 @@ function pnForum_user_reply($args=array())
                                              'message'          => $message,
                                              'attach_signature' => $attach_signature,
                                              'subscribe_topic'  => $subscribe_topic));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id,
                                   'start' => $start)) . '#pid' . $post_id);
-        return true;
     } else {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
         $reply = pnModAPIFunc('pnForum', 'user', 'preparereply',
@@ -317,10 +314,11 @@ function pnForum_user_newtopic($args=array())
         									 'preview');
     }
 
+    $preview = (empty($preview)) ? false : true;
+
     //	if cancel is submitted move to forum-view
     if(!empty($cancel)) {
-        pnRedirect(pnModURL('pnForum','user', 'viewforum', array('forum'=>$forum_id)));
-        return true;
+        return pnRedirect(pnModURL('pnForum','user', 'viewforum', array('forum'=>$forum_id)));
     }
 
     if (empty($preview)) {
@@ -341,7 +339,7 @@ function pnForum_user_newtopic($args=array())
                                    'topic_start'=> (empty($subject) && empty($message)),
                                    'attach_signature' => $attach_signature,
                                    'subscribe_topic'  => $subscribe_topic));
-    if(isset($submit) && !isset($preview)) {
+    if($submit && $preview==false) {
         // sync the users, so that new pn users get into the pnForum
         // database
         pnModAPIFunc('pnForum', 'user', 'usersync');
@@ -359,16 +357,15 @@ function pnForum_user_newtopic($args=array())
                                        'message'          => $message,
                                        'attach_signature' => $attach_signature,
                                        'subscribe_topic'  => $subscribe_topic));
-    	pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+    	return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
     	                    array('topic' => pnVarPrepForStore($topic_id))));
-    	return true;
 
     } else {
         // new topic
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
         $pnr->add_core_data();
-        $pnr->assign( 'preview', (isset($preview)) ? true : false);
+        $pnr->assign( 'preview', $preview);
         $pnr->assign( 'newtopic', $newtopic);
         $pnr->assign( 'loggedin', pnUserLoggedIn());
         $pnr->assign( 'last_visit', $last_visit);
@@ -401,14 +398,11 @@ function pnForum_user_editpost($args=array())
                                               'preview');
     }
 
+    $preview = (empty($preview)) ? false : true;
+
     //	if cancel is submitted move to forum-view
     if(!empty($cancel)) {
-        pnRedirect(pnModURL('pnForum','user', 'viewtopic', array('topic'=>$topic_id)));
-        return true;
-    }
-
-    if (empty($preview)) {
-    	unset($preview);
+        return pnRedirect(pnModURL('pnForum','user', 'viewtopic', array('topic'=>$topic_id)));
     }
 
     if (empty($submit)) {
@@ -418,7 +412,7 @@ function pnForum_user_editpost($args=array())
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
-    if(isset($submit) && !isset($preview)) {
+    if($submit && !$preview) {
         //store the new topic
 
         $redirect = pnModAPIFunc('pnForum', 'user', 'updatepost',
@@ -426,8 +420,7 @@ function pnForum_user_editpost($args=array())
                                        'delete'   => $delete,
                                        'subject'  => $subject,
                                        'message'  => $message));
-    	pnRedirect($redirect);
-    	return true;
+    	return pnRedirect($redirect);
 
     } else {
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
@@ -442,7 +435,7 @@ function pnForum_user_editpost($args=array())
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
         $pnr->add_core_data();
-        $pnr->assign( 'preview', (isset($preview)) ? true : false);
+        $pnr->assign( 'preview', $preview);
         $pnr->assign( 'post', $post);
         $pnr->assign( 'loggedin', pnUserLoggedIn());
         $pnr->assign( 'last_visit', $last_visit);
@@ -503,8 +496,7 @@ function pnForum_user_topicadmin($args=array())
                 $templatename = "pnforum_user_viewip.html";
                 break;
             default:
-                pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
-                return true;
+                return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
         }
         return $pnr->fetch($templatename);
 
@@ -513,8 +505,7 @@ function pnForum_user_topicadmin($args=array())
             case "del":
             case "delete":
                 $forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
-                pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id)));
-                return true;
+                return pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id)));
                 break;
             case "move":
                 pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
@@ -533,12 +524,11 @@ function pnForum_user_topicadmin($args=array())
                 $to_topic_id = pnVarCleanFromInput('to_topic_id');
                 pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic_id' => $topic_id,
                                                                     'to_topic_id'   => $to_topic_id));
-                pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $to_topic_id)));
+                return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $to_topic_id)));
                 break;
             default:
         }
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
     }
 }
 
@@ -550,8 +540,7 @@ function pnForum_user_prefs($args=array())
 {
     $loggedin = pnUserLoggedIn();
     if(!$loggedin) {
-        pnRedirect(pnModURL('pnForum', 'user', 'main'));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'main'));
     }
 
     // get the input
@@ -635,8 +624,7 @@ function pnForum_user_prefs($args=array())
             $pnr->assign('tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('pnforum_user_prefs.html');
     }
-    pnRedirect(pnModURL('pnForum', 'user', $return_to, $params));
-    return true;
+    return pnRedirect(pnModURL('pnForum', 'user', $return_to, $params));
 }
 
 /**
@@ -682,8 +670,7 @@ function pnForum_user_emailtopic($args=array())
                      array('sendto_email' => $sendto_email,
                            'message'      => $message,
                            'topic_subject'=> $topic['topic_subject']));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)));
     } else {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
@@ -712,16 +699,16 @@ function pnForum_user_viewlatest($args=array())
         list($selorder, $nohours, $unanswered) = pnVarCleanFromInput('selorder', 'nohours', 'unanswered');
     }
 
-    if (!isset($selorder) || !is_numeric($selorder)) {
+    if(empty($selorder) || !is_numeric($selorder)) {
     	$selorder = 1;
     }
-    if (isset($nohours) && !is_numeric($nohours)) {
+    if(!empty($nohours) && !is_numeric($nohours)) {
     	unset($nohours);
     }
-    if (!isset($unanswered) || !is_numeric($unanswered)) {
+    if(empty($unanswered) || !is_numeric($unanswered)) {
     	$unanswered = 0;
     }
-    if (isset($nohours)) {
+    if(!empty($nohours)) {
     	$selorder = 5;
     }
 
@@ -781,8 +768,8 @@ function pnForum_user_splittopic($args=array())
         $post['topic_subject'] = $newsubject;
         $newtopic_id = pnModAPIFunc('pnForum', 'user', 'splittopic',
                                    array('post' => $post));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
-                            array('topic' => $newtopic_id)));
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+                                   array('topic' => $newtopic_id)));
 
     } else {
         $pnr =& new pnRender('pnForum');
@@ -818,8 +805,7 @@ function pnForum_user_print($args=array())
             return pnForum_user_viewtopic(array('topic' => $topic_id,
                                                 'start'   => 0));
         } else {
-            pnRedirect(pnModURL('pnForum', 'user', 'main'));
-            return true;
+            return pnRedirect(pnModURL('pnForum', 'user', 'main'));
         }
     } else {
         $pnr =& new pnRender('pnForum');
@@ -836,8 +822,7 @@ function pnForum_user_print($args=array())
             $pnr->assign('topic', $topic);
             $output = $pnr->fetch('pnforum_user_printtopic.html');
         } else {
-            pnRedirect(pnModURL('pnForum', 'user', 'main'));
-            return true;
+            return pnRedirect(pnModURL('pnForum', 'user', 'main'));
         }
         echo "<html>\n";
         echo "<head>\n";
@@ -897,7 +882,7 @@ function pnForum_user_search($args=array())
         $pnr->assign('forums', $forums);
         return $pnr->fetch('pnforum_user_search.html');
     } else {   // submit is set
-        if(!isset($vars['searchlimit']) || empty($vars['searchlimit'])) {
+        if(empty($vars['searchlimit'])) {
             $vars['searchlimit'] = 10;
         }
         if(!is_array($vars['searchforums']) || !is_array($vars['searchorder']) || ($vars['searchbool']<>"AND" && $vars['searchbool']<>"OR") ) {
@@ -983,9 +968,9 @@ function pnForum_user_movepost($args=array())
 		$post['old_topic'] = $topic['topic_id'];
         $start = pnModAPIFunc('pnForum', 'user', 'movepost', array('post'     => $post,
                                                                    'to_topic' => $to_topic));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $to_topic,
-                                                                  'start' => $start)) . "#pid" . $post['post_id']);
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+                                   array('topic' => $to_topic,
+                                         'start' => $start)) . "#pid" . $post['post_id']);
     } else {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
@@ -1040,8 +1025,7 @@ function pnForum_user_jointopics($args=array())
 		//$post['old_topic'] = $old_topic;
         $res = pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic' => $from_topic,
                                                                    'to_topic'   => $to_topic));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $res)));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $res)));
     }
 }
 
@@ -1087,9 +1071,8 @@ function pnForum_user_moderateforum($args=array())
         return $pnr->fetch($templatename);
 
     } else { // submit is set
-        pnfdebug('ids', $topic_ids);
-        pnRedirect("http://www.google.de");
-        return true;
+        //pnfdebug('ids', $topic_ids);
+        return pnRedirect("http://www.google.de");
     // Dann kommen die eigentlichen funktionen ....
     }
 }
@@ -1131,10 +1114,9 @@ function pnForum_user_report($args)
                            'comment' => $comment));
         $start = pnModAPIFunc('pnForum', 'user', 'get_page_from_topic_replies',
                               array('topic_replies' => $post['topic_replies']));
-        pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
-                            array('topic' => $post['topic_id'],
-                                  'start' => $start)));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+                                   array('topic' => $post['topic_id'],
+                                         'start' => $start)));
     }
 
 }
@@ -1176,8 +1158,7 @@ function pnForum_user_topicsubscriptions($args)
                                    'silent'   => true));
             }
         }
-        pnRedirect(pnModURL('pnForum', 'user', 'topicsubscriptions'));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'user', 'topicsubscriptions'));
     }
 }
 
