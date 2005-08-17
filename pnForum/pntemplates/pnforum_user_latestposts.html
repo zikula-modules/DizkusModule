@@ -2,19 +2,7 @@
 
 <!--[ include file=pnforum_user_header.html ]-->
 
-<!--[* pndebug *]-->
-
-<script type="text/javascript">
-<!--
-function func_name() {
-    document.latestposts.submit();
-}
-//-->
-</script>
-
-<div style="background: <!--[ $bgcolor2 ]-->; text-align: center;">
-    <h1><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</h1>
-</div>
+<h1 style="background: <!--[ $bgcolor2 ]-->; text-align: center;"><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</h1>
 <form name="latestposts" method="post" action="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->">
 <div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ]
@@ -28,9 +16,8 @@ function func_name() {
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ]
 </div>
 </form>
-<div style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;">
-    <h2><!--[ pnml name='_PNFORUM_FORUMS' ]--></h2>
-</div>
+
+<h2 style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_FORUMS' ]--></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
@@ -62,9 +49,7 @@ function func_name() {
     <!--[ /foreach ]-->
 </table>
 
-<div style="text-align: center; margin-top: 1.5em;">
-    <h2><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></h2>
-</div>
+<h2 style="text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
