@@ -120,6 +120,14 @@ function pnForum_admin_preferences()
         	$favorites_enabledonchecked = " ";
         	$favorites_enabledoffchecked = $checked;
         }
+        if (pnModGetVar('pnForum', 'hideusers') == "yes") {
+        	$hideusers_onchecked = $checked;
+        	$hideusers_offchecked = " ";
+        } else {
+        	$hideusers_onchecked = " ";
+        	$hideusers_offchecked = $checked;
+        }
+
         $pnr =& new pnRender("pnForum");
         $pnr->cachung = false;
         $pnr->add_core_data();
@@ -151,10 +159,13 @@ function pnForum_admin_preferences()
         $pnr->assign('m2f_enabledoffchecked', $m2f_enabledoffchecked);
         $pnr->assign('favorites_enabledonchecked', $favorites_enabledonchecked);
         $pnr->assign('favorites_enabledoffchecked', $favorites_enabledoffchecked);
+        $pnr->assign('hideusers_onchecked',  $hideusers_onchecked);
+        $pnr->assign('hideusers_offchecked', $hideusers_offchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'hideusers', pnVarPrepForStore(pnVarCleanFromInput('hideusers')));
             pnModSetVar('pnForum', 'favorites_enabled', pnVarPrepForStore(pnVarCleanFromInput('favorites_enabled')));
             pnModSetVar('pnForum', 'm2f_enabled', pnVarPrepForStore(pnVarCleanFromInput('m2f_enabled')));
             pnModSetVar('pnForum', 'autosubscribe', pnVarPrepForStore(pnVarCleanFromInput('autosubscribe')));
@@ -178,6 +189,7 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         }
         if($actiontype=="RestoreDefaults")  {
+            pnModSetVar('pnForum', 'hideusers', 'no');
             pnModSetVar('pnForum', 'favorites_enabled', 'yes');
             pnModSetVar('pnForum', 'm2f_enabled', 'yes');
             pnModSetVar('pnForum', 'autosubscribe', 'yes');
@@ -389,8 +401,14 @@ function pnForum_admin_forum()
         $pnr->assign('forum', $forum);
         $pnr->assign('categories', pnModAPIFunc('pnForum', 'admin', 'readcategories'));
         $pnr->assign('moderators', $moderators);
-        $pnr->assign('users', pnModAPIFunc('pnForum', 'admin', 'readusers',
-                                            array('moderators' => $moderators)));
+        $hideusers = pnModGetVar('pnForum', 'hideusers');
+        if($hideusers == 'no') {
+            $users = pnModAPIFunc('pnForum', 'admin', 'readusers',
+                                  array('moderators' => $moderators));
+        } else {
+            $users = array();
+        }
+        $pnr->assign('users', $users);
         $pnr->assign('groups', pnModAPIFunc('pnForum', 'admin', 'readgroups',
                                             array('moderators' => $moderators)));
         return $pnr->fetch("pnforum_admin_forum.html");

@@ -42,6 +42,8 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_PREFS_HIDEUSERSINFORUMADMIN', 'Hide users in forum admin');
+define('_PNFORUM_UNKNOWNUSER', '**unknown user**');
 define('_PNFORUM_MANAGETOPICSUBSCRIPTIONS_HINT', 'Here you can manage your topic subscriptions.');
 define('_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND', 'no topic subscriptions found');
 define('_PNFORUM_MANAGETOPICSUBSCRIPTIONS', 'Manage topic subscriptions');

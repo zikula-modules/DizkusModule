@@ -222,7 +222,7 @@ function pnForum_adminapi_deletecategory($args)
         if(is_array($forums) && count($forums)>0) {
             foreach($forums as $forum) {
                 // remove all forums in this category
-                pnModAPIFunc('pnForum', 'user', 'deleteforum',
+                pnModAPIFunc('pnForum', 'admin', 'deleteforum',
                              array('forum_id' => $forum['forum_id'],
                                    'ok'       => 1));
             }  //foreach forum

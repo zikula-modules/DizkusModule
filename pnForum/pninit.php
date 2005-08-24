@@ -245,6 +245,7 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'post_sort_order', "ASC");
 	pnModSetVar('pnForum', 'log_ip', "yes");
 	pnModSetVar('pnForum', 'slimforum', "no");
+	pnModSetVar('pnForum', 'hideusers', "no");
 
     // Initialisation successful
     return true;
@@ -563,6 +564,7 @@ function pnForum_upgrade_to_2_0_2($createindex=true)
     pnModSetVar('pnForum', 'extendedsearch', 'no');
     pnModSetVar('pnForum', 'm2f_enabled', 'yes');
     pnModSetVar('pnForum', 'favorites_enabled', 'yes');
+	pnModSetVar('pnForum', 'hideusers', "no");
 
     // set a session to indicate that the upgrade is done
     pnSessionSetVar('upgrade_to_202_done', 1);
