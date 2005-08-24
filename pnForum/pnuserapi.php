@@ -56,10 +56,15 @@ function pnForum_userapi_get_userdata_from_id($args)
     extract($args);
     unset($args);
 
+    $makedummy = false;
     // get the core user data
     $userdata = pnUserGetVars($userid);
     if($userdata==false) {
-        return showforumerror("" . _PNFORUM_NOUSER_OR_POST . "(user id: $userid)", __FILE__, __LINE__);
+        //return showforumerror("" . _PNFORUM_NOUSER_OR_POST . "(user id: $userid)", __FILE__, __LINE__);
+        // create a dummy user basing on Anonymous
+        // necessary for some socks :-)
+        $userdata = pnUserGetVars(1);
+        $makedummy = true;
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
@@ -150,6 +155,21 @@ function pnForum_userapi_get_userdata_from_id($args)
             // user is anonymous
             $userdata['pn_uname'] = pnConfigGetVar('anonymous');
         }
+    }
+
+    if($makedummy == true) {
+        // we create a dummy user, so we need to adjust some of the information
+        // gathered so far
+        $userdata['pn_name']   = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['pn_uname']  = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['pn_email']  = '';
+        $userdata['pn_femail'] = '';
+        $userdata['pn_url']    = '';
+        $userdata['name']      = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['uname']     = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['email']     = '';
+        $userdata['femail']    = '';
+        $userdata['url']       = '';
     }
     return $userdata;
 }
