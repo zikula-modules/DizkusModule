@@ -1151,11 +1151,13 @@ function pnForum_user_topicsubscriptions($args)
         if(!pnSecConfirmAuthKey()) {
             return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
         }
-        foreach($subscriptions as $subscription) {
-            if(!array_key_exists($subscription['topic_id'], $topic_id)) {
-                pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
-                             array('topic_id' => $subscription['topic_id'],
-                                   'silent'   => true));
+        if(is_array($topic_id)) {
+            foreach($subscriptions as $subscription) {
+                if(!array_key_exists($subscription['topic_id'], $topic_id)) {
+                    pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
+                                 array('topic_id' => $subscription['topic_id'],
+                                       'silent'   => true));
+                }
             }
         }
         return pnRedirect(pnModURL('pnForum', 'user', 'topicsubscriptions'));

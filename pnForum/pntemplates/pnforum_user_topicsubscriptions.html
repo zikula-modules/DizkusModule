@@ -2,9 +2,41 @@
 
 <!--[ include file=pnforum_user_header.html ]-->
 
+<script type="text/javascript">
+    <!--
+    function CheckAll() {
+      for (var i=0;i<document.tsubscriptions.elements.length;i++) {
+        var e = document.tsubscriptions.elements[i];
+        if ((e.name != 'allbox') && (e.type=='checkbox'))
+        e.checked = document.tsubscriptions.allbox.checked;
+      }
+    }
+
+    function CheckCheckAll() {
+      var TotalBoxes = 0;
+      var TotalOn = 0;
+      for (var i=0;i<document.tsubscriptions.elements.length;i++) {
+        var e = document.tsubscriptions.elements[i];
+        if ((e.name != 'allbox') && (e.type=='checkbox')) {
+          TotalBoxes++;
+          if (e.checked) {
+            TotalOn++;
+          }
+        }
+      }
+      if (TotalBoxes==TotalOn) {
+        document.tsubscriptions.allbox.checked=true;
+      } else {
+        document.tsubscriptions.allbox.checked=false;
+      }
+    }
+
+    -->
+</script>
 <h1><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS_HINT' ]--></h1>
-<form action="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" method="post">
+<form name="tsubscriptions" action="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" method="post">
 <div>
+    <label for="allbox"><!--[pnml name=_PNFORUM_TOGGLEALL]--></label><input name="allbox" id="allbox" onclick="CheckAll();" type="checkbox" value="1" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
     <table style="width: 99%; padding: 0; margin: 0, border-collapse: collapse;">
         <thead>
@@ -16,7 +48,7 @@
                     <!--[ pnml name='_PNFORUM_POSTER' ]-->
                 </th>
                 <th>
-                    <!--[ pnml name='_PNFORUM_ACTIONS' ]-->
+                    <!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]-->
                 </th>
             </tr>
         </thead>
@@ -30,7 +62,7 @@
                     <!--[ $subscription.poster_name|profilelink ]-->
                 </td>
                 <td style="width: 10%; text-align: center;">
-                    <input type="checkbox" name="topic_id[<!--[ $subscription.topic_id ]-->]" checked="checked" value="1" />
+                    <input type="checkbox" onclick="CheckCheckAll();" name="topic_id[]" value="<!--[ $subscription.topic_id ]-->" />
                 </td>
             </tr>
             <!--[ foreachelse ]-->
