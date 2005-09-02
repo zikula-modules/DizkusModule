@@ -1202,14 +1202,13 @@ function pnForum_userapi_storereply($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
-    pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
-
     // get the last topic page
     $start = pnForum_userapi_get_last_topic_page(array('topic_id' => $topic_id));
 
-//$time_end = microtime_float();
-//$time = $time_end - $time_start;
-//pnfdebug('time for readtopic', $time);
+    // Let any hooks know that we have created a new item.
+    pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
+
+    pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
 
     return array($start, $this_post);
 }
@@ -1478,6 +1477,9 @@ function pnForum_userapi_storenewtopic($args)
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
+
+        // Let any hooks know that we have created a new item.
+        pnModCallHooks('item', 'create', $post_id, array('module' => 'pnForum'));
     }
 
     if(pnUserLoggedin()) {
@@ -1505,6 +1507,7 @@ function pnForum_userapi_storenewtopic($args)
 
     //  notify for newtopic
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'0'));
+
 
     // delete temporary session var
     pnSessionDelVar('topic_started');
@@ -1757,6 +1760,9 @@ function pnForum_userapi_updatepost($args)
                 pnfCloseDB($result);
             }
         }
+        // Let any hooks know that we have updated an item.
+        pnModCallHooks('item', 'update', $post_id, array('module' => 'pnForum'));
+
         // update done, return now
         return pnModURL('pnForum', 'user', 'viewtopic',
                         array('topic' => $topic_id /*,
@@ -1779,6 +1785,10 @@ function pnForum_userapi_updatepost($args)
                 WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
+
+        // Let any hooks know that we have deleted an item.
+        pnModCallHooks('item', 'delete', $post_id, array('module' => 'pnForum'));
+
         //
         // there are several possibilities now:
         // #1 we deleted the last posting in the thread, but their are still others.
@@ -1863,6 +1873,9 @@ function pnForum_userapi_updatepost($args)
                         WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
                 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
+
+                // Let any hooks know that we have deleted an item (topic).
+                pnModCallHooks('item', 'delete', $topic_id, array('module' => 'pnForum'));
 
                 //
                 // ready to return
@@ -2418,8 +2431,12 @@ function pnForum_userapi_notify_by_email($args)
     }
     $subject .= "$category_name :: $forum_name :: $topic_subject";
 
+    // we do not wnat to notif the sender = the recent user
+    $thisuser = pnUserGetVar('uid');
+
     //  get list of forum subscribers with non-empty emails
-    $sql = "SELECT DISTINCT u.pn_email,
+    $sql = "SELECT DISTINCT u.pn_uid,
+                            u.pn_email,
                             u.pn_name,
                             u.pn_uname
             FROM " . $pntable['users'] . " as u,
@@ -2434,18 +2451,22 @@ function pnForum_userapi_notify_by_email($args)
     // we create an array of recipients here
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_email, $pn_name, $pn_uname) = $result->fields;
-            if(!empty($pn_name)) {
-                $recipients[$pn_email] = $pn_name;
-            } else {
-                $recipients[$pn_email] = $pn_uname;
+            list($pn_uid, $pn_email, $pn_name, $pn_uname) = $result->fields;
+            // exclude the recent user from getting an email
+            if($pn_uid <> $thisuser) {
+                if(!empty($pn_name)) {
+                    $recipients[$pn_email] = $pn_name;
+                } else {
+                    $recipients[$pn_email] = $pn_uname;
+                }
             }
         }
     }
     pnfCloseDB($result);
 
     //  get list of topic_subscribers with non-empty emails
-    $sql = "SELECT DISTINCT u.pn_email,
+    $sql = "SELECT DISTINCT u.pn_uid,
+                            u.pn_email,
                             u.pn_name,
                             u.pn_uname
             FROM " . $pntable['users'] . " as u,
@@ -2457,11 +2478,14 @@ function pnForum_userapi_notify_by_email($args)
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_email, $pn_name, $pn_uname) = $result->fields;
-            if(!empty($pn_name)) {
-                $recipients[$pn_email] = $pn_name;
-            } else {
-                $recipients[$pn_email] = $pn_uname;
+            list($pn_uid, $pn_email, $pn_name, $pn_uname) = $result->fields;
+            // exclude the recent user from getting an email
+            if($pn_uid <> $thisuser) {
+                if(!empty($pn_name)) {
+                    $recipients[$pn_email] = $pn_name;
+                } else {
+                    $recipients[$pn_email] = $pn_uname;
+                }
             }
         }
     }
@@ -2472,7 +2496,7 @@ function pnForum_userapi_notify_by_email($args)
     $message = _PNFORUM_NOTIFYBODY1 . ' '. $sitename . "\n"
             . "$category_name :: $forum_name ::.. $topic_subject\n\n"
             . "$poster_name ".pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2)." $topic_time_ml\n"
-            . "---------------------------------------------------------------------\n"
+            . "---------------------------------------------------------------------\n\n"
             . "".pnVarCensor(strip_tags($post_message))."\n"
             . "---------------------------------------------------------------------\n\n"
             . _PNFORUM_NOTIFYBODY3."\n"
