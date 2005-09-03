@@ -18,6 +18,13 @@ Important changes:
 - new option to turn off the favorites system
 - easier topic subscription management for the user
 - easier forum moderation (credits to Thomas Pawlitzki for this improvement)
+- finding the correct images for topics, new topics, hot topics and hot new topics (viewforum)
+  is not longer done in program code but is now part of the template logic. There are two new fields in
+  the topic array: new_posts and hot_topic, see the pnforum_user_viewforum.html template for more
+  information. Custom templates might need some adjustments.
+  The fields image, altimage and image_attr are obsolete now and have been removed!!
+- the same is valid for the image in the main pnForum view, new field $forum.new_posts
+  removed: fldr_img, fldr_img_attr, fldr_alt
 
 ---------------------------------------------------------------------------------------------
 2.0.1 (fs)

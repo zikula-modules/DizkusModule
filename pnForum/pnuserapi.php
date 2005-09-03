@@ -360,8 +360,6 @@ function pnForum_userapi_readcategorytree($args)
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    $folder_image   = pnModGetVar('pnForum', 'folder_image');
-    $newposts_image = pnModGetVar('pnForum', 'newposts_image');
     $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
 
     $tree = array();
@@ -393,13 +391,11 @@ function pnForum_userapi_readcategorytree($args)
                 if ($forum['forum_topics'] != 0) {
                     // are there new topics since last_visit?
                     if ($forum['post_time'] > $last_visit) {
+                        $forum['new_posts'] = true;
                         // we have new posts
-                        $fldr_img = $newposts_image;
-                        $fldr_alt = _PNFORUM_NEWPOSTS;
                     } else {
                         // no new posts
-                        $fldr_img = $folder_image;
-                        $fldr_alt = _PNFORUM_NONEWPOSTS;
+                        $forum['new_posts'] = false;
                     }
 
                     $posted_unixtime= strtotime ($forum['post_time']);
@@ -440,13 +436,9 @@ function pnForum_userapi_readcategorytree($args)
                     $forum['last_post_data'] = $last_post_data;
                 } else {
                     // there are no posts in this forum
-                    $fldr_img = $folder_image;
-                    $fldr_alt = _PNFORUM_NONEWPOSTS;
+                    $forum['new_posts']= false;
                     $last_post = _PNFORUM_NOPOSTS;
                 }
-                $forum['fldr_img']  = $fldr_img;
-                $forum['fldr_img_attr'] =  getimagesize($fldr_img);
-                $forum['fldr_alt']  = $fldr_alt;
                 $forum['last_post'] = $last_post;
                 $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
 
@@ -575,10 +567,6 @@ function pnForum_userapi_readforum($args)
     $posts_per_page     = pnModGetVar('pnForum', 'posts_per_page');
     $topics_per_page    = pnModGetVar('pnForum', 'topics_per_page');
     $hot_threshold      = pnModGetVar('pnForum', 'hot_threshold');
-    $folder_image       = pnModGetVar('pnForum', 'folder_image');
-    $hot_folder_image   = pnModGetVar('pnForum', 'hot_folder_image');
-    $newposts_image     = pnModGetVar('pnForum', 'newposts_image');
-    $hot_newposts_image = pnModGetVar('pnForum', 'hot_newposts_image');
     $posticon           = pnModGetVar('pnForum', 'posticon');
     $firstnew_image     = pnModGetVar('pnForum', 'firstnew_image');
     $post_sort_order    = pnModAPIFunc('pnForum','user','get_user_post_order');
@@ -630,31 +618,25 @@ function pnForum_userapi_readforum($args)
 
         if($topic['topic_replies'] >= $hot_threshold) {
             // topic is hot
+            $topic['hot_topic'] = true;
             if($topic['post_time'] < $last_visit) {
                 // topic has no new posts
-                $image = $hot_folder_image;
-                $altimage = "hot_folder_image";
+                $topic['new_posts'] = false;
             } else {
                 // topic has new posts
-                $image = $hot_newposts_image;
-                $altimage = "hot_newposts_image";
+                $topic['new_posts'] = true;
             }
         } else {
             // topic is normal
+            $topic['hot_topic'] = false;
             if($topic['post_time'] < $last_visit) {
                 // topic has no new posts
-                $image = $folder_image;
-                $altimage = "folder_image";
+                $topic['new_posts'] = false;
             } else {
                 // topic has new posts
-                $image = $newposts_image;
-                $altimage = "newposts_image";
+                $topic['new_posts'] = true;
             }
         }
-
-        $topic['image'] = $image;
-        $topic['altimage'] = $altimage;
-        $topic['image_attr'] = getimagesize($image);
 
         // pagination
         $pagination = "";

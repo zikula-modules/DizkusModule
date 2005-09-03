@@ -30,7 +30,11 @@
         <!--[ foreach item=forum from=$category.forums ]-->
          <tr align="left" valign="top" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.background='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.background='<!--[ $bgcolor1 ]-->'">
             <td headers="col_0" align="center" valign="middle" style="width:2%;">
-                <img src="<!--[ $forum.fldr_img ]-->" alt="<!--[ $forum.fldr_alt ]-->" width="<!--[ $forum.fldr_img_attr.0 ]-->" height="<!--[ $forum.fldr_img_attr.1 ]-->" /></td>
+                <!--[ if $forum.new_posts eq 1 ]-->
+                    <!--[ pnimg src='red_folder.gif' alt='_PNFORUM_NEWPOSTS' altml=true ]-->
+                <!--[ else ]-->
+                    <!--[ pnimg src='folder.gif' alt='_PNFORUM_NONEWPOSTS' altml=true ]-->
+                <!--[ /if ]-->
             <td headers="col_0">
                 <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]-->
                 <br /><!--[ $forum.forum_desc ]-->

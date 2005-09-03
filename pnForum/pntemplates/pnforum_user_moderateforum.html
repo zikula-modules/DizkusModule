@@ -51,14 +51,28 @@
         <!--[ if $topic.sticky eq 1 ]-->
 			<!--[ if $stickyControlStart eq 1]-->
 			    <tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-				<td headers="col_0" style="width:5%;"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
+				    <td headers="col_0" style="width:5%;">
+				        <!--[ if $topic.new_posts eq 1 ]-->
+    				        <!--[ pnimg src="stickynew.gif" alt="_PNFORUM_STICKY" altml=true ]-->
+				        <!--[ else ]-->
+    				        <!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]-->
+				        <!--[ /if ]-->
+				    </td>
 			<!--[ else ]-->
 				<tr style="background-color:<!--[ $bgcolor2 ]-->;">
-				<td colspan="7" style="vertical-align: bottom;width:5%;"><strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong></td>
+				    <td colspan="7" style="vertical-align: bottom;width:5%;">
+				        <strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong>
+				    </td>
 				</tr>
 
 				<tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-				<td headers="col_0" style="width:5%;"><!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]--></td>
+				    <td headers="col_0" style="width:5%;">
+				        <!--[ if $topic.new_posts eq 1 ]-->
+    				        <!--[ pnimg src="stickynew.gif" alt="_PNFORUM_STICKY" altml=true ]-->
+				        <!--[ else ]-->
+    				        <!--[ pnimg src="sticky.gif" alt="_PNFORUM_STICKY" altml=true ]-->
+				        <!--[ /if ]-->
+				    </td>
 
 
 				<!--[ assign var="stickyControlStart" value="1" ]-->
@@ -69,7 +83,19 @@
 		  	    <!--[ if $topic.topic_status eq 1 ]-->
 		  	        <!--[ pnimg src="lock.gif" alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
 		  	    <!--[ else ]-->
-		  	        <img src="<!--[ $topic.image ]-->" alt="<!--[ $topic.altimage ]-->" width="<!--[ $topic.image_attr.0 ]-->" height="<!--[ $topic.image_attr.1 ]-->" /></td>
+		  	        <!--[ if $topic.hot_topic eq 1 ]-->
+    		  	        <!--[ if $topic.new_posts eq 1 ]-->
+		  	                <!--[ pnimg src="hot_red_folder.gif" alt="_PNFORUM_HOTNEWTOPIC" altml=true ]-->
+	    	  	        <!--[ else ]-->
+		  	                <!--[ pnimg src="hot_folder.gif" alt="_PNFORUM_HOTTOPIC" altml=true ]-->
+                        <!--[ /if ]-->
+		  	        <!--[ else ]-->
+    		  	        <!--[ if $topicnew_posts eq 1 ]-->
+		  	        <!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NORMALTOPIC" altml=true ]-->
+    		  	        <!--[ else ]-->
+		  	        <!--[ pnimg src="folder.gif" alt="_PNFORUM_NORMALNEWTOPIC" altml=true ]-->
+                        <!--[ /if ]-->
+                    <!--[ /if ]-->
                 <!--[ /if ]-->
         <!--[ /if ]-->
         <td headers="col_0" style="text-align:left;">
