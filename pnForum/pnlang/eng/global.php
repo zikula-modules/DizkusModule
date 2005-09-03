@@ -42,6 +42,15 @@
  ***********************************************************************/
 
 define('_PNFORUM_MODERATE','Moderate');
+define('_PNFORUM_SELECTED','Selection');
+define('_PNFORUM_STICKYTOPICS','Make selected topics sticky');
+define('_PNFORUM_UNSTICKYTOPICS','Make selected topics unsticky');
+define('_PNFORUM_LOCKTOPICS','Lock selected topics');
+define('_PNFORUM_UNLOCKTOPICS','Open selected topics');
+define('_PNFORUM_DELETETOPICS','Delete selected topics');
+define('_PNFORUM_MOVETOPICS','Move selected topics');
+define('_PNFORUM_MODERATE_MOVETOPICS_HINT','Choose target forum for moving topics:');
+define('_PNFORUM_SUBMIT_HINT','BEWARE: pnForum will not ask you for any confirmation! Clicking on Submit will immediately start the selected action!');
 
 // new
 define('_PNFORUM_TOGGLEALL', 'Remove all topic subscriptions');
