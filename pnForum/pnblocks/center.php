@@ -36,7 +36,7 @@
  * @author Andreas Krapohl, Frank Schummertz
  * @copyright 2003 by Andreas Krapohl, Frank Schummertz
  * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
@@ -69,12 +69,12 @@ function pnForum_centerblock_info()
 
 /**
  * display the center block
- */ 
+ */
 function pnForum_centerblock_display($row)
 {
     //check for Permission
 	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_READ)){
-	    return; 
+	    return;
 	}
 
     // Break out options from our content field
@@ -84,13 +84,13 @@ function pnForum_centerblock_display($row)
     if(empty($vars['cb_template'])) {
         $vars['cb_template'] = "pnforum_centerblock_display.html";
     }
-    $params = explode(" ", $vars['cb_parameters']);
+    $params = explode(",", $vars['cb_parameters']);
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     if(is_array($params) && count($params)>0) {
         foreach($params as $param) {
             $paramdata = explode("=", $param);
-            $pnr->assign($paramdata[0], $paramdata[1]);
+            $pnr->assign(trim($paramdata[0]), trim($paramdata[1]));
         }
     }
     $row['content'] = $pnr->fetch($vars['cb_template']);
@@ -103,7 +103,7 @@ function pnForum_centerblock_display($row)
 function pnForum_centerblock_update($row)
 {
 	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
-	    return false; 
+	    return false;
 	}
     list($cb_template,
          $cb_parameters) = pnVarCleanFromInput('cb_template',
@@ -111,19 +111,19 @@ function pnForum_centerblock_update($row)
 
     if(empty($cb_parameters)) { $cb_parameters = ""; }
     if(empty($cb_template))   { $cb_template = "pnforum_centerblock_display.html"; }
-    
+
     $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
     return($row);
-} 
+}
 
 
 /**
  * Modify the block
  */
 function pnForum_centerblock_modify($row)
-{ 
+{
 	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
-	    return false; 
+	    return false;
 	}
 
     // Break out options from our content field
@@ -133,6 +133,6 @@ function pnForum_centerblock_modify($row)
     $pnRender->caching = false;
     $pnRender->assign('vars', $vars);
     return $pnRender->fetch('pnforum_centerblock_config.html');
-} 
+}
 
 ?>

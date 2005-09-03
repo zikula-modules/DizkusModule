@@ -73,10 +73,24 @@ function pnForum_statisticsblock_display($row)
     //check for Permission
     if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ return; }
 
-    $pnr = & new pnRender('pnForum');
+    // Break out options from our content field
+    $vars = pnBlockVarsFromContent($row['content']);
+
+    // check if cb_template is set, if not, use the default centerblock template
+    if(empty($vars['sb_template'])) {
+        $vars['sb_template'] = "pnforum_statisticsblock_display.html";
+    }
+    $params = explode(",", $vars['sb_parameters']);
+    $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
-    $row['content'] = $pnr->fetch('pnforum_statisticsblock_display.html');
-    return themesideblock($row);
+    if(is_array($params) && count($params)>0) {
+        foreach($params as $param) {
+            $paramdata = explode("=", $param);
+            $pnr->assign(trim($paramdata[0]), trim($paramdata[1]));
+        }
+    }
+    $row['content'] = $pnr->fetch($vars['sb_template']);
+	return themesideblock($row);
 }
 
 /**
