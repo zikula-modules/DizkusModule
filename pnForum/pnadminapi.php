@@ -1199,6 +1199,11 @@ function pnForum_adminapi_addforum($args)
                     'neworder'    => $forum_order,
                     'oldorder'    => $highest));
     }
+
+    // Let any hooks know that we have created a new item.
+    pnModCallHooks('item', 'create', $forum, array('module' => 'pnForum',
+                                                   'forum_id' => $forum));
+
     return $forum;
 }
 
