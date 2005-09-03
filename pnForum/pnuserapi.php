@@ -581,12 +581,16 @@ function pnForum_userapi_readforum($args)
     $hot_newposts_image = pnModGetVar('pnForum', 'hot_newposts_image');
     $posticon           = pnModGetVar('pnForum', 'posticon');
     $firstnew_image     = pnModGetVar('pnForum', 'firstnew_image');
+    $post_sort_order    = pnModAPIFunc('pnForum','user','get_user_post_order');
 
     // read moderators
     $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
     $forum['last_visit'] = $last_visit;
 
     $forum['topic_start'] = (!empty ($start)) ? $start : 0;
+
+    // if user can moderate Forum, set a flag
+    $forum['access_moderate'] = allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id']);
 
     // forum_pager is obsolete, inform the user about this
     $forum['forum_pager'] = 'deprecated data field $forum.forum_pager used, please update your template using the forumpager plugin';
@@ -607,7 +611,6 @@ function pnForum_userapi_readforum($args)
             LEFT JOIN ".$pntable['users']." AS u2 ON p.poster_id = u2.pn_uid
             WHERE t.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
             ORDER BY t.sticky DESC, p.post_time DESC";
-//            ORDER BY t.sticky DESC, topic_time DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
     $forum['forum_id'] = $forum_id;
@@ -616,8 +619,10 @@ function pnForum_userapi_readforum($args)
         $topic = array();
         $topic = $result->GetRowAssoc(false);
         //$topic = $row;
+
         if ($topic['last_poster'] == "Anonymous") {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
         if ($topic['pn_uname'] == "Anonymous") {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
+        $topic['total_posts'] = $topic['topic_replies'] + 1;
 
         $topic['post_time_unix'] = strtotime ($topic['post_time']);
         $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
@@ -655,6 +660,21 @@ function pnForum_userapi_readforum($args)
         $pagination = "";
         $lastpage=0;
         if($topic['topic_replies']+1 > $posts_per_page) {
+
+            if ($post_sort_order == "ASC") {
+                $hc_dlink_times = 0;
+                if (($topic['topic_replies']+1-$posts_per_page)>= 0) {
+                    $hc_dlink_times = 0;
+                    for ($x = 0; $x < $topic['topic_replies']+1-$posts_per_page; $x+= $posts_per_page) {
+                        $hc_dlink_times++;
+                    }
+                }
+                $topic['last_page_start'] = $hc_dlink_times*$posts_per_page;
+            } else {
+                // latest topic is on top anyway...
+                $topic['last_page_start'] = 0;
+            }
+
             $pagination .= "&nbsp;&nbsp;&nbsp;<span class=\"pn-sub\">(".pnVarPrepForDisplay(_PNFORUM_GOTOPAGE)."&nbsp;";
             $pagenr = 1;
             $skippages = 0;
@@ -687,6 +707,8 @@ function pnForum_userapi_readforum($args)
         // we now create the url to the last post in the thread. This might
         // on site 1, 2 or what ever in the thread, depending on topic_replies
         // count and the posts_per_page setting
+
+        // we keep this for backwardscompatibility
         $topic['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                            array('topic' => $topic['topic_id'],
                                                  'start' => (ceil(($topic['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
@@ -720,9 +742,9 @@ function pnForum_userapi_readtopic($args)
     extract($args);
     unset($args);
 
-    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+    $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
     $topics_per_page = pnModGetVar('pnForum', 'topics_per_page');
-    $posticon = pnModGetVar('pnForum', 'posticon');
+    $posticon        = pnModGetVar('pnForum', 'posticon');
     $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order');
 
     $complete = (isset($complete)) ? $complete : false;
@@ -1206,7 +1228,9 @@ function pnForum_userapi_storereply($args)
     $start = pnForum_userapi_get_last_topic_page(array('topic_id' => $topic_id));
 
     // Let any hooks know that we have created a new item.
-    pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
+    pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum',
+                                                       'topic_id' => $topic_id,
+                                                       'post_id' => $this_post));
 
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
 
@@ -1479,7 +1503,8 @@ function pnForum_userapi_storenewtopic($args)
         pnfCloseDB($result);
 
         // Let any hooks know that we have created a new item.
-        pnModCallHooks('item', 'create', $post_id, array('module' => 'pnForum'));
+        pnModCallHooks('item', 'create', $post_id, array('module' => 'pnForum',
+                                                         'topic_id' => $topic_id));
     }
 
     if(pnUserLoggedin()) {
@@ -1660,13 +1685,6 @@ function pnForum_userapi_updatepost($args)
 {
     extract($args);
     unset($args);
-
-    /**
-     * Confirm authorisation code
-     */
-    if (!pnSecConfirmAuthKey()) {
-        return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
-    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -2203,6 +2221,7 @@ function pnForum_userapi_readuserforums($args)
  *
  *@params $args['topic_id'] int the topics id
  *@params $args['forum_id'] int the destination forums id
+ *@params $args['shadow']   boolean true = create shadow topic
  *@returns void
  */
 function pnForum_userapi_movetopic($args)
@@ -2863,10 +2882,6 @@ function pnForum_userapi_emailtopic($args)
     extract($args);
     unset($args);
 
-    if (!pnSecConfirmAuthKey()) {
-        return showforumerror(_PNFORUM_BADAUTHKEY, __FILE__, __LINE__);
-    }
-
     $sender_name = pnUserGetVar('uname');
     $sender_email = pnUserGetVar('email');
     if (!pnUserLoggedIn()) {
@@ -3025,12 +3040,6 @@ function pnForum_userapi_splittopic($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-
-    // it's a submitted page
-    // Confirm authorisation code
-    if (!pnSecConfirmAuthKey()) {
-        return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
-    }
 
     // before we do anything we will read the topic_last_post_id because we will need
     // this one later (it will become the topic_last_post_id of the new thread)
@@ -4390,10 +4399,6 @@ pnfdebug('args',$args);
 	extract($args); // $new_topic, $old_topic (parameters)
    	unset($args);
 
-	if (!pnSecConfirmAuthKey()) {
-      	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
-    }
-
 	// check if from_topic exists. this function will return an error if not
 	$from_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false));
     if(!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
@@ -4624,10 +4629,6 @@ function pnForum_userapi_notify_moderator($args)
 {
     extract($args);
     unset($args);
-
-	if (!pnSecConfirmAuthKey()) {
-      	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
-    }
 
     setlocale (LC_TIME, pnConfigGetVar('locale'));
     $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));

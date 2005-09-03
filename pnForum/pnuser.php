@@ -413,8 +413,13 @@ function pnForum_user_editpost($args=array())
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     if($submit && !$preview) {
+        /**
+         * Confirm authorisation code
+         */
+        if (!pnSecConfirmAuthKey()) {
+            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
         //store the new topic
-
         $redirect = pnModAPIFunc('pnForum', 'user', 'updatepost',
                                  array('post_id'  => $post_id,
                                        'delete'   => $delete,
@@ -501,6 +506,9 @@ function pnForum_user_topicadmin($args=array())
         return $pnr->fetch($templatename);
 
     } else { // submit is set
+    	if (!pnSecConfirmAuthKey()) {
+          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
         switch($mode) {
             case "del":
             case "delete":
@@ -666,6 +674,10 @@ function pnForum_user_emailtopic($args=array())
                           array('topic_id'   => $topic_id));
 
     if(!empty($submit)) {
+        if (!pnSecConfirmAuthKey()) {
+            return showforumerror(_PNFORUM_BADAUTHKEY, __FILE__, __LINE__);
+        }
+
         pnModAPIFunc('pnForum', 'user', 'emailtopic',
                      array('sendto_email' => $sendto_email,
                            'message'      => $message,
@@ -764,6 +776,10 @@ function pnForum_user_splittopic($args=array())
     }
 
     if(!empty($submit)) {
+        // Confirm authorisation code
+        if (!pnSecConfirmAuthKey()) {
+            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
         // submit is set, we split the topic now
         $post['topic_subject'] = $newsubject;
         $newtopic_id = pnModAPIFunc('pnForum', 'user', 'splittopic',
@@ -1016,6 +1032,10 @@ function pnForum_user_jointopics($args=array())
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_jointopics.html');
     } else {
+    	if (!pnSecConfirmAuthKey()) {
+          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
+
 		// check if from_topic exists. this function will return an error if not
 		$from_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false));
 		// check if to_topic exists. this function will return an error if not
@@ -1029,6 +1049,13 @@ function pnForum_user_jointopics($args=array())
     }
 }
 
+/**
+ * moderateforum
+ * simple moderation of multiple topics
+ *
+ *@params to be documented :-)
+ *
+ */
 function pnForum_user_moderateforum($args=array())
 {
     // get the input
@@ -1040,41 +1067,90 @@ function pnForum_user_moderateforum($args=array())
         $start    = (int)pnVarCleanFromInput('start');
         $mode     = pnVarCleanFromInput('mode');
         $submit   = pnVarCleanFromInput('submit');
-        $topic_ids= pnVarCleanFromInput('topic_id');
+		$topic_ids= pnVarCleanFromInput('topic_id');
         $shadow   = pnVarCleanFromInput('createshadowtopic');
+        $moveto   = pnVarCleanFromInput('moveto');
+    }
+    $shadow = (empty($shadow)) ? false : true;
 
+    if(!pnModAPILoad('pnForum', 'user')) {
+        return showforumerror("loading userapi failed", __FILE__, __LINE__);
     }
 
+    list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
+
+    // Get the Forum for Display and Permission-Check
     $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
                           array('forum_id'        => $forum_id,
                                 'start'           => $start,
                                 'last_visit'      => $last_visit,
                                 'last_visit_unix' => $last_visit_unix));
 
-    if(!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+	if(!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-    if(!$submit) {
+
+    // Submit isn't set'
+    if(empty($submit)) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
-        $pnr->add_core_data();
         $pnr->assign('forum_id', $forum_id);
-        $pnr->assign('forum',$forum);
         $pnr->assign('mode',$mode);
         $pnr->assign('topic_ids', $topic_ids);
         $pnr->assign('last_visit', $last_visit);
         $pnr->assign('last_visit_unix', $last_visit_unix);
+        $pnr->assign('forum',$forum);
+        // For Movetopic
+        $pnr->assign('forums', pnModAPIFunc('pnForum', 'user', 'readuserforums'));
+        return $pnr->fetch("pnforum_user_moderateforum.html");
 
-        $templatename = "pnforum_user_moderateforum.html";
-        return $pnr->fetch($templatename);
-
-    } else { // submit is set
-        //pnfdebug('ids', $topic_ids);
-        return pnRedirect("http://www.google.de");
-    // Dann kommen die eigentlichen funktionen ....
+    } else {
+        // submit is set
+    	if (!pnSecConfirmAuthKey()) {
+          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
+    	switch($mode) {
+            case "del":
+            case "delete":
+            	foreach($topic_ids as $topic_id) {
+                	$forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
+            	}
+                break;
+            case "move":
+            	if (empty($moveto)) {
+            		pnSessionSetVar('errormsg',"_PNFORUM_NO_MOVETO");
+            		break;
+            	}
+            	foreach ($topic_ids as $topic_id) {
+                	pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
+                    	                                               'forum_id' => $moveto,
+                        	                                           'shadow'   => $shadow ));
+            	}
+                break;
+            case "lock":
+            case "unlock":
+            	foreach($topic_ids as $topic_id) {
+                	pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+            	}
+                break;
+            case "sticky":
+            case "unsticky":
+            	foreach($topic_ids as $topic_id) {
+                	pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+            	}
+                break;
+            default:
+        }
+        // Refresh Forum Info
+        $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
+                          array('forum_id'        => $forum_id,
+                                'start'           => $start,
+                                'last_visit'      => $last_visit,
+                                'last_visit_unix' => $last_visit_unix));
     }
+    return pnRedirect(pnModURL('pnForum', 'user', 'moderateforum', array('forum' => $forum_id)));
 }
 
 /**
@@ -1109,6 +1185,9 @@ function pnForum_user_report($args)
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_notifymod.html');
     } else {   // submit is set
+    	if (!pnSecConfirmAuthKey()) {
+          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        }
         pnModAPIFunc('pnForum', 'user', 'notify_moderator',
                      array('post'    => $post,
                            'comment' => $comment));
