@@ -41,6 +41,10 @@
  *
  ***********************************************************************/
 
+define('_PNFORUM_BLOCK_TEMPLATENAME', 'Name of templatefile');
+define('_PNFORUM_BLOCK_PARAMETERS', 'Parameters');
+define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'e.g.. maxposts=5 ');
+
 define('_PNFORUM_MODERATE','Moderate');
 define('_PNFORUM_SELECTED','Selection');
 define('_PNFORUM_STICKYTOPICS','Make selected topics sticky');

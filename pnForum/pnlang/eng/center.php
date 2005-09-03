@@ -29,20 +29,8 @@
  * along with this program; if not, write to the Free Software          *
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 *
  * USA                                                                  *
- ************************************************************************/ 
+ ************************************************************************/
 
-define('_PNFORUM_CB_TEMPLATENAME', 'Templatename');
-define('_PNFORUM_CB_PARAMETERS', 'Parameters');
+include_once("modules/pnForum/pnlang/eng/global.php");
 
-define('_PNFORUM_CB_RECENTPOSTS','recent Topics in forum:');
-define('_PNFORUM_CB_REPLY','reply');
-define('_PNFORUM_CB_REPLIES','replies');
-define('_PNFORUM_CB_RECENTPOSTS_ADMIN','Number of Recent topics to be shown (-1=Off)');
-define('_PNFORUM_CB_RECENTPOSTS_ADMIN_OPTION','Recent topics extended options');
-define('_PNFORUM_CB_ADMIN_ON','On');
-define('_PNFORUM_CB_ADMIN_OFF','Off');
-define('_PNFORUM_CB_ADMIN_REPLIES','Show number of total replies per topic');
-define('_PNFORUM_CB_ADMIN_DATE','Show date of last reply in topic');
-define('_PNFORUM_CB_ADMIN_DATEREPLIES','Show total number of replies and date of the last one');
-define('_PNFORUM_CB_ADMIN_SHORTEN','Shorten display');
 ?>
