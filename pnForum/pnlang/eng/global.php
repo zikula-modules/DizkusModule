@@ -43,7 +43,7 @@
 
 define('_PNFORUM_BLOCK_TEMPLATENAME', 'Name of templatefile');
 define('_PNFORUM_BLOCK_PARAMETERS', 'Parameters');
-define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'e.g.. maxposts=5 ');
+define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'comma separated list, e.g.. maxposts=5,forum_id=27 ');
 
 define('_PNFORUM_MODERATE','Moderate');
 define('_PNFORUM_SELECTED','Selection');
