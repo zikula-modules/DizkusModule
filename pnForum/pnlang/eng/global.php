@@ -41,6 +41,11 @@
  *
  ***********************************************************************/
 
+define('_PNFORUM_HOTTOPIC', 'hot topic');
+define('_PNFORUM_HOTNEWTOPIC', 'hot topic with new postings');
+define('_PNFORUM_NORMALTOPIC', 'normal topic');
+define('_PNFORUM_NORMALNEWTOPIC', 'normal topic with new postings');
+
 define('_PNFORUM_BLOCK_TEMPLATENAME', 'Name of templatefile');
 define('_PNFORUM_BLOCK_PARAMETERS', 'Parameters');
 define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'comma separated list, e.g.. maxposts=5,forum_id=27 ');
