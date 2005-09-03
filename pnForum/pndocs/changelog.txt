@@ -17,6 +17,7 @@ Important changes:
 - bug fixes, cleanups (as usual)
 - new option to turn off the favorites system
 - easier topic subscription management for the user
+- easier forum moderation (credits to Thomas Pawlitzki for this improvement)
 
 ---------------------------------------------------------------------------------------------
 2.0.1 (fs)
