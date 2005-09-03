@@ -143,10 +143,6 @@ function pnForum_admin_preferences()
         $pnr->assign('url_ranks_images', pnModGetVar('pnForum', 'url_ranks_images'));
         $pnr->assign('posticon', pnModGetVar('pnForum', 'posticon'));
         $pnr->assign('firstnew_image', pnModGetVar('pnForum', 'firstnew_image'));
-        $pnr->assign('folder_image', pnModGetVar('pnForum', 'folder_image'));
-        $pnr->assign('hot_folder_image', pnModGetVar('pnForum', 'hot_folder_image'));
-        $pnr->assign('newposts_image', pnModGetVar('pnForum', 'newposts_image'));
-        $pnr->assign('hot_newposts_image', pnModGetVar('pnForum', 'hot_newposts_image'));
         $pnr->assign('post_sort_order_ascchecked', $post_sort_order_ascchecked);
         $pnr->assign('post_sort_order_descchecked', $post_sort_order_descchecked);
         $pnr->assign('logiponchecked', $logiponchecked);
@@ -180,10 +176,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'url_ranks_images', pnVarPrepForStore(pnVarCleanFromInput('url_ranks_images')));
             pnModSetVar('pnForum', 'posticon', pnVarPrepForStore(pnVarCleanFromInput('posticon')));
             pnModSetVar('pnForum', 'firstnew_image', pnVarPrepForStore(pnVarCleanFromInput('firstnew_image')));
-            pnModSetVar('pnForum', 'folder_image', pnVarPrepForStore(pnVarCleanFromInput('folder_image')));
-            pnModSetVar('pnForum', 'hot_folder_image', pnVarPrepForStore(pnVarCleanFromInput('hot_folder_image')));
-            pnModSetVar('pnForum', 'newposts_image', pnVarPrepForStore(pnVarCleanFromInput('newposts_image')));
-            pnModSetVar('pnForum', 'hot_newposts_image', pnVarPrepForStore(pnVarCleanFromInput('hot_newposts_image')));
             pnModSetVar('pnForum', 'post_sort_order', pnVarPrepForStore(pnVarCleanFromInput('post_sort_order')));
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
@@ -202,10 +194,6 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
 		    pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
 		    pnModSetVar('pnForum', 'url_ranks_images', "modules/pnForum/pnimages/ranks");
-		    pnModSetVar('pnForum', 'folder_image', "modules/pnForum/pnimages/folder.gif");
-		    pnModSetVar('pnForum', 'hot_folder_image', "modules/pnForum/pnimages/hot_folder.gif");
-		    pnModSetVar('pnForum', 'newposts_image', "modules/pnForum/pnimages/red_folder.gif");
-		    pnModSetVar('pnForum', 'hot_newposts_image', "modules/pnForum/pnimages/hot_red_folder.gif");
 		    pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
 		    pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
 		    pnModSetVar('pnForum', 'post_sort_order', "ASC");
