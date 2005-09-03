@@ -41,6 +41,8 @@
  *
  ***********************************************************************/
 
+define('_PNFORUM_MODERATE','Moderate');
+
 // new
 define('_PNFORUM_TOGGLEALL', 'Remove all topic subscriptions');
 define('_PNFORUM_PREFS_HIDEUSERSINFORUMADMIN', 'Hide users in forum admin');
