@@ -33,10 +33,10 @@
  *
  * statisticsblock
  * @version $Id$
- * @author Andreas Krapohl, Frank Schummertz 
+ * @author Andreas Krapohl, Frank Schummertz
  * @copyright 2003 by Andreas Krapohl, Frank Schummertz
- * @package pnForum 
- * @license GPL <http://www.gnu.org/licenses/gpl.html> 
+ * @package pnForum
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
  *
  ***********************************************************************/
@@ -67,16 +67,53 @@ function pnForum_statisticsblock_info()
 
 /**
  * display the statisticsblock
- */ 
+ */
 function pnForum_statisticsblock_display($row)
 {
     //check for Permission
     if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ return; }
-    
+
     $pnr = & new pnRender('pnForum');
     $pnr->caching = false;
     $row['content'] = $pnr->fetch('pnforum_statisticsblock_display.html');
     return themesideblock($row);
+}
+
+/**
+ * Update the block
+ */
+function pnForum_statisticsblock_update($row)
+{
+	if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+	    return false;
+	}
+    list($sb_template,
+         $sb_parameters) = pnVarCleanFromInput('sb_template',
+                                               'sb_parameters');
+
+    if(empty($sb_parameters)) { $sb_parameters = ""; }
+    if(empty($sb_template))   { $sb_template = "pnforum_statisticsblock_display.html"; }
+
+    $row['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
+    return($row);
+}
+
+/**
+ * Modify the block
+ */
+function pnForum_statisticsblock_modify($row)
+{
+	if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+	    return false;
+	}
+
+    // Break out options from our content field
+    $vars = pnBlockVarsFromContent($row['content']);
+
+    $pnRender = new pnRender('pnForum');
+    $pnRender->caching = false;
+    $pnRender->assign('vars', $vars);
+    return $pnRender->fetch('pnforum_statisticsblock_config.html');
 }
 
 ?>
