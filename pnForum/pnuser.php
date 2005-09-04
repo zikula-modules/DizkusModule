@@ -72,16 +72,6 @@ function pnForum_user_main($args=array())
         $tree = pnModAPIFunc('pnForum', 'user', 'getFavorites', array('user_id' => (int)pnUserGetVar('uid'),
                                                                       'last_visit' => $last_visit ));
     } else {
-/*
-    if($loggedIn && (pnModGetVar('pnForum', 'favorites_enabled')=='yes')) {
-        if(empty($favorites)) {
-            $favorites = pnModAPIFunc('pnForum', 'user', 'get_favorite_status');
-        }
-        $tree = pnModAPIFunc('pnForum', 'user', 'getFavorites', array('user_id' => (int)pnUserGetVar('uid'),
-                                                                      'last_visit' => $last_visit ));
- pnfdebug('tree', $tree, true);
-    } else {
-*/
         $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
 
         if(pnModGetVar('pnForum', 'slimforum') == 'yes') {
@@ -565,7 +555,6 @@ function pnForum_user_prefs($args=array())
                                                'forum');
     }
 
-    //$return_to = 'main';
     switch($act) {
         case 'subscribe_topic':
             $return_to = (!empty($return_to))? $return_to : "viewtopic";
@@ -1204,7 +1193,7 @@ function pnForum_user_report($args)
  * topicsubscriptions
  * manage the users topic subscription
  *
- *@params for
+ *@params
  *
  */
 function pnForum_user_topicsubscriptions($args)

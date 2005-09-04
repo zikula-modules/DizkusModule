@@ -616,27 +616,10 @@ function pnForum_userapi_readforum($args)
         $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
         $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, pnVarPrepForDisplay($posted_ml), pnVarPrepForDisplay($topic['last_poster']));
 
-        if($topic['topic_replies'] >= $hot_threshold) {
-            // topic is hot
-            $topic['hot_topic'] = true;
-            if($topic['post_time'] < $last_visit) {
-                // topic has no new posts
-                $topic['new_posts'] = false;
-            } else {
-                // topic has new posts
-                $topic['new_posts'] = true;
-            }
-        } else {
-            // topic is normal
-            $topic['hot_topic'] = false;
-            if($topic['post_time'] < $last_visit) {
-                // topic has no new posts
-                $topic['new_posts'] = false;
-            } else {
-                // topic has new posts
-                $topic['new_posts'] = true;
-            }
-        }
+        // does this topic have enough postings to be hot?
+        $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
+        // does this posting have new postings?
+        $topic['new_posts'] = ($topic['post_time'] < $last_visit) ? false : true;
 
         // pagination
         $pagination = "";
@@ -761,12 +744,7 @@ function pnForum_userapi_readtopic($args)
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
         }
-/*
-        $topic['access_comment'] = false;
-        if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-            $topic['access_comment'] = true;
-        }
-*/
+
         $topic['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
 
         $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
@@ -899,10 +877,6 @@ function pnForum_userapi_readtopic($args)
         return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
     }
     pnfCloseDB($result);
-
-//$time_end = microtime_float();
-//$time = $time_end - $time_start;
-//pnfdebug('time for readtopic', $time);
 
     return $topic;
 }
@@ -1630,7 +1604,6 @@ function pnForum_userapi_readpost($args)
  */
 function pnForum_userapi_is_first_post($args)
 {
-    //topic_id, $post_id
     extract($args);
     unset($args);
 
@@ -4377,7 +4350,6 @@ function pnForum_userapi_get_last_topic_page($args)
  */
 function pnForum_userapi_jointopics($args)
 {
-pnfdebug('args',$args);
 	extract($args); // $new_topic, $old_topic (parameters)
    	unset($args);
 
@@ -4624,18 +4596,7 @@ function pnForum_userapi_notify_moderator($args)
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
     }
-/*
-    $msg_From_Header = 'From: ' . pnConfigGetVar('sitename') . '<' . $email_from . ">\n";
-    $msg_XMailer_Header = 'X-Mailer: ' . $ModName . ' ' . $modVersion . "\n";
-    $msg_ContentType_Header = 'Content-Type: text/plain;';
 
-    $pnforum_default_charset = pnModGetVar('pnForum', 'default_lang');
-    if(!empty($pnforum_default_charset)) {
-        $msg_ContentType_Header .= ' charset='.$pnforum_default_charset;
-    }
-    $msg_ContentType_Header .= "\n";
-    $msg_Subject .= pnVarPrepForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
-*/
     $subject .= pnVarPrepForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
     $sitename = pnConfigGetVar('sitename');
 
@@ -4710,13 +4671,6 @@ function pnForum_userapi_notify_moderator($args)
                            'headers'     => array('X-UserID: ' . $uid,
                                                   'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-/*
-            // set reply-to to his own adress ;)
-            $msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
-            $msg_Headers .= "Reply-To: $email";
-
-            pnMail($email, $msg_Subject, $message, $msg_Headers);
-*/
         }
     }
     return;
