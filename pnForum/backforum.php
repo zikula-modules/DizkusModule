@@ -46,7 +46,6 @@ if(!file_exists($templatefile) || !is_readable($templatefile)) {
  * check for forum_id
  */
 if(!empty($forum_id) && is_numeric($forum_id)) {
-    pnModAPILoad('pnForum', 'user');
     $forum = pnModAPIFunc('pnForum', 'user', 'readuserforums',
                           array('forum_id' => $forum_id));
     if(count($forum) == 0) {
