@@ -1,0 +1,421 @@
+<HTML><HEAD>
+
+
+
+<TITLE>phpBB_14 Administration Setup</TITLE>
+
+
+
+</HEAD>
+
+
+
+<BODY BGCOLOR="#FFFFFF">
+
+<font face="Geneva, Helvetica, Arial"> 
+
+<p>PN_phpBB_14 v1.7.4.0== release date:= xx/xx/2002<br>
+
+  ----------------------------------------------------------------------</p>
+
+<p>1. Administration</p>
+
+<p>1.1 Forums Administration<br>
+
+  This is where you can administer your phpBB_14 forums.</p>
+
+<p>1.1.1 phpBB_14 </p>
+
+<p>Forum Wide Options allows you to:<br>
+
+  a. Configure who you want the email to come from when someone subscribes to 
+
+  a topic and gets an email showing a new post.<br>
+
+  b. Set the Character Set that will be used in the e-mail headers.<br>
+
+  c. Set the -Hot Topics- threshold.<br>
+
+  d. Set the number of posts per topic that will be displayed per page. <br>
+
+  e. Set the number of topics displayed per page in a given forum.<br>
+
+  f. Set the path to the image graphics used in phpBB_14.<br>
+
+  'Sync':<br>
+
+  Allows you to synchronize the PN users, forums and topics indexes to fix any 
+
+  discrepancies that might exist.</p>
+
+<p> 1.1.3 Add a Category<br>
+
+  Categories are the top level of the individual forums.<br>
+
+  'Add':<br>
+
+  After clicking on 'Add', you will be give a space to type in the name of your 
+
+  new category. Click 'Submit' when done entering your text. <br>
+
+  'Edit':<br>
+
+  This will allow you to 'Edit' or 'Delete' any categories that have been previously 
+
+  made. <br>
+
+  'Re-Order':<br>
+
+  Allows you to re-order the Categories. <br>
+
+  'Delete':<br>
+
+  This will allow you to 'Edit' or 'Delete' any categories that have been previously 
+
+  made. <br>
+
+  <br>
+
+  1.1.4 Add a Forum:<br>
+
+  Forums are the various 'sub-categories' that your individual discussion will 
+
+  be kept in.<br>
+
+  'Add':<br>
+
+  After clicking on 'Add', you will be give a space to type in the name and description 
+
+  of your new Forum. Highlight who you want to moderate this Forum and which Category 
+
+  you want the forum to be in. Note that the PostNuke 'Permissions' must still 
+
+  be set correctly for the 'moderator'. Click 'Submit' when done entering your 
+
+  text. <br>
+
+  'Edit':<br>
+
+  This will allow you to 'Edit' or 'Delete' any Forums that have been previously 
+
+  made. <br>
+
+  'Re-Order':<br>
+
+  Allows you to re-order the Forums within individual Categories <br>
+
+  'Delete':<br>
+
+  This will allow you to 'Edit' or 'Delete' any Forumsthat have been previously 
+
+  made.</p>
+
+<p> 1.1.5 Users Ranks<br>
+
+  You have the ability to create various 'Ranks' for users based on the number 
+
+  of posts they generate. <br>
+
+  'Add':<br>
+
+  After clicking on 'Add', you will be give a space to type in the name and description 
+
+  of a new User Rank. <br>
+
+  'Edit':<br>
+
+  This will allow you to 'Edit' or 'Delete' any Users Ranks that have been previously 
+
+  made. <br>
+
+  'Delete':<br>
+
+  This will allow you to 'Edit' or 'Delete' any Users Ranks that have been previously 
+
+  made. </p>
+
+<p>1.1.6 Honorary Ranks<br>
+
+  You have the ability to create 'Ranks' for special members. This could be 'Webmaster', 
+
+  'Associate', 'Client', etc.<br>
+
+  'Add':<br>
+
+  After clicking on 'Add', you will be give a space to type in the name and description 
+
+  of a new Honorary Rank. <br>
+
+  'Edit':<br>
+
+  This will allow you to 'Edit' or 'Delete' any Honorary Ranks that have been 
+
+  previously made. <br>
+
+  'Assign':<br>
+
+  This will allow you to 'Assign' any Honorary Ranks that have been previously 
+
+  made. <br>
+
+  'Delete':<br>
+
+  This will allow you to 'Edit' or 'Delete' any Honorary Ranks that have been 
+
+  previously made. </p>
+
+<p>1.1.7 Bad Words Filtering<br>
+
+  'Add':<br>
+
+  Here you can add/edit/delete bad words that will be filtered and replaced with 
+
+  others on your site <br>
+
+  'Edit':<br>
+
+  Here you can add/edit/delete bad words that will be filtered and replaced with 
+
+  others on your site <br>
+
+  'Delete':<br>
+
+  Here you can add/edit/delete bad words that will be filtered and replaced with 
+
+  others on your site <br>
+
+  <br>
+
+  1.2 Using PostNuke permissions with the phpBB_14 bulletin board.<br>
+
+  This chapter assumes that you already know Rogue permissions principles. <br>
+
+  phpBB_14 implements four levels/instances of controlling access rights to the 
+
+  module. <br>
+
+  These are: <br>
+
+  Category <br>
+
+  Forum <br>
+
+  StatsBlock <br>
+
+  You are therefore able to control how a user or a user group may use your forum. 
+
+  <br>
+
+  Note: Earlier versions of phpBB_14 had the option of setting a forumtype to 
+
+  be 'private|public'. This option is not used any more. Only Rogue permissions 
+
+  will be checked when accessed. </p>
+
+<p>This is also correct regarding moderator access to forums and categories. Moderator 
+
+  access is checked against MODERATE_ACCESS in PostNuke permission system for 
+
+  any given user or group. Setting the moderator parameter inside phpBB_14 administration 
+
+  panel, is not currently in use. The parameter will be deprecated in future versions. 
+
+</p>
+
+<p>Following are some examples on how to use the PostNuke 0.71x permission system 
+
+  in the phpBB_14 module. We will use these names in the examples to give you 
+
+  a &quot;realworld&quot; examples: <br>
+
+  Category: General <br>
+
+  Forum: Chitchat and discussion <br>
+
+  Usergroup: Mygroup <br>
+
+  User: JimDude </p>
+
+<p><br>
+
+  EXAMPLE 1. <br>
+
+  Cut off Unregistered users from accessing private forum. Unregistered users 
+
+  will not even see that a private forum exists. <br>
+
+  Go to Administration/Permissions/New group permission </p>
+
+<p>Group Component Instance Permissions level <br>
+
+  Unregistered phpBB_14::Forum Chitchat:: None </p>
+
+<p>Because upper lines override lower, the newly created group permission should 
+
+  be above this line: <br>
+
+  Group Component Instance Permissions level <br>
+
+  Unregistered .* .* Read </p>
+
+<p><br>
+
+  EXAMPLE 2. <br>
+
+  Cut off Unregistered users to a whole category. All forums inside the category 
+
+  will be inaccessible. </p>
+
+<p>Group Component Instance Permissions level <br>
+
+  Unregistered phpBB_14::Category General:: None </p>
+
+<p>Because upper lines override lower, the newly created group permission should 
+
+  be above this line: <br>
+
+  Group Component Instance Permissions level <br>
+
+  Unregistered .* .* Read </p>
+
+<p><br>
+
+  EXAMPLE 3. <br>
+
+  Let Unregistered users view forums in a category, but not post or reply to posts. 
+
+  <br>
+
+  (as the smart eye sees, dropping the following line, will cause unregistered 
+
+  users to have read-access to all categories) </p>
+
+<p>Group Component Instance Permissions level <br>
+
+  Unregistered phpBB_14::Category General:: Read </p>
+
+<p>Because upper lines override lower, the newly created group permission should 
+
+  be above this line: <br>
+
+  Group Component Instance Permissions level <br>
+
+  Unregistered .* .* Read </p>
+
+<p><br>
+
+  EXAMPLE 4. <br>
+
+  Let a closed Usergroup access all forums in a category. All users not in this 
+
+  group fully cut off. </p>
+
+<p>The first thing to do is to create the Usergroup and populate it with users 
+
+  (we will not show how to do this here). </p>
+
+<p>Group Component Instance Permissions level <br>
+
+  Mygroup phpBB_14::Category General:: Edit <br>
+
+  All groups phpBB_14::Category General:: None </p>
+
+<p>Because upper lines override lower, the newly created group permissions should 
+
+  be above BOTH of these lines: <br>
+
+  Group Component Instance Permissions level <br>
+
+  Users .* .* Comment <br>
+
+  Unregistered .* .* Read </p>
+
+<p><br>
+
+  EXAMPLE 5. <br>
+
+  Assign moderator rights to a specific user. This is done in two parts. <br>
+
+  First you have to define the user as a moderator of the forum, using the phpBB_14 
+
+  admin pane. (Note, this is only for viewing purposes in the forums at this time...)<br>
+
+  Next, you have to give the same user moderator rights in the PostNuke <br>
+
+  permission system. This is done using this scheme: </p>
+
+<p>User Component Instance Permissions level <br>
+
+  JimDude phpBB_14::Forum Chitchat:: Moderate </p>
+
+<p>NB! Be very careful of using USER permissions. They will always override any 
+
+  group permissions. If you do something wrong, you may end up shutting your self 
+
+  out! Always use other usernames that your ADMIN name, when playing around with 
+
+  user permissions!! </p>
+
+<p><br>
+
+  EXAMPLE 6. <br>
+
+  Assign a user to be moderator for two forums. <br>
+
+  This is done in two parts. First you assign the user as moderator to both the 
+
+  forums, using the phpBB_14 admin pane. <br>
+
+  Next, you have to give the same user moderator rights in the PostNuke permission 
+
+  system. This is done using this scheme: </p>
+
+<p>User Component Instance Permissions level <br>
+
+  JimDude phpBB_14::Forum (ChitChat|discussion):: Moderate </p>
+
+<p>Note: <br>
+
+  Be very careful when using USER permissions. They will always override any group 
+
+  permissions. If you do something wrong, you may end up shutting your self out! 
+
+  Always use other usernames than your ADMIN name, when playing around with user 
+
+  permissions!!</p>
+
+<p>We also suggest looking at the PostNuke permissions documentation:<br>
+
+  <a href="http://centre.ics.uci.edu/~grape/modules.php?op=modload&amp;name=Wiki&amp;file=index&amp;pagename=PERMISSIONS" target="_blank">http://centre.ics.uci.edu/~grape/modules.php?op=modload&amp;name=Wiki&amp;file=index&amp;pagename=PERMISSIONS</a></p>
+
+<p>---------------------------------------------------------------------- <br>
+
+  1.3 Setting up Statistics block </p>
+
+<p>You can activate and place this block, using standard Rogue Blocks administrating. 
+
+  <br>
+
+  Create a new block of type 'phpBB_14/phpBB_14 Statistics'. Configure it to with 
+
+  the PostNuke 'Edit' feature to meet your needs.<br>
+
+  Also see 2.3.5</p>
+
+<p>---------------------------------------------------------------------- <br>
+
+  1.4 Setting up Search Include</p>
+
+<p>The search routine for phpBB_14 is included in the module core and needs no 
+
+  special set-up to be used with PostNuke.<br>
+
+</p>
+
+</font> 
+
+</BODY>
+
+
+
+</HTML>
