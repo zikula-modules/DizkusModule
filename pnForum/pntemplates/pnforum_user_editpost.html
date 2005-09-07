@@ -21,8 +21,8 @@
                     </tr>
                     <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
                         <td rowspan="2" valign="top">
-                        <!--[ if $loggedin ]-->
-                    	    <a href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"><strong><!--[ $post.poster_data.pn_uname ]--></strong></a>
+                    	<!--[ if $pncore.logged_in eq 1 ]-->
+                    	    <strong><!--[ $post.poster_data.pn_uname|profilelink ]--></strong>
                     	    <!--[  if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     		<br /><img src="<!--[ $post.poster_data.pn_user_avatar ]-->" alt="<!--[ $post.poster_data.pn_uname ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> >
                     	    <!--[ /if ]-->
@@ -52,31 +52,31 @@
     </table>
     <br /><br />
 <!--[ /if ]-->
-<!--[ if $post.moderate eq true ]-->
+<!--[ if $post.moderate eq true || $post.edit_subject eq true ]-->
 <label for="subject"><!--[ pnml name='_PNFORUM_SUBJECT' ]--></label>
-<br />
-<input type="text" size="50" maxlength="100" name="subject" id="subject" tabindex="0" value="<!--[ $post.topic_subject ]-->">
+<input type="text" size="50" maxlength="100" name="subject" id="subject" tabindex="0" value="<!--[ $post.topic_subject ]-->" />
 <br /><br />
 <!--[ /if ]-->
 
 <label for="message"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
-<br />
 <textarea name="message" rows="10" cols="80" id="message" tabindex="0"><!--[ $post.post_text ]--></textarea>
 <br />
 <!--[ plainbbcode textfieldid=message ]-->
 <!--[ bbsmile textfieldid=message ]-->
 <br /><br />
-<!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br/><input type="checkbox" name="preview" id="preview" tabindex="0"><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
+<!--[ pnml name='_PNFORUM_OPTIONS' ]-->:
+<br/>
+<input type="checkbox" name="preview" id="preview" tabindex="0" /><label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
 <br />
 <!--[ if $post.moderate eq true ]-->
-<input type="checkbox" name="delete" id="delete" tabindex="0"><label for="delete"><!--[ pnml name='_PNFORUM_DELETE' ]--></label>
+<input type="checkbox" name="delete" id="delete" tabindex="0" /><label for="delete"><!--[ pnml name='_PNFORUM_DELETE' ]--></label>
 <br />
 <!--[ /if ]-->
 <br />
-<input type="hidden" name="post"   value="<!--[ $post.post_id ]-->">
-<input type="hidden" name="forum"  value="<!--[ $post.forum_id ]-->">
-<input type="hidden" name="topic"  value="<!--[ $post.topic_id ]-->">
-<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->">
+<input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
+<input type="hidden" name="forum"  value="<!--[ $post.forum_id ]-->" />
+<input type="hidden" name="topic"  value="<!--[ $post.topic_id ]-->" />
+<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <div style="vertical-align: middle;">
     <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
     <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->

@@ -241,25 +241,32 @@ function pnForum_userapi_boardstats($args)
 }
 
 /**
- * get_last_post_in_topic
- * gets the last post in a topic, false if no posts
+ * get_firstlast_post_in_topic
+ * gets the first or last post in a topic, false if no posts
  *
  *@params $args['topic_id'] int the topics id
+ *@params $args['first']   boolean if true then get the first posting, otherwise the last
  *@params $args['id_only'] boolean if true, only return the id, not the complete post information
- *@returns array with post information of false
+ *@returns array with post information or false or (int)id if id_only is true
  */
-function pnForum_userapi_get_last_post_in_topic($args)
+function pnForum_userapi_get_firstlast_post_in_topic($args)
 {
     extract($args);
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
 
+    if(!isset($first) || !is_bool($first) || (is_bool($first) && $first==false)) {
+        $sortorder = 'DESC';
+    } else {
+        $sortorder = 'ASC';
+    }
+
     if(isset($topic_id) && is_numeric($topic_id)) {
-        $sql = "SELECT p.post_id
-                FROM ".$pntable['pnforum_posts']." AS p
-                WHERE p.topic_id = '".(int)pnVarPrepForStore($topic_id)."'
-                ORDER BY p.post_time DESC";
+        $sql = 'SELECT p.post_id
+                FROM ' . $pntable['pnforum_posts'] . ' AS p
+                WHERE p.topic_id = "'.(int)pnVarPrepForStore($topic_id) . '"
+                ORDER BY p.post_time ' . $sortorder;
 
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
@@ -544,6 +551,7 @@ function pnForum_userapi_setcookies()
  *@params $args['start'] int number of topic to start with (if on page 1+)
  *@params $args['last_visit'] string users last visit date
  *@params $args['last_visit_unix'] string users last visit date as timestamp
+ *@params $args['topics_per_page'] int number of topics to read, -1 = all topics
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
 function pnForum_userapi_readforum($args)
@@ -565,7 +573,9 @@ function pnForum_userapi_readforum($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $posts_per_page     = pnModGetVar('pnForum', 'posts_per_page');
-    $topics_per_page    = pnModGetVar('pnForum', 'topics_per_page');
+    if(!isset($topics_per_page)) {
+        $topics_per_page    = pnModGetVar('pnForum', 'topics_per_page');
+    }
     $hot_threshold      = pnModGetVar('pnForum', 'hot_threshold');
     $posticon           = pnModGetVar('pnForum', 'posticon');
     $firstnew_image     = pnModGetVar('pnForum', 'firstnew_image');
@@ -601,6 +611,7 @@ function pnForum_userapi_readforum($args)
             ORDER BY t.sticky DESC, p.post_time DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
+
     $forum['forum_id'] = $forum_id;
     $forum['topics'] = array();
     while(!$result->EOF) {
@@ -1592,6 +1603,7 @@ function pnForum_userapi_readpost($args)
     // allow to edit the subject if first post
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
 
+
     return $post;
 }
 
@@ -1820,7 +1832,7 @@ function pnForum_userapi_updatepost($args)
             //
             // check if this was the last post in the topic, if yes, remove topic
             //
-            $last_topic_post = pnForum_userapi_get_last_post_in_topic(array('topic_id' => $topic_id));
+            $last_topic_post = pnForum_userapi_get_firstlast_post_in_topic(array('topic_id' => $topic_id));
             $forum_last_post_id = pnForum_userapi_get_last_post_in_forum(array('forum_id' => $forum_id, 'id_only' => true));
             if($last_topic_post == false) {
                 //
@@ -4029,7 +4041,7 @@ function pnForum_userapi_mailcron($args)
                                             // and store this mail in the same thread
                                             $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topic_by_postmsgid',
                                                                      array('msgid' => $replyto));
-                                            if(is_boolean($topic_id) && $topic_id==false) {
+                                            if(is_bool($topic_id) && $topic_id==false) {
                                                 // msgid not found, we clear replyto to create a new topic
                                                 $replyto = '';
                                             } else {

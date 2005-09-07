@@ -41,6 +41,16 @@
  *
  ***********************************************************************/
 
+define('_PNFORUM_NOMOVETO', 'No target forum for moving selected');
+define('_PNFORUM_NOJOINTO', 'No target topic for joining selected');
+define('_PNFORUM_SELECTACTION', 'select action');
+define('_PNFORUM_SELECTTARGETFORUM', 'select target forum');
+define('_PNFORUM_SELECTTARGETTOPIC', 'select target topic');
+define('_PNFORUM_OR', 'or');
+define('_PNFORUM_MODERATE_JOINTOPICS_HINT', 'If you want to joi topics, select the target topic here');
+define('_PNFORUM_MODERATORSOPTIONS', 'Moderators options');
+define('_PNFORUM_JOINTOPICS', 'Join topics');
+
 define('_PNFORUM_HOTTOPIC', 'hot topic');
 define('_PNFORUM_HOTNEWTOPIC', 'hot topic with new postings');
 define('_PNFORUM_NORMALTOPIC', 'normal topic');

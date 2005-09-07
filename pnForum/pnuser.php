@@ -423,6 +423,16 @@ function pnForum_user_editpost($args=array())
         if(!empty($subject)) {
             $post['topic_subject'] = $subject;
         }
+
+        // if the current user is the original poster we allow to
+        // edit the subject
+        $firstpost = pnModAPIFunc('pnForum', 'user', 'get_firstlast_post_in_topic',
+                                  array('topic_id' => $post['topic_id'],
+                                        'first'    => true));
+        if($post['poster_data']['pn_uid'] = $firstpost['poster_data']['pn_uid']) {
+            $post['edit_subject'] = true;
+        }
+
         if(!empty($message)) {
             $post['post_text'] = $message;
             list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array($message));
@@ -432,7 +442,6 @@ function pnForum_user_editpost($args=array())
         $pnr->add_core_data();
         $pnr->assign( 'preview', $preview);
         $pnr->assign( 'post', $post);
-        $pnr->assign( 'loggedin', pnUserLoggedIn());
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('pnforum_user_editpost.html');
@@ -1059,12 +1068,9 @@ function pnForum_user_moderateforum($args=array())
 		$topic_ids= pnVarCleanFromInput('topic_id');
         $shadow   = pnVarCleanFromInput('createshadowtopic');
         $moveto   = pnVarCleanFromInput('moveto');
+        $jointo   = pnVarCleanFromInput('jointo');
     }
     $shadow = (empty($shadow)) ? false : true;
-
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
@@ -1100,44 +1106,61 @@ function pnForum_user_moderateforum($args=array())
     	if (!pnSecConfirmAuthKey()) {
           	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
         }
-    	switch($mode) {
-            case "del":
-            case "delete":
-            	foreach($topic_ids as $topic_id) {
-                	$forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
-            	}
-                break;
-            case "move":
-            	if (empty($moveto)) {
-            		pnSessionSetVar('errormsg',"_PNFORUM_NO_MOVETO");
-            		break;
-            	}
-            	foreach ($topic_ids as $topic_id) {
-                	pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
-                    	                                               'forum_id' => $moveto,
-                        	                                           'shadow'   => $shadow ));
-            	}
-                break;
-            case "lock":
-            case "unlock":
-            	foreach($topic_ids as $topic_id) {
-                	pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
-            	}
-                break;
-            case "sticky":
-            case "unsticky":
-            	foreach($topic_ids as $topic_id) {
-                	pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
-            	}
-                break;
-            default:
+        if(count($topic_ids)<>0) {
+    	    switch($mode) {
+                case "del":
+                case "delete":
+                	foreach($topic_ids as $topic_id) {
+                    	$forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
+                	}
+                    break;
+                case "move":
+                	if(empty($moveto)) {
+                		return showforumerror(_PNFORUM_NOMOVETO, __FILE__, __LINE__);
+                	}
+                	foreach ($topic_ids as $topic_id) {
+                    	pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
+                        	                                               'forum_id' => $moveto,
+                            	                                           'shadow'   => $shadow ));
+                	}
+                    break;
+                case "lock":
+                case "unlock":
+                	foreach($topic_ids as $topic_id) {
+                    	pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+                	}
+                    break;
+                case "sticky":
+                case "unsticky":
+                	foreach($topic_ids as $topic_id) {
+                    	pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+                	}
+                    break;
+                case "join":
+                    if(empty($jointo)) {
+                        return showforumerror(_PNFORUM_NOJOINTO, __FILE__, __LINE__);
+                    }
+                    if(in_array($jointo, $topic_ids)) {
+                        // jointo, the target topic, is part of the topics to join
+                        // we remove this to avoid a loop
+                        $fliparray = array_flip($topic_ids);
+                        unset($fliparray[$jointo]);
+                        $topic_ids = array_flip($fliparray);
+                    }
+                	foreach($topic_ids as $to_topic_id) {
+                        pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic_id' => $topic_id,
+                                                                            'to_topic_id'   => $jointo));
+                    }
+                    break;
+                default:
+            }
+            // Refresh Forum Info
+            $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
+                              array('forum_id'        => $forum_id,
+                                    'start'           => $start,
+                                    'last_visit'      => $last_visit,
+                                    'last_visit_unix' => $last_visit_unix));
         }
-        // Refresh Forum Info
-        $forum = pnModAPIFunc('pnForum', 'user', 'readforum',
-                          array('forum_id'        => $forum_id,
-                                'start'           => $start,
-                                'last_visit'      => $last_visit,
-                                'last_visit_unix' => $last_visit_unix));
     }
     return pnRedirect(pnModURL('pnForum', 'user', 'moderateforum', array('forum' => $forum_id)));
 }
