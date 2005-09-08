@@ -41,6 +41,7 @@
  *
  ***********************************************************************/
 
+define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'Missing parameters to perform search');
 define('_PNFORUM_NOMOVETO', 'No target forum for moving selected');
 define('_PNFORUM_NOJOINTO', 'No target topic for joining selected');
 define('_PNFORUM_SELECTACTION', 'select action');

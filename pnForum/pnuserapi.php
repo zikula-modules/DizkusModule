@@ -3172,20 +3172,8 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
  *@params $args['limit']      int number of hits to show per page > 1
  *@returns array with search results
  */
-function pnForum_userapi_forumsearch($args=array())
+function pnForum_userapi_forumsearch($args)
 {
-    // check params. if searchfor is not set, try get read the last search options from
-    // a session variable
-    if(!isset($args['searchfor']) || empty($args['searchfor'])) {
-        // save startnum
-        $startnum = $args['startnum'];
-        $args = unserialize(pnSessionGetVar('lastforumsearch'));
-        $args['startnum'] = $startnum;
-    } else {
-        // searchfor is set, seems to be a new search. store it for later use
-        pnSessionSetVar('lastforumsearch', serialize($args));
-    }
-
     // check mod var for fulltext support
     $fulltextindex = pnModGetVar('pnForum', 'fulltextindex');
     if($fulltextindex == 1) {
@@ -3395,7 +3383,7 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
  *@params $args['limit']      int number of hits to show per page > 1
  *@returns array with search results
  */
-function pnForum_userapi_forumsearch_fulltext_($args)
+function pnForum_userapi_forumsearch_fulltext($args)
 {
     extract($args);
     unset($args);

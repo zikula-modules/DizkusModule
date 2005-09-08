@@ -899,20 +899,19 @@ function pnForum_user_search($args=array())
         if(empty($vars['searchlimit'])) {
             $vars['searchlimit'] = 10;
         }
-        if(!is_array($vars['searchforums']) || !is_array($vars['searchorder']) || ($vars['searchbool']<>"AND" && $vars['searchbool']<>"OR") ) {
-            return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        if($vars['searchbool']<>'AND' && $vars['searchbool']<>'OR') {
+            $vars['searchbool'] = 'AND';
+        }
+        if(!is_array($vars['searchforums']) || count($vars['searchforums'])== 0) {
+            // set default
+            $vars['searchforums'][0] = '';
         }
 
-        // check mod var for extendedsearch support
-        $extendedsearch = pnModGetVar('pnForum', 'extendedsearch');
-        if($extendedsearch == 1) {
-            // extendedsearch
-            return pnModAPIFunc('pnForum', 'user', 'forumsearch_boolean', $args);
-        } else {
-            // no extendedsearch
-            return pnModAPIFunc('pnForum', 'user', 'forumsearch', $args);
-        }
 
+        if(!is_array($vars['searchorder']) || count($vars['searchorder'])==0 ) {
+            // set default
+            $vars['searchorder'][0] = 1;
+        }
 
         list($searchresults,
              $total_hits ) = pnModAPIFunc('pnForum', 'user', 'forumsearch',

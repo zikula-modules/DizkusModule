@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 
 <div style="padding: 3px; text-align: center; background: <!--[ $bgcolor2 ]-->;">
-<h2><!--[ pnml name='_PNFORUM_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ $searchfor ]-->'&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) </h2>
+<h2><!--[ pnml name='_PNFORUM_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ if $searchfor neq '' ]--><!--[ $searchfor ]--><!--[ else ]--><!--[ $searchauthor ]--><!--[ /if ]-->'&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) </h2>
 </div>
 <br />
 
