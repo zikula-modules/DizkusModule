@@ -257,3 +257,14 @@ legend {
     float: left;
 }
 
+.searchresultlist {
+    list-style-type: none;
+}
+
+.searchresult {
+
+    border: 1px solid black;
+    margin: 5px;
+    padding: 3px;
+    background: #E5E7E8;
+}

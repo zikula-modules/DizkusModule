@@ -7,16 +7,22 @@
 </div>
 <br />
 
-<ul>
-<!--[ foreach item=searchresult from=$searchresults ]-->
-    <li><a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$searchresult.topic_id highlight=$searchfor ]-->"><!--[ $searchresult.topic_title ]--></a>
-        &nbsp;&nbsp;&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$searchresult.topic_id highlight=$searchfor ]-->" target="_blank">(<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NEWWIN' ]-->)</a>
-        <a class="header" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$searchresult.forum_id ]-->"><!--[ $searchresult.cat_title ]--> :: <!--[ $searchresult.forum_name ]--></a><br>
-        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]-->: <!--[ $searchresult.poster_name ]-->&nbsp;|&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_DATE' ]-->: <!--[ $searchresult.posted_time ]-->&nbsp;|&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_REPLIES' ]-->: <!--[ $searchresult.topic_replies ]--> | <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_VIEWS' ]-->: <!--[ $searchresult.topic_views ]--><br>
-        <!--[ $searchresult.post_text|truncate:128 ]-->
+<ul class="searchresultlist">
+<!--[ foreach key=num item=searchresult from=$searchresults ]-->
+    <li class="searchresult">
+        <strong>#<!--[ $searchstart+$num+1 ]--></strong><br />
+        <strong><!--[ pnml name='_PNFORUM_SUBJECT' ]--></strong> : <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$searchresult.topic_id highlight=$searchfor ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $searchresult.topic_title ]-->'"><!--[ $searchresult.topic_title ]--></a><br />
+        <strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong> : <a class="header" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$searchresult.forum_id ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $searchresult.forum_name ]-->'"><!--[ $searchresult.cat_title ]--> :: <!--[ $searchresult.forum_name ]--></a><br />
+        <strong><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]--></strong> : <!--[ $searchresult.poster_name|profilelink ]--><br />
+        <strong><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_DATE' ]--></strong> : <!--[ $searchresult.posted_time ]--><br />
+        <strong><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_REPLIES' ]--></strong> : <!--[ $searchresult.topic_replies ]--><br />
+        <strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong> :<br />
+        <br />
+        <!--[ $searchresult.post_text|truncate:128 ]--><br />
+        <br />
     </li>
 <!--[ foreachelse ]-->
-    <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NOENTRIES' ]-->
+    <li><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NOENTRIES' ]--></li>
 <!--[ /foreach ]-->
 </ul>
 <br />
