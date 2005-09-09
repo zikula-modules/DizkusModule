@@ -3,7 +3,7 @@
 <!--[ include file=pnforum_user_header.html ]-->
 
 <!--[* pndebug *]-->
-<table class="pnForum-border" border="0"  cellpadding="5" cellspacing="1" width="100%" summary="<!--[ pnml name='_PNFORUM_FORUMS' ]-->">
+<table class="pnForum-border" border="0"  cellpadding="5" cellspacing="1" width="97%" summary="<!--[ pnml name='_PNFORUM_FORUMS' ]-->">
     <thead>
         <tr style="text-align:left;background-color:<!--[ $bgcolor2 ]-->;" align="left">
             <th id="col_0" abbr="<!--[ if $favorites ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan="2" align="left" valign="middle">
@@ -66,9 +66,7 @@
         <!--[ /foreach ]-->
     </tbody>
 </table>
-<!--[ forumimage name=newposts_image assign=newposts ]-->
-<!--[ forumimage name=folder_image assign=folder ]-->
-<img src="<!--[ $newposts.name ]-->" alt="newposts_image" width="<!--[ $newposts.width ]-->" height="<!--[ $newposts.height ]-->" /> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
-<img src="<!--[ $folder.name ]-->" alt="folder_image" width="<!--[ $folder.width ]-->" height="<!--[ $folder.height ]-->" /> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
+<!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
+<!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
 
 <!--[ include file='pnforum_user_footer.html ]-->

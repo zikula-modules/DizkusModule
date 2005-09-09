@@ -1,7 +1,5 @@
 <!--[*  $Id$  *]-->
 
-<!--[ forumimage name=firstnew_image assign=firstnew ]-->
-
 <!--[* pndebug *]-->
 
 <!--[ include file='pnforum_user_header.html' ]-->
@@ -122,15 +120,11 @@
 </table>
 <!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
 <br /><br />
- <!--[ forumimage name=newposts_image assign=newposts ]-->
- <!--[ forumimage name=hot_newposts_image assign=hot_newposts ]-->
- <!--[ forumimage name=folder_image assign=folder ]-->
- <!--[ forumimage name=hot_folder_image assign=hot_folder ]-->
 
-<img src="<!--[ $newposts.name ]-->" alt="<!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> <!--[ $forum.last_visit ]-->" /> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
-<img src="<!--[ $hot_newposts.name ]-->" alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->" /> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
-<img src="<!--[ $folder.name ]-->" alt="<!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->" /> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
-<img src="<!--[ $hot_folder.name ]-->" alt="<!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->" /> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
+<!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
+<!--[ pnimg src="hot_red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
+<!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)<br />
+<!--[ pnimg src="hot_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--><br />
 <!--[ pnimg src="lock.gif" alt='_PNFORUM_ISLOCKED' altml=true ]--> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]-->
 
 
