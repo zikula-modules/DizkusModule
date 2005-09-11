@@ -468,6 +468,16 @@ function pnForum_user_topicadmin($args=array())
     }
     $shadow = (empty($shadow)) ? false : true;
 
+    if(empty($topic_id) && !empty($post_id)) {
+        $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_postid',
+                                 array('post_id' => $post_id));
+    }
+    $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+                          array('topic_id' => $topic_id));
+    if($topic['access_moderate']<>true) {
+        return showforumerror(_PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
+    }
+
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->add_core_data();
