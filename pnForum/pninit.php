@@ -221,9 +221,9 @@ function pnForum_init()
         return false;
     }
 
-    // upgrade to 2.0.2
-    $upgrade_to_202 = pnForum_upgrade_to_2_0_2();
-    if($upgrade_to_202 <> true) {
+    // upgrade to 25
+    $upgrade_to_2_5 = pnForum_upgrade_to_2_5();
+    if($upgrade_to_2_5 <> true) {
         return false;
     }
 
@@ -371,7 +371,7 @@ function pnForum_upgrade($oldversion)
             $ok = $ok && pnForum_upgrade_to_2_0_1();
         case '2.0.1':
             // upgrade to 2.0.2
-            $ok = $ok && pnForum_upgrade_to_2_0_2(true);
+            $ok = $ok && pnForum_upgrade_to_2_5(true);
         default: break;
     }
 
@@ -469,12 +469,12 @@ function pnForum_upgrade_to_2_0_1()
 }
 
 /**
- * upgrade to v2.0.2
+ * upgrade to v2.5
  *
  */
-function pnForum_upgrade_to_2_0_2($createindex=true)
+function pnForum_upgrade_to_2_5($createindex=true)
 {
-    if(pnSessionGetVar('upgrade_to_202_done') == 1) {
+    if(pnSessionGetVar('upgrade_to_2_5_done') == 1) {
         return true;
     }
 
@@ -506,6 +506,13 @@ function pnForum_upgrade_to_2_0_2($createindex=true)
     pnfCloseDB($result);
 
     // check the result from the interactive upgrade
+
+    // if we use an innodb table we cannot create inde fields
+    $dbtype = $GLOBALS['pnconfig']['dbtype'];
+    if(strtolower($dbtype) == 'innodb') {
+        $createindex = false;
+    }
+
     if($createindex == true) {
         $pnforumtopicstable = $pntable['pnforum_topics'];
         $sql = "ALTER TABLE $pnforumtopicstable
@@ -567,7 +574,7 @@ function pnForum_upgrade_to_2_0_2($createindex=true)
 	pnModSetVar('pnForum', 'hideusers', "no");
 
     // set a session to indicate that the upgrade is done
-    pnSessionSetVar('upgrade_to_202_done', 1);
+    pnSessionSetVar('upgrade_to_2_5_done', 1);
 
     return true;
 }
@@ -592,7 +599,7 @@ function pnForum_init_interactiveupgrade($args)
     $authid = pnSecGenAuthKey('Modules');
     switch($oldversion) {
         case '2.0.1':
-            $templatefile = 'pnforum_upgrade_202.html';
+            $templatefile = 'pnforum_upgrade_25.html';
             break;
         default:
             // no interactive upgrade for version < 2.0.1
@@ -610,10 +617,10 @@ function pnForum_init_interactiveupgrade($args)
 }
 
 /**
- * interactiveupgrade_to_2_0_2
+ * interactiveupgrade_to_2_5
  *
  */
-function pnForum_init_interactiveupgrade_to_2_0_2()
+function pnForum_init_interactiveupgrade_to_2_5()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
@@ -623,12 +630,12 @@ function pnForum_init_interactiveupgrade_to_2_0_2()
 
     if(!empty($submit)) {
         $createindex = ($createindex==1) ? true : false;
-        $result = pnForum_upgrade_to_2_0_2($createindex);
+        $result = pnForum_upgrade_to_2_5($createindex);
         if($result<>true) {
-            return showforumerror(_PNFORUM_TO202_FAILED, __FILE__, __LINE__);
+            return showforumerror(_PNFORUM_TO25_FAILED, __FILE__, __LINE__);
         }
-        pnSessionSetVar('upgrade_to_2_0_2_done', 1 );
-        pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.0.2' )));
+        pnSessionSetVar('upgrade_to_2_5_done', 1 );
+        pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
         return true;
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
