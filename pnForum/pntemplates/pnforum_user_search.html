@@ -37,7 +37,7 @@
         <label for="searchforums"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_FORUM' ]-->:</label>
     </div>
     <div style="float: left; width: 70%; text-align: left;">
-        <select name="searchforums[]" id="searchforums" size="1">
+        <select name="searchforums[]" id="searchforums" size="5" multiple="multiple">
         <option value="" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHALLFORUMS' ]--></option>
         <!--[ foreach item=forum from=$forums ]-->
         <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]--></option>

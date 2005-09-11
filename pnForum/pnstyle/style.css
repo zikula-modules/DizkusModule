@@ -146,18 +146,19 @@ legend {
     text-align: center;
 }
 
-.post-header-row, post-bottom-row {
-    clear: both;
+.post-header-row, .post-bottom-row {
+    /* clear: both; */
     width: 98%;
+    border: 1px solid red;
 }
 .post-header-left {
-    clear: both;
+    /* clear: both; */
     width: 24%;
     float: left;
     height: 2em;
     text-align: left;
-    padding-left: 3px;
-    padding-top: 0.5em;
+    margin-left: 3px;
+    margin-top: 0.5em;
 }
 
 .post-header-right {
@@ -165,37 +166,40 @@ legend {
     float: left;
     height: 2em;
     text-align: right;
-    padding-right: 5px;
-    padding-top: 0.5em;
+    margin-right: 5px;
+    margin-top: 0.5em;
+}
+
+.post-title-row {
+    width: 98%;
 }
 
 .post-title-left {
-    clear: both;
     width: 24%;
     float: left;
     text-align: left;
-    padding-left: 3px;
+    margin-left: 3px;
 }
 
 .post-title-right {
     width: 74%;
     float: left;
     text-align: left;
-    padding-left: 3px;
+    margin-left: 3px;
     font-size: 2em;
     font-weight: bold;
 }
 
 .post-content-row {
-    clear: both;
+    /* clear: both; */
     width: 98%;
 }
 
 .post-userinfo {
-    clear: both;
+    /* clear: both; */
     width: 24%;
     float: left;
-    padding: 3px;
+    margin: 3px;
     text-align: left;
     overflow: visible;
 }
@@ -204,55 +208,55 @@ legend {
     width: 74%;
     float: left;
     text-align: left;
-    padding: 3px;
+    margin: 3px;
     overflow: visible;
 }
 
 .post-bottom-left {
-    clear: both;
+    /* clear: both; */
     width: 24%;
     float: left;
     text-align: left;
-    padding-left: 3px;
+    margin-left: 3px;
 }
 
 .post-bottom-right {
     width: 74%;
     float: left;
     text-align: left;
-    padding-left: 3px;
+    margin-left: 3px;
 }
 
 .post-bottom2 {
-    clear: both;
+    /* clear: both; */
     width: 98%;
     float: left;
     text-align: right;
-    padding-right: 3px;
+    margin-right: 3px;
 }
 
 .post-bottom-userinfo {
     width: 49%;
     text-align: left;
     float: left;
-    padding-left: 5px;
+    margin-left: 5px;
 }
 
 .post-bottom-useroptions {
     width: 49%;
     text-align: right;
     float: right;
-    padding-right: 5px;
+    margin-right: 5px;
 }
 
-.quickreply-options,quickreply-options-header {
-    clear: both;
+.quickreply-options, .quickreply-options-header {
+    /* clear: both; */
     width: 30%;
     float: left;
     text-align: left;
 }
 
-.quickreply-text, quickreply-text-header {
+.quickreply-text, .quickreply-text-header {
     width: 66%;
     float: left;
 }

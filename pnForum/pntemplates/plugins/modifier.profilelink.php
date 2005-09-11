@@ -54,10 +54,13 @@
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
  */
-function smarty_modifier_profilelink($string)
+function smarty_modifier_profilelink($string, $class="")
 {
     $string = pnVarPrepForDisplay($string);
-    return '<a title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $string . '</a>';
+    if(!empty($class)) {
+        $class = 'class="' + $class . '" ';
+    }
+    return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $string . '</a>';
 }
 
 ?>
