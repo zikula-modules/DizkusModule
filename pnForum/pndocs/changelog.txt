@@ -4,7 +4,7 @@ PostNuke pnForum Module changelog
 
 
 ---------------------------------------------------------------------------------------------
-2.0.2 (fs)
+2.5 (fs)
 ---------------------------------------------------------------------------------------------
 This version needs .760 or later!
 Important changes:
@@ -13,7 +13,7 @@ Important changes:
 
 - fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
 - added mail2forum feature
-- forum search now with FULLTEXT index
+- forum search now optional with FULLTEXT index
 - bug fixes, cleanups (as usual)
 - new option to turn off the favorites system
 - easier topic subscription management for the user
@@ -25,7 +25,7 @@ Important changes:
   The fields image, altimage and image_attr are obsolete now and have been removed!!
 - the same is valid for the image in the main pnForum view, new field $forum.new_posts
   removed: fldr_img, fldr_img_attr, fldr_alt
-
+-
 ---------------------------------------------------------------------------------------------
 2.0.1 (fs)
 ---------------------------------------------------------------------------------------------
