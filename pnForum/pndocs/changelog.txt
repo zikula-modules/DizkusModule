@@ -25,7 +25,8 @@ Important changes:
   The fields image, altimage and image_attr are obsolete now and have been removed!!
 - the same is valid for the image in the main pnForum view, new field $forum.new_posts
   removed: fldr_img, fldr_img_attr, fldr_alt
--
+- a lot of other fixes and addons
+
 ---------------------------------------------------------------------------------------------
 2.0.1 (fs)
 ---------------------------------------------------------------------------------------------
