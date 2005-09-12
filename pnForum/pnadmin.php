@@ -129,7 +129,7 @@ function pnForum_admin_preferences()
         }
 
         $pnr =& new pnRender("pnForum");
-        $pnr->cachung = false;
+        $pnr->caching = false;
         $pnr->add_core_data();
         $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
@@ -233,7 +233,7 @@ function pnForum_admin_advancedpreferences()
         	$extendedsearch_checked = $checked;
         }
         $pnr =& new pnRender("pnForum");
-        $pnr->cachung = false;
+        $pnr->caching = false;
         $pnr->add_core_data();
         $pnr->assign('dbversion', $dbversion);
         $pnr->assign('dbtype', $dbconn->databaseType);
