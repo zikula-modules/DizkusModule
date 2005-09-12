@@ -41,9 +41,97 @@
  *
  ************************************************************************
  * Traduction française : Franck Barbenoire, le 18 janvier 2005         *
+ * Traduction française : Chestnut, le 11 septembre 2005                *
  ************************************************************************/
 
+define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'Paramètres manquants pour effectuer la recherche');
+define('_PNFORUM_NOMOVETO', 'Aucun forum cible où déplacer la sélection');
+define('_PNFORUM_NOJOINTO', 'Aucun sujet cible pour fusionner la sélection');
+define('_PNFORUM_SELECTACTION', 'sélectionner une action');
+define('_PNFORUM_SELECTTARGETFORUM', 'sélectionner un forum cible');
+define('_PNFORUM_SELECTTARGETTOPIC', 'sélectionner un sujet cible');
+define('_PNFORUM_OR', 'ou');
+define('_PNFORUM_MODERATE_JOINTOPICS_HINT', 'Si vous désirez fusionner des sujets, sélectionnez ici le sujet cible'); // Error in English file
+define('_PNFORUM_MODERATORSOPTIONS', 'Options - Modérateurs');
+define('_PNFORUM_JOINTOPICS', 'Fusionner des sujets');
+
+define('_PNFORUM_HOTTOPIC', 'Sujet chaud');
+define('_PNFORUM_HOTNEWTOPIC', 'Sujet chaud contenant des nouveaux messages');
+define('_PNFORUM_NORMALTOPIC', 'Sujet normal');
+define('_PNFORUM_NORMALNEWTOPIC', 'Sujet normal contenant des nouveaux messages');
+
+define('_PNFORUM_BLOCK_TEMPLATENAME', 'Nom du fichier template');
+define('_PNFORUM_BLOCK_PARAMETERS', 'Paramètres');
+define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'liste séparée par des virgules, e.g.. maxposts=5,forum_id=27 ');
+
+define('_PNFORUM_MODERATE','Moderer');
+define('_PNFORUM_SELECTED','Sélection');
+define('_PNFORUM_STICKYTOPICS','Coller les sujets sélectionnés');
+define('_PNFORUM_UNSTICKYTOPICS','Décoller les sujets sélectionnés');
+define('_PNFORUM_LOCKTOPICS','Verrouiller les sujets sélectionnés');
+define('_PNFORUM_UNLOCKTOPICS','Déverrouiller les sujets sélectionnés');
+define('_PNFORUM_DELETETOPICS','Supprimer les sujets sélectionnés');
+define('_PNFORUM_MOVETOPICS','Déplacer les sujets sélectionnés');
+define('_PNFORUM_MODERATE_MOVETOPICS_HINT','Choisissez le forum cible où déplacer les sujets :');
+define('_PNFORUM_SUBMIT_HINT','ATTENTION : pnForum ne vous demandera pas de confirmation ! Cliquer sur Soumettre débutera immédiatement l\'action sélectionnée!');
+
 // new
+define('_PNFORUM_TOGGLEALL', 'Supprimer toutes les inscriptions aux sujets');
+define('_PNFORUM_PREFS_HIDEUSERSINFORUMADMIN', 'Cacher les utilisateurs dans le forum admin');
+define('_PNFORUM_UNKNOWNUSER', '**utilisateur inconnu**');
+define('_PNFORUM_MANAGETOPICSUBSCRIPTIONS_HINT', 'Vous pouvez gérer les inscriptions aux sujets sur cette page.');
+define('_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND', 'Aucune inscription trouvée');
+define('_PNFORUM_MANAGETOPICSUBSCRIPTIONS', 'Administrer les inscriptions aux sujets');
+define('_PNFORUM_GROUP', 'Groupe');
+define('_PNFORUM_NOSPECIALRANKSINDATABASE', 'Aucun rang spécial dans la base de données. Vous pouvez en ajouter un par le formulaire ci-bas.');
+define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Utiliser la recherche étendue dans la recherche interne');
+define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>La recherche étendue permet l\'utilisation de paramètres comme "+pnforum -skype" pour trouver les messages contenant "pnforum" mais ne contenant pas "skype". Minimum requis : MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Recherche étendue sur MySQL">Recherche étendue sur MySQL</a>.');
+define('_PNFORUM_DATABASEINUSE', 'Base de données utilisée');
+define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX', 'Rechercher en utilisant la recherche par index');
+define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<i>La recherche utilisant les index de texte complet requiert min. MySQL 4 ou plus récent et ne fonctionne pas avec les bases InnoDB. Ce drapeau sera normalement utilisé lors de l\'installation lorsque les index auront été créés. Le résultat de la recherche pourrait être vide si la requête est présente dans un trop gran nombre de messages. C\'est une "fonctionnalité" MySQL.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL">Recherche Texte complet MySQL</a>.');
+define('_PNFORUM_ADMINADVANCEDCONFIG', 'Configuration avancée');
+define('_PNFORUM_ADMINADVANCEDCONFIG_HINT', 'Attention : De mauvais paramètres peuvent avoir des effets secondaires négatifs. Si vous ne comprenez pas ce qui se passe ici, ne prenez pas de risque et laissez la configuration comme elle est.');
+define('_PNFORUM_ADMINADVANCEDCONFIG_INFO', 'Attention, mettre à jour la configuration avancée !');
+define('_PNFORUM_MODERATION_NOTICE', 'Requête de Modération');
+define('_PNFORUM_NOTIFYMODERATORTITLE', 'Avertir un modérateur à propos d\'un message');
+define('_PNFORUM_REPORTINGUSERNAME', 'Rapporter un utilisateur');
+define('_PNFORUM_NOTIFYMODBODY1', 'Requête de modération');
+define('_PNFORUM_NOTIFYMODBODY2', 'Commentaire');
+define('_PNFORUM_NOTIFYMODBODY3', 'Lien au sujet');
+define('_PNFORUM_NOTIFYMODERATOR', 'avertir un modérateur');
+define('_PNFORUM_JOINTOPICS', 'Fusionner des sujets');
+define('_PNFORUM_JOINTOPICS_INFO', 'Fusionner deux sujets');
+define('_PNFORUM_JOINTOPICS_TOTOPIC', 'Sujet cible');
+
+define('_PNFORUM_MOVEPOST', 'Déplacer un message');
+define('_PNFORUM_MOVEPOST_INFO', 'Déplacer un message d\'un sujet à un autre');
+define('_PNFORUM_MOVEPOST_TOTOPIC', 'Sujet cible');
+
+define('_PNFORUM_MAIL2FORUMPOSTS', 'Listes de diffusion');
+define('_PNFORUM_NOSUBJECT', 'Aucun sujet');
+define('_PNFORUM_PREFS_FAVORITESENABLED', 'Favoris activés');
+define('_PNFORUM_PREFS_M2FENABLED', 'Mail2Forum activé');
+define('_PNFORUM_POP3TESTRESULTS', 'Resultats du test Pop3');
+define('_PNFORUM_BACKTOFORUMADMIN', 'Retour au forum admin');
+define('_PNFORUM_WRONGPNVERSIONFORMAIL2FORUM', 'Minimum requis pour le Mail2Forum : PostNuke .760 et plus !');
+define('_PNFORUM_MINSHORT', 'min');
+define('_PNFORUM_MAIL2FORUM', 'Mail2Forum');
+define('_PNFORUM_POP3ACTIVE', 'Mail2Forum activé');
+define('_PNFORUM_POP3TEST', 'Effectuer le test Pop3 après la sauvegarde');
+define('_PNFORUM_POP3SERVER', 'Serveur Pop3');
+define('_PNFORUM_POP3PORT', 'Port Pop3');
+define('_PNFORUM_POP3LOGIN', 'Login Pop3');
+define('_PNFORUM_POP3PASSWORD', 'Mot de passe Pop3');
+define('_PNFORUM_POP3PASSWORDCONFIRM', 'Confirmer le mot de passe Pop3');
+define('_PNFORUM_POP3INTERVAL', 'Interval de recherche de message');
+define('_PNFORUM_POP3MATCHSTRING', 'Règle');
+define('_PNFORUM_POP3MATCHSTRINGHINT', 'La règle est une expression régulière que doit contenir le sujet des mails pour éviter le spam. Aucune vérification si la règle est vide !');
+define('_PNFORUM_PASSWORDNOMATCH', 'Les mots de passe ne correspondent pas, s.v.p. revenez en arrière pour corriger');
+define('_PNFORUM_POP3PNUSER', 'Pseudo PN');
+define('_PNFORUM_POP3PNPASSWORD', 'Mot de passe PN');
+define('_PNFORUM_POP3PNPASSWORDCONFIRM', 'Confirmer le mot de passe PN');
+
+define('_PNFORUM_WHATISBBCODE', 'Le BBCode, c\'est quoi ?');
 define('_PNFORUM_START', 'Racine');
 define('_PNFORUM_PREFS_AUTOSUBSCRIBE', 'Inscription automatique aux nouveaux sujets et messages');
 
@@ -172,7 +260,6 @@ define('_PNFORUM_GOTOPAGE','Aller à la page');
 //
 // H
 //
-
 define('_PNFORUM_HOMEPAGE','Accueil');
 define('_PNFORUM_HONORARY_RANK','Titre honorifique');
 define('_PNFORUM_HONORARY_RANKS','Titres honorifiques');
@@ -195,7 +282,7 @@ define('_PNFORUM_LAST','dernières');
 define('_PNFORUM_LAST24','dernières 24 heures');
 define('_PNFORUM_LASTCHANGE','dernière modification le ');
 define('_PNFORUM_LASTPOST','Dernier message');
-define('_PNFORUM_LASTPOSTSTRING','%s<br>par %s');
+define('_PNFORUM_LASTPOSTSTRING','%s<br />par %s');
 define('_PNFORUM_LASTVISIT', 'dernière visite');
 define('_PNFORUM_LASTWEEK','semaine dernière');
 define('_PNFORUM_LATEST','Derniers messages');
@@ -278,7 +365,7 @@ define('_PNFORUM_POST','Envoyer');
 define('_PNFORUM_POSTED','Envoyé');
 define('_PNFORUM_POSTER','Expéditeur');
 define('_PNFORUM_POSTS','Messages');
-define('_PNFORUM_POWEREDBY', 'Powered by <a href="http://www.pnforum.de/" title="pnForum">pnForum</a> Version');
+define('_PNFORUM_POWEREDBY', 'Généré par <a href="http://www.pnforum.de/" title="pnForum">pnForum</a> Version');
 define('_PNFORUM_PREFS_ASCENDING', 'Ascendant');
 define('_PNFORUM_PREFS_CHARSET', 'Jeu de caractères par défaut :<br /><em>(c\'est le jeu de caractères utilisé dans les en-têtes des emails)</em>');
 define('_PNFORUM_PREFS_DESCENDING', 'Descendant');
@@ -342,7 +429,7 @@ define('_PNFORUM_RETURNTOTOPIC', 'Retour au sujet');
 // S
 //
 define('_PNFORUM_SAVEPREFS','Enregistrer vos préférences');
-define('_PNFORUM_SEARCH','chercher dans pnForum');
+define('_PNFORUM_SEARCH','Recherche');
 define('_PNFORUM_SEARCHALLFORUMS', 'tous les forums');
 define('_PNFORUM_SEARCHAND','tous les mots [AND]');
 define('_PNFORUM_SEARCHBOOL', 'condition logique');
@@ -384,7 +471,7 @@ define('_PNFORUM_STATSBLOCK','Nombre total de messages :');
 define('_PNFORUM_STATUS', 'Status');
 define('_PNFORUM_STICKY', 'Collé');
 define('_PNFORUM_STICKYTOPIC_INFO', 'Quand vous pressez le bouton de collage à la fin du formulaire, le sujet sera <strong>collé</strong>. Vous pourrez le décoller ultérieurement.');
-define('_PNFORUM_STICKYTOPIC','"Coller" ce sujet');
+define('_PNFORUM_STICKYTOPIC','Coller ce sujet');
 define('_PNFORUM_SUBJECT_MAX','(pas plus de 100 symboles)');
 define('_PNFORUM_SUBJECT','Sujet');
 define('_PNFORUM_SUBMIT','Envoyer');
