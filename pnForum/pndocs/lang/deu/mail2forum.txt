@@ -1,0 +1,57 @@
+$Id$
+
+
+Mail2Forum
+----------
+
+Mail2forum erlaubt es, Mailinglisten in ein Forum zu spiegeln. Dazu verbindet
+sich pnForum mit einem Scriupt, das üblicherweise per Cron aufgerufen wird, zu
+einem POP3-Server, holt die Mails und speichert sie unter einem beliebigen User-
+account ins Forum
+
+Konfiguration
+-------------
+
+Basiskonfiguration: Hier kann das Mail2Forum global ein- und ausgeschaltet werden.
+
+Einstellungen pro Forum:
+------------------------
+
+Mail2Forum aktivieren: Feature für dieses Forum ein- und ausschalten
+Pop3 Test nach dem Speichern durchführen: Ist der Haken gesetzt, wird nach dem
+Speichern ein Verbindungstest durchgeführt. Dabei werden noch keine Mails
+abgeholt.
+Pop3 Mailserver:
+Pop3 Port:
+Pop3 Login:
+Pop3 Kennwort: Diese Felder sind selbsterklärend
+Prüfintervall: noch nicht benutzt
+PN Username:
+PN Kennwort: Name und Kennwort des PostNuke-Users, unter dessen Namen die
+Mails im Forum gespeichert werden
+Regel: Filterregel, z.Zt. noch nicht benutzt.
+
+
+Benutzung:
+----------
+
+Die Mails werden mit dem mailcron.php Skript abgeholt. Dies wird üblicherweise
+per Cron in einem festen Interval, z.B. stündlich, aufgerufen.
+
+Vor dem ersten Aufruf muss mailcron.php angepasst werden:
+
+Zeile 37: //
+Zeile 38: // store the absolut path to your PostNuke folder here
+Zeile 39: //
+Zeile 40: chdir('/opt/lampp/htdocs/760');
+
+Danach sind keine Änderungen notwendig.
+
+Manueller Aufruf:
+-----------------
+
+http://www.meinedomain.de/modules/pnForum/mailron.php?debug=1
+
+verbindet zum Mailserver, holt Mails ab und sortiert sie ein. ?debug=1 zeigt
+dabei, was das Script gerade macht.
+
