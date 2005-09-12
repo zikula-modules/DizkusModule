@@ -41,6 +41,9 @@
  *
  ***********************************************************************/
 
+
+define('_PNFORUM_CB_RECENTPOSTS','Recent postings:');
+
 define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'Missing parameters to perform search');
 define('_PNFORUM_NOMOVETO', 'No target forum for moving selected');
 define('_PNFORUM_NOJOINTO', 'No target topic for joining selected');
@@ -48,7 +51,7 @@ define('_PNFORUM_SELECTACTION', 'select action');
 define('_PNFORUM_SELECTTARGETFORUM', 'select target forum');
 define('_PNFORUM_SELECTTARGETTOPIC', 'select target topic');
 define('_PNFORUM_OR', 'or');
-define('_PNFORUM_MODERATE_JOINTOPICS_HINT', 'If you want to joi topics, select the target topic here');
+define('_PNFORUM_MODERATE_JOINTOPICS_HINT', 'If you want to join topics, select the target topic here');
 define('_PNFORUM_MODERATORSOPTIONS', 'Moderators options');
 define('_PNFORUM_JOINTOPICS', 'Join topics');
 
@@ -85,10 +88,10 @@ define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Use extended f
 define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>The extended fulltext search enables parameters like "+pnforum -skype" for postings that contain "pnforum" but not "skype". Minimum requirement is MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Extended fulltest search in MySQL">Extended fulltest search in MySQL</a>.');
 define('_PNFORUM_DATABASEINUSE', 'Database in use');
 define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX', 'Search forums with fulltext index');
-define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<i>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the idex fields have been created. The searc result might by empty if the query string is present in too many postings. This is a "feature" of MySQL.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL">Fulltext search in MySQL</a>.');
+define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<i>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the index fields have been created. The search result might by empty if the query string is present in too many postings. This is a "feature" of MySQL.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL">Fulltext search in MySQL</a>.');
 define('_PNFORUM_ADMINADVANCEDCONFIG', 'Advanced configuration');
 define('_PNFORUM_ADMINADVANCEDCONFIG_HINT', 'Caution: wrong settings here can lead to unwanted side effects. If you do not understand what is going on here, stay away and leave the settings as they are!');
-define('_PNFORUM_ADMINADVANCEDCONFIG_INFO', 'Set advanced configurtion, caution!');
+define('_PNFORUM_ADMINADVANCEDCONFIG_INFO', 'Set advanced configuration, caution!');
 define('_PNFORUM_MODERATION_NOTICE', 'Moderation request');
 define('_PNFORUM_NOTIFYMODERATORTITLE', 'Notify a moderator about a posting');
 define('_PNFORUM_REPORTINGUSERNAME', 'Reporting user');
