@@ -77,6 +77,10 @@ function pnForum_centerblock_display($row)
 	    return;
 	}
 
+    // return immediately if no post exist
+    if(pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all')) == 0) {
+        return;
+    }
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
