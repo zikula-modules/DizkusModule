@@ -376,15 +376,19 @@ function pnForum_user_editpost($args=array())
         unset($args);
     } else {
         list($post_id,
+             $topic_id,
         	 $message,
         	 $subject,
         	 $submit,
         	 $delete,
+        	 $cancel,
         	 $preview) =  pnVarCleanFromInput('post',
+        	                                  'topic',
                                               'message',
                                               'subject',
                                               'submit',
                                               'delete',
+                                              'cancel',
                                               'preview');
     }
 

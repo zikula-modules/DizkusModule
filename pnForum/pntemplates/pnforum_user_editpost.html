@@ -1,5 +1,8 @@
 <!--[*  $Id$  *]-->
 
+<!--[ pnimg src="ok.gif" assign=ok ]-->
+<!--[ pnimg src="cancel.gif" assign=cancel ]-->
+
 <!--[* pndebug *]-->
 
 <!--[ include file='pnforum_user_header.html' ]-->
@@ -78,12 +81,9 @@
 <input type="hidden" name="topic"  value="<!--[ $post.topic_id ]-->" />
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <div style="vertical-align: middle;">
-    <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-    <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
-    </button>&nbsp;&nbsp;
-    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onClick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id ]-->'">
-    <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
-    </button>
+    <input name="submit" type="image" value="submit" src="<!--[ $ok.src ]-->" alt="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" />
+    &nbsp;&nbsp;
+    <input name="cancel" type="image" value="cancel" src="<!--[ $cancel.src ]-->" alt="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" />
 </div>
 </form>
 
