@@ -44,37 +44,6 @@
  * Traduction française : Chestnut, le 11 septembre 2005                *
  ************************************************************************/
 
-define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'Paramètres manquants pour effectuer la recherche');
-define('_PNFORUM_NOMOVETO', 'Aucun forum cible où déplacer la sélection');
-define('_PNFORUM_NOJOINTO', 'Aucun sujet cible pour fusionner la sélection');
-define('_PNFORUM_SELECTACTION', 'sélectionner une action');
-define('_PNFORUM_SELECTTARGETFORUM', 'sélectionner un forum cible');
-define('_PNFORUM_SELECTTARGETTOPIC', 'sélectionner un sujet cible');
-define('_PNFORUM_OR', 'ou');
-define('_PNFORUM_MODERATE_JOINTOPICS_HINT', 'Si vous désirez fusionner des sujets, sélectionnez ici le sujet cible'); // Error in English file
-define('_PNFORUM_MODERATORSOPTIONS', 'Options - Modérateurs');
-define('_PNFORUM_JOINTOPICS', 'Fusionner des sujets');
-
-define('_PNFORUM_HOTTOPIC', 'Sujet chaud');
-define('_PNFORUM_HOTNEWTOPIC', 'Sujet chaud contenant des nouveaux messages');
-define('_PNFORUM_NORMALTOPIC', 'Sujet normal');
-define('_PNFORUM_NORMALNEWTOPIC', 'Sujet normal contenant des nouveaux messages');
-
-define('_PNFORUM_BLOCK_TEMPLATENAME', 'Nom du fichier template');
-define('_PNFORUM_BLOCK_PARAMETERS', 'Paramètres');
-define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'liste séparée par des virgules, e.g.. maxposts=5,forum_id=27 ');
-
-define('_PNFORUM_MODERATE','Moderer');
-define('_PNFORUM_SELECTED','Sélection');
-define('_PNFORUM_STICKYTOPICS','Coller les sujets sélectionnés');
-define('_PNFORUM_UNSTICKYTOPICS','Décoller les sujets sélectionnés');
-define('_PNFORUM_LOCKTOPICS','Verrouiller les sujets sélectionnés');
-define('_PNFORUM_UNLOCKTOPICS','Déverrouiller les sujets sélectionnés');
-define('_PNFORUM_DELETETOPICS','Supprimer les sujets sélectionnés');
-define('_PNFORUM_MOVETOPICS','Déplacer les sujets sélectionnés');
-define('_PNFORUM_MODERATE_MOVETOPICS_HINT','Choisissez le forum cible où déplacer les sujets :');
-define('_PNFORUM_SUBMIT_HINT','ATTENTION : pnForum ne vous demandera pas de confirmation ! Cliquer sur Soumettre débutera immédiatement l\'action sélectionnée!');
-
 // new
 define('_PNFORUM_TOGGLEALL', 'Supprimer toutes les inscriptions aux sujets');
 define('_PNFORUM_PREFS_HIDEUSERSINFORUMADMIN', 'Cacher les utilisateurs dans le forum admin');
@@ -189,6 +158,9 @@ define('_PNFORUM_AUTHOR','Auteur');
 //
 // B
 //
+define('_PNFORUM_BLOCK_PARAMETERS', 'Paramètres');
+define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'liste séparée par des virgules, e.g.. maxposts=5,forum_id=27 ');
+define('_PNFORUM_BLOCK_TEMPLATENAME', 'Nom du fichier template');
 define('_PNFORUM_BODY','Corps du message');
 define('_PNFORUM_BOTTOM','Fin');
 
@@ -214,6 +186,7 @@ define('_PNFORUM_DATE','Date');
 define('_PNFORUM_DELETE','Supprimer ce message');
 define('_PNFORUM_DELETETOPIC_INFO', 'En appuyant sur le bouton de suppression à la fin de ce formulaire, le sujet sélectionné et tous les messages qui en dépendent seront <strong>définitivement</strong> supprimés.');
 define('_PNFORUM_DELETETOPIC','Supprimer ce sujet');
+define('_PNFORUM_DELETETOPICS','Supprimer les sujets sélectionnés');
 define('_PNFORUM_DESCRIPTION', 'Description');
 define('_PNFORUM_DOWN','Vers le bas');
 
@@ -264,7 +237,9 @@ define('_PNFORUM_HOMEPAGE','Accueil');
 define('_PNFORUM_HONORARY_RANK','Titre honorifique');
 define('_PNFORUM_HONORARY_RANKS','Titres honorifiques');
 define('_PNFORUM_HOST', 'Hôte');
+define('_PNFORUM_HOTNEWTOPIC', 'Sujet chaud contenant des nouveaux messages');
 define('_PNFORUM_HOTTHRES','Plus de %d messages');
+define('_PNFORUM_HOTTOPIC', 'Sujet chaud');
 define('_PNFORUM_HOURS','heures');
 
 //
@@ -288,18 +263,24 @@ define('_PNFORUM_LASTWEEK','semaine dernière');
 define('_PNFORUM_LATEST','Derniers messages');
 define('_PNFORUM_LOCKTOPIC_INFO', 'Quand vous pressez le bouton de verrouillage à la fin de ce formulaire, le sujet sélectionné sera <strong>verrouillé</strong>. Vous pourrez le déverouiller plus tard.');
 define('_PNFORUM_LOCKTOPIC','Verrouillez ce sujet');
+define('_PNFORUM_LOCKTOPICS','Verrouiller les sujets sélectionnés');
 
 //
 // M
 //
 define('_PNFORUM_MAILTO_NOBODY','Vous devez entrer un message.');
 define('_PNFORUM_MAILTO_WRONGEMAIL','Vous n\'avez pas saisi d\'adresse email pour le destinataire ou elle n\'est pas correcte.');
+define('_PNFORUM_MODERATE','Modérer');
 define('_PNFORUM_MODERATEDBY','Modéré par');
+define('_PNFORUM_MODERATE_JOINTOPICS_HINT', 'Si vous désirez fusionner des sujets, sélectionnez ici le sujet cible'); // Error in English file
+define('_PNFORUM_MODERATE_MOVETOPICS_HINT','Choisissez le forum cible où déplacer les sujets :');
 define('_PNFORUM_MODERATOR','Modérateur');
+define('_PNFORUM_MODERATORSOPTIONS', 'Options - Modérateurs');
 define('_PNFORUM_MORETHAN','Plus de ');
 define('_PNFORUM_MOVED_SUBJECT', 'déplacé');
 define('_PNFORUM_MOVETOPIC_INFO', 'Quand vous pressez le bouton de déplacement à la fin de ce formulaire, le sujet sélectionné et les messages qu\'il contient seront <strong>déplacés</strong> vers le forum sélectionné. Note: vous n\'êtes autorisé à déplacer que vers les forums dont vous êtes modérateur. L\'administrateur peut déplacer n\importe quel sujet dans n\importe quel forum.');
 define('_PNFORUM_MOVETOPIC','Déplacer ce sujet');
+define('_PNFORUM_MOVETOPICS','Déplacer les sujets sélectionnés');
 define('_PNFORUM_MOVETOPICTO','Déplacez le sujet vers :');
 
 //
@@ -324,13 +305,17 @@ define('_PNFORUM_NOAUTHPOST','Note: non autorisé à envoyer des commentaires');
 define('_PNFORUM_NOCATEGORIES', 'Pas de catégorie');
 define('_PNFORUM_NOFAVORITES','Pas de favoris');
 define('_PNFORUM_NOFORUMS', 'pas de forum');
+define('_PNFORUM_NOJOINTO', 'Aucun sujet cible pour fusionner la sélection');
 define('_PNFORUM_NOMODERATORSASSIGNED', 'pas de modérateur désigné');
+define('_PNFORUM_NOMOVETO', 'Aucun forum cible où déplacer la sélection');
 define('_PNFORUM_NONE', 'aucun');
 define('_PNFORUM_NONEWPOSTS','Pas de nouveau message depuis votre dernière visite.');
 define('_PNFORUM_NOPOSTLOCK','Vous ne pouvre pas répondre à ce message, le sujet est verrouillé.');
 define('_PNFORUM_NOPOSTS','Pas de message');
 define('_PNFORUM_NORANK', 'Pas de titre honorifique');
 define('_PNFORUM_NORANKSINDATABASE', 'Pas de titre honorifique');
+define('_PNFORUM_NORMALNEWTOPIC', 'Sujet normal contenant des nouveaux messages');
+define('_PNFORUM_NORMALTOPIC', 'Sujet normal');
 define('_PNFORUM_NOSMILES','Il n\'y a pas d\'émoticon dans la base de données');
 define('_PNFORUM_NOTEDIT','Vous ne pouvez pas modifier les messages dont vous n\'êtes pas l\'auteur.');
 define('_PNFORUM_NOTIFYBODY1','Forums');
@@ -352,6 +337,7 @@ define('_PNFORUM_OLDEST_FIRST','Afficher en premier les plus vieux messages');
 define('_PNFORUM_ONEREPLY','réponse');
 define('_PNFORUM_ONLINE', 'en ligne');
 define('_PNFORUM_OPTIONS','Options');
+define('_PNFORUM_OR', 'ou');
 define('_PNFORUM_OURLATESTPOSTS','Derniers messages du forum');
 
 //
@@ -454,7 +440,11 @@ define('_PNFORUM_SEARCHINCLUDE_TITLE','Chercher dans les forums');
 define('_PNFORUM_SEARCHINCLUDE_VIEWS','Affichages');
 define('_PNFORUM_SEARCHOR','un seul mot [OR]');
 define('_PNFORUM_SEARCHRESULTSFOR','Résultats de la recherche');
+define('_PNFORUM_SELECTACTION', 'sélectionner une action');
+define('_PNFORUM_SELECTED','Sélection');
 define('_PNFORUM_SELECTEDITCAT','Selectionnez une categorie');
+define('_PNFORUM_SELECTTARGETFORUM', 'sélectionner un forum cible');
+define('_PNFORUM_SELECTTARGETTOPIC', 'sélectionner un sujet cible');
 define('_PNFORUM_SEND_PM', 'Envoyer un message privé');
 define('_PNFORUM_SENDTO','Envoyer à');
 define('_PNFORUM_SEPARATOR','&nbsp;::&nbsp;');
@@ -472,9 +462,11 @@ define('_PNFORUM_STATUS', 'Status');
 define('_PNFORUM_STICKY', 'Collé');
 define('_PNFORUM_STICKYTOPIC_INFO', 'Quand vous pressez le bouton de collage à la fin du formulaire, le sujet sera <strong>collé</strong>. Vous pourrez le décoller ultérieurement.');
 define('_PNFORUM_STICKYTOPIC','Coller ce sujet');
+define('_PNFORUM_STICKYTOPICS','Coller les sujets sélectionnés');
 define('_PNFORUM_SUBJECT_MAX','(pas plus de 100 symboles)');
 define('_PNFORUM_SUBJECT','Sujet');
 define('_PNFORUM_SUBMIT','Envoyer');
+define('_PNFORUM_SUBMIT_HINT','ATTENTION : pnForum ne vous demandera pas de confirmation ! Cliquer sur Soumettre débutera immédiatement l\'action sélectionnée!');
 define('_PNFORUM_SUBSCRIBE_FORUM', 's\'inscrire au forum');
 define('_PNFORUM_SUBSCRIBE_STATUS','Etat de vos inscriptions');
 define('_PNFORUM_SUBSCRIBE_TOPIC','s\'inscrire au sujet');
@@ -501,9 +493,11 @@ define('_PNFORUM_TOTAL','Total');
 define('_PNFORUM_UALASTWEEK', 'dernière semaine, sans réponse');
 define('_PNFORUM_UNLOCKTOPIC_INFO', 'Quand vous pressez le bouton de déverrouillage à la fin du formulaire, le sujet sélectionné sera <strong>déverouillé</strong>. Vous pourrez le verrouiller à nouveau ultérieurement.');
 define('_PNFORUM_UNLOCKTOPIC','Déverrouiller ce sujet');
+define('_PNFORUM_UNLOCKTOPICS','Déverrouiller les sujets sélectionnés');
 define('_PNFORUM_UNREGISTERED','Utilisateur non enregistré');
 define('_PNFORUM_UNSTICKYTOPIC_INFO', 'Quand vous pressez le bouton de décollage à la fin de ce formulaire, le sujet sélectionné sera <strong>décollé</strong>. Vous pourrez le recoller ultérieurement.');
 define('_PNFORUM_UNSTICKYTOPIC','Sujet non collé');
+define('_PNFORUM_UNSTICKYTOPICS','Décoller les sujets sélectionnés');
 define('_PNFORUM_UNSUBSCRIBE_FORUM','se désinscrire du forum');
 define('_PNFORUM_UNSUBSCRIBE_TOPIC','se désinscrire du sujet');
 define('_PNFORUM_UP','Vers le haut');
