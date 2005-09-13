@@ -40,14 +40,8 @@
  */
 function smarty_function_readlastposts($params, &$smarty)
 {
-//$time_start= microtime_float();
     extract($params);
     unset($params);
-
-    if(!pnModAPILoad('pnForum', 'user')) {
-        $smarty->trigger_error('unable to load pnForum userapi');
-        return;
-    }
 
     $loggedIn = false;
     $uid = 1;
@@ -181,15 +175,12 @@ function smarty_function_readlastposts($params, &$smarty)
               pt.post_id = p.post_id
         ORDER by t.topic_time DESC";
 
-//    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $postcount = 0;
     $lastposts = array();
 
     $startreadat = 0;
     $postmaxread = false;
-//$temp_counter = 0;
     do {
-//$temp_counter++;
         // if the user wants to see the last x postings we read 5 * x because
         // we might get to forums he is not allowed to see
         // we do this until we got the requested number of postings
@@ -279,10 +270,6 @@ function smarty_function_readlastposts($params, &$smarty)
     pnfCloseDB($result);
     $smarty->assign('lastpostcount', count($lastposts));
     $smarty->assign('lastposts', $lastposts);
-//$time_end = microtime_float();
-//$time_used = $time_end - $time_start;
-//pnfdebug('time needed for readlastposts', $time_used);
-//pnfdebug('counter', $temp_counter);
     return;
 }
 
