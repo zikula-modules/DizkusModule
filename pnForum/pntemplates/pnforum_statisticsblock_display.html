@@ -2,19 +2,24 @@
 
 <!--[ readtopforums ]-->
 <!--[ if $topforumscount > 0 ]-->
-    <br /><strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_PNFORUM_ACTIVE_FORUMS' ]--></strong><br />
+    <br /><strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_PNFORUM_ACTIVE_FORUMS' ]--></strong>
+    <ul class="pnf_forumlist">
     <!--[ foreach item=topforum from=$topforums ]-->
-    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topforum.forum_id ]-->" title="<!--[ $topforum.cat_title ]--> :: <!--[ $topforum.forum_name ]-->"><!--[ $topforum.forum_name ]--></a>&nbsp;(<!--[ $topforum.forum_topics ]-->/<!--[ $topforum.forum_posts ]-->)<br />
+    <li><a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topforum.forum_id ]-->" title="<!--[ $topforum.cat_title ]--> :: <!--[ $topforum.forum_name ]-->"><!--[ $topforum.forum_name ]--></a>
+        <br />
+        (<!--[ $topforum.forum_topics ]-->/<!--[ $topforum.forum_posts ]-->)</li>
     <!--[ /foreach ]-->
+    </ul>
     <br />
 <!--[ /if ]-->
 
 <!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *]-->
 <!--[ readlastposts maxposts=$maxposts ]-->
 <!--[ if $lastpostcount > 0 ]-->
-    <br /><strong><!--[ $lastpostcount ]--> <!--[ pnml name='_PNFORUM_RECENT_POSTS' ]--></strong><br />
+    <br /><strong><!--[ $lastpostcount ]--> <!--[ pnml name='_PNFORUM_RECENT_POSTS' ]--></strong>
+    <ul class="pnf_postlist">
     <!--[ foreach item=lastpost from=$lastposts ]-->
-    <strong><big>&middot;</big></strong>&nbsp;<a href="<!--[ $lastpost.last_post_url_anchor|pnvarprepfordisplay ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.title_tag|pnvarprepfordisplay|pnvarcensor ]-->"><!--[ $lastpost.topic_title|pnforumbbsmile|pnvarcensor|truncate:25 ]--></a>
+    <li><a href="<!--[ $lastpost.last_post_url_anchor|pnvarprepfordisplay ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.title_tag|pnvarprepfordisplay|pnvarcensor ]-->"><!--[ $lastpost.topic_title|pnforumbbsmile|pnvarcensor|truncate:21 ]--></a>
     <br />
     <!--[ $lastpost.topic_replies ]-->
     <!--[ if $lastpost.topic_replies eq 1 ]-->
@@ -23,25 +28,29 @@
         <!--[ pnml name='_PNFORUM_REPLIES' ]-->
     <!--[ /if ]-->
     <br />
-    <!--[ $lastpost.poster_name ]--><br /><!--[ $lastpost.posted_time ]-->
-    <br />
+    <!--[ $lastpost.poster_name|profilelink ]--><br /><!--[ $lastpost.posted_time ]-->
+    </li>
     <!--[ /foreach ]-->
+    </ul>
     <br />
 <!--[ /if ]-->
 
 <!--[ readtopposters ]-->
 <!--[ if $toppostercount > 0 ]-->
-    <br /><strong><!--[ $toppostercount ]--> <!--[ pnml name='_PNFORUM_ACTIVE_POSTERS' ]--></strong><br />
+    <br /><strong><!--[ $toppostercount ]--> <!--[ pnml name='_PNFORUM_ACTIVE_POSTERS' ]--></strong>
+    <ul class="pnf_posterlist">
     <!--[ foreach item=topposter from=$topposters ]-->
-        <strong><big>&middot;</big></strong>&nbsp;<a href="user.php?op=userinfo&amp;uname=<!--[ $topposter.user_name ]-->"><!--[ $topposter.user_name ]--></a><br />(<!--[ $topposter.user_posts ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->)<br />
+        <li><!--[ $topposter.user_name|profilelink ]--><br />(<!--[ $topposter.user_posts ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->)</li>
     <!--[ /foreach ]-->
+</ul>
     <br />
 <!--[ /if ]-->
 
 <!--[ readstatistics ]-->
-<br /><strong><!--[ pnml name='_PNFORUM_TOTAL' ]-->:</strong><br />
-<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_CATEGORIES' ]-->: <!--[ $total_categories ]--><br />
-<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_FORUMS' ]-->: <!--[ $total_forums ]--><br />
-<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_TOPICS' ]-->: <!--[ $total_topics ]--><br />
-<strong><big>&middot;</big></strong>&nbsp;<!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $total_posts ]--><br />
-
+<br /><strong><!--[ pnml name='_PNFORUM_TOTAL' ]-->:</strong>
+<ul class="pnf_statslist">
+<li><!--[ pnml name='_PNFORUM_CATEGORIES' ]-->: <!--[ $total_categories ]--></li>
+<li><!--[ pnml name='_PNFORUM_FORUMS' ]-->: <!--[ $total_forums ]--></li>
+<li><!--[ pnml name='_PNFORUM_TOPICS' ]-->: <!--[ $total_topics ]--></li>
+<li><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $total_posts ]--></li>
+</ul>

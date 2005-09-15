@@ -272,3 +272,51 @@ legend {
     padding: 3px;
     background: #E5E7E8;
 }
+
+ul.pnf_forumlist {
+    padding: 0 0 0 0.8em;
+    margin: 0 0 0 0.8em;
+    list-style-position: outside;
+    list-style-image: url('../pnimages/arrow.gif');
+}
+
+ul.pnf_forumlist li {
+    padding: 0;
+    margin: 0;
+}
+
+.pnf_postlist {
+    padding: 0 0 0 0.8em;
+    margin: 0 0 0 0.8em;
+    list-style-position: outside;
+    list-style-image: url('../pnimages/arrow.gif');
+}
+
+ul.pnf_postlist li {
+    padding: 0;
+    margin: 0;
+}
+
+.pnf_posterlist {
+    padding: 0 0 0 0.8em;
+    margin: 0 0 0 0.8em;
+    list-style-position: outside;
+    list-style-image: url('../pnimages/arrow.gif');
+}
+
+ul.pnf_posterlist li {
+    padding: 0;
+    margin: 0;
+}
+
+.pnf_statslist {
+    padding: 0 0 0 0.8em;
+    margin: 0 0 0 0.8em;
+    list-style-position: outside;
+    list-style-image: url('../pnimages/arrow.gif');
+}
+
+ul.pnf_statslist li {
+    padding: 0;
+    margin: 0;
+}
