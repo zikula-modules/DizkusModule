@@ -5,6 +5,8 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false textfieldid=message ]-->
+
 <!--[* pndebug *]-->
 <div>
 <strong><!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnforumbbsmile|pnvarcensor ]--></strong>
@@ -81,13 +83,24 @@
 <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <br /><br />
-<div style="vertical-align: middle;">
-    <input name="submit" type="image" value="submit" src="<!--[ $ok.src ]-->" alt="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" />
-    &nbsp;&nbsp;
-    <input name="cancel" type="image" value="cancel" src="<!--[ $cancel.src ]-->" alt="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" />
-<!--[ plainbbcode textfieldid='message' ]--><br />
-<!--[ bbsmile textfieldid=message ]-->
+<!--[ $hooks.pn_bbcode ]-->
+<!--[ $hooks.pn_bbsmile ]-->
 <br />
+<div style="vertical-align: middle;">
+    <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+    <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
+    </button>
+    &nbsp;&nbsp;
+    <button name="cancel" type="submit" value="cancel" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
+    <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
+    </button>
+
+    <!--[*
+    HTML for Typetool - not supported!!!
+        <input name="submit" type="submit" value=" <!--[ pnml name='_PNFORUM_SUBMIT' ]--> " />
+        &nbsp;&nbsp;
+        <input name="cancel" type="submit" value=" <!--[ pnml name='_PNFORUM_CANCELPOST' ]--> " />
+    *]-->
 </div>
 </fieldset>
 </form>

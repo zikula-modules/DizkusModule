@@ -7,6 +7,8 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false textfieldid=message ]-->
+
 <form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
 
 <strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor ]--></strong>
@@ -64,8 +66,8 @@
 <label for="message"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
 <textarea name="message" rows="10" cols="80" id="message" tabindex="0"><!--[ $post.post_text ]--></textarea>
 <br />
-<!--[ plainbbcode textfieldid=message ]-->
-<!--[ bbsmile textfieldid=message ]-->
+<!--[ $hooks.pn_bbcode ]-->
+<!--[ $hooks.pn_bbsmile ]-->
 <br /><br />
 <!--[ pnml name='_PNFORUM_OPTIONS' ]-->:
 <br/>
@@ -81,9 +83,20 @@
 <input type="hidden" name="topic"  value="<!--[ $post.topic_id ]-->" />
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <div style="vertical-align: middle;">
-    <input name="submit" type="image" value="submit" src="<!--[ $ok.src ]-->" alt="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" />
+    <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+    <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
+    </button>
     &nbsp;&nbsp;
-    <input name="cancel" type="image" value="cancel" src="<!--[ $cancel.src ]-->" alt="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" />
+    <button name="cancel" type="submit" value="cancel" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
+    <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
+    </button>
+
+    <!--[*
+    HTML for Typetool - not supported!!!
+        <input name="submit" type="submit" value=" <!--[ pnml name='_PNFORUM_SUBMIT' ]--> " />
+        &nbsp;&nbsp;
+        <input name="cancel" type="submit" value=" <!--[ pnml name='_PNFORUM_CANCELPOST' ]--> " />
+    *]-->
 </div>
 </form>
 
