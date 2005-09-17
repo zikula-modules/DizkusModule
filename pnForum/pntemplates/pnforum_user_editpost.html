@@ -1,8 +1,5 @@
 <!--[*  $Id$  *]-->
 
-<!--[ pnimg src="ok.gif" assign=ok ]-->
-<!--[ pnimg src="cancel.gif" assign=cancel ]-->
-
 <!--[* pndebug *]-->
 
 <!--[ include file='pnforum_user_header.html' ]-->
@@ -87,7 +84,8 @@
     <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
     </button>
     &nbsp;&nbsp;
-    <button name="cancel" type="submit" value="cancel" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
+
+    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id ]-->'">
     <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
     </button>
 

@@ -1,8 +1,5 @@
 <!--[*  $Id$  *]-->
 
-<!--[ pnimg src="ok.gif" assign=ok ]-->
-<!--[ pnimg src="cancel.gif" assign=cancel ]-->
-
 <!--[* pndebug *]-->
 
 <!--[ include file='pnforum_user_header.html' ]-->
@@ -31,7 +28,7 @@
                     <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
                     	<td rowspan="2" valign="top">
                         <!--[ if $loggedin ]-->
-                    	    <a href="user.php?op=userinfo&amp;uname=<!--[ $newtopic.poster_data.pn_uname ]-->"><strong><!--[ $newtopic.poster_data.pn_uname ]--></strong></a>
+                    	    <strong><!--[ $newtopic.poster_data.pn_uname|profilelink ]--></strong>
                     	    <!--[  if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     		<br /><img src="<!--[ $newtopic.poster_data.pn_user_avatar ]-->" alt="<!--[ $newtopic.poster_data.pn_uname ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> />
                     	    <!--[ /if ]-->
@@ -84,7 +81,7 @@
     <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
     </button>
     &nbsp;&nbsp;
-    <button name="cancel" type="submit" value="cancel" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
+    <button name="reset" type="button" value="reset" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$newtopic.forum_id ]-->'">
     <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
     </button>
 <!--[*

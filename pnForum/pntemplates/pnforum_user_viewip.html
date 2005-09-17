@@ -42,7 +42,7 @@
                 </tr>
                 <!--[ foreach item=user from=$viewip.users ]-->
                 <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td><a href="user.php?op=userinfo&amp;uname=<!--[ $user.pn_uname ]-->"><strong><!--[ $user.pn_uname ]--></strong></a></td>
+                    <td><!--[ $user.pn_uname|profilelink ]--></td>
                     <td><!--[ $user.postcount ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--></td>
                 </tr>
                 <!--[ /foreach ]-->

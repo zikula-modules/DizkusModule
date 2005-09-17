@@ -42,25 +42,50 @@
  * Smarty modifier to create a link to a users profile
  *
  * Available parameters:
-
+ *
  * Example
  *
+ *   Simple version, shows $username
  *   <!--[$username|profilelink]-->
+ *   Simple version, shows $username, using class="classname"
+ *   <!--[$username|profilelink:classname]-->
+ *   Using profile.gif instead of username, no class
+ *   <!--[$username|profilelink:'':'images/profile.gif']-->
  *
+ *   Using language depending image from pnimg. Note that we pass
+ *   the pnimg result array to the modifier as-is
+ *   <!--[ pnimg src='profile.gif' assign=profile]-->
+ *   <!--[$username|profilelink:'classname':$profile]-->
  *
  * @author       Frank Schummertz
  * @author       The pnForum team
- * @since        16. Sept. 2003
- * @param        array    $string     the contents to transform
- * @return       string   the modified output
+ * @version      $Id$
+ * @param        $string    string       the users name
+ * @param        $class     string       the class name for the link (optional)
+ * @param        $image     string/array the image to show instead of the username (optional)
+ *                                       may be an array as created by pnimg
+ * @return       string   the output
  */
-function smarty_modifier_profilelink($string, $class="")
+function smarty_modifier_profilelink($string, $class='', $image='')
 {
     $string = pnVarPrepForDisplay($string);
+
     if(!empty($class)) {
         $class = 'class="' + $class . '" ';
     }
-    return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $string . '</a>';
+
+    if(!empty($image)) {
+        if(is_array($image)) {
+            // if it is an array we assume that it is an pnimg array
+            $show = '<img src="' . $image['src'] . '" alt="' . $image['alt'] . '" width="' . $image['width'] . '" height="' . $image['height'] . '" />';
+
+        } else {
+            $show = '<img src="' . $image . '" alt="' . $string . '" />';
+        }
+    } else {
+        $show = $string;
+    }
+    return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $show . '</a>';
 }
 
 ?>
