@@ -5,10 +5,11 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false textfieldid=message ]-->
+
 <div>
 <strong><!--[ pnml name='_PNFORUM_NEW_THREADS' ]--></strong>
 <br />
-<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=newtopic ]-->" method="post">
+<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=newtopic ]-->" method="post" enctype="multipart/form-data">
 <!--[ if $preview eq true ]-->
 <div>
     <strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong>
@@ -27,7 +28,7 @@
                     </tr>
                     <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
                     	<td rowspan="2" valign="top">
-                        <!--[ if $loggedin ]-->
+                        <!--[ if $pncore.logged_in ]-->
                     	    <strong><!--[ $newtopic.poster_data.pn_uname|profilelink ]--></strong>
                     	    <!--[  if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     		<br /><img src="<!--[ $newtopic.poster_data.pn_user_avatar ]-->" alt="<!--[ $newtopic.poster_data.pn_uname ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> />
@@ -68,6 +69,7 @@
 <br />
 <!--[ $hooks.pn_bbcode ]-->
 <!--[ $hooks.pn_bbsmile ]-->
+<!--[ $hooks.pnUpper ]-->
 <br /><br />
 <input type="hidden" name="forum"  value="<!--[ $newtopic.forum_id ]-->" />
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />

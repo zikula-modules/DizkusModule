@@ -70,7 +70,7 @@
 <input type="checkbox" id="attach_signature" name="attach_signature" <!--[ if $reply.attach_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
 <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
 <br />
-<!--[ if $loggedin ]-->
+<!--[ if $pncore.logged_in ]-->
 <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $reply.subscribe_topic eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
 <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
 <br />
@@ -82,6 +82,7 @@
 <br /><br />
 <!--[ $hooks.pn_bbcode ]-->
 <!--[ $hooks.pn_bbsmile ]-->
+<!--[ $hooks.pnUpper ]-->
 <br />
 <div style="vertical-align: middle;">
     <button name="submit" type="submit" value="submit" style="border: none; background: transparent;" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
