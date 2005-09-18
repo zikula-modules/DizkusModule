@@ -406,11 +406,11 @@ define('_PNFORUM_REPLYQUOTE', 'quote');
 define('_PNFORUM_REPLY_POST','Reply to');
 define('_PNFORUM_REPORTINGUSERNAME', 'Reporting user');
 define('_PNFORUM_RETURNTOTOPIC', 'Back to the topic');
-d
+
 //
 // S
 //
-efine('_PNFORUM_SAVEPREFS','Save Preferences');
+define('_PNFORUM_SAVEPREFS','Save Preferences');
 define('_PNFORUM_SEARCH','search pnForum');
 define('_PNFORUM_SEARCHALLFORUMS', 'alle forums');
 define('_PNFORUM_SEARCHAND','all words [AND]');
