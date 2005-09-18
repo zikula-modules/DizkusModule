@@ -95,7 +95,6 @@ function pnForum_user_main($args=array())
     $pnr->assign( 'view_category', $viewcat);
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
-    $pnr->assign( 'loggedin', $loggedIn);
     $pnr->assign( 'numposts', pnModAPIFunc('pnForum', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
@@ -175,7 +174,6 @@ function pnForum_user_viewtopic($args=array())
     $pnr->assign( 'topic', $topic);
     $pnr->assign( 'post_count', count($topic['posts']));
     $pnr->assign( 'hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
-    $pnr->assign( 'loggedin', pnUserLoggedIn());
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
     return $pnr->fetch('pnforum_user_viewtopic.html');
@@ -269,7 +267,6 @@ function pnForum_user_reply($args=array())
         $pnr->add_core_data();
         $pnr->assign( 'reply', $reply);
         $pnr->assign( 'preview', $preview);
-        $pnr->assign( 'loggedin', pnUserLoggedIn());
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('pnforum_user_reply.html');
@@ -354,7 +351,6 @@ function pnForum_user_newtopic($args=array())
         $pnr->add_core_data();
         $pnr->assign( 'preview', $preview);
         $pnr->assign( 'newtopic', $newtopic);
-        $pnr->assign( 'loggedin', pnUserLoggedIn());
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('pnforum_user_newtopic.html');
