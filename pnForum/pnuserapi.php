@@ -1195,8 +1195,9 @@ function pnForum_userapi_storereply($args)
     $start = pnForum_userapi_get_last_topic_page(array('topic_id' => $topic_id));
 
     // Let any hooks know that we have created a new item.
-    pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
-    pnModCallHooks('item', 'create', $topic_id, array('module' => 'pnForum'));
+    //pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
+    pnModCallHooks('item', 'create', $topic_id, array('module' => 'pnForum',
+                                                      'post_id' => $post_id));
 
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
 
@@ -1744,8 +1745,9 @@ function pnForum_userapi_updatepost($args)
             }
         }
         // Let any hooks know that we have updated an item.
-        pnModCallHooks('item', 'update', $post_id, array('module' => 'pnForum'));
-        pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum'));
+        //pnModCallHooks('item', 'update', $post_id, array('module' => 'pnForum'));
+        pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
+                                                          'post_id' => $post_id));
 
         // update done, return now
         return pnModURL('pnForum', 'user', 'viewtopic',
@@ -1771,7 +1773,7 @@ function pnForum_userapi_updatepost($args)
         pnfCloseDB($result);
 
         // Let any hooks know that we have deleted an item.
-        pnModCallHooks('item', 'delete', $post_id, array('module' => 'pnForum'));
+        //pnModCallHooks('item', 'delete', $post_id, array('module' => 'pnForum'));
 
         //
         // there are several possibilities now:
