@@ -1196,7 +1196,7 @@ function pnForum_userapi_storereply($args)
 
     // Let any hooks know that we have created a new item.
     //pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
-    pnModCallHooks('item', 'create', $topic_id, array('module' => 'pnForum',
+    pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
                                                       'post_id' => $post_id));
 
     pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));

@@ -2,7 +2,7 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false textfieldid=message ]-->
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false textfieldid=message ]-->
 
 <!--[* pndebug *]-->
 <div>
@@ -61,7 +61,7 @@
 
 
 <div>
-<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post">
+<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post" enctype="multipart/form-data">
 <fieldset style="border:none;">
 <textarea name="message" rows="15" cols="80" id="message" tabindex="0"><!--[ $reply.message ]--></textarea>
 <br />

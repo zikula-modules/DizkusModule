@@ -6,7 +6,7 @@
 
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false textfieldid=message ]-->
 
-<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post">
+<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post" enctype="multipart/form-data">
 
 <strong><!--[ pnml name='_PNFORUM_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor ]--></strong>
 <br /><br />
