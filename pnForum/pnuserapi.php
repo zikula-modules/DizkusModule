@@ -2339,6 +2339,9 @@ function pnForum_userapi_deletetopic($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
+    // Let any hooks know that we have deleted an item (topic).
+    pnModCallHooks('item', 'delete', $topic_id, array('module' => 'pnForum'));
+
     pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
     return $forum_id;
 
