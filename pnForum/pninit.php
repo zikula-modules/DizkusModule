@@ -55,6 +55,8 @@ function pnForum_init()
 {
     list($dbconn, $pntable) = pnfOpenDB();
 
+    pnSessionSetVar('upgrade_to_2_5_done', 0);
+
     // creating categories table
     $pnforumcategoriestable = $pntable['pnforum_categories'];
     $pnforumcategoriescolumn = &$pntable['pnforum_categories_column'];
@@ -222,7 +224,7 @@ function pnForum_init()
     }
 
     // upgrade to 25
-    $upgrade_to_2_5 = pnForum_upgrade_to_2_5();
+    $upgrade_to_2_5 = pnForum_upgrade_to_2_5(true);
     if($upgrade_to_2_5 <> true) {
         return false;
     }
@@ -370,9 +372,10 @@ function pnForum_upgrade($oldversion)
             // upgrade to 2.0.1
             $ok = $ok && pnForum_upgrade_to_2_0_1();
         case '2.0.1':
-            // upgrade to 2.0.2
+            // upgrade to 2.5
             $ok = $ok && pnForum_upgrade_to_2_5(true);
-        default: break;
+        default:
+            break;
     }
 
     return $ok;
