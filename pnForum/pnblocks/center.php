@@ -140,8 +140,8 @@ function pnForum_centerblock_modify($row)
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
-    if(empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
-    if(empty($vars['cb_template']))   { $vars['cb_template']   = 'pnforum_centerblock_display.html'; }
+    if(!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
+    if(!isset($vars['cb_template']) || empty($vars['cb_template']))   { $vars['cb_template']   = 'pnforum_centerblock_display.html'; }
 
     $pnRender = new pnRender('pnForum');
     $pnRender->caching = false;
