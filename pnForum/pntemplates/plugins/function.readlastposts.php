@@ -30,7 +30,7 @@
  * reads the last $maxposts postings of forum $forum_id and assign them in a
  * variable lastposts and the number of them in lastpostcount
  *
- *@params maxposts (int) number of posts to read, default = 10
+ *@params maxposts (int) number of posts to read, default = 5
  *@params forum_id (int) forum_id, if not set, all forums
  *@params user_id  (int) -1 = last postings of current user, otherwise its treated as an user_id
  *@params canread (bool) if set, only the forums that we have read access to
@@ -43,11 +43,21 @@ function smarty_function_readlastposts($params, &$smarty)
     extract($params);
     unset($params);
 
+    $maxposts = (isset($maxposts)) ? (int)$maxposts : 5;
+
     $loggedIn = false;
     $uid = 1;
     if (pnUserLoggedIn()) {
         $loggedIn = true;
         $uid = (int)pnUserGetVar('uid');
+    }
+
+    // get number of posts in db
+    $numposts = pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all'));
+    if($numposts==0) {
+        $smarty->assign('lastpostcount', 0);
+        $smarty->assign('lastposts', array());
+        return;
     }
 
     include_once('modules/pnForum/common.php');
@@ -134,7 +144,9 @@ function smarty_function_readlastposts($params, &$smarty)
         $whereshowm2f = '';
     }
 
-    $postmax = (!empty($maxposts)) ? $maxposts : 5;
+    //check how much we have to read
+    $postmax = (empty($maxposts) || $maxposts==0) ? 5: $maxposts;
+    $postmax = ($numposts < $maxposts) ? $numposts : $maxposts;
 
     // user_id set?
     $whereuser = "";
@@ -264,7 +276,10 @@ function smarty_function_readlastposts($params, &$smarty)
             }
             // prepare the next round of reading topics
             $startreadat = $postcount;
+        } else {
+            $postmaxread = true;
         }
+
     } while($postmaxread==false);
 
     pnfCloseDB($result);
