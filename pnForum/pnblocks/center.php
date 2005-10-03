@@ -78,25 +78,32 @@ function pnForum_centerblock_display($row)
 	}
 
     // return immediately if no post exist
-    if(pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all')) == 0) {
+    if(pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all'))==0) {
         return;
     }
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
+    $pnr =& new pnRender('pnForum');
+    $pnr->add_core_data();
+    $pnr->caching = false;
+
     // check if cb_template is set, if not, use the default centerblock template
     if(empty($vars['cb_template'])) {
         $vars['cb_template'] = "pnforum_centerblock_display.html";
     }
+    if(empty($vars['cb_parameters'])) {
+        $vars['cb_parameters'] = "maxposts=5";
+    }
     $params = explode(",", $vars['cb_parameters']);
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
-    if(is_array($params) && count($params)>0) {
+
+    if(is_array($params) &&(count($params)>0)) {
         foreach($params as $param) {
             $paramdata = explode("=", $param);
             $pnr->assign(trim($paramdata[0]), trim($paramdata[1]));
         }
     }
+
     $row['content'] = $pnr->fetch($vars['cb_template']);
 	return themesideblock($row);
 }
@@ -113,8 +120,8 @@ function pnForum_centerblock_update($row)
          $cb_parameters) = pnVarCleanFromInput('cb_template',
                                                'cb_parameters');
 
-    if(empty($cb_parameters)) { $cb_parameters = ""; }
-    if(empty($cb_template))   { $cb_template = "pnforum_centerblock_display.html"; }
+    if(empty($cb_parameters)) { $cb_parameters = 'maxposts=5'; }
+    if(empty($cb_template))   { $cb_template = 'pnforum_centerblock_display.html'; }
 
     $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
     return($row);
@@ -132,6 +139,9 @@ function pnForum_centerblock_modify($row)
 
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
+
+    if(empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
+    if(empty($vars['cb_template']))   { $vars['cb_template']   = 'pnforum_centerblock_display.html'; }
 
     $pnRender = new pnRender('pnForum');
     $pnRender->caching = false;

@@ -80,9 +80,16 @@ function pnForum_statisticsblock_display($row)
     if(empty($vars['sb_template'])) {
         $vars['sb_template'] = "pnforum_statisticsblock_display.html";
     }
-    $params = explode(",", $vars['sb_parameters']);
+    if(empty($vars['sb_parameters'])) {
+        $vars['sb_parameters'] = "maxposts=5";
+    }
+
     $pnr =& new pnRender('pnForum');
+    $pnr->add_core_data();
     $pnr->caching = false;
+
+    $params = explode(",", $vars['sb_parameters']);
+
     if(is_array($params) && count($params)>0) {
         foreach($params as $param) {
             $paramdata = explode("=", $param);
@@ -105,8 +112,8 @@ function pnForum_statisticsblock_update($row)
          $sb_parameters) = pnVarCleanFromInput('sb_template',
                                                'sb_parameters');
 
-    if(empty($sb_parameters)) { $sb_parameters = ""; }
-    if(empty($sb_template))   { $sb_template = "pnforum_statisticsblock_display.html"; }
+    if(empty($sb_parameters)) { $sb_parameters = 'maxposts=5'; }
+    if(empty($sb_template))   { $sb_template = 'pnforum_statisticsblock_display.html'; }
 
     $row['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
     return($row);
@@ -123,6 +130,9 @@ function pnForum_statisticsblock_modify($row)
 
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
+
+    if(!isset($vars['sb_parameters']) || empty($vars['sb_parameters'])) { $vars['sb_parameters'] = 'maxposts=5'; }
+    if(!isset($vars['sb_template']) || empty($vars['sb_template']))   { $vars['sb_template']   = 'pnforum_statisticsblock_display.html'; }
 
     $pnRender = new pnRender('pnForum');
     $pnRender->caching = false;
