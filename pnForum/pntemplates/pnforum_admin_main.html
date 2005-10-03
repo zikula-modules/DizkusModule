@@ -28,25 +28,25 @@
     <legend>
         <strong><!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
     </legend>
-    <div style="clear: both; width: 98%;">
-        <div style="float: left; width: 45%; text-align: center;">
+    <div width: 98%;">
+        <div style="text-align: left;">
     	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=forum ]-->" method="post">
     	    <select name="forum_id">
   	        <option value="-1"><!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]--></option>
     	    <!--[ foreach item=forum from=$forums ]-->
-    	        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]-->::<!--[ $forum.forum_name ]--></option>
+    	        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> (ID:<!--[ $forum.cat_id ]-->) ::<!--[ $forum.forum_name ]--> (ID:<!--[ $forum.forum_id ]-->)</option>
             <!--[ /foreach ]-->
-            </select><br />
+            </select>
             <input type="submit" value="<!--[ pnml name='_EDIT' ]-->" />
             </form>
         </div>
-        <div style="float: right; width: 45%; text-align: center;">
+        <div style="text-align: left;">
     	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums ]-->" method="post">
     	    <select name="cat_id">
     	    <!--[ foreach item=category from=$categories ]-->
     	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title ]--> (ID: <!--[ $category.cat_id ]-->)</option>
             <!--[ /foreach ]-->
-            </select><br />
+            </select>
             <input type="submit" value="<!--[ pnml name='_PNFORUM_REORDER' ]-->" />
             </form>
         </div>
