@@ -638,4 +638,80 @@ function useragent_is_bot()
     return false;
 }
 
+/**
+ * ünf_getimagepath
+ *
+ * gets an path for a image - this is a copy of the pnimh logic
+ *
+ *@params $image string the imagefile name
+ *@returns an array of information for the imagefile:
+ *         ['path']   string the path to the imagefile
+ *         ['size']   string 'width="xx" height="yy"' as delivered by getimagesize, may be empty
+ * or false on error
+ */
+function pnf_getimagepath($image=null)
+{
+    if(!isset($image)) {
+        return false;
+    }
+
+    $result = array();
+
+    // module
+    $modname = pnModGetName();
+
+    // language
+    $lang =  pnVarPrepForOS(pnUserGetLang());
+
+    // theme directory
+    $theme         = pnVarPrepForOS(pnUserGetTheme());
+    $osmodname     = pnVarPrepForOS($modname);
+    $cWhereIsPerso = WHERE_IS_PERSO;
+    if (!(empty($cWhereIsPerso))) {
+    	$themelangpath = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images/$lang";
+    	$themepath     = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images";
+    	$corethemepath = $cWhereIsPerso . "themes/$theme/images";
+    } else {
+        $themelangpath = "themes/$theme/templates/modules/$osmodname/images/$lang";
+    	$themepath     = "themes/$theme/templates/modules/$osmodname/images";
+    	$corethemepath = "themes/$theme/images";
+    }
+    // module directory
+    $modinfo       = pnModGetInfo(pnModGetIDFromName($modname));
+    $osmoddir      = pnVarPrepForOS($modinfo['directory']);
+	$modlangpath   = "modules/$osmoddir/pnimages/$lang";
+	$modpath       = "modules/$osmoddir/pnimages";
+	$syslangpath   = "system/$osmoddir/pnimages/$lang";
+	$syspath       = "system/$osmoddir/pnimages";
+
+    $ossrc = pnVarPrepForOS($image);
+
+    // search for the image
+    foreach (array($themelangpath,
+				   $themepath,
+				   $corethemepath,
+				   $modlangpath,
+				   $modpath,
+				   $syslangpath,
+				   $syspath) as $path) {
+     	if (file_exists("$path/$ossrc") && is_readable("$path/$ossrc")) {
+    		$result['path'] = "$path/$ossrc";
+		break;
+    	}
+    }
+
+    if ($result['path'] == '') {
+	    return false;
+    }
+
+    if(!$_image_data = @getimagesize($result['path'])) {
+        // invalid image
+        $result['size']  = '';
+    } else {
+        $result['size']  = $_image_data[3];
+    }
+
+    return $result;
+}
+
 ?>

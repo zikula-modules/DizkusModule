@@ -42,6 +42,7 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_UNKNOWNIMAGE', 'unknown image');
 
 // alphasorting starts here
 
@@ -198,7 +199,6 @@ define('_PNFORUM_ISLOCKED','Topic is Locked. No new posts may be made in it');
 //
 // J
 //
-define('_PNFORUM_JOINTOPICS', 'Join topics');
 define('_PNFORUM_JOINTOPICS', 'Join topics');
 define('_PNFORUM_JOINTOPICS_INFO', 'Joins two topics together');
 define('_PNFORUM_JOINTOPICS_TOTOPIC', 'Target topic');

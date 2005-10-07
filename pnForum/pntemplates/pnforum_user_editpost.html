@@ -4,7 +4,7 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false textfieldid=message ]-->
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false ]-->
 
 <form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=editpost ]-->" method="post" enctype="multipart/form-data">
 
@@ -63,8 +63,8 @@
 <label for="message"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
 <textarea name="message" rows="10" cols="80" id="message" tabindex="0"><!--[ $post.post_text ]--></textarea>
 <br />
-<!--[ $hooks.pn_bbcode ]-->
-<!--[ $hooks.pn_bbsmile ]-->
+<!--[ plainbbcode textfieldid=message ]-->
+<!--[ bbsmile textfieldid=message ]-->
 <!--[ $hooks.pnUpper ]-->
 <br /><br />
 <!--[ pnml name='_PNFORUM_OPTIONS' ]-->:

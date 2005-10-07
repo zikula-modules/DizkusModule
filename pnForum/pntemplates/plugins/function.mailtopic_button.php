@@ -32,18 +32,28 @@
  *@params $params['cat_id'] int category id
  *@params $params['forum_id'] int forum id
  *@params $params['topic_id'] int topic id
+ *@params $params['image']    string the image filename (without path)
  */
-function smarty_function_mailtopic_button($params, &$smarty) 
+function smarty_function_mailtopic_button($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
 
+    // set a default value
+    if(!isset($image) || empty($image)) {
+        $image = 'sendto.gif';
+    }
+
     include_once('modules/pnForum/common.php');
-    $out = "";
+    $out = '';
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-	    $authid = pnSecGenAuthKey();
-	    $lang = pnUserGetLang();
-		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/sendto.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) ."\" /></a>";
+        $imagedata = pnf_getimagepath($image);
+        if($imagedata == false) {
+            $show = pnVarPrepForDisplay(_PNFORUM_EMAIL_TOPIC);
+        } else {
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) .'" ' . $imagedata['size'] . ' />';
+        }
+	    $out = '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) . '" href="'. pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id))) . '">' . $show . '</a>';
 	}
     return $out;
 }

@@ -32,17 +32,26 @@
  *@params $params['cat_id'] int category id
  *@params $params['forum_id'] int forum id
  *@params $params['post_id'] int post id
+ *@params $params['image']    string the image filename (without path)
  */
-function smarty_function_splittopic_button($params, &$smarty) 
+function smarty_function_splittopic_button($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
+
+    // set a default value
+    if(!isset($image) || empty($image)) {
+        $image = 'splitit.gif';
+    }
 
     include_once('modules/pnForum/common.php');
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        $image = pnModGetVar('pnForum', 'splittopic_image');
-        $img_attr = getimagesize($image);
-        $out = "<a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'splittopic', array('post'=>$post_id)))."\"><img src=\"$image\" alt=\"".pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE)."\" ".$img_attr[3]." >".pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE)."</a>&nbsp;&nbsp;&nbsp;";
+        if($imagedata == false) {
+            $show = pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE);
+        } else {
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_SPLITTOPIC_TITLE) .'" ' . $imagedata['size'] . ' />';
+        }
+        $out = '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_SPLITTOPIC_TITLE) . '" href="'. pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'splittopic', array('post'=>$post_id))) . '">' . $show . '</a>';
     }
     return $out;
 }

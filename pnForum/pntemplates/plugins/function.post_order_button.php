@@ -32,11 +32,20 @@
  *@params $params['topic_id'] int forum id
  *@params $params['return_to'] string url to return to after subscribing, necessary because
  *                                    the subscription page can be reached from several places
+ *@params $params['image_ascending']    string the image filename (without path)
+ *@params $params['image_descending']    string the image filename (without path)
  */
 function smarty_function_post_order_button($params, &$smarty)
 {
     extract($params);
 	unset($params);
+
+    if(!isset($image_ascending) || empty($image_ascending)) {
+        $image_ascending = 'postorderasc.gif';
+    }
+    if(!isset($image_descending) || empty($image_descending)) {
+        $image_descending = 'postorderdesc.gif';
+    }
 
     // initialize the variable
     $out = '';
@@ -59,17 +68,23 @@ function smarty_function_post_order_button($params, &$smarty)
         }
     }
     if (pnUserLoggedIn()) {
-        if(!pnModAPILoad('pnForum', 'user')) {
-            $smarty->trigger_error("post_order_button: unable to load userapi");
-            return false;
-        }
         $post_order = pnModAPIFunc('pnForum','user','get_user_post_order');
-        $lang = pnUserGetLang();
         if ($post_order == 'ASC' ) {
-            $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_NEWEST_FIRST)."\" href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/postorderasc.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER)."\" /></a>";
+            $imagedata = pnf_getimagepath($image_ascending);
+            if($imagedata == false) {
+                $show = pnVarPrepForDisplay(_PNFORUM_NEWEST_FIRST);
+            } else {
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
+            }
         } else {
-            $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_OLDEST_FIRST)."\" href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/postorderdesc.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER)."\" /></a>";
+            $imagedata = pnf_getimagepath($image_descending);
+            if($imagedata == false) {
+                $show = pnVarPrepForDisplay(_PNFORUM_OLDEST_FIRST);
+            } else {
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
+            }
         }
+        $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_CHANGE_POST_ORDER) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
     }
     return $out;
 }

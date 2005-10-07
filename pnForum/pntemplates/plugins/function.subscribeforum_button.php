@@ -33,27 +33,44 @@
  *@params $params['forum_id'] int forum id
  *@params $params['return_to'] string url to return to after subscribing, necessary because
  *                                    the subscription page can be reached from several places
+ *@params $params['image_subscribe']    string the image filename (without path)
+ *@params $params['image_unsubscribe']    string the image filename (without path)
  */
-function smarty_function_subscribeforum_button($params, &$smarty) 
+function smarty_function_subscribeforum_button($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
 
+    if(!isset($image_subscribe) || empty($image_subscribe)) {
+        $image_subscribe = 'f_abo_on.gif';
+    }
+    if(!isset($image_unsubscribe) || empty($image_unsubscribe)) {
+        $image_unsubscribe = 'f_abo_off.gif';
+    }
+
     $userid = pnUserGetVar('uid');
+    $out = '';
     if (pnUserLoggedIn()) {
         include_once('modules/pnForum/common.php');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            if(!pnModAPILoad('pnForum', 'user')) {
-                $smarty->trigger_error("subscribetopic_button: unable to load userapi");
-                return false;
-            }
-            $lang = pnUserGetLang();
             if(pnModAPIFunc('pnForum', 'user', 'get_forum_subscription_status',
-                            array('userid'=>$userid, 
+                            array('userid'=>$userid,
                                   'forum_id'=>$forum_id))==false) {
-                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/f_abo_on.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_FORUM)."\" /></a>";
+                $imagedata = pnf_getimagepath($image_subscribe);
+                if($imagedata == false) {
+                    $show = pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_FORUM);
+                } else {
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                }
+                $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_FORUM) . '" href="' . pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
-                $out = "<a title=\"".pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM)."\" href=\"".pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to)))."\"><img src=\"modules/pnForum/pnimages/$lang/f_abo_off.gif\" alt=\"".pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_FORUM)."\" /></a>";
+                $imagedata = pnf_getimagepath($image_unsubscribe);
+                if($imagedata == false) {
+                    $show = pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM);
+                } else {
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                }
+                $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM) . '" href="' . pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             }
         }
     }

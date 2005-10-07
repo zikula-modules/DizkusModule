@@ -32,28 +32,36 @@
  *@params $params['cat_id'] int category id
  *@params $params['forum_id'] int forum id
  *@params $params['topic_id'] int topic id
+ *@params $params['image']    string the image filename (without path)
  */
 function smarty_function_printtopic_button($params, &$smarty)
 {
     extract($params);
     unset($params);
 
+    // set a default value
+    if(!isset($image) || empty($image)) {
+        $image = 'printtopic.gif';
+    }
+
     include_once('modules/pnForum/common.php');
-    $out = "";
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        $imagedata = pnf_getimagepath($image);
+        if($imagedata == false) {
+            $show = pnVarPrepForDisplay(_PNFORUM_PRINT_TOPIC);
+        } else {
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) .'" ' . $imagedata['size'] . ' />';
+        }
         $lang = pnUserGetLang();
         if(function_exists('pnThemeInfo')) {
             $themeinfo = pnThemeInfo('Printer');
             if($themeinfo['active']) {
-                $out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
-            } else {
-                $out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
+                return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . $show . '</a>';
             }
-        } else {
-            $out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . "\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/printtopic.gif\" alt=\"" . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) ."\" /></a>";
         }
+        return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . $show . '</a>';
     }
-    return $out;
+    return '';
 }
 
 ?>

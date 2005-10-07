@@ -2,7 +2,7 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false textfieldid=message ]-->
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false ]-->
 
 <!--[* pndebug *]-->
 <div>
@@ -80,8 +80,8 @@
 <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <br /><br />
-<!--[ $hooks.pn_bbcode ]-->
-<!--[ $hooks.pn_bbsmile ]-->
+<!--[ plainbbcode textfieldid=message ]-->
+<!--[ bbsmile textfieldid=message ]-->
 <!--[ $hooks.pnUpper ]-->
 <br />
 <div style="vertical-align: middle;">

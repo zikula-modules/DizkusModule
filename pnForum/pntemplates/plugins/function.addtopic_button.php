@@ -31,18 +31,28 @@
  *
  *@params $params['cat_id'] int category id
  *@params $params['forum_id'] int forum id
+ *@params $params['image']    string the image filename (without path)
  */
-function smarty_function_addtopic_button($params, &$smarty) 
+function smarty_function_addtopic_button($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
+
+    // set a default value
+    if(!isset($image) || empty($image)) {
+        $image = 'post.gif';
+    }
 
     include_once('modules/pnForum/common.php');
     $out = "";
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-	    $authid = pnSecGenAuthKey();
-	    $lang = pnUserGetLang();
-		$out = "<a title=\"" . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\" href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id))) . "\"><img src=\"modules/pnForum/pnimages/$lang/post.gif\" alt=\"". pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) ."\" /></a>";
+        $imagedata = pnf_getimagepath($image);
+        if($imagedata == false) {
+            $show = pnVarPrepForDisplay(_PNFORUM_NEWTOPIC);
+        } else {
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) .'" ' . $imagedata['size'] . ' />';
+        }
+        $out = '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) . '" href="'. pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id))) . '">' . $show . '</a>';
 	}
     return $out;
 }
