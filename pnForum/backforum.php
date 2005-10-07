@@ -34,11 +34,18 @@ $count = (empty($count)) ? 10 : (int)$count;
 $feed = (!empty($feed)) ? $feed : 'rss091';
 
 /**
+ * crete pnRender object
+ */
+$pnr =& new pnRender('pnForum');
+$pnr->caching = false;
+
+/**
  * check if template for feed exists
  */
-$templatefile = 'modules/pnForum/pntemplates/pnforum_feed_' . pnVarPrepForOS($feed) . '.html';
-if(!file_exists($templatefile) || !is_readable($templatefile)) {
+$templatefile = 'pnforum_feed_' . pnVarPrepForOS($feed) . '.html';
+if(!$pnr->template_exists($templatefile)) {
     // silently stop working
+    echo 'no html';
     exit;
 }
 
@@ -61,8 +68,6 @@ if(!empty($forum_id) && is_numeric($forum_id)) {
     $forumname = 'Forum';
 }
 
-$pnr =& new pnRender('pnForum');
-$pnr->caching = false;
 
 $pnr->assign('forum_name', $forumname);
 $pnr->assign('forum_link', $link);
