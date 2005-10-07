@@ -45,7 +45,6 @@ $pnr->caching = false;
 $templatefile = 'pnforum_feed_' . pnVarPrepForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
-    echo 'no html';
     exit;
 }
 
