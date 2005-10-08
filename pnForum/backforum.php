@@ -51,6 +51,13 @@ if(!$pnr->template_exists($templatefile)) {
 }
 
 /**
+ * get user id
+ */
+if(!empty($user)) {
+    $uid = pnUserGetIDFromName($user);
+}
+
+/**
  * check for forum_id
  */
 if(!empty($forum_id)) {
@@ -63,8 +70,7 @@ if(!empty($forum_id)) {
     $where = "AND t.forum_id = '" . (int)pnVarPrepForStore($forum_id) . "' ";
     $link = pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
-} elseif (isset($user) && !empty($user)) {
-    $uid = pnUserGetIDFromName($user);
+} elseif (isset($uid) && ($uid<>false)) {
     $where = "AND p.poster_id=" . $uid . " ";
     $link = pnModURL('pnForum', 'user', 'main');
 } else {
@@ -107,7 +113,6 @@ $sql = "SELECT t.topic_id,
               $where
         ORDER BY t.topic_time DESC
         LIMIT 100";
-
 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 $result_postmax = $result->PO_RecordCount();
 
