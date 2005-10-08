@@ -58,6 +58,14 @@ if(!empty($user)) {
 }
 
 /**
+ * st some defaults
+ */
+$link = pnModURL('pnForum', 'user', 'main');
+$forumname = 'Forum';
+// default where clause => no where clause
+$where = '';
+
+/**
  * check for forum_id
  */
 if(!empty($forum_id)) {
@@ -72,11 +80,6 @@ if(!empty($forum_id)) {
     $forumname = $forum['forum_name'];
 } elseif (isset($uid) && ($uid<>false)) {
     $where = "AND p.poster_id=" . $uid . " ";
-    $link = pnModURL('pnForum', 'user', 'main');
-} else {
-    $where = '';
-    $link = pnModURL('pnForum', 'user', 'main');
-    $forumname = 'Forum';
 }
 
 $pnr->assign('forum_name', $forumname);
