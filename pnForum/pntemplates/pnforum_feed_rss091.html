@@ -6,6 +6,8 @@
 Possible parameters for backforum.php
 
 -> forum_id  read new postings in this forum only
+-> username  read new postings from this user only, do not mix with forum_id
+             if both forum_id and user_id are sent, forum_id will be used
 -> count     number of postings to read, default 10
 -> feed      type of feed to deliver, e.g. atom which needs a template
              pnforum_feed_atom.html to work
@@ -13,6 +15,18 @@ Possible parameters for backforum.php
 
 pnForum permission still apply! The forum access will be tested against
 an unregistered user.
+
+IMPORTANT HINT:
+===============
+Do not configure pnRender to expose template information for debugging purposes if
+you want to use templated RSS feeds! This will result in an XML error message:
+
+XML Parsing Error: xml declaration not at start of external entity
+Location: http://www.example.com/backforum.php
+Line Number 3, Column 1:<?xml version="1.0" encoding="ISO-8859-1"?>
+
+If you have to do this kind of debugging, do not forget to switch it off as
+soon as possible!
 
 -->
 

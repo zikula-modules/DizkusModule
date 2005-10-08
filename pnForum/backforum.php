@@ -21,20 +21,22 @@ pnInit();
  */
 include_once 'modules/pnForum/common.php';
 
-list($count, $forum_id, $feed) = pnVarCleanFromInput('count', 'forum', 'feed');
+list($count, $forum_id, $feed, $user) = pnVarCleanFromInput('count', 'forum_id', 'feed', 'user');
 
 /**
- * check for counter,  if not set, set the output count to 10
+ * check for feed, if not set, use rss091 as default
  */
-$count = (empty($count)) ? 10 : (int)$count;
+if(!empty($feed)) {
+    // feed is set, check counter
+    $count = (empty($count)) ? 10 : (int)$count;
+} else {
+    // set defaults
+    $feed = 'rss091';
+    $count = 5;
+}
 
 /**
- * check for feed,  if not set, use rss091 as default
- */
-$feed = (!empty($feed)) ? $feed : 'rss091';
-
-/**
- * crete pnRender object
+ * create pnRender object
  */
 $pnr =& new pnRender('pnForum');
 $pnr->caching = false;
@@ -51,22 +53,25 @@ if(!$pnr->template_exists($templatefile)) {
 /**
  * check for forum_id
  */
-if(!empty($forum_id) && is_numeric($forum_id)) {
+if(!empty($forum_id)) {
     $forum = pnModAPIFunc('pnForum', 'user', 'readuserforums',
                           array('forum_id' => $forum_id));
     if(count($forum) == 0) {
         // not allowed to see forum
         exit;
     }
-    $whereforum = "AND t.forum_id = '" . pnVarPrepForStore($forum_id) . "' ";
+    $where = "AND t.forum_id = '" . (int)pnVarPrepForStore($forum_id) . "' ";
     $link = pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
+} elseif (isset($user) && !empty($user)) {
+    $uid = pnUserGetIDFromName($user);
+    $where = "AND p.poster_id=" . $uid . " ";
+    $link = pnModURL('pnForum', 'user', 'main');
 } else {
-    $whereforum = "";
+    $where = '';
     $link = pnModURL('pnForum', 'user', 'main');
     $forumname = 'Forum';
 }
-
 
 $pnr->assign('forum_name', $forumname);
 $pnr->assign('forum_link', $link);
@@ -99,8 +104,8 @@ $sql = "SELECT t.topic_id,
         WHERE t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id
-              $whereforum
-        ORDER by t.topic_time DESC
+              $where
+        ORDER BY t.topic_time DESC
         LIMIT 100";
 
 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -137,7 +142,6 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
     }
 }
 pnfCloseDB($result);
-
 $pnr->assign('posts', $posts);
 
 header("Content-Type: text/xml");
