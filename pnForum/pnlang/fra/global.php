@@ -44,6 +44,9 @@
  * Traduction française : Chestnut, le 11 septembre 2005                *
  ************************************************************************/
 
+define('_PNFORUM_UNKNOWNIMAGE', 'image inconnue');
+define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Retirer la signature des utilisateurs sur les messages (Affichage)');
+
 // new
 define('_PNFORUM_TOGGLEALL', 'Supprimer toutes les inscriptions aux sujets');
 define('_PNFORUM_PREFS_HIDEUSERSINFORUMADMIN', 'Cacher les utilisateurs dans le forum admin');
