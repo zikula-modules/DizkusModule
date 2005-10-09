@@ -43,6 +43,7 @@
 
 // new
 define('_PNFORUM_UNKNOWNIMAGE', 'unknown image');
+define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Remove users signature from posting');
 
 // alphasorting starts here
 

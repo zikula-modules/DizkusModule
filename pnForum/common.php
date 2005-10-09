@@ -550,8 +550,12 @@ function cmp_catorder ($a, $b)
  * pnForum_replacesignature
  *
  */
-function pnForum_replacesignature($text, $signature="")
+function pnForum_replacesignature($text, $signature='')
 {
+    $removesignature = pnModGetVar('pnForum', 'removesignature');
+    if($removesignature == 'yes') {
+        $signature = '';
+    }
     if (!empty($signature)){
         $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));
         $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));

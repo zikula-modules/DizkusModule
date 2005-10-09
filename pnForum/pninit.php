@@ -244,6 +244,7 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'log_ip', "yes");
 	pnModSetVar('pnForum', 'slimforum', "no");
 	pnModSetVar('pnForum', 'hideusers', "no");
+	pnModSetVar('pnForum', 'removesignature', "no");
 
     // Initialisation successful
     return true;
@@ -341,16 +342,7 @@ function pnForum_delete()
     }
 
 	// remove module vars
-    $modvarstable = $pntable['module_vars'];
-    $modvarscolumn = $pntable['module_vars_column'];
-    $sql = "DELETE FROM $modvarstable
-            WHERE $modvarscolumn[modname]='pnForum'";
-    $result = $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-    	pnSessionSetVar('errormsg', $dbconn->ErrorMsg() . " : $sql");
-    	return -1;
-    }
-
+	pnModDelVar('pnForum');
 
     // Deletion successful
     return true;
@@ -575,6 +567,7 @@ function pnForum_upgrade_to_2_5($createindex=true)
     pnModSetVar('pnForum', 'm2f_enabled', 'yes');
     pnModSetVar('pnForum', 'favorites_enabled', 'yes');
 	pnModSetVar('pnForum', 'hideusers', "no");
+	pnModSetVar('pnForum', 'removesignature', "no");
 
     // set a session to indicate that the upgrade is done
     pnSessionSetVar('upgrade_to_2_5_done', 1);
