@@ -356,7 +356,6 @@ define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Use extended f
 define('_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>The extended fulltext search enables parameters like "+pnforum -skype" for postings that contain "pnforum" but not "skype". Minimum requirement is MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Extended fulltest search in MySQL">Extended fulltest search in MySQL</a>.');
 define('_PNFORUM_PREFS_LOGIP', 'Log IP addresses :');
 define('_PNFORUM_PREFS_M2FENABLED', 'Mail2Forum enabled');
-define('_PNFORUM_PREFS_MINPOSTINGSFORANCHOR', 'Minimum number of before inserting an anchor:<br /><em>An anchor enables the user to go directly to the last posting in a large thread</em>');
 define('_PNFORUM_PREFS_NEWPOSTSICON', 'New posts image:<br /><em>(Folder with new posts since user\'s last visit)</em>');
 define('_PNFORUM_PREFS_NO', 'No');
 define('_PNFORUM_PREFS_POSTICON', 'Post Icon:');

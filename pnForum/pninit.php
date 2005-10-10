@@ -233,7 +233,6 @@ function pnForum_init()
 	$module = 'pnForum';
 	pnModSetVar('pnForum', 'posts_per_page', 15);
 	pnModSetVar('pnForum', 'topics_per_page', 15);
-	pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
 	pnModSetVar('pnForum', 'hot_threshold', 20);
 	pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
 	pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
@@ -561,6 +560,7 @@ function pnForum_upgrade_to_2_5($createindex=true)
 	pnModDelVar('pnForum', 'hot_folder_image');
 	pnModDelVar('pnForum', 'newposts_image');
 	pnModDelVar('pnForum', 'hot_newposts_image');
+    pnModDelVar('pnForum', 'min_postings_for_anchor');
 
     // new
     pnModSetVar('pnForum', 'extendedsearch', 'no');

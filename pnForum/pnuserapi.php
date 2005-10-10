@@ -2971,6 +2971,12 @@ function pnForum_userapi_get_latest_posts($args)
 
             $post['posted_unixtime'] = strtotime ($post['post_time']);
             $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
+
+            $post['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                               array('topic' => $post['topic_id'],
+                                                     'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+            $post['last_post_url_anchor'] = $post['last_post_url'] . "#pid" . $post['topic_last_post_id'];
+
 //            pnfCloseDB($result2);
 
             if((int)$pop3_active == 0) {

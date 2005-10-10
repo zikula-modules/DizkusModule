@@ -11,6 +11,8 @@ Important changes:
 - $loggedin in templates has been replaced with $pncore.logged_in. Customized templates
   need to be updated!
 
+- removed obsolete setting "minimum postings for anchor", the plugin postanchor is deprecated
+  now, do nt use it any longer!
 - fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
 - added mail2forum feature
 - forum search now optional with FULLTEXT index

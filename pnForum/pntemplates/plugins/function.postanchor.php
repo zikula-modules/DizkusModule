@@ -34,10 +34,17 @@
  *@params $params['post_id']   int post id
  *@params $params['assign']    string(optional) if set, thr result is assigned to this
  *                                              variable and not returned
- */ 
-function smarty_function_postanchor($params, &$smarty) 
+ *
+ *
+ **************************************************************
+ *
+ * This plugin is deprecated, do not use it in your templates!!
+ *
+ **************************************************************
+ */
+function smarty_function_postanchor($params, &$smarty)
 {
-    extract($params); 
+    extract($params);
 	unset($params);
 
     if(empty($post_id)) { return; }
@@ -46,12 +53,12 @@ function smarty_function_postanchor($params, &$smarty)
         $min = pnModGetVar('pnForum', 'min_postings_for_anchor');
         $min = (!empty($min)) ? $min : 2;
     }
-    
-    $anchor = "";    
+
+    $anchor = "";
     if($postings >= $min) {
         $anchor = "#pid$post_id";
     }
-    
+
     if(!empty($assign)) {
         $smarty->assign($assign, $anchor);
         return;

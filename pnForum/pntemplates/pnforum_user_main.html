@@ -6,13 +6,24 @@
 <table class="pnForum-border" border="0"  cellpadding="5" cellspacing="1" width="97%" summary="<!--[ pnml name='_PNFORUM_FORUMS' ]-->">
     <thead>
         <tr style="text-align:left;background-color:<!--[ $bgcolor2 ]-->;" align="left">
-            <th id="col_0" abbr="<!--[ if $favorites ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan="2" align="left" valign="middle">
-                <!--[ if $favorites ]-->
-                    <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]--></strong><!--[ if $pnore.logged_in eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnimg src="showallforums.gif" alt='_PNFORUM_SHOWALLFORUMS' altml=true ]--></a><!--[ /if ]-->
+            <!--[ if $pncore.logged_in eq true]-->
+            <th id="col_0" abbr="<!--[ if $pncore.pnForum.favorites_enabled eq 'yes' ]--><!--[ pnml name='_PNFORUM_FAVORITES' ]--> <!--[ else ]--><!--[ pnml name='_PNFORUM_FORUM' ]--><!--[ /if ]-->" colspan="2" align="left" valign="middle">
+                <!--[ if $pncore.pnForum.favorites_enabled eq 'yes' ]-->
+                    <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]--></strong>&nbsp;
+                    <!--[ if $favorites]-->
+                        <a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnimg src="showallforums.gif" alt='_PNFORUM_SHOWALLFORUMS' altml=true ]--></a>
+                    <!--[ else ]-->
+                        <a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]-->"><!--[ pnimg src="showfavorites.gif" alt='_PNFORUM_SHOWFAVORITES' altml=true ]--></a>
+                    <!--[ /if ]-->
                 <!--[ else ]-->
-                    <strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong><!--[ if $pncore.logged_in eq true]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]-->"><!--[ pnimg src="showfavorites.gif" alt='_PNFORUM_SHOWFAVORITES' altml=true ]--></a><!--[ /if ]-->
+                    <strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong>
                 <!--[ /if ]-->
             </th>
+           <!--[ else ]-->
+            <th id="col_0" abbr="<!--[ pnml name='_PNFORUM_FORUM' ]-->" colspan="2" align="left" valign="middle">
+                <strong><!--[ pnml name='_PNFORUM_FORUMS' ]--></strong>
+            </th>
+           <!--[ /if ]-->
             <th id="col_1" abbr="<!--[ pnml name='_PNFORUM_TOPICS' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_TOPICS' ]--></strong></th>
             <th id="col_2" abbr="<!--[ pnml name='_PNFORUM_POSTS' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_POSTS' ]--></strong></th>
             <th id="col_3" abbr="<!--[ pnml name='_PNFORUM_LASTPOST' ]-->" align="center"><strong><!--[ pnml name='_PNFORUM_LASTPOST' ]--></strong></th>
@@ -56,7 +67,7 @@
         <!--[ foreachelse ]-->
         <tr>
             <td colspan="5" style="background-color:<!--[ $bgcolor1 ]-->;">
-                <!--[ if $favorites ]-->
+                <!--[ if $pncore.pnForum.favorites_enabled eq 'yes' ]-->
                 <!--[ pnml name='_PNFORUM_NOFAVORITES' ]-->
                 <!--[ else ]-->
                 <!--[ pnml name='_PNFORUM_NO_FORUMS_DB' ]-->

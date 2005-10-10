@@ -141,7 +141,6 @@ function pnForum_admin_preferences()
         $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
         $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
-	    $pnr->assign('min_postings_for_anchor', pnModGetVar('pnForum', 'min_postings_for_anchor'));
 	    $pnr->assign('topics_per_page', pnModGetVar('pnForum', 'topics_per_page'));
 	    $pnr->assign('posts_per_page', pnModGetVar('pnForum', 'posts_per_page'));
 	    $pnr->assign('hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
@@ -177,7 +176,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'autosubscribe', pnVarPrepForStore(pnVarCleanFromInput('autosubscribe')));
             pnModSetVar('pnForum', 'signature_start', pnVarPrepForStore(pnVarCleanFromInput('signature_start')));
             pnModSetVar('pnForum', 'signature_end', pnVarPrepForStore(pnVarCleanFromInput('signature_end')));
-            pnModSetVar('pnForum', 'min_postings_for_anchor', pnVarPrepForStore(pnVarCleanFromInput('min_postings_for_anchor')));
             pnModSetVar('pnForum', 'topics_per_page', pnVarPrepForStore(pnVarCleanFromInput('topics_per_page')));
             pnModSetVar('pnForum', 'posts_per_page', pnVarPrepForStore(pnVarCleanFromInput('posts_per_page')));
             pnModSetVar('pnForum', 'hot_threshold', pnVarPrepForStore(pnVarCleanFromInput('hot_threshold')));
@@ -198,7 +196,6 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'autosubscribe', 'yes');
             pnModSetVar('pnForum', 'signature_start', '<div style="border: 1px solid black;">');
             pnModSetVar('pnForum', 'signature_end', '</div>');
-		    pnModSetVar('pnForum', 'min_postings_for_anchor', 2);
 		    pnModSetVar('pnForum', 'posts_per_page', 15);
 		    pnModSetVar('pnForum', 'topics_per_page', 15);
 		    pnModSetVar('pnForum', 'hot_threshold', 20);
