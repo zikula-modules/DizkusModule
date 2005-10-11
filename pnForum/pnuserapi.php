@@ -505,7 +505,7 @@ function pnForum_userapi_get_moderators($args)
     } else {
         $sql = "SELECT g.pn_name, g.pn_gid
                 FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
-                WHERE g.pn_gid = f.user_id
+                WHERE g.pn_gid = f.user_id-1000000
                 AND f.user_id>1000000
                 GROUP BY f.user_id";
     }
