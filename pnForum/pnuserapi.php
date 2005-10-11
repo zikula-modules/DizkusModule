@@ -473,11 +473,18 @@ function pnForum_userapi_get_moderators($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT u.pn_uname, u.pn_uid
-            FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
-            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
-            AND f.user_id<1000000";
-
+    if(isset($forum_id)) {
+        $sql = "SELECT u.pn_uname, u.pn_uid
+                FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
+                WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
+                AND f.user_id<1000000";
+    } else {
+        $sql = "SELECT u.pn_uname, u.pn_uid
+                FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
+                WHERE u.pn_uid = f.user_id
+                AND f.user_id<1000000
+                GROUP BY f.user_id";
+    }
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $mods = array();
@@ -490,11 +497,18 @@ function pnForum_userapi_get_moderators($args)
     }
     pnfCloseDB($result);
 
-    $sql = "SELECT g.pn_name, g.pn_gid
-            FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
-            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
-            AND f.user_id>1000000";
-
+    if(isset($forum_id)) {
+        $sql = "SELECT g.pn_name, g.pn_gid
+                FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
+                WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
+                AND f.user_id>1000000";
+    } else {
+        $sql = "SELECT g.pn_name, g.pn_gid
+                FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
+                WHERE g.pn_gid = f.user_id
+                AND f.user_id>1000000
+                GROUP BY f.user_id";
+    }
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
@@ -2508,7 +2522,8 @@ function pnForum_userapi_notify_by_email($args)
                            'subject'     => $subject,
                            'body'        => $message,
                            'headers'     => array('X-UserID: ' . $uid,
-                                                  'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
+                                                  'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'],
+                                                  'X-pnForumTopicID: ' . $topic_id));
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
     }
@@ -4005,6 +4020,7 @@ function pnForum_userapi_mailcron($args)
                                     $from = '';
                                     $msgid = '';
                                     $replyto = '';
+                                    $original_topic_id = '';
                                     foreach($headers as $header) {
                                         //echo htmlspecialchars($header),"\n";
                                         // get subject
@@ -4026,49 +4042,58 @@ function pnForum_userapi_mailcron($args)
                                             $msgid = trim(strip_tags(substr($header, 11)));
                                         }
 
+                                        // check for X-pnForumTopicID, if set, then this is a possible
+                                        // loop (mailinglist subscribed to the forum too)
+                                        if(strpos($header, 'X-pnForumTopicID:')===0) {
+                                            $original_topic_id = trim(strip_tags(substr($header, 17)));
+                                        }
                                     }
                                     if(empty($subject)) {
                                         $subject = pnVarPrepForDisplay(_PNFORUM_NOSUBJECT);
                                     }
 
                                     // check if subject matches our matchstring
-                                    if( empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject)<>0) ) {
-                                        $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
-                                        if(!empty($replyto)) {
-                                            // this seems to be a reply, we find the original posting
-                                            // and store this mail in the same thread
-                                            $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topic_by_postmsgid',
-                                                                     array('msgid' => $replyto));
-                                            if(is_bool($topic_id) && $topic_id==false) {
-                                                // msgid not found, we clear replyto to create a new topic
-                                                $replyto = '';
-                                            } else {
-                                                // topic_id found, add this posting as a reply there
-                                                list($start,
-                                                     $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
-                                                                               array('topic_id'         => $topic_id,
-                                                                                     'message'          => $message,
-                                                                                     'attach_signature' => 1,
-                                                                                     'subscribe_topic'  => 0,
-                                                                                     'msgid'            => $msgid));
-                                                mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n");
+                                    if(empty($original_topic_id)) {
+                                        if( empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject)<>0) ) {
+                                            $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
+                                            if(!empty($replyto)) {
+                                                // this seems to be a reply, we find the original posting
+                                                // and store this mail in the same thread
+                                                $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topic_by_postmsgid',
+                                                                         array('msgid' => $replyto));
+                                                if(is_bool($topic_id) && $topic_id==false) {
+                                                    // msgid not found, we clear replyto to create a new topic
+                                                    $replyto = '';
+                                                } else {
+                                                    // topic_id found, add this posting as a reply there
+                                                    list($start,
+                                                         $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
+                                                                                   array('topic_id'         => $topic_id,
+                                                                                         'message'          => $message,
+                                                                                         'attach_signature' => 1,
+                                                                                         'subscribe_topic'  => 0,
+                                                                                         'msgid'            => $msgid));
+                                                    mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n");
+                                                }
                                             }
-                                        }
 
-                                        // check again for replyto and create a new topic
-                                        if(empty($replyto)) {
-                                            // store message in forum
-                                            $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
-                                                                     array('subject'          => $subject,
-                                                                           'message'          => $message,
-                                                                           'forum_id'         => $forum['forum_id'],
-                                                                           'attach_signature' => 1,
-                                                                           'subscribe_topic'  => 0,
-                                                                           'msgid'            => $msgid ));
-                                            mailcronecho("added new topic '$subject' (topic=$topic_id) to forum '".$forum['forum_name'] ."'\n");
+                                            // check again for replyto and create a new topic
+                                            if(empty($replyto)) {
+                                                // store message in forum
+                                                $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+                                                                         array('subject'          => $subject,
+                                                                               'message'          => $message,
+                                                                               'forum_id'         => $forum['forum_id'],
+                                                                               'attach_signature' => 1,
+                                                                               'subscribe_topic'  => 0,
+                                                                               'msgid'            => $msgid ));
+                                                mailcronecho("added new topic '$subject' (topic=$topic_id) to forum '".$forum['forum_name'] ."'\n");
+                                            }
+                                        } else {
+                                            mailcronecho("mail subject '$subject' does not match requirement - ignored!");
                                         }
                                     } else {
-                                        mailcronecho("mail subject '$subject' does not match requirement - ignored!");
+                                        mailcronecho("mail subject '$subject' is a possible loop - ignored!");
                                     }
                                     // mark message for deletion
                                     $pop3->DeleteMessage($cnt);
