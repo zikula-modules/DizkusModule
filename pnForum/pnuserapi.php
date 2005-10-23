@@ -41,7 +41,7 @@
  *
  ***********************************************************************/
 
-include_once("modules/pnForum/common.php");
+include_once('modules/pnForum/common.php');
 
 /**
  * get_userdata_from_id
@@ -60,7 +60,6 @@ function pnForum_userapi_get_userdata_from_id($args)
     // get the core user data
     $userdata = pnUserGetVars($userid);
     if($userdata==false) {
-        //return showforumerror("" . _PNFORUM_NOUSER_OR_POST . "(user id: $userid)", __FILE__, __LINE__);
         // create a dummy user basing on Anonymous
         // necessary for some socks :-)
         $userdata = pnUserGetVars(1);
@@ -71,19 +70,19 @@ function pnForum_userapi_get_userdata_from_id($args)
 
     $pnfusercol = $pntable['pnforum_users_column'];
 
-    $sql = "SELECT ";
+    $sql = 'SELECT ';
     $flag = false;
     $prefix = pnConfigGetVar('prefix');
     foreach($pnfusercol as $pnfuserfield) {
         if($flag==true) {
-            $sql .= ", ";
+            $sql .= ', ';
         }
-        $sql .= "$pnfuserfield as " . str_replace($prefix . "_pnforum_users.", "", $pnfuserfield) . "\n";
+        $sql .= $pnfuserfield . ' as ' . str_replace($prefix . '_pnforum_users.', '', $pnfuserfield) . "\n";
         $flag = true;
     }
 
-    $sql .= "FROM ".$pntable['pnforum_users']."
-             WHERE " . $pnfusercol['user_id'] . "='" . (int)pnVarPrepForStore($userid) . "'";
+    $sql .= 'FROM ' . $pntable['pnforum_users']. '
+             WHERE ' . $pnfusercol['user_id'] . "='" . (int)pnVarPrepForStore($userid) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if(!$result->EOF) {
@@ -99,8 +98,8 @@ function pnForum_userapi_get_userdata_from_id($args)
         // get the users rank
         //
         if ($userdata['user_rank'] != 0) {
-            $sql = "SELECT rank_title, rank_image
-                    FROM ".$pntable['pnforum_ranks']."
+            $sql = 'SELECT rank_title, rank_image
+                    FROM ' . $pntable['pnforum_ranks']. "
                     WHERE rank_id = '".(int)pnVarPrepForStore($userdata['user_rank'])."'";
         } elseif ($userdata['user_posts'] != 0) {
             $sql = "SELECT rank_title, rank_image
@@ -147,7 +146,7 @@ function pnForum_userapi_get_userdata_from_id($args)
 
             // avatar
             if($userdata['pn_user_avatar']){
-                $userdata['pn_user_avatar'] = "images/avatar/" . $userdata['pn_user_avatar'];
+                $userdata['pn_user_avatar'] = 'images/avatar/' . $userdata['pn_user_avatar'];
                 $userdata['pn_user_avatar_attr'] = getimagesize($userdata['pn_user_avatar']);
             }
 
@@ -191,12 +190,12 @@ function pnForum_userapi_boardstats($args)
 
     switch($type) {
         case 'all':
-            $sql = "SELECT SUM(forum_posts) as total
-                    FROM ".$pntable['pnforum_forums']."";
+            $sql = 'SELECT SUM(forum_posts) as total
+                    FROM ' . $pntable['pnforum_forums'];
             break;
         case 'category':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_categories']."";
+            $sql = 'SELECT count(*) AS total
+                    FROM ' . $pntable['pnforum_categories'];
             break;
         case 'topic':
             $sql = "SELECT count(*) AS total
@@ -214,23 +213,23 @@ function pnForum_userapi_boardstats($args)
                     WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
             break;
         case 'allposts':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_posts']."";
+            $sql = 'SELECT count(*) AS total
+                    FROM ' . $pntable['pnforum_posts'];
             break;
         case 'alltopics':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_topics']."";
+            $sql = 'SELECT count(*) AS total
+                    FROM ' . $pntable['pnforum_topics'];
             break;
         case 'allmembers':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_users']."";
+            $sql = 'SELECT count(*) AS total
+                    FROM ' . $pntable['pnforum_users'];
             break;
         case 'lastmember':
-            $sql = "SELECT u.pn_uname
-                    FROM ".$pntable['users']." AS u
-                    LEFT JOIN ".$pntable['pnforum_users']." AS p ON u.pn_uid=p.user_id
+            $sql = 'SELECT u.pn_uname
+                    FROM ' . $pntable['users'] . ' AS u
+                    LEFT JOIN ' . $pntable['pnforum_users'] . ' AS p ON u.pn_uid=p.user_id
                     ORDER BY p.user_id DESC
-                    LIMIT 1";
+                    LIMIT 1';
             break;
         default:
         }
@@ -415,8 +414,8 @@ function pnForum_userapi_readcategorytree($args)
                         }
 
                         $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
-                        $last_post = $last_post." <a href=\"". pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). "\">"
-                                               ."<img src=\"modules/pnForum/pnimages/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
+                        $last_post = $last_post.' <a href="' . pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). '">
+                                                  <img src="modules/pnForum/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                         // new in 2.0.2 - no more preformattd output
                         $last_post_data['name']     = $username;
                         $last_post_data['subject']  = $topic_title;
@@ -427,7 +426,7 @@ function pnForum_userapi_readcategorytree($args)
                         $last_post_data['url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                                                     array('topic' => $forum['topic_id'],
                                                                           'start' => (ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page));
-                        $last_post_data['url_anchor'] = $last_post_data['url'] . "#pid" . $forum['forum_last_post_id'];
+                        $last_post_data['url_anchor'] = $last_post_data['url'] . '#pid' . $forum['forum_last_post_id'];
                     } else {
                         // no posts in forum
                         $last_post = _PNFORUM_NOPOSTS;
@@ -553,7 +552,7 @@ function pnForum_userapi_setcookies()
     setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
 
     // set vars for all scripts
-    $last_visit = ml_ftime("%Y-%m-%d %H:%M",$temptime);
+    $last_visit = ml_ftime('%Y-%m-%d %H:%M',$temptime);
     return array($last_visit, $temptime);
 }
 
@@ -633,8 +632,8 @@ function pnForum_userapi_readforum($args)
         $topic = $result->GetRowAssoc(false);
         //$topic = $row;
 
-        if ($topic['last_poster'] == "Anonymous") {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
-        if ($topic['pn_uname'] == "Anonymous") {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
+        if ($topic['last_poster'] == 'Anonymous') {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
+        if ($topic['pn_uname'] == 'Anonymous') {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
         $topic['total_posts'] = $topic['topic_replies'] + 1;
 
         $topic['post_time_unix'] = strtotime ($topic['post_time']);
@@ -647,11 +646,11 @@ function pnForum_userapi_readforum($args)
         $topic['new_posts'] = ($topic['post_time'] < $last_visit) ? false : true;
 
         // pagination
-        $pagination = "";
+        $pagination = '';
         $lastpage=0;
         if($topic['topic_replies']+1 > $posts_per_page) {
 
-            if ($post_sort_order == "ASC") {
+            if ($post_sort_order == 'ASC') {
                 $hc_dlink_times = 0;
                 if (($topic['topic_replies']+1-$posts_per_page)>= 0) {
                     $hc_dlink_times = 0;
@@ -665,7 +664,7 @@ function pnForum_userapi_readforum($args)
                 $topic['last_page_start'] = 0;
             }
 
-            $pagination .= "&nbsp;&nbsp;&nbsp;<span class=\"pn-sub\">(".pnVarPrepForDisplay(_PNFORUM_GOTOPAGE)."&nbsp;";
+            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . '&nbsp;';
             $pagenr = 1;
             $skippages = 0;
             for($x = 0; $x < $topic['topic_replies'] + 1; $x += $posts_per_page) {
@@ -680,18 +679,18 @@ function pnForum_userapi_readforum($args)
                 }
 
                 if($pagenr > 3 && $skippages != 1 && !$lastpage) {
-                    $pagination .= ", ... ";
+                    $pagination .= ', ... ';
                     $skippages = 1;
                 }
 
                 if ($skippages != 1 || $lastpage) {
-                    if ($x!=0) $pagination .= ", ";
-                    $pagination .= "<a href=\"".pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start))."\" title=\"" . $topic['topic_title'] . " " . pnVarPrepForDisplay(_PNFORUM_PAGE) . " $pagenr\">$pagenr</a>";
+                    if ($x!=0) $pagination .= ', ';
+                    $pagination .= '<a href="' . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . pnVarPrepForDisplay(_PNFORUM_PAGE) . ' ' . $pagenr . '">' . $pagenr . '</a>';
                 }
 
                 $pagenr++;
             }
-            $pagination .= ")</span>";
+            $pagination .= ')</span>';
         }
         $topic['pagination'] = $pagination;
         // we now create the url to the last post in the thread. This might
@@ -702,7 +701,7 @@ function pnForum_userapi_readforum($args)
         $topic['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                            array('topic' => $topic['topic_id'],
                                                  'start' => (ceil(($topic['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-        $topic['last_post_url_anchor'] = $topic['last_post_url'] . "#pid" . $topic['topic_last_post_id'];
+        $topic['last_post_url_anchor'] = $topic['last_post_url'] . '#pid' . $topic['topic_last_post_id'];
 
         array_push( $forum['topics'], $topic );
         $result->MoveNext();
@@ -798,7 +797,7 @@ function pnForum_userapi_readtopic($args)
         /**
          * more then one page in this topic?
          */
-        $topic['total_posts'] = pnForum_userapi_boardstats(array('id'=>$topic_id, 'type'=>"topic"));
+        $topic['total_posts'] = pnForum_userapi_boardstats(array('id'=>$topic_id, 'type' => 'topic'));
 
         if($topic['total_posts'] > $posts_per_page) {
             $times = 0;
@@ -849,7 +848,7 @@ function pnForum_userapi_readtopic($args)
 
             // check if the user is still in the postnuke db
             $user_name = pnUserGetVar('uname', $post['poster_id']);
-            if ($user_name == "") {
+            if ($user_name == '') {
                 // user deleted from the db?
                 $post['poster_id'] = '1';
             }
@@ -883,7 +882,7 @@ function pnForum_userapi_readtopic($args)
             }
 
             if(allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']) &&
-                pnModGetVar('pnForum', 'log_ip') == "yes") {
+                pnModGetVar('pnForum', 'log_ip') == 'yes') {
                 // user is allowed to see ip
                 $post['poster_data']['seeip'] = true;
             }
@@ -978,15 +977,15 @@ function pnForum_userapi_preparereply($args)
     $reply['topic_id'] = pnVarPrepForDisplay($myrow['topic_id']);
     // the next line is only producing a valid result, if we get a post_id which
     // means we are producing a reply with quote
-    if(array_key_exists("post_text", $myrow)) {
+    if(array_key_exists('post_text', $myrow)) {
         $text = pnForum_bbdecode($myrow['post_text']);
-        $text = preg_replace('/(<br[ \/]*?>)/i', "", $text);
+        $text = preg_replace('/(<br[ \/]*?>)/i', '', $text);
         // just for backwards compatibility
         $text = pnForum_undo_make_clickable($text);
-        $text = str_replace("[addsig]", "", $text);
+        $text = str_replace('[addsig]', '', $text);
         $reply['message'] = '[quote='.$myrow['pn_uname'].']'.$text.'[/quote]';
     } else {
-        $reply['message'] = "";
+        $reply['message'] = '';
     }
 
     // anonymous user has uid=0, but needs pn_uid=1
@@ -1041,7 +1040,7 @@ function pnForum_userapi_preparereply($args)
         $row = $result->GetRowAssoc(false);
         $review = $row;
         $review['user_name'] = pnUserGetVar('uname', $review['poster_id']);
-        if ($review['user_name'] == "") {
+        if ($review['user_name'] == '') {
             // user deleted from the db?
             $review['poster_id'] = 1;
         }
@@ -1106,21 +1105,21 @@ function pnForum_userapi_storereply($args)
     // anonymous user has uid=0, but needs pn_uid=1
     if(pnUserLoggedin()) {
         if($attach_signature==1) {
-            $message .= "[addsig]";
+            $message .= '[addsig]';
         }
         $pn_uid = pnUserGetVar('uid');
     } else {
         $pn_uid = 1;
     }
 
-    if (pnModGetVar('pnForum', 'log_ip') == "no") {
+    if (pnModGetVar('pnForum', 'log_ip') == 'no') {
         // for privavy issues ip logging can be deactivated
-        $poster_ip = "127.0.0.1";
+        $poster_ip = '127.0.0.1';
     } else {
         // some enviroment for logging ;)
-        $poster_ip = pnServerGetVar("HTTP_X_FORWARDED_FOR");
+        $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
         if(empty($poster_ip)){
-            $poster_ip = pnServerGetVar("REMOTE_ADDR");
+            $poster_ip = pnServerGetVar('REMOTE_ADDR');
         }
     }
 
@@ -1141,7 +1140,7 @@ function pnForum_userapi_storereply($args)
     $forum_id = (int)pnVarPrepForStore($myrow['forum_id']);
 
     // Prep for DB
-    $time = date("Y-m-d H:i");
+    $time = date('Y-m-d H:i');
     $topic_id = pnVarPrepForStore($topic_id);
     $message = pnVarPrepForStore($message);
     $pn_uid = pnVarPrepForStore($pn_uid);
@@ -1415,7 +1414,7 @@ function pnForum_userapi_storenewtopic($args)
     //  anonymous user has uid=0, but needs pn_uid=1
     if(pnUserLoggedin()) {
         if($attach_signature==1) {
-            $message .= "[addsig]";
+            $message .= '[addsig]';
         }
         $pn_uid = pnUserGetVar('uid');
     } else  {
@@ -1423,17 +1422,17 @@ function pnForum_userapi_storenewtopic($args)
     }
 
     // some enviroment for logging ;)
-    if (getenv("HTTP_X_FORWARDED_FOR")){
-        $poster_ip=getenv("HTTP_X_FORWARDED_FOR");
+    if (pnServerGetVar('HTTP_X_FORWARDED_FOR')){
+        $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
     } else {
-        $poster_ip=getenv("REMOTE_ADDR");
+        $poster_ip = pnServerGetVar('REMOTE_ADDR');
     }
     // for privavy issues ip logging can be deactivated
-    if (pnModGetVar('pnForum', 'log_ip') == "no") {
-        $poster_ip = "127.0.0.1";
+    if (pnModGetVar('pnForum', 'log_ip') == 'no') {
+        $poster_ip = '127.0.0.1';
     }
 
-    $time = (isset($time)) ? $time : date("Y-m-d H:i");
+    $time = (isset($time)) ? $time : date('Y-m-d H:i');
 
     // Prep for DB
     $subject   = pnVarPrepForStore($subject);
@@ -1601,11 +1600,11 @@ function pnForum_userapi_readpost($args)
 
     //$message = pnVarPrepForDisplay($message);
     //  remove [addsig]
-    $message = eregi_replace("\[addsig]$", "", $message);
+    $message = eregi_replace("\[addsig]$", '', $message);
     //  remove <!-- editby -->
     $message = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $message);
     //  convert <br /> to \n (since nl2br only inserts additional <br /> we just need to remove them
-    //$message = eregi_replace('<br />', "", $message);
+    //$message = eregi_replace('<br />', '', $message);
     $message = phpbb_br2nl($message);
     //  convert bbcode (just for backwards compatibility)
     $message = pnForum_bbdecode($message);
@@ -1730,12 +1729,12 @@ function pnForum_userapi_updatepost($args)
                 $editname = pnConfigGetVar('anonymous');
             }
             $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
-            $message .= "<br /><br /><!-- editby --><br /><br /><em>"._PNFORUM_EDITBY." $editname, $edit_date</em><!-- end editby --> ";
+            $message .= '<br /><br /><!-- editby --><br /><br /><em>' . _PNFORUM_EDITBY . ' ' . $editname . ', ' . $edit_date . '</em><!-- end editby --> ';
         }
 
         // add signature placeholder
         if ($poster_id <> 1){
-            $message .= "[addsig]";
+            $message .= '[addsig]';
         }
         $message = pnVarPrepForStore($message);
 
@@ -1887,7 +1886,7 @@ function pnForum_userapi_updatepost($args)
                 // there is at least one posting in this topic
                 // $post contains the data of the last posting
                 //
-                $lastposttime = date("Y-m-d H:i", $last_topic_post['post_unixtime']);
+                $lastposttime = date('Y-m-d H:i', $last_topic_post['post_unixtime']);
                 $sql = "UPDATE ".$pntable['pnforum_topics']."
                         SET topic_time = '".pnVarPrepForStore($lastposttime)."',
                             topic_last_post_id = '".(int)pnVarPrepForStore($last_topic_post['post_id'])."',
@@ -1965,11 +1964,11 @@ function pnForum_userapi_get_last_boardpost($args)
     // format the return string
     switch($type) {
         case 'topic':
-            $userlink = "<a href=\"user.php?op=userinfo&amp;uname=".$uname."\">".$uname."</a>";
+            $userlink = '<a href="user.php?op=userinfo&amp;uname=' . $uname . '">' . $uname . '</a>';
             // correct the time
             $posted_unixtime= strtotime ($post_time);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
-            $val = "<td><span class=\"pn-normal\">$userlink</span></td><td><span class=\"pn-normal\">$posted_ml</span></td>";
+            $val = '<td><span class="pn-normal">' . $userlink . '</span></td><td><span class="pn-normal">' . $posted_ml . '</span></td>';
             break;
         case 'time_fix':
             $val = $post_time;
@@ -2048,7 +2047,7 @@ function pnForum_userapi_lockunlocktopic($args)
         return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-    $new_status = ($mode=="lock") ? 1 : 0;
+    $new_status = ($mode=='lock') ? 1 : 0;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_status = $new_status
@@ -2077,7 +2076,7 @@ function pnForum_userapi_stickyunstickytopic($args)
         return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-    $new_sticky = ($mode=="sticky") ? 1 : 0;
+    $new_sticky = ($mode=='sticky') ? 1 : 0;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET sticky = '$new_sticky'
@@ -2146,11 +2145,11 @@ function pnForum_userapi_readuserforums($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $where = "";
+    $where = '';
     if(isset($forum_id)) {
-        $where = "WHERE f.forum_id=" . pnVarPrepForStore($forum_id) . " ";
+        $where = 'WHERE f.forum_id=' . pnVarPrepForStore($forum_id) . ' ';
     } elseif (isset($cat_id)) {
-        $where = "WHERE c.cat_id=" . pnVarPrepForStore($cat_id) . " ";
+        $where = 'WHERE c.cat_id=' . pnVarPrepForStore($cat_id) . ' ';
     }
     $sql = "SELECT f.forum_name,
                    f.forum_id,
@@ -2250,7 +2249,7 @@ function pnForum_userapi_movetopic($args)
         if($shadow==true) {
             // user wants to have a shadow topic
             $message = sprintf(_PNFORUM_SHADOWTOPIC_MESSAGE, pnModURL('pnForum','user','viewtopic', array('topic'=> $topic_id)) );
-            $subject = "***" . pnVarPrepForDisplay(_PNFORUM_MOVED_SUBJECT) . ": " . $topic_title;
+            $subject = '***' . pnVarPrepForDisplay(_PNFORUM_MOVED_SUBJECT) . ': ' . $topic_title;
 
             pnForum_userapi_storenewtopic(array('subject'  => $subject,
                                                 'message'  => $message,
@@ -2347,7 +2346,7 @@ function pnForum_userapi_deletetopic($args)
             $sql .= " OR ";
         }
         $sql .= "post_id = '". pnVarPrepForStore($posts_to_remove[$x])."'";
-        $set = TRUE;
+        $set = true;
     }
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2382,17 +2381,11 @@ function pnForum_userapi_notify_by_email($args)
 
     // generate the mailheader info
     $email_from = pnModGetVar('pnForum', 'email_from');
-    if ($email_from == "") {
+    if ($email_from == '') {
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
     }
-/*
-    $pnforum_default_charset = pnModGetVar('pnForum', 'default_lang');
-    if(!empty($pnforum_default_charset)) {
-        $msg_ContentType_Header .= ' charset='.$pnforum_default_charset;
-    }
-    $msg_ContentType_Header .= "\n";
-*/
+
     // normal notification
     $sql = "SELECT t.topic_title,
                    t.topic_poster,
@@ -2433,7 +2426,7 @@ function pnForum_userapi_notify_by_email($args)
         // Reply
         $subject= 'Re: ';
     }
-    $subject .= "$category_name :: $forum_name :: $topic_subject";
+    $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
 
     // we do not wnat to notif the sender = the recent user
     $thisuser = pnUserGetVar('uid');
@@ -2498,10 +2491,10 @@ function pnForum_userapi_notify_by_email($args)
     $sitename = pnConfigGetVar('sitename');
 
     $message = _PNFORUM_NOTIFYBODY1 . ' '. $sitename . "\n"
-            . "$category_name :: $forum_name ::.. $topic_subject\n\n"
-            . "$poster_name ".pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2)." $topic_time_ml\n"
+            . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
+            . $poster_name . ' ' .pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . "".pnVarCensor(strip_tags($post_message))."\n"
+            . pnVarCensor(strip_tags($post_message))."\n"
             . "---------------------------------------------------------------------\n\n"
             . _PNFORUM_NOTIFYBODY3."\n"
             . pnModURL('pnForum', 'user', 'reply', array('topic'=>$topic_id,'forum'=>$forum_id))."\n\n"
@@ -2512,8 +2505,6 @@ function pnForum_userapi_notify_by_email($args)
 
     if(count($recipients)>0) {
         foreach($recipients as $email_to => $toname) {
-            //$toname = pnUserGetVar('name', $uid);
-            //$toname = (!empty($toname)) ? $toname : pnUserGetVar('uname', $uid);
 
             $args = array( 'fromname'    => $sitename,
                            'fromaddress' => $email_from,
@@ -2590,7 +2581,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
                               'topic_last_post_id' => $row['topic_last_post_id'],
                               'poster_name'        => $row['pn_uname'],
                               'forum_name'         => $row['forum_name']);
-        if($post_sort_order == "ASC") {
+        if($post_sort_order == 'ASC') {
             $start = ((ceil(($subscription['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
         } else {
             // latest topic is on top anyway...
@@ -2602,7 +2593,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
         $subscription['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                                   array('topic' => $subscription['topic_id'],
                                                         'start' => $start));
-        $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . "#pid" . $subscription['topic_last_post_id'];
+        $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . '#pid' . $subscription['topic_last_post_id'];
 
         array_push($subscriptions, $subscription);
         $result->MoveNext();
@@ -2929,18 +2920,18 @@ function pnForum_userapi_get_latest_posts($args)
     $lastvisitsql   = $part1." t.topic_time > '" . pnVarPrepForStore($last_visit) . "' ".$part2;
 
     switch ($selorder) {
-        case "2" : $sql = $todaysql; $text=""._PNFORUM_TODAY."";
+        case '2' : $sql = $todaysql; $text = _PNFORUM_TODAY;
                    break;
-        case "3" : $sql = $yesterdaysql; $text=""._PNFORUM_YESTERDAY."";
+        case '3' : $sql = $yesterdaysql; $text = _PNFORUM_YESTERDAY;
                    break;
-        case "4" : $sql = $lastweeksql; $text=""._PNFORUM_LASTWEEK."";
+        case '4' : $sql = $lastweeksql; $text= _PNFORUM_LASTWEEK;
                    break;
-        case "5" : $sql = $lastxhsql; $text=""._PNFORUM_LAST." $nohours "._PNFORUM_HOURS."";
+        case '5' : $sql = $lastxhsql; $text = _PNFORUM_LAST . ' ' . $nohours . ' ' . _PNFORUM_HOURS;
                    break;
-        case "6" : $sql = $lastvisitsql; $text=""._PNFORUM_LASTVISIT." ".ml_ftime(_DATETIMEBRIEF, $temptime)."";
+        case '6' : $sql = $lastvisitsql; $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $temptime);
                    break;
-        case "1" :
-        default:   $sql = $last24hsql; $text=""._PNFORUM_LAST24."";
+        case '1' :
+        default:   $sql = $last24hsql; $text  =_PNFORUM_LAST24;
                    break;
     }
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2964,7 +2955,7 @@ function pnForum_userapi_get_latest_posts($args)
             $post['poster_id'] = pnVarPrepForDisplay($poster_id);
 
             // get correct page for latest entry
-            if ($post_sort_order == "ASC") {
+            if ($post_sort_order == 'ASC') {
                 $hc_dlink_times = 0;
                 if (($topic_replies+1-$posts_per_page)>= 0) {
                     $hc_dlink_times = 0;
@@ -2990,7 +2981,7 @@ function pnForum_userapi_get_latest_posts($args)
             $post['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
                                                array('topic' => $post['topic_id'],
                                                      'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-            $post['last_post_url_anchor'] = $post['last_post_url'] . "#pid" . $post['topic_last_post_id'];
+            $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
 
 //            pnfCloseDB($result2);
 
@@ -3016,7 +3007,7 @@ function pnForum_userapi_usersync()
 {
   	pnModAPIFunc('pnForum', 'admin', 'sync',
                  array( 'id'   => NULL,
-	                    'type' => "users"));
+	                    'type' => 'users'));
     return;
 }
 
@@ -3044,7 +3035,7 @@ function pnForum_userapi_splittopic($args)
     list($old_last_post_id, $old_replies) = $result->fields;
     pnfCloseDB($result);
 
-    $time = date("Y-m-d H:i");
+    $time = date('Y-m-d H:i');
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
@@ -3123,10 +3114,10 @@ function pnForum_userapi_update_user_post_count($args)
     if(!isset($user_id) || !isset($mode)) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
-    if(strtolower($mode)=="inc") {
-        $math = "+";
-    } elseif(strtolower($mode)=="dec") {
-        $math = "-";
+    if(strtolower($mode)=='inc') {
+        $math = '+';
+    } elseif(strtolower($mode)=='dec') {
+        $math = '-';
     } else {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
@@ -3159,8 +3150,8 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     switch($view) {
-        case "previous": $math = "<"; $sort = "DESC"; break;
-        case "next":     $math = ">"; $sort = "ASC";break;
+        case 'previous': $math = '<'; $sort = 'DESC'; break;
+        case 'next':     $math = '>'; $sort = 'ASC';break;
         default: return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
@@ -3267,7 +3258,7 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
     if(!empty($searchfor)) {
         $flag = false;
         $words = explode(' ', $searchfor);
-        $query .= "( ";
+        $query .= '( ';
         foreach($words as $word) {
             if($flag) {
                 switch($bool) {
@@ -3284,7 +3275,7 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
             $query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
             $flag = true;
         }
-        $query .= " ) AND ";
+        $query .= ' ) AND ';
     } else {
         // searchfor is empty, we search by author only
     }
@@ -3295,16 +3286,16 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
 
     //check forums (multiple selection is possible!)
     if($forums[0]) {
-        $query .= " AND (";
+        $query .= ' AND (';
         $flag = false;
         foreach($forums as $forumid) {
             if($flag) {
-                $query .= " OR ";
+                $query .= ' OR ';
             }
             $query .= "f.forum_id=$forumid";
             $flag = true;
         }
-        $query .= ") ";
+        $query .= ') ';
     }
 
     // authors with adodb
@@ -3325,18 +3316,18 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
     }
 
     // Not sure this is needed and is not cross DB compat
-    //$query .= " GROUP BY pt.post_id ";
+    //$query .= ' GROUP BY pt.post_id ';
 
     $searchorder = $order['0'];
 
     if ($searchorder == 1){
-        $query .= " ORDER BY pt.post_id DESC";
+        $query .= ' ORDER BY pt.post_id DESC';
     }
     if ($searchorder == 2){
-        $query .= " ORDER BY t.topic_title";
+        $query .= ' ORDER BY t.topic_title';
     }
     if ($searchorder == 3){
-        $query .= " ORDER BY f.forum_name";
+        $query .= ' ORDER BY f.forum_name';
     }
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 
@@ -3366,7 +3357,7 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
 
                 //without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", "", $sresult['post_text']);
+                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
 
                 //strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
@@ -3440,7 +3431,7 @@ function pnForum_userapi_forumsearch_fulltext($args)
             // OR
             $flag = false;
             $words = explode(' ', $searchfor);
-            $wherematch .= "( ";
+            $wherematch .= '( ';
             foreach($words as $word) {
                 if($flag) {
                     $wherematch .= ' OR ';
@@ -3451,13 +3442,13 @@ function pnForum_userapi_forumsearch_fulltext($args)
                 $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
                 $flag = true;
             }
-            $wherematch .= " ) ";
+            $wherematch .= ' ) ';
         }
-        $wherematch .= " AND ";
+        $wherematch .= ' AND ';
 
         $flag = false;
         $words = explode(' ', $searchfor);
-        $wherematch = "( ";
+        $wherematch = '( ';
         foreach($words as $word) {
             if($flag==true) {
                 switch(strtolower($bool)) {
@@ -3475,11 +3466,11 @@ function pnForum_userapi_forumsearch_fulltext($args)
             $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
             $flag = true;
         }
-        $wherematch .= " ) AND ";
+        $wherematch .= ' ) AND ';
 
             $flag = false;
             $words = explode(' ', $searchfor);
-            $query .= "( ";
+            $query .= '( ';
             foreach($words as $word) {
                 if($flag==true) {
                     switch(strtolower($bool)) {
@@ -3497,8 +3488,8 @@ function pnForum_userapi_forumsearch_fulltext($args)
                 $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
                 $flag = true;
             }
-            $query .= " ) ";
-            $query .= " AND ";
+            $query .= ' ) ';
+            $query .= ' AND ';
 
     } else {
         // searchfor is empty, we search by author only
@@ -3508,16 +3499,16 @@ function pnForum_userapi_forumsearch_fulltext($args)
     // partial sql stored in $whereforum
     $whereforums = '';
     if($forums[0]) {
-        $whereforums = " AND (";
+        $whereforums = ' AND (';
         $flag = false;
         foreach($forums as $forumid) {
             if($flag) {
-                $whereforums .= " OR ";
+                $whereforums .= ' OR ';
             }
-            $whereforums .= "f.forum_id= " . pnVarPrepForStore($forumid) . " ";
+            $whereforums .= 'f.forum_id= ' . pnVarPrepForStore($forumid) . ' ';
             $flag = true;
         }
-        $whereforums .= ") ";
+        $whereforums .= ') ';
     }
 
     // authors with adodb
@@ -3610,7 +3601,7 @@ function pnForum_userapi_forumsearch_fulltext($args)
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
 
                 //without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", "", $sresult['post_text']);
+                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
 
                 //strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
@@ -3951,7 +3942,7 @@ function pnForum_userapi_get_page_from_topic_replies($args)
     $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
 
     $times = 0;
-    if ($post_sort_order == "ASC") {
+    if ($post_sort_order == 'ASC') {
         if (($topic_replies+1-$posts_per_page)>= 0) {
             for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page) {
                 $times++;
@@ -3980,17 +3971,17 @@ function pnForum_userapi_mailcron($args)
 
     $force = (isset($force)) ? (boolean)$force : false;
 
-    include_once "modules/pnForum/pnincludes/pop3.php";
+    include_once 'modules/pnForum/pnincludes/pop3.php';
     if( (($forum['pop3_active']==1) && ($forum['pop3_last_connect']<=time()-($forum['pop3_interval']*60)) ) || ($force==true) ) {
         mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n");
         // get new mails for this forum
         $pop3 =& new pop3_class;
         $pop3->hostname = $forum['pop3_server'];
         $pop3->port     = $forum['pop3_port'];
-        $error = "";
+        $error = '';
 
         // open connection to pop3 server
-        if(($error = $pop3->Open())=="") {
+        if(($error = $pop3->Open())=='') {
             mailcronecho("connected to the pop3 server '".$pop3->hostname."'.\n");
             // login to pop3 server
             if(($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=="") {
@@ -4146,24 +4137,24 @@ function pnForum_userapi_testpop3connection($args)
 
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
-    include_once "modules/pnForum/pnincludes/pop3.php";
+    include_once 'modules/pnForum/pnincludes/pop3.php';
 
     $pop3 =& new pop3_class;
     $pop3->hostname = $forum['pop3_server'];
     $pop3->port     = $forum['pop3_port'];
 
-    $error = "";
+    $error = '';
     $pop3messages = array();
-    if(($error=$pop3->Open())=="") {
+    if(($error=$pop3->Open())=='') {
         $pop3messages[] = "connected to the POP3 server '".$pop3->hostname."'";
-        if(($error=$pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=="") {
+        if(($error=$pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=='') {
             $pop3messages[] = "user '" . $forum['pop3_login'] . "' logged in";
-            if(($error=$pop3->Statistics($messages,$size))=="") {
+            if(($error=$pop3->Statistics($messages,$size))=='') {
                 $pop3messages[] = "there are $messages messages in the mail box with a total of $size bytes.";
-                $result=$pop3->ListMessages("",1);
+                $result=$pop3->ListMessages('',1);
                 if(is_array($result) && count($result)>0) {
                     for($cnt=1; $cnt<=count($result); $cnt++) {
-                        if(($error=$pop3->RetrieveMessage($cnt, $headers, $body, -1))=="") {
+                        if(($error=$pop3->RetrieveMessage($cnt, $headers, $body, -1))=='') {
                             foreach($headers as $header) {
                                 if(strpos(strtolower($header), 'subject:')===0) {
                                     $subject = trim(strip_tags(substr($header, 8)));
@@ -4171,7 +4162,7 @@ function pnForum_userapi_testpop3connection($args)
                             }
                         }
                     }
-                    if($error=="" && ($error=$pop3->Close())=="") {
+                    if($error=='' && ($error=$pop3->Close())=='') {
                         $pop3messages[] = "disconnected from the POP3 server '".$pop3->hostname."'.\n";
                     }
 
@@ -4182,7 +4173,7 @@ function pnForum_userapi_testpop3connection($args)
         }
     }
     if(!empty($error)) {
-        $pop3messages[] = "error: " . htmlspecialchars($error);
+        $pop3messages[] = 'error: ' . htmlspecialchars($error);
     }
 
     return $pop3messages;
@@ -4361,7 +4352,7 @@ function pnForum_userapi_get_last_topic_page($args)
     $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
     $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
 
-    if ($post_sort_order == "ASC") {
+    if ($post_sort_order == 'ASC') {
         $hc_dlink_times = 0;
         if (($topic_replies+1-$posts_per_page)>= 0) {
             $hc_dlink_times = 0;
@@ -4627,7 +4618,7 @@ function pnForum_userapi_notify_moderator($args)
 
     // generate the mailheader
     $email_from = pnModGetVar('pnForum', 'email_from');
-    if ($email_from == "") {
+    if ($email_from == '') {
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
     }

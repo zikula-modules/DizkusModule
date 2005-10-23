@@ -239,11 +239,12 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'url_ranks_images', "modules/$module/pnimages/ranks");
 	pnModSetVar('pnForum', 'posticon', "modules/$module/pnimages/posticon.gif");
 	pnModSetVar('pnForum', 'firstnew_image', "modules/$module/pnimages/firstnew.gif");
-	pnModSetVar('pnForum', 'post_sort_order', "ASC");
-	pnModSetVar('pnForum', 'log_ip', "yes");
-	pnModSetVar('pnForum', 'slimforum', "no");
-	pnModSetVar('pnForum', 'hideusers', "no");
-	pnModSetVar('pnForum', 'removesignature', "no");
+	pnModSetVar('pnForum', 'post_sort_order', 'ASC');
+	pnModSetVar('pnForum', 'log_ip', 'yes');
+	pnModSetVar('pnForum', 'slimforum', 'no');
+	pnModSetVar('pnForum', 'hideusers', 'no');
+	pnModSetVar('pnForum', 'removesignature', 'no');
+	pnModSetVar('pnForum', 'striptags', 'no');
 
     // Initialisation successful
     return true;
@@ -566,8 +567,9 @@ function pnForum_upgrade_to_2_5($createindex=true)
     pnModSetVar('pnForum', 'extendedsearch', 'no');
     pnModSetVar('pnForum', 'm2f_enabled', 'yes');
     pnModSetVar('pnForum', 'favorites_enabled', 'yes');
-	pnModSetVar('pnForum', 'hideusers', "no");
-	pnModSetVar('pnForum', 'removesignature', "no");
+	pnModSetVar('pnForum', 'hideusers', 'no');
+	pnModSetVar('pnForum', 'removesignature', 'no');
+	pnModSetVar('pnForum', 'striptags', 'no');
 
     // set a session to indicate that the upgrade is done
     pnSessionSetVar('upgrade_to_2_5_done', 1);

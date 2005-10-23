@@ -134,6 +134,13 @@ function pnForum_admin_preferences()
         	$removesignature_onchecked = " ";
         	$removesignature_offchecked = $checked;
         }
+        if (pnModGetVar('pnForum', 'striptags') == "yes") {
+        	$striptags_onchecked = $checked;
+        	$striptags_offchecked = " ";
+        } else {
+        	$striptags_onchecked = " ";
+        	$striptags_offchecked = $checked;
+        }
 
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
@@ -165,10 +172,13 @@ function pnForum_admin_preferences()
         $pnr->assign('hideusers_offchecked', $hideusers_offchecked);
         $pnr->assign('removesignature_onchecked',  $removesignature_onchecked);
         $pnr->assign('removesignature_offchecked', $removesignature_offchecked);
+        $pnr->assign('striptags_onchecked',  $striptags_onchecked);
+        $pnr->assign('striptags_offchecked', $striptags_offchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'striptags', pnVarPrepForStore(pnVarCleanFromInput('striptags')));
             pnModSetVar('pnForum', 'removesignature', pnVarPrepForStore(pnVarCleanFromInput('removesignature')));
             pnModSetVar('pnForum', 'hideusers', pnVarPrepForStore(pnVarCleanFromInput('hideusers')));
             pnModSetVar('pnForum', 'favorites_enabled', pnVarPrepForStore(pnVarCleanFromInput('favorites_enabled')));

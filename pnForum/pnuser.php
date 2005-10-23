@@ -41,7 +41,7 @@
  *
  ***********************************************************************/
 
-include_once("modules/pnForum/common.php");
+include_once('modules/pnForum/common.php');
 
 /**
  * main
@@ -156,7 +156,7 @@ function pnForum_user_viewtopic($args=array())
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
-    if(!empty($view) && ($view=="next" || $view=="previous")) {
+    if(!empty($view) && ($view=='next' || $view=='previous')) {
         $topic_id = pnModAPIFunc('pnForum', 'user', 'get_previous_or_next_topic_id',
                                  array('topic_id' => $topic_id,
                                        'view'     => $view));
@@ -222,10 +222,18 @@ function pnForum_user_reply($args=array())
 
     $preview = (empty($preview)) ? false : true;
 
+    $message = pnfstriptags($message);
+    // check for maximum message size
+    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+        pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
+        // switch to preview mode
+        $preview = true;
+    }
+
     if (empty($submit)) {
         $submit = false;
-    	$subject="";
-    	$message="";
+    	$subject = '';
+    	$message = '';
     } else {
         $submit = true;
     }
@@ -315,6 +323,14 @@ function pnForum_user_newtopic($args=array())
     	$message = '';
     }
 
+    $message = pnfstriptags($message);
+    // check for maximum message size
+    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+        pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
+        // switch to preview mode
+        $preview = true;
+    }
+
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     $newtopic = pnModAPIFunc('pnForum', 'user', 'preparenewtopic',
@@ -392,9 +408,17 @@ function pnForum_user_editpost($args=array())
         return pnRedirect(pnModURL('pnForum','user', 'viewtopic', array('topic'=>$topic_id)));
     }
 
+    $message = pnfstriptags($message);
+    // check for maximum message size
+    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+        pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
+        // switch to preview mode
+        $preview = true;
+    }
+
     if (empty($submit)) {
-    	$subject="";
-    	$message="";
+    	$subject = '';
+    	$message = '';
     }
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
@@ -485,26 +509,26 @@ function pnForum_user_topicadmin($args=array())
 
     if(empty($submit)) {
         switch($mode) {
-            case "del":
-            case "delete":
-                $templatename = "pnforum_user_deletetopic.html";
+            case 'del':
+            case 'delete':
+                $templatename = 'pnforum_user_deletetopic.html';
                 break;
-            case "move":
-            case "join":
+            case 'move':
+            case 'join':
                 $pnr->assign('forums', pnModAPIFunc('pnForum', 'user', 'readuserforums'));
-                $templatename = "pnforum_user_movetopic.html";
+                $templatename = 'pnforum_user_movetopic.html';
                 break;
-            case "lock":
-            case "unlock":
-                $templatename = "pnforum_user_locktopic.html";
+            case 'lock':
+            case 'unlock':
+                $templatename = 'pnforum_user_locktopic.html';
                 break;
-            case "sticky":
-            case "unsticky":
-                $templatename = "pnforum_user_stickytopic.html";
+            case 'sticky':
+            case 'unsticky':
+                $templatename = 'pnforum_user_stickytopic.html';
                 break;
-            case "viewip":
+            case 'viewip':
                 $pnr->assign('viewip', pnModAPIFunc('pnForum', 'user', 'get_viewip_data', array('post_id' => $post_id)));
-                $templatename = "pnforum_user_viewip.html";
+                $templatename = 'pnforum_user_viewip.html';
                 break;
             default:
                 return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
@@ -516,25 +540,25 @@ function pnForum_user_topicadmin($args=array())
           	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
         }
         switch($mode) {
-            case "del":
-            case "delete":
+            case 'del':
+            case 'delete':
                 $forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
                 return pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id)));
                 break;
-            case "move":
+            case 'move':
                 pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
                                                                    'forum_id' => $forum_id,
                                                                    'shadow'   => $shadow ));
                 break;
-            case "lock":
-            case "unlock":
+            case 'lock':
+            case 'unlock':
                 pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 break;
-            case "sticky":
-            case "unsticky":
+            case 'sticky':
+            case 'unsticky':
                 pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 break;
-            case "join":
+            case 'join':
                 $to_topic_id = pnVarCleanFromInput('to_topic_id');
                 pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic_id' => $topic_id,
                                                                     'to_topic_id'   => $to_topic_id));
@@ -573,32 +597,32 @@ function pnForum_user_prefs($args=array())
 
     switch($act) {
         case 'subscribe_topic':
-            $return_to = (!empty($return_to))? $return_to : "viewtopic";
+            $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('pnForum', 'user', 'subscribe_topic',
                          array('topic_id' => $topic_id ));
             $params = array('topic'=>$topic_id);
             break;
         case 'unsubscribe_topic':
-            $return_to = (!empty($return_to))? $return_to : "viewtopic";
+            $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
                          array('topic_id' => $topic_id ));
             $params = array('topic'=>$topic_id);
             break;
         case 'subscribe_forum':
-            $return_to = (!empty($return_to))? $return_to : "viewforum";
+            $return_to = (!empty($return_to))? $return_to : 'viewforum';
             pnModAPIFunc('pnForum', 'user', 'subscribe_forum',
                          array('forum_id' => $forum_id ));
             $params = array('forum'=>$forum_id);
             break;
         case 'unsubscribe_forum':
-            $return_to = (!empty($return_to))? $return_to : "viewforum";
+            $return_to = (!empty($return_to))? $return_to : 'viewforum';
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum',
                          array('forum_id' => $forum_id ));
             $params = array('forum'=>$forum_id);
             break;
         case 'add_favorite_forum':
             if(pnModGetVar('pnForum', 'favorites_enabled')=='yes') {
-                $return_to = (!empty($return_to))? $return_to : "viewforum";
+                $return_to = (!empty($return_to))? $return_to : 'viewforum';
                 pnModAPIFunc('pnForum', 'user', 'add_favorite_forum',
                              array('forum_id' => $forum_id ));
                 $params = array('forum'=>$forum_id);
@@ -606,21 +630,21 @@ function pnForum_user_prefs($args=array())
             break;
         case 'remove_favorite_forum':
             if(pnModGetVar('pnForum', 'favorites_enabled')=='yes') {
-                $return_to = (!empty($return_to))? $return_to : "viewforum";
+                $return_to = (!empty($return_to))? $return_to : 'viewforum';
                 pnModAPIFunc('pnForum', 'user', 'remove_favorite_forum',
                              array('forum_id' => $forum_id ));
                 $params = array('forum'=>$forum_id);
             }
             break;
         case 'change_post_order':
-            $return_to = (!empty($return_to))? $return_to : "viewtopic";
+            $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
             $params = array('topic'=>$topic_id);
             break;
         case 'showallforums':
         case 'showfavorites':
             if(pnModGetVar('pnForum', 'favorites_enabled')=='yes') {
-                $return_to = (!empty($return_to))? $return_to : "main";
+                $return_to = (!empty($return_to))? $return_to : 'main';
                 $favorites = pnModAPIFunc('pnForum', 'user', 'change_favorite_status');
                 $params = array();
             }
@@ -667,9 +691,9 @@ function pnForum_user_emailtopic($args=array())
 	    if (!pnVarValidate($sendto_email, 'email')) {
 	    	// Empty e-mail is checked here too
         	$error_msg = true;
-        	$sendto_email = "";
+        	$sendto_email = '';
         	unset($submit);
-	    } else if ($message == "") {
+	    } else if ($message == '') {
         	$error_msg = true;
         	unset($submit);
 	    }
@@ -695,7 +719,7 @@ function pnForum_user_emailtopic($args=array())
         $pnr->assign('topic', $topic);
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
-        $pnr->assign('message', "".pnVarPrepForDisplay(_PNFORUM_EMAILTOPICMSG) ."\n\n" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
+        $pnr->assign('message', pnVarPrepForDisplay(_PNFORUM_EMAILTOPICMSG) ."\n\n" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('pnforum_user_emailtopic.html');
@@ -990,7 +1014,7 @@ function pnForum_user_movepost($args=array())
                                                                    'to_topic' => $to_topic));
         return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                                    array('topic' => $to_topic,
-                                         'start' => $start)) . "#pid" . $post['post_id']);
+                                         'start' => $start)) . '#pid' . $post['post_id']);
     } else {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
@@ -1105,7 +1129,7 @@ function pnForum_user_moderateforum($args=array())
         $pnr->assign('forum',$forum);
         // For Movetopic
         $pnr->assign('forums', pnModAPIFunc('pnForum', 'user', 'readuserforums'));
-        return $pnr->fetch("pnforum_user_moderateforum.html");
+        return $pnr->fetch('pnforum_user_moderateforum.html');
 
     } else {
         // submit is set
@@ -1114,13 +1138,13 @@ function pnForum_user_moderateforum($args=array())
         }
         if(count($topic_ids)<>0) {
     	    switch($mode) {
-                case "del":
-                case "delete":
+                case 'del':
+                case 'delete':
                 	foreach($topic_ids as $topic_id) {
                     	$forum_id = pnModAPIFunc('pnForum', 'user', 'deletetopic', array('topic_id'=>$topic_id));
                 	}
                     break;
-                case "move":
+                case 'move':
                 	if(empty($moveto)) {
                 		return showforumerror(_PNFORUM_NOMOVETO, __FILE__, __LINE__);
                 	}
@@ -1130,19 +1154,19 @@ function pnForum_user_moderateforum($args=array())
                             	                                           'shadow'   => $shadow ));
                 	}
                     break;
-                case "lock":
-                case "unlock":
+                case 'lock':
+                case 'unlock':
                 	foreach($topic_ids as $topic_id) {
                     	pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 	}
                     break;
-                case "sticky":
-                case "unsticky":
+                case 'sticky':
+                case 'unsticky':
                 	foreach($topic_ids as $topic_id) {
                     	pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 	}
                     break;
-                case "join":
+                case 'join':
                     if(empty($jointo)) {
                         return showforumerror(_PNFORUM_NOJOINTO, __FILE__, __LINE__);
                     }
