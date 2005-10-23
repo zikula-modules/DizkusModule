@@ -96,7 +96,7 @@ function pnForum_statisticsblock_display($row)
             $pnr->assign(trim($paramdata[0]), trim($paramdata[1]));
         }
     }
-    $row['content'] = $pnr->fetch($vars['sb_template']);
+    $row['content'] = $pnr->fetch(trim($vars['sb_template']));
 	return themesideblock($row);
 }
 

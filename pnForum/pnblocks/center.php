@@ -104,7 +104,7 @@ function pnForum_centerblock_display($row)
         }
     }
 
-    $row['content'] = $pnr->fetch($vars['cb_template']);
+    $row['content'] = $pnr->fetch(trim($vars['cb_template']));
 	return themesideblock($row);
 }
 
