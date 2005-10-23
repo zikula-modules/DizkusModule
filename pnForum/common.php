@@ -90,7 +90,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
 {
 	$modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
 //    $baseDir = realpath(pnModGetBaseDir('pnForum')) . '/pntemplates';
-    $baseDir = realpath("modules/" . $modinfo['directory'] . "/pntemplates");
+    $baseDir = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
     $lang = pnUserGetLang();
     $error_path = 'errors/' . $error_type;
     $prefix = 'pnforum_error_';
@@ -146,7 +146,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
         return $default_msg;
     }else {
         // ouch, no custom message and no default.
-        return showforumerror("Error message not found", __FILE__, __LINE__);
+        return showforumerror('Error message not found', __FILE__, __LINE__);
     }
 }
 
@@ -155,7 +155,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
  * display a simple error message showing $text
  *@param text string The error text
  */
-function showforumerror($error_text, $file="", $line=0)
+function showforumerror($error_text, $file='', $line=0)
 {
     // we need to load one core file in order to have the language definitions
     // available
@@ -171,12 +171,12 @@ function showforumerror($error_text, $file="", $line=0)
         $pnr->assign( 'file', $file);
         $pnr->assign( 'line', $line);
     }
-    $output = $pnr->fetch("pnforum_errorpage.html");
+    $output = $pnr->fetch('pnforum_errorpage.html');
     if(preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
         // __FILE__ ends with api.php or is common.php or pninit.php
-        include_once("header.php");
+        include_once('header.php');
         echo $output;
-        include_once("footer.php");
+        include_once('footer.php');
         exit;
     }
     return $output;
@@ -190,46 +190,62 @@ function showforumerror($error_text, $file="", $line=0)
  * No mail is generated
  * If current user is admin, then onscreen message also include additional debug information
  */
-function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="", $line)
+function showforumsqlerror($msg, $sql='', $mysql_errno='', $mysql_error='', $file='', $line)
 {
-	$adminmail = pnConfigGetVar('adminmail');
-	$pagetype = 'error';
-
 	if(!empty($sql)) {
 		// Sending notify e-mail for error
-		$posted_message = "Error occured\n\n";
-		$posted_message .= "SQL statement:\n".$sql."\n";
-		$posted_message .= "\nDatabase error number:\n".$mysql_errno."\n";
-		$posted_message .= "\nDatabase error message:\n".$mysql_error."\n";
-		$posted_message .= "\nLINK:\n".$GLOBALS[CHARSET_HTTP_METHOD].""
-                        .$GLOBALS[HTTP_HOST].""
-						.$GLOBALS[SCRIPT_NAME]
-						."?"
-						.$GLOBALS[QUERY_STRING]
-						."\n";
-		$posted_message .= "\nHTTP_USER_AGENT:\n".$GLOBALS[HTTP_USER_AGENT]."\n";
+		$message = "Error occured\n\n";
+		$message .= "SQL statement:\n" . $sql . "\n\n";
+		$message .= "Database error number:\n" . $mysql_errno . "\n\n";
+		$message .= "Database error message:\n" . $mysql_error . "\n\n";
+		$message .= "Link: " . pnGetCurrentURL() . "\n\n";
+		$message .= "HTTP_USER_AGENT:\n" . pnServerGetVar('HTTP_USER_AGENT') . "\n";
+/*
     	$email_from = pnModGetVar('pnForum', 'email_from');
-    	if ($email_from == "") {
+    	if ($email_from == '') {
     		// nothing in forumwide-settings, use PN adminmail
     		$email_from = pnConfigGetVar('adminmail');
     	}
-    	$msg_From_Header = "From: ".pnConfigGetVar('sitename')."<".$email_from.">\n";
+    	$msg_From_Header = 'From: ' . pnConfigGetVar('sitename') . '<' . $email_from.">\n";
     	$modInfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
-    	$msg_XMailer_Header = "X-Mailer: pnForum ".$modVersion."\n";
-    	$msg_ContentType_Header = "Content-Type: text/plain;";
+    	$msg_XMailer_Header = 'X-Mailer: pnForum ' . $modVersion . "\n";
+    	$msg_ContentType_Header = 'Content-Type: text/plain;';
 
-    	$phpbb_default_charset = pnModGetVar('pnForum', 'default_lang');
-    	if ($phpbb_default_charset != '') {
-    		$msg_ContentType_Header .= " charset=".$phpbb_default_charset;
+    	$pnforum_default_charset = pnModGetVar('pnForum', 'default_lang');
+    	if ($pnforum_default_charset != '') {
+    		$msg_ContentType_Header .= ' charset=' . $pnforum_default_charset;
     	}
     	$msg_ContentType_Header .= "\n";
 		$msg_To = pnConfigGetVar('adminmail');
 		// set reply-to to his own adress ;)
 		$msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
 		$msg_Headers .= "Reply-To: $msg_To";
-        $msg_Subject = "sql error in your pnForum";
+        $msg_Subject = 'sql error in your pnForum';
+*/
+//    	pnMail($msg_To, $msg_Subject, $posted_message, $msg_Headers);
 
-    	pnMail($msg_To, $msg_Subject, $posted_message, $msg_Headers);
+    	$email_from = pnModGetVar('pnForum', 'email_from');
+    	if ($email_from == '') {
+    		// nothing in forumwide-settings, use PN adminmail
+    		$email_from = pnConfigGetVar('adminmail');
+    	}
+		$email_to = pnConfigGetVar('adminmail');
+        $subject = 'sql error in your pnForum';
+        $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
+
+        $args = array( 'fromname'    => pnConfigGetVar('sitename'),
+                       'fromaddress' => $email_from,
+                       'toname'      => $email_to,
+                       'toaddress'   => $email_to,
+                       'subject'     => $subject,
+                       'body'        => $message,
+                       'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
+        pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+
+
+
+
+
 	}
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
@@ -245,9 +261,9 @@ function showforumsqlerror($msg,$sql='',$mysql_errno='',$mysql_error='', $file="
  * internal debug function
  *
  */
-function pnfdebug($name="", $data, $die = false)
+function pnfdebug($name='', $data, $die = false)
 {
-    if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
+    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         $type = gettype($data);
         echo "\n<!-- begin debug of $name -->\n<div style=\"color: red;\">$name ($type";
         if(is_array($data)||is_object($data)) {
@@ -298,7 +314,7 @@ function pnfsqldebug($sql)
  *@returns array  pntable array
  *        or false on error
  */
-function pnfOpenDB($tablename="")
+function pnfOpenDB($tablename='')
 {
 	pnModDBInfoLoad('pnForum');
 	$dbconn =& pnDBGetConn(true);
@@ -348,7 +364,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
+    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
     }
@@ -378,7 +394,7 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(pnSecAuthAction(0, "pnForum::", "::", ACCESS_ADMIN)) {
+    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
     }
@@ -404,10 +420,13 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
  */
 if(!function_exists('pnForum_is_serialized')) {
     function pnForum_is_serialized( $string ) {
-        if( @unserialize( $string ) == "" ) {
+        return @unserialize($string)!=='';
+        /*
+        if( @unserialize( $string ) == '' ) {
             return false;
         }
         return true;
+        */
     }
 }
 
@@ -502,7 +521,7 @@ function phpbb_br2nl($str)
  */
 function allowedtoseecategoryandforum($category_id, $forum_id)
 {
-    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_OVERVIEW);
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW);
 }
 
 /**
@@ -510,7 +529,7 @@ function allowedtoseecategoryandforum($category_id, $forum_id)
  */
 function allowedtoreadcategoryandforum($category_id, $forum_id)
 {
-    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_READ);
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ);
 }
 
 /**
@@ -518,7 +537,7 @@ function allowedtoreadcategoryandforum($category_id, $forum_id)
  */
 function allowedtowritetocategoryandforum($category_id, $forum_id)
 {
-    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_COMMENT);
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT);
 }
 
 /**
@@ -526,7 +545,7 @@ function allowedtowritetocategoryandforum($category_id, $forum_id)
  */
 function allowedtomoderatecategoryandforum($category_id, $forum_id)
 {
-    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_MODERATE);
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE);
 }
 
 /**
@@ -534,7 +553,7 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id)
  */
 function allowedtoadmincategoryandforum($category_id, $forum_id)
 {
-    return pnSecAuthAction(0, "pnForum::", "$category_id:$forum_id:", ACCESS_ADMIN);
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN);
 }
 
 /**
@@ -561,7 +580,7 @@ function pnForum_replacesignature($text, $signature='')
         $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));
         $text = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $signature . $sigend, $text);
     } else {
-        $text = eregi_replace("\[addsig]$", "", $text);
+        $text = eregi_replace("\[addsig]$", '', $text);
     }
     return $text;
 }
@@ -575,7 +594,7 @@ function mailcronecho($text)
     if(pnSessionGetVar('mailcronrunning')==true) {
         echo $text;
         if(pnSessionGetVar('mailcrondebug')==true) {
-            echo "<br />";
+            echo '<br />';
         }
         flush();
     }
@@ -608,10 +627,10 @@ function pnfVarPrepHTMLDisplay($text)
  * used for debug purposes only
  *
  */
-if(!function_exists("microtime_float")) {
+if(!function_exists('microtime_float')) {
 function microtime_float()
 {
-    list($usec, $sec) = explode(" ", microtime());
+    list($usec, $sec) = explode(' ', microtime());
     return ((float)$usec + (float)$sec);
 }
 }
@@ -626,13 +645,13 @@ function microtime_float()
 function useragent_is_bot()
 {
     // check the user agent - if it is a bot, return immediately
-    $robotslist = array ( "ia_archiver",
-                          "googlebot",
-                          "mediapartners-google",
-                          "yahoo!",
-                          "msnbot",
-                          "jeeves",
-                          "lycos");
+    $robotslist = array ( 'ia_archiver',
+                          'googlebot',
+                          'mediapartners-google',
+                          'yahoo!',
+                          'msnbot',
+                          'jeeves',
+                          'lycos');
     $useragent = pnServerGetVar('HTTP_USER_AGENT');
     for($cnt=0; $cnt < count($robotslist); $cnt++) {
         if(strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
@@ -716,6 +735,37 @@ function pnf_getimagepath($image=null)
     }
 
     return $result;
+}
+
+/**
+ * pnfstriptags
+ * strip all thml tags outside of [code][/code]
+ *
+ *@params  $text     string the text
+ *@returns string    the sanitized text
+ */
+function pnfstriptags($text='')
+{
+    if(empty($text)) {
+        return $text;
+    }
+
+    if(pnModGetVar('pnForum', 'striptags') == 'yes') {
+        // save code tags
+        $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
+        for($i=0; $i < $codecount; $i++) {
+            $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " PNFSTREPLACEMENT{$i} ", $text, 1);
+        }
+
+        // strip all html
+        $text = strip_tags($text);
+
+        // replace code tags saved before
+        for ($i = 0; $i < $codecount; $i++) {
+            $text = preg_replace("/ PNFSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
+        }
+    }
+    return $text;
 }
 
 ?>
