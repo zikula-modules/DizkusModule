@@ -330,3 +330,10 @@ div.pnf_statusmsg {
     font-size=1.2em;
     font-weight: bold;
 }
+
+.pnfadminuser {
+    color: red;
+}
+.pnfnoadminuser {
+    color: green;
+}

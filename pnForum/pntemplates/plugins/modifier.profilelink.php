@@ -71,7 +71,7 @@ function smarty_modifier_profilelink($string, $class='', $image='')
     $string = pnVarPrepForDisplay($string);
 
     if(!empty($class)) {
-        $class = 'class="' + $class . '" ';
+        $class = 'class="' . $class . '" ';
     }
 
     if(!empty($image)) {
