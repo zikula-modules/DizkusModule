@@ -503,8 +503,8 @@ function pnForum_upgrade_to_2_5($createindex=true)
     // check the result from the interactive upgrade
 
     // if we use an innodb table we cannot create inde fields
-    $dbtype = $GLOBALS['pnconfig']['dbtype'];
-    if(strtolower($dbtype) == 'innodb') {
+    $dbtabletype = $GLOBALS['pnconfig']['dbtabletype'];
+    if(strtolower($dbtabletype) == 'innodb') {
         $createindex = false;
     }
 
