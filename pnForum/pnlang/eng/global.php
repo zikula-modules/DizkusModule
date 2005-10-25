@@ -48,6 +48,8 @@ define('_PNFORUM_ILLEGALMESSAGESIZE', 'Illegal message size, max. 65535 chars');
 define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Strip all html tags from new posts (does not alter content of [code][/code]');
 define('_PNFORUM_USERSONLINE', 'Users online');
 define('_PNFORUM_BASEDONLASTXMINUTES', 'This list bases on the users active in the last %m% minutes');
+define('_PNFORUM_AND', 'and');
+
 // alphasorting starts here
 
 //
