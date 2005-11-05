@@ -44,6 +44,35 @@
  * Traduction française : Chestnut, le 11 septembre 2005                *
  ************************************************************************/
 
+//nouveau (sp?, damn, I should have learned french in school, but latin was more interesting :-))
+// new 20051105
+define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
+define('_PNFORUM_NOPNTOPIC', 'aucun sujet');
+define('_PNFORUM_ALLPNTOPIC', 'tous les sujets');
+define('_PNFORUM_PNTOPIC_HINT', '');
+define('_PNFORUM_BACKTOSUBMISSION', 'Aller au contenu en attente');
+define('_PNFORUM_PREFS_DELETEHOOKACTION', 'Action lorsque l\'extension d\'effacement est appelée');
+define('_PNFORUM_PREFS_DELTEHOOKACTIONREMOVE', 'Fermer le sujet');
+define('_PNFORUM_PREFS_DELETEHOOKACTIONLOCK', 'Supprimer le sujet');
+
+define('_PNFORUM_AUTOMATICDISCUSSIONSUBJECT', 'Créer automatiquement un sujet');
+define('_PNFORUM_AUTOMATICDISCUSSIONMESSAGE', 'Créer automatiquement un sujet des éléments en attente');
+define('_PNFORUM_SELECTREFERENCEMODULE', 'Sélectionner le module'); //select hooked module');
+define('_PNFORUM_NOHOOKEDMODULES', 'Aucun module trouvé'); //no hooked module found');
+define('_PNFORUM_MODULEREFERENCE', 'Référence Module');
+define('_PNFORUM_MODULEREFERENCE_HINT', 'Utilisé comme option de commentaires, tous les éléments proposés de ce module auront un sujet associé dans le forum. Cette liste ne contient que les modules pour lesquels le pnForum a été activé.');
+define('_PNFORUM_DISCUSSINFORUM', 'Discuter de cette proposition dans le forum');
+define('_PNFORUM_FAILEDTODELETEHOOK', 'Echec de la suppression de l\'extension');
+define('_PNFORUM_FAILEDTOCREATEHOOK', 'Echec de la création de l\'extension');
+define('_PNFORUM_UNKNOWNIMAGE', 'image inconnue');
+define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Retirer la signature des utilisateurs des messages');
+define('_PNFORUM_ILLEGALMESSAGESIZE', 'Taille de message illégale (max: 65535 caractères');
+define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Supprimer le HTML des nouveaux messages (garde le contenu entre les balises [code][/code]');
+define('_PNFORUM_USERSONLINE', 'Utilisateurs en ligne');
+define('_PNFORUM_BASEDONLASTXMINUTES', 'Données pour les %m% dernières minutes');
+define('_PNFORUM_AND', 'et');
+define('_PNFORUM_NOHTMLALLOWED', 'Tags HTML interdits (excepté à l\'intérieur des balises [code][/code])');
+
 // alphasorting starts here
 
 //

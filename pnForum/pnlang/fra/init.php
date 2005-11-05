@@ -53,4 +53,7 @@ define('_PNFORUM_UPGRADE_ADDINDEXLATER', 'Créer les index manuellement avec phpm
 define('_PNFORUM_TO25_HINT', 'Cette mise à jour contient plusieurs changements au niveau de la base de données incluant la création de deux index de champs améliorant les performances de recherche sur le texte complet. Cela pourrait entraîner des problêmes sur des hébergements mutualisés et une base contenant beaucoup de messages !');
 define('_PNFORUM_TO25_FAILED', 'Echec de la mise à jour du pnForum à la version 2.5');
 
+define('_PNFORUM_TO26_HINT', 'Cette mise à jour contient plusieurs changements au niveau de la base de données concernant l\'option des commentaires via le forum.');
+define('_PNFORUM_TO26_FAILED', 'Echec de la mise à jour du pnForum à la version 2.6');
+
 ?>
