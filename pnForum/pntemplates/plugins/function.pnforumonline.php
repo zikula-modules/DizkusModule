@@ -88,7 +88,7 @@ function smarty_function_pnforumonline($params, &$smarty)
     } else {
         $anonwhere = "AND      $sessioninfocolumn[uid] > '0'";
     }
-    $sql = "SELECT   $sessioninfocolumn[uid], $pntable[users].pn_uname
+    $sql = "SELECT DISTINCT $sessioninfocolumn[uid], $pntable[users].pn_uname
             FROM     $sessioninfotable, $pntable[users]
             WHERE    $sessioninfocolumn[lastused] > $activetime
             $anonwhere
