@@ -102,21 +102,33 @@ function pnForum_hookapi_createbyitem($args)
         $forumtable = $pntable['pnforum_forums'];
         $forumcolumn = $pntable['pnforum_forums_column'];
 
-        $sql = "SELECT $forumcolumn[forum_id]
+        $sql = "SELECT $forumcolumn[forum_id],
+                       $forumcolumn[forum_pntopic]
                 FROM $forumtable
-                WHERE $forumcolumn[forum_moduleref]='" . pnVarPrepForStore($modid) . "'
-                  AND $forumcolumn[forum_pntopic]= '" . pnVarPrepForStore($pntopic) . "'";
+                WHERE $forumcolumn[forum_moduleref]='" . pnVarPrepForStore($modid) . "'";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        if(!$result->EOF) {
-            list($forum_id) = $result->fields;
-            pnModAPIFunc('pnForum', 'user', 'storenewtopic',
-                         array('forum_id'  => $forum_id,
-                               'subject'   => $subject,
-                               'message'   => $message,
-                               'reference' => $reference,
-                               'post_as'   => $authorid));
+
+        $forumsfound = array();
+        while(!$result->EOF) {
+            list($forum_id, $forum_pntopic) = $result->fields;
+            $forumsfound[$forum_pntopic] = $forum_id;
+            $result->MoveNext();
         }
         pnfCloseDB($result);
+
+        if(count($forumsfound)<>0) {
+            ksort($forumsfound);
+            // thanks to Franky Chestnut to figure out the following logic
+            if(array_key_exists($pntopic, $forumsfound) || isset($forumsfound['-1'])) {
+                $forum_id = (!isset($forumsfound[$pntopic]) ? $forumsfound['-1'] : $forumsfound[$pntopic]);
+                pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+                             array('forum_id'  => $forum_id,
+                                   'subject'   => $subject,
+                                   'message'   => $message,
+                                   'reference' => $reference,
+                                   'post_as'   => $authorid));
+            }
+        }
 
     }
     return $extrainfo;
@@ -204,6 +216,11 @@ function pnForum_hookapi_deletebyitem($args)
 
     if(!isset($objectid) || empty($objectid)) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+
+    // fix for news
+    if($modname=='AddStory') {
+        $modname = 'News';
     }
 
     // we have an objectid now, we combine this with the module id now for the

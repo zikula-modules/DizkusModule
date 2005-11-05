@@ -50,7 +50,7 @@ define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
 define('_PNFORUM_NOPNTOPIC', 'aucun sujet');
 define('_PNFORUM_ALLPNTOPIC', 'tous les sujets');
 define('_PNFORUM_PNTOPIC_HINT', '');
-define('_PNFORUM_BACKTOSUBMISSION', 'Aller au contenu en attente');
+define('_PNFORUM_BACKTOSUBMISSION', 'Lien vers l\'Article');
 define('_PNFORUM_PREFS_DELETEHOOKACTION', 'Action lorsque l\'extension d\'effacement est appelée');
 define('_PNFORUM_PREFS_DELTEHOOKACTIONREMOVE', 'Fermer le sujet');
 define('_PNFORUM_PREFS_DELETEHOOKACTIONLOCK', 'Supprimer le sujet');

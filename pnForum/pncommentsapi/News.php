@@ -27,8 +27,8 @@
  ************************************************************************
  *
  * @version $Id$
- * @author Frank Schummertz
- * @copyright 2005 by Frank Schummertz
+ * @author Frank Schummertz, Franky Chestnut
+ * @copyright 2005 by Frank Schummertz, Franky Chestnut
  * @package pnForum
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
  * @link http://www.pnforum.de
@@ -48,6 +48,8 @@ function pnForum_commentsapi_News($args)
     list($dbconn, $pntable) = pnfOpenDB();
     $pnstoriestable = $pntable['stories'];
     $pnstoriescolumn = $pntable['stories_column'];
+    $pntopicstable = $pntable['topics'];
+    $pntopicscolumn = $pntable['topics_column'];
 
     $sql = "SELECT $pnstoriescolumn[bodytext],
                    $pnstoriescolumn[hometext],
@@ -55,10 +57,15 @@ function pnForum_commentsapi_News($args)
                    $pnstoriescolumn[title],
                    $pnstoriescolumn[topic],
                    $pnstoriescolumn[aid],
-                   $pnstoriescolumn[format_type]
-            FROM $pnstoriestable
+                   $pnstoriescolumn[format_type],
+                   $pntopicscolumn[topicname]
+            FROM   $pnstoriestable
+            LEFT JOIN $pntopicstable ON $pnstoriescolumn[topic]=$pntopicscolumn[topicid]
             WHERE $pnstoriescolumn[sid] ='" . pnVarPrepForStore($objectid) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    //echo $sql;
+    //exit;
+
     if(!$result->EOF) {
         list($bodytext,
              $hometext,
@@ -66,21 +73,26 @@ function pnForum_commentsapi_News($args)
              $title,
              $topic,
              $authorid,
-             $format_type) = $result->fields;
+             $format_type,
+             $topicname) = $result->fields;
         pnfCloseDB($result);
+    } else {
+        return false;
     }
 
     // workaround for bug in AddStories html fixed on 11-05-2005
     $authorid = (int)$authorid;
 
-    $totaltext = $hometext . "\n\n" . $bodytext . "\n\n" . $notes . "\n\n";
+    $link  = pnGetBaseURL() . 'index.php?name=News&file=article&sid=' . $objectid;
+    $title = ($topicname<>'' ? $topicname.' - '.$title : $title);
 
-    $url = 'index.php?name=News&file=article&sid=' . $objectid;
     if(pnModIsHooked('pn_bbcode', 'pnForum')) {
-        $totaltext .= '[url=' . pnGetBaseURL() . $url . ']' . _PNFORUM_BACKTOSUBMISSION . "[/url]\n\n";
-    } else {
-        $totaltext .= pnGetBaseURL() . $url;
+        $notes = '[i]' . $notes . '[/i]';
+        $link  = '[url=' . $link . ']' . _PNFORUM_BACKTOSUBMISSION . '[/url]';
     }
+
+    $totaltext = $hometext . "\n\n" . $bodytext . "\n\n" . $notes . "\n\n" . $link . "\n\n";
+
     return array($title, $totaltext , $topic, $authorid);
 }
 
