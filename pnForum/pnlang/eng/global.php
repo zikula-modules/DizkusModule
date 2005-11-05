@@ -42,6 +42,24 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_PNTOPIC', 'PostNuke Topic');
+define('_PNFORUM_NOPNTOPIC', 'no topic');
+define('_PNFORUM_ALLPNTOPIC', 'all topics');
+define('_PNFORUM_PNTOPIC_HINT', '');
+define('_PNFORUM_BACKTOSUBMISSION', 'Go to this submission');
+define('_PNFORUM_PREFS_DELETEHOOKACTION', 'Action to be performed when deletehook is called');
+define('_PNFORUM_PREFS_DELTEHOOKACTIONREMOVE', 'close topic');
+define('_PNFORUM_PREFS_DELETEHOOKACTIONLOCK', 'delete topic');
+
+define('_PNFORUM_AUTOMATICDISCUSSIONSUBJECT', 'Automatically created topic');
+define('_PNFORUM_AUTOMATICDISCUSSIONMESSAGE', 'Automatically created topic for discussion of submitted entries');
+define('_PNFORUM_SELECTREFERENCEMODULE', 'select hooked module');
+define('_PNFORUM_NOHOOKEDMODULES', 'no hooked module found');
+define('_PNFORUM_MODULEREFERENCE', 'Modulereference');
+define('_PNFORUM_MODULEREFERENCE', 'Used for comment feature, all topics to submission in this module go into this forum. This list only contains the modules whre the pnForum are activated for.');
+define('_PNFORUM_DISCUSSINFORUM', 'Discuss this submission in the forums');
+define('_PNFORUM_FAILEDTODELETEHOOK', 'Failed to delete hook');
+define('_PNFORUM_FAILEDTOCREATEHOOK', 'Failed to create hook');
 define('_PNFORUM_UNKNOWNIMAGE', 'unknown image');
 define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Remove users signature from posting');
 define('_PNFORUM_ILLEGALMESSAGESIZE', 'Illegal message size, max. 65535 chars');
@@ -49,6 +67,7 @@ define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Strip all html tags from new posts (
 define('_PNFORUM_USERSONLINE', 'Users online');
 define('_PNFORUM_BASEDONLASTXMINUTES', 'This list bases on the users active in the last %m% minutes');
 define('_PNFORUM_AND', 'and');
+define('_PNFORUM_NOHTMLALLOWED', 'NO HTML-tags allowed (only inside of [code][/code])');
 
 // alphasorting starts here
 

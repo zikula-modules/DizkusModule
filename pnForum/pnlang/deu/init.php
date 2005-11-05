@@ -53,4 +53,7 @@ define('_PNFORUM_UPGRADE_ADDINDEXLATER', 'Indexfelder manuell in phpmyadmin o.ä 
 define('_PNFORUM_TO25_HINT', 'Das Upgrade auf Version 2.5 beinhaltet einige Datenbankänderungen, u.a. das Hinzufügen zweier Indexfelder, um die Volltextsuche zu beschleunigen. Dies könnte auf manchem Systemen aufgrund der Laufzeitbegrenzung von PHP-Skripten in Zusammenhang mit einem großen Datenbestand zu Problemen führen.<br /><br />');
 define('_PNFORUM_TO25_FAILED', 'Upgrade auf pnForum 2.5 fehlgeschlagen');
 
+define('_PNFORUM_TO26_HINT', 'Das Upgrade auf Version 2.6 beinhaltet einige Datenbankänderungen, um pnForum als Kommentarmodul zu verwenden.<br />');
+define('_PNFORUM_TO26_FAILED', 'Upgrade auf pnForum 2.6 fehlgeschlagen');
+
 ?>

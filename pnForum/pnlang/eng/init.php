@@ -53,4 +53,7 @@ define('_PNFORUM_UPGRADE_ADDINDEXLATER', 'Create index fields manually with phpm
 define('_PNFORUM_TO25_HINT', 'This upgrade contains several database changes including the creation of two index fields to inrease the fulltext search performance. This might lead you into trouble in shared hosting environments with a large amount of postings in the database!');
 define('_PNFORUM_TO25_FAILED', 'Upgrade to pnForum 2.5 failed');
 
+define('_PNFORUM_TO26_HINT', 'This upgrade contains several database for the forum comments feature.');
+define('_PNFORUM_TO26_FAILED', 'Upgrade to pnForum 2.6 failed');
+
 ?>
