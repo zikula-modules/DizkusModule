@@ -290,6 +290,8 @@ function pnForum_adminapi_readforums($args)
                    f.forum_pop3_matchstring,
                    f.forum_pop3_pnuser,
                    f.forum_pop3_pnpassword,
+                   f.forum_moduleref,
+                   f.forum_pntopic,
                    c.cat_title,
                    c.cat_id
             FROM ".$pntable['pnforum_forums']." AS f
@@ -323,6 +325,8 @@ function pnForum_adminapi_readforums($args)
                   $forum['pop3_matchstring'],
                   $forum['pop3_pnuser'],
                   $forum['pop3_pnpassword'],
+                  $forum['forum_moduleref'],
+                  $forum['forum_pntopic'],
                   $forum['cat_title'],
                   $forum['cat_id'] ) = $result->fields;
             if( ( ($permcheck=="see") && allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id']) )
@@ -1116,6 +1120,8 @@ function pnForum_adminapi_sync($args)
  *@params $args['pop3_matchstring'] string  reg exp
  *@params $args['pop3_pnuser'] string postnuke username
  *@params $args['pop3_pnpassword'] string postnuke password
+ *@params $args['moduleref'] string reference module
+ *@params $args['pntopic']   int PN topic id
  *@returns int the new forums id
  *
  */
@@ -1162,7 +1168,9 @@ function pnForum_adminapi_addforum($args)
                 forum_pop3_interval,
                 forum_pop3_matchstring,
                 forum_pop3_pnuser,
-                forum_pop3_pnpassword)
+                forum_pop3_pnpassword,
+                forum_moduleref,
+                forum_pntopic)
             VALUES ('".pnVarPrepForStore($forum_id)."',
                     '".pnVarPrepForStore($forum_name)."',
                     '".pnVarPrepForStore($desc)."',
@@ -1176,7 +1184,9 @@ function pnForum_adminapi_addforum($args)
                     '".(int)pnVarPrepForStore($pop3_interval)."',
                     '".pnVarPrepForStore($pop3_matchstring)."',
                     '".pnVarPrepForStore($pop3_pnuser)."',
-                    '".pnVarPrepForStore($pop3_pnpassword)."')";
+                    '".pnVarPrepForStore($pop3_pnpassword)."',
+                    '".pnVarPrepForStore($moduleref)."',
+                    '".pnVarPrepForStore($pntopic)."')";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     $forum = $dbconn->PO_Insert_ID($pntable['pnforum_forums'], 'forum_id');
@@ -1245,7 +1255,9 @@ function pnForum_adminapi_editforum($args)
             forum_pop3_interval    ='".(int)pnVarPrepForStore($pop3_interval)."',
             forum_pop3_pnuser      ='".pnVarPrepForStore($pop3_pnuser)."',
             $pnpasswordupdate
-            forum_pop3_matchstring ='".pnVarPrepForStore($pop3_matchstring)."'
+            forum_pop3_matchstring ='".pnVarPrepForStore($pop3_matchstring)."',
+            forum_moduleref        ='".pnVarPrepForStore($moduleref)."',
+            forum_pntopic          ='".pnVarPrepForStore($pntopic)."'
             WHERE forum_id=".pnVarPrepForStore($forum_id)."";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1346,4 +1358,40 @@ function pnForum_adminapi_deleteforum($args)
     }
     return;
 }
+
+/**
+ * get_pntopics
+ *
+ */
+function pnForum_adminapi_get_pntopics()
+{
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $pntopicstable  = $pntable['topics'];
+    $pntopicscolumn = $pntable['topics_column'];
+
+    $sql = "SELECT $pntopicscolumn[topicid],
+                   $pntopicscolumn[topicname],
+                   $pntopicscolumn[topicimage],
+                   $pntopicscolumn[topictext]
+            FROM $pntopicstable
+            ORDER BY $pntopicscolumn[topicname]";
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    $topics = array();
+    if($result->RecordCount()>0) {
+        for (; !$result->EOF; $result->MoveNext())
+        {
+            $topic = array();
+            list( $topic['topicid'],
+                  $topic['topicname'],
+                  $topic['topicimage'],
+                  $topic['topictext'] ) = $result->fields;
+            array_push($topics, $topic);
+        }
+    }
+    return $topics;
+}
+
 ?>

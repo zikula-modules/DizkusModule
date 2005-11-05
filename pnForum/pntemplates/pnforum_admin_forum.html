@@ -67,6 +67,39 @@
 
         <div class="pnfadminrow98">
             <div class="pnfadmincol24">
+                <label for="modulref"><!--[ pnml name='_PNFORUM_MODULEREFERENCE' html=1]-->:</label>
+            </div>
+            <div class="pnfadmincol66">
+                <select id="moduleref" name="moduleref" size="1">
+                    <!--[ foreach item=hookmod from=$hooked_modules ]-->
+                    <option value="<!--[ $hookmod.id ]-->" <!--[ if $hookmod.sel == true ]-->selected="selected"<!--[ /if ]-->><!--[ $hookmod.name ]--></option>
+                    <!--[ foreachelse ]-->
+                    <option value="0"><!--[ pnml name='_PNFORUM_NOHOOKEDMODULES' ]--></option>
+                    <!--[ /foreach ]-->
+                </select>
+                <br /><!--[ pnml name='_PNFORUM_MODULEREFERENCE_HINT' ]-->
+            </div>
+        </div>
+
+        <div class="pnfadminrow98">
+            <div class="pnfadmincol24">
+                <label for="pntopic"><!--[ pnml name='_PNFORUM_PNTOPIC' html=1]-->:</label>
+            </div>
+            <div class="pnfadmincol66">
+                <select id="pntopic" name="pntopic" size="1">
+                    <option value="0"><!--[ pnml name='_PNFORUM_NOPNTOPIC' ]--></option>
+                    <option value="-1"><!--[ pnml name='_PNFORUM_ALLPNTOPIC' ]--></option>
+                    <!--[ foreach item=pntopic from=$pntopics ]-->
+                    <option value="<!--[ $pntopic.topicid ]-->" <!--[ if $forum.forum_pntopic == $pntopic.topicid ]-->selected="selected"<!--[ /if ]-->><!--[ $pntopic.topicname ]--></option>
+                    <!--[ foreachelse ]-->
+                    <!--[ /foreach ]-->
+                </select>
+                <br /><!--[ pnml name='_PNFORUM_PNTOPIC_HINT' ]-->
+            </div>
+        </div>
+
+        <div class="pnfadminrow98">
+            <div class="pnfadmincol24">
                 <label for="forum_mods"><!--[ pnml name='_PNFORUM_MODERATOR' ]-->:</label>
             </div>
             <div class="pnfadmincol66">

@@ -142,6 +142,14 @@ function pnForum_admin_preferences()
         	$striptags_offchecked = $checked;
         }
 
+        if (pnModGetVar('pnForum', 'deletehookaction') == 'lock') {
+        	$deletehookaction_lock = $checked;
+        	$deletehookaction_remove  = ' ';
+        } else {
+        	$deletehookaction_lock = ' ';
+        	$deletehookaction_remove  = $checked;
+        }
+
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->add_core_data();
@@ -174,10 +182,13 @@ function pnForum_admin_preferences()
         $pnr->assign('removesignature_offchecked', $removesignature_offchecked);
         $pnr->assign('striptags_onchecked',  $striptags_onchecked);
         $pnr->assign('striptags_offchecked', $striptags_offchecked);
+        $pnr->assign('deletehookaction_lock',   $deletehookaction_lock);
+        $pnr->assign('deletehookaction_remove', $deletehookaction_remove);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'deletehookaction', pnVarPrepForStore(pnVarCleanFromInput('deletehookaction')));
             pnModSetVar('pnForum', 'striptags', pnVarPrepForStore(pnVarCleanFromInput('striptags')));
             pnModSetVar('pnForum', 'removesignature', pnVarPrepForStore(pnVarCleanFromInput('removesignature')));
             pnModSetVar('pnForum', 'hideusers', pnVarPrepForStore(pnVarCleanFromInput('hideusers')));
@@ -199,6 +210,8 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         }
         if($actiontype=="RestoreDefaults")  {
+            pnModSetVar('pnForum', 'deletehookaction', 'lock');
+            pnModSetVar('pnForum', 'striptags', 'no');
             pnModSetVar('pnForum', 'removesignature', 'no');
             pnModSetVar('pnForum', 'hideusers', 'no');
             pnModSetVar('pnForum', 'favorites_enabled', 'yes');
@@ -377,34 +390,58 @@ function pnForum_admin_forum()
     if(!$submit) {
         //
         if($forum_id==-1) {
-            $forum = array('forum_name'       => "",
+            $forum = array('forum_name'       => '',
                            'forum_id'         => -1,
-                           'forum_desc'       => "",
+                           'forum_desc'       => '',
                            'forum_access'     => -1,
                            'forum_type'       => -1,
                            'forum_order'      => -1,
-                           'cat_title'        => "",
+                           'cat_title'        => '',
                            'cat_id'           => -1,
                            'pop3_active'      => 0,
-                           'pop3_server'      => "",
+                           'pop3_server'      => '',
                            'pop3_port'        => 110,
-                           'pop3_login'       => "",
-                           'pop3_password'    => "",
+                           'pop3_login'       => '',
+                           'pop3_password'    => '',
                            'pop3_interval'    => 0,
-                           'pop3_pnuser'      => "",
-                           'pop3_pnpassword'  => "",
-                           'pop3_matchstring' => "");
+                           'pop3_pnuser'      => '',
+                           'pop3_pnpassword'  => '',
+                           'pop3_matchstring' => '',
+                           'forum_moduleref'  => '',
+                           'forum_pntopic'    => 0);
         } else {
             $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                                   array('forum_id' => $forum_id));
         }
         $forum['pop3_active_checked'] = ($forum['pop3_active']==1) ? 'checked' : '';
+        $hooked_modules_raw = pnModAPIFunc('modules', 'admin', 'gethookedmodules',
+                                       array('hookmodname' => 'pnForum'));
+        $hooked_modules = array(array('name' => _PNFORUM_NOHOOKEDMODULES,
+                                               'id'   => 0));
+        $foundsel = false;
+        foreach($hooked_modules_raw as $hookmod => $dummy) {
+            $hookmodid = pnModGetIDFromName($hookmod);
+            $sel = false;
+            if($forum['forum_moduleref'] == $hookmodid) {
+                $sel = true;
+                $foundsel = true;
+            }
+            $hooked_modules[] = array('name' => $hookmod,
+                                               'id'   => $hookmodid,
+                                               'sel'  => $sel);
+        }
+        if($foundsel == false) {
+            $hooked_modules[0]['sel'] = true;
+        }
+
         $moderators = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
                                     array('forum_id' => $forum['forum_id']));
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->add_core_data();
         $pnr->assign('forum', $forum);
+        $pnr->assign('hooked_modules', $hooked_modules);
+        $pnr->assign('pntopics', pnModAPIFunc('pnForum', 'admin', 'get_pntopics'));
         $pnr->assign('categories', pnModAPIFunc('pnForum', 'admin', 'readcategories'));
         $pnr->assign('moderators', $moderators);
         $hideusers = pnModGetVar('pnForum', 'hideusers');
@@ -437,6 +474,8 @@ function pnForum_admin_forum()
              $pop3_pnuser,
              $pop3_pnpassword,
              $pop3_pnpasswordconfirm,
+             $moduleref,
+             $pntopic,
              $actiontype,
              $pop3_test)   = pnVarCleanFromInput('forum_name',
                                                  'forum_id',
@@ -455,6 +494,8 @@ function pnForum_admin_forum()
                                                  'pop3_pnuser',
                                                  'pop3_pnpassword',
                                                  'pop3_pnpasswordconfirm',
+                                                 'moduleref',
+                                                 'pntopic',
                                                  'actiontype',
                                                  'pop3_test');
         $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
@@ -496,7 +537,9 @@ function pnForum_admin_forum()
                                                'pop3_interval'    => $pop3_interval,
                                                'pop3_pnuser'      => $pop3_pnuser,
                                                'pop3_pnpassword'  => $pop3_pnpassword,
-                                               'pop3_matchstring' => $pop3_matchstring));
+                                               'pop3_matchstring' => $pop3_matchstring,
+                                               'moduleref'        => $moduleref,
+                                               'pntopic'          => $pntopic));
                 break;
             case "Edit":
                 pnModAPIFunc('pnForum', 'admin', 'editforum',
@@ -514,7 +557,9 @@ function pnForum_admin_forum()
                                    'pop3_interval'    => $pop3_interval,
                                    'pop3_pnuser'      => $pop3_pnuser,
                                    'pop3_pnpassword'  => $pop3_pnpassword,
-                                   'pop3_matchstring' => $pop3_matchstring));
+                                   'pop3_matchstring' => $pop3_matchstring,
+                                   'moduleref'        => $moduleref,
+                                   'pntopic'          => $pntopic));
                 break;
             case "Delete":
                 // no security check!!!

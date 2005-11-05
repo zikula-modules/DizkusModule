@@ -2,24 +2,26 @@
 PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
+---------------------------------------------------------------------------------------------
+2.6 (fs)
+---------------------------------------------------------------------------------------------
+This version needs .760 or later!
+
+- added create/update/delete/displayhooks that create topics when new submission, e.g. news have
+  been approved/sent. This needed some db changes.
+- added plugin to show the users who are online (crdits to Franky Chestnut for this one)
+  footer template updated accordingly
+- moved all language defines to global.php for easier handling
 
 ---------------------------------------------------------------------------------------------
 2.5 (fs)
 ---------------------------------------------------------------------------------------------
 This version needs .760 or later!
+******************
 Important changes:
+******************
 - $loggedin in templates has been replaced with $pncore.logged_in. Customized templates
   need to be updated!
-
-- removed obsolete setting "minimum postings for anchor", the plugin postanchor is deprecated
-  now, do nt use it any longer!
-- fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
-- added mail2forum feature
-- forum search now optional with FULLTEXT index
-- bug fixes, cleanups (as usual)
-- new option to turn off the favorites system
-- easier topic subscription management for the user
-- easier forum moderation (credits to Thomas Pawlitzki for this improvement)
 - finding the correct images for topics, new topics, hot topics and hot new topics (viewforum)
   is not longer done in program code but is now part of the template logic. There are two new fields in
   the topic array: new_posts and hot_topic, see the pnforum_user_viewforum.html template for more
@@ -27,6 +29,17 @@ Important changes:
   The fields image, altimage and image_attr are obsolete now and have been removed!!
 - the same is valid for the image in the main pnForum view, new field $forum.new_posts
   removed: fldr_img, fldr_img_attr, fldr_alt
+
+- added new option to remove all html tags outside of [code][/code] from new postings
+- removed obsolete setting "minimum postings for anchor", the plugin postanchor is deprecated
+  now, do not use it any longer!
+- fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
+- added mail2forum feature
+- forum search now optional with FULLTEXT index
+- new option to turn off the favorites system
+- easier topic subscription management for the user
+- easier forum moderation (credits to Thomas Pawlitzki for this improvement)
+- bug fixes, cleanups (as usual)
 - a lot of other fixes and addons
 
 ---------------------------------------------------------------------------------------------

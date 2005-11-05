@@ -87,7 +87,10 @@ function pnForum_pntables()
                                               'forum_pop3_lastconnect' => $pnforum_forums . '.forum_pop3_lastconnect',
                                               'forum_pop3_pnuser'      => $pnforum_forums . '.forum_pop3_pnuser',
                                               'forum_pop3_pnpassword'  => $pnforum_forums . '.forum_pop3_pnpassword',
-                                              'forum_pop3_matchstring' => $pnforum_forums . '.forum_pop3_matchstring',);
+                                              'forum_pop3_matchstring' => $pnforum_forums . '.forum_pop3_matchstring',
+                                              'forum_moduleref'        => $pnforum_forums . '.forum_moduleref',
+                                              'forum_pntopic'          => $pnforum_forums . '.forum_pntopic'
+                                              );
 
     $pnforum_posts = pnConfigGetVar('prefix') . '_pnforum_posts';
     $pntable['pnforum_posts'] = $pnforum_posts;
@@ -134,7 +137,8 @@ function pnForum_pntables()
                                               'topic_notify'       => $pnforum_topics . '.topic_notify',
                                               'sticky'             => $pnforum_topics . '.sticky',
                                               'sticky_label'       => $pnforum_topics . '.sticky_label',
-                                              'poll_id'            => $pnforum_topics . '.poll_id');
+                                              'poll_id'            => $pnforum_topics . '.poll_id',
+                                              'topic_reference'    => $pnforum_topics . '.topic_reference');
 
 
     $pnforum_users = pnConfigGetVar('prefix') . '_pnforum_users';

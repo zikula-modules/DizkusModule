@@ -157,11 +157,9 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
  */
 function showforumerror($error_text, $file='', $line=0)
 {
-    // we need to load one core file in order to have the language definitions
+    // we need to load the languages
     // available
-    if(!pnModAPILoad('pnForum','admin')) {
-        pnModAPILoad('pnForum', 'user');
-    }
+    pnModLangLoad('pnForum');
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
@@ -372,6 +370,38 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+    }
+    return $result;
+}
+
+/**
+ * pnfAutoExecuteSQL
+ * executes an sql command and returns the result, shows error if necessary
+ *
+ *@params $dbconn object db onnection object
+ *@params $record array of fieldname -> value to INSERT or UPDATE
+ *@params $where  string WHERE clause for INSERT
+ *@params $debug  bool   true if debug should be activated, default is false
+ *@params $file   string name of the calling file, important for error reporting
+ *@params $line   int    line in the calling file, important for error reorting
+ *@returns boolean the result of $dbconn->AutoExecute()
+ */
+function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FILE__, $line=__LINE__, $debug=false)
+{
+    if(!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
+        return showforumerror(_MODARGSERROR, $file, $line);
+    }
+    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+        // only admins shall see the debug output
+        $dbconn->debug = $debug;
+    }
+
+    $mode = (empty($where)) ? 'INSERT': 'UPDATE';
+
+    $result = $dbconn->AutoExecute($table, $record, $mode, $where);
+    $dbconn->debug = false;
+    if($dbconn->ErrorNo() != 0) {
+        return showforumsqlerror(_PNFORUM_ERROR_CONNECT, $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
@@ -766,6 +796,185 @@ function pnfstriptags($text='')
         }
     }
     return $text;
+}
+
+/**
+ * see if a user is authorised to carry out a particular task
+ * @public
+ * @param realm the realm under test
+ * @param component the component under test
+ * @param instance the instance under test
+ * @param level the level of access required
+ * @return bool true if authorised, false if not
+ */
+function pnfSecAuthAction($testrealm, $testcomponent, $testinstance, $testlevel, $testuser=null)
+{
+    static $userperms, $groupperms;
+
+    if(!isset($userperms) || !isset($groupperms)) {
+        $userperms  = array();
+        $groupperms = array();
+    }
+
+    if(!isset($testuser)) {
+        $testuser = pnUserGetVar('uid');
+    }
+
+    if (!isset($GLOBALS['pnfauthinfogathered'][$testuser]) || (int)$GLOBALS['pnfauthinfogathered'][$testuser] == 0) {
+        // First time here - get auth info
+        list($userperms[$testuser], $groupperms[$testuser]) = pnfSecGetAuthInfo($testuser);
+
+        if ((count($userperms[$testuser]) == 0) &&
+            (count($groupperms[$testuser]) == 0)) {
+                // No permissions
+                return;
+        }
+    }
+
+    // Get user access level
+    $userlevel = pnSecGetLevel($userperms[$testuser], $testrealm, $testcomponent, $testinstance);
+
+    // User access level is override, so return that if it exists
+    if ($userlevel > ACCESS_INVALID) {
+        // user has explicitly defined access level for this
+        // realm/component/instance combination
+		return $userlevel >= $testlevel;
+    }
+
+	return pnSecGetLevel($groupperms[$testuser], $testrealm, $testcomponent, $testinstance) >= $testlevel;
+}
+
+/**
+ * get authorisation information for this user
+ *
+ * @public
+ * @return array two element array of user and group permissions
+ */
+function pnfSecGetAuthInfo($testuser=null)
+{
+    // Load the groups db info
+	pnModDBInfoLoad('Groups', 'Groups');
+	pnModDBInfoLoad('Permissions', 'Permissions');
+
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+
+    // Tables we use
+    $userpermtable = $pntable['user_perms'];
+    $userpermcolumn = &$pntable['user_perms_column'];
+
+    $groupmembershiptable = $pntable['group_membership'];
+    $groupmembershipcolumn = &$pntable['group_membership_column'];
+
+    $grouppermtable = $pntable['group_perms'];
+    $grouppermcolumn = &$pntable['group_perms_column'];
+
+    $realmtable = $pntable['realms'];
+    $realmcolumn = &$pntable['realms_column'];
+
+    // Empty arrays
+    $userperms = array();
+    $groupperms = array();
+
+    $uids[] = -1;
+    // Get user ID
+    if(!isset($testuser)) {
+        if (!pnUserLoggedIn()) {
+            // Unregistered UID
+            $uids[] = 0;
+            $vars['Active User'] = 'unregistered';
+        } else {
+            $uids[] = pnUserGetVar('uid');
+            $vars['Active User'] = pnUserGetVar('uid');
+        }
+    } else {
+        $uids[] = $testuser;
+        $vars['Active User'] = $testuser;
+    }
+
+    $uids = implode(",", $uids);
+
+    // Get user permissions
+    $query = "SELECT $userpermcolumn[realm],
+                     $userpermcolumn[component],
+                     $userpermcolumn[instance],
+                     $userpermcolumn[level]
+              FROM $userpermtable
+              WHERE $userpermcolumn[uid] IN (" . pnVarPrepForStore($uids) . ")
+              ORDER by $userpermcolumn[sequence]";
+    $result =& $dbconn->Execute($query);
+
+    if ($dbconn->ErrorNo() != 0) {
+        return array($userperms, $groupperms);
+    }
+
+	while (list($realm, $component, $instance, $level) = $result->fields) {
+        $result->MoveNext();
+		//itevo
+		$component = fixsecuritystring($component);
+		$instance = fixsecuritystring($instance);
+        $userperms[] = array('realm'     => $realm,
+                             'component' => $component,
+                             'instance'  => $instance,
+                             'level'     => $level);
+    }
+
+    // Get all groups that user is in
+    $query = "SELECT $groupmembershipcolumn[gid]
+              FROM $groupmembershiptable
+              WHERE $groupmembershipcolumn[uid] IN (" . pnVarPrepForStore($uids) . ")";
+
+    $result =& $dbconn->Execute($query);
+
+    if ($dbconn->ErrorNo() != 0) {
+        return array($userperms, $groupperms);
+    }
+
+    $usergroups[] = -1;
+    if (!pnUserLoggedIn()) {
+        // Unregistered GID
+        $usergroups[] = 0;
+    }
+	while (list($gid) = $result->fields) {
+        $result->MoveNext();
+        $usergroups[] = $gid;
+    }
+    $usergroups = implode(",", $usergroups);
+
+    // Get all group permissions
+    $query = "SELECT $grouppermcolumn[realm],
+                     $grouppermcolumn[component],
+                     $grouppermcolumn[instance],
+                     $grouppermcolumn[level]
+              FROM $grouppermtable
+              WHERE $grouppermcolumn[gid] IN (" . pnVarPrepForStore($usergroups) . ")
+              ORDER by $grouppermcolumn[sequence]";
+    $result =& $dbconn->Execute($query);
+
+    if ($dbconn->ErrorNo() != 0) {
+        return array($userperms, $groupperms);
+    }
+
+    while(list($realm, $component, $instance, $level) = $result->fields) {
+        $result->MoveNext();
+		//itevo
+		$component = fixsecuritystring($component);
+		$instance = fixsecuritystring($instance);
+        // Search/replace of special names
+		preg_match_all("/<([^>]+)>/", $instance, $res);
+		for($i = 0; $i < count($res[1]); $i++) {
+			$instance = preg_replace("/<([^>]+)>/", $vars[$res[1][$i]], $instance, 1);
+		}
+        $groupperms[] = array('realm'     => $realm,
+                              'component' => $component,
+                              'instance'  => $instance,
+                              'level'     => $level);
+    }
+
+	// we've now got the permissions info
+	$GLOBALS['pnfauthinfogathered'][$testuser] = 1;
+
+    return array($userperms, $groupperms);
 }
 
 ?>

@@ -351,6 +351,8 @@ function pnForum_userapi_readcategorytree($args)
                     f.forum_topics,
                     f.forum_posts,
                     f.forum_last_post_id,
+                    f.forum_moduleref,
+                    f.forum_pntopic,
                     t.topic_title,
                     t.topic_replies,
                     u.pn_uname,
@@ -383,6 +385,8 @@ function pnForum_userapi_readcategorytree($args)
         $forum['forum_topics']        = $row['forum_topics'];
         $forum['forum_posts']         = $row['forum_posts'];
         $forum['forum_last_post_id']  = $row['forum_last_post_id'];
+        $forum['forum_moduleref']     = $row['forum_moduleref'];
+        $forum['forum_pntopic']       = $row['forum_pntopic'];
         $topic_title                  = $row['topic_title'];
         $topic_replies                = $row['topic_replies'];
         $forum['pn_uname']            = $row['pn_uname'];
@@ -723,6 +727,7 @@ function pnForum_userapi_readforum($args)
  *@params $args['complete'] bool if true, reads the complete thread and does not care about
  *                               the posts_per_page setting, ignores 'start'
  *@params $args['last_visit'] string the users last visit date
+ *@params $args['count']      bool  true if we have raise the read counter, default true
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
 function pnForum_userapi_readtopic($args)
@@ -737,6 +742,7 @@ function pnForum_userapi_readtopic($args)
     $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order');
 
     $complete = (isset($complete)) ? $complete : false;
+    $count    = (isset($count)) ? $count : true;
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -789,11 +795,12 @@ function pnForum_userapi_readtopic($args)
         /**
          * update topic counter
          */
-        $sql = "UPDATE ".$pntable['pnforum_topics']."
-                SET topic_views = topic_views + 1
-                WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
+        if($count == true) {
+            $sql = "UPDATE ".$pntable['pnforum_topics']."
+                    SET topic_views = topic_views + 1
+                    WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        }
         /**
          * more then one page in this topic?
          */
@@ -1379,6 +1386,8 @@ function pnForum_userapi_preparenewtopic($args)
  *                             topic
  *@params $args['attach_signature'] int 1=yes, otherwise no
  *@params $args['subscribe_topic'] int 1=yes, otherwise no
+ *@params $args['reference']  string for comments feature: <modname>-<objectid>
+ *@params $args['post_as']    int used id under which this topic should be posted
  *@returns int the new topics id
  */
 function pnForum_userapi_storenewtopic($args)
@@ -1412,15 +1421,18 @@ function pnForum_userapi_storenewtopic($args)
     $posted_message=stripslashes($message);
 
     //  anonymous user has uid=0, but needs pn_uid=1
-    if(pnUserLoggedin()) {
-        if($attach_signature==1) {
-            $message .= '[addsig]';
+    if(isset($post_as) || !empty($post_as) || is_numeric($post_as)) {
+        $pn_uid = $post_as;
+    } else {
+        if(pnUserLoggedin()) {
+            if($attach_signature==1) {
+                $message .= '[addsig]';
+            }
+            $pn_uid = pnUserGetVar('uid');
+        } else  {
+            $pn_uid = 1;
         }
-        $pn_uid = pnUserGetVar('uid');
-    } else  {
-        $pn_uid = 1;
     }
-
     // some enviroment for logging ;)
     if (pnServerGetVar('HTTP_X_FORWARDED_FOR')){
         $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
@@ -1441,13 +1453,26 @@ function pnForum_userapi_storenewtopic($args)
     $forum_id  = pnVarPrepForStore($forum_id);
     $time      = pnVarPrepForStore($time);
     $poster_ip = pnVarPrepForStore($poster_ip);
+    $reference = pnVarPrepForStore($reference);
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
     $sql = "INSERT INTO ".$pntable['pnforum_topics']."
-            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify)
+            (topic_id,
+             topic_title,
+             topic_poster,
+             forum_id,
+             topic_time,
+             topic_notify,
+             topic_reference)
             VALUES
-            ('".pnVarPrepForStore($topic_id)."','$subject', '$pn_uid', '$forum_id', '$time', '' )";
+            ('".pnVarPrepForStore($topic_id)."',
+             '$subject',
+             '$pn_uid',
+             '$forum_id',
+             '$time',
+             '',
+             '$reference' )";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1457,9 +1482,19 @@ function pnForum_userapi_storenewtopic($args)
 
     $post_id = $dbconn->GenID($pntable['pnforum_posts']);
     $sql = "INSERT INTO ".$pntable['pnforum_posts']."
-            (post_id, topic_id, forum_id, poster_id, post_time, poster_ip)
+            (post_id,
+             topic_id,
+             forum_id,
+             poster_id,
+             post_time,
+             poster_ip)
             VALUES
-            ('".pnVarPrepForStore($post_id)."', '".pnVarPrepForStore($topic_id)."', '$forum_id', '$pn_uid', '$time', '$poster_ip')";
+            ('".pnVarPrepForStore($post_id)."',
+             '".pnVarPrepForStore($topic_id)."',
+             '$forum_id',
+             '$pn_uid',
+             '$time',
+             '$poster_ip')";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -4227,7 +4262,7 @@ function pnForum_userapi_get_topicid_by_postid($args)
     unset($args);
 
     if(!isset($post_id) || empty($post_id)) {
-        return showforumerror(_MODSRGSERROR, __FILE__, __LINE__);
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
     $topic_id = false;
@@ -4700,6 +4735,39 @@ function pnForum_userapi_notify_moderator($args)
         }
     }
     return;
+}
+
+/**
+ * get_topicid_by_reference
+ * gets a topic reference as parameter and delivers the internal topic id
+ * used for pnForum as comment module
+ *
+ *@params $args['reference'] string the refernce
+ */
+function pnForum_userapi_get_topicid_by_reference($args)
+{
+    extract($args);
+    unset($args);
+
+    if(!isset($reference) || empty($reference)) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+
+    $topic_id = false;
+
+    list($dbconn, $pntable) = pnfOpenDB();
+    $topicstable = $pntable['pnforum_topics'];
+    $topicscolumn = $pntable['pnforum_topics_column'];
+
+    $sql = "SELECT $topicscolumn[topic_id]
+            FROM $topicstable
+            WHERE $topicscolumn[topic_reference]='" . pnVarPrepForStore($reference) . "'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    if(!$result->EOF) {
+        list($topic_id) = $result->fields;
+        pnfCloseDB($result);
+    }
+    return $topic_id;
 }
 
 ?>

@@ -56,6 +56,7 @@ function pnForum_init()
     list($dbconn, $pntable) = pnfOpenDB();
 
     pnSessionSetVar('upgrade_to_2_5_done', 0);
+    pnSessionSetVar('upgrade_to_2_6_done', 0);
 
     // creating categories table
     $pnforumcategoriestable = $pntable['pnforum_categories'];
@@ -223,9 +224,15 @@ function pnForum_init()
         return false;
     }
 
-    // upgrade to 25
+    // upgrade to 2.5
     $upgrade_to_2_5 = pnForum_upgrade_to_2_5(true);
     if($upgrade_to_2_5 <> true) {
+        return false;
+    }
+
+    // upgrade to 2.6
+    $upgrade_to_2_6 = pnForum_upgrade_to_2_6();
+    if($upgrade_to_2_6 <> true) {
         return false;
     }
 
@@ -245,6 +252,7 @@ function pnForum_init()
 	pnModSetVar('pnForum', 'hideusers', 'no');
 	pnModSetVar('pnForum', 'removesignature', 'no');
 	pnModSetVar('pnForum', 'striptags', 'no');
+    pnModSetVar('pnForum', 'deletehookaction', 'lock');
 
     // Initialisation successful
     return true;
@@ -341,6 +349,59 @@ function pnForum_delete()
         return false;
     }
 
+    // remove the hooks
+    //
+    // createhook
+    //
+    if (!pnModUnRegisterHook('item',
+                             'create',
+                             'API',
+                             'pnForum',
+                             'hook',
+                             'createbyitem')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTODELETEHOOK . ' (create)');
+        return false;
+    }
+
+    //
+    // updatehook
+    //
+    if (!pnModUnRegisterHook('item',
+                             'update',
+                             'API',
+                             'pnForum',
+                             'hook',
+                             'updatebyitem')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTODELETEHOOK . ' (update)');
+        return false;
+    }
+
+    //
+    // deletehook
+    //
+    if (!pnModUnRegisterHook('item',
+                             'delete',
+                             'API',
+                             'pnForum',
+                             'hook',
+                             'deletebyitem')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTODELETEHOOK . ' (delete)');
+        return false;
+    }
+
+    //
+    // displayhook
+    //
+    if (!pnModUnRegisterHook('item',
+                             'display',
+                             'GUI',
+                             'pnForum',
+                             'hook',
+                             'showdiscussionlink')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTODELETEHOOK . ' (display)');
+        return false;
+    }
+
 	// remove module vars
 	pnModDelVar('pnForum');
 
@@ -366,6 +427,9 @@ function pnForum_upgrade($oldversion)
         case '2.0.1':
             // upgrade to 2.5
             $ok = $ok && pnForum_upgrade_to_2_5(true);
+        case '2.5':
+            // upgrade to 2.6
+            $ok = $ok && pnForum_upgrade_to_2_6();
         default:
             break;
     }
@@ -578,6 +642,107 @@ function pnForum_upgrade_to_2_5($createindex=true)
 }
 
 /**
+ * upgrade to v2.5
+ *
+ */
+function pnForum_upgrade_to_2_6()
+{
+    if(pnSessionGetVar('upgrade_to_2_6_done') === 1) {
+        return true;
+    }
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $pnforumforumstable = $pntable['pnforum_forums'];
+    $pnforumforumscolumn = &$pntable['pnforum_forums_column'];
+
+    $sql = "ALTER TABLE $pnforumforumstable
+            ADD $pnforumforumscolumn[forum_moduleref] INT(11) ,
+            ADD $pnforumforumscolumn[forum_pntopic] TINYINT(4) NOT NULL DEFAULT 0 ,
+            ADD INDEX forum_moduleref( forum_moduleref )";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    pnfCloseDB($result);
+
+    $pnforumtopicstable = $pntable['pnforum_topics'];
+    $pnforumtopicscolumn = &$pntable['pnforum_topics_column'];
+
+    $sql = "ALTER TABLE $pnforumtopicstable
+            ADD $pnforumtopicscolumn[topic_reference] VARCHAR(60) ,
+            ADD INDEX topic_reference( topic_reference )";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // resize the subject field to 255 chars
+    $sql = "ALTER TABLE $pnforumtopicstable
+            CHANGE $pnforumtopicscolumn[topic_title] $pnforumtopicscolumn[topic_title] VARCHAR(255)";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
+    // create the hooks: create, delete, display.
+    // everything else is not needed , at least not atm.
+    //
+    // createhook
+    //
+    if (!pnModRegisterHook('item',
+                           'create',
+                           'API',
+                           'pnForum',
+                           'hook',
+                           'createbyitem')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTOCREATEHOOK . ' (create)');
+        return false;
+    }
+
+    //
+    // updatehook
+    //
+    if (!pnModRegisterHook('item',
+                           'update',
+                           'API',
+                           'pnForum',
+                           'hook',
+                           'updatebyitem')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTOCREATEHOOK . ' (update)');
+        return false;
+    }
+
+    //
+    // deletehook
+    //
+    if (!pnModRegisterHook('item',
+                           'delete',
+                           'API',
+                           'pnForum',
+                           'hook',
+                           'deletebyitem')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTOCREATEHOOK . ' (delete)');
+        return false;
+    }
+
+    //
+    // displayhook
+    //
+    if (!pnModRegisterHook('item',
+                           'display',
+                           'GUI',
+                           'pnForum',
+                           'hook',
+                           'showdiscussionlink')) {
+        pnSessionSetVar('errormsg', _PNFORUM_FAILEDTOCREATEHOOK . ' (display)');
+        return false;
+    }
+
+    // modvars
+    pnModSetVar('pnForum', 'deletehookaction', 'lock');
+
+    // set a session to indicate that the upgrade is done
+    pnSessionSetVar('upgrade_to_2_6_done', 1);
+
+    return true;
+}
+
+/**
  * interactiveupgrade
  *
  *
@@ -598,6 +763,9 @@ function pnForum_init_interactiveupgrade($args)
     switch($oldversion) {
         case '2.0.1':
             $templatefile = 'pnforum_upgrade_25.html';
+            break;
+        case '2.5':
+            $templatefile = 'pnforum_upgrade_26.html';
             break;
         default:
             // no interactive upgrade for version < 2.0.1
@@ -631,6 +799,31 @@ function pnForum_init_interactiveupgrade_to_2_5()
         $result = pnForum_upgrade_to_2_5($createindex);
         if($result<>true) {
             return showforumerror(_PNFORUM_TO25_FAILED, __FILE__, __LINE__);
+        }
+        pnSessionSetVar('upgrade_to_2_5_done', 1 );
+        pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade_to_2_6', array('oldversion' => '2.5' )));
+        return true;
+    }
+    pnRedirect(pnModURL('Modules', 'admin', 'view'));
+    return true;
+}
+
+/**
+ * interactiveupgrade_to_2_6
+ *
+ */
+function pnForum_init_interactiveupgrade_to_2_6()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    $submit = pnVarCleanFromInput('submit');
+
+    if(!empty($submit)) {
+        $result = pnForum_upgrade_to_2_6();
+        if($result<>true) {
+            return showforumerror(_PNFORUM_TO26_FAILED, __FILE__, __LINE__);
         }
         pnSessionSetVar('upgrade_to_2_5_done', 1 );
         pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
