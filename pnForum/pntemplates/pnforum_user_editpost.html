@@ -63,6 +63,10 @@
 <label for="message"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
 <textarea name="message" rows="10" cols="80" id="message" tabindex="0"><!--[ $post.post_text ]--></textarea>
 <br />
+<!--[ if $pncore.pnForum.striptags == 'yes' ]-->
+    <!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--><br />
+    <br />
+<!--[ /if ]-->
 <!--[ plainbbcode textfieldid=message ]-->
 <!--[ bbsmile textfieldid=message ]-->
 <!--[ $hooks.pnUpper ]-->

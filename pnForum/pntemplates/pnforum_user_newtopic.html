@@ -67,6 +67,10 @@
 <br />
 <textarea name="message" rows="15" cols="80" id="message" tabindex="0"><!--[ $newtopic.message|pnvarprepfordisplay ]--></textarea>
 <br />
+<!--[ if $pncore.pnForum.striptags == 'yes' ]-->
+    <!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--><br />
+    <br />
+<!--[ /if ]-->
 <!--[ plainbbcode textfieldid=message ]-->
 <!--[ bbsmile textfieldid=message ]-->
 <!--[ $hooks.pnUpper ]-->

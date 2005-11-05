@@ -80,6 +80,10 @@
 <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
 <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 <br /><br />
+<!--[ if $pncore.pnForum.striptags == 'yes' ]-->
+    <!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--><br />
+    <br />
+<!--[ /if ]-->
 <!--[ plainbbcode textfieldid=message ]-->
 <!--[ bbsmile textfieldid=message ]-->
 <!--[ $hooks.pnUpper ]-->
