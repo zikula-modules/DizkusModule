@@ -1,36 +1,32 @@
 <!--[*  $Id$  *]-->
 
 <!--[ pnforumonline assign=online ]-->
-<!--[* pndebug *]-->
+
 <!--[ pnconfiggetvar name='anonymoussessions' assign=anonsessions ]-->
+<!--[ pnconfiggetvar name='secinactivemins' assign=mins ]-->
+
 <div style="margin-top: 1em; clear: both; width: 100%; font-size: 1.0em; border: 1px solid black;">
-    <div style="background: <!--[ $bgcolor3 ]-->; line-height: 1.2em; padding: 0.1em 0 0.1em 2px;">
+    <div style="background: <!--[ $bgcolor3 ]-->; line-height: 1.4em; padding: 0.2em 0 0.2em 2px;">
         <strong><!--[ pnml name='_PNFORUM_USERSONLINE' ]-->:</strong><br />
-        <br />
     </div>
     <div style="margin: 2px; font-size: 0.8em;">
-        <!--[ foreach num=num item=user from=$online.unames ]-->
+        <!--[ foreach key=num item=user from=$online.unames ]-->
             <!--[ if $user.admin == '1' ]-->
                 <!--[ $user.uname|profilelink:"pnfadminuser"]-->
             <!--[ else ]-->
                 <!--[ $user.uname|profilelink:"pnfnoadminuser"]-->
             <!--[ /if ]-->
-            <!--[ if $online.numusers > 1 && $num <= $online.numusers ]-->,<!--[ /if ]-->
+            <!--[ if $online.numusers > 1 && $num <> $online.numusers-1 ]-->-<!--[ /if ]-->
         <!--[ /foreach ]-->
         <!--[ if $anonsessions == 1 ]-->
         <!--[ pnml name='_PNFORUM_AND' ]--> <!--[ if $online.numguests == 1 ]-->0 <!--[ pnml name='_GUEST' ]--><!--[ else ]--><!--[ $online.numguests ]--> <!--[ pnml name='_GUESTS' ]--><!--[ /if ]-->
         <!--[ /if ]-->
         <br />
         <br />
-        <!--[ pnconfiggetvar name='secinactivemins' assign=mins ]-->
         <!--[ pnml name='_PNFORUM_BASEDONLASTXMINUTES' m=$mins ]-->
     </div>
 </div>
 <br /><br />
-<div style="clear: both; width: 100%; font-size: 10px;">
-
-    <div style="text-align: center;">
-        <!--[ pnml name='_PNFORUM_POWEREDBY' html=1 ]-->&nbsp;<!--[pnmodgetinfo modname=pnForum info=version ]-->
-    </div>
+<div style="width: 100%; font-size: 0.8em; text-align: center;">
+    <!--[ pnml name='_PNFORUM_POWEREDBY' html=1 ]-->&nbsp;<!--[pnmodgetinfo modname=pnForum info=version ]-->
 </div>
-
