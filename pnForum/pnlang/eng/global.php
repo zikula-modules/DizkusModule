@@ -56,7 +56,7 @@ define('_PNFORUM_AUTOMATICDISCUSSIONMESSAGE', 'Automatically created topic for d
 define('_PNFORUM_SELECTREFERENCEMODULE', 'select hooked module');
 define('_PNFORUM_NOHOOKEDMODULES', 'no hooked module found');
 define('_PNFORUM_MODULEREFERENCE', 'Modulereference');
-define('_PNFORUM_MODULEREFERENCE', 'Used for comment feature, all topics to submission in this module go into this forum. This list only contains the modules whre the pnForum are activated for.');
+define('_PNFORUM_MODULEREFERENCE_HINT', 'Used for comment feature, all topics to submission in this module go into this forum. This list only contains the modules whre the pnForum are activated for.');
 define('_PNFORUM_DISCUSSINFORUM', 'Discuss this submission in the forums');
 define('_PNFORUM_FAILEDTODELETEHOOK', 'Failed to delete hook');
 define('_PNFORUM_FAILEDTOCREATEHOOK', 'Failed to create hook');
