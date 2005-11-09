@@ -45,6 +45,7 @@
  ************************************************************************/
 
 //nouveau (sp?, damn, I should have learned french in school, but latin was more interesting :-))
+
 // new 20051105
 define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
 define('_PNFORUM_NOPNTOPIC', 'aucun sujet');
@@ -353,11 +354,11 @@ define('_PNFORUM_POP3MATCHSTRING', 'Règle');
 define('_PNFORUM_POP3MATCHSTRINGHINT', 'La règle est une expression régulière que doit contenir le sujet des mails pour éviter le spam. Aucune vérification si la règle est vide !');
 define('_PNFORUM_POP3PASSWORD', 'Mot de passe Pop3');
 define('_PNFORUM_POP3PASSWORDCONFIRM', 'Confirmer le mot de passe Pop3');
-define('_PNFORUM_POP3PNPASSWORD', 'Mot de passe PN');
-define('_PNFORUM_POP3PNPASSWORDCONFIRM', 'Confirmer le mot de passe PN');
-define('_PNFORUM_POP3PNUSER', 'Pseudo PN');
-define('_PNFORUM_POP3PORT', 'Port Pop3');
+define('_PNFORUM_POP3PORT', 'Port');
 define('_PNFORUM_POP3SERVER', 'Serveur Pop3');
+define('_PNFORUM_PNPASSWORD', 'Mot de passe PN');
+define('_PNFORUM_PNPASSWORDCONFIRM', 'Confirmer le mot de passe PN');
+define('_PNFORUM_PNUSER', 'Pseudo PN');
 define('_PNFORUM_POP3TEST', 'Effectuer le test Pop3 après la sauvegarde');
 define('_PNFORUM_POP3TESTRESULTS', 'Resultats du test Pop3');
 define('_PNFORUM_POST','Envoyer');

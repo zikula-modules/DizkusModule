@@ -42,6 +42,20 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_RSS2FORUMPOSTS', 'RSS feeds');
+define('_PNFORUM_RSS_SUMMARY', 'Summary');
+define('_PNFORUM_EXTENDEDOPTIONSAFTERSAVING', 'Extended options available after saving');
+define('_PNFORUM_SELECTRSSFEED', 'Select RSS feed');
+define('_PNFORUM_RSSMODULENOTAVAILABLE', '<span style="color: red;">RSS module not available!</span>');
+define('_PNFORUM_PREFS_RSS2FENABLED', 'RSS2Forum enabled');
+define('_PNFORUM_EXTERNALSOURCE', 'External source');
+define('_PNFORUM_NOEXTERNALSOURCE', 'no external source');
+define('_PNFORUM_RSS2FORUM', 'RSS2Forum');
+define('_PNFORUM_EXTERNALSOURCEURL_HINT', 'In case of an RSS feed enter the id of the feed as configured in the RSS module');
+
+define('_PNFORUM_LASTPOSTINGBY', 'last posting by');
+define('_PNFORUM_WRITTENON', 'written on');
+
 define('_PNFORUM_PNTOPIC', 'PostNuke Topic');
 define('_PNFORUM_NOPNTOPIC', 'no topic');
 define('_PNFORUM_ALLPNTOPIC', 'all topics');
@@ -351,11 +365,11 @@ define('_PNFORUM_POP3MATCHSTRING', 'Rule');
 define('_PNFORUM_POP3MATCHSTRINGHINT', 'The rule is a regular expression that the mails subject as to match to avoid spa posigns. An empty rule means no checks!');
 define('_PNFORUM_POP3PASSWORD', 'Pop3 password');
 define('_PNFORUM_POP3PASSWORDCONFIRM', 'Pop3 password confirmation');
-define('_PNFORUM_POP3PNPASSWORD', 'PN password');
-define('_PNFORUM_POP3PNPASSWORDCONFIRM', 'PN password confirmation');
-define('_PNFORUM_POP3PNUSER', 'PN username');
+define('_PNFORUM_POP3SERVER', 'Pop3 Server');
 define('_PNFORUM_POP3PORT', 'Pop3 port');
-define('_PNFORUM_POP3SERVER', 'Pop3 server');
+define('_PNFORUM_PNPASSWORD', 'PN password');
+define('_PNFORUM_PNPASSWORDCONFIRM', 'PN password confirmation');
+define('_PNFORUM_PNUSER', 'PN username');
 define('_PNFORUM_POP3TEST', 'Perform Pop3 test after saving');
 define('_PNFORUM_POP3TESTRESULTS', 'Pop3 test results');
 define('_PNFORUM_POST','post');
