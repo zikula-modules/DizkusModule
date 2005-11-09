@@ -273,6 +273,47 @@ legend {
     background: #E5E7E8;
 }
 
+ul.pnf_maincategorylist {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+ul.pnf_maincategorylist li {
+    padding: 0;
+    margin: 0.5em 0 0.5em 0;
+    padding-left: 3em;
+    background-repeat: no-repeat;
+    background-position: 0 1em;
+}
+ul.pnf_maincategorylist li.newposts {
+    background-image: url(../pnimages/red_folder.gif);
+}
+
+ul.pnf_maincategorylist li.nonewposts {
+    background-image: url(../pnimages/folder.gif);
+}
+
+ul.pnf_mainforumlist {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+ul.pnf_mainforumlist li {
+    margin: 0.5em 0 0.5em 0;
+    padding-left: 3em;
+    background-repeat: no-repeat;
+    background-position: 0 1em;
+}
+ul.pnf_mainforumlist li.newposts {
+    background-image: url(../pnimages/red_folder.gif);
+}
+
+ul.pnf_mainforumlist li.nonewposts {
+    background-image: url(../pnimages/folder.gif);
+}
+
 ul.pnf_forumlist {
     padding: 0 0 0 0.8em;
     margin: 0 0 0 0.8em;
@@ -327,7 +368,7 @@ div.pnf_statusmsg {
     text-align:center;
     width:99%;
     border: 1px solid red;
-    font-size=1.2em;
+    font-size: 1.2em;
     font-weight: bold;
 }
 
