@@ -36,6 +36,7 @@
  *@params canread (bool) if set, only the forums that we have read access to
  *@params favorites (bool) if set, only the favorite forums
  *@params show_m2f (bool) if set show postings from mail2forum forums
+ *@params show_rss (bool) if set show postings from rss2forum forums
  *
  */
 function smarty_function_readlastposts($params, &$smarty)
@@ -137,12 +138,19 @@ function smarty_function_readlastposts($params, &$smarty)
         pnfCloseDB($result);
     }
 
+    $wherespecial = " (f.forum_pop3_active = '0'";
     // if show_m2f is set we show contents of m2f forums where.
     // forum_pop3_active is set to 1
-    $whereshowm2f = " f.forum_pop3_active = '0' AND";
     if($show_m2f==true) {
-        $whereshowm2f = '';
+        $wherespecial = " OR f.forum_pop3_active = '1'";
     }
+    // if show_rss is set we show contents of rss2f forums where.
+    // forum_pop3_active is set to 2
+    if($show_rss==true) {
+        $wherespecial = " OR f.forum_pop3_active = '2'";
+    }
+
+    $wherespecial .= ') AND ';
 
     //check how much we have to read
     $postmax = (empty($maxposts) || $maxposts==0) ? 5: $maxposts;
@@ -180,7 +188,7 @@ function smarty_function_readlastposts($params, &$smarty)
               $whereuser
               $wherefavorites
               $wherecanread
-              $whereshowm2f
+              $wherespecial
               t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id AND

@@ -31,8 +31,8 @@
     </thead>
     <tbody>
         <!--[ foreach item=category from=$tree ]-->
-        <tr align="left" valign="top">
-            <td headers="col_0" colspan="5" style="background-color:<!--[ $bgcolor2 ]-->;">
+        <tr align="left" valign="top" style="background-color:<!--[ $bgcolor3 ]-->;">
+            <td headers="col_0" colspan="5" style="padding: 10px 0 10px 6px;">
                 <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->">
                 <strong><!--[ $category.cat_title ]--></strong></a>&nbsp;<!--[ adminlink type=category id=$category.cat_id ]-->
             </td>

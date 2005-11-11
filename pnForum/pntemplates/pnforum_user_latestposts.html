@@ -17,6 +17,7 @@
 </div>
 </form>
 
+<a id="postings" />
 <h2 style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_FORUMS' ]--></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
@@ -49,6 +50,40 @@
     <!--[ /foreach ]-->
 </table>
 
+<a id="rss" />
+<h2 style="text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_RSS2FORUMPOSTS' ]--></h2>
+<table border="0" cellpadding="3" cellspacing="1" width="100%">
+	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
+          <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
+          <td width="15%" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
+          <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
+          <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
+	</tr>
+	<!--[ foreach item=post from=$rssposts ]-->
+    <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+        <td width="50%">
+            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarcensor ]--></a>
+        </td>
+        <td style="text-align: center;">
+            <!--[ $post.topic_replies ]-->
+        </td>
+        <td>
+            <!--[ $post.poster_name|profilelink ]-->
+        </td>
+        <td>
+            <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
+        </td>
+    </tr>
+    <!--[ foreachelse ]-->
+    <tr>
+        <td colspan="4" style="text-align: center;">
+            <strong><!--[ pnml name='_PNFORUM_NOPOSTS' ]--></strong>
+        </td>
+    </tr>
+    <!--[ /foreach ]-->
+</table>
+
+<a id="lists" />
 <h2 style="text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
@@ -82,3 +117,5 @@
 </table>
 
 <!--[ include file='pnforum_user_footer.html' ]-->
+
+<!--[* pndebug output=html *]-->

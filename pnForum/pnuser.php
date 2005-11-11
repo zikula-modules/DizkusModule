@@ -87,12 +87,24 @@ function pnForum_user_main($args=array())
             }
         }
     }
+
+    $view_category_data = array();
+    if($viewcat <> -1) {
+        foreach($tree as $category) {
+            if ($category['cat_id'] == $viewcat) {
+                $view_category_data = $category;
+                break;
+            }
+        }
+    }
+
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->add_core_data();
     $pnr->assign( 'favorites', $favorites);
     $pnr->assign( 'tree', $tree);
     $pnr->assign( 'view_category', $viewcat);
+    $pnr->assign( 'view_category_data', $view_category_data);
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
     $pnr->assign( 'numposts', pnModAPIFunc('pnForum', 'user', 'boardstats',
@@ -746,6 +758,10 @@ function pnForum_user_viewlatest($args=array())
     if(!empty($nohours) && !is_numeric($nohours)) {
     	unset($nohours);
     }
+    // maximum two weeks back = 2 * 24 * 7 hours
+    if(isset($nohours) && $nohours>336) {
+        $nohours = 336;
+    }
     if(empty($unanswered) || !is_numeric($unanswered)) {
     	$unanswered = 0;
     }
@@ -755,17 +771,18 @@ function pnForum_user_viewlatest($args=array())
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
-    list($posts, $m2fposts, $text) = pnModAPIFunc('pnForum', 'user', 'get_latest_posts',
-                                                 array('selorder'   => $selorder,
-                                                       'nohours'    => $nohours,
-                                                       'unanswered' => $unanswered,
-                                                       'last_visit' => $last_visit));
+    list($posts, $m2fposts, $rssposts, $text) = pnModAPIFunc('pnForum', 'user', 'get_latest_posts',
+                                                             array('selorder'   => $selorder,
+                                                                   'nohours'    => $nohours,
+                                                                   'unanswered' => $unanswered,
+                                                                   'last_visit' => $last_visit));
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->add_core_data();
     $pnr->assign('posts', $posts);
     $pnr->assign('m2fposts', $m2fposts);
+    $pnr->assign('rssposts', $rssposts);
     $pnr->assign('text', $text);
     $pnr->assign('nohours', $nohours);
     $pnr->assign( 'last_visit', $last_visit);
@@ -1121,6 +1138,7 @@ function pnForum_user_moderateforum($args=array())
     if(empty($submit)) {
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
+        $pnr->add_core_data();
         $pnr->assign('forum_id', $forum_id);
         $pnr->assign('mode',$mode);
         $pnr->assign('topic_ids', $topic_ids);

@@ -124,17 +124,78 @@
             </div>
         </div>
 
+
         <div class="pnfadminrow98">
-            <strong><!--[ pnml name='_PNFORUM_MAIL2FORUM' ]--></strong>
+            <div class="pnfadmincol24">
+                <label for="pop3_active"><!--[ pnml name='_PNFORUM_EXTERNALSOURCE' ]--></label>:
+            </div>
+            <div class="pnfadmincol66" id="extsource">
+                <!--[ foreach item=extsource from=$externalsourceoptions key=num ]-->
+                <input type="radio" name="extsource" value="<!--[ $num ]-->" <!--[ $extsource.checked ]--> />&nbsp;<!--[ $extsource.name ]-->&nbsp;<!--[ $extsource.ok  ]--><br />
+                <!--[ if $extsource.extended == true ]-->
+                <!--[ pnml name='_PNFORUM_EXTENDEDOPTIONSAFTERSAVING' ]--><br />
+                <!--[ /if ]-->
+                <!--[ /foreach ]-->
+            </div>
+        </div>
+
+        <!--[ if $forum.externalsource == 1 || $forum.externalsource == 2 ]-->
+
+        <div class="pnfadminrow98">
+            <div class="pnfadmincol24">
+                <label for="pnuser"><!--[ pnml name='_PNFORUM_PNUSER' ]--></label>:
+            </div>
+            <div class="pnfadmincol66">
+                <input type="text" id="pnuser" name="pnuser" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnuser ]-->" />
+            </div>
         </div>
 
         <div class="pnfadminrow98">
             <div class="pnfadmincol24">
-                <label for="pop3_active"><!--[ pnml name='_PNFORUM_POP3ACTIVE' ]--></label>:
+                <label for="pnpassword"><!--[ pnml name='_PNFORUM_PNPASSWORD' ]--></label>:
             </div>
             <div class="pnfadmincol66">
-                <input type="checkbox" id="pop3_active" name="pop3_active" value="1" <!--[ $forum.pop3_active_checked ]--> />
+                <input type="password" id="pnpassword" name="pnpassword" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
             </div>
+        </div>
+
+        <div class="pnfadminrow98">
+            <div class="pnfadmincol24">
+                <label for="pnpasswordconfirm"><!--[ pnml name='_PNFORUM_PNPASSWORDCONFIRM' ]--></label>:
+            </div>
+            <div class="pnfadmincol66">
+                <input type="password" id="pnpasswordconfirm" name="pnpasswordconfirm" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
+            </div>
+        </div>
+
+        <!--[ /if ]-->
+
+        <!--[ if $forum.externalsource == 2 ]-->
+
+        <div class="pnfadminrow98">
+            <strong><!--[ pnml name='_PNFORUM_RSS2FORUM' ]--></strong>
+        </div>
+
+        <div class="pnfadminrow98">
+            <div class="pnfadmincol24">
+                <label for="rssfeed"><!--[ pnml name='_PNFORUM_SELECTRSSFEED' ]--></label>:
+            </div>
+            <div class="pnfadmincol66">
+                <select name="rssfeed" size="1">
+                <option value="0"><!--[ pnml name='_PNFORUM_NONE' ]--></option>
+                <!--[ foreach item=feed from=$rssfeeds ]-->
+                <option value="<!--[ $feed.fid ]-->" <!--[ if $feed.fid == $forum.externalsourceurl ]-->selected="selected"<!--[ /if ]-->"><!--[ $feed.feedname|pnvarprepfordisplay ]--> (<!--[ $feed.url ]-->)</option>
+                <!--[ /foreach ]-->
+                </select>
+            </div>
+        </div>
+
+        <!--[ /if ]-->
+
+        <!--[ if $forum.externalsource == 1 ]-->
+
+        <div class="pnfadminrow98">
+            <strong><!--[ pnml name='_PNFORUM_MAIL2FORUM' ]--></strong>
         </div>
 
         <div class="pnfadminrow98">
@@ -151,7 +212,7 @@
                 <label for="pop3_server"><!--[ pnml name='_PNFORUM_POP3SERVER' ]--></label>:
             </div>
             <div class="pnfadmincol66">
-                <input type="text" id="pop3_server" name="pop3_server" maxlength="60" size="30" value="<!--[ $forum.pop3_server ]-->" />
+                <input type="text" id="pop3_server" name="pop3_server" maxlength="60" size="30" value="<!--[ $forum.pop3_server ]-->" /><br />
             </div>
         </div>
 
@@ -200,32 +261,6 @@
             </div>
         </div>
 *]-->
-        <div class="pnfadminrow98">
-            <div class="pnfadmincol24">
-                <label for="pop3_pnuser"><!--[ pnml name='_PNFORUM_POP3PNUSER' ]--></label>:
-            </div>
-            <div class="pnfadmincol66">
-                <input type="text" id="pop3_pnuser" name="pop3_pnuser" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnuser ]-->" />
-            </div>
-        </div>
-
-        <div class="pnfadminrow98">
-            <div class="pnfadmincol24">
-                <label for="pop3_pnpassword"><!--[ pnml name='_PNFORUM_POP3PNPASSWORD' ]--></label>:
-            </div>
-            <div class="pnfadmincol66">
-                <input type="password" id="pop3_pnpassword" name="pop3_pnpassword" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
-            </div>
-        </div>
-
-        <div class="pnfadminrow98">
-            <div class="pnfadmincol24">
-                <label for="pop3_pnpasswordconfirm"><!--[ pnml name='_PNFORUM_POP3PNPASSWORDCONFIRM' ]--></label>:
-            </div>
-            <div class="pnfadmincol66">
-                <input type="password" id="pop3_pnpasswordconfirm" name="pop3_pnpasswordconfirm" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
-            </div>
-        </div>
 
         <div class="pnfadminrow98">
             <div class="pnfadmincol24">
@@ -236,6 +271,8 @@
                 <br /><!--[ pnml name='_PNFORUM_POP3MATCHSTRINGHINT' ]-->
             </div>
         </div>
+
+        <!--[ /if ]-->
 
         <div class="pnfadminrow98">
             <div class="pnfadmincol24">

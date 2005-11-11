@@ -375,6 +375,8 @@ function pnForum_userapi_readcategorytree($args)
         $row = $result->GetRowAssoc(false);
         $cat   = array();
         $forum = array();
+        $cat['last_post'] = array(); // get the last post in this category, this is an array
+        $cat['new_posts'] = false;
         $cat['forums'] = array();
         $cat['cat_id']                = $row['cat_id'];
         $cat['cat_title']             = $row['cat_title'];
@@ -451,6 +453,18 @@ function pnForum_userapi_readcategorytree($args)
                 }
                 $forum['last_post'] = $last_post;
                 $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
+
+                // set flag if new postings in category
+                if($tree[$cat['cat_title']]['new_posts'] == false) {
+                    $tree[$cat['cat_title']]['new_posts'] = $forum['new_posts'];
+                }
+
+                // make sure that the most recent posting is stored in the category too
+                if((count($tree[$cat['cat_title']]['last_post']) == 0)
+                  || ($tree[$cat['cat_title']]['last_post']['unixtime'] < $last_post_data['unixtime'])) {
+                    // nothing stored before or a is older than b (a < b for timestamps)
+                    $tree[$cat['cat_title']]['last_post'] = $last_post_data;
+                }
 
                 array_push($tree[$cat['cat_title']]['forums'], $forum);
             }
@@ -743,6 +757,7 @@ function pnForum_userapi_readtopic($args)
 
     $complete = (isset($complete)) ? $complete : false;
     $count    = (isset($count)) ? $count : true;
+    $start    = (isset($start)) ? $start : 0;
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -874,7 +889,7 @@ function pnForum_userapi_readtopic($args)
             $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['pn_user_sig']);
 
             // call hooks for $message
-            list($post['post_text']) = pnModCallHooks('item', 'transform', '', array($post['post_text']));
+            list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
             $post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_text'])));
             //$post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor($post['post_text']));
 
@@ -1031,7 +1046,8 @@ function pnForum_userapi_preparereply($args)
     }
 
     // Topic review (show last 10)
-    $sql = "SELECT p.poster_id,
+    $sql = "SELECT p.post_id,
+                   p.poster_id,
                    p.post_time,
                    pt.post_text,
                    t.topic_title
@@ -1067,7 +1083,7 @@ function pnForum_userapi_preparereply($args)
         $message = pnForum_replacesignature($message, $review['poster_data']['pn_user_sig']);
 
         // call hooks for $message
-        list($message) = pnModCallHooks('item', 'transform', '', array($message));
+        list($message) = pnModCallHooks('item', 'transform', $review['post_id'], array($message));
         $review['post_text'] = $message;
 
         array_push($reply['topic_review'], $review);
@@ -1454,6 +1470,7 @@ function pnForum_userapi_storenewtopic($args)
     $time      = pnVarPrepForStore($time);
     $poster_ip = pnVarPrepForStore($poster_ip);
     $reference = pnVarPrepForStore($reference);
+    $msgid     = pnVarPrepForStore($msgid);
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
@@ -1487,21 +1504,22 @@ function pnForum_userapi_storenewtopic($args)
              forum_id,
              poster_id,
              post_time,
-             poster_ip)
+             poster_ip,
+             post_msgid)
             VALUES
             ('".pnVarPrepForStore($post_id)."',
              '".pnVarPrepForStore($topic_id)."',
              '$forum_id',
              '$pn_uid',
              '$time',
-             '$poster_ip')";
+             '$poster_ip',
+             '$msgid')";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     $post_id = $dbconn->PO_Insert_ID($pntable['pnforum_posts'], 'post_id');
-    if($post_id)
-    {
+    if($post_id) {
         //  insert values into posts_text-table
         $sql = "INSERT INTO ".$pntable['pnforum_posts_text']."
                 (post_id, post_text)
@@ -1630,7 +1648,7 @@ function pnForum_userapi_readpost($args)
     $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
 
     // call hooks for $message_display ($message remains untouched for the textarea)
-    list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array($post['post_textdisplay']));
+    list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
     $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
 
     //$message = pnVarPrepForDisplay($message);
@@ -2911,7 +2929,7 @@ function pnForum_userapi_emailtopic($args)
  *@params $args['nohours'] int posting within these hours
  *@params $args['unanswered'] int 0 or 1(= postings with no answers)
  *@params $args['last_visit'] string the users last visit data
- *@returns array (postings, text_to_display)
+ *@returns array (postings, mail2forumpostings, rsspostings, text_to_display)
  */
 function pnForum_userapi_get_latest_posts($args)
 {
@@ -2969,12 +2987,15 @@ function pnForum_userapi_get_latest_posts($args)
         default:   $sql = $last24hsql; $text  =_PNFORUM_LAST24;
                    break;
     }
+//die($sql);
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $posts = array();
     $m2fposts = array();
+    $rssposts = array();
+
     while ((list($topic_id, $topic_title, $forum_id, $forum_name, $pop3_active, $cat_id, $cat_title,
-                 $topic_replies, $topic_last_post_id, $post_time, $poster_id) = $result->FetchRow()) ) {
+                 $topic_replies, $topic_last_post_id, $post_time, $poster_id) = $result->fields) ) {
         // check permission before display
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             $post=array();
@@ -3018,17 +3039,22 @@ function pnForum_userapi_get_latest_posts($args)
                                                      'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
             $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
 
-//            pnfCloseDB($result2);
-
-            if((int)$pop3_active == 0) {
-                array_push($posts, $post);
-            } else {
-                array_push($m2fposts, $post);
+            switch((int)$pop3_active) {
+                case 1: // mail2forum
+                    array_push($m2fposts, $post);
+                    break;
+                case 2:
+                    array_push($rssposts, $post);
+                    break;
+                case 0: // normal posting
+                default:
+                    array_push($posts, $post);
             }
         }
+        $result->MoveNext();
     }
     pnfCloseDB($result);
-    return array($posts, $m2fposts, $text);
+    return array($posts, $m2fposts, $rssposts, $text);
 }
 
 /**
@@ -4768,6 +4794,82 @@ function pnForum_userapi_get_topicid_by_reference($args)
         pnfCloseDB($result);
     }
     return $topic_id;
+}
+
+/**
+ * insertrss
+ *
+ *@params $args['forum']    array with forum data
+ *@params $args['items']    array with feed data as returned from RSS module
+ *@return boolean true or false
+ */
+function pnForum_userapi_insertrss($args)
+{
+    extract($args);
+
+    if (!$forum || !$items) {
+        return false;
+    }
+
+    $bbcode = pnModAvailable('pn_bbcode');
+    $boldstart = '';
+    $boldend   = '';
+    $urlstart  = '';
+    $urlend    = '';
+    if($bbcode==true) {
+        $boldstart = '[b]';
+        $boldend   = '[/b]';
+        $urlstart  = '[url]';
+        $urlend    = '[/url]';
+    }
+
+    // who sneds the postings?
+    $post_as = pnUserGetIDFromName($forum['pnuser']);
+    if($post_as == false) {
+        $post_as = 2; // hopefully 2 is the admin :-)
+    }
+
+    foreach($items as $item) {
+        // create the reference, we need it twice
+        if(!isset($item['date_timestamp']) || empty($item['date_timestamp'])) {
+            $reference = md5($item['link']);
+            $item['date_timestamp'] = time();
+        } else {
+            $reference = md5($item['link'] . '-' . $item['date_timestamp']);
+        }
+
+        // Checking if the forum already has that news.
+        $check = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_reference',
+                              array('reference' => $reference));
+
+        if ($check == false) {
+
+            // Not found... we can add the news.
+            $subject  = $item['title'];
+
+            // Adding little display goodies - finishing with the url of the news...
+            $message  = $boldstart . _PNFORUM_RSS_SUMMARY . ' :' . $boldend . "\n\n" . $item['summary'] . "\n\n" . $urlstart . $item['link'] . $urlend . "\n\n";
+
+            // store message in forum
+            $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+                                     array('subject'          => $subject,
+                                           'message'          => $message,
+                                           'time'             => date("Y-m-d H:i", $item['date_timestamp']),
+                                           'forum_id'         => $forum['forum_id'],
+                                           'attach_signature' => 0,
+                                           'subscribe_topic'  => 0,
+                                           'reference'        => $reference,
+                                           'post_as'          => $post_as ));
+
+            if (!$topic_id) {
+                // An error occured... get away before screwing more.
+                return false;
+            }
+        }
+    }
+
+    return true;
+
 }
 
 ?>

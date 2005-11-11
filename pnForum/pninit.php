@@ -735,6 +735,7 @@ function pnForum_upgrade_to_2_6()
 
     // modvars
     pnModSetVar('pnForum', 'deletehookaction', 'lock');
+    pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
 
     // set a session to indicate that the upgrade is done
     pnSessionSetVar('upgrade_to_2_6_done', 1);

@@ -63,8 +63,10 @@ $forums = pnModAPIFunc('pnForum', 'admin', 'readforums', array('permcheck' => 'n
 if(is_array($forums) && count($forums)>0 ) {
     echo count($forums) . " forums read<br />";
     foreach($forums as $forum) {
-        pnModAPIFunc('pnForum', 'user', 'mailcron',
-                     array('forum' => $forum));
+        if($forum['externalsource'] == 1) {    // Mail
+            pnModAPIFunc('pnForum', 'user', 'mailcron',
+                         array('forum' => $forum));
+        }
     }
 }
 pnSessionDelVar('mailcronrunning');

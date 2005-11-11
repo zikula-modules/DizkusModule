@@ -329,6 +329,18 @@ function pnForum_adminapi_readforums($args)
                   $forum['forum_pntopic'],
                   $forum['cat_title'],
                   $forum['cat_id'] ) = $result->fields;
+            // we re-use the pop3_active field to distinguish between
+            // 0 - no external source
+            // 1 - mail
+            // 2 - rss
+            // now
+            // to do: rename the db fields:
+            $forum['externalsource']     = $forum['pop3_active'];
+            $forum['externalsourceurl']  = $forum['pop3_server'];
+            $forum['externalsourceport'] = $forum['pop3_port'];
+            $forum['pnuser']             = $forum['pop3_pnuser'];
+            $forum['pnpassword']         = $forum['pop3_pnpassword'];
+
             if( ( ($permcheck=="see") && allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id']) )
               ||( ($permcheck=="read") && allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id']) )
               ||( ($permcheck=="write") && allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id']) )
@@ -1365,6 +1377,7 @@ function pnForum_adminapi_deleteforum($args)
  */
 function pnForum_adminapi_get_pntopics()
 {
+    pnModDBInfoLoad('Topics');
     list($dbconn, $pntable) = pnfOpenDB();
 
     $pntopicstable  = $pntable['topics'];
