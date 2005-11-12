@@ -17,8 +17,8 @@
 </div>
 </form>
 
-<a id="postings" />
-<h2 style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_FORUMS' ]--></h2>
+
+<h2 style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;"><a id="postings"><!--[ pnml name='_PNFORUM_FORUMS' ]--></a></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
@@ -29,7 +29,7 @@
 	<!--[ foreach item=post from=$posts ]-->
     <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
         <td width="50%">
-            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarcensor ]--></a>
+            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarprepfordisplay ]--></a>
         </td>
         <td style="text-align: center;">
             <!--[ $post.topic_replies ]-->
@@ -50,8 +50,7 @@
     <!--[ /foreach ]-->
 </table>
 
-<a id="rss" />
-<h2 style="text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_RSS2FORUMPOSTS' ]--></h2>
+<h2 style="text-align: center; margin-top: 1.5em;"><a id="rss"><!--[ pnml name='_PNFORUM_RSS2FORUMPOSTS' ]--></a></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
@@ -62,7 +61,7 @@
 	<!--[ foreach item=post from=$rssposts ]-->
     <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
         <td width="50%">
-            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarcensor ]--></a>
+            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarprepfordisplay ]--></a>
         </td>
         <td style="text-align: center;">
             <!--[ $post.topic_replies ]-->
@@ -83,8 +82,7 @@
     <!--[ /foreach ]-->
 </table>
 
-<a id="lists" />
-<h2 style="text-align: center; margin-top: 1.5em;"><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></h2>
+<h2 style="text-align: center; margin-top: 1.5em;"><a id="lists"><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></a></h2>
 <table border="0" cellpadding="3" cellspacing="1" width="100%">
 	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
           <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
@@ -95,7 +93,7 @@
 	<!--[ foreach item=post from=$m2fposts ]-->
     <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
         <td width="50%">
-            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarcensor ]--></a>
+            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.forum_name ]--> :: <!--[ $post.cat_title ]-->"><!--[ $post.topic_title|pnvarprepfordisplay ]--></a>
         </td>
         <td style="text-align: center;">
             <!--[ $post.topic_replies ]-->
