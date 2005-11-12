@@ -45,6 +45,7 @@ chdir('/opt/lampp/htdocs/761');
 
 include 'modules/pnForum/common.php';
 
+// start PostNuke
 /****************************************************************/
 include 'includes/pnAPI.php';
 pnInit();
@@ -65,59 +66,71 @@ if (!pnModAvailable('RSS')) {
 
 // Getting All forums where RSS2PNFORUM is SET...
 /****************************************************************/
-//$forums = pnModAPIFunc('pnForum', 'rss2forum', 'getforumfeed', array());
 $forums = pnModAPIFunc('pnForum', 'admin', 'readforums', array('permcheck' => 'nocheck'));
-/* Note:
- * sql array get the forum_id, the rss2forum On/Off where On,
- * the pn_username, the pn_pasword and the forum_feed ID.
- *
- */
+
 if (!$forums) {
     return;
 }
 /****************************************************************/
 
-
+$loggedin = false;
+$lastuser = '';
 foreach($forums as $forum) {
 
     if($forum['externalsource'] == 2) {   // RSS
-pnfdebug('esurl', $forum['externalsourceurl']);
-        $rss = pnModAPIFunc('RSS', 'user', 'get', array('fid' => $forum['externalsourceurl']));
 
-        if (!$rss) {
-            // Buzz off, this feed doesn't exists
-            exit;
-            return;
-        }
-pnfdebug('rss', $rss, true);
-        // Get the feed...
-        $dump = pnModAPIFunc('RSS', 'user', 'getfeed', array('fid' => $rss['fid'],
-                                                             'url' => $rss['url']));
-
-        if (!$dump) {
-            // Buzz off, this feed doesn't exists
-            exit;
-            return;
+        if($lastuser <> $forum['pnuser']) {
+            pnUserLogOut();
+            $loggedin = false;
+            // login the correct user
+            if(pnUserLogIn($forum['pnuser'], base64_decode($forum['pnpassword']), false)) {
+                $lastuser = $forum['pnuser'];
+                $loggedin = true;
+            } else {
+                // unable to login
+            }
+        } else {
+            // we have been here before
+            $loggedin = true;
         }
 
-        // Sorting ascending to store in the right order in the forum.
-        // I tried to sort by the timestamp at first and lost my mind why it wasn't working...
-        // Finally decided that since it was working with the link, the link was good enough
-        // Change it to your liking. It probably won't work on other type of feed.
-        // Important information is in the $dump->items
-        $items = array_csort($dump->items, 'link', SORT_ASC);
+        if($loggedin == true) {
+            $rss = pnModAPIFunc('RSS', 'user', 'get', array('fid' => $forum['externalsourceurl']));
 
-        // See the function below...
-        $insert = pnModAPIFunc('pnForum', 'user', 'insertrss',
-                               array('items' => $items,
-                                     'forum' => $forum));
+            if (!$rss) {
+                // Buzz off, this feed doesn't exists
+                exit;
+                return;
+            }
 
-        if (!$insert) {
-            // Do your debug
-        }
+            // Get the feed...
+            $dump = pnModAPIFunc('RSS', 'user', 'getfeed', array('fid' => $rss['fid'],
+                                                                 'url' => $rss['url']));
 
-        return true;
-        // Done
+            if (!$dump) {
+                // Buzz off, this feed doesn't exists
+                exit;
+                return;
+            }
+
+            // Sorting ascending to store in the right order in the forum.
+            // I tried to sort by the timestamp at first and lost my mind why it wasn't working...
+            // Finally decided that since it was working with the link, the link was good enough
+            // Change it to your liking. It probably won't work on other type of feed.
+            // Important information is in the $dump->items
+            $items = array_csort($dump->items, 'link', SORT_ASC);
+
+            // See the function below...
+            $insert = pnModAPIFunc('pnForum', 'user', 'insertrss',
+                                   array('items' => $items,
+                                         'forum' => $forum));
+
+            if (!$insert) {
+                // Do your debug
+            }
+
+            // Done
+        } // if loggedin
     }
 }
 
