@@ -7,11 +7,14 @@ Steffen Voss aka ArschMitOhren (steffen.voss@online.de)
 
 People who contributed code for 2.0.0 or later
 ----------------------------------------------
+Franky Chestnut (webmaster@pnconcept.com)
+    rss2forum and a lot of other useful stuff and fixes
 Chris Miller aka R3ap3r (chris@bariatricsupportcenter.com)
-(code for favorites functions and post sort order in topic view)
+    code for favorites functions and post sort order in topic view
 Franck Barbenoire (fbarbenoire@yahoo.fr)
-(french translation and button images)
-Thomas Pawlitzki (moderate forum functionality)
+    french translation and button images
+Thomas Pawlitzki
+    moderate forum functionality
 
 
 Credits for pre 2.0.0 versions:
