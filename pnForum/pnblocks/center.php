@@ -145,6 +145,7 @@ function pnForum_centerblock_modify($row)
 
     $pnRender = new pnRender('pnForum');
     $pnRender->caching = false;
+    $pnRender->add_core_data();
     $pnRender->assign('vars', $vars);
     return $pnRender->fetch('pnforum_centerblock_config.html');
 }

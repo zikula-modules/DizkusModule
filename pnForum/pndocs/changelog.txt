@@ -9,8 +9,9 @@ This version needs .760 or later!
 
 - added create/update/delete/displayhooks that create topics when new submission, e.g. news have
   been approved/sent. This needed some db changes.
-- added plugin to show the users who are online (crdits to Franky Chestnut for this one)
+- added plugin to show the users who are online (credits to Franky Chestnut for this one)
   footer template updated accordingly
+- added rss2forum feature based on the work of Franky Chestnut
 - moved all language defines to global.php for easier handling
 
 ---------------------------------------------------------------------------------------------
