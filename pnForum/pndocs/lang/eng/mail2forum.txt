@@ -16,16 +16,19 @@ Base Configuration ('Forum wide options'): Toggle Mail2Forum on or off globally.
 Configuration per Forum:
 ------------------------
 
-Mail2Forum active: Activate the feature for this forum
+External source: Select Mail2Forum or RSS2Forum here, more configuration options
+after saving.
+
+PN username:
+PN password: User name and password of the PostNuke-user who shall be used as
+posting user in the forum
+
 Perform Pop3 test after saving: perform a connection test to the pop3 server
 after storing the onfiguration. No mails will be fetched.
 Pop3 server:
 Pop3 port:
 Pop3 login:
 Pop3 password: These fields are selfexplanatory imho
-PN username:
-PN password: User name and password of the PostNuke-user who shall be used as
-posting user in the forum
 Rule: not yet used
 
 Usage:

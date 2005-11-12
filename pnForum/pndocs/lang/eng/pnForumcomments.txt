@@ -1,0 +1,46 @@
+$Id$
+
+
+pnForumComments
+---------------
+
+Since version 2.6 pnForum offers hooks that allow it to be used as comments
+module like EZComments.
+Whenever a new submission has been added a new forum topic will be created.
+For a special support a function in modules/pnForum/pncommentsapi/ is needed.
+Currently such a support exists for the News module only. It reads the new
+submission and copies the content to the initial posting. For all other modules
+the postings get a default text.
+In order to use this feature the pnForum hook has to be activated for the
+target module.
+
+Basic configuration
+-------------------
+
+Action to be performed when deletehook is called: Either closing or deleting
+a topic in the forum.
+
+Configuration per Forum
+-----------------------
+
+Modulereference: In this list all modules where the pnForum hook is activated
+appear for selection.
+PostNuke Topic: Submission can be sorted into different forums depending on their
+topic.
+
+Usage
+-----
+
+The forum topics will be created using the name of the initial submitter. As far
+as News are concerned this will be done when the news get approved. In this case
+the user who does this needs the permission to write to the target forum. If no
+approval is needed the submitter needs this permission.
+
+After a forum topic has been created a link to this topic will be displayed below
+the entry. This can be configured by changing the pnforum_hook_display.html
+template which gets an array of the complete discussion data so far as parameter,
+for more information the see the output of the pndebug plugin.
+
+If a news submission gets updated the initial posting will be updated too. Upon
+deletion the action configured in the basic configuration will be performed.
+

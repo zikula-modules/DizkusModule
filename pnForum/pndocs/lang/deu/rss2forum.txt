@@ -1,0 +1,53 @@
+$Id$
+
+
+RSS2Forum
+---------
+
+RSS2Forum ist ähnlich wie Mail2Forum und erlaubt die Übernahme von RSS Feeds
+in Foren. Auch dies sollte regelmässig per Cronjob ausgeführt werden.
+
+Konfiguration
+-------------
+
+Basiskonfiguration: Hier kann RSS2Forum global ein- und ausgeschaltet werden.
+
+Vorbereitungen
+--------------
+
+Das RSS Modul muss installiert und aktiviert sein und die RSS Feeds müssen dort
+angelegt sein.
+Alle hier definierten Quellen erscheinen nachher in der Forenkonfiguration zur Auswahl.
+
+Einstellungen pro Forum:
+------------------------
+
+Externe Quelle: Hier kann Mail2Forum oderRSS2Forum ausgewählt werden. Die weitere
+Konfiguration erscheint nach dem Speichern.
+
+PN Username:
+PN Kennwort: Name und Kennwort des PostNuke-Users, unter dessen Namen die
+Mails im Forum gespeichert werden
+
+RSS-Feed auswählen: Hier erscheinen alle im RSS Modul definierten Feeds zu Auswahl.
+
+Benutzung:
+----------
+
+Die RSS Feeds werden mit dem rss2pnforum.php Skript abgeholt. Dies wird üblicherweise
+per Cron in einem festen Interval, z.B. stündlich, aufgerufen.
+
+Vor dem ersten Aufruf muss rss2pnforum.php angepasst werden:
+
+Zeile 38: //
+Zeile 39: // store the absolut path to your PostNuke folder here
+Zeile 40: chdir('/opt/lampp/htdocs/760');
+
+Danach sind keine Änderungen notwendig.
+
+Manueller Aufruf:
+-----------------
+
+http://www.meinedomain.de/modules/pnForum/rss2pnforum.php
+
+holt für alle Foren, die für RSS2Forum konfiguriert sind, die neue Beiträge ab.

@@ -17,7 +17,13 @@ Basiskonfiguration: Hier kann das Mail2Forum global ein- und ausgeschaltet werde
 Einstellungen pro Forum:
 ------------------------
 
-Mail2Forum aktivieren: Feature für dieses Forum ein- und ausschalten
+Externe Quelle: Hier kann Mail2Forum oderRSS2Forum ausgewählt werden. Die weitere
+Konfiguration erscheint nach dem Speichern.
+
+PN Username:
+PN Kennwort: Name und Kennwort des PostNuke-Users, unter dessen Namen die
+Mails im Forum gespeichert werden
+
 Pop3 Test nach dem Speichern durchführen: Ist der Haken gesetzt, wird nach dem
 Speichern ein Verbindungstest durchgeführt. Dabei werden noch keine Mails
 abgeholt.
@@ -26,9 +32,6 @@ Pop3 Port:
 Pop3 Login:
 Pop3 Kennwort: Diese Felder sind selbsterklärend
 Prüfintervall: noch nicht benutzt
-PN Username:
-PN Kennwort: Name und Kennwort des PostNuke-Users, unter dessen Namen die
-Mails im Forum gespeichert werden
 Regel: Filterregel, z.Zt. noch nicht benutzt.
 
 
