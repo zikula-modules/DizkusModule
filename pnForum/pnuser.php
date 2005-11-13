@@ -579,9 +579,8 @@ function pnForum_user_topicadmin($args=array())
  */
 function pnForum_user_prefs($args=array())
 {
-    $loggedin = pnUserLoggedIn();
-    if(!$loggedin) {
-        return pnRedirect(pnModURL('pnForum', 'user', 'main'));
+    if(!pnUserLoggedIn()) {
+        return pnModFunc('pnForum', 'user', 'login', array('redirect' => pnModURL('pnForum', 'user', 'prefs')));
     }
 
     // get the input
@@ -1291,6 +1290,48 @@ function pnForum_user_topicsubscriptions($args)
         }
         return pnRedirect(pnModURL('pnForum', 'user', 'topicsubscriptions'));
     }
+}
+
+/**
+ * login
+ *
+ */
+function pnForum_user_login($args)
+{
+    // get the input
+    if(count($args)>0) {
+        extract($args);
+        unset($args);
+    } else {
+        list($submit,
+             $uname,
+             $pass,
+             $rememberme,
+             $redirect) = pnVarCleanFromInput('submit',
+                                              'uname',
+                                              'pass',
+                                              'rememberme',
+                                              'redirect');
+    }
+
+    if(empty($redirect)) {
+        $redirect = pnModURL('pnForum', 'user', 'main');
+    }
+
+    if(!$submit) {
+        $pnr =& new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->add_core_data('PNConfig');
+        $pnr->assign('redirect', $redirect);
+        return $pnr->fetch('pnforum_user_login.html');
+    } else { // submit is set
+        // login
+        if(pnUserLogin($uname, $pass, $rememberme) == false) {
+            return showforumerror();
+        }
+        return pnRedirect($redirect);
+    }
+
 }
 
 ?>

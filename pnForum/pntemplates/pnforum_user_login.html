@@ -1,0 +1,27 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file="pnforum_user_header.html" ]-->
+
+<form action="<!--[ pnmodurl modname="pnForum" type="user" func="login" ]-->" method="post">
+    <div style="text-align: left; padding: 2px; margin: 10px 0 10px 0;">
+        <h1 style="text-align: center;"><!--[ pnml name='_PNFORUM_USERLOGINTITLE' ]--></h1>
+        <br />
+        <label for="pnfuname"><!--[ pnml name='_PNFORUM_USERNAME' ]--></label><br />
+        <input type="text" id="pnfuname" name="uname" size="14" maxlength="25"	onblur="if(this.value=='')this.value='<!--[ pnml name=_PNFORUM_USERNAME ]-->';" onfocus="if(this.value=='<!--[ pnml name=_PNFORUM_USERNAME ]-->')this.value='';" value="<!--[ pnml name='_PNFORUM_USERNAME' ]-->"/><br />
+        <br />
+        <label for="pnfpass"><!--[ pnml name='_PNFORUM_PASSWORD' ]--></label><br />
+        <input type="password" id="pnfpass" name="pass" size="14" maxlength="20" />
+        <br />
+        <!--[ if $pncore.pnconfig.seclevel != 'High' ]-->
+            <input type="checkbox" value="1" name="rememberme" id="pnfrememberme" />&nbsp;
+            <label for="pnfrememberme"><!--[ pnml name='_PNFORUM_REMEMBERME' ]--></label>
+            <br />
+        <!--[ /if ]-->
+        <input type="hidden" name="redirect" value="<!--[ $redirect|pnvarprepfordisplay ]-->" />
+        <br /><br />
+        <input name="submit" type="submit" value="<!--[ pnml name='_LOGIN' ]-->" />
+
+    </div>
+</form>
+
+<!--[ include file="pnforum_user_footer.html" ]-->

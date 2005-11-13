@@ -45,6 +45,20 @@
  ************************************************************************/
 
 //nouveau (sp?, damn, I should have learned french in school, but latin was more interesting :-))
+define('_PNFORUM_USERLOGINTITLE', 'Cette fonction concerne les membres seulement');
+define('_PNFORUM_PASSWORD', 'Mot de passe');
+define('_PNFORUM_REMEMBERME', 'Se souvenir de moi');
+define('_PNFORUM_NOTIFYBODY6', 'Lien entre les Sujets et les inscriptions au Forum :');
+
+define('_PNFORUM_RSS2FORUMPOSTS', 'Fil RSS');
+define('_PNFORUM_RSS_SUMMARY', 'Sommaire');
+define('_PNFORUM_EXTENDEDOPTIONSAFTERSAVING', 'Options supplémentaires après l\'enregistrement');
+define('_PNFORUM_SELECTRSSFEED', 'Sélectionnez le fil RSS');
+define('_PNFORUM_RSSMODULENOTAVAILABLE', '<span style="color: red;">Module RSS non-disponible !</span>');
+define('_PNFORUM_PREFS_RSS2FENABLED', 'RSS2Forum activé');
+define('_PNFORUM_EXTERNALSOURCE', 'Source Externe');
+define('_PNFORUM_NOEXTERNALSOURCE', 'Aucun source externe');
+define('_PNFORUM_RSS2FORUM', 'RSS2Forum');
 
 // new 20051105
 define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');

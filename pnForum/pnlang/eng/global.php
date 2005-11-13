@@ -42,6 +42,11 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_USERLOGINTITLE', 'This functionality is for registered users only');
+define('_PNFORUM_PASSWORD', 'Password');
+define('_PNFORUM_REMEMBERME', 'Remember me');
+define('_PNFORUM_NOTIFYBODY6', 'Link for maintaining topic and forum subscriptions:');
+
 define('_PNFORUM_RSS2FORUMPOSTS', 'RSS feeds');
 define('_PNFORUM_RSS_SUMMARY', 'Summary');
 define('_PNFORUM_EXTENDEDOPTIONSAFTERSAVING', 'Extended options available after saving');

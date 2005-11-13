@@ -2572,7 +2572,9 @@ function pnForum_userapi_notify_by_email($args)
             . _PNFORUM_NOTIFYBODY3 . "\n"
             . pnModURL('pnForum', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id)) . "\n\n"
             . _PNFORUM_NOTIFYBODY4 . "\n"
-            . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)) . "\n"
+            . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)) . "\n\n"
+            . _PNFORUM_NOTIFYBODY6 . "\n"
+            . pnModURL('pnForum', 'user', 'prefs') . "\n"
             . "\n"
             . _PNFORUM_NOTIFYBODY5 . ' ' . pnGetBaseURL();
 
