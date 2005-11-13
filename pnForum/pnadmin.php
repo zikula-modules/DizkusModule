@@ -399,6 +399,14 @@ function pnForum_admin_forum()
 
     list($submit, $forum_id) = pnVarCleanFromInput('submit', 'forum_id');
 
+    $categories = pnModAPIFunc('pnForum', 'admin', 'readcategories');
+    if(count($categories) == 0) {
+        // no categories found, redirect to category admin
+        pnSessionSetVar('statusmsg', _PNFORUM_NOCATEGORIES);
+        return pnRedirect(pnModURL('pnForum', 'admin', 'category',
+                                   array('cat_id' => -1)));
+    }
+
     if(!$submit) {
         //
         if($forum_id==-1) {
@@ -474,7 +482,7 @@ function pnForum_admin_forum()
         $pnr->assign('rssfeeds', $rssfeeds);
         $pnr->assign('externalsourceoptions', $externalsourceoptions);
         $pnr->assign('pntopics', pnModAPIFunc('pnForum', 'admin', 'get_pntopics'));
-        $pnr->assign('categories', pnModAPIFunc('pnForum', 'admin', 'readcategories'));
+        $pnr->assign('categories', $categories);
         $pnr->assign('moderators', $moderators);
         $hideusers = pnModGetVar('pnForum', 'hideusers');
         if($hideusers == 'no') {
