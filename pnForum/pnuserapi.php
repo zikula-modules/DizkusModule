@@ -58,7 +58,7 @@ function pnForum_userapi_get_userdata_from_id($args)
 
     static $usersarray;
 
-    if(isset($usersarray) && is_array($usersarray) && array_key_exists($usersarray, $userid)) {
+    if(isset($usersarray) && is_array($usersarray) && array_key_exists($userid, $usersarray)) {
         return $usersarray[$userid];
     } else {
         // init array
