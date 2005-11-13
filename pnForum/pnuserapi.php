@@ -555,6 +555,16 @@ function pnForum_userapi_setcookies()
      * set last visit cookies and get last visit time
      * set LastVisit cookie, which always gets the current time and lasts one year
      */
+/*
+    setcookie('pnForumLastVisit', time(), time()+31536000);
+
+    if (!isset ($_COOKIE['pnForumLastVisitTemp'])){
+        $temptime = $_COOKIE['pnForumLastVisit'];
+    } else {
+        $temptime = $_COOKIE['pnForumLastVisitTemp'];
+    }
+*/
+
     setcookie('phpBBLastVisit', time(), time()+31536000);
 
     if (!isset ($_COOKIE['phpBBLastVisitTemp'])){
@@ -562,12 +572,14 @@ function pnForum_userapi_setcookies()
     } else {
         $temptime = $_COOKIE['phpBBLastVisitTemp'];
     }
+
     if(empty($temptime)) {
         $temptime = 0;
     }
 
     // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-    setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
+    setcookie('pnForumLastVisitTemp', $temptime, time()+1800);
+//    setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
 
     // set vars for all scripts
     $last_visit = ml_ftime('%Y-%m-%d %H:%M',$temptime);
@@ -1427,10 +1439,6 @@ function pnForum_userapi_storenewtopic($args)
     /*
     it's a submitted page and message and subject are not empty
     */
-
-    //  do a censor on subject and message
-    // $subject = censor($subject);
-    // $message = censor($message);
 
     //  grab message for notification
     //  without html-specialchars, bbcode, smilies <br /> and [addsig]
@@ -2547,14 +2555,14 @@ function pnForum_userapi_notify_by_email($args)
             . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
             . $poster_name . ' ' .pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . pnVarCensor(strip_tags($post_message))."\n"
+            . pnVarCensor(strip_tags($post_message)) . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . _PNFORUM_NOTIFYBODY3."\n"
-            . pnModURL('pnForum', 'user', 'reply', array('topic'=>$topic_id,'forum'=>$forum_id))."\n\n"
-            . _PNFORUM_NOTIFYBODY4."\n"
-            . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id))."\n"
+            . _PNFORUM_NOTIFYBODY3 . "\n"
+            . pnModURL('pnForum', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id)) . "\n\n"
+            . _PNFORUM_NOTIFYBODY4 . "\n"
+            . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)) . "\n"
             . "\n"
-            . _PNFORUM_NOTIFYBODY5." ".pnGetBaseURL();
+            . _PNFORUM_NOTIFYBODY5 . ' ' . pnGetBaseURL();
 
     if(count($recipients)>0) {
         foreach($recipients as $email_to => $toname) {
@@ -2929,6 +2937,7 @@ function pnForum_userapi_emailtopic($args)
  *@params $args['nohours'] int posting within these hours
  *@params $args['unanswered'] int 0 or 1(= postings with no answers)
  *@params $args['last_visit'] string the users last visit data
+ *@params $args['last_visit_unix'] string the users last visit data as unix timestamp
  *@returns array (postings, mail2forumpostings, rsspostings, text_to_display)
  */
 function pnForum_userapi_get_latest_posts($args)
@@ -2981,13 +2990,13 @@ function pnForum_userapi_get_latest_posts($args)
                    break;
         case '5' : $sql = $lastxhsql; $text = _PNFORUM_LAST . ' ' . $nohours . ' ' . _PNFORUM_HOURS;
                    break;
-        case '6' : $sql = $lastvisitsql; $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $temptime);
+        case '6' : $sql = $lastvisitsql; $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
                    break;
         case '1' :
         default:   $sql = $last24hsql; $text  =_PNFORUM_LAST24;
                    break;
     }
-//die($sql);
+
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $posts = array();
@@ -4823,12 +4832,6 @@ function pnForum_userapi_insertrss($args)
         $urlend    = '[/url]';
     }
 
-    // who sneds the postings?
-    $post_as = pnUserGetIDFromName($forum['pnuser']);
-    if($post_as == false) {
-        $post_as = 2; // hopefully 2 is the admin :-)
-    }
-
     foreach($items as $item) {
         // create the reference, we need it twice
         if(!isset($item['date_timestamp']) || empty($item['date_timestamp'])) {
@@ -4858,8 +4861,7 @@ function pnForum_userapi_insertrss($args)
                                            'forum_id'         => $forum['forum_id'],
                                            'attach_signature' => 0,
                                            'subscribe_topic'  => 0,
-                                           'reference'        => $reference,
-                                           'post_as'          => $post_as ));
+                                           'reference'        => $reference));
 
             if (!$topic_id) {
                 // An error occured... get away before screwing more.

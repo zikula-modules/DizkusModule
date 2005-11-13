@@ -144,7 +144,6 @@ function pnForum_user_viewforum($args=array())
     $pnr->add_core_data();
     $pnr->assign( 'forum', $forum);
     $pnr->assign( 'hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
-    $pnr->assign( 'loggedin', pnUserLoggedIn());
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
     return $pnr->fetch('pnforum_user_viewforum.html');
@@ -668,7 +667,6 @@ function pnForum_user_prefs($args=array())
             $pnr->add_core_data();
             $pnr->assign( 'last_visit', $last_visit);
             $pnr->assign( 'favorites_enabled', pnModGetVar('pnForum', 'favorites_enabled'));
-            $pnr->assign( 'loggedin', $loggedin);
             $pnr->assign( 'last_visit_unix', $last_visit_unix);
             $pnr->assign('tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('pnforum_user_prefs.html');
@@ -775,7 +773,8 @@ function pnForum_user_viewlatest($args=array())
                                                              array('selorder'   => $selorder,
                                                                    'nohours'    => $nohours,
                                                                    'unanswered' => $unanswered,
-                                                                   'last_visit' => $last_visit));
+                                                                   'last_visit' => $last_visit,
+                                                                   'last_visit_unix' => $last_visit_unix));
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
@@ -785,10 +784,9 @@ function pnForum_user_viewlatest($args=array())
     $pnr->assign('rssposts', $rssposts);
     $pnr->assign('text', $text);
     $pnr->assign('nohours', $nohours);
-    $pnr->assign( 'last_visit', $last_visit);
-    $pnr->assign( 'loggedin', pnUserLoggedIn());
-    $pnr->assign( 'last_visit_unix', $last_visit_unix);
-    $pnr->assign( 'numposts', pnModAPIFunc('pnForum', 'user', 'boardstats',
+    $pnr->assign('last_visit', $last_visit);
+    $pnr->assign('last_visit_unix', $last_visit_unix);
+    $pnr->assign('numposts', pnModAPIFunc('pnForum', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
     return $pnr->fetch('pnforum_user_latestposts.html');

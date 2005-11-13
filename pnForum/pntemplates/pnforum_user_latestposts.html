@@ -13,7 +13,9 @@
 <div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ]
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ]
+    <!--[ if $last_visit_unix <> 0]-->
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=6 ]-->"><!--[ pnml name='_PNFORUM_LASTVISIT' ]--></a> ]
+    <!--[ /if ]-->
 </div>
 </form>
 
