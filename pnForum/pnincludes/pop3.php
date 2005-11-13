@@ -15,6 +15,7 @@ class pop3_class
 	var $authentication_mechanism="USER";
 	var $realm="";
 	var $workstation="";
+	var $join_continuation_header_lines=1;
 
 	/* Private variables - DO NOT ACCESS */
 
@@ -420,7 +421,7 @@ class pop3_class
 			return($this->SetError("Could not get message retrieval command response"));
 		if($this->Tokenize($response," ")!="+OK")
 			return($this->SetError("Could not retrieve the message: ".$this->Tokenize("\r\n")));
-		for($headers=$body=array(),$line=0;;$line++)
+		for($headers=$body=array(),$line=0;;)
 		{
 			$response=$this->GetLine();
 			if(GetType($response)!="string")
@@ -436,7 +437,16 @@ class pop3_class
 						$response=substr($response,1,strlen($response)-1);
 					break;
 			}
-			$headers[$line]=$response;
+			if($this->join_continuation_header_lines
+			&& $line>0
+			&& ($response[0]=="\t"
+			|| $response[0]==" "))
+				$headers[$line-1].=$response;
+			else
+			{
+				$headers[$line]=$response;
+				$line++;
+			}
 		}
 		for($line=0;;$line++)
 		{
