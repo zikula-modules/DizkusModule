@@ -1,0 +1,38 @@
+$Id$
+
+
+Installation
+------------
+
+* Extract zip package, the following folder structure appears
+
+  html
+  |
+  -- includes
+  |  |
+  |  -- search
+  |
+  -- modules
+     |
+     -- pnForum
+        |
+        -- weitere Unterverzeichnisse
+
+  Copy the content of includes/search to your PostNuke's includes/search folder
+  Copy the content of modules to your PostNuke's modules folder (not modules/Modules!!)
+  Copy backforum.php from the pnForum folder to your PostNuke root folder
+
+* regenerate module list
+* install and activate pnForum
+* activate hooks for pnForum as needed
+
+For more information about the pnForum features see
+
+mail2forum.txt
+rss2forum.txt
+pnForumcomments.txt
+
+For more information about the permission schemes see
+
+upgrade.txt
+

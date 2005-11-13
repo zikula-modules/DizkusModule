@@ -1,4 +1,7 @@
 $Id$ $Name$
 
-Please look into /pndocs/lang/eng/manual.html for the docs.
+Deutsche Anleitung: pndocs/deu/install.txt
 
+English manual: pndocs/eng/install.txt
+
+more to come...

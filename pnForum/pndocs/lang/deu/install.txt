@@ -1,0 +1,40 @@
+$Id$
+
+
+Installation
+------------
+
+* Zippaket auspacken, es erscheint foglende Dateistruktur:
+
+  html
+  |
+  -- includes
+  |  |
+  |  -- search
+  |
+  -- modules
+     |
+     -- pnForum
+        |
+        -- weitere Unterverzeichnisse
+
+  Den Inhalt von includes/search ins PostNuke includes/search Verzeichnis kopieren
+  Den Inhalt von modules ins PostNuke modules Verzeichnis kopieren
+  (nicht modules/Moules!!)
+  Die Datei backforum.php aus dem pnForumverzeichnis ins PostNuke Verzeichnis
+  kopieren
+
+* Modulliste neu erzeugen lassen
+* pnForum installieren und aktivieren
+* Hooks nach Bedarf für pnForum einstellen.
+
+WeitereInformationen zu den einzelnen Features gibts in
+
+mail2forum.txt
+rss2forum.txt
+pnForumcomments.txt
+
+Information zum Berechtigungssystem gibts in
+
+upgrade.txt
+

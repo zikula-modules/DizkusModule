@@ -1,3 +1,6 @@
+$Id$
+
+
 pnForum module developers team (current status):
 ----------------------------------------------------------
 Andreas Krapohl aka larsneo (larsneo@postnuke.com)

@@ -1,3 +1,5 @@
+$Id$
+
 Crossupgrade phpBB_14 -> pnForum
 --------------------------------
 
@@ -20,7 +22,7 @@ Beim Upgrade hat sich folgende Reihenfolge als sinnvoll erwiesen:
 * pnForum Blöcke hinzufügen
 
 
-Das Permissionschema hat sich geändert: 
+Das Permissionschema hat sich geändert:
 
 Statt
 

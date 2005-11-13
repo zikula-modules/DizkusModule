@@ -1,3 +1,6 @@
+$Id$
+
+
 Crossupgrade phpBB_14 -> pnForum
 --------------------------------
 
@@ -48,4 +51,3 @@ As usual, you need the comment right to write new postings.
 Users | pnForum:: | .* | comment
 
 allows all registered users to write in all forums.
- 
