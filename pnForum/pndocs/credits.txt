@@ -15,6 +15,8 @@ Franck Barbenoire (fbarbenoire@yahoo.fr)
     french translation and button images
 Thomas Pawlitzki
     moderate forum functionality
+Manuel Lemos
+    pop3 class, he even changed it on my request to merge the header lines
 
 
 Credits for pre 2.0.0 versions:
