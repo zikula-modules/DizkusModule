@@ -304,8 +304,13 @@ function pnForum_admin_syncforums()
 
 	pnModAPIFunc('pnForum', 'admin', 'sync',
 	             array( 'id'   => NULL,
+	                    'type' => "users"));
+	$message = pnVarPrepForDisplay(_PNFORUM_SYNC_USERS) . "<br />";
+
+	pnModAPIFunc('pnForum', 'admin', 'sync',
+	             array( 'id'   => NULL,
 	                    'type' => "all forums"));
-	$message = pnVarPrepForDisplay(_PNFORUM_SYNC_FORUMINDEX) . "<br />";
+	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_FORUMINDEX) . "<br />";
 
 	pnModAPIFunc('pnForum', 'admin', 'sync',
 	             array( 'id'   => NULL,
@@ -316,11 +321,6 @@ function pnForum_admin_syncforums()
 	             array( 'id'   => NULL,
 	                    'type' => "all posts"));
 	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_POSTSCOUNT) . "<br />";
-
-	pnModAPIFunc('pnForum', 'admin', 'sync',
-	             array( 'id'   => NULL,
-	                    'type' => "users"));
-	$message .= pnVarPrepForDisplay(_PNFORUM_SYNC_USERS) . "<br />";
 
 	if ($silent != 1) {
         pnSessionSetVar('statusmsg', $message);

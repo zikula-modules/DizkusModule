@@ -255,10 +255,6 @@ function pnForum_user_reply($args=array())
             return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
         }
 
-        // sync the users, so that new pn users get into the pnForum
-        // database
-        pnModAPIFunc('pnForum', 'user', 'usersync');
-
         list($start,
              $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
                                        array('topic_id'         => $topic_id,
@@ -352,10 +348,6 @@ function pnForum_user_newtopic($args=array())
                                    'attach_signature' => $attach_signature,
                                    'subscribe_topic'  => $subscribe_topic));
     if($submit==true && $preview==false) {
-        // sync the users, so that new pn users get into the pnForum
-        // database
-        pnModAPIFunc('pnForum', 'user', 'usersync');
-
         // it's a submitted page
         // Confirm authorisation code
         if (!pnSecConfirmAuthKey()) {

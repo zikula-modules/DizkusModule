@@ -56,6 +56,16 @@ function pnForum_userapi_get_userdata_from_id($args)
     extract($args);
     unset($args);
 
+    static $usersarray;
+
+    if(isset($usersarray) && is_array($usersarray) && array_key_exists($usersarray, $userid)) {
+        return $usersarray[$userid];
+    } else {
+        // init array
+        $usersarray = array();
+    }
+
+
     $makedummy = false;
     // get the core user data
     $userdata = pnUserGetVars($userid);
@@ -67,22 +77,8 @@ function pnForum_userapi_get_userdata_from_id($args)
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
+    $sql = 'SELECT * FROM ' . $pntable['pnforum_users'] . ' WHERE ' . $pntable['pnforum_users_column']['user_id'] . '="' . (int)pnVarPrepForStore($userid) . '";';
 
-    $pnfusercol = $pntable['pnforum_users_column'];
-
-    $sql = 'SELECT ';
-    $flag = false;
-    $prefix = pnConfigGetVar('prefix');
-    foreach($pnfusercol as $pnfuserfield) {
-        if($flag==true) {
-            $sql .= ', ';
-        }
-        $sql .= $pnfuserfield . ' as ' . str_replace($prefix . '_pnforum_users.', '', $pnfuserfield) . "\n";
-        $flag = true;
-    }
-
-    $sql .= 'FROM ' . $pntable['pnforum_users']. '
-             WHERE ' . $pnfusercol['user_id'] . "='" . (int)pnVarPrepForStore($userid) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if(!$result->EOF) {
@@ -93,6 +89,11 @@ function pnForum_userapi_get_userdata_from_id($args)
         $userdata['moderate'] = false;
         $userdata['reply'] = false;
         $userdata['seeip'] = false;
+
+        //
+        // get the users group membership
+        //
+        $userdata['groups'] = pnModAPIFunc('Groups', 'user', 'getusergroups', array('uid' => $userdata['pn_uid']));
 
         //
         // get the users rank
@@ -169,6 +170,9 @@ function pnForum_userapi_get_userdata_from_id($args)
         $userdata['email']     = '';
         $userdata['femail']    = '';
         $userdata['url']       = '';
+        $userdata['groups']    = array();
+    } else {
+        $usersarray[$userid] = $userdata;
     }
     return $userdata;
 }
@@ -1132,6 +1136,10 @@ function pnForum_userapi_storereply($args)
     it's a submitted page and message is not empty
     */
 
+    // sync the users, so that new pn users get into the pnForum
+    // database
+    pnModAPIFunc('pnForum', 'user', 'usersync');
+
     // grab message for notification
     // without html-specialchars, bbcode, smilies <br> and [addsig]
     $posted_message=stripslashes($message);
@@ -1435,6 +1443,10 @@ function pnForum_userapi_storenewtopic($args)
         // either message or subject is empty
         return showforumerror(_PNFORUM_EMPTYMSG, __FILE__, __LINE__);
     }
+
+    // sync the users, so that new pn users get into the pnForum
+    // database
+    pnModAPIFunc('pnForum', 'user', 'usersync');
 
     /*
     it's a submitted page and message and subject are not empty
