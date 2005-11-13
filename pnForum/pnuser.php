@@ -404,6 +404,16 @@ function pnForum_user_editpost($args=array())
                                               'preview');
     }
 
+    if(empty($post_id) || !is_numeric($post_id)) {
+        return pnRedirect(pnModURL('pnForum', 'user', 'main'));
+    }
+    $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+                         array('post_id'    => $post_id));
+    if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
+       && ($post['poster_data']['pn_uid'] <> pnUserGetVar('uid')) ) {
+        return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
+    }
+
     $preview = (empty($preview)) ? false : true;
 
     //	if cancel is submitted move to forum-view
@@ -442,8 +452,6 @@ function pnForum_user_editpost($args=array())
     	return pnRedirect($redirect);
 
     } else {
-        $post = pnModAPIFunc('pnForum', 'user', 'readpost',
-                             array('post_id'    => $post_id));
         if(!empty($subject)) {
             $post['topic_subject'] = $subject;
         }
@@ -1258,6 +1266,10 @@ function pnForum_user_report($args)
  */
 function pnForum_user_topicsubscriptions($args)
 {
+    if(!pnUserLoggedIn()) {
+        return pnModFunc('pnForum', 'user', 'login', array('redirect' => pnModURL('pnForum', 'user', 'prefs')));
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1298,6 +1310,10 @@ function pnForum_user_topicsubscriptions($args)
  */
 function pnForum_user_login($args)
 {
+    if(pnUserLoggedIn()) {
+        return pnRedirect(pnModURL('pnForum', 'user', 'main'));
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1327,7 +1343,7 @@ function pnForum_user_login($args)
     } else { // submit is set
         // login
         if(pnUserLogin($uname, $pass, $rememberme) == false) {
-            return showforumerror();
+            return showforumerror(_PNFORUM_ERRORLOGGINGIN, __FILE__, __LINE__);
         }
         return pnRedirect($redirect);
     }

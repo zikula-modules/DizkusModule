@@ -42,6 +42,7 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_ERRORLOGGINGIN', 'Unable to log you in, wrong username or wrong password used?');
 define('_PNFORUM_USERLOGINTITLE', 'This functionality is for registered users only');
 define('_PNFORUM_PASSWORD', 'Password');
 define('_PNFORUM_REMEMBERME', 'Remember me');

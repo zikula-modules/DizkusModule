@@ -45,6 +45,7 @@
  ************************************************************************/
 
 //nouveau (sp?, damn, I should have learned french in school, but latin was more interesting :-))
+define('_PNFORUM_ERRORLOGGINGIN', 'Connexion Impossible, Pseudo ou mot de passe invalide !');
 define('_PNFORUM_USERLOGINTITLE', 'Cette fonction concerne les membres seulement');
 define('_PNFORUM_PASSWORD', 'Mot de passe');
 define('_PNFORUM_REMEMBERME', 'Se souvenir de moi');
@@ -59,6 +60,9 @@ define('_PNFORUM_PREFS_RSS2FENABLED', 'RSS2Forum activé');
 define('_PNFORUM_EXTERNALSOURCE', 'Source Externe');
 define('_PNFORUM_NOEXTERNALSOURCE', 'Aucun source externe');
 define('_PNFORUM_RSS2FORUM', 'RSS2Forum');
+define('_PNFORUM_EXTERNALSOURCEURL_HINT', 'Si un Fil RSS est disponible, entrez son identifiant tel qu\'il apparaît dans le module RSS'); <--- beurk one.........
+define('_PNFORUM_LASTPOSTINGBY', 'Dernier message par :');
+define('_PNFORUM_WRITTENON', 'écrit à');
 
 // new 20051105
 define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
