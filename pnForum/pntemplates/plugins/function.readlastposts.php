@@ -142,12 +142,12 @@ function smarty_function_readlastposts($params, &$smarty)
     // if show_m2f is set we show contents of m2f forums where.
     // forum_pop3_active is set to 1
     if($show_m2f==true) {
-        $wherespecial = " OR f.forum_pop3_active = '1'";
+        $wherespecial .= " OR f.forum_pop3_active = '1'";
     }
     // if show_rss is set we show contents of rss2f forums where.
     // forum_pop3_active is set to 2
     if($show_rss==true) {
-        $wherespecial = " OR f.forum_pop3_active = '2'";
+        $wherespecial .= " OR f.forum_pop3_active = '2'";
     }
 
     $wherespecial .= ') AND ';
