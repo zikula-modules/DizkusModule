@@ -45,52 +45,6 @@
  ************************************************************************/
 
 //nouveau (sp?, damn, I should have learned french in school, but latin was more interesting :-))
-define('_PNFORUM_ERRORLOGGINGIN', 'Connexion Impossible, Pseudo ou mot de passe invalide !');
-define('_PNFORUM_USERLOGINTITLE', 'Cette fonction concerne les membres seulement');
-define('_PNFORUM_PASSWORD', 'Mot de passe');
-define('_PNFORUM_REMEMBERME', 'Se souvenir de moi');
-define('_PNFORUM_NOTIFYBODY6', 'Lien entre les Sujets et les inscriptions au Forum :');
-
-define('_PNFORUM_RSS2FORUMPOSTS', 'Fil RSS');
-define('_PNFORUM_RSS_SUMMARY', 'Sommaire');
-define('_PNFORUM_EXTENDEDOPTIONSAFTERSAVING', 'Options supplémentaires après l\'enregistrement');
-define('_PNFORUM_SELECTRSSFEED', 'Sélectionnez le fil RSS');
-define('_PNFORUM_RSSMODULENOTAVAILABLE', '<span style="color: red;">Module RSS non-disponible !</span>');
-define('_PNFORUM_PREFS_RSS2FENABLED', 'RSS2Forum activé');
-define('_PNFORUM_EXTERNALSOURCE', 'Source Externe');
-define('_PNFORUM_NOEXTERNALSOURCE', 'Aucun source externe');
-define('_PNFORUM_RSS2FORUM', 'RSS2Forum');
-define('_PNFORUM_EXTERNALSOURCEURL_HINT', 'Si un Fil RSS est disponible, entrez son identifiant tel qu\'il apparaît dans le module RSS'); <--- beurk one.........
-define('_PNFORUM_LASTPOSTINGBY', 'Dernier message par :');
-define('_PNFORUM_WRITTENON', 'écrit à');
-
-// new 20051105
-define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
-define('_PNFORUM_NOPNTOPIC', 'aucun sujet');
-define('_PNFORUM_ALLPNTOPIC', 'tous les sujets');
-define('_PNFORUM_PNTOPIC_HINT', '');
-define('_PNFORUM_BACKTOSUBMISSION', 'Lien vers l\'Article');
-define('_PNFORUM_PREFS_DELETEHOOKACTION', 'Action lorsque l\'extension d\'effacement est appelée');
-define('_PNFORUM_PREFS_DELTEHOOKACTIONREMOVE', 'Fermer le sujet');
-define('_PNFORUM_PREFS_DELETEHOOKACTIONLOCK', 'Supprimer le sujet');
-
-define('_PNFORUM_AUTOMATICDISCUSSIONSUBJECT', 'Créer automatiquement un sujet');
-define('_PNFORUM_AUTOMATICDISCUSSIONMESSAGE', 'Créer automatiquement un sujet des éléments en attente');
-define('_PNFORUM_SELECTREFERENCEMODULE', 'Sélectionner le module'); //select hooked module');
-define('_PNFORUM_NOHOOKEDMODULES', 'Aucun module trouvé'); //no hooked module found');
-define('_PNFORUM_MODULEREFERENCE', 'Référence Module');
-define('_PNFORUM_MODULEREFERENCE_HINT', 'Utilisé comme option de commentaires, tous les éléments proposés de ce module auront un sujet associé dans le forum. Cette liste ne contient que les modules pour lesquels le pnForum a été activé.');
-define('_PNFORUM_DISCUSSINFORUM', 'Discuter de cette proposition dans le forum');
-define('_PNFORUM_FAILEDTODELETEHOOK', 'Echec de la suppression de l\'extension');
-define('_PNFORUM_FAILEDTOCREATEHOOK', 'Echec de la création de l\'extension');
-define('_PNFORUM_UNKNOWNIMAGE', 'image inconnue');
-define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Retirer la signature des utilisateurs des messages');
-define('_PNFORUM_ILLEGALMESSAGESIZE', 'Taille de message illégale (max: 65535 caractères');
-define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Supprimer le HTML des nouveaux messages (garde le contenu entre les balises [code][/code]');
-define('_PNFORUM_USERSONLINE', 'Utilisateurs en ligne');
-define('_PNFORUM_BASEDONLASTXMINUTES', 'Données pour les %m% dernières minutes');
-define('_PNFORUM_AND', 'et');
-define('_PNFORUM_NOHTMLALLOWED', 'Tags HTML interdits (excepté à l\'intérieur des balises [code][/code])');
 
 // alphasorting starts here
 
@@ -142,14 +96,20 @@ define('_PNFORUM_ADMINUSERRANK_MIN','Nombre min de messages');
 define('_PNFORUM_ADMINUSERRANK_TITLE','Administration des notations des membres');
 define('_PNFORUM_ADMINUSERRANK_TITLE2','Notation');
 define('_PNFORUM_ADMIN_SYNC','Synchroniser');
+define('_PNFORUM_ALLPNTOPIC', 'tous les sujets');
+define('_PNFORUM_AND', 'et');
 define('_PNFORUM_ASSIGN','Affecter à');
 define('_PNFORUM_ATTACHSIGNATURE', 'Attacher ma signature');
 define('_PNFORUM_AUTHOR','Auteur');
+define('_PNFORUM_AUTOMATICDISCUSSIONMESSAGE', 'Créer automatiquement un sujet des éléments en attente');
+define('_PNFORUM_AUTOMATICDISCUSSIONSUBJECT', 'Créer automatiquement un sujet');
 
 //
 // B
 //
 define('_PNFORUM_BACKTOFORUMADMIN', 'Retour au forum admin');
+define('_PNFORUM_BACKTOSUBMISSION', 'Lien vers l\'Article');
+define('_PNFORUM_BASEDONLASTXMINUTES', 'Données pour les %m% dernières minutes');
 define('_PNFORUM_BLOCK_PARAMETERS', 'Paramètres');
 define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'liste séparée par des virgules, e.g.. maxposts=5,forum_id=27 ');
 define('_PNFORUM_BLOCK_TEMPLATENAME', 'Nom du fichier template');
@@ -181,6 +141,7 @@ define('_PNFORUM_DELETETOPIC','Supprimer ce sujet');
 define('_PNFORUM_DELETETOPICS','Supprimer les sujets sélectionnés');
 define('_PNFORUM_DELETETOPIC_INFO', 'En appuyant sur le bouton de suppression à la fin de ce formulaire, le sujet sélectionné et tous les messages qui en dépendent seront <strong>définitivement</strong> supprimés.');
 define('_PNFORUM_DESCRIPTION', 'Description');
+define('_PNFORUM_DISCUSSINFORUM', 'Discuter de cette proposition dans le forum');
 define('_PNFORUM_DOWN','Vers le bas');
 
 //
@@ -194,13 +155,19 @@ define('_PNFORUM_EDIT_POST','Modifier le message');
 define('_PNFORUM_EMAILTOPICMSG','Bonjour ! Visitez ce site, cela devrait vous intéresser');
 define('_PNFORUM_EMAIL_TOPIC', 'envoyer en tant qu\'email');
 define('_PNFORUM_EMPTYMSG','Vous devez entrer un message. Les messages vides ne sont pas autorisés. Revenez en arrière et réessayez.');
+define('_PNFORUM_ERRORLOGGINGIN', 'Connexion Impossible, Pseudo ou mot de passe invalide !');
 define('_PNFORUM_ERRORMAILTO', 'Envoyer un rapport de bug');
 define('_PNFORUM_ERROROCCURED', 'L\'erreur suivante s\'est produite :');
 define('_PNFORUM_ERROR_CONNECT','Erreur de connexion à la base de données !<br>');
+define('_PNFORUM_EXTENDEDOPTIONSAFTERSAVING', 'Options supplémentaires après l\'enregistrement');
+define('_PNFORUM_EXTERNALSOURCE', 'Source Externe');
+define('_PNFORUM_EXTERNALSOURCEURL_HINT', 'Si un Fil RSS est disponible, entrez son identifiant tel qu\'il apparaît dans le module RSS'); <--- beurk one.........
 
 //
 // F
 //
+define('_PNFORUM_FAILEDTOCREATEHOOK', 'Echec de la création de l\'extension');
+define('_PNFORUM_FAILEDTODELETEHOOK', 'Echec de la suppression de l\'extension');
 define('_PNFORUM_FAVORITES','Favoris');
 define('_PNFORUM_FAVORITE_STATUS','Etat des favoris');
 define('_PNFORUM_FORUM','Forum');
@@ -239,6 +206,7 @@ define('_PNFORUM_HOURS','heures');
 //
 // I
 //
+define('_PNFORUM_ILLEGALMESSAGESIZE', 'Taille de message illégale (max: 65535 caractères');
 define('_PNFORUM_IMAGE', 'Image');
 define('_PNFORUM_IP_USERNAMES', 'Nom des utilisateurs actifs avec leurs totaux et IP');
 define('_PNFORUM_ISLOCKED','Le sujet est verrouillé. Pas de nouveau message');
@@ -257,6 +225,7 @@ define('_PNFORUM_LAST','dernières');
 define('_PNFORUM_LAST24','dernières 24 heures');
 define('_PNFORUM_LASTCHANGE','dernière modification le ');
 define('_PNFORUM_LASTPOST','Dernier message');
+define('_PNFORUM_LASTPOSTINGBY', 'Dernier message par :');
 define('_PNFORUM_LASTPOSTSTRING','%s<br />par %s');
 define('_PNFORUM_LASTVISIT', 'dernière visite');
 define('_PNFORUM_LASTWEEK','semaine dernière');
@@ -283,6 +252,8 @@ define('_PNFORUM_MODERATE_MOVETOPICS_HINT','Choisissez le forum cible où déplace
 define('_PNFORUM_MODERATION_NOTICE', 'Requête de Modération');
 define('_PNFORUM_MODERATOR','Modérateur');
 define('_PNFORUM_MODERATORSOPTIONS', 'Options - Modérateurs');
+define('_PNFORUM_MODULEREFERENCE', 'Référence Module');
+define('_PNFORUM_MODULEREFERENCE_HINT', 'Utilisé comme option de commentaires, tous les éléments proposés de ce module auront un sujet associé dans le forum. Cette liste ne contient que les modules pour lesquels le pnForum a été activé.');
 define('_PNFORUM_MORETHAN','Plus de ');
 define('_PNFORUM_MOVED_SUBJECT', 'déplacé');
 define('_PNFORUM_MOVEPOST', 'Déplacer un message');
@@ -311,13 +282,17 @@ define('_PNFORUM_NOAUTH_TOREAD', 'Vous n\'avez pas l\'autorisation de lire cette
 define('_PNFORUM_NOAUTH_TOSEE', 'Vous n\'avez pas l\'autorisation de voir cette catégorie ou ce forum');
 define('_PNFORUM_NOAUTH_TOWRITE', 'Vous n\'avez pas l\'autorisation d\'écrire dans cette catégorie ou ce forum');
 define('_PNFORUM_NOCATEGORIES', 'Pas de catégorie');
+define('_PNFORUM_NOEXTERNALSOURCE', 'Aucun source externe');
 define('_PNFORUM_NOFAVORITES','Pas de favoris');
 define('_PNFORUM_NOFORUMS', 'pas de forum');
+define('_PNFORUM_NOHOOKEDMODULES', 'Aucun module trouvé'); //no hooked module found');
+define('_PNFORUM_NOHTMLALLOWED', 'Tags HTML interdits (excepté à l\'intérieur des balises [code][/code])');
 define('_PNFORUM_NOJOINTO', 'Aucun sujet cible pour fusionner la sélection');
 define('_PNFORUM_NOMODERATORSASSIGNED', 'pas de modérateur désigné');
 define('_PNFORUM_NOMOVETO', 'Aucun forum cible où déplacer la sélection');
 define('_PNFORUM_NONE', 'aucun');
 define('_PNFORUM_NONEWPOSTS','Pas de nouveau message depuis votre dernière visite.');
+define('_PNFORUM_NOPNTOPIC', 'aucun sujet');
 define('_PNFORUM_NOPOSTLOCK','Vous ne pouvre pas répondre à ce message, le sujet est verrouillé.');
 define('_PNFORUM_NOPOSTS','Pas de message');
 define('_PNFORUM_NORANK', 'Pas de titre honorifique');
@@ -333,6 +308,7 @@ define('_PNFORUM_NOTIFYBODY2','écrit à');
 define('_PNFORUM_NOTIFYBODY3','Répondre à ce message : ');
 define('_PNFORUM_NOTIFYBODY4','Faire défiler les fils de discussion :');
 define('_PNFORUM_NOTIFYBODY5','Vous recevez ce message car vous avez demandé à recevoir les messages du forum : ');
+define('_PNFORUM_NOTIFYBODY6', 'Lien entre les Sujets et les inscriptions au Forum :');
 define('_PNFORUM_NOTIFYME', 'M\'avertir lorsqu\'une réponse est envoyée');
 define('_PNFORUM_NOTIFYMODBODY1', 'Requête de modération');
 define('_PNFORUM_NOTIFYMODBODY2', 'Commentaire');
@@ -362,9 +338,15 @@ define('_PNFORUM_OURLATESTPOSTS','Derniers messages du forum');
 // P
 //
 define('_PNFORUM_PAGE','Page #');
+define('_PNFORUM_PASSWORD', 'Mot de passe');
 define('_PNFORUM_PASSWORDNOMATCH', 'Les mots de passe ne correspondent pas, s.v.p. revenez en arrière pour corriger');
 define('_PNFORUM_PERMDENY','Accès refusé !');
 define('_PNFORUM_PERSONAL_SETTINGS','Préférences');
+define('_PNFORUM_PNPASSWORD', 'Mot de passe PN');
+define('_PNFORUM_PNPASSWORDCONFIRM', 'Confirmer le mot de passe PN');
+define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
+define('_PNFORUM_PNTOPIC_HINT', '');
+define('_PNFORUM_PNUSER', 'Pseudo PN');
 define('_PNFORUM_POP3ACTIVE', 'Mail2Forum activé');
 define('_PNFORUM_POP3INTERVAL', 'Interval de recherche de message');
 define('_PNFORUM_POP3LOGIN', 'Login Pop3');
@@ -374,9 +356,6 @@ define('_PNFORUM_POP3PASSWORD', 'Mot de passe Pop3');
 define('_PNFORUM_POP3PASSWORDCONFIRM', 'Confirmer le mot de passe Pop3');
 define('_PNFORUM_POP3PORT', 'Port');
 define('_PNFORUM_POP3SERVER', 'Serveur Pop3');
-define('_PNFORUM_PNPASSWORD', 'Mot de passe PN');
-define('_PNFORUM_PNPASSWORDCONFIRM', 'Confirmer le mot de passe PN');
-define('_PNFORUM_PNUSER', 'Pseudo PN');
 define('_PNFORUM_POP3TEST', 'Effectuer le test Pop3 après la sauvegarde');
 define('_PNFORUM_POP3TESTRESULTS', 'Resultats du test Pop3');
 define('_PNFORUM_POST','Envoyer');
@@ -388,6 +367,9 @@ define('_PNFORUM_POWEREDBY', 'Généré par <a href="http://www.pnforum.de/" title=
 define('_PNFORUM_PREFS_ASCENDING', 'Ascendant');
 define('_PNFORUM_PREFS_AUTOSUBSCRIBE', 'Inscription automatique aux nouveaux sujets et messages');
 define('_PNFORUM_PREFS_CHARSET', 'Jeu de caractères par défaut :<br /><em>(c\'est le jeu de caractères utilisé dans les en-têtes des emails)</em>');
+define('_PNFORUM_PREFS_DELETEHOOKACTION', 'Action lorsque l\'extension d\'effacement est appelée');
+define('_PNFORUM_PREFS_DELETEHOOKACTIONLOCK', 'Supprimer le sujet');
+define('_PNFORUM_PREFS_DELTEHOOKACTIONREMOVE', 'Fermer le sujet');
 define('_PNFORUM_PREFS_DESCENDING', 'Descendant');
 define('_PNFORUM_PREFS_EMAIL', 'Adresse email de l\'expéditeur :<br /><em>(apparaîtra dans tous les emails envoyés par le forum)</em>');
 define('_PNFORUM_PREFS_FAVORITESENABLED', 'Favoris activés');
@@ -407,14 +389,17 @@ define('_PNFORUM_PREFS_POSTICON', 'Icône d\'envoi de message :');
 define('_PNFORUM_PREFS_POSTSORTORDER', 'Ordre de tri des messages :');
 define('_PNFORUM_PREFS_POSTSPERPAGE', 'Nombre de messages par page :<br /><em>(c\'est le nombre de messages d\'un sujet qui seront affichés par page. La valeur par défaut est 15)</em>');
 define('_PNFORUM_PREFS_RANKLOCATION', 'Emplacement des icônes de notation :');
+define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Retirer la signature des utilisateurs des messages');
 define('_PNFORUM_PREFS_REMOVESIGNATUREFROMPOST', 'Retirer la signature des utilisateurs sur les messages (Affichage)');
 define('_PNFORUM_PREFS_RESTOREDEFAULTS', 'Restaurer les valeurs par défaut');
+define('_PNFORUM_PREFS_RSS2FENABLED', 'RSS2Forum activé');
 define('_PNFORUM_PREFS_SAVE', 'Enregistrer');
 define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX', 'Rechercher en utilisant la recherche par index');
 define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<i>La recherche utilisant les index de texte complet requiert min. MySQL 4 ou plus récent et ne fonctionne pas avec les bases InnoDB. Ce drapeau sera normalement utilisé lors de l\'installation lorsque les index auront été créés. Le résultat de la recherche pourrait être vide si la requête est présente dans un trop gran nombre de messages. C\'est une "fonctionnalité" MySQL.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL">Recherche Texte complet MySQL</a>.');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'Marque de fin de signature :');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Marque de début de signature :');
 define('_PNFORUM_PREFS_SLIMFORUM', 'Masquer les catégories contenant un seul forum');
+define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Supprimer le HTML des nouveaux messages (garde le contenu entre les balises [code][/code]');
 define('_PNFORUM_PREFS_TOPICICON', 'Icône de sujet :');
 define('_PNFORUM_PREFS_TOPICSPERPAGE', 'Nombre de sujets par page :<br /><em>(c\'est le nombre de sujets d\'un forum qui seront affichés par page. La valeur par défaut est 15)</em>');
 define('_PNFORUM_PREFS_YES', 'Oui');
@@ -439,6 +424,7 @@ define('_PNFORUM_RECENT_POST_ORDER', 'Ordre des messages récents dans les sujets
 define('_PNFORUM_REGISTER','S\'enregistrer');
 define('_PNFORUM_REGISTRATION_NOTE','Note: les membres peuvent s\'inscrire pour recevoir les nouveaux messages');
 define('_PNFORUM_REG_SINCE', 'enregistré depuis');
+define('_PNFORUM_REMEMBERME', 'Se souvenir de moi');
 define('_PNFORUM_REMOVE', 'supprimer');
 define('_PNFORUM_REMOVE_FAVORITE_FORUM','Supprimer des favoris');
 define('_PNFORUM_REORDER','Réorganiser');
@@ -452,6 +438,10 @@ define('_PNFORUM_REPLYQUOTE', 'citer');
 define('_PNFORUM_REPLY_POST','Répondre à ');
 define('_PNFORUM_REPORTINGUSERNAME', 'Rapporter un utilisateur');
 define('_PNFORUM_RETURNTOTOPIC', 'Retour au sujet');
+define('_PNFORUM_RSS2FORUM', 'RSS2Forum');
+define('_PNFORUM_RSS2FORUMPOSTS', 'Fil RSS');
+define('_PNFORUM_RSSMODULENOTAVAILABLE', '<span style="color: red;">Module RSS non-disponible !</span>');
+define('_PNFORUM_RSS_SUMMARY', 'Sommaire');
 
 //
 // S
@@ -485,6 +475,8 @@ define('_PNFORUM_SEARCHRESULTSFOR','Résultats de la recherche');
 define('_PNFORUM_SELECTACTION', 'sélectionner une action');
 define('_PNFORUM_SELECTED','Sélection');
 define('_PNFORUM_SELECTEDITCAT','Selectionnez une categorie');
+define('_PNFORUM_SELECTREFERENCEMODULE', 'Sélectionner le module'); //select hooked module');
+define('_PNFORUM_SELECTRSSFEED', 'Sélectionnez le fil RSS');
 define('_PNFORUM_SELECTTARGETFORUM', 'sélectionner un forum cible');
 define('_PNFORUM_SELECTTARGETTOPIC', 'sélectionner un sujet cible');
 define('_PNFORUM_SENDTO','Envoyer à');
@@ -536,6 +528,7 @@ define('_PNFORUM_TOTAL','Total');
 //
 define('_PNFORUM_UALASTWEEK', 'dernière semaine, sans réponse');
 define('_PNFORUM_UNKNOWNIMAGE', 'image inconnue');
+define('_PNFORUM_UNKNOWNIMAGE', 'image inconnue');
 define('_PNFORUM_UNKNOWNUSER', '**utilisateur inconnu**');
 define('_PNFORUM_UNLOCKTOPIC','Déverrouiller ce sujet');
 define('_PNFORUM_UNLOCKTOPICS','Déverrouiller les sujets sélectionnés');
@@ -549,7 +542,9 @@ define('_PNFORUM_UNSUBSCRIBE_TOPIC','se désinscrire du sujet');
 define('_PNFORUM_UP','Vers le haut');
 define('_PNFORUM_UPDATE','Mettre à jour');
 define('_PNFORUM_USEBBCODE','Cliquez sur les boutons pour ajouter <a href="modules.php?op=modload&amp;name=Messages&amp;file=bbcode_ref">BBCode</a> à votre message :');
+define('_PNFORUM_USERLOGINTITLE', 'Cette fonction concerne les membres seulement');
 define('_PNFORUM_USERNAME','Nom d\'utilisateur');
+define('_PNFORUM_USERSONLINE', 'Utilisateurs en ligne');
 define('_PNFORUM_USERS_RANKS','Notation des membres');
 define('_PNFORUM_USER_IP', 'IP du Membre');
 
@@ -566,7 +561,7 @@ define('_PNFORUM_VISITFORUM', 'visitez ce forum');
 // W
 //
 define('_PNFORUM_WHATISBBCODE', 'Le BBCode, c\'est quoi ?');
-define('_PNFORUM_WRONGPNVERSIONFORMAIL2FORUM', 'Minimum requis pour le Mail2Forum : PostNuke .760 et plus !');
+define('_PNFORUM_WRITTENON', 'écrit à');
 
 //
 // Y
