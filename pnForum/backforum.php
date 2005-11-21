@@ -21,7 +21,7 @@ pnInit();
  */
 include_once 'modules/pnForum/common.php';
 
-list($count, $forum_id, $feed, $user) = pnVarCleanFromInput('count', 'forum_id', 'feed', 'user');
+list($count, $forum_id, $cat_id, $feed, $user) = pnVarCleanFromInput('count', 'forum_id', 'cat_id', 'feed', 'user');
 
 /**
  * check for feed, if not set, use rss091 as default
@@ -33,6 +33,13 @@ if(!empty($feed)) {
     // set defaults
     $feed = 'rss091';
     $count = 5;
+}
+
+if(isset($forum_id) && !is_numeric($forum_id)) {
+    die('backforum.php: invalid forum id "' . pnVarPrepForDisplay($forum_id) . '"');
+}
+if(isset($cat_id) && !is_numeric($cat_id)) {
+    die('backforum.php: invalid category id "' . pnVarPrepForDisplay($cat_id) . '"');
 }
 
 /**
@@ -58,7 +65,7 @@ if(!empty($user)) {
 }
 
 /**
- * st some defaults
+ * set some defaults
  */
 $link = pnModURL('pnForum', 'user', 'main');
 $forumname = 'Forum';
@@ -78,6 +85,19 @@ if(!empty($forum_id)) {
     $where = "AND t.forum_id = '" . (int)pnVarPrepForStore($forum_id) . "' ";
     $link = pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
+} elseif (!empty($cat_id)) {
+    if(!pnSecAuthAction(0, 'pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
+        exit;
+    }
+    $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+                             array('cat_id' => $cat_id));
+    if($category == false) {
+        exit;
+    }
+    $where = "AND f.cat_id = '" . (int)pnVarPrepForStore($cat_id) . "' ";
+    $link = pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
+    $forumname = $category['cat_title'];
+    
 } elseif (isset($uid) && ($uid<>false)) {
     $where = "AND p.poster_id=" . $uid . " ";
 }

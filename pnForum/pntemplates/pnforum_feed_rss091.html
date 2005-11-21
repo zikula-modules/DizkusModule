@@ -5,9 +5,10 @@
 <!--
 Possible parameters for backforum.php
 
+-> cat_id    read new postings in this category only
 -> forum_id  read new postings in this forum only
--> username  read new postings from this user only, do not mix with forum_id
-             if both forum_id and user_id are sent, forum_id will be used
+-> username  read new postings from this user only
+             search sequence: cat_id, forum_id, username
 -> count     number of postings to read, default 10
 -> feed      type of feed to deliver, e.g. atom which needs a template
              pnforum_feed_atom.html to work
