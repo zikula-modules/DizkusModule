@@ -461,7 +461,7 @@ function pnForum_user_editpost($args=array())
         $firstpost = pnModAPIFunc('pnForum', 'user', 'get_firstlast_post_in_topic',
                                   array('topic_id' => $post['topic_id'],
                                         'first'    => true));
-        if($post['poster_data']['pn_uid'] = $firstpost['poster_data']['pn_uid']) {
+        if($post['poster_data']['pn_uid'] == $firstpost['poster_data']['pn_uid']) {
             $post['edit_subject'] = true;
         }
 
