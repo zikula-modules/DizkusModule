@@ -8,6 +8,12 @@ Mail2forum allows you to mirror mailinglists into a forum. To do this, pnForum
 connects to a pop3 server, usually invoked by cron, fetches mails and stores
 them in the forum using a given user login.
 
+#############
+# IMPORTANT #
+#############
+If you use this, make sure that the mailing list does not send a monthly
+password reminder! This will be mirrored to the forum as well!
+
 Configuration
 -------------
 

@@ -9,6 +9,13 @@ sich pnForum mit einem Scriupt, das üblicherweise per Cron aufgerufen wird, zu
 einem POP3-Server, holt die Mails und speichert sie unter einem beliebigen User-
 account ins Forum
 
+#####################
+# WICHTIGER HINWEIS #
+#####################
+Manche Mailinglisten versenden monatliche Passworterinnerungsmail, die das
+Kennwort klar ersichtlich im Text enthalten. Dies sollte aus Sicherheitsgründen
+ausgeschaltet werden!
+
 Konfiguration
 -------------
 
