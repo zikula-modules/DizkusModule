@@ -541,7 +541,6 @@ define('_PNFORUM_UNSUBSCRIBE_FORUM','se désinscrire du forum');
 define('_PNFORUM_UNSUBSCRIBE_TOPIC','se désinscrire du sujet');
 define('_PNFORUM_UP','Vers le haut');
 define('_PNFORUM_UPDATE','Mettre à jour');
-define('_PNFORUM_USEBBCODE','Cliquez sur les boutons pour ajouter <a href="modules.php?op=modload&amp;name=Messages&amp;file=bbcode_ref">BBCode</a> à votre message :');
 define('_PNFORUM_USERLOGINTITLE', 'Cette fonction concerne les membres seulement');
 define('_PNFORUM_USERNAME','Nom d\'utilisateur');
 define('_PNFORUM_USERSONLINE', 'Utilisateurs en ligne');
@@ -560,7 +559,6 @@ define('_PNFORUM_VISITFORUM', 'visitez ce forum');
 //
 // W
 //
-define('_PNFORUM_WHATISBBCODE', 'Le BBCode, c\'est quoi ?');
 define('_PNFORUM_WRITTENON', 'écrit à');
 
 //
