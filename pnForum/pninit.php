@@ -55,8 +55,8 @@ function pnForum_init()
 {
     list($dbconn, $pntable) = pnfOpenDB();
 
-    pnSessionSetVar('upgrade_to_2_5_done', 0);
-    pnSessionSetVar('upgrade_to_2_6_done', 0);
+//    pnSessionSetVar('upgrade_to_2_5_done', 0);
+//    pnSessionSetVar('upgrade_to_2_6_done', 0);
 
     // creating categories table
     $pnforumcategoriestable = $pntable['pnforum_categories'];
@@ -536,10 +536,11 @@ function pnForum_upgrade_to_2_0_1()
  */
 function pnForum_upgrade_to_2_5($createindex=true)
 {
+/*
     if(pnSessionGetVar('upgrade_to_2_5_done') === 1) {
         return false;
     }
-
+*/
     list($dbconn, $pntable) = pnfOpenDB();
 
     $pnforumforumstable = $pntable['pnforum_forums'];
@@ -639,7 +640,7 @@ function pnForum_upgrade_to_2_5($createindex=true)
 	pnModSetVar('pnForum', 'striptags', 'no');
 
     // set a session to indicate that the upgrade is done
-    pnSessionSetVar('upgrade_to_2_5_done', 1);
+//    pnSessionSetVar('upgrade_to_2_5_done', 1);
 
     return true;
 }
@@ -650,10 +651,11 @@ function pnForum_upgrade_to_2_5($createindex=true)
  */
 function pnForum_upgrade_to_2_6()
 {
+/*
     if(pnSessionGetVar('upgrade_to_2_6_done') === 1) {
         return true;
     }
-
+*/
     list($dbconn, $pntable) = pnfOpenDB();
 
     $pnforumforumstable = $pntable['pnforum_forums'];
@@ -741,7 +743,7 @@ function pnForum_upgrade_to_2_6()
     pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
 
     // set a session to indicate that the upgrade is done
-    pnSessionSetVar('upgrade_to_2_6_done', 1);
+//    pnSessionSetVar('upgrade_to_2_6_done', 1);
 
     return true;
 }
@@ -768,11 +770,11 @@ function pnForum_init_interactiveupgrade($args)
     $authid = pnSecGenAuthKey('Modules');
     switch($oldversion) {
         case '2.0.1':
-            pnSessionSetVar('upgrade_to_2_5_done', 0);
+//            pnSessionSetVar('upgrade_to_2_5_done', 0);
             $templatefile = 'pnforum_upgrade_25.html';
             break;
         case '2.5':
-            pnSessionSetVar('upgrade_to_2_6_done', 0);
+//            pnSessionSetVar('upgrade_to_2_6_done', 0);
             $templatefile = 'pnforum_upgrade_26.html';
             break;
         default:
@@ -809,7 +811,7 @@ function pnForum_init_interactiveupgrade_to_2_5()
         if($result<>true) {
             return showforumerror(_PNFORUM_TO25_FAILED, __FILE__, __LINE__);
         }
-        pnSessionSetVar('upgrade_to_2_5_done', 1 );
+//        pnSessionSetVar('upgrade_to_2_5_done', 1 );
         return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
@@ -833,7 +835,7 @@ function pnForum_init_interactiveupgrade_to_2_6()
         if($result<>true) {
             return showforumerror(_PNFORUM_TO26_FAILED, __FILE__, __LINE__);
         }
-        pnSessionSetVar('upgrade_to_2_6_done', 1 );
+//        pnSessionSetVar('upgrade_to_2_6_done', 1 );
         return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.6' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
