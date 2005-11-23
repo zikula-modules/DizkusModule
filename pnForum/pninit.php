@@ -416,6 +416,7 @@ function pnForum_delete()
  *	of pnForum.  It is accessed via the PostNuke
  *	Admin interface and should not be called directly.
  */
+/*
 function pnForum_upgrade($oldversion)
 {
     $ok = true;
@@ -426,9 +427,11 @@ function pnForum_upgrade($oldversion)
             $ok = $ok && pnForum_upgrade_to_2_0_1();
         case '2.0.1':
             // upgrade to 2.5
+            pnSessionSetVar('upgrade_to_2_5_done', 0);            
             $ok = $ok && pnForum_upgrade_to_2_5(true);
         case '2.5':
             // upgrade to 2.6
+            pnSessionSetVar('upgrade_to_2_6_done', 0);            
             $ok = $ok && pnForum_upgrade_to_2_6();
         default:
             break;
@@ -436,7 +439,7 @@ function pnForum_upgrade($oldversion)
 
     return $ok;
 }
-
+*/
 /**
  * cross upgrade from phpBB_14
  *
@@ -533,8 +536,8 @@ function pnForum_upgrade_to_2_0_1()
  */
 function pnForum_upgrade_to_2_5($createindex=true)
 {
-    if(pnSessionGetVar('upgrade_to_2_5_done') == 1) {
-        return true;
+    if(pnSessionGetVar('upgrade_to_2_5_done') === 1) {
+        return false;
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
@@ -754,6 +757,8 @@ function pnForum_init_interactiveupgrade($args)
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
+    $oldversion = pnVarCleanFromInput('oldversion');
+    
     extract($args);
     unset($args);
 
@@ -763,9 +768,11 @@ function pnForum_init_interactiveupgrade($args)
     $authid = pnSecGenAuthKey('Modules');
     switch($oldversion) {
         case '2.0.1':
+            pnSessionSetVar('upgrade_to_2_5_done', 0);
             $templatefile = 'pnforum_upgrade_25.html';
             break;
         case '2.5':
+            pnSessionSetVar('upgrade_to_2_6_done', 0);
             $templatefile = 'pnforum_upgrade_26.html';
             break;
         default:
@@ -803,8 +810,7 @@ function pnForum_init_interactiveupgrade_to_2_5()
             return showforumerror(_PNFORUM_TO25_FAILED, __FILE__, __LINE__);
         }
         pnSessionSetVar('upgrade_to_2_5_done', 1 );
-        pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade_to_2_6', array('oldversion' => '2.5' )));
-        return true;
+        return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
     return true;
@@ -827,9 +833,8 @@ function pnForum_init_interactiveupgrade_to_2_6()
         if($result<>true) {
             return showforumerror(_PNFORUM_TO26_FAILED, __FILE__, __LINE__);
         }
-        pnSessionSetVar('upgrade_to_2_5_done', 1 );
-        pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
-        return true;
+        pnSessionSetVar('upgrade_to_2_6_done', 1 );
+        return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.6' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
     return true;
