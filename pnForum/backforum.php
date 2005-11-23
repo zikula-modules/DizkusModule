@@ -31,8 +31,8 @@ if(!empty($feed)) {
     $count = (empty($count)) ? 10 : (int)$count;
 } else {
     // set defaults
-    $feed = 'rss091';
-    $count = 5;
+    $feed = 'rss20';
+    $count = 10;
 }
 
 if(isset($forum_id) && !is_numeric($forum_id)) {
@@ -54,7 +54,7 @@ $pnr->caching = false;
 $templatefile = 'pnforum_feed_' . pnVarPrepForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
-    exit;
+    die('no template for ' . pnVarPrepForDisplay($feed));
 }
 
 /**
@@ -124,6 +124,7 @@ $sql = "SELECT t.topic_id,
                f.forum_id,
                f.forum_name,
                p.poster_id,
+               p.post_time,
                c.cat_id,
                c.cat_title
         FROM ".$pntable['pnforum_topics']." as t,
@@ -146,7 +147,7 @@ $shown_results=0;
 $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
 $posts = array();
 
-while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $forum_id, $forum_name, $poster_id, $cat_id, $cat_title) = $result->FetchRow())
+while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $forum_id, $forum_name, $poster_id, $post_time, $cat_id, $cat_title) = $result->FetchRow())
               && ($shown_results < $count) ) {
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         $post = array();
@@ -157,6 +158,8 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
         $post['forum_id']           = $forum_id;
         $post['forum_name']         = $forum_name;
         $post['poster_id']          = $poster_id;
+        $post['time']               = $post_time;
+        $post['unixtime']           = strtotime ($post['time']);
         $post['cat_id']             = $cat_id;
         $post['cat_title']          = $cat_title;
         $shown_results++;
@@ -169,8 +172,10 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
         $result->MoveNext();
     }
 }
+
 pnfCloseDB($result);
 $pnr->assign('posts', $posts);
+$pnr->assign('now', time());
 
 header("Content-Type: text/xml");
 $pnr->display($templatefile);
