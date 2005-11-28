@@ -70,6 +70,10 @@ function pnForum_statisticsblock_info()
  */
 function pnForum_statisticsblock_display($row)
 {
+    if(!pnModAvailable('pnForum')) {
+        return;
+    }
+    
     //check for Permission
     if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ return; }
 

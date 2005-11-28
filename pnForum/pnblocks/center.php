@@ -72,6 +72,10 @@ function pnForum_centerblock_info()
  */
 function pnForum_centerblock_display($row)
 {
+    if(!pnModAvailable('pnForum')) {
+        return;
+    }
+
     //check for Permission
 	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_READ)){
 	    return;
