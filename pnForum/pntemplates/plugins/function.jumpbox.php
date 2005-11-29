@@ -51,7 +51,7 @@ function smarty_function_jumpbox($params, &$smarty)
 	           <option value="'.pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'main')).'">' . pnVarPrepForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
         foreach($forums as $forum) {
             if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-            	$out .= '<option value="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum['forum_id']))) . '">' . $forum['cat_title'] . '&nbsp;::&nbsp;' . $forum['forum_name'] . '</option>';
+            	$out .= '<option value="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum['forum_id']))) . '">' . pnVarPrepForDisplay($forum['cat_title']) . '&nbsp;::&nbsp;' . pnVarPrepForDisplay($forum['forum_name']) . '</option>';
             }
         }
         $out .= '</select>
