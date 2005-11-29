@@ -11,6 +11,7 @@
         <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
     </div>
     <div class="pnfadmincol49" style="text-align: center;">
+
         <!--[ post_order_button return_to=prefs ]-->&nbsp;
     </div>
 </div>
@@ -21,6 +22,7 @@
     </div>
     <div class="pnfadmincol49" style="text-align: center;">
         <a href="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnimg src="managetopicsubscriptions.gif" altml=true alt="_PNFORUM_MANAGETOPICSUBSCRIPTIONS" ]--></a>
+
     </div>
 </div>
 
@@ -33,6 +35,7 @@
     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
         <th style="width:50%; height:28px;">
             <strong><!--[ pnml name='_PNFORUM_CATEGORY ]--> / <!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
+
         </th>
         <th style="width:25%; height:28px; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong>
@@ -42,24 +45,27 @@
             <strong><!--[ pnml name='_PNFORUM_FAVORITE_STATUS' ]--></strong>
         </th>
         <!--[ /if ]-->
+
     </tr>
     </thead>
     <tbody>
     <!--[ foreach item=category from=$tree ]-->
     <tr align="left" valign="top">
         <td colspan="2" height="28">
-            <strong><!--[ $category.cat_title ]--></strong>
+            <strong><!--[ $category.cat_title|pnvarprepfordisplay ]--></strong>
         </td>
         <!--[ if $favorites_enabled eq "yes" ]-->
+
         <td>&nbsp;</td>
         <!--[ /if ]-->
     </tr>
     <!--[ foreach item=forum from=$category.forums ]-->
     <tr bgcolor="<!--[ $bgcolor3 ]-->" style="text-align:left; vertical-align:top;">
         <td width="50%">
-          	<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
+          	<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong></a>
     	    <br />
-        	<!--[ $forum.forum_desc ]-->
+        	<!--[ $forum.forum_desc|pnvarprephtmldisplay ]-->
+
         </td>
         <td style="text-align:center; vertical-align:middle;">
             <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;<br />
@@ -69,6 +75,7 @@
             <!--[ favoriteforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;
 		</td>
         <!--[ /if ]-->
+
     </tr>
 
     <!--[ /foreach ]-->
