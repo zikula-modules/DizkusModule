@@ -582,8 +582,8 @@ function pnForum_userapi_setcookies()
     }
 
     // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-    setcookie('pnForumLastVisitTemp', $temptime, time()+1800);
-//    setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
+//    setcookie('pnForumLastVisitTemp', $temptime, time()+1800);
+    setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
 
     // set vars for all scripts
     $last_visit = ml_ftime('%Y-%m-%d %H:%M',$temptime);
