@@ -410,37 +410,6 @@ function pnForum_delete()
 }
 
 /**
- *  upgrade the pnForum module
- *
- *	This function is used to upgrade an old version
- *	of pnForum.  It is accessed via the PostNuke
- *	Admin interface and should not be called directly.
- */
-/*
-function pnForum_upgrade($oldversion)
-{
-    $ok = true;
-
-	switch($oldversion) {
-        case '2.0.0':
-            // upgrade to 2.0.1
-            $ok = $ok && pnForum_upgrade_to_2_0_1();
-        case '2.0.1':
-            // upgrade to 2.5
-            pnSessionSetVar('upgrade_to_2_5_done', 0);            
-            $ok = $ok && pnForum_upgrade_to_2_5(true);
-        case '2.5':
-            // upgrade to 2.6
-            pnSessionSetVar('upgrade_to_2_6_done', 0);            
-            $ok = $ok && pnForum_upgrade_to_2_6();
-        default:
-            break;
-    }
-
-    return $ok;
-}
-*/
-/**
  * cross upgrade from phpBB_14
  *
  * returns true if crossupgrade has been done or false if not. In this case the init()
@@ -536,11 +505,6 @@ function pnForum_upgrade_to_2_0_1()
  */
 function pnForum_upgrade_to_2_5($createindex=true)
 {
-/*
-    if(pnSessionGetVar('upgrade_to_2_5_done') === 1) {
-        return false;
-    }
-*/
     list($dbconn, $pntable) = pnfOpenDB();
 
     $pnforumforumstable = $pntable['pnforum_forums'];
@@ -639,9 +603,6 @@ function pnForum_upgrade_to_2_5($createindex=true)
 	pnModSetVar('pnForum', 'removesignature', 'no');
 	pnModSetVar('pnForum', 'striptags', 'no');
 
-    // set a session to indicate that the upgrade is done
-//    pnSessionSetVar('upgrade_to_2_5_done', 1);
-
     return true;
 }
 
@@ -651,11 +612,6 @@ function pnForum_upgrade_to_2_5($createindex=true)
  */
 function pnForum_upgrade_to_2_6()
 {
-/*
-    if(pnSessionGetVar('upgrade_to_2_6_done') === 1) {
-        return true;
-    }
-*/
     list($dbconn, $pntable) = pnfOpenDB();
 
     $pnforumforumstable = $pntable['pnforum_forums'];
@@ -742,9 +698,6 @@ function pnForum_upgrade_to_2_6()
     pnModSetVar('pnForum', 'deletehookaction', 'lock');
     pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
 
-    // set a session to indicate that the upgrade is done
-//    pnSessionSetVar('upgrade_to_2_6_done', 1);
-
     return true;
 }
 
@@ -769,17 +722,22 @@ function pnForum_init_interactiveupgrade($args)
 
     $authid = pnSecGenAuthKey('Modules');
     switch($oldversion) {
+        case '2.0.0':
+            pnForum_upgrade_to_2_0_1();
         case '2.0.1':
-//            pnSessionSetVar('upgrade_to_2_5_done', 0);
             $templatefile = 'pnforum_upgrade_25.html';
             break;
         case '2.5':
-//            pnSessionSetVar('upgrade_to_2_6_done', 0);
             $templatefile = 'pnforum_upgrade_26.html';
             break;
         default:
             // no interactive upgrade for version < 2.0.1
             // or latest step reached
+           	$smarty =& new Smarty;
+           	$smarty->compile_dir = pnConfigGetVar('temp') . '/pnRender_compiled';
+           	$smarty->cache_dir = pnConfigGetVar('temp') . '/pnRender_cache';
+           	$smarty->use_sub_dirs = false;
+           	$smarty->clear_compiled_tpl();
             pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
             return true;
     }
@@ -811,7 +769,6 @@ function pnForum_init_interactiveupgrade_to_2_5()
         if($result<>true) {
             return showforumerror(_PNFORUM_TO25_FAILED, __FILE__, __LINE__);
         }
-//        pnSessionSetVar('upgrade_to_2_5_done', 1 );
         return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
@@ -835,7 +792,6 @@ function pnForum_init_interactiveupgrade_to_2_6()
         if($result<>true) {
             return showforumerror(_PNFORUM_TO26_FAILED, __FILE__, __LINE__);
         }
-//        pnSessionSetVar('upgrade_to_2_6_done', 1 );
         return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.6' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
