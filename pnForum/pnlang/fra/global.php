@@ -161,7 +161,7 @@ define('_PNFORUM_ERROROCCURED', 'L\'erreur suivante s\'est produite :');
 define('_PNFORUM_ERROR_CONNECT','Erreur de connexion à la base de données !<br>');
 define('_PNFORUM_EXTENDEDOPTIONSAFTERSAVING', 'Options supplémentaires après l\'enregistrement');
 define('_PNFORUM_EXTERNALSOURCE', 'Source Externe');
-define('_PNFORUM_EXTERNALSOURCEURL_HINT', 'Si un Fil RSS est disponible, entrez son identifiant tel qu\'il apparaît dans le module RSS'); <--- beurk one.........
+define('_PNFORUM_EXTERNALSOURCEURL_HINT', 'Si un Fil RSS est disponible, entrez son identifiant tel qu\'il apparaît dans le module RSS');
 
 //
 // F
