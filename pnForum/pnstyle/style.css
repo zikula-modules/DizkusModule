@@ -280,11 +280,12 @@ ul.pnf_maincategorylist {
 }
 
 ul.pnf_maincategorylist li {
-    padding: 0;
-    margin: 0.5em 0 0.5em 0;
+    padding: 0 0 0.5em 0;
+    margin: 0;
     padding-left: 3em;
     background-repeat: no-repeat;
     background-position: 0 1em;
+    border-top: 1px #666 dashed;
 }
 ul.pnf_maincategorylist li.newposts {
     background-image: url(../pnimages/red_folder.gif);
@@ -301,10 +302,11 @@ ul.pnf_mainforumlist {
 }
 
 ul.pnf_mainforumlist li {
-    margin: 0.5em 0 0.5em 0;
-    padding-left: 3em;
+    margin: 0;
+    padding: 0 0 0.5em 3em;
     background-repeat: no-repeat;
-    background-position: 0 1em;
+    background-position: 0 2em;
+    border-top: 1px #666 dashed;
 }
 ul.pnf_mainforumlist li.newposts {
     background-image: url(../pnimages/red_folder.gif);
@@ -377,4 +379,14 @@ div.pnf_statusmsg {
 }
 .pnfnoadminuser {
     color: green;
+}
+
+.pnf_invisible {
+    position:absolute;
+    left:-1000px;
+    top:-1000px;
+    width:0;
+    height:0;
+    overflow:hidden;
+    display:inline;
 }

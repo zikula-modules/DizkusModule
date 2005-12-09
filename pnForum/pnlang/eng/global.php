@@ -42,6 +42,8 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_CATEGORYOVERVIEW', 'Category overview');
+define('_PNFORUM_FORUMSOVERVIEW', 'Forums overview');
 
 // alphasorting starts here
 
