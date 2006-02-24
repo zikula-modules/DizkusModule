@@ -563,10 +563,20 @@ function pnForum_user_topicadmin($args=array())
                 break;
             case 'lock':
             case 'unlock':
+                list($f_id, $c_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+                                                  array('topic_id' => $topic_id));
+                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                }
                 pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 break;
             case 'sticky':
             case 'unsticky':
+                list($f_id, $c_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+                                                  array('topic_id' => $topic_id));
+                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                }
                 pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 break;
             case 'join':

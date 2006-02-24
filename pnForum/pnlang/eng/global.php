@@ -42,6 +42,15 @@
  ***********************************************************************/
 
 // new
+define('_PNFORUM_FAVORITESDISABLED', 'favorites disabled');
+define('_PNFORUM_STATUS_NOTCHANGED', 'not changed');
+define('_PNFORUM_STATUS_CHANGED', 'changed');
+define('_PNFORUM_STORINGPOST', '... storing post ...');
+define('_PNFORUM_UPDATINGPOST', '... updating post ...');
+define('_PNFORUM_DELETINGPOST', '... deleting post ...');
+define('_PNFORUM_PREPARINGPREVIEW', '... preparing preview ...');
+define('_PNFORUM_STORINGREPLY', '... storing reply ...');
+
 define('_PNFORUM_CATEGORYOVERVIEW', 'Category overview');
 define('_PNFORUM_FORUMSOVERVIEW', 'Forums overview');
 

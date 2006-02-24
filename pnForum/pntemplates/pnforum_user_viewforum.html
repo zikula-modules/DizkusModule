@@ -14,8 +14,36 @@
 <!--[ /if ]-->
 
 <!--[ addtopic_button forum_id=$forum.forum_id cat_id=$forum.cat_id ]-->
+
+<a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');"   style="display: none;" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->"   href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_on.gif" alt="_PNFORUM_SUBSCRIBE_FORUM" altml=true ]--></a> 
+<a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" style="display: none;" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_off.gif" alt="_PNFORUM_UNSUBSCRIBE_FORUM" altml=true ]--></a> 
+<script type="text/javascript">
+    var is_subscribed = <!--[ $forum.is_subscribed ]-->;
+    if(is_subscribed == 0) {
+        Element.show('subscribeforumbutton_' + <!--[ $forum.forum_id ]-->);
+    } else {
+        Element.show('unsubscribeforumbutton_' + <!--[ $forum.forum_id ]-->);
+    }
+</script>
+<noscript>
 <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$forum.cat_id  ]-->
+</noscript>
+
+<!--[ if $pncore.pnForum.favorites_enabled eq "yes" ]-->
+<a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    style="display: none;" id="addfavoritebutton_<!--[ $forum.forum_id ]-->"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnimg src="add2favorites.gif" alt="_PNFORUM_ADD_FAVORITE_FORUM" altml=true ]--></a> 
+<a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" style="display: none;" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnimg src="removefavorite.gif" alt="_PNFORUM_REMOVE_FAVORITE_FORUM" altml=true ]--></a> 
+<script type="text/javascript">
+    var is_favorite = <!--[ $forum.is_favorite ]-->;
+    if(is_favorite == 0) {
+        Element.show('addfavoritebutton_' + <!--[ $forum.forum_id ]-->);
+    } else {
+        Element.show('removefavoritebutton_' + <!--[ $forum.forum_id ]-->);
+    }
+</script>
+<noscript>
 <!--[ favoriteforum_button forum_id=$forum.forum_id cat_id=$forum.cat_id ]-->
+</noscript>
+<!--[ /if ]-->
 <br /><br />
 <!--[* start of breadcrumbs *]-->
 <a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>

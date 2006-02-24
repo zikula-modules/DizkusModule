@@ -6,30 +6,27 @@
 
 <h1 style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_SETTING' ]--></strong></h1>
 
-<div class="pnfadminrow98" style="background: <!--[ $bgcolor2 ]-->; height: 1.2em;">
-    <div class="pnfadmincol49" style="margin-left: 5px;">
+
+
+<div style="float: left; padding: 0.2em 0 1em 0;" class="pnf_clearfix">
+<dl>
+    <dt class="pnfuser">
         <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
-    </div>
-    <div class="pnfadmincol49" style="text-align: center;">
+     </dt>
+    <dd class="pnfuser">
+        <!--[ post_order_button return_to=prefs ]-->
+    </dd>
 
-        <!--[ post_order_button return_to=prefs ]-->&nbsp;
-    </div>
-</div>
-
-<div class="pnfadminrow98" style="background: <!--[ $bgcolor2 ]-->; height: 1.2em;">
-    <div class="pnfadmincol49" style="margin-left: 5px;">
+    <dt class="pnfuser">
         <strong><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></strong>
-    </div>
-    <div class="pnfadmincol49" style="text-align: center;">
+    </dt>
+    <dd class="pnfuser">
         <a href="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnimg src="managetopicsubscriptions.gif" altml=true alt="_PNFORUM_MANAGETOPICSUBSCRIPTIONS" ]--></a>
-
-    </div>
+    </dd>
+</dl>
 </div>
-
-
-<div style="clear: both;"></div>
-
 <br />
+<div style="float: left; padding: 0.2em 0 1em 0;" class="pnf_clearfix">
 <table bgcolor="<!--[ $bgcolor2 ]-->" border="0" cellpadding="3" cellspacing="1" width="100%">
     <thead>
     <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
@@ -68,11 +65,36 @@
 
         </td>
         <td style="text-align:center; vertical-align:middle;">
-            <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;<br />
+            <a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');"   style="display: none;" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->"   href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_on.gif" alt="_PNFORUM_SUBSCRIBE_FORUM" altml=true ]--></a> 
+            <a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" style="display: none;" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_off.gif" alt="_PNFORUM_UNSUBSCRIBE_FORUM" altml=true ]--></a> 
+            <script type="text/javascript">
+                var is_subscribed = <!--[ $forum.is_subscribed ]-->;
+                if(is_subscribed == 0) {
+                    Element.show('subscribeforumbutton_' + <!--[ $forum.forum_id ]-->);
+                } else {
+                    Element.show('unsubscribeforumbutton_'+ <!--[ $forum.forum_id ]-->);
+                }
+            </script>
+            <noscript>
+            <!--[ subscribeforum_button forum_id=$forum.forum_id cat_id=$forum.cat_id return_to=prefs ]-->
+            </noscript>
         </td>
         <!--[ if $favorites_enabled eq "yes" ]-->
         <td style="text-align:center; vertical-align:middle;">
+            <a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    style="display: none;" id="addfavoritebutton_<!--[ $forum.forum_id ]-->"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnimg src="add2favorites.gif" alt="_PNFORUM_ADD_FAVORITE_FORUM" altml=true ]--></a> 
+            <a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" style="display: none;" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnimg src="removefavorite.gif" alt="_PNFORUM_REMOVE_FAVORITE_FORUM" altml=true ]--></a> 
+            <script type="text/javascript">
+                var is_favorite = <!--[ $forum.is_favorite ]-->;
+                if(is_favorite == 0) {
+                    Element.show('addfavoritebutton_' + <!--[ $forum.forum_id ]-->);
+                } else {
+                    Element.show('removefavoritebutton_' + <!--[ $forum.forum_id ]-->);
+                }
+            </script>
+            <noscript>
             <!--[ favoriteforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;
+            </noscript>
+
 		</td>
         <!--[ /if ]-->
 
@@ -82,5 +104,7 @@
     <!--[ /foreach ]-->
     </tbody>
 </table>
+
+</div>
 
 <!--[ include file='pnforum_user_footer.html' ]-->

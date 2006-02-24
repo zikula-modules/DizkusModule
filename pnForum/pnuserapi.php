@@ -458,6 +458,18 @@ function pnForum_userapi_readcategorytree($args)
                 $forum['last_post'] = $last_post;
                 $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
 
+                // is the user subscribed to the forum?
+                $forum['is_subscribed'] = 0;
+                if(pnForum_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                    $forum['is_subscribed'] = 1;
+                }
+
+                // is this forum in the favorite list?
+                $forum['is_favorite'] = 0;
+                if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+                    $forum['is_favorite'] = 1;
+                }
+
                 // set flag if new postings in category
                 if($tree[$cat['cat_title']]['new_posts'] == false) {
                     $tree[$cat['cat_title']]['new_posts'] = $forum['new_posts'];
@@ -633,6 +645,18 @@ function pnForum_userapi_readforum($args)
     $forum['last_visit'] = $last_visit;
 
     $forum['topic_start'] = (!empty ($start)) ? $start : 0;
+
+    // is the user subscribed to the forum?
+    $forum['is_subscribed'] = 0;
+    if(pnForum_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+        $forum['is_subscribed'] = 1;
+    }
+
+    // is this forum in the favorite list?
+    $forum['is_favorite'] = 0;
+    if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+        $forum['is_favorite'] = 1;
+    }
 
     // if user can moderate Forum, set a flag
     $forum['access_moderate'] = allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id']);
@@ -820,8 +844,12 @@ function pnForum_userapi_readtopic($args)
 
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly
-        $topic['is_subscribed'] = pnForum_userapi_get_topic_subscription_status(array('userid'   => pnUserGetVar('uid'),
-                                                                                      'topic_id' => $topic['topic_id']));
+        if(pnForum_userapi_get_topic_subscription_status(array('userid'   => pnUserGetVar('uid'),
+                                                               'topic_id' => $topic['topic_id'])) == true) {
+            $topic['is_subscribed'] = 1;
+        } else {
+            $topic['is_subscribed'] = 0;
+        }                                                        
 
         /**
          * update topic counter
@@ -884,6 +912,8 @@ function pnForum_userapi_readtopic($args)
         while(!$result2->EOF) {
             $post = $result2->GetRowAssoc(false);
 
+            $post['topic_id'] = $topic_id;
+            
             // check if the user is still in the postnuke db
             $user_name = pnUserGetVar('uname', $post['poster_id']);
             if ($user_name == '') {
@@ -945,7 +975,7 @@ function pnForum_userapi_readtopic($args)
 
 /**
  * preparereply
- * prepapare a reply to a posting by reading the last ten postign in revers order for review
+ * prepare a reply to a posting by reading the last ten postign in revers order for review
  *
  *@params $args['topic_id'] int the topics id
  *@params $args['post_id'] int the post id to reply to
@@ -1276,7 +1306,6 @@ function pnForum_userapi_get_topic_subscription_status($args)
 
     $sql = "SELECT user_id from ".$pntable['pnforum_topic_subscription']."
             WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
     pnfCloseDB($result);
@@ -1641,6 +1670,10 @@ function pnForum_userapi_readpost($args)
     $post['post_id']      = pnVarPrepForDisplay($myrow['post_id']);
     $post['post_time']    = pnVarPrepForDisplay($myrow['post_time']);
     $message              = $myrow['post_text'];
+    $post['post_rawtext'] = pnForum_replacesignature($message, '');
+    $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
+    $post['post_rawtext'] = eregi_replace('<br />', '', $post['post_rawtext']);
+
     $post['topic_id']     = pnVarPrepForDisplay($myrow['topic_id']);
     $post['topic_rawsubject']= strip_tags($myrow['topic_title']);
     $post['topic_subject']= pnVarPrepForDisplay($myrow['topic_title']);
@@ -1653,6 +1686,7 @@ function pnForum_userapi_readpost($args)
     $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
     // create unix timestamp
     $post['post_unixtime'] = strtotime ($post['post_time']);
+    $post['posted_unixtime'] = $post['post_unixtime'];
 
     if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
@@ -1663,14 +1697,39 @@ function pnForum_userapi_readpost($args)
     if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         $post['moderate'] = true;
     }
+    
+    $post['poster_data']['edit'] = false;
+    $post['poster_data']['reply'] = false;
+    $post['poster_data']['seeip'] = false;
+    $post['poster_data']['moderate'] = false;
+////////// neu
+    if ($post['poster_data']['pn_uid']==$pn_uid) {
+        // user is allowed to moderate || own post
+        $post['poster_data']['edit'] = true;
+    }
+    if(allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
+        // user is allowed to reply
+        $post['poster_data']['reply'] = true;
+    }
 
+    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) &&
+        pnModGetVar('pnForum', 'log_ip') == 'yes') {
+        // user is allowed to see ip
+        $post['poster_data']['seeip'] = true;
+    }
+    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+        // user is allowed to moderate
+        $post['poster_data']['moderate'] = true;
+        $post['poster_data']['edit'] = true;
+    }
+//////////// ende neu
     $post['post_textdisplay'] = phpbb_br2nl($message);
     $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
 
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
     $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
-
+/*
     //$message = pnVarPrepForDisplay($message);
     //  remove [addsig]
     $message = eregi_replace("\[addsig]$", '', $message);
@@ -1684,6 +1743,8 @@ function pnForum_userapi_readpost($args)
     //  convert autolinks (just for backwards compatibility)
     $message = pnForum_undo_make_clickable($message);
     $post['post_text'] = $message;
+*/
+    $post['post_text'] = $post['post_textdisplay'];
 
     // allow to edit the subject if first post
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
@@ -2115,11 +2176,6 @@ function pnForum_userapi_lockunlocktopic($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
-    if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
-    }
-
     $new_status = ($mode=='lock') ? 1 : 0;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
@@ -2143,11 +2199,6 @@ function pnForum_userapi_stickyunstickytopic($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
-
-    list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
-    if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
-    }
 
     $new_sticky = ($mode=='sticky') ? 1 : 0;
 

@@ -161,6 +161,10 @@ function showforumerror($error_text, $file='', $line=0)
     // available
     pnModLangLoad('pnForum');
 
+    if(pnSessionGetVar('pn_ajax_call') == 'ajax') {
+        pnf_ajaxerror($error_text);
+    }
+   
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
@@ -198,29 +202,6 @@ function showforumsqlerror($msg, $sql='', $mysql_errno='', $mysql_error='', $fil
 		$message .= "Database error message:\n" . $mysql_error . "\n\n";
 		$message .= "Link: " . pnGetCurrentURL() . "\n\n";
 		$message .= "HTTP_USER_AGENT:\n" . pnServerGetVar('HTTP_USER_AGENT') . "\n";
-/*
-    	$email_from = pnModGetVar('pnForum', 'email_from');
-    	if ($email_from == '') {
-    		// nothing in forumwide-settings, use PN adminmail
-    		$email_from = pnConfigGetVar('adminmail');
-    	}
-    	$msg_From_Header = 'From: ' . pnConfigGetVar('sitename') . '<' . $email_from.">\n";
-    	$modInfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
-    	$msg_XMailer_Header = 'X-Mailer: pnForum ' . $modVersion . "\n";
-    	$msg_ContentType_Header = 'Content-Type: text/plain;';
-
-    	$pnforum_default_charset = pnModGetVar('pnForum', 'default_lang');
-    	if ($pnforum_default_charset != '') {
-    		$msg_ContentType_Header .= ' charset=' . $pnforum_default_charset;
-    	}
-    	$msg_ContentType_Header .= "\n";
-		$msg_To = pnConfigGetVar('adminmail');
-		// set reply-to to his own adress ;)
-		$msg_Headers = $msg_From_Header.$msg_XMailer_Header.$msg_ContentType_Header;
-		$msg_Headers .= "Reply-To: $msg_To";
-        $msg_Subject = 'sql error in your pnForum';
-*/
-//    	pnMail($msg_To, $msg_Subject, $posted_message, $msg_Headers);
 
     	$email_from = pnModGetVar('pnForum', 'email_from');
     	if ($email_from == '') {
@@ -1005,4 +986,92 @@ if (!function_exists('array_csort')) {
     }
 }
 
+/**
+ * pnf_ajax_error
+ *
+ * display an error durig Ajax execution
+ */
+function pnf_ajaxerror($error)
+{
+    if(!empty($error)) {
+        header('HTTP/1.0 400 Bad Data');
+        echo $error;
+        exit;
+    }
+}
+
+/**
+ * pnf_convert_to_utf8()
+ * converts a string or an array (recursivly) to utf-8
+ *
+ */
+function pnf_convert_to_utf8($input='')
+{
+    if(is_array($input)) {
+        foreach($input as $key => $value) {
+            $return[$key] = pnf_convert_to_utf8($value);
+         } 
+        return $return;
+    } elseif(is_string($input)) {
+        return utf8_encode($input);
+    } else {
+        return $input;
+    }
+}
+/**
+ * encode data in JSON 
+ * This functions can add a new authid if requested to do so.
+ * If the supplied args is not an array, it will be converted to an 
+ * array with 'data' as key.
+ * Authid field will always be named 'authid'. Any other field 'authid'
+ * will be overwritten!
+ *
+ */
+function pnf_jsonizeoutput($args, $createauthid = false)
+{
+    require_once('modules/pnForum/pnincludes/JSON.php');
+    $json = new Services_JSON();
+    if(!is_array($args)) {
+        $data = array('data' => $args);
+    } else {
+        $data = $args;
+    }
+    if($createauthid == true) {
+        $data['authid'] = pnSecGenAuthKey('pnForum');
+    }
+    
+    $data = pnf_convert_to_utf8($data); 
+    
+    $output = $json->encode($data);
+    echo $output;
+    exit;
+    
+}
+
+function pnf_createXML($args)
+{
+    $modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
+    $xml = '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n"
+          .'<pnforum version="' . $modinfo['version'] . '">' . "\n";
+    $xml .= pnf_createXMLarray('', $args);
+    $xml .= '</pnforum>';
+    return $xml;
+}
+
+function pnf_createXMLarray($xml, $array)
+{
+    foreach($array as $key => $value) {
+        if(!empty($key)) {
+            $xml .= '<' . strtolower($key) . '>';
+            if(is_array($value)) {
+                $xml .= pnf_createXMLarray($xml, $value);
+            } else {
+                $xml .= $value;
+            }     
+            $xml .= '</' . strtolower($key) . '>' . "\n";
+        }
+    }
+    return $xml;
+}
+ 
 ?>

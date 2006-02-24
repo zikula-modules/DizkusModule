@@ -1,8 +1,30 @@
 <!--[*  $Id$  *]-->
 <!--[* pndebug *]-->
 
-<div style="text-align:left">
-	<a title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="modules.php?op=modload&amp;name=Search&amp;file=index"><!--[ pnimg src="search.gif" alt="_PNFORUM_SEARCH" altml=true ]--></a>
+<!--[* 
+
+This is the main pnforum div which embraces the whole forum output.
+
+This enables us to use CSS stylesheets like
+
+#pnforum ul {
+    margin: 0;
+    padding: 0;
+}
+
+for easier use of stylesheets classes and id's.
+
+This div will be closed in the footer template.
+
+ *]-->
+
+<div id="pnforum" class="pnf_clearfix">
+    
+<script type="text/javascript" src="modules/pnForum/pnjavascript/prototype.js"></script>
+<script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum.js"></script>
+
+<div style="text-align:left; height: 2.5em;">
+	<a title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="index.php?module=Search"><!--[ pnimg src="search.gif" alt="_PNFORUM_SEARCH" altml=true ]--></a>
 	<a title="<!--[ pnml name='_PNFORUM_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->"><!--[ pnimg src="latestposts.gif" alt="_PNFORUM_LATEST" altml=true ]--></a>
 	<!--[ if $pncore.logged_in neq 1 ]-->
 		<a title="<!--[ pnml name='_PNFORUM_REGISTRATION_NOTE' ]-->" href="user.php?op=loginscreen&amp;module=User"><!--[ pnimg src="login.gif" alt="_PNFORUM_REGISTRATION_NOTE" altml=true ]--></a>
@@ -16,5 +38,6 @@
 <!--[ pngetstatusmsg class="pnf_statusmsg" tag="div"|pnvarprephtmldisplay]-->
 
 <!--[ if $numposts ]-->
-<!--[ pnml name='_PNFORUM_STATSBLOCK' ]-->&nbsp;<!--[ $numposts ]--><br />
+    <!--[ pnml name='_PNFORUM_STATSBLOCK' ]-->&nbsp;<!--[ $numposts ]--><br />
 <!--[ /if ]-->
+

@@ -16,7 +16,7 @@ a.pnForum_links {
 }
 
 div.pnfadminrow98 {
-    clear: both;
+    /* clear: both; */
     width: 98%;
     padding-top: 1em;
     padding-bottom: 1em;
@@ -390,3 +390,42 @@ div.pnf_statusmsg {
     overflow:hidden;
     display:inline;
 }
+
+/*
+ * main pnforum div
+ */
+#pnforum {
+}
+
+dt.pnfuser {
+    width: 50%;
+    text-align: left;
+    float: left;
+    padding: 1em 0 1em 0;
+}
+
+dd.pnfuser {
+    width: 40%;
+    text-align: left;
+    float: left;
+    padding: 1em 0 1em 0;
+}
+
+/*
+ * clearfix solution
+ */
+
+.pnf_clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.pnf_clearfix {display: inline-table;}
+
+/* Hides from IE-mac \*/
+* html .pnf_clearfix {height: 1%;}
+.pnf_clearfix {display: block;}
+/* End hide from IE-mac */
