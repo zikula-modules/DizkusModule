@@ -15,7 +15,92 @@ var stickystatus = false;
 var subscribestatus = false;
 var subscribeforumstatus = false;
 var favoritestatus = false;
+var subjectstatus = false;
 var uisize = 'undefined';
+
+function topicsubjectedit(topicid)
+{
+    if(subjectstatus == false) {
+        subjectstatus = true;
+        var pars = "module=pnForum&type=ajax&func=edittopicsubject&topic=" + topicid;
+        var myAjax = new Ajax.Request(
+            "index.php", 
+            {
+                method: 'post', 
+                parameters: pars, 
+                onComplete: topicsubjecteditinit
+            });
+    }
+}
+
+function topicsubjecteditinit(originalRequest)
+{
+    // show error if necessary
+    if( originalRequest.status != 200 ) { 
+        pnf_showajaxerror(originalRequest.responseText);
+        return;
+    }
+    
+    var result = dejsonize(originalRequest.responseText);
+
+    var topicsubjectID = 'topicsubject_' + result.topic_id;
+
+    Element.hide($(topicsubjectID));
+    updateAuthid(result.authid);
+
+	new Insertion.After($(topicsubjectID), result.data);	
+}
+
+function topicsubjecteditcancel(topicid)
+{
+    var topicsubjectID = 'topicsubject_' + topicid;
+
+    Element.remove($(topicsubjectID + '_editor'));
+    Element.show($(topicsubjectID));
+    subjectstatus = false;
+}
+
+function topicsubjecteditsave(topicid)
+{
+    var topicsubjectID = 'topicsubject_' + topicid;
+    var editID = topicsubjectID + '_edit';
+    var authID = topicsubjectID + '_authid';
+
+    var pars = "module=pnForum&type=ajax&func=updatetopicsubject" +   
+               "&topic=" + topicid +
+               "&subject=" + encodeURIComponent($F(editID)) +
+               "&authid=" + $F(authID);
+
+    var myAjax = new Ajax.Request(                              
+                    "index.php",                                
+                    {                                           
+                        method: 'post',                         
+                        parameters: pars,                       
+                        onComplete: topicsubjecteditsave_response
+                    }                                           
+                    );              
+
+}
+
+function topicsubjecteditsave_response(originalRequest)
+{
+    // show error if necessary
+    if( originalRequest.status != 200 ) { 
+        pnf_showajaxerror(originalRequest.responseText);
+        return;
+    }
+
+    var result = dejsonize(originalRequest.responseText);
+    var topicsubjectID = 'topicsubject_' + result.topic_id;
+
+    Element.remove($(topicsubjectID + '_editor'));
+    updateAuthid(result.authid);
+    
+    $(topicsubjectID + '_content').innerHTML = result.topic_title;
+    Element.show($(topicsubjectID));
+
+    subjectstatus = false;
+}
 
 function toggleuserinfo(postid)
 {

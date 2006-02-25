@@ -160,7 +160,8 @@ function showforumerror($error_text, $file='', $line=0)
     // we need to load the languages
     // available
     pnModLangLoad('pnForum');
-
+    
+    $GLOBALS['info']['title'] = $error_text;
     if(pnSessionGetVar('pn_ajax_call') == 'ajax') {
         pnf_ajaxerror($error_text);
     }
@@ -989,11 +990,12 @@ if (!function_exists('array_csort')) {
 /**
  * pnf_ajax_error
  *
- * display an error durig Ajax execution
+ * display an error during Ajax execution
  */
 function pnf_ajaxerror($error)
 {
     if(!empty($error)) {
+        pnSessionDelVar('pn_ajax_call');
         header('HTTP/1.0 400 Bad Data');
         echo $error;
         exit;
@@ -1029,6 +1031,7 @@ function pnf_convert_to_utf8($input='')
  */
 function pnf_jsonizeoutput($args, $createauthid = false)
 {
+    pnSessionDelVar('pn_ajax_call');
     require_once('modules/pnForum/pnincludes/JSON.php');
     $json = new Services_JSON();
     if(!is_array($args)) {
@@ -1044,6 +1047,7 @@ function pnf_jsonizeoutput($args, $createauthid = false)
     
     $output = $json->encode($data);
     echo $output;
+    pnSessionDelVar('pn_ajax_call');
     exit;
     
 }

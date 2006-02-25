@@ -140,7 +140,7 @@ function pnForum_ajax_readpost()
             pnf_ajaxerror(_PNFORUM_NOAUTH); 
         }        
     } 
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readrawtext()'); 
+    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readpost()'); 
 }
 
 function pnForum_ajax_editpost()
@@ -392,6 +392,73 @@ function pnForum_ajax_addremovefavorite()
     pnf_jsonizeoutput(array('newmode' => $newmode,
                             'forum_id' => $forum_id));    
     exit;
+}
+
+function pnForum_ajax_edittopicsubject()
+{
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+    $topic_id = pnVarCleanFromInput('topic');
+
+    if(!empty($topic_id)) {
+        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+                             array('topic_id' => $topic_id,
+                                   'count'    => false,
+                                   'complete' => false  ));
+        if($topic['access_moderate'] == true) {
+            $pnr = new pnRender('pnForum');
+            $pnr->caching = false;
+            $pnr->add_core_data();
+            $pnr->assign('topic', $topic);
+            pnf_jsonizeoutput(array('data' => $pnr->fetch('pnforum_ajax_edittopicsubject.html'),
+                                    'topic_id' => $topic_id), true);
+            exit;
+        } else {
+            pnf_ajaxerror(_PNFORUM_NOAUTH); 
+        }        
+    } 
+    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_readtopic()'); 
+}
+
+function pnForum_ajax_updatetopicsubject()
+{
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+    list($topic_id,
+         $subject) = pnVarCleanFromInput('topic',
+                                         'subject');
+
+    if(!empty($topic_id)) {
+        list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+                                                array('topic_id' => $topic_id));
+        if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+            return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
+        }
+        if (!pnSecConfirmAuthKey()) {
+           pnf_ajaxerror(_BADAUTHKEY);
+        }
+
+        list($dbconn, $pntable) = pnfOpenDB();
+        
+        if (trim($subject) != '') {
+            $subject = pnVarPrepForStore(pnVarCensor(utf8_decode($subject)));
+            $sql = "UPDATE ".$pntable['pnforum_topics']."
+                    SET topic_title = '$subject'
+                    WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+
+            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            pnfCloseDB($result);
+            // Let any hooks know that we have updated an item.
+            pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
+                                                              'topic_id' => $topic_id));
+
+            pnf_jsonizeoutput(array('topic_title' => $subject,
+                                    'topic_id' => $topic_id), 
+                              true);
+        
+        } else {
+            pnf_ajaxerror(_PNFORUM_NOSUBJECT); 
+        }
+    }
+    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()'); 
 }
 
 ?>

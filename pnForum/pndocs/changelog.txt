@@ -5,6 +5,8 @@ $Id$
 PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
++ Using Ajax now for some features, this implied a major rewrite of some templates
+  and adding a few new ones. Non-javascript fallbacks are included.
 - fixed [#2491] removal of topics doesn't remove the subscriptions
 - fixed some html and validation issues
 
