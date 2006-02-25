@@ -184,7 +184,6 @@ function pnForum_user_viewtopic($args=array())
     $pnr->add_core_data();
     $pnr->assign( 'topic', $topic);
     $pnr->assign( 'post_count', count($topic['posts']));
-    $pnr->assign( 'hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
     $pnr->assign( 'last_visit', $last_visit);
     $pnr->assign( 'last_visit_unix', $last_visit_unix);
     return $pnr->fetch('pnforum_user_viewtopic.html');
@@ -243,8 +242,8 @@ function pnForum_user_reply($args=array())
 
     if (empty($submit)) {
         $submit = false;
-    	$subject = '';
-    	$message = '';
+    	//$subject = '';
+    	//$message = '';
     } else {
         $submit = true;
     }

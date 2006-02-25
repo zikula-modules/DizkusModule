@@ -105,7 +105,9 @@ function pnForum_ajax_reply()
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
 //    pnf_jsonizeoutput(utf8_encode($pnr->fetch('pnforum_user_singlepost.html')), true);
-    pnf_jsonizeoutput($pnr->fetch('pnforum_user_singlepost.html'), true);
+    pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_user_singlepost.html'),
+                            'post_id' => $post['post_id']),
+                      true);
     exit;
 }
 

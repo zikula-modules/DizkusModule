@@ -23,7 +23,7 @@ This div will be closed in the footer template.
 <script type="text/javascript" src="modules/pnForum/pnjavascript/prototype.js"></script>
 <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum.js"></script>
 
-<div style="text-align:left; height: 2.5em;">
+<p style="text-align:left; height: 2.5em;">
 	<a title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="index.php?module=Search"><!--[ pnimg src="search.gif" alt="_PNFORUM_SEARCH" altml=true ]--></a>
 	<a title="<!--[ pnml name='_PNFORUM_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->"><!--[ pnimg src="latestposts.gif" alt="_PNFORUM_LATEST" altml=true ]--></a>
 	<!--[ if $pncore.logged_in neq 1 ]-->
@@ -32,9 +32,10 @@ This div will be closed in the footer template.
 	<!--[ else ]-->
 		<a title="<!--[ pnml name='_PNFORUM_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="pnForum" func="prefs" ]-->"><!--[ pnimg src="settings.gif" alt="_PNFORUM_PERSONAL_SETTINGS" altml=true ]--></a>
 	<!--[ /if ]-->
-</div>
+</p>
+<!--[*
 <div style="text-align:right"><!--[ jumpbox ]--></div>
-
+*]-->
 <!--[ pngetstatusmsg class="pnf_statusmsg" tag="div"|pnvarprephtmldisplay]-->
 
 <!--[ if $numposts ]-->

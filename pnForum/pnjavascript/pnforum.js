@@ -471,12 +471,7 @@ function createQuickReply()
 {
     if(replystatus==false) {
         replystatus = true;
-        preview = $F('preview');
-        if(preview == '1') {
-            showpnForumInfo(preparingPreview);
-        } else {
-            showpnForumInfo(storingReply);
-        }
+        showpnForumInfo(storingReply);
         
         var attach_signature = ''
         var sigObj = $('attach_signature');
@@ -495,7 +490,6 @@ function createQuickReply()
                    "&message=" + encodeURIComponent($F('message')) +              
                    attach_signature +            
                    subscribe_topic + 
-                   "&preview=" + preview +
                    "&authid=" + $F('authid');
         
         var myAjax = new Ajax.Request(                              
@@ -506,8 +500,6 @@ function createQuickReply()
                             onComplete: createQuickReply_response
                         }                                           
                         );              
-    } else {
-        alert('replystatus true');
     }
 }
 
@@ -523,20 +515,26 @@ function createQuickReply_response(originalRequest)
 
     var result = dejsonize(originalRequest.responseText);
 
-    $('quickreplyposting').innerHTML = result.data;
-    Element.show($('quickreplyposting'));
     updateAuthid(result.authid);
     
     if(preview != 1) {
         // clear textarea
         $('message').value = '';
-        // add new quickreplyposting listitem
+        // reset preview
+        $('quickreply_preview').innerHTML = '&nbsp;';
+        Element.hide($('quickreply_preview'));
+        
+        $('quickreplyposting').innerHTML = result.data;
+        Element.show($('quickreplyposting'));
+        
         new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
         // clear old id
         $('quickreplyposting').id = '';
         // rename new id
         $('new_quickreplyposting').id = 'quickreplyposting';
     } else {
+        $('quickreply_preview').innerHTML = result.data;
+        Element.show($('quickreply_preview'));
         // clear preview
         $('preview').checked = false;
     }
@@ -544,9 +542,53 @@ function createQuickReply_response(originalRequest)
 
 }
 
+function previewQuickReply()
+{
+    if(replystatus==false) {
+        replystatus = true;
+        showpnForumInfo(preparingPreview);
+        
+        var pars = "module=pnForum&type=ajax&func=reply" +   
+                   "&topic=" + $F('topic') +
+                   "&message=" + encodeURIComponent($F('message')) +              
+                   "&preview=1" +
+                   "&authid=" + $F('authid');
+        
+        var myAjax = new Ajax.Request(                              
+                        "index.php",                                
+                        {                                           
+                            method: 'post',                         
+                            parameters: pars,                       
+                            onComplete: previewQuickReply_response
+                        }                                           
+                        );              
+    }
+}
+
+function previewQuickReply_response(originalRequest)
+{
+    hidepnForumInfo();
+
+    // show error if necessary
+    if( originalRequest.status != 200 ) { 
+        alert(originalRequest.responseText);
+        return;
+    }
+
+    var result = dejsonize(originalRequest.responseText);
+
+    updateAuthid(result.authid);
+    
+    $('quickreply_preview').innerHTML = result.data;
+    Element.show($('quickreply_preview'));
+    replystatus = false;
+}
+
 function clearQuickReply()
 {
     $('message').value = '';
+    $('quickreply_preview').innerHTML = '&nbsp;';
+    Element.hide($('quickreply_preview'));
     replystatus = false;
 }                        
 
