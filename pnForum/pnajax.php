@@ -81,7 +81,7 @@ function pnForum_ajax_reply()
                              array('post_id' => $post_id)); 
     } else {
         // preview == true, create fake post
-        $post['post_id']      = -1;
+        $post['post_id']      = 0;
         $post['topic_id']     = $topic_id;
         $post['poster_data'] = pnModAPIFunc('pnForum', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
         // create unix timestamp
@@ -158,7 +158,9 @@ function pnForum_ajax_editpost()
             $pnr->add_core_data();
             $pnr->assign('post', $post);
 //            pnf_jsonizeoutput(utf8_encode($pnr->fetch('pnforum_ajax_editpost.html')), true);
-            pnf_jsonizeoutput($pnr->fetch('pnforum_ajax_editpost.html'), true);
+            pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_ajax_editpost.html'),
+                                    'post_id' => $post['post_id']), 
+                                    true);
             exit;
         } else {
             pnf_ajaxerror(_PNFORUM_NOAUTH); 
@@ -192,9 +194,10 @@ function pnForum_ajax_updatepost()
             //$post['post_text'] = utf8_encode($post['post_text']);
             $post['action'] = 'updated';
         } else {
-            $post = array('action' => 'deleted');
+            $post = array('action'  => 'deleted',
+                          'post_id' => $post_id);
         }
-        pnf_jsonizeoutput($post);
+        pnf_jsonizeoutput($post, true);
         exit;
     }
     pnf_ajaxerror('internal error: no post id in pnForum_ajax_updatepost()'); 

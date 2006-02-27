@@ -5,8 +5,6 @@
  *
  */
 
-var preview;
-var postingID;
 var editstatus = false;
 var replystatus = false;
 var editchanged = false;
@@ -16,13 +14,30 @@ var subscribestatus = false;
 var subscribeforumstatus = false;
 var favoritestatus = false;
 var subjectstatus = false;
-var uisize = 'undefined';
+
+var pnf_globalhandlers = {
+    onCreate: function(){
+        if($('pnforum')) {
+            $('pnforum').style.cursor = 'wait';
+        }
+    },
+
+    onComplete: function() {
+        if(Ajax.activeRequestCount == 0){
+            if($('pnforum')) {
+                $('pnforum').style.cursor = 'auto';
+            }
+        }
+    }
+};
+
 
 function topicsubjectedit(topicid)
 {
     if(subjectstatus == false) {
         subjectstatus = true;
         var pars = "module=pnForum&type=ajax&func=edittopicsubject&topic=" + topicid;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -38,6 +53,7 @@ function topicsubjecteditinit(originalRequest)
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
+        subjectstatus = false;
         return;
     }
     
@@ -48,7 +64,7 @@ function topicsubjecteditinit(originalRequest)
     Element.hide($(topicsubjectID));
     updateAuthid(result.authid);
 
-	new Insertion.After($(topicsubjectID), result.data);	
+    new Insertion.After($(topicsubjectID), result.data);    
 }
 
 function topicsubjecteditcancel(topicid)
@@ -70,7 +86,7 @@ function topicsubjecteditsave(topicid)
                "&topic=" + topicid +
                "&subject=" + encodeURIComponent($F(editID)) +
                "&authid=" + $F(authID);
-
+    Ajax.Responders.register(pnf_globalhandlers);
     var myAjax = new Ajax.Request(                              
                     "index.php",                                
                     {                                           
@@ -87,6 +103,7 @@ function topicsubjecteditsave_response(originalRequest)
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
+        subjectstatus = false;
         return;
     }
 
@@ -105,19 +122,18 @@ function topicsubjecteditsave_response(originalRequest)
 function toggleuserinfo(postid)
 {
     var userinfoID = 'posting_' + postid + '_userinfo';
-
-    if(uisize == 'undefined') {
-        uisize = $(userinfoID).style.width;
-        var height = $(userinfoID).style.height;
-        new Insertion.Before(userinfoID, '<div id="uireplacement_' + postid + '" style="background: url(../pnimages/pixel.gif) repeat-y 0 0;">&nbsp;</div>');
-        Element.hide($(userinfoID + 'content'));
-        $(userinfoID).style.width = '2%';
-    } else {    
-        $(userinfoID).style.width = uisize;
-        uisize = 'undefined';
-        Element.remove($('uireplacement_' + postid));
-        Element.show($(userinfoID + 'content'));
-    }
+    var postingtextID = 'postingtext_' + postid;
+    
+    if(Element.visible(userinfoID) == false) {
+        Element.removeClassName(postingtextID, 'postingtext_big');
+        Element.addClassName(postingtextID, 'postingtext_small');
+        Element.show(userinfoID);
+    } else {
+        Element.hide(userinfoID);
+        Element.removeClassName(postingtextID, 'postingtext_small');
+        Element.addClassName(postingtextID, 'postingtext_big');
+    } 
+    Event.observe(postingtextID, 'click', function(){toggleuserinfo(postid)}, false);       
 }
 
 function addremovefavorite(forumid, mode)
@@ -125,6 +141,7 @@ function addremovefavorite(forumid, mode)
     if(favoritestatus == false) {
         favoritestatus = true;
         var pars = "module=pnForum&type=ajax&func=addremovefavorite&forum=" + forumid + "&mode=" + mode;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -164,6 +181,7 @@ function subscribeunsubscribeforum(forumid, mode)
     if(subscribeforumstatus == false) {
         subscribeforumstatus = true;
         var pars = "module=pnForum&type=ajax&func=subscribeunsubscribeforum&forum=" + forumid + "&mode=" + mode;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -203,6 +221,7 @@ function subscribeunsubscribetopic(topicid, mode)
     if(subscribestatus == false) {
         subscribestatus = true;
         var pars = "module=pnForum&type=ajax&func=subscribeunsubscribetopic&topic=" + topicid + "&mode=" + mode;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -215,10 +234,10 @@ function subscribeunsubscribetopic(topicid, mode)
 
 function subscribeunsubscribetopic_response(originalRequest)
 {
+    subscribestatus = false;
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
-        subscribestatus = false;
         return;
     }
     var result = dejsonize(originalRequest.responseText);
@@ -235,7 +254,6 @@ function subscribeunsubscribetopic_response(originalRequest)
         default:
              alert('wrong result from subscribe/unsubscribe');
     }
-    subscribestatus = false;
 }
 
 function stickyunstickytopic(topicid, mode)
@@ -243,6 +261,7 @@ function stickyunstickytopic(topicid, mode)
     if(stickystatus == false) {
         stickystatus = true;
         var pars = "module=pnForum&type=ajax&func=stickyunstickytopic&topic=" + topicid + "&mode=" + mode;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -255,10 +274,10 @@ function stickyunstickytopic(topicid, mode)
 
 function stickyunstickytopic_response(originalRequest)
 {
+    stickystatus = false;
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
-        stickystatus = false;
         return;
     }
     var result = dejsonize(originalRequest.responseText);
@@ -275,7 +294,6 @@ function stickyunstickytopic_response(originalRequest)
         default:
              alert('wrong result from sticky/unsticky');
     }
-    stickystatus = false;
 }
 
 function lockunlocktopic(topicid, mode)
@@ -283,6 +301,7 @@ function lockunlocktopic(topicid, mode)
     if(lockstatus == false) {
         lockstatus = true;
         var pars = "module=pnForum&type=ajax&func=lockunlocktopic&topic=" + topicid + "&mode=" + mode;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -295,10 +314,10 @@ function lockunlocktopic(topicid, mode)
 
 function lockunlocktopic_response(originalRequest)
 {
+    lockstatus = false;
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
-        lockstatus = false;
         return;
     }
     var result = dejsonize(originalRequest.responseText);
@@ -315,7 +334,6 @@ function lockunlocktopic_response(originalRequest)
         default:
              alert('wrong result from lock/unlock');
     }
-    lockstatus = false;
 }
 
 function quickEdit(postid)
@@ -323,8 +341,8 @@ function quickEdit(postid)
     if(editstatus == false) {
         editstatus = true;
         editchanged = false;
-        postingID = postid;
         var pars = "module=pnForum&type=ajax&func=editpost&post=" + postid;
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
             "index.php", 
             {
@@ -340,48 +358,48 @@ function quickEditInit(originalRequest)
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
+        editstatus = false;
         return;
     }
 
-    var postingtextID = 'postingtext_' + postingID;
-    var postinguserID = 'posting_' + postingID + '_userinfo';
-    
     var result = dejsonize(originalRequest.responseText);
+
+    var postingtextID = 'postingtext_' + result.post_id;
+    var postinguserID = 'posting_' + result.post_id + '_userinfo';
     
     Element.hide($(postingtextID));
     Element.hide($(postinguserID));
     updateAuthid(result.authid);
 
-	new Insertion.After($(postingtextID), result.data);	
+    new Insertion.After($(postingtextID), result.data); 
 
-    Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(postingID)}, false);		
-	Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(postingID)}, false);
-	Event.observe(postingtextID + '_cancel', 'click',  function(){quickEditcancel(postingID)}, false);
+    Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);      
+    Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);
+    Event.observe(postingtextID + '_cancel', 'click',  function(){quickEditcancel(result.post_id)}, false);
 }
 
-function quickEditchanged(postingID)
+function quickEditchanged(postid)
 {
     if(editchanged == false) {
         editchanged = true;
-        var postingtextstatusID = 'postingtext_' + postingID + '_status';
+        var postingtextstatusID = 'postingtext_' + postid + '_status';
         $(postingtextstatusID).innerHTML = '<span style="color: red;">' + statusChanged + '</span>';
     }
     return;
 }
 
-function quickEditcancel(postingID)
+function quickEditcancel(postid)
 {
-    var postingtextID = 'postingtext_' + postingID;
-    var postinguserID = 'posting_' + postingID + '_userinfo';
+    var postingtextID = 'postingtext_' + postid;
+    var postinguserID = 'posting_' + postid + '_userinfo';
     Element.show($(postingtextID));
     Element.show($(postinguserID));
     Element.remove($(postingtextID + '_editor'));
-    postingID = '';
     editstatus = false;
 }
-function quickEditsave(postingID)
+function quickEditsave(postid)
 {
-    var postingtextID = 'postingtext_' + postingID;
+    var postingtextID = 'postingtext_' + postid;
     var statusID = postingtextID + '_status';
     var deletepost;
     var editID = postingtextID + '_edit';
@@ -395,11 +413,12 @@ function quickEditsave(postingID)
         deletepost = '';
     }
     var pars = "module=pnForum&type=ajax&func=updatepost" +   
-               "&post=" + postingID +
+               "&post=" + postid +
                deletepost +
                "&message=" + encodeURIComponent($F(editID)) +
                "&authid=" + $F(authID);
 
+    Ajax.Responders.register(pnf_globalhandlers);
     var myAjax = new Ajax.Request(                              
                     "index.php",                                
                     {                                           
@@ -416,13 +435,16 @@ function quickEditsave_response(originalRequest)
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
+        editstatus = false;
         return;
     }
 
     var result = dejsonize(originalRequest.responseText);
-    var postingtextID = 'postingtext_' + postingID;
-    var postingobjID = 'posting_' + postingID;
+    
+    var postingtextID = 'postingtext_' + result.post_id;
+    var postingobjID = 'posting_' + result.post_id;
     var postinguserID = postingobjID + '_userinfo';
+    updateAuthid(result.authid);
     
     Element.remove($(postingtextID + '_editor'));
     
@@ -433,13 +455,13 @@ function quickEditsave_response(originalRequest)
         Element.show($(postingtextID));
         Element.show($(postinguserID));
     }
-    postingID = '';
     editstatus = false;
 }
 
 function createQuote(postid)
 {
     var pars = "module=pnForum&type=ajax&func=preparequote&post=" + postid;
+    Ajax.Responders.register(pnf_globalhandlers);
     var myAjax = new Ajax.Request(
         "index.php", 
         {
@@ -492,6 +514,7 @@ function createQuickReply()
                    subscribe_topic + 
                    "&authid=" + $F('authid');
         
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(                              
                         "index.php",                                
                         {                                           
@@ -509,7 +532,8 @@ function createQuickReply_response(originalRequest)
 
     // show error if necessary
     if( originalRequest.status != 200 ) { 
-        alert(originalRequest.responseText);
+        pnf_showajaxerror(originalRequest.responseText);
+        replystatus = false;
         return;
     }
 
@@ -517,27 +541,21 @@ function createQuickReply_response(originalRequest)
 
     updateAuthid(result.authid);
     
-    if(preview != 1) {
-        // clear textarea
-        $('message').value = '';
-        // reset preview
-        $('quickreply_preview').innerHTML = '&nbsp;';
-        Element.hide($('quickreply_preview'));
-        
-        $('quickreplyposting').innerHTML = result.data;
-        Element.show($('quickreplyposting'));
-        
-        new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
-        // clear old id
-        $('quickreplyposting').id = '';
-        // rename new id
-        $('new_quickreplyposting').id = 'quickreplyposting';
-    } else {
-        $('quickreply_preview').innerHTML = result.data;
-        Element.show($('quickreply_preview'));
-        // clear preview
-        $('preview').checked = false;
-    }
+    // clear textarea
+    $('message').value = '';
+    // reset preview
+    $('quickreplypreview').innerHTML = '&nbsp;';
+    Element.hide($('quickreplypreview'));
+    
+    $('quickreplyposting').innerHTML = result.data;
+    Element.show($('quickreplyposting'));
+    
+    new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
+    // clear old id
+    $('quickreplyposting').id = '';
+    // rename new id
+    $('new_quickreplyposting').id = 'quickreplyposting';
+
     replystatus = false;
 
 }
@@ -554,6 +572,7 @@ function previewQuickReply()
                    "&preview=1" +
                    "&authid=" + $F('authid');
         
+        Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(                              
                         "index.php",                                
                         {                                           
@@ -571,24 +590,24 @@ function previewQuickReply_response(originalRequest)
 
     // show error if necessary
     if( originalRequest.status != 200 ) { 
-        alert(originalRequest.responseText);
+        pnf_showajaxerror(originalRequest.responseText);
+        replystatus = false;
         return;
     }
 
     var result = dejsonize(originalRequest.responseText);
 
     updateAuthid(result.authid);
-    
-    $('quickreply_preview').innerHTML = result.data;
-    Element.show($('quickreply_preview'));
+    $('quickreplypreview').innerHTML = result.data;
+    Element.show($('quickreplypreview'));
     replystatus = false;
 }
 
 function clearQuickReply()
 {
     $('message').value = '';
-    $('quickreply_preview').innerHTML = '&nbsp;';
-    Element.hide($('quickreply_preview'));
+    $('quickreplypreview').innerHTML = '&nbsp;';
+    Element.hide($('quickreplypreview'));
     replystatus = false;
 }                        
 

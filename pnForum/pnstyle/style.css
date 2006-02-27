@@ -397,6 +397,17 @@ div.pnf_statusmsg {
 #pnforum {
 }
 
+#pnforum ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none
+}
+
+#pnforum li {
+    margin: 0;
+    padding: 0;
+}
+
 dt.pnfuser {
     width: 50%;
     text-align: left;
@@ -429,3 +440,173 @@ dd.pnfuser {
 * html .pnf_clearfix {height: 1%;}
 .pnf_clearfix {display: block;}
 /* End hide from IE-mac */
+
+.posting {
+    margin: 5px 0 10px 0; 
+    border: 1px solid black; 
+}
+
+.postingheader {
+    border-bottom: 1px solid black; 
+    height: 2.5em; 
+}
+
+.postingheaderleft {
+    text-align: left; 
+    margin: 0.5em 0 0 5px; 
+    width: 19%; 
+    float:left;
+}
+
+.postingheaderright {
+    text-align:right; 
+    margin: 0.5em 5px 0 0; 
+    float: right;
+}
+
+.postingheadermiddle {
+    text-align: left; 
+    margin: 0.3em 5px 0 0; 
+    float: left;
+}
+
+.postingbody {
+    text-align: left; 
+    width: 100%;
+}
+
+.postingtext_small {
+    width: 78%; 
+    float: left; 
+    padding: 5px 5px 25px 5px; 
+    overflow: auto;
+}
+
+.postingtext_big {
+    width: 98%; 
+    float: left; 
+    padding: 5px 5px 25px 5px; 
+    overflow: auto;
+}
+
+.userinfo {
+    margin: 5px; 
+    border: 1px solid black; 
+    padding: 3px 3px 6px 3px; 
+    float: left; 
+    width: 17%; 
+}
+
+.userinfoname {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.userinforankimage {
+    margin-top: 1em;
+}
+
+.userinfodetails {
+    margin-top: 2em; 
+    width: 99%; 
+    border-top: 1px solid black;
+}
+
+.userinfodetails dl {
+    margin: 1em 0 0 0.5em; 
+    padding: 0;
+}
+
+.userinfodetails dt {
+    font-size: 0.8em; 
+    text-align: left;
+}
+
+.userinfodetails dd {
+    font-size: 0.8em; 
+    text-align: right;
+    font-weight: bold;
+}
+
+.userinfoonline {
+    color: red;
+}
+
+.postingfooter {
+    margin-top: 5px; 
+    border-top: 1px solid black; 
+    height: 2.5em; 
+}
+
+.postingfooterleft {
+    c-lear: both; 
+    text-align: left; 
+    margin: 3px 0 0 5px; 
+    float: left;
+}
+
+.postingfooterright {
+    text-align: right; 
+    margin: 3px 10px 0 0;
+    float: right;
+}
+
+a.postingbutton {
+    margin: 0 3px 0 3px;
+}
+
+a.postingbuttonhidden {
+    margin: 0 3px 0 3px;
+    display: hidden;
+}
+
+a.normallink {
+    padding-left: 0 ! important;
+    background: none no-repeat bottom left ! important;
+}
+
+.topicheader {
+    float: left; 
+    width: 100%; 
+    margin-top: 1em; 
+    border: 1px solid black; 
+}
+
+.topicheaderleft {
+    float: left; 
+    width: 19%; 
+    margin: 5px 0 0 5px;
+}
+
+.topicheaderright {
+    font-size: 1.6em; 
+    line-height: 1.65em; 
+    font-weight: bold; 
+    float: left; 
+    width: 80%;
+}
+
+#pnforuminformation {
+    visibility: hidden; 
+    color: red; 
+    text-align: center; 
+    font-weight: bold; 
+    margin: 2px 0 2px 0; 
+    padding: 2px 0 2px 0;
+}
+
+#quickreply {
+    width: 100%; 
+    float: left; 
+    margin-top: 1.5em;
+}
+
+#quickreplyoptions {
+    width:40%; 
+    float: left; 
+    text-align: left; 
+    margin-top: 1em;
+}
+
+
+

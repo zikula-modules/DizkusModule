@@ -6,34 +6,34 @@ Template for single postings
 
 *]-->
 <!--[ pnimg src="profile.gif" assign=profile alt='_PNFORUM_PROFILE' altml=true ]-->
-    <div id="posting_<!--[ $post.post_id ]-->"  style="margin: 5px 0 10px 0; border: 1px solid black; background-color: <!--[ $bgcolor1 ]-->;" class="pnf_clearfix">
-        <div style="border-bottom: 1px solid black; height: 2.5em; background-color: <!--[ $bgcolor3 ]-->;" class="pnf_clearfix">
-            <div style="text-align: left; margin: 0.7em 0 0 5px; width: 19%; float:left;">
+    <div id="posting_<!--[ $post.post_id ]-->"  style="background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
+        <div style="background-color: <!--[ $bgcolor3 ]-->;" class="postingheader pnf_clearfix">
+            <div class="postingheaderleft">
                 <!--[ if $post_counter == $post_count ]-->
-                <a id="bottom" />
+                <a id="bottom"></a>
                 <!--[ /if ]-->
-                <a id="pid<!--[ $post.post_id ]-->" />
+                <a id="pid<!--[ $post.post_id ]-->"></a>
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
-                    <strong><!--[ $post.poster_data.pn_uname|profilelink ]--></strong>
+                    <span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span>
                 <!--[ else ]-->
-                    <strong><!--[ $post.poster_data.pn_uname ]--></strong>
+                    <span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span>
                 <!--[ /if ]-->
             </div>
-            <div style="text-align:right; margin: 0.7em 5px 0 0; float: right;">
+            <div class="postingheaderright">
                 <strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|date_format:"%d.%m.%Y, %H:%M" ]-->
             </div>
             <!--[ if $preview neq true ]-->
-            <div style="text-align:right; margin: 0.3em 5px 0 0; float: right;">
+            <div class="postingheadermiddle">
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
                     <!--[ $post.poster_data.pn_uname|profilelink:'':$profile ]-->
                     <!--[ pnmodgetinfo modname='Messages' info='type' assign=type]-->
                     <!--[ if $type eq 1 ]-->
-                    <a title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"><!--[ pnimg src="sendpm.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
+                    <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"><!--[ pnimg src="sendpm.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
                     <!--[ else ]-->
-                    <a title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->"><!--[ pnimg src="sendpm.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
+                    <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->"><!--[ pnimg src="sendpm.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
                     <!--[ /if ]-->
                     <!--[ if $post.poster_data.pn_url neq "" ]-->
-                        <a title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->"><!--[ pnimg src="myhp.gif" alt='_PNFORUM_HOMEPAGE' altml=true ]--></a>
+                        <a class="postingbutton normallink" title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->"><!--[ pnimg src="myhp.gif" alt='_PNFORUM_HOMEPAGE' altml=true ]--></a>
                     <!--[ /if ]-->
                 <!--[ /if ]-->
 
@@ -41,105 +41,96 @@ Template for single postings
             <!--[ /if ]-->
         </div>
        
-        <div style="background-color: <!--[ $bgcolor1 ]-->; text-align: left; width: 100%;" class="pnf_clearfix">
+        <div class="postingbody pnf_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
             <!--[ if $post.poster_data.pn_uid neq 1 ]-->
-                <div style="margin: 5px; border: 1px solid black; padding: 3px 3px 6px 3px; float: left; width: 17%; background-color: <!--[ $bgcolor3 ]-->;" id="posting_<!--[ $post.post_id ]-->_userinfo">
-                    <!--[*
-                    <button style="background: none; border: none; text-align: right; padding: 2px; font-size: 9px; margin: 1px; float: right;" id="toggleuserinfo_<!--[ $post.post_id ]-->" onclick="javascript:toggleuserinfo(<!--[ $post.post_id ]-->);">x</button>
-                    *]-->
+                <div onclick="javascript:toggleuserinfo(<!--[ $post.post_id ]-->);" class="userinfo" style="background-color: <!--[ $bgcolor3 ]-->;" id="posting_<!--[ $post.post_id ]-->_userinfo">
                     <div id="posting_<!--[ $post.post_id ]-->_userinfocontent">
-                    <!--[ if $post.poster_data.rank ]-->
-                        <strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></strong>
-                        <!--[ if $post.poster_data.rank_image ]-->
-                            <img style="margin-top: 1em;" src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
-                        <!--[ /if ]-->
-                    <!--[ /if ]-->
-                    
-                    <!--[ if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                        <div style="margin-top: 1em; width:99%; text-align: center;">
-                        <!--[ $post.poster_data.pn_uname|profilelink:'':$post.poster_data.pn_user_avatar ]-->
-                        </div>
-                    <!--[ /if ]-->
-                    
-                    <div style="margin-top: 2em; width: 99%; border-top: 1px solid black;">
-                        <dl style="margin: 1em 0 0 0.5em; padding: 0;">
-                            <dt style="font-size: 0.8em; text-align: left;">
-                                <!--[ pnml name='_PNFORUM_REG_SINCE' ]-->:
-                            </dt>
-                            <dd style="font-size: 0.9em; text-align: right;">
-                                <strong><!--[ $post.poster_data.pn_user_regdate|pndate_format:"%b. %Y"  ]--></strong>
-                            </dd>
-                            <dt style="font-size: 0.8em; text-align: left;">
-                                <!--[ pnml name='_PNFORUM_STATUS' ]-->:
-                            </dt>
-                            <dd style="font-size: 0.9em; text-align: right;">
-                                <strong><!--[ if $post.poster_data.online  ]--><span style="color: red;"><!--[ pnml name='_PNFORUM_ONLINE' ]--></span><!--[ else ]--><!--[ pnml name='_PNFORUM_OFFLINE' ]--><!--[ /if ]--></strong>
-                            </dd>
-                            <!--[ if !$post.poster_data.online  ]-->
-                            <dt style="font-size: 0.8em; text-align: left;">
-                                <!--[ pnml name='_PNFORUM_LAST_SEEN' ]-->:
-                            </dt>
-                            <dd style="font-size: 0.9em; text-align: right;">
-                                <strong><!--[ $post.poster_data.user_lastvisit|date_format:"%d.%m.%y"  ]--></strong>
-                            </dd>
+                        <!--[ if $post.poster_data.rank ]-->
+                            <strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></strong>
+                            <!--[ if $post.poster_data.rank_image ]-->
+                                <img class="uerinforankimage" src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
                             <!--[ /if ]-->
-                            <dt style="font-size: 0.8em; text-align: left;">
-                                <!--[ pnml name='_PNFORUM_POSTS' ]-->:
-                            </dt>
-                            <dd style="font-size: 0.9em; text-align: right;">
-                                <strong><!--[ $post.poster_data.user_posts ]--></strong>
-                            </dd>
-                        </dl>
-                    </div>
-                    
-                    <!--[ if $post.poster_data.seeip eq true ]-->
-                        <br /><a title="<!--[ pnml name='_PNFORUM_VIEWIP' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_VIEWIP' ]--></a>
-                    <!--[ /if ]-->
+                        <!--[ /if ]-->
+                        
+                        <!--[ if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
+                            <div style="margin-top: 1em; width:99%; text-align: center;">
+                            <!--[ $post.poster_data.pn_uname|profilelink:'':$post.poster_data.pn_user_avatar ]-->
+                            </div>
+                        <!--[ /if ]-->
+                        
+                        <div class="userinfodetails">
+                            <dl >
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_REG_SINCE' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ $post.poster_data.pn_user_regdate|pndate_format:"%b. %Y"  ]-->
+                                </dd>
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_STATUS' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ if $post.poster_data.online  ]--><span class="userinfoonline"><!--[ pnml name='_PNFORUM_ONLINE' ]--></span><!--[ else ]--><!--[ pnml name='_PNFORUM_OFFLINE' ]--><!--[ /if ]-->
+                                </dd>
+                                <!--[ if !$post.poster_data.online  ]-->
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_LAST_SEEN' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ $post.poster_data.user_lastvisit|date_format:"%d.%m.%y"  ]-->
+                                </dd>
+                                <!--[ /if ]-->
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_POSTS' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ $post.poster_data.user_posts ]-->
+                                </dd>
+                            </dl>
+                        </div>
+                        
+                        <!--[ if $post.poster_data.seeip eq true ]-->
+                            <br /><a title="<!--[ pnml name='_PNFORUM_VIEWIP' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_VIEWIP' ]--></a>
+                        <!--[ /if ]-->
                     </div>
                 </div>
             <!--[ /if ]-->
-            <div style="width: 78%; float: left; padding: 5px 5px 25px 5px; overflow: auto;" id="postingtext_<!--[ $post.post_id ]-->">
+            <div class="postingtext_small" id="postingtext_<!--[ $post.post_id ]-->">
                 <!--[ $post.post_text ]-->
             </div>
             
         </div>
 
-        <div style="margin-top: 5px; border-top: 1px solid black; height: 2.5em; background-color: <!--[ $bgcolor3 ]-->;" class="pnf_clearfix">
+        <div class="postingfooter pnf_clearfix" style="background-color: <!--[ $bgcolor3 ]-->;">
 
-            <div style="height: 2.5em; clear: both; text-align: left; margin: 3px 0 0 5px; float: left;">
+            <div class="postingfooterleft">
                 <!--[ if $preview neq true ]-->
-                    <a title="<!--[ pnml name='_PNFORUM_TOP' ]-->" href="#top"><!--[ pnimg src="go_up.gif" alt="_PNFORUM_TOP" altml=true ]--></a>&nbsp;
+                    <a title="<!--[ pnml name='_PNFORUM_TOP' ]-->" href="#top"><!--[ pnimg src="go_up.gif" alt="_PNFORUM_TOP" altml=true ]--></a>
+                <!--[ else ]-->
+                    &nbsp;
                 <!--[ /if ]-->
             </div>
 
             <!--[ if $preview neq true ]-->
-                <div style="text-align:right; margin: 3px 10px 0 0;float: right;">
+                <div class="postingfooterright">
                     <!--[ if $post.poster_data.moderate eq true]-->
                         <!--[ if ($num neq 0) or ($topic.start neq 0)  ]-->
-                            <a style="margin: 0 3px 0 3px;" title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnimg src="move_post.gif" alt='_PNFORUM_MOVEPOST' altml=true ]--></a>
-                            <a style="margin: 0 3px 0 3px;" title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnimg src="splitit.gif" alt='_PNFORUM_SPLITTOPIC' altml=true ]--></a>
+                            <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnimg src="move_post.gif" alt='_PNFORUM_MOVEPOST' altml=true ]--></a>
+                            <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnimg src="splitit.gif" alt='_PNFORUM_SPLITTOPIC' altml=true ]--></a>
                         <!--[ /if ]-->
                     <!--[ /if ]-->
             
                     <!--[ if $topic.topic_status neq 1 ]-->
                         <!--[ if $post.poster_data.reply eq true]-->
-                            <a style="margin: 0 3px 0 3px; display: none;" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
-                            <script type="text/javascript">
-                                var quotebutton = 'quotebutton_' + <!--[ $post.post_id ]-->;
-                                Element.show($(quotebutton));
-                            </script>
+                            <a class="postingbuttonhidden" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
                             <noscript>
-                            <a style="margin: 0 3px 0 3px;"  title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
+                            <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
                             </noscript>
                         <!--[ /if ]-->
                         <!--[ if $post.poster_data.edit eq 1 ]-->
-                            <a style="margin: 0 3px 0 3px; display: none;" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
-                            <script type="text/javascript">
-                                var editbutton = 'editbutton_' + <!--[ $post.post_id ]-->;
-                                Element.show($(editbutton));
-                            </script>
+                            <a class="postingbuttonhidden" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
                             <noscript>
-                            <a style="margin: 0 3px 0 3px;" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
+                            <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
                             </noscript>
                         <!--[ /if ]-->
                     <!--[ else ]-->
@@ -151,3 +142,9 @@ Template for single postings
         </div>
     </div>
     
+    <script type="text/javascript">
+        //var editbutton = 'editbutton_' + <!--[ $post.post_id ]-->;
+        Element.show($('editbutton_<!--[ $post.post_id ]-->'));
+        //var quotebutton = 'quotebutton_' + <!--[ $post.post_id ]-->;
+        Element.show($('quotebutton_<!--[ $post.post_id ]-->'));
+    </script>
