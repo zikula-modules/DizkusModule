@@ -61,7 +61,7 @@ function topicsubjecteditinit(originalRequest)
 
     var topicsubjectID = 'topicsubject_' + result.topic_id;
 
-    Element.hide($(topicsubjectID));
+    Element.hide(topicsubjectID);
     updateAuthid(result.authid);
 
     new Insertion.After($(topicsubjectID), result.data);    
@@ -71,8 +71,8 @@ function topicsubjecteditcancel(topicid)
 {
     var topicsubjectID = 'topicsubject_' + topicid;
 
-    Element.remove($(topicsubjectID + '_editor'));
-    Element.show($(topicsubjectID));
+    Element.remove(topicsubjectID + '_editor');
+    Element.show(topicsubjectID);
     subjectstatus = false;
 }
 
@@ -110,11 +110,11 @@ function topicsubjecteditsave_response(originalRequest)
     var result = dejsonize(originalRequest.responseText);
     var topicsubjectID = 'topicsubject_' + result.topic_id;
 
-    Element.remove($(topicsubjectID + '_editor'));
+    Element.remove(topicsubjectID + '_editor');
     updateAuthid(result.authid);
     
-    $(topicsubjectID + '_content').innerHTML = result.topic_title;
-    Element.show($(topicsubjectID));
+    Element.update(topicsubjectID + '_content', result.topic_title);
+    Element.show(topicsubjectID);
 
     subjectstatus = false;
 }
@@ -367,8 +367,8 @@ function quickEditInit(originalRequest)
     var postingtextID = 'postingtext_' + result.post_id;
     var postinguserID = 'posting_' + result.post_id + '_userinfo';
     
-    Element.hide($(postingtextID));
-    Element.hide($(postinguserID));
+    Element.hide(postingtextID);
+    Element.hide(postinguserID);
     updateAuthid(result.authid);
 
     new Insertion.After($(postingtextID), result.data); 
@@ -383,7 +383,7 @@ function quickEditchanged(postid)
     if(editchanged == false) {
         editchanged = true;
         var postingtextstatusID = 'postingtext_' + postid + '_status';
-        $(postingtextstatusID).innerHTML = '<span style="color: red;">' + statusChanged + '</span>';
+        Element.update(postingtextstatusID, '<span style="color: red;">' + statusChanged + '</span>');
     }
     return;
 }
@@ -392,9 +392,9 @@ function quickEditcancel(postid)
 {
     var postingtextID = 'postingtext_' + postid;
     var postinguserID = 'posting_' + postid + '_userinfo';
-    Element.show($(postingtextID));
-    Element.show($(postinguserID));
-    Element.remove($(postingtextID + '_editor'));
+    Element.show(postingtextID);
+    Element.show(postinguserID);
+    Element.remove(postingtextID + '_editor');
     editstatus = false;
 }
 function quickEditsave(postid)
@@ -406,10 +406,10 @@ function quickEditsave(postid)
     var authID = postingtextID + '_authid';
 
     if($(postingtextID + '_delete') && $(postingtextID + '_delete').checked == true) {
-        $(statusID).innerHTML = '<span style="color: red;">' + deletingPost + '</span>';
+        Element.update(statusID, '<span style="color: red;">' + deletingPost + '</span>');
         deletepost = '&delete=1';
     } else {
-        $(statusID).innerHTML = '<span style="color: red;">' + updatingPost + '</span>';
+        Element.update(statusID, '<span style="color: red;">' + updatingPost + '</span>');
         deletepost = '';
     }
     var pars = "module=pnForum&type=ajax&func=updatepost" +   
@@ -446,14 +446,14 @@ function quickEditsave_response(originalRequest)
     var postinguserID = postingobjID + '_userinfo';
     updateAuthid(result.authid);
     
-    Element.remove($(postingtextID + '_editor'));
+    Element.remove(postingtextID + '_editor');
     
     if(result.action == 'deleted') {
-        Element.remove($(postingobjID));
+        Element.remove(postingobjID);
     } else {
-        $(postingtextID).innerHTML = result.post_text;
-        Element.show($(postingtextID));
-        Element.show($(postinguserID));
+        Element.update(postingtextID, result.post_text);
+        Element.show(postingtextID);
+        Element.show(postinguserID);
     }
     editstatus = false;
 }
@@ -493,7 +493,7 @@ function createQuickReply()
 {
     if(replystatus==false) {
         replystatus = true;
-        showpnForumInfo(storingReply);
+        showpnforuminfo(storingReply);
         
         var attach_signature = ''
         var sigObj = $('attach_signature');
@@ -528,7 +528,7 @@ function createQuickReply()
 
 function createQuickReply_response(originalRequest)
 {
-    hidepnForumInfo();
+    hidepnforuminfo();
 
     // show error if necessary
     if( originalRequest.status != 200 ) { 
@@ -543,13 +543,16 @@ function createQuickReply_response(originalRequest)
     
     // clear textarea
     $('message').value = '';
+    
     // reset preview
-    $('quickreplypreview').innerHTML = '&nbsp;';
-    Element.hide($('quickreplypreview'));
+    Element.update('quickreplypreview', '&nbsp;');
+    Element.hide('quickreplypreview');
     
-    $('quickreplyposting').innerHTML = result.data;
-    Element.show($('quickreplyposting'));
+    // show new posting
+    Element.update('quickreplyposting', result.data);
+    Element.show('quickreplyposting');
     
+    // prepare everything for another quick reply
     new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
     // clear old id
     $('quickreplyposting').id = '';
@@ -564,7 +567,7 @@ function previewQuickReply()
 {
     if(replystatus==false) {
         replystatus = true;
-        showpnForumInfo(preparingPreview);
+        showpnforuminfo(preparingPreview);
         
         var pars = "module=pnForum&type=ajax&func=reply" +   
                    "&topic=" + $F('topic') +
@@ -586,7 +589,7 @@ function previewQuickReply()
 
 function previewQuickReply_response(originalRequest)
 {
-    hidepnForumInfo();
+    hidepnforuminfo();
 
     // show error if necessary
     if( originalRequest.status != 200 ) { 
@@ -598,32 +601,36 @@ function previewQuickReply_response(originalRequest)
     var result = dejsonize(originalRequest.responseText);
 
     updateAuthid(result.authid);
-    $('quickreplypreview').innerHTML = result.data;
-    Element.show($('quickreplypreview'));
+    Element.update('quickreplypreview', result.data);
+    Element.show('quickreplypreview');
     replystatus = false;
 }
 
 function clearQuickReply()
 {
     $('message').value = '';
-    $('quickreplypreview').innerHTML = '&nbsp;';
-    Element.hide($('quickreplypreview'));
+    Element.update('quickreplypreview', '&nbsp;');
+    Element.hide('quickreplypreview');
     replystatus = false;
 }                        
 
-function showpnForumInfo(infotext)
+function showpnforuminfo(infotext)
 {
-    $('pnforuminformation').innerHTML = infotext;
+    Element.update('pnforuminformation', infotext);
     $('pnforuminformation').style.visibility = 'visible';
     
 }
 
-function hidepnForumInfo()
+function hidepnforuminfo()
 {
-    $('pnforuminformation').innerHTML = '&nbsp;';
+    Element.update('pnforuminformation', '&nbsp;');
     $('pnforuminformation').style.visibility = 'hidden';
 }
 
+/*
+ * show an ajax error
+ * to-do: beautify this function
+ */
 function pnf_showajaxerror(error)
 {
     alert(error);
@@ -635,7 +642,6 @@ function updateAuthid(authid)
         for(var i=0; i<document.forms.length; i++) {
             for(var j=0; j<document.forms[i].elements.length; j++) {
                 if(document.forms[i].elements[j].type=='hidden' && document.forms[i].elements[j].name=='authid') {
-                    //alert(i + ', ' + j + ': hidden authid - ' + document.forms[i].elements[j].value);
                     document.forms[i].elements[j].value = authid;
                 }
             }
