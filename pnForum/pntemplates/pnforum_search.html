@@ -1,56 +1,64 @@
 <!--[*  $Id$  *]-->
 
-<input type="hidden" name="pnForum_startnum" value="0" />
+<!--[ add_additional_header header="<link rel=\"StyleSheet\" type=\"text/css\" href=\"modules/pnForum/pnstyle/style.css\" />"]-->
+<div class="pnf_clearfix">
+    
+    <input type="hidden" name="pnForum_startnum" value="0" />
+    
+    <div style="padding-left: 3px; background-color: <!--[ $bgcolor2 ]-->;">
+        <input type="checkbox" name="active_pnForum" id="active_pnForum" value="1" checked="checked" />&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_TITLE' ]-->
+    </div>
+    
+    <div style="float: left; padding: 4px; width: 99%;" class="pnf_clearfix">
+        <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+            <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_FORUM' ]-->:
+        </div>
+        <div style="float: left; width: 70%; text-align: left;">
+            <select name="pnForum_forum[]" id="pnForum_forum" size="5" multiple="multiple">
+            <option value="" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ALLTOPICS' ]--></option>
+            <!--[ foreach item=forum from=$forums ]-->
+            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprephtmldisplay ]--> :: <!--[ $forum.forum_name|pnvarprephtmldisplay ]--></option>
+            <!--[ /foreach ]-->
+            </select>
+        </div>
+    </div>
+    
+    <div style="float: left; padding: 4px; width: 99%;" class="pnf_clearfix">
+        <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+            <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]-->:
+        </div>
+        <div style="float: left; width: 70%; text-align: left;">
+            <input type="text" name="pnForum_author" id="pnForum_author" size="20" maxlength="255" />
+        </div>
+    </div>
+    
+    <div style="float: left; padding: 4px; width: 99%;" class="pnf_clearfix">
+        <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+            <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ORDER' ]-->:
+        </div>
+        <div style="float: left; width: 70%; text-align: left;">
+            <select name="pnForum_order[]" id="pnForum_order" size="1">
+            <option value="1" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYDATE' ]--></option>
+            <option value="2"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYTITLE' ]--></option>
+            <option value="3"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYFORUM' ]--></option>
+            </select>
+        </div>
+    </div>
+    
+    <div style="float: left; padding: 4px; width: 99%;" class="pnf_clearfix">
+        <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
+            <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_LIMIT' ]-->:
+        </div>
+        <div style="float: left; width: 70%; text-align: left;">
+            <select name="pnForum_limit" id="pnForum_limit" size="1">
+            <option value="0"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NOLIMIT' ]--></option>
+            <option value="10" selected="selected">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            </select>
+            <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->
+        </div>
+    </div>
 
-<div style="padding-left: 3px; background-color: <!--[ $bgcolor2 ]-->;">
-    <input type="checkbox" name="active_pnForum" id="active_pnForum" value="1" checked="checked" />&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_TITLE' ]-->
 </div>
-
-<div style="clear:both; padding: 4px;">
-    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
-        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_FORUM' ]-->:
-    </div>
-    <div style="float: left; width: 70%; text-align: left;">
-        <select name="pnForum_forum[]" id="pnForum_forum" size="5" multiple="multiple">
-        <option value="" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ALLTOPICS' ]--></option>
-        <!--[ foreach item=forum from=$forums ]-->
-        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprephtmldisplay ]--> :: <!--[ $forum.forum_name|pnvarprephtmldisplay ]--></option>
-        <!--[ /foreach ]-->
-        </select>
-    </div>
-</div>
-<div style="clear:both; padding: 4px;">
-    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
-        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]-->:
-    </div>
-    <div style="float: left; width: 70%; text-align: left;">
-        <input type="text" name="pnForum_author" id="pnForum_author" size="20" maxlength="255" />
-    </div>
-</div>
-<div style="clear:both; padding: 4px;">
-    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
-        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ORDER' ]-->:
-    </div>
-    <div style="float: left; width: 70%; text-align: left;">
-        <select name="pnForum_order[]" id="pnForum_order" size="1">
-        <option value="1" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYDATE' ]--></option>
-        <option value="2"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYTITLE' ]--></option>
-        <option value="3"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYFORUM' ]--></option>
-        </select>
-    </div>
-</div>
-<div style="clear:both; padding: 4px;">
-    <div style="padding-top: 2px; float: left; width: 20%; text-align: right;">
-        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_LIMIT' ]-->:
-    </div>
-    <div style="float: left; width: 70%; text-align: left;">
-        <select name="pnForum_limit" id="pnForum_limit" size="1">
-        <option value="0"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_NOLIMIT' ]--></option>
-        <option value="10" selected="selected">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-        </select>
-        <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->
-    </div>
-</div>
-<div style="clear:both;"> </div>
+<!-- div style="float: left;" class="pnf_clearfix"></div -->
