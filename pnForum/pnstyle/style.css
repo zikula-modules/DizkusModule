@@ -618,5 +618,7 @@ a.normallink {
     margin-top: 1em;
 }
 
-
+.pnf_handle {
+    cursor: move;
+}
 

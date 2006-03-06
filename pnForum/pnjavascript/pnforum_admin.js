@@ -438,11 +438,14 @@ function sortforuminit(containmentsarray)
     for(var j=0; j < containmentsarray.length; j++) {
         Sortable.create(containmentsarray[j],
                         {dropOnEmpty: true,
+                         handle: 'pnf_handle',
                          containment: containmentsarray,
                          constraint: false
                         });
     }
-    Sortable.create("category");
+    Sortable.create("category",
+                    { handle: 'pnf_handle' 
+                    });
 }
 
 function showpnforuminfo(infotext)
