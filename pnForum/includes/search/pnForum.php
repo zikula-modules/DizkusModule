@@ -58,6 +58,7 @@ function search_pnForum_opt($vars)
 
     $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign('forums', $forums);
     return $pnr->fetch('pnforum_search.html');
 }

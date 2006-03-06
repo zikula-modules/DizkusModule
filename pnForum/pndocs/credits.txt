@@ -20,7 +20,8 @@ Thomas Pawlitzki
     moderate forum functionality
 Manuel Lemos
     pop3 class, he even changed it on my request to merge the header lines
-
+Klaus Petzka
+    creating some animated gifs for the ajax stuff
 
 Credits for pre 2.0.0 versions:
 -------------------------------
