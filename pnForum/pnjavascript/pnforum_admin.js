@@ -401,6 +401,13 @@ function hideshowcategory(catid)
     Element.toggle('showcategory_' + catid);
 }
 
+function hideshowforumlist(catid)
+{
+    Effect.toggle('cid_' + catid, 'slide');
+    Element.toggle('hideforumlist_' + catid);
+    Element.toggle('showforumlist_' + catid);
+}
+
 function storenewforumorder()
 {
     if(forumliststatus == false) {
@@ -439,12 +446,27 @@ function sortforuminit(containmentsarray)
         Sortable.create(containmentsarray[j],
                         {dropOnEmpty: true,
                          handle: 'pnf_handle',
+                         overlap: 'horizontal',
                          containment: containmentsarray,
-                         constraint: false
+                         onUpdate: function() {
+                                                  for(var k=0; k < containmentsarray.length; k++) {
+                                                      if($(containmentsarray[k]).childNodes.length == 2) {
+                                                          Element.show('emptycategory_' + containmentsarray[k]);
+                                                      } else {
+                                                          Element.hide('emptycategory_' + containmentsarray[k]);
+                                                      }
+                                                  }
+                                              },    
+                         constraint: false,
                         });
+        if($(containmentsarray[j]).childNodes.length == 2) {
+            Element.show('emptycategory_' + containmentsarray[j]);
+        }
     }
     Sortable.create("category",
-                    { handle: 'pnf_handle' 
+                    { 
+                      handle: 'pnf_handle', 
+                      overlap: 'horizontal'
                     });
 }
 

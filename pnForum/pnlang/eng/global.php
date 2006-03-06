@@ -45,6 +45,9 @@
 define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
 
 // new
+define('_PNFORUM_EMPTYCATEGORY', 'This category does not contain any forums yet');
+define('_PNFORUM_HIDEFORUMS', 'Hide forums');
+define('_PNFORUM_SHOWFORUMS', 'Show forums');
 define('_PNFORUM_HIDECATEGORY', 'Hide category');
 define('_PNFORUM_SHOWCATEGORY', 'Show category');
 define('_PNFORUM_HIDEFORUM', 'Hide forum');
