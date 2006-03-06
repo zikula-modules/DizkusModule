@@ -41,7 +41,23 @@
  *
  ***********************************************************************/
 
+// changed
+define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
+
 // new
+define('_PNFORUM_HIDECATEGORY', 'Hide category');
+define('_PNFORUM_SHOWCATEGORY', 'Show category');
+define('_PNFORUM_HIDEFORUM', 'Hide forum');
+define('_PNFORUM_SHOWFORUM', 'Show forum');
+define('_PNFORUM_LOADCATEGORYDATA', 'Load category data');
+define('_PNFORUM_LOADFORUMDATA', 'Load forum data');
+define('_PNFORUM_ADMINREORDERTREE', 'Manipulate forum tree');
+define('_PNFORUM_ADMINREORDERTREEINFO', 'Here you can reorder the categories and forums');
+define('_PNFORUM_REORDERFORUMTREE', 'Re-order forum tree');
+
+define('_PNFORUM_STORINGNEWSORTORDER', '... storing new sort order ...');
+define('_PNFORUM_TOGGLEUSERINFO', 'toggle user details');
+define('_PNFORUM_HIDEUSERINFO', 'hide user details');
 define('_PNFORUM_FAVORITESDISABLED', 'favorites disabled');
 define('_PNFORUM_STATUS_NOTCHANGED', 'not changed');
 define('_PNFORUM_STATUS_CHANGED', 'changed');
@@ -188,7 +204,6 @@ define('_PNFORUM_FORUM_EDIT_FORUM','Edit Forum');
 define('_PNFORUM_FORUM_EDIT_ORDER','Edit Order');
 define('_PNFORUM_FORUM_NOEXIST','Error - The forum/topic you selected does not exist. Please go back and try again.');
 define('_PNFORUM_FORUM_REORDER','Re-Order');
-define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','If you only want to move a forum by one position then click on the up or down arrow.  If a forum has an order number of 0 it will be ordered alphabetically by forum name.  The final display order will be Alphabetical Forums (with order=0) then by numerical order.  Click on the order number to assign a new order.');
 
 //
 // G
