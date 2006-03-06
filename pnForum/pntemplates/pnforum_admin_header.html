@@ -1,6 +1,30 @@
 <!--[*  $Id$  *]-->
 <!--[ admincategorymenu xhtml=1 ]-->
 
+<script type="text/javascript" src="modules/pnForum/pnjavascript/prototype.js"></script>
+<script type="text/javascript" src="modules/pnForum/pnjavascript/scriptaculous.js"></script>
+<script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_admin.js"></script>
+
+<!--[* 
+
+This is the main pnforum div which embraces the whole forum output.
+
+This enables us to use CSS stylesheets like
+
+#pnforum ul {
+    margin: 0;
+    padding: 0;
+}
+
+for easier use of stylesheets classes and id's.
+
+This div will be closed in the footer template.
+
+ *]-->
+
+<div id="pnforum_admin" class="pnf_clearfix">
+
+
 <div style="width:99%; background-color:<!--[ $bgcolor2 ]-->; text-align:center; padding:4px;">
 <h2><a title="<!--[ pnml name='_PNFORUM_ADMINFORUMSPANEL' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=main ]-->"><!--[pnml name='_PNFORUM_ADMINFORUMSPANEL']--></a></h2>
 v<!--[pnmodgetinfo modname=pnForum info=version ]-->
@@ -8,6 +32,7 @@ v<!--[pnmodgetinfo modname=pnForum info=version ]-->
 <div style="text-align: center; margin-top: 1em;">
 [<a title="<!--[ pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMOPTIONS' ]--></a>]&nbsp;
 [<a title="<!--[ pnml name='_PNFORUM_ADMINADVANCEDCONFIG_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=advancedpreferences ]-->"><!--[ pnml name='_PNFORUM_ADMINADVANCEDCONFIG' ]--></a>]&nbsp;
+[<a title="<!--[ pnml name='_PNFORUM_ADMINREORDERTREE_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=reordertree ]-->"><!--[ pnml name='_PNFORUM_ADMINREORDERTREE' ]--></a>]&nbsp;
 [<a title="<!--[ pnml name='_PNFORUM_ADMINFORUMSYNC_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=syncforums ]-->"><!--[ pnml name='_PNFORUM_ADMINFORUMSYNC' ]--></a>]
 <br /><br />
 [<a title="<!--[ pnml name='_PNFORUM_ADMINRANKS_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=ranks ranktype=0 ]-->"><!--[ pnml name='_PNFORUM_ADMINRANKS' ]--></a>]&nbsp;

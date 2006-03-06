@@ -73,12 +73,14 @@ function pnForum_adminapi_readcategories($args)
             ORDER BY $catcolumn[cat_order]";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
+        for (; !$result->EOF; $result->MoveNext()) {
             $category = array();
             list( $category['cat_id'],
                   $category['cat_title'],
                   $category['cat_order'] ) = $result->fields;
+            if(isset($cat_id)) {
+                return $category;
+            }
             array_push( $categories, $category );
         }
         usort($categories, 'cmp_catorder');
@@ -189,8 +191,9 @@ function pnForum_adminapi_addcategory($args)
         $sql = "INSERT INTO $cattable ($catcolumn[cat_id], $catcolumn[cat_title], $catcolumn[cat_order])
                 VALUES (" . pnVarPrepForStore($cat_id) . ", '$cat_title', " . pnVarPrepForStore($neworder) . ")";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        $new_cat_id = $dbconn->PO_Insert_ID($cattable, 'cat_id');
         pnfCloseDB($result);
-        return true;
+        return $new_cat_id;   // true;
     }
     return false;
 }
@@ -256,14 +259,14 @@ function pnForum_adminapi_readforums($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $permcheck = (isset($permcheck)) ? strtolower($permcheck): "read";
+    $permcheck = (isset($permcheck)) ? strtolower($permcheck): 'read';
     if( !empty($permcheck) &&
-        ($permcheck <> "see") &&
-        ($permcheck <> "read") &&
-        ($permcheck <> "write") &&
-        ($permcheck <> "moderate") &&
-        ($permcheck <> "admin") &&
-        ($permcheck <> "nocheck")  ) {
+        ($permcheck <> 'see') &&
+        ($permcheck <> 'read') &&
+        ($permcheck <> 'write') &&
+        ($permcheck <> 'moderate') &&
+        ($permcheck <> 'admin') &&
+        ($permcheck <> 'nocheck')  ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
     $where = "";
@@ -340,7 +343,6 @@ function pnForum_adminapi_readforums($args)
             $forum['externalsourceport'] = $forum['pop3_port'];
             $forum['pnuser']             = $forum['pop3_pnuser'];
             $forum['pnpassword']         = $forum['pop3_pnpassword'];
-
             if( ( ($permcheck=="see") && allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id']) )
               ||( ($permcheck=="read") && allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id']) )
               ||( ($permcheck=="write") && allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id']) )
@@ -805,178 +807,6 @@ function pnForum_adminapi_reordercategoriessave($args)
 }
 
 /**
- * reorder forums save
- *@params $args['neworder'] int the new order number
- *@params $args['oldorder'] int the old order number
- *@params $args['forum_id'] int the forum id
- *@params $args['cat_id'] int the category id
- */
-function pnForum_adminapi_reorderforumssave($args)
-{
-    extract($args);
-    unset($args);
-
-    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN) &&
-        !pnSecAuthAction(0, 'pnForum::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
-        return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
-    }
-
-    if(!isset($neworder) || !isset($oldorder)){
-        pnSessionSetVar('errormsg', _MODARGSERROR);
-        return false;
-    }
-
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    $forumtable   = $pntable['pnforum_forums'];
-    $forumcolumn  = &$pntable['pnforum_forums_column'];
-
-    $cat_id      = (int)pnVarPrepForStore($cat_id);
-    $forum_id    = (int)pnVarPrepForStore($forum_id);
-    $neworder    = (int)pnVarPrepForStore($neworder);
-    $oldorder    = (int)pnVarPrepForStore($oldorder);
-
-    if ((int)$oldorder > (int)$neworder) {
-        if ($neworder < 0) {
-            $neworder = 0;
-        }
-        if ($neworder == 0) {
-            $sql = "SELECT $forumcolumn[forum_id],
-                $forumcolumn[forum_order]
-                    FROM $forumtable
-                    WHERE $forumcolumn[forum_order] >= '" . (int)pnVarPrepForStore($oldorder) . "'
-                    AND $forumcolumn[cat_id]='" . (int)pnVarPrepForStore($cat_id) . "'
-                    ORDER BY $forumcolumn[forum_order] DESC";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            while(list($forumid, $currentOrder) = $result->fields) {
-                $sql2 = "UPDATE $forumtable
-                    SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($currentOrder-1) . "'
-                    WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forumid) . "'";
-                $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-                pnfCloseDB($result2);
-                $result->MoveNext();
-            }
-            pnfCloseDB($result);
-            $sql2 = "UPDATE $forumtable
-                SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($neworder) . "'
-                WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forum_id) . "'";
-            $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-            pnfCloseDB($result2);
-        } else {
-            $sql = "SELECT $forumcolumn[forum_id],
-                $forumcolumn[forum_order]
-                    FROM $forumtable
-                    WHERE $forumcolumn[forum_order] >= '" . (int)pnVarPrepForStore($neworder) . "'
-                    AND $forumcolumn[forum_order] <= '" . (int)pnVarPrepForStore($oldorder) . "'
-                    AND $forumcolumn[cat_id]='" . (int)pnVarPrepForStore($cat_id) . "'
-                    AND $forumcolumn[forum_order] != '0'
-                    ORDER BY $forumcolumn[forum_order] DESC";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            if ($result->EOF) {
-                $sql2 = "UPDATE $forumtable
-                    SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($neworder) . "'
-                    WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forum_id) . "'";
-                $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-                pnfCloseDB($result2);
-            } else {
-                while(list($forum_id, $currentOrder) = $result->fields) {
-                    if ($currentOrder == $oldorder) {
-                        // we are dealing with the old value so make it the new value
-                        $currentOrder = $neworder;
-                    } else {
-                        $currentOrder++;
-                    }
-                    $sql2 = "UPDATE $forumtable
-                        SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($currentOrder) . "'
-                        WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forum_id) . "'";
-                    $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-                    pnfCloseDB($result2);
-                    $result->MoveNext();
-                }
-            }
-            pnfCloseDB($result);
-        }
-    } else {
-        // new order > old order
-
-        $sql = "SELECT max(forum_order) AS maxorder
-            FROM $forumtable
-            WHERE $forumcolumn[cat_id] = '" . (int)pnVarPrepForStore($cat_id) . "'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        list($maxorder) = $result->fields;
-        pnfCloseDB($result);
-
-        // The new sequence is lower in the list
-        //if the new requested sequence is bigger than
-        //the maximum sequence number then set it to
-        //the maximum number.  We don't want any spaces
-        //in the sequence.
-        if ($neworder > ($maxorder+1)) {
-            $neworder = ((int)$maxorder)+1;
-        }
-
-        if ($oldorder == 0) {
-            $sql = "SELECT $forumcolumn[forum_id],
-                $forumcolumn[forum_order]
-                    FROM $forumtable
-                    WHERE $forumcolumn[forum_order] >= '" . (int)pnVarPrepForStore($neworder) . "'
-                    AND $forumcolumn[cat_id]='" . (int)pnVarPrepForStore($cat_id) . "'
-                    ORDER BY $forumcolumn[forum_order] DESC";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            while(list($forumid, $currentOrder) = $result->fields) {
-                $sql2 = "UPDATE $forumtable
-                    SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($currentOrder+1) . "'
-                    WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forumid) . "'";
-                $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-                pnfCloseDB($result2);
-                $result->MoveNext();
-            }
-            pnfCloseDB($result);
-            $sql2 = "UPDATE $forumtable
-                SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($neworder) . "'
-                WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forum_id) . "'";
-            $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-            pnfCloseDB($result2);
-        } else {
-            $sql = "SELECT $forumcolumn[forum_id],
-                $forumcolumn[forum_order]
-                    FROM $forumtable
-                    WHERE $forumcolumn[forum_order] >= '" . (int)pnVarPrepForStore($oldorder) . "'
-                    AND $forumcolumn[forum_order] <= '" . (int)pnVarPrepForStore($neworder) . "'
-                    AND $forumcolumn[cat_id]='" . (int)pnVarPrepForStore($cat_id) . "'
-                    AND $forumcolumn[forum_order] != '0'
-                    ORDER BY $forumcolumn[forum_order] ASC";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            if ($result->EOF) {
-                $sql2 = "UPDATE $forumtable
-                    SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($neworder) . "'
-                    WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forum_id) . "'";
-                $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-                pnfCloseDB($result2);
-            } else {
-                while(list($forum_id, $currentOrder) = $result->fields) {
-                    if ($currentOrder == $oldorder) {
-                        // we are dealing with the old value so make it the new value
-                        $currentOrder = $neworder;
-                    } else {
-                        $currentOrder--;
-                    }
-                    $sql2 = "UPDATE $forumtable
-                        SET $forumcolumn[forum_order] = '" . (int)pnVarPrepForStore($currentOrder) . "'
-                        WHERE $forumcolumn[forum_id] = '" . (int)pnVarPrepForStore($forum_id) . "'";
-                    $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-                    pnfCloseDB($result2);
-                    $result->MoveNext();
-                }
-            }
-            pnfCloseDB($result);
-        }
-
-    }
-    return;
-}
-
-/**
  * This function should receive $id, $type
  * synchronizes forums/topics/users
  */
@@ -1147,7 +977,10 @@ function pnForum_adminapi_addforum($args)
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
+    $forumtable  = $pntable['pnforum_forums'];
+    $forumcolumn = $pntable['pnforum_forums_column'];
 
+    $forum_name = strip_tags($forum_name);
     if(empty($forum_name)) {
         return showforumerror(_PNFORUM_CREATEFORUM_INCOMPLETE, __FILE__, __LINE__);
     }
@@ -1155,34 +988,34 @@ function pnForum_adminapi_addforum($args)
         $desc = '';
     }
     $desc = nl2br($desc); // to be fixed ASAP
-    $desc = pnVarPrepForStore($desc);
-    $forum_name = pnVarPrepForStore($forum_name);
-    $cat_id = pnVarPrepForStore($cat_id);
+    //$desc = pnVarPrepForStore($desc);
+    //$forum_name = pnVarPrepForStore($forum_name);
+    //$cat_id = pnVarPrepForStore($cat_id);
     $sql = "SELECT max(forum_order) AS highest
-            FROM ".$pntable['pnforum_forums']."
-            WHERE cat_id = '" . pnVarPrepForStore($cat_id) . "'";
+            FROM " . $forumtable . "
+            WHERE " . $forumcolumn['cat_id'] ."= '" . pnVarPrepForStore($cat_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($highest) = $result->fields;
     pnfCloseDB($result);
     $highest++;
     $forum_id = $dbconn->GenID($pntable['pnforum_forums']);
-    $sql = "INSERT INTO ".$pntable['pnforum_forums']."
-                (forum_id,
-                forum_name,
-                forum_desc,
-                cat_id,
-                forum_order,
-                forum_pop3_active,
-                forum_pop3_server,
-                forum_pop3_port,
-                forum_pop3_login,
-                forum_pop3_password,
-                forum_pop3_interval,
-                forum_pop3_matchstring,
-                forum_pop3_pnuser,
-                forum_pop3_pnpassword,
-                forum_moduleref,
-                forum_pntopic)
+    $sql = "INSERT INTO " . $forumtable . "
+                (" . $forumcolumn['forum_id'] . ",
+                 " . $forumcolumn['forum_name'] . ",
+                 " . $forumcolumn['forum_desc'] . ",
+                 " . $forumcolumn['cat_id'] . ",
+                 " . $forumcolumn['forum_order'] . ",
+                 " . $forumcolumn['forum_pop3_active'] . ",
+                 " . $forumcolumn['forum_pop3_server'] . ",
+                 " . $forumcolumn['forum_pop3_port'] . ",
+                 " . $forumcolumn['forum_pop3_login'] . ",
+                 " . $forumcolumn['forum_pop3_password'] . ",
+                 " . $forumcolumn['forum_pop3_interval'] . ",
+                 " . $forumcolumn['forum_pop3_matchstring'] . ",
+                 " . $forumcolumn['forum_pop3_pnuser'] . ",
+                 " . $forumcolumn['forum_pop3_pnpassword'] . ",
+                 " . $forumcolumn['forum_moduleref'] . ",
+                 " . $forumcolumn['forum_pntopic'] . ")
             VALUES ('".pnVarPrepForStore($forum_id)."',
                     '".pnVarPrepForStore($forum_name)."',
                     '".pnVarPrepForStore($desc)."',
@@ -1200,15 +1033,16 @@ function pnForum_adminapi_addforum($args)
                     '".pnVarPrepForStore($moduleref)."',
                     '".pnVarPrepForStore($pntopic)."')";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+pnf_ajaxerror($dbconn->ErrorMsg());
     pnfCloseDB($result);
-    $forum = $dbconn->PO_Insert_ID($pntable['pnforum_forums'], 'forum_id');
+    $newforumid = $dbconn->PO_Insert_ID($pntable['pnforum_forums'], 'forum_id');
     $count = 0;
     if(is_array($mods) && count($mods)>0) {
         while(list($mod_number, $mod) = each($mods)) {
             $mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']."
                                 (forum_id,
                                 user_id)
-                            VALUES ('".pnVarPrepForStore($forum)."',
+                            VALUES ('".pnVarPrepForStore($newforumid)."',
                                     '".pnVarPrepForStore($mod)."')";
             $mod_res = pnfExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
             pnfCloseDB($mod_res);
@@ -1217,24 +1051,24 @@ function pnForum_adminapi_addforum($args)
     if (isset($forum_order) && is_numeric($forum_order)) {
         pnModAPIFunc('pnForum', 'admin', 'reorderforumssave',
                 array('cat_id'      => $cat_id,
-                    'forum_id'    => $forum,
+                    'forum_id'    => $newforumid,
                     'neworder'    => $forum_order,
                     'oldorder'    => $highest));
     }
 
     // Let any hooks know that we have created a new item.
-    pnModCallHooks('item', 'create', $forum, array('module' => 'pnForum',
-                                                   'forum_id' => $forum));
+    pnModCallHooks('item', 'create', $newforumid, array('module' => 'pnForum',
+                                                        'forum_id' => $newforumid));
 
-    return $forum;
+    return $newforumid;
 }
 
 /**
  * editforum
  */
+// $forum_id, $forum_name, $desc, $cat_id, $mods, $rem_mods)
 function pnForum_adminapi_editforum($args)
 {
-// $forum_id, $forum_name, $desc, $cat_id, $mods, $rem_mods)
     extract($args);
     unset($args);
 
@@ -1256,25 +1090,27 @@ function pnForum_adminapi_editforum($args)
     }
 
     $sql = "UPDATE ".$pntable['pnforum_forums']."
-            SET forum_name='".pnVarPrepForStore($forum_name)."',
+            SET forum_name='".pnVarPrepForStore(strip_tags($forum_name))."',
             forum_desc='".pnVarPrepForStore($desc)."',
-            cat_id='".pnVarPrepForStore($cat_id)."',
-            forum_pop3_active      ='".(int)pnVarPrepForStore($pop3_active)."',
+            cat_id=" . (int)pnVarPrepForStore($cat_id) . ",
+            forum_pop3_active      =".(int)pnVarPrepForStore($pop3_active).",
             forum_pop3_server      ='".pnVarPrepForStore($pop3_server)."',
-            forum_pop3_port        ='".(int)pnVarPrepForStore($pop3_port)."',
+            forum_pop3_port        =".(int)pnVarPrepForStore($pop3_port).",
             forum_pop3_login       ='".pnVarPrepForStore($pop3_login)."',
             $pop3passwordupdate
-            forum_pop3_interval    ='".(int)pnVarPrepForStore($pop3_interval)."',
+            forum_pop3_interval    =".(int)pnVarPrepForStore($pop3_interval).",
             forum_pop3_pnuser      ='".pnVarPrepForStore($pop3_pnuser)."',
             $pnpasswordupdate
             forum_pop3_matchstring ='".pnVarPrepForStore($pop3_matchstring)."',
-            forum_moduleref        ='".pnVarPrepForStore($moduleref)."',
-            forum_pntopic          ='".pnVarPrepForStore($pntopic)."'
+            forum_moduleref        =".pnVarPrepForStore($moduleref).",
+            forum_pntopic          =".pnVarPrepForStore($pntopic)."
             WHERE forum_id=".pnVarPrepForStore($forum_id)."";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     if(isset($mods) && !empty($mods)) {
+        $recentmods = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
+                                   array('forum_id' => $forum_id));
         foreach ($mods as $mod) {
             $mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']." (forum_id, user_id) VALUES ('".pnVarPrepForStore($forum_id)."', '".pnVarPrepForStore($mod)."')";
             $mods = pnfExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
@@ -1289,6 +1125,7 @@ function pnForum_adminapi_editforum($args)
             pnfCloseDB($rem);
         }
     }
+
     return;
 }
 
@@ -1407,4 +1244,89 @@ function pnForum_adminapi_get_pntopics()
     return $topics;
 }
 
+/**
+ * store new forum order
+ *
+ *@params $args['forum_id'] int the forum id 
+ *@params $args['cat_id']   int the forums category id 
+ *@params $args['order']    int the forum order number in this category
+ *
+ */
+function pnForum_adminapi_storenewforumorder($args)
+{
+    extract($args);
+    unset($args);
+
+    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
+    }
+    
+    if(!isset($forum_id) || empty($forum_id) || !is_numeric($forum_id)) {
+        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), forumid=' . $forum_id);
+    }    
+    if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
+        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), cat_id=' . $cat_id);
+    }    
+    if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
+        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), order=' . $order);
+    }    
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $forumtable   = $pntable['pnforum_forums'];
+    $forumcolumn  = &$pntable['pnforum_forums_column'];
+
+    $sql = "UPDATE " . $forumtable. "
+            SET " . $forumcolumn['forum_order'] ."='" . (int)pnVarPrepForStore($order) . "',
+                " . $forumcolumn['cat_id'] . "='" . (int)pnVarPrepForStore($cat_id) . "'
+            WHERE " . $forumcolumn['forum_id'] . "='" . (int)pnVarPrepForStore($forum_id) . "'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
+    if(is_bool($result) && $result==false) {
+        return false;
+    }
+    pnfCloseDB($result);
+    return true;
+    
+}
+
+/**
+ * store new category order
+ *
+ *@params $args['cat_id'] int the category id 
+ *@params $args['order']  int the category order number
+ *
+ */
+function pnForum_adminapi_storenewcategoryorder($args)
+{
+    extract($args);
+    unset($args);
+
+    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        pnf_ajaxerror(_PNFORUM_NOAUTH);
+    }
+    
+    if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
+        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), cat_id=' . $cat_id);
+    }    
+    if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
+        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), order=' . $order);
+    }    
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    $cattable   = $pntable['pnforum_categories'];
+    $catcolumn  = &$pntable['pnforum_categories_column'];
+
+    $sql = "UPDATE $cattable
+            SET $catcolumn[cat_order] = '" . (int)pnVarPrepForStore($order) . "'
+            WHERE $catcolumn[cat_id] = '" . (int)pnVarPrepForStore($cat_id) . "'";
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
+    if(is_bool($result) && $result==false) {
+        return false;
+    }
+    pnfCloseDB($result);
+    return true;
+    
+}
+ 
 ?>

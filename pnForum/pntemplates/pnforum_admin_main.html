@@ -45,7 +45,7 @@
             </form>
         </div>
         <div style="text-align: left;">
-    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=reorderforums ]-->" method="post">
+    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=newforumorder ]-->" method="post">
     	    <select name="cat_id">
     	    <!--[ foreach item=category from=$categories ]-->
 
@@ -58,4 +58,7 @@
     </div>
 
 </fieldset>
+
 <br />
+
+<!--[ include file='pnforum_admin_footer.html' ]-->

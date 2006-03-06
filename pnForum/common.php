@@ -339,7 +339,7 @@ function pnfCloseDB($resobj)
  *@params $line   int    line in the calling file, important for error reorting
  *@returns object the result of $dbconn->Execute($sql)
  */
-function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false)
+function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false, $extendederror=true)
 {
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
@@ -351,7 +351,11 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     $result = $dbconn->Execute($sql);
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+        if($extendederror == true) {
+            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+        } else {
+            return false;
+        }
     }
     return $result;
 }
@@ -1029,9 +1033,8 @@ function pnf_convert_to_utf8($input='')
  * will be overwritten!
  *
  */
-function pnf_jsonizeoutput($args, $createauthid = false)
+function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
 {
-    pnSessionDelVar('pn_ajax_call');
     require_once('modules/pnForum/pnincludes/JSON.php');
     $json = new Services_JSON();
     if(!is_array($args)) {
@@ -1042,11 +1045,14 @@ function pnf_jsonizeoutput($args, $createauthid = false)
     if($createauthid == true) {
         $data['authid'] = pnSecGenAuthKey('pnForum');
     }
-    
-    $data = pnf_convert_to_utf8($data); 
-    
-    $output = $json->encode($data);
-    echo $output;
+    $output = $json->encode(pnf_convert_to_utf8($data));
+
+    if($xjsonheader == false) {
+        echo $output;
+    } else {
+        header('HTTP/1.0 200 OK');
+        header('X-JSON:(' . $output . ')');
+    }
     pnSessionDelVar('pn_ajax_call');
     exit;
     

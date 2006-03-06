@@ -328,311 +328,7 @@ function pnForum_admin_syncforums()
     return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
 
-/**
- * addcategory
- *
- */
-function pnForum_admin_category()
-{
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
-    }
 
-    list($submit, $cat_id) = pnVarCleanFromInput('submit', 'cat_id');
-    if(!$submit)
-    {
-        if( $cat_id==-1) {
-            $category = array('cat_title' => "",
-                              'cat_id' => -1);
-            $category['topic_count'] = 0;
-            $category['post_count'] = 0;
-        } else {
-            $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
-                                     array( 'cat_id' => $cat_id ));
-            $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
-                       array('cat_id' => $cat_id));
-
-            foreach($forums as $forum) {
-                $category['topic_count'] += pnModAPIFunc('pnForum', 'user', 'boardstats',
-                                                         array('type' => 'forumtopics',
-                                                               'id'   => $forum['forum_id']));
-                $category['post_count'] += pnModAPIFunc('pnForum', 'user', 'boardstats',
-                                                        array('type' => 'forumposts',
-                                                              'id'   => $forum['forum_id']));
-            }
-        }
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
-        $pnr->assign('category', $category );
-        return $pnr->fetch("pnforum_admin_category.html");
-    } else { // submit is set
-        list($actiontype, $cat_title) = pnVarCleanFromInput('actiontype', 'cat_title');
-
-        switch($actiontype)
-        {
-            case "Add":
-                pnModAPIFunc('pnForum', 'admin', 'addcategory', array('cat_title' => $cat_title));
-                break;
-            case "Edit":
-                pnModAPIFunc('pnForum', 'admin', 'updatecategory', array('cat_id' => $cat_id,
-                                                                          'cat_title' => $cat_title));
-                break;
-            case "Delete":
-                pnModAPIFunc('pnForum', 'admin', 'deletecategory', array('cat_id' => $cat_id));
-                break;
-            default:
-        }
-        return pnRedirect(pnModUrl('pnForum', 'admin', 'main'));
-    }
-}
-
-/**
- * forum
- *
- */
-function pnForum_admin_forum()
-{
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
-    }
-
-    list($submit, $forum_id) = pnVarCleanFromInput('submit', 'forum_id');
-
-    $categories = pnModAPIFunc('pnForum', 'admin', 'readcategories');
-    if(count($categories) == 0) {
-        // no categories found, redirect to category admin
-        pnSessionSetVar('statusmsg', _PNFORUM_NOCATEGORIES);
-        return pnRedirect(pnModURL('pnForum', 'admin', 'category',
-                                   array('cat_id' => -1)));
-    }
-
-    if(!$submit) {
-        //
-        if($forum_id==-1) {
-            $forum = array('forum_name'       => '',
-                           'forum_id'         => -1,
-                           'forum_desc'       => '',
-                           'forum_access'     => -1,
-                           'forum_type'       => -1,
-                           'forum_order'      => -1,
-                           'cat_title'        => '',
-                           'cat_id'           => -1,
-                           'pop3_active'      => 0,
-                           'pop3_server'      => '',
-                           'pop3_port'        => 110,
-                           'pop3_login'       => '',
-                           'pop3_password'    => '',
-                           'pop3_interval'    => 0,
-                           'pop3_pnuser'      => '',
-                           'pop3_pnpassword'  => '',
-                           'pop3_matchstring' => '',
-                           'forum_moduleref'  => '',
-                           'forum_pntopic'    => 0);
-        } else {
-            $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
-                                  array('forum_id' => $forum_id));
-        }
-        $externalsourceoptions = array( 0 => array('checked'  => '',
-                                                   'name'     => _PNFORUM_NOEXTERNALSOURCE,
-                                                   'ok'       => '',
-                                                   'extended' => false),   // none
-                                        1 => array('checked'  => '',
-                                                   'name'     => _PNFORUM_MAIL2FORUM,
-                                                   'ok'       => '',
-                                                   'extended' => true),  // mail
-                                        2 => array('checked'  => '',
-                                                   'name'     => _PNFORUM_RSS2FORUM,
-                                                   'ok'       => (pnModAvailable('RSS')==true) ? '' : _PNFORUM_RSSMODULENOTAVAILABLE,
-                                                   'extended' => true)); // rss
-        $externalsourceoptions[$forum['pop3_active']]['checked'] = ' checked="checked"';
-        $hooked_modules_raw = pnModAPIFunc('modules', 'admin', 'gethookedmodules',
-                                       array('hookmodname' => 'pnForum'));
-        $hooked_modules = array(array('name' => _PNFORUM_NOHOOKEDMODULES,
-                                               'id'   => 0));
-        $foundsel = false;
-        foreach($hooked_modules_raw as $hookmod => $dummy) {
-            $hookmodid = pnModGetIDFromName($hookmod);
-            $sel = false;
-            if($forum['forum_moduleref'] == $hookmodid) {
-                $sel = true;
-                $foundsel = true;
-            }
-            $hooked_modules[] = array('name' => $hookmod,
-                                               'id'   => $hookmodid,
-                                               'sel'  => $sel);
-        }
-        if($foundsel == false) {
-            $hooked_modules[0]['sel'] = true;
-        }
-
-        // read all RSS feeds
-        $rssfeeds = array();
-        if(pnModAvailable('RSS')) {
-            $rssfeeds = pnModAPIFunc('RSS', 'user', 'getall');
-        }
-
-        $moderators = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
-                                    array('forum_id' => $forum['forum_id']));
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
-        $pnr->assign('forum', $forum);
-        $pnr->assign('hooked_modules', $hooked_modules);
-        $pnr->assign('rssfeeds', $rssfeeds);
-        $pnr->assign('externalsourceoptions', $externalsourceoptions);
-        $pnr->assign('pntopics', pnModAPIFunc('pnForum', 'admin', 'get_pntopics'));
-        $pnr->assign('categories', $categories);
-        $pnr->assign('moderators', $moderators);
-        $hideusers = pnModGetVar('pnForum', 'hideusers');
-        if($hideusers == 'no') {
-            $users = pnModAPIFunc('pnForum', 'admin', 'readusers',
-                                  array('moderators' => $moderators));
-        } else {
-            $users = array();
-        }
-        $pnr->assign('users', $users);
-        $pnr->assign('groups', pnModAPIFunc('pnForum', 'admin', 'readgroups',
-                                            array('moderators' => $moderators)));
-        return $pnr->fetch("pnforum_admin_forum.html");
-    } else {
-        //
-        list($forum_name,
-             $forum_id,
-             $cat_id,
-             $desc,
-             $mods,
-             $rem_mods,
-             $extsource,
-             $rssfeed,
-             $pop3_server,
-             $pop3_port,
-             $pop3_login,
-             $pop3_password,
-             $pop3_passwordconfirm,
-             $pop3_interval,
-             $pop3_matchstring,
-             $pnuser,
-             $pnpassword,
-             $pnpasswordconfirm,
-             $moduleref,
-             $pntopic,
-             $actiontype,
-             $pop3_test)   = pnVarCleanFromInput('forum_name',
-                                                 'forum_id',
-                                                 'cat_id',
-                                                 'desc',
-                                                 'mods',
-                                                 'rem_mods',
-                                                 'extsource',
-                                                 'rssfeed',
-                                                 'pop3_server',
-                                                 'pop3_port',
-                                                 'pop3_login',
-                                                 'pop3_password',
-                                                 'pop3_passwordconfirm',
-                                                 'pop3_interval',
-                                                 'pop3_matchstring',
-                                                 'pnuser',
-                                                 'pnpassword',
-                                                 'pnpasswordconfirm',
-                                                 'moduleref',
-                                                 'pntopic',
-                                                 'actiontype',
-                                                 'pop3_test');
-        $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
-                              array('forum_id' => $forum_id));
-
-        if($extsource == 2) {
-            // store the rss feed in the pop3_server field
-            $pop3_server = $rssfeed;
-        }
-
-        if($pop3_password <> $pop3_passwordconfirm) {
-        	return showforumerror(_PNFORUM_PASSWORDNOMATCH, __FILE__, __LINE__);
-        }
-        // check if user has changed the password
-        if($forum['pop3_password'] == $pop3_password) {
-            // no change necessary
-            $pop3_password = "";
-        } else {
-            $pop3_password = base64_encode($pop3_password);
-        }
-
-        if($pnpassword <> $pnpasswordconfirm) {
-        	return showforumerror(_PNFORUM_PASSWORDNOMATCH, __FILE__, __LINE__);
-        }
-        // check if user has changed the password
-        if($forum['pop3_pnpassword'] == $pnpassword) {
-            // no change necessary
-            $pnpassword = "";
-        } else {
-            $pnpassword = base64_encode($pnpassword);
-        }
-        switch($actiontype) {
-            case "Add":
-                $forum_id = pnModAPIFunc('pnForum', 'admin', 'addforum',
-                                         array('forum_name'       => $forum_name,
-                                               'cat_id'           => $cat_id,
-                                               'desc'             => $desc,
-                                               'mods'             => $mods,
-                                               'pop3_active'      => $extsource,
-                                               'pop3_server'      => $pop3_server,
-                                               'pop3_port'        => $pop3_port,
-                                               'pop3_login'       => $pop3_login,
-                                               'pop3_password'    => $pop3_password,
-                                               'pop3_interval'    => $pop3_interval,
-                                               'pop3_pnuser'      => $pnuser,
-                                               'pop3_pnpassword'  => $pnpassword,
-                                               'pop3_matchstring' => $pop3_matchstring,
-                                               'moduleref'        => $moduleref,
-                                               'pntopic'          => $pntopic));
-                break;
-            case "Edit":
-                pnModAPIFunc('pnForum', 'admin', 'editforum',
-                             array('forum_name'       => $forum_name,
-                                   'forum_id'         => $forum_id,
-                                   'cat_id'           => $cat_id,
-                                   'desc'             => $desc,
-                                   'mods'             => $mods,
-                                   'rem_mods'         => $rem_mods,
-                                   'pop3_active'      => $extsource,
-                                   'pop3_server'      => $pop3_server,
-                                   'pop3_port'        => $pop3_port,
-                                   'pop3_login'       => $pop3_login,
-                                   'pop3_password'    => $pop3_password,
-                                   'pop3_interval'    => $pop3_interval,
-                                   'pop3_pnuser'      => $pnuser,
-                                   'pop3_pnpassword'  => $pnpassword,
-                                   'pop3_matchstring' => $pop3_matchstring,
-                                   'moduleref'        => $moduleref,
-                                   'pntopic'          => $pntopic));
-                break;
-            case "Delete":
-                // no security check!!!
-                pnModAPIFunc('pnForum', 'admin', 'deleteforum',
-                             array('forum_id'   => $forum_id,
-                                   'ok'         => 1 ));
-                break;
-            default:
-        }
-        if($pop3_test==1) {
-            $pop3testresult = pnModAPIFunc('pnForum', 'user', 'testpop3connection',
-                                           array('forum_id' => $forum_id));
-            $pnr =& new pnRender('pnForum');
-            $pnr->caching = false;
-            $pnr->add_core_data();
-            $pnr->assign('messages', $pop3testresult);
-            $pnr->assign('forum_id', $forum_id);
-            return $pnr->fetch('pnforum_admin_pop3test.html');
-        }
-    }
-    if($actiontype == 'Delete') {
-        return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
-    } else {
-        return pnRedirect(pnModURL('pnForum', 'admin', 'forum', array('forum_id' => $forum_id)));
-    }
-}
 
 /**
  * ranks
@@ -731,86 +427,17 @@ function pnForum_admin_assignranks()
     return pnRedirect(pnModURL('pnForum','admin', 'assignranks'));
 }
 
-/**
- * reordercategories
+
+/** 
+ * newforumorder
  *
  */
-function pnForum_admin_reordercategories()
-{
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
-    }
-
-    list($direction) = pnVarCleanFromInput('direction');
-
-    $categories = pnModAPIFunc('pnForum', 'admin', 'readcategories');
-
-    if(!$direction) {
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
-        $pnr->assign('total_categories', count($categories));
-        $pnr->assign('categories', $categories);
-        return $pnr->fetch("pnforum_admin_reordercategories.html");
-    } else {
-        list( $cat_id,
-              $cat_order,
-              $direction ) = pnVarCleanFromInput('cat_id',
-                                                 'cat_order',
-                                                 'direction');
-        pnModAPIFunc('pnForum', 'admin', 'reordercategoriessave',
-                     array('cat_id'    => $cat_id,
-                           'cat_order' => $cat_order,
-                           'direction' => $direction));
-    }
-    return pnRedirect(pnModURL('pnForum', 'admin', 'reordercategories'));
-}
-
-/**
- * reorderforums
- *
- */
-function pnForum_admin_reorderforums()
+function pnForum_admin_newforumorder()
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
-
-    list($direction,
-            $cat_id,
-            $forum_id,
-            $direction,
-            $editforumorder,
-            $oldorder,
-            $neworder) = pnVarCleanFromInput('direction',
-                'cat_id',
-                'forum_id',
-                'direction',
-                'editforumorder',
-                'oldorder',
-                'neworder');
-
-    // we are re-sequencing with the arrow keys
-    if (!empty($direction)) {
-        // figure out the new order
-        if ($direction=='up') {
-            $neworder = $oldorder-1;
-        } else {
-            $neworder = $oldorder+1;
-        }
-    }
-
-    // we either got the neworder because they were editing
-    // an entry or because they used an arrow key and we calculated
-    // it above
-    if (isset($neworder) && is_numeric($neworder)) {
-        // call the api function to figure out the new sequence for everything
-        pnModAPIFunc('pnForum', 'admin', 'reorderforumssave',
-                array('cat_id'      => $cat_id,
-                    'forum_id'    => $forum_id,
-                    'neworder'    => $neworder,
-                    'oldorder'    => $oldorder));
-    }
+    $cat_id = pnVarCleanFromInput('cat_id');
 
     // if we have been passed a cat_id then lets figure out which forums
     // belong to this category, and get the category details
@@ -823,19 +450,578 @@ function pnForum_admin_reorderforums()
                 array('cat_id' => $cat_id));
     }
 
-    // show the list of forums and their order
-    // NOTE: There is no need to do a pnRedirect because we figure
-    // out the forum info after we set the new order if we were editing.
     $pnr =& new pnRender("pnForum");
     $pnr->caching = false;
     $pnr->add_core_data();
     $pnr->assign('forums', $forums);
-    // editforumorder is used to determine if we want to edit the forum_order
-    // and contains the forum_id of the forum we want to edit.
-    $pnr->assign('editforumorder', $editforumorder);
     $pnr->assign('total_forums', count($forums));
     $pnr->assign('category', $category);
     return $pnr->fetch("pnforum_admin_reorderforums.html");
+}
+
+
+/**
+ * newforumordersave
+ *
+ * AJAX result function
+ *
+ */
+function pnForum_admin_newforumordersave()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    if(!pnSecConfirmAuthKey()) {
+        pnf_ajaxerror(_BADAUTHKEY);
+    }
+    
+    list($forums,
+         $cat_id) = pnVarCleanFromInput('forums',
+                                        'cat_id');
+
+    if(is_array($forums) && count($forums) > 0) {
+        foreach($forums as $order => $forum_id) {
+            // array key start with 0, but we need 1, so we increae the order
+            // values
+            $order++;
+            if(pnModAPIFunc('pnForum', 'admin', 'storenewforumorder',
+                                              array('forum_id' => $forum_id,
+                                                    'order'    => $order)) == false) {
+                pnf_ajaxerror('storenewforumorder(): cannot reorder forum ' . $forum_id . ' (' . $order . ')');
+            }
+        } 
+    }
+    pnf_jsonizeoutput(true, true);
+    
+}
+
+/** 
+ * newforumorder
+ *
+ */
+function pnForum_admin_reordertree()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    $categorytree = pnModAPIFunc('pnForum', 'user', 'readcategorytree');
+    if(is_array($categorytree) && count($categorytree) > 0) {
+        foreach($categorytree as $category) {
+            $catids[] = $category['cat_id'];
+            if(is_array($category['forums']) && count($category['forums']) > 0) {
+                foreach($category['forums'] as $forum) {
+                    $forumids[] = $forum['forum_id'];
+                }
+            }
+        }
+    }
+    $pnr =& new pnRender("pnForum");
+    $pnr->caching = false;
+    $pnr->add_core_data();
+    $pnr->assign('categorytree', $categorytree);
+    $pnr->assign('catids', $catids);
+    $pnr->assign('forumids', $forumids);
+    return $pnr->fetch("pnforum_admin_reordertree.html");
+}
+
+
+/**
+ * reordertreesave
+ *
+ * AJAX result function
+ *
+ */
+function pnForum_admin_reordertreesave()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    }
+
+    pnSessionsetVar('pn_ajax_call', 'ajax');
+    
+    if(!pnSecConfirmAuthKey()) {
+//        pnf_ajaxerror(_BADAUTHKEY);
+    }
+    
+    $categoryarray = pnVarCleanFromInput('category');
+    
+    // the last entry in the $category is the placeholder for a new
+    // category, we need ot remove this
+    array_pop($categoryarray);
+$test = implode($categoryarray, ':') . "\n";
+    if(is_array($categoryarray) && count($categoryarray) > 0) {
+        foreach($categoryarray as $catorder => $cat_id) {
+            // array key start with 0, but we need 1, so we increase the order
+            // value
+            $catorder++;
+            if(pnModAPIFunc('pnForum', 'admin', 'storenewcategoryorder',
+                                              array('cat_id' => $cat_id,
+                                                    'order'  => $catorder)) == false) {
+                pnf_ajaxerror('storenewcategoryorder(): cannot reorder category ' . $cat_id . ' (' . $catorder . ')');
+            }
+
+            $forumsincategoryarray = pnVarCleanFromInput('cid_' . $cat_id);
+$test .= "f:" . implode($forumsincategoryarray, ':') . "\n";
+            if(is_array($forumsincategoryarray) && count($forumsincategoryarray) > 0) {
+                foreach($forumsincategoryarray as $forumorder => $forum_id) {
+                    if(!empty($forum_id) && is_numeric($forum_id)) {
+                        // array key start with 0, but we need 1, so we increase the order
+                        // value
+                        $forumorder++;
+                        if(pnModAPIFunc('pnForum', 'admin', 'storenewforumorder',
+                                                          array('forum_id' => $forum_id,
+                                                                'cat_id'   => $cat_id,
+                                                                'order'    => $forumorder)) == false) {
+                            pnf_ajaxerror('storenewforumorder(): cannot reorder forum ' . $forum_id . ' in category ' . $cat_id . ' (' . $forumorder . ')');
+                        }
+                    }
+                }
+            }
+        } 
+    }
+//pnf_ajaxerror($test);
+    pnf_jsonizeoutput('', true, true);
+    
+}
+
+/**
+ * editforum
+ *
+ * AJAX function
+ *
+ */
+function pnForum_admin_editforum($args=array())
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    }
+    
+    if(count($args)>0) {
+        extract($args);
+        // forum_id, returnhtml
+    } else {
+        $forum_id = pnVarCleanFromInput('forum');
+    }
+     
+    if(empty($forum_id) || !is_numeric($forum_id)) {
+        pnf_ajaxerror(_MODARGSERROR . ': forum_id ' . pnVarPrepForDisplay($forum_id) . ' in pnForum_admin_editforum()');
+    }
+    
+    if($forum_id == -1) {
+        // create a new forum 
+        $new = true;
+        $cat_id = pnVarCleanFromInput('cat');
+        $forum = array('forum_name'       => _PNFORUM_ADDNEWFORUM,
+                       'forum_id'         => time(), /* for new forums only! */
+                       'forum_desc'       => '',
+                       'forum_access'     => -1,
+                       'forum_type'       => -1,
+                       'forum_order'      => -1,
+                       'cat_title'        => '',
+                       'cat_id'           => $cat_id,
+                       'pop3_active'      => 0,
+                       'pop3_server'      => '',
+                       'pop3_port'        => 110,
+                       'pop3_login'       => '',
+                       'pop3_password'    => '',
+                       'pop3_interval'    => 0,
+                       'pop3_pnuser'      => '',
+                       'pop3_pnpassword'  => '',
+                       'pop3_matchstring' => '',
+                       'forum_moduleref'  => '',
+                       'forum_pntopic'    => 0);
+    } else {
+        // we are editing
+        $new = false;            
+        $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                              array('forum_id'  => $forum_id,
+                                    'permcheck' => 'admin'));
+    }
+    $externalsourceoptions = array( 0 => array('checked'  => '',
+                                               'name'     => _PNFORUM_NOEXTERNALSOURCE,
+                                               'ok'       => '',
+                                               'extended' => false),   // none
+                                    1 => array('checked'  => '',
+                                               'name'     => _PNFORUM_MAIL2FORUM,
+                                               'ok'       => '',
+                                               'extended' => true),  // mail
+                                    2 => array('checked'  => '',
+                                               'name'     => _PNFORUM_RSS2FORUM,
+                                               'ok'       => (pnModAvailable('RSS')==true) ? '' : _PNFORUM_RSSMODULENOTAVAILABLE,
+                                               'extended' => true)); // rss
+    $externalsourceoptions[$forum['pop3_active']]['checked'] = ' checked="checked"';
+    $hooked_modules_raw = pnModAPIFunc('modules', 'admin', 'gethookedmodules',
+                                   array('hookmodname' => 'pnForum'));
+    $hooked_modules = array(array('name' => _PNFORUM_NOHOOKEDMODULES,
+                                           'id'   => 0));
+    $foundsel = false;
+    foreach($hooked_modules_raw as $hookmod => $dummy) {
+        $hookmodid = pnModGetIDFromName($hookmod);
+        $sel = false;
+        if($forum['forum_moduleref'] == $hookmodid) {
+            $sel = true;
+            $foundsel = true;
+        }
+        $hooked_modules[] = array('name' => $hookmod,
+                                           'id'   => $hookmodid,
+                                           'sel'  => $sel);
+    }
+    if($foundsel == false) {
+        $hooked_modules[0]['sel'] = true;
+    }
+
+    // read all RSS feeds
+    $rssfeeds = array();
+    if(pnModAvailable('RSS')) {
+        $rssfeeds = pnModAPIFunc('RSS', 'user', 'getall');
+    }
+
+    $moderators = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
+                                    array('forum_id' => $forum['forum_id']));
+
+
+    $pnr = new pnRender('pnForum');
+    $pnr->assign('hooked_modules', $hooked_modules);
+    $pnr->assign('rssfeeds', $rssfeeds);
+    $pnr->assign('externalsourceoptions', $externalsourceoptions);
+    $pnr->assign('pntopics', pnModAPIFunc('pnForum', 'admin', 'get_pntopics'));
+    $pnr->assign('moderators', $moderators);
+    $hideusers = pnModGetVar('pnForum', 'hideusers');
+    if($hideusers == 'no') {
+        $users = pnModAPIFunc('pnForum', 'admin', 'readusers',
+                              array('moderators' => $moderators));
+    } else {
+        $users = array();
+    }
+    $pnr->assign('users', $users);
+    $pnr->assign('groups', pnModAPIFunc('pnForum', 'admin', 'readgroups',
+                                        array('moderators' => $moderators)));
+    $pnr->caching = false;
+    $pnr->add_core_data();
+    $pnr->assign('forum', $forum);
+    $pnr->assign('newforum', $new);
+    $html = $pnr->fetch('pnforum_ajax_editforum.html');
+    if(!isset($returnhtml)) {
+        pnf_jsonizeoutput(array('data'     => $html,
+                                'forum_id' => $forum['forum_id'],
+                                'cat_id'   => $forum['cat_id'],
+                                'new'      => $new),
+                          false);
+    }
+    return $html; 
+}
+
+/**
+ * editcategory
+ *
+ */
+function pnForum_admin_editcategory($args=array())
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    if(!empty($args)) {
+        extract($args);
+        $cat_id = $cat;
+    } else {
+        $cat_id = pnVarCleanFromInput('cat');
+    }   
+    if( $cat_id == 'new') {
+        $new = true;
+        $category = array('cat_title'    => _PNFORUM_ADDNEWCATEGORY,
+                          'cat_id'       => time(),
+                          'forum_count'  => 0);
+        // we add a new category
+    } else {
+        $new = false;
+        $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+                                 array( 'cat_id' => $cat_id ));
+        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                               array('cat_id'    => $cat_id,
+                                     'permcheck' => 'nocheck'));
+        $category['forum_count'] = count($forums);
+    }
+    $pnr =& new pnRender("pnForum");
+    $pnr->caching = false;
+    $pnr->add_core_data();
+    $pnr->assign('category', $category );
+    $pnr->assign('newcategory', $new);
+    pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_ajax_editcategory.html'),
+                            'cat_id'   => $category['cat_id'],
+                            'new'      => $new),
+                      false);
+}
+
+/**
+ * storecategory
+ *
+ * AJAX function
+ *
+ */
+function pnForum_admin_storecategory()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    if(!pnSecConfirmAuthKey()) {
+        pnf_ajaxerror(_BADAUTHKEY);
+    }
+
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+
+    list($cat_id, 
+         $cat_title, 
+         $add,
+         $delete) = pnVarCleanFromInput('cat_id', 
+                                        'cat_title', 
+                                        'add',
+                                        'delete');
+    
+    $cat_title = utf8_decode($cat_title);
+    if(!empty($delete)) {
+        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                               array('cat_id'    => $cat_id,
+                                     'permcheck' => 'nocheck'));
+        if(count($forums) > 0) {
+            $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+                                     array( 'cat_id' => $cat_id ));
+            pnf_ajaxerror('error: category "' . $category['cat_title'] . '" contains ' . count($forums) . ' forums!');
+        }
+        $res = pnModAPIFunc('pnForum', 'admin', 'deletecategory',
+                            array('cat_id' => $cat_id));
+        if($res==true) {
+            pnf_jsonizeoutput(array('cat_id' => $cat_id,
+                                    'action' => 'delete'),
+                              true); 
+        } else {
+            pnf_ajaxerror('error deleting category ' . pnVarPrepForDisplay($cat_id));
+        }
+        
+    } else if(!empty($add)) {
+        $original_catid = $cat_id;
+        $cat_id = pnModAPIFunc('pnForum', 'admin', 'addcategory',
+                               array('cat_title' => $cat_title));
+        if(!is_bool($cat_id)) {
+            $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+                                     array( 'cat_id' => $cat_id ));
+            $pnr =& new pnRender("pnForum");
+            $pnr->caching = false;
+            $pnr->add_core_data();
+            $pnr->assign('category', $category );
+            $pnr->assign('newcategory', false);
+            pnf_jsonizeoutput(array('cat_id'      => $cat_id,
+                                    'old_id'      => $original_catid,
+                                    'cat_title'   => $cat_title,
+                                    'action'      => 'add',
+                                    'edithtml'    => $pnr->fetch('pnforum_ajax_editcategory.html'),
+                                    'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
+                              true); 
+        } else {
+            pnf_ajaxerror('error creating category "' . pnVarPrepForDisplay($cat_title) . '"');
+        }
+        
+    } else {
+        if(pnModAPIFunc('pnForum', 'admin', 'updatecategory',
+                        array('cat_title' => $cat_title,
+                              'cat_id'    => $cat_id)) == true) {
+            pnf_jsonizeoutput(array('cat_id'      => $cat_id,
+                                    'cat_title'   => $cat_title,
+                                    'action'      => 'update',
+                                    'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
+                              true); 
+        } else {
+            pnf_ajaxerror('error updating cat_id ' . pnVarPrepForDisplay($cat_id) . ' with title "' . pnVarPrepForDisplay($cat_title) . '"');
+        }
+    }
+}
+
+/**
+ * storeforum
+ *
+ * AJAX function
+ */
+function pnForum_admin_storeforum()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    }
+
+    if(!pnSecConfirmAuthKey()) {
+        pnf_ajaxerror(_BADAUTHKEY);
+    }
+
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+
+    list($forum_name,
+         $forum_id,
+         $cat_id,
+         $desc,
+         $mods,
+         $rem_mods,
+         $extsource,
+         $rssfeed,
+         $pop3_server,
+         $pop3_port,
+         $pop3_login,
+         $pop3_password,
+         $pop3_passwordconfirm,
+         $pop3_interval,
+         $pop3_matchstring,
+         $pnuser,
+         $pnpassword,
+         $pnpasswordconfirm,
+         $moduleref,
+         $pntopic,
+         $pop3_test,
+         $add,
+         $delete)   = pnVarCleanFromInput('forum_name',
+                                          'forum_id',
+                                          'cat_id',
+                                          'desc',
+                                          'mods',
+                                          'rem_mods',
+                                          'extsource',
+                                          'rssfeed',
+                                          'pop3_server',
+                                          'pop3_port',
+                                          'pop3_login',
+                                          'pop3_password',
+                                          'pop3_passwordconfirm',
+                                          'pop3_interval',
+                                          'pop3_matchstring',
+                                          'pnuser',
+                                          'pnpassword',
+                                          'pnpasswordconfirm',
+                                          'moduleref',
+                                          'pntopic',
+                                          'pop3_test',
+                                          'add',
+                                          'delete');
+    $forum_name           = utf8_decode($forum_name);           
+    $desc                 = utf8_decode($desc);                 
+    $pop3_server          = utf8_decode($pop3_server);          
+    $pop3_login           = utf8_decode($pop3_login);           
+    $pop3_password        = utf8_decode($pop3_password);        
+    $pop3_passwordconfirm = utf8_decode($pop3_passwordconfirm); 
+    $pop3_matchstring     = utf8_decode($pop3_matchstring);     
+    $pnuser               = utf8_decode($pnuser);               
+    $pnpassword           = utf8_decode($pnpassword);           
+    $pnpasswordconfirm    = utf8_decode($pnpasswordconfirm);    
+
+    $pop3testresulthtml = '';
+    if(!empty($delete)) {
+        $action = 'delete';
+        $newforum = array();
+        $old_id = $forum_id;
+        // no security check!!!
+        pnModAPIFunc('pnForum', 'admin', 'deleteforum',
+                     array('forum_id'   => $forum_id,
+                           'ok'         => 1 ));
+    } else {
+        // add or update - the next steps are the same for both
+        if($extsource == 2) {
+            // store the rss feed in the pop3_server field
+            $pop3_server = $rssfeed;
+        }
+
+        if($pop3_password <> $pop3_passwordconfirm) {
+        	pnf_ajaxerror(_PNFORUM_PASSWORDNOMATCH);
+        }
+        if($pnpassword <> $pnpasswordconfirm) {
+        	pnf_ajaxerror(_PNFORUM_PASSWORDNOMATCH);
+        }
+        
+        if(!empty($add)) {
+            $action = 'add';
+            $old_id = $forum_id;
+            $pop3_password = base64_encode($pop3_password);
+            $pnpassword = base64_encode($pnpassword);
+            $forum_id = pnModAPIFunc('pnForum', 'admin', 'addforum',
+                                     array('forum_name'       => $forum_name,
+                                           'cat_id'           => $cat_id,
+                                           'desc'             => $desc,
+                                           'mods'             => $mods,
+                                           'pop3_active'      => $extsource,
+                                           'pop3_server'      => $pop3_server,
+                                           'pop3_port'        => $pop3_port,
+                                           'pop3_login'       => $pop3_login,
+                                           'pop3_password'    => $pop3_password,
+                                           'pop3_interval'    => $pop3_interval,
+                                           'pop3_pnuser'      => $pnuser,
+                                           'pop3_pnpassword'  => $pnpassword,
+                                           'pop3_matchstring' => $pop3_matchstring,
+                                           'moduleref'        => $moduleref,
+                                           'pntopic'          => $pntopic));
+        } else {
+            $action = 'update';
+            $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                                  array('forum_id' => $forum_id));
+            // check if user has changed the password
+            if($forum['pop3_password'] == $pop3_password) {
+                // no change necessary
+                $pop3_password = "";
+            } else {
+                $pop3_password = base64_encode($pop3_password);
+            }
+            
+            // check if user has changed the password
+            if($forum['pop3_pnpassword'] == $pnpassword) {
+                // no change necessary
+                $pnpassword = "";
+            } else {
+                $pnpassword = base64_encode($pnpassword);
+            }
+             
+            pnModAPIFunc('pnForum', 'admin', 'editforum',
+                         array('forum_name'       => $forum_name,
+                               'forum_id'         => $forum_id,
+                               'cat_id'           => $cat_id,
+                               'desc'             => $desc,
+                               'mods'             => $mods,
+                               'rem_mods'         => $rem_mods,
+                               'pop3_active'      => $extsource,
+                               'pop3_server'      => $pop3_server,
+                               'pop3_port'        => $pop3_port,
+                               'pop3_login'       => $pop3_login,
+                               'pop3_password'    => $pop3_password,
+                               'pop3_interval'    => $pop3_interval,
+                               'pop3_pnuser'      => $pnuser,
+                               'pop3_pnpassword'  => $pnpassword,
+                               'pop3_matchstring' => $pop3_matchstring,
+                               'moduleref'        => $moduleref,
+                               'pntopic'          => $pntopic));
+        }
+        $editforumhtml = pnForum_admin_editforum(array('forum_id'   => $forum_id,
+                                                       'returnhtml' => true));
+        $forumtitle = '<a href="' . pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id)) .'">' . $forum_name . '</a> (' . $forum_id . ')';
+        // re-read forum data 
+        $newforum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+                              array('forum_id'  => $forum_id,
+                                    'permcheck' => 'nocheck'));
+        if($pop3_test==1) {
+            $pop3testresult = pnModAPIFunc('pnForum', 'user', 'testpop3connection',
+                                           array('forum_id' => $forum_id));
+            $pnr =& new pnRender('pnForum');
+            $pnr->caching = false;
+            $pnr->add_core_data();
+            $pnr->assign('messages', $pop3testresult);
+            $pnr->assign('forum_id', $forum_id);
+            $pop3testresulthtml = $pnr->fetch('pnforum_admin_pop3test.html');
+        }
+    } 
+      
+    pnf_jsonizeoutput(array('action'         => $action,
+                            'forum'          => $newforum,
+                            'old_id'         => $old_id,
+                            'forumtitle'     => $forumtitle,
+                            'pop3resulthtml' => $pop3testresulthtml,
+                            'editforumhtml'  => $editforumhtml),
+                      true,
+                      true);
 }
 
 ?>
