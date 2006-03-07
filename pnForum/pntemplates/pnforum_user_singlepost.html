@@ -121,22 +121,19 @@ Template for single postings
             
                     <!--[ if $topic.topic_status neq 1 ]-->
                         <!--[ if $post.poster_data.reply eq true]-->
-                            <a class="postingbuttonhidden" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
+                            <a class="postingbutton" style="display:none;" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
                             <noscript>
                             <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnimg src="answertoz.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]--></a>
                             </noscript>
                         <!--[ /if ]-->
                         <!--[ if $post.poster_data.edit eq 1 ]-->
-                            <a class="postingbuttonhidden" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
+                            <a class="postingbutton" style="display:none;" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
                             <noscript>
                             <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnimg src="modify.gif" alt='_PNFORUM_EDITDELETE' altml=true ]--></a>
                             </noscript>
                         <!--[ /if ]-->
                     <!--[ else ]-->
                         <!--[ pnimg src=closedt.gif alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
-                        <script type="text/javascript">
-                            $('postingtext_<!--[ $post.post_id ]-->').style.background = 'url(../pnimages/closed_watermark.jpg)'
-                        </script>
                     <!--[ /if ]-->
                     <a href="<!--[ pnmodurl modname=pnForum type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_NOTIFYMODERATOR ]-->"><!--[ pnimg src="notifymod.gif" ]--></a>
                 </div>
@@ -146,9 +143,9 @@ Template for single postings
     
     <script type="text/javascript">
         if($('editbutton_<!--[ $post.post_id ]-->')) {
-            Element.show($('editbutton_<!--[ $post.post_id ]-->'));
+            Element.show('editbutton_<!--[ $post.post_id ]-->');
         }
         if($('quotebutton_<!--[ $post.post_id ]-->')) {
-            Element.show($('quotebutton_<!--[ $post.post_id ]-->'));
+            Element.show('quotebutton_<!--[ $post.post_id ]-->');
         }
     </script>
