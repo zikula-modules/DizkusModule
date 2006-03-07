@@ -481,16 +481,21 @@ dd.pnfuser {
     float: left;
 }
 
-.postingbody {
+.postingbody, .postingbody_closed {
     text-align: left; 
     width: 100%;
+}
+
+.postingbody_closed {    
+    background-image: url(../pnimages/closed_watermark.jpg); 
+    background-repeat: repeat;
 }
 
 .postingtext_small {
     width: 78%; 
     float: left; 
     padding: 5px 5px 25px 5px; 
-    overflow: auto;
+    overflow: auto; 
 }
 
 .postingtext_big {
@@ -567,7 +572,7 @@ a.postingbutton {
 
 a.postingbuttonhidden {
     margin: 0 3px 0 3px;
-    display: hidden;
+    display: none;
 }
 
 a.normallink {
@@ -622,3 +627,17 @@ a.normallink {
     cursor: move;
 }
 
+.pnf_textarea {
+    background-image: url(../pnimages/posthint.gif);
+    background-repeat: no-repeat;
+    background-position: top right;    
+}
+
+.pnf_newcategory {
+    width: 95%; 
+    margin: 0.2em 0 0.2em 2em;
+}
+
+.pnf_treeforumlist {
+/* */
+}

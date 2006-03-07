@@ -5,6 +5,7 @@
  *
  */
 
+var containments = new Array();
 var forumliststatus = false;
 var treeorderstatus = false;
 var globalhandlers = {
@@ -74,25 +75,22 @@ function loadcategory(catid)
         });
 }
 
-function editcategory(originalRequest)
+function editcategory(originalRequest, json)
 {    
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
+    Element.update('editcategory_' + json.cat_id, json.data);
+    Effect.toggle('editcategory_' + json.cat_id, 'slide');
+    Event.observe('showcategory_' + json.cat_id, 'click', function(){hideshowcategory(json.cat_id)}, false);
+    Event.observe('hidecategory_' + json.cat_id, 'click', function(){hideshowcategory(json.cat_id)}, false);
+    Element.hide('loadcategory_' + json.cat_id);
+    Element.hide('showcategory_' + json.cat_id);
+    Element.show('hidecategory_' + json.cat_id);
 
-    var result = dejsonize(originalRequest.responseText);
-    Element.update('editcategory_' + result.cat_id, result.data);
-    Effect.toggle('editcategory_' + result.cat_id, 'slide');
-    //Element.show('editcategory_' + result.cat_id);
-    Event.observe('showcategory_' + result.cat_id, 'click', function(){hideshowcategory(result.cat_id)}, false);
-    Event.observe('hidecategory_' + result.cat_id, 'click', function(){hideshowcategory(result.cat_id)}, false);
-    Element.show('hidecategory_' + result.cat_id);
-    Element.hide('showcategory_' + result.cat_id);
-    Element.hide('loadcategory_' + result.cat_id);
-
-    pnf_toggleprogressimage(true, result.cat_id);
+    pnf_toggleprogressimage(true, json.cat_id);
 }
 
 function storeforum(forumid)
@@ -123,7 +121,20 @@ function storeforum_response(originalRequest, json)
     updateAuthid(json.authid);
     switch(json.action) {
         case 'delete':
-            Element.remove('forum_' + json.old_id);
+            var forum = 'forum_' + json.old_id;
+            // hide it
+            Effect.toggle(forum, 'slide');
+            // check if there are more forums, if not, show place holder
+            if($(forum).parentNode.childNodes.length == 3) {
+                // 3 = this forum li, emptycategory li  + newforum li
+                // after removing it the list will be virtually empty
+                Element.show('emptycategory_' + json.cat_id);
+                $('deletecategory_' + json.cat_id).style.visibility = '';
+            } else {
+                $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
+            }
+            // remove it
+            Element.remove(forum);
             break;
         case 'update':
             Element.update('forumtitle_' + json.forum.forum_id, json.forumtitle);
@@ -142,17 +153,19 @@ function storeforum_response(originalRequest, json)
             $('forum_' + json.old_id).id = newforum;
 
             var newhideforum = 'hideforum_' + json.forum.forum_id;
-            var newshowforum = 'showforum_' + json.forum.forum_id;
             $('hideforum_' + json.old_id).id = newhideforum;
+            Event.observe(newhideforum, 'click', function(){hideshowforum(json.forum.forum_id)}, false);
+            Element.show(newhideforum);
+            
+            var newshowforum = 'showforum_' + json.forum.forum_id;
             $('showforum_' + json.old_id).id = newshowforum;
+            Event.observe(newshowforum, 'click', function(){hideshowforum(json.forum.forum_id)}, false);
+            Element.hide(newshowforum);
 
             Element.remove('canceladdforum_' + json.old_id);
             $('progressforumimage_' + json.old_id).id = 'progressforumimage_' + json.forum.forum_id;
 
-            Event.observe(newshowforum, 'click', function(){hideshowforum(json.forum.forum_id)}, false);
-            Event.observe(newhideforum, 'click', function(){hideshowforum(json.forum.forum_id)}, false);
-            Element.show(newhideforum);
-            Element.hide(newshowforum);
+            $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
             break;
         default:
             pnf_showajaxerror('storeforum_response(): received illegal action type from server');   
@@ -183,6 +196,8 @@ function storecategory_response(originalRequest)
 
     var result = dejsonize(originalRequest.responseText);
     updateAuthid(result.authid);
+
+    pnf_toggleprogressimage(true, result.old_id);
     
     switch(result.action) {
         case 'add':
@@ -203,15 +218,60 @@ function storecategory_response(originalRequest)
             var newaddforum = 'addforum_' + result.cat_id;
             $('addforum_' + result.old_id).id = newaddforum;
             Element.show(newaddforum);
+            Event.observe(newaddforum, 'click', function(){addforum(result.cat_id)}, false);
+
+            var newhideforumlist = 'hideforumlist_' + result.cat_id;
+            $('hideforumlist_' + result.old_id).id = newhideforumlist;
+            Element.show(newhideforumlist);
+            Event.observe(newhideforumlist, 'click', function(){hideshowforumlist(result.cat_id)}, false);
+            
+            var newshowforumlist = 'showforumlist_' + result.cat_id;
+            $('showforumlist_' + result.old_id).id = newshowforumlist;
+            Element.hide(newshowforumlist);
+            Event.observe(newshowforumlist, 'click', function(){hideshowforumlist(result.cat_id)}, false);
+
+            var newprogresscategoryimage = 'progresscategoryimage_' + result.cat_id;
+            $('progresscategoryimage_' + result.old_id).id = newprogresscategoryimage;
+            $(newprogresscategoryimage).style.visibilty = 'hidden';
+
+            
+            var newcid = 'cid_' + result.cat_id;
+            $('cid_' + result.old_id).id = newcid;
+            Element.show(newcid);
+
+            
+            var newemptycategory = 'emptycategory_' + result.cat_id;
+            $('emptycategory_' + result.old_id).id = newemptycategory;
+            Element.show(newemptycategory);
+
 
             Element.remove('canceladdcategory_' + result.old_id);
-
             var neweditcategory = 'editcategory_' + result.cat_id;          
+
             $('editcategory_' + result.old_id).id = neweditcategory;
             Element.update(neweditcategory, result.edithtml);
 
-            var neweditcategoryform = 'editcategoryform_' + result.cat_id;          
-            $('editcategoryform_' + result.old_id).id = neweditcategoryform;
+            // new forum li
+            var newforum = 'newforum_cat' + result.cat_id;
+            $('newforum_cat' + result.old_id).id = newforum;
+            
+            var newforumtitle = 'forumtitle_cat' + result.cat_id;   
+            $('forumtitle_cat' + result.old_id).id = newforumtitle;
+            
+            var newhideforum = 'hideforum_cat' + result.cat_id;
+            $('hideforum_cat' + result.old_id).id = newhideforum;
+            
+            var newshowforum = 'showforum_cat' + result.cat_id;   
+            $('showforum_cat' + result.old_id).id = newshowforum;
+           
+            var newcanceladdforum = 'canceladdforum_cat' + result.cat_id; 
+            $('canceladdforum_cat' + result.old_id).id = newcanceladdforum;
+            
+            var newprogressforumimage = 'progressforumimage_cat' + result.cat_id;
+            $('progressforumimage_cat' + result.old_id).id = newprogressforumimage;
+            
+            var neweditforum = 'neweditforum_' + result.cat_id; 
+            $('neweditforum_' + result.old_id).id = neweditforum;
             
             break;
         case 'update':
@@ -223,7 +283,6 @@ function storecategory_response(originalRequest)
         default:
             pnf_showajaxerror('unknown action received from server');
     }
-    pnf_toggleprogressimage(true, result.cat_id);
 }
 
 function addforum(catid)
@@ -248,33 +307,48 @@ function addforuminit(originalRequest)
     }
 
     var result = dejsonize(originalRequest.responseText);
+
     // copy newforum li
     var newnewforum = $('newforum_cat' + result.cat_id).cloneNode(true);
+
     // update existig newforum li with data retreved from server
-    Element.update('neweditforum_' + result.cat_id, result.data);
     // and show it
-    Element.show('newforum_cat' + result.cat_id);
-    Element.show('neweditforum_' + result.cat_id);
+    var neweditforum = 'editforum_' + result.forum_id;
+    $('neweditforum_' + result.cat_id).id = neweditforum;
+    Element.update(neweditforum, result.data);
+    Element.show(neweditforum);
+    
     // set new id in newforum li
-    $('newforum_cat' + result.cat_id).id = 'forum_' + result.forum_id;
-    $('neweditforum_' + result.cat_id).id = 'editforum_' + result.forum_id;
+    var newforum = 'forum_' + result.forum_id;
+    $('newforum_cat' + result.cat_id).id = newforum;
+    Element.show(newforum);
+
     var newforumtitle = 'forumtitle_' + result.forum_id;
-    var newhideforum = 'hideforum_' + result.forum_id;
-    var newshowforum = 'showforum_' + result.forum_id;
-    var newcanceladdforum = 'canceladdforum_' + result.forum_id;
     $('forumtitle_cat' + result.cat_id).id = newforumtitle;
+
+    var newhideforum = 'hideforum_' + result.forum_id;
     $('hideforum_cat' + result.cat_id).id = newhideforum;
-    $('showforum_cat' + result.cat_id).id = newshowforum;
-    $('canceladdforum_cat' + result.cat_id).id = newcanceladdforum;
-    $('progressforumimage_cat' + result.cat_id).id = 'progressforumimage_' + result.forum_id;
-    Event.observe(newshowforum, 'click', function(){hideshowforum(result.forum_id)}, false);
     Event.observe(newhideforum, 'click', function(){hideshowforum(result.forum_id)}, false);
-    Event.observe(newcanceladdforum, 'click', function(){canceladdforum(result.forum_id)}, false);
     Element.show(newhideforum);
+
+    var newshowforum = 'showforum_' + result.forum_id;
+    $('showforum_cat' + result.cat_id).id = newshowforum;
+    Event.observe(newshowforum, 'click', function(){hideshowforum(result.forum_id)}, false);
     Element.hide(newshowforum);
+
+    var newcanceladdforum = 'canceladdforum_' + result.forum_id;
+    $('canceladdforum_cat' + result.cat_id).id = newcanceladdforum;
+    Event.observe(newcanceladdforum, 'click', function(){canceladdforum(result.forum_id, result.cat_id)}, false);
+
+    $('progressforumimage_cat' + result.cat_id).id = 'progressforumimage_' + result.forum_id;
+
     // append copied li to the ul - now we can add another new forum without 
     // needing to store the first one
     $('cid_' + result.cat_id).appendChild(newnewforum);
+    if(Element.visible('cid_' + result.cat_id) == false) {
+        hideshowforumlist(result.cat_id);
+    }
+    Element.hide('emptycategory_' + result.cat_id);
     pnf_toggleprogressimage(true, result.cat_id);
 }
 
@@ -290,7 +364,7 @@ function addcategory()
         });
 }
 
-function addcategoryinit(originalRequest)
+function addcategoryinit(originalRequest, json)
 {    
     // show error if necessary
     if( originalRequest.status != 200 ) { 
@@ -298,43 +372,87 @@ function addcategoryinit(originalRequest)
         return;
     }
 
-    var result = dejsonize(originalRequest.responseText);
+   //var result = dejsonize(originalRequest.responseText);
 
     // copy newcategory li
     var newnewcategory = $('newcategory').cloneNode(true);
+    
     // update existing newcategory li with data retreved from server
-    Element.update('neweditcategory', result.data);
+    Element.update('neweditcategory', json.data);
     // and show it
-    Element.show('neweditcategory');
-    Effect.toggle('newcategory', 'slide');
-    //Element.show('newcategory');
+    
     // set new id in newcategory li
-    var newcategory = 'category_' + result.cat_id;
+    var newcategory = 'category_' + json.cat_id;
     $('newcategory').id = newcategory;
 
-    $('neweditcategory').id = 'editcategory_' + result.cat_id;
-    $('newcategorytitle').id = 'categorytitle_' + result.cat_id;
+    var neweditcategory = 'editcategory_' + json.cat_id;
+    $('neweditcategory').id = neweditcategory;
+    Element.show(neweditcategory);
 
-    var newhidecategory = 'hidecategory_' + result.cat_id;
-    var newshowcategory = 'showcategory_' + result.cat_id;
-    var newcanceladdcategory = 'canceladdcategory_' + result.cat_id;
-    var newaddforum = 'addforum_' + result.cat_id;
+    $('newcategorytitle').id = 'categorytitle_' + json.cat_id;
 
+    var newhidecategory = 'hidecategory_' + json.cat_id;
     $('newhidecategory').id = newhidecategory;
-    $('newshowcategory').id = newshowcategory;
-    $('newcanceladdcategory').id = newcanceladdcategory;
-    $('newaddforum').id = newaddforum;
-
-    Event.observe(newshowcategory, 'click', function(){hideshowcategory(result.cat_id)}, false);
-    Event.observe(newhidecategory, 'click', function(){hideshowcategory(result.cat_id)}, false);
-    Event.observe(newcanceladdcategory, 'click', function(){canceladdcategory(result.cat_id)}, false);
+    Event.observe(newhidecategory, 'click', function(){hideshowcategory(json.cat_id)}, false);
     Element.show(newhidecategory);
+    
+    var newshowcategory = 'showcategory_' + json.cat_id;
+    $('newshowcategory').id = newshowcategory;
+    Event.observe(newshowcategory, 'click', function(){hideshowcategory(json.cat_id)}, false);
     Element.hide(newshowcategory);
+
+    var newhideforumlist = 'hideforumlist_' + json.cat_id;
+    $('newhideforumlist').id = newhideforumlist;
+    Element.hide(newhideforumlist);
+    
+    var newshowforumlist = 'showforumlist_' + json.cat_id;
+    $('newshowforumlist').id = newshowforumlist;
+    Element.hide(newshowforumlist);
+
+    var newprogresscategoryimage = 'progresscategoryimage_' + json.cat_id;
+    $('newprogresscategoryimage').id = newprogresscategoryimage;
+    
+    var newcanceladdcategory = 'canceladdcategory_' + json.cat_id;
+    $('newcanceladdcategory').id = newcanceladdcategory;
+    Event.observe(newcanceladdcategory, 'click', function(){canceladdcategory(json.cat_id)}, false);
+    
+    var newaddforum = 'addforum_' + json.cat_id;
+    $('newaddforum').id = newaddforum;
     Element.hide(newaddforum);
+
+    var newcid = 'cid_' + json.cat_id;
+    $('newcid').id = newcid;
+    
+    var newemptycategory = 'emptycategory_' + json.cat_id;
+    $('newemptycategory').id = newemptycategory;
+
+    // new forum li
+    var newforum = 'newforum_cat' + json.cat_id;
+    $('newforum').id = newforum;
+    
+    var newforumtitle = 'forumtitle_cat' + json.cat_id;   
+    $('newforumtitle').id = newforumtitle;
+    
+    var newhideforum = 'hideforum_cat' + json.cat_id;
+    $('newhideforum').id = newhideforum;
+    
+    var newshowforum = 'showforum_cat' + json.cat_id;   
+    $('newshowforum').id = newshowforum;
+    
+    var newcanceladdforum = 'canceladdforum_cat' + json.cat_id; 
+    $('newcanceladdforum').id = newcanceladdforum;
+    
+    var newprogressforumimage = 'progressforumimage_cat' + json.cat_id;
+    $('newprogressforumimage').id = newprogressforumimage;
+    
+    var neweditforum = 'neweditforum_' + json.cat_id; 
+    $('neweditforum').id = neweditforum;
+
     // append copied li to the ul - now we can add another new category without 
     // needing to store the first one
     $('category').appendChild(newnewcategory);
-    Element.scrollTo(newcategory);
+
+    Effect.toggle(newcategory, 'slide');
 }
 
 function canceladdcategory(catid)
@@ -343,20 +461,29 @@ function canceladdcategory(catid)
     Element.remove('category_' + catid);
 }
 
-function canceladdforum(forumid)
+function canceladdforum(forumid, catid)
 {
-    Effect.toggle('forum_' + forumid, 'slide');
-    Element.remove('forum_' + forumid);
+    var forum = 'forum_' + forumid;
+    // hide it
+    Effect.toggle(forum, 'slide');
+    // check if there are more forums, if not, show place holder
+    if($(forum).parentNode.childNodes.length == 3) {
+        // 3 = this forum li, emptycategory li  + newforum li
+        // after removing it the list will be virtually empty
+        Element.show('emptycategory_' + catid);
+    }
+    // remove it
+    Element.remove(forum);
 }
 
-function storetreeorder(containmentsarray)
+function storetreeorder()
 {
     if(treeorderstatus == false) {
         showpnforuminfo(storingnewsortorder);
         treeorderstatus = true
         var pars = 'module=pnForum&type=admin&func=reordertreesave&' + Sortable.serialize('category');
-        for(var j=0; j < containmentsarray.length; j++) {
-            pars = pars + '&' + Sortable.serialize(containmentsarray[j]);
+        for(var j=0; j < containments.length; j++) {
+            pars = pars + '&' + Sortable.serialize(containments[j]);
         }
         pars = pars + '&authid=' + $F('authid');
 
@@ -391,6 +518,7 @@ function hideshowforum(forumid)
     Effect.toggle('editforum_' + forumid, 'slide');
     Element.toggle('hideforum_' + forumid);
     Element.toggle('showforum_' + forumid);
+    return;
 }
 
 function hideshowcategory(catid)
@@ -399,6 +527,7 @@ function hideshowcategory(catid)
     Effect.toggle('editcategory_' + catid, 'slide');
     Element.toggle('hidecategory_' + catid);
     Element.toggle('showcategory_' + catid);
+    return;
 }
 
 function hideshowforumlist(catid)
@@ -440,34 +569,49 @@ function storenewforumorder_response(originalRequest)
     updateAuthid(result.authid);
 }
 
-function sortforuminit(containmentsarray)
+function create_sortables()
 {
-    for(var j=0; j < containmentsarray.length; j++) {
-        Sortable.create(containmentsarray[j],
+    var cids = document.getElementsByClassName('pnf_treeforumlist');
+    if(cids.length > 0) {
+        for(var i=0; i<cids.length; i++) {
+            containments[containments.length] = cids[i].id;
+        }
+    }
+    
+    for(var j=0; j < containments.length; j++) {
+        Sortable.create(containments[j],
                         {dropOnEmpty: true,
                          handle: 'pnf_handle',
                          overlap: 'horizontal',
-                         containment: containmentsarray,
+                         containment: containments,
                          onUpdate: function() {
-                                                  for(var k=0; k < containmentsarray.length; k++) {
-                                                      if($(containmentsarray[k]).childNodes.length == 2) {
-                                                          Element.show('emptycategory_' + containmentsarray[k]);
-                                                      } else {
-                                                          Element.hide('emptycategory_' + containmentsarray[k]);
+                                                  for(var k=0; k < containments.length; k++) {
+                                                      // value is cid_X, but we need the X only
+                                                      if(containments[k] != 'newcid') {
+                                                        var temp = containments[k].split('_');
+                                                        if($(containments[k]).childNodes.length == 2) {
+                                                            Element.show('emptycategory_' + temp[1]);
+                                                        } else {
+                                                            Element.hide('emptycategory_' + temp[1]);
+                                                        }
                                                       }
                                                   }
                                               },    
                          constraint: false,
                         });
-        if($(containmentsarray[j]).childNodes.length == 2) {
-            Element.show('emptycategory_' + containmentsarray[j]);
+        if($(containments[j]).childNodes.length == 2) {
+            if(containments[j] != 'newcid') {
+                var temp = containments[j].split('_');
+                Element.show('emptycategory_' + temp[1]);
+            }
         }
     }
+
     Sortable.create("category",
                     { 
-                      handle: 'pnf_handle', 
-                      overlap: 'horizontal'
+                      handle: 'pnf_handle' 
                     });
+
 }
 
 function showpnforuminfo(infotext)

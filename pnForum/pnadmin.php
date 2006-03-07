@@ -752,7 +752,8 @@ function pnForum_admin_editcategory($args=array())
     pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_ajax_editcategory.html'),
                             'cat_id'   => $category['cat_id'],
                             'new'      => $new),
-                      false);
+                      false,
+                      true);
 }
 
 /**
@@ -917,6 +918,8 @@ function pnForum_admin_storeforum()
         $action = 'delete';
         $newforum = array();
         $old_id = $forum_id;
+        $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+                               array('forum_id' => $forum_id)); 
         // no security check!!!
         pnModAPIFunc('pnForum', 'admin', 'deleteforum',
                      array('forum_id'   => $forum_id,
@@ -1016,6 +1019,7 @@ function pnForum_admin_storeforum()
       
     pnf_jsonizeoutput(array('action'         => $action,
                             'forum'          => $newforum,
+                            'cat_id'         => $cat_id,
                             'old_id'         => $old_id,
                             'forumtitle'     => $forumtitle,
                             'pop3resulthtml' => $pop3testresulthtml,

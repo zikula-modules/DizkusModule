@@ -6,12 +6,9 @@
 <div style="margin: 0.5em;">    
     <label for="cat_title"><!--[ pnml name='_PNFORUM_CATEGORY ]--></label>&nbsp;
     <input type="text" id="cat_title" name="cat_title" value="<!--[ $category.cat_title ]-->" size="50" maxlength="100" />
+    <span id="deletecategory_<!--[ $category.cat_id ]-->"<!--[ if $category.forum_count neq 0 ]--> style="visibility:hidden"<!--[ /if ]-->><input type="checkbox" name="delete" id="delete" value="delete" />&nbsp;<label for="delete"><!--[ pnml name='_DELETE' ]--></label></span>
     <!--[ if $newcategory eq true ]-->
         <input type="hidden" name="add" value="add" />
-    <!--[ else ]-->
-        <!--[ if $category.forum_count eq 0 ]-->
-            <input type="checkbox" name="delete" value="delete" />&nbsp;<!--[ pnml name='_DELETE' ]-->
-        <!--[ /if ]-->
     <!--[ /if ]-->
     <br />
     <input type="hidden" name="cat_id" value="<!--[ $category.cat_id ]-->" />
