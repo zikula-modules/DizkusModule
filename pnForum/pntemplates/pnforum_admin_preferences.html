@@ -5,13 +5,13 @@
 <!--[* pndebug *]-->
 
 <fieldset>
-    <legend style="font-weight: bold;">
-        <!--[pnml name='_PNFORUM_ADMINFORUMOPTIONS_INFO']-->
+    <legend>
+        <!--[pnml name='_PNFORUM_ADMINFORUMOPTIONS']-->
     </legend>
 
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->" method="post">
-    <div style="padding-top: 1em; padding-bottom: 1em;">
-        <dl>
+    <div class="pnf_clearfix">
+        <dl class="pnf_clearfix">
             <dt class="pnfadmin"><label for="email_from"><!--[ pnml name='_PNFORUM_PREFS_EMAIL' html=1 ]--></label></dt>
             <dd class="pnfadmin"><input type="text" id="email_from" name="email_from" size="30" maxlength="100" value="<!--[ $email_from ]-->" /></dd>
 
@@ -100,11 +100,11 @@
             </dd>
         </dl>
 
-        <div class="pnfadminrow98">
+        <div class="pnfadminrow98 pnf_clearfix">
             <!--[ pnml name='_PNFORUM_PREFS_ICONS' html=1 ]-->
         </div>
 
-        <dl>
+        <dl class="pnf_clearfix">
             <dt class="pnfadmin"><label for="url_ranks_images"><!--[ pnml name='_PNFORUM_PREFS_RANKLOCATION' ]--></label></dt>
             <dd class="pnfadmin"><input type="text" id="url_ranks_images" name="url_ranks_images" size="40" maxlength="100" value="<!--[ $url_ranks_images ]-->" /></dd>
 
@@ -115,14 +115,16 @@
             <dd class="pnfadmin"><input type="text" id="firstnew_image" name="firstnew_image" size="40" maxlength="100" value="<!--[ $firstnew_image ]-->" />&nbsp;<img src="<!--[ $firstnew_image ]-->" alt="firstnew_image" /></dd>
         </dl>
 
-        <div class="pnfadminrow98">
+        <div class="pnfadminrow98 pnf_clearfix">
             <input type="radio" name="actiontype" value="Save" checked="checked" />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]-->&nbsp;
             <input type="radio" name="actiontype" value="RestoreDefaults" />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_RESTOREDEFAULTS' ]-->
             <br /><br />
-            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+            <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
         </div>
 
     </div>
     </form>
 
 </fieldset>
+
+<!--[ include file='pnforum_admin_footer.html' ]-->

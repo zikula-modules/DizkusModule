@@ -6,18 +6,8 @@
 
 <!--[ pnimg src="icon_dbaccess.gif" assign="progressicon ]-->
 
-<!--[*
-<script type="text/javascript">
-    var storingnewsortorder = '<!--[ pnml name='_PNFORUM_STORINGNEWSORTORDER' ]-->';
-    var containments  = new Array();
-    <!--[ foreach item=category from=$categorytree ]-->
-    containments[containments.length] = "cid_<!--[ $category.cat_id ]-->";
-    <!--[ /foreach ]-->
-</script>
-*]-->
-
 <fieldset>
-    <legend style="font-weight: bold;">
+    <legend>
         <!--[ pnml name='_PNFORUM_REORDERFORUMS' ]-->
     </legend>
 
@@ -26,8 +16,8 @@
     <!--[ pnml name="_PNFORUM_FORUM_SEQUENCE_DESCRIPTION" ]-->
     <br /><br />
     <div class="pnf_clearfix">
-        <button onclick="javascript:addcategory();" style="float: left; margin-left: 2em; border: none; background: transparent;"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINCATADD" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
-        <button onclick="javascript:storetreeorder(containments); return false;" style="float:right; margin-right: 2em; background: transparent; border: none;" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        <button onclick="javascript:addcategory();" class="left"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINCATADD" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
+        <button onclick="javascript:storetreeorder();" class="right" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
     </div>
     <div id="pnforuminformation" style="width: 60%; visibility: hidden;">&nbsp;</div>
     <ul id="category">
@@ -39,13 +29,13 @@
                         <a title="<!--[ pnml name='_PNFORUM_VISITCATEGORY' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id ]-->"><!--[ $category.cat_title ]--></a> (<!--[ $category.cat_id ]-->)
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                      <button id="loadcategory_<!--[ $category.cat_id ]-->"  style="margin: 0 0.5em 0 0.5em; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_LOADCATEGORYDATA' ]-->" onclick="javascript:loadcategory(<!--[ $category.cat_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_PNFORUM_LOADCATEGORYDATA" altml=true ]--></button>
-                      <button id="hidecategory_<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDECATEGORY' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
-                      <button id="showcategory_<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWCATEGORY' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
-                      <button onclick="javascript:hideshowforumlist(<!--[$category.cat_id ]-->);" id="hideforumlist_<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUMS' ]-->"><!--[ pnimg src="icon_hideforums.gif" ]--></button>
-                      <button onclick="javascript:hideshowforumlist(<!--[$category.cat_id ]-->);" id="showforumlist_<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUMS' ]-->"><!--[ pnimg src="icon_showforums.gif" ]--></button>
-                      <button onclick="javascript:addforum(<!--[ $category.cat_id ]-->);" id="addforum_<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; background: transparent; border: none;" onclick="javascript:addforum(<!--[ $category.cat_id ]-->);" title="<!--[ pnml name='_PNFORUM_ADMINFORUMADD' ]-->"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINFORUMADD" altml=true ]--></button>
-                      <img id="progresscategoryimage_<!--[ $category.cat_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_PNFORUM_PLEASEWAIT' ]-->" />
+                        <button id="loadcategory_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_LOADCATEGORYDATA' ]-->" onclick="javascript:loadcategory(<!--[ $category.cat_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_PNFORUM_LOADCATEGORYDATA" altml=true ]--></button>
+                        <button id="hidecategory_<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDECATEGORY' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                        <button id="showcategory_<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_SHOWCATEGORY' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                        <button onclick="javascript:hideshowforumlist(<!--[$category.cat_id ]-->);" id="hideforumlist_<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUMS' ]-->"><!--[ pnimg src="icon_hideforums.gif" ]--></button>
+                        <button onclick="javascript:hideshowforumlist(<!--[$category.cat_id ]-->);" id="showforumlist_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFORUMS' ]-->"><!--[ pnimg src="icon_showforums.gif" ]--></button>
+                        <button onclick="javascript:addforum(<!--[ $category.cat_id ]-->);" id="addforum_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_ADMINFORUMADD' ]-->"><!--[ pnimg src="icon_addforum.gif" alt="_PNFORUM_ADMINFORUMADD" altml=true ]--></button>
+                        <img id="progresscategoryimage_<!--[ $category.cat_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_PNFORUM_PLEASEWAIT' ]-->" />
                     </div>
                 </div>
                 <div id="editcategory_<!--[ $category.cat_id ]-->" style="display: none; margin-top: 0.5em; width: 90%;">&nbsp;</div>
@@ -58,9 +48,9 @@
                             <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->" title="<!--[ $forum.forum_name ]-->"><!--[ $forum.forum_name ]--></a> (<!--[ $forum.forum_id ]-->)
                         </div>
                         <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                            <button id="loadforum_<!--[ $forum.forum_id ]-->"  style="margin: 0 0.5em 0 0.5em; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_LOADFORUMDATA' ]-->" onclick="javascript:loadforum(<!--[ $forum.forum_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_PNFORUM_LOADFORUMDATA" altml=true ]--></button>
-                            <button id="hideforum_<!--[ $forum.forum_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
-                            <button id="showforum_<!--[ $forum.forum_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                            <button id="loadforum_<!--[ $forum.forum_id ]-->"  title="<!--[ pnml name='_PNFORUM_LOADFORUMDATA' ]-->" onclick="javascript:loadforum(<!--[ $forum.forum_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_PNFORUM_LOADFORUMDATA" altml=true ]--></button>
+                            <button id="hideforum_<!--[ $forum.forum_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                            <button id="showforum_<!--[ $forum.forum_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
                             <img id="progressforumimage_<!--[ $forum.forum_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_PNFORUM_PLEASEWAIT' ]-->" />
                         </div>
                     </div>
@@ -76,9 +66,9 @@
                             <!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]-->
                         </div>
                         <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                            <button id="hideforum_cat<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
-                            <button id="showforum_cat<!--[ $category.cat_id ]-->" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
-                            <button id="canceladdforum_cat<!--[ $category.cat_id ]-->" style="background: transparent; border: none;" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_cancel.gif" alt="_CANCEL" altml=true ]--></button>
+                            <button id="hideforum_cat<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                            <button id="showforum_cat<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                            <button id="canceladdforum_cat<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_canceladdforum.gif" alt="_CANCEL" altml=true ]--></button>
                             <img id="progressforumimage_cat<!--[ $category.cat_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_PNFORUM_PLEASEWAIT' ]-->" />
                         </div>
                     </div>
@@ -95,12 +85,12 @@
                         <!--[ pnml name='_PNFORUM_ADDNEWCATEGORY' ]-->
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                        <button id="newhidecategory" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDECATEGORY' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
-                        <button id="newshowcategory" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWCATEGORY' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
-                        <button id="newhideforumlist" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUMS' ]-->"><!--[ pnimg src="icon_hideforums.gif" ]--></button>
-                        <button id="newshowforumlist" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUMS' ]-->"><!--[ pnimg src="icon_showforums.gif" ]--></button>
-                        <button id="newaddforum"     style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_ADMINFORUMADD' ]-->"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINFORUMADD" altml=true ]--></button>
-                        <button id="newcanceladdcategory" style="background: transparent; border: none;" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_cancel.gif" alt="_CANCEL" altml=true ]--></button>
+                        <button id="newhidecategory"  style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDECATEGORY' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                        <button id="newshowcategory"  style="display: none;" title="<!--[ pnml name='_PNFORUM_SHOWCATEGORY' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                        <button id="newhideforumlist" style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUMS' ]-->"><!--[ pnimg src="icon_hideforums.gif" ]--></button>
+                        <button id="newshowforumlist" style="display: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUMS' ]-->"><!--[ pnimg src="icon_showforums.gif" ]--></button>
+                        <button id="newaddforum"      style="display: none;" title="<!--[ pnml name='_PNFORUM_ADMINFORUMADD' ]-->"><!--[ pnimg src="icon_addforum.gif" alt="_PNFORUM_ADMINFORUMADD" altml=true ]--></button>
+                        <button id="newcanceladdcategory" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_cancel.gif" alt="_CANCEL" altml=true ]--></button>
                         <img id="newprogresscategoryimage" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_PNFORUM_PLEASEWAIT' ]-->" />
                     </div>
                 </div>
@@ -117,9 +107,9 @@
                             <!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]-->
                         </div>
                         <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                            <button id="newhideforum" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
-                            <button id="newshowforum" style="margin: 0 0.5em 0 0.5em; display: none; background: transparent; border: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
-                            <button id="newcanceladdforum" style="background: transparent; border: none;" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_cancel.gif" alt="_CANCEL" altml=true ]--></button>
+                            <button id="newhideforum" style="display: none;" title="<!--[ pnml name='_PNFORUM_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                            <button id="newshowforum" style="display: none;" title="<!--[ pnml name='_PNFORUM_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                            <button id="newcanceladdforum" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_canceladdforum.gif" alt="_CANCEL" altml=true ]--></button>
                             <img id="newprogressforumimage" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_PNFORUM_PLEASEWAIT' ]-->" />
                         </div>
                     </div>
@@ -133,13 +123,13 @@
 
     <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
     <div class="pnf_clearfix">
-        <button onclick="javascript:addcategory();" style="float: left; margin: 2em 0 2em 2em; border: none; background: transparent;"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINCATADD" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
-        <button onclick="javascript:storetreeorder(); return false;" style="float:right; margin: 2em 2em 2em 0; background: transparent; border: none;" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        <button onclick="javascript:addcategory();" class="left"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINCATADD" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
+        <button onclick="javascript:storetreeorder();" class="right" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
     </div>
     
     <script type="text/javascript">
         var storingnewsortorder = '<!--[ pnml name='_PNFORUM_STORINGNEWSORTORDER' ]-->';
-        create_sortables();
+        Event.observe(window, 'load', create_sortables, false);
     </script>
     </div>
  

@@ -492,7 +492,7 @@ function pnForum_admin_newforumordersave()
             }
         } 
     }
-    pnf_jsonizeoutput(true, true);
+    pnf_jsonizeoutput(true, true, true);
     
 }
 
@@ -683,6 +683,8 @@ function pnForum_admin_editforum($args=array())
 
 
     $pnr = new pnRender('pnForum');
+    $pnr->caching = false;
+    $pnr->add_core_data();
     $pnr->assign('hooked_modules', $hooked_modules);
     $pnr->assign('rssfeeds', $rssfeeds);
     $pnr->assign('externalsourceoptions', $externalsourceoptions);
@@ -698,16 +700,14 @@ function pnForum_admin_editforum($args=array())
     $pnr->assign('users', $users);
     $pnr->assign('groups', pnModAPIFunc('pnForum', 'admin', 'readgroups',
                                         array('moderators' => $moderators)));
-    $pnr->caching = false;
-    $pnr->add_core_data();
     $pnr->assign('forum', $forum);
     $pnr->assign('newforum', $new);
     $html = $pnr->fetch('pnforum_ajax_editforum.html');
     if(!isset($returnhtml)) {
-        pnf_jsonizeoutput(array('data'     => $html,
-                                'forum_id' => $forum['forum_id'],
+        pnf_jsonizeoutput(array('forum_id' => $forum['forum_id'],
                                 'cat_id'   => $forum['cat_id'],
-                                'new'      => $new),
+                                'new'      => $new,
+                                'data'     => $html),
                           false);
     }
     return $html; 
@@ -797,6 +797,7 @@ function pnForum_admin_storecategory()
         if($res==true) {
             pnf_jsonizeoutput(array('cat_id' => $cat_id,
                                     'action' => 'delete'),
+                              true,
                               true); 
         } else {
             pnf_ajaxerror('error deleting category ' . pnVarPrepForDisplay($cat_id));
@@ -820,6 +821,7 @@ function pnForum_admin_storecategory()
                                     'action'      => 'add',
                                     'edithtml'    => $pnr->fetch('pnforum_ajax_editcategory.html'),
                                     'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
+                              true,
                               true); 
         } else {
             pnf_ajaxerror('error creating category "' . pnVarPrepForDisplay($cat_title) . '"');
@@ -833,6 +835,7 @@ function pnForum_admin_storecategory()
                                     'cat_title'   => $cat_title,
                                     'action'      => 'update',
                                     'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
+                              true,
                               true); 
         } else {
             pnf_ajaxerror('error updating cat_id ' . pnVarPrepForDisplay($cat_id) . ' with title "' . pnVarPrepForDisplay($cat_title) . '"');

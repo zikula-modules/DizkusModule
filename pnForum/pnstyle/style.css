@@ -1,5 +1,24 @@
 /*  $Id$  */
 
+button, button.right, button.left {
+    border: none;
+    background: transparent;
+    margin: 0 0.5em 0 0.5em;
+    padding: 0;
+    border-bottom: 1px dashed black;
+    cursor: pointer;
+}
+
+button.right {
+    float:right; 
+    margin: 1em 2em 1em 0;
+}
+
+button.left {
+    float: left; 
+    margin: 1em 0 1em 2em;
+}
+
 .pnForum-title {
     font-size: 12px;
 }
@@ -129,15 +148,17 @@ dd.pnfadmin {
     float: left;
 }
 
-fieldset {
+#pnforum_admin fieldset {
     font-size: 1em;
-    padding: 3px;
+    width: 95%
+    padding: 0.5em 0.5em 1em 0.5em;
     margin: 3px;
 }
 
-legend {
+#pnforum_admin legend {
     font-size: 1em;
     font-weight: bold;
+    margin-bottom: 1em;
 }
 
 .displayhook {
@@ -639,5 +660,5 @@ a.normallink {
 }
 
 .pnf_treeforumlist {
-/* */
+/* dont't remove this - needed for Ajax! */
 }

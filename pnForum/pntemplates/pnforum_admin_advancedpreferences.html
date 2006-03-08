@@ -5,33 +5,34 @@
 <!--[* pndebug *]-->
 
 <fieldset>
-    <legend style="font-weight: bold;">
+    <legend>
         <!--[pnml name='_PNFORUM_ADMINADVANCEDCONFIG_INFO']-->
     </legend>
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=advancedpreferences ]-->" method="post">
-    <div style="padding-top: 1em; padding-bottom: 1em;">
+    <div class="pnf_clearfix">
         <strong><!--[ pnml name='_PNFORUM_ADMINADVANCEDCONFIG_HINT' ]--></strong>
         <div class="pnfadminrow98">
             <!--[ pnml name='_PNFORUM_DATABASEINUSE' ]-->: <!--[ $dbname ]--> (<!--[ $dbtype ]--> <!--[ $dbversion ]-->)<br />
         </div>
         <div class="pnfadminrow98">
-            <span class="pnfadmincol49"><!--[ pnml name='_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX' html=1 ]--></span>
-            <span class="pnfadmincol49"><input type="checkbox" name="fulltextindex" value="1" <!--[ $fulltextindex_checked ]--> /></span>
+            <label for="fulltextindex"  class="pnfadmincol49"><!--[ pnml name='_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX' html=1 ]--></label>
+            <input class="pnfadmincol49" type="checkbox" name="fulltextindex" id="fulltextindex" value="1" <!--[ $fulltextindex_checked ]--> />
         </div>
         <div class="pnfadminrow98">
             <!--[ pnml name='_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT' html=1 ]-->
         </div>
         <div class="pnfadminrow98">
-    		<span class="pnfadmincol49"><!--[ pnml name='_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX' ]--></span>
-            <span class="pnfadmincol49"><input type="checkbox" name="extendedsearch" value="1" <!--[ $extendedsearch_checked ]--> /></span>
+    		<label for="" class="pnfadmincol49"><!--[ pnml name='_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX' ]--></label>
+            <input class="pnfadmincol49" type="checkbox" name="extendedsearch" id="extendedsearch" value="1" <!--[ $extendedsearch_checked ]--> />
     	</div>
         <div class="pnfadminrow98">
             <!--[ pnml name='_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT' html=1 ]-->
-        </div>
-        <div class="pnfadminrow98" style="text-align: center;">
-            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+            <p>
+            <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+            </p>
         </div>
     </div>
     </form>
 </fieldset>
 
+<!--[ include file='pnforum_admin_footer.html' ]-->

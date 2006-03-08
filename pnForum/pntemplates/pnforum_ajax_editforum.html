@@ -2,7 +2,6 @@
 
 <!--[* pndebug *]-->
 
-<fieldset>
     <form id="editforumform_<!--[ $forum.forum_id ]-->" name="editforumform_<!--[ $forum.forum_id ]-->" action="<!--[ pnmodurl modname=pnForum type=admin func=forum ]-->" method="post">
     <div style="cursor: auto; margin: 1em;">
         <div class="pnfadminrow98 pnf_clearfix">
@@ -110,7 +109,7 @@
             </div>
             <div class="pnfadmincol66" id="extsource">
                 <!--[ foreach item=extsource from=$externalsourceoptions key=num ]-->
-                <input type="radio" name="extsource" value="<!--[ $num ]-->" <!--[ $extsource.checked ]--> />&nbsp;<!--[ $extsource.name ]-->&nbsp;<!--[ $extsource.ok  ]--><br />
+                <input onchange="javascript:showextendedoptions(<!--[ $num ]-->, <!--[ $forum.forum_id ]-->)" type="radio" name="extsource" value="<!--[ $num ]-->" <!--[ $extsource.checked ]--> />&nbsp;<!--[ $extsource.name ]-->&nbsp;<!--[ $extsource.ok  ]--><br />
                 <!--[ if $extsource.extended == true ]-->
                 <!--[ pnml name='_PNFORUM_EXTENDEDOPTIONSAFTERSAVING' ]--><br />
                 <!--[ /if ]-->
@@ -118,7 +117,9 @@
             </div>
         </div>
 
-        <!--[ if $forum.externalsource == 1 || $forum.externalsource == 2 ]-->
+        <!--[* if $forum.externalsource == 1 || $forum.externalsource == 2 *]-->
+
+        <div id="pnlogindata_<!--[ $forum.forum_id ]-->" style="display:none;">
 
         <div class="pnfadminrow98 pnf_clearfix">
             <div class="pnfadmincol24">
@@ -146,10 +147,14 @@
                 <input type="password" id="pnpasswordconfirm" name="pnpasswordconfirm" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
             </div>
         </div>
+        
+        </div>
 
-        <!--[ /if ]-->
+        <!--[* /if *]-->
 
-        <!--[ if $forum.externalsource == 2 ]-->
+        <!--[* if $forum.externalsource == 2 *]-->
+
+        <div id="rss2forum_<!--[ $forum.forum_id ]-->" style="display:none;">
 
         <div class="pnfadminrow98 pnf_clearfix">
             <strong><!--[ pnml name='_PNFORUM_RSS2FORUM' ]--></strong>
@@ -168,11 +173,15 @@
                 </select>
             </div>
         </div>
+        
+        </div>
 
-        <!--[ /if ]-->
+        <!--[* /if *]-->
 
-        <!--[ if $forum.externalsource == 1 ]-->
+        <!--[* if $forum.externalsource == 1 *]-->
 
+        <div id="mail2forum_<!--[ $forum.forum_id ]-->" style="display:none;">
+            
         <div class="pnfadminrow98 pnf_clearfix">
             <strong><!--[ pnml name='_PNFORUM_MAIL2FORUM' ]--></strong>
         </div>
@@ -251,7 +260,8 @@
             </div>
         </div>
 
-        <!--[ /if ]-->
+        </div>
+        <!--[* /if *]-->
 
         <div class="pnfadminrow98 pnf_clearfix">
         <!--[ if $newforum eq true ]-->
@@ -265,11 +275,9 @@
             <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
             <input type="hidden" name="forum_id" value="<!--[ $forum.forum_id ]-->" />
             <input type="hidden" name="cat_id" value="<!--[ $forum.cat_id ]-->" />
-            <button onclick="javascript:storeforum(<!--[ $forum.forum_id ]-->); return false;" style="margin: 1em 0 1em 0; background: transparent; border: none;"name="submit" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+            <button onclick="javascript:storeforum(<!--[ $forum.forum_id ]-->); return false;" name="submit" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
         </div>
 
     </div>
 
     </form>
-    <br />
-</fieldset>
