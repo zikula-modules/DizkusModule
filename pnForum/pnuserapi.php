@@ -2283,6 +2283,18 @@ function pnForum_userapi_readuserforums($args)
                    f.forum_order,
                    f.forum_topics,
                    f.forum_posts,
+                   f.forum_pop3_active,
+                   f.forum_pop3_server,
+                   f.forum_pop3_port,
+                   f.forum_pop3_login,
+                   f.forum_pop3_password,
+                   f.forum_pop3_interval,
+                   f.forum_pop3_lastconnect,
+                   f.forum_pop3_matchstring,
+                   f.forum_pop3_pnuser,
+                   f.forum_pop3_pnpassword,
+                   f.forum_moduleref,
+                   f.forum_pntopic,
                    c.cat_title,
                    c.cat_id
             FROM ".$pntable['pnforum_forums']." AS f
@@ -2306,9 +2318,21 @@ function pnForum_userapi_readuserforums($args)
                   $forum['forum_order'],
                   $forum['forum_topics'],
                   $forum['forum_posts'],
+                  $forum['pop3_active'],
+                  $forum['pop3_server'],
+                  $forum['pop3_port'],
+                  $forum['pop3_login'],
+                  $forum['pop3_password'],
+                  $forum['pop3_interval'],
+                  $forum['pop3_lastconnect'],
+                  $forum['pop3_matchstring'],
+                  $forum['pop3_pnuser'],
+                  $forum['pop3_pnpassword'],
+                  $forum['forum_moduleref'],
+                  $forum['forum_pntopic'],
                   $forum['cat_title'],
                   $forum['cat_id'] ) = $result->fields;
-            if(allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+            if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
                 array_push( $forums, $forum );
             }
         }

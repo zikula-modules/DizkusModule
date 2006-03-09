@@ -1,5 +1,7 @@
 <!--[*  $Id$  *]-->
 
+<!--[ add_additional_header header='<link rel="stylesheet" href="modules/pnForum/pnstyle/style.css" type="text/css" />' ]-->
+
 <!--[ readtopforums ]-->
 <!--[ if $topforumscount > 0 ]-->
     <br /><strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_PNFORUM_ACTIVE_FORUMS' ]--></strong>
@@ -13,13 +15,13 @@
     <br />
 <!--[ /if ]-->
 
-<!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *]-->
+<!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, they are hidden per default *]-->
 <!--[ readlastposts maxposts=$maxposts ]-->
 <!--[ if $lastpostcount > 0 ]-->
     <br /><strong><!--[ $lastpostcount ]--> <!--[ pnml name='_PNFORUM_RECENT_POSTS' ]--></strong>
     <ul class="pnf_postlist">
     <!--[ foreach item=lastpost from=$lastposts ]-->
-    <li><a href="<!--[ $lastpost.last_post_url_anchor|pnvarprepfordisplay ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.title_tag|pnvarprepfordisplay|pnvarcensor ]-->"><!--[ $lastpost.topic_title|pnforumbbsmile|pnvarcensor|truncate:21 ]--></a>
+    <li><a href="<!--[ $lastpost.last_post_url_anchor ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.topic_title ]-->"><!--[ $lastpost.topic_title|pnforumbbsmile|pnvarcensor|truncate:21 ]--></a>
     <br />
     <!--[ $lastpost.topic_replies ]-->
     <!--[ if $lastpost.topic_replies eq 1 ]-->

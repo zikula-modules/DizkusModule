@@ -11,6 +11,9 @@ PostNuke pnForum Module changelog
 - fixed some html and validation issues, removed some more tables
 - animated gifs made Klaus Petzka (mail@petzi-juist.de)
 - fixed [#2569] pnForum preferences always visible in user profile
+- fixed [#2557] No protection against posting many new threads
+
+
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)
