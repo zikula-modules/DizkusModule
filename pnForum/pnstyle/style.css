@@ -468,6 +468,7 @@ div.pnf_statusmsg {
     height:2.2em;
     vertical-align: middle;
     padding: 0.2em;
+    border: none;
 }
 
 #userprefs .thd25 {
@@ -476,6 +477,7 @@ div.pnf_statusmsg {
     text-align: center;
     vertical-align: middle;
     padding: 0.2em;
+    border: none;
 }
 
 #userprefs tr {

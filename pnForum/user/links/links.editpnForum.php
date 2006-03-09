@@ -14,8 +14,10 @@ if (eregi(basename(__FILE__), $_SERVER['PHP_SELF'])) {
 	die ("You can't access this file directly...");
 }
 
-pnModAPILoad('pnForum', 'user');  // only to load the language file, so that we do not need the lang folder :-)
-$modInfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
-user_menu_add_option("user.php?op=editpnForum", ""._PNFORUM_FORUM."", "modules/$modInfo[directory]/pnimages/admin.gif");
+if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_OVERVIEW)) {
+    pnModLangLoad('pnForum', 'user'); 
+    $modInfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
+    user_menu_add_option("user.php?op=editpnForum", ""._PNFORUM_FORUM."", "modules/" . pnVarPrepForDisplay($modInfo[directory]) . "/pnimages/icon_forumprefs.gif");
+}
 
 ?>

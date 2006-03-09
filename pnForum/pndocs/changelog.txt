@@ -10,6 +10,7 @@ PostNuke pnForum Module changelog
 - fixed [#2491] removal of topics doesn't remove the subscriptions
 - fixed some html and validation issues, removed some more tables
 - animated gifs made Klaus Petzka (mail@petzi-juist.de)
+- fixed [#2569] pnForum preferences always visible in user profile
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)
