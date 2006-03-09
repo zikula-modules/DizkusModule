@@ -3,14 +3,14 @@
 <!--[ include file=pnforum_user_header.html ]-->
 
 <h1 style="background: <!--[ $bgcolor2 ]-->; text-align: center;"><!--[ pnml name='_PNFORUM_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</h1>
-<form name="latestposts" method="post" action="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->">
-<div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
+<form id="latestposts" method="post" action="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->">
+<div class="optionline" style="background: <!--[ $bgcolor3 ]-->;">
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_PNFORUM_YESTERDAY' ]--></a> ]
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_PNFORUM_TODAY' ]--></a> ]
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_PNFORUM_LAST24' ]--></a> ]
-    [ <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><!--[ pnml name='_PNFORUM_LAST' ]--></button> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0" /> <button style="border: 1px solid black; margin: 0; background: transparent; text-decoration: underline;" type="submit"><!--[ pnml name='_PNFORUM_HOURS' ]--></button> ]
+    [ <button type="submit"><!--[ pnml name='_PNFORUM_LAST' ]--></button> <input type="text" name="nohours" id="pnForum_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0" /> <button type="submit"><!--[ pnml name='_PNFORUM_HOURS' ]--></button> ]
 </div>
-<div style="text-align: center; background: <!--[ $bgcolor3 ]-->;">
+<div class="optionline" style="background: <!--[ $bgcolor3 ]-->;">
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_PNFORUM_LASTWEEK' ]--></a> ]
     [ <a href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_PNFORUM_UALASTWEEK' ]--></a> ]
     <!--[ if $last_visit_unix <> 0]-->
@@ -21,16 +21,16 @@
 
 
 <h2 style="background: <!--[ $bgcolor2 ]-->; text-align: center; margin-top: 1.5em;"><a id="postings"><!--[ pnml name='_PNFORUM_FORUMS' ]--></a></h2>
-<table border="0" cellpadding="3" cellspacing="1" width="100%">
-	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
-          <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
-          <td width="15%" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
-          <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
-          <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
+<table>
+	<tr style="background: <!--[ $bgcolor2 ]-->;">
+          <th class="latestposts_thd50"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
+          <th class="latestposts_thd15"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
+          <th class="latestposts_thd15"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
+          <th class="latestposts_thd20"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
 	</tr>
 	<!--[ foreach item=post from=$posts ]-->
     <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-        <td width="50%">
+        <td>
             <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.cat_title ]--> :: <!--[ $post.forum_name ]-->"><!--[ $post.topic_title ]--></a>
         </td>
         <td style="text-align: center;">
@@ -39,7 +39,7 @@
         <td>
             <!--[ $post.poster_name|profilelink ]-->
         </td>
-        <td><!--[* %d.%m.%Y, %H:%M" *]-->
+        <td>
             <!--[ $post.posted_unixtime|pndate_format:"%d.%m.%Y, %H:%M" ]-->
         </td>
     </tr>
@@ -53,17 +53,17 @@
 </table>
 
 <h2 style="text-align: center; margin-top: 1.5em;"><a id="rss"><!--[ pnml name='_PNFORUM_RSS2FORUMPOSTS' ]--></a></h2>
-<table border="0" cellpadding="3" cellspacing="1" width="100%">
-	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
-          <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
-          <td width="15%" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
-          <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
-          <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
+<table>
+	<tr style="background: <!--[ $bgcolor2 ]-->;">
+          <th class="latestposts_thd50"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
+          <th class="latestposts_thd15"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
+          <th class="latestposts_thd15"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
+          <th class="latestposts_thd20"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
 	</tr>
 	<!--[ foreach item=post from=$rssposts ]-->
     <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-        <td width="50%">
-            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.cat_title ]--> :: <!--[ $post.forum_name ]-->"><!--[ $post.topic_title|pnvarprepfordisplay ]--></a>
+        <td>
+            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.cat_title ]--> :: <!--[ $post.forum_name ]-->"><!--[ $post.topic_title ]--></a>
         </td>
         <td style="text-align: center;">
             <!--[ $post.topic_replies ]-->
@@ -85,17 +85,17 @@
 </table>
 
 <h2 style="text-align: center; margin-top: 1.5em;"><a id="lists"><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></a></h2>
-<table border="0" cellpadding="3" cellspacing="1" width="100%">
-	<tr style="background: <!--[ $bgcolor2 ]-->; text-align: left;">
-          <td width="50%"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
-          <td width="15%" style="text-align: center;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></td>
-          <td width="15%"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></td>
-          <td width="20%"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></td>
+<table>
+	<tr style="background: <!--[ $bgcolor2 ]-->;">
+          <th class="latestposts_thd50"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
+          <th class="latestposts_thd15"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
+          <th class="latestposts_thd15"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
+          <th class="latestposts_thd20"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
 	</tr>
 	<!--[ foreach item=post from=$m2fposts ]-->
     <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-        <td width="50%">
-            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.cat_title ]--> :: <!--[ $post.forum_name ]-->"><!--[ $post.topic_title|pnvarprepfordisplay ]--></a>
+        <td>
+            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.cat_title ]--> :: <!--[ $post.forum_name ]-->"><!--[ $post.topic_title ]--></a>
         </td>
         <td style="text-align: center;">
             <!--[ $post.topic_replies ]-->

@@ -673,9 +673,10 @@ function pnForum_user_prefs($args=array())
             $pnr =& new pnRender('pnForum');
             $pnr->caching = false;
             $pnr->add_core_data();
-            $pnr->assign( 'last_visit', $last_visit);
-            $pnr->assign( 'favorites_enabled', pnModGetVar('pnForum', 'favorites_enabled'));
-            $pnr->assign( 'last_visit_unix', $last_visit_unix);
+            $pnr->assign('last_visit', $last_visit);
+            $pnr->assign('favorites_enabled', pnModGetVar('pnForum', 'favorites_enabled'));
+            $pnr->assign('last_visit_unix', $last_visit_unix);
+            $pnr->assign('post_order', strtolower(pnModAPIFunc('pnForum','user','get_user_post_order')));
             $pnr->assign('tree', pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('pnforum_user_prefs.html');
     }

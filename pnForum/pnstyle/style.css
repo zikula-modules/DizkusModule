@@ -1,5 +1,8 @@
 /*  $Id$  */
 
+/*
+ * general settings
+ */
 button, button.right, button.left {
     border: none;
     background: transparent;
@@ -19,6 +22,25 @@ button.left {
     margin: 1em 0 1em 2em;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none
+}
+
+li {
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * obsolete pnf_* ?
+ */    
 .pnForum-title {
     font-size: 12px;
 }
@@ -150,7 +172,7 @@ dd.pnfadmin {
 
 #pnforum_admin fieldset {
     font-size: 1em;
-    width: 95%
+    width: 95%;
     padding: 0.5em 0.5em 1em 0.5em;
     margin: 3px;
 }
@@ -418,40 +440,96 @@ div.pnf_statusmsg {
 #pnforum {
 }
 
-#pnforum ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none
-}
 
-#pnforum li {
-    margin: 0;
-    padding: 0;
-}
-
-#pnforum_admin ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none
-}
-
-#pnforum_admin li {
-    margin: 0;
-    padding: 0;
-}
-
-dt.pnfuser {
+#pnforum dt.prefs {
     width: 50%;
     text-align: left;
     float: left;
     padding: 0.5em 0 0.5em 0;
 }
 
-dd.pnfuser {
+#pnforum dd.prefs {
     width: 40%;
     text-align: left;
     float: left;
     padding: 0.5em 0 0.5em 0;
+}
+
+/*************************
+ * pnforum_user_prefs.html
+ *************************/
+#userprefs {
+    float: left; 
+    margin-top: 1em;
+}
+
+#userprefs .thd50 {
+    width:50%; 
+    height:2.2em;
+    vertical-align: middle;
+    padding: 0.2em;
+}
+
+#userprefs .thd25 {
+    width:25%; 
+    height:2.2em;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.2em;
+}
+
+#userprefs tr {
+   vertical-align: middle;
+   text-align:left;
+}
+
+/*******************************
+ * pnforum_user_latestposts.html
+ *******************************/
+ 
+#latestposts {
+/* do not delete */
+}
+
+#latestposts .optionline {
+    font-size: 1em;
+    height: 1.8em;
+    padding-top: 0.4em;
+    text-align: center; 
+}
+
+.latestposts_thd50 {
+    width: 50%;
+    text-align: center;
+    font-size: 1em;
+    height: 2.2em;
+    vertical-align: middle;
+    border: none;
+}
+
+.latestposts_thd15 {
+    width: 15%;
+    text-align: center;
+    font-size: 1em;
+    height: 2.2em;
+    vertical-align: middle;
+    border: none;
+}
+
+.latestposts_thd20 {
+    width: 20%;
+    text-align: center;
+    font-size: 1em;
+    height: 2.2em;
+    vertical-align: middle;
+    border: none;
+}
+
+
+#latestposts {
+}
+
+#latestposts {
 }
 
 /*

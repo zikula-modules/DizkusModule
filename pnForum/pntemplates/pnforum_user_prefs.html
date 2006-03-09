@@ -8,37 +8,47 @@
 
 
 
-<div style="float: left; padding: 0.2em 0 1em 0;" class="pnf_clearfix">
-<dl>
-    <dt class="pnfuser">
+<dl style="float: left; padding: 0.2em 0 1em 0;" class="pnf_clearfix">
+    <dt class="prefs pnf_clearfix">
         <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
      </dt>
-    <dd class="pnfuser">
-        <!--[ post_order_button return_to=prefs ]-->
+    <dd class="prefs">
+            <a onclick="javascript:changesortorder();" style="display: none;" id="sortorder_asc"  href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnimg src="postorderasc.gif" alt="_PNFORUM_CHANGE_POST_ORDER" altml=true ]--></a> 
+            <a onclick="javascript:changesortorder();" style="display: none;" id="sortorder_desc" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnimg src="postorderdesc.gif" alt="_PNFORUM_CHANGE_POST_ORDER" altml=true ]--></a> 
+            <form action="javascript:void(0);" method="post"><input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey ]-->" /></form>
+            <script type="text/javascript">
+                var post_order = '<!--[ $post_order ]-->';
+                if(post_order == 'asc') {
+                    Element.show('sortorder_asc');
+                } else {
+                    Element.show('sortorder_desc');
+                }
+            </script>
+            <noscript>
+            <!--[ post_order_button return_to=prefs ]-->
+            </noscript>
     </dd>
 
-    <dt class="pnfuser">
+    <dt class="prefs pnf_clearfix">
         <strong><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></strong>
     </dt>
-    <dd class="pnfuser">
+    <dd class="prefs">
         <a href="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnimg src="managetopicsubscriptions.gif" altml=true alt="_PNFORUM_MANAGETOPICSUBSCRIPTIONS" ]--></a>
     </dd>
 </dl>
-</div>
-<br />
-<div style="float: left; padding: 0.2em 0 1em 0;" class="pnf_clearfix">
-<table bgcolor="<!--[ $bgcolor2 ]-->" border="0" cellpadding="3" cellspacing="1" width="100%">
-    <thead>
-    <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-        <th style="width:50%; height:28px;">
-            <strong><!--[ pnml name='_PNFORUM_CATEGORY ]--> / <!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
 
+<div id="userprefs" class="pnf_clearfix">
+<table>
+    <thead>
+    <tr style="background: <!--[ $bgcolor2 ]-->;">
+        <th class="thd50">
+            <strong><!--[ pnml name='_PNFORUM_CATEGORY ]--> / <!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
         </th>
-        <th style="width:25%; height:28px; text-align: center;">
+        <th class="thd25">
             <strong><!--[ pnml name='_PNFORUM_SUBSCRIBE_STATUS' ]--></strong>
         </th>
         <!--[ if $favorites_enabled eq "yes" ]-->
-        <th style="width:25%; height:28px; text-align: center;">
+        <th class="thd25">
             <strong><!--[ pnml name='_PNFORUM_FAVORITE_STATUS' ]--></strong>
         </th>
         <!--[ /if ]-->
@@ -47,24 +57,23 @@
     </thead>
     <tbody>
     <!--[ foreach item=category from=$tree ]-->
-    <tr align="left" valign="top">
-        <td colspan="2" height="28">
-            <strong><!--[ $category.cat_title|pnvarprepfordisplay ]--></strong>
+    <tr style="background: <!--[ $bgcolor3 ]-->;">
+        <td class="thd50">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id ]-->"><strong><!--[ $category.cat_title|pnvarprepfordisplay ]--></strong></a>
         </td>
+        <td class="thd25">&nbsp;</td>
         <!--[ if $favorites_enabled eq "yes" ]-->
-
         <td>&nbsp;</td>
         <!--[ /if ]-->
     </tr>
     <!--[ foreach item=forum from=$category.forums ]-->
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" style="text-align:left; vertical-align:top;">
-        <td width="50%">
-          	<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong></a>
-    	    <br />
-        	<!--[ $forum.forum_desc|pnvarprephtmldisplay ]-->
-
+    <tr style="background: <!--[ $bgcolor1 ]-->;">
+        <td class="thd50">
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong></a>
+            <br />
+            <!--[ $forum.forum_desc|pnvarprephtmldisplay ]-->
         </td>
-        <td style="text-align:center; vertical-align:middle;">
+        <td class="thd25">
             <a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');"   style="display: none;" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->"   href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_on.gif" alt="_PNFORUM_SUBSCRIBE_FORUM" altml=true ]--></a> 
             <a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" style="display: none;" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_off.gif" alt="_PNFORUM_UNSUBSCRIBE_FORUM" altml=true ]--></a> 
             <script type="text/javascript">
@@ -80,7 +89,7 @@
             </noscript>
         </td>
         <!--[ if $favorites_enabled eq "yes" ]-->
-        <td style="text-align:center; vertical-align:middle;">
+        <td class="thd25">
             <a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    style="display: none;" id="addfavoritebutton_<!--[ $forum.forum_id ]-->"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnimg src="add2favorites.gif" alt="_PNFORUM_ADD_FAVORITE_FORUM" altml=true ]--></a> 
             <a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" style="display: none;" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnimg src="removefavorite.gif" alt="_PNFORUM_REMOVE_FAVORITE_FORUM" altml=true ]--></a> 
             <script type="text/javascript">
@@ -95,7 +104,7 @@
             <!--[ favoriteforum_button forum_id=$forum.forum_id cat_id=$category.cat_id return_to=prefs]-->&nbsp;
             </noscript>
 
-		</td>
+        </td>
         <!--[ /if ]-->
 
     </tr>

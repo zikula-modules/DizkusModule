@@ -466,4 +466,20 @@ function pnForum_ajax_updatetopicsubject()
     pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()'); 
 }
 
+function pnForum_ajax_changesortorder()
+{
+    if(!pnUserLoggedIn()) {
+       pnf_ajaxerror(_PNFORUM_USERLOGINTITLE);
+    }
+    
+    if (!pnSecConfirmAuthKey()) {
+       pnf_ajaxerror(_BADAUTHKEY);
+    }
+   
+    pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
+    $newmode = strtolower(pnModAPIFunc('pnForum','user','get_user_post_order'));
+    pnf_jsonizeoutput($newmode, true, true);    
+    exit;
+}
+
 ?>

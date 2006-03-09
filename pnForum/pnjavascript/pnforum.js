@@ -14,6 +14,7 @@ var subscribestatus = false;
 var subscribeforumstatus = false;
 var favoritestatus = false;
 var subjectstatus = false;
+var sortorderstatus = false;
 
 var pnf_globalhandlers = {
     onCreate: function(){
@@ -31,6 +32,47 @@ var pnf_globalhandlers = {
     }
 };
 
+function changesortorder()
+{
+    if(sortorderstatus == false) {
+        sortorderstatus = true;
+        var pars = "module=pnForum&type=ajax&func=changesortorder&authid=" + $F('authid');
+        Ajax.Responders.register(pnf_globalhandlers);
+        var myAjax = new Ajax.Request(
+            "index.php", 
+            {
+                method: 'post', 
+                parameters: pars, 
+                onComplete: changesortorder_response
+            });
+    }
+}
+
+function changesortorder_response(originalRequest)
+{
+    sortorderstatus = false;
+    // show error if necessary
+    if( originalRequest.status != 200 ) { 
+        pnf_showajaxerror(originalRequest.responseText);
+        return;
+    }
+
+    var json = dejsonize(originalRequest.responseText);
+    updateAuthid(json.authid);
+    
+    switch(json.data) {
+        case 'desc':
+            Element.hide('sortorder_asc');
+            Element.show('sortorder_desc');
+            break;
+        case 'asc':
+            Element.hide('sortorder_desc');
+            Element.show('sortorder_asc');
+            break;
+        default:
+             alert('wrong result from changesortorder');
+    }
+}
 
 function topicsubjectedit(topicid)
 {
