@@ -58,12 +58,17 @@ function smarty_function_forumpager($params, &$smarty)
     $next = $start + $topics_per_page;
     $previous = $start - $topics_per_page;
     $pager = "";
+    
+    // check if we are in view or moderate mode
+    $func = pnVarCleanFromInput('func');
+    $func = (($func=='viewforum') || ($func=='moderateforum')) ? $func : 'viewforum';
+    
     if($total > $topics_per_page) {
         // more topcs than we want to see
         $pager = "<div>" . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . "&nbsp;:&nbsp;";
         for($x = 0; $x < $total; $x++) {
             if(($previous >= 0) and ($count == 1)) {
-                $pager .=  "<a href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array( 'forum'=>$forum_id, 'start' => $previous)))."\" title=\"" . pnVarPrepForDisplay(_PNFORUM_PREVPAGE) . "\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a>';
+                $pager .=  "<a href=\"". pnVarPrepForDisplay(pnModURL('pnForum', 'user', $func, array( 'forum'=>$forum_id, 'start' => $previous)))."\" title=\"" . pnVarPrepForDisplay(_PNFORUM_PREVPAGE) . "\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a>';
                 //$pager .= " | ";
             }
             if(!($x % $topics_per_page)) {
@@ -75,14 +80,14 @@ function smarty_function_forumpager($params, &$smarty)
                     || ($count==1) // link first page
                     || (($x > ($start-6*$topics_per_page)) //link -5 and +5 pages
                     &&($x < ($start+6*$topics_per_page))) ) {
-                        $pager .=  " $separator <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$x)))."\" title=\"" . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . " $count\">$count</a>\n";
+                        $pager .=  " $separator <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', $func, array('forum'=>$forum_id,'start'=>$x)))."\" title=\"" . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . " $count\">$count</a>\n";
                     }
                 }
                 $count++;
             }
         }
         if($next < $total) {
-            $pager .=  " $separator <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id,'start'=>$next)))."\" title=\"" . pnVarPrepForDisplay(_PNFORUM_NEXTPAGE) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE)."</a>";
+            $pager .=  " $separator <a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'user', $func, array('forum'=>$forum_id,'start'=>$next)))."\" title=\"" . pnVarPrepForDisplay(_PNFORUM_NEXTPAGE) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE)."</a>";
         }
 
         $pager .= "</div>";
