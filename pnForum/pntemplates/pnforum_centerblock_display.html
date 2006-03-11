@@ -3,6 +3,7 @@
 <!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *]-->
 <!--[ readlastposts maxposts=$maxposts show_m2f=true ]-->
 <!--[ if $lastpostcount > 0 ]-->
+ <!--[ pndebug ]-->
     <table width="100%" border="0" cellpadding="3" cellspacing="1">
         <tr>
             <td colspan="4" style="background-color:<!--[ $bgcolor2 ]-->;">
@@ -15,7 +16,7 @@
                 <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$lastpost.forum_id ]-->"><!--[ $lastpost.forum_name ]--></a>
             </td>
             <td style="background-color:<!--[ $bgcolor1 ]-->;">
-                <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$lastpost.topic_id start=$lastpost.start ]-->"><!--[ $lastpost.topic_title ]--></a>
+                <a href="<!--[ $lastpost.last_post_url_anchor ]-->"><!--[ $lastpost.topic_title ]--></a>
             </td>
             <td style="background-color:<!--[ $bgcolor1 ]-->;">
                 <!--[ $lastpost.posted_time ]-->

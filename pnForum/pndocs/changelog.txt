@@ -12,7 +12,7 @@ PostNuke pnForum Module changelog
 - animated gifs made Klaus Petzka (mail@petzi-juist.de)
 - fixed [#2569] pnForum preferences always visible in user profile
 - fixed [#2557] No protection against posting many new threads
-
+- fixed [#2490] Wrong number of guests in online list
 
 
 ---------------------------------------------------------------------------------------------

@@ -237,12 +237,12 @@ function smarty_function_readlastposts($params, &$smarty)
             } else {
                 $user_name = pnConfigGetVar('anonymous');
             }
-            $lastpost['poster_name'] = $user_name;
+            $lastpost['poster_name'] = pnVarPrepForDisplay($user_name);
 
             $lastpost['post_text'] = pnForum_replacesignature($lastpost['post_text'], '');
             // call hooks for $message
             list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
-            $lastpost['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
+            $lastpost['post_text'] = pnVarPrepForDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
 
             $posted_unixtime= strtotime ($lastpost['topic_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
