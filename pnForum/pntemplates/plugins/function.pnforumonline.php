@@ -88,7 +88,7 @@ function smarty_function_pnforumonline($params, &$smarty)
     } else {
         $anonwhere = "AND      $sessioninfocolumn[uid] > '0'";
     }
-    $sql = "SELECT DISTINCT $sessioninfocolumn[uid], $pntable[users].pn_uname
+    $sql = "SELECT   $sessioninfocolumn[uid], $pntable[users].pn_uname
             FROM     $sessioninfotable, $pntable[users]
             WHERE    $sessioninfocolumn[lastused] > $activetime
             $anonwhere
@@ -103,9 +103,9 @@ function smarty_function_pnforumonline($params, &$smarty)
         list($uid, $uname) = $result->fields;
 
         if ($uid != 0) {
-            $unames[] = array('uid'   => $uid,
-                              'uname' => $uname,
-                              'admin' => ($moderators[$uid] == $uname));
+            $unames[$uid] = array('uid'   => $uid,
+                                  'uname' => $uname,
+                                  'admin' => ($moderators[$uid] == $uname));
             $numusers++;
         } else {
             $numguests++;
@@ -127,9 +127,9 @@ function smarty_function_pnforumonline($params, &$smarty)
             }
         }
 
-        $users[] = array('uid'    => $user['uid'],
-                         'uname'  => $user['uname'],
-                         'admin'  => $user['admin']);
+        $users[$user['uid']] = array('uid'    => $user['uid'],
+                             'uname'  => $user['uname'],
+                             'admin'  => $user['admin']);
 
     }
 
