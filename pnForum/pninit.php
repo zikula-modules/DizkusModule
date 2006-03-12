@@ -236,16 +236,19 @@ function pnForum_init()
         return false;
     }
 
+    // upgrade to 2.7 just adds a new modvar.... no need to check for
+    // return value
+    pnForum_upgrade_to_2_7();
+    
 	// Bulletin Board settings
-	$module = 'pnForum';
 	pnModSetVar('pnForum', 'posts_per_page', 15);
 	pnModSetVar('pnForum', 'topics_per_page', 15);
 	pnModSetVar('pnForum', 'hot_threshold', 20);
 	pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
 	pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
-	pnModSetVar('pnForum', 'url_ranks_images', "modules/$module/pnimages/ranks");
-	pnModSetVar('pnForum', 'posticon', "modules/$module/pnimages/posticon.gif");
-	pnModSetVar('pnForum', 'firstnew_image', "modules/$module/pnimages/firstnew.gif");
+	pnModSetVar('pnForum', 'url_ranks_images', "modules/pnForum/pnimages/ranks");
+	pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
+	pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
 	pnModSetVar('pnForum', 'post_sort_order', 'ASC');
 	pnModSetVar('pnForum', 'log_ip', 'yes');
 	pnModSetVar('pnForum', 'slimforum', 'no');
@@ -607,7 +610,7 @@ function pnForum_upgrade_to_2_5($createindex=true)
 }
 
 /**
- * upgrade to v2.5
+ * upgrade to v2.6
  *
  */
 function pnForum_upgrade_to_2_6()
@@ -702,6 +705,16 @@ function pnForum_upgrade_to_2_6()
 }
 
 /**
+ * upgrade to v2.7
+ *
+ */
+function pnForum_upgrade_to_2_7()
+{
+    pnModSetVar('pnForum', 'shownewtopicconfirmation', 'no');
+    return true;
+}
+
+/**
  * interactiveupgrade
  *
  *
@@ -729,6 +742,9 @@ function pnForum_init_interactiveupgrade($args)
             break;
         case '2.5':
             $templatefile = 'pnforum_upgrade_26.html';
+            break;
+        case '2.6':
+            $templatefile = 'pnforum_upgrade_27.html';
             break;
         default:
             // no interactive upgrade for version < 2.0.1
@@ -793,6 +809,26 @@ function pnForum_init_interactiveupgrade_to_2_6()
             return showforumerror(_PNFORUM_TO26_FAILED, __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.6' )));
+    }
+    pnRedirect(pnModURL('Modules', 'admin', 'view'));
+    return true;
+}
+
+/**
+ * interactiveupgrade_to_2_7
+ *
+ */
+function pnForum_init_interactiveupgrade_to_2_7()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    $submit = pnVarCleanFromInput('submit');
+
+    if(!empty($submit)) {
+        pnForum_upgrade_to_2_7();
+        return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.7' )));
     }
     pnRedirect(pnModURL('Modules', 'admin', 'view'));
     return true;

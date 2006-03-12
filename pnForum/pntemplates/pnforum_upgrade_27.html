@@ -1,0 +1,21 @@
+<!--[*  $Id$  *]-->
+
+<form action="<!--[ pnmodurl modname=pnForum type=init func="interactiveupgrade_to_2_7" ]-->" method="post">
+    <div>
+        <div style="height: 3em; vertical-align: middle; width: 90%; background-color: <!--[ $bgcolor1 ]-->; text-align: center;">
+            <h1><!--[ pnml name='_PNFORUM_WELCOMETOINTERACTIVEUPGRADE' ]--></h1><br />
+        </div>
+        <h2>
+        <!--[ pnml name='_PNFORUM_OLDVERSION' ]-->: <!--[ $oldversion ]--><br />
+        <!--[ pnml name='_PNFORUM_NEXTVERSION' ]-->: 2.7<br />
+        <!--[ pnml name='_PNFORUM_NEWVERSION' ]-->: <!--[ $newversion ]-->
+        </h2>
+        <div style="border: 1px solid red; padding: 4px; margin: 10px; color: red;">
+            <h2><!--[ pnml name='_PNFORUM_BACKUPHINT' html=1 ]--></h2>
+        </div>
+        <div><!--[ pnml name='_PNFORUM_TO27_HINT' html=1 ]--></div>
+        <input type="hidden" name="authkey" value="<!--[ $authid ]-->" />
+        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+
+    </div>
+</form>

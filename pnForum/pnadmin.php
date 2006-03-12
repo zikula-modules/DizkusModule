@@ -158,6 +158,14 @@ function pnForum_admin_preferences()
         	$rss2f_enabledoffchecked = $checked;
         }
 
+        if (pnModGetVar('pnForum', 'newtopicconfirmation') == "yes") {
+        	$newtopicconf_onchecked = $checked;
+        	$newtopicconf_offchecked = " ";
+        } else {
+        	$newtopicconf_onchecked = " ";
+        	$newtopicconf_offchecked = $checked;
+        }
+
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->add_core_data();
@@ -194,10 +202,13 @@ function pnForum_admin_preferences()
         $pnr->assign('deletehookaction_remove', $deletehookaction_remove);
         $pnr->assign('rss2f_enabledonchecked', $rss2f_enabledonchecked);
         $pnr->assign('rss2f_enabledoffchecked', $rss2f_enabledoffchecked);
+        $pnr->assign('newtopicconf_onchecked',  $newtopicconf_onchecked);
+        $pnr->assign('newtopicconf_offchecked', $newtopicconf_offchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'newtopicconfirmation', pnVarPrepForStore(pnVarCleanFromInput('newtopicconfirmation')));
             pnModSetVar('pnForum', 'rss2f_enabled', pnVarPrepForStore(pnVarCleanFromInput('rss2f_enabled')));
             pnModSetVar('pnForum', 'deletehookaction', pnVarPrepForStore(pnVarCleanFromInput('deletehookaction')));
             pnModSetVar('pnForum', 'striptags', pnVarPrepForStore(pnVarCleanFromInput('striptags')));
@@ -221,6 +232,7 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
         }
         if($actiontype=="RestoreDefaults")  {
+            pnModSetVar('pnForum', 'newtopicconfirmation', 'no');
             pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
             pnModSetVar('pnForum', 'deletehookaction', 'lock');
             pnModSetVar('pnForum', 'striptags', 'no');
