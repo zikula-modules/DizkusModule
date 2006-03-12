@@ -56,4 +56,7 @@ define('_PNFORUM_TO25_FAILED', 'Upgrade to pnForum 2.5 failed');
 define('_PNFORUM_TO26_HINT', 'This upgrade contains several database for the forum comments feature.');
 define('_PNFORUM_TO26_FAILED', 'Upgrade to pnForum 2.6 failed');
 
+define('_PNFORUM_TO27_HINT', 'This upgrade does not not change the database structure.<br />The new feature in this version is the use of Ajax (<a href="http://en.wikipedia.org/wiki/Ajax_(programming)">read more about it</a>).<br /><br />');
+define('_PNFORUM_TO27_FAILED', 'Upgrade auf pnForum 2.7 fehlgeschlagen');
+
 ?>

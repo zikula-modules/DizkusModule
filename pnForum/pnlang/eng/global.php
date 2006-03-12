@@ -43,8 +43,14 @@
 
 // changed
 define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
+define('_PNFORUM_NEW_THREADS','New Topic in forum');
 
 // new
+define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...Weiterleitung zum neuen Beitrag...');
+define('_PNFORUM_PREFS_SHOWNEWTOPICCONFIRMATION', 'Show confirmation when a new topic has been created'); 
+define('_PNFORUM_THANKSFORNEWTOPIC', 'Thanks for your submission');
+define('_PNFORUM_CLICKHERETOGOTONEWTOPIC', 'Click here to go the new topic');
+define('_PNFORUM_CLICKHERETOGOTOFORUM', 'Click here to go back to the forum');
 define('_PNFORUM_EMPTYCATEGORY', 'This category does not contain any forums yet');
 define('_PNFORUM_HIDEFORUMS', 'Hide forums');
 define('_PNFORUM_SHOWFORUMS', 'Show forums');
