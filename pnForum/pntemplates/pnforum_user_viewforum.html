@@ -15,6 +15,7 @@
 
 <!--[ addtopic_button forum_id=$forum.forum_id cat_id=$forum.cat_id ]-->
 
+<!--[ if $pncore.logged_in ]-->
 <a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');"   style="display: none;" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->"   href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_on.gif" alt="_PNFORUM_SUBSCRIBE_FORUM" altml=true ]--></a> 
 <a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" style="display: none;" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnimg src="f_abo_off.gif" alt="_PNFORUM_UNSUBSCRIBE_FORUM" altml=true ]--></a> 
 <script type="text/javascript">
@@ -43,6 +44,7 @@
 <noscript>
 <!--[ favoriteforum_button forum_id=$forum.forum_id cat_id=$forum.cat_id ]-->
 </noscript>
+<!--[ /if ]-->
 <!--[ /if ]-->
 <br /><br />
 <!--[* start of breadcrumbs *]-->

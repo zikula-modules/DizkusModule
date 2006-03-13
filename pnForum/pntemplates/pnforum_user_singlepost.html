@@ -22,11 +22,13 @@ Template for single postings
             <div class="postingheadermiddle">
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
                     <!--[ $post.poster_data.pn_uname|profilelink:'':$profile ]-->
+                    <!--[ if $pncore.logged_in ]-->
                     <!--[ pnmodgetinfo modname='Messages' info='type' assign=type]-->
                     <!--[ if $type eq 1 ]-->
                     <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"><!--[ pnimg src="sendpm.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
                     <!--[ else ]-->
                     <a class="postingbutton" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->"><!--[ pnimg src="sendpm.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
+                    <!--[ /if ]-->
                     <!--[ /if ]-->
                     <!--[ if $post.poster_data.pn_url neq "" ]-->
                         <a class="postingbutton normallink" title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->"><!--[ pnimg src="myhp.gif" alt='_PNFORUM_HOMEPAGE' altml=true ]--></a>
