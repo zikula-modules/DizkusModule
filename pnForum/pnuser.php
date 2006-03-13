@@ -325,8 +325,8 @@ function pnForum_user_newtopic($args=array())
     }
 
     if($submit==false) {
-    	$subject = '';
-    	$message = '';
+//    	$subject = '';
+//    	$message = '';
     }
 
     $message = pnfstriptags($message);
@@ -360,8 +360,17 @@ function pnForum_user_newtopic($args=array())
                                        'message'          => $message,
                                        'attach_signature' => $attach_signature,
                                        'subscribe_topic'  => $subscribe_topic));
-        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
-    	                    array('topic' => pnVarPrepForStore($topic_id))));
+        if(pnModGetVar('pnForum', 'newtopicconfirmation') == 'yes') {
+            $pnr =& new pnRender('pnForum');
+            $pnr->caching = false;
+            $pnr->add_core_data();
+            $pnr->assign('topic', pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $topic_id)));
+            return $pnr->fetch('pnforum_user_newtopicconfirmation.html');
+        
+        } else {
+            return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
+    	                        array('topic' => $topic_id)));
+        }
     } else {
         // new topic
         $pnr =& new pnRender('pnForum');

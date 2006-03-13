@@ -244,7 +244,7 @@ function pnForum_adminapi_deletecategory($args)
  * readforums
  * read the forums list and performs  permission for each depending on the permcheck parameter
  * default is ACCESS_READ. "nocheck" means, return the forums no matter if the user has sufficient
- * rights or not, in this ase the caling function has to take care of it!!
+ * rights or not, in this case the calling function has to take care of it!!
  *
  *@params $args['forum_id'] int only read this forum
  *@params $args['cat_id'] int read the forums in this category only

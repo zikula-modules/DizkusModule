@@ -27,17 +27,6 @@ table {
     width: 100%;
 }
 
-ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none
-}
-
-li {
-    margin: 0;
-    padding: 0;
-}
-
 /*
  * obsolete pnf_* ?
  */    
@@ -304,6 +293,18 @@ dd.pnfadmin {
     float: left;
 }
 
+.newtopic-options, .newtopic-options-header {
+    /* clear: both; */
+    width: 30%;
+    float: left;
+    text-align: left;
+}
+
+.newtopic-text, .newtopic-text-header {
+    width: 66%;
+    float: left;
+}
+
 .searchresultlist {
     list-style-type: none;
 }
@@ -440,6 +441,17 @@ div.pnf_statusmsg {
 #pnforum {
 }
 
+#pnforum ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none
+}
+
+#pnforum li {
+    margin: 0;
+    padding: 0;
+}
+
 
 #pnforum dt.prefs {
     width: 50%;
@@ -486,6 +498,18 @@ div.pnf_statusmsg {
 }
 
 /*******************************
+ * pnforum_user_footer.html
+ *******************************/
+
+#footer_line {
+    float: left; 
+    margin: 1em 0 1em 0; 
+    width: 99%; 
+    font-size: 0.8em; 
+    text-align: center;
+} 
+
+/*******************************
  * pnforum_user_latestposts.html
  *******************************/
  
@@ -525,13 +549,6 @@ div.pnf_statusmsg {
     height: 2.2em;
     vertical-align: middle;
     border: none;
-}
-
-
-#latestposts {
-}
-
-#latestposts {
 }
 
 /*
@@ -711,17 +728,29 @@ a.normallink {
     padding: 2px 0 2px 0;
 }
 
-#quickreply {
+#quickreply, #newtopic {
     width: 100%; 
     float: left; 
     margin-top: 1.5em;
 }
 
-#quickreplyoptions {
+#quickreplyoptions, #newtopicoptions {
     width:40%; 
     float: left; 
     text-align: left; 
     margin-top: 1em;
+}
+
+#quickreplyhooks, #newtopichooks {
+    width: 50%;
+    float: right;
+    margin-top: 1em;
+}    
+
+#newtopicconfirmation {
+    text-align: center; 
+    width: 99%; 
+    padding: 5em 0 5em 0;
 }
 
 .pnf_handle {

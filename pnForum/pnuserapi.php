@@ -1411,6 +1411,8 @@ function pnForum_userapi_preparenewtopic($args)
     $newtopic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
     $newtopic['cat_title']  = pnVarPrepForDisplay($myrow['cat_title']);
 
+    $newtopic['topic_unixtime'] = time();
+
     // need at least "comment" to add newtopic
     if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
@@ -3559,7 +3561,7 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
  *@params $args['bool']       string 'AND' or 'OR'
  *@params $args['forums']     array array of forum ids to search in
  *@params $args['author']     string searhc for postings of this author only
- *@params $args['order']      array array of order to display results
+ *@params $args['order']      int order to display results
  *@params $args['startnum']   int number of entry to start showing when on page > 1
  *@params $args['limit']      int number of hits to show per page > 1
  *@returns array with search results
@@ -3633,28 +3635,28 @@ function pnForum_userapi_forumsearch_fulltext($args)
         }
         $wherematch .= ' ) AND ';
 
-            $flag = false;
-            $words = explode(' ', $searchfor);
-            $query .= '( ';
-            foreach($words as $word) {
-                if($flag==true) {
-                    switch(strtolower($bool)) {
-                        case 'or':
-                            $query .= ' OR ';
-                            break;
-                        case 'and':
-                        default:
-                            $query .= 'AND ';
-                    }
+        $flag = false;
+        $words = explode(' ', $searchfor);
+        $query .= '( ';
+        foreach($words as $word) {
+            if($flag==true) {
+                switch(strtolower($bool)) {
+                    case 'or':
+                        $query .= ' OR ';
+                        break;
+                    case 'and':
+                    default:
+                        $query .= 'AND ';
                 }
-                $word = pnVarPrepForStore($word);
-                // get post_text and match up forums/topics/posts
-                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
-                $flag = true;
             }
-            $query .= ' ) ';
-            $query .= ' AND ';
+            $word = pnVarPrepForStore($word);
+            // get post_text and match up forums/topics/posts
+            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+            $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+            $flag = true;
+        }
+        $query .= ' ) ';
+        $query .= ' AND ';
 
     } else {
         // searchfor is empty, we search by author only
@@ -3691,19 +3693,19 @@ function pnForum_userapi_forumsearch_fulltext($args)
     // Not sure this is needed and is not cross DB compat
     //$query .= " GROUP BY pt.post_id ";
 
-    $searchorder = $order['0'];
+    //$searchorder = $order['0'];
     // search order, partial sql stored in $searchordersql
     $orderbyscore = '';
     if(!empty($selectmatch)) {
         $orderbyscore = 'textscore DESC, subjectscore DESC,';
     }
-    if ($searchorder == 1){
+    if ($order == 1){
         $searchordersql = " ORDER BY $orderbyscore pt.post_id DESC";
     }
-    if ($searchorder == 2){
+    if ($order == 2){
         $searchordersql = " ORDER BY $orderbyscore t.topic_title";
     }
-    if ($searchorder == 3){
+    if ($order == 3){
         $searchordersql = " ORDER BY $orderbyscore f.forum_name";
     }
 
@@ -3735,8 +3737,6 @@ function pnForum_userapi_forumsearch_fulltext($args)
               $whereforums
               $whereauthor
               $searchordersql";
-
-
 
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 

@@ -13,7 +13,10 @@ PostNuke pnForum Module changelog
 - fixed [#2569] pnForum preferences always visible in user profile
 - fixed [#2557] No protection against posting many new threads
 - fixed [#2490] Wrong number of guests in online list
-
+- added [#2512]	Centerblock Links inkl. PID
+- fixed [#2637] moderation navigation and 
+        [#2683] Moderation function broken on multiple pages (same bug)
+- fixed [#2729] Parameter: for statistics-Block ignored
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

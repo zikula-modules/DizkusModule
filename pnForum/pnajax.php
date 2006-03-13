@@ -104,7 +104,6 @@ function pnForum_ajax_reply()
     $pnr->add_core_data();
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
-//    pnf_jsonizeoutput(utf8_encode($pnr->fetch('pnforum_user_singlepost.html')), true);
     pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_user_singlepost.html'),
                             'post_id' => $post['post_id']),
                       true);
@@ -480,6 +479,136 @@ function pnForum_ajax_changesortorder()
     $newmode = strtolower(pnModAPIFunc('pnForum','user','get_user_post_order'));
     pnf_jsonizeoutput($newmode, true, true);    
     exit;
+}
+
+function pnForum_ajax_newtopic()
+{
+    if (!pnSecConfirmAuthKey()) {
+//       pnf_ajaxerror(_BADAUTHKEY);
+    }
+
+    list($forum_id,
+         $message,
+         $subject,
+         $attach_signature,
+         $subscribe_topic,
+         $preview) = pnVarCleanFromInput('forum',
+                                         'message',
+                                         'subject',
+                                         'attach_signature',
+                                         'subscribe_topic',
+                                         'preview');
+
+    $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+                           array('forum_id' => $forum_id));
+
+    if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOWRITE);
+    }
+
+    $preview          = ($preview=='1') ? true : false;
+    $attach_signature = ($attach_signature=='1') ? true : false;
+    $subscribe_topic  = ($subscribe_topic=='1') ? true : false;
+    
+    $message = pnfstriptags(utf8_decode($message));
+    // check for maximum message size
+    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+        pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
+    }
+    if(strlen($message)==0) {
+        pnf_ajaxerror(_PNFORUM_EMPTYMSG);
+    }
+
+    $subject = utf8_decode($subject);
+    if(strlen($subject)==0) {
+        pnf_ajaxerror(_PNFORUM_NOSUBJECT);
+    }
+
+    $pnr = new pnRender('pnForum');
+    $pnr->caching = false;
+    $pnr->add_core_data();
+
+    if($preview == false) {
+        // store new topic
+        $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+                                 array('forum_id'         => $forum_id,
+                                       'subject'          => $subject,
+                                       'message'          => $message,
+                                       'attach_signature' => $attach_signature,
+                                       'subscribe_topic'  => $subscribe_topic));
+        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+                              array('topic_id' => $topic_id));
+        if(pnModGetVar('pnForum', 'newtopicconfirmation') == 'yes') {
+            $pnr->assign('topic', $topic);
+            $confirmation = $pnr->fetch('pnforum_ajax_newtopicconfirmation.html');
+        } else {
+            $confirmation = false;
+        }
+        pnf_jsonizeoutput(array('topic'        => $topic,
+                                'confirmation' => $confirmation,
+                                'redirect'     => pnModURL('pnForum', 'user', 'viewtopic',
+    	                                                   array('topic' => $topic_id))),
+                          true);
+        
+    }
+    
+    // preview == true, create fake topic
+    $newtopic['cat_id']     = $cat_id;
+//    $newtopic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
+//    $newtopic['cat_title']  = pnVarPrepForDisplay($myrow['cat_title']);
+
+    $newtopic['topic_unixtime'] = time();
+
+    // need at least "comment" to add newtopic
+    if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
+        // user is not allowed to post
+        return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
+    }
+    $newtopic['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
+
+    $newtopic['subject'] = $subject;
+    $newtopic['message'] = $message;
+    $newtopic['message_display'] = $message; // phpbb_br2nl($message);
+
+    list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
+    $newtopic['message_display'] = nl2br($newtopic['message_display']);
+
+    if(pnUserLoggedIn()) {
+        if($topic_start==true) {
+            $newtopic['attach_signature'] = true;
+            $newtopic['subscribe_topic']  = (pnModGetVar('pnForum', 'autosubscribe')=='yes') ? true : false;
+        } else {
+            $newtopic['attach_signature'] = $attach_signature;
+            $newtopic['subscribe_topic']  = $subscribe_topic;
+        }
+    } else {
+        $newtopic['attach_signature'] = false;
+        $newtopic['subscribe_topic']  = false;
+    }
+
+/*
+    $post['post_id']      = 0;
+    $post['topic_id']     = $topic_id;
+    $post['poster_data'] = pnModAPIFunc('pnForum', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
+    // create unix timestamp
+    $post['post_unixtime'] = time();
+    $post['posted_unixtime'] = $post['post_unixtime'];
+    
+    $post['post_textdisplay'] = phpbb_br2nl($message);
+    $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+    
+    // call hooks for $message_display ($message remains untouched for the textarea)
+    list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
+    $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
+    
+    $post['post_text'] = $post['post_textdisplay'];
+    
+    $pnr->assign('post', $post);
+*/
+    $pnr->assign('newtopic', $newtopic);
+    pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_user_newtopicpreview.html'),
+                            'newtopic' => $newtopic),
+                      true);
 }
 
 ?>

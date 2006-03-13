@@ -15,6 +15,7 @@ var subscribeforumstatus = false;
 var favoritestatus = false;
 var subjectstatus = false;
 var sortorderstatus = false;
+var newtopicstatus = false;
 
 var pnf_globalhandlers = {
     onCreate: function(){
@@ -31,6 +32,120 @@ var pnf_globalhandlers = {
         }
     }
 };
+
+function createnewtopic()
+{
+    if(newtopicstatus==false) {
+        newtopicstatus = true;
+        showpnforuminfo(storingPost);
+        
+        var attach_signature = ''
+        var sigObj = $('attach_signature');
+        if(sigObj) {
+            attach_signature = '&attach_signature=' + sigObj.value;
+        }
+        
+        var subscribe_topic;
+        var subObj = $('subscribe_topic');
+        if(subObj) {
+            subscribe_topic = '&subscribe_topic' + subObj.value;
+        }
+
+        var pars = "module=pnForum&type=ajax&func=newtopic" +  
+                   "&forum=" + $F('forum') + 
+                   "&subject=" + encodeURIComponent($F('subject')) +
+                   "&message=" + encodeURIComponent($F('message')) +              
+                   attach_signature +            
+                   subscribe_topic + 
+                   "&authid=" + $F('authid');
+
+        Ajax.Responders.register(pnf_globalhandlers);
+        var myAjax = new Ajax.Request(                              
+                        "index.php",                                
+                        {                                           
+                            method: 'post',                         
+                            parameters: pars,                       
+                            onComplete: createnewtopic_response
+                        }                                           
+                        );              
+    }
+}
+
+function createnewtopic_response(originalRequest)
+{
+    hidepnforuminfo();
+
+    // show error if necessary
+    if( originalRequest.status != 200 ) { 
+        pnf_showajaxerror(originalRequest.responseText);
+        newtopicstatus = false;
+        return;
+    }
+
+    newtopicstatus = false;
+    var json = dejsonize(originalRequest.responseText);
+
+    if((json.confirmation == false) || !$('newtopicconfirmation')) {
+        showpnforuminfo(redirecting);
+    } else {
+        Element.hide('newtopic');
+        Element.update('newtopicconfirmation', json.confirmation);
+        Element.show('newtopicconfirmation');
+    }   
+    window.setTimeout("pnf_redirect('" + json.redirect + "');", 3000);
+}
+
+function previewnewtopic()
+{
+    if(newtopicstatus==false) {
+        newtopicstatus = true;
+        showpnforuminfo(preparingPreview);
+        
+        var pars = "module=pnForum&type=ajax&func=newtopic" +   
+                   "&subject=" + encodeURIComponent($F('subject')) +
+                   "&message=" + encodeURIComponent($F('message')) +              
+                   "&preview=1" +
+                   "&authid=" + $F('authid');
+        
+        Ajax.Responders.register(pnf_globalhandlers);
+        var myAjax = new Ajax.Request(                              
+                        "index.php",                                
+                        {                                           
+                            method: 'post',                         
+                            parameters: pars,                       
+                            onComplete: previewnewtopic_response
+                        }                                           
+                        );              
+    }
+}
+
+function previewnewtopic_response(originalRequest)
+{
+    hidepnforuminfo();
+    // show error if necessary
+    if( originalRequest.status != 200 ) { 
+        pnf_showajaxerror(originalRequest.responseText);
+        newtopicstatus = false;
+        return;
+    }
+
+    var json = dejsonize(originalRequest.responseText);
+
+    updateAuthid(json.authid);
+    Element.update('newtopicpreview', json.data);
+    Element.show('newtopicpreview');
+    newtopicstatus = false;
+}
+
+function clearnewtopic()
+{
+    $('message').value = '';
+    $('subject').value = '';
+    Element.update('newtopicpreview', '&nbsp;');
+    Element.hide('newtopicpreview');
+    newtopicstatus = false;
+}                        
+
 
 function changesortorder()
 {
@@ -702,4 +817,7 @@ function dejsonize(jsondata)
     return result;
 }
 
-
+function pnf_redirect(redirecturl)
+{
+    window.location.href = redirecturl;
+}

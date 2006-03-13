@@ -167,6 +167,7 @@ function showforumerror($error_text, $file='', $line=0)
     }
    
     $pnr =& new pnRender('pnForum');
+    $pnr->add_core_data();
     $pnr->caching = false;
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
@@ -762,11 +763,7 @@ function pnf_getimagepath($image=null)
  */
 function pnfstriptags($text='')
 {
-    if(empty($text)) {
-        return $text;
-    }
-
-    if(pnModGetVar('pnForum', 'striptags') == 'yes') {
+    if(!empty($text) && (pnModGetVar('pnForum', 'striptags') == 'yes')) {
         // save code tags
         $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
         for($i=0; $i < $codecount; $i++) {
