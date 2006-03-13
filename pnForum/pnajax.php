@@ -467,6 +467,8 @@ function pnForum_ajax_updatetopicsubject()
 
 function pnForum_ajax_changesortorder()
 {
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+
     if(!pnUserLoggedIn()) {
        pnf_ajaxerror(_PNFORUM_USERLOGINTITLE);
     }
@@ -483,8 +485,10 @@ function pnForum_ajax_changesortorder()
 
 function pnForum_ajax_newtopic()
 {
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+
     if (!pnSecConfirmAuthKey()) {
-//       pnf_ajaxerror(_BADAUTHKEY);
+       pnf_ajaxerror(_BADAUTHKEY);
     }
 
     list($forum_id,
@@ -586,25 +590,6 @@ function pnForum_ajax_newtopic()
         $newtopic['subscribe_topic']  = false;
     }
 
-/*
-    $post['post_id']      = 0;
-    $post['topic_id']     = $topic_id;
-    $post['poster_data'] = pnModAPIFunc('pnForum', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
-    // create unix timestamp
-    $post['post_unixtime'] = time();
-    $post['posted_unixtime'] = $post['post_unixtime'];
-    
-    $post['post_textdisplay'] = phpbb_br2nl($message);
-    $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
-    
-    // call hooks for $message_display ($message remains untouched for the textarea)
-    list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-    $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
-    
-    $post['post_text'] = $post['post_textdisplay'];
-    
-    $pnr->assign('post', $post);
-*/
     $pnr->assign('newtopic', $newtopic);
     pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_user_newtopicpreview.html'),
                             'newtopic' => $newtopic),
