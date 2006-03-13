@@ -10,13 +10,13 @@
         <strong><!--[ pnml name='_PNFORUM_USERSONLINE' ]-->:</strong><br />
     </div>
     <div style="margin: 2px; font-size: 0.8em;">
-        <!--[ foreach key=num item=user from=$online.unames ]-->
+        <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
             <!--[ if $user.admin == '1' ]-->
                 <!--[ $user.uname|profilelink:"pnfadminuser"]-->
             <!--[ else ]-->
                 <!--[ $user.uname|profilelink:"pnfnoadminuser"]-->
             <!--[ /if ]-->
-            <!--[ if $online.numusers > 1 && $num <> $online.numusers-1 ]-->-<!--[ /if ]-->
+            <!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
         <!--[ /foreach ]-->
         <!--[ if $anonsessions == 1 ]-->
         <!--[ pnml name='_PNFORUM_AND' ]--> <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
@@ -26,7 +26,7 @@
         <!--[ pnml name='_PNFORUM_BASEDONLASTXMINUTES' m=$mins ]-->
     </div>
 </div>
-<p style="float: left; margin: 1em 0 1em 0; width: 99%; font-size: 0.8em; text-align: center;" class="pnf_clearfix">
+<p id="footer_line" class="pnf_clearfix">
     <!--[ pnml name='_PNFORUM_POWEREDBY' html=1 ]-->&nbsp;<!--[pnmodgetinfo modname=pnForum info=version ]-->
 </p>
 
