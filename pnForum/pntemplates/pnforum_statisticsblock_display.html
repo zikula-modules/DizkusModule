@@ -2,7 +2,7 @@
 
 <!--[ add_additional_header header='<link rel="stylesheet" href="modules/pnForum/pnstyle/style.css" type="text/css" />' ]-->
 
-<!--[ readtopforums ]-->
+<!--[ readtopforums maxforums=$maxforums ]-->
 <!--[ if $topforumscount > 0 ]-->
     <br /><strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_PNFORUM_ACTIVE_FORUMS' ]--></strong>
     <ul class="pnf_forumlist">
@@ -37,7 +37,7 @@
     <br />
 <!--[ /if ]-->
 
-<!--[ readtopposters ]-->
+<!--[ readtopposters maxposters=$maxposters]-->
 <!--[ if $toppostercount > 0 ]-->
     <br /><strong><!--[ $toppostercount ]--> <!--[ pnml name='_PNFORUM_ACTIVE_POSTERS' ]--></strong>
     <ul class="pnf_posterlist">
