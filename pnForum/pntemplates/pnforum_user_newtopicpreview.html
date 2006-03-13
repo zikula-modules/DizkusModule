@@ -1,0 +1,102 @@
+<!--[*
+
+$Id$
+
+Template for single postings
+
+*]-->
+<!--[ pnimg src="profile.gif" assign=profile alt='_PNFORUM_PROFILE' altml=true ]-->
+
+
+
+    <div id="posting_<!--[ $newtopic.topic_id ]-->"  style="background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
+        <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 1px solid black; background-color: <!--[ $bgcolor3 ]-->;" id="topicsubject_<!--[ $newtopic.topic_id ]-->_content"><!--[ $newtopic.subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
+        <div style="background-color: <!--[ $bgcolor3 ]-->;" class="postingheader pnf_clearfix">
+            <div class="postingheaderleft">
+                <span class="userinfoname"><!--[ $newtopic.poster_data.pn_uname ]--></span>
+            </div>
+            <div class="postingheaderright">
+                <strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $newtopic.topic_unixtime|date_format:"%d.%m.%Y, %H:%M" ]-->
+            </div>
+        </div>
+       
+        <div class="postingbody pnf_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
+            <!--[ if $newtopic.poster_data.pn_uid neq 1 ]-->
+                <div  class="userinfo" style="background-color: <!--[ $bgcolor3 ]-->;" id="posting_<!--[ $newtopic.topic_id ]-->_userinfo">
+                    <button onclick="javascript:toggleuserinfo(<!--[ $newtopic.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right; background: transparent; border: none;">x</button>
+                    <div id="posting_<!--[ $newtopic.topic_id ]-->_userinfocontent">
+                        
+                        <!--[ if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
+                            <div style="margin: 1em 0 0.5em 0; width:99%; text-align: center;">
+                            <!--[ $newtopic.poster_data.pn_uname|profilelink:'':$newtopic.poster_data.pn_user_avatar ]-->
+                            </div>
+                        <!--[ /if ]-->
+                        <!--[ if $newtopic.poster_data.rank ]-->
+                            <div style="text-align: center;">
+                                <strong><!--[ $newtopic.poster_data.rank|pnvarprepfordisplay ]--></strong>
+                                <!--[ if $newtopic.poster_data.rank_image ]-->
+                                    <img class="uerinforankimage" src="<!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
+                                <!--[ /if ]-->
+                            </div>
+                        <!--[ /if ]-->
+                        
+                        <div class="userinfodetails">
+                            <dl >
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_REG_SINCE' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ $newtopic.poster_data.pn_user_regdate|pndate_format:"%b. %Y"  ]-->
+                                </dd>
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_STATUS' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ if $newtopic.poster_data.online  ]--><span class="userinfoonline"><!--[ pnml name='_PNFORUM_ONLINE' ]--></span><!--[ else ]--><!--[ pnml name='_PNFORUM_OFFLINE' ]--><!--[ /if ]-->
+                                </dd>
+                                <!--[ if !$newtopic.poster_data.online  ]-->
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_LAST_SEEN' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ $newtopic.poster_data.user_lastvisit|date_format:"%d.%m.%y"  ]-->
+                                </dd>
+                                <!--[ /if ]-->
+                                <dt>
+                                    <!--[ pnml name='_PNFORUM_POSTS' ]-->:
+                                </dt>
+                                <dd>
+                                    <!--[ $newtopic.poster_data.user_posts ]-->
+                                </dd>
+                            </dl>
+                        </div>
+                        
+                    </div>
+                </div>
+            <!--[ /if ]-->
+            <div class="postingtext_small" id="postingtext_<!--[ $newtopic.topic_id ]-->">
+                <!--[ $newtopic.message_display ]-->
+            </div>
+            
+        </div>
+
+        <div class="postingfooter pnf_clearfix" style="background-color: <!--[ $bgcolor3 ]-->;">
+
+            <div class="postingfooterleft">
+                &nbsp;
+            </div>
+            <div class="postingfooterright">
+                &nbsp;
+            </div>
+
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        if($('editbutton_<!--[ $post.post_id ]-->')) {
+            Element.show('editbutton_<!--[ $post.post_id ]-->');
+        }
+        if($('quotebutton_<!--[ $post.post_id ]-->')) {
+            Element.show('quotebutton_<!--[ $post.post_id ]-->');
+        }
+    </script>
