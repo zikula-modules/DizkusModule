@@ -2584,19 +2584,25 @@ function pnForum_userapi_notify_by_email($args)
     }
     $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
 
-    // we do not wnat to notif the sender = the recent user
+    // we do not want to notify the sender = the recent user
     $thisuser = pnUserGetVar('uid');
 
     //  get list of forum subscribers with non-empty emails
     $sql = "SELECT DISTINCT u.pn_uid,
                             u.pn_email,
                             u.pn_name,
-                            u.pn_uname
+                            u.pn_uname,
+                            c.cat_id
             FROM " . $pntable['users'] . " as u,
-                 " . $pntable['pnforum_subscription'] . " as fs
+                 " . $pntable['pnforum_subscription'] . " as fs,
+                 " . $pntable['pnforum_forums'] . " as f,
+                 " . $pntable['pnforum_categories'] . " as c
             WHERE fs.forum_id=".pnVarPrepForStore($forum_id)."
+              AND fs.user_id <> " . pnVarPrepForStore($thisuser) . "
               AND u.pn_uid = fs.user_id
-              AND u.pn_email <> ''";
+              AND u.pn_email <> ''
+              AND f.forum_id = fs.forum_id
+              AND c.cat_id = f.cat_id";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $recipients = array();
@@ -2604,14 +2610,12 @@ function pnForum_userapi_notify_by_email($args)
     // we create an array of recipients here
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid, $pn_email, $pn_name, $pn_uname) = $result->fields;
-            // exclude the recent user from getting an email
-            if($pn_uid <> $thisuser) {
-                if(!empty($pn_name)) {
-                    $recipients[$pn_email] = $pn_name;
-                } else {
-                    $recipients[$pn_email] = $pn_uname;
-                }
+            list($pn_uid, $pn_email, $pn_name, $pn_uname, $cat_id) = $result->fields;
+            // check permissions
+            if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+                $email['name'] = (!empty($pn_name)) ? $pn_name : $pn_uname;
+                $email['address'] = $pn_email;
+                $recipients[$email['name']] = $email;
             }
         }
     }
@@ -2621,24 +2625,29 @@ function pnForum_userapi_notify_by_email($args)
     $sql = "SELECT DISTINCT u.pn_uid,
                             u.pn_email,
                             u.pn_name,
-                            u.pn_uname
+                            u.pn_uname,
+                            c.cat_id
             FROM " . $pntable['users'] . " as u,
-                 " . $pntable['pnforum_topic_subscription'] . " as ts
+                 " . $pntable['pnforum_topic_subscription'] . " as ts,
+                 " . $pntable['pnforum_forums'] . " as f,
+                 " . $pntable['pnforum_categories'] . " as c
             WHERE ts.topic_id=".pnVarPrepForStore($topic_id)."
+              AND ts.user_id <> " . pnVarPrepForStore($thisuser) . "
               AND u.pn_uid = ts.user_id
-              AND u.pn_email <> ''";
+              AND u.pn_email <> ''
+              AND f.forum_id = ts.forum_id
+              AND c.cat_id = f.cat_id";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid, $pn_email, $pn_name, $pn_uname) = $result->fields;
+            list($pn_uid, $pn_email, $pn_name, $pn_uname, $cat_id) = $result->fields;
             // exclude the recent user from getting an email
-            if($pn_uid <> $thisuser) {
-                if(!empty($pn_name)) {
-                    $recipients[$pn_email] = $pn_name;
-                } else {
-                    $recipients[$pn_email] = $pn_uname;
-                }
+            // check permissions
+            if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+                $email['name'] = (!empty($pn_name)) ? $pn_name : $pn_uname;
+                $email['address'] = $pn_email;
+                $recipients[$email['name']] = $email;
             }
         }
     }
@@ -2670,8 +2679,8 @@ function pnForum_userapi_notify_by_email($args)
                            'toaddress'   => $email_to,
                            'subject'     => $subject,
                            'body'        => $message,
-                           'headers'     => array('X-UserID: ' . $uid,
-                                                  'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'],
+                           'headers'     => array('X-UserID: ' . md5($uid),
+                                                  'X-Mailer: pnForum v' . $modinfo['version'],
                                                   'X-pnForumTopicID: ' . $topic_id));
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
