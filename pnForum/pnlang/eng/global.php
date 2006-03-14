@@ -41,11 +41,22 @@
  *
  ***********************************************************************/
 
+// removed
+// define('_PNFORUM_TOGGLEALL', 'Remove all topic subscriptions');
+
 // changed
 define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
 define('_PNFORUM_NEW_THREADS','New Topic in forum');
 
 // new
+define('_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND','no forum subscriptions found');
+define('_PNFORUM_TOGGLEALLFORUMS', 'Remove all forum subscriptions');
+define('_PNFORUM_TOGGLEALLTOPICS', 'Remove all topic subscriptions');
+define('_PNFORUM_THISFUNCTIONNEEDSJAVASCRIPT', 'This function needs javascript enabled!!');
+define('_PNFORUM_MANAGEFORUMSUBSCRIPTIONS', 'Manage forum subscriptions');
+define('_PNFORUM_SHOWSUBSCRIPTIONS', 'Show users subscriptions');
+define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS', 'Manage subscriptions');
+define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS_INFO', 'Remove the users topic and forum subscriptions');
 define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...Weiterleitung zum neuen Beitrag...');
 define('_PNFORUM_PREFS_SHOWNEWTOPICCONFIRMATION', 'Show confirmation when a new topic has been created'); 
 define('_PNFORUM_THANKSFORNEWTOPIC', 'Thanks for your submission');
@@ -62,7 +73,7 @@ define('_PNFORUM_SHOWFORUM', 'Show forum');
 define('_PNFORUM_LOADCATEGORYDATA', 'Load category data');
 define('_PNFORUM_LOADFORUMDATA', 'Load forum data');
 define('_PNFORUM_ADMINREORDERTREE', 'Manipulate forum tree');
-define('_PNFORUM_ADMINREORDERTREEINFO', 'Here you can reorder the categories and forums');
+define('_PNFORUM_ADMINREORDERTREE_INFO', 'Here you can reorder the categories and forums');
 define('_PNFORUM_REORDERFORUMTREE', 'Re-order forum tree');
 
 define('_PNFORUM_STORINGNEWSORTORDER', '... storing new sort order ...');
@@ -548,7 +559,6 @@ define('_PNFORUM_SYNC_USERS', 'PostNuke and pnForum users synchronized');
 // T
 //
 define('_PNFORUM_TODAY','today');
-define('_PNFORUM_TOGGLEALL', 'Remove all topic subscriptions');
 define('_PNFORUM_TOP','Top');
 define('_PNFORUM_TOPIC','Topic');
 define('_PNFORUM_TOPICLOCKED','Topic locked');
