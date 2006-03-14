@@ -617,11 +617,17 @@ function pnForum_user_prefs($args=array())
         list($act,
              $return_to,
              $topic_id,
-             $forum_id ) = pnVarCleanFromInput('act',
-                                               'return_to',
-                                               'topic',
-                                               'forum');
+             $forum_id,
+             $user_id ) = pnVarCleanFromInput('act',
+                                              'return_to',
+                                              'topic',
+                                              'forum',
+                                              'user');
     }
+
+    // user_id will only be used if we have admin permissions otherwise the
+    // user can edit his prefs only but not others users prefs
+    
 
     switch($act) {
         case 'subscribe_topic':
@@ -1299,8 +1305,8 @@ function pnForum_user_topicsubscriptions($args)
                                             'submit');
     }
 
-    $subscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions');
     if(!$submit) {
+        $subscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions');
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
         $pnr->add_core_data();
@@ -1310,13 +1316,9 @@ function pnForum_user_topicsubscriptions($args)
         if(!pnSecConfirmAuthKey()) {
             return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
         }
-        if(is_array($topic_id)) {
-            foreach($subscriptions as $subscription) {
-                if(!array_key_exists($subscription['topic_id'], $topic_id)) {
-                    pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
-                                 array('topic_id' => $subscription['topic_id'],
-                                       'silent'   => true));
-                }
+        if(is_array($topic_id) && (count($topic_id) > 0)) {
+            for($i=0; $i<count($topic_id); $i++) {
+                pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic', array('topic_id' => $topic_id[$i]));
             }
         }
         return pnRedirect(pnModURL('pnForum', 'user', 'topicsubscriptions'));

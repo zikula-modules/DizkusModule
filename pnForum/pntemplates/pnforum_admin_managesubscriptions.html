@@ -1,0 +1,99 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='pnforum_admin_header.html' ]-->
+
+<!--[* pndebug *]-->
+<fieldset>
+    <legend>
+        <!--[pnml name='_PNFORUM_ADMINMANAGESUBSCRIPTIONS']-->
+    </legend>
+    
+    <form id="subscriptions" action="" method="post">
+        <div style="margin: 1em 0 1em 0;">
+            <label for="pnusername"><!--[ pnml name='_PNFORUM_USERNAME' ]--></label>:&nbsp;<input type="text" name="pnusername" id="pnusername" value="<!--[ $pnusername ]-->" />&nbsp;<button type="submit" name="submit"><!--[ pnml name='_PNFORUM_SHOWSUBSCRIPTIONS' ]--></button>
+        </div>
+    </form>
+
+
+    <form id="managesubscriptions" action="<!--[ pnmodurl modname=pnForum type=admin func=managesubscriptions ]-->" method="post">
+    <input type="hidden" name="pnuid" value="<!--[ $pnuid ]-->" />
+    <h2><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></h2>
+    <!--[ if $topicsubscriptions|@count <> 0 ]-->
+    <div>
+        <label for="alltopic"><!--[pnml name=_PNFORUM_TOGGLEALLTOPICS]--></label><input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
+        <table style="width: 99%; padding: 0; margin: 0, border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>
+                        <!--[ pnml name='_PNFORUM_TOPIC' ]-->
+                    </th>
+                    <th>
+                        <!--[ pnml name='_PNFORUM_POSTER' ]-->
+                    </th>
+                    <th>
+                        <!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]-->
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--[ foreach item=subscription from=$topicsubscriptions ]-->
+                <tr style="width: 99;">
+                    <td style="width: 60%">
+                        <a href="<!--[ $subscription.last_post_url_anchor|pnvarprepfordisplay ]-->" title="<!--[ $subscription.forum_name ]--> :: <!--[ $subscription.topic_title ]-->"><!--[ $subscription.topic_title|pnvarcensor|pnvarprepfordisplay ]--></a>
+                    </td>
+                    <td style="width: 25; text-align: center;">
+                        <!--[ $subscription.poster_name|profilelink ]-->
+                    </td>
+                    <td style="width: 10%; text-align: center;">
+                        <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="<!--[ $subscription.topic_id ]-->" />
+                    </td>
+                </tr>
+                <!--[ /foreach ]-->
+            </tbody>
+        </table>
+    </div>
+    <!--[ else ]-->
+    <!--[ pnml name='_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND ]-->
+    <!--[ /if ]-->
+
+    <h2><!--[ pnml name='_PNFORUM_MANAGEFORUMSUBSCRIPTIONS' ]--></h2>
+    <!--[ if $forumsubscriptions|@count <> 0 ]-->
+    <div>
+        <label for="allforum"><!--[pnml name=_PNFORUM_TOGGLEALLFORUMS]--></label><input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
+        <table style="width: 99%; padding: 0; margin: 0, border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>
+                        <!--[ pnml name='_PNFORUM_FORUM' ]-->
+                    </th>
+                    <th>
+                        <!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]-->
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--[ foreach item=subscription from=$forumsubscriptions ]-->
+                <tr style="width: 99;">
+                    <td style="width: 60%">
+                        <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$subscription.forum_id ]-->" title="<!--[ $subscription.topic_title ]--> :: <!--[ $subscription.forum_name ]-->"><!--[ $subscription.forum_name|pnvarcensor|pnvarprepfordisplay ]--></a>
+                    </td>
+                    <td style="width: 10%; text-align: center;">
+                        <input class="forum_checkbox" type="checkbox" onclick="CheckCheckAll('forum');" name="forum_id[]" value="<!--[ $subscription.forum_id ]-->" />
+                    </td>
+                </tr>
+                <!--[ /foreach ]-->
+            </tbody>
+        </table>
+        <div style="margin: 2em 0 2em 0;">
+            <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        </div>
+    </div>
+    <!--[ else ]-->
+    <!--[ pnml name='_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND ]-->
+    <!--[ /if ]-->
+    </form>
+</fieldset>
+
+<!--[ include file='pnforum_admin_footer.html' ]-->

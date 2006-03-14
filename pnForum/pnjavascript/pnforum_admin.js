@@ -598,41 +598,6 @@ function create_sortables()
 
 }
 
-function showpnforuminfo(infotext)
-{
-    Element.update('pnforuminformation', infotext);
-    $('pnforuminformation').style.visibility = 'visible';
-    
-}
-
-function hidepnforuminfo()
-{
-    Element.update('pnforuminformation', '&nbsp;');
-    $('pnforuminformation').style.visibility = 'hidden';
-}
-
-/*
- * show an ajax error
- * to-do: beautify this function
- */
-function pnf_showajaxerror(error)
-{
-    alert(error);
-}
-
-function updateAuthid(authid)
-{
-    if(authid.length != 0) {
-        for(var i=0; i<document.forms.length; i++) {
-            for(var j=0; j<document.forms[i].elements.length; j++) {
-                if(document.forms[i].elements[j].type=='hidden' && document.forms[i].elements[j].name=='authid') {
-                    document.forms[i].elements[j].value = authid;
-                }
-            }
-        }
-    }
-}
-
 function pnf_toggleprogressimage(typ, id)
 {
     // typ true = category (id=cat_id), false=forum (id=forum_id)
@@ -650,17 +615,6 @@ function pnf_toggleprogressimage(typ, id)
         }
     }
 
-}
-
-function dejsonize(jsondata)
-{
-    var result;
-    try {
-        result = eval('(' + jsondata + ')');
-    } catch(error) {
-        alert('illegal JSON response: ' + error + 'in\n' + jsondata);
-    }
-    return result;
 }
 
 /*

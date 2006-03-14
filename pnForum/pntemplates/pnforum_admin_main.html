@@ -2,63 +2,6 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<fieldset style="padding: 15px;">
-    <legend>
-        <strong><!--[ pnml name='_PNFORUM_CATEGORY' ]--></strong>
-    </legend>
-    <div style="clear: both; width: 98%;">
-        <div style="float: left; width: 45%; text-align: center;">
-    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=category ]-->" method="post">
-
-    	    <select name="cat_id">
-    	    <option value="-1"><!--[ pnml name='_PNFORUM_ADDNEWCATEGORY' ]--></option>
-    	    <!--[ foreach item=category from=$categories ]-->
-    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--> (ID: <!--[ $category.cat_id ]-->)</option>
-            <!--[ /foreach ]-->
-            </select><br />
-            <input type="submit" value="<!--[ pnml name='_EDIT' ]-->" />
-
-            </form>
-        </div>
-        <div style="float: right; width: 45%; text-align: center;">
-   		    <a title="<!--[ pnml name='_PNFORUM_ADMINCATORDER_INFO' ]-->" href="<!--[ pnmodurl modname=pnForum type=admin func=reordercategories ]-->"><!--[ pnml name='_PNFORUM_REORDER' ]--></a>
-        </div>
-    </div>
-</fieldset>
-<br />
-<fieldset style="padding: 15px;">
-    <legend>
-
-        <strong><!--[ pnml name='_PNFORUM_FORUM' ]--></strong>
-    </legend>
-    <div style="width: 98%;">
-        <div style="text-align: left;">
-    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=forum ]-->" method="post">
-    	    <select name="forum_id">
-  	        <option value="-1"><!--[ pnml name='_PNFORUM_ADDNEWFORUM' ]--></option>
-    	    <!--[ foreach item=forum from=$forums ]-->
-    	        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> (ID:<!--[ $forum.cat_id ]-->) ::<!--[ $forum.forum_name|pnvarprepfordisplay ]--> (ID:<!--[ $forum.forum_id ]-->)</option>
-
-            <!--[ /foreach ]-->
-            </select>
-            <input type="submit" value="<!--[ pnml name='_EDIT' ]-->" />
-            </form>
-        </div>
-        <div style="text-align: left;">
-    	    <form action="<!--[ pnmodurl modname=pnForum type=admin func=newforumorder ]-->" method="post">
-    	    <select name="cat_id">
-    	    <!--[ foreach item=category from=$categories ]-->
-
-    	        <option value="<!--[ $category.cat_id ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--> (ID: <!--[ $category.cat_id ]-->)</option>
-            <!--[ /foreach ]-->
-            </select>
-            <input type="submit" value="<!--[ pnml name='_PNFORUM_REORDER' ]-->" />
-            </form>
-        </div>
-    </div>
-
-</fieldset>
-
 <br />
 
 <!--[ include file='pnforum_admin_footer.html' ]-->

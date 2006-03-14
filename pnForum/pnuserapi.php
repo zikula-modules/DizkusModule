@@ -2586,6 +2586,13 @@ function pnForum_userapi_notify_by_email($args)
 
     // we do not want to notify the sender = the recent user
     $thisuser = pnUserGetVar('uid');
+    // anonymous does not have uid, so we need a sql to exclude real users
+    $fs_wherenotuser = '';
+    $ts_wherenotuser = '';
+    if(!empty($thisuser)) {
+        $fs_wherenotuser = ' AND fs.user_id <> ' . pnVarPrepForStore($thisuser);
+        $ts_wherenotuser = ' AND ts.user_id <> ' . pnVarPrepForStore($thisuser);
+    }
 
     //  get list of forum subscribers with non-empty emails
     $sql = "SELECT DISTINCT u.pn_uid,
@@ -2598,7 +2605,7 @@ function pnForum_userapi_notify_by_email($args)
                  " . $pntable['pnforum_forums'] . " as f,
                  " . $pntable['pnforum_categories'] . " as c
             WHERE fs.forum_id=".pnVarPrepForStore($forum_id)."
-              AND fs.user_id <> " . pnVarPrepForStore($thisuser) . "
+              " . $fs_wherenotuser . "
               AND u.pn_uid = fs.user_id
               AND u.pn_email <> ''
               AND f.forum_id = fs.forum_id
@@ -2632,7 +2639,7 @@ function pnForum_userapi_notify_by_email($args)
                  " . $pntable['pnforum_forums'] . " as f,
                  " . $pntable['pnforum_categories'] . " as c
             WHERE ts.topic_id=".pnVarPrepForStore($topic_id)."
-              AND ts.user_id <> " . pnVarPrepForStore($thisuser) . "
+              " . $ts_wherenotuser . "
               AND u.pn_uid = ts.user_id
               AND u.pn_email <> ''
               AND f.forum_id = ts.forum_id
@@ -2692,6 +2699,7 @@ function pnForum_userapi_notify_by_email($args)
  * get_topic_subscriptions
  *
  *@params none
+ *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns array with topic ids, may be empty
  */
 function pnForum_userapi_get_topic_subscriptions($args)
@@ -2701,7 +2709,13 @@ function pnForum_userapi_get_topic_subscriptions($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $userid = pnUserGetVar('uid');
+    if(isset($user_id)) {
+        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+            return showforumerror(_PNFORUM_NOAUTH);
+        }
+    } else {
+        $user_id = pnUserGetVar('uid');
+    }
 
     $tstable = $pntable['pnforum_topic_subscription'];
     $tscolumn = $pntable['pnforum_topic_subscription_column'];
@@ -2726,7 +2740,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
                  $topicstable AS t,
                  $userstable AS u,
                  $forumstable AS f
-            WHERE (ts.user_id='".(int)pnVarPrepForStore($userid)."'
+            WHERE (ts.user_id='".(int)pnVarPrepForStore($user_id)."'
               AND t.topic_id=ts.topic_id
               AND u.pn_uid=ts.user_id
               AND f.forum_id=ts.forum_id)
@@ -2734,7 +2748,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $subscriptions = array();
-    $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
+    $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order', array('user_id' => $user_id));
     $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
 
     while (!$result->EOF) {
@@ -2771,10 +2785,12 @@ function pnForum_userapi_get_topic_subscriptions($args)
     return $subscriptions;
 }
 
+
 /**
  * subscribe_topic
  *
  *@params $args['topic_id'] int the topics id
+ *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns void
  */
 function pnForum_userapi_subscribe_topic($args)
@@ -2784,17 +2800,21 @@ function pnForum_userapi_subscribe_topic($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $userid = pnUserGetVar('uid');
+    if(isset($user_id) && !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        return showforumerror(_PNFORUM_NOAUTH);
+    } else {
+        $user_id = pnUserGetVar('uid');
+    }
 
     list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (pnForum_userapi_get_topic_subscription_status(array('userid'=>$userid, 'topic_id'=>$topic_id)) == false) {
+    if (pnForum_userapi_get_topic_subscription_status(array('userid' => $user_id, 'topic_id' => $topic_id)) == false) {
         // add user only if not already subscribed to the topic
         $sql = "INSERT INTO ".$pntable['pnforum_topic_subscription']." (user_id, forum_id, topic_id)
-                VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."','".(int)pnVarPrepForStore($topic_id)."')";
+                VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."','".(int)pnVarPrepForStore($topic_id)."')";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
@@ -2804,8 +2824,9 @@ function pnForum_userapi_subscribe_topic($args)
 /**
  * unsubscribe_topic
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['silent'] bool true=no error message when not subscribed, simply return void
+ *@params $args['topic_id'] int the topics id, if not set we unsubscribe all topics
+ *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ *@params $args['silent'] bool true=no error message when not subscribed, simply return void (obsolete)
  *@returns void
  */
 function pnForum_userapi_unsubscribe_topic($args)
@@ -2813,33 +2834,39 @@ function pnForum_userapi_unsubscribe_topic($args)
     extract($args);
     unset($args);
 
-    $silent = (isset($silent)) ? true : false;
-
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $userid = pnUserGetVar('uid');
+    $tsubtable  = $pntable['pnforum_topic_subscription'];
+    $tsubcolumn = $pntable['pnforum_topic_subscription_column'];
 
-    if (pnForum_userapi_get_topic_subscription_status(array('userid'=>$userid, 'topic_id'=>$topic_id)) == true) {
-        // user is subscribed, delete subscription
-        $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']."
-                WHERE user_id='".(int)pnVarPrepForStore($userid)."'
-                AND topic_id='".(int)pnVarPrepForStore($topic_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
-    } else {
-        // user is not subscribed
-        if($silent==false) {
-            return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
-        } else {
-            return;
+    if(isset($user_id)) {
+        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+            return showforumerror(_PNFORUM_NOAUTH);
         }
+    } else {
+        $user_id = pnUserGetVar('uid');
     }
+
+    $wheretopic = '';
+    if(!empty($topic_id)) {
+        $wheretopic = ' AND ' . $tsubcolumn['topic_id'] . '=' . (int)pnVarPrepForStore($topic_id);
+    }
+    
+    $sql = 'DELETE FROM ' .$tsubtable . '
+            WHERE ' . $tsubcolumn['user_id'] . '=' . (int)pnVarPrepForStore($user_id) . 
+            $wheretopic;
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+    
+    return;
 }
 
 /**
  * subscribe_forum
  *
  *@params $args['forum_id'] int the forums id
+ *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns void
  */
 function pnForum_userapi_subscribe_forum($args)
@@ -2849,18 +2876,23 @@ function pnForum_userapi_subscribe_forum($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $userid = pnUserGetVar('uid');
 
+    if(isset($user_id) && !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+        return showforumerror(_PNFORUM_NOAUTH);
+    } else {
+        $user_id = pnUserGetVar('uid');
+    }
+    
     $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (pnForum_userapi_get_forum_subscription_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == false) {
+    if (pnForum_userapi_get_forum_subscription_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
         // add user only if not already subscribed to the forum
         $sql = "INSERT INTO ".$pntable['pnforum_subscription']." (user_id, forum_id)
-                VALUES ('".(int)pnVarPrepForStore($userid)."','".(int)pnVarPrepForStore($forum_id)."')";
+                VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."')";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -2871,7 +2903,8 @@ function pnForum_userapi_subscribe_forum($args)
 /**
  * unsubscribe_forum
  *
- *@params $args['forum_id'] int the forums id
+ *@params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
+ *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns void
  */
 function pnForum_userapi_unsubscribe_forum($args)
@@ -2880,20 +2913,30 @@ function pnForum_userapi_unsubscribe_forum($args)
     unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
+    
+    $fsubtable  = $pntable['pnforum_subscription'];
+    $fsubcolumn = $pntable['pnforum_subscription_column'];
 
-    $userid = pnUserGetVar('uid');
-
-    if (pnForum_userapi_get_forum_subscription_status(array('userid'=>$userid, 'forum_id'=>$forum_id)) == true) {
-        // user is subscribed, delete subscription
-        $sql = "DELETE FROM ".$pntable['pnforum_subscription']."
-                WHERE user_id='".(int)pnVarPrepForStore($userid)."'
-                AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
-
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+    if(isset($user_id)) {
+        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+            return showforumerror(_PNFORUM_NOAUTH);
+        }
     } else {
-        return showforumerror(_PNFORUM_NOTSUBSCRIBED, __FILE__, __LINE__);
+        $user_id = pnUserGetVar('uid');
     }
+
+    $whereforum = '';
+    if(!empty($forum_id)) {
+        $whereforum = ' AND ' . $fsubcolumn['forum_id'] . '=' . (int)pnVarPrepForStore($forum_id);
+    }
+    
+    $sql = 'DELETE FROM ' . $fsubtable . '
+            WHERE ' . $fsubcolumn['user_id'] . '=' . (int)pnVarPrepForStore($user_id) .
+            $whereforum;
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    pnfCloseDB($result);
+
     return;
 }
 /**
@@ -3974,7 +4017,7 @@ function pnForum_userapi_change_favorite_status($args)
  * Returns 'ASC' or 'DESC' on success, false on failure.
  *
  *@params user_id - The user id of the person who's order we
- * are trying to determine
+ *                  are trying to determine
  *@returns string on success, false on failure
  */
 function pnForum_userapi_get_user_post_order($args)
@@ -4976,6 +5019,65 @@ function pnForum_userapi_insertrss($args)
 
     return true;
 
+}
+
+/**
+ * get_forum_subscriptions
+ *
+ *@params none
+ *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ *@returns array with forum ids, may be empty
+ */
+function pnForum_userapi_get_forum_subscriptions($args)
+{
+    extract($args);
+    unset($args);
+
+    list($dbconn, $pntable) = pnfOpenDB();
+
+    if(isset($user_id)) {
+        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+            return showforumerror(_PNFORUM_NOAUTH);
+        }
+    } else {
+        $user_id = pnUserGetVar('uid');
+    }
+
+    $fstable  = $pntable['pnforum_subscription'];
+    $fscolumn = $pntable['pnforum_subscription_column'];
+    $forumstable  = $pntable['pnforum_forums'];
+    $forumscolumn = $pntable['pnforum_forums_column'];
+    $categoriestable  = $pntable['pnforum_categories'];
+    $categoriescolumn = $pntable['pnforum_categories_column'];
+
+    // read the topic ids
+    $sql = 'SELECT ' . $forumscolumn['forum_id'] . ',
+                   ' . $forumscolumn['forum_name'] . ',
+                   ' . $categoriescolumn['cat_id'] . ',
+                   ' . $categoriescolumn['cat_title'] . '
+            FROM ' . $fstable . ',
+                 ' . $forumstable . ',
+                 ' . $categoriestable . '
+            WHERE ' . $fscolumn['user_id'] . '=' . (int)pnVarPrepForStore($user_id) . '
+              AND ' . $forumscolumn['forum_id'] . '=' . $fscolumn['forum_id'] . '
+              AND ' . $categoriescolumn['cat_id'] . '=' . $forumscolumn['cat_id']. '
+            ORDER BY ' . $categoriescolumn['cat_order'] . ', ' . $forumscolumn['forum_order'];
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    $subscriptions = array();
+    while (!$result->EOF) {
+        $row = $result->GetRowAssoc(false);
+        $subscription = array('forum_id'      => $row['forum_id'],
+                              'forum_name'    => $row['forum_name'],
+                              'cat_id'        => $row['cat_id'],
+                              'cat_title'     => $row['cat_title']);
+        array_push($subscriptions, $subscription);
+        $result->MoveNext();
+    }
+
+    pnfCloseDB($result);
+
+    return $subscriptions;
 }
 
 ?>

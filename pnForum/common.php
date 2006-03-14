@@ -194,17 +194,20 @@ function showforumerror($error_text, $file='', $line=0)
  * No mail is generated
  * If current user is admin, then onscreen message also include additional debug information
  */
-function showforumsqlerror($msg, $sql='', $mysql_errno='', $mysql_error='', $file='', $line)
+function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file='', $line)
 {
 	if(!empty($sql)) {
 		// Sending notify e-mail for error
 		$message = "Error occured\n\n";
 		$message .= "SQL statement:\n" . $sql . "\n\n";
-		$message .= "Database error number:\n" . $mysql_errno . "\n\n";
-		$message .= "Database error message:\n" . $mysql_error . "\n\n";
+		$message .= "Database error number:\n" . $sql_errno . "\n\n";
+		$message .= "Database error message:\n" . $sql_error . "\n\n";
 		$message .= "Link: " . pnGetCurrentURL() . "\n\n";
-		$message .= "HTTP_USER_AGENT:\n" . pnServerGetVar('HTTP_USER_AGENT') . "\n";
-
+		$message .= "HTTP_USER_AGENT: " . pnServerGetVar('HTTP_USER_AGENT') . "\n";
+        $message .= "Username: " . pnUserGetVar('uname') . " (" . pnUserGetVar('uid') . ")\n";
+        $message .= "Email: " . pnUserGetVar('email') . "\n";
+        $message .= "error occured in " . $file . " at line " . $line . "\n"; 
+        
     	$email_from = pnModGetVar('pnForum', 'email_from');
     	if ($email_from == '') {
     		// nothing in forumwide-settings, use PN adminmail
@@ -222,17 +225,12 @@ function showforumsqlerror($msg, $sql='', $mysql_errno='', $mysql_error='', $fil
                        'body'        => $message,
                        'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
         pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-
-
-
-
-
 	}
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
-                                code : $mysql_errno <br />
-                                msg  : $mysql_error <br />", $file, $line );
+                                code : $sql_errno <br />
+                                msg  : $sql_error <br />", $file, $line );
     } else {
         return showforumerror( $msg, $file, $line );
     }
@@ -536,41 +534,41 @@ function phpbb_br2nl($str)
 /**
  * allowedtoseecategoryandforum
  */
-function allowedtoseecategoryandforum($category_id, $forum_id)
+function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW);
+    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
 }
 
 /**
  * allowedtoreadcategoryandforum
  */
-function allowedtoreadcategoryandforum($category_id, $forum_id)
+function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ);
+    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
 }
 
 /**
  * allowedtowritetocategoryandforum
  */
-function allowedtowritetocategoryandforum($category_id, $forum_id)
+function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT);
+    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
 }
 
 /**
  * allowedtomoderatecategoryandforum
  */
-function allowedtomoderatecategoryandforum($category_id, $forum_id)
+function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE);
+    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
 }
 
 /**
  * allowedtoadmincategoryandforum
  */
-function allowedtoadmincategoryandforum($category_id, $forum_id)
+function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN);
+    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
 }
 
 /**

@@ -441,75 +441,7 @@ function pnForum_admin_assignranks()
 
 
 /** 
- * newforumorder
- *
- */
-function pnForum_admin_newforumorder()
-{
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
-    }
-    $cat_id = pnVarCleanFromInput('cat_id');
-
-    // if we have been passed a cat_id then lets figure out which forums
-    // belong to this category, and get the category details
-    if(!empty($cat_id) && is_numeric($cat_id)) {
-        // get the list of forums and their data
-        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
-                array('cat_id' => $cat_id));
-        // get the category information
-        $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
-                array('cat_id' => $cat_id));
-    }
-
-    $pnr =& new pnRender("pnForum");
-    $pnr->caching = false;
-    $pnr->add_core_data();
-    $pnr->assign('forums', $forums);
-    $pnr->assign('total_forums', count($forums));
-    $pnr->assign('category', $category);
-    return $pnr->fetch("pnforum_admin_reorderforums.html");
-}
-
-
-/**
- * newforumordersave
- *
- * AJAX result function
- *
- */
-function pnForum_admin_newforumordersave()
-{
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
-    }
-
-    if(!pnSecConfirmAuthKey()) {
-        pnf_ajaxerror(_BADAUTHKEY);
-    }
-    
-    list($forums,
-         $cat_id) = pnVarCleanFromInput('forums',
-                                        'cat_id');
-
-    if(is_array($forums) && count($forums) > 0) {
-        foreach($forums as $order => $forum_id) {
-            // array key start with 0, but we need 1, so we increae the order
-            // values
-            $order++;
-            if(pnModAPIFunc('pnForum', 'admin', 'storenewforumorder',
-                                              array('forum_id' => $forum_id,
-                                                    'order'    => $order)) == false) {
-                pnf_ajaxerror('storenewforumorder(): cannot reorder forum ' . $forum_id . ' (' . $order . ')');
-            }
-        } 
-    }
-    pnf_jsonizeoutput(true, true, true);
-    
-}
-
-/** 
- * newforumorder
+ * reordertree
  *
  */
 function pnForum_admin_reordertree()
@@ -1041,6 +973,57 @@ function pnForum_admin_storeforum()
                             'editforumhtml'  => $editforumhtml),
                       true,
                       true);
+}
+
+/**
+ * managesubscriptions
+ *
+ */
+function pnForum_admin_managesubscriptions()
+{
+    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    list($submit, $pnusername) = pnVarCleanFromInput('submit', 'pnusername');
+    
+    if(!empty($pnusername)) {
+        $pnuid = pnUserGetIDFromName($pnusername);
+        if(!empty($pnuid)) {
+            $topicsubscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions', array('user_id' => $pnuid));
+            $forumsubscriptions = pnModAPIFunc('pnForum', 'user', 'get_forum_subscriptions', array('user_id' => $pnuid));
+        }
+    }
+    if(!$submit) {
+        // submit is empty
+        $pnr = new pnRender('pnForum');
+        $pnr->caching = false;
+        $pnr->add_core_data();
+        $pnr->assign('pnusername', $pnusername);
+        $pnr->assign('pnuid', $pnuid);
+        $pnr->assign('topicsubscriptions', $topicsubscriptions);
+        $pnr->assign('forumsubscriptions', $forumsubscriptions);
+        
+        return $pnr->fetch('pnforum_admin_managesubscriptions.html');
+    } else {  // submit not empty
+        list($pnuid, $allforums, $forum_ids, $alltopics, $topic_ids) = pnVarCleanFromInput('pnuid', 'allforum', 'forum_id', 'alltopic', 'topic_id');
+        if($allforums == '1') {
+            pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum', array('user_id' => $pnuid));
+        } elseif(count($forum_ids) > 0) {
+            for($i=0; $i<count($forum_ids); $i++) {
+                pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum', array('user_id' => $pnuid, 'forum_id' => $forum_ids[$i]));
+            }
+        }
+
+        if($alltopics == '1') {
+            pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic', array('user_id' => $pnuid));
+        } elseif(count($topic_ids) > 0) {
+            for($i=0; $i<count($topic_ids); $i++) {
+                pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic', array('user_id' => $pnuid, 'topic_id' => $topic_ids[$i]));
+            }
+        }
+    }
+    return pnRedirect(pnModURL('pnForum', 'admin', 'managesubscriptions', array('pnusername' => pnUserGetVar('uname', $pnuid))));
 }
 
 ?>

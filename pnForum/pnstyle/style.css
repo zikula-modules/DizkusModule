@@ -452,6 +452,26 @@ div.pnf_statusmsg {
     padding: 0;
 }
 
+#pnforum_admin ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none
+}
+
+#pnforum_admin li {
+    margin: 0;
+    padding: 0;
+}
+
+#pnforum_admin h1 {
+    font-size: 2em;
+    margin: 0.5em 0 0.5em 0;
+}
+
+#pnforum_admin h2 {
+    font-size: 1.5em;
+    margin: 0.5em 0 0.5em 0;
+}
 
 #pnforum dt.prefs {
     width: 50%;
