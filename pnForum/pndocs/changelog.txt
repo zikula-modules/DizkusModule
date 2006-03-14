@@ -17,6 +17,8 @@ PostNuke pnForum Module changelog
 - fixed [#2637] moderation navigation and 
         [#2683] Moderation function broken on multiple pages (same bug)
 - fixed [#2729] Parameter: for statistics-Block ignored
+- fixed [#2728] PostNuke Rechte greifen bei Mailverständigung nicht.
+- added [#2492] Admin option to remove subscriptions
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

@@ -6,7 +6,7 @@ pnForum module developers team (current status):
 Andreas Krapohl aka larsneo (larsneo@postnuke.com)
 Jim Hadfield (jhadfiel@oldihc.org)
 Frank Schummertz aka landseer (frank.schummertz@landseer-stuttgart.de)
-Steffen Voss aka ArschMitOhren (steffen.voss@online.de)
+Steffen Voss aka kafferinge.de (steffen.voss@online.de)
 
 People who contributed code for 2.0.0 or later
 ----------------------------------------------
