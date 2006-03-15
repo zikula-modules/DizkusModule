@@ -102,7 +102,7 @@ function storeforum(forumid)
         });
 }
 
-function storeforum_response(originalRequest, json)
+function storeforum_response(originalRequest)
 {
     // show error if necessary
     if( originalRequest.status != 200 ) { 
@@ -111,6 +111,7 @@ function storeforum_response(originalRequest, json)
         return;
     }
 
+    var json = dejsonize(originalRequest.responseText);
     updateAuthid(json.authid);
     switch(json.action) {
         case 'delete':
@@ -617,7 +618,6 @@ function pnf_toggleprogressimage(typ, id)
 
 }
 
-/*
 function showextendedoptions(extsource, forumid)
 {
     switch(extsource) {
@@ -635,7 +635,5 @@ function showextendedoptions(extsource, forumid)
             Element.hide('pnlogindata_' + forumid);
             Element.hide('mail2forum_' + forumid);
             Element.hide('rss2forum_' + forumid);
-            alert('wrong value ' + extsource + ' in showextendedoptions()');
     }
 }
-*/

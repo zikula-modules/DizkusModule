@@ -740,6 +740,7 @@ function pnForum_admin_storecategory()
                             array('cat_id' => $cat_id));
         if($res==true) {
             pnf_jsonizeoutput(array('cat_id' => $cat_id,
+                                    'old_id' => $cat_id,
                                     'action' => 'delete'),
                               true,
                               true); 
@@ -776,6 +777,7 @@ function pnForum_admin_storecategory()
                         array('cat_title' => $cat_title,
                               'cat_id'    => $cat_id)) == true) {
             pnf_jsonizeoutput(array('cat_id'      => $cat_id,
+                                    'old_id'      => $cat_id,
                                     'cat_title'   => $cat_title,
                                     'action'      => 'update',
                                     'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
@@ -971,7 +973,6 @@ function pnForum_admin_storeforum()
                             'forumtitle'     => $forumtitle,
                             'pop3resulthtml' => $pop3testresulthtml,
                             'editforumhtml'  => $editforumhtml),
-                      true,
                       true);
 }
 

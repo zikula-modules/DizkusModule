@@ -119,7 +119,7 @@
 
         <!--[* if $forum.externalsource == 1 || $forum.externalsource == 2 *]-->
 
-        <div id="pnlogindata_<!--[ $forum.forum_id ]-->" style="display:none;">
+        <div id="pnlogindata_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource == 0 ]-->style="display:none;"<!--[ /if ]-->>
 
         <div class="pnfadminrow98 pnf_clearfix">
             <div class="pnfadmincol24">
@@ -152,35 +152,9 @@
 
         <!--[* /if *]-->
 
-        <!--[* if $forum.externalsource == 2 *]-->
-
-        <div id="rss2forum_<!--[ $forum.forum_id ]-->" style="display:none;">
-
-        <div class="pnfadminrow98 pnf_clearfix">
-            <strong><!--[ pnml name='_PNFORUM_RSS2FORUM' ]--></strong>
-        </div>
-
-        <div class="pnfadminrow98 pnf_clearfix">
-            <div class="pnfadmincol24">
-                <label for="rssfeed"><!--[ pnml name='_PNFORUM_SELECTRSSFEED' ]--></label>:
-            </div>
-            <div class="pnfadmincol66">
-                <select name="rssfeed" size="1">
-                <option value="0"><!--[ pnml name='_PNFORUM_NONE' ]--></option>
-                <!--[ foreach item=feed from=$rssfeeds ]-->
-                <option value="<!--[ $feed.fid ]-->" <!--[ if $feed.fid == $forum.externalsourceurl ]-->selected="selected"<!--[ /if ]-->"><!--[ $feed.feedname|pnvarprepfordisplay ]--> (<!--[ $feed.url ]-->)</option>
-                <!--[ /foreach ]-->
-                </select>
-            </div>
-        </div>
-        
-        </div>
-
-        <!--[* /if *]-->
-
         <!--[* if $forum.externalsource == 1 *]-->
 
-        <div id="mail2forum_<!--[ $forum.forum_id ]-->" style="display:none;">
+        <div id="mail2forum_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource <> 1 ]-->style="display:none;"<!--[ /if ]-->>
             
         <div class="pnfadminrow98 pnf_clearfix">
             <strong><!--[ pnml name='_PNFORUM_MAIL2FORUM' ]--></strong>
@@ -261,6 +235,32 @@
         </div>
 
         </div>
+        <!--[* /if *]-->
+
+        <!--[* if $forum.externalsource == 2 *]-->
+
+        <div id="rss2forum_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource <> 2 ]-->style="display:none;"<!--[ /if ]-->>
+
+        <div class="pnfadminrow98 pnf_clearfix">
+            <strong><!--[ pnml name='_PNFORUM_RSS2FORUM' ]--></strong>
+        </div>
+
+        <div class="pnfadminrow98 pnf_clearfix">
+            <div class="pnfadmincol24">
+                <label for="rssfeed"><!--[ pnml name='_PNFORUM_SELECTRSSFEED' ]--></label>:
+            </div>
+            <div class="pnfadmincol66">
+                <select name="rssfeed" size="1">
+                <option value="0"><!--[ pnml name='_PNFORUM_NONE' ]--></option>
+                <!--[ foreach item=feed from=$rssfeeds ]-->
+                <option value="<!--[ $feed.fid ]-->" <!--[ if $feed.fid == $forum.externalsourceurl ]-->selected="selected"<!--[ /if ]-->"><!--[ $feed.feedname|pnvarprepfordisplay ]--> (<!--[ $feed.url ]-->)</option>
+                <!--[ /foreach ]-->
+                </select>
+            </div>
+        </div>
+        
+        </div>
+
         <!--[* /if *]-->
 
         <div class="pnfadminrow98 pnf_clearfix">
