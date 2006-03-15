@@ -11,17 +11,17 @@
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: center;">
-        <!--[ pnml name='_PNFORUM_MOVETOPIC_INFO' html=1 ]--><br />
+    <div style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+        <p><!--[ pnml name='_PNFORUM_MOVETOPIC_INFO' html=1 ]--></p>
         <select name="forum" id="phpbb_forum">
         <!--[ foreach item=forum from=$forums ]-->
         <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]-->&nbsp;::&nbsp;<!--[ $forum.forum_name ]--></option>
         <!--[ /foreach ]-->
         </select>
-        <br />
+        <p>
         <label for="createshadowtopic"><!--[ pnml name='_PNFORUM_CREATESHADOWTOPIC' html=1 ]--></label>
         <input type="checkbox" id="createshadowtopic" name="createshadowtopic" value="1" />
-        <br />
+        </p>
         <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_MOVETOPIC' ]-->" />
      </div>
      </form>
@@ -35,10 +35,11 @@
     <input type="hidden" name="mode" value="join" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: center;">
+    <div style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+        <p>
         <label for="to_topic_id"><!--[ pnml name='_PNFORUM_JOINTOPICS_TOTOPIC' html=1 ]--></label>
         <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />(topic_id)
-        <br />
+        </p>
         <input name="submit" type="submit" value="<!--[ pnml name='_PNFORUM_JOINTOPICS' ]-->" />
     </div>
     </form>

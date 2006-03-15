@@ -1,58 +1,37 @@
 <!--[*  $Id$  *]-->
 
+<!--[ include file='pnforum_user_header.html' ]-->
+
 <!--[* pndebug *]-->
 
-<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="95%">
-    <tr>
-        <td>
-            <table border="0" cellpadding="3" cellspacing="1" width="100%">
-                <tr align="left">
-                    <td colspan="2" align="center">
-                        <!--[ pnml name='_PNFORUM_ACCOUNT_INFORMATION' ]-->
-                    </td>
-                </tr>
-                    <td colspan="2" align="center">
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td>
-                        <strong><!--[ pnml name='_PNFORUM_USER_IP' ]-->:</strong>
-                    </td>
-                    <td>
-                        <!--[ $viewip.poster_ip ]-->
-                    </td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td>
-                        <strong><!--[ pnml name='_PNFORUM_HOST' ]-->:</strong>
-                    </td>
-                    <td>
-                        <!--[ $viewip.poster_host ]-->
-                    </td>
-                </tr>
-                    <td colspan="2" align="center">
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-                    <td colspan="2" align="center">
-                        <!--[ pnml name='_PNFORUM_IP_USERNAMES ]--><br>&nbsp;
-                    </td>
-                </tr>
-                <!--[ foreach item=user from=$viewip.users ]-->
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td><!--[ $user.pn_uname|profilelink ]--></td>
-                    <td><!--[ $user.postcount ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--></td>
-                </tr>
-                <!--[ /foreach ]-->
-            </table>
-        </td>
-    </tr>
-</table>
-<br />
-<div style="text-align: center;">
-<a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic_id ]-->"><!--[ pnml name='_PNFORUM_RETURNTOTOPIC' ]--></a>
-</div>
+<fieldset>
+    <legend>
+        <!--[ pnml name='_PNFORUM_ACCOUNT_INFORMATION' ]-->
+    </legend>
+    <div style="padding: 0.5em; background-color: <!--[ $bgcolor3 ]-->;">
+    <p>
+    <label for="poster_ip"><strong><!--[ pnml name='_PNFORUM_USER_IP' ]-->:</strong></label>
+    <span id="poster_ip"><!--[ $viewip.poster_ip ]--></span>
+    </p>
+    <p>
+    <label for="poster_host"><strong><!--[ pnml name='_PNFORUM_HOST' ]-->:</strong></label>
+    <span id="poster_host"><!--[ $viewip.poster_host ]--></span>
+    </p>
+    <p style="margin: 1em 0 1em 0;">
+        <!--[ pnml name='_PNFORUM_IP_USERNAMES ]-->
+    </p>
+    <ul>
+        <!--[ foreach item=user from=$viewip.users ]-->
+        <li>
+            <!--[ $user.pn_uname|profilelink ]-->&nbsp;(<!--[ $user.postcount ]--> <!--[ pnml name='_PNFORUM_POSTS' ]-->)
+        </li>
+        <!--[ /foreach ]-->
+    </ul> 
+    
+    </div>
+    <div style="text-align:center; margin: 1em 0 1em 0;">
+        <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic_id ]-->"><!--[ pnml name='_PNFORUM_RETURNTOTOPIC' ]--></a>
+    </div>
+</fieldset>
 
 <!--[ include file='pnforum_user_footer.html' ]-->
