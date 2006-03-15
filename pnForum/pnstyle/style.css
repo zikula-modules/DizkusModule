@@ -172,6 +172,11 @@ dd.pnfadmin {
     margin-bottom: 1em;
 }
 
+#pnforum legend {
+    font-size: 1em;
+    font-weight: bold;
+}
+
 .displayhook {
     clear: both;
     padding: 5px;
