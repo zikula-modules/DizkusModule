@@ -19,6 +19,7 @@ PostNuke pnForum Module changelog
 - fixed [#2729] Parameter: for statistics-Block ignored
 - fixed [#2728] PostNuke Rechte greifen bei Mailverständigung nicht.
 - added [#2492] Admin option to remove subscriptions
+- fixed [#2734] blocks show wrong date/time after splitting a thread
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

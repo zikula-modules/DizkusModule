@@ -3075,7 +3075,16 @@ function pnForum_userapi_emailtopic($args)
         $sender_name = pnConfigGetVar('anonymous');
         $sender_email = pnModGetVar('pnForum', 'email_from');
     }
-    pnMail($sendto_email, $topic_subject, $message, "From: \"$sender_name\" <$sender_email>\nX-Mailer: PHP/" . phpversion());
+    //pnMail($sendto_email, $topic_subject, $message, "From: \"$sender_name\" <$sender_email>\nX-Mailer: PHP/" . phpversion());
+    $args = array( 'fromname'    => $sender_name,
+                   'fromaddress' => $sender_email,
+                   'toname'      => $sendto_email,
+                   'toaddress'   => $sendto_email,
+                   'subject'     => $subject,
+                   'body'        => $message,
+                   'headers'     => array('X-Mailer: pnForum v' . $modinfo['version']));
+    pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+
     return;
 }
 
@@ -3259,9 +3268,19 @@ function pnForum_userapi_splittopic($args)
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
     $sql = "INSERT INTO ".$pntable['pnforum_topics']."
-            (topic_id, topic_title, topic_poster, forum_id, topic_time, topic_notify)
+            (topic_id, 
+             topic_title, 
+             topic_poster, 
+             forum_id, 
+             topic_time, 
+             topic_notify)
             VALUES
-            ('".pnVarPrepForStore($topic_id)."', '".pnVarPrepForStore($post['topic_subject'])."', '".pnVarPrepForStore($post['poster_data']['pn_uid'])."', '".pnVarPrepForStore($post['forum_id'])."', '".pnVarPrepForStore($time)."', '' )";
+            ('".pnVarPrepForStore($topic_id)."', 
+             '".pnVarPrepForStore($post['topic_subject'])."', 
+             '".pnVarPrepForStore($post['poster_data']['pn_uid'])."', 
+             '".pnVarPrepForStore($post['forum_id'])."', 
+             '".pnVarPrepForStore($time)."', 
+             '' )";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $newtopic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
     pnfCloseDB($result);
@@ -3277,6 +3296,7 @@ function pnForum_userapi_splittopic($args)
     list($posts_to_move) = $result->fields;
     pnfCloseDB($result);
 
+    // update the topic_id in the postings
     // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
     // post_id > $post['post_id']
     $sql = "UPDATE ".$pntable['pnforum_posts']."
@@ -3286,13 +3306,14 @@ function pnForum_userapi_splittopic($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
-    // get the new topic_last_pos_id of the old topic
-    $sql = "SELECT post_id
+    // get the new topic_last_post_id of the old topic
+    $sql = "SELECT post_id,
+                   post_time
             FROM ".$pntable['pnforum_posts']."
             WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
             ORDER BY post_time DESC";
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-    list($new_last_post_id) = $result->fields;
+    list($new_last_post_id, $new_topic_time) = $result->fields;
     pnfCloseDB($result);
 
     // update the new topic
@@ -3308,7 +3329,8 @@ function pnForum_userapi_splittopic($args)
     $old_replies = (int)$old_replies - (int)$posts_to_move;
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_replies = " . pnVarPrepForStore($old_replies) . ",
-                topic_last_post_id = '" . pnVarPrepForStore($new_last_post_id) . "'
+                topic_last_post_id = '" . pnVarPrepForStore($new_last_post_id) . "',
+                topic_time = '" . pnVarPrepForStore($new_topic_time) . "'
             WHERE topic_id = '". (int)pnVarPrepForStore($post['topic_id'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
