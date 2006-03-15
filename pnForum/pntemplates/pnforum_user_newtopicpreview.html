@@ -9,8 +9,8 @@ Template for single postings
 
 
 
-    <div id="posting_<!--[ $newtopic.topic_id ]-->"  style="background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
-        <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 1px solid black; background-color: <!--[ $bgcolor3 ]-->;" id="topicsubject_<!--[ $newtopic.topic_id ]-->_content"><!--[ $newtopic.subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
+    <div id="posting"  style="background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
+        <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 1px solid black; background-color: <!--[ $bgcolor3 ]-->;" id="topicsubject_content"><!--[ $newtopic.subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
         <div style="background-color: <!--[ $bgcolor3 ]-->;" class="postingheader pnf_clearfix">
             <div class="postingheaderleft">
                 <span class="userinfoname"><!--[ $newtopic.poster_data.pn_uname ]--></span>
@@ -22,9 +22,9 @@ Template for single postings
        
         <div class="postingbody pnf_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
             <!--[ if $newtopic.poster_data.pn_uid neq 1 ]-->
-                <div  class="userinfo" style="background-color: <!--[ $bgcolor3 ]-->;" id="posting_<!--[ $newtopic.topic_id ]-->_userinfo">
+                <div  class="userinfo" style="background-color: <!--[ $bgcolor3 ]-->;" id="posting_userinfo">
                     <button onclick="javascript:toggleuserinfo(<!--[ $newtopic.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right; background: transparent; border: none;">x</button>
-                    <div id="posting_<!--[ $newtopic.topic_id ]-->_userinfocontent">
+                    <div id="posting_userinfocontent">
                         
                         <!--[ if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                             <div style="margin: 1em 0 0.5em 0; width:99%; text-align: center;">
@@ -74,7 +74,7 @@ Template for single postings
                     </div>
                 </div>
             <!--[ /if ]-->
-            <div class="postingtext_small" id="postingtext_<!--[ $newtopic.topic_id ]-->">
+            <div class="postingtext_small" id="postingtext">
                 <!--[ $newtopic.message_display ]-->
             </div>
             
