@@ -1,44 +1,40 @@
 <!--[*  $Id$  *]-->
 
+<!--[ include file='pnforum_user_header.html' ]-->
+
 <!--[* pndebug *]-->
 
-<form action="<!--[ pnmodurl modname=pnForum type=user func=emailtopic ]-->" method="post" name="emailtopic">
+<fieldset>
+    <legend>
+        <!--[ pnml name='_PNFORUM_EMAIL_TOPIC' html=1 ]-->
+    </legend>
+    <!--[ if $error_msg neq '' ]-->
+    <div style="background-color: <!--[ $bgcolor2 ]-->; text-align: center; color:red;">
+            <strong><!--[ $error_msg ]--></strong>
+    </div>
+    <!--[ /if ]-->
 
-  <table border="0" cellpadding="3" cellspacing="1" align="center" width="100%" class="pnForum-border">
-        <!--[ if $error_msg neq '' ]-->
-        <tr bgcolor="<!--[ $bgcolor2 ]-->" align="center">
-            <td colspan="2">
-                <strong><!--[ pnml name='_PNFORUM_MAILTO_WRONGEMAIL' ]--></strong>
-            </td>
-        </tr>
-        <!--[ /if ]-->
+    <form action="<!--[ pnmodurl modname=pnForum type=user func=emailtopic ]-->" method="post" name="emailtopic">
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
+    <input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
+    <div style="padding: 0.5em; background-color: <!--[ $bgcolor3 ]-->">
+        <p>
+            <label for="sendto_email"><strong><!--[ pnml name='_PNFORUM_SENDTO' ]--></strong></label><br />
+            <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->" />
+        </p>
+        <p>
+            <label for="emailsubject"><strong><!--[ pnml name='_PNFORUM_SUBJECT' html=1 ]-->:&nbsp;</strong></label><br />
+            <input type="text" id="emailsubject" name="emailsubject" size="50" maxlength="100" value="<!--[ $emailsubject ]-->" />
+        </p>
+        <p>
+            <label for="message"><strong><!--[ pnml name='_PNFORUM_BODY' ]--></strong></label><br />
+            <textarea id="message" name="message" rows="10" cols="80"><!--[ $message|pnvarprepfordisplay ]--></textarea>
+        </p>
 
-	<tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-		<td>
-		    <label for="sendto_email"><strong><!--[ pnml name='_PNFORUM_SENDTO' ]--></strong></label>
-		</td>
-		<td bgcolor="<!--[ $bgcolor1 ]-->">
-		    <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->" />
-	    </td>
-	</tr>
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-		<td><strong><!--[ pnml name='_PNFORUM_SUBJECT' ]--></strong></td>
-		<td bgcolor="<!--[ $bgcolor1 ]-->" >
-		    <!--[ $topic.topic_subject ]-->
-		</td>
-    </tr>
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-		<td><label for="message"><strong><!--[ pnml name='_PNFORUM_BODY' ]--></strong></label></td>
-		<td bgcolor="<!--[ $bgcolor1 ]-->" >
-		    <textarea id="message" name="message" rows="10" cols="80"><!--[ $message|pnvarprepfordisplay ]--></textarea>
-		</td>
-    </tr>
-    <tr bgcolor="<!--[ $bgcolor3 ]-->" align="center">
-		<td colspan="2">
-			<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-    		<input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
-			<input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_SUBMIT ]-->" />
-        </td>
-    </tr>
-</table>
-</form>
+        <input name="submit" type="submit" value="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" />
+    </div>
+    </form>
+</fieldset>
+
+
+<!--[ include file='pnforum_user_footer.html' ]-->

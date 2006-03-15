@@ -711,6 +711,7 @@ function pnForum_user_emailtopic($args=array())
     } else {
         $topic_id = (int)pnVarCleanFromInput('topic');
         $message = pnVarCleanFromInput('message');
+        $emailsubject = pnVarCleanFromInput('emailsubject');
         $sendto_email = pnVarCleanFromInput('sendto_email');
         $submit = pnVarCleanFromInput('submit');
     }
@@ -724,17 +725,20 @@ function pnForum_user_emailtopic($args=array())
     if(!empty($submit)) {
 	    if (!pnVarValidate($sendto_email, 'email')) {
 	    	// Empty e-mail is checked here too
-        	$error_msg = true;
+        	$error_msg = pnVarPrepForDisplay(_PNFORUM_MAILTO_WRONGEMAIL);
         	$sendto_email = '';
         	unset($submit);
 	    } else if ($message == '') {
-        	$error_msg = true;
+        	$error_msg = pnVarPrepForDisplay(_PNFORUM_MAILTO_NOBODY);
+        	unset($submit);
+	    } else if ($emailsubject == '') {
+        	$error_msg = pnVarPrepForDisplay(_PNFORUM_MAILTO_NOSUBJECT);
         	unset($submit);
 	    }
     }
 
-    $topic = pnModAPIFunc('pnForum', 'user', 'prepareemailtopic',
-                          array('topic_id'   => $topic_id));
+//    $topic = pnModAPIFunc('pnForum', 'user', 'prepareemailtopic',
+//                          array('topic_id'   => $topic_id));
 
     if(!empty($submit)) {
         if (!pnSecConfirmAuthKey()) {
@@ -744,15 +748,19 @@ function pnForum_user_emailtopic($args=array())
         pnModAPIFunc('pnForum', 'user', 'emailtopic',
                      array('sendto_email' => $sendto_email,
                            'message'      => $message,
-                           'topic_subject'=> $topic['topic_subject']));
+                           'topic_subject'=> $email_subject));
         return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)));
     } else {
+        $topic = pnModAPIFunc('pnForum', 'user', 'prepareemailtopic',
+                              array('topic_id'   => $topic_id));
+        $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_subject'];
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
         $pnr->add_core_data();
         $pnr->assign('topic', $topic);
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
+        $pnr->assign('emailsubject', $emailsubject);
         $pnr->assign('message', pnVarPrepForDisplay(_PNFORUM_EMAILTOPICMSG) ."\n\n" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
