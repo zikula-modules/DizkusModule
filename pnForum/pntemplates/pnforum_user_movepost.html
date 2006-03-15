@@ -1,40 +1,28 @@
 <!--[*  $Id$  *]-->
 
+<!--[ include file=pnforum_user_header.html ]-->
+
 <!--[* pndebug *]-->
 
-<table border="0" cellpadding="1" cellspacing="1" align="center" valign="top" width="100%">
-    <tr>
-        <td bgcolor="<!--[ $bgcolor2 ]-->">
-            <table border="0" cellpadding="3" cellspacing="1" width="100%">
-                <tr bgcolor="<!--[ $bgcolor2 ]-->" align="left">
-                    <form action="<!--[ pnmodurl modname=pnForum type=user func=movepost ]-->" method="post">
-                    <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
-					<input type="hidden" name="from_topic" value="<!--[ $post.topic_id ]-->" />
-                    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-					<input type="hidden" name="submit" value="1" />
-                    <td align="center"><strong><!--[ pnml name='_PNFORUM_MOVEPOST' ]--></strong></td>
-                </tr>
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td align="center"><!--[ pnml name='_PNFORUM_MOVEPOST_INFO' html=1 ]--></td>
-	            </tr>
-
-                <tr bgcolor="<!--[ $bgcolor3 ]-->" align="left">
-                    <td align="center">
-                        <!--[ pnml name='_PNFORUM_MOVEPOST_TOTOPIC' html=1 ]-->
-                        <input type="text" name="to_topic" value="" size="10" maxlength="20" />
-                        (topic_id)
-                    </td>
-	            </tr>
-
-                <tr bgcolor="<!--[ $bgcolor3 ]-->">
-                    <td align="center">
-                        <input type="submit" value="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" />
-                    </td>
-                </tr>
-                </form>
-            </table>
-        </td>
-    </tr>
-</table>
+<fieldset>
+    <legend>
+        <!--[ pnml name='_PNFORUM_MOVEPOST' html=1 ]-->
+    </legend>
+    <form action="<!--[ pnmodurl modname=pnForum type=user func=movepost ]-->" method="post">
+    <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
+    <input type="hidden" name="from_topic" value="<!--[ $post.topic_id ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
+    <div style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+        <p style="text-align:center;">
+            <!--[ pnml name='_PNFORUM_MOVEPOST_INFO' html=1 ]-->
+        </p>
+        <p>
+        <label for="to_topic"><!--[ pnml name='_PNFORUM_MOVEPOST_TOTOPIC' html=1 ]--></label>
+        <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" /> (topic_id)
+        </p>
+        <input name="submit" type="submit" value="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" />
+    </div>
+    </form>
+</fieldset>
 
 <!--[ include file='pnforum_user_footer.html' ]-->
