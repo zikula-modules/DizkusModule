@@ -12,7 +12,7 @@
 	</tr>
 	</thead>
     <tbody>
-        <tr bgcolor="" align="left">
+        <tr align="left">
             <td headers="col_0" rowspan="2" valign="top">
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
                 
@@ -22,12 +22,12 @@
                 <!--[ /if ]-->
                 <br />
                 <!--[ if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                <img src="<!--[ $post.poster_data.pn_user_avatar ]-->" alt="avatar" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]-->>
+                <img src="<!--[ $post.poster_data.pn_user_avatar ]-->" alt="avatar" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> />
                 <!--[ /if ]-->
                 <!--[ if $post.poster_data.rank ]-->
                     <br /><strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></strong>
                     <!--[ if $post.poster_data.rank_image ]-->
-                        <br /><img src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> >
+                        <br /><img src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
                     <!--[ /if ]-->
                 <!--[ /if ]-->
                 <br /><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $post.poster_data.user_posts ]-->

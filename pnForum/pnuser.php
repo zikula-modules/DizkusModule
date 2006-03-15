@@ -916,10 +916,14 @@ function pnForum_user_print($args=array())
         } else {
             return pnRedirect(pnModURL('pnForum', 'user', 'main'));
         }
-        echo "<html>\n";
+        $lang = pnConfigGetVar('backend_language');
+        echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
+        echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+        echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$lang\" xml:lang=\"$lang\">\n";
         echo "<head>\n";
+        echo "<title>" . $topic['topic_title'] . "</title>\n";
         echo "<link rel=\"StyleSheet\" href=\"themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";
-        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('pnForum', 'default_lang') ."\">\n";
+        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('pnForum', 'default_lang') ."\" />\n";
 
         global $additional_header;
         if (is_array($additional_header))
