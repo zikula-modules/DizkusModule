@@ -748,7 +748,7 @@ function pnForum_user_emailtopic($args=array())
         pnModAPIFunc('pnForum', 'user', 'emailtopic',
                      array('sendto_email' => $sendto_email,
                            'message'      => $message,
-                           'topic_subject'=> $email_subject));
+                           'subject'      => $emailsubject));
         return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)));
     } else {
         $topic = pnModAPIFunc('pnForum', 'user', 'prepareemailtopic',
