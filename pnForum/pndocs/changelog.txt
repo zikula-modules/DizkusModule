@@ -20,6 +20,7 @@ PostNuke pnForum Module changelog
 - fixed [#2728] PostNuke Rechte greifen bei Mailverständigung nicht.
 - added [#2492] Admin option to remove subscriptions
 - fixed [#2734] blocks show wrong date/time after splitting a thread
+- fixed [#2678] Search does not honor sort field specification
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

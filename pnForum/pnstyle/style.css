@@ -22,6 +22,22 @@ button.left {
     margin: 1em 0 1em 2em;
 }
 
+.shown {
+    display: inline;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;

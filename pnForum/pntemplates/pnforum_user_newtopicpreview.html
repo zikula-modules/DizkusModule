@@ -23,7 +23,7 @@ Template for single postings
         <div class="postingbody pnf_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
             <!--[ if $newtopic.poster_data.pn_uid neq 1 ]-->
                 <div  class="userinfo" style="background-color: <!--[ $bgcolor3 ]-->;" id="posting_userinfo">
-                    <button onclick="javascript:toggleuserinfo(<!--[ $newtopic.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right; background: transparent; border: none;">x</button>
+                    <button onclick="javascript:toggleuserinfo(<!--[ $newtopic.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
                     <div id="posting_userinfocontent">
                         
                         <!--[ if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
@@ -46,7 +46,7 @@ Template for single postings
                                     <!--[ pnml name='_PNFORUM_REG_SINCE' ]-->:
                                 </dt>
                                 <dd>
-                                    <!--[ $newtopic.poster_data.pn_user_regdate|pndate_format:"%b. %Y"  ]-->
+                                    <!--[ $newtopic.poster_data.pn_user_regdate|pndate_format:"%B %Y"  ]-->
                                 </dd>
                                 <dt>
                                     <!--[ pnml name='_PNFORUM_STATUS' ]-->:
