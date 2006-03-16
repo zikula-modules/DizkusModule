@@ -15,7 +15,7 @@
         </div>
         <div style="float: left; width: 70%; text-align: left;">
             <select name="pnForum_forum[]" id="pnForum_forum" size="5" multiple="multiple">
-            <option value="" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ALLTOPICS' ]--></option>
+            <option value="-1" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ALLTOPICS' ]--></option>
             <!--[ foreach item=forum from=$forums ]-->
             <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprephtmldisplay ]--> :: <!--[ $forum.forum_name|pnvarprephtmldisplay ]--></option>
             <!--[ /foreach ]-->
@@ -41,6 +41,9 @@
             <option value="1" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYDATE' ]--></option>
             <option value="2"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYTITLE' ]--></option>
             <option value="3"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYFORUM' ]--></option>
+            <!--[ if $pncore.pnForum.fulltextindex == 1 ]-->
+            <option value="4"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_BYSCORE' ]--></option>
+            <!--[ /if ]-->
             </select>
         </div>
     </div>

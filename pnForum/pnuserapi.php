@@ -3525,51 +3525,57 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
     $query .= "AND p.forum_id=f.forum_id\n";
     $query .= "AND c.cat_id=f.cat_id\n";
 
-    //check forums (multiple selection is possible!)
-    if($forums[0]) {
-        $query .= ' AND (';
-        $flag = false;
-        foreach($forums as $forumid) {
-            if($flag) {
-                $query .= ' OR ';
-            }
-            $query .= "f.forum_id=$forumid";
-            $flag = true;
-        }
-        $query .= ') ';
+
+    // get all forums the user is allowed to read
+    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+    if(!is_array($userforums) || count($userforums)==0) {
+        // error or user is not allowed to read any forum at all
+        // return empty result set without even doing a db access
+        return(array($searchresults, 0));
+    }
+    // now create a very simle array of forum_ids only. we do not need
+    // all the other stuff in the $userforums array entries
+    $allowedforums = array();
+    for($i=0; $i<count($userforums); $i++) {
+        array_push($allowedforums, $userforums[$i]['forum_id']);
     }
 
-    // authors with adodb
+    if($forums[0]== -1) {
+        // search in all forums we are allowed to see
+        $query .= ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
+    } else {
+        // filter out forums we are not allowed to read
+        for($i=0;$i<count($forums); $i++) {
+            if(in_array($forums[$i], $allowedforums)) {
+                $forums2[] = $forums[$i];
+            }
+        }
+        $query .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
+    }
+
+    // authors
     if($author) {
-        $search_username = addslashes($author);
-        $sql = "SELECT pn_uid
-                FROM $pntable[users]
-                WHERE pn_uname = '".pnVarPrepForStore($search_username)."'";
-        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-        $row = $result->GetRowAssoc(false);
-        pnfCloseDB($result);
-        $searchauthor = $row['pn_uid'];
+        $searchauthor = pnUserGetIDFromName($author);
         if ($searchauthor > 0){
-            $query .= " AND p.poster_id=$searchauthor \n";
-        } else {
-            $query .= " AND p.poster_id=0 \n";
+            $query .= ' AND p.poster_id=' . pnVarPrepForStore($searchauthor);
         }
     }
 
     // Not sure this is needed and is not cross DB compat
     //$query .= ' GROUP BY pt.post_id ';
 
-    $searchorder = $order['0'];
+    switch($order) {
+        case 2:
+            $query .= ' ORDER BY t.topic_title';
+            break;
+        case 3:
+            $query .= ' ORDER BY f.forum_name';
+            break;
+        case 1:
+        default:
+            $query .= ' ORDER BY pt.post_id DESC';
+    }
 
-    if ($searchorder == 1){
-        $query .= ' ORDER BY pt.post_id DESC';
-    }
-    if ($searchorder == 2){
-        $query .= ' ORDER BY t.topic_title';
-    }
-    if ($searchorder == 3){
-        $query .= ' ORDER BY f.forum_name';
-    }
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 
     $total_hits = 0;
@@ -3590,33 +3596,31 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
                  $sresult['topic_views'],
                  $sresult['poster_id'],
                  $sresult['post_time']) = $result->fields;
-     	    if(allowedtoseecategoryandforum($sresult['cat_id'], $sresult['forum_id'])) {
-                // auth check for forum and category before displaying search result
-                // timezone
-                $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-                $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-                $sresult['topic_title'] = stripslashes($sresult['topic_title']);
+            // no auth check for forum and category needed here
+            // timezone
+            $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
+            $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
+            $sresult['topic_title'] = stripslashes($sresult['topic_title']);
 
-                //without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
+            //without signature
+            $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
 
-                //strip_tags is needed here 'cause maybe we cut within a html-tag...
-                $sresult['post_text'] = strip_tags($sresult['post_text']);
+            //strip_tags is needed here 'cause maybe we cut within a html-tag...
+            $sresult['post_text'] = strip_tags($sresult['post_text']);
 
-                // username
-                $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
+            // username
+            $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
 
-                // check if we have to skip the first $startnum entries or not
-                if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
-                    $skip_hits++;
-                } else {
-                    // check if we have a limit and wether we have reached it or not
-                    if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                        array_push($searchresults, $sresult);
-                    }
+            // check if we have to skip the first $startnum entries or not
+            if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
+                $skip_hits++;
+            } else {
+                // check if we have a limit and wether we have reached it or not
+                if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
+                    array_push($searchresults, $sresult);
                 }
-                $total_hits++;
             }
+            $total_hits++;
         }
     }
 
@@ -3655,6 +3659,9 @@ function pnForum_userapi_forumsearch_fulltext($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
+    // prepare array for search results
+    $searchresults = array();
+
     $searchfor = pnVarPrepForStore(trim($searchfor));
     // partial sql stored in $wherematch
     $wherematch = '';
@@ -3666,8 +3673,8 @@ function pnForum_userapi_forumsearch_fulltext($args)
 
         if($bool == 'AND') {
             // AND
-            $wherematch = "(MATCH pt.post_text AGAINST ('$searchfor') OR MATCH t.topic_title AGAINST ('$searchfor')) \n";
-            $selectmatch = ", MATCH pt.post_text AGAINST ('$searchfor') as textscore, MATCH t.topic_title AGAINST ('$searchfor') as subjectscore \n";
+            $wherematch = "(MATCH pt.post_text AGAINST ('%$searchfor%') OR MATCH t.topic_title AGAINST ('%$searchfor%')) \n";
+            $selectmatch = ", MATCH pt.post_text AGAINST ('%$searchfor%') as textscore, MATCH t.topic_title AGAINST ('%$searchfor%') as subjectscore \n";
         } else {
             // OR
             $flag = false;
@@ -3680,7 +3687,7 @@ function pnForum_userapi_forumsearch_fulltext($args)
                 $word = pnVarPrepForStore($word);
                 // get post_text and match up forums/topics/posts
                 //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+                $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
                 $flag = true;
             }
             $wherematch .= ' ) ';
@@ -3704,7 +3711,7 @@ function pnForum_userapi_forumsearch_fulltext($args)
             $word = pnVarPrepForStore($word);
             // get post_text and match up forums/topics/posts
             //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $wherematch .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+            $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
             $flag = true;
         }
         $wherematch .= ' ) AND ';
@@ -3726,7 +3733,7 @@ function pnForum_userapi_forumsearch_fulltext($args)
             $word = pnVarPrepForStore($word);
             // get post_text and match up forums/topics/posts
             //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $query .= "(MATCH pt.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+            $query .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
             $flag = true;
         }
         $query .= ' ) ';
@@ -3736,20 +3743,35 @@ function pnForum_userapi_forumsearch_fulltext($args)
         // searchfor is empty, we search by author only
     }
 
-    //check forums (multiple selection is possible!)
-    // partial sql stored in $whereforum
+    // check forums (multiple selection is possible!)
+    // partial sql stored in $whereforums
     $whereforums = '';
-    if($forums[0]) {
-        $whereforums = ' AND (';
-        $flag = false;
-        foreach($forums as $forumid) {
-            if($flag) {
-                $whereforums .= ' OR ';
+    
+    // get all forums the user is allowed to read
+    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+    if(!is_array($userforums) || count($userforums)==0) {
+        // error or user is not allowed to read any forum at all
+        // return empty result set without even doing a db access
+        return(array($searchresults, 0));
+    }
+    // now create a very simle array of forum_ids only. we do not need
+    // all the other stuff in the $userforums array entries
+    $allowedforums = array();
+    for($i=0; $i<count($userforums); $i++) {
+        array_push($allowedforums, $userforums[$i]['forum_id']);
+    }
+
+    if($forums[0]== -1) {
+        // search in all forums we are allowed to see
+        $whereforums = ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
+    } else {
+        // filter out forums we are not allowed to read
+        for($i=0;$i<count($forums); $i++) {
+            if(in_array($forums[$i], $allowedforums)) {
+                $forums2[] = $forums[$i];
             }
-            $whereforums .= 'f.forum_id= ' . pnVarPrepForStore($forumid) . ' ';
-            $flag = true;
         }
-        $whereforums .= ') ';
+        $whereforums .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
     }
 
     // authors with adodb
@@ -3759,30 +3781,30 @@ function pnForum_userapi_forumsearch_fulltext($args)
         $searchuid = pnUserGetIDFromName($author);
         if(is_numeric($searchuid)) {
             $whereauthor = " AND p.poster_id=$searchuid \n";
-        } else {
-            $whereauthor = ''; // " AND p.poster_id=0 \n";
         }
     }
 
     // Not sure this is needed and is not cross DB compat
     //$query .= " GROUP BY pt.post_id ";
 
-    //$searchorder = $order['0'];
-    // search order, partial sql stored in $searchordersql
-    $orderbyscore = '';
-    if(!empty($selectmatch)) {
-        $orderbyscore = 'textscore DESC, subjectscore DESC,';
+    switch($order) {
+        case 2:
+            $searchordersql = ' ORDER BY t.topic_title ';
+            break;
+        case 3:
+            $searchordersql = ' ORDER BY f.forum_name ';
+            break;
+        case 4:
+            if($selectmatch) {
+                $searchordersql = ' ORDER BY textscore DESC, subjectscore DESC ';
+                break;
+            } // no selectmatch, we slip through to default
+        case 1:
+        default:
+            $searchordersql = ' ORDER BY pt.post_id DESC ';
+            break;
     }
-    if ($order == 1){
-        $searchordersql = " ORDER BY $orderbyscore pt.post_id DESC";
-    }
-    if ($order == 2){
-        $searchordersql = " ORDER BY $orderbyscore t.topic_title";
-    }
-    if ($order == 3){
-        $searchordersql = " ORDER BY $orderbyscore f.forum_name";
-    }
-
+    
     $query = "SELECT DISTINCT
               f.forum_id,
               f.forum_name,
@@ -3816,7 +3838,6 @@ function pnForum_userapi_forumsearch_fulltext($args)
 
     $total_hits = 0;
     $skip_hits = 0;
-    $searchresults = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             $sresult = array();
@@ -3832,43 +3853,43 @@ function pnForum_userapi_forumsearch_fulltext($args)
                  $sresult['topic_views'],
                  $sresult['poster_id'],
                  $sresult['post_time']) = $result->fields;
-     	    if(allowedtoseecategoryandforum($sresult['cat_id'], $sresult['forum_id'])) {
-                // auth check for forum and category before displaying search result
-                // timezone
-                $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-                $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-                $sresult['topic_title'] = stripslashes($sresult['topic_title']);
+            // no further auth check needed, we are only searching forums we
+            // are allowed to read
+            // timezone
+            $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
+            $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
+            $sresult['topic_title'] = stripslashes($sresult['topic_title']);
 
-                //without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
+            //without signature
+            $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
 
-                //strip_tags is needed here 'cause maybe we cut within a html-tag...
-                $sresult['post_text'] = strip_tags($sresult['post_text']);
+            //strip_tags is needed here 'cause maybe we cut within a html-tag...
+            $sresult['post_text'] = strip_tags($sresult['post_text']);
 
-                // username
-                $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
+            // username
+            $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
 
-                // THIS PART IS NOT WORKING ATM!!! DO NOT USE IT!!!
-                // we now create the url to the last post in the thread. This might
-                // on site 1, 2 or what ever in the thread, depending on topic_replies
-                // count and the posts_per_page setting
-                //$sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                //                                   array('topic' => $sresult['topic_id'],
-                //                                         'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-                //$sresult['last_post_url_anchor'] = $sresult['last_post_url'] . "#pid" . $sresult['topic_last_post_id'];
-                //
+            // THIS PART IS NOT WORKING ATM!!! DO NOT USE IT!!!
+            // we now create the url to the last post in the thread. This might
+            // on site 1, 2 or what ever in the thread, depending on topic_replies
+            // count and the posts_per_page setting
+            //$sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+            //                                   array('topic' => $sresult['topic_id'],
+            //                                         'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+            //$sresult['last_post_url_anchor'] = $sresult['last_post_url'] . "#pid" . $sresult['topic_last_post_id'];
+            //
 
-                // check if we have to skip the first $startnum entries or not
-                if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
-                    $skip_hits++;
-                } else {
-                    // check if we have a limit and if we have reached it or not
-                    if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                        array_push($searchresults, $sresult);
-                    }
+            // check if we have to skip the first $startnum entries or not
+            if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
+                $skip_hits++;
+            } else {
+                // check if we have a limit and if we have reached it or not
+                if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
+                    array_push($searchresults, $sresult);
                 }
-                $total_hits++;
             }
+            $total_hits++;
+            
         }
     }
 

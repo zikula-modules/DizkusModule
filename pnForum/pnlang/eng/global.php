@@ -49,6 +49,7 @@ define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipul
 define('_PNFORUM_NEW_THREADS','New Topic in forum');
 
 // new
+define('_PNFORUM_SEARCHINCLUDE_BYSCORE', 'by score');
 define('_PNFORUM_MAILTO_NOSUBJECT','You must enter a subject for this email.');
 define('_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND','no forum subscriptions found');
 define('_PNFORUM_TOGGLEALLFORUMS', 'Remove all forum subscriptions');
