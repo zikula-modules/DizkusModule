@@ -3475,6 +3475,9 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
+    // prepare searchresults array
+    $searchresults = array();
+
     $query = "SELECT DISTINCT
               f.forum_id,
               f.forum_name,
@@ -3545,10 +3548,16 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
         $query .= ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
     } else {
         // filter out forums we are not allowed to read
+        $forums2 = array();
         for($i=0;$i<count($forums); $i++) {
             if(in_array($forums[$i], $allowedforums)) {
                 $forums2[] = $forums[$i];
             }
+        }
+        if(count($forums2)==0) {
+            // error or user is not allowed to read any forum at all
+            // return empty result set without even doing a db access
+            return(array($searchresults, 0));
         }
         $query .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
     }
@@ -3580,7 +3589,6 @@ function pnForum_userapi_forumsearch_nonfulltext($args)
 
     $total_hits = 0;
     $skip_hits = 0;
-    $searchresults = array();
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             $sresult = array();
@@ -3766,10 +3774,16 @@ function pnForum_userapi_forumsearch_fulltext($args)
         $whereforums = ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
     } else {
         // filter out forums we are not allowed to read
+        $forums2 = array();
         for($i=0;$i<count($forums); $i++) {
             if(in_array($forums[$i], $allowedforums)) {
                 $forums2[] = $forums[$i];
             }
+        }
+        if(count($forums2)==0) {
+            // error or user is not allowed to read any forum at all
+            // return empty result set without even doing a db access
+            return(array($searchresults, 0));
         }
         $whereforums .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
     }
