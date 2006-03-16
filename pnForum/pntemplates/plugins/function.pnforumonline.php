@@ -49,7 +49,8 @@
  * unames: array of 'uid', (int, userid), 'uname' (string, username) and 'admin' (boolean, true if users is a moderator)
  *
  * Available parameters:
- *   - assign:  If set, the results are assigned to the corresponding variable
+ *   - assign:       If set, the results are assigned to the corresponding variable
+ *   - checkgroups:  If set, checks if the users found are in the moderator groups (perforance issue!) default is no group check
  *
  * Example
  *   <!--[pnforumonline assign="islogged"]-->
@@ -69,6 +70,8 @@ function smarty_function_pnforumonline($params, &$smarty)
     extract($params);
     unset($params);
 
+    $checkgroups = (isset($checkgroups)) ? true : false;
+    
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sessioninfocolumn = &$pntable['session_info_column'];
@@ -114,30 +117,34 @@ function smarty_function_pnforumonline($params, &$smarty)
 
     pnfCloseDB($result);
 
-    foreach($unames as $user) {
-        if ($user['admin'] == false) {
-            $groups = pnModAPIFunc('Groups', 'user', 'getusergroups', array('uid' => $user['uid']));
-
-            foreach($groups as $group) {
-                if (isset($moderators[$group['gid']+1000000])) {
-                    $user['admin'] = true;
-                } else {
-                    $user['admin'] = false;
+    if($checkgroups == true) {
+        foreach($unames as $user) {
+            if ($user['admin'] == false) {
+                $groups = pnModAPIFunc('Groups', 'user', 'getusergroups', array('uid' => $user['uid']));
+        
+                foreach($groups as $group) {
+                    if (isset($moderators[$group['gid']+1000000])) {
+                        $user['admin'] = true;
+                    } else {
+                        $user['admin'] = false;
+                    }
                 }
             }
+        
+            $users[$user['uid']] = array('uid'    => $user['uid'],
+                                         'uname'  => $user['uname'],
+                                         'admin'  => $user['admin']);
+        
         }
-
-        $users[$user['uid']] = array('uid'    => $user['uid'],
-                             'uname'  => $user['uname'],
-                             'admin'  => $user['admin']);
-
+        $unames = $users;
     }
+    usort($unames, 'cmp_userorder');
 
     $pnforumonline['numguests'] = $numguests;
 
     $pnforumonline['numusers']  = $numusers;
     $pnforumonline['total']     = $total;
-    $pnforumonline['unames']    = $users;
+    $pnforumonline['unames']    = $unames;
 
     if (isset($assign)) {
         $smarty->assign($assign, $pnforumonline);
@@ -146,6 +153,11 @@ function smarty_function_pnforumonline($params, &$smarty)
     }
     return;
 
+}
+
+function cmp_userorder ($a, $b)
+{
+   return strtolower($a['uname']) > strtolower($b['uname']);
 }
 
 ?>
