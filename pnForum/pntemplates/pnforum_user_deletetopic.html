@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" >
     <legend>
         <!--[ pnml name='_PNFORUM_DELETETOPIC' ]-->
     </legend>
@@ -11,9 +11,11 @@
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: center;">
+    <div class="moddiv">
+        <p>
         <label for="submit_delete"><!--[ pnml name='_PNFORUM_DELETETOPIC_INFO' html=1 ]--></label><br />
         <input id="submit_delete" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_DELETETOPIC' ]-->" />
+        </p>
     </div>
     </form>
 </fieldset>

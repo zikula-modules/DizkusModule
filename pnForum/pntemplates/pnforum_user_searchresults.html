@@ -2,15 +2,12 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
-<div style="padding: 3px; text-align: center; background: <!--[ $bgcolor2 ]-->;">
-<h2><!--[ pnml name='_PNFORUM_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ if $searchfor neq '' ]--><!--[ $searchfor|pnvarprepfordisplay ]--><!--[ else ]--><!--[ $searchauthor|pnvarprepfordisplay ]--><!--[ /if ]-->'&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) </h2>
-</div>
-<br />
+<h2 style="margin: 1em 0 1em 0; padding: 3px; text-align: center; background-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ if $searchfor neq '' ]--><!--[ $searchfor|pnvarprepfordisplay ]--><!--[ else ]--><!--[ $searchauthor|pnvarprepfordisplay ]--><!--[ /if ]-->'&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) </h2>
 
 <ul class="searchresultlist">
 <!--[ foreach key=num item=searchresult from=$searchresults ]-->
-    <li class="searchresult">
-        <strong>#<!--[ $searchstart+$num+1 ]--></strong><br />
+    <li class="searchresult" style="background-color: <!--[ cycle values="$bgcolor2, $bgcolor3" ]-->">
+        <strong>#<!--[ $startnum+$num+1 ]--></strong><br />
         <strong><!--[ pnml name='_PNFORUM_SUBJECT' ]--></strong> : <a href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$searchresult.topic_id highlight=$searchfor ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_TOPIC' ]--> '<!--[ $searchresult.topic_title ]-->'"><!--[ $searchresult.topic_title ]--></a><br />
         <strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong> : <a class="header" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$searchresult.forum_id ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $searchresult.forum_name ]-->'"><!--[ $searchresult.cat_title ]--> :: <!--[ $searchresult.forum_name ]--></a><br />
         <strong><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]--></strong> : <!--[ $searchresult.poster_name|profilelink ]--><br />
@@ -26,6 +23,6 @@
 <!--[ /foreach ]-->
 </ul>
 <br />
-<!--[ pager rowcount=$total_hits limit=$searchlimit separator=" " posvar=searchstart txt_prev="<<" txt_next=">>" ]-->
+<!--[ pager rowcount=$total_hits limit=$searchlimit separator=" " posvar=pnForum_startnum txt_prev="<<" txt_next=">>" ]-->
 <br />
 <!--[ include file='pnforum_user_footer.html' ]-->

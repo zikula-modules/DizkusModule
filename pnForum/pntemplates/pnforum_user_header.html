@@ -24,16 +24,16 @@ This div will be closed in the footer template.
 <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_tools.js"></script>
 <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_user.js"></script>
 
-<p style="text-align:left; height: 2.5em;">
-	<a title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="index.php?module=Search"><!--[ pnimg src="search.gif" alt="_PNFORUM_SEARCH" altml=true ]--></a>
-	<a title="<!--[ pnml name='_PNFORUM_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->"><!--[ pnimg src="latestposts.gif" alt="_PNFORUM_LATEST" altml=true ]--></a>
+<div class="optionrow" style="background-color: <!--[$bgcolor4]-->; border-color: <!--[$bgcolor3]-->;">
+	<span class="headerlink"><!--[ pnimg src="icon_search.gif" alt="_PNFORUM_SEARCH" altml=true title="_PNFORUM_SEARCH" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="index.php?module=Search"><!--[ pnml name='_PNFORUM_SEARCHSHORT' ]--></a></span>
+    <span class="headerlink"><!--[ pnimg src="icon_latestposts.gif" alt="_PNFORUM_LATEST" altml=true title="_PNFORUM_LATEST" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->"><!--[ pnml name='_PNFORUM_LATEST' ]--></a></span>
 	<!--[ if $pncore.logged_in neq 1 ]-->
-		<a title="<!--[ pnml name='_PNFORUM_REGISTRATION_NOTE' ]-->" href="user.php?op=loginscreen&amp;module=User"><!--[ pnimg src="login.gif" alt="_PNFORUM_REGISTRATION_NOTE" altml=true ]--></a>
-		<a title="<!--[ pnml name='_PNFORUM_REGISTRATION_NOTE' ]-->" href="user.php?op=register&amp;module=NewUser"><!--[ pnimg src="register.gif" alt="_PNFORUM_REGISTRATION_NOTE" altml=true ]--></a>
+	    <span class="headerlink"><!--[ pnimg src="icon_login.gif" alt="_PNFORUM_LOGIN" altml=true title="_PNFORUM_REGISTRATION_NOTE" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LOGIN' ]-->" href="user.php?op=loginscreen&amp;module=User"><!--[ pnml name='_PNFORUM_LOGIN' ]--></a></span>
+		<span class="headerlink"><!--[ pnimg src="icon_register.gif" alt="_PNFORUM_REGISTER" altml=true title="_PNFORUM_REGISTRATION_NOTE" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_REGISTER' ]-->" href="user.php?op=register&amp;module=NewUser"><!--[ pnml name='_PNFORUM_REGISTER' ]--></a></span>
 	<!--[ else ]-->
-		<a title="<!--[ pnml name='_PNFORUM_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="pnForum" func="prefs" ]-->"><!--[ pnimg src="settings.gif" alt="_PNFORUM_PERSONAL_SETTINGS" altml=true ]--></a>
+		<span class="headerlink"><!--[ pnimg src="icon_configure.gif" alt="_PNFORUM_PERSONAL_SETTINGS" altml=true title="_PNFORUM_PERSONAL_SETTINGS" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="pnForum" func="prefs" ]-->"><!--[ pnml name='_PNFORUM_PERSONAL_SETTINGS' ]--></a></span>
 	<!--[ /if ]-->
-</p>
+</div>
 
 <!--[ pngetstatusmsg class="pnf_statusmsg" tag="div"|pnvarprephtmldisplay]-->
 

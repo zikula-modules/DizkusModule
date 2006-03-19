@@ -466,7 +466,7 @@ function pnForum_userapi_readcategorytree($args)
 
                 // is this forum in the favorite list?
                 $forum['is_favorite'] = 0;
-                if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+                if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                     $forum['is_favorite'] = 1;
                 }
 
@@ -657,6 +657,9 @@ function pnForum_userapi_readforum($args)
     if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
         $forum['is_favorite'] = 1;
     }
+
+    // if user can write into Forum, set a flag
+    $forum['access_comment'] = allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id']);
 
     // if user can moderate Forum, set a flag
     $forum['access_moderate'] = allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id']);
@@ -1360,7 +1363,7 @@ function pnForum_userapi_get_forum_favorites_status($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_forum_favorites']."
-            WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+            WHERE user_id = " . (int)pnVarPrepForStore($userid) . " AND forum_id = " . (int)pnVarPrepForStore($forum_id);
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
@@ -2964,7 +2967,7 @@ function pnForum_userapi_add_favorite_forum($args)
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == false) {
+    if (pnForum_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
         // add user only if not already a favorite
         $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id)
                 VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."')";
@@ -3096,6 +3099,7 @@ function pnForum_userapi_emailtopic($args)
  *@params $args['unanswered'] int 0 or 1(= postings with no answers)
  *@params $args['last_visit'] string the users last visit data
  *@params $args['last_visit_unix'] string the users last visit data as unix timestamp
+ *@params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
  *@returns array (postings, mail2forumpostings, rsspostings, text_to_display)
  */
 function pnForum_userapi_get_latest_posts($args)
@@ -3105,118 +3109,158 @@ function pnForum_userapi_get_latest_posts($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
-    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
-
-    // some tricky sql
-    $part1 = "SELECT    t.topic_id,
-                        t.topic_title,
-                        f.forum_id,
-                        f.forum_name,
-                        f.forum_pop3_active,
-                        c.cat_id,
-                        c.cat_title,
-                        t.topic_replies,
-                        t.topic_last_post_id,
-                        p.post_time,
-                        p.poster_id
-            FROM        ".$pntable['pnforum_topics']." AS t
-            LEFT JOIN   ".$pntable['pnforum_forums']." AS f ON f.forum_id = t.forum_id
-            LEFT JOIN   ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
-            LEFT JOIN   ".$pntable['pnforum_posts']." AS p ON p.post_id = t.topic_last_post_id
-            WHERE";
-
-    if ($unanswered==1) {
-        $part2 = "AND t.topic_replies='0' ORDER BY t.topic_time DESC";
-    } else {
-        $part2 = "ORDER BY t.topic_time DESC";
-    }
-
-    $lastweeksql    = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) < 8 ".$part2;
-    $yesterdaysql   = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ".$part2;
-    $todaysql       = $part1." TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ".$part2;
-    $last24hsql     = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ".$part2;
-    $lastxhsql      = $part1." t.topic_time > DATE_SUB(NOW(), INTERVAL " . pnVarPrepForStore($nohours) . " HOUR) ".$part2;
-    $lastvisitsql   = $part1." t.topic_time > '" . pnVarPrepForStore($last_visit) . "' ".$part2;
-
-    switch ($selorder) {
-        case '2' : $sql = $todaysql; $text = _PNFORUM_TODAY;
-                   break;
-        case '3' : $sql = $yesterdaysql; $text = _PNFORUM_YESTERDAY;
-                   break;
-        case '4' : $sql = $lastweeksql; $text= _PNFORUM_LASTWEEK;
-                   break;
-        case '5' : $sql = $lastxhsql; $text = _PNFORUM_LAST . ' ' . $nohours . ' ' . _PNFORUM_HOURS;
-                   break;
-        case '6' : $sql = $lastvisitsql; $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
-                   break;
-        case '1' :
-        default:   $sql = $last24hsql; $text  =_PNFORUM_LAST24;
-                   break;
-    }
-
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
+    // init some arrays
     $posts = array();
     $m2fposts = array();
     $rssposts = array();
+    
+    
+    if( !isset($limit) || empty($limit) || ($limit < 0) || ($limit > 250) ) {
+        $limit = 250;
+    }
+
+    $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
+    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+    $hot_threshold   = pnModGetVar('pnForum', 'hot_threshold');
+
+    if ($unanswered==1) {
+        $unanswered = "AND t.topic_replies='0' ORDER BY t.topic_time DESC";
+    } else {
+        $unanswered = "ORDER BY t.topic_time DESC";
+    }
+
+    // sql part per selected time frame
+
+    switch ($selorder) {
+        case '2' : // today 
+                   $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ";
+                   $text = _PNFORUM_TODAY;
+                   break;
+        case '3' : // yesterday
+                   $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ";
+                   $text = _PNFORUM_YESTERDAY;
+                   break;
+        case '4' : // lastweek
+                   $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) < 8 ";
+                   $text= _PNFORUM_LASTWEEK;
+                   break;
+        case '5' : // last x hours 
+                   $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . pnVarPrepForStore($nohours) . " HOUR) ";
+                   $text = _PNFORUM_LAST . ' ' . $nohours . ' ' . _PNFORUM_HOURS;
+                   break;
+        case '6' : // last visit 
+                   $wheretime = " AND t.topic_time > '" . pnVarPrepForStore($last_visit) . "' ";
+                   $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
+                   break;
+        case '1' :
+        default:   // last 24 hours 
+                   $wheretime = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ";
+                   $text  =_PNFORUM_LAST24;
+                   break;
+    }
+
+    // get all forums the user is allowed to read
+    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+    if(!is_array($userforums) || count($userforums)==0) {
+        // error or user is not allowed to read any forum at all
+        // return empty result set without even doing a db access
+        return array($posts, $m2fposts, $rssposts, $text);
+    }
+    // now create a very simle array of forum_ids only. we do not need
+    // all the other stuff in the $userforums array entries
+    $allowedforums = array();
+    for($i=0; $i<count($userforums); $i++) {
+        array_push($allowedforums, $userforums[$i]['forum_id']);
+    }
+    $whereforum = ' f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
+
+
+    // build the tricky sql
+    $sql = "SELECT    t.topic_id,
+                      t.topic_title,
+                      f.forum_id,
+                      f.forum_name,
+                      f.forum_pop3_active,
+                      c.cat_id,
+                      c.cat_title,
+                      t.topic_replies,
+                      t.topic_last_post_id,
+                      t.sticky,
+                      t.topic_status,
+                      p.post_time,
+                      p.poster_id
+          FROM        ".$pntable['pnforum_topics']." AS t
+          LEFT JOIN   ".$pntable['pnforum_forums']." AS f ON f.forum_id = t.forum_id
+          LEFT JOIN   ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
+          LEFT JOIN   ".$pntable['pnforum_posts']." AS p ON p.post_id = t.topic_last_post_id
+          WHERE " . 
+          $whereforum .
+          $wheretime .
+          $unanswered; 
+
+    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     while ((list($topic_id, $topic_title, $forum_id, $forum_name, $pop3_active, $cat_id, $cat_title,
-                 $topic_replies, $topic_last_post_id, $post_time, $poster_id) = $result->fields) ) {
-        // check permission before display
-        if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            $post=array();
-            $post['topic_id'] = pnVarPrepForDisplay($topic_id);
-            $post['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
-            $post['forum_id'] = pnVarPrepForDisplay($forum_id);
-            $post['forum_name'] = pnVarPrepForDisplay($forum_name);
-            $post['cat_id'] = pnVarPrepForDisplay($cat_id);
-            $post['cat_title'] = pnVarPrepForDisplay($cat_title);
-            $post['topic_replies'] = pnVarPrepForDisplay($topic_replies);
-            $post['topic_last_post_id'] = pnVarPrepForDisplay($topic_last_post_id);
-            $post['post_time'] = pnVarPrepForDisplay($post_time);
-            $post['poster_id'] = pnVarPrepForDisplay($poster_id);
+                 $topic_replies, $topic_last_post_id, $sticky, $topic_status, $post_time, $poster_id) = $result->fields) && !$limit_reached ) {
+        $post=array();
+        $post['topic_id'] = pnVarPrepForDisplay($topic_id);
+        $post['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
+        $post['forum_id'] = pnVarPrepForDisplay($forum_id);
+        $post['forum_name'] = pnVarPrepForDisplay($forum_name);
+        $post['cat_id'] = pnVarPrepForDisplay($cat_id);
+        $post['cat_title'] = pnVarPrepForDisplay($cat_title);
+        $post['topic_replies'] = pnVarPrepForDisplay($topic_replies);
+        $post['topic_last_post_id'] = pnVarPrepForDisplay($topic_last_post_id);
+        $post['sticky'] = pnVarPrepForDisplay($sticky);
+        $post['topic_status'] = pnVarPrepForDisplay($topic_status);
+        $post['post_time'] = pnVarPrepForDisplay($post_time);
+        $post['poster_id'] = pnVarPrepForDisplay($poster_id);
 
-            // get correct page for latest entry
-            if ($post_sort_order == 'ASC') {
+        // does this topic have enough postings to be hot?
+        $post['hot_topic'] = ($post['topic_replies'] >= $hot_threshold) ? true : false;
+
+        // get correct page for latest entry
+        if ($post_sort_order == 'ASC') {
+            $hc_dlink_times = 0;
+            if (($topic_replies+1-$posts_per_page)>= 0) {
                 $hc_dlink_times = 0;
-                if (($topic_replies+1-$posts_per_page)>= 0) {
-                    $hc_dlink_times = 0;
-                    for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page)
-                    $hc_dlink_times++;
-                }
-                $start = $hc_dlink_times*$posts_per_page;
-            } else {
-                // latest topic is on top anyway...
-                $start = 0;
+                for ($x = 0; $x < $topic_replies+1-$posts_per_page; $x+= $posts_per_page)
+                $hc_dlink_times++;
             }
-            $post['start'] = $start;
+            $start = $hc_dlink_times*$posts_per_page;
+        } else {
+            // latest topic is on top anyway...
+            $start = 0;
+        }
+        $post['start'] = $start;
 
-            if ($post['poster_id'] == 1) {
-                $post['poster_name'] = pnConfigGetVar('anonymous');
-            } else {
-                $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
-            }
+        if ($post['poster_id'] == 1) {
+            $post['poster_name'] = pnConfigGetVar('anonymous');
+        } else {
+            $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
+        }
 
-            $post['posted_unixtime'] = strtotime ($post['post_time']);
-            $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
+        $post['posted_unixtime'] = strtotime ($post['post_time']);
+        $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
 
-            $post['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                               array('topic' => $post['topic_id'],
-                                                     'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-            $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
+        $post['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                           array('topic' => $post['topic_id'],
+                                                 'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+        $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
 
-            switch((int)$pop3_active) {
-                case 1: // mail2forum
-                    array_push($m2fposts, $post);
-                    break;
-                case 2:
-                    array_push($rssposts, $post);
-                    break;
-                case 0: // normal posting
-                default:
-                    array_push($posts, $post);
-            }
+        switch((int)$pop3_active) {
+            case 1: // mail2forum
+                array_push($m2fposts, $post);
+                $limit_reached = count($m2fposts) > $limit;
+                break;
+            case 2:
+                array_push($rssposts, $post);
+                $limit_reached = count($rssposts) > $limit;
+                break;
+            case 0: // normal posting
+            default:
+                array_push($posts, $post);
+                $limit_reached = count($posts) > $limit;
         }
         $result->MoveNext();
     }
@@ -3411,504 +3455,6 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     }
     pnfCloseDB($result);
     return $topic_id;
-}
-
-
-/**
- * forumsearch
- * This is a wrapper function for forumsearch_fulltext() or forumsearch_nonfulltext()
- * depending on the database type.
- * Alle parameters will be passed to this final search function as-is
- *
- *@params $args['searchfor']  string the search term
- *@params $args['bool']       string 'AND' or 'OR'
- *@params $args['forums']     array array of forum ids to search in
- *@params $args['author']     string searhc for postings of this author only
- *@params $args['order']      array array of order to display results
- *@params $args['startnum']   int number of entry to start showing when on page > 1
- *@params $args['limit']      int number of hits to show per page > 1
- *@returns array with search results
- */
-function pnForum_userapi_forumsearch($args)
-{
-    // check mod var for fulltext support
-    $fulltextindex = pnModGetVar('pnForum', 'fulltextindex');
-    if($fulltextindex == 1) {
-        // fulltext index
-        return pnModAPIFunc('pnForum', 'user', 'forumsearch_fulltext', $args);
-    } else {
-        // no fulltext index
-        return pnModAPIFunc('pnForum', 'user', 'forumsearch_nonfulltext', $args);
-    }
-    // wtf are we doing here..
-    return false;
-
-}
-
-/**
- * forumsearch_nonfulltext
- * the function that will search the forum
- *
- * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL pnForum_userapi_forumsearch INSTEAD
- *
- *@params $args['searchfor']  string the search term
- *@params $args['bool']       string 'AND' or 'OR'
- *@params $args['forums']     array array of forum ids to search in
- *@params $args['author']     string search for postings of this author only
- *@params $args['order']      array array of order to display results
- *@params $args['startnum']   int number of entry to start showing when on page > 1
- *@params $args['limit']      int number of hits to show per page > 1
- *@returns array with search results
- */
-function pnForum_userapi_forumsearch_nonfulltext($args)
-{
-    extract($args);
-    unset($args);
-
-    if( empty($searchfor) && empty($author) ) {
-        return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
-    }
-
-    if(!isset($limit) || empty($limit)) {
-        $limit = 10;
-    }
-
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    // prepare searchresults array
-    $searchresults = array();
-
-    $query = "SELECT DISTINCT
-              f.forum_id,
-              f.forum_name,
-              f.cat_id,
-              c.cat_title,
-              pt.post_text,
-              pt.post_id,
-              t.topic_id,
-              t.topic_title,
-              t.topic_replies,
-              t.topic_views,
-              p.poster_id,
-              p.post_time
-              FROM ".$pntable['pnforum_posts']." AS p,
-                   ".$pntable['pnforum_forums']." AS f,
-                   ".$pntable['pnforum_posts_text']." AS pt,
-                   ".$pntable['pnforum_topics']." AS t,
-                   ".$pntable['pnforum_categories']." AS c
-              WHERE ";
-
-    $searchfor = pnVarPrepForStore(trim($searchfor));
-    if(!empty($searchfor)) {
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $query .= '( ';
-        foreach($words as $word) {
-            if($flag) {
-                switch($bool) {
-                    case 'AND' :
-                        $query .= ' AND ';
-                        break;
-                    case 'OR' :
-                    default :
-                        $query .= ' OR ';
-                        break;
-                }
-            }
-            // get post_text and match up forums/topics/posts
-            $query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $flag = true;
-        }
-        $query .= ' ) AND ';
-    } else {
-        // searchfor is empty, we search by author only
-    }
-    $query .= "p.post_id=pt.post_id \n";
-    $query .= "AND p.topic_id=t.topic_id \n";
-    $query .= "AND p.forum_id=f.forum_id\n";
-    $query .= "AND c.cat_id=f.cat_id\n";
-
-
-    // get all forums the user is allowed to read
-    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
-    if(!is_array($userforums) || count($userforums)==0) {
-        // error or user is not allowed to read any forum at all
-        // return empty result set without even doing a db access
-        return(array($searchresults, 0));
-    }
-    // now create a very simle array of forum_ids only. we do not need
-    // all the other stuff in the $userforums array entries
-    $allowedforums = array();
-    for($i=0; $i<count($userforums); $i++) {
-        array_push($allowedforums, $userforums[$i]['forum_id']);
-    }
-
-    if($forums[0]== -1) {
-        // search in all forums we are allowed to see
-        $query .= ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
-    } else {
-        // filter out forums we are not allowed to read
-        $forums2 = array();
-        for($i=0;$i<count($forums); $i++) {
-            if(in_array($forums[$i], $allowedforums)) {
-                $forums2[] = $forums[$i];
-            }
-        }
-        if(count($forums2)==0) {
-            // error or user is not allowed to read any forum at all
-            // return empty result set without even doing a db access
-            return(array($searchresults, 0));
-        }
-        $query .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
-    }
-
-    // authors
-    if($author) {
-        $searchauthor = pnUserGetIDFromName($author);
-        if ($searchauthor > 0){
-            $query .= ' AND p.poster_id=' . pnVarPrepForStore($searchauthor);
-        }
-    }
-
-    // Not sure this is needed and is not cross DB compat
-    //$query .= ' GROUP BY pt.post_id ';
-
-    switch($order) {
-        case 2:
-            $query .= ' ORDER BY t.topic_title';
-            break;
-        case 3:
-            $query .= ' ORDER BY f.forum_name';
-            break;
-        case 1:
-        default:
-            $query .= ' ORDER BY pt.post_id DESC';
-    }
-
-    $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
-
-    $total_hits = 0;
-    $skip_hits = 0;
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $sresult = array();
-            list($sresult['forum_id'],
-                 $sresult['forum_name'],
-                 $sresult['cat_id'],
-                 $sresult['cat_title'],
-                 $sresult['post_text'],
-                 $sresult['post_id'],
-                 $sresult['topic_id'],
-                 $sresult['topic_title'],
-                 $sresult['topic_replies'],
-                 $sresult['topic_views'],
-                 $sresult['poster_id'],
-                 $sresult['post_time']) = $result->fields;
-            // no auth check for forum and category needed here
-            // timezone
-            $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-            $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-            $sresult['topic_title'] = stripslashes($sresult['topic_title']);
-
-            //without signature
-            $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
-
-            //strip_tags is needed here 'cause maybe we cut within a html-tag...
-            $sresult['post_text'] = strip_tags($sresult['post_text']);
-
-            // username
-            $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
-
-            // check if we have to skip the first $startnum entries or not
-            if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
-                $skip_hits++;
-            } else {
-                // check if we have a limit and wether we have reached it or not
-                if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                    array_push($searchresults, $sresult);
-                }
-            }
-            $total_hits++;
-        }
-    }
-
-    pnfCloseDB($result);
-    return array($searchresults, $total_hits);
-}
-
-/**
- * forumsearch_fulltext
- * the function that will search the forum using fulltext indices - does not work on
- * InnoDB databases!!!
- *
- * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL pnForum_userapi_forumsearch INSTEAD
- *
- *@params $args['searchfor']  string the search term
- *@params $args['bool']       string 'AND' or 'OR'
- *@params $args['forums']     array array of forum ids to search in
- *@params $args['author']     string searhc for postings of this author only
- *@params $args['order']      int order to display results
- *@params $args['startnum']   int number of entry to start showing when on page > 1
- *@params $args['limit']      int number of hits to show per page > 1
- *@returns array with search results
- */
-function pnForum_userapi_forumsearch_fulltext($args)
-{
-    extract($args);
-    unset($args);
-
-    if( empty($searchfor) && empty($author) ) {
-        return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
-    }
-
-    if(!isset($limit) || empty($limit)) {
-        $limit = 10;
-    }
-
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    // prepare array for search results
-    $searchresults = array();
-
-    $searchfor = pnVarPrepForStore(trim($searchfor));
-    // partial sql stored in $wherematch
-    $wherematch = '';
-    // selectmatch contains almost the same as wherematch without the last AND and
-    // will be used in the SELECT part like ... selectmatch as score
-    // to enable ordering the results by score
-    $selectmatch = '';
-    if(!empty($searchfor)) {
-
-        if($bool == 'AND') {
-            // AND
-            $wherematch = "(MATCH pt.post_text AGAINST ('%$searchfor%') OR MATCH t.topic_title AGAINST ('%$searchfor%')) \n";
-            $selectmatch = ", MATCH pt.post_text AGAINST ('%$searchfor%') as textscore, MATCH t.topic_title AGAINST ('%$searchfor%') as subjectscore \n";
-        } else {
-            // OR
-            $flag = false;
-            $words = explode(' ', $searchfor);
-            $wherematch .= '( ';
-            foreach($words as $word) {
-                if($flag) {
-                    $wherematch .= ' OR ';
-                }
-                $word = pnVarPrepForStore($word);
-                // get post_text and match up forums/topics/posts
-                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-                $flag = true;
-            }
-            $wherematch .= ' ) ';
-        }
-        $wherematch .= ' AND ';
-
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $wherematch = '( ';
-        foreach($words as $word) {
-            if($flag==true) {
-                switch(strtolower($bool)) {
-                    case 'or':
-                        $wherematch .= ' OR ';
-                        break;
-                    case 'and':
-                    default:
-                        $wherematch .= 'AND ';
-                }
-            }
-            $word = pnVarPrepForStore($word);
-            // get post_text and match up forums/topics/posts
-            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-            $flag = true;
-        }
-        $wherematch .= ' ) AND ';
-
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $query .= '( ';
-        foreach($words as $word) {
-            if($flag==true) {
-                switch(strtolower($bool)) {
-                    case 'or':
-                        $query .= ' OR ';
-                        break;
-                    case 'and':
-                    default:
-                        $query .= 'AND ';
-                }
-            }
-            $word = pnVarPrepForStore($word);
-            // get post_text and match up forums/topics/posts
-            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $query .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-            $flag = true;
-        }
-        $query .= ' ) ';
-        $query .= ' AND ';
-
-    } else {
-        // searchfor is empty, we search by author only
-    }
-
-    // check forums (multiple selection is possible!)
-    // partial sql stored in $whereforums
-    $whereforums = '';
-    
-    // get all forums the user is allowed to read
-    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
-    if(!is_array($userforums) || count($userforums)==0) {
-        // error or user is not allowed to read any forum at all
-        // return empty result set without even doing a db access
-        return(array($searchresults, 0));
-    }
-    // now create a very simle array of forum_ids only. we do not need
-    // all the other stuff in the $userforums array entries
-    $allowedforums = array();
-    for($i=0; $i<count($userforums); $i++) {
-        array_push($allowedforums, $userforums[$i]['forum_id']);
-    }
-
-    if($forums[0]== -1) {
-        // search in all forums we are allowed to see
-        $whereforums = ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
-    } else {
-        // filter out forums we are not allowed to read
-        $forums2 = array();
-        for($i=0;$i<count($forums); $i++) {
-            if(in_array($forums[$i], $allowedforums)) {
-                $forums2[] = $forums[$i];
-            }
-        }
-        if(count($forums2)==0) {
-            // error or user is not allowed to read any forum at all
-            // return empty result set without even doing a db access
-            return(array($searchresults, 0));
-        }
-        $whereforums .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
-    }
-
-    // authors with adodb
-    // partial sql stored in $whereauthor
-    $whereauthor = '';
-    if($author) {
-        $searchuid = pnUserGetIDFromName($author);
-        if(is_numeric($searchuid)) {
-            $whereauthor = " AND p.poster_id=$searchuid \n";
-        }
-    }
-
-    // Not sure this is needed and is not cross DB compat
-    //$query .= " GROUP BY pt.post_id ";
-
-    switch($order) {
-        case 2:
-            $searchordersql = ' ORDER BY t.topic_title ';
-            break;
-        case 3:
-            $searchordersql = ' ORDER BY f.forum_name ';
-            break;
-        case 4:
-            if($selectmatch) {
-                $searchordersql = ' ORDER BY textscore DESC, subjectscore DESC ';
-                break;
-            } // no selectmatch, we slip through to default
-        case 1:
-        default:
-            $searchordersql = ' ORDER BY pt.post_id DESC ';
-            break;
-    }
-    
-    $query = "SELECT DISTINCT
-              f.forum_id,
-              f.forum_name,
-              f.cat_id,
-              c.cat_title,
-              pt.post_text,
-              pt.post_id,
-              t.topic_id,
-              t.topic_title,
-              t.topic_replies,
-              t.topic_views,
-              p.poster_id,
-              p.post_time
-              $selectmatch
-              FROM ".$pntable['pnforum_posts']." AS p,
-                   ".$pntable['pnforum_forums']." AS f,
-                   ".$pntable['pnforum_posts_text']." AS pt,
-                   ".$pntable['pnforum_topics']." AS t,
-                   ".$pntable['pnforum_categories']." AS c
-              WHERE
-              $wherematch
-              p.post_id=pt.post_id
-              AND p.topic_id=t.topic_id
-              AND p.forum_id=f.forum_id
-              AND c.cat_id=f.cat_id
-              $whereforums
-              $whereauthor
-              $searchordersql";
-
-    $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
-
-    $total_hits = 0;
-    $skip_hits = 0;
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $sresult = array();
-            list($sresult['forum_id'],
-                 $sresult['forum_name'],
-                 $sresult['cat_id'],
-                 $sresult['cat_title'],
-                 $sresult['post_text'],
-                 $sresult['post_id'],
-                 $sresult['topic_id'],
-                 $sresult['topic_title'],
-                 $sresult['topic_replies'],
-                 $sresult['topic_views'],
-                 $sresult['poster_id'],
-                 $sresult['post_time']) = $result->fields;
-            // no further auth check needed, we are only searching forums we
-            // are allowed to read
-            // timezone
-            $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-            $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-            $sresult['topic_title'] = stripslashes($sresult['topic_title']);
-
-            //without signature
-            $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
-
-            //strip_tags is needed here 'cause maybe we cut within a html-tag...
-            $sresult['post_text'] = strip_tags($sresult['post_text']);
-
-            // username
-            $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
-
-            // THIS PART IS NOT WORKING ATM!!! DO NOT USE IT!!!
-            // we now create the url to the last post in the thread. This might
-            // on site 1, 2 or what ever in the thread, depending on topic_replies
-            // count and the posts_per_page setting
-            //$sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-            //                                   array('topic' => $sresult['topic_id'],
-            //                                         'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-            //$sresult['last_post_url_anchor'] = $sresult['last_post_url'] . "#pid" . $sresult['topic_last_post_id'];
-            //
-
-            // check if we have to skip the first $startnum entries or not
-            if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
-                $skip_hits++;
-            } else {
-                // check if we have a limit and if we have reached it or not
-                if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                    array_push($searchresults, $sresult);
-                }
-            }
-            $total_hits++;
-            
-        }
-    }
-
-    pnfCloseDB($result);
-    return array($searchresults, $total_hits);
 }
 
 /**

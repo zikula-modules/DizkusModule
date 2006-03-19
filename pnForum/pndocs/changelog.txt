@@ -7,9 +7,24 @@ PostNuke pnForum Module changelog
 
 + Using Ajax now for some features, this implied a major rewrite of some templates
   and adding a few new ones. Non-javascript fallbacks are included.
++ animated gifs made Klaus Petzka (mail@petzi-juist.de)
++ optimized all functions that search forums (better performance)
++ search function is .8 compatible
++ Templates and layout reworked
++ The following plugins are declared obsolete and may not be present in
+  future versions:
+  addtopic_button
+  favoriteforum_button
+  listforummods
+  mailtopic_button
+  post_order_button
+  splittopic_button
+  subscribeforum_button
+  subscribetopic_button
+  Please use display logic to show the buttons, for more details see the
+  recent templates. 
 - fixed [#2491] removal of topics doesn't remove the subscriptions
 - fixed some html and validation issues, removed some more tables
-- animated gifs made Klaus Petzka (mail@petzi-juist.de)
 - fixed [#2569] pnForum preferences always visible in user profile
 - fixed [#2557] No protection against posting many new threads
 - fixed [#2490] Wrong number of guests in online list

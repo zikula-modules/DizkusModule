@@ -437,11 +437,12 @@ function pnForum_user_editpost($args=array())
         $preview = true;
     }
 
+/*
     if (empty($submit)) {
     	$subject = '';
     	$message = '';
     }
-
+*/
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     if($submit && !$preview) {
@@ -461,7 +462,7 @@ function pnForum_user_editpost($args=array())
 
     } else {
         if(!empty($subject)) {
-            $post['topic_subject'] = $subject;
+            $post['topic_subject'] = strip_tags($subject);
         }
 
         // if the current user is the original poster we allow to
@@ -474,8 +475,8 @@ function pnForum_user_editpost($args=array())
         }
 
         if(!empty($message)) {
-            $post['post_text'] = $message;
-            list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array($message));
+            $post['post_rawtext'] = $message;
+            list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array(nl2br($message)));
         }
         $pnr =& new pnRender('pnForum');
         $pnr->caching = false;
@@ -947,6 +948,16 @@ function pnForum_user_print($args=array())
  */
 function pnForum_user_search($args=array())
 {
+    $submit = pnVarCleanFromInput('submit');
+    if(!$submit) {
+        return pnModAPIFunc('pnForum', 'search', 'internalsearchoptions');
+    } else {
+        return pnModAPIFunc('pnForum', 'search', 'search');
+    }
+    
+    
+    
+/*    
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1023,6 +1034,7 @@ function pnForum_user_search($args=array())
         $pnr->assign('searchstart',  $vars['searchstart']);
         return $pnr->fetch('pnforum_user_searchresults.html');
     }
+*/
 }
 
 /**

@@ -47,8 +47,19 @@
 // changed
 define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
 define('_PNFORUM_NEW_THREADS','New Topic in forum');
+define('_PNFORUM_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_PNFORUM_GOTOSTART', 'go to the forums startpage');
+define('_PNFORUM_YOUAREHERE', 'You are here');
+define('_PNFORUM_CURRENTSORTORDER', 'recent sort order');
+define('_PNFORUM_ORDER_ASC', 'oldest submissions on top');
+define('_PNFORUM_ORDER_DESC','newest submissions on top');
+define('_PNFORUM_CANCEL','cancel');
+define('_PNFORUM_MOVEPOSTSHORT', 'move');
+define('_PNFORUM_SPLITSHORT', 'split');
+define('_PNFORUM_LOGIN', 'Login');
+define('_PNFORUM_SEARCHSHORT', 'Search');
 define('_PNFORUM_SEARCHINCLUDE_BYSCORE', 'by score');
 define('_PNFORUM_MAILTO_NOSUBJECT','You must enter a subject for this email.');
 define('_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND','no forum subscriptions found');
@@ -105,7 +116,6 @@ define('_PNFORUM_ACTIVE_POSTERS','top active Posters:');
 define('_PNFORUM_ADD','Add');
 define('_PNFORUM_ADDNEWCATEGORY', '-- add new category --');
 define('_PNFORUM_ADDNEWFORUM', '-- add new forum --');
-define('_PNFORUM_ADD_FAVORITE_FORUM','Add favorite forum');
 define('_PNFORUM_ADMINADVANCEDCONFIG', 'Advanced configuration');
 define('_PNFORUM_ADMINADVANCEDCONFIG_HINT', 'Caution: wrong settings here can lead to unwanted side effects. If you do not understand what is going on here, stay away and leave the settings as they are!');
 define('_PNFORUM_ADMINADVANCEDCONFIG_INFO', 'Set advanced configuration, caution!');
@@ -389,7 +399,7 @@ define('_PNFORUM_PAGE','Page #');
 define('_PNFORUM_PASSWORD', 'Password');
 define('_PNFORUM_PASSWORDNOMATCH', 'Passwords do not match, please go back and correct');
 define('_PNFORUM_PERMDENY','Access denied!');
-define('_PNFORUM_PERSONAL_SETTINGS','Personal Settings');
+define('_PNFORUM_PERSONAL_SETTINGS','personal settings');
 define('_PNFORUM_PNPASSWORD', 'PN password');
 define('_PNFORUM_PNPASSWORDCONFIRM', 'PN password confirmation');
 define('_PNFORUM_PNTOPIC', 'PostNuke Topic');

@@ -5,21 +5,28 @@
 <!--[ pnconfiggetvar name='anonymoussessions' assign=anonsessions ]-->
 <!--[ pnconfiggetvar name='secinactivemins' assign=mins ]-->
 
-<div style="float: left; margin-top: 1em; width: 99%; font-size: 1.0em; border: 1px solid black;" class="pnf_clearfix">
-    <div style="background: <!--[ $bgcolor3 ]-->; line-height: 1.4em; padding: 0.2em 0 0.2em 2px;">
-        <strong><!--[ pnml name='_PNFORUM_USERSONLINE' ]-->:</strong><br />
+<div class="pnf_clearfix" style="float: left; margin-top: 1em; width: 100%; font-size: 1em; background-color: <!--[$bgcolor4]-->; border: 2px solid <!--[$bgcolor3]-->;" >
+    <div style="background: <!--[ $bgcolor4 ]-->; line-height: 1.4em; padding: 0.2em 0 0.2em 2px;">
+        <strong><!--[ pnml name='_PNFORUM_USERSONLINE' ]-->:</strong>
     </div>
     <div style="margin: 2px; font-size: 0.8em;">
+        <!--[ if $online.numusers > 0]-->
+        <ul>
         <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
+        <li style="float: left;">
             <!--[ if $user.admin == '1' ]-->
                 <!--[ $user.uname|profilelink:"pnfadminuser"]-->
             <!--[ else ]-->
                 <!--[ $user.uname|profilelink:"pnfnoadminuser"]-->
             <!--[ /if ]-->
-            <!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
+            <!--[if !$smarty.foreach.onlineusers.last]-->,&nbsp;<!--[/if]-->
+        </li>
         <!--[ /foreach ]-->
+        </ul>
+        &nbsp;<!--[ pnml name='_PNFORUM_AND' ]-->&nbsp;
+        <!--[ /if ]-->
         <!--[ if $anonsessions == 1 ]-->
-        <!--[ pnml name='_PNFORUM_AND' ]--> <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
+        <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
         <!--[ /if ]-->
         <br />
         <br />

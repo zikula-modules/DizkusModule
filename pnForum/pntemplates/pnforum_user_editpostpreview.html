@@ -10,66 +10,66 @@ Template for single postings
 
 
     <div id="posting"  style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
-        <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 2px solid <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" id="topicsubject_content"><!--[ $newtopic.subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
+        <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 2px solid <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" id="topicsubject_content"><!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
         <div style="border-bottom-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" class="postingheader pnf_clearfix">
             <div class="postingheaderleft">
-                <span class="userinfoname"><!--[ $newtopic.poster_data.pn_uname ]--></span>
+                <span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span>
             </div>
             <div class="postingheaderright">
-                <strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $newtopic.topic_unixtime|date_format:"%d.%m.%Y, %H:%M" ]-->
+                <strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|date_format:"%d.%m.%Y, %H:%M" ]-->
             </div>
         </div>
        
         <div class="postingbody pnf_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
             <div  class="userinfo" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" id="posting_userinfo">
-                <button onclick="javascript:toggleuserinfo(<!--[ $newtopic.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
+                <button onclick="javascript:toggleuserinfo(<!--[ $post.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
                 <div id="posting_userinfocontent">
                     
-                    <!--[ if $newtopic.poster_data.pn_uid neq 1 ]-->
-                        <!--[ if $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
+                    <!--[ if $post.poster_data.pn_uid neq 1 ]-->
+                        <!--[ if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                             <div style="margin: 1em 0 0.5em 0; width:99%; text-align: center;">
-                            <!--[ $newtopic.poster_data.pn_uname|profilelink:'':$newtopic.poster_data.pn_user_avatar ]-->
+                            <!--[ $post.poster_data.pn_uname|profilelink:'':$post.poster_data.pn_user_avatar ]-->
                             </div>
                         <!--[ /if ]-->
-                        <!--[ if $newtopic.poster_data.rank ]-->
+                        <!--[ if $post.poster_data.rank ]-->
                             <div style="text-align: center;">
-                                <strong><!--[ $newtopic.poster_data.rank|pnvarprepfordisplay ]--></strong>
-                                <!--[ if $newtopic.poster_data.rank_image ]-->
-                                    <img class="uerinforankimage" src="<!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
+                                <strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></strong>
+                                <!--[ if $post.poster_data.rank_image ]-->
+                                    <img class="uerinforankimage" src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
                                 <!--[ /if ]-->
                             </div>
-                        <!--[ /if ]-->  
+                        <!--[ /if ]-->
                     <!--[ else ]-->
-                        <!--[ $newtopic.poster_data.uname ]-->
+                        <!--[ $post.poster_data.uname ]-->
                     <!--[ /if ]-->
-                    
+
                     <div class="userinfodetails">
                         <dl >
                             <dt>
                                 <!--[ pnml name='_PNFORUM_REG_SINCE' ]-->:
                             </dt>
                             <dd>
-                                <!--[ $newtopic.poster_data.pn_user_regdate|pndate_format:"%B %Y"  ]-->
+                                <!--[ $post.poster_data.pn_user_regdate|pndate_format:"%B %Y"  ]-->
                             </dd>
                             <dt>
                                 <!--[ pnml name='_PNFORUM_STATUS' ]-->:
                             </dt>
                             <dd>
-                                <!--[ if $newtopic.poster_data.online  ]--><span class="userinfoonline"><!--[ pnml name='_PNFORUM_ONLINE' ]--></span><!--[ else ]--><!--[ pnml name='_PNFORUM_OFFLINE' ]--><!--[ /if ]-->
+                                <!--[ if $post.poster_data.online  ]--><span class="userinfoonline"><!--[ pnml name='_PNFORUM_ONLINE' ]--></span><!--[ else ]--><!--[ pnml name='_PNFORUM_OFFLINE' ]--><!--[ /if ]-->
                             </dd>
-                            <!--[ if !$newtopic.poster_data.online  ]-->
+                            <!--[ if !$post.poster_data.online  ]-->
                             <dt>
                                 <!--[ pnml name='_PNFORUM_LAST_SEEN' ]-->:
                             </dt>
                             <dd>
-                                <!--[ $newtopic.poster_data.user_lastvisit|date_format:"%d.%m.%y"  ]-->
+                                <!--[ $post.poster_data.user_lastvisit|date_format:"%d.%m.%y"  ]-->
                             </dd>
                             <!--[ /if ]-->
                             <dt>
                                 <!--[ pnml name='_PNFORUM_POSTS' ]-->:
                             </dt>
                             <dd>
-                                <!--[ $newtopic.poster_data.user_posts ]-->
+                                <!--[ $post.poster_data.user_posts ]-->
                             </dd>
                         </dl>
                     </div>
@@ -77,12 +77,12 @@ Template for single postings
                 </div>
             </div>
             <div class="postingtext_small" id="postingtext">
-                <!--[ $newtopic.message_display ]-->
+                <!--[ $post.post_textdisplay ]-->
             </div>
             
         </div>
 
-        <div class="postingfooter pnf_clearfix" style="border-top-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;">
+        <div class="postingfooter pnf_clearfix" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;">
 
             <div class="postingfooterleft">
                 &nbsp;

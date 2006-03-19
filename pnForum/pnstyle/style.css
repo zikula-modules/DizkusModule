@@ -38,13 +38,8 @@ button.left {
     visibility: hidden;
 }
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
 /*
- * obsolete pnf_* ?
+ * obsolete pnForum-title and pnForum-border;
  */    
 .pnForum-title {
     font-size: 12px;
@@ -188,9 +183,25 @@ dd.pnfadmin {
     margin-bottom: 1em;
 }
 
+#pnforum fieldset {
+    width: 99%;
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+    border-style: solid;
+    border-width: 2px;
+}
+
 #pnforum legend {
     font-size: 1em;
     font-weight: bold;
+    color: black;
+    margin-bottom: 1em;
+}
+
+#pnforum .moddiv {
+    text-align: center;
+    padding: 1em;
 }
 
 .displayhook {
@@ -326,16 +337,14 @@ dd.pnfadmin {
     float: left;
 }
 
-.searchresultlist {
+ul.searchresultlist {
     list-style-type: none;
 }
 
-.searchresult {
-
+li.searchresult {
     border: 1px solid black;
     margin: 5px;
     padding: 3px;
-    background: #E5E7E8;
 }
 
 ul.pnf_maincategorylist {
@@ -460,6 +469,7 @@ div.pnf_statusmsg {
  * main pnforum div
  */
 #pnforum {
+    width: 99%;
 }
 
 #pnforum ul {
@@ -471,6 +481,34 @@ div.pnf_statusmsg {
 #pnforum li {
     margin: 0;
     padding: 0;
+}
+
+#pnforum table {
+    border-collapse: collapse;
+    width: 99%;
+}
+
+pnforum th {
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+}
+
+#pnforum .optionrow {
+    padding: 3px;
+    border-style: solid; 
+    border-width: 2px;
+    text-align:left; 
+    font-size: 1em;
+    margin: 1em 0 1em 0;
+}
+
+#pnforum .headerlink {
+    margin: 0 1em 0 1em;
+}
+
+#forumlegend {
+    margin: 2em 0 1em 0;
 }
 
 #pnforum_admin ul {
@@ -565,8 +603,8 @@ div.pnf_statusmsg {
     text-align: center; 
 }
 
-.latestposts_thd50 {
-    width: 50%;
+.latestposts_thd40 {
+    width: 40%;
     text-align: center;
     font-size: 1em;
     height: 2.2em;
@@ -583,6 +621,15 @@ div.pnf_statusmsg {
     border: none;
 }
 
+.latestposts_thd10 {
+    width: 10%;
+    text-align: center;
+    font-size: 1em;
+    height: 2.2em;
+    vertical-align: middle;
+    border: none;
+}
+
 .latestposts_thd20 {
     width: 20%;
     text-align: center;
@@ -592,6 +639,30 @@ div.pnf_statusmsg {
     border: none;
 }
 
+/*******************************
+ * pnforum_user_search.html
+ * pnforum_search.html
+ *******************************/
+
+#pnfsearch {
+    padding: 1em 0 1em 0;
+    overflow:hidden;
+}
+
+#pnfsearch .searchleft {
+    margin: 4px 0 4px 0; 
+    float: left; 
+    width: 35%; 
+    text-align: right;
+}
+
+#pnfsearch .searchright {
+    float: left; 
+    width: 60%; 
+    text-align: left; 
+    margin: 4px 0 4px 0; 
+}
+    
 /*
  * clearfix solution
  */
@@ -611,13 +682,20 @@ div.pnf_statusmsg {
 .pnf_clearfix {display: block;}
 /* End hide from IE-mac */
 
+/* Overflow-Methode zum Clearen der Float-Umgebungen */
+.pnf_floatbox { 
+    overflow:hidden; 
+}
+
 .posting {
     margin: 5px 0 10px 0; 
-    border: 1px solid black; 
+    border-width: 2px;
+    border-style: solid; 
 }
 
 .postingheader {
-    border-bottom: 1px solid black; 
+    border-bottom-width: 2px; 
+    border-bottom-style: solid; 
     height: 2.5em; 
 }
 
@@ -642,7 +720,7 @@ div.pnf_statusmsg {
 
 .postingbody, .postingbody_closed {
     text-align: left; 
-    width: 100%;
+    width: 99%;
 }
 
 .postingbody_closed {    
@@ -666,7 +744,8 @@ div.pnf_statusmsg {
 
 .userinfo {
     margin: 5px; 
-    border: 1px solid black; 
+    border-width: 2px;
+    border-style: solid; 
     padding: 3px 3px 6px 3px; 
     float: left; 
     width: 17%; 
@@ -709,7 +788,8 @@ div.pnf_statusmsg {
 
 .postingfooter {
     margin-top: 5px; 
-    border-top: 1px solid black; 
+    border-top-width: 2px;
+    border-top-style: solid; 
     height: 2.5em; 
 }
 
@@ -725,11 +805,11 @@ div.pnf_statusmsg {
     float: right;
 }
 
-a.postingbutton {
+.postingbuttona. {
     margin: 0 3px 0 3px;
 }
 
-a.postingbuttonhidden {
+.postingbuttonhidden {
     margin: 0 3px 0 3px;
     display: none;
 }
@@ -741,9 +821,11 @@ a.normallink {
 
 .topicheader {
     float: left; 
-    width: 100%; 
+    width: 99%; 
     margin-top: 1em; 
-    border: 1px solid black; 
+    border-width: 2px;
+    border-style: solid; 
+    
 }
 
 .topicheaderleft {
@@ -757,7 +839,7 @@ a.normallink {
     line-height: 1.65em; 
     font-weight: bold; 
     float: left; 
-    width: 80%;
+    width: 79%;
 }
 
 #pnforuminformation {
@@ -775,15 +857,15 @@ a.normallink {
     margin-top: 1.5em;
 }
 
-#quickreplyoptions, #newtopicoptions {
-    width:40%; 
+#quickreplyoptions, #newtopicoptions, #editpostoptions {
+    width:49%; 
     float: left; 
     text-align: left; 
     margin-top: 1em;
 }
 
-#quickreplyhooks, #newtopichooks {
-    width: 50%;
+#quickreplyhooks, #newtopichooks, #editposthooks {
+    width: 49%;
     float: right;
     margin-top: 1em;
 }    

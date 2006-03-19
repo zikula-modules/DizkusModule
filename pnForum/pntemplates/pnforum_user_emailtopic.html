@@ -4,20 +4,20 @@
 
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" >
     <legend>
         <!--[ pnml name='_PNFORUM_EMAIL_TOPIC' html=1 ]-->
     </legend>
     <!--[ if $error_msg neq '' ]-->
-    <div style="background-color: <!--[ $bgcolor2 ]-->; text-align: center; color:red;">
-            <strong><!--[ $error_msg ]--></strong>
+    <div class="moddiv">
+        <strong style="color: red;"><!--[ $error_msg ]--></strong>
     </div>
     <!--[ /if ]-->
 
     <form action="<!--[ pnmodurl modname=pnForum type=user func=emailtopic ]-->" method="post" name="emailtopic">
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
-    <div style="padding: 0.5em; background-color: <!--[ $bgcolor3 ]-->">
+    <div class="moddiv" style="text-align: left;">
         <p>
             <label for="sendto_email"><strong><!--[ pnml name='_PNFORUM_SENDTO' ]--></strong></label><br />
             <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->" />
@@ -30,8 +30,9 @@
             <label for="message"><strong><!--[ pnml name='_PNFORUM_BODY' ]--></strong></label><br />
             <textarea id="message" name="message" rows="10" cols="80"><!--[ $message|pnvarprepfordisplay ]--></textarea>
         </p>
-
+        <p>
         <input name="submit" type="submit" value="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" />
+        </p>
     </div>
     </form>
 </fieldset>

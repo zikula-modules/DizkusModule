@@ -69,6 +69,10 @@ function search_pnForum($vars)
     if(!isset($vars['active_pnForum'])) {
         return;
     }
+    
+    return pnModAPIFunc('pnForum', 'search', 'search');
+    
+/*    
     if(!isset($vars['pnForum_limit']) || empty($vars['pnForum_limit'])) {
         $vars['pnForum_limit'] = 10;
     }
@@ -79,7 +83,7 @@ function search_pnForum($vars)
 
     // the search function for pnForum is in our pnuserapi.php
     list($searchresults,
-         $total_hits) = pnModAPIFunc('pnForum', 'user', 'forumsearch',
+         $total_hits) = pnModAPIFunc('pnForum', 'search', 'search',
                                      array('searchfor' => $vars['q'],
                                            'bool'      => $vars['bool'],
                                            'forums'    => $vars['pnForum_forum'],
@@ -98,5 +102,6 @@ function search_pnForum($vars)
     $pnr->assign('internalsearch', $vars['internalsearch']);
     $pnr->assign('searchfor', urlencode($vars['q']));
     return $pnr->fetch('pnforum_searchresults.html');
+*/
 }
 ?>

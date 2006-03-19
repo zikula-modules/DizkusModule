@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" >
     <legend>
         <!--[ if $mode eq "lock" ]-->
             <!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->
@@ -16,13 +16,17 @@
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: center;">
+    <div class="moddiv">
         <!--[ if $mode eq "lock" ]-->
-            <!--[ pnml name='_PNFORUM_LOCKTOPIC_INFO' html=1 ]--><br />
+            <!--[ pnml name='_PNFORUM_LOCKTOPIC_INFO' html=1 ]-->
+            <p>
             <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" />
+            </p>
         <!--[ else ]-->
-            <!--[ pnml name='_PNFORUM_UNLOCKTOPIC_INFO' html=1 ]--><br />
+            <!--[ pnml name='_PNFORUM_UNLOCKTOPIC_INFO' html=1 ]-->
+            <p>
             <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" />
+            </p>
         <!--[ /if ]-->
     </div>
     </form>

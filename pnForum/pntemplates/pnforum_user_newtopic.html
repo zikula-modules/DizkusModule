@@ -12,8 +12,9 @@
     <input type="hidden" id="topic" name="topic" value="<!--[ $newtopic.topic_id ]-->" />
     <input type="hidden" id="quote" name="quote" value="" />
     <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <fieldset >
-        <legend><strong><!--[ pnml name='_PNFORUM_NEW_THREADS' ]-->&nbsp;"<!--[ $newtopic.forum_name ]-->"</strong></legend>
+    <fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" >
+        <legend><!--[ pnml name='_PNFORUM_NEW_THREADS' ]-->&nbsp;"<!--[ $newtopic.forum_name ]-->"</legend>
+        <div style="margin: 1em;">
         <div id="newtopicpreview" style="display: none;" class="pnf_clearfix">&nbsp;</div>
         <!--[ if $preview ]-->
         <div id="nonajaxnewtopicpreview">
@@ -49,36 +50,37 @@
                     <!--[ /if ]-->
                     <li id="newtopicbuttons" style="margin: 1.5em; display: none; text-align: left;">
                         <button onclick="createnewtopic(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-                        <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
+                        <!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_SUBMIT" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_SUBMIT' ]-->
                         </button>
                         <button onclick="previewnewtopic(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
-                        <!--[ pnimg src="preview.gif" alt="_PNFORUM_PREVIEW" altml=true ]-->
+                        <!--[ pnimg src="icon_preview.gif" alt="_PNFORUM_PREVIEW" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_PREVIEW' ]-->
                         </button>
                         <button onclick="clearnewtopic();" type="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
-                        <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
+                        <!--[ pnimg src="icon_cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true class="postingbutton" ]--><!--[ pnml name="_PNFORUM_CANCEL" ]-->
                         </button>
                     </li>
                     
                     <li id="nonajaxnewtopicbuttons" style="text-align: left; margin: 1.5em;">
                         <button name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-                        <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
+                        <!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_SUBMIT" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_SUBMIT' ]-->
                         </button>
                         <button name="preview" type="submit" value="1" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
-                        <!--[ pnimg src="preview.gif" alt="_PNFORUM_PREVIEW" altml=true ]-->
+                        <!--[ pnimg src="icon_preview.gif" alt="_PNFORUM_PREVIEW" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_PREVIEW' ]-->
                         </button>
                         <button name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->'">
-                        <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
+                        <!--[ pnimg src="icon_cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true class="postingbutton" ]--><!--[ pnml name="_PNFORUM_CANCEL" ]-->
                         </button>
                     </li>
             
                 </ul>
             
             </div>
-            <div id="newtopichooks" style="width:50%; float: left; margin-top: 1em;">
+            <div id="newtopichooks" style="float: left; margin-top: 1em;">
                 <!--[ plainbbcode textfieldid=message ]-->
                 <!--[ bbsmile textfieldid=message ]-->
                 <!--[ $hooks.pnUpper ]--><br />
             </div>
+        </div>
         </div>
     </fieldset>
 

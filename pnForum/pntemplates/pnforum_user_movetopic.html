@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" >
     <legend>
         <!--[ pnml name='_PNFORUM_MOVETOPIC' ]-->
     </legend>
@@ -11,7 +11,7 @@
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+    <div class="moddiv">
         <p><!--[ pnml name='_PNFORUM_MOVETOPIC_INFO' html=1 ]--></p>
         <select name="forum" id="phpbb_forum">
         <!--[ foreach item=forum from=$forums ]-->
@@ -27,7 +27,7 @@
      </form>
 </fieldset>
 <br />
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" >
     <legend>
         <!--[ pnml name='_PNFORUM_JOINTOPICS' html=1 ]-->
     </legend>
@@ -35,7 +35,7 @@
     <input type="hidden" name="mode" value="join" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+    <div class="moddiv">
         <p>
         <label for="to_topic_id"><!--[ pnml name='_PNFORUM_JOINTOPICS_TOTOPIC' html=1 ]--></label>
         <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />(topic_id)

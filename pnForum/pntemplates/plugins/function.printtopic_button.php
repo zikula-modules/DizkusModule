@@ -39,27 +39,13 @@ function smarty_function_printtopic_button($params, &$smarty)
     extract($params);
     unset($params);
 
-    // set a default value
-    if(!isset($image) || empty($image)) {
-        $image = 'printtopic.gif';
-    }
-
     include_once('modules/pnForum/common.php');
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        $imagedata = pnf_getimagepath($image);
-        if($imagedata == false) {
-            $show = pnVarPrepForDisplay(_PNFORUM_PRINT_TOPIC);
-        } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) .'" ' . $imagedata['size'] . ' />';
+        $themeinfo = pnThemeInfo('Printer');
+        if($themeinfo['active']) {
+            return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
         }
-        $lang = pnUserGetLang();
-        if(function_exists('pnThemeInfo')) {
-            $themeinfo = pnThemeInfo('Printer');
-            if($themeinfo['active']) {
-                return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . $show . '</a>';
-            }
-        }
-        return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . $show . '</a>';
+        return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
     }
     return '';
 }
