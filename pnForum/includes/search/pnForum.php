@@ -46,62 +46,21 @@ include_once("modules/pnForum/common.php");
 $search_modules[] = array(
     'title' => 'pnForum',
     'func_search' => 'search_pnForum',
-    'func_opt' => 'search_pnForum_opt'
+    'func_opt'    => 'search_pnForum_opt'
 );
 
 function search_pnForum_opt($vars)
 {
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        return showforumerror("loading adminapi failed", __FILE__, __LINE__);
-    }
-    $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
-
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
-    $pnr->assign('forums', $forums);
-    return $pnr->fetch('pnforum_search.html');
+    pnModLangLoad('pnForum', 'user');
+    return pnModAPIFunc('pnForum', 'search', 'options');
 }
-
 
 function search_pnForum($vars)
 {
     if(!isset($vars['active_pnForum'])) {
         return;
     }
-    
     return pnModAPIFunc('pnForum', 'search', 'search');
-    
-/*    
-    if(!isset($vars['pnForum_limit']) || empty($vars['pnForum_limit'])) {
-        $vars['pnForum_limit'] = 10;
-    }
-
-    if(!pnModAPILoad('pnForum', 'user')) {
-        return showforumerror("loading userapi failed", __FILE__, __LINE__);
-    }
-
-    // the search function for pnForum is in our pnuserapi.php
-    list($searchresults,
-         $total_hits) = pnModAPIFunc('pnForum', 'search', 'search',
-                                     array('searchfor' => $vars['q'],
-                                           'bool'      => $vars['bool'],
-                                           'forums'    => $vars['pnForum_forum'],
-                                           'author'    => $vars['pnForum_author'],
-                                           'order'     => $vars['pnForum_order'],
-                                           'limit'     => $vars['pnForum_limit'],
-                                           'startnum'  => $vars['pnForum_startnum']));
-
-
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->assign('searchresults', $searchresults);
-    $pnr->assign('total_hits', $total_hits);
-    $pnr->assign('perpage', $vars['pnForum_limit']);
-    $pnr->assign('startnum', $vars['pnForum_startnum']);
-    $pnr->assign('internalsearch', $vars['internalsearch']);
-    $pnr->assign('searchfor', urlencode($vars['q']));
-    return $pnr->fetch('pnforum_searchresults.html');
-*/
 }
+
 ?>

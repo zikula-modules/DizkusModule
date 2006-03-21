@@ -553,8 +553,7 @@ function pnForum_searchapi_fulltext($args)
               $whereforums
               $whereauthor
               $searchordersql";
-pnfdebug('start', $startnum);
-pnfdebug('limit', $limit);
+
 //    $result = pnfSelectLimit($dbconn, $query, $limit, $startnum, __FILE__, __LINE__, $debug=false);
 
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
