@@ -4,12 +4,12 @@
 
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
     <legend>
         <!--[pnml name='_PNFORUM_ADMINADVANCEDCONFIG_INFO']-->
     </legend>
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=advancedpreferences ]-->" method="post">
-    <div class="pnf_clearfix">
+    <div style="margin: 1em;" class="pnf_clearfix">
         <strong><!--[ pnml name='_PNFORUM_ADMINADVANCEDCONFIG_HINT' ]--></strong>
         <div class="pnfadminrow98">
             <!--[ pnml name='_PNFORUM_DATABASEINUSE' ]-->: <!--[ $dbname ]--> (<!--[ $dbtype ]--> <!--[ $dbversion ]-->)<br />
@@ -27,10 +27,10 @@
     	</div>
         <div class="pnfadminrow98">
             <!--[ pnml name='_PNFORUM_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT' html=1 ]-->
-            <p>
-            <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
-            </p>
         </div>
+        <p>
+        <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        </p>
     </div>
     </form>
 </fieldset>

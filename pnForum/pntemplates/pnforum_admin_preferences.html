@@ -4,13 +4,13 @@
 
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
     <legend>
         <!--[pnml name='_PNFORUM_ADMINFORUMOPTIONS']-->
     </legend>
 
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=preferences ]-->" method="post">
-    <div class="pnf_clearfix">
+    <div style="margin: 1em;" class="pnf_clearfix">
         <dl class="pnf_clearfix">
             <dt class="pnfadmin"><label for="email_from"><!--[ pnml name='_PNFORUM_PREFS_EMAIL' html=1 ]--></label></dt>
             <dd class="pnfadmin"><input type="text" id="email_from" name="email_from" size="30" maxlength="100" value="<!--[ $email_from ]-->" /></dd>

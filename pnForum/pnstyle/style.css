@@ -172,9 +172,11 @@ dd.pnfadmin {
 
 #pnforum_admin fieldset {
     font-size: 1em;
-    width: 95%;
-    padding: 0.5em 0.5em 1em 0.5em;
-    margin: 3px;
+    width: 99%;
+    padding: 0;
+    margin: 0;
+    border-style: solid;
+    border-width: 2px;
 }
 
 #pnforum_admin legend {

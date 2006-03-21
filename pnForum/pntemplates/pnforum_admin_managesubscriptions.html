@@ -3,11 +3,13 @@
 <!--[ include file='pnforum_admin_header.html' ]-->
 
 <!--[* pndebug *]-->
-<fieldset>
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
     <legend>
         <!--[pnml name='_PNFORUM_ADMINMANAGESUBSCRIPTIONS']-->
     </legend>
     
+    <div style="margin: 1em;">
+        
     <form id="subscriptions" action="" method="post">
         <div style="margin: 1em 0 1em 0;">
             <label for="pnusername"><!--[ pnml name='_PNFORUM_USERNAME' ]--></label>:&nbsp;<input type="text" name="pnusername" id="pnusername" value="<!--[ $pnusername ]-->" />&nbsp;<button type="submit" name="submit"><!--[ pnml name='_PNFORUM_SHOWSUBSCRIPTIONS' ]--></button>
@@ -94,6 +96,9 @@
     <!--[ pnml name='_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND ]-->
     <!--[ /if ]-->
     </form>
+    
+</div>
+    
 </fieldset>
 
 <!--[ include file='pnforum_admin_footer.html' ]-->
