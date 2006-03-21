@@ -5,33 +5,28 @@
 <!--[* start of breadcrumbs *]-->
 <div id="breadcrumbs">
     <ul style="font-size: 1.4em;">
-<!--[*
-        <li style="float: left;">
-            <strong><!--[ pnml name='_PNFORUM_YOUAREHERE' ]-->:&nbsp;</strong>
-        </li>
-*]-->
         <li style="float: left;">
             <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
         </li>
         <li style="float: left;">
-            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><strong><!--[ $forum.cat_title ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><strong><!--[ $forum.cat_title ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
         </li>
         <li style="float: left;">
-            <!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong><br />
+            <strong><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong><br />
         </li>
     </ul>
 </div>
 <!--[* end of breadcrumbs *]-->
 <br />
 <!--[ if $forum.forum_mods|@count > 0 ]-->
-<p style="margin: 1em 0 1em 0;">
+<div style="margin: 1em 0 1em 0;">
 <ul>
     <li style="float:left; margin-right: 1em;"><strong><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</strong></li>
     <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
     <li style="float:left; margin-right: 1em;"><!--[$mod|profilelink]--><!--[if !$smarty.foreach.moderators.last]-->,<!--[/if]--></li>
     <!--[ /foreach ]-->
 </ul>
-</p>
+</div>
 <!--[ /if ]-->
 
 <br />
@@ -100,8 +95,8 @@
         <col id="col_topic"    width="46%" />
         <col id="col_replies"  width="8%" />
         <col id="col_poster"   width="10%" />
-        <col id="col_view"     width="6" />
-        <col id="col_lastpost" width="20" />
+        <col id="col_view"     width="6%" />
+        <col id="col_lastpost" width="20%" />
     </colgroup>
     
     <thead>

@@ -2774,9 +2774,9 @@ function pnForum_userapi_get_topic_subscriptions($args)
         // we now create the url to the last post in the thread. This might
         // on site 1, 2 or what ever in the thread, depending on topic_replies
         // count and the posts_per_page setting
-        $subscription['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                                  array('topic' => $subscription['topic_id'],
-                                                        'start' => $start));
+        $subscription['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+                                                             array('topic' => $subscription['topic_id'],
+                                                                   'start' => $start)));
         $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . '#pid' . $subscription['topic_last_post_id'];
 
         array_push($subscriptions, $subscription);
@@ -3243,9 +3243,9 @@ function pnForum_userapi_get_latest_posts($args)
         $post['posted_unixtime'] = strtotime ($post['post_time']);
         $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
 
-        $post['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                           array('topic' => $post['topic_id'],
-                                                 'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+        $post['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+                                                     array('topic' => $post['topic_id'],
+                                                           'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page)));
         $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
 
         switch((int)$pop3_active) {
