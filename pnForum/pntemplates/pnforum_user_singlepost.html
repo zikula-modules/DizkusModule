@@ -5,7 +5,9 @@ $Id$
 Template for single postings
 
 *]-->
-<!--[ pnimg src="icon_profile.gif" assign=profile alt='_PNFORUM_PROFILE' altml=true ]-->
+
+<!--[* pnimg src="icon_profile.gif" assign=profile alt='_PNFORUM_PROFILE' altml=true *]-->
+
 <div id="posting_<!--[ $post.post_id ]-->"  style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
     <div style="border-bottom-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" class="postingheader pnf_clearfix">
         <div class="postingheaderleft">
@@ -47,7 +49,7 @@ Template for single postings
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
                     <!--[ if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                         <div style="margin: 1em 0 0.5em 0; width:99%; text-align: center;">
-                        <!--[ $post.poster_data.pn_uname|profilelink:'':$post.poster_data.pn_user_avatar ]-->
+                            <img src="<!--[ $post.poster_data.pn_user_avatar ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
                         </div>
                     <!--[ /if ]-->
                     <!--[ if $post.poster_data.rank ]-->
