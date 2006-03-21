@@ -3,12 +3,10 @@
 <!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *]-->
 <!--[ readlastposts maxposts=$maxposts show_m2f=true ]-->
 <!--[ if $lastpostcount > 0 ]-->
+    <div style="padding: 3px; border: 2px solid <!--[ $bgcolor2 ]-->; background-color= <!--[ $bgcolor3 ]-->">
+        <strong><!--[ $lastpostcount ]-->&nbsp;<!--[ pnml name='_PNFORUM_CB_RECENTPOSTS' ]--></strong>
+    </div>
     <table width="100%" border="0" cellpadding="3" cellspacing="1">
-        <tr>
-            <td colspan="4" style="background-color:<!--[ $bgcolor2 ]-->;">
-                <strong><!--[ $lastpostcount ]-->&nbsp;<!--[ pnml name='_PNFORUM_CB_RECENTPOSTS' ]--></strong>
-            </td>
-        </tr>
         <!--[ foreach item=lastpost from=$lastposts ]-->
         <tr>
             <td style="background-color:<!--[ $bgcolor1 ]-->;">

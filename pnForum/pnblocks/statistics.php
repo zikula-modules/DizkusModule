@@ -75,7 +75,9 @@ function pnForum_statisticsblock_display($row)
     }
     
     //check for Permission
-    if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ return; }
+    if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ 
+        return; 
+    }
 
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
@@ -86,6 +88,11 @@ function pnForum_statisticsblock_display($row)
     }
     if(empty($vars['sb_parameters'])) {
         $vars['sb_parameters'] = "maxposts=5";
+    }
+
+    if(pnModGetName() <> 'pnForum') {
+        // add the pnForum stylesheet file to the addtional_header array
+        pnf_add_stylesheet_header();
     }
 
     $pnr =& new pnRender('pnForum');

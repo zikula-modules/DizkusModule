@@ -1079,5 +1079,30 @@ function pnf_createXMLarray($xml, $array)
     }
     return $xml;
 }
+
+/**
+ * pnf_add_stylesheet_header
+ *
+ */
+function pnf_add_stylesheet_header($modname='')
+{
+    if(empty($modname)) {
+        $modname = pnModGetName();
+    }
+    
+    include_once 'modules/Xanthia/plugins/function.modulestylesheet.php';
+    $css = smarty_function_modulestylesheet(array('xhtml' => 1,
+                                                  'modname' => $modname));
+    global $additional_header;
+    if(is_array($additional_header)) {
+        if(!in_array($css, $additional_header)) {
+            $additional_header[] = $css;
+        }
+    } else {
+        $additional_header[] = $css;
+    }
+die(pnVarPrepForDisplay($css));
+    return;
+}
  
 ?>

@@ -900,6 +900,9 @@ a.normallink {
     background-repeat: no-repeat;
     background-position: top right;    
 }
+.pnf_textarea:focus {
+    background-image: none;
+}
 
 .pnf_newcategory {
     width: 95%; 

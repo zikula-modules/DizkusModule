@@ -85,6 +85,12 @@ function pnForum_centerblock_display($row)
     if(pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all'))==0) {
         return;
     }
+
+    if(pnModGetName() <> 'pnForum') {
+        // add the pnForum stylesheet file to the addtional_header array
+        pnf_add_stylesheet_header();
+    }
+
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 

@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 
 <!--[* start of breadcrumbs *]-->
-<div id="breadcrumbs">
+<div id="breadcrumbs" class="pnf_clearfix">
     <ul style="font-size: 1.4em;">
         <li style="float: left;">
             <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
@@ -19,7 +19,7 @@
 <!--[* end of breadcrumbs *]-->
 <br />
 <!--[ if $forum.forum_mods|@count > 0 ]-->
-<div style="margin: 1em 0 1em 0;">
+<div style="margin: 1em 0 1em 0;" class="pnf_clearfix">
 <ul>
     <li style="float:left; margin-right: 1em;"><strong><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</strong></li>
     <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
@@ -37,6 +37,7 @@
 </div>
 <!--[ /if ]-->
 
+<!--[ if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in ]-->
 <div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
 <!--[* Moderate *]-->
 <!--[ if $forum.access_moderate eq true ]-->
@@ -87,6 +88,7 @@
 <!--[ /if ]-->
 <!--[ /if ]-->
 </div>
+<!--[ /if ]-->
 
 <!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
 <table cellpadding="5" cellspacing="0" width="99%" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
@@ -201,7 +203,7 @@
 <!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
 
 <div id="forumlegend">
-    <ul>
+    <ul style="margin:0; padding: 0;">
         <li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)</li>
         <li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true title="_PNFORUM_NONEWPOSTS" titleml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%b %e, %Y  - %R" ]-->)</li>
         <li><!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]--> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--></li>
