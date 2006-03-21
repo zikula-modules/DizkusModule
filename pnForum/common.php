@@ -1101,7 +1101,6 @@ function pnf_add_stylesheet_header($modname='')
     } else {
         $additional_header[] = $css;
     }
-die(pnVarPrepForDisplay($css));
     return;
 }
  
