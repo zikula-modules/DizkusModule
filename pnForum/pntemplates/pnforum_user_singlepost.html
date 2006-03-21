@@ -52,20 +52,23 @@ Template for single postings
                             <img src="<!--[ $post.poster_data.pn_user_avatar ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
                         </div>
                     <!--[ /if ]-->
-                    <!--[ if $post.poster_data.rank ]-->
-                        <div style="text-align: center;">
-                            <strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></strong>
-                            <!--[ if $post.poster_data.rank_image ]-->
-                                <img class="userinforankimage" src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
-                            <!--[ /if ]-->
-                        </div>
-                    <!--[ /if ]-->
                 <!--[ else ]-->
                     <!--[ $post.poster_data.uname ]-->
                 <!--[ /if ]-->
                 
                 <div class="userinfodetails">
                     <dl >
+                        <!--[ if $post.poster_data.rank ]-->
+                        <dt>
+                            <!--[ pnml name='_PNFORUM_RANK' ]-->:
+                        </dt>
+                        <dd>
+                            <!--[ $post.poster_data.rank|pnvarprepfordisplay ]-->
+                            <!--[ if $post.poster_data.rank_image ]-->
+                                <img class="userinforankimage" src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
+                            <!--[ /if ]-->
+                        </dd>
+                        <!--[ /if ]-->
                         <dt>
                             <!--[ pnml name='_PNFORUM_REG_SINCE' ]-->:
                         </dt>
