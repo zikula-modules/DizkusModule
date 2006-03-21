@@ -23,9 +23,12 @@
         </li>
         <!--[ /foreach ]-->
         </ul>
+        <!--[ if $online.numguests > 0 ]-->
+        &nbsp;<!--[ pnml name='_PNFORUM_AND' ]-->&nbsp;
+        <!--[ /if ]-->
         <!--[ /if ]-->
         <!--[ if $anonsessions == 1 ]-->
-        &nbsp;<!--[ pnml name='_PNFORUM_AND' ]-->&nbsp;<!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
+        <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
         <!--[ /if ]-->
         <br />
         <br />
