@@ -50,6 +50,8 @@ define('_PNFORUM_NEW_THREADS','New Topic in forum');
 define('_PNFORUM_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_PNFORUM_CLICKTOEDIT', 'click to edit');
+define('_PNFORUM_EDITSHORT', 'edit');
 define('_PNFORUM_GOTOSTART', 'go to the forums startpage');
 define('_PNFORUM_YOUAREHERE', 'You are here');
 define('_PNFORUM_CURRENTSORTORDER', 'recent sort order');
@@ -370,7 +372,7 @@ define('_PNFORUM_NOTIFYME', 'Notify me when a reply is posted');
 define('_PNFORUM_NOTIFYMODBODY1', 'Request for moderation');
 define('_PNFORUM_NOTIFYMODBODY2', 'Comment');
 define('_PNFORUM_NOTIFYMODBODY3', 'Link to topic');
-define('_PNFORUM_NOTIFYMODERATOR', 'notify moderator');
+define('_PNFORUM_NOTIFYMODERATOR', 'notify mod');
 define('_PNFORUM_NOTIFYMODERATOR_INFO', 'A moderator will be notified about the selected posting.<br />Important reasons are<br /><dl><dd>copryright violations</dd><dd>personal insults</dd><dd>etc.</dd></dl>but not<dl><dd>typos</dd><dd>different opinion about the topic</dd><dd>etc.</dd></dl><br /><br />Comment:');
 define('_PNFORUM_NOTIFYMODERATOR_TITLE', 'Notify a moderator about a posting');
 define('_PNFORUM_NOTOPICS','There are no topics for this forum.');
