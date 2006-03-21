@@ -504,7 +504,7 @@ pnforum th {
 }
 
 #pnforum .headerlink {
-    margin: 0 1em 0 1em;
+    margin: 0 0.5em 0 0.5em;
 }
 
 #forumlegend {
@@ -604,12 +604,14 @@ pnforum th {
 }
 
 .latestposts_thd40 {
-    width: 40%;
     text-align: center;
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
-    border: none;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 .latestposts_thd15 {
@@ -618,7 +620,10 @@ pnforum th {
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
-    border: none;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 .latestposts_thd10 {
@@ -627,7 +632,12 @@ pnforum th {
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
-    border: none;
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 .latestposts_thd20 {
@@ -636,7 +646,12 @@ pnforum th {
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
-    border: none;
+    border-right-width: 2px;
+    border-right-style: solid;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 /*******************************
