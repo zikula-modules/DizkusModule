@@ -241,16 +241,6 @@ function pnForum_user_reply($args=array())
         $preview = true;
     }
 
-    /*
-    if (empty($submit)) {
-        $submit = false;
-    	//$subject = '';
-    	//$message = '';
-    } else {
-        $submit = true;
-    }
-    */
-
     if ($submit==true && $preview==false) {
         // Confirm authorisation code
         if (!pnSecConfirmAuthKey()) {
@@ -327,11 +317,6 @@ function pnForum_user_newtopic($args=array())
     //	if cancel is submitted move to forum-view
     if($cancel==true) {
         return pnRedirect(pnModURL('pnForum','user', 'viewforum', array('forum'=>$forum_id)));
-    }
-
-    if($submit==false) {
-//    	$subject = '';
-//    	$message = '';
     }
 
     $message = pnfstriptags($message);
@@ -442,12 +427,6 @@ function pnForum_user_editpost($args=array())
         $preview = true;
     }
 
-/*
-    if (empty($submit)) {
-    	$subject = '';
-    	$message = '';
-    }
-*/
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
     if($submit && !$preview) {
@@ -959,87 +938,6 @@ function pnForum_user_search($args=array())
     } else {
         return pnModAPIFunc('pnForum', 'search', 'search');
     }
-    
-    
-    
-/*    
-    // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $submit = pnVarCleanFromInput('submit');
-        list($vars['searchfor'],
-             $vars['searchbool'],
-             $vars['searchauthor'],
-             $vars['searchforums'],
-             $vars['searchorder'],
-             $vars['searchlimit'],
-             $vars['searchstart'] ) = pnVarCleanFromInput('searchfor',
-                                                          'searchbool',
-                                                          'searchauthor',
-                                                          'searchforums',
-                                                          'searchorder',
-                                                          'searchlimit',
-                                                          'searchstart');
-
-    }
-
-    if(!$submit) {
-        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
-
-        $pnr =& new pnRender('pnForum');
-        $pnr->caching = false;
-        $pnr->add_core_data();
-        $pnr->assign('forums', $forums);
-        return $pnr->fetch('pnforum_user_search.html');
-    } else {   // submit is set
-        if(empty($vars['searchlimit'])) {
-            $vars['searchlimit'] = 10;
-        }
-        if($vars['searchbool']<>'AND' && $vars['searchbool']<>'OR') {
-            $vars['searchbool'] = 'AND';
-        }
-        if(!is_array($vars['searchforums']) || count($vars['searchforums'])== 0) {
-            // set default
-            $vars['searchforums'][0] = '';
-        }
-
-
-        if(!is_array($vars['searchorder']) || count($vars['searchorder'])==0 ) {
-            // set default
-            $vars['searchorder'][0] = 1;
-        }
-
-        list($searchresults,
-             $total_hits ) = pnModAPIFunc('pnForum', 'user', 'forumsearch',
-                                          array('searchfor' => $vars['searchfor'],
-                                                'bool'      => $vars['searchbool'],
-                                                'forums'    => $vars['searchforums'],
-                                                'author'    => $vars['searchauthor'],
-                                                'order'     => $vars['searchorder'],
-                                                'limit'     => $vars['searchlimit'],
-                                                'startnum'  => $vars['searchstart']));
-
-        $pnr =& new pnRender('pnForum');
-        $urltemplate = pnModURL('pnForum', 'user', 'search',
-                                array('searchagain'  => 1,
-                                      'searchstart'  => '%%'));
-        $pnr->caching = false;
-        $pnr->add_core_data();
-        $pnr->assign('total_hits', $total_hits);
-        $pnr->assign('urltemplate', $urltemplate);
-        $pnr->assign('searchresults', $searchresults);
-        $pnr->assign('searchfor',    $vars['searchfor']);
-        $pnr->assign('searchbool',   $vars['searchbool']);
-        $pnr->assign('searchauthor', $vars['searchauthor']);
-        $pnr->assign('searchforums', $vars['searchforums']);
-        $pnr->assign('searchorder',  $vars['searchorder']);
-        $pnr->assign('searchlimit',  $vars['searchlimit']);
-        $pnr->assign('searchstart',  $vars['searchstart']);
-        return $pnr->fetch('pnforum_user_searchresults.html');
-    }
-*/
 }
 
 /**
