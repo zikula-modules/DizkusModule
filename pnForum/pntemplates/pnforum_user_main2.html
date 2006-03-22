@@ -2,44 +2,79 @@
 
 <!--[ include file=pnforum_user_header.html ]-->
 
-<div style="margin: 2em 0 2em 0;">
-
-<!--[ if $view_category == -1 ]-->
-    <h1 style="text-align: center;"><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
-    <br />
-    <ul class="pnf_maincategorylist">
-        <!--[ foreach item=category from=$tree ]-->
-        <li class="<!--[ if $category.new_posts == true ]-->newposts<!--[ else ]-->nonewposts<!--[ /if ]-->" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <h2><a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title ]--></a>&nbsp;<!--[ adminlink type=category id=$category.cat_id ]--></h2>
-            <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pndate_format ]-->:
-            <a href="<!--[ $category.last_post.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $category.last_post.subject|pnvarprephtmldisplay ]-->'"><!--[ $category.last_post.subject|pnvarprepfordisplay ]--></a></span>
-        </li>
-        <!--[ /foreach ]-->
-    </ul>
-<!--[ else ]-->
-    <h1 style="text-align: center;"><!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" ]--></h1>
-    <br />
-    <h2 style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->" title="<!--[ pnml name='_PNFORUM_START' ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a>&nbsp;::&nbsp;<!--[ $view_category_data.cat_title ]--></h2>
-    <br />
-    <ul class="pnf_mainforumlist">
-        <!--[ foreach item=forum from=$view_category_data.forums ]-->
-        <li class="<!--[ if $forum.new_posts == true ]-->newposts<!--[ else ]-->nonewposts<!--[ /if ]-->" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <h2><a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name ]--></a>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]--></h2>
-            <div style="font-size: 0.8em; margin-left: 0.3em;">
-                <!--[ $forum.forum_desc ]--><br />
-                <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
-                <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pndate_format ]-->:
-                <a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
-            </div>
-        </li>
-        <!--[ /foreach ]-->
-    </ul>
-
+<!--[ if $pncore.logged_in eq true]-->
+    <!--[ if $pncore.pnForum.favorites_enabled eq 'yes' ]-->
+    <div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
+        <strong><!--[ pnml name='_PNFORUM_FAVORITES' ]-->:&nbsp;</strong>&nbsp;
+        <!--[ if $favorites]-->
+            <!--[ pnimg src="icon_removefavorite.gif ]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]-->"><!--[ pnml name='_PNFORUM_SHOWALLFORUMS' ]--></a>
+        <!--[ else ]-->
+            <!--[ pnimg src="icon_addfavorite.gif ]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]-->"><!--[ pnml name='_PNFORUM_SHOWFAVORITES' ]--></a>
+        <!--[ /if ]-->
+    </div>
+    <!--[ /if ]-->
 <!--[ /if ]-->
-</div>
-<!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
-<!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
 
+<table border="0"  cellpadding="5" cellspacing="0" width="99%" summary="<!--[ pnml name='_PNFORUM_FORUMS' ]-->">
+    <tbody>
+        <!--[ assign var="headersdone" value="0" ]-->
+        <!--[ foreach item=category from=$tree ]-->
+        <tr align="left" valign="top" style="background-color:<!--[ $bgcolor3 ]-->;">
+            <td colspan="2" style="border: 2px solid <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->; border-right: 0;">     
+                <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><strong><!--[ $category.cat_title ]--></strong></a>
+            </td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[ $bgcolor2 ]-->; border-left: 0; border-right: 0;" width="10%" abbr="<!--[ pnml name='_PNFORUM_TOPICS' ]-->"><!--[ if $headersdone == 0 ]--><strong><!--[ pnml name='_PNFORUM_TOPICS' ]--></strong><!--[ /if ]--></td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[ $bgcolor2 ]-->; border-left: 0; border-right: 0;" width="10%" abbr="<!--[ pnml name='_PNFORUM_POSTS' ]-->"><!--[ if $headersdone == 0 ]--><strong><!--[ pnml name='_PNFORUM_POSTS' ]--></strong><!--[ /if ]--></td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[ $bgcolor2 ]-->; border-left: 0;" width="30%" abbr="<!--[ pnml name='_PNFORUM_LASTPOST' ]-->"><!--[ if $headersdone == 0 ]--><strong><!--[ pnml name='_PNFORUM_LASTPOST' ]--></strong><!--[ assign var="headersdone" value="1" ]--><!--[ /if ]--></td>
+        </tr>
+        <tr align="left">
+            <td  colspan="5" style="line-height: 1px;"></td>
+        </tr>
+        <!--[ if ($view_category eq $category.cat_id) or ($view_category eq -1) ]-->
+        <!--[ foreach item=forum from=$category.forums ]-->
+         <tr align="left" valign="top" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.background='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.background='<!--[ $bgcolor1 ]-->'">
+            <td align="left" valign="middle" style="width:4%;">
+                <!--[ if $forum.new_posts eq 1 ]-->
+                    <!--[ pnimg src='icon_redfolder.gif' alt='_PNFORUM_NEWPOSTS' altml=true ]-->
+                <!--[ else ]-->
+                    <!--[ pnimg src='icon_folder.gif' alt='_PNFORUM_NONEWPOSTS' altml=true ]-->
+                <!--[ /if ]-->
+            </td>
+            <td align="left" valign="middle" style="width:46%;">
+                <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
+                <br /><!--[ $forum.forum_desc ]-->
+                <br /><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]-->
+            </td>
+            <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
+            <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pndate_format:datetimebrief ]--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|profilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_PNFORUM_NOPOSTS' ]--><!--[ /if ]--></td>
+        </tr>
+        <!--[ foreachelse ]-->
+        <tr>
+            <td colspan="5">     
+                <strong><!--[ pnml name='_PNFORUM_NOFORUMS' ]--></strong>
+            </td>
+        </tr>
+        <!--[ /foreach ]-->
+        <!--[ /if ]-->
+        <tr align="left">
+            <td colspan="5" style="line-height: 1px;"></td>
+        </tr>
+        <!--[ foreachelse ]-->
+        <tr>
+            <td colspan="5">     
+                <!--[ if $pncore.pnForum.favorites_enabled eq 'yes' ]-->
+                <!--[ pnml name='_PNFORUM_NOFAVORITES' ]-->
+                <!--[ else ]-->
+                <!--[ pnml name='_PNFORUM_NO_FORUMS_DB' ]-->
+                <!--[ /if ]-->
+            </td>
+        </tr>
+        <!--[ /foreach ]-->
+    </tbody>
+</table>
+<ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
+<li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)</li>
+<li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--></li>
+</ul>
 <!--[ include file='pnforum_user_footer.html ]-->
-
-<!--[* pndebug *]-->

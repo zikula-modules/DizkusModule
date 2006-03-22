@@ -26,18 +26,18 @@
 
 <!--[ if $view_category == -1 ]-->
 
-    <h1 style="text-align: center;"><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
+    <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
     <br />
     <ul class="pnf_maincategorylist">
         <!--[ foreach item=category from=$tree ]-->
         <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <h2>
+            <h2 style=" font-size: 1em;">
             <!--[ if $category.new_posts == true ]-->
-                <!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
+                <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
             <!--[ else ]-->
-                <!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
+                <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
             <!--[ /if ]-->
-                <a id="categorylink_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title ]--></a>&nbsp;<!--[ adminlink type=category id=$category.cat_id ]-->
+                <a id="categorylink_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title ]--></a>
                 <script type="text/javascript">
                     document.getElementById('categorylink_<!--[ $category.cat_id ]-->').href = "javascript: open('<!--[ $category.cat_id ]-->');";
                 </script>
@@ -48,13 +48,14 @@
                 <ul class="pnf_mainforumlist" style="padding-left: 1.5em;">
                     <!--[ foreach item=forum from=$category.forums ]-->
                     <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-                        <h2>
+                        <h2 style=" font-size: 1em;">
                         <!--[ if $forum.new_posts == true ]-->
-                            <!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
+                            <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
                         <!--[ else ]-->
-                            <!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
+                            <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
                         <!--[ /if ]-->
-                        <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name ]--></a>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]--></h2>
+                        <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name ]--></a>
+                        </h2>
                         <div style="font-size: 0.8em; margin-left: 0.3em;">
                             <!--[ $forum.forum_desc ]--><br />
                             <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
@@ -72,20 +73,21 @@
     </ul>
 
 <!--[ else ]-->
-    <h1 style="text-align: center;"><!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" ]--></h1>
+    <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" ]--></h1>
     <br />
-    <h2 style="text-align: center;"><a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->" title="<!--[ pnml name='_PNFORUM_START' ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a>&nbsp;::&nbsp;<!--[ $view_category_data.cat_title ]--></h2>
+    <h2 style="text-align: center; font-size: 1em;"><a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->" title="<!--[ pnml name='_PNFORUM_START' ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a>&nbsp;::&nbsp;<!--[ $view_category_data.cat_title ]--></h2>
     <br />
     <ul class="pnf_mainforumlist">
         <!--[ foreach item=forum from=$view_category_data.forums ]-->
         <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <h2>
+            <h2 style=" font-size: 1em;">
             <!--[ if $forum.new_posts == true ]-->
-                <!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
+                <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
             <!--[ else ]-->
-                <!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
+                <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
             <!--[ /if ]-->
-            <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name ]--></a>&nbsp;<!--[ adminlink type=forum id=$forum.forum_id ]--></h2>
+            <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name ]--></a>
+            </h2>
             <div style="font-size: 0.8em; margin-left: 0.3em;">
                 <!--[ $forum.forum_desc ]--><br />
                 <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
@@ -100,8 +102,8 @@
 <!--[ /if ]-->
 
 </div>
-<!--[ pnimg src="red_folder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
-<!--[ pnimg src="folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
+<!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
+<!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
 
 <!--[ include file='pnforum_user_footer.html ]-->
 
