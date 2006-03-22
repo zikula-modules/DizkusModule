@@ -22,7 +22,7 @@
 </form>
 
 <h2 style="border: 2px solid <!--[ $bgcolor2 ]-->; background-color:<!--[ $bgcolor3 ]-->; text-align: center; margin-top: 1.5em;"><a id="postings"><!--[ pnml name='_PNFORUM_FORUMS' ]--></a></h2>
-<table style="width: 100%;">
+<table style="width: 100%;" cellspacing="0">
 	<tr style="width: 100%; background: <!--[ $bgcolor3 ]-->;">
           <th class="latestposts_thd10" style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
           <th class="latestposts_thd40" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
@@ -66,7 +66,7 @@
 </table>
 
 <h2 style="border: 2px solid <!--[ $bgcolor2 ]-->; background-color:<!--[ $bgcolor3 ]-->; text-align: center; margin-top: 1.5em;"><a id="rsspostings"><!--[ pnml name='_PNFORUM_RSS2FORUMPOSTS' ]--></a></h2>
-<table style="width: 100%;">
+<table style="width: 100%;" cellspacing="0">
 	<tr style="width: 100%; background: <!--[ $bgcolor3 ]-->;">
           <th class="latestposts_thd10" style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
           <th class="latestposts_thd40" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
@@ -81,10 +81,10 @@
                 <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true]-->
             <!--[ /if ]-->
             <!--[ if $post.hot_topic eq 1 ]-->
-                <span style="margin-left: 15px;"><!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true]--></span>
+                <!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true]-->
             <!--[ /if ]-->
             <!--[ if $post.topic_status == 1 ]-->
-                <span style="margin-left: 15px;"><!--[ pnimg src="icon_locked.gif" alt="_PNFORUM_ISLOCKED" altml=true title="_PNFORUM_TOPICLOCKED" titleml=true ]--></span>
+                <!--[ pnimg src="icon_locked.gif" alt="_PNFORUM_ISLOCKED" altml=true title="_PNFORUM_TOPICLOCKED" titleml=true ]-->
             <!--[ /if ]-->
         </td>
         <td>
@@ -110,7 +110,7 @@
 </table>
 
 <h2 style="border: 2px solid <!--[ $bgcolor2 ]-->; background-color:<!--[ $bgcolor3 ]-->; text-align: center; margin-top: 1.5em;"><a id="m2fpostings"><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]--></a></h2>
-<table style="width: 100%;">
+<table style="width: 100%;" cellspacing="0">
 	<tr style="width: 100%; background: <!--[ $bgcolor3 ]-->;">
           <th class="latestposts_thd10" style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
           <th class="latestposts_thd40" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>

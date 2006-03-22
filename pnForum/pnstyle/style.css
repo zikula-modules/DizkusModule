@@ -486,8 +486,7 @@ div.pnf_statusmsg {
 }
 
 #pnforum table {
-    border-collapse: collapse;
-    width: 99%;
+    width: 100%;
 }
 
 pnforum th {
@@ -607,6 +606,7 @@ pnforum th {
 
 .latestposts_thd40 {
     text-align: center;
+    width: 40%;
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
@@ -614,6 +614,8 @@ pnforum th {
     border-top-style: solid;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    border-right: 0;
+    border-left: 0;
 }
 
 .latestposts_thd15 {
@@ -626,6 +628,8 @@ pnforum th {
     border-top-style: solid;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    border-right: 0;
+    border-left: 0;
 }
 
 .latestposts_thd10 {
@@ -640,6 +644,7 @@ pnforum th {
     border-top-style: solid;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    border-right: 0;
 }
 
 .latestposts_thd20 {
@@ -654,6 +659,7 @@ pnforum th {
     border-top-style: solid;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    border-left: 0;
 }
 
 /*******************************
@@ -822,7 +828,7 @@ pnforum th {
     float: right;
 }
 
-.postingbuttona. {
+.postingbutton a {
     margin: 0 3px 0 3px;
 }
 
@@ -874,14 +880,14 @@ a.normallink {
     margin-top: 1.5em;
 }
 
-#quickreplyoptions, #newtopicoptions, #editpostoptions {
+#quickreplyoptions, #newtopicoptions, #editpostoptions, #replyoptions {
     width:49%; 
     float: left; 
     text-align: left; 
     margin-top: 1em;
 }
 
-#quickreplyhooks, #newtopichooks, #editposthooks {
+#quickreplyhooks, #newtopichooks, #editposthooks, #replyhooks {
     width: 49%;
     float: right;
     margin-top: 1em;
