@@ -5,174 +5,74 @@
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false ]-->
 
 <!--[* pndebug *]-->
-<div>
-<strong><!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnforumbbsmile|pnvarcensor ]--></strong>
 
-<!--[ if $preview ]-->
-<h2 style="text-align:left;"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></h2>
-<div>
-<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td style="background-color:<!--[ $bgcolor2 ]-->;">
-            <table class="pnForum-border" border="0" cellpadding="5" cellspacing="1" width="100%">
-                <tr style="background-color:<!--[ $bgcolor2 ]-->;text-align:left;">
-                    <td style="height:28px;width:20%;"><span class="pnForum-title">
-                        <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
-                    </td>
-                    <td style="height:28px;width:80%;"><span class="pnForum-title">
-                        <strong><!--[ $reply.topic_subject|pnforumbbsmile|pnvarcensor ]--></strong></span>
-                    </td>
-                </tr>
-                <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
-                    <td valign="top">
-                    <!--[ if $reply.poster_data.pn_uid neq 1 ]-->
-                        <strong><!--[ $reply.poster_data.pn_uname|profilelink ]--></strong>
-		                <!--[ if $reply.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                            <br /><img src="<!--[ $reply.poster_data.pn_user_avatar ]-->" alt="<!--[ $reply.poster_data.pn_uname ]-->" <!--[ $replyposter_data.pn_user_avatar_attr.3 ]--> />
-	                    <!--[ /if ]-->
-                        <!--[ if $reply.poster_data.rank ]-->
-	                        <br /><strong><!--[ $reply.poster_data.rank|pnvarprepfordisplay ]--></strong>
-			                <!--[ if $reply.poster_data.rank_image ]-->
-                                <br /><img src="<!--[ $reply.poster_data.rank_image ]-->" alt="$review.poster_data.rank" <!--[ $reply.poster_data.rank_image_attr.3 ]--> />
-	                        <!--[ /if ]-->
-	                    <!--[ /if ]-->
-                        <br /><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $reply.poster_data.user_posts ]-->
-                    <!--[ else ]-->
-                        <strong><!--[ $reply.poster_data.pn_uname ]--></strong>
-                        <br /><!--[ pnml name='_PNFORUM_UNREGISTERED' ]-->
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+    <legend>
+        <!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnforumbbsmile|pnvarcensor ]-->
+    </legend>
+
+    <form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post" enctype="multipart/form-data">
+    <div style="margin: 1em;">
+        <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
+
+        <!--[ if $preview ]-->
+        <div id="replypreview">
+            <!--[ include file="pnforum_user_replypreview.html" ]-->
+        </div>
+        <!--[ /if ]-->
+
+
+
+        <div id="replyeditor">
+            <textarea class="pnf_textarea" name="message" id="message" style="width:99%; height: 10em;"><!--[ $reply.message ]--></textarea>
+            <!--[ if $pncore.pnForum.striptags == 'yes' ]-->
+                <div><!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--></div>
+            <!--[ /if ]-->
+        </div>
+
+        <div class="pnf_clearfix">
+            <div id="replyoptions">
+                <ul>
+                    <li>
+                        <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
+                    </li>
+                    <!--[ if $pncore.logged_in ]-->
+                    <li>
+                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                        <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                        <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
+                    </li>
                     <!--[ /if ]-->
-                    </td>
-                    <td style="background-color:<!--[ $bgcolor1 ]-->;" valign="top">
-                        <!--[ $reply.message|pnmodcallhooks|nl2br|pnvarcensor ]-->
-                    </td>
-                </tr>
-                <tr style="background-color:<!--[ $bgcolor3 ]-->;">
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
-</div>
-<!--[ /if ]-->
-<!--
-#####
--->
+                    
+                    <li id="nonajaxnewtopicbuttons" style="text-align: left; margin: 1.5em;">
+                        <button name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+                        <!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_SUBMIT" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_SUBMIT' ]-->
+                        </button>
+                        <button name="preview" type="submit" value="1" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
+                        <!--[ pnimg src="icon_preview.gif" alt="_PNFORUM_PREVIEW" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_PREVIEW' ]-->
+                        </button>
+                        <button name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->'">
+                        <!--[ pnimg src="icon_cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true class="postingbutton" ]--><!--[ pnml name="_PNFORUM_CANCEL" ]-->
+                        </button>
+                    </li>
+            
+                </ul>
+            
+            </div>
+            <div id="replyhooks" style="float: left; margin-top: 1em;">
+                <!--[ plainbbcode textfieldid=message ]-->
+                <!--[ bbsmile textfieldid=message ]-->
+                <!--[ $hooks.pnUpper ]--><br />
+            </div>
+        </div>
 
+    </div>
+    </form>
 
-<div>
-<form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post" enctype="multipart/form-data">
-<fieldset style="border:none;">
-<textarea name="message" rows="15" cols="80" id="message" tabindex="0"><!--[ $reply.message ]--></textarea>
-<br />
-<br />
-<!--[ pnml name='_PNFORUM_OPTIONS' ]-->:<br />
-<input type="checkbox" id="attach_signature" name="attach_signature" <!--[ if $reply.attach_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
-<label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
-<br />
-<!--[ if $pncore.logged_in ]-->
-<input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $reply.subscribe_topic eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
-<label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
-<br />
-<!--[ /if ]-->
-<input type="checkbox" name="preview" id="preview" tabindex="0" />
-<label for="preview"><!--[ pnml name='_PNFORUM_PREVIEW' ]--></label>
-<input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
-<input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-<br /><br />
-<!--[ if $pncore.pnForum.striptags == 'yes' ]-->
-    <!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--><br />
-    <br />
-<!--[ /if ]-->
-<!--[ plainbbcode textfieldid=message ]-->
-<!--[ bbsmile textfieldid=message ]-->
-<!--[ $hooks.pnUpper ]-->
-<br />
-<div style="vertical-align: middle;">
-    <button name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-    <!--[ pnimg src="ok.gif" alt="_PNFORUM_SUBMIT" altml=true ]-->
-    </button>
-    &nbsp;&nbsp;
-    <button name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$reply.topic_id ]-->'">
-    <!--[ pnimg src="cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true ]-->
-    </button>
-
-    <!--[*
-    HTML for Typetool - not supported!!!
-        <input name="submit" type="submit" value=" <!--[ pnml name='_PNFORUM_SUBMIT' ]--> " />
-        &nbsp;&nbsp;
-        <input name="cancel" type="submit" value=" <!--[ pnml name='_PNFORUM_CANCELPOST' ]--> " />
-    *]-->
-</div>
 </fieldset>
-</form>
-</div>
 
-
-<!--
-#####
--->
-<div>
-<br /><br />
-<label for="phpbb_body"><!--[ pnml name='_PNFORUM_BODY' ]--></label>:
-<br />
-
-<br /><br />
-<table class="pnForum-border" border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td style="background-color:<!--[ $bgcolor2 ]-->;">
-            <table class="pnForum-border" border="0" cellpadding="5" cellspacing="0" width="100%">
-                <tr style="background-color:<!--[ $bgcolor2 ]-->;text-align:left;">
-                    <td style="height:28px;width:20%;"><span class="pnForum-title">
-                        <strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></span>
-                    </td>
-                    <td style="height:28;width:80%;"><span class="pnForum-title">
-                        <strong><!--[ $reply.topic_subject|pnvarcensor ]--></strong></span>
-                    </td>
-                </tr>
-                <!--[ foreach item=review from=$reply.topic_review ]-->
-				<tr style="background-color:<!--[ $bgcolor3 ]-->;">
-                    <td colspan="2">
-					<!--[ if $review.poster_data.pn_uid neq 1 ]-->
-                        <strong><!--[ $review.poster_data.pn_uname|profilelink ]--></strong>
-					<!--[ /if ]-->
-					</td>
-                </tr>
-                <tr style="background-color:<!--[ $bgcolor3 ]-->;text-align:left;">
-                    <td valign="top">
-                    <!--[ if $review.poster_data.pn_uid neq 1 ]-->
-
-		                <!--[ if $review.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
-                            <img src="<!--[ $review.poster_data.pn_user_avatar ]-->" alt="<!--[ $review.poster_data.pn_uname ]-->" <!--[ $review.poster_data.pn_user_avatar_attr.3 ]--> />
-	                    <!--[ /if ]-->
-                        <!--[ if $review.poster_data.rank ]-->
-	                        <br /><strong><!--[ $review.poster_data.rank|pnvarprepfordisplay ]--></strong>
-			                <!--[ if $review.poster_data.rank_image ]-->
-                                <br /><img src="<!--[ $review.poster_data.rank_image ]-->" alt="$review.poster_data.rank" <!--[ $review.poster_data.rank_image_attr.3 ]--> />
-	                        <!--[ /if ]-->
-	                    <!--[ /if ]-->
-                        <br /><!--[ pnml name='_PNFORUM_POSTS' ]-->: <!--[ $review.poster_data.user_posts ]-->
-                    <!--[ else ]-->
-                        <strong><!--[ $review.poster_data.pn_uname ]--></strong>
-                        <br /><!--[ pnml name='_PNFORUM_UNREGISTERED' ]-->
-                    <!--[ /if ]-->
-                    </td>
-                    <td style="background-color:<!--[ $bgcolor1 ]-->;">
-                        <!--[ $review.post_text|nl2br|pnmodcallhooks|pnvarcensor ]-->
-                    </td>
-                </tr>
-				<tr style="background-color:<!--[ $bgcolor3 ]-->;">
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-				<tr style="background-color:<!--[ $bgcolor2 ]-->;">
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                <!--[ /foreach ]-->
-
-            </table>
-        </td>
-    </tr>
-</table>
-</div>
-</div>
 <!--[ include file='pnforum_user_footer.html' ]-->

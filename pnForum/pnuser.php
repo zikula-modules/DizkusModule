@@ -231,6 +231,7 @@ function pnForum_user_reply($args=array())
     }
 
     $preview = (empty($preview)) ? false : true;
+    $submit = (empty($submit)) ? false : true;
 
     $message = pnfstriptags($message);
     // check for maximum message size
@@ -240,6 +241,7 @@ function pnForum_user_reply($args=array())
         $preview = true;
     }
 
+    /*
     if (empty($submit)) {
         $submit = false;
     	//$subject = '';
@@ -247,6 +249,7 @@ function pnForum_user_reply($args=array())
     } else {
         $submit = true;
     }
+    */
 
     if ($submit==true && $preview==false) {
         // Confirm authorisation code
@@ -274,6 +277,8 @@ function pnForum_user_reply($args=array())
                                     'subscribe_topic'  => $subscribe_topic));
         if($preview==true) {
             $reply['message'] = pnfVarPrepHTMLDisplay($message);
+            list($reply['message_display']) = pnModCallHooks('item', 'transform', '', array($message));
+            $reply['message_display'] = nl2br($reply['message_display']);
         }
 
         $pnr =& new pnRender('pnForum');
