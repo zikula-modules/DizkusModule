@@ -93,7 +93,7 @@ function pnForum_ajax_reply()
     
         // call hooks for $message_display ($message remains untouched for the textarea)
         list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-        $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
+        $post['post_textdisplay'] =pnVarCensor(nl2br($post['post_textdisplay']));
     
         $post['post_text'] = $post['post_textdisplay'];
 
