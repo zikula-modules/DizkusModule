@@ -38,7 +38,7 @@
                     <br /><!--[ pnml name='_PNFORUM_UNREGISTERED' ]-->
     
                 <!--[ /if ]-->
-                <p><!--[ pnml name='_PNFORUM_POSTED' ]-->:<br /><!--[ $post.posted_unixtime|pndate_format:"%e.%b %Y  - %R" ]-->
+                <p><!--[ pnml name='_PNFORUM_POSTED' ]-->:<br /><!--[ $post.posted_unixtime|pnfdate_format:"%e.%b %Y  - %R":'':true ]-->
             </td>
             <td headers="col_1">
                 <!--[ $post.post_textdisplay ]-->

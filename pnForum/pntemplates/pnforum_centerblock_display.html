@@ -16,7 +16,7 @@
                 <a href="<!--[ $lastpost.last_post_url_anchor ]-->"><!--[ $lastpost.topic_title ]--></a>
             </td>
             <td style="background-color:<!--[ $bgcolor1 ]-->;">
-                <!--[ $lastpost.posted_time ]-->
+                <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
             </td>
             <td style="background-color:<!--[ $bgcolor1 ]-->;">
                 <!--[ $lastpost.poster_name|profilelink ]-->

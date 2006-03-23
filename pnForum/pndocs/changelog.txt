@@ -23,6 +23,11 @@ PostNuke pnForum Module changelog
   subscribetopic_button
   Please use display logic to show the buttons, for more details see the
   recent templates. 
++ added timezone support (credits go to Adrian Chapman for the idea). To use this in
+  your templates, use the new pnfdate_format modifier instead of pndate_format, e.g.:
+  <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
+  The last parameter is activating the timezone support which adds the difference between
+  the users timezone and the main timezone configured in your PostNuke settings.
 - fixed [#2491] removal of topics doesn't remove the subscriptions
 - fixed some html and validation issues, removed some more tables
 - fixed [#2569] pnForum preferences always visible in user profile

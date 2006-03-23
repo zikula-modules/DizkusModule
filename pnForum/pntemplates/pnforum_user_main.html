@@ -42,7 +42,7 @@
                     document.getElementById('categorylink_<!--[ $category.cat_id ]-->').href = "javascript: open('<!--[ $category.cat_id ]-->');";
                 </script>
              </h2>
-            <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pndate_format ]-->:
+            <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
             <a href="<!--[ $category.last_post.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $category.last_post.subject|pnvarprephtmldisplay ]-->'"><!--[ $category.last_post.subject|pnvarprepfordisplay ]--></a></span>
             <div id="category_<!--[ $category.cat_id ]-->" style="display: none;">
                 <ul class="pnf_mainforumlist" style="padding-left: 1.5em;">
@@ -59,7 +59,7 @@
                         <div style="font-size: 0.8em; margin-left: 0.3em;">
                             <!--[ $forum.forum_desc ]--><br />
                             <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
-                            <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pndate_format ]-->:
+                            <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
                             <a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
                         </div>
                         <span class="pnf_invisible">. </span>
@@ -91,7 +91,7 @@
             <div style="font-size: 0.8em; margin-left: 0.3em;">
                 <!--[ $forum.forum_desc ]--><br />
                 <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
-                <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pndate_format ]-->:
+                <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
                 <a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
             </div>
             <span class="pnf_invisible">. </span>
@@ -102,8 +102,11 @@
 <!--[ /if ]-->
 
 </div>
-<!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)<br />
-<!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]-->
+
+<ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
+<li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%e. %b %Y  - %R":'':true ]-->)</li>
+<li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--></li>
+</ul>
 
 <!--[ include file='pnforum_user_footer.html ]-->
 

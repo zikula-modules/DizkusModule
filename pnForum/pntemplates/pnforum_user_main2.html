@@ -47,7 +47,7 @@
             </td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
-            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pndate_format:datetimebrief ]--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|profilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_PNFORUM_NOPOSTS' ]--><!--[ /if ]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|profilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_PNFORUM_NOPOSTS' ]--><!--[ /if ]--></td>
         </tr>
         <!--[ foreachelse ]-->
         <tr>
@@ -74,7 +74,7 @@
     </tbody>
 </table>
 <ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
-<li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pndate_format:"%e. %b %Y  - %R" ]-->)</li>
+<li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%e. %b %Y  - %R":'':true ]-->)</li>
 <li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--></li>
 </ul>
 <!--[ include file='pnforum_user_footer.html ]-->

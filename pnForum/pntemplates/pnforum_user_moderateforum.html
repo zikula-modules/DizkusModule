@@ -142,7 +142,7 @@
         <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;text-align: center; vertical-align: middle;" headers="col_replies"><!--[ $topic.topic_replies ]--></td>
         <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;text-align: center; vertical-align: middle;" headers="col_poster"><!--[ $topic.pn_uname|profilelink ]--></td>
         <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;text-align: center; vertical-align: middle;" headers="col_views"><!--[ $topic.topic_views ]--></td>
-        <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;text-align: center; vertical-align: middle;" headers="col_date"><!--[ $topic.post_time_unix|pndate_format:datetimebrief ]--><br /><!--[ $topic.last_poster|profilelink ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
+        <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;text-align: center; vertical-align: middle;" headers="col_date"><!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief':'':true ]--><br /><!--[ $topic.last_poster|profilelink ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
         <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;text-align: center; vertical-align: middle;" headers="col_selection"><input type="checkbox" name="topic_id[]" value="<!--[$topic.topic_id]-->"/></td>
     </tr>
 
