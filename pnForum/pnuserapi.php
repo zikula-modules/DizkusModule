@@ -2636,7 +2636,8 @@ function pnForum_userapi_notify_by_email($args)
                             u.pn_email,
                             u.pn_name,
                             u.pn_uname,
-                            c.cat_id
+                            c.cat_id,
+                            f.forum_id
             FROM " . $pntable['users'] . " as u,
                  " . $pntable['pnforum_topic_subscription'] . " as ts,
                  " . $pntable['pnforum_forums'] . " as f,
@@ -2651,7 +2652,7 @@ function pnForum_userapi_notify_by_email($args)
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid, $pn_email, $pn_name, $pn_uname, $cat_id) = $result->fields;
+            list($pn_uid, $pn_email, $pn_name, $pn_uname, $cat_id, $forum_id) = $result->fields;
             // exclude the recent user from getting an email
             // check permissions
             if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
@@ -2679,19 +2680,28 @@ function pnForum_userapi_notify_by_email($args)
             . pnModURL('pnForum', 'user', 'prefs') . "\n"
             . "\n"
             . _PNFORUM_NOTIFYBODY5 . ' ' . pnGetBaseURL();
-
+/*
+echo "<pre>";
+var_dump($recipients);
+echo "</pre>";
+*/
     if(count($recipients)>0) {
-        foreach($recipients as $email_to => $toname) {
+        foreach($recipients as $subscriber) {
 
             $args = array( 'fromname'    => $sitename,
                            'fromaddress' => $email_from,
-                           'toname'      => $toname,
-                           'toaddress'   => $email_to,
+                           'toname'      => $subscriber['name'],
+                           'toaddress'   => $subscriber['address'],
                            'subject'     => $subject,
                            'body'        => $message,
                            'headers'     => array('X-UserID: ' . md5($uid),
                                                   'X-Mailer: pnForum v' . $modinfo['version'],
                                                   'X-pnForumTopicID: ' . $topic_id));
+/*
+echo "<pre>";
+var_dump($args);
+echo "</pre>";
+*/
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
     }
