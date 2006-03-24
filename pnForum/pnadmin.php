@@ -494,7 +494,6 @@ function pnForum_admin_reordertreesave()
     // the last entry in the $category is the placeholder for a new
     // category, we need ot remove this
     array_pop($categoryarray);
-$test = implode($categoryarray, ':') . "\n";
     if(is_array($categoryarray) && count($categoryarray) > 0) {
         foreach($categoryarray as $catorder => $cat_id) {
             // array key start with 0, but we need 1, so we increase the order
@@ -507,7 +506,6 @@ $test = implode($categoryarray, ':') . "\n";
             }
 
             $forumsincategoryarray = pnVarCleanFromInput('cid_' . $cat_id);
-$test .= "f:" . implode($forumsincategoryarray, ':') . "\n";
             if(is_array($forumsincategoryarray) && count($forumsincategoryarray) > 0) {
                 foreach($forumsincategoryarray as $forumorder => $forum_id) {
                     if(!empty($forum_id) && is_numeric($forum_id)) {
@@ -525,7 +523,6 @@ $test .= "f:" . implode($forumsincategoryarray, ':') . "\n";
             }
         } 
     }
-//pnf_ajaxerror($test);
     pnf_jsonizeoutput('', true, true);
     
 }
@@ -582,6 +579,7 @@ function pnForum_admin_editforum($args=array())
         $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                               array('forum_id'  => $forum_id,
                                     'permcheck' => 'admin'));
+
     }
     $externalsourceoptions = array( 0 => array('checked'  => '',
                                                'name'     => _PNFORUM_NOEXTERNALSOURCE,

@@ -558,6 +558,7 @@ function pnForum_ajax_newtopic()
     
     // preview == true, create fake topic
     $newtopic['cat_id']     = $cat_id;
+    $newtopic['forum_id']   = $forum_id;
 //    $newtopic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
 //    $newtopic['cat_title']  = pnVarPrepForDisplay($myrow['cat_title']);
 
@@ -577,6 +578,7 @@ function pnForum_ajax_newtopic()
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
     $newtopic['message_display'] = nl2br($newtopic['message_display']);
 
+    $topic_start = (empty($subject) && empty($message));
     if(pnUserLoggedIn()) {
         if($topic_start==true) {
             $newtopic['attach_signature'] = true;

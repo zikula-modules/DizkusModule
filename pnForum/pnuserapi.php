@@ -53,8 +53,10 @@ include_once('modules/pnForum/common.php');
  */
 function pnForum_userapi_get_userdata_from_id($args)
 {
-    extract($args);
-    unset($args);
+    $userid = $args['userid'];
+    if(empty($userid)) {
+        return showforumerror(_MODARGSERROR . ' in pnForum_userapi_get_userdata_from_id()', __FILE__, __LINE__);
+    }
 
     static $usersarray;
 
@@ -187,9 +189,9 @@ function pnForum_userapi_get_userdata_from_id($args)
  */
 function pnForum_userapi_boardstats($args)
 {
-    extract($args);
-    unset($args);
-
+    $id   = isset($args['id']) ? $args['id'] : null;
+    $type = isset($args['type']) ? $args['type'] : null;
+    
     list($dbconn, $pntable) = pnfOpenDB();
 
     switch($type) {
@@ -236,6 +238,7 @@ function pnForum_userapi_boardstats($args)
                     LIMIT 1';
             break;
         default:
+            return showforumerror(_MOARGSERROR . ' in pnForum_userapi_boardstats()', __FILE__, __LINE__);
         }
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list ($total) = $result->fields;
@@ -254,18 +257,19 @@ function pnForum_userapi_boardstats($args)
  */
 function pnForum_userapi_get_firstlast_post_in_topic($args)
 {
-    extract($args);
-    unset($args);
-
+    $topic_id = $args['topic_id'];
+    $first    = $args['first'];
+    $id_only  = $args['id_only'];
+    
     list($dbconn, $pntable) = pnfOpenDB();
 
-    if(!isset($first) || !is_bool($first) || (is_bool($first) && $first==false)) {
+    if(empty($first) || !is_bool($first) || (is_bool($first) && $first==false)) {
         $sortorder = 'DESC';
     } else {
         $sortorder = 'ASC';
     }
 
-    if(isset($topic_id) && is_numeric($topic_id)) {
+    if(!empty($topic_id) && is_numeric($topic_id)) {
         $sql = 'SELECT p.post_id
                 FROM ' . $pntable['pnforum_posts'] . ' AS p
                 WHERE p.topic_id = "'.(int)pnVarPrepForStore($topic_id) . '"
@@ -297,12 +301,12 @@ function pnForum_userapi_get_firstlast_post_in_topic($args)
  */
 function pnForum_userapi_get_last_post_in_forum($args)
 {
-    extract($args);
-    unset($args);
+    $forum_id = $args['forum_id'];
+    $id_only  = $args['id_only'];
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    if(isset($forum_id) && is_numeric($forum_id)) {
+    if(!empty($forum_id) && is_numeric($forum_id)) {
         $sql = "SELECT p.post_id
                 FROM ".$pntable['pnforum_posts']." AS p
                 WHERE p.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
@@ -334,15 +338,14 @@ function pnForum_userapi_get_last_post_in_forum($args)
  */
 function pnForum_userapi_readcategorytree($args)
 {
+    $last_visit = $args['last_visit'];
+    
     static $tree;
 
     // if we have already called this once during the script
     if (isset($tree)) {
         return $tree;
     }
-
-    extract($args);
-    unset($args);
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -403,6 +406,7 @@ function pnForum_userapi_readcategorytree($args)
             if(!array_key_exists( $cat['cat_title'], $tree)) {
                 $tree[$cat['cat_title']] = $cat;
             }
+            $last_post_data = array();
             if(!empty($forum['forum_id'])) {
                 if ($forum['forum_topics'] != 0) {
                     // are there new topics since last_visit?
@@ -501,12 +505,11 @@ function pnForum_userapi_readcategorytree($args)
  */
 function pnForum_userapi_get_moderators($args)
 {
-    extract($args);
-    unset($args);
+    $forum_id = $args['forum_id'];
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    if(isset($forum_id)) {
+    if(!empty($forum_id)) {
         $sql = "SELECT u.pn_uname, u.pn_uid
                 FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
                 WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
@@ -530,7 +533,7 @@ function pnForum_userapi_get_moderators($args)
     }
     pnfCloseDB($result);
 
-    if(isset($forum_id)) {
+    if(!empty($forum_id)) {
         $sql = "SELECT g.pn_name, g.pn_gid
                 FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
                 WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
@@ -571,16 +574,6 @@ function pnForum_userapi_setcookies()
      * set last visit cookies and get last visit time
      * set LastVisit cookie, which always gets the current time and lasts one year
      */
-/*
-    setcookie('pnForumLastVisit', time(), time()+31536000);
-
-    if (!isset ($_COOKIE['pnForumLastVisitTemp'])){
-        $temptime = $_COOKIE['pnForumLastVisit'];
-    } else {
-        $temptime = $_COOKIE['pnForumLastVisitTemp'];
-    }
-*/
-
     setcookie('phpBBLastVisit', time(), time()+31536000);
 
     if (!isset ($_COOKIE['phpBBLastVisitTemp'])){
@@ -594,7 +587,6 @@ function pnForum_userapi_setcookies()
     }
 
     // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-//    setcookie('pnForumLastVisitTemp', $temptime, time()+1800);
     setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
 
     // set vars for all scripts
@@ -632,7 +624,7 @@ function pnForum_userapi_readforum($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $posts_per_page     = pnModGetVar('pnForum', 'posts_per_page');
-    if(!isset($topics_per_page)) {
+    if(empty($topics_per_page)) {
         $topics_per_page    = pnModGetVar('pnForum', 'topics_per_page');
     }
     $hot_threshold      = pnModGetVar('pnForum', 'hot_threshold');
@@ -1264,11 +1256,11 @@ function pnForum_userapi_storereply($args)
         // update subscription
         if($subscribe_topic==1) {
             // user wants to subscribe the topic
-            pnForum_userapi_subscribe_topic(array('topic_id'=>$topic_id));
+            pnForum_userapi_subscribe_topic(array('topic_id' => $topic_id));
         } else {
             // user wants not to subscribe the topic
-            pnForum_userapi_unsubscribe_topic(array('topic_id'=>$topic_id,
-                                                    'silent'  => true));
+            pnForum_userapi_unsubscribe_topic(array('topic_id' => $topic_id,
+                                                    'silent'   => true));
         }
     }
 
@@ -1286,9 +1278,9 @@ function pnForum_userapi_storereply($args)
     // Let any hooks know that we have created a new item.
     //pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
     pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
-                                                      'post_id' => $post_id));
+                                                      'post_id' => $this_post));
 
-    pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'2'));
+    pnForum_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '2'));
 
     return array($start, $this_post);
 }
@@ -1491,7 +1483,7 @@ function pnForum_userapi_storenewtopic($args)
     $posted_message=stripslashes($message);
 
     //  anonymous user has uid=0, but needs pn_uid=1
-    if(isset($post_as) || !empty($post_as) || is_numeric($post_as)) {
+    if(isset($post_as) && !empty($post_as) && is_numeric($post_as)) {
         $pn_uid = $post_as;
     } else {
         if(pnUserLoggedin()) {
@@ -1523,8 +1515,9 @@ function pnForum_userapi_storenewtopic($args)
     $forum_id  = pnVarPrepForStore($forum_id);
     $time      = pnVarPrepForStore($time);
     $poster_ip = pnVarPrepForStore($poster_ip);
-    $reference = pnVarPrepForStore($reference);
-    $msgid     = pnVarPrepForStore($msgid);
+    
+    $reference = (isset($reference)) ? pnVarPrepForStore($reference) : '';
+    $msgid     = (isset($msgid)) ? pnVarPrepForStore($msgid) : '';
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
@@ -3210,6 +3203,7 @@ function pnForum_userapi_get_latest_posts($args)
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
+    $limit_reached = false;
     while ((list($topic_id, $topic_title, $forum_id, $forum_name, $pop3_active, $cat_id, $cat_title,
                  $topic_replies, $topic_last_post_id, $sticky, $topic_status, $post_time, $poster_id) = $result->fields) && !$limit_reached ) {
         $post=array();
@@ -4173,7 +4167,7 @@ function pnForum_userapi_get_last_topic_page($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     // get topic_replies for correct redirect (start parameter)
-    $sql = "SELECT topic_replies FROM " . $pntable[pnforum_topics] . " WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
+    $sql = "SELECT topic_replies FROM " . $pntable['pnforum_topics'] . " WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list ($topic_replies) = $result->fields;
     pnfCloseDB($result);

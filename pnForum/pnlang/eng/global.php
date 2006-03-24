@@ -330,7 +330,6 @@ define('_PNFORUM_MOVETOPIC_INFO', 'When you press the move button at the bottom 
 define('_PNFORUM_NEWEST_FIRST','Display the newest post first');
 define('_PNFORUM_NEWPOSTS','New posts since your last visit.');
 define('_PNFORUM_NEWTOPIC','new topic');
-define('_PNFORUM_NEW_THREADS','New Topic');
 define('_PNFORUM_NEXTPAGE','Next Page');
 define('_PNFORUM_NEXT_TOPIC','to next topic');
 define('_PNFORUM_NOAUTH', 'No permission for this action');
