@@ -338,7 +338,7 @@ function pnForum_userapi_get_last_post_in_forum($args)
  */
 function pnForum_userapi_readcategorytree($args)
 {
-    $last_visit = $args['last_visit'];
+    $last_visit = (isset($args['last_visit'])) ? $args['last_visit'] : 0;
     
     static $tree;
 

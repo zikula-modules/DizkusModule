@@ -1009,9 +1009,10 @@ function pnf_ajaxerror($error)
 function pnf_convert_to_utf8($input='')
 {
     if(is_array($input)) {
+        $return = array();
         foreach($input as $key => $value) {
             $return[$key] = pnf_convert_to_utf8($value);
-         } 
+        } 
         return $return;
     } elseif(is_string($input)) {
         return utf8_encode($input);

@@ -451,6 +451,8 @@ function pnForum_admin_reordertree()
     }
 
     $categorytree = pnModAPIFunc('pnForum', 'user', 'readcategorytree');
+    $catids = array();
+    $forumids = array();
     if(is_array($categorytree) && count($categorytree) > 0) {
         foreach($categorytree as $category) {
             $catids[] = $category['cat_id'];
