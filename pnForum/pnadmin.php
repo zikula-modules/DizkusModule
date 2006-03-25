@@ -866,6 +866,8 @@ function pnForum_admin_storeforum()
     if(!empty($delete)) {
         $action = 'delete';
         $newforum = array();
+        $forumtitle = '';
+        $editforumhtml = '';
         $old_id = $forum_id;
         $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
                                array('forum_id' => $forum_id)); 
@@ -910,6 +912,7 @@ function pnForum_admin_storeforum()
                                            'pntopic'          => $pntopic));
         } else {
             $action = 'update';
+            $old_id = '';
             $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
                                   array('forum_id' => $forum_id));
             // check if user has changed the password

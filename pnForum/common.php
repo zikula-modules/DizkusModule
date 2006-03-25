@@ -536,7 +536,10 @@ function phpbb_br2nl($str)
  */
 function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
+    if(!is_dot8()) {
+        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
+    }
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
 }
 
 /**
@@ -544,7 +547,10 @@ function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
  */
 function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
+    if(!is_dot8()) {
+        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
+    } 
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
 }
 
 /**
@@ -552,7 +558,10 @@ function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
  */
 function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
+    if(!is_dot8()) {
+        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
+    } 
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
 }
 
 /**
@@ -560,7 +569,10 @@ function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = nu
  */
 function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
+    if(!is_dot8()) {
+        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
+    } 
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
 }
 
 /**
@@ -568,7 +580,10 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = n
  */
 function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
+    if(!is_dot8()) {
+        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
+    } 
+    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
 }
 
 /**
@@ -1103,6 +1118,15 @@ function pnf_add_stylesheet_header($modname='')
         $additional_header[] = $css;
     }
     return;
+}
+
+/**
+ * pn version check
+ *
+ */
+function is_dot8()
+{
+    return function_exists('pnVarCleanFromCOOKIE');
 }
  
 ?>

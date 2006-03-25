@@ -1214,34 +1214,36 @@ function pnForum_adminapi_deleteforum($args)
  */
 function pnForum_adminapi_get_pntopics()
 {
-    pnModDBInfoLoad('Topics');
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    $pntopicstable  = $pntable['topics'];
-    $pntopicscolumn = $pntable['topics_column'];
-
-    $sql = "SELECT $pntopicscolumn[topicid],
-                   $pntopicscolumn[topicname],
-                   $pntopicscolumn[topicimage],
-                   $pntopicscolumn[topictext]
-            FROM $pntopicstable
-            ORDER BY $pntopicscolumn[topicname]";
-
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    $topics = array();
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
-            $topic = array();
-            list( $topic['topicid'],
-                  $topic['topicname'],
-                  $topic['topicimage'],
-                  $topic['topictext'] ) = $result->fields;
-            array_push($topics, $topic);
+    if(!is_dot8()) {
+        pnModDBInfoLoad('Topics');
+        list($dbconn, $pntable) = pnfOpenDB();
+        
+        $pntopicstable  = $pntable['topics'];
+        $pntopicscolumn = $pntable['topics_column'];
+        
+        $sql = "SELECT $pntopicscolumn[topicid],
+                       $pntopicscolumn[topicname],
+                       $pntopicscolumn[topicimage],
+                       $pntopicscolumn[topictext]
+                FROM $pntopicstable
+                ORDER BY $pntopicscolumn[topicname]";
+        
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        
+        $topics = array();
+        if($result->RecordCount()>0) {
+            for (; !$result->EOF; $result->MoveNext())
+            {
+                $topic = array();
+                list( $topic['topicid'],
+                      $topic['topicname'],
+                      $topic['topicimage'],
+                      $topic['topictext'] ) = $result->fields;
+                array_push($topics, $topic);
+            }
         }
+        return $topics;
     }
-    return $topics;
 }
 
 /**

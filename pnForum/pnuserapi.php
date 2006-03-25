@@ -348,30 +348,35 @@ function pnForum_userapi_readcategorytree($args)
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
+    $cattable = $pntable['pnforum_categories'];
+    $forumstable = $pntable['pnforum_forums'];
+    $poststable = $pntable['pnforum_posts'];
+    $topicstable = $pntable['pnforum_topics'];
+    $userstable = $pntable['users'];
 
-    $sql = "SELECT c.cat_id,
-                    c.cat_title,
-                    c.cat_order,
-                    f.forum_id,
-                    f.forum_name,
-                    f.forum_desc,
-                    f.forum_topics,
-                    f.forum_posts,
-                    f.forum_last_post_id,
-                    f.forum_moduleref,
-                    f.forum_pntopic,
-                    t.topic_title,
-                    t.topic_replies,
-                    u.pn_uname,
-                    u.pn_uid,
-                    p.topic_id,
-                    p.post_time
-            FROM ".$pntable['pnforum_categories']." AS c
-            LEFT JOIN ".$pntable['pnforum_forums']." AS f ON f.cat_id=c.cat_id
-            LEFT JOIN ".$pntable['pnforum_posts']." AS p ON p.post_id=f.forum_last_post_id
-            LEFT JOIN ".$pntable['pnforum_topics']." AS t ON t.topic_id=p.topic_id
-            LEFT JOIN ".$pntable['users']." AS u ON u.pn_uid=p.poster_id
-            ORDER BY c.cat_order, f.forum_order, f.forum_name";
+    $sql = 'SELECT ' . $cattable . '.cat_id AS cat_id,
+                   ' . $cattable . '.cat_title AS cat_title,
+                   ' . $cattable . '.cat_order AS cat_order,
+                   ' . $forumstable . '.forum_id AS forum_id,
+                   ' . $forumstable . '.forum_name AS forum_name,
+                   ' . $forumstable . '.forum_desc AS forum_desc,
+                   ' . $forumstable . '.forum_topics AS forum_topics,
+                   ' . $forumstable . '.forum_posts AS forum_posts,
+                   ' . $forumstable . '.forum_last_post_id AS forum_last_post_id,
+                   ' . $forumstable . '.forum_moduleref AS forum_moduleref,
+                   ' . $forumstable . '.forum_pntopic AS forum_pntopic,
+                   ' . $topicstable . '.topic_title AS topic_title,
+                   ' . $topicstable . '.topic_replies AS topic_replies,
+                   ' . $userstable . '.pn_uname AS pn_uname,
+                   ' . $userstable . '.pn_uid AS pn_uid,
+                   ' . $poststable . '.topic_id AS topic_id,
+                   ' . $poststable . '.post_time AS post_time
+            FROM ' . $cattable . '
+            LEFT JOIN ' . $forumstable . ' ON ' . $forumstable . '.cat_id=' . $cattable . '.cat_id
+            LEFT JOIN ' . $poststable . ' ON ' . $poststable . '.post_id=' . $forumstable . '.forum_last_post_id
+            LEFT JOIN ' . $topicstable . ' ON ' . $topicstable . '.topic_id=' . $poststable . '.topic_id
+            LEFT JOIN ' . $userstable . ' ON ' . $userstable . '.pn_uid=' . $poststable . '.poster_id
+            ORDER BY ' . $cattable . '.cat_order, ' . $forumstable . '.forum_order, ' . $forumstable . '.forum_name';
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 

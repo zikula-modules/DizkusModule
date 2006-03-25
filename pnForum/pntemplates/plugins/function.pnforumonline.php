@@ -87,16 +87,16 @@ function smarty_function_pnforumonline($params, &$smarty)
     $moderators = pnModAPIFunc('pnForum', 'user', 'get_moderators', array());
 
     if (pnConfigGetVar('anonymoussessions')) {
-        $anonwhere = "AND      $sessioninfocolumn[uid] >= '0' ";
+        $anonwhere = "AND      $pntable[session_info].pn_uid >= '0' ";
     } else {
-        $anonwhere = "AND      $sessioninfocolumn[uid] > '0'";
+        $anonwhere = "AND      $pntable[session_info].pn_uid > '0'";
     }
-    $sql = "SELECT   $sessioninfocolumn[uid], $pntable[users].pn_uname
-            FROM     $sessioninfotable, $pntable[users]
-            WHERE    $sessioninfocolumn[lastused] > $activetime
+    $sql = "SELECT   $pntable[session_info].pn_uid, $pntable[users].pn_uname
+            FROM     $pntable[session_info], $pntable[users]
+            WHERE    $pntable[session_info].pn_lastused > $activetime
             $anonwhere
-            AND      IF($sessioninfocolumn[uid]='0','1',$sessioninfocolumn[uid]) = $pntable[users].pn_uid
-            GROUP BY $sessioninfocolumn[ipaddr], $sessioninfocolumn[uid]";
+            AND      IF($pntable[session_info].pn_uid='0','1',$pntable[session_info].pn_uid) = $pntable[users].pn_uid
+            GROUP BY $pntable[session_info].pn_ipaddr, $pntable[session_info].pn_uid";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 

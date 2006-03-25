@@ -133,6 +133,7 @@ function storeforum_response(originalRequest)
         case 'update':
             Element.update('forumtitle_' + json.forum.forum_id, json.forumtitle);
             Element.update('editforum_' + json.forum.forum_id, json.editforumhtml);
+            pnf_toggleprogressimage(false, json.forum.forum_id);
             break;
         case 'add':
             var newforumtitle = 'forumtitle_' + json.forum.forum_id;
@@ -157,6 +158,7 @@ function storeforum_response(originalRequest)
             Element.hide(newshowforum);
 
             Element.remove('canceladdforum_' + json.old_id);
+            pnf_toggleprogressimage(false, json.old_id);
             $('progressforumimage_' + json.old_id).id = 'progressforumimage_' + json.forum.forum_id;
 
             $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
@@ -164,7 +166,6 @@ function storeforum_response(originalRequest)
         default:
             pnf_showajaxerror('storeforum_response(): received illegal action type from server');   
     }
-    pnf_toggleprogressimage(false, json.forum.forum_id);
 }
 
 function storecategory(catid)
@@ -608,6 +609,7 @@ function pnf_toggleprogressimage(typ, id)
     } else {
         imageid = 'progressforumimage_' + id;
     }        
+
     if($(imageid)) {
         if($(imageid).style.visibility == 'hidden') {
             $(imageid).style.visibility = '';
