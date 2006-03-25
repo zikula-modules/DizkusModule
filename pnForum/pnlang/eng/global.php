@@ -169,7 +169,7 @@ define('_PNFORUM_AUTOMATICDISCUSSIONSUBJECT', 'Automatically created topic');
 //
 define('_PNFORUM_BACKTOFORUMADMIN', 'Back to forum admin');
 define('_PNFORUM_BACKTOSUBMISSION', 'Go to this submission');
-define('_PNFORUM_BASEDONLASTXMINUTES', 'This list bases on the users active in the last %m% minutes');
+define('_PNFORUM_BASEDONLASTXMINUTES', 'This list is based on the users active over the last %m% minutes.');
 define('_PNFORUM_BLOCK_PARAMETERS', 'Parameters');
 define('_PNFORUM_BLOCK_PARAMETERS_HINT', 'comma separated list, e.g.. maxposts=5,forum_id=27 ');
 define('_PNFORUM_BLOCK_TEMPLATENAME', 'Name of templatefile');
