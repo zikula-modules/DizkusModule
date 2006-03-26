@@ -658,7 +658,7 @@ function createQuickReply()
             attach_signature = '&attach_signature=' + sigObj.value;
         }
         
-        var subscribe_topic;
+        var subscribe_topic = '';
         var subObj = $('subscribe_topic');
         if(subObj) {
             subscribe_topic = '&subscribe_topic' + subObj.value;
@@ -670,7 +670,7 @@ function createQuickReply()
                    attach_signature +            
                    subscribe_topic + 
                    "&authid=" + $F('authid');
-        
+
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(                              
                         "index.php",                                
