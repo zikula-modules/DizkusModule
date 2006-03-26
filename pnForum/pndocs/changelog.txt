@@ -28,19 +28,21 @@ PostNuke pnForum Module changelog
   <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
   The last parameter is activating the timezone support which adds the difference between
   the users timezone and the main timezone configured in your PostNuke settings.
-- fixed [#2491] removal of topics doesn't remove the subscriptions
++ added [#2512]	centerblock Links inkl. PID
++ added [#2636] similar topics plugin
 - fixed some html and validation issues, removed some more tables
+- fixed [#2490] wrong number of guests in online list
+- fixed [#2491] removal of topics doesn't remove the subscriptions
+- added [#2492] admin option to remove subscriptions
+- fixed [#2557] no protection against posting many new threads
 - fixed [#2569] pnForum preferences always visible in user profile
-- fixed [#2557] No protection against posting many new threads
-- fixed [#2490] Wrong number of guests in online list
-- added [#2512]	Centerblock Links inkl. PID
 - fixed [#2637] moderation navigation and 
-        [#2683] Moderation function broken on multiple pages (same bug)
-- fixed [#2729] Parameter: for statistics-Block ignored
-- fixed [#2728] PostNuke Rechte greifen bei Mailverständigung nicht.
-- added [#2492] Admin option to remove subscriptions
+        [#2683] moderation function broken on multiple pages (same bug)
+- fixed [#2678] search does not honor sort field specification
+- fixed [#2728] permissions not checked when notify mails are sent.
+- fixed [#2729] parameter for statistics-block ignored
 - fixed [#2734] blocks show wrong date/time after splitting a thread
-- fixed [#2678] Search does not honor sort field specification
+- fixed [#2767] language edit (english)
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

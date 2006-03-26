@@ -752,7 +752,7 @@ pnforum th {
 }
 
 .postingtext_small {
-    width: 78%; 
+    width: 73%; 
     float: left; 
     padding: 5px 5px 25px 5px; 
     overflow: auto; 
@@ -771,7 +771,7 @@ pnforum th {
     border-style: solid; 
     padding: 3px 3px 6px 3px; 
     float: left; 
-    width: 17%; 
+    width: 20%; 
 }
 
 .userinfoname {
@@ -877,6 +877,11 @@ a.normallink {
 #quickreply, #newtopic {
     width: 100%; 
     float: left; 
+    margin-top: 1.5em;
+}
+
+#similartopics {
+    float:left;
     margin-top: 1.5em;
 }
 
