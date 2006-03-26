@@ -489,10 +489,29 @@ div.pnf_statusmsg {
     width: 100%;
 }
 
-pnforum th {
+#pnforum th {
     font-size: 1em;
     font-weight: bold;
     text-align: center;
+}
+
+#pnforum th.leftcell {
+    border-width: 2px;
+    border-style: solid;
+    border-right: none;
+}
+
+#pnforum th.midcell {
+    border-width: 2px;
+    border-style: solid;
+    border-right: none;
+    border-left: none;
+}
+
+#pnforum th.rightcell {
+    border-width: 2px;
+    border-style: solid;
+    border-left: none;
 }
 
 #pnforum .optionrow {
