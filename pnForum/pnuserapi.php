@@ -54,9 +54,6 @@ include_once('modules/pnForum/common.php');
 function pnForum_userapi_get_userdata_from_id($args)
 {
     $userid = $args['userid'];
-    if(empty($userid)) {
-        return showforumerror(_MODARGSERROR . ' in pnForum_userapi_get_userdata_from_id()', __FILE__, __LINE__);
-    }
 
     static $usersarray;
 
