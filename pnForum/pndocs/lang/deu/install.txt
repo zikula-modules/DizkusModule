@@ -12,6 +12,8 @@ Installation
   |  |
   |  -- search
   |
+  -- javascript
+  |
   -- modules
      |
      -- pnForum
@@ -19,8 +21,9 @@ Installation
         -- weitere Unterverzeichnisse
 
   Den Inhalt von includes/search ins PostNuke includes/search Verzeichnis kopieren
+  Den Inhalt von javascript ins PostNuke javascript Verzeichnis kopieren
   Den Inhalt von modules ins PostNuke modules Verzeichnis kopieren
-  (nicht modules/Moules!!)
+  (nicht modules/Modules!!)
   Die Datei backforum.php aus dem pnForumverzeichnis ins PostNuke Verzeichnis
   kopieren
 
@@ -28,7 +31,7 @@ Installation
 * pnForum installieren und aktivieren
 * Hooks nach Bedarf für pnForum einstellen.
 
-WeitereInformationen zu den einzelnen Features gibts in
+Weitere Informationen zu den einzelnen Features gibts in
 
 mail2forum.txt
 rss2forum.txt
