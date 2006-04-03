@@ -2457,19 +2457,7 @@ function pnForum_userapi_deletetopic($args)
             $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
             pnfCloseDB($result2);
         }
-        $result->MoveNext();
-    }
-    pnfCloseDB($result);
-
-    // Get the post ID's we have to remove.
-    $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    // we need to put a check here if we have more posts...
-    while (!$result->EOF) {
-        $row = $result->GetRowAssoc(false);
+        // collect the post ID's we have to remove.
         $posts_to_remove[] = $row['post_id'];
         $result->MoveNext();
     }
