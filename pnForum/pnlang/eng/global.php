@@ -50,6 +50,7 @@ define('_PNFORUM_NEW_THREADS','New Topic in forum');
 define('_PNFORUM_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_PNFORUM_LINKTOTHISPOST', 'Link to this posting');
 define('_PNFORUM_SIMILARTOPICS', 'similar topics');
 define('_PNFORUM_RANK', 'rank');
 define('_PNFORUM_CLICKTOEDIT', 'click to edit');

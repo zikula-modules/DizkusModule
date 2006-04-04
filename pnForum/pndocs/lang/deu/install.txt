@@ -4,7 +4,7 @@ $Id$
 Installation
 ------------
 
-* Zippaket auspacken, es erscheint foglende Dateistruktur:
+* Zippaket auspacken, es erscheint folgende Dateistruktur:
 
   html
   |

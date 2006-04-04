@@ -95,7 +95,8 @@ function smarty_modifier_pnfdate_format($string, $format='datebrief', $default_d
 
     $tzoffset = 0;
     if(isset($usetzoffset)) {
-        $tzoffset = ( (float)pnUserGetVar('timezone_offset') - (float)pnConfigGetVar('timezone_offset')) * 3600;
+        $useroffset = (pnConfigGetVar('anonymoussessions')==1) ? (float)pnUserGetVar('timezone_offset') : (float)pnUserGetVar('timezone_offset', 1);
+        $tzoffset = ($useroffset - (float)pnConfigGetVar('timezone_offset')) * 3600;
     }
 	if($string != '') {
     	return strftime($format, smarty_make_timestamp($string) + $tzoffset );

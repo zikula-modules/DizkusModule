@@ -2,19 +2,20 @@
 
 <!--[ include file=pnforum_user_header.html ]-->
 
+<script type="text/javascript" src="javascript/ajax/scriptaculous.js"></script>
 
 <script type="text/javascript">
     function open(thiscat)
     {
         <!--[ foreach item=singlecat from=$tree ]-->
         if(thiscat == <!--[ $singlecat.cat_id ]-->) {
-            if(document.getElementById('category_<!--[ $singlecat.cat_id ]-->').style.display == 'block') {
-                document.getElementById('category_<!--[ $singlecat.cat_id ]-->').style.display = 'none';
+            if($('category_<!--[ $singlecat.cat_id ]-->').style.display == '') {
+                $('category_<!--[ $singlecat.cat_id ]-->').style.display = 'none';
             } else {                
-                document.getElementById('category_<!--[ $singlecat.cat_id ]-->').style.display = 'block';
+                $('category_<!--[ $singlecat.cat_id ]-->').style.display = '';
             }
         } else {
-            document.getElementById('category_<!--[ $singlecat.cat_id ]-->').style.display = 'none';
+            $('category_<!--[ $singlecat.cat_id ]-->').style.display = 'none';
         }
         <!--[ /foreach ]-->
 
@@ -39,7 +40,7 @@
             <!--[ /if ]-->
                 <a id="categorylink_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title ]--></a>
                 <script type="text/javascript">
-                    document.getElementById('categorylink_<!--[ $category.cat_id ]-->').href = "javascript: open('<!--[ $category.cat_id ]-->');";
+                    $('categorylink_<!--[ $category.cat_id ]-->').href = "javascript: open('<!--[ $category.cat_id ]-->');";
                 </script>
              </h2>
             <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:

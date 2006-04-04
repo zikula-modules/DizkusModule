@@ -50,7 +50,7 @@ soon as possible!
         <title><!--[ $post.topic_title|pnvarprepfordisplay ]--></title>
         <link><!--[ $post.last_post_url|pnvarprepfordisplay ]--></link>
         <description><!--[ $post.cat_title|pnvarprepfordisplay ]--> :: <!--[ $post.forum_name|pnvarprepfordisplay ]--></description>
-        <pubDate><!--[ $post.unixtime|pndate_format:"%a, %d %b %Y %T %Z" ]--></pubDate>
+        <pubDate><!--[ $post.unixtime|pnfdate_format:"%a, %d %b %Y %T %Z":'':true ]--></pubDate>
         
     </item>
     <!--[ /foreach ]-->

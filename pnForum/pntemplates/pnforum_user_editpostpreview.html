@@ -16,7 +16,7 @@ Template for single postings
                 <span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span>
             </div>
             <div class="postingheaderright">
-                <strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|date_format:"%d.%m.%Y, %H:%M" ]-->
+                <strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
             </div>
         </div>
        
