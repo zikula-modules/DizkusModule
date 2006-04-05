@@ -18,7 +18,7 @@ Template for single postings
             <button onclick="javascript:toggleuserinfo(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_TOGGLEUSERINFO' ]-->"><span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span></button>
         </div>
         <div class="postingheaderright">
-            <a style="margin-right: 5px;" href="<!--[ pnmodurl modname=pnForum type=user type=viewtopic topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_LINKTOTHISPOST' ]-->"><!--[ pnimg src="icon_postlink.gif" alt="_PNFORUM_LINKTOTHISPOST" altml=true ]--></a><strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+            <a style="margin-right: 5px;" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_LINKTOTHISPOST' ]-->"><!--[ pnimg src="icon_postlink.gif" alt="_PNFORUM_LINKTOTHISPOST" altml=true ]--></a><strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
         </div>
         <!--[ if $preview neq true ]-->
         <div class="postingheadermiddle">
