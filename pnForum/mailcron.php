@@ -55,21 +55,18 @@ if(!pnModAPILoad('pnForum', 'admin')) {
     die('unable to load pnForum adminapi\n');
 }
 
-pnSessionSetVar('mailcronrunning', true);
-if($debug==1) {
-    pnSessionSetVar('mailcrondebug', true);
-}
+$debug = ($debug==1) ? true : false;
+
 $forums = pnModAPIFunc('pnForum', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 if(is_array($forums) && count($forums)>0 ) {
     echo count($forums) . " forums read<br />";
     foreach($forums as $forum) {
         if($forum['externalsource'] == 1) {    // Mail
             pnModAPIFunc('pnForum', 'user', 'mailcron',
-                         array('forum' => $forum));
+                         array('forum' => $forum,
+                               'debug' => $debug));
         }
     }
 }
-pnSessionDelVar('mailcronrunning');
-pnSessionDelVar('mailcrondebug');
 
 ?>

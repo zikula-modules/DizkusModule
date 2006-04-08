@@ -365,11 +365,20 @@ function pnForum_adminapi_readforums($args)
 /**
  * readmoderators
  * $forum_id
+ * $real_mods 
  */
 function pnForum_adminapi_readmoderators($args)
 {
     extract($args);
     unset($args);
+    
+    // real_mods set = do not deliver groups but their members
+    // default false
+    if(!isset($real_mods) || (empty($real_mods)) {
+        $real_mods = false;
+    } else {
+        $real_mods = true,
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -382,8 +391,7 @@ function pnForum_adminapi_readmoderators($args)
 
     $mods = array();
     if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
+        for (; !$result->EOF; $result->MoveNext()) {
             $mod = array();
             list( $mod['uname'],
                   $mod['uid'] ) = $result->fields;
@@ -400,8 +408,7 @@ function pnForum_adminapi_readmoderators($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
+        for (; !$result->EOF; $result->MoveNext()) {
             $mod = array();
             list( $mod['uname'],
                   $mod['uid'] ) = $result->fields;

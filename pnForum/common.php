@@ -619,15 +619,13 @@ function pnForum_replacesignature($text, $signature='')
  * mailcronecho
  *
  */
-function mailcronecho($text)
+function mailcronecho($text, $debug)
 {
-    if(pnSessionGetVar('mailcronrunning')==true) {
-        echo $text;
-        if(pnSessionGetVar('mailcrondebug')==true) {
-            echo '<br />';
-        }
-        flush();
+    echo $text;
+    if($debug==true) {
+        echo '<br />';
     }
+    flush();
     return;
 }
 

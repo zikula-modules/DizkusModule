@@ -3772,6 +3772,7 @@ function pnForum_userapi_get_page_from_topic_replies($args)
  *
  *@params $args['forum'] array with forum information
  *@params $args['force'] boolean if true force connection no matter of active setting or interval
+ *@params $args['debug'] boolean indicates debug mode on/off
  *@returns none
  */
 function pnForum_userapi_mailcron($args)
@@ -3787,7 +3788,7 @@ function pnForum_userapi_mailcron($args)
 
     include_once 'modules/pnForum/pnincludes/pop3.php';
     if( (($forum['pop3_active']==1) && ($forum['pop3_last_connect']<=time()-($forum['pop3_interval']*60)) ) || ($force==true) ) {
-        mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n");
+        mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $debug);
         // get new mails for this forum
         $pop3 =& new pop3_class;
         $pop3->hostname = $forum['pop3_server'];
@@ -3796,27 +3797,29 @@ function pnForum_userapi_mailcron($args)
 
         // open connection to pop3 server
         if(($error = $pop3->Open())=='') {
-            mailcronecho("connected to the pop3 server '".$pop3->hostname."'.\n");
+            mailcronecho("connected to the pop3 server '".$pop3->hostname."'.\n", $debug);
             // login to pop3 server
             if(($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=="") {
-                mailcronecho( "user '" . $forum['pop3_login'] . "' logged into pop3 server '".$pop3->hostname."'.\n");
+                mailcronecho( "user '" . $forum['pop3_login'] . "' logged into pop3 server '".$pop3->hostname."'.\n", $debug);
                 // check for message
                 if(($error = $pop3->Statistics($messages,$size))=="") {
-                    mailcronecho("there are $messages messages in the mail box with a total of $size bytes.\n");
+                    mailcronecho("there are $messages messages in the mail box with a total of $size bytes.\n", $debug);
                     // get message list...
                     $result = $pop3->ListMessages("",1);
                     if(is_array($result) && count($result)>0) {
                         // logout the currentuser
-                        mailcronecho("logging out '" . pnUserGetVar('uname') . "' from pn\n");
+                        mailcronecho("logging out '" . pnUserGetVar('uname') . "' from pn\n", $debug);
                         pnUserLogOut();
                         // login the correct user
                         if(pnUserLogIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
-                            if(!pnSecAuthAction(0, "pnForum::", $forum['category'] . ": " . $forum['forum_id'] .":", ACCESS_COMMENT)) {
-                                mailcronecho("stop: insufficient permissions for " . $forum['pop3_pnuser'] . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ")");
+                            mailcronecho('user ' . pnUserGetVar('uname') . ' successfully logged in', $debug);
+                            if(!allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+                                mailcronecho("stop: insufficient permissions for " . pnUserGetVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ")", $debug);
                                 pnUserLogOut();
+                                mailcronecho('user ' . pnUserGetVar('uname') . ' logged out', $debug);
                                 return false;
                             }
-                            mailcronecho("adding new posts as user '" . $forum['pop3_pnuser'] . "' now\n");
+                            mailcronecho("adding new posts as user '" . pnUserGetVar('uname') . "' now\n", $debug);
                             // .cycle through the message list
                             for($cnt=1; $cnt<=count($result); $cnt++) {
                                 if(($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1))=="") {
@@ -3878,7 +3881,7 @@ function pnForum_userapi_mailcron($args)
                                                                                          'attach_signature' => 1,
                                                                                          'subscribe_topic'  => 0,
                                                                                          'msgid'            => $msgid));
-                                                    mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n");
+                                                    mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n", $debug);
                                                 }
                                             }
 
@@ -3892,13 +3895,13 @@ function pnForum_userapi_mailcron($args)
                                                                                'attach_signature' => 1,
                                                                                'subscribe_topic'  => 0,
                                                                                'msgid'            => $msgid ));
-                                                mailcronecho("added new topic '$subject' (topic=$topic_id) to forum '".$forum['forum_name'] ."'\n");
+                                                mailcronecho("added new topic '$subject' (topic=$topic_id) to forum '".$forum['forum_name'] ."'\n", $debug);
                                             }
                                         } else {
-                                            mailcronecho("mail subject '$subject' does not match requirement - ignored!");
+                                            mailcronecho("mail subject '$subject' does not match requirement - ignored!", $debug);
                                         }
                                     } else {
-                                        mailcronecho("mail subject '$subject' is a possible loop - ignored!");
+                                        mailcronecho("mail subject '$subject' is a possible loop - ignored!", $debug);
                                     }
                                     // mark message for deletion
                                     $pop3->DeleteMessage($cnt);
