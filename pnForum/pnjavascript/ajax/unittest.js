@@ -258,6 +258,9 @@ Test.Unit.Assertions.prototype = {
     this.failures++;
     this.messages.push("Failure: " + message);
   },
+  info: function(message) {
+    this.messages.push("Info: " + message);
+  },
   error: function(error) {
     this.errors++;
     this.messages.push(error.name + ": "+ error.message + "(" + Test.Unit.inspect(error) +")");
@@ -336,6 +339,14 @@ Test.Unit.Assertions.prototype = {
   },
   assertVisible: function(element) {
     this.assert(this._isVisible(element), Test.Unit.inspect(element) + " was not visible. " + ("" || arguments[1]));
+  },
+  benchmark: function(operation, iterations) {
+    var startAt = new Date();
+    (iterations || 1).times(operation);
+    var timeTaken = ((new Date())-startAt);
+    this.info((arguments[2] || 'Operation') + ' finished ' + 
+       iterations + ' iterations in ' + (timeTaken/1000)+'s' );
+    return timeTaken;
   }
 }
 
