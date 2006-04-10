@@ -7,6 +7,7 @@ PostNuke pnForum Module changelog
 
 + Using Ajax now for some features, this implied a major rewrite of some templates
   and adding a few new ones. Non-javascript fallbacks are included.
++ using resizable.js written by Kazuki Ohta (ohta@uei.co.jp)
 + animated gifs made Klaus Petzka (mail@petzi-juist.de)
 + optimized all functions that search forums (better performance)
 + search function is .8 compatible
