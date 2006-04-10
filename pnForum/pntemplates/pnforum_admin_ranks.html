@@ -9,18 +9,7 @@
         <!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE' ]-->
     </legend>
 
-    <script type="text/javascript">
-    <!--
-    function ShowRankImage(num) {
-
-        var imageobj = document.getElementById('image' + num);
-        var rankobj  = document.getElementById('rank_image' + num);
-        imageobj.src = '<!--[ $pncore.pnForum.url_ranks_images ]-->/' + rankobj.options[rankobj.selectedIndex].value
-        return;
-    }
-
-    //-->
-    </script>
+    <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_admin_ranks.js"></script>
 
     <div class="pnfadminrow98" style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
         <!--[ pnml name='_PNFORUM_ADMINUSERRANK_INFO' html=1 ]-->
@@ -58,7 +47,7 @@
             <input type="text" name="max_posts" value="<!--[ $rank.rank_max ]-->" maxlength="5" size="4" />
         </div>
         <div class="pnfadmincol22c">
-            <select name="image" id="rank_image<!--[ $num ]-->" onchange="ShowRankImage(<!--[ $num ]-->)">
+            <select name="image" id="rank_image<!--[ $num ]-->" onchange="ShowRankImage(<!--[ $num ]-->, '<!--[ $pncore.pnForum.url_ranks_images ]-->')">
             <!--[ foreach item=rankimage from=$rankimages ]-->
                 <option value="<!--[ $rankimage ]-->" <!--[ if $rankimage eq $rank.rank_image ]-->selected="selected"<!--[ /if ]-->><!--[ $rankimage ]--></option>
             <!--[ /foreach ]-->
