@@ -557,41 +557,56 @@ function storenewforumorder_response(originalRequest, json)
 
 function create_sortables()
 {
-    var cids = document.getElementsByClassName('pnf_treeforumlist');
+    /* var cids = document.getElementsByClassName('pnf_treeforumlist');
     if(cids.length > 0) {
         for(var i=0; i<cids.length; i++) {
             containments[containments.length] = cids[i].id;
         }
     }
+    */
+    // create containments array
+    $A(document.getElementsByClassName('pnf_treeforumlist')).each(
+        function(containment)
+        {
+            containments[containments.length] = containment.id;
+        }
+        );
     
-    for(var j=0; j < containments.length; j++) {
-        Sortable.create(containments[j],
+    containments.each(
+    function(containment)
+    {
+        Sortable.create(containment,
                         {dropOnEmpty: true,
                          handle: 'pnf_handle',
                          overlap: 'horizontal',
                          containment: containments,
-                         onUpdate: function() {
-                                                  for(var k=0; k < containments.length; k++) {
-                                                      // value is cid_X, but we need the X only
-                                                      if(containments[k] != 'newcid') {
-                                                        var temp = containments[k].split('_');
-                                                        if($(containments[k]).childNodes.length == 2) {
-                                                            Element.show('emptycategory_' + temp[1]);
-                                                        } else {
-                                                            Element.hide('emptycategory_' + temp[1]);
-                                                        }
-                                                      }
-                                                  }
-                                              },    
-                         constraint: false,
+                         onUpdate: function() 
+                             {
+                             containments.each(
+                                function(containment)
+                                {
+                                    // value is cid_X, but we need the X only
+                                    if(containment != 'newcid') {
+                                        var temp = containment.split('_');
+                                        if($(containment).childNodes.length == 2) {
+                                            Element.show('emptycategory_' + temp[1]);
+                                        } else {
+                                            Element.hide('emptycategory_' + temp[1]);
+                                        }
+                                    }
+                                }
+                                )
+                             },    
+                         constraint: false
                         });
-        if($(containments[j]).childNodes.length == 2) {
-            if(containments[j] != 'newcid') {
-                var temp = containments[j].split('_');
+    
+    if($(containment).childNodes.length == 2) {
+            if(containment != 'newcid') {
+                var temp = containment.split('_');
                 Element.show('emptycategory_' + temp[1]);
             }
         }
-    }
+    });
 
     Sortable.create("category",
                     { 
