@@ -48,7 +48,7 @@
                 <li style="border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;" id="forum_<!--[ $forum.forum_id ]-->">
                     <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="pnf_handle pnf_clearfix">
                         <div id="forumtitle_<!--[ $forum.forum_id ]-->" style="float: left; width: 60%;">
-                            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->" title="<!--[ $forum.forum_name ]-->"><!--[ $forum.forum_name ]--></a> (<!--[ $forum.forum_id ]-->)
+                            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->" title="<!--[ $forum.forum_name|pnvarprepfordisplay ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a> (<!--[ $forum.forum_id ]-->)
                         </div>
                         <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
                             <button id="loadforum_<!--[ $forum.forum_id ]-->"  title="<!--[ pnml name='_PNFORUM_LOADFORUMDATA' ]-->" onclick="javascript:loadforum(<!--[ $forum.forum_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_PNFORUM_LOADFORUMDATA" altml=true ]--></button>
