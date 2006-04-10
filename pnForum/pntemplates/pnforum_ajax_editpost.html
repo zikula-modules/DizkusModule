@@ -10,8 +10,16 @@ Template to edit postings with ajax
     <div style="border: 1px solid black; width: 99%; margin: 2px; text-align: left;">
     <strong style="margin: 2px;"><!--[ pnml name='_PNFORUM_STATUS' ]-->:</strong><span style="margin-left: 5px;" id="postingtext_<!--[ $post.post_id ]-->_status"><!--[ pnml name='_PNFORUM_STATUS_NOTCHANGED' ]--></span>
     </div>
-    <textarea style="width: 99%; height: 15em;" id="postingtext_<!--[ $post.post_id ]-->_edit" name="postingtext_<!--[ $post.post_id ]-->_edit"><!--[ $post.post_rawtext ]--></textarea>
-
+    <textarea style="width: 99%; height: 15em;" id="<!--[ $postingtextareaid ]-->" name="postingtext_<!--[ $post.post_id ]-->_edit"><!--[ $post.post_rawtext ]--></textarea>
+    <div class="pnf_clearfix">
+        <div style="margin-top: 10px; margin-left: 20px; float: left; width:45%; text-align: left;">
+            <!--[ plainbbcode textfieldid=$postingtextareaid ]-->
+        </div>
+        <div style="margin-top: 10px; margin-right: 20px; float: right; width:45%; text-align: left;">
+            <!--[ bbsmile textfieldid=$postingtextareaid ]-->
+        </div>
+    </div>
+    
     <div style="margin: 3px; width: 30%; float: left; text-align: left;"><input id="postingtext_<!--[ $post.post_id ]-->_save" type="button" value="<!--[ pnml name='_PNFORUM_UPDATE' ]-->" /></div>
     <!--[ if $post.poster_data.moderate eq true ]-->
     <div style="margin-top: 3px; width: 30%; float: left; text-align: center;"><input id="postingtext_<!--[ $post.post_id ]-->_delete" type="checkbox"  value="1" /><label style="margin-left: 3px;" for="postingtext_<!--[ $post.post_id ]-->_delete"><!--[ pnml name='_PNFORUM_DELETE' ]--></label></div>

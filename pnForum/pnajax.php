@@ -156,7 +156,9 @@ function pnForum_ajax_editpost()
             $pnr->caching = false;
             $pnr->add_core_data();
             $pnr->assign('post', $post);
-//            pnf_jsonizeoutput(utf8_encode($pnr->fetch('pnforum_ajax_editpost.html')), true);
+            // simplify our live 
+            $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
+
             pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_ajax_editpost.html'),
                                     'post_id' => $post['post_id']), 
                                     true);
