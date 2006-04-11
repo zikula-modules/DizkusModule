@@ -539,7 +539,7 @@ function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
     }
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
+    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
 }
 
 /**
@@ -550,7 +550,7 @@ function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
     } 
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
+    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
 }
 
 /**
@@ -561,7 +561,7 @@ function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = nu
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
     } 
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
+    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
 }
 
 /**
@@ -572,7 +572,7 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = n
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
     } 
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
+    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
 }
 
 /**
@@ -583,7 +583,7 @@ function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
     } 
-    return pnSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
+    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
 }
 
 /**
@@ -1104,7 +1104,8 @@ function pnf_add_stylesheet_header($modname='')
         $modname = pnModGetName();
     }
     
-    include_once 'modules/Xanthia/plugins/function.modulestylesheet.php';
+    // load the modulestylesheet plugin to determine the stylesheet path
+    require_once $pnRender->_get_plugin_filepath('function','modulestylesheet');
     $css = smarty_function_modulestylesheet(array('xhtml' => 1,
                                                   'modname' => $modname));
     global $additional_header;
