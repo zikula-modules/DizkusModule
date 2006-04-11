@@ -690,9 +690,9 @@ function useragent_is_bot()
 }
 
 /**
- * ünf_getimagepath
+ * pnf_getimagepath
  *
- * gets an path for a image - this is a copy of the pnimh logic
+ * gets an path for a image - this is a copy of the pnimg logic
  *
  *@params $image string the imagefile name
  *@returns an array of information for the imagefile:
@@ -1105,7 +1105,8 @@ function pnf_add_stylesheet_header($modname='')
     }
     
     // load the modulestylesheet plugin to determine the stylesheet path
-    require_once $pnRender->_get_plugin_filepath('function','modulestylesheet');
+    $pnr =& new pnRender('pnForum');
+    require_once $pnr->_get_plugin_filepath('function','modulestylesheet');
     $css = smarty_function_modulestylesheet(array('xhtml' => 1,
                                                   'modname' => $modname));
     global $additional_header;
