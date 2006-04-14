@@ -524,8 +524,8 @@ function pnForum_adminapi_readranks($args)
     // read images
     $handle = opendir(pnModGetVar('pnForum', 'url_ranks_images'));
     $filelist = array();
-    while ($file = readdir($handle)) {
-        if ($file != "." && $file != ".." && $file != "CVS") {
+    while ($file = readdir($handle)) {  
+        if(getimagesize(pnModGetVar('pnForum', 'url_ranks_images') . '/' . $file) <> false) {
             $filelist[] = $file;
         }
     }
@@ -555,8 +555,7 @@ function pnForum_adminapi_readranks($args)
 
     $ranks = array();
     if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
+        for (; !$result->EOF; $result->MoveNext()) {
             $rank = array();
             list( $rank['rank_id'],
                   $rank['rank_title'],
