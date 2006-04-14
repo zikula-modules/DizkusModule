@@ -25,4 +25,4 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 
-DEFAULT /var/www/gforge/cronjobs/cvs-cron/syncmail %{sVv} pnforum-commits@lists.postnuke.com
+#DEFAULT /var/www/gforge/cronjobs/cvs-cron/syncmail %{sVv} pnforum-commits@lists.postnuke.com
