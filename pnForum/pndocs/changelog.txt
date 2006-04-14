@@ -5,6 +5,7 @@ $Id$
 PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
+
 + Using Ajax now for some features, this implied a major rewrite of some templates
   and adding a few new ones. Non-javascript fallbacks are included.
 + using resizable.js written by Kazuki Ohta (ohta@uei.co.jp)
