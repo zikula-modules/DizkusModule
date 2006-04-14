@@ -11,7 +11,7 @@
 
     <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
     <br />
-    <ul class="pnf_maincategorylist">
+    <ul id="pnf_maincategorylist">
         <!--[ foreach item=category from=$tree ]-->
         <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
             <h2 style=" font-size: 1em;">
@@ -20,10 +20,7 @@
             <!--[ else ]-->
                 <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
             <!--[ /if ]-->
-                <a id="categorylink_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a>
-                <script type="text/javascript">
-                    $('categorylink_<!--[ $category.cat_id ]-->').href = "javascript: open('<!--[ $category.cat_id ]-->');";
-                </script>
+            <a id="categorylink_<!--[ $category.cat_id ]-->" class="openclosecategory" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a>
              </h2>
             <!--[ if $category.last_post.url_anchor neq '' ]-->
             <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:

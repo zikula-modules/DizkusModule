@@ -357,13 +357,13 @@ li.searchresult {
     padding: 3px;
 }
 
-ul.pnf_maincategorylist {
+ul#pnf_maincategorylist {
     padding: 0;
     margin: 0;
     list-style: none;
 }
 
-ul.pnf_maincategorylist li {
+ul#pnf_maincategorylist li {
     padding: 0 0 0.5em 0;
     margin: 0;
     padding-left: 3em;
@@ -371,12 +371,17 @@ ul.pnf_maincategorylist li {
     background-position: 0 1em;
     border-top: 1px #666 dashed;
 }
-ul.pnf_maincategorylist li.newposts {
+
+ul#pnf_maincategorylist li.newposts {
     background-image: url(../pnimages/red_folder.gif);
 }
 
-ul.pnf_maincategorylist li.nonewposts {
+ul#pnf_maincategorylist li.nonewposts {
     background-image: url(../pnimages/folder.gif);
+}
+
+ul#pnf_maincategorylist .openclosecategory{
+    /* dont delete this */
 }
 
 ul.pnf_mainforumlist {
