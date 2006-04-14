@@ -28,4 +28,21 @@ $modversion['user'] = 1;
 $modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:',
                                       'pnForum::CreateForum' => 'CategoryID::');
 
+// .8 extension following: module depedencies
+$modversion['dependencies'] = array(
+                                    array('modname'    => 'pn_bbcode', 
+                                          'minversion' => '1.20', 
+                                          'maxversion' => '', 
+                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
+                                    array('modname'    => 'pn_bbsmile', 
+                                          'minversion' => '1.15', 
+                                          'maxversion' => '', 
+                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
+                                    array('modname'    => 'pn_bbclick', 
+                                          'minversion' => '1.06', 
+                                          'maxversion' => '', 
+                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
+                                              );
+
+
 ?>
