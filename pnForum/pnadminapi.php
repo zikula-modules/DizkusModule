@@ -365,21 +365,12 @@ function pnForum_adminapi_readforums($args)
 /**
  * readmoderators
  * $forum_id
- * $real_mods 
  */
 function pnForum_adminapi_readmoderators($args)
 {
     extract($args);
     unset($args);
     
-    // real_mods set = do not deliver groups but their members
-    // default false
-    if(!isset($real_mods) || empty($real_mods)) {
-        $real_mods = false;
-    } else {
-        $real_mods = true;
-    }
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT u.pn_uname, u.pn_uid
