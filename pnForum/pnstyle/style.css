@@ -958,8 +958,11 @@ a.normallink {
 /* dont't remove this - needed for Ajax! */
 }
 
-
-
+/**
+ *
+ * css for resizable.js
+ *
+ */
 
 .textarea-active {
 	background-color: #eeeeee;
