@@ -4455,8 +4455,10 @@ function pnForum_userapi_notify_moderator($args)
                 if($group <> false) {
                     foreach($group['members'] as $gm_uid) {
                         $mod_email = pnUserGetVar('email', $gm_uid);
+                        $mod_uname = pnUserGetVar('uname', $gm_uid);
                         if(!empty($mod_email)) {
-                            array_push($recipients, $mod_email);
+                            array_push($recipients, array('uname' => $mod_uname,
+                                                          'email' => $mod_email));
                         }
                         if($gm_uid==2) {
                             // admin is also moderator
@@ -4467,8 +4469,10 @@ function pnForum_userapi_notify_moderator($args)
 
             } else {
                 $mod_email = pnUserGetVar('email', $mod['uid']);
+                //uname is alread stored in $mod['uname']
                 if(!empty($mod_email)) {
-                    array_push($recipients, $mod_email);
+                    array_push($recipients, array('uname' => $mod['uname'],
+                                                  'email' => $mod_email));
                 }
                 if($mod['uid']==2) {
                     // admin is also moderator
@@ -4480,11 +4484,13 @@ function pnForum_userapi_notify_moderator($args)
     // always inform the admin. he might be a moderator to so we check the
     // admin_is_mod flag now
     if($admin_is_mod == false) {
-        array_push($recipients, $email_from);
+        array_push($recipients, array('uname' => pnConfigGetVar('sitename'),
+                                      'email' => $email_from));
     }
 
-    $reporting_userid = pnSessionGetVar('uid');
-    $reporting_username = pnUserGetVar('uname', $reporting_userid);
+    $reporting_userid   = pnUserGetVar('uid');
+    $reporting_username = pnUserGetVar('uname');
+    
     $start = pnModAPIFunc('pnForum', 'user', 'get_page_from_topic_replies',
                           array('topic_replies' => $post['topic_replies'],
                                 'start'         => $start));
@@ -4501,17 +4507,14 @@ function pnForum_userapi_notify_moderator($args)
             . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
             . "\n";
     if(count($recipients)>0) {
-        foreach($recipients as $email_to) {
-            $toname = pnUserGetVar('name', $uid);
-            $toname = (!empty($toname)) ? $toname : pnUserGetVar('uname', $uid);
-
+        foreach($recipients as $recipient) {
             $args = array( 'fromname'    => $sitename,
                            'fromaddress' => $email_from,
-                           'toname'      => $email_to,
-                           'toaddress'   => $email_to,
+                           'toname'      => $recipient['uname'],
+                           'toaddress'   => $recipient['email'],
                            'subject'     => $subject,
                            'body'        => $message,
-                           'headers'     => array('X-UserID: ' . $uid,
+                           'headers'     => array('X-UserID: ' . $reporting_userid,
                                                   'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
