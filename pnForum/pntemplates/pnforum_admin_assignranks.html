@@ -1,7 +1,7 @@
 <!--[*  $Id$  *]-->
 
 <!--[ include file='pnforum_admin_header.html' ]-->
-<!--[ pndebug ]-->
+
 <fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
     <legend>
         <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN' ]-->
@@ -36,17 +36,17 @@
         </tr>
         </thead>
         <tbody>
-        <!--[ foreach key=uid item=user from=$allusers ]-->
+        <!--[ foreach item=user from=$allusers ]-->
         <tr>
             <td style="font-size: 1em;">
                 <!--[ $user.name ]-->
             </td>
             <td style="text-align: center;">
-                <input type="radio" name="setrank[<!--[ $uid ]-->]" value="0" <!--[ if $user.rank_id eq 0 ]-->checked="checked"<!--[ /if ]--> />
+                <input type="radio" name="setrank[<!--[ $user.uid ]-->]" value="0" <!--[ if $user.rank_id eq 0 ]-->checked="checked"<!--[ /if ]--> />
             </td>
             <!--[ foreach item=rank from=$ranks ]-->
             <td style="text-align: center;">
-                <input type="radio" name="setrank[<!--[ $uid ]-->]" value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->checked="checked"<!--[ /if ]--> />
+                <input type="radio" name="setrank[<!--[ $user.uid ]-->]" value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->checked="checked"<!--[ /if ]--> />
             </td>
             <!--[ /foreach ]-->
         </tr>

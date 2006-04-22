@@ -1129,4 +1129,66 @@ function is_dot8()
     return function_exists('pnVarCleanFromCOOKIE');
 }
  
+/**
+ * pnfUserGetAll
+ *
+ */
+function pnfUserGetAll($regexpfield='', $regexpression='')
+{
+    if(is_dot8()) {
+        return pnUserGetAll('uname', 'ASC', 0, 1, '', $regexpfield, $regexpression);
+    } 
+    
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
+
+    pnModDBInfoLoad('Users');
+
+    $userstable = $pntable['users'];
+    $userscolumn = &$pntable['users_column'];
+    $sql = "SELECT $userscolumn[uname],
+                   $userscolumn[uid],
+                   $userscolumn[name],
+                   $userscolumn[email],
+                   $userscolumn[url],
+                   $userscolumn[user_avatar]
+            FROM $userstable";
+    if(!empty($regexpfield) && (array_key_exists($regexpfield, $userscolumn)) && !empty($regexpression)) {
+        $sql .= ' WHERE ' . $userscolumn[$regexpfield]. ' REGEXP "' . pnVarPrepForStore($regexpression) . '"';
+    }
+    $result =& $dbconn->Execute($sql);
+
+    if ($dbconn->ErrorNo() != 0) {
+        return;
+    }
+
+    if ($result->EOF) {
+        return false;
+    }
+
+    $resarray = array();
+    while (!$result->EOF) {
+        list($uname, $uid, $name, $email, $url, $user_avatar) = $result->fields;
+        $result->MoveNext();
+        $resarray[$uid] = array('uname' => $uname,
+                                'uid' => $uid,
+                                'name' => $name,
+                                'email' => $email,
+                                'url' => $url,
+                                'avatar' => $user_avatar);
+    }
+    $result->Close();
+
+    return $resarray;
+}
+
+/**
+ * sorting user lists by ['uname']
+ *
+ */
+function cmp_userorder ($a, $b)
+{
+   return strcmp($a['uname'], $b['uname']);
+}
+ 
 ?>

@@ -410,47 +410,61 @@ function pnForum_admin_assignranks()
 
     list($submit, $letter) = pnVarCleanFromInput('submit', 'letter');
 
-    // check for a letter parameter
-    if (empty($letter) && strlen($letter) != 1) {
-        $letter = 'A';
-    }
-
-    list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
-                                             array('ranktype' => 1));
-    for($cnt=0; $cnt<count($ranks); $cnt++) {
-        $ranks[$cnt]['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
-                                             array('rank_id' => $ranks[$cnt]['rank_id']));
-    }
-    // remove the first rank, its used for adding new ranks only
-    array_splice($ranks, 0, 1);
-
-    $users = pnUserGetAll();
-    $allusers = array();
-    foreach ($users as $user) {
-        if ($user['uname'] == 'Anonymous')  continue;
-        if (strtoupper($user['uname'][0]) == strtoupper($letter) || $letter == '*') {
+    if(!$submit) {
+        // check for a letter parameter
+        if (empty($letter) || strlen($letter) != 1) {
+            $letter = 'A';
+        }
+    
+        list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
+                                                 array('ranktype' => 1));
+        for($cnt=0; $cnt<count($ranks); $cnt++) {
+            $ranks[$cnt]['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
+                                                 array('rank_id' => $ranks[$cnt]['rank_id']));
+        }
+        // remove the first rank, its used for adding new ranks only
+        array_splice($ranks, 0, 1);
+    
+        switch($letter) {
+            case '?':
+                // read usernames beginning with special chars
+                $regexpfield = 'uname';
+                $regexpression = '^:punct:';
+                break;
+            case '*':
+                // read allusers
+                $regexpfield = '';
+                $regexpression = '';
+                break;
+            default:
+                $regexpfield = 'uname';
+                $regexpression = '^' . $letter;
+        }
+        $users = pnfUserGetAll($regexpfield, $regexpression);
+    
+        $allusers = array();
+        foreach ($users as $user) {
+            if ($user['uname'] == 'Anonymous')  continue;
+            
             $alias = '';
             if (!empty($user['name'])) {
                 $alias = ' (' . $user['name'] . ')';
             }
-            $allusers[$user['uid']]['name'] = $user['uname'] . $alias;
-        }
-        $chrid = ord(strtoupper($user['uname'][0]));
-        if ($letter == '?' && !($chrid >=65 && $chrid <=90)) {
-            if (!empty($user['name'])) {
-              $alias = ' (' . $user['name'] . ')';
+            
+            $user['name'] = $user['uname'] . $alias;
+    
+            $user['rank_id'] = 0;
+            for($cnt=0; $cnt<count($ranks); $cnt++) {
+                if(in_array($user['uid'], $ranks[$cnt]['users'])) {
+                    $user['rank_id'] = $ranks[$cnt]['rank_id'];
+                }
             }
-            $allusers[$user['uid']]['name'] = $user['uname'] . $alias;
+            array_push($allusers, $user);
         }
-        $allusers[$user['uid']]['rank_id'] = 0;
-        for($cnt=0; $cnt<count($ranks); $cnt++) {
-            if(in_array($user['uid'], $ranks[$cnt]['users'])) {
-                $allusers[$user['uid']]['rank_id'] = $ranks[$cnt]['rank_id'];
-            }
-        }
-    }
+        usort($allusers, 'cmp_userorder');
+        
+        unset($users);
 
-    if(!$submit) {
         $pnr =& new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->add_core_data();

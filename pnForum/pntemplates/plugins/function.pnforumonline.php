@@ -155,9 +155,4 @@ function smarty_function_pnforumonline($params, &$smarty)
 
 }
 
-function cmp_userorder ($a, $b)
-{
-   return strtolower($a['uname']) > strtolower($b['uname']);
-}
-
 ?>
