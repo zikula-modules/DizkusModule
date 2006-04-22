@@ -717,7 +717,16 @@ div.pnf_statusmsg {
     text-align: left; 
     margin: 4px 0 4px 0; 
 }
-    
+
+/**
+ * pnforum_admin_assignranks.html
+ *
+ */
+div.rankuser-alphanav {
+  text-align:center;
+  margin: 1em 0 1em 0;
+}
+   
 /*
  * clearfix solution
  */

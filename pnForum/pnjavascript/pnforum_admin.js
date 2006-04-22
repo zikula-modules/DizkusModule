@@ -106,7 +106,6 @@ function storeforum_response(originalRequest)
 {
     // show error if necessary
     if( originalRequest.status != 200 ) { 
-        pnf_toggleprogressimage(false, json.forum.forum_id);
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }

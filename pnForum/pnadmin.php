@@ -408,14 +408,47 @@ function pnForum_admin_assignranks()
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
-    list($submit) = pnVarCleanFromInput('submit');
+    list($submit, $letter) = pnVarCleanFromInput('submit', 'letter');
 
-    $rankusers = pnModAPIFunc('pnForum', 'admin', 'readrankusers');
-    $norankusers = pnModAPIFunc('pnForum', 'admin', 'readnorankusers');
+    // check for a letter parameter
+    if (empty($letter) && strlen($letter) != 1) {
+        $letter = 'A';
+    }
+
     list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
                                              array('ranktype' => 1));
+    for($cnt=0; $cnt<count($ranks); $cnt++) {
+        $ranks[$cnt]['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
+                                             array('rank_id' => $ranks[$cnt]['rank_id']));
+    }
     // remove the first rank, its used for adding new ranks only
     array_splice($ranks, 0, 1);
+
+    $users = pnUserGetAll();
+    $allusers = array();
+    foreach ($users as $user) {
+        if ($user['uname'] == 'Anonymous')  continue;
+        if (strtoupper($user['uname'][0]) == strtoupper($letter) || $letter == '*') {
+            $alias = '';
+            if (!empty($user['name'])) {
+                $alias = ' (' . $user['name'] . ')';
+            }
+            $allusers[$user['uid']]['name'] = $user['uname'] . $alias;
+        }
+        $chrid = ord(strtoupper($user['uname'][0]));
+        if ($letter == '?' && !($chrid >=65 && $chrid <=90)) {
+            if (!empty($user['name'])) {
+              $alias = ' (' . $user['name'] . ')';
+            }
+            $allusers[$user['uid']]['name'] = $user['uname'] . $alias;
+        }
+        $allusers[$user['uid']]['rank_id'] = 0;
+        for($cnt=0; $cnt<count($ranks); $cnt++) {
+            if(in_array($user['uid'], $ranks[$cnt]['users'])) {
+                $allusers[$user['uid']]['rank_id'] = $ranks[$cnt]['rank_id'];
+            }
+        }
+    }
 
     if(!$submit) {
         $pnr =& new pnRender("pnForum");
@@ -423,18 +456,12 @@ function pnForum_admin_assignranks()
         $pnr->add_core_data();
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
-        $pnr->assign('rankusers', $rankusers);
-        $pnr->assign('norankusers', $norankusers);
+        $pnr->assign('allusers', $allusers);
         return $pnr->fetch("pnforum_admin_assignranks.html");
     } else {
-        list($actiontype,
-             $rank_id,
-             $user_id ) = pnVarCleanFromInput('actiontype',
-                                              'rank_id',
-                                              'user_id');
-        pnModAPIFunc('pnForum', 'admin', 'assignranksave', array('actiontype'=> $actiontype,
-                                                                  'rank_id'   => $rank_id,
-                                                                  'user_id'   => $user_id));
+        $setrank = pnVarCleanFromInput('setrank');
+        pnModAPIFunc('pnForum', 'admin', 'assignranksave', 
+                     array('setrank' => $setrank));
     }
     return pnRedirect(pnModURL('pnForum','admin', 'assignranks'));
 }
@@ -632,7 +659,18 @@ function pnForum_admin_editforum($args=array())
     $pnr->assign('hooked_modules', $hooked_modules);
     $pnr->assign('rssfeeds', $rssfeeds);
     $pnr->assign('externalsourceoptions', $externalsourceoptions);
-    $pnr->assign('pntopics', pnModAPIFunc('pnForum', 'admin', 'get_pntopics'));
+    
+    if(is_dot8()==true) {
+        $pnr->assign('is_dot8', true);
+        Loader::loadClass('CategoryUtil');
+        $cats        = CategoryUtil::getSubCategories (1, true, true, true, true, true);
+        $catselector = CategoryUtil::getSelector_Categories($cats, $forum['forum_pntopic'], 'pncategory');
+        $pnr->assign('categoryselector', $catselector);        
+    } else {   
+        $pnr->assign('is_dot8', false);
+        $pnr->assign('pntopics', pnModAPIFunc('pnForum', 'admin', 'get_pntopics'));
+    }
+    
     $pnr->assign('moderators', $moderators);
     $hideusers = pnModGetVar('pnForum', 'hideusers');
     if($hideusers == 'no') {
@@ -805,7 +843,6 @@ function pnForum_admin_storeforum()
     }
 
     pnSessionSetVar('pn_ajax_call', 'ajax');
-
     list($forum_name,
          $forum_id,
          $cat_id,
@@ -825,7 +862,7 @@ function pnForum_admin_storeforum()
          $pnpassword,
          $pnpasswordconfirm,
          $moduleref,
-         $pntopic,
+         /* $pntopic, */
          $pop3_test,
          $add,
          $delete)   = pnVarCleanFromInput('forum_name',
@@ -847,10 +884,17 @@ function pnForum_admin_storeforum()
                                           'pnpassword',
                                           'pnpasswordconfirm',
                                           'moduleref',
-                                          'pntopic',
+                                          /* 'pntopic', */
                                           'pop3_test',
                                           'add',
                                           'delete');
+
+    if(is_dot8()==true) {
+        $pntopic = (int)FormUtil::getpassedValue('pncategory', 0);
+    } else {
+        $pntopic = pnVarCleanFromInput('pntopic');
+    }
+
     $forum_name           = utf8_decode($forum_name);           
     $desc                 = utf8_decode($desc);                 
     $pop3_server          = utf8_decode($pop3_server);          

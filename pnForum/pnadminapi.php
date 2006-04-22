@@ -624,7 +624,7 @@ function pnForum_adminapi_saverank($args)
 
 /**
  * readrankusers
- *
+ * rank_id
  */
 function pnForum_adminapi_readrankusers($args)
 {
@@ -633,19 +633,12 @@ function pnForum_adminapi_readrankusers($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $sql = "SELECT  u.user_id,
-                    p.pn_uname,
-                    r.rank_id,
-                    r.rank_title,
-                    r.rank_image,
-                    r.rank_style
-              FROM ".$pntable['pnforum_ranks']." as r
-              LEFT JOIN ".$pntable['pnforum_users']." as u
-              ON r.rank_id=u.user_rank
-              LEFT JOIN ".$pntable['users']." as p
-              ON p.pn_uid=u.user_id
-              WHERE (r.rank_special=1) AND (u.user_id <>'') AND (p.pn_uname<>'')
-              ORDER BY p.pn_uname";
+    $sql = 'SELECT  u.user_id
+            FROM ' . $pntable['pnforum_ranks'] . ' as r,
+                 ' . $pntable['pnforum_users'].' as u
+            WHERE r.rank_id=' . pnVarPrepForStore($rank_id) . '
+              AND u.user_rank=r.rank_id
+              AND (r.rank_special=1) AND (u.user_id <>"")';
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -654,13 +647,8 @@ function pnForum_adminapi_readrankusers($args)
         for (; !$result->EOF; $result->MoveNext())
         {
             $user = array();
-            list( $user['user_id'],
-                  $user['pn_uname'],
-                  $user['rank_id'],
-                  $user['rank_title'],
-                  $user['rank_image'],
-                  $user['rank_style'] ) = $result->fields;
-            array_push( $users, $user );
+            list($user_id) = $result->fields;
+            array_push( $users, $user_id );
         }
     }
     pnfCloseDB($result);
@@ -697,7 +685,7 @@ function pnForum_adminapi_readnorankusers()
 
 /**
  * assignranksave
- *
+ * setrank array(uid) = rank_id
  */
 function pnForum_adminapi_assignranksave($args)
 {
@@ -708,33 +696,16 @@ function pnForum_adminapi_assignranksave($args)
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
-    if(!is_numeric($rank_id) && !is_numeric($user_id) ) {
-        return false;
-    }
-
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $rank_id = (int)pnVarPrepForStore($rank_id);
-    $user_id = (int)pnVarPrepForStore($user_id);
-
-    switch($actiontype)
-    {
-        // no difference between Add and Update here, redundant code removed
-        case 'Add':
-        case 'Update':
+    if(is_array($setrank)) {
+        foreach($setrank as $user_id => $rank_id) {
             $sql = "UPDATE ".$pntable['pnforum_users']."
-                    SET user_rank='$rank_id'
-                    WHERE user_id = '$user_id'";
+                    SET user_rank='" . pnVarPrepForStore($rank_id) . "'
+                    WHERE user_id = '" . pnVarPrepForStore($user_id) . "'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
-            break;
-        case 'Delete':
-            $sql = "UPDATE ".$pntable['pnforum_users']."
-                    SET user_rank='0'
-                    WHERE user_id = '$user_id'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
-            break;
+        }
     }
     return;
 }
@@ -1241,6 +1212,7 @@ function pnForum_adminapi_get_pntopics()
         }
         return $topics;
     }
+    return false;
 }
 
 /**

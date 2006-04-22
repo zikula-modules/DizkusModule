@@ -49,12 +49,14 @@
                     <!--[ foreach item=hookmod from=$hooked_modules ]-->
                     <option value="<!--[ $hookmod.id ]-->" <!--[ if $hookmod.sel == true ]-->selected="selected"<!--[ /if ]-->><!--[ $hookmod.name ]--></option>
                     <!--[ foreachelse ]-->
-                    <option value="0"><!--[ pnml name='_PNFORUM_NOHOOKEDMODULES' ]--></option>
+                    <option value="0" selected="selected"><!--[ pnml name='_PNFORUM_NOHOOKEDMODULES' ]--></option>
                     <!--[ /foreach ]-->
                 </select>
                 <br /><!--[ pnml name='_PNFORUM_MODULEREFERENCE_HINT' ]-->
             </div>
         </div>
+
+        <!--[ if $is_dot8 eq false ]-->
 
         <div class="pnfadminrow98 pnf_clearfix">
             <div class="pnfadmincol24">
@@ -72,6 +74,20 @@
                 <br /><!--[ pnml name='_PNFORUM_PNTOPIC_HINT' ]-->
             </div>
         </div>
+        
+        <!--[ else ]-->
+
+        <div class="pnfadminrow98 pnf_clearfix">
+            <div class="pnfadmincol24">
+                <label for="pncategory"><!--[ pnml name='_PNFORUM_PNCATEGORIES' html=1]-->:</label>
+            </div>
+            <div class="pnfadmincol66">
+                <!--[ $categoryselector ]-->
+            </div>
+        </div>
+
+        
+        <!--[ /if ]-->
 
         <div class="pnfadminrow98 pnf_clearfix">
             <div class="pnfadmincol24">
