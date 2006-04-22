@@ -39,7 +39,7 @@
             <!--[ foreach item=rankimage from=$rankimages ]-->
             <option value="<!--[ $rankimage ]-->" <!--[ if $rankimage eq $rank.rank_image ]-->selected="selected"<!--[ /if ]-->><!--[ $rankimage ]--></option>
             <!--[ /foreach ]-->
-            </select><img id="image<!--[ $num ]-->"src="<!--[ $pncore.pnForum.url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" />
+            </select><img id="image<!--[ $num ]-->"src="<!--[ $pncore.pnForum.url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" alt="<!--[ $rank.rank_title ]-->" />
         </div>
         <!--[ if $num eq 0 ]-->
         <div class="pnfadmincol33c">
