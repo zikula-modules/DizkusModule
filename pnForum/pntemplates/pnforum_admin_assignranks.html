@@ -12,7 +12,7 @@
     </div>
 
     <div class="rankuser-alphanav">
-        [&nbsp;<!--[pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="*;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"]-->&nbsp;]
+        [<!--[pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="*;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"]-->&nbsp;]
     </div>
 
     <!--[* Yes, it's a table, we are dealing with tabular data so a table is correct here *]-->
@@ -38,7 +38,7 @@
         <tbody>
         <!--[ foreach item=user from=$allusers ]-->
         <tr>
-            <td style="font-size: 1em;">
+            <td style="font-size: 1em; text-align: left;">
                 <!--[ $user.name ]-->
             </td>
             <td style="text-align: center;">
@@ -54,7 +54,8 @@
         </tbody>   
     </table>
     <p style="margin-top: 2em;">
-    <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        <input type="hidden" name="lastletter" value="<!--[ $letter ]-->" />
+        <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
     </p>
     </div>
     </form>

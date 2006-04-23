@@ -555,19 +555,21 @@ function pnForum_adminapi_readranks($args)
                   $rank['rank_special'],
                   $rank['rank_image'],
                   $rank['rank_style'] ) = $result->fields;
+            $rank['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
+                                          array('rank_id' => $rank['rank_id']));
             array_push( $ranks, $rank );
         }
     }
     // add a dummy rank on top for new ranks
-    $dummy = array();
-    $dummy['rank_id']      = -1;
-    $dummy['rank_title']   = "";
-    $dummy['rank_min']     = 0;
-    $dummy['rank_max']     = 0;
-    $dummy['rank_special'] = 0;
-    $dummy['rank_image']   = "onestar.gif";
-    $dummy['rank_style']   = "";
-    array_unshift($ranks, $dummy);
+    array_unshift($ranks, array('rank_id'      => -1,
+                                'rank_title'   => '',
+                                'rank_min'     => 0,
+                                'rank_max'     => 0,
+                                'rank_special' => 0,
+                                'rank_image'   => 'onestar.gif',
+                                'rank_style'   => '',
+                                'users'        => array()));
+    
 
     pnfCloseDB($result);
     return array($filelist, $ranks);

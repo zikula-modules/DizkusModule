@@ -408,20 +408,23 @@ function pnForum_admin_assignranks()
     	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
-    list($submit, $letter) = pnVarCleanFromInput('submit', 'letter');
+    list($submit, $letter, $lastletter) = pnVarCleanFromInput('submit', 'letter', 'lastletter');
+    // check for a letter parameter
+    if(!empty($lastletter)) {
+        $letter = $lastletter;
+    }
+    if (empty($letter) || strlen($letter) != 1) {
+        $letter = 'A';
+    }
 
     if(!$submit) {
-        // check for a letter parameter
-        if (empty($letter) || strlen($letter) != 1) {
-            $letter = 'A';
-        }
+        // sync the users, so that new pn users get into the pnForum
+        // database
+        pnModAPIFunc('pnForum', 'user', 'usersync');
     
         list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
                                                  array('ranktype' => 1));
-        for($cnt=0; $cnt<count($ranks); $cnt++) {
-            $ranks[$cnt]['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
-                                                 array('rank_id' => $ranks[$cnt]['rank_id']));
-        }
+
         // remove the first rank, its used for adding new ranks only
         array_splice($ranks, 0, 1);
     
@@ -429,7 +432,7 @@ function pnForum_admin_assignranks()
             case '?':
                 // read usernames beginning with special chars
                 $regexpfield = 'uname';
-                $regexpression = '^:punct:';
+                $regexpression = '^[[:punct:][:digit:]]';
                 break;
             case '*':
                 // read allusers
@@ -471,13 +474,15 @@ function pnForum_admin_assignranks()
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
         $pnr->assign('allusers', $allusers);
+        $pnr->assign('letter', $letter);
         return $pnr->fetch("pnforum_admin_assignranks.html");
     } else {
         $setrank = pnVarCleanFromInput('setrank');
         pnModAPIFunc('pnForum', 'admin', 'assignranksave', 
                      array('setrank' => $setrank));
     }
-    return pnRedirect(pnModURL('pnForum','admin', 'assignranks'));
+    return pnRedirect(pnModURL('pnForum','admin', 'assignranks',
+                               array('letter' => $letter)));
 }
 
 
