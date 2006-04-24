@@ -235,7 +235,7 @@ function pnForum_userapi_boardstats($args)
                     LIMIT 1';
             break;
         default:
-            return showforumerror(_MOARGSERROR . ' in pnForum_userapi_boardstats()', __FILE__, __LINE__);
+            return showforumerror(_MODARGSERROR . ' in pnForum_userapi_boardstats()', __FILE__, __LINE__);
         }
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list ($total) = $result->fields;
@@ -2581,19 +2581,13 @@ function pnForum_userapi_notify_by_email($args)
     }
 
     //  get list of forum subscribers with non-empty emails
-    $sql = "SELECT DISTINCT u.pn_uid,
-                            u.pn_email,
-                            u.pn_name,
-                            u.pn_uname,
+    $sql = "SELECT DISTINCT fs.user_id,
                             c.cat_id
-            FROM " . $pntable['users'] . " as u,
-                 " . $pntable['pnforum_subscription'] . " as fs,
+            FROM " . $pntable['pnforum_subscription'] . " as fs,
                  " . $pntable['pnforum_forums'] . " as f,
                  " . $pntable['pnforum_categories'] . " as c
             WHERE fs.forum_id=".pnVarPrepForStore($forum_id)."
               " . $fs_wherenotuser . "
-              AND u.pn_uid = fs.user_id
-              AND u.pn_email <> ''
               AND f.forum_id = fs.forum_id
               AND c.cat_id = f.cat_id";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2603,10 +2597,13 @@ function pnForum_userapi_notify_by_email($args)
     // we create an array of recipients here
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid, $pn_email, $pn_name, $pn_uname, $cat_id) = $result->fields;
+            list($pn_uid, $cat_id) = $result->fields;
+            $pn_email = pnUserGetVar('email', $pn_uid);
+            if(empty($pn_email)) { continue; }
             // check permissions
             if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
-                $email['name'] = (!empty($pn_name)) ? $pn_name : $pn_uname;
+                $pn_name  = pnUserGetVar('name', $pn_uid);
+                $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
                 $recipients[$email['name']] = $email;
             }
@@ -2615,31 +2612,27 @@ function pnForum_userapi_notify_by_email($args)
     pnfCloseDB($result);
 
     //  get list of topic_subscribers with non-empty emails
-    $sql = "SELECT DISTINCT u.pn_uid,
-                            u.pn_email,
-                            u.pn_name,
-                            u.pn_uname,
+    $sql = "SELECT DISTINCT ts.user_id,
                             c.cat_id,
                             f.forum_id
-            FROM " . $pntable['users'] . " as u,
-                 " . $pntable['pnforum_topic_subscription'] . " as ts,
+            FROM " . $pntable['pnforum_topic_subscription'] . " as ts,
                  " . $pntable['pnforum_forums'] . " as f,
                  " . $pntable['pnforum_categories'] . " as c
             WHERE ts.topic_id=".pnVarPrepForStore($topic_id)."
               " . $ts_wherenotuser . "
-              AND u.pn_uid = ts.user_id
-              AND u.pn_email <> ''
               AND f.forum_id = ts.forum_id
               AND c.cat_id = f.cat_id";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list($pn_uid, $pn_email, $pn_name, $pn_uname, $cat_id, $forum_id) = $result->fields;
-            // exclude the recent user from getting an email
+            list($pn_uid, $cat_id, $forum_id) = $result->fields;
+            $pn_email = pnUserGetVar('email', $pn_uid);
+            if(empty($pn_email)) { continue; }
             // check permissions
             if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
-                $email['name'] = (!empty($pn_name)) ? $pn_name : $pn_uname;
+                $pn_name  = pnUserGetVar('name', $pn_uid);
+                $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
                 $recipients[$email['name']] = $email;
             }
