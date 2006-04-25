@@ -9,6 +9,7 @@ Event.observe(window, 'load',
     function()
     {
         if($A(document.getElementsByClassName('openclosecategory')).length == 0) {
+            // no categories defined - return now
             return;
         }
         
@@ -20,7 +21,7 @@ Event.observe(window, 'load',
                               'click', 
                               function()
                               { 
-                                  var thiscat = this.id.split('_')[1];
+                                  var thiscat = catlink.id.split('_')[1];
                                   $A(document.getElementsByClassName('category')).each(
                                       function(cat)
                                       {
