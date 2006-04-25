@@ -46,7 +46,7 @@ Gibts in der Kategorie 7 noch ein zweites Forum, z.B. ForumID 14, geht auch
 
 Moderatorengruppe | pnForum:: | 7:(12|14): | moderieren
 
-Weiteres siehe Handbuch auf http://www.post-nuke.net
+Weiteres siehe Handbuch auf http://support.pn-cms.de
 
 Wie üblich braucht man zum Schreiben das Kommentieren-Recht:
 
