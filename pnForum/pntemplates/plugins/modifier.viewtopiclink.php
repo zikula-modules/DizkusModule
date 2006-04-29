@@ -80,7 +80,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     if(isset($subject) && !empty($subject)) {
         $title .= ' ' . $subject;
     }
-    return pnVarPrepHTMLDisplay('<a '. pnVarPrepHTMLDisplay($class) .' href="' . pnVarPrepHTMLDisplay($url) . '" title="' . pnVarPrepHTMLDisplay($title) .'">' . pnVarPrepForDisplay($subject) . '</a>');
+    return '<a '. pnVarPrepForDisplay($class) .' href="' . pnVarPrepForDisplay($url) . '" title="' . pnVarPrepForDisplay($title) .'">' . pnVarPrepForDisplay($subject) . '</a>';
 }
 
 ?>

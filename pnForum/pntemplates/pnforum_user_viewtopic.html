@@ -68,8 +68,8 @@
 <!--[* start of breadcrumbs *]-->
 <p>
 <a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
-<a href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$topic.cat_id ]-->"><strong><!--[ $topic.cat_title ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
-<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topic.forum_id]-->"><strong><!--[ $topic.forum_name ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+<a href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$topic.cat_id ]-->"><strong><!--[ $topic.cat_title|pnvarprepfordisplay ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
+<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topic.forum_id]-->"><strong><!--[ $topic.forum_name|pnvarprepfordisplay ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
 <!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]--></strong><br />
 </p>
 <!--[* end of breadcrumbs *]-->

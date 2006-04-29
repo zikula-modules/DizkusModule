@@ -9,7 +9,7 @@
             <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
         </li>
         <li style="float: left;">
-            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><strong><!--[ $forum.cat_title ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
+            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><strong><!--[ $forum.cat_title|pnvarprepfordisplay ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
         </li>
         <li style="float: left;">
             <strong><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong><br />
@@ -91,7 +91,7 @@
 <!--[ /if ]-->
 
 <!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
-<table cellpadding="5" cellspacing="0" width="99%" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
+<table cellpadding="5" cellspacing="0" width="99%" summary="<!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]-->">
     <colgroup>
         <col id="col_status"   width="10%" />
         <col id="col_topic"    width="46%" />
