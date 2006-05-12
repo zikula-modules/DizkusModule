@@ -21,7 +21,7 @@ Installation
         -- weitere Unterverzeichnisse
 
   Copy the content of includes/search to your PostNuke's includes/search folder
-  Copy the content of javascript to your PostNuke's javascript folder
+  Copy the content of javascript/ajax to PostNuke_rootfolder/javascript/ajax
   Copy the content of modules to your PostNuke's modules folder (not modules/Modules!!)
   Copy backforum.php from the pnForum folder to your PostNuke root folder
 

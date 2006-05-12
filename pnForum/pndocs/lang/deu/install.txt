@@ -21,7 +21,7 @@ Installation
         -- weitere Unterverzeichnisse
 
   Den Inhalt von includes/search ins PostNuke includes/search Verzeichnis kopieren
-  Den Inhalt von javascript ins PostNuke javascript Verzeichnis kopieren
+  Den Inhalt von javascript/ajax inach PostNuke_Rootverzeichnis/javascript/ajax Verzeichnis kopieren
   Den Inhalt von modules ins PostNuke modules Verzeichnis kopieren
   (nicht modules/Modules!!)
   Die Datei backforum.php aus dem pnForumverzeichnis ins PostNuke Verzeichnis
