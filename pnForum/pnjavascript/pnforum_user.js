@@ -48,7 +48,7 @@ function createnewtopic()
         var subscribe_topic;
         var subObj = $('subscribe_topic');
         if(subObj) {
-            subscribe_topic = '&subscribe_topic' + subObj.value;
+            subscribe_topic = '&subscribe_topic=' + subObj.value;
         }
 
         var pars = "module=pnForum&type=ajax&func=newtopic" +  
