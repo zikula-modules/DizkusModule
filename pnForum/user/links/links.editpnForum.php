@@ -17,7 +17,7 @@ if (eregi(basename(__FILE__), $_SERVER['PHP_SELF'])) {
 if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_OVERVIEW)) {
     pnModLangLoad('pnForum', 'user'); 
     $modInfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
-    user_menu_add_option("user.php?op=editpnForum", ""._PNFORUM_FORUM."", "modules/" . pnVarPrepForDisplay($modInfo[directory]) . "/pnimages/icon_forumprefs.gif");
+    user_menu_add_option("user.php?op=editpnForum", pnVarPrepForDisplay(_PNFORUM_FORUM), "modules/" . pnVarPrepForDisplay($modInfo['directory']) . "/pnimages/icon_forumprefs.gif");
 }
 
 ?>
