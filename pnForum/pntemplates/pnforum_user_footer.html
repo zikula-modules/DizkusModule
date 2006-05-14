@@ -13,7 +13,7 @@
         <!--[ if $online.numusers > 0]-->
         <ul>
         <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
-        <li style="float: left;">
+        <li style="margin-left: 0.8em; float: left;">
             <!--[ if $user.admin == '1' ]--><!--[ $user.uname|profilelink:"pnfadminuser"]--><!--[ else ]--><!--[ $user.uname|profilelink:"pnfnoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
         </li>
         <!--[ /foreach ]-->
