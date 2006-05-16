@@ -1,5 +1,5 @@
 <!--[*  $Id$  *]-->
-<!--[* pndebug *]-->
+<!--[ pndebug ]-->
 
 <!--[* 
 
@@ -30,10 +30,12 @@ This div will be closed in the footer template.
 	<span class="headerlink"><!--[ pnimg src="icon_home.gif" alt="_PNFORUM_START" altml=true title="_PNFORUM_START" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_START' ]-->" href="<!--[ pnmodurl modname=pnForum ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a></span>
 	<span class="headerlink"><!--[ pnimg src="icon_search.gif" alt="_PNFORUM_SEARCH" altml=true title="_PNFORUM_SEARCH" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=search ]-->"><!--[ pnml name='_PNFORUM_SEARCHSHORT' ]--></a></span>
     <span class="headerlink"><!--[ pnimg src="icon_latestposts.gif" alt="_PNFORUM_LATEST" altml=true title="_PNFORUM_LATEST" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LATEST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewlatest ]-->"><!--[ pnml name='_PNFORUM_LATEST' ]--></a></span>
+    <span class="headerlink"><!--[ pnimg src="icon_rss.gif" alt="_PNFORUM_LATESTRSS" altml=true title="_PNFORUM_LATESTRSS" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LATESTRSS' ]-->" href="backforum.php"><!--[ pnml name='_PNFORUM_LATESTRSS' ]--></a></span>
 	<!--[ if $pncore.logged_in neq 1 ]-->
 	    <span class="headerlink"><!--[ pnimg src="icon_login.gif" alt="_PNFORUM_LOGIN" altml=true title="_PNFORUM_REGISTRATION_NOTE" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LOGIN' ]-->" href="user.php?op=loginscreen&amp;module=User"><!--[ pnml name='_PNFORUM_LOGIN' ]--></a></span>
 		<span class="headerlink"><!--[ pnimg src="icon_register.gif" alt="_PNFORUM_REGISTER" altml=true title="_PNFORUM_REGISTRATION_NOTE" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_REGISTER' ]-->" href="user.php?op=register&amp;module=NewUser"><!--[ pnml name='_PNFORUM_REGISTER' ]--></a></span>
 	<!--[ else ]-->
+		<span class="headerlink"><!--[ pnimg src="icon_configure.gif" alt="_PNFORUM_VIEWYOURPOSTS" altml=true title="_PNFORUM_VIEWYOURPOSTS" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_VIEWYOURPOSTS' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=search ]-->&amp;q=&amp;submit=Search&amp;bool=AND&amp;pnForum_forum[]=-1&amp;pnForum_author=<!--[ $pncore.user.pn_uname ]-->&amp;pnForum_order[]=1&amp;pnForum_limit=20&amp;internalsearch=1&amp;active_pnForum=1"><!--[ pnml name='_PNFORUM_VIEWYOURPOSTS' ]--></a></span>
 		<span class="headerlink"><!--[ pnimg src="icon_configure.gif" alt="_PNFORUM_PERSONAL_SETTINGS" altml=true title="_PNFORUM_PERSONAL_SETTINGS" titleml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="pnForum" func="prefs" ]-->"><!--[ pnml name='_PNFORUM_PERSONAL_SETTINGS' ]--></a></span>
 	<!--[ /if ]-->
 </div>
