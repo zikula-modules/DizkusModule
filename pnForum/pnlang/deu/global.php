@@ -49,6 +49,8 @@ define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien m
 define('_PNFORUM_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_PNFORUM_LATESTRSS', 'RSS');
+define('_PNFORUM_VIEWYOURPOSTS', 'meine Beiträge');
 define('_PNFORUM_PNCATEGORIES', 'Kategorie auswählen');
 define('_PNFORUM_LINKTOTHISPOST', 'Link zu diesem Beitrag');
 define('_PNFORUM_SIMILARTOPICS', 'Ähnliche Beiträge');
