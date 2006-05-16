@@ -88,7 +88,7 @@
  */
 function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
 {
-	$modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
+  $modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
 //    $baseDir = realpath(pnModGetBaseDir('pnForum')) . '/pntemplates';
     $baseDir = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
     $lang = pnUserGetLang();
@@ -160,12 +160,12 @@ function showforumerror($error_text, $file='', $line=0)
     // we need to load the languages
     // available
     pnModLangLoad('pnForum');
-    
+
     $GLOBALS['info']['title'] = $error_text;
     if(pnSessionGetVar('pn_ajax_call') == 'ajax') {
         pnf_ajaxerror($error_text);
     }
-   
+
     $pnr =& new pnRender('pnForum');
     $pnr->add_core_data();
     $pnr->caching = false;
@@ -196,27 +196,27 @@ function showforumerror($error_text, $file='', $line=0)
  */
 function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file='', $line)
 {
-	if(!empty($sql)) {
-		// Sending notify e-mail for error
-		$message = "Error occured\n\n";
-		$message .= "SQL statement:\n" . $sql . "\n\n";
-		$message .= "Database error number:\n" . $sql_errno . "\n\n";
-		$message .= "Database error message:\n" . $sql_error . "\n\n";
-		$message .= "Link: " . pnGetCurrentURL() . "\n\n";
-		$message .= "HTTP_USER_AGENT: " . pnServerGetVar('HTTP_USER_AGENT') . "\n";
+    if(!empty($sql)) {
+        // Sending notify e-mail for error
+        $message = "Error occured\n\n";
+        $message .= "SQL statement:\n" . $sql . "\n\n";
+        $message .= "Database error number:\n" . $sql_errno . "\n\n";
+        $message .= "Database error message:\n" . $sql_error . "\n\n";
+        $message .= "Link: " . pnGetCurrentURL() . "\n\n";
+        $message .= "HTTP_USER_AGENT: " . pnServerGetVar('HTTP_USER_AGENT') . "\n";
         $message .= "Username: " . pnUserGetVar('uname') . " (" . pnUserGetVar('uid') . ")\n";
         $message .= "Email: " . pnUserGetVar('email') . "\n";
-        $message .= "error occured in " . $file . " at line " . $line . "\n"; 
+        $message .= "error occured in " . $file . " at line " . $line . "\n";
         
-    	$email_from = pnModGetVar('pnForum', 'email_from');
-    	if ($email_from == '') {
-    		// nothing in forumwide-settings, use PN adminmail
-    		$email_from = pnConfigGetVar('adminmail');
-    	}
-		$email_to = pnConfigGetVar('adminmail');
+        $email_from = pnModGetVar('pnForum', 'email_from');
+        if ($email_from == '') {
+            // nothing in forumwide-settings, use PN adminmail
+            $email_from = pnConfigGetVar('adminmail');
+        }
+        $email_to = pnConfigGetVar('adminmail');
         $subject = 'sql error in your pnForum';
         $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
-
+    
         $args = array( 'fromname'    => pnConfigGetVar('sitename'),
                        'fromaddress' => $email_from,
                        'toname'      => $email_to,
@@ -225,7 +225,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
                        'body'        => $message,
                        'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
         pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-	}
+    }
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
@@ -295,9 +295,9 @@ function pnfsqldebug($sql)
  */
 function pnfOpenDB($tablename='')
 {
-	pnModDBInfoLoad('pnForum');
-	$dbconn =& pnDBGetConn(true);
-	$pntable =& pnDBGetTables();
+    pnModDBInfoLoad('pnForum');
+    $dbconn =& pnDBGetConn(true);
+    $pntable =& pnDBGetTables();
 
     if(!empty($tablename)) {
         $columnname = $tablename . '_column';
@@ -320,8 +320,7 @@ function pnfOpenDB($tablename='')
  */
 function pnfCloseDB($resobj)
 {
-    if(is_object($resobj))
-    {
+    if(is_object($resobj)) {
         $resobj->Close();
     }
     return;
@@ -346,8 +345,9 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
+        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
     }
-    $result = $dbconn->Execute($sql);
+    $result =& $dbconn->Execute($sql);
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
         if($extendederror == true) {
@@ -379,6 +379,7 @@ function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
+        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
     }
 
     $mode = (empty($where)) ? 'INSERT': 'UPDATE';
@@ -412,6 +413,7 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
+        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
     }
     if( $start<>false && (is_numeric($start) && $start<>0 ) ){
         $result = $dbconn->SelectLimit($sql, $limit, $start);
@@ -485,25 +487,22 @@ function pnForum_bbdecode($message)
     // unordered list code..
     $matchCount = preg_match_all("#<!-- BBCode ulist Start --><UL>(.*?)</UL><!-- BBCode ulist End -->#s", $message, $matches);
 
-    for ($i = 0; $i < $matchCount; $i++)
-    {
-    	$currMatchTextBefore = preg_quote($matches[1][$i]);
-    	$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
+    for ($i = 0; $i < $matchCount; $i++) {
+      $currMatchTextBefore = preg_quote($matches[1][$i]);
+      $currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
 
-    	$message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
+      $message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
     }
 
     // ordered list code..
     $matchCount = preg_match_all("#<!-- BBCode olist Start --><OL TYPE=([A1])>(.*?)</OL><!-- BBCode olist End -->#si", $message, $matches);
 
-    for ($i = 0; $i < $matchCount; $i++)
-    {
-    	$currMatchTextBefore = preg_quote($matches[2][$i]);
-    	$currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
+    for ($i = 0; $i < $matchCount; $i++) {
+      $currMatchTextBefore = preg_quote($matches[2][$i]);
+      $currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
 
-    	$message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
+      $message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
     }
-
     return($message);
 }
 
@@ -518,8 +517,8 @@ function pnForum_bbdecode($message)
  */
 function pnForum_undo_make_clickable($text)
 {
-	$text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
-	$text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
+    $text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
+    $text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
     return $text;
 }
 
@@ -549,7 +548,7 @@ function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
 {
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
-    } 
+    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
 }
 
@@ -560,7 +559,7 @@ function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = nu
 {
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
-    } 
+    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
 }
 
@@ -571,7 +570,7 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = n
 {
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
-    } 
+    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
 }
 
@@ -582,7 +581,7 @@ function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null
 {
     if(!is_dot8()) {
         return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
-    } 
+    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
 }
 
@@ -592,7 +591,7 @@ function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null
  */
 function cmp_catorder ($a, $b)
 {
-   return (int)$a['cat_order'] > (int)$b['cat_order'];
+    return (int)$a['cat_order'] > (int)$b['cat_order'];
 }
 
 /**
@@ -719,40 +718,40 @@ function pnf_getimagepath($image=null)
     $osmodname     = pnVarPrepForOS($modname);
     $cWhereIsPerso = WHERE_IS_PERSO;
     if (!(empty($cWhereIsPerso))) {
-    	$themelangpath = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images/$lang";
-    	$themepath     = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images";
-    	$corethemepath = $cWhereIsPerso . "themes/$theme/images";
+        $themelangpath = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images/$lang";
+        $themepath     = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images";
+        $corethemepath = $cWhereIsPerso . "themes/$theme/images";
     } else {
         $themelangpath = "themes/$theme/templates/modules/$osmodname/images/$lang";
-    	$themepath     = "themes/$theme/templates/modules/$osmodname/images";
-    	$corethemepath = "themes/$theme/images";
+        $themepath     = "themes/$theme/templates/modules/$osmodname/images";
+        $corethemepath = "themes/$theme/images";
     }
     // module directory
     $modinfo       = pnModGetInfo(pnModGetIDFromName($modname));
     $osmoddir      = pnVarPrepForOS($modinfo['directory']);
-	$modlangpath   = "modules/$osmoddir/pnimages/$lang";
-	$modpath       = "modules/$osmoddir/pnimages";
-	$syslangpath   = "system/$osmoddir/pnimages/$lang";
-	$syspath       = "system/$osmoddir/pnimages";
+    $modlangpath   = "modules/$osmoddir/pnimages/$lang";
+    $modpath       = "modules/$osmoddir/pnimages";
+    $syslangpath   = "system/$osmoddir/pnimages/$lang";
+    $syspath       = "system/$osmoddir/pnimages";
 
     $ossrc = pnVarPrepForOS($image);
 
     // search for the image
     foreach (array($themelangpath,
-				   $themepath,
-				   $corethemepath,
-				   $modlangpath,
-				   $modpath,
-				   $syslangpath,
-				   $syspath) as $path) {
-     	if (file_exists("$path/$ossrc") && is_readable("$path/$ossrc")) {
-    		$result['path'] = "$path/$ossrc";
-		break;
-    	}
+                   $themepath,
+                   $corethemepath,
+                   $modlangpath,
+                   $modpath,
+                   $syslangpath,
+                   $syspath) as $path) {
+        if (file_exists("$path/$ossrc") && is_readable("$path/$ossrc")) {
+            $result['path'] = "$path/$ossrc";
+            break;
+        }
     }
 
     if ($result['path'] == '') {
-	    return false;
+        return false;
     }
 
     if(!$_image_data = @getimagesize($result['path'])) {
@@ -832,10 +831,10 @@ function pnfSecAuthAction($testrealm, $testcomponent, $testinstance, $testlevel,
     if ($userlevel > ACCESS_INVALID) {
         // user has explicitly defined access level for this
         // realm/component/instance combination
-		return $userlevel >= $testlevel;
+    return $userlevel >= $testlevel;
     }
 
-	return pnSecGetLevel($groupperms[$testuser], $testrealm, $testcomponent, $testinstance) >= $testlevel;
+  return pnSecGetLevel($groupperms[$testuser], $testrealm, $testcomponent, $testinstance) >= $testlevel;
 }
 
 /**
@@ -847,8 +846,8 @@ function pnfSecAuthAction($testrealm, $testcomponent, $testinstance, $testlevel,
 function pnfSecGetAuthInfo($testuser=null)
 {
     // Load the groups db info
-	pnModDBInfoLoad('Groups', 'Groups');
-	pnModDBInfoLoad('Permissions', 'Permissions');
+    pnModDBInfoLoad('Groups', 'Groups');
+    pnModDBInfoLoad('Permissions', 'Permissions');
 
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
@@ -902,11 +901,11 @@ function pnfSecGetAuthInfo($testuser=null)
         return array($userperms, $groupperms);
     }
 
-	while (list($realm, $component, $instance, $level) = $result->fields) {
+    while (list($realm, $component, $instance, $level) = $result->fields) {
         $result->MoveNext();
-		//itevo
-		$component = fixsecuritystring($component);
-		$instance = fixsecuritystring($instance);
+
+        $component = fixsecuritystring($component);
+        $instance = fixsecuritystring($instance);
         $userperms[] = array('realm'     => $realm,
                              'component' => $component,
                              'instance'  => $instance,
@@ -929,7 +928,7 @@ function pnfSecGetAuthInfo($testuser=null)
         // Unregistered GID
         $usergroups[] = 0;
     }
-	while (list($gid) = $result->fields) {
+    while (list($gid) = $result->fields) {
         $result->MoveNext();
         $usergroups[] = $gid;
     }
@@ -951,22 +950,22 @@ function pnfSecGetAuthInfo($testuser=null)
 
     while(list($realm, $component, $instance, $level) = $result->fields) {
         $result->MoveNext();
-		//itevo
-		$component = fixsecuritystring($component);
-		$instance = fixsecuritystring($instance);
+
+        $component = fixsecuritystring($component);
+        $instance = fixsecuritystring($instance);
         // Search/replace of special names
-		preg_match_all("/<([^>]+)>/", $instance, $res);
-		for($i = 0; $i < count($res[1]); $i++) {
-			$instance = preg_replace("/<([^>]+)>/", $vars[$res[1][$i]], $instance, 1);
-		}
+        preg_match_all("/<([^>]+)>/", $instance, $res);
+        for($i = 0; $i < count($res[1]); $i++) {
+          $instance = preg_replace("/<([^>]+)>/", $vars[$res[1][$i]], $instance, 1);
+        }
         $groupperms[] = array('realm'     => $realm,
                               'component' => $component,
                               'instance'  => $instance,
                               'level'     => $level);
     }
 
-	// we've now got the permissions info
-	$GLOBALS['pnfauthinfogathered'][$testuser] = 1;
+    // we've now got the permissions info
+    $GLOBALS['pnfauthinfogathered'][$testuser] = 1;
 
     return array($userperms, $groupperms);
 }
@@ -976,7 +975,8 @@ function pnfSecGetAuthInfo($testuser=null)
  *
  */
 if (!function_exists('array_csort')) {
-    function array_csort() {  //coded by Ichier2003 found on php.net (watch out the eval).
+    function array_csort() 
+    {  //coded by Ichier2003 found on php.net (watch out the eval).
        $args = func_get_args();
        $marray = array_shift($args);
 
@@ -1004,7 +1004,7 @@ if (!function_exists('array_csort')) {
  *
  * display an error during Ajax execution
  */
-function pnf_ajaxerror($error)
+function pnf_ajaxerror($error='unspecified ajax error')
 {
     if(!empty($error)) {
         pnSessionDelVar('pn_ajax_call');
@@ -1025,7 +1025,7 @@ function pnf_convert_to_utf8($input='')
         $return = array();
         foreach($input as $key => $value) {
             $return[$key] = pnf_convert_to_utf8($value);
-        } 
+        }
         return $return;
     } elseif(is_string($input)) {
         return utf8_encode($input);
@@ -1034,9 +1034,9 @@ function pnf_convert_to_utf8($input='')
     }
 }
 /**
- * encode data in JSON 
+ * encode data in JSON
  * This functions can add a new authid if requested to do so.
- * If the supplied args is not an array, it will be converted to an 
+ * If the supplied args is not an array, it will be converted to an
  * array with 'data' as key.
  * Authid field will always be named 'authid'. Any other field 'authid'
  * will be overwritten!
@@ -1065,7 +1065,7 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
     }
     pnSessionDelVar('pn_ajax_call');
     exit;
-    
+
 }
 
 function pnf_createXML($args)
@@ -1087,7 +1087,7 @@ function pnf_createXMLarray($xml, $array)
                 $xml .= pnf_createXMLarray($xml, $value);
             } else {
                 $xml .= $value;
-            }     
+            }
             $xml .= '</' . strtolower($key) . '>' . "\n";
         }
     }
@@ -1103,7 +1103,7 @@ function pnf_add_stylesheet_header($modname='')
     if(empty($modname)) {
         $modname = pnModGetName();
     }
-    
+
     // load the modulestylesheet plugin to determine the stylesheet path
     $pnr =& new pnRender('pnForum');
     require_once $pnr->_get_plugin_filepath('function','modulestylesheet');
@@ -1128,7 +1128,7 @@ function is_dot8()
 {
     return function_exists('pnVarCleanFromCOOKIE');
 }
- 
+
 /**
  * pnfUserGetAll
  *
@@ -1137,8 +1137,8 @@ function pnfUserGetAll($regexpfield='', $regexpression='')
 {
     if(is_dot8()) {
         return pnUserGetAll('uname', 'ASC', 0, 1, '', $regexpfield, $regexpression);
-    } 
-    
+    }
+
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
 
@@ -1188,7 +1188,7 @@ function pnfUserGetAll($regexpfield='', $regexpression='')
  */
 function cmp_userorder ($a, $b)
 {
-   return strcmp($a['uname'], $b['uname']);
+    return strcmp($a['uname'], $b['uname']);
 }
- 
+
 ?>
