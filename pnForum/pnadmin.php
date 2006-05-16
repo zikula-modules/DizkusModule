@@ -538,7 +538,7 @@ function pnForum_admin_reordertreesave()
     }
     
     $categoryarray = pnVarCleanFromInput('category');
-    
+
     // the last entry in the $category is the placeholder for a new
     // category, we need ot remove this
     array_pop($categoryarray);
@@ -554,6 +554,12 @@ function pnForum_admin_reordertreesave()
             }
 
             $forumsincategoryarray = pnVarCleanFromInput('cid_' . $cat_id);
+            // last two item in the array or for internal purposes in the template
+            // we do not need them, in fact they lead to errors when we
+            // do not remove them
+            array_pop($forumsincategoryarray);
+            array_pop($forumsincategoryarray);
+            
             if(is_array($forumsincategoryarray) && count($forumsincategoryarray) > 0) {
                 foreach($forumsincategoryarray as $forumorder => $forum_id) {
                     if(!empty($forum_id) && is_numeric($forum_id)) {
