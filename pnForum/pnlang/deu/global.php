@@ -406,7 +406,7 @@ define('_PNFORUM_PAGE','Seite');
 define('_PNFORUM_PASSWORD', 'Kennwort');
 define('_PNFORUM_PASSWORDNOMATCH', 'Kennwörter stimmen nicht überein, bitte korrigieren');
 define('_PNFORUM_PERMDENY','keine Berechtigung!');
-define('_PNFORUM_PERSONAL_SETTINGS','Persönliche Einstellungen');
+define('_PNFORUM_PERSONAL_SETTINGS','Einstellungen');
 define('_PNFORUM_PNPASSWORD', 'PN Kennwort');
 define('_PNFORUM_PNPASSWORDCONFIRM', 'PN Kennwort bestätigen');
 define('_PNFORUM_PNTOPIC', 'PostNuke Topic');
