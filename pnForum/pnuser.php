@@ -759,6 +759,10 @@ function pnForum_user_emailtopic($args=array())
  */
 function pnForum_user_viewlatest($args=array())
 {
+    if(useragent_is_bot() == true) {
+        return pnRedirect(pnModURL('pnForum', 'user', 'main')); 
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
