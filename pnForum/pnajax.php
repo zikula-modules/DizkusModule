@@ -513,8 +513,8 @@ function pnForum_ajax_newtopic()
     }
 
     $preview          = ($preview=='1') ? true : false;
-    $attach_signature = ($attach_signature=='1') ? true : false;
-    $subscribe_topic  = ($subscribe_topic=='1') ? true : false;
+    //$attach_signature = ($attach_signature=='1') ? true : false;
+    //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
     
     $message = pnfstriptags(utf8_decode($message));
     // check for maximum message size
@@ -583,15 +583,15 @@ function pnForum_ajax_newtopic()
     $topic_start = (empty($subject) && empty($message));
     if(pnUserLoggedIn()) {
         if($topic_start==true) {
-            $newtopic['attach_signature'] = true;
-            $newtopic['subscribe_topic']  = (pnModGetVar('pnForum', 'autosubscribe')=='yes') ? true : false;
+            $newtopic['attach_signature'] = 1;
+            $newtopic['subscribe_topic']  = (pnModGetVar('pnForum', 'autosubscribe')=='yes') ? 1 : 0;
         } else {
             $newtopic['attach_signature'] = $attach_signature;
             $newtopic['subscribe_topic']  = $subscribe_topic;
         }
     } else {
-        $newtopic['attach_signature'] = false;
-        $newtopic['subscribe_topic']  = false;
+        $newtopic['attach_signature'] = 0;
+        $newtopic['subscribe_topic']  = 0;
     }
 
     $pnr->assign('newtopic', $newtopic);
