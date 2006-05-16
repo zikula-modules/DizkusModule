@@ -30,7 +30,7 @@ PostNuke pnForum Module changelog
   <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
   The last parameter is activating the timezone support which adds the difference between
   the users timezone and the main timezone configured in your PostNuke settings.
-+ added [#2512]	centerblock Links inkl. PID
++ added [#2512]	centerblock links inkl. PID
 + added [#2636] similar topics plugin
 - fixed some html and validation issues, removed some more tables
 - fixed [#2490] wrong number of guests in online list
@@ -45,6 +45,7 @@ PostNuke pnForum Module changelog
 - fixed [#2729] parameter for statistics-block ignored
 - fixed [#2734] blocks show wrong date/time after splitting a thread
 - fixed [#2767] language edit (english)
+- fixed [#2922] index error
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)
