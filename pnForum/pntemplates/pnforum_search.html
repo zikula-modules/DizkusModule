@@ -17,7 +17,7 @@
             <select name="pnForum_forum[]" id="pnForum_forum" size="5" multiple="multiple">
             <option value="-1" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHALLFORUMS' ]--></option>
             <!--[ foreach item=forum from=$forums ]-->
-            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]--></option>
+            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
             <!--[ /foreach ]-->
             </select>
         </div>
@@ -77,7 +77,7 @@
             <select name="pnForum_forum[]" id="pnForum_forum" size="5" multiple="multiple">
             <option value="-1" selected="selected"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ALLTOPICS' ]--></option>
             <!--[ foreach item=forum from=$forums ]-->
-            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprephtmldisplay ]--> :: <!--[ $forum.forum_name|pnvarprephtmldisplay ]--></option>
+            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
             <!--[ /foreach ]-->
             </select>
         </div>

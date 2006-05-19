@@ -15,7 +15,7 @@
         <strong><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_REPLIES' ]--></strong> : <!--[ $searchresult.topic_replies ]--><br />
         <strong><!--[ pnml name='_PNFORUM_PREVIEW' ]--></strong> :<br />
         <br />
-        <!--[ $searchresult.post_text|truncate:128 ]--><br />
+        <!--[ $searchresult.post_text|truncate:128|pnvarprepfordisplay ]--><br />
         <br />
     </li>
 <!--[ foreachelse ]-->
