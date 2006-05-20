@@ -41,13 +41,18 @@
  *
  ***********************************************************************/
 
-$forum_id = pnVarCleanFromInput('f');
+if (!defined('LOADED_AS_MODULE')) {
+    die ('Access Denied');
+}
+
+
+$forum_id = (int)pnVarCleanFromInput('f');
 
 
 // if topic_id is set we can directly go to the same topic_id in pnForum
 if(isset($forum_id) &&!empty($forum_id) && is_numeric($forum_id)) {
     return pnRedirect(pnModURL('pnForum', 'user', 'viewforum',
-                               array('forum' => $forum_id));
+                               array('forum' => $forum_id)));
 }
 
 ?>

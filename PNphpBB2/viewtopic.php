@@ -47,14 +47,14 @@ if (!defined('LOADED_AS_MODULE')) {
 
 modules_get_language();
 
-$post_id = pnVarCleanFromInput('p');
-$topic_id = pnVarCleanFromInput('t');
+$post_id = (int)pnVarCleanFromInput('p');
+$topic_id = (int)pnVarCleanFromInput('t');
 
 $pnr = new pnRender('PNphpBB2');
 $pnr->caching = false;
 
 // if topic_id is set we can directly go to the same topic_id in pnForum
-if(isset($topic_id) &&!empty($topic_id) && is_numeric($topic_id)) {
+if(!empty($topic_id)) {
     $pnr->assign('topic_id', $topic_id);
     $pnr->assign('url', pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)));
     include('header.php');
@@ -64,10 +64,18 @@ if(isset($topic_id) &&!empty($topic_id) && is_numeric($topic_id)) {
 }    
 
 
-// if p iset we need to get the topicid first and find the pagewhere this post is
-$topic_id = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_postid',
-                         array('post_id' => $post_id));
-if($topic_id <> false) {
+if(!empty($post_id)) {
+    // if p iset we need to get the topicid first and find the pagewhere this post is
+    $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_postid',
+                             array('post_id' => $post_id));
+    if($topic_id <> false) {
+        $pnr->assign('topic_id', $topic_id);
+        $pnr->assign('url', pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)));
+        include('header.php');
+        echo $pnr->fetch('pnphpbb2_topicredirect.html');
+        include('footer.php');
+        exit();
+    }
 }
 
 $pnr->assign('post_id', $post_id);
