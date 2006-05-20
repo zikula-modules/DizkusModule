@@ -32,6 +32,7 @@ PostNuke pnForum Module changelog
   the users timezone and the main timezone configured in your PostNuke settings.
 + added [#2512]	centerblock links inkl. PID
 + added [#2636] similar topics plugin
++ added [#2899] Link back to forum index in search and latest posts.
 - fixed some html and validation issues, removed some more tables
 - fixed [#2490] wrong number of guests in online list
 - fixed [#2491] removal of topics doesn't remove the subscriptions
@@ -46,6 +47,8 @@ PostNuke pnForum Module changelog
 - fixed [#2734] blocks show wrong date/time after splitting a thread
 - fixed [#2767] language edit (english)
 - fixed [#2922] index error
+- fixed [#2944] + [#2945] &'s not converted into entities in search plugin
+- fixed [#2903] Riesige Fehlerbox bei Bedienerfehler beim Ändern eines Postings
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)
