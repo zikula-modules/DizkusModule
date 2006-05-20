@@ -577,7 +577,7 @@ function quickEditsave(postid)
     var editID = postingtextID + '_edit';
     var authID = postingtextID + '_authid';
     
-    if($F(editID)) == '') {
+    if($F(editID) == '') {
         // no text
         return;
     }
