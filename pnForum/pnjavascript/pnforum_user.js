@@ -36,6 +36,15 @@ var pnf_globalhandlers = {
 function createnewtopic()
 {
     if(newtopicstatus==false) {
+        if($F('subject') == '') {
+            // no subject
+            return;
+        }
+        if($F('message') == '') {
+            // no text
+            return;
+        }
+        
         newtopicstatus = true;
         showpnforuminfo(storingPost);
         
@@ -238,6 +247,10 @@ function topicsubjecteditsave(topicid)
     var topicsubjectID = 'topicsubject_' + topicid;
     var editID = topicsubjectID + '_edit';
     var authID = topicsubjectID + '_authid';
+    if($F(editID) == '') {
+        // no text
+        return;
+    }
 
     var pars = "module=pnForum&type=ajax&func=updatetopicsubject" +   
                "&topic=" + topicid +
@@ -563,6 +576,11 @@ function quickEditsave(postid)
     var deletepost;
     var editID = postingtextID + '_edit';
     var authID = postingtextID + '_authid';
+    
+    if($F(editID)) == '') {
+        // no text
+        return;
+    }
 
     if($(postingtextID + '_delete') && $(postingtextID + '_delete').checked == true) {
         Element.update(statusID, '<span style="color: red;">' + deletingPost + '</span>');
@@ -651,6 +669,9 @@ function createQuoteInit(originalRequest)
 function createQuickReply()
 {
     if(replystatus==false) {
+        if($F('message') == '') {
+            return;
+        }
         replystatus = true;
         showpnforuminfo(storingReply);
         
@@ -663,7 +684,7 @@ function createQuickReply()
         var subscribe_topic = '';
         var subObj = $('subscribe_topic');
         if(subObj) {
-            subscribe_topic = '&subscribe_topic' + subObj.value;
+            subscribe_topic = '&subscribe_topic=' + subObj.value;
         }
 
         var pars = "module=pnForum&type=ajax&func=reply" +   
@@ -672,7 +693,6 @@ function createQuickReply()
                    attach_signature +            
                    subscribe_topic + 
                    "&authid=" + $F('authid');
-
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(                              
                         "index.php",                                
