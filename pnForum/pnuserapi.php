@@ -151,8 +151,14 @@ function pnForum_userapi_get_userdata_from_id($args)
 
             // avatar
             if($userdata['pn_user_avatar']){
-                $userdata['pn_user_avatar'] = 'images/avatar/' . $userdata['pn_user_avatar'];
-                $userdata['pn_user_avatar_attr'] = getimagesize($userdata['pn_user_avatar']);
+                $avatarfilename = 'images/avatar/' . pnVarPrepForOS($userdata['pn_user_avatar']);
+                $avatardata = @getimagesize($avatarfilename);
+                if($avatardata <> false) {
+                    $userdata['pn_user_avatar'] = $avatarfilename;
+                    $userdata['pn_user_avatar_attr'] = $avatardata;
+                } else {
+                    $userdata['pn_user_avatar'] = '';
+                }
             }
 
         } else {
