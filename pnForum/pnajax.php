@@ -56,8 +56,8 @@ function pnForum_ajax_reply()
                                          'preview');
     
     $preview          = ($preview=='1') ? true : false;
-    $attach_signature = ($attach_signature=='1') ? true : false;
-    $subscribe_topic  = ($subscribe_topic=='1') ? true : false;
+//    $attach_signature = ($attach_signature=='1') ? true : false;
+//    $subscribe_topic  = ($subscribe_topic=='1') ? true : false;
     
     $message = pnfstriptags(utf8_decode($message));
     // check for maximum message size
