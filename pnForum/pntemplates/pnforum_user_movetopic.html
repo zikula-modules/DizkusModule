@@ -15,7 +15,7 @@
         <p><!--[ pnml name='_PNFORUM_MOVETOPIC_INFO' html=1 ]--></p>
         <select name="forum" id="phpbb_forum">
         <!--[ foreach item=forum from=$forums ]-->
-        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title ]-->&nbsp;::&nbsp;<!--[ $forum.forum_name ]--></option>
+        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]-->&nbsp;::&nbsp;<!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
         <!--[ /foreach ]-->
         </select>
         <p>
