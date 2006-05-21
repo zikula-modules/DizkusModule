@@ -2,6 +2,16 @@
  * $Id$
  *
  */
+
+function getcheckboxvalue(id)
+{
+    if($(id)) {
+        if($(id).checked==true) {
+            return $(id).value;
+        }
+        return '';
+    }
+}
  
 function CheckAll(formtype) {                                                                                               
     document.getElementsByClassName(formtype + '_checkbox').each(function(el) { el.checked = $('all' + formtype).checked;});

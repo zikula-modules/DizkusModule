@@ -48,25 +48,13 @@ function createnewtopic()
         newtopicstatus = true;
         showpnforuminfo(storingPost);
         
-        var attach_signature = ''
-        var sigObj = $('attach_signature');
-        if(sigObj) {
-            attach_signature = '&attach_signature=' + sigObj.value;
-        }
-        
-        var subscribe_topic;
-        var subObj = $('subscribe_topic');
-        if(subObj) {
-            subscribe_topic = '&subscribe_topic=' + subObj.value;
-        }
-
-        var pars = "module=pnForum&type=ajax&func=newtopic" +  
-                   "&forum=" + $F('forum') + 
-                   "&subject=" + encodeURIComponent($F('subject')) +
-                   "&message=" + encodeURIComponent($F('message')) +              
-                   attach_signature +            
-                   subscribe_topic + 
-                   "&authid=" + $F('authid');
+        var pars = 'module=pnForum&type=ajax&func=newtopic' +  
+                   '&forum=' + $F('forum') + 
+                   '&subject=' + encodeURIComponent($F('subject')) +
+                   '&message=' + encodeURIComponent($F('message')) +              
+                   '&attach_signature=' + getcheckboxvalue('attach_signature') +            
+                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') + 
+                   '&authid=' + $F('authid');
 
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(                              
@@ -675,24 +663,12 @@ function createQuickReply()
         replystatus = true;
         showpnforuminfo(storingReply);
         
-        var attach_signature = ''
-        var sigObj = $('attach_signature');
-        if(sigObj) {
-            attach_signature = '&attach_signature=' + sigObj.value;
-        }
-        
-        var subscribe_topic = '';
-        var subObj = $('subscribe_topic');
-        if(subObj) {
-            subscribe_topic = '&subscribe_topic=' + subObj.value;
-        }
-
-        var pars = "module=pnForum&type=ajax&func=reply" +   
-                   "&topic=" + $F('topic') +
-                   "&message=" + encodeURIComponent($F('message')) +              
-                   attach_signature +            
-                   subscribe_topic + 
-                   "&authid=" + $F('authid');
+        var pars = 'module=pnForum&type=ajax&func=reply' +   
+                   '&topic=' + $F('topic') +
+                   '&message=' + encodeURIComponent($F('message')) +              
+                   '&attach_signature=' + getcheckboxvalue('attach_signature') +            
+                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') + 
+                   '&authid=' + $F('authid');
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(                              
                         "index.php",                                
