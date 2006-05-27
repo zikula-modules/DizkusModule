@@ -74,18 +74,22 @@ function smarty_modifier_profilelink($string, $class='', $image='')
         $class = 'class="' . $class . '" ';
     }
 
-    if(!empty($image)) {
-        if(is_array($image)) {
-            // if it is an array we assume that it is an pnimg array
-            $show = '<img src="' . $image['src'] . '" alt="' . $image['alt'] . '" width="' . $image['width'] . '" height="' . $image['height'] . '" />';
-
+    if(pnUserGetIDFromName($string) <> false) {
+        if(!empty($image)) {
+            if(is_array($image)) {
+                // if it is an array we assume that it is an pnimg array
+                $show = '<img src="' . $image['src'] . '" alt="' . $image['alt'] . '" width="' . $image['width'] . '" height="' . $image['height'] . '" />';
+        
+            } else {
+                $show = '<img src="' . $image . '" alt="' . $string . '" />';
+            }
         } else {
-            $show = '<img src="' . $image . '" alt="' . $string . '" />';
+            $show = $string;
         }
+            return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $show . '</a>';
     } else {
-        $show = $string;
+        return $string;
     }
-    return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $show . '</a>';
 }
 
 ?>
