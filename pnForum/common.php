@@ -207,7 +207,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
         $message .= "Username: " . pnUserGetVar('uname') . " (" . pnUserGetVar('uid') . ")\n";
         $message .= "Email: " . pnUserGetVar('email') . "\n";
         $message .= "error occured in " . $file . " at line " . $line . "\n";
-        
+
         $email_from = pnModGetVar('pnForum', 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use PN adminmail
@@ -216,7 +216,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
         $email_to = pnConfigGetVar('adminmail');
         $subject = 'sql error in your pnForum';
         $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
-    
+
         $args = array( 'fromname'    => pnConfigGetVar('sitename'),
                        'fromaddress' => $email_from,
                        'toname'      => $email_to,
@@ -975,7 +975,7 @@ function pnfSecGetAuthInfo($testuser=null)
  *
  */
 if (!function_exists('array_csort')) {
-    function array_csort() 
+    function array_csort()
     {  //coded by Ichier2003 found on php.net (watch out the eval).
        $args = func_get_args();
        $marray = array_shift($args);
@@ -1108,7 +1108,7 @@ function pnf_add_stylesheet_header($modname='')
     $pnr =& new pnRender('pnForum');
     require_once $pnr->_get_plugin_filepath('function','modulestylesheet');
     $css = smarty_function_modulestylesheet(array('xhtml' => 1,
-                                                  'modname' => $modname));
+                                                  'modname' => $modname), $pnr);
     global $additional_header;
     if(is_array($additional_header)) {
         if(!in_array($css, $additional_header)) {
