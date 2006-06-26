@@ -246,13 +246,13 @@ function pnForum_adminapi_deletecategory($args)
  * default is ACCESS_READ. "nocheck" means, return the forums no matter if the user has sufficient
  * rights or not, in this case the calling function has to take care of it!!
  *
- *@params $args['forum_id'] int only read this forum
- *@params $args['cat_id'] int read the forums in this category only
- *@params $args['permcheck'] string either "nocheck", "see", "read", "write", "moderate" or "admin", default is "read"
+ *@params $args['forum_id'] int only read this forum (optional)
+ *@params $args['cat_id'] int read the forums in this category only (optional)
+ *@params $args['permcheck'] string either "nocheck", "see", "read", "write", "moderate" or "admin", default is "read" (optional)
  *@returns array of forums or
  *         one forum in case of forum_id set
  */
-function pnForum_adminapi_readforums($args)
+function pnForum_adminapi_readforums($args=array())
 {
     extract($args);
     unset($args);
@@ -370,7 +370,7 @@ function pnForum_adminapi_readmoderators($args)
 {
     extract($args);
     unset($args);
-    
+
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT u.pn_uname, u.pn_uid
@@ -515,7 +515,7 @@ function pnForum_adminapi_readranks($args)
     // read images
     $handle = opendir(pnModGetVar('pnForum', 'url_ranks_images'));
     $filelist = array();
-    while ($file = readdir($handle)) {  
+    while ($file = readdir($handle)) {
         if(getimagesize(pnModGetVar('pnForum', 'url_ranks_images') . '/' . $file) <> false) {
             $filelist[] = $file;
         }
@@ -569,7 +569,7 @@ function pnForum_adminapi_readranks($args)
                                 'rank_image'   => 'onestar.gif',
                                 'rank_style'   => '',
                                 'users'        => array()));
-    
+
 
     pnfCloseDB($result);
     return array($filelist, $ranks);
@@ -1187,19 +1187,19 @@ function pnForum_adminapi_get_pntopics()
     if(!is_dot8()) {
         pnModDBInfoLoad('Topics');
         list($dbconn, $pntable) = pnfOpenDB();
-        
+
         $pntopicstable  = $pntable['topics'];
         $pntopicscolumn = $pntable['topics_column'];
-        
+
         $sql = "SELECT $pntopicscolumn[topicid],
                        $pntopicscolumn[topicname],
                        $pntopicscolumn[topicimage],
                        $pntopicscolumn[topictext]
                 FROM $pntopicstable
                 ORDER BY $pntopicscolumn[topicname]";
-        
+
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        
+
         $topics = array();
         if($result->RecordCount()>0) {
             for (; !$result->EOF; $result->MoveNext())
@@ -1220,8 +1220,8 @@ function pnForum_adminapi_get_pntopics()
 /**
  * store new forum order
  *
- *@params $args['forum_id'] int the forum id 
- *@params $args['cat_id']   int the forums category id 
+ *@params $args['forum_id'] int the forum id
+ *@params $args['cat_id']   int the forums category id
  *@params $args['order']    int the forum order number in this category
  *
  */
@@ -1233,16 +1233,16 @@ function pnForum_adminapi_storenewforumorder($args)
     if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
-    
+
     if(!isset($forum_id) || empty($forum_id) || !is_numeric($forum_id)) {
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), forumid=' . $forum_id);
-    }    
+    }
     if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), cat_id=' . $cat_id);
-    }    
+    }
     if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), order=' . $order);
-    }    
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -1259,13 +1259,13 @@ function pnForum_adminapi_storenewforumorder($args)
     }
     pnfCloseDB($result);
     return true;
-    
+
 }
 
 /**
  * store new category order
  *
- *@params $args['cat_id'] int the category id 
+ *@params $args['cat_id'] int the category id
  *@params $args['order']  int the category order number
  *
  */
@@ -1277,13 +1277,13 @@ function pnForum_adminapi_storenewcategoryorder($args)
     if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
         pnf_ajaxerror(_PNFORUM_NOAUTH);
     }
-    
+
     if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), cat_id=' . $cat_id);
-    }    
+    }
     if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), order=' . $order);
-    }    
+    }
 
     list($dbconn, $pntable) = pnfOpenDB();
 
@@ -1299,7 +1299,7 @@ function pnForum_adminapi_storenewcategoryorder($args)
     }
     pnfCloseDB($result);
     return true;
-    
+
 }
- 
+
 ?>
