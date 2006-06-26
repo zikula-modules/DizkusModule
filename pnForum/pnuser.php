@@ -82,6 +82,8 @@ function pnForum_user_main($args=array())
                 foreach($tree as $catname=>$forumarray) {
                     if(count($forumarray['forums'])==1) {
                         return pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));
+                    } else {
+                        $viewcat = $tree[$catname]['cat_id'];
                     }
                 }
             }
@@ -356,7 +358,7 @@ function pnForum_user_newtopic($args=array())
             $pnr->add_core_data();
             $pnr->assign('topic', pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $topic_id)));
             return $pnr->fetch('pnforum_user_newtopicconfirmation.html');
-        
+
         } else {
             return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
     	                        array('topic' => $topic_id)));
@@ -612,7 +614,7 @@ function pnForum_user_prefs($args=array())
 
     // user_id will only be used if we have admin permissions otherwise the
     // user can edit his prefs only but not others users prefs
-    
+
 
     switch($act) {
         case 'subscribe_topic':
@@ -760,7 +762,7 @@ function pnForum_user_emailtopic($args=array())
 function pnForum_user_viewlatest($args=array())
 {
     if(useragent_is_bot() == true) {
-        return pnRedirect(pnModURL('pnForum', 'user', 'main')); 
+        return pnRedirect(pnModURL('pnForum', 'user', 'main'));
     }
 
     // get the input
