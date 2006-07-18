@@ -886,14 +886,17 @@ function pnForum_userapi_readtopic($args)
 
         $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-        if ($currentuserid != 0 && $currentuserid != 1) {
+        $topic['access_comment']  = false;
+        $topic['access_moderate'] = false;
+        $topic['access_admin']    = false;
+        if($topic['access_read'] == true) {
             $topic['access_comment']  = $topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-            $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-            $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-        } else {
-            $topic['access_comment']  = false; //$topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-            $topic['access_moderate'] = false; //$topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-            $topic['access_admin']    = false; //$topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+            if($topic['access_comment'] == true) {
+                $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+                if($topic['access_moderate'] == true) {
+                    $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+                }
+            }
         }
 
         // get the next and previous topic_id's for the next / prev button
