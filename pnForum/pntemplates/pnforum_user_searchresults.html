@@ -2,7 +2,7 @@
 
 <!--[ include file='pnforum_user_header.html' ]-->
 
-<h1 style="margin: 1em 0 1em 0; padding: 3px; text-align: center;"><!--[ pnml name='_PNFORUM_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ if $searchfor neq '' ]--><!--[ $searchfor|pnvarprepfordisplay ]--><!--[ else ]--><!--[ $searchauthor|pnvarprepfordisplay ]--><!--[ /if ]-->'&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) </h1>
+<h1><!--[ pnml name='_PNFORUM_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ if $searchfor neq '' ]--><!--[ $searchfor|pnvarprepfordisplay ]--><!--[ else ]--><!--[ $searchauthor|pnvarprepfordisplay ]--><!--[ /if ]-->'&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->) </h1>
 
 <ul class="searchresultlist">
 <!--[ foreach key=num item=searchresult from=$searchresults ]-->
