@@ -44,27 +44,27 @@ function createnewtopic()
             // no text
             return;
         }
-        
+
         newtopicstatus = true;
         showpnforuminfo(storingPost);
-        
-        var pars = 'module=pnForum&type=ajax&func=newtopic' +  
-                   '&forum=' + $F('forum') + 
+
+        var pars = 'module=pnForum&type=ajax&func=newtopic' +
+                   '&forum=' + $F('forum') +
                    '&subject=' + encodeURIComponent($F('subject')) +
-                   '&message=' + encodeURIComponent($F('message')) +              
-                   '&attach_signature=' + getcheckboxvalue('attach_signature') +            
-                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') + 
+                   '&message=' + encodeURIComponent($F('message')) +
+                   '&attach_signature=' + getcheckboxvalue('attach_signature') +
+                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') +
                    '&authid=' + $F('authid');
 
         Ajax.Responders.register(pnf_globalhandlers);
-        var myAjax = new Ajax.Request(                              
-                        "index.php",                                
-                        {                                           
-                            method: 'post',                         
-                            parameters: pars,                       
+        var myAjax = new Ajax.Request(
+                        "index.php",
+                        {
+                            method: 'post',
+                            parameters: pars,
                             onComplete: createnewtopic_response
-                        }                                           
-                        );              
+                        }
+                        );
     }
 }
 
@@ -73,7 +73,7 @@ function createnewtopic_response(originalRequest)
     hidepnforuminfo();
 
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         newtopicstatus = false;
         return;
@@ -88,7 +88,7 @@ function createnewtopic_response(originalRequest)
         Element.hide('newtopic');
         Element.update('newtopicconfirmation', json.confirmation);
         Element.show('newtopicconfirmation');
-    }   
+    }
     window.setTimeout("pnf_redirect('" + json.redirect + "');", 3000);
 }
 
@@ -97,22 +97,23 @@ function previewnewtopic()
     if(newtopicstatus==false) {
         newtopicstatus = true;
         showpnforuminfo(preparingPreview);
-        
-        var pars = "module=pnForum&type=ajax&func=newtopic" +   
+
+        var pars = "module=pnForum&type=ajax&func=newtopic" +
                    "&subject=" + encodeURIComponent($F('subject')) +
-                   "&message=" + encodeURIComponent($F('message')) +              
+                   "&message=" + encodeURIComponent($F('message')) +
+                   "&attach_signature=" + getcheckboxvalue('attach_signature') +
                    "&preview=1" +
                    "&authid=" + $F('authid');
-        
+
         Ajax.Responders.register(pnf_globalhandlers);
-        var myAjax = new Ajax.Request(                              
-                        "index.php",                                
-                        {                                           
-                            method: 'post',                         
-                            parameters: pars,                       
+        var myAjax = new Ajax.Request(
+                        "index.php",
+                        {
+                            method: 'post',
+                            parameters: pars,
                             onComplete: previewnewtopic_response
-                        }                                           
-                        );              
+                        }
+                        );
     }
 }
 
@@ -120,7 +121,7 @@ function previewnewtopic_response(originalRequest)
 {
     hidepnforuminfo();
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         newtopicstatus = false;
         return;
@@ -141,7 +142,7 @@ function clearnewtopic()
     Element.update('newtopicpreview', '&nbsp;');
     Element.hide('newtopicpreview');
     newtopicstatus = false;
-}                        
+}
 
 
 function changesortorder()
@@ -151,10 +152,10 @@ function changesortorder()
         var pars = "module=pnForum&type=ajax&func=changesortorder&authid=" + $F('authid');
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: changesortorder_response
             });
     }
@@ -164,14 +165,14 @@ function changesortorder_response(originalRequest)
 {
     sortorderstatus = false;
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
 
     var json = dejsonize(originalRequest.responseText);
     updateAuthid(json.authid);
-    
+
     switch(json.data) {
         case 'desc':
             Element.hide('sortorder_asc');
@@ -193,10 +194,10 @@ function topicsubjectedit(topicid)
         var pars = "module=pnForum&type=ajax&func=edittopicsubject&topic=" + topicid;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: topicsubjecteditinit
             });
     }
@@ -205,12 +206,12 @@ function topicsubjectedit(topicid)
 function topicsubjecteditinit(originalRequest)
 {
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         subjectstatus = false;
         return;
     }
-    
+
     var result = dejsonize(originalRequest.responseText);
 
     var topicsubjectID = 'topicsubject_' + result.topic_id;
@@ -218,7 +219,7 @@ function topicsubjecteditinit(originalRequest)
     Element.hide(topicsubjectID);
     updateAuthid(result.authid);
 
-    new Insertion.After($(topicsubjectID), result.data);    
+    new Insertion.After($(topicsubjectID), result.data);
 }
 
 function topicsubjecteditcancel(topicid)
@@ -240,26 +241,26 @@ function topicsubjecteditsave(topicid)
         return;
     }
 
-    var pars = "module=pnForum&type=ajax&func=updatetopicsubject" +   
+    var pars = "module=pnForum&type=ajax&func=updatetopicsubject" +
                "&topic=" + topicid +
                "&subject=" + encodeURIComponent($F(editID)) +
                "&authid=" + $F(authID);
     Ajax.Responders.register(pnf_globalhandlers);
-    var myAjax = new Ajax.Request(                              
-                    "index.php",                                
-                    {                                           
-                        method: 'post',                         
-                        parameters: pars,                       
+    var myAjax = new Ajax.Request(
+                    "index.php",
+                    {
+                        method: 'post',
+                        parameters: pars,
                         onComplete: topicsubjecteditsave_response
-                    }                                           
-                    );              
+                    }
+                    );
 
 }
 
 function topicsubjecteditsave_response(originalRequest)
 {
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         subjectstatus = false;
         return;
@@ -270,7 +271,7 @@ function topicsubjecteditsave_response(originalRequest)
 
     Element.remove(topicsubjectID + '_editor');
     updateAuthid(result.authid);
-    
+
     Element.update(topicsubjectID + '_content', result.topic_title);
     Element.show(topicsubjectID);
 
@@ -281,7 +282,7 @@ function toggleuserinfo(postid)
 {
     var userinfoID = 'posting_' + postid + '_userinfo';
     var postingtextID = 'postingtext_' + postid;
-    
+
     if(Element.visible(userinfoID) == false) {
         Element.removeClassName(postingtextID, 'postingtext_big');
         Element.addClassName(postingtextID, 'postingtext_small');
@@ -290,8 +291,8 @@ function toggleuserinfo(postid)
         Element.hide(userinfoID);
         Element.removeClassName(postingtextID, 'postingtext_small');
         Element.addClassName(postingtextID, 'postingtext_big');
-    } 
-    Event.observe(postingtextID, 'click', function(){toggleuserinfo(postid)}, false);       
+    }
+    Event.observe(postingtextID, 'click', function(){toggleuserinfo(postid)}, false);
 }
 
 function addremovefavorite(forumid, mode)
@@ -301,10 +302,10 @@ function addremovefavorite(forumid, mode)
         var pars = "module=pnForum&type=ajax&func=addremovefavorite&forum=" + forumid + "&mode=" + mode;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: addremovefavorite_response
             });
     }
@@ -314,12 +315,12 @@ function addremovefavorite_response(originalRequest)
 {
     favoritestatus = false;
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
     var result = dejsonize(originalRequest.responseText);
-    
+
     switch(result.newmode) {
         case 'added':
             Element.hide('addfavoritebutton_' + result.forum_id);
@@ -341,10 +342,10 @@ function subscribeunsubscribeforum(forumid, mode)
         var pars = "module=pnForum&type=ajax&func=subscribeunsubscribeforum&forum=" + forumid + "&mode=" + mode;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: subscribeunsubscribeforum_response
             });
     }
@@ -354,12 +355,12 @@ function subscribeunsubscribeforum_response(originalRequest)
 {
     subscribeforumstatus = false;
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
     var result = dejsonize(originalRequest.responseText);
-    
+
     switch(result.newmode) {
         case 'subscribed':
             Element.hide('subscribeforumbutton_' + result.forum_id);
@@ -381,10 +382,10 @@ function subscribeunsubscribetopic(topicid, mode)
         var pars = "module=pnForum&type=ajax&func=subscribeunsubscribetopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: subscribeunsubscribetopic_response
             });
     }
@@ -394,12 +395,12 @@ function subscribeunsubscribetopic_response(originalRequest)
 {
     subscribestatus = false;
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
     var result = dejsonize(originalRequest.responseText);
-    
+
     switch(result.data) {
         case 'subscribed':
             Element.hide('subscribetopicbutton');
@@ -421,10 +422,10 @@ function stickyunstickytopic(topicid, mode)
         var pars = "module=pnForum&type=ajax&func=stickyunstickytopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: stickyunstickytopic_response
             });
     }
@@ -434,12 +435,12 @@ function stickyunstickytopic_response(originalRequest)
 {
     stickystatus = false;
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
     var result = dejsonize(originalRequest.responseText);
-    
+
     switch(result.data) {
         case 'sticky':
             Element.hide('stickytopicbutton');
@@ -461,10 +462,10 @@ function lockunlocktopic(topicid, mode)
         var pars = "module=pnForum&type=ajax&func=lockunlocktopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: lockunlocktopic_response
             });
     }
@@ -474,12 +475,12 @@ function lockunlocktopic_response(originalRequest)
 {
     lockstatus = false;
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
     var result = dejsonize(originalRequest.responseText);
-    
+
     switch(result.data) {
         case 'locked':
             Element.hide('locktopicbutton');
@@ -502,10 +503,10 @@ function quickEdit(postid)
         var pars = "module=pnForum&type=ajax&func=editpost&post=" + postid;
         Ajax.Responders.register(pnf_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php", 
+            "index.php",
             {
-                method: 'post', 
-                parameters: pars, 
+                method: 'post',
+                parameters: pars,
                 onComplete: quickEditInit
             });
     }
@@ -514,7 +515,7 @@ function quickEdit(postid)
 function quickEditInit(originalRequest)
 {
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         editstatus = false;
         return;
@@ -524,16 +525,16 @@ function quickEditInit(originalRequest)
 
     var postingtextID = 'postingtext_' + result.post_id;
     var postinguserID = 'posting_' + result.post_id + '_userinfo';
-    
+
     Element.hide(postingtextID);
     Element.hide(postinguserID);
     updateAuthid(result.authid);
 
-    new Insertion.After($(postingtextID), result.data); 
+    new Insertion.After($(postingtextID), result.data);
 
     Resizable.initialize('postingtext_' + result.post_id + '_edit');
 
-    Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);      
+    Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
     Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);
     Event.observe(postingtextID + '_cancel', 'click',  function(){quickEditcancel(result.post_id)}, false);
 }
@@ -564,7 +565,7 @@ function quickEditsave(postid)
     var deletepost;
     var editID = postingtextID + '_edit';
     var authID = postingtextID + '_authid';
-    
+
     if($F(editID) == '') {
         // no text
         return;
@@ -577,42 +578,42 @@ function quickEditsave(postid)
         Element.update(statusID, '<span style="color: red;">' + updatingPost + '</span>');
         deletepost = '';
     }
-    var pars = "module=pnForum&type=ajax&func=updatepost" +   
+    var pars = "module=pnForum&type=ajax&func=updatepost" +
                "&post=" + postid +
                deletepost +
                "&message=" + encodeURIComponent($F(editID)) +
                "&authid=" + $F(authID);
 
     Ajax.Responders.register(pnf_globalhandlers);
-    var myAjax = new Ajax.Request(                              
-                    "index.php",                                
-                    {                                           
-                        method: 'post',                         
-                        parameters: pars,                       
+    var myAjax = new Ajax.Request(
+                    "index.php",
+                    {
+                        method: 'post',
+                        parameters: pars,
                         onComplete: quickEditsave_response
-                    }                                           
-                    );              
-    
+                    }
+                    );
+
 }
 
 function quickEditsave_response(originalRequest)
 {
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         editstatus = false;
         return;
     }
 
     var result = dejsonize(originalRequest.responseText);
-    
+
     var postingtextID = 'postingtext_' + result.post_id;
     var postingobjID = 'posting_' + result.post_id;
     var postinguserID = postingobjID + '_userinfo';
     updateAuthid(result.authid);
-    
+
     Element.remove(postingtextID + '_editor');
-    
+
     if(result.action == 'deleted') {
         Element.remove(postingobjID);
     } else {
@@ -628,28 +629,28 @@ function createQuote(postid)
     var pars = "module=pnForum&type=ajax&func=preparequote&post=" + postid;
     Ajax.Responders.register(pnf_globalhandlers);
     var myAjax = new Ajax.Request(
-        "index.php", 
+        "index.php",
         {
-            method: 'post', 
-            parameters: pars, 
+            method: 'post',
+            parameters: pars,
             onComplete: createQuoteInit
         });
-    
+
 }
 
 function createQuoteInit(originalRequest)
 {
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         return;
-    }    
+    }
 
     var oldvalue = $('message').value;
     if(oldvalue.length != 0) {
         oldvalue += '\n\n';
     }
     var result = dejsonize(originalRequest.responseText);
-    
+
     $('message').value = oldvalue + result.message  + '\n';
     Field.focus('message');
 }
@@ -662,22 +663,22 @@ function createQuickReply()
         }
         replystatus = true;
         showpnforuminfo(storingReply);
-        
-        var pars = 'module=pnForum&type=ajax&func=reply' +   
+
+        var pars = 'module=pnForum&type=ajax&func=reply' +
                    '&topic=' + $F('topic') +
-                   '&message=' + encodeURIComponent($F('message')) +              
-                   '&attach_signature=' + getcheckboxvalue('attach_signature') +            
-                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') + 
+                   '&message=' + encodeURIComponent($F('message')) +
+                   '&attach_signature=' + getcheckboxvalue('attach_signature') +
+                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') +
                    '&authid=' + $F('authid');
         Ajax.Responders.register(pnf_globalhandlers);
-        var myAjax = new Ajax.Request(                              
-                        "index.php",                                
-                        {                                           
-                            method: 'post',                         
-                            parameters: pars,                       
+        var myAjax = new Ajax.Request(
+                        "index.php",
+                        {
+                            method: 'post',
+                            parameters: pars,
                             onComplete: createQuickReply_response
-                        }                                           
-                        );              
+                        }
+                        );
     }
 }
 
@@ -686,7 +687,7 @@ function createQuickReply_response(originalRequest)
     hidepnforuminfo();
 
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         replystatus = false;
         return;
@@ -695,18 +696,18 @@ function createQuickReply_response(originalRequest)
     var result = dejsonize(originalRequest.responseText);
 
     updateAuthid(result.authid);
-    
+
     // clear textarea
     $('message').value = '';
-    
+
     // reset preview
     Element.update('quickreplypreview', '&nbsp;');
     Element.hide('quickreplypreview');
-    
+
     // show new posting
     Element.update('quickreplyposting', result.data);
     Element.show('quickreplyposting');
-    
+
     // prepare everything for another quick reply
     new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
     // clear old id
@@ -723,22 +724,23 @@ function previewQuickReply()
     if(replystatus==false) {
         replystatus = true;
         showpnforuminfo(preparingPreview);
-        
-        var pars = "module=pnForum&type=ajax&func=reply" +   
+
+        var pars = "module=pnForum&type=ajax&func=reply" +
                    "&topic=" + $F('topic') +
-                   "&message=" + encodeURIComponent($F('message')) +              
+                   "&message=" + encodeURIComponent($F('message')) +
+                   "&attach_signature=" + getcheckboxvalue('attach_signature') +
                    "&preview=1" +
                    "&authid=" + $F('authid');
-        
+
         Ajax.Responders.register(pnf_globalhandlers);
-        var myAjax = new Ajax.Request(                              
-                        "index.php",                                
-                        {                                           
-                            method: 'post',                         
-                            parameters: pars,                       
+        var myAjax = new Ajax.Request(
+                        "index.php",
+                        {
+                            method: 'post',
+                            parameters: pars,
                             onComplete: previewQuickReply_response
-                        }                                           
-                        );              
+                        }
+                        );
     }
 }
 
@@ -747,7 +749,7 @@ function previewQuickReply_response(originalRequest)
     hidepnforuminfo();
 
     // show error if necessary
-    if( originalRequest.status != 200 ) { 
+    if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
         replystatus = false;
         return;
@@ -767,4 +769,4 @@ function clearQuickReply()
     Element.update('quickreplypreview', '&nbsp;');
     Element.hide('quickreplypreview');
     replystatus = false;
-}                        
+}

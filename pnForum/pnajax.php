@@ -54,17 +54,17 @@ function pnForum_ajax_reply()
                                          'attach_signature',
                                          'subscribe_topic',
                                          'preview');
-    
+
     $preview          = ($preview=='1') ? true : false;
 //    $attach_signature = ($attach_signature=='1') ? true : false;
 //    $subscribe_topic  = ($subscribe_topic=='1') ? true : false;
-    
+
     $message = pnfstriptags(utf8_decode($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
     }
-    
+
     if($preview==false) {
         if (!pnSecConfirmAuthKey()) {
            pnf_ajaxerror(_BADAUTHKEY);
@@ -76,9 +76,9 @@ function pnForum_ajax_reply()
                                              'message'          => $message,
                                              'attach_signature' => $attach_signature,
                                              'subscribe_topic'  => $subscribe_topic));
-        
+
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
-                             array('post_id' => $post_id)); 
+                             array('post_id' => $post_id));
     } else {
         // preview == true, create fake post
         $post['post_id']      = 0;
@@ -87,17 +87,19 @@ function pnForum_ajax_reply()
         // create unix timestamp
         $post['post_unixtime'] = time();
         $post['posted_unixtime'] = $post['post_unixtime'];
-    
+
         $post['post_textdisplay'] = phpbb_br2nl($message);
-        $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
-    
+        if($attach_signature == 1) {
+            $post['post_textdisplay'] .= '[addsig]';
+            $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+        }
         // call hooks for $message_display ($message remains untouched for the textarea)
         list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
         $post['post_textdisplay'] =pnVarCensor(nl2br($post['post_textdisplay']));
-    
+
         $post['post_text'] = $post['post_textdisplay'];
 
-    }   
+    }
 
     $pnr = new pnRender('pnForum');
     $pnr->caching = false;
@@ -122,8 +124,8 @@ function pnForum_ajax_preparequote()
         //$post['message'] = utf8_encode($post['message']);
         pnf_jsonizeoutput($post, false);
         exit;
-    } 
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_preparequote()'); 
+    }
+    pnf_ajaxerror('internal error: no post id in pnForum_ajax_preparequote()');
 }
 
 function pnForum_ajax_readpost()
@@ -138,10 +140,10 @@ function pnForum_ajax_readpost()
             pnf_jsonizeoutput($post, false);
             exit;
         } else {
-            pnf_ajaxerror(_PNFORUM_NOAUTH); 
-        }        
-    } 
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readpost()'); 
+            pnf_ajaxerror(_PNFORUM_NOAUTH);
+        }
+    }
+    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readpost()');
 }
 
 function pnForum_ajax_editpost()
@@ -156,18 +158,18 @@ function pnForum_ajax_editpost()
             $pnr->caching = false;
             $pnr->add_core_data();
             $pnr->assign('post', $post);
-            // simplify our live 
+            // simplify our live
             $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
 
             pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_ajax_editpost.html'),
-                                    'post_id' => $post['post_id']), 
+                                    'post_id' => $post['post_id']),
                                     true);
             exit;
         } else {
-            pnf_ajaxerror(_PNFORUM_NOAUTH); 
-        }        
-    } 
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readrawtext()'); 
+            pnf_ajaxerror(_PNFORUM_NOAUTH);
+        }
+    }
+    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readrawtext()');
 
 }
 
@@ -201,68 +203,68 @@ function pnForum_ajax_updatepost()
         pnf_jsonizeoutput($post, true);
         exit;
     }
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_updatepost()'); 
-                                        
+    pnf_ajaxerror('internal error: no post id in pnForum_ajax_updatepost()');
+
 }
 
 function pnForum_ajax_lockunlocktopic()
 {
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
-    
+
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
-    
+
     if(empty($topic_id)) {
-        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_lockunlocktopic()'); 
+        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_lockunlocktopic()');
     }
     if( empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_lockunlocktopic()'); 
+        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_lockunlocktopic()');
     }
-    
+
     list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
-    
+
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
     }
-    
-    pnModAPIFunc('pnForum', 'user', 'lockunlocktopic', 
-                 array('topic_id' => $topic_id, 
+
+    pnModAPIFunc('pnForum', 'user', 'lockunlocktopic',
+                 array('topic_id' => $topic_id,
                        'mode'     => $mode));
     $newmode = ($mode=='lock') ? 'locked' : 'unlocked';
-//    pnf_jsonizeoutput(utf8_encode($newmode));    
-    pnf_jsonizeoutput($newmode);    
+//    pnf_jsonizeoutput(utf8_encode($newmode));
+    pnf_jsonizeoutput($newmode);
     exit;
 }
 
 function pnForum_ajax_stickyunstickytopic()
 {
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
-    
+
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
-    
+
     if(empty($topic_id)) {
-        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_stickyunstickytopic()'); 
+        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_stickyunstickytopic()');
     }
     if( empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_stickyunstickytopic()'); 
+        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_stickyunstickytopic()');
     }
-    
+
     list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
-    
+
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
     }
 
-    pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', 
-                 array('topic_id' => $topic_id, 
+    pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic',
+                 array('topic_id' => $topic_id,
                        'mode'     => $mode));
-//    pnf_jsonizeoutput(utf8_encode($mode));    
-    pnf_jsonizeoutput($mode);    
+//    pnf_jsonizeoutput(utf8_encode($mode));
+    pnf_jsonizeoutput($mode);
     exit;
 }
 
@@ -270,43 +272,43 @@ function pnForum_ajax_subscribeunsubscribetopic()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
-    
+
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
-    
+
     if(empty($topic_id)) {
-        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_subscribeunsubscribetopic()'); 
+        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_subscribeunsubscribetopic()');
     }
-    
+
     list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
-    
+
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return pnf_ajaxerror(_PNFORUM_NOAUTH_TOREAD);
     }
 
     switch($mode) {
         case 'subscribe':
-            pnModAPIFunc('pnForum', 'user', 'subscribe_topic', 
-                         array('topic_id' => $topic_id, 
+            pnModAPIFunc('pnForum', 'user', 'subscribe_topic',
+                         array('topic_id' => $topic_id,
                                'silent'   => true));
             $newmode = 'subscribed';
             break;
         case 'unsubscribe':
-            pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic', 
-                         array('topic_id' => $topic_id, 
+            pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
+                         array('topic_id' => $topic_id,
                                'silent'   => true));
             $newmode = 'unsubscribed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribetopic()'); 
+        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribetopic()');
     }
-    
+
 
     pnSessionDelVar('pn_ajax_call');
-//    pnf_jsonizeoutput(utf8_encode($newmode));    
-    pnf_jsonizeoutput($newmode);    
+//    pnf_jsonizeoutput(utf8_encode($newmode));
+    pnf_jsonizeoutput($newmode);
     exit;
 }
 
@@ -314,66 +316,66 @@ function pnForum_ajax_subscribeunsubscribeforum()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
     list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
-    
+
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
-    
+
     if(empty($forum_id)) {
-        pnf_ajaxerror('internal error: no forum id in pnForum_ajax_subscribeunsubscribeforum()'); 
+        pnf_ajaxerror('internal error: no forum id in pnForum_ajax_subscribeunsubscribeforum()');
     }
-    
+
     $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
-    
+
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return pnf_ajaxerror(_PNFORUM_NOAUTH_TOREAD);
     }
 
     switch($mode) {
         case 'subscribe':
-            pnModAPIFunc('pnForum', 'user', 'subscribe_forum', 
-                         array('forum_id' => $forum_id, 
+            pnModAPIFunc('pnForum', 'user', 'subscribe_forum',
+                         array('forum_id' => $forum_id,
                                'silent'   => true));
             $newmode = 'subscribed';
             break;
         case 'unsubscribe':
-            pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum', 
-                         array('forum_id' => $forum_id, 
+            pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum',
+                         array('forum_id' => $forum_id,
                                'silent'   => true));
             $newmode = 'unsubscribed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribeforum()'); 
+        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribeforum()');
     }
-    
+
 
     pnSessionDelVar('pn_ajax_call');
     pnf_jsonizeoutput(array('newmode' => $newmode,
-                            'forum_id' => $forum_id));    
+                            'forum_id' => $forum_id));
     exit;
 }
 
 function pnForum_ajax_addremovefavorite()
 {
     if(pnModGetVar('pnForum', 'favorites_enabled')=='no') {
-        pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED); 
+        pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED);
     }
-    
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
     list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
-    
+
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
-    
+
     if(empty($forum_id)) {
-        pnf_ajaxerror('internal error: no forum id in pnForum_ajax_addremovefavorite()'); 
+        pnf_ajaxerror('internal error: no forum id in pnForum_ajax_addremovefavorite()');
     }
-    
+
     $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
-    
+
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return pnf_ajaxerror(_PNFORUM_NOAUTH_TOREAD);
     }
@@ -390,13 +392,13 @@ function pnForum_ajax_addremovefavorite()
             $newmode = 'removed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_addremovefavorite()'); 
+        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_addremovefavorite()');
     }
-    
+
 
     pnSessionDelVar('pn_ajax_call');
     pnf_jsonizeoutput(array('newmode' => $newmode,
-                            'forum_id' => $forum_id));    
+                            'forum_id' => $forum_id));
     exit;
 }
 
@@ -419,10 +421,10 @@ function pnForum_ajax_edittopicsubject()
                                     'topic_id' => $topic_id), true);
             exit;
         } else {
-            pnf_ajaxerror(_PNFORUM_NOAUTH); 
-        }        
-    } 
-    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_readtopic()'); 
+            pnf_ajaxerror(_PNFORUM_NOAUTH);
+        }
+    }
+    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_readtopic()');
 }
 
 function pnForum_ajax_updatetopicsubject()
@@ -443,7 +445,7 @@ function pnForum_ajax_updatetopicsubject()
         }
 
         list($dbconn, $pntable) = pnfOpenDB();
-        
+
         if (trim($subject) != '') {
             $subject = pnVarPrepForStore(pnVarCensor(utf8_decode($subject)));
             $sql = "UPDATE ".$pntable['pnforum_topics']."
@@ -457,14 +459,14 @@ function pnForum_ajax_updatetopicsubject()
                                                               'topic_id' => $topic_id));
 
             pnf_jsonizeoutput(array('topic_title' => $subject,
-                                    'topic_id' => $topic_id), 
+                                    'topic_id' => $topic_id),
                               true);
-        
+
         } else {
-            pnf_ajaxerror(_PNFORUM_NOSUBJECT); 
+            pnf_ajaxerror(_PNFORUM_NOSUBJECT);
         }
     }
-    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()'); 
+    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()');
 }
 
 function pnForum_ajax_changesortorder()
@@ -474,14 +476,14 @@ function pnForum_ajax_changesortorder()
     if(!pnUserLoggedIn()) {
        pnf_ajaxerror(_PNFORUM_USERLOGINTITLE);
     }
-    
+
     if (!pnSecConfirmAuthKey()) {
        pnf_ajaxerror(_BADAUTHKEY);
     }
-   
+
     pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
     $newmode = strtolower(pnModAPIFunc('pnForum','user','get_user_post_order'));
-    pnf_jsonizeoutput($newmode, true, true);    
+    pnf_jsonizeoutput($newmode, true, true);
     exit;
 }
 
@@ -515,7 +517,7 @@ function pnForum_ajax_newtopic()
     $preview          = ($preview=='1') ? true : false;
     //$attach_signature = ($attach_signature=='1') ? true : false;
     //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
-    
+
     $message = pnfstriptags(utf8_decode($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
@@ -555,9 +557,9 @@ function pnForum_ajax_newtopic()
                                 'redirect'     => pnModURL('pnForum', 'user', 'viewtopic',
     	                                                   array('topic' => $topic_id))),
                           true);
-        
+
     }
-    
+
     // preview == true, create fake topic
     $newtopic['cat_id']     = $cat_id;
     $newtopic['forum_id']   = $forum_id;
@@ -576,6 +578,11 @@ function pnForum_ajax_newtopic()
     $newtopic['subject'] = $subject;
     $newtopic['message'] = $message;
     $newtopic['message_display'] = $message; // phpbb_br2nl($message);
+
+    if($attach_signature==1) {
+        $newtopic['message_display'] .= '[addsig]';
+        $newtopic['message_display'] = pnForum_replacesignature($newtopic['message_display'], $newtopic['poster_data']['pn_user_sig']);
+    }
 
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
     $newtopic['message_display'] = nl2br($newtopic['message_display']);
