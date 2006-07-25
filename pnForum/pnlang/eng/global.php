@@ -462,7 +462,7 @@ define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX', 'Search forums with fulltext in
 define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<i>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the index fields have been created. The search result might by empty if the query string is present in too many postings. This is a "feature" of MySQL.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL">Fulltext search in MySQL</a>.');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'End of signature format:');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Start of signature format:');
-define('_PNFORUM_PREFS_SLIMFORUM', 'Hide category view with one forum only');
+define('_PNFORUM_PREFS_SLIMFORUM', 'Hide category view with one category only');
 define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Strip all html tags from new posts (does not alter content of [code][/code]');
 define('_PNFORUM_PREFS_TOPICICON', 'Topic image:');
 define('_PNFORUM_PREFS_TOPICSPERPAGE', 'Topics per Forum:<br /><em>(This is the number of topics per forum that will be displayed per page of a forum. 15 by default.)</em>');
