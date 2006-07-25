@@ -41,7 +41,7 @@
  *
  ***********************************************************************/
 
-// removed 
+// removed
 // define('_PNFORUM_TOGGLEALL', 'Alle Themenabos entfernen');
 
 // changed
@@ -78,7 +78,7 @@ define('_PNFORUM_SHOWSUBSCRIPTIONS', 'Alle Abos dieses Benutzers anzeigen');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS', 'Abos verwalten');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS_INFO', 'Themen- und Forenabos der Benutzer verwalten');
 define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...now redirecting to the new topic...');
-define('_PNFORUM_PREFS_SHOWNEWTOPICCONFIRMATION', 'Zeige Bestätigung für neue Beiträge'); 
+define('_PNFORUM_PREFS_SHOWNEWTOPICCONFIRMATION', 'Zeige Bestätigung für neue Beiträge');
 define('_PNFORUM_THANKSFORNEWTOPIC', 'Vielen Dank für Deinen Beitrag!');
 define('_PNFORUM_CLICKHERETOGOTONEWTOPICORWAITFORREDIRECT', 'Hier klicken, um zu dem neuen Beitrag zu gehen oder auf die Weiterleitung warten.');
 define('_PNFORUM_CLICKHERETOGOTONEWTOPIC', 'Hier klicken, um zu dem neuen Beitrag zu gehen.');
@@ -462,7 +462,7 @@ define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX', 'Forumsuche mit Volltextindex')
 define('_PNFORUM_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<i>Die Forensuche mit Volltextindexfeldern benötigt MySQL 4 oder höher und funktioniert nicht mit InnoDB Datenbanken. Dieses Flag wird üblicherweise bei der Installation gesetzt, wenn die entsprechenden Indexfelder angelegt werden. Es könnte sein, das eine Volltextsuche zu einem leeren Ergebnis führt, obwohl der Suchbegriff vorhanden ist.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Volltextsuche in MySQL">Volltextsuche in MySQL</a>.');
 define('_PNFORUM_PREFS_SIGNATUREEND', 'Ende der Formatierung von Signaturen:');
 define('_PNFORUM_PREFS_SIGNATURESTART', 'Start der Formatierung von Signaturen:');
-define('_PNFORUM_PREFS_SLIMFORUM', 'Kategorieansicht bei nur einem Forum überspringen:');
+define('_PNFORUM_PREFS_SLIMFORUM', 'Kategorieansicht bei nur einer Kategorie überspringen:');
 define('_PNFORUM_PREFS_STRIPTAGSFROMPOST', 'Alle HTML Tags aus neuen Postings entfernen (Inhalt von [code][/code] bleibt erhalten)');
 define('_PNFORUM_PREFS_TOPICICON', 'Thema:');
 define('_PNFORUM_PREFS_TOPICSPERPAGE', 'Themen pro Seite:<br /><em>(Dies ist die Anzahl der Themen, die in einem Forum pro Seite angezeigt werden. Standard ist 15.)</em>');
