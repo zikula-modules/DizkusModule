@@ -17,6 +17,8 @@ var subjectstatus = false;
 var sortorderstatus = false;
 var newtopicstatus = false;
 
+var indicatorimage = '<img src="modules/pnForum/pnimages/ajaxindicator.gif" alt="" />';
+
 var pnf_globalhandlers = {
     onCreate: function(){
         if($('pnforum')) {
@@ -46,7 +48,7 @@ function createnewtopic()
         }
 
         newtopicstatus = true;
-        showpnforuminfo(storingPost);
+        showpnforuminfo(indicatorimage + ' ' + storingPost);
 
         var pars = 'module=pnForum&type=ajax&func=newtopic' +
                    '&forum=' + $F('forum') +
@@ -96,7 +98,7 @@ function previewnewtopic()
 {
     if(newtopicstatus==false) {
         newtopicstatus = true;
-        showpnforuminfo(preparingPreview);
+        showpnforuminfo(indicatorimage + ' ' + preparingPreview);
 
         var pars = "module=pnForum&type=ajax&func=newtopic" +
                    "&subject=" + encodeURIComponent($F('subject')) +
@@ -662,7 +664,7 @@ function createQuickReply()
             return;
         }
         replystatus = true;
-        showpnforuminfo(storingReply);
+        showpnforuminfo(indicatorimage + ' ' + storingReply);
 
         var pars = 'module=pnForum&type=ajax&func=reply' +
                    '&topic=' + $F('topic') +
@@ -723,7 +725,7 @@ function previewQuickReply()
 {
     if(replystatus==false) {
         replystatus = true;
-        showpnforuminfo(preparingPreview);
+        showpnforuminfo(indicatorimage + ' ' + preparingPreview);
 
         var pars = "module=pnForum&type=ajax&func=reply" +
                    "&topic=" + $F('topic') +

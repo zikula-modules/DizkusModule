@@ -12,16 +12,16 @@ function getcheckboxvalue(id)
         return '';
     }
 }
- 
-function CheckAll(formtype) {                                                                                               
+
+function CheckAll(formtype) {
     document.getElementsByClassName(formtype + '_checkbox').each(function(el) { el.checked = $('all' + formtype).checked;});
-}                                                                                                                           
-                                                                                                                            
-function CheckCheckAll(formtype) {                                                                                          
-    var totalon = 0;                                                                                                        
-    document.getElementsByClassName(formtype + '_checkbox').each(function(el) { if (el.checked) { totalon++; } });          
-    $('all' + formtype).checked = (document.getElementsByClassName(formtype + '_checkbox').length==totalon);                
-}        
+}
+
+function CheckCheckAll(formtype) {
+    var totalon = 0;
+    document.getElementsByClassName(formtype + '_checkbox').each(function(el) { if (el.checked) { totalon++; } });
+    $('all' + formtype).checked = (document.getElementsByClassName(formtype + '_checkbox').length==totalon);
+}
 
 function dejsonize(jsondata)
 {
@@ -58,19 +58,22 @@ function pnf_showajaxerror(error)
 
 function showpnforuminfo(infotext)
 {
-    Element.update('pnforuminformation', infotext);
-    $('pnforuminformation').style.visibility = 'visible';
-    
+    if($('pnforuminformation')) {
+        Element.update('pnforuminformation', infotext);
+        $('pnforuminformation').style.visibility = 'visible';
+    }
+
 }
 
 function hidepnforuminfo()
 {
-    Element.update('pnforuminformation', '&nbsp;');
-    $('pnforuminformation').style.visibility = 'hidden';
+    if($('pnforuminformation')) {
+        Element.update('pnforuminformation', '&nbsp;');
+        $('pnforuminformation').style.visibility = 'hidden';
+    }
 }
 
 function pnf_redirect(redirecturl)
 {
     window.location.href = redirecturl;
 }
-                                                                                                                   
