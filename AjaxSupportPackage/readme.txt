@@ -1,5 +1,5 @@
 //
-// AjaxSupportPackage 6.08
+// AjaxSupportPackage 6.08.04
 //
 
 
@@ -12,6 +12,7 @@ scriptaculous 1.6.1     http://script.aculo.us
 behaviour 1.1           http://bennolan.com/behaviour/behaviour.js
 fieldvalidation 1.5.3   http://tetlaw.id.au/view/blog/really-easy-field-validation-with-prototype/
 resizable               http://lists.rubyonrails.org/pipermail/rails-spinoffs/2006-April/003645.html
+windows 0.96.2          http://prototype-window.xilinus.com/download.html
 If you think, something valuable is missing, contact me (see #3)
 
 1. Why
