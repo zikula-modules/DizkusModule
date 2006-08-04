@@ -24,7 +24,7 @@ PostNuke pnForum Module changelog
   subscribeforum_button
   subscribetopic_button
   Please use display logic to show the buttons, for more details see the
-  recent templates. 
+  recent templates.
 + added timezone support (credits go to Adrian Chapman for the idea). To use this in
   your templates, use the new pnfdate_format modifier instead of pndate_format, e.g.:
   <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
@@ -39,7 +39,7 @@ PostNuke pnForum Module changelog
 - added [#2492] admin option to remove subscriptions
 - fixed [#2557] no protection against posting many new threads
 - fixed [#2569] pnForum preferences always visible in user profile
-- fixed [#2637] moderation navigation and 
+- fixed [#2637] moderation navigation and
         [#2683] moderation function broken on multiple pages (same bug)
 - fixed [#2678] search does not honor sort field specification
 - fixed [#2728] permissions not checked when notify mails are sent.
@@ -49,6 +49,10 @@ PostNuke pnForum Module changelog
 - fixed [#2922] index error
 - fixed [#2944] + [#2945] &'s not converted into entities in search plugin
 - fixed [#2903] Riesige Fehlerbox bei Bedienerfehler beim Ändern eines Postings
+- fixed [#2952] Incorrect entites in moved thread template
+- fixed [#3076] Wrong time for guests
+- fixed [#3110] Signature in Preview
+- fixed [#2946] issues header in search results
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)
