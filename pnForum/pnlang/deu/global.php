@@ -77,7 +77,7 @@ define('_PNFORUM_MANAGEFORUMSUBSCRIPTIONS', 'Forenabos verwalten');
 define('_PNFORUM_SHOWSUBSCRIPTIONS', 'Alle Abos dieses Benutzers anzeigen');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS', 'Abos verwalten');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS_INFO', 'Themen- und Forenabos der Benutzer verwalten');
-define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...now redirecting to the new topic...');
+define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...Weiterleitung zum neuen Beitrag...');
 define('_PNFORUM_PREFS_SHOWNEWTOPICCONFIRMATION', 'Zeige Bestätigung für neue Beiträge');
 define('_PNFORUM_THANKSFORNEWTOPIC', 'Vielen Dank für Deinen Beitrag!');
 define('_PNFORUM_CLICKHERETOGOTONEWTOPICORWAITFORREDIRECT', 'Hier klicken, um zu dem neuen Beitrag zu gehen oder auf die Weiterleitung warten.');

@@ -78,7 +78,7 @@ define('_PNFORUM_MANAGEFORUMSUBSCRIPTIONS', 'Manage forum subscriptions');
 define('_PNFORUM_SHOWSUBSCRIPTIONS', 'Show users subscriptions');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS', 'Manage subscriptions');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS_INFO', 'Remove the users topic and forum subscriptions');
-define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...Weiterleitung zum neuen Beitrag...');
+define('_PNFORUM_REDIRECTINGTONEWTOPIC', '...now redirecting to the new topic...');
 define('_PNFORUM_PREFS_SHOWNEWTOPICCONFIRMATION', 'Show confirmation when a new topic has been created');
 define('_PNFORUM_THANKSFORNEWTOPIC', 'Thanks for your submission');
 define('_PNFORUM_CLICKHERETOGOTONEWTOPICORWAITFORREDIRECT', 'Click here to go the new topic or wait a few seconds to be redirected');
