@@ -393,6 +393,7 @@ function pnForum_user_editpost($args=array())
         	 $subject,
         	 $submit,
         	 $delete,
+        	 $attach_signature,
         	 $cancel,
         	 $preview) =  pnVarCleanFromInput('post',
         	                                  'topic',
@@ -400,6 +401,7 @@ function pnForum_user_editpost($args=array())
                                               'subject',
                                               'submit',
                                               'delete',
+                                              'attach_signature',
                                               'cancel',
                                               'preview');
     }
@@ -440,10 +442,11 @@ function pnForum_user_editpost($args=array())
         }
         //store the new topic
         $redirect = pnModAPIFunc('pnForum', 'user', 'updatepost',
-                                 array('post_id'  => $post_id,
-                                       'delete'   => $delete,
-                                       'subject'  => $subject,
-                                       'message'  => $message));
+                                 array('post_id'          => $post_id,
+                                       'delete'           => $delete,
+                                       'subject'          => $subject,
+                                       'message'          => $message,
+                                       'attach_signature' => ($attach_signature==1)));
     	return pnRedirect($redirect);
 
     } else {

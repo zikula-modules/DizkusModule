@@ -13,6 +13,7 @@ Template to edit postings with ajax
     <textarea style="width: 99%; height: 15em;" id="<!--[ $postingtextareaid ]-->" name="postingtext_<!--[ $post.post_id ]-->_edit"><!--[ $post.post_rawtext ]--></textarea>
     <div class="pnf_clearfix">
         <div style="margin-top: 10px; margin-left: 20px; float: left; width:45%; text-align: left;">
+            <p><input type="checkbox" name="attach_signature" id="postingtext_<!--[ $post.post_id ]-->_attach_signature" <!--[ if $post.has_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" />&nbsp;<label for="postingtext_<!--[ $post.post_id ]-->_attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label></p>
             <!--[ plainbbcode textfieldid=$postingtextareaid ]-->
         </div>
         <div style="margin-top: 10px; margin-right: 20px; float: right; width:45%; text-align: left;">

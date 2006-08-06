@@ -1745,6 +1745,7 @@ function pnForum_userapi_readpost($args)
     $post['post_id']      = pnVarPrepForDisplay($myrow['post_id']);
     $post['post_time']    = pnVarPrepForDisplay($myrow['post_time']);
     $message              = $myrow['post_text'];
+    $post['has_signature']= (substr($message, -8, 8)=='[addsig]');
     $post['post_rawtext'] = pnForum_replacesignature($message, '');
     $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
     $post['post_rawtext'] = eregi_replace('<br />', '', $post['post_rawtext']);
@@ -1867,6 +1868,7 @@ function pnForum_userapi_is_first_post($args)
  *@params $args['subject'] string the subject
  *@params $args['message'] string the text
  *@params $args['delete'] boolean true if the posting is to be deleted
+ *@params $args['attach_signature'] boolean true if the addsig place holder has to be appended
  *@returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
  */
 function pnForum_userapi_updatepost($args)
@@ -1942,7 +1944,7 @@ function pnForum_userapi_updatepost($args)
         }
 
         // add signature placeholder
-        if ($poster_id <> 1){
+        if(($poster_id <> 1) && ($attach_signature==true)){
             $message .= '[addsig]';
         }
         $message = pnVarPrepForStore($message);

@@ -567,6 +567,7 @@ function quickEditsave(postid)
     var deletepost;
     var editID = postingtextID + '_edit';
     var authID = postingtextID + '_authid';
+    var sigID = postingtextID + '_attach_signature';
 
     if($F(editID) == '') {
         // no text
@@ -580,11 +581,12 @@ function quickEditsave(postid)
         Element.update(statusID, '<span style="color: red;">' + updatingPost + '</span>');
         deletepost = '';
     }
-    var pars = "module=pnForum&type=ajax&func=updatepost" +
-               "&post=" + postid +
+    var pars = 'module=pnForum&type=ajax&func=updatepost' +
+               '&post=' + postid +
                deletepost +
-               "&message=" + encodeURIComponent($F(editID)) +
-               "&authid=" + $F(authID);
+               '&message=' + encodeURIComponent($F(editID)) +
+               '&authid=' + $F(authID) +
+               '&attach_signature=' + getcheckboxvalue(sigID);
 
     Ajax.Responders.register(pnf_globalhandlers);
     var myAjax = new Ajax.Request(

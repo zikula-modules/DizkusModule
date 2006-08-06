@@ -48,6 +48,10 @@
                         <input type="checkbox" name="delete" id="delete" tabindex="0" value="1" />
                         <label for="delete"><!--[ pnml name='_PNFORUM_DELETE' ]--></label>
                     </li>
+                    <li>
+                        <input type="checkbox" name="attach_signature" id="attach_signature" <!--[ if $post.has_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                        <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
+                  </li>
                     <!--[ /if ]-->
                     <li id="editpostbuttons" style="text-align: left; margin: 1.5em;">
                         <button name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">

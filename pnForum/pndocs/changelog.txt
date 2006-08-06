@@ -6,6 +6,12 @@ PostNuke pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
 
+---------------------------------------------------------------------------------------------
+2.7 (fs)
+---------------------------------------------------------------------------------------------
+*** Note: Most of the bugs fixed in this list have been reported during the extensive
+***       testphase before the release and do not necessarily fix bugs of the 2.6 version
+***       because some new functionality introduced in 2.7 is affected.          
 + Using Ajax now for some features, this implied a major rewrite of some templates
   and adding a few new ones. Non-javascript fallbacks are included.
 + using resizable.js written by Kazuki Ohta (ohta@uei.co.jp)
@@ -53,6 +59,7 @@ PostNuke pnForum Module changelog
 - fixed [#3076] Wrong time for guests
 - fixed [#3110] Signature in Preview
 - fixed [#2946] issues header in search results
+- fixed [#3121] Signatur nach Editieren bei Posting obwohl nicht aktiviert
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

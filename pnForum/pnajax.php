@@ -178,23 +178,25 @@ function pnForum_ajax_updatepost()
     list($post_id,
          $subject,
          $message,
-         $delete) = pnVarCleanFromInput('post',
-                                        'subject',
-                                        'message',
-                                        'delete');
+         $delete,
+         $attach_signature) = pnVarCleanFromInput('post',
+                                                  'subject',
+                                                  'message',
+                                                  'delete',
+                                                  'attach_signature');
     if(!empty($post_id)) {
         if (!pnSecConfirmAuthKey()) {
             pnf_ajaxerror(_BADAUTHKEY);
         }
         pnModAPIFunc('pnForum', 'user', 'updatepost',
-                     array('post_id' => $post_id,
-                           'subject' => utf8_decode($subject),
-                           'message' => utf8_decode($message),
-                           'delete'  => $delete));
+                     array('post_id'          => $post_id,
+                           'subject'          => utf8_decode($subject),
+                           'message'          => utf8_decode($message),
+                           'delete'           => $delete,
+                           'attach_signature' => ($attach_signature==1)));
         if($delete <> '1') {
             $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                                  array('post_id'     => $post_id));
-            //$post['post_text'] = utf8_encode($post['post_text']);
             $post['action'] = 'updated';
         } else {
             $post = array('action'  => 'deleted',
@@ -555,7 +557,7 @@ function pnForum_ajax_newtopic()
         pnf_jsonizeoutput(array('topic'        => $topic,
                                 'confirmation' => $confirmation,
                                 'redirect'     => pnModURL('pnForum', 'user', 'viewtopic',
-    	                                                   array('topic' => $topic_id))),
+                                                           array('topic' => $topic_id))),
                           true);
 
     }
