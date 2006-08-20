@@ -1212,7 +1212,7 @@ function pnf_blacklist()
                                    pnServerGetVar('SERVER_PROTOCOL'),
                                    pnServerGetVar('HTTP_REFERRER'),
                                    pnServerGetVar('HTTP_USER_AGENT')));
-        fwrite($fh, pnVarPrepForStore($line));                           
+        fwrite($fh, pnVarPrepForStore($line) . "\n");                           
         fclose($fh);
     }
     return;

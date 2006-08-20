@@ -1200,7 +1200,7 @@ function pnForum_user_report($args)
     // - remove html and compare with original comment
     // - use censor and compare with original omment
     // if only one of this comparisons fails -> trash it, its spam.
-    if(!pnUserLoggedIn()) {
+    if(!pnUserLoggedIn() && pnSecConfirmAuthKey()) {
         if((strip_tags($comment) <> $comment) ||
            (pnVarCensor($comment) <> $comment)) {
             // possibly spam, stop now
