@@ -1191,4 +1191,92 @@ function cmp_userorder ($a, $b)
     return strcmp($a['uname'], $b['uname']);
 }
 
+/**
+ * pnf_blacklist()
+ * blacklist the users ip address if considered a spammer
+ *
+ */
+function pnf_blacklist()
+{
+    $pntemp = pnConfigGetVar('temp');
+    $blacklistfile = $pntemp . '/pnForum_spammer.txt';
+
+
+    $fh = fopen($blacklistfile, 'a');
+    if($fh) {
+        $ip = pnf_getip();
+        $line = implode(',', array(strftime('%Y-%m-%d %H:%M'),
+                                   $ip,
+                                   pnServerGetVar('REQUEST_METHOD'),
+                                   pnServerGetVar('REQUEST_URI'),
+                                   pnServerGetVar('SERVER_PROTOCOL'),
+                                   pnServerGetVar('HTTP_REFERRER'),
+                                   pnServerGetVar('HTTP_USER_AGENT')));
+        fwrite($fh, pnVarPrepForStore($line));                           
+        fclose($fh);
+    }
+    return;
+}
+
+/**
+ * check for valid ip address
+ * original code taken form spidertrap
+ * @author       Thomas Zeithaml <info@spider-trap.de>
+ * @copyright    (c) 2005-2006 Spider-Trap Team
+ */
+function pnf_validip($ip) 
+{
+   if (!empty($ip) && ip2long($ip)!=-1) {
+       $reserved_ips = array (
+       array('0.0.0.0','2.255.255.255'),
+       array('10.0.0.0','10.255.255.255'),
+       array('127.0.0.0','127.255.255.255'),
+       array('169.254.0.0','169.254.255.255'),
+       array('172.16.0.0','172.31.255.255'),
+       array('192.0.2.0','192.0.2.255'),
+       array('192.168.0.0','192.168.255.255'),
+       array('255.255.255.0','255.255.255.255')
+       );
+
+       foreach ($reserved_ips as $r) {
+           $min = ip2long($r[0]);
+           $max = ip2long($r[1]);
+           if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max)) return false;
+       }
+       return true;
+   } else {
+       return false;
+   }
+}
+
+/**
+ * get the users ip address
+ * changes: replaced references to $_SERVER with pnServerGetVar()
+ * original code taken form spidertrap
+ * @author       Thomas Zeithaml <info@spider-trap.de>
+ * @copyright    (c) 2005-2006 Spider-Trap Team
+ */
+function pnf_getip()
+{
+   if (pnf_validip(pnServerGetVar("HTTP_CLIENT_IP"))) {
+       return pnServerGetVar("HTTP_CLIENT_IP");
+   }
+   foreach (explode(",",pnServerGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
+       if (pnf_validip(trim($ip))) {
+           return $ip;
+       }
+   }
+   if (pnf_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
+       return pnServerGetVar("HTTP_X_FORWARDED");
+   } elseif (pnf_validip(pnServerGetVar("HTTP_FORWARDED_FOR"))) {
+       return pnServerGetVar("HTTP_FORWARDED_FOR");
+   } elseif (pnf_validip(pnServerGetVar("HTTP_FORWARDED"))) {
+       return pnServerGetVar("HTTP_FORWARDED");
+   } elseif (pnf_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
+       return pnServerGetVar("HTTP_X_FORWARDED");
+   } else {
+       return pnServerGetVar("REMOTE_ADDR");
+   }
+}
+
 ?>
