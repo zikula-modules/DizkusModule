@@ -1200,15 +1200,16 @@ function pnForum_user_report($args)
     // - remove html and compare with original comment
     // - use censor and compare with original omment
     // if only one of this comparisons fails -> trash it, its spam.
-    if((strip_tags($comment) <> $comment) ||
-       (pnVarCensor($comment) <> $comment)) {
-        // possibly spam, stop now
-        // get the users ip address and store it in pnTemp/pnForum_spammers.txt
-        pnf_blacklist();
-        // return to topic
-        return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
-                                   array('topic' => $post['topic_id'],
-                                         'start' => $start)));
+    if(!pnUserLoggedIn()) {
+        if((strip_tags($comment) <> $comment) ||
+           (pnVarCensor($comment) <> $comment)) {
+            // possibly spam, stop now
+            // get the users ip address and store it in pnTemp/pnForum_spammers.txt
+            pnf_blacklist();
+            // set 403 header and stop
+            header('HTTP/1.0 403 Forbidden');
+            exit;
+        }
     }
     
     if(!$submit) {
