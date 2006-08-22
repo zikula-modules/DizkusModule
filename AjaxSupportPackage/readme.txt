@@ -1,5 +1,5 @@
 //
-// AjaxSupportPackage 6.08.04
+// AjaxSupportPackage 6.08.22
 //
 
 
