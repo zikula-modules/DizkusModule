@@ -1227,6 +1227,13 @@ function pnForum_userapi_storereply($args)
     extract($args);
     unset($args);
 
+    list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+                                            array('topic_id' => $topic_id));
+
+    if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+        return showforumerror(_PNFORUM_NOAUTH_TOWRITE);
+    }
+
     list($dbconn, $pntable) = pnfOpenDB();
 
     if(trim($message) == '') {

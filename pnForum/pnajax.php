@@ -54,11 +54,10 @@ function pnForum_ajax_reply()
                                          'attach_signature',
                                          'subscribe_topic',
                                          'preview');
-
     $preview          = ($preview=='1') ? true : false;
-//    $attach_signature = ($attach_signature=='1') ? true : false;
-//    $subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
+    pnSessionSetVar('pn_ajax_call', 'ajax');
+    
     $message = pnfstriptags(utf8_decode($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
@@ -115,6 +114,7 @@ function pnForum_ajax_reply()
 function pnForum_ajax_preparequote()
 {
     $post_id = pnVarCleanFromInput('post');
+    pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
         $post = pnModAPIFunc('pnForum', 'user', 'preparereply',
@@ -131,6 +131,7 @@ function pnForum_ajax_preparequote()
 function pnForum_ajax_readpost()
 {
     $post_id = pnVarCleanFromInput('post');
+    pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
@@ -149,6 +150,7 @@ function pnForum_ajax_readpost()
 function pnForum_ajax_editpost()
 {
     $post_id = pnVarCleanFromInput('post');
+    pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
@@ -184,6 +186,7 @@ function pnForum_ajax_updatepost()
                                                   'message',
                                                   'delete',
                                                   'attach_signature');
+    pnSessionSetVar('pn_ajax_call', 'ajax');
     if(!empty($post_id)) {
         if (!pnSecConfirmAuthKey()) {
             pnf_ajaxerror(_BADAUTHKEY);
@@ -212,6 +215,7 @@ function pnForum_ajax_updatepost()
 function pnForum_ajax_lockunlocktopic()
 {
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
+    pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
@@ -243,6 +247,7 @@ function pnForum_ajax_lockunlocktopic()
 function pnForum_ajax_stickyunstickytopic()
 {
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
+    pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if (!pnSecConfirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
@@ -360,11 +365,11 @@ function pnForum_ajax_subscribeunsubscribeforum()
 
 function pnForum_ajax_addremovefavorite()
 {
+    pnSessionSetVar('pn_ajax_call', 'ajax');
     if(pnModGetVar('pnForum', 'favorites_enabled')=='no') {
         pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED);
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
     list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
 
     if (!pnSecConfirmAuthKey()) {

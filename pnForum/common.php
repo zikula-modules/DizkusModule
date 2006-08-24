@@ -1056,6 +1056,7 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
     }
     $output = $json->encode(pnf_convert_to_utf8($data));
 
+    pnSessionDelVar('pn_ajax_call');
     header('HTTP/1.0 200 OK');
     if($xjsonheader == false) {
         echo $output;
@@ -1063,7 +1064,6 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
         header('X-JSON:(' . $output . ')');
         echo $output;
     }
-    pnSessionDelVar('pn_ajax_call');
     exit;
 
 }
