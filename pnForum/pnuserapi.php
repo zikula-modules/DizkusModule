@@ -838,6 +838,7 @@ function pnForum_userapi_readtopic($args)
 
     $sql = "SELECT    $coltopics[topic_title],
                       $coltopics[topic_status],
+                      $coltopics[topic_poster],
                       $coltopics[forum_id],
                       $coltopics[sticky],
                       $coltopics[topic_time],
@@ -898,7 +899,16 @@ function pnForum_userapi_readtopic($args)
                 }
             }
         }
-
+        // check permission to change the topic subject
+        if($topic['access_moderate']) {
+            // user has moderate perms, copy this to topicsubjectedit
+            $topic['access_topicsubjectedit'] = $topic['access_moderate'];
+        } else {
+            // check if user is the topic starter and give him the permission to
+            // update the subject
+            $topic['access_topicsubjectedit'] = (pnUserGetVar('uid') == $topic['topic_poster']);
+        }
+        
         // get the next and previous topic_id's for the next / prev button
         $topic['next_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'next'));
         $topic['prev_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'previous'));

@@ -83,7 +83,7 @@
     <div class="topicheaderleft">
         <a id="top" title="<!--[ pnml name='_PNFORUM_BOTTOM' ]-->" href="#bottom"><!--[ pnimg src="icon_bottom.gif" alt="_PNFORUM_BOTTOM" altml=true ]--></a>
     </div>
-    <div class="topicheaderright pnf_clearfix" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_moderate eq 1 ]-->title="<!--[ pnml name='_PNFORUM_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
+    <div class="topicheaderright pnf_clearfix" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_PNFORUM_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
         <span id="topicsubject_<!--[ $topic.topic_id ]-->_content"><!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]--></span>
     </div>
 </div>

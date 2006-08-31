@@ -419,7 +419,7 @@ function pnForum_ajax_edittopicsubject()
                              array('topic_id' => $topic_id,
                                    'count'    => false,
                                    'complete' => false  ));
-        if($topic['access_moderate'] == true) {
+        if($topic['access_topicsubjectedit'] == true) {
             $pnr = new pnRender('pnForum');
             $pnr->caching = false;
             $pnr->add_core_data();
@@ -440,38 +440,42 @@ function pnForum_ajax_updatetopicsubject()
     list($topic_id,
          $subject) = pnVarCleanFromInput('topic',
                                          'subject');
-
+    
     if(!empty($topic_id)) {
-        list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
-                                                array('topic_id' => $topic_id));
-        if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-            return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
-        }
         if (!pnSecConfirmAuthKey()) {
            pnf_ajaxerror(_BADAUTHKEY);
         }
 
-        list($dbconn, $pntable) = pnfOpenDB();
+        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+                             array('topic_id' => $topic_id,
+                                   'count'    => false,
+                                   'complete' => false  ));
+        if(!$topic['access_topicsubjectedit']) {
+            return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
+        }
 
-        if (trim($subject) != '') {
-            $subject = pnVarPrepForStore(pnVarCensor(utf8_decode($subject)));
-            $sql = "UPDATE ".$pntable['pnforum_topics']."
-                    SET topic_title = '$subject'
-                    WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
-            // Let any hooks know that we have updated an item.
-            pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
-                                                              'topic_id' => $topic_id));
-
-            pnf_jsonizeoutput(array('topic_title' => $subject,
-                                    'topic_id' => $topic_id),
-                              true);
-
-        } else {
+        $subject = trim(utf8_decode($subject));
+        if(empty($subject)) {
             pnf_ajaxerror(_PNFORUM_NOSUBJECT);
         }
+
+        list($dbconn, $pntable) = pnfOpenDB();
+
+        $subject = pnVarPrepForStore(pnVarCensor($subject));
+        $sql = "UPDATE ".$pntable['pnforum_topics']."
+                SET topic_title = '$subject'
+                WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
+        // Let any hooks know that we have updated an item.
+        pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
+                                                          'topic_id' => $topic_id));
+
+        pnf_jsonizeoutput(array('topic_title' => $subject,
+                                'topic_id' => $topic_id),
+                          true);
+
     }
     pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()');
 }
