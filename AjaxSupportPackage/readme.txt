@@ -1,5 +1,5 @@
 //
-// AjaxSupportPackage 6.08.22
+// AjaxSupportPackage 6.09.8
 //
 
 
@@ -7,8 +7,8 @@
 -------
 This package contains a collection of javascript libraries that can be used
 for rich internet sites in PostNuke:
-prototype 1.5.0_rc0     http://prototype.conio.net
-scriptaculous 1.6.1     http://script.aculo.us
+prototype 1.5.0_rc1     http://prototype.conio.net
+scriptaculous 1.6.4     http://script.aculo.us
 behaviour 1.1           http://bennolan.com/behaviour/behaviour.js
 fieldvalidation 1.5.3   http://tetlaw.id.au/view/blog/really-easy-field-validation-with-prototype/
 resizable               http://lists.rubyonrails.org/pipermail/rails-spinoffs/2006-April/003645.html
@@ -26,6 +26,7 @@ Formicula (beginning with 1.0)
 MultiHook (beginning with 2.0)
 pnForum (beginning with 2.7)
 pnMessages (beginning with 1.0)
+pnUpper (beginning with 1.0)
 ...
 (if I missed some, email me)
 
@@ -40,3 +41,7 @@ global $additional_header array.
 3. Who
 ------
 Compiled by Frank Schummertz, frank.schummertz@landseer-stuttgart.de
+
+4. When
+-------
+6.09.8: scriptaculous 1.6.4, prototype 1.5.0_rc1
