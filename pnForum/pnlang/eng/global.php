@@ -50,6 +50,8 @@ define('_PNFORUM_NEW_THREADS','New Topic in forum');
 define('_PNFORUM_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_PNFORUM_HOURS', 'hrs');
+define('_PNFORUM_PREFS_TIMESPANFORCHANGES', 'Allow changes in postings within x hours');
 define('_PNFORUM_LATESTRSS', 'RSS');
 define('_PNFORUM_VIEWYOURPOSTS', 'view your posts');
 define('_PNFORUM_PNCATEGORIES', 'Select Category');
