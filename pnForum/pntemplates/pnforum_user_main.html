@@ -9,6 +9,9 @@
 
 <!--[ if $view_category == -1 ]-->
 
+    <!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" assign=maintitle]-->
+    <!--[ setforumtitle title=$maintitle ]-->
+    
     <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
     <br />
     <ul id="pnf_maincategorylist">
@@ -58,6 +61,10 @@
     </ul>
 
 <!--[ else ]-->
+
+    <!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" assign=maintitle]-->
+    <!--[ setforumtitle title=$maintitle ]-->
+
     <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" ]--></h1>
     <br />
     <h2 style="text-align: center; font-size: 1em;"><a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->" title="<!--[ pnml name='_PNFORUM_START' ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a>&nbsp;::&nbsp;<!--[ $view_category_data.cat_title|pnvarprepfordisplay ]--></h2>

@@ -39,6 +39,7 @@ PostNuke pnForum Module changelog
 + added [#2512]	centerblock links inkl. PID
 + added [#2636] similar topics plugin
 + added [#2899] Link back to forum index in search and latest posts.
++ added [#2979] Set title to category, forum or thread title
 - fixed some html and validation issues, removed some more tables
 - fixed [#2490] wrong number of guests in online list
 - fixed [#2491] removal of topics doesn't remove the subscriptions
