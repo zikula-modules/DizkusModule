@@ -13,19 +13,19 @@
     <div style="margin: 1em;" class="pnf_clearfix">
         <dl class="pnf_clearfix">
             <dt class="pnfadmin"><label for="email_from"><!--[ pnml name='_PNFORUM_PREFS_EMAIL' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="email_from" name="email_from" size="30" maxlength="100" value="<!--[ $email_from ]-->" /></dd>
+            <dd class="pnfadmin"><input type="text" id="email_from" name="email_from" size="30" maxlength="100" value="<!--[ $pncore.pnForum.email_from|pnvarprepfordisplay ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="default_lang"><!--[ pnml name='_PNFORUM_PREFS_CHARSET' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="default_lang" name="default_lang" size="30" maxlength="30" value="<!--[ $default_lang ]-->" /></dd>
+            <dd class="pnfadmin"><input type="text" id="default_lang" name="default_lang" size="30" maxlength="30" value="<!--[ $pncore.pnForum.default_lang|pnvarprepfordisplay ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="hot_threshold"><!--[ pnml name='_PNFORUM_PREFS_HOTTOPIC' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="hot_threshold" name="hot_threshold" size="3" maxlength="3" value="<!--[ $hot_threshold ]-->" /></dd>
+            <dd class="pnfadmin"><input type="text" id="hot_threshold" name="hot_threshold" size="3" maxlength="3" value="<!--[ $pncore.pnForum.hot_threshold|pnvarprepfordisplay ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="posts_per_page"><!--[ pnml name='_PNFORUM_PREFS_POSTSPERPAGE' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="posts_per_page" name="posts_per_page" size="3" maxlength="3" value="<!--[ $posts_per_page ]-->" /></dd>
+            <dd class="pnfadmin"><input type="text" id="posts_per_page" name="posts_per_page" size="3" maxlength="3" value="<!--[ $pncore.pnForum.posts_per_page|pnvarprepfordisplay ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="topics_per_page"><!--[ pnml name='_PNFORUM_PREFS_TOPICSPERPAGE' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="topics_per_page" name="topics_per_page" size="3" maxlength="3" value="<!--[ $topics_per_page ]-->" /></dd>
+            <dd class="pnfadmin"><input type="text" id="topics_per_page" name="topics_per_page" size="3" maxlength="3" value="<!--[ $pncore.pnForum.topics_per_page|pnvarprepfordisplay ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="signature_start"><!--[ pnml name='_PNFORUM_PREFS_SIGNATURESTART' html=1 ]--></label></dt>
             <dd class="pnfadmin"><textarea id="signature_start" name="signature_start" rows="2" cols="40"><!--[ $signature_start|pnvarprepfordisplay ]--></textarea></dd>
@@ -105,14 +105,17 @@
                 <input type="radio" name="newtopicconfirmation" value="no" <!--[ $newtopicconf_offchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
             </dd>
 
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_TIMESPANFORCHANGES' ]--></dt>
+            <dd class="pnfadmin"><input type="text" id="timespanforchanges" name="timespanforchanges" size="10" maxlength="10" value="<!--[ $pncore.pnForum.timespanforchanges|pnvarprepfordisplay ]-->" />&nbsp;<!--[ pnml name="_PNFORUM_HOURS" ]--></dd>
+
             <dt class="pnfadmin"><label for="url_ranks_images"><!--[ pnml name='_PNFORUM_PREFS_RANKLOCATION' ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="url_ranks_images" name="url_ranks_images" size="40" maxlength="100" value="<!--[ $url_ranks_images ]-->" /></dd>
+            <dd class="pnfadmin"><input type="text" id="url_ranks_images" name="url_ranks_images" size="40" maxlength="100" value="<!--[ $pncore.pnForum.url_ranks_images|pnvarprepfordisplay ]-->" /></dd>
 
             <dt class="pnfadmin"><label for="posticon"><!--[ pnml name='_PNFORUM_PREFS_POSTICON' ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="posticon" name="posticon" size="40" maxlength="100" value="<!--[ $posticon ]-->" />&nbsp;<img src="<!--[ $posticon ]-->" alt="posticon" /></dd>
+            <dd class="pnfadmin"><input type="text" id="posticon" name="posticon" size="40" maxlength="100" value="<!--[ $pncore.pnForum.posticon|pnvarprepfordisplay ]-->" />&nbsp;<img src="<!--[ $pncore.pnForum.posticon|pnvarprepfordisplay ]-->" alt="posticon" /></dd>
 
             <dt class="pnfadmin"><label for="firstnew_image"><!--[ pnml name='_PNFORUM_PREFS_FIRSTNEWPOSTICON' ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="firstnew_image" name="firstnew_image" size="40" maxlength="100" value="<!--[ $firstnew_image ]-->" />&nbsp;<img src="<!--[ $firstnew_image ]-->" alt="firstnew_image" /></dd>
+            <dd class="pnfadmin"><input type="text" id="firstnew_image" name="firstnew_image" size="40" maxlength="100" value="<!--[ $pncore.pnForum.firstnew_image|pnvarprepfordisplay ]-->" />&nbsp;<img src="<!--[ $pncore.pnForum.firstnew_image|pnvarprepfordisplay ]-->" alt="firstnew_image" /></dd>
         </dl>
 
         <div class="pnfadminrow98 pnf_clearfix" style="float: left;">

@@ -172,14 +172,6 @@ function pnForum_admin_preferences()
         $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
         $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
-	    $pnr->assign('topics_per_page', pnModGetVar('pnForum', 'topics_per_page'));
-	    $pnr->assign('posts_per_page', pnModGetVar('pnForum', 'posts_per_page'));
-	    $pnr->assign('hot_threshold', pnModGetVar('pnForum', 'hot_threshold'));
-	    $pnr->assign('email_from', pnModGetVar('pnForum', 'email_from'));
-	    $pnr->assign('default_lang', pnModGetVar('pnForum', 'default_lang'));
-        $pnr->assign('url_ranks_images', pnModGetVar('pnForum', 'url_ranks_images'));
-        $pnr->assign('posticon', pnModGetVar('pnForum', 'posticon'));
-        $pnr->assign('firstnew_image', pnModGetVar('pnForum', 'firstnew_image'));
         $pnr->assign('post_sort_order_ascchecked', $post_sort_order_ascchecked);
         $pnr->assign('post_sort_order_descchecked', $post_sort_order_descchecked);
         $pnr->assign('logiponchecked', $logiponchecked);
@@ -219,17 +211,48 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'autosubscribe', pnVarPrepForStore(pnVarCleanFromInput('autosubscribe')));
             pnModSetVar('pnForum', 'signature_start', pnVarPrepForStore(pnVarCleanFromInput('signature_start')));
             pnModSetVar('pnForum', 'signature_end', pnVarPrepForStore(pnVarCleanFromInput('signature_end')));
-            pnModSetVar('pnForum', 'topics_per_page', pnVarPrepForStore(pnVarCleanFromInput('topics_per_page')));
-            pnModSetVar('pnForum', 'posts_per_page', pnVarPrepForStore(pnVarCleanFromInput('posts_per_page')));
-            pnModSetVar('pnForum', 'hot_threshold', pnVarPrepForStore(pnVarCleanFromInput('hot_threshold')));
-            pnModSetVar('pnForum', 'email_from', pnVarPrepForStore(pnVarCleanFromInput('email_from')));
-            pnModSetVar('pnForum', 'default_lang', pnVarPrepForStore(pnVarCleanFromInput('default_lang')));
+
+            $topics_per_page = (int)pnVarCleanFromInput('topics_per_page');
+            if(empty($topics_per_page) || $topics_per_page<0) {
+                $topics_per_page = 15;
+            }
+            pnModSetVar('pnForum', 'topics_per_page', pnVarPrepForStore($topics_per_page));
+            
+            $posts_per_page = (int)pnVarCleanFromInput('posts_per_page');
+            if(empty($posts_per_page) || $posts_per_page<0) {
+                $posts_per_page = 15;
+            }
+            pnModSetVar('pnForum', 'posts_per_page', pnVarPrepForStore($posts_per_page));
+
+            $hot_threshold = (int)pnVarCleanFromInput('hot_threshold');
+            if(empty($hot_threshold) || $hot_threshold<0) {
+                $hot_threshold = 20;
+            }
+            pnModSetVar('pnForum', 'hot_threshold', pnVarPrepForStore($hot_threshold));
+            
+            $email_from = pnVarCleanFromInput('email_from');
+            if(empty($email_from) || !pnVarValidate($email_from, 'email')) {
+                $email_from = pnConfigGetVar('adminmail');
+            }
+            pnModSetVar('pnForum', 'email_from', pnVarPrepForStore($email_from));
+            
+            $default_lang = pnVarCleanFromInput('default_lang');
+            if(empty($default_lang)) {
+                $default_lang = _CHARSET;
+            }
+            pnModSetVar('pnForum', 'default_lang', pnVarPrepForStore($default_lang));
+
             pnModSetVar('pnForum', 'url_ranks_images', pnVarPrepForStore(pnVarCleanFromInput('url_ranks_images')));
             pnModSetVar('pnForum', 'posticon', pnVarPrepForStore(pnVarCleanFromInput('posticon')));
             pnModSetVar('pnForum', 'firstnew_image', pnVarPrepForStore(pnVarCleanFromInput('firstnew_image')));
             pnModSetVar('pnForum', 'post_sort_order', pnVarPrepForStore(pnVarCleanFromInput('post_sort_order')));
             pnModSetVar('pnForum', 'log_ip', pnVarPrepForStore(pnVarCleanFromInput('log_ip')));
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
+            $timespanforchanges = (int)pnVarCleanFromInput('timespanforchanges');
+            if(empty($timespanforchanges) || $timespanforchanges<0) {
+                $timespanforchanges = 12;
+            }
+            pnModSetVar('pnForum', 'timespanforchanges', pnVarPrepForStore($timespanforchanges));
         }
         if($actiontype=="RestoreDefaults")  {
             pnModSetVar('pnForum', 'newtopicconfirmation', 'no');
@@ -254,6 +277,7 @@ function pnForum_admin_preferences()
 		    pnModSetVar('pnForum', 'post_sort_order', "ASC");
 		    pnModSetVar('pnForum', 'log_ip', "yes");
 		    pnModSetVar('pnForum', 'slimforum', "no");
+		    pnModSetVar('pnForum', 'timespanforchanges', 12);
         }
     }
     return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
