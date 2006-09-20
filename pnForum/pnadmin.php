@@ -250,7 +250,7 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'slimforum', pnVarPrepForStore(pnVarCleanFromInput('slimforum')));
             $timespanforchanges = (int)pnVarCleanFromInput('timespanforchanges');
             if(empty($timespanforchanges) || $timespanforchanges<0) {
-                $timespanforchanges = 12;
+                $timespanforchanges = 24;
             }
             pnModSetVar('pnForum', 'timespanforchanges', pnVarPrepForStore($timespanforchanges));
         }
