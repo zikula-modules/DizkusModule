@@ -433,7 +433,7 @@ function pnForum_userapi_readcategorytree($args)
                         $forum['new_posts'] = false;
                     }
 
-                    $posted_unixtime= strtotime ($forum['post_time']);
+                    $posted_unixtime= pnf_str2time($forum['post_time']); // strtotime ($forum['post_time']);
                     $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
                     if ($posted_unixtime) {
                         if ($forum['pn_uid']==1) {
@@ -710,7 +710,7 @@ function pnForum_userapi_readforum($args)
         if ($topic['pn_uname'] == 'Anonymous') {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
         $topic['total_posts'] = $topic['topic_replies'] + 1;
 
-        $topic['post_time_unix'] = strtotime ($topic['post_time']);
+        $topic['post_time_unix'] = pnf_str2time($topic['post_time']); //strtotime ($topic['post_time']);
         $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
         $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, pnVarPrepForDisplay($posted_ml), pnVarPrepForDisplay($topic['last_poster']));
 
@@ -876,7 +876,7 @@ function pnForum_userapi_readtopic($args)
         $topic = $result->GetRowAssoc(false);
         $topic['topic_id'] = $topic_id;
         $topic['start'] = $start;
-        $topic['topic_unixtime'] = strtotime ($topic['topic_time']);
+        $topic['topic_unixtime'] = pnf_str2time($topic['topic_time']); //strtotime ($topic['topic_time']);
         $topic['post_sort_order'] = $post_sort_order;
 
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
@@ -984,15 +984,7 @@ function pnForum_userapi_readtopic($args)
             $post = $result2->GetRowAssoc(false);
 
             $post['topic_id'] = $topic_id;
-/*
-not necessary, pnForum creates dumy users if not foud
-            // check if the user is still in the postnuke db
-            $user_name = pnUserGetVar('uname', $post['poster_id']);
-            if ($user_name == '') {
-                // user deleted from the db?
-                $post['poster_id'] = '1';
-            }
-*/
+
             // check if array_key_exists() with poster _id in $userdata
             //if(!array_key_exists($post['poster_id'], $userdata)) {
             if (!isset($userdata[$post['poster_id']])) {
@@ -1001,7 +993,7 @@ not necessary, pnForum creates dumy users if not foud
             }
             // we now have the data and use them
             $post['poster_data'] = $userdata[$post['poster_id']];
-            $post['posted_unixtime'] = strtotime ($post['post_time']);
+            $post['posted_unixtime'] = pnf_str2time($post['post_time']); //strtotime ($post['post_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
@@ -1013,29 +1005,38 @@ not necessary, pnForum creates dumy users if not foud
             $post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_text'])));
             //$post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor($post['post_text']));
 
-            $pn_uid = $currentuserid;//pnUserGetVar('uid');
-            if ($post['poster_data']['pn_uid']==$pn_uid) {
-                // user is allowed to moderate || own post
-                $post['poster_data']['edit'] = true;
-            }
-
+            $post['poster_data']['reply'] = false;
             if ($topic['access_comment'] || $topic['access_moderate'] || $topic['access_admin']) {
-            //if(allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'])) {
                 // user is allowed to reply
                 $post['poster_data']['reply'] = true;
             }
+
+            $post['poster_data']['seeip'] = false;
             if (($topic['access_moderate'] || $topic['access_admin']) && $pnforumvars['log_ip'] == 'yes') {
-            //if(allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id']) &&
                 //pnModGetVar('pnForum', 'log_ip') == 'yes') {
                 // user is allowed to see ip
                 $post['poster_data']['seeip'] = true;
             }
+            
+            $post['poster_data']['moderate'] = false;
+            $post['poster_data']['edit'] = false;
             if ($topic['access_moderate'] || $topic['access_admin']) {
-            //if(allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'])) {
                 // user is allowed to moderate
                 $post['poster_data']['moderate'] = true;
                 $post['poster_data']['edit'] = true;
+            } elseif ($post['poster_data']['pn_uid']==$currentuserid) {
+                // user is allowed to moderate || own post
+                // if the timespanforchanges (in hrs!) setting allows it
+                $now = time();
+                // timespanforchanges is in hours, but we need seconds:
+                $timespansecs = $pnforumvars['timespanforchanges'] * 60 * 60;
+                if(($now - $post['posted_unixtime']) <= $timespansecs ) {
+                    $post['poster_data']['edit'] = true;
+                }
             }
+
+
+
             array_push($topic['posts'], $post);
             $result2->MoveNext();
         }
@@ -1198,7 +1199,7 @@ function pnForum_userapi_preparereply($args)
         $review['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$review['poster_id']));
 
         // TODO extract unixtime directly from MySql
-        $review['post_unixtime'] = strtotime ($review['post_time']);
+        $review['post_unixtime'] = pnf_str2time($review['post_time']); //strtotime ($review['post_time']);
         $review['post_ml'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($review['post_unixtime']));
 
         $message = $review['post_text'];
@@ -1778,7 +1779,7 @@ function pnForum_userapi_readpost($args)
     $post['cat_id']       = pnVarPrepForDisplay($myrow['cat_id']);
     $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
     // create unix timestamp
-    $post['post_unixtime'] = strtotime ($post['post_time']);
+    $post['post_unixtime'] = pnf_str2time($post['post_time']); //strtotime ($post['post_time']);
     $post['posted_unixtime'] = $post['post_unixtime'];
 
     if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
@@ -2194,7 +2195,7 @@ function pnForum_userapi_get_last_boardpost($args)
         case 'topic':
             $userlink = '<a href="user.php?op=userinfo&amp;uname=' . $uname . '">' . $uname . '</a>';
             // correct the time
-            $posted_unixtime= strtotime ($post_time);
+            $posted_unixtime= pnf_str2time($post_time); //strtotime ($post_time);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
             $val = '<td><span class="pn-normal">' . $userlink . '</span></td><td><span class="pn-normal">' . $posted_ml . '</span></td>';
             break;
@@ -2645,7 +2646,7 @@ function pnForum_userapi_notify_by_email($args)
     }
     pnfCloseDB($result);
 
-    $topic_unixtime= strtotime ($myrow['topic_time']);
+    $topic_unixtime= pnf_str2time($myrow['topic_time']); //strtotime ($myrow['topic_time']);
     $topic_time_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic_unixtime));
 
     $poster_name = pnUserGetVar('uname',$poster_id);
@@ -3336,7 +3337,7 @@ function pnForum_userapi_get_latest_posts($args)
             $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
         }
 
-        $post['posted_unixtime'] = strtotime ($post['post_time']);
+        $post['posted_unixtime'] = pnf_str2time($post['post_time']); // strtotime ($post['post_time']);
         $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
 
         $post['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
