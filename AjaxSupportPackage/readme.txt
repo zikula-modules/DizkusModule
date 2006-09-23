@@ -27,6 +27,7 @@ MultiHook (beginning with 2.0)
 pnForum (beginning with 2.7)
 pnMessages (beginning with 1.0)
 pnUpper (beginning with 1.0)
+pnTopList (beginning with 1.0)
 ...
 (if I missed some, email me)
 
