@@ -1002,8 +1002,8 @@ function pnForum_userapi_readtopic($args)
 
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
-            $post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_text'])));
-            //$post['post_text'] = pnVarPrepHTMLDisplay(pnVarCensor($post['post_text']));
+            $post['post_text'] = pnVarPrepHTMLDisplay(nl2br($post['post_text']));
+            //$post['post_text'] = pnVarPrepHTMLDisplay($post['post_text']);
 
             $post['poster_data']['reply'] = false;
             if ($topic['access_comment'] || $topic['access_moderate'] || $topic['access_admin']) {
@@ -1822,7 +1822,7 @@ function pnForum_userapi_readpost($args)
 
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-    $post['post_textdisplay'] = pnVarPrepHTMLDisplay(pnVarCensor(nl2br($post['post_textdisplay'])));
+    $post['post_textdisplay'] = pnVarPrepHTMLDisplay(nl2br($post['post_textdisplay']));
 /*
     //$message = pnVarPrepForDisplay($message);
     //  remove [addsig]
@@ -1977,7 +1977,7 @@ function pnForum_userapi_updatepost($args)
         if (!empty ($subject)) {
             //  topic has a new subject
             if (trim($subject) != '') {
-                $subject = pnVarPrepForStore(pnVarCensor($subject));
+                $subject = pnVarPrepForStore($subject);
                 $sql = "UPDATE ".$pntable['pnforum_topics']."
                         SET topic_title = '$subject'
                         WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
@@ -2654,7 +2654,7 @@ function pnForum_userapi_notify_by_email($args)
     $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
     $forum_name = pnVarPrepForDisplay($myrow['forum_name']);
     $category_name = pnVarPrepForDisplay($myrow['cat_title']);
-    $topic_subject = pnVarPrepForDisplay(pnVarCensor($myrow['topic_title']));
+    $topic_subject = pnVarPrepForDisplay($myrow['topic_title']);
 
     if ($type == 0) {
         // New message
@@ -2741,7 +2741,7 @@ function pnForum_userapi_notify_by_email($args)
             . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
             . $poster_name . ' ' .pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . pnVarCensor(strip_tags($post_message)) . "\n"
+            . strip_tags($post_message) . "\n"
             . "---------------------------------------------------------------------\n\n"
             . _PNFORUM_NOTIFYBODY3 . "\n"
             . pnModURL('pnForum', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id)) . "\n\n"
@@ -3129,7 +3129,7 @@ function pnForum_userapi_prepareemailtopic($args)
     $topic['cat_title'] = pnVarPrepForDisplay($myrow['cat_title']);
     $topic['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
     $topic['cat_id'] = pnVarPrepForDisplay($myrow['cat_id']);
-    $topic['topic_subject'] = pnVarPrepForDisplay(pnVarCensor($myrow['topic_title']));
+    $topic['topic_subject'] = pnVarPrepForDisplay($myrow['topic_title']);
 
     /**
      * base security check
@@ -3301,7 +3301,7 @@ function pnForum_userapi_get_latest_posts($args)
                  $poster_id) = $result->fields) && !$limit_reached ) {
         $post=array();
         $post['topic_id'] = pnVarPrepForDisplay($topic_id);
-        $post['topic_title'] = pnVarPrepForDisplay(pnVarCensor($topic_title));
+        $post['topic_title'] = pnVarPrepForDisplay($topic_title);
         $post['forum_id'] = pnVarPrepForDisplay($forum_id);
         $post['forum_name'] = pnVarPrepForDisplay($forum_name);
         $post['cat_id'] = pnVarPrepForDisplay($cat_id);
