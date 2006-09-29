@@ -514,7 +514,7 @@ define('_PNFORUM_RSS_SUMMARY', 'Summary');
 //
 define('_PNFORUM_SAVEPREFS','Save Preferences');
 define('_PNFORUM_SEARCH','search pnForum');
-define('_PNFORUM_SEARCHALLFORUMS', 'alle forums');
+define('_PNFORUM_SEARCHALLFORUMS', 'All forums');
 define('_PNFORUM_SEARCHAND','all words [AND]');
 define('_PNFORUM_SEARCHBOOL', 'Connection');
 define('_PNFORUM_SEARCHFOR','Search for');
