@@ -26,6 +26,6 @@ Template to edit postings with ajax
     <div style="margin-top: 3px; width: 30%; float: left; text-align: center;"><input id="postingtext_<!--[ $post.post_id ]-->_delete" type="checkbox"  value="1" /><label style="margin-left: 3px;" for="postingtext_<!--[ $post.post_id ]-->_delete"><!--[ pnml name='_PNFORUM_DELETE' ]--></label></div>
     <!--[ /if ]-->
     <div style="margin: 3px; width: 30%; float: right; text-align: right;"><input id="postingtext_<!--[ $post.post_id ]-->_cancel" type="button" value="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" /></div>
-    <input type="hidden" id="postingtext_<!--[ $post.post_id ]-->_authid" name="postingtext_<!--[ $post.post_id ]-->_authid" value="<!--[ pnsecgenauthkey ]-->" />
+    <input type="hidden" id="postingtext_<!--[ $post.post_id ]-->_authid" name="postingtext_<!--[ $post.post_id ]-->_authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
 </div>
 

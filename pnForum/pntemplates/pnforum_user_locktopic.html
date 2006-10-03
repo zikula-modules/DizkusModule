@@ -15,7 +15,7 @@
     <form action="<!--[ pnmodurl modname=pnForum type=user func=topicadmin ]-->" method="post">
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
     <div class="moddiv">
         <!--[ if $mode eq "lock" ]-->
             <!--[ pnml name='_PNFORUM_LOCKTOPIC_INFO' html=1 ]-->

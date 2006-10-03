@@ -11,7 +11,7 @@
     <form action="<!--[ pnmodurl modname=pnForum type=user func=splittopic ]-->" method="post">
     <div style="padding: 0.5em; text-align: center; background-color: <!--[ $bgcolor3 ]-->">
         <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
         
         <p><!--[ pnml name='_PNFORUM_SPLITTOPIC_INFO' html=1 ]--></p>
         <p>

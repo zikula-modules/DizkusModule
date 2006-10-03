@@ -12,8 +12,8 @@
     <!--[ /if ]-->
     <br />
     <input type="hidden" name="cat_id" value="<!--[ $category.cat_id ]-->" />
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey ]-->" />
-    <button onclick="javascript:storecategory(<!--[ $category.cat_id ]-->); return false;" name="submit" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
+    <button onclick="storecategory(<!--[ $category.cat_id ]-->);" name="submit" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
 </div>
 </form>
 
