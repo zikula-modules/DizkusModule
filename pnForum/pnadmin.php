@@ -751,7 +751,7 @@ function pnForum_admin_editforum($args=array())
 function pnForum_admin_editcategory($args=array())
 {
     if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
     }
 
     if(!empty($args)) {
@@ -775,7 +775,7 @@ function pnForum_admin_editcategory($args=array())
                                      'permcheck' => 'nocheck'));
         $category['forum_count'] = count($forums);
     }
-    $pnr =& new pnRender("pnForum");
+    $pnr =& new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->add_core_data();
     $pnr->assign('category', $category );
@@ -795,15 +795,15 @@ function pnForum_admin_editcategory($args=array())
  */
 function pnForum_admin_storecategory()
 {
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
-    }
+    pnSessionSetVar('pn_ajax_call', 'ajax');
 
+    if (!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    }
+    
     if(!pnSecConfirmAuthKey()) {
         pnf_ajaxerror(_BADAUTHKEY);
     }
-
-    pnSessionSetVar('pn_ajax_call', 'ajax');
 
     list($cat_id, 
          $cat_title, 
@@ -812,7 +812,7 @@ function pnForum_admin_storecategory()
                                         'cat_title', 
                                         'add',
                                         'delete');
-    
+
     $cat_title = utf8_decode($cat_title);
     if(!empty($delete)) {
         $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
@@ -842,7 +842,7 @@ function pnForum_admin_storecategory()
         if(!is_bool($cat_id)) {
             $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            $pnr =& new pnRender("pnForum");
+            $pnr =& new pnRender('pnForum');
             $pnr->caching = false;
             $pnr->add_core_data();
             $pnr->assign('category', $category );
