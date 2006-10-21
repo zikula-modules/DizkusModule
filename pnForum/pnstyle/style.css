@@ -179,7 +179,6 @@ dd.pnfadmin {
 }
 
 #pnforum_admin fieldset {
-    font-size: 1em;
     width: 99%;
     padding: 0;
     margin: 0;
@@ -188,14 +187,13 @@ dd.pnfadmin {
 }
 
 #pnforum_admin legend {
-    font-size: 1em;
+    font-size: 110%;
     font-weight: bold;
     margin-bottom: 1em;
 }
 
 #pnforum fieldset {
     width: 99%;
-    font-size: 1em;
     padding: 0;
     margin: 0;
     border-style: solid;
@@ -203,7 +201,7 @@ dd.pnfadmin {
 }
 
 #pnforum legend {
-    font-size: 1em;
+    font-size: 110%;
     font-weight: bold;
     color: black;
     margin-bottom: 1em;
@@ -484,6 +482,7 @@ div.pnf_statusmsg {
  * main pnforum div
  */
 #pnforum {
+    font-size: small;
     width: 99%;
 }
 
@@ -504,6 +503,16 @@ div.pnf_statusmsg {
 
 #pnforum table {
     width: 99%;
+}
+
+#pnforum table caption {
+    text-align: center; 
+    margin: 1.5em 0 0.25em 0; 
+    border-style: solid;
+    border-width: 2px;
+    padding: 4px 0;
+    font-size: 150%;
+    font-weight: bold;
 }
 
 #pnforum th {
