@@ -538,6 +538,7 @@ div.pnf_statusmsg {
     text-align:left; 
     font-size: 1em;
     margin: 1em 0 1em 0;
+    line-height: 2em;
 }
 
 #pnforum .headerlink {
@@ -784,6 +785,8 @@ div.rankuser-alphanav {
     text-align: left; 
     margin: 0.3em 5px 0 0; 
     float: left;
+    width: 120px;
+    line-height: 2em;
 }
 
 .postingbody, .postingbody_closed {
@@ -992,4 +995,187 @@ a.normallink {
 	background: #E0E0E0 url(../pnimages/resize-handler.gif) no-repeat 100% 100%;
 	border: 1px solid #B0B0B0;
 	cursor: se-resize;
+}
+
+/*
+ * styling of links with images 
+ *
+ * Note: When use a CSS3 feature to highlight external the following image normally
+ *       would not be visisble. The ! important fixes this.
+ * a[href^="http:"],
+ * a[href^="https:"] {
+ *     padding-left: 1.5em;
+ *     background: url('images/internet.gif') no-repeat bottom left;
+ * }
+ *
+ */
+
+#pnforum a.image {
+    margin: 0 0.5em;
+    font-size: 1em;
+    padding: 2px 0 2px 19px ! important; /* 16px image + spacer */
+}
+
+#pnforum a.rsslink {
+    background: url(../pnimages/icon_rss.gif) no-repeat 0 50%;
+}
+
+#pnforum a.latestpostslink {
+    background: url(../pnimages/icon_latestposts.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.searchlink {
+    background: url(../pnimages/icon_search.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.homelink {
+    background: url(../pnimages/icon_home.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.loginlink {
+    background: url(../pnimages/icon_login.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.registerlink {
+    background: url(../pnimages/icon_register.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.searchpostslink {
+    background: url(../pnimages/icon_searchposts.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.configurelink {
+    background: url(../pnimages/icon_configure.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.folderlink {
+    background: url(../pnimages/icon_folder.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.newpostsfolderlink {
+    background: url(../pnimages/icon_redfolder.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.categorylink {
+    background: url(../pnimages/icon_folder.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.newpostscategorylink {
+    background: url(../pnimages/icon_redfolder.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.moderatelink {
+    background: url(../pnimages/icon_moderate.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.newtopiclink {
+    background: url(../pnimages/icon_newtopic.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.subscribelink {
+    background: url(../pnimages/icon_subscribe.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.unsubscribelink {
+    background: url(../pnimages/icon_unsubscribe.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.addfavoritelink {
+    background: url(../pnimages/icon_addfavorite.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.removefavoritelink {
+    background: url(../pnimages/icon_removefavorite.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.mailtolink {
+    background: url(../pnimages/icon_mailto.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.printlink {
+    background: url(../pnimages/icon_print.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.subscribetopiclink {
+    background: url(../pnimages/icon_subscribe.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.unsubscribetopiclink {
+    background: url(../pnimages/icon_unsubscribe.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.locktopiclink {
+    background: url(../pnimages/icon_lock.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.unlocktopiclink {
+    background: url(../pnimages/icon_unlock.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.stickytopiclink {
+    background: url(../pnimages/icon_sticky.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.unstickytopiclink {
+    background: url(../pnimages/icon_unsticky.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.movetopiclink {
+    background: url(../pnimages/icon_move.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.deletetopiclink {
+    background: url(../pnimages/icon_delete.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.movepostlink {
+    background: url(../pnimages/icon_move.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.splittopiclink {
+    background: url(../pnimages/icon_split.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.editpostlink {
+    background: url(../pnimages/icon_edit.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.quotepostlink {
+    background: url(../pnimages/icon_quote.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.notifymoderatorlink {
+    background: url(../pnimages/icon_notify.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.linktopostlink {
+    background: url(../pnimages/icon_postlink.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.sendpmlink {
+    background: url(../pnimages/icon_email.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.gotohomepagelink {
+    background: url(../pnimages/icon_www.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.viewprofilelink {
+    background: url(../pnimages/icon_profile.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.previoustopiclink {
+    background: url(../pnimages/icon_previous.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.nexttopiclink {
+    background: url(../pnimages/icon_next.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.sortorderasclink {
+    background: url(../pnimages/icon_up.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.sortorderdesclink {
+    background: url(../pnimages/icon_down.gif) no-repeat 0 50% ! important;
 }

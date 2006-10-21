@@ -9,58 +9,58 @@
 <div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
     <div>
         <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
-        <a class="headerlink" title="<!--[ pnml name='_PNFORUM_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.prev_topic_id ]-->"><!--[ pnimg src="icon_previous.gif" alt="_PNFORUM_PREVIOUS_TOPIC" altml=true ]--></a>
+        <a class="image previoustopiclink" title="<!--[ pnml name='_PNFORUM_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.prev_topic_id ]-->"></a>
         <!--[ /if ]-->
         
         <!--[ if $topic.access_comment ]-->
-            <span class="headerlink"><!--[ pnimg src="icon_newtopic.gif" alt="_PNFORUM_NEWTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=newtopic forum=$topic.forum_id ]-->"><!--[ pnml name='_PNFORUM_NEWTOPIC' ]--></a></span>
+            <a class="image newtopiclink" title="<!--[ pnml name='_PNFORUM_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=newtopic forum=$topic.forum_id ]-->"><!--[ pnml name='_PNFORUM_NEWTOPIC' ]--></a>
         <!--[ /if ]-->
         
         <!--[ if $pncore.logged_in ]-->
-        <span class="headerlink"><!--[ pnimg src="icon_mailto.gif" alt="_PNFORUM_PREVIOUS_TOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_EMAIL_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=emailtopic topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_EMAIL_TOPIC' ]--></a></span>
+            <a class="image mailtolink" title="<!--[ pnml name='_PNFORUM_EMAIL_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=emailtopic topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_EMAIL_TOPIC' ]--></a>
         <!--[ /if ]-->
         
-        <span class="headerlink"><!--[ pnimg src="icon_print.gif" alt="_PNFORUM_NEWTOPIC" altml=true ]-->&nbsp;<!--[ printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id ]--></span>
+        <!--[ printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id ]-->
         
         <!--[ if $pncore.logged_in ]-->
-        <span id="subscribetopicbutton"   class="headerlink" style="display: none;"><!--[ pnimg src="icon_subscribe.gif" alt="_PNFORUM_SUBSCRIBE_TOPIC" altml=true ]-->&nbsp;<a onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></span>
-        <span id="unsubscribetopicbutton" class="headerlink" style="display: none;"><!--[ pnimg src="icon_unsubscribe.gif" alt="_PNFORUM_UNSUBSCRIBE_TOPIC" altml=true ]-->&nbsp;<a onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]--></a></span>
+        <a id="subscribetopicbutton" class="image subscribetopiclink" style="display: none;" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a>
+        <a id="unsubscribetopicbutton" class="image unsubscribetopiclink" style="display: none;" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]--></a>
         <noscript>
             <!--[ if $topic.is_subscribed == 0 ]-->
-                <span class="headerlink"><!--[ pnimg src="icon_subscribe.gif" alt="_PNFORUM_SUBSCRIBE_TOPIC" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></span>
+                <a class="image subscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a>
             <!--[ else ]-->
-                <span class="headerlink"><!--[ pnimg src="icon_unsubscribe.gif" alt="_PNFORUM_SUBSCRIBE_TOPIC" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></span>
+                <a class="image unsubscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a>
             <!--[ /if ]-->
         </noscript>
         <!--[ /if ]-->
         <!--[ if $topic.topic_id neq $topic.next_topic_id ]-->
-        <a class="headerlink" title="<!--[ pnml name='_PNFORUM_NEXT_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.next_topic_id ]-->"><!--[ pnimg src="icon_next.gif" alt="_PNFORUM_NEXT_TOPIC" altml=true ]--></a>
+        <a class="image nexttopiclink" title="<!--[ pnml name='_PNFORUM_NEXT_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.next_topic_id ]-->"></a>
         <!--[ /if ]-->
     </div>
 
     <!--[ if $topic.access_moderate eq 1 ]-->
     <div style="margin: 0.5em 0 0.5em 0;">
-        <span style="display: none;" id="locktopicbutton"   class="headerlink"><!--[ pnimg src="icon_lock.gif" alt="_PNFORUM_LOCKTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_PNFORUM_LOCKTOPIC' ]--></a></span>
-        <span style="display: none;" id="unlocktopicbutton" class="headerlink"><!--[ pnimg src="icon_unlock.gif" alt="_PNFORUM_UNLOCKTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]--></a></span>
+        <a style="display: none;" id="locktopicbutton" class="image locktopiclink" title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_PNFORUM_LOCKTOPIC' ]--></a>
+        <a style="display: none;" id="unlocktopicbutton" class="image unlocktopiclink" title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]--></a>
         <noscript>
             <!--[ if $topic.topic_status eq 0 ]-->
-                <span class="headerlink"><!--[ pnimg src="icon_lock.gif" alt="_PNFORUM_LOCKTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=lock topic=$topic.topic_id ]-->"><!--[ pnml name="_PNFORUM_LOCKTOPIC" ]--></a></span>
+                <a class="image locktopiclink" title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=lock topic=$topic.topic_id ]-->"><!--[ pnml name="_PNFORUM_LOCKTOPIC" ]--></a>
             <!--[ else ]-->
-                <span class="headerlink"><!--[ pnimg src="icon_unlock.gif" alt="_PNFORUM_UNLOCKTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=unlock topic=$topic.topic_id ]-->"><!--[ pnml name="_PNFORUM_UNLOCKTOPIC" ]--></a></span>
+                <a class="image unlocktopiclink" title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=unlock topic=$topic.topic_id ]-->"><!--[ pnml name="_PNFORUM_UNLOCKTOPIC" ]--></a>
             <!--[ /if ]-->
         </noscript>
     
-        <span class="headerlink" style="display: none;" id="stickytopicbutton"   ><!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKYTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'sticky')"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a>   </span>
-        <span class="headerlink" style="display: none;" id="unstickytopicbutton" ><!--[ pnimg src="icon_unsticky.gif" alt="_PNFORUM_UNSTICKYTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'unsticky')"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></a></span>
+        <a class="image stickytopiclink" style="display: none;" id="stickytopicbutton" title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'sticky')"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a>
+        <a class="image unstickytopiclink" style="display: none;" id="unstickytopicbutton" title="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'unsticky')"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></a>
         <noscript>
             <!--[ if $topic.sticky eq 0 ]-->
-                <span class="headerlink"><!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKYTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=sticky topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a></span>
+                <a class="image stickytopiclink" title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=sticky topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a>
             <!--[ else ]-->
-                <span class="headerlink"><!--[ pnimg src="icon_unsticky.gif" alt="_PNFORUM_UNSTICKYTOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=unsticky topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></a></span>
+                <a class="image unstickytopiclink" title="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=unsticky topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></a>
             <!--[ /if ]-->
         </noscript>
-        <span class="headerlink"><!--[ pnimg src="icon_move.gif" alt="_PNFORUM_MOVETOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_MOVETOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=move topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_MOVETOPIC' ]--></a></span>
-        <span class="headerlink"><!--[ pnimg src="icon_delete.gif" alt="_PNFORUM_DELETETOPIC" altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_DELETETOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=delete topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_DELETETOPIC' ]--></a></span>
+        <a class="image movetopiclink" title="<!--[ pnml name='_PNFORUM_MOVETOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=move topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_MOVETOPIC' ]--></a>
+        <a class="image deletetopiclink" title="<!--[ pnml name='_PNFORUM_DELETETOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=delete topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_DELETETOPIC' ]--></a>
     </div>
     <!--[ /if ]-->
 

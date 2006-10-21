@@ -34,14 +34,10 @@
         <!--[ foreach item=forum from=$category.forums ]-->
          <tr align="left" valign="top" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.background='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.background='<!--[ $bgcolor1 ]-->'">
             <td align="left" valign="middle" style="width:4%;">
-                <!--[ if $forum.new_posts eq 1 ]-->
-                    <!--[ pnimg src='icon_redfolder.gif' alt='_PNFORUM_NEWPOSTS' altml=true ]-->
-                <!--[ else ]-->
-                    <!--[ pnimg src='icon_folder.gif' alt='_PNFORUM_NONEWPOSTS' altml=true ]-->
-                <!--[ /if ]-->
+                &nbsp;
             </td>
             <td align="left" valign="middle" style="width:46%;">
-                <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
+                <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
                 <br /><!--[ $forum.forum_desc ]-->
                 <br /><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]-->
             </td>

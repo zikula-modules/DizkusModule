@@ -18,12 +18,7 @@
         <!--[ foreach item=category from=$tree ]-->
         <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
             <h2 style=" font-size: 1em;">
-            <!--[ if $category.new_posts == true ]-->
-                <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
-            <!--[ else ]-->
-                <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
-            <!--[ /if ]-->
-            <a id="categorylink_<!--[ $category.cat_id ]-->" class="openclosecategory" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a>
+            <a id="categorylink_<!--[ $category.cat_id ]-->" class="image <!--[ if $category.new_posts == true ]-->newpostscategorylink<!--[ else ]-->categorylink<!--[ /if ]--> openclosecategory" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a>
              </h2>
             <!--[ if $category.last_post.url_anchor neq '' ]-->
             <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
@@ -35,12 +30,7 @@
                     <!--[ foreach item=forum from=$category.forums ]-->
                     <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
                         <h2 style=" font-size: 1em;">
-                        <!--[ if $forum.new_posts == true ]-->
-                            <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
-                        <!--[ else ]-->
-                            <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
-                        <!--[ /if ]-->
-                        <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
+                        <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
                         </h2>
                         <div style="font-size: 0.8em; margin-left: 0.3em;">
                             <!--[ $forum.forum_desc|pnvarprephtmldisplay ]--><br />
@@ -73,12 +63,7 @@
         <!--[ foreach item=forum from=$view_category_data.forums ]-->
         <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
             <h2 style=" font-size: 1em;">
-            <!--[ if $forum.new_posts == true ]-->
-                <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]-->
-            <!--[ else ]-->
-                <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]-->
-            <!--[ /if ]-->
-            <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
+            <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
             </h2>
             <div style="font-size: 0.8em; margin-left: 0.3em;">
                 <!--[ $forum.forum_desc|pnvarprephtmldisplay ]--><br />

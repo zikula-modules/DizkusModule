@@ -9,8 +9,8 @@
         <strong><!--[ pnml name='_PNFORUM_RECENT_POST_ORDER' ]--></strong>
      </dt>
     <dd class="prefs">
-            <span style="display: none;" id="sortorder_asc"  ><!--[ pnimg src="icon_up.gif" alt="_PNFORUM_CHANGE_POST_ORDER" altml=true ]-->&nbsp;<a onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_ASC' ]-->)</span>
-            <span style="display: none;" id="sortorder_desc" ><!--[ pnimg src="icon_down.gif" alt="_PNFORUM_CHANGE_POST_ORDER" altml=true ]-->&nbsp;<a onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_DESC' ]-->)</span> 
+            <span style="display: none;" id="sortorder_asc"  ><a class="image sortorderasclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_ASC' ]-->)</span>
+            <span style="display: none;" id="sortorder_desc" ><a class="image sortorderdesclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_DESC' ]-->)</span> 
             <form action="javascript:void(0);" method="post"><input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" /></form>
             <script type="text/javascript">
                 var post_order = '<!--[ $post_order ]-->';
@@ -22,9 +22,9 @@
             </script>
             <noscript>
                 <!--[ if $post_order == 'asc' ]-->
-                    <!--[ pnimg src="icon_up.gif" alt="_PNFORUM_CHANGE_POST_ORDER" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="change_post_order" return_to="prefs" ]-->" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_ASC' ]-->)
+                    <a class="image sortorderasclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="change_post_order" return_to="prefs" ]-->" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_ASC' ]-->)
                 <!--[ else ]-->
-                    <!--[ pnimg src="icon_down.gif" alt="_PNFORUM_CHANGE_POST_ORDER" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="change_post_order" return_to="prefs" ]-->" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_DESC' ]-->)
+                    <a class="image sortorderdesclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="change_post_order" return_to="prefs" ]-->" title="<!--[ pnml name="_PNFORUM_CHANGE_POST_ORDER" ]-->"><!--[ pnml name='_PNFORUM_CHANGE_POST_ORDER' ]--></a>&nbsp;(<!--[ pnml name='_PNFORUM_CURRENTSORTORDER' ]-->: <!--[ pnml name='_PNFORUM_ORDER_DESC' ]-->)
                 <!--[ /if ]-->
             </noscript>
     </dd>
@@ -33,7 +33,7 @@
         <strong><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></strong>
     </dt>
     <dd class="prefs">
-        <!--[ pnimg src="icon_subscribe.gif" altml=true alt="_PNFORUM_MANAGETOPICSUBSCRIPTIONS" ]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></a>
+        <a class="image subscribetopiclink" href="<!--[ pnmodurl modname=pnForum type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></a>
     </dd>
 </dl>
 
@@ -74,8 +74,8 @@
             <!--[ $forum.forum_desc|pnvarprephtmldisplay ]-->
         </td>
         <td class="thd25">
-            <span id="subscribeforumbutton_<!--[ $forum.forum_id ]-->"   class="headerlink" style="display: none;"><!--[ pnimg src="icon_subscribe.gif" alt="_PNFORUM_SUBSCRIBE_FORUM" altml=true ]-->&nbsp;<a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a></span> 
-            <span id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" class="headerlink" style="display: none;"><!--[ pnimg src="icon_unsubscribe.gif" alt="_PNFORUM_UNSUBSCRIBE_FORUM" altml=true ]-->&nbsp;<a onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a></span>
+            <a id="subscribeforumbutton_<!--[ $forum.forum_id ]-->"   class="image subscribelink" style="display: none;" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a>
+            <a id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" class="image unsubscribelink" style="display: none;" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a>
             <script type="text/javascript">
                 var is_subscribed = <!--[ $forum.is_subscribed ]-->;
                 if(is_subscribed == 0) {
@@ -86,16 +86,16 @@
             </script>
             <noscript>
                 <!--[ if $forum.is_subscribed == 0 ]-->
-                    <span class="headerlink"><!--[ pnimg src="icon_subscribe.gif" alt="_PNFORUM_SUBSCRIBE_FORUM" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a></span> 
+                    <a class="image subscribelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a>
                 <!--[ else ]-->
-                    <span class="headerlink"><!--[ pnimg src="icon_unsubscribe.gif" alt="_PNFORUM_UNSUBSCRIBE_FORUM" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a></span>
+                    <a class="image unsubscribelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a>
                 <!--[ /if ]-->
             </noscript>
         </td>
         <!--[ if $favorites_enabled eq "yes" ]-->
         <td class="thd25">
-            <span id="addfavoritebutton_<!--[ $forum.forum_id ]-->" class="headerlink" style="display: none;"><!--[ pnimg src="icon_addfavorite.gif" alt="_PNFORUM_ADD_FAVORITE_FORUM" altml=true ]-->&nbsp;<a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a></span>
-            <span id="removefavoritebutton_<!--[ $forum.forum_id ]-->" class="headerlink" style="display: none;"><!--[ pnimg src="icon_removefavorite.gif" alt="_PNFORUM_REMOVE_FAVORITE_FORUM" altml=true ]-->&nbsp;<a onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a></span>
+            <a id="addfavoritebutton_<!--[ $forum.forum_id ]-->"    class="image addfavoritelink" style="display: none;" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a>
+            <a id="removefavoritebutton_<!--[ $forum.forum_id ]-->" class="image removefavoritelink" style="display: none;" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a>
             <script type="text/javascript">
                 var is_favorite = <!--[ $forum.is_favorite ]-->;
                 if(is_favorite == 0) {
@@ -106,9 +106,9 @@
             </script>
             <noscript>
                 <!--[ if $forum.is_favorite == 0 ]-->
-                    <span class="headerlink"><!--[ pnimg src="icon_addfavorite.gif" alt="_PNFORUM_ADD_FAVORITE_FORUM" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a></span>
+                    <a class="image addfavoritelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a>
                 <!--[ else ]-->
-                    <span class="headerlink"><!--[ pnimg src="icon_removefavorite.gif" alt="_PNFORUM_REMOVE_FAVORITE_FORUM" altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a></span>
+                    <a class="image removefavoritelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs ]-->" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a>
                 <!--[ /if ]-->
             </noscript>
         </td>

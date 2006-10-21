@@ -18,22 +18,22 @@ Template for single postings
             <button onclick="javascript:toggleuserinfo(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_TOGGLEUSERINFO' ]-->"><span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span></button>
         </div>
         <div class="postingheaderright">
-            <a style="margin-right: 5px;" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_LINKTOTHISPOST' ]-->"><!--[ pnimg src="icon_postlink.gif" alt="_PNFORUM_LINKTOTHISPOST" altml=true ]--></a><strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+            <a class="image linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_LINKTOTHISPOST' ]-->"></a><strong><!--[ pnml name='_PNFORUM_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
         </div>
         <!--[ if $preview neq true ]-->
         <div class="postingheadermiddle">
             <!--[ if $post.poster_data.pn_uid neq 1 ]-->
-                <!--[ $post.poster_data.pn_uname|profilelink:'':$profile ]-->
+                <a class="image viewprofilelink" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_data.pn_uname ]-->" title="<!--[ $post.poster_data.pn_uname ]-->"></a>
                 <!--[ if $pncore.logged_in ]-->
-                <!--[ pnmodgetinfo modname='Messages' info='type' assign=type]-->
-                <!--[ if $type eq 1 ]-->
-                <a class="headerlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"><!--[ pnimg src="icon_email.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
-                <!--[ else ]-->
-                <a class="headerlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->"><!--[ pnimg src="icon_email.gif" alt='_PNFORUM_SEND_PM' altml=true ]--></a>
-                <!--[ /if ]-->
+                    <!--[ pnmodgetinfo modname='Messages' info='type' assign=type]-->
+                    <!--[ if $type eq 1 ]-->
+                        <a class="image sendpmlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"></a>
+                    <!--[ else ]-->
+                        <a class="image sendpmlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->"></a>
+                    <!--[ /if ]-->
                 <!--[ /if ]-->
                 <!--[ if $post.poster_data.pn_url neq "" ]-->
-                    <a class="headerlink normallink" title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->"><!--[ pnimg src="icon_www.gif" alt='_PNFORUM_HOMEPAGE' altml=true ]--></a>
+                    <a class="image gotohomepagelink" title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->"></a>
                 <!--[ /if ]-->
             <!--[ /if ]-->
 
@@ -123,38 +123,30 @@ Template for single postings
             <div class="postingfooterright">
                 <!--[ if $post.poster_data.moderate eq true]-->
                     <!--[ if ($num neq 0) or ($topic.start neq 0)  ]-->
-                        <span class="postingbutton"><!--[ pnimg src="icon_move.gif" alt='_PNFORUM_MOVEPOST' altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_MOVEPOSTSHORT' ]--></a></span>
-                        <span class="postingbutton"><!--[ pnimg src="icon_split.gif" alt='_PNFORUM_SPLITTOPIC' altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_SPLITSHORT' ]--></a></span>
+                        <a class="image movepostlink" title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_MOVEPOSTSHORT' ]--></a>
+                        <a class="image splittopiclink" title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_SPLITSHORT' ]--></a>
                     <!--[ /if ]-->
                 <!--[ /if ]-->
         
                 <!--[ if $topic.topic_status neq 1 ]-->
                     <!--[ if $post.poster_data.reply eq true]-->
-                        <span class="postingbutton" style="display:none;" id="quotebutton_<!--[ $post.post_id ]-->"><!--[ pnimg src="icon_quote.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]-->&nbsp;<a onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a></span>
+                        <a class="image quotepostlink" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
                         <noscript>
-                        <span class="postingbutton"><!--[ pnimg src="icon_quote.gif" alt='_PNFORUM_REPLYQUOTE' altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a></span>
+                        <a class="image quotepostlink" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
                         </noscript>
                     <!--[ /if ]-->
                     <!--[ if $post.poster_data.edit eq 1 ]-->
-                        <span class="postingbutton" style="display:none;" id="editbutton_<!--[ $post.post_id ]-->"><!--[ pnimg src="icon_edit.gif" alt='_PNFORUM_EDITDELETE' altml=true ]-->&nbsp;<a onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a></span>
+                        <a class="image editpostlink" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
                         <noscript>
-                        <span class="postingbutton"><!--[ pnimg src="icon_edit.gif" alt='_PNFORUM_EDITDELETE' altml=true ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a></span>
+                        <a class="image editpostlink" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
                         </noscript>
                     <!--[ /if ]-->
                 <!--[ else ]-->
                     <!--[ pnimg src=icon_locked.gif alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
                 <!--[ /if ]-->
-                <span class="postingbutton"><!--[ pnimg src="icon_notify.gif" alt='_PNFORUM_NOTIFYMODERATOR_TITLE' altml=true ]-->&nbsp;<a href="<!--[ pnmodurl modname=pnForum type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnml name='_PNFORUM_NOTIFYMODERATOR' ]--></a></span>
+                <a class="image notifymoderatorlink" href="<!--[ pnmodurl modname=pnForum type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnml name='_PNFORUM_NOTIFYMODERATOR' ]--></a>
             </div>
         <!--[ /if ]-->
     </div>
 </div>
 
-<script type="text/javascript">
-    if($('editbutton_<!--[ $post.post_id ]-->')) {
-        Element.show('editbutton_<!--[ $post.post_id ]-->');
-    }
-    if($('quotebutton_<!--[ $post.post_id ]-->')) {
-        Element.show('quotebutton_<!--[ $post.post_id ]-->');
-    }
-</script>

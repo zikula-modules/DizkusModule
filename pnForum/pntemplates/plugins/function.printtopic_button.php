@@ -47,9 +47,9 @@ function smarty_function_printtopic_button($params, &$smarty)
             $themeinfo = pnThemeInfo('Printer');
         }
         if($themeinfo['active']) {
-            return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
+            return '<a class="image printlink" title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
         }
-        return '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
+        return '<a class="image printlink" title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
     }
     return '';
 }
