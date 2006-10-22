@@ -130,13 +130,13 @@ Template for single postings
         
                 <!--[ if $topic.topic_status neq 1 ]-->
                     <!--[ if $post.poster_data.reply eq true]-->
-                        <a class="image quotepostlink" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
+                        <a style="display:none;" class="image quotepostlink" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
                         <noscript>
                         <a class="image quotepostlink" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
                         </noscript>
                     <!--[ /if ]-->
                     <!--[ if $post.poster_data.edit eq 1 ]-->
-                        <a class="image editpostlink" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
+                        <a style="display:none;" class="image editpostlink" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
                         <noscript>
                         <a class="image editpostlink" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
                         </noscript>
@@ -150,3 +150,11 @@ Template for single postings
     </div>
 </div>
 
+<script type="text/javascript">
+    if($('editbutton_<!--[ $post.post_id ]-->')) {
+        Element.show('editbutton_<!--[ $post.post_id ]-->');
+    }
+    if($('quotebutton_<!--[ $post.post_id ]-->')) {
+        Element.show('quotebutton_<!--[ $post.post_id ]-->');
+    }
+</script>
