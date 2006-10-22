@@ -631,7 +631,8 @@ div.pnf_statusmsg {
     float: left; 
     margin: 1em 0 1em 0; 
     width: 99%; 
-    font-size: 0.8em; 
+    font-size: 80%;
+    line-height: 2em; 
     text-align: center;
 } 
 
@@ -1187,4 +1188,16 @@ a.normallink {
 
 #pnforum a.sortorderdesclink {
     background: url(../pnimages/icon_down.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.gototoplink {
+    background: url(../pnimages/icon_up.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.gotobottomlink {
+    background: url(../pnimages/icon_down.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum a.discussinforumlink {
+    background: url(../pnimages/icon_discuss.gif) no-repeat 0 50% ! important;
 }
