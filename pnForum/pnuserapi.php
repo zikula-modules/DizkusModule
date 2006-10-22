@@ -3977,6 +3977,9 @@ function pnForum_userapi_mailcron($args)
                                         // get sender
                                         if(strpos($header, 'from:')===0) {
                                             $from = trim(strip_tags(substr($header, 5)));
+                                            // replace @ and . to make it harder for email harvesers,
+                                            // credits to Teb for this idea
+                                            $from = str_replace(array('@','.'),array(' (at) ',' (dot) '), $from);
                                         }
                                         // get msgid from In-Reply-To: if this is an nswer to a prior
                                         // posting
