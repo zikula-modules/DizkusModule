@@ -4048,6 +4048,10 @@ function pnForum_userapi_mailcron($args)
                                     $pop3->DeleteMessage($cnt);
                                 }
                             }
+                            // logout the mail2forum user
+                            if(pnUserLogOut()) {
+                                mailcronecho('user ' . $forum['pop3_pnuser'] . ' logged out', $debug);
+                            }
                         } else {
                             mailcronecho("error: cannot login user '". $forum['pop3_pnuser'] ."' to pn\n");
                         }
