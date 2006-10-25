@@ -830,7 +830,7 @@ function pnForum_admin_storecategory()
                                     'old_id' => $cat_id,
                                     'action' => 'delete'),
                               true,
-                              true); 
+                              false); 
         } else {
             pnf_ajaxerror('error deleting category ' . pnVarPrepForDisplay($cat_id));
         }
@@ -854,7 +854,7 @@ function pnForum_admin_storecategory()
                                     'edithtml'    => $pnr->fetch('pnforum_ajax_editcategory.html'),
                                     'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
                               true,
-                              true); 
+                              false); 
         } else {
             pnf_ajaxerror('error creating category "' . pnVarPrepForDisplay($cat_title) . '"');
         }
@@ -869,7 +869,7 @@ function pnForum_admin_storecategory()
                                     'action'      => 'update',
                                     'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
                               true,
-                              true); 
+                              false); 
         } else {
             pnf_ajaxerror('error updating cat_id ' . pnVarPrepForDisplay($cat_id) . ' with title "' . pnVarPrepForDisplay($cat_title) . '"');
         }

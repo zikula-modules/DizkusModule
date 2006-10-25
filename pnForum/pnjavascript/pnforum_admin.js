@@ -182,13 +182,14 @@ function storecategory(catid)
 
 function storecategory_response(originalRequest, json)
 {
-    pnf_toggleprogressimage(true, json.old_id);
     // show error if necessary
     if( originalRequest.status != 200 ) { 
         pnf_showajaxerror(originalRequest.responseText);
         return;
     }
+    var json = dejsonize(originalRequest.responseText);
 
+    pnf_toggleprogressimage(true, json.old_id);
     updateAuthid(json.authid);
     
     switch(json.action) {
@@ -631,7 +632,7 @@ function pnf_toggleprogressimage(typ, id)
             $(imageid).style.visibility = 'hidden';
         }
     }
-
+    return;
 }
 
 function showextendedoptions(extsource, forumid)
