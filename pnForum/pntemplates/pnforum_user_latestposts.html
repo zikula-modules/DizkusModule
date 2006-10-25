@@ -26,14 +26,18 @@
 	    <a id="postings"></a><!--[ pnml name='_PNFORUM_FORUMS' ]-->
 	</caption>
 	<tr style="width: 100%; background: <!--[ $bgcolor3 ]-->;">
-          <th class="latestposts_thd10" style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
+          <th class="latestposts_thd15l" style="border-color: <!--[ $bgcolor2 ]-->;">Forum</th>
+          <th class="latestposts_thd5"  style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
           <th class="latestposts_thd40" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
-          <th class="latestposts_thd15" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
-          <th class="latestposts_thd15" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
-          <th class="latestposts_thd20" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
+          <th class="latestposts_thd5"  style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
+          <th class="latestposts_thd20" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
+          <th class="latestposts_thd15r" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
 	</tr>
 	<!--[ foreach item=post from=$posts ]-->
-    <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+    <tr style="font-size: 90%; background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+        <td>
+            <a href="<!--[pnmodurl modname='pnForum' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name]-->"><!--[ $post.forum_name|truncate:"25" ]--></a>
+        </td>
         <td>
             <!--[ if $post.sticky == 1 ]-->
                 <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true  style="margin-left: 5px;" ]-->
@@ -54,13 +58,13 @@
         <td>
             <!--[ $post.poster_name|profilelink ]-->
         </td>
-        <td>
-            <!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+        <td style="text-align: center;">
+            <!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y %H:%M":'':true ]-->
         </td>
     </tr>
     <!--[ foreachelse ]-->
     <tr>
-        <td colspan="5" style="text-align: center;">
+        <td colspan="6" style="font-size: 90%; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_NOPOSTS' ]--></strong>
         </td>
     </tr>
@@ -72,14 +76,18 @@
 	    <a id="rsspostings"></a><!--[ pnml name='_PNFORUM_RSS2FORUMPOSTS' ]-->
 	</caption>
 	<tr style="width: 100%; background: <!--[ $bgcolor3 ]-->;">
-          <th class="latestposts_thd10" style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
+          <th class="latestposts_thd15l" style="border-color: <!--[ $bgcolor2 ]-->;">Forum</th>
+          <th class="latestposts_thd5"  style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
           <th class="latestposts_thd40" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
-          <th class="latestposts_thd15" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
-          <th class="latestposts_thd15" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
-          <th class="latestposts_thd20" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
+          <th class="latestposts_thd5"  style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
+          <th class="latestposts_thd20" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
+          <th class="latestposts_thd15r" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
 	</tr>
 	<!--[ foreach item=post from=$rssposts ]-->
-    <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+    <tr style="font-size: 90%; background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+        <td>
+            <a href="<!--[pnmodurl modname='pnForum' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name]-->"><!--[ $post.forum_name|truncate:"25" ]--></a>
+        </td>
         <td style="text-align: center;">
             <!--[ if $post.sticky == 1 ]-->
                 <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true]-->
@@ -100,13 +108,13 @@
         <td>
             <!--[ $post.poster_name|profilelink ]-->
         </td>
-        <td>
-            <!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+        <td style="text-align: center;">
+            <!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y %H:%M":'':true ]-->
         </td>
     </tr>
     <!--[ foreachelse ]-->
     <tr>
-        <td colspan="5" style="text-align: center;">
+        <td colspan="6" style="font-size: 90%; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_NOPOSTS' ]--></strong>
         </td>
     </tr>
@@ -118,14 +126,18 @@
 	    <a id="m2fpostings"></a><!--[ pnml name='_PNFORUM_MAIL2FORUMPOSTS' ]-->
 	</caption>
 	<tr style="width: 100%; background: <!--[ $bgcolor3 ]-->;">
-          <th class="latestposts_thd10" style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
+          <th class="latestposts_thd15l" style="border-color: <!--[ $bgcolor2 ]-->;">Forum</th>
+          <th class="latestposts_thd5"  style="border-color: <!--[ $bgcolor2 ]-->;">&nbsp;</th>
           <th class="latestposts_thd40" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></th>
-          <th class="latestposts_thd15" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
-          <th class="latestposts_thd15" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
-          <th class="latestposts_thd20" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
+          <th class="latestposts_thd5" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_REPLIES' ]--></strong></th>
+          <th class="latestposts_thd20" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_AUTHOR' ]--></strong></th>
+          <th class="latestposts_thd15r" style="border-color: <!--[ $bgcolor2 ]-->;"><strong><!--[ pnml name='_PNFORUM_POSTED' ]--></strong></th>
 	</tr>
 	<!--[ foreach item=post from=$m2fposts ]-->
-    <tr style="background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+    <tr style="font-size: 90%; background: <!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
+        <td>
+            <a href="<!--[pnmodurl modname='pnForum' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name]-->"><!--[ $post.forum_name|truncate:"25" ]--></a>
+        </td>
         <td>
             <!--[ if $post.sticky == 1 ]-->
                 <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true]-->
@@ -146,13 +158,13 @@
         <td>
             <!--[ $post.poster_name|profilelink ]-->
         </td>
-        <td>
-            <!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+        <td style="text-align: center;">
+            <!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y %H:%M":'':true ]-->
         </td>
     </tr>
     <!--[ foreachelse ]-->
     <tr>
-        <td colspan="5" style="text-align: center;">
+        <td colspan="6" style="font-size: 90%; text-align: center;">
             <strong><!--[ pnml name='_PNFORUM_NOPOSTS' ]--></strong>
         </td>
     </tr>

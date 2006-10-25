@@ -665,7 +665,7 @@ div.pnf_statusmsg {
     border-left: 0;
 }
 
-.latestposts_thd15 {
+.latestposts_thd15l {
     width: 15%;
     text-align: center;
     font-size: 1em;
@@ -676,6 +676,22 @@ div.pnf_statusmsg {
     border-bottom-width: 2px;
     border-bottom-style: solid;
     border-right: 0;
+    border-left-width: 2px;
+    border-left-style: solid;
+}
+
+.latestposts_thd15r {
+    width: 15%;
+    text-align: center;
+    font-size: 1em;
+    height: 2.2em;
+    vertical-align: middle;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-right-width: 2px;
+    border-right-style: solid;
     border-left: 0;
 }
 
@@ -685,13 +701,12 @@ div.pnf_statusmsg {
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
-    border-left-width: 2px;
-    border-left-style: solid;
     border-top-width: 2px;
     border-top-style: solid;
     border-bottom-width: 2px;
     border-bottom-style: solid;
     border-right: 0;
+    border-left: 0;
 }
 
 .latestposts_thd20 {
@@ -700,13 +715,26 @@ div.pnf_statusmsg {
     font-size: 1em;
     height: 2.2em;
     vertical-align: middle;
-    border-right-width: 2px;
-    border-right-style: solid;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-right: 0;
+    border-left: 0;
+}
+
+.latestposts_thd5 {
+    width: 5%;
+    text-align: center;
+    font-size: 1em;
+    height: 2.2em;
+    vertical-align: middle;
     border-top-width: 2px;
     border-top-style: solid;
     border-bottom-width: 2px;
     border-bottom-style: solid;
     border-left: 0;
+    border-right: 0;
 }
 
 /*******************************
