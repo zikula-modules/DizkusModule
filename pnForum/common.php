@@ -1068,32 +1068,6 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
 
 }
 
-function pnf_createXML($args)
-{
-    $modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
-    $xml = '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n"
-          .'<pnforum version="' . $modinfo['version'] . '">' . "\n";
-    $xml .= pnf_createXMLarray('', $args);
-    $xml .= '</pnforum>';
-    return $xml;
-}
-
-function pnf_createXMLarray($xml, $array)
-{
-    foreach($array as $key => $value) {
-        if(!empty($key)) {
-            $xml .= '<' . strtolower($key) . '>';
-            if(is_array($value)) {
-                $xml .= pnf_createXMLarray($xml, $value);
-            } else {
-                $xml .= $value;
-            }
-            $xml .= '</' . strtolower($key) . '>' . "\n";
-        }
-    }
-    return $xml;
-}
-
 /**
  * pnf_add_stylesheet_header
  *
