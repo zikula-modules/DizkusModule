@@ -627,7 +627,42 @@ div.pnf_statusmsg {
  * pnforum_user_footer.html
  *******************************/
 
-#footer_line {
+#pnf_footer {
+    float: left; 
+    margin-top: 1em; 
+    width: 100%; 
+    padding: 0;
+    border-width: 2px;
+    border-style: solid; 
+}
+
+#pnf_footer p.onlinetop {
+    margin: 0;
+    line-height: 1.4em; 
+    padding: 0.2em 0 0.2em 2px;
+    font-weight: bold;
+}
+
+#pnf_onlinelist {
+    margin: 2px; 
+    float: left;
+}
+
+#pnf_onlinelist ul li {
+    margin-left: 0.8em; 
+    font-size: 85%;
+    float: left;
+    color: black;
+}
+
+#pnf_onlinelist p {
+    clear: left; 
+    margin: 0;
+    padding: 1em 0 0 0;    
+    font-size: 80%;
+}
+
+#pnf_footer_line {
     float: left; 
     margin: 1em 0 1em 0; 
     width: 99%; 

@@ -24,6 +24,8 @@ Installation
   Copy the content of javascript/ajax to PostNuke_rootfolder/javascript/ajax
   Copy the content of modules to your PostNuke's modules folder (not modules/Modules!!)
   Copy backforum.php from the pnForum folder to your PostNuke root folder
+  Copy modules/pnForum/pntemplates/plugins/function.pnforucolorcss.php to modules/Xanthia/plugins
+  Add <!--[ pnforumcolorcss ]--> to the head section of your theme.
 
 * regenerate module list
 * install and activate pnForum

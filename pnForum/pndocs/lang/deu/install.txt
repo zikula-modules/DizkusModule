@@ -26,7 +26,9 @@ Installation
   (nicht modules/Modules!!)
   Die Datei backforum.php aus dem pnForumverzeichnis ins PostNuke Verzeichnis
   kopieren
-
+  Die Datei modules/pnForum/pntemplates/plugins/function.pnforucolorcss.php nach modules/Xanthia/plugins kopieren
+  Im Head-Berei des Themes <!--[ pnforumcolorcss ]--> einfügen
+  
 * Modulliste neu erzeugen lassen
 * pnForum installieren und aktivieren
 * Hooks nach Bedarf für pnForum einstellen.
