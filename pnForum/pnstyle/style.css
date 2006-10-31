@@ -624,20 +624,20 @@ div.pnf_statusmsg {
     text-align: center;
 }
 
-#pnforum th.leftcell {
+#pnforum .leftcell {
     border-width: 2px;
     border-style: solid;
     border-right: none;
 }
 
-#pnforum th.midcell {
+#pnforum .midcell {
     border-width: 2px;
     border-style: solid;
     border-right: none;
     border-left: none;
 }
 
-#pnforum th.rightcell {
+#pnforum .rightcell {
     border-width: 2px;
     border-style: solid;
     border-left: none;
@@ -778,97 +778,51 @@ div.pnf_statusmsg {
 /* do not delete */
 }
 
-#latestposts .optionline {
+div#latestposts .optionline {
     font-size: 1em;
     height: 1.8em;
     padding-top: 0.4em;
     text-align: center; 
 }
 
-.latestposts_thd40 {
-    text-align: center;
-    width: 40%;
-    font-size: 1em;
-    height: 2.2em;
-    vertical-align: middle;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-right: 0;
-    border-left: 0;
+div#latestposts table {
+    width: 100%;
 }
 
-.latestposts_thd15l {
+div#latestposts table col.col_forum {
     width: 15%;
-    text-align: center;
-    font-size: 1em;
-    height: 2.2em;
-    vertical-align: middle;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-right: 0;
-    border-left-width: 2px;
-    border-left-style: solid;
 }
-
-.latestposts_thd15r {
-    width: 15%;
-    text-align: center;
-    font-size: 1em;
-    height: 2.2em;
-    vertical-align: middle;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-right-width: 2px;
-    border-right-style: solid;
-    border-left: 0;
-}
-
-.latestposts_thd10 {
-    width: 10%;
-    text-align: center;
-    font-size: 1em;
-    height: 2.2em;
-    vertical-align: middle;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-right: 0;
-    border-left: 0;
-}
-
-.latestposts_thd20 {
-    width: 20%;
-    text-align: center;
-    font-size: 1em;
-    height: 2.2em;
-    vertical-align: middle;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-right: 0;
-    border-left: 0;
-}
-
-.latestposts_thd5 {
+div#latestposts table col.col_status {
     width: 5%;
+}
+div#latestposts table col.col_topic {
+    width: 40%;
+}
+div#latestposts table col.col_view {
+    width: 5%;
+}
+div#latestposts table col.col_poster {
+    width: 20%;
+}
+div#latestposts table col.col_date {
+    width: 15%;
+}
+
+div#latestposts table tr {
+    font-size: 90%;
     text-align: center;
-    font-size: 1em;
-    height: 2.2em;
+}
+
+div#latestposts table tr td {
     vertical-align: middle;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-left: 0;
-    border-right: 0;
+}
+
+div#latestposts table tr td.left {
+    text-align: left;
+}
+
+div#latestposts table tr td.nonewtopics {
+    font-weight: bold;
 }
 
 /*******************************
