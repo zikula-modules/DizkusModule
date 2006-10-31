@@ -5,41 +5,41 @@
 
 <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_user_main.js"></script>
     
-<div style="margin: 2em 0 2em 0;">
+<div id="pnf_main">
 
 <!--[ if $view_category == -1 ]-->
 
     <!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" assign=maintitle]-->
     <!--[ setforumtitle title=$maintitle ]-->
     
-    <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
-    <br />
+    <h1><!--[ pnml name="_PNFORUM_CATEGORYOVERVIEW" ]--></h1>
     <ul id="pnf_maincategorylist">
         <!--[ foreach item=category from=$tree ]-->
-        <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <h2 style=" font-size: 1em;">
-            <a id="categorylink_<!--[ $category.cat_id ]-->" class="image <!--[ if $category.new_posts == true ]-->newpostscategorylink<!--[ else ]-->categorylink<!--[ /if ]--> openclosecategory" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a>
-             </h2>
+        <li class="pnf_bgcolor1" onmouseover="this.className='pnf_bgcolor3'" onmouseout="this.className='pnf_bgcolor1'">
+            <p>
+                <a id="categorylink_<!--[ $category.cat_id ]-->" class="image <!--[ if $category.new_posts == true ]-->newpostscategorylink<!--[ else ]-->categorylink<!--[ /if ]--> openclosecategory" title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a>
+             </p>
             <!--[ if $category.last_post.url_anchor neq '' ]-->
-            <span style="font-size: 0.8em;"><!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
-            <a href="<!--[ $category.last_post.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $category.last_post.subject|pnvarprephtmldisplay ]-->'"><!--[ $category.last_post.subject|pnvarprepfordisplay ]--></a>
-            </span>
+            <p class="catlastpostinfo">
+                <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $category.last_post.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $category.last_post.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
+                <a href="<!--[ $category.last_post.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $category.last_post.subject|pnvarprephtmldisplay ]-->'"><!--[ $category.last_post.subject|pnvarprepfordisplay ]--></a>
+            </p>
             <!--[ /if ]-->
             <div id="category_<!--[ $category.cat_id ]-->" class="hidden category">
-                <ul class="pnf_mainforumlist" style="padding-left: 1.5em;">
+                <ul class="pnf_mainforumlist">
                     <!--[ foreach item=forum from=$category.forums ]-->
-                    <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-                        <h2 style=" font-size: 1em;">
-                        <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
-                        </h2>
-                        <div style="font-size: 0.8em; margin-left: 0.3em;">
+                    <li class="pnf_bgcolor1" onmouseover="this.className='pnf_bgcolor3'" onmouseout="this.className='pnf_bgcolor1'">
+                        <p>
+                            <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
+                        </p>
+                        <p class="forumlastpostinfo">
                             <!--[ $forum.forum_desc|pnvarprephtmldisplay ]--><br />
                             <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
                             <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
                             <!--[ if $forum.last_post_data.url_anchor neq '' ]-->
                             <a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
                             <!--[ /if ]-->
-                        </div>
+                        </p>
                         <span class="pnf_invisible">. </span>
                     </li>
                     <!--[ /foreach ]-->
@@ -55,24 +55,22 @@
     <!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" assign=maintitle]-->
     <!--[ setforumtitle title=$maintitle ]-->
 
-    <h1 style="text-align: center; font-size: 1.4em;"><!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" ]--></h1>
-    <br />
-    <h2 style="text-align: center; font-size: 1em;"><a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->" title="<!--[ pnml name='_PNFORUM_START' ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a>&nbsp;::&nbsp;<!--[ $view_category_data.cat_title|pnvarprepfordisplay ]--></h2>
-    <br />
+    <h1><!--[ pnml name="_PNFORUM_FORUMSOVERVIEW" ]--></h1>
+    <h2><a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->" title="<!--[ pnml name='_PNFORUM_START' ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a>&nbsp;::&nbsp;<!--[ $view_category_data.cat_title|pnvarprepfordisplay ]--></h2>
     <ul class="pnf_mainforumlist">
         <!--[ foreach item=forum from=$view_category_data.forums ]-->
-        <li style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <h2 style=" font-size: 1em;">
+        <li class="pnf_bgcolor1" onmouseover="this.className='pnf_bgcolor3'" onmouseout="this.className='pnf_bgcolor1'">
+            <p>
             <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> '<!--[ $forum.forum_name|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$forum.forum_id  ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a>
-            </h2>
-            <div style="font-size: 0.8em; margin-left: 0.3em;">
+            </p>
+            <p class="forumlastpostinfo">
                 <!--[ $forum.forum_desc|pnvarprephtmldisplay ]--><br />
                 <!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]--><br /><br />
                 <!--[ pnml name='_PNFORUM_LASTPOSTINGBY' ]-->&nbsp;<!--[ $forum.last_post_data.name|profilelink ]-->&nbsp;<!--[ pnml name='_PNFORUM_WRITTENON' ]-->&nbsp;<!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]-->:
                 <!--[ if $forum.last_post_data.url_anchor neq '' ]-->
                 <a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
                 <!--[ /if ]-->
-            </div>
+            </p>
             <span class="pnf_invisible">. </span>
         </li>
         <!--[ /foreach ]-->
@@ -82,11 +80,9 @@
 
 </div>
 
-<ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
+<ul id="pnf_forumlegend">
 <li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%e. %b %Y  - %R":'':true ]-->)</li>
 <li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--></li>
 </ul>
 
 <!--[ include file='pnforum_user_footer.html ]-->
-
-<!--[* pndebug *]-->

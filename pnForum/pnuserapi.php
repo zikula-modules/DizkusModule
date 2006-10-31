@@ -846,6 +846,7 @@ function pnForum_userapi_readtopic($args)
                       $coltopics[topic_last_post_id],
                       $colforums[forum_name],
                       $colforums[cat_id],
+                      $colforums[forum_pop3_active],
                       $colcats[cat_title]
             FROM      $tbltopics
             LEFT JOIN $tblforums
@@ -879,6 +880,14 @@ function pnForum_userapi_readtopic($args)
         $topic['topic_unixtime'] = pnf_str2time($topic['topic_time']); //strtotime ($topic['topic_time']);
         $topic['post_sort_order'] = $post_sort_order;
 
+        // pop3_active contains the external source (if any), create the correct var name
+        // 0 - no external source
+        // 1 - mail
+        // 2 - rss
+        $topic['externalsource'] = $topic['pop3_active'];
+        // kill the wrong var
+        unset($topic['pop3_active']);
+        
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
             return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
         }

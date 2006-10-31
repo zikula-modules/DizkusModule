@@ -3,44 +3,44 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 
 <!--[ setforumtitle title="`$forum.cat_title` - `$forum.forum_name`" ]-->
-
+  
+<div id="pnf_viewforum">  
+  
 <!--[* start of breadcrumbs *]-->
-<div id="breadcrumbs" class="pnf_clearfix">
-    <ul style="font-size: 1.4em;">
-        <li style="float: left;">
-            <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
+<div id="pnf_breadcrumbs" class="pnf_clearfix">
+    <ul>
+        <li>
+            <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
         </li>
-        <li style="float: left;">
-            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><strong><!--[ $forum.cat_title|pnvarprepfordisplay ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
+        <li>
+            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
         </li>
-        <li style="float: left;">
-            <strong><!--[ $forum.forum_name|pnvarprepfordisplay ]--></strong><br />
+        <li>
+            <!--[ $forum.forum_name|pnvarprepfordisplay ]-->
         </li>
     </ul>
 </div>
 <!--[* end of breadcrumbs *]-->
-<br />
+
 <!--[ if $forum.forum_mods|@count > 0 ]-->
-<div style="margin: 1em 0 1em 0;" class="pnf_clearfix">
-<ul>
-    <li style="float:left; margin-right: 1em;"><strong><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</strong></li>
-    <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
-    <li style="float:left; margin-right: 1em;"><!--[$mod|profilelink]--><!--[if !$smarty.foreach.moderators.last]-->,<!--[/if]--></li>
-    <!--[ /foreach ]-->
-</ul>
+<div id="pnf_moderatorlist" class="pnf_clearfix">
+    <ul>
+        <li><span><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</span></li>
+        <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
+        <li><!--[$mod|profilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
+        <!--[ /foreach ]-->
+    </ul>
 </div>
 <!--[ /if ]-->
 
-<br />
-
 <!--[ if $forum.forum_desc <> "" ]-->
-<div class="optionrow" style="padding: 1em; background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
+<div id="pnf_forumdescription" class="optionrow pnf_bgcolor3 pnf_bordercolor2">
     <!--[ $forum.forum_desc|pnvarprephtmldisplay ]-->
 </div>
 <!--[ /if ]-->
 
 <!--[ if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in ]-->
-<div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
+<div class="optionrow pnf_bgcolor3 pnf_bordercolor2">
 <!--[* Moderate *]-->
 <!--[ if $forum.access_moderate eq true ]-->
     <a class="image moderatelink" title="<!--[ pnml name='_PNFORUM_MODERATE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=moderateforum forum=$forum.forum_id ]-->"><!--[ pnml name='_PNFORUM_MODERATE' ]--></a>
@@ -92,125 +92,106 @@
 </div>
 <!--[ /if ]-->
 
-<!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
-<table cellpadding="5" cellspacing="0" width="99%" summary="<!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]-->">
-    <colgroup>
-        <col id="col_status"   width="10%" />
-        <col id="col_topic"    width="46%" />
-        <col id="col_replies"  width="8%" />
-        <col id="col_poster"   width="10%" />
-        <col id="col_view"     width="6%" />
-        <col id="col_lastpost" width="20%" />
-    </colgroup>
+<!--[ if $forum.topics ]-->
+
+    <!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
+    <table id="pnf_topiclist" cellpadding="5" cellspacing="0" summary="<!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]-->">
+        <colgroup>
+            <col id="col_status" />
+            <col id="col_topic" />
+            <col id="col_replies" />
+            <col id="col_poster" />
+            <col id="col_view" />
+            <col id="col_lastpost" />
+        </colgroup>
+        
+        <thead>
+            <tr class="pnf_bgcolor3">
+                <th class="leftcell pnf_bordercolor2" ><!--[ pnml name='_PNFORUM_STATUS' ]--></th>
+                <th class="midcell pnf_bordercolor2"  ><!--[ pnml name='_PNFORUM_TOPIC' ]--></th>
+                <th class="midcell pnf_bordercolor2"  ><!--[ pnml name='_PNFORUM_REPLIES' ]--></th>
+                <th class="midcell pnf_bordercolor2"  ><!--[ pnml name='_PNFORUM_POSTER' ]--></th>
+                <th class="midcell pnf_bordercolor2"  ><!--[ pnml name='_PNFORUM_VIEWS' ]--></th>
+                <th class="rightcell pnf_bordercolor2"><!--[ pnml name='_PNFORUM_DATE' ]--></th>
+            </tr>
+        </thead>
     
-    <thead>
-        <tr style="background-color:<!--[ $bgcolor3 ]-->;">
-            <th class="leftcell"  style="border-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_STATUS' ]--></th>
-            <th class="midcell"   style="border-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_TOPIC' ]--></th>
-            <th class="midcell"   style="border-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_REPLIES' ]--></th>
-            <th class="midcell"   style="border-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_POSTER' ]--></th>
-            <th class="midcell"   style="border-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_VIEWS' ]--></th>
-            <th class="rightcell" style="border-color: <!--[ $bgcolor2 ]-->;"><!--[ pnml name='_PNFORUM_DATE' ]--></th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-    <!--[ assign var="stickyControlStart" value="0" ]-->
-    <!--[ assign var="stickyControlEnd" value="0" ]-->
-    <!--[ foreach item=topic from=$forum.topics ]-->
-    <!--[ if $topic.sticky eq 0 ]-->
-        <!--[ if $stickyControlStart eq 1]-->
-            <!--[ if $stickyControlEnd eq 0]-->
-                <tr style="margin-top: 1em; background-color:<!--[ $bgcolor3 ]-->;">
-                    <td colspan="6" style="border: 2px solid <!--[ $bgcolor2 ]-->;text-align: center;"><strong><!--[ pnml name='_PNFORUM_TOPIC' ]--></strong></td>
+        <tbody>
+    
+        <!--[ assign var="stickystarted" value="0" ]-->
+        <!--[ assign var="topicstarted"  value="0" ]-->
+        
+        <!--[ foreach item=topic from=$forum.topics ]-->
+        
+        <!--[ if $topic.sticky eq 1 ]-->
+            <!--[ if $stickystarted eq 0]-->
+                <tr class="subheader pnf_bgcolor3">
+                    <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" class="pnf_bordercolor2" colspan="6">
+                        <!--[ pnml name='_PNFORUM_STICKY' ]-->
+                    </td>
                 </tr>
-                <!--[ assign var="stickyControlEnd" value="1" ]-->
+                <!--[ assign var="stickystarted" value="1" ]-->
+            <!--[ /if ]-->        
+        <!--[ else ]-->   
+            <!--[ if $topicstarted eq 0]-->
+                <tr class="subheader pnf_bgcolor3">
+                    <td colspan="6" class="pnf_bordercolor2">
+                        <!--[ pnml name='_PNFORUM_TOPIC' ]-->
+                    </td>
+                </tr>
+                <!--[ assign var="topicstarted" value="1" ]-->
             <!--[ /if ]-->
         <!--[ /if ]-->
-    <!--[ /if ]-->
-
-        <!--[ if $topic.sticky eq 1 ]-->
-            <!--[ if $stickyControlStart eq 1]-->
-                <tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-                    <td headers="col_status" style="width:10%; border-bottom: 2px solid <!--[ $bgcolor2 ]-->;">
-                        <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true]-->
-                        <!--[ if $topic.new_posts eq 1 ]-->
-                            <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]-->
-                        <!--[ /if ]-->
-                        <!--[ if $topic.hot_topic eq 1 ]-->
-                            <!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]-->
-                        <!--[ /if ]-->
-                        <!--[ if $topic.topic_status eq 1 ]-->
-                            <!--[ pnimg src="icon_locked.gif" alt="_PNFORUM_ISLOCKED" altml=true title="_PNFORUM_TOPICLOCKED" titleml=true ]-->
-                        <!--[ /if ]-->
-                    </td>
-            <!--[ else ]-->
-                <tr style="margin-top: 1em; background-color:<!--[ $bgcolor3 ]-->;">
-                    <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" colspan="6" style="border: 2px solid <!--[ $bgcolor2 ]-->;text-align: center;">
-                        <strong><!--[ pnml name='_PNFORUM_STICKY' ]--></strong>
-                    </td>
-                </tr>
-
-                <tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-                    <td headers="col_status" style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->; width:10%;">
-                        <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true]-->
-                        <!--[ if $topic.new_posts eq 1 ]-->
-                            <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]-->
-                        <!--[ /if ]-->
-                        <!--[ if $topic.hot_topic eq 1 ]-->
-                            <!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]-->
-                        <!--[ /if ]-->
-                        <!--[ if $topic.topic_status eq 1 ]-->
-                            <!--[ pnimg src="icon_locked.gif" alt="_PNFORUM_ISLOCKED" altml=true title="_PNFORUM_TOPICLOCKED" titleml=true ]-->
-                        <!--[ /if ]-->
-                    </td>
-
-                    <!--[ assign var="stickyControlStart" value="1" ]-->
-            <!--[ /if ]-->
-        <!--[ else ]-->
-            <tr style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.backgroundColor='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.backgroundColor='<!--[ $bgcolor1 ]-->'">
-            <td headers="col_status" style="width:10%; border-bottom: 2px solid <!--[ $bgcolor2 ]-->;">
+        <tr id="topic<!--[ $topic.topic_id ]-->" class="topicrow pnf_bgolor1" onmouseover="Element.removeClassName('topic<!--[ $topic.topic_id ]-->', 'pnf_bgcolor1'); Element.addClassName('topic<!--[ $topic.topic_id ]-->', 'pnf_bgcolor3');" onmouseout="Element.removeClassName('topic<!--[ $topic.topic_id ]-->', 'pnf_bgcolor3'); Element.addClassName('topic<!--[ $topic.topic_id ]-->', 'pnf_bgcolor1');">
+            <td headers="col_status" class="pnf_bordercolor2">
+                <!--[ if $topic.sticky eq 1 ]-->
+                    <!--[ pnimg src="icon_sticky.gif" alt="_PNFORUM_STICKY" altml=true title="_PNFORUM_STICKY" titleml=true]-->
+                <!--[ /if ]-->
                 <!--[ if $topic.topic_status eq 1 ]-->
                     <!--[ pnimg src="icon_locked.gif" alt="_PNFORUM_ISLOCKED" altml=true title="_PNFORUM_TOPICLOCKED" titleml=true ]-->
+                <!--[ /if ]-->
+                <!--[ if $topic.new_posts eq 1 ]-->
+                    <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]-->
                 <!--[ else ]-->
-                    <!--[ if $topic.new_posts eq 1 ]-->
-                        <!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]-->
-                    <!--[ else ]-->
-                        <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NORMALTOPIC" altml=true title="_PNFORUM_NORMALTOPIC" titleml=true ]-->
-                    <!--[ /if ]-->
-                    <!--[ if $topic.hot_topic eq 1 ]-->
-                        <!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]-->
-                    <!--[ /if ]-->
+                    <!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NORMALTOPIC" altml=true title="_PNFORUM_NORMALTOPIC" titleml=true ]-->
+                <!--[ /if ]-->
+                <!--[ if $topic.hot_topic eq 1 ]-->
+                    <!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]-->
                 <!--[ /if ]-->
             </td>
-        <!--[ /if ]-->
-        <td headers="col_topic" style="text-align:left; border-bottom: 2px solid <!--[ $bgcolor2 ]-->;">
-            <!--[ $topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name ]-->
-            <!--[ topicpager total=$topic.total_posts nonextprev=1 start=-1 topic_id=$topic.topic_id ]-->
-         </td>
-        <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;" headers="col_replies" align="center" valign="middle"><!--[ $topic.topic_replies ]--></td>
-        <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;" headers="col_poster" align="center" valign="middle"><!--[ $topic.pn_uname|profilelink ]--></td>
-        <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;" headers="col_views" align="center" valign="middle"><!--[ $topic.topic_views ]--></td>
-        <td style="border-bottom: 2px solid <!--[ $bgcolor2 ]-->;" headers="col_date" align="center" valign="middle"><!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief':'':true ]--><br /><!--[ $topic.last_poster|profilelink ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
-    </tr>
+            <td headers="col_topic" class="pnf_bordercolor2">
+                <!--[ $topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name ]-->
+                <!--[ topicpager total=$topic.total_posts nonextprev=1 start=-1 topic_id=$topic.topic_id ]-->
+             </td>
+            <td class="pnf_bordercolor2" headers="col_replies" align="center"><!--[ $topic.topic_replies ]--></td>
+            <td class="pnf_bordercolor2" headers="col_poster" align="center"><!--[ $topic.pn_uname|profilelink ]--></td>
+            <td class="pnf_bordercolor2" headers="col_views" align="center"><!--[ $topic.topic_views ]--></td>
+            <td class="pnf_bordercolor2" headers="col_date" align="center"><!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief':'':true ]--><br /><!--[ $topic.last_poster|profilelink ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
+        </tr>
+    
+        <!--[ foreachelse ]-->
+        <tr class="notopics>
+            <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" class="pnf_bgcolor3" colspan="6" align="center"><!--[ pnml name='_PNFORUM_NOTOPICS' ]--></td>
+        </tr>
+        <!--[ /foreach ]-->
+        </tbody>
+    </table>
+    <!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
 
-    <!--[ foreachelse ]-->
-    <tr>
-        <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" style="background-color:<!--[ $bgcolor3 ]-->;" colspan="6" align="center"><!--[ pnml name='_PNFORUM_NOTOPICS' ]--></td>
-    </tr>
-    <!--[ /foreach ]-->
-    </tbody>
-</table>
-<!--[ forumpager total=$forum.forum_topics start=$forum.topic_start forum_id=$forum.forum_id ]-->
+<!--[ else ]-->
+    <p class="pnf_notopics">
+         <!--[ pnml name='_PNFORUM_NOTOPICS' ]-->
+    </p>
 
-<div id="forumlegend">
-    <ul style="margin:0; padding: 0;">
-        <li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pnfdate_format:"%b %e, %Y  - %R":'':true ]-->)</li>
-        <li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true title="_PNFORUM_NONEWPOSTS" titleml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%b %e, %Y  - %R":'':true ]-->)</li>
-        <li><!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]--> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--></li>
-        <li><!--[ pnimg src="icon_locked.gif" alt='_PNFORUM_ISLOCKED' altml=true title='_PNFORUM_ISLOCKED' titleml=true ]--> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]--></li>
-    </ul>
+<!--[ /if ]-->
+
 </div>
+
+ <ul id="pnf_forumlegend">
+     <li><!--[ pnimg src="icon_redfolder.gif" alt="_PNFORUM_NEWPOSTS" altml=true title="_PNFORUM_NEWPOSTS" titleml=true ]--> = <!--[ pnml name='_PNFORUM_NEWPOSTS ]--> (<!--[ $last_visit_unix|pnfdate_format:"%b %e, %Y  - %R":'':true ]-->)</li>
+     <li><!--[ pnimg src="icon_folder.gif" alt="_PNFORUM_NONEWPOSTS" altml=true title="_PNFORUM_NONEWPOSTS" titleml=true ]--> = <!--[ pnml name='_PNFORUM_NONEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%b %e, %Y  - %R":'':true ]-->)</li>
+     <li><!--[ pnimg src="icon_hottopic.gif" alt="_PNFORUM_HOTTOPIC" altml=true title="_PNFORUM_HOTTOPIC" titleml=true ]--> = <!--[ pnml name='_PNFORUM_MORETHAN' ]--> <!--[ $hot_threshold ]--> <!--[ pnml name='_PNFORUM_POSTS' ]--></li>
+     <li><!--[ pnimg src="icon_locked.gif" alt='_PNFORUM_ISLOCKED' altml=true title='_PNFORUM_ISLOCKED' titleml=true ]--> = <!--[ pnml name='_PNFORUM_ISLOCKED' ]--></li>
+ </ul>
 
 <!--[ include file='pnforum_user_footer.html' ]-->

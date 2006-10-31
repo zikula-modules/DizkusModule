@@ -6,7 +6,7 @@
 
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false ]-->
 
-<div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
+<div class="optionrow pnf_bgcolor3 pnf_bordercolor2">
     <div>
         <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
         <a class="image previoustopiclink" title="<!--[ pnml name='_PNFORUM_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.prev_topic_id ]-->"></a>
@@ -81,7 +81,7 @@
 </p>
 <!--[ topicpager total=$topic.total_posts start=$topic.post_start topic_id=$topic.topic_id ]-->
 
-<div class="topicheader pnf_clearfix" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;">
+<div class="topicheader pnf_bordercolor2 pnf_bgcolor3 pnf_clearfix">
     <div class="topicheaderleft">
         <a id="top" title="<!--[ pnml name='_PNFORUM_BOTTOM' ]-->" href="#bottom"><!--[ pnimg src="icon_bottom.gif" alt="_PNFORUM_BOTTOM" altml=true ]--></a>
     </div>
@@ -133,7 +133,7 @@ end of unused code **** *]-->
     <input type="hidden" id="topic" name="topic" value="<!--[ $topic.topic_id ]-->" />
     <input type="hidden" id="quote" name="quote" value="" />
     <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+    <fieldset class="pnf_bordercolor2 pnf_bgcolor3" >
         <legend><!--[ pnml name='_PNFORUM_QUICKREPLY' ]--></legend>
         <div style="margin: 1em;">
         <div id="quickreplypreview" style="display: none;">&nbsp;</div>

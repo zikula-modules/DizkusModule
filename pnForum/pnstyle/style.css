@@ -200,13 +200,6 @@ dd.pnfadmin {
     border-width: 2px;
 }
 
-#pnforum legend {
-    font-size: 110%;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 1em;
-}
-
 #pnforum .moddiv {
     text-align: center;
     padding: 1em;
@@ -355,6 +348,19 @@ li.searchresult {
     padding: 3px;
 }
 
+/********************************
+pnforum_user_main.html
+********************************/
+
+div#pnf_main {
+    margin: 2em 0;
+}
+
+div#pnf_main h1 {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
 ul#pnf_maincategorylist {
     padding: 0;
     margin: 0;
@@ -382,8 +388,12 @@ ul#pnf_maincategorylist .openclosecategory{
     /* dont delete this */
 }
 
+ul#pnf_maincategorylist p.catlastpostinfo {
+    font-size: 80%;
+}
+
 ul.pnf_mainforumlist {
-    padding: 0;
+    padding: 0 0 0 1.5em;
     margin: 0;
     list-style: none;
 }
@@ -395,12 +405,18 @@ ul.pnf_mainforumlist li {
     background-position: 0 2em;
     border-top: 1px #666 dashed;
 }
+
 ul.pnf_mainforumlist li.newposts {
     background-image: url(../pnimages/red_folder.gif);
 }
 
 ul.pnf_mainforumlist li.nonewposts {
     background-image: url(../pnimages/folder.gif);
+}
+
+ul.pnf_mainforumlist li p.forumlastpostinfo {
+    font-size: 0.8em; 
+    margin-left: 0.3em;
 }
 
 ul.pnf_forumlist {
@@ -413,6 +429,93 @@ ul.pnf_forumlist {
 ul.pnf_forumlist li {
     padding: 0;
     margin: 0;
+}
+
+ul#pnf_forumlegend {
+    padding: 0; 
+    margin: 2em 0 1em 0;
+    list-style-type: none;
+    font-size: 90%
+    color: black;
+}
+
+/*****************************
+ pnforum_user_viewforum.html
+*****************************/
+
+div#pnf_viewforum {
+    margin: 2em 0;
+}
+
+div#pnf_breadcrumbs, div#pnf_moderatorlist {
+    margin-bottom: 1em;
+}
+
+div#pnf_breadcrumbs ul, div#pnf_moderatorlist ul {
+    float: left;
+}
+
+div#pnf_breadcrumbs li {
+    font-size: 140%;
+    font-weight: bold;
+    float: left;
+}
+
+div#pnf_moderatorlist li {
+    float: left;
+}
+
+div#pnf_moderatorlist li span {
+    margin-right: 1em;
+}
+
+div#pnf_forumdescription {
+    padding: 1em;
+}
+
+table#pnf_topiclist {
+    width: 99%;
+}
+
+table#pnf_topiclist tr.subheader td {
+    font-weight: bold;
+    text-align: center;
+    border-width: 2px; 
+    border-style: solid;
+    border-top: none; 
+}
+
+table#pnf_topiclist col#col_status {
+    width: 10%;
+}
+table#pnf_topiclist col#col_topic {
+    text-align:left;
+    width: 46%;
+}
+table#pnf_topiclist col#col_replies {
+    width: 8%;
+}
+table#pnf_topiclist col#col_poster {
+    width: 10%;
+}
+table#pnf_topiclist col#col_view {
+    width: 6%;
+}
+table#pnf_topiclist col#col_lastpost {
+    width: 20%;
+}
+
+table#pnf_topiclist tr.topicrow td {
+    border-bottom-width: 2px;
+    border-bottom-style: solid;   
+    vertical-align: middle;                 
+}                                  
+
+p.pnf_notopics {
+    padding: 1em;
+    text-align: center;
+    font-weight: bold;
+    font-size: 110%;
 }
 
 .pnf_postlist {
@@ -552,10 +655,6 @@ div.pnf_statusmsg {
 
 #pnforum .headerlink {
     margin: 0 0.5em 0 0.5em;
-}
-
-#forumlegend {
-    margin: 2em 0 1em 0;
 }
 
 #pnforum_admin ul {
