@@ -619,28 +619,39 @@ div.pnf_statusmsg {
 }
 
 #pnforum th {
-    font-size: 1em;
+    font-size: 105%;
     font-weight: bold;
     text-align: center;
 }
 
-#pnforum .leftcell {
+#pnforum .fullcell, #pnforum .leftcell, #pnforum .midcell, #pnforum .rightcell {
     border-width: 2px;
     border-style: solid;
+}
+
+#pnforum .leftcell {
     border-right: none;
 }
 
 #pnforum .midcell {
-    border-width: 2px;
-    border-style: solid;
     border-right: none;
     border-left: none;
 }
 
 #pnforum .rightcell {
-    border-width: 2px;
-    border-style: solid;
     border-left: none;
+}
+
+#pnforum .left {
+    text-align: left;
+}
+
+#pnforum .right {
+    text-align: right;
+}
+
+#pnforum .center {
+    text-align: center;
 }
 
 #pnforum .optionrow {
@@ -678,48 +689,45 @@ div.pnf_statusmsg {
     margin: 0.5em 0 0.5em 0;
 }
 
-#pnforum dt.prefs {
-    width: 50%;
-    text-align: left;
-    float: left;
-    padding: 0.5em 0 0.5em 0;
-}
-
-#pnforum dd.prefs {
-    width: 40%;
-    text-align: left;
-    float: left;
-    padding: 0.5em 0 0.5em 0;
-}
 
 /*************************
  * pnforum_user_prefs.html
  *************************/
-#userprefs {
-    float: left; 
-    margin-top: 1em;
+
+div#pnf_userprefs {
+    /* do not delete */
 }
 
-#userprefs .thd50 {
-    width:50%; 
-    height:2.2em;
+div#pnf_userprefs dl {
+    padding: 0.2em 0 1em 0;
+}
+
+div#pnf_userprefs dl dt {
+    font-weight: bold;
+    text-align: left;
+    padding: 0.5em 0;
+}
+
+div#pnf_userprefs dl dd {
+    text-align: left;
+    padding: 0.5em 0;
+}
+
+div#pnf_userprefs table tr td {
+    height: 2.2em;
     vertical-align: middle;
     padding: 0.2em;
-    border: none;
-}
-
-#userprefs .thd25 {
-    width:25%; 
-    height:2.2em;
     text-align: center;
-    vertical-align: middle;
-    padding: 0.2em;
-    border: none;
 }
 
-#userprefs tr {
-   vertical-align: middle;
-   text-align:left;
+div#pnf_userprefs col#col_name {
+    width: 50%;
+}
+div#pnf_userprefs col#col_subscription {
+    width: 25%;
+}
+div#pnf_userprefs col#col_favorite {
+    width: 25%;
 }
 
 /*******************************
@@ -815,10 +823,6 @@ div#latestposts table tr {
 
 div#latestposts table tr td {
     vertical-align: middle;
-}
-
-div#latestposts table tr td.left {
-    text-align: left;
 }
 
 div#latestposts table tr td.nonewtopics {
