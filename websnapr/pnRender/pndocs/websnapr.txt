@@ -1,12 +1,12 @@
-websnapr plugin for PostNuke 0.76x
+WebSnapr plugin for PostNuke 0.76x
 Version 1.0
 
 0. What
 -------
-WebSnapr (http://websnaprcopm)lets you capture screenshots of web pages.
+WebSnapr (http://websnaprcopm) lets you capture screenshots of web pages.
 This plugin for enables this screenshot as some kind of tooltip when moving
-the mouse over an external link. It is supposed to be used with PN .763 or later,
-it may also work with older versions, but this is untested.
+the mouse over an external link. It is supposed to be used with PostNuke .763
+or later, it may also work with older versions, but this is untested.
  
 1. Who
 ------
@@ -21,6 +21,7 @@ A demo is available at http://support.pn-cms.de
 ------
 Unlike the original Link Preview V2 this solution does not need any changes in the supplied 
 files.
+
 WebSnapr contains of
 
 modules/pnRender/plugins/function.websnapr.php
@@ -36,12 +37,18 @@ Change your Xanthia-theme and add
 somewhere in the head of the theme. Preferred place is just in front of the </head> tag.
 Thats it.
 
-Reload any page that contains an external link (=not linking to your domain) and you will
-see a screenshot of the site behind the link when you move the mouse over this it.
+Load any page that contains an external link (=not linking to your domain) and you will
+see a screenshot of the site behind the link when you move the mouse over it. If there is
+no screenshot available, websnapr.com will queue your request and inform you about this.
+In this case wait a couple of seconds and reload the page. WebSnapr seems to have problems
+frames (yuck...), but they suck anyway....
+Screenshots that have already been transferred get cached.
 
 3. Why
 ------
 It's cool, that is enough reason for this. If you don't like, don't use it.
+If you like it, you can find my Amazon wishlist here:
+http://www.amazon.de/gp/registry/wishlist/ref=topnav__w/028-9479686-9674169
 
 4. Wassup
 ---------
