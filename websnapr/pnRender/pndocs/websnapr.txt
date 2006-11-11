@@ -3,7 +3,7 @@ Version 1.0
 
 0. What
 -------
-WebSnapr (http://websnaprcopm) lets you capture screenshots of web pages.
+WebSnapr (http://websnapr.com) lets you capture screenshots of web pages.
 This plugin for enables this screenshot as some kind of tooltip when moving
 the mouse over an external link. It is supposed to be used with PostNuke .763
 or later, it may also work with older versions, but this is untested.
