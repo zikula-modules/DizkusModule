@@ -22,7 +22,7 @@ A demo is available at http://support.pn-cms.de
 Unlike the original Link Preview V2 this solution does not need any changes in the supplied 
 files.
 
-WebSnapr contains of
+WebSnapr consists of
 
 modules/pnRender/plugins/function.websnapr.php
 modules/pnRender/pndocs/websnapr.txt
