@@ -1,0 +1,48 @@
+websnapr plugin for PostNuke 0.76x
+Version 1.0
+
+0. What
+-------
+WebSnapr (http://websnaprcopm)lets you capture screenshots of web pages.
+This plugin for enables this screenshot as some kind of tooltip when moving
+the mouse over an external link. It is supposed to be used with PN .763 or later,
+it may also work with older versions, but this is untested.
+ 
+1. Who
+------
+The plugin is based on Link Preview V2 written by Brian MacAllister, see
+http://www.frequency-decoder.com/2006/10/25/link-preview-v2/ for more
+information.
+The PostNuke-integration is (c) 2006 by Landseer / Frank Schummertz 
+(frank.schummertz@landseer-stuttgart.de)
+A demo is available at http://support.pn-cms.de
+
+2. How
+------
+Unlike the original Link Preview V2 this solution does not need any changes in the supplied 
+files.
+WebSnapr contains of
+
+modules/pnRender/plugins/function.websnapr.php
+modules/pnRender/pndocs/websnapr.txt
+modules/pnRender/pnimages/ (containing several images)
+modules/pnRender/pnjavascript/websnapr.js
+modules/pnRender/pnstyle/websnapr.js
+
+Copy the content of the supplied pnRender folder to the pnRender folder of
+your PostNuke installation.
+Change your Xanthia-theme and add
+<!--[websnapr]-->
+somewhere in the head of the theme. Preferred place is just in front of the </head> tag.
+Thats it.
+
+Reload any page that contains an external link (=not linking to your domain) and you will
+see a screenshot of the site behind the link when you move the mouse over this it.
+
+3. Why
+------
+It's cool, that is enough reason for this. If you don't like, don't use it.
+
+4. Wassup
+---------
+1.0 initial version

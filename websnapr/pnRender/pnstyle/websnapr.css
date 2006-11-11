@@ -1,0 +1,97 @@
+#fdImageThumb {
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 243px;
+    height: 195px;
+    visibility:hidden;
+    overflow:hidden;
+}
+#fdImageThumb div {
+    display: block;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background:transparent url(../pnimages/loading.gif) no-repeat 0 0;
+    visibility:hidden;
+    z-index:9999;
+}
+#fdImageThumb div.imageLoaded {
+    background:transparent url(../pnimages/loading.gif) no-repeat 0 0;
+}
+#fdImageThumb div.imageError {
+    background:transparent url(../pnimages/error.gif) no-repeat 0 0;
+}
+#fdImageThumb img {
+    position:absolute;
+    display:block;
+    border:0 none;
+    width: 202px;
+    height: 152px;
+    z-index:9999;
+}
+.leftTop {
+    z-index: 9999;
+    /* Good browsers */
+    background:transparent url(../pnimages/rt.png) no-repeat 0 0 !important;
+    background:none;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/rt.png',sizingMethod='image');
+}
+.leftTop img {
+    top:16px;
+    left:25px;
+}
+.leftTop div {
+    left: 113px;
+    top: 76px;
+}
+.leftBottom {
+    z-index: 9999;
+    /* Good browsers */
+    background:transparent url(../pnimages/lb.png) no-repeat 0 0 !important;
+    /* IE badness */
+    background:none;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/lb.png',sizingMethod='image');
+}
+.leftBottom img {
+    top:28px;
+    left:25px;
+}
+.leftBottom div {
+    left: 113px;
+    top: 82px;
+}
+.rightTop {
+    z-index: 9999;
+    /* Good browsers */
+    background:transparent url(../pnimages/lt.png) no-repeat 0 0 !important;
+    /* IE badness */
+    background:none;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/lt.png',sizingMethod='image');
+}
+.rightTop img {
+    top:16px;
+    left:16px;
+}
+.rightTop div {
+    left:103px;
+    top:70px;
+}
+.rightBottom {
+    z-index: 9999;
+    /* Good browsers */
+    background:transparent url(../pnimages/rb.png) no-repeat 0 0 !important;
+    /* IE badness */
+    background:none;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/rb.png',sizingMethod='image');
+}
+.rightBottom img {
+    top:28px;
+    left:15px;
+}
+.rightBottom div {
+    left:103px;
+    top:80px;
+}
+
