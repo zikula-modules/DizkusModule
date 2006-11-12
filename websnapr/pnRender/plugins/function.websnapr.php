@@ -46,12 +46,14 @@
  */
 function smarty_function_websnapr($params, &$smarty)
 {
+    $modinfo = pnModGetInfo(pnModGetIDFromName('pnrender'));
+    $modpath = ($modinfo['type'] == 3) ? 'system' : 'modules';
     
-    $out = "<link rel=\"stylesheet\" href=\"modules/pnRender/pnstyle/websnapr.css\" type=\"text/css\" />\n"
-          ."<script type=\"text/javascript\" src=\"modules/pnRender/pnjavascript/websnapr.js\"></script>\n"
+    $out = "<link rel=\"stylesheet\" href=\"" . pnVarPrepForDisplay($modpath). "/pnRender/pnstyle/websnapr.css\" type=\"text/css\" />\n"
+          ."<script type=\"text/javascript\" src=\"" . pnVarPrepForDisplay($modpath). "/pnRender/pnjavascript/websnapr.js\"></script>\n"
           ."<script type=\"text/javascript\">\n"
           ."    webSnapr.setbaseurl('" . pnGetBaseURL() . "');\n" 
-          ."    webSnapr.setimageuri('" . pnGetBaseURI() . "/modules/pnRender/pnimages');\n" 
+          ."    webSnapr.setimageuri('" . pnGetBaseURI() . "/" . pnVarPrepForDisplay($modpath). "/pnRender/pnimages');\n" 
           ."    webSnapr.addEvent(window, ['load'], webSnapr.init);\n"
           ."</script>\n\n";  
     return $out;

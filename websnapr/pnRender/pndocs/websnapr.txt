@@ -1,5 +1,5 @@
 WebSnapr plugin for PostNuke 0.76x
-Version 1.0
+Version 1.1
 
 0. What
 -------
@@ -53,3 +53,5 @@ http://www.amazon.de/gp/registry/wishlist/ref=topnav__w/028-9479686-9674169
 4. Wassup
 ---------
 1.0 initial version
+1.1 fixed bug in deectio of javascript links, added support for .8
+

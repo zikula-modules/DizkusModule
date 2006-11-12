@@ -56,9 +56,13 @@ var webSnapr = {
         },
         isexternal: function(host) {
 	        if (host == "") return false;
-	        var expr = new RegExp(webSnapr.baseURL, "i");
-	        if (expr.test(host)) return false;
-	        return true;
+	        var httptest = /^http/i;
+	        if(httptest.test(host)) {
+	            var expr = new RegExp(webSnapr.baseURL, "i");
+	            if (expr.test(host)) return false;
+	            return true;
+            }
+            return false;
         },
         preloadImages: function() {
                 var imgList = ["lt.png", "lb.png", "rt.png", "rb.png", "error.gif", "loading.jpg"];
