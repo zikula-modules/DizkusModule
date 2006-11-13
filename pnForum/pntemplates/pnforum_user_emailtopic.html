@@ -4,12 +4,12 @@
 
 <!--[* pndebug *]-->
 
-<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+<fieldset id="pnf_emailtopic" class="pnf_bgcolor3 pnf_bordercolor2">
     <legend>
         <!--[ pnml name='_PNFORUM_EMAIL_TOPIC' html=1 ]-->
     </legend>
     <!--[ if $error_msg neq '' ]-->
-    <div class="moddiv">
+    <div>
         <strong style="color: red;"><!--[ $error_msg ]--></strong>
     </div>
     <!--[ /if ]-->
@@ -17,21 +17,21 @@
     <form action="<!--[ pnmodurl modname=pnForum type=user func=emailtopic ]-->" method="post" name="emailtopic">
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
-    <div class="moddiv" style="text-align: left;">
+    <div>
         <p>
-            <label for="sendto_email"><strong><!--[ pnml name='_PNFORUM_SENDTO' ]--></strong></label><br />
+            <label for="sendto_email"><!--[ pnml name='_PNFORUM_SENDTO' ]--></label>
             <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->" />
         </p>
         <p>
-            <label for="emailsubject"><strong><!--[ pnml name='_PNFORUM_SUBJECT' html=1 ]-->:&nbsp;</strong></label><br />
+            <label for="emailsubject"><!--[ pnml name='_PNFORUM_SUBJECT' html=1 ]-->:&nbsp;</label>
             <input type="text" id="emailsubject" name="emailsubject" size="50" maxlength="100" value="<!--[ $emailsubject ]-->" />
         </p>
         <p>
-            <label for="message"><strong><!--[ pnml name='_PNFORUM_BODY' ]--></strong></label><br />
+            <label for="message"><!--[ pnml name='_PNFORUM_BODY' ]--></label>
             <textarea id="message" name="message" rows="10" cols="80"><!--[ $message|pnvarprepfordisplay ]--></textarea>
         </p>
         <p>
-        <input name="submit" type="submit" value="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->" />
+        <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->"><!--[ pnml name='_PNFORUM_SUBMIT' ]--></button>
         </p>
     </div>
     </form>

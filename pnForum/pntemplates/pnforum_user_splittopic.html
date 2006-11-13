@@ -4,12 +4,12 @@
 
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset id="pnf_splittopic" class="pnf_bgcolor3 pnf_bordercolor2">
     <legend>
         <!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->
     </legend>
     <form action="<!--[ pnmodurl modname=pnForum type=user func=splittopic ]-->" method="post">
-    <div style="padding: 0.5em; text-align: center; background-color: <!--[ $bgcolor3 ]-->">
+    <div>
         <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
         <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
         
@@ -17,8 +17,8 @@
         <p>
             <label for="newsubject"><!--[ pnml name='_PNFORUM_SPLITTOPIC_NEWTOPIC' html=1 ]--></label>
             <input type="text" id="newsubject" name="newsubject" value="<!--[ pnml name='_PNFORUM_SPLIT' ]-->: <!--[ $post.topic_subject ]-->" size="40" maxlength="100" />
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->"><!--[ pnml name='_PNFORUM_SPLITTOPIC' ]--></button>
         </p>
-        <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" />
     </div>
     </form>
 </fieldset>

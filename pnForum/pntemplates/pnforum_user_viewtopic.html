@@ -9,7 +9,7 @@
 <div class="optionrow pnf_bgcolor3 pnf_bordercolor2">
     <div>
         <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
-        <a class="image previoustopiclink" title="<!--[ pnml name='_PNFORUM_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.prev_topic_id ]-->"></a>
+        <a class="image previoustopiclink" title="<!--[ pnml name='_PNFORUM_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.prev_topic_id ]-->">&nbsp;</a>
         <!--[ /if ]-->
         
         <!--[ if $topic.access_comment ]-->
@@ -34,12 +34,12 @@
         </noscript>
         <!--[ /if ]-->
         <!--[ if $topic.topic_id neq $topic.next_topic_id ]-->
-        <a class="image nexttopiclink" title="<!--[ pnml name='_PNFORUM_NEXT_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.next_topic_id ]-->"></a>
+        <a class="image nexttopiclink" title="<!--[ pnml name='_PNFORUM_NEXT_TOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.next_topic_id ]-->">&nbsp;</a>
         <!--[ /if ]-->
     </div>
 
     <!--[ if $topic.access_moderate eq 1 ]-->
-    <div style="margin: 0.5em 0 0.5em 0;">
+    <div id="pnf_moderatetopicoptions">
         <a style="display: none;" id="locktopicbutton" class="image locktopiclink" title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_PNFORUM_LOCKTOPIC' ]--></a>
         <a style="display: none;" id="unlocktopicbutton" class="image unlocktopiclink" title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]--></a>
         <noscript>
@@ -68,51 +68,71 @@
 
 </div>
 <!--[* start of breadcrumbs *]-->
-<p>
-<a href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><strong><!--[ pnml name='_PNFORUM_START' ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
-<a href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$topic.cat_id ]-->"><strong><!--[ $topic.cat_title|pnvarprepfordisplay ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]--></strong>
-<a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topic.forum_id]-->"><strong><!--[ $topic.forum_name|pnvarprepfordisplay ]--></strong></a><strong><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
-<!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]--></strong><br />
-</p>
+<div id="pnf_breadcrumbs" class="pnf_clearfix">
+    <ul>
+        <li>
+            <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+        </li>
+        <li>
+            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $topic.cat_title|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$topic.cat_id ]-->"><!--[ $topic.cat_title|pnvarprepfordisplay ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+        </li>
+        <li>
+            <!--[ $forum.forum_name|pnvarprepfordisplay ]-->
+            <a href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$topic.forum_id]-->" title="<!--[ $topic.forum_name|pnvarprepfordisplay ]-->"><!--[ $topic.forum_name|pnvarprepfordisplay ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+        </li>
+        <li>
+            <!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]-->
+        </li>
+    </ul>
+</div>
 <!--[* end of breadcrumbs *]-->
-<p>
-<!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:
-<!--[ listforummods moderators=$topic.forum_mods ]-->
-</p>
+
+<!--[ if $topic.forum_mods|@count > 0 ]-->
+<div id="pnf_moderatorlist" class="pnf_clearfix">
+    <ul>
+        <li><span><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</span></li>
+        <!--[ foreach name=moderators item=mod from=$topic.forum_mods ]-->
+        <li><!--[$mod|profilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
+        <!--[ /foreach ]-->
+    </ul>
+</div>
+<!--[ /if ]-->
+
+
+
 <!--[ topicpager total=$topic.total_posts start=$topic.post_start topic_id=$topic.topic_id ]-->
 
 <div class="topicheader pnf_bordercolor2 pnf_bgcolor3 pnf_clearfix">
     <div class="topicheaderleft">
         <a id="top" title="<!--[ pnml name='_PNFORUM_BOTTOM' ]-->" href="#bottom"><!--[ pnimg src="icon_bottom.gif" alt="_PNFORUM_BOTTOM" altml=true ]--></a>
     </div>
-    <div class="topicheaderright pnf_clearfix" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_PNFORUM_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
+    <div class="topicheaderright" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_PNFORUM_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
         <span id="topicsubject_<!--[ $topic.topic_id ]-->_content"><!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]--></span>
     </div>
 </div>
-<br />
-<div style="float: left; text-align: left;" class="pnf_clearfix">
-    <ul style="padding: 0; margin: 0;">
+
+<div id="pnf_postinglist" class="pnf_clearfix">
+    <ul class="pnf_clearfix">
         <!--[ counter start=0 print=false assign=post_counter]-->
         <!--[ foreach key=num item=post from=$topic.posts ]-->
         <!--[ counter ]-->
-        <li style="padding: 0; margin: 0; text-align: left;">
+        <li>
             <!--[ include file="pnforum_user_singlepost.html" ]-->
         </li>
         <!--[ /foreach ]-->
-        <li id="quickreplyposting" style="padding: 0; margin: 0; display: none;">
+        <li id="quickreplyposting" style="display: none;">
             
         </li>
     </ul>
-    
-    <!--[ pnupper_fileuploads objectid=$topic.topic_id ]-->
 </div>
+    
 <!--[ topicpager total=$topic.total_posts start=$topic.post_start topic_id=$topic.topic_id ]-->
 
 <!--[* **** unused, this is  performance hog, use it on your own risk, but don't blame me 
 <!--[ similartopics search=$topic.topic_title ]-->
 <!--[ if $similartopics|@count > 0]-->
-<ul id="similartopics" class="pnf_clearfix">
-    <li style="line-height: 1.5em; font-size: 1.2em; font-weight: bold;">
+<ul id="pnf_similartopics" class="pnf_clearfix">
+    <li>
         <!--[ pnml name='_PNFORUM_SIMILARTOPICS' ]-->:
     </li>
     <!--[ foreach item=similartopic from=$similartopics ]-->
@@ -127,7 +147,7 @@
 end of unused code **** *]-->
 
 <!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
-<div id="quickreply" class="pnf_clearfix">        
+<div id="pnf_quickreply" class="pnf_clearfix">        
     <form name="quickreplyform" id="quickreplyform" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post" enctype="multipart/form-data">
     <input type="hidden" id="forum" name="forum" value="<!--[ $topic.forum_id ]-->" />
     <input type="hidden" id="topic" name="topic" value="<!--[ $topic.topic_id ]-->" />
@@ -135,64 +155,62 @@ end of unused code **** *]-->
     <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
     <fieldset class="pnf_bordercolor2 pnf_bgcolor3" >
         <legend><!--[ pnml name='_PNFORUM_QUICKREPLY' ]--></legend>
-        <div style="margin: 1em;">
-        <div id="quickreplypreview" style="display: none;">&nbsp;</div>
-        <div id="pnforuminformation">&nbsp;</div>
-        <div id="quickreplyeditor" class="pnf_clearfix">
-            <textarea class="pnf_textarea" id="message" name="message" style="width:99%; height: 10em;" ></textarea>
+        <div>
+            <div id="quickreplypreview" style="display: none;">&nbsp;</div>
+            <div id="pnforuminformation">&nbsp;</div>
+            <textarea class="pnf_textarea" id="message" name="message"></textarea>
             <!--[ if $pncore.pnForum.striptags == 'yes' ]-->
-                <div><!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--></div>
+                <p><!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--></p>
             <!--[ /if ]-->
-        </div>
-        <div class="pnf_clearfix">
-            <div id="quickreplyoptions">
-                <ul>
-                    <li>
-                        <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
-                    </li>
-                    <!--[ if $pncore.logged_in ]-->
-                    <li>
-                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                        <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
-                        <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
-                    </li>
-                    <!--[ /if ]-->
-                    <li id="quickreplybuttons" style="margin: 1.5em; display: none; text-align: left;">
-                        <button onclick="createQuickReply(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-                        <!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_SUBMIT" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_SUBMIT' ]-->
-                        </button>
-                        <button onclick="previewQuickReply(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
-                        <!--[ pnimg src="icon_preview.gif" alt="_PNFORUM_PREVIEW" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_PREVIEW' ]-->
-                        </button>
-                        <button onclick="clearQuickReply();" type="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
-                        <!--[ pnimg src="icon_cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true class="postingbutton" ]--><!--[ pnml name="_PNFORUM_CANCEL" ]-->
-                        </button>
-                    </li>
+            <div class="pnf_clearfix">
+                <div id="quickreplyoptions">
+                    <ul>
+                        <li>
+                            <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
+                        </li>
+                        <!--[ if $pncore.logged_in ]-->
+                        <li>
+                            <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                            <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                            <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
+                        </li>
+                        <!--[ /if ]-->
+                        <li id="quickreplybuttons" style="display: none;">
+                            <button class="image ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+                            <!--[ pnml name='_PNFORUM_SUBMIT' ]-->
+                            </button>
+                            <button class="image preview" onclick="previewQuickReply(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
+                            <!--[ pnml name='_PNFORUM_PREVIEW' ]-->
+                            </button>
+                            <button class="image cancel" onclick="clearQuickReply();" type="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->">
+                            <!--[ pnml name="_PNFORUM_CANCEL" ]-->
+                            </button>
+                        </li>
+                        
+                        <li id="nonajaxquickreplybuttons">
+                            <button class="image ok" name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+                            <!--[ pnml name='_PNFORUM_SUBMIT' ]-->
+                            </button>
+                            <button class="image preview" name="preview" type="submit" value="1" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
+                            <!--[ pnml name='_PNFORUM_PREVIEW' ]-->
+                            </button>
+                            <button class="image cancel" name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->'">
+                            <!--[ pnml name="_PNFORUM_CANCEL" ]-->
+                            </button>
+                        </li>
                     
-                    <li id="nonajaxquickreplybuttons" style="text-align: left; margin: 1.5em;">
-                        <button name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-                        <!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_SUBMIT" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_SUBMIT' ]-->
-                        </button>
-                        <button name="preview" type="submit" value="1" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
-                        <!--[ pnimg src="icon_preview.gif" alt="_PNFORUM_PREVIEW" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_PREVIEW' ]-->
-                        </button>
-                        <button name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->'">
-                        <!--[ pnimg src="icon_cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true class="postingbutton" ]--><!--[ pnml name="_PNFORUM_CANCEL" ]-->
-                        </button>
-                    </li>
+                    </ul>
             
-                </ul>
-            
+                </div>
+                <div id="quickreplyhooks">
+                    <!--[ plainbbcode textfieldid=message ]-->
+                    <!--[ bbsmile textfieldid=message ]-->
+                    <!--[* $hooks.pnUpper *]--><br />
+                </div>
             </div>
-            <div id="quickreplyhooks" style="float: left; margin-top: 1em;">
-                <!--[ plainbbcode textfieldid=message ]-->
-                <!--[ bbsmile textfieldid=message ]-->
-                <!--[* $hooks.pnUpper *]--><br />
-            </div>
-        </div>
         </div>
     </fieldset>
 
@@ -200,7 +218,7 @@ end of unused code **** *]-->
 
 </div>
 <!--[ /if ]-->
-<div style="text-align:center;">
+<div id="pnf_displayhooks">
 <!--[ $hooks.Ratings ]-->
 </div>
 
@@ -239,7 +257,7 @@ end of unused code **** *]-->
     }
     
     
-    if($('quickreply')) {
+    if($('pnf_quickreply')) {
         Resizable.initialize("message");
         Element.show($('quickreplybuttons'));
         Element.hide($('nonajaxquickreplybuttons'));

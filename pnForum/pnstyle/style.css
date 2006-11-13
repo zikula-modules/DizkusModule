@@ -200,6 +200,10 @@ dd.pnfadmin {
     border-width: 2px;
 }
 
+#pnforum label {
+    margin: 0 1em;
+}
+
 #pnforum .moddiv {
     text-align: center;
     padding: 1em;
@@ -326,18 +330,6 @@ dd.pnfadmin {
     float: left;
 }
 
-.newtopic-options, .newtopic-options-header {
-    /* clear: both; */
-    width: 30%;
-    float: left;
-    text-align: left;
-}
-
-.newtopic-text, .newtopic-text-header {
-    width: 66%;
-    float: left;
-}
-
 ul.searchresultlist {
     list-style-type: none;
 }
@@ -435,9 +427,95 @@ ul#pnf_forumlegend {
     padding: 0; 
     margin: 2em 0 1em 0;
     list-style-type: none;
-    font-size: 90%
+    font-size: 90%;
     color: black;
 }
+
+/*****************************
+ pnforum_user_viewtopic.html
+*****************************/
+
+div#pnf_moderatetopicoptions {
+    margin: 0.5em 0;
+}
+
+div#pnf_postinglist {
+    float: left; 
+    text-align: left;
+    padding: 0; 
+    margin: 0;
+}
+
+div#pnf_postinglist ul,
+div#pnf_postinglist ul li {
+    padding: 0; 
+    margin: 0; 
+    text-align: left;
+}
+
+ul#pnf_similartopics li {
+    line-height: 1.5em; 
+    font-size: 110%; 
+    font-weight: bold;
+}
+
+div#pnf_quickreply {
+    width: 99%; 
+    float: left; 
+    margin-top: 1.5em;
+}
+
+div#quickreplyeditor {
+    width: 99%;
+}
+
+div#pnf_quickreply fieldset {
+    padding: 4px;
+}
+
+div#pnf_quickreply fieldset textarea {
+    width:99%; 
+    height: 10em;
+}
+
+div#quickreplyposting {
+    padding: 0; 
+    margin: 0; 
+}
+ 
+#pnforum li#quickreplybuttons,
+#pnforum li#nonajaxquickreplybuttons {
+    margin: 1.5em; 
+    text-align: left;
+}
+
+div#pnf_displayhooks {
+    text-align: center;
+}
+
+.topicheader {
+    float: left; 
+    width: 99%; 
+    margin-top: 1em; 
+    border-width: 2px;
+    border-style: solid; 
+    
+}
+
+.topicheaderleft {
+    float: left; 
+    width: 19%; 
+    margin: 5px 0 0 5px;
+}
+
+.topicheaderright {
+    font-size: 1.6em; 
+    line-height: 1.65em; 
+    font-weight: bold; 
+    float: left; 
+    width: 79%;
+}
+
 
 /*****************************
  pnforum_user_viewforum.html
@@ -604,8 +682,13 @@ div.pnf_statusmsg {
     padding: 0;
 }
 
+/***********************
+ styles for all tables
+************************/
 #pnforum table {
     width: 99%;
+    padding: 0;
+    margin: 0;
 }
 
 #pnforum table caption {
@@ -614,8 +697,12 @@ div.pnf_statusmsg {
     border-style: solid;
     border-width: 2px;
     padding: 4px 0;
-    font-size: 150%;
+    font-size: 130%;
     font-weight: bold;
+}
+
+pnforum tr td {
+    font-size: 90%;
 }
 
 #pnforum th {
@@ -623,6 +710,7 @@ div.pnf_statusmsg {
     font-weight: bold;
     text-align: center;
 }
+
 
 #pnforum .fullcell, #pnforum .leftcell, #pnforum .midcell, #pnforum .rightcell {
     border-width: 2px;
@@ -640,6 +728,12 @@ div.pnf_statusmsg {
 
 #pnforum .rightcell {
     border-left: none;
+}
+
+
+#pnforum legend {
+    font-weight: bold;
+    font-size: 90%;
 }
 
 #pnforum .left {
@@ -731,6 +825,120 @@ div#pnf_userprefs col#col_favorite {
 }
 
 /*******************************
+ * pnforum_user_topicsubscriptions.html
+ *******************************/
+
+form#pnf_topicsubscriptions col#col_topic {
+    width: 50%;
+}
+form#pnf_topicsubscriptions col#col_poster {
+    width: 25%;
+}
+form#pnf_topicsubscriptions col#col_action {
+    width: 25%;
+}
+
+form#pnf_topicsubscriptions td {
+    height: 2em;
+    vertical-align: middle;
+}
+
+/************************************
+ * pnforum_user_movepost.html
+ * pnforum_user_movetopic.html
+ * pnforum_user_splittopic.html
+ * pnforum_user_deletetopic.html
+ * pnforum_user_emailtopic.html
+ * pnforum_user_notifymoderator.html
+ * pnforum_user_viewip.html
+ ************************************/
+
+fieldset#pnf_movepost div,
+fieldset#pnf_movetopic div,
+fieldset#pnf_jointopic div,
+fieldset#pnf_deletetopic div,
+fieldset#pnf_splittopic div {
+    text-align: center;
+    margin: 1em;
+}
+
+fieldset#pnf_viewip div,
+fieldset#pnf_emailtopic div,
+fieldset#pnf_notifymoderator div {
+    margin: 1em;
+}
+
+/************************************
+ * pnforum_user_viewip.html
+ ************************************/
+
+fieldset#pnf_viewip div p {
+    margin: 1em 0;
+}
+
+fieldset#pnf_viewip div label {
+    margin-left: 0;
+}
+
+fieldset#pnf_viewip .gobacklink {
+    display: block;
+    text-align:center; 
+    margin: 1em 0;
+
+}
+
+/*******************************
+ * pnforum_user_emailtopic.html
+ *******************************/
+
+fieldset#pnf_emailtopic label {
+    margin-left: 0;
+    font-weight: bold;
+    display: block;
+}
+
+/*******************************
+ * pnforum_ajax_editpost.html
+ *******************************/
+
+div.pnf_ajaxeditpost {
+    width: 99%; 
+    margin-top: 3px; 
+    text-align: center;
+}
+
+div.pnf_ajaxeditpost textarea {
+    width: 99%; 
+    height: 15em;
+}
+
+div.pnf_ajaxeditpost .optionsleft {
+    margin: 10px 0 0 20px; 
+    float: left; 
+    width:45%; 
+    text-align: left;
+}
+
+div.pnf_ajaxeditpost .optionsright {
+    margin: 10px 20px 0 0; 
+    float: right; 
+    width:45%; 
+    text-align: left;
+}
+
+div.ajaxeditpoststatusbox {
+    border: 1px solid black; 
+    width: 99%; 
+    margin: 2px; 
+    text-align: left;
+}
+
+div.ajaxeditpoststatusbox strong {
+    margin: 2px 5px 2px 2px;
+    padding: 2px; 
+}
+
+/*******************************
  * pnforum_user_footer.html
  *******************************/
 
@@ -793,10 +1001,6 @@ div#latestposts .optionline {
     text-align: center; 
 }
 
-div#latestposts table {
-    width: 100%;
-}
-
 div#latestposts table col.col_forum {
     width: 15%;
 }
@@ -817,7 +1021,6 @@ div#latestposts table col.col_date {
 }
 
 div#latestposts table tr {
-    font-size: 90%;
     text-align: center;
 }
 
@@ -827,6 +1030,53 @@ div#latestposts table tr td {
 
 div#latestposts table tr td.nonewtopics {
     font-weight: bold;
+}
+
+/*******************************
+ * pnforum_user_newtopic.html
+ *******************************/
+
+div#pnf_newtopic {
+    width: 99%; 
+    float: left; 
+    margin-top: 1.5em;
+}
+
+div#newtopiceditor {
+    width: 99%;
+}
+
+div#pnf_newtopic fieldset {
+    padding: 4px;
+}
+
+div#pnf_newtopic fieldset label {
+    margin-left: 0;
+}
+
+div#pnf_newtopic fieldset textarea {
+    width:99%; 
+    height: 10em;
+}
+
+div#newtopicposting {
+    padding: 0; 
+    margin: 0; 
+}
+ 
+#pnforum li#newtopicbuttons,
+#pnforum li#nonajaxnewtopicbuttons {
+    margin: 1.5em; 
+    text-align: left;
+}
+
+div#topicsubject_content {
+    font-size: 140%;
+    margin: 0; 
+    padding-left: 1em; 
+    padding-bottom: 0.3em; 
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 /*******************************
@@ -886,6 +1136,10 @@ div.rankuser-alphanav {
     overflow:hidden; 
 }
 
+/*******************************
+ * pnforum_user_singlepost.html
+ *******************************/
+
 .posting {
     margin: 5px 0 10px 0; 
     border-width: 2px;
@@ -900,7 +1154,8 @@ div.rankuser-alphanav {
 
 .postingheaderleft {
     text-align: left; 
-    margin: 0.5em 0 0 5px; 
+    margin: 0.5em 0 0 5px;
+    padding: 0; 
     width: 19%; 
     float:left;
 }
@@ -1020,29 +1275,6 @@ a.normallink {
     background: none no-repeat bottom left ! important;
 }
 
-.topicheader {
-    float: left; 
-    width: 99%; 
-    margin-top: 1em; 
-    border-width: 2px;
-    border-style: solid; 
-    
-}
-
-.topicheaderleft {
-    float: left; 
-    width: 19%; 
-    margin: 5px 0 0 5px;
-}
-
-.topicheaderright {
-    font-size: 1.6em; 
-    line-height: 1.65em; 
-    font-weight: bold; 
-    float: left; 
-    width: 79%;
-}
-
 #pnforuminformation {
     visibility: hidden; 
     color: red; 
@@ -1052,11 +1284,6 @@ a.normallink {
     padding: 2px 0 2px 0;
 }
 
-#quickreply, #newtopic {
-    width: 99%; 
-    float: left; 
-    margin-top: 1.5em;
-}
 
 #similartopics {
     float:left;
@@ -1064,7 +1291,7 @@ a.normallink {
 }
 
 #quickreplyoptions, #newtopicoptions, #editpostoptions, #replyoptions {
-    width:49%; 
+    width: 49%; 
     float: left; 
     text-align: left; 
     margin-top: 1em;
@@ -1128,7 +1355,7 @@ a.normallink {
 }
 
 /*
- * styling of links with images 
+ * styling of links and buttons with images 
  *
  * Note: When use a CSS3 feature to highlight external the following image normally
  *       would not be visisble. The ! important fixes this.
@@ -1140,7 +1367,8 @@ a.normallink {
  *
  */
 
-#pnforum a.image {
+#pnforum a.image, 
+#pnforum button.image {
     margin: 0 0.5em;
     font-size: 1em;
     padding: 2px 0 2px 19px ! important; /* 16px image + spacer */
@@ -1320,4 +1548,22 @@ a.normallink {
 
 #pnforum a.discussinforumlink {
     background: url(../pnimages/icon_discuss.gif) no-repeat 0 50% ! important;
+}
+
+/*** buttons ***/
+
+#pnforum button.ok {
+    background: url(../pnimages/icon_ok.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum button.cancel {
+    background: url(../pnimages/icon_cancel.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum button.delete {
+    background: url(../pnimages/icon_delete.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum button.preview {
+    background: url(../pnimages/icon_preview.gif) no-repeat 0 50% ! important;
 }

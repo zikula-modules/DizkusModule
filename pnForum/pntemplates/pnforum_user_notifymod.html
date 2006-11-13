@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset id="pnf_notifymoderator" class="pnf_bgcolor3 pnf_bordercolor2">
     <legend>
         <!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE' ]-->
     </legend>
@@ -11,10 +11,12 @@
     <form action="<!--[ pnmodurl modname=pnForum type=user func=report ]-->" method="post">
     <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; width: 95%; text-align: left;">
+    <div>
         <!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_INFO' html=1 ]--><br />
         <textarea rows="6" cols="60" name="comment"></textarea><br />
-        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+        <p>
+            <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" ]-->&nbsp;<!--[ pnml name='_SUBMIT' ]--></button>
+        </p>
     </div>
     </form>
 </fieldset>

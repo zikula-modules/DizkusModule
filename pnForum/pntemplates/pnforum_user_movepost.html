@@ -4,7 +4,7 @@
 
 <!--[* pndebug *]-->
 
-<fieldset>
+<fieldset id="pnf_movepost" class="pnf_bgcolor3 pnf_bordercolor2">
     <legend>
         <!--[ pnml name='_PNFORUM_MOVEPOST' html=1 ]-->
     </legend>
@@ -12,15 +12,15 @@
     <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
     <input type="hidden" name="from_topic" value="<!--[ $post.topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <div style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
-        <p style="text-align:center;">
+    <div >
+        <p>
             <!--[ pnml name='_PNFORUM_MOVEPOST_INFO' html=1 ]-->
         </p>
         <p>
-        <label for="to_topic"><!--[ pnml name='_PNFORUM_MOVEPOST_TOTOPIC' html=1 ]--></label>
-        <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" /> (topic_id)
+            <label for="to_topic"><!--[ pnml name='_PNFORUM_MOVEPOST_TOTOPIC' html=1 ]--></label>
+            <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" /> (topic_id)
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->"><!--[ pnml name='_PNFORUM_MOVEPOST' ]--></button>
         </p>
-        <input name="submit" type="submit" value="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" />
     </div>
     </form>
 </fieldset>

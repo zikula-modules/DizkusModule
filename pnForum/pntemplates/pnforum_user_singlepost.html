@@ -23,17 +23,17 @@ Template for single postings
         <!--[ if $preview neq true ]-->
         <div class="postingheadermiddle">
             <!--[ if $post.poster_data.pn_uid neq 1 ]-->
-                <a class="image viewprofilelink" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_data.pn_uname ]-->" title="<!--[ $post.poster_data.pn_uname ]-->"></a>
+                <a class="image viewprofilelink" href="user.php?op=userinfo&amp;uname=<!--[ $post.poster_data.pn_uname ]-->" title="<!--[ $post.poster_data.pn_uname ]-->">&nbsp;</a>
                 <!--[ if $pncore.logged_in ]-->
                     <!--[ pnmodgetinfo modname='Messages' info='type' assign=type]-->
                     <!--[ if $type eq 1 ]-->
-                        <a class="image sendpmlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->"></a>
+                        <a class="image sendpmlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="index.php?name=Messages&amp;file=replypmsg&amp;send=1&amp;uname=<!--[ $post.poster_data.pn_uname ]-->">&nbsp;</a>
                     <!--[ else ]-->
-                        <a class="image sendpmlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->"></a>
+                        <a class="image sendpmlink" title="<!--[ pnml name='_PNFORUM_SEND_PM' ]-->" href="<!--[ pnmodurl modname=Messages func=compose uname=$post.poster_data.pn_uname ]-->">&nbsp;</a>
                     <!--[ /if ]-->
                 <!--[ /if ]-->
                 <!--[ if $post.poster_data.pn_url neq "" ]-->
-                    <a class="image gotohomepagelink" title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->"></a>
+                    <a class="image gotohomepagelink" title="<!--[ pnml name='_PNFORUM_HOMEPAGE' ]-->" href="<!--[ $post.poster_data.pn_url|pnvarprepfordisplay]-->">&nbsp;</a>
                 <!--[ /if ]-->
             <!--[ /if ]-->
 
@@ -43,7 +43,7 @@ Template for single postings
    
     <div class="postingbody pnf_bgcolor1 pnf_clearfix">
         <div  class="userinfo pnf_bordercolor2 pnf_bgcolor3" <!--[ if $topic.externalsource eq 1 ]-->style="display: none;"<!--[ /if ]--> id="posting_<!--[ $post.post_id ]-->_userinfo">
-            <button onclick="javascript:toggleuserinfo(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
+            <button onclick="toggleuserinfo(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
             <div id="posting_<!--[ $post.post_id ]-->_userinfocontent">
                 
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
