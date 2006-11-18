@@ -2,17 +2,17 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+<fieldset class="pnf_bordercolor2 pnf_bgcolor3">
     <legend>
         <!--[ pnml name='_PNFORUM_ADMINHONORARYRANKS' ]-->
     </legend>
 
     <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_admin_ranks.js"></script>
 
-    <div class="pnfadminrow98" style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+    <div class="pnfadminrow98 bgcolor3" style="text-align: center;">
         <!--[ pnml name='_PNFORUM_ADMINHONORARYRANKS_INFO' html=1 ]-->
     </div>
-    <div class="pnfadminrow98" style="background-color: <!--[ $bgcolor3 ]-->;">
+    <div class="pnfadminrow98" class="bgcolor3">
         <div class="pnfadmincol33c">
             <strong><!--[ pnml name='_PNFORUM_HONORARY_RANK' html=1 ]--></strong>
         </div>
@@ -44,7 +44,7 @@
         <!--[ if $num eq 0 ]-->
         <div class="pnfadmincol33c">
             <input type="hidden" name="actiontype" value="Add" />
-            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->" />
+            <button class="image add" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_ADD' ]-->"><!--[ pnml name='_PNFORUM_ADD' ]--></button>
         </div>
         <!--[ else ]-->
         <div class="pnfadmincol16c">
@@ -53,7 +53,7 @@
             <input type="radio" name="actiontype" value="Delete" /><!--[ pnml name='_DELETE' ]-->
         </div>
         <div class="pnfadmincol16c">
-            <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_SUBMIT' ]--></button>
         </div>
         <!--[ /if ]-->
     </div>

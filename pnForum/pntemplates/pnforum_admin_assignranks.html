@@ -2,12 +2,12 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+<fieldset class="pnf_bordercolor2 pnf_bgcolor3">
     <legend>
         <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN' ]-->
     </legend>
 
-    <div class="pnfadminrow98" style="background-color: <!--[ $bgcolor3 ]-->; text-align: center;">
+    <div class="pnfadminrow98 pnf_bgcolor3 center">
         <!--[ pnml name='_PNFORUM_ADMINHONORARYASSIGN_INFO' html=1 ]-->
     </div>
 
@@ -17,18 +17,18 @@
 
     <!--[* Yes, it's a table, we are dealing with tabular data so a table is correct here *]-->
     <form action="<!--[ pnmodurl modname=pnForum type=admin func=assignranks ]-->" method="post">
-    <div style="text-align: center;">
-    <table>
+    <div>
+    <table cellspacing="0" cellpadding="5">
         <thead>
         <tr>
-            <th style="font-size: 1em;">
+            <th class="leftcell pnf_bordercolor2">
                <strong><!--[ pnml name='_PNFORUM_USERNAME' ]--></strong>
             </th>
-            <th>
+            <th class="midcell pnf_bordercolor2">
                 <!--[ pnml name='_PNFORUM_NORANK' ]-->
             </th>
-            <!--[ foreach item=rank from=$ranks  ]-->
-            <th>
+            <!--[ foreach name=ranks item=rank from=$ranks  ]-->
+            <th class="<!--[if !$smarty.foreach.ranks.last]-->midcell<!--[ else ]-->rightcell<!--[ /if ]--> pnf_bordercolor2">
                 <img src="<!--[ $pncore.pnForum.url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" alt="<!--[ $rank.rank_image ]-->" title="<!--[ $rank.rank_title ]-->" /><br />
                 <!--[ $rank.rank_title ]-->
             </th>
@@ -38,14 +38,14 @@
         <tbody>
         <!--[ foreach item=user from=$allusers ]-->
         <tr>
-            <td style="font-size: 1em; text-align: left;">
-                <!--[ $user.name ]-->
+            <td>
+                <!--[$user.uname|profilelink]-->
             </td>
-            <td style="text-align: center;">
+            <td class="center">
                 <input type="radio" name="setrank[<!--[ $user.uid ]-->]" value="0" <!--[ if $user.rank_id eq 0 ]-->checked="checked"<!--[ /if ]--> />
             </td>
             <!--[ foreach item=rank from=$ranks ]-->
-            <td style="text-align: center;">
+            <td class="center">
                 <input type="radio" name="setrank[<!--[ $user.uid ]-->]" value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->checked="checked"<!--[ /if ]--> />
             </td>
             <!--[ /foreach ]-->
@@ -53,9 +53,9 @@
         <!--[ /foreach ]--> 
         </tbody>   
     </table>
-    <p style="margin-top: 2em;">
+    <p>
         <input type="hidden" name="lastletter" value="<!--[ $letter ]-->" />
-        <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
     </p>
     </div>
     </form>

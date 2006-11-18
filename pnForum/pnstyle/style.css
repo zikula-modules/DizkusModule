@@ -685,13 +685,15 @@ div.pnf_statusmsg {
 /***********************
  styles for all tables
 ************************/
-#pnforum table {
+#pnforum table,
+#pnforum_admin table {
     width: 99%;
     padding: 0;
     margin: 0;
 }
 
-#pnforum table caption {
+#pnforum table caption,
+#pnforum_admin table caption {
     text-align: center; 
     margin: 1.5em 0 0.25em 0; 
     border-style: solid;
@@ -701,32 +703,38 @@ div.pnf_statusmsg {
     font-weight: bold;
 }
 
-pnforum tr td {
+pnforum tr td,
+pnforum_admin tr td {
     font-size: 90%;
 }
 
-#pnforum th {
+#pnforum th,
+#pnforum_admin th {
     font-size: 105%;
     font-weight: bold;
     text-align: center;
 }
 
 
-#pnforum .fullcell, #pnforum .leftcell, #pnforum .midcell, #pnforum .rightcell {
+#pnforum .fullcell, #pnforum .leftcell, #pnforum .midcell, #pnforum .rightcell,
+#pnforum_admin .fullcell, #pnforum_admin .leftcell, #pnforum_admin .midcell, #pnforum_admin .rightcell {
     border-width: 2px;
     border-style: solid;
 }
 
-#pnforum .leftcell {
+#pnforum .leftcell,
+#pnforum_admin .leftcell {
     border-right: none;
 }
 
-#pnforum .midcell {
+#pnforum .midcell,
+#pnforum_admin .midcell {
     border-right: none;
     border-left: none;
 }
 
-#pnforum .rightcell {
+#pnforum .rightcell,
+#pnforum_admin .rightcell {
     border-left: none;
 }
 
@@ -1410,7 +1418,9 @@ a.normallink {
  */
 
 #pnforum a.image, 
-#pnforum button.image {
+#pnforum button.image,
+#pnforum_admin a.image, 
+#pnforum_admin button.image {
     margin: 0 0.5em;
     font-size: 1em;
     padding: 2px 0 2px 19px ! important; /* 16px image + spacer */
@@ -1594,16 +1604,24 @@ a.normallink {
 
 /*** buttons ***/
 
-#pnforum button.ok {
+#pnforum button.ok, #pnforum_admin button.ok {
     background: url(../pnimages/icon_ok.gif) no-repeat 0 50% ! important;
 }
 
-#pnforum button.cancel {
+#pnforum button.cancel, #pnforum_admin button.cancel {
     background: url(../pnimages/icon_cancel.gif) no-repeat 0 50% ! important;
 }
 
-#pnforum button.delete {
+#pnforum button.delete, #pnforum_admin button.delete {
     background: url(../pnimages/icon_delete.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum button.add, #pnforum_admin button.add {
+    background: url(../pnimages/icon_add.gif) no-repeat 0 50% ! important;
+}
+
+#pnforum button.search, #pnforum_admin button.search {
+    background: url(../pnimages/icon_search.gif) no-repeat 0 50% ! important;
 }
 
 #pnforum button.preview {

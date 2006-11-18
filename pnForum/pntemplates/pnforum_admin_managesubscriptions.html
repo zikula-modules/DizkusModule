@@ -3,37 +3,39 @@
 <!--[ include file='pnforum_admin_header.html' ]-->
 
 <!--[* pndebug *]-->
-<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+<fieldset class="pnf_bordercolor2 pnf_bgcolor3">
     <legend>
         <!--[pnml name='_PNFORUM_ADMINMANAGESUBSCRIPTIONS']-->
     </legend>
     
     <div style="margin: 1em;">
         
-    <form id="subscriptions" action="" method="post">
-        <div style="margin: 1em 0 1em 0;">
-            <label for="pnusername"><!--[ pnml name='_PNFORUM_USERNAME' ]--></label>:&nbsp;<input type="text" name="pnusername" id="pnusername" value="<!--[ $pnusername ]-->" />&nbsp;<button type="submit" name="submit"><!--[ pnml name='_PNFORUM_SHOWSUBSCRIPTIONS' ]--></button>
+    <form id="subscriptions" action="<!--[ pnmodurl modname=pnForum type=admin func=managesubscriptions ]-->" method="post">
+        <div>
+            <label for="pnusername"><!--[ pnml name='_PNFORUM_USERNAME' ]--></label>:&nbsp;<input type="text" name="pnusername" id="pnusername" value="<!--[ $pnusername ]-->" />&nbsp;<button class="image search" type="submit" name="submit"><!--[ pnml name='_PNFORUM_SHOWSUBSCRIPTIONS' ]--></button>
         </div>
     </form>
 
 
     <form id="managesubscriptions" action="<!--[ pnmodurl modname=pnForum type=admin func=managesubscriptions ]-->" method="post">
     <input type="hidden" name="pnuid" value="<!--[ $pnuid ]-->" />
-    <h2><!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]--></h2>
     <!--[ if $topicsubscriptions|@count <> 0 ]-->
     <div>
-        <label for="alltopic"><!--[pnml name=_PNFORUM_TOGGLEALLTOPICS]--></label><input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />
         <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-        <table style="width: 99%; padding: 0; margin: 0, border-collapse: collapse;">
+        <table cellpadding="5" cellspacing="0">
+        	<caption class="pnf_bordercolor2 pnf_bgcolor3">
+                <!--[ pnml name='_PNFORUM_MANAGETOPICSUBSCRIPTIONS' ]-->
+                (<label for="alltopic"><!--[pnml name=_PNFORUM_TOGGLEALLTOPICS]--></label><input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />)
+            </caption>
             <thead>
-                <tr>
-                    <th>
+                <tr class="pnf_bgcolor3">
+                    <th class="leftcell pnf_bordercolor2">
                         <!--[ pnml name='_PNFORUM_TOPIC' ]-->
                     </th>
-                    <th>
+                    <th class="midcell pnf_bordercolor2">
                         <!--[ pnml name='_PNFORUM_POSTER' ]-->
                     </th>
-                    <th>
+                    <th class="rightcell pnf_bordercolor2">
                         <!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]-->
                     </th>
                 </tr>
@@ -56,21 +58,23 @@
         </table>
     </div>
     <!--[ else ]-->
-    <!--[ pnml name='_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND ]-->
+    <h2><!--[ pnml name='_PNFORUM_NOTOPICSUBSCRIPTIONSFOUND ]--></h2>
     <!--[ /if ]-->
 
-    <h2><!--[ pnml name='_PNFORUM_MANAGEFORUMSUBSCRIPTIONS' ]--></h2>
     <!--[ if $forumsubscriptions|@count <> 0 ]-->
     <div>
-        <label for="allforum"><!--[pnml name=_PNFORUM_TOGGLEALLFORUMS]--></label><input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />
         <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-        <table style="width: 99%; padding: 0; margin: 0, border-collapse: collapse;">
+        <table cellpadding="5" cellspacing="0">
+        	<caption class="pnf_bordercolor2 pnf_bgcolor3">
+                <!--[ pnml name='_PNFORUM_MANAGEFORUMSUBSCRIPTIONS' ]-->
+                (<label for="allforum"><!--[pnml name=_PNFORUM_TOGGLEALLFORUMS]--></label><input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />(
+            </caption>
             <thead>
-                <tr>
-                    <th>
+                <tr class="pnf_bgcolor3">
+                    <th class="leftcell pnf_bordercolor2">
                         <!--[ pnml name='_PNFORUM_FORUM' ]-->
                     </th>
-                    <th>
+                    <th class="rightcell pnf_bordercolor2">
                         <!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]-->
                     </th>
                 </tr>
@@ -90,11 +94,11 @@
         </table>
     </div>
     <!--[ else ]-->
-    <!--[ pnml name='_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND ]-->
+    <h2><!--[ pnml name='_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND ]--></h2>
     <!--[ /if ]-->
-    <div style="margin: 2em 0 2em 0;">
-        <button type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
-    </div>
+    <p>
+        <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+    </p>
     </form>
     
 </div>
