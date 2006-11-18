@@ -163,6 +163,9 @@ function pnForum_user_viewtopic($args=array())
         unset($args);
     } else {
         $topic_id = (int)pnVarCleanFromInput('topic');
+        // begin patch #3494 part 1, credits to teb
+        $post_id  = (int)pnVarCleanFromInput('post');
+        // end patch #3494 part 1
         $start    = (int)pnVarCleanFromInput('start');
         $view     = strtolower(pnVarCleanFromInput('view'));
     }
@@ -176,6 +179,18 @@ function pnForum_user_viewtopic($args=array())
         return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic',
                             array('topic' => $topic_id)));
     }
+
+    // begin patch #3494 part 2, credits to teb
+    if(!empty($post_id) && is_numeric($post_id) && empty($topic_id)) {
+        $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+        if($topic_id <>false) {
+            // redirect instad of continue, better for SEO
+            return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', 
+                                       array('topic' => $topic_id)));
+        }
+    }
+    // end patch #3494 part 2
+    
     $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
                           array('topic_id'   => $topic_id,
                                 'start'      => $start,
