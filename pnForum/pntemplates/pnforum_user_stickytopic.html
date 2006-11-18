@@ -3,7 +3,7 @@
 <!--[ include file='pnforum_user_header.html' ]-->
 <!--[* pndebug *]-->
 
-<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+<fieldset id="pnf_stickytopic" class="pnf_bordercolor2 pnf_bgcolor3" >
     <legend>
         <!--[ if $mode eq "sticky" ]-->
             <!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->
@@ -15,16 +15,16 @@
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
     <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-    <div class="moddiv">
+    <div>
         <!--[ if $mode eq "sticky" ]-->
             <!--[ pnml name='_PNFORUM_STICKYTOPIC_INFO' html=1 ]-->
             <p>
-            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->" />
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></button>
             </p>
         <!--[ else ]-->
             <!--[ pnml name='_PNFORUM_UNSTICKYTOPIC_INFO' html=1 ]-->
             <p>
-            <input type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" />
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></button>
         </p>
         <!--[ /if ]-->
     </div>

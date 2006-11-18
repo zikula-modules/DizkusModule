@@ -845,6 +845,7 @@ form#pnf_topicsubscriptions td {
 
 /************************************
  * pnforum_user_movepost.html
+ * pnforum_user_locktopic.html
  * pnforum_user_movetopic.html
  * pnforum_user_splittopic.html
  * pnforum_user_deletetopic.html
@@ -855,8 +856,10 @@ form#pnf_topicsubscriptions td {
 
 fieldset#pnf_movepost div,
 fieldset#pnf_movetopic div,
+fieldset#pnf_locktopic div,
 fieldset#pnf_jointopic div,
 fieldset#pnf_deletetopic div,
+fieldset#pnf_stickytopic div,
 fieldset#pnf_splittopic div {
     text-align: center;
     margin: 1em;
@@ -936,6 +939,44 @@ div.ajaxeditpoststatusbox {
 div.ajaxeditpoststatusbox strong {
     margin: 2px 5px 2px 2px;
     padding: 2px; 
+}
+
+/*******************************
+ * pnforum_user_reply.html
+ *******************************/
+
+div#pnf_reply {
+    width: 99%; 
+    float: left; 
+    margin-top: 1.5em;
+}
+
+div#replyeditor {
+    width: 99%;
+}
+
+div#pnf_reply fieldset {
+    padding: 4px;
+}
+
+div#pnf_reply fieldset label {
+    margin-left: 0;
+}
+
+div#pnf_reply fieldset textarea {
+    width:99%; 
+    height: 10em;
+}
+
+div#replyposting {
+    padding: 0; 
+    margin: 0; 
+}
+ 
+#pnforum li#replybuttons,
+#pnforum li#nonajaxreplybuttons {
+    margin: 1.5em; 
+    text-align: left;
 }
 
 /*******************************
@@ -1153,11 +1194,12 @@ div.rankuser-alphanav {
 }
 
 .postingheaderleft {
-    text-align: left; 
-    margin: 0.5em 0 0 5px;
-    padding: 0; 
-    width: 19%; 
-    float:left;
+    width: 24%;
+    float: left;
+    height: 2em;
+    text-align: left;
+    margin-left: 3px;
+    margin-top: 0.5em;
 }
 
 .postingheaderright {

@@ -9,9 +9,8 @@ Template for single postings
 
 
 
-    <div id="posting"  style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor1 ]-->;" class="posting pnf_clearfix">
-        <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 2px solid <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor4 ]-->;" id="topicsubject_content"><!--[ $reply.subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
-        <div style="border-bottom-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" class="postingheader pnf_clearfix">
+    <div id="posting"  class="pnf_bordercolor2 pnf_bgcolor1 posting pnf_clearfix">
+        <div class="pnf_bordercolor2 pnf_bgcolor3 postingheader pnf_clearfix">
             <div class="postingheaderleft">
                 <span class="userinfoname"><!--[ $reply.poster_data.pn_uname ]--></span>
             </div>
@@ -21,8 +20,8 @@ Template for single postings
         </div>
        
         <div class="postingbody pnf_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
-            <div  class="userinfo" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" id="posting_userinfo">
-                <button onclick="javascript:toggleuserinfo(<!--[ $reply.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
+            <div  class="userinfo pnf_bordercolor2 pnf_bgcolor3" id="posting_userinfo">
+                <button onclick="toggleuserinfo(<!--[ $reply.topic_id ]-->);" title="<!--[ pnml name='_PNFORUM_HIDEUSERINFO' ]-->" style="float: right;">x</button>
                 <div id="posting_userinfocontent">
                     
                     <!--[ if $reply.poster_data.pn_uid neq 1 ]-->
@@ -85,7 +84,7 @@ Template for single postings
             
         </div>
 
-        <div class="postingfooter pnf_clearfix" style="border-top-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;">
+        <div class="postingfooter pnf_clearfix pnf_bordercolor2 pnf_bgcolor3">
 
             <div class="postingfooterleft">
                 &nbsp;

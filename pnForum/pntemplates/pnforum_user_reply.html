@@ -6,73 +6,74 @@
 
 <!--[* pndebug *]-->
 
-<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
-    <legend>
-        <!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnforumbbsmile|pnvarcensor ]-->
-    </legend>
 
-    <form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post" enctype="multipart/form-data">
-    <div style="margin: 1em;">
-        <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
-
-        <!--[ if $preview ]-->
-        <div id="replypreview">
-            <!--[ include file="pnforum_user_replypreview.html" ]-->
-        </div>
-        <!--[ /if ]-->
-
-
-
-        <div id="replyeditor">
-            <textarea class="pnf_textarea" name="message" id="message" style="width:99%; height: 10em;"><!--[ $reply.message ]--></textarea>
-            <!--[ if $pncore.pnForum.striptags == 'yes' ]-->
-                <div><!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--></div>
+<div id="pnf_reply" class="pnf_clearfix">        
+    <fieldset class="pnf_bordercolor2 pnf_bgcolor3" >
+        <legend>
+            <!--[ pnml name='_PNFORUM_REPLY_POST' ]-->: <!--[ $reply.topic_subject|pnforumbbsmile|pnvarcensor ]-->
+        </legend>
+    
+        <form id="post" action="<!--[ pnmodurl modname=pnForum type=user func=reply ]-->" method="post" enctype="multipart/form-data">
+        <div>
+            <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
+            <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=pnForum ]-->" />
+    
+            <!--[ if $preview ]-->
+            <div id="replypreview">
+                <!--[ include file="pnforum_user_replypreview.html" ]-->
+            </div>
             <!--[ /if ]-->
-        </div>
-
-        <div class="pnf_clearfix">
-            <div id="replyoptions">
-                <ul>
-                    <li>
-                        <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
-                    </li>
-                    <!--[ if $pncore.logged_in ]-->
-                    <li>
-                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                        <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
-                        <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
-                    </li>
-                    <!--[ /if ]-->
-                    
-                    <li id="nonajaxnewtopicbuttons" style="text-align: left; margin: 1.5em;">
-                        <button name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
-                        <!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_SUBMIT" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_SUBMIT' ]-->
-                        </button>
-                        <button name="preview" type="submit" value="1" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
-                        <!--[ pnimg src="icon_preview.gif" alt="_PNFORUM_PREVIEW" altml=true class="postingbutton" ]--><!--[ pnml name='_PNFORUM_PREVIEW' ]-->
-                        </button>
-                        <button name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewtopic topic=$topic.topic_id ]-->'">
-                        <!--[ pnimg src="icon_cancel.gif" alt="_PNFORUM_CANCELPOST" altml=true class="postingbutton" ]--><!--[ pnml name="_PNFORUM_CANCEL" ]-->
-                        </button>
-                    </li>
-            
-                </ul>
-            
+    
+    
+    
+            <div id="replyeditor">
+                <textarea class="pnf_textarea" name="message" id="message"><!--[ $reply.message ]--></textarea>
+                <!--[ if $pncore.pnForum.striptags == 'yes' ]-->
+                    <div><!--[ pnml name='_PNFORUM_NOHTMLALLOWED' ]--></div>
+                <!--[ /if ]-->
             </div>
-            <div id="replyhooks" style="float: left; margin-top: 1em;">
-                <!--[ plainbbcode textfieldid=message ]-->
-                <!--[ bbsmile textfieldid=message ]-->
-                <!--[* $hooks.pnUpper *]--><br />
+    
+            <div class="pnf_clearfix">
+                <div id="replyoptions">
+                    <ul>
+                        <li>
+                            <strong><!--[ pnml name='_PNFORUM_OPTIONS' ]--></strong>
+                        </li>
+                        <!--[ if $pncore.logged_in ]-->
+                        <li>
+                            <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                            <label for="attach_signature"><!--[ pnml name='_PNFORUM_ATTACHSIGNATURE' ]--></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                            <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
+                        </li>
+                        <!--[ /if ]-->
+                        
+                        <li id="nonajaxreplybuttons">
+                            <button class="image ok" name="submit" type="submit" value="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
+                            <!--[ pnml name='_PNFORUM_SUBMIT' ]-->
+                            </button>
+                            <button class="image preview" name="preview" type="submit" value="1" title="<!--[ pnml name='_PNFORUM_PREVIEW' ]-->">
+                            <!--[ pnml name='_PNFORUM_PREVIEW' ]-->
+                            </button>
+                            <button class="image cancel" name="reset" type="button" value="reset" title="<!--[ pnml name='_PNFORUM_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$newtopic.forum_id ]-->'">
+                            <!--[ pnml name="_PNFORUM_CANCEL" ]-->
+                            </button>
+                        </li>
+                
+                    </ul>
+                
+                </div>
+                <div id="replyhooks">
+                    <!--[ plainbbcode textfieldid=message ]-->
+                    <!--[ bbsmile textfieldid=message ]-->
+                </div>
             </div>
+    
         </div>
-
-    </div>
-    </form>
-
-</fieldset>
-
+        </form>
+    
+    </fieldset>
+</div>
 <!--[ include file='pnforum_user_footer.html' ]-->
