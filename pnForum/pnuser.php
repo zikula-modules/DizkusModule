@@ -570,6 +570,13 @@ function pnForum_user_topicadmin($args=array())
                 return pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forum_id)));
                 break;
             case 'move':
+                list($f_id, $c_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
+                if($forum_id == $f_id) {
+                    return showforumerror(_PNFORUM_SOURCEEQUALSTARGETFORUM, __FILE__, __LINE__);
+                }
+                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                }
                 pnModAPIFunc('pnForum', 'user', 'movetopic', array('topic_id' => $topic_id,
                                                                    'forum_id' => $forum_id,
                                                                    'shadow'   => $shadow ));
@@ -594,6 +601,14 @@ function pnForum_user_topicadmin($args=array())
                 break;
             case 'join':
                 $to_topic_id = pnVarCleanFromInput('to_topic_id');
+                if(!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
+                    // user wnats to copy topi to itself
+                    return showforumerror(_PNFORUM_SOURCEEQUALSTARGETTOPIC, __FILE__, __LINE__);
+                }
+                list($f_id, $c_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $to_topic_id));
+                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                }
                 pnModAPIFunc('pnForum', 'user', 'jointopics', array('from_topic_id' => $topic_id,
                                                                     'to_topic_id'   => $to_topic_id));
                 return pnRedirect(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $to_topic_id)));
