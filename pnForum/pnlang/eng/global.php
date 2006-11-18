@@ -76,7 +76,7 @@ define('_PNFORUM_MAILTO_NOSUBJECT','You must enter a subject for this email.');
 define('_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND','no forum subscriptions found');
 define('_PNFORUM_TOGGLEALLFORUMS', 'Remove all forum subscriptions');
 define('_PNFORUM_TOGGLEALLTOPICS', 'Remove all topic subscriptions');
-define('_PNFORUM_THISFUNCTIONNEEDSJAVASCRIPT', 'This function needs javascript enabled!!');
+define('_PNFORUM_THISFUNCTIONNEEDSJAVASCRIPT', 'The pnForum-administration needs javascript enabled!');
 define('_PNFORUM_MANAGEFORUMSUBSCRIPTIONS', 'Manage forum subscriptions');
 define('_PNFORUM_SHOWSUBSCRIPTIONS', 'Show users subscriptions');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS', 'Manage subscriptions');

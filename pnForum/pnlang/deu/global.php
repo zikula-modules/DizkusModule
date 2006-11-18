@@ -75,7 +75,7 @@ define('_PNFORUM_MAILTO_NOSUBJECT','keinen Betreff angegeben');
 define('_PNFORUM_NOFORUMSUBSCRIPTIONSFOUND','keine Forenabos gefunden');
 define('_PNFORUM_TOGGLEALLFORUMS', 'alle Forenabos entfernen');
 define('_PNFORUM_TOGGLEALLTOPICS', 'alle Themenabos entfernen');
-define('_PNFORUM_THISFUNCTIONNEEDSJAVASCRIPT', 'Die Funktion benötigt Javascript!!');
+define('_PNFORUM_THISFUNCTIONNEEDSJAVASCRIPT', 'Die pnForum-Administation benötigt Javascript!');
 define('_PNFORUM_MANAGEFORUMSUBSCRIPTIONS', 'Forenabos verwalten');
 define('_PNFORUM_SHOWSUBSCRIPTIONS', 'Alle Abos dieses Benutzers anzeigen');
 define('_PNFORUM_ADMINMANAGESUBSCRIPTIONS', 'Abos verwalten');
