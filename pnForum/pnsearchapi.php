@@ -173,6 +173,8 @@ function pnForum_searchapi_nonfulltext($args)
         return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
     }
 
+    $posts_per_page     = pnModGetVar('pnForum', 'posts_per_page');
+    
     if(!isset($limit) || empty($limit)) {
         $limit = 10;
     }
@@ -191,8 +193,11 @@ function pnForum_searchapi_nonfulltext($args)
               pt.post_id,
               t.topic_id,
               t.topic_title,
+              t.topic_poster,
               t.topic_replies,
               t.topic_views,
+              t.topic_status,
+              t.topic_last_post_id,
               p.poster_id,
               p.post_time
               FROM ".$pntable['pnforum_posts']." AS p,
@@ -307,8 +312,11 @@ function pnForum_searchapi_nonfulltext($args)
                      $sresult['post_id'],
                      $sresult['topic_id'],
                      $sresult['topic_title'],
+                     $sresult['topic_poster'],
                      $sresult['topic_replies'],
                      $sresult['topic_views'],
+                     $sresult['topic_status'],
+                     $sresult['topic_last_post_id'],
                      $sresult['poster_id'],
                      $sresult['post_time']) = $result->fields;
                 // no auth check for forum and category needed here
@@ -317,19 +325,31 @@ function pnForum_searchapi_nonfulltext($args)
                 $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
                 
-                //without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
-                
-                //strip_tags is needed here 'cause maybe we cut within a html-tag...
+                // without signature
+                $sresult['post_text'] = $sresult['topic_replies'] + 1;
+
+                // topic size
+                $sresult['total_posts'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
+                                
+                // strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
                 
-                // username
+                // last poster username
                 $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
+
+                // topic starter username
+                $sresult['topicstarter_name'] = pnUserGetVar('uname', $sresult['topic_poster']);
+
+                // last posting links
+                $sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                     array('topic' => $sresult['topic_id'],
+                                                           'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+                $sresult['last_post_url_anchor'] = $sresult['last_post_url'] . '#pid' . $sresult['topic_last_post_id'];
                 
                 // check if we have to skip the first $startnum entries or not
                 // check if we have a limit and wether we have reached it or not
                 if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                    array_push($searchresults, $sresult);
+                    $searchresults[$sresult['topic_id']] = $sresult;
                 }
             }
             $total_hits++;
@@ -534,8 +554,11 @@ function pnForum_searchapi_fulltext($args)
               pt.post_id,
               t.topic_id,
               t.topic_title,
+              t.topic_poster,
               t.topic_replies,
               t.topic_views,
+              t.topic_status,
+              t.topic_last_post_id,
               p.poster_id,
               p.post_time
               $selectmatch
@@ -574,8 +597,11 @@ function pnForum_searchapi_fulltext($args)
                      $sresult['post_id'],
                      $sresult['topic_id'],
                      $sresult['topic_title'],
+                     $sresult['topic_poster'],
                      $sresult['topic_replies'],
                      $sresult['topic_views'],
+                     $sresult['topic_status'],
+                     $sresult['topic_last_post_id'],
                      $sresult['poster_id'],
                      $sresult['post_time']) = $result->fields;
                 // check if we have to skip the first $startnum entries or not
@@ -586,18 +612,31 @@ function pnForum_searchapi_fulltext($args)
                 $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
     
-                //without signature
+                // without signature
                 $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
-    
-                //strip_tags is needed here 'cause maybe we cut within a html-tag...
+ 
+                 // topic size
+                $sresult['total_posts'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
+                                
+   
+                // strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
     
-                // username
+                // last poster username
                 $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
+
+                // topic starter username
+                $sresult['topicstarter_name'] = pnUserGetVar('uname', $sresult['topic_poster']);
+
+                // last posting links
+                $sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                                                     array('topic' => $sresult['topic_id'],
+                                                           'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
+                $sresult['last_post_url_anchor'] = $sresult['last_post_url'] . '#pid' . $sresult['topic_last_post_id'];
     
                 // check if we have a limit and if we have reached it or not
                 if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                    array_push($searchresults, $sresult);
+                    $searchresults[$sresult['topic_id']] = $sresult;
                 }
             }
         }

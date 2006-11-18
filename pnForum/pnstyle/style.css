@@ -888,6 +888,7 @@ form#pnf_topicsubscriptions td {
  * pnforum_user_emailtopic.html
  * pnforum_user_notifymoderator.html
  * pnforum_user_viewip.html
+ * pnforum_user_search.html
  ************************************/
 
 fieldset#pnf_movepost div,
@@ -896,6 +897,7 @@ fieldset#pnf_locktopic div,
 fieldset#pnf_jointopic div,
 fieldset#pnf_deletetopic div,
 fieldset#pnf_stickytopic div,
+fieldset#pnf_search div,
 fieldset#pnf_splittopic div {
     text-align: center;
     margin: 1em;
@@ -1161,19 +1163,37 @@ div#topicsubject_content {
  * pnforum_search.html
  *******************************/
 
-#pnfsearch {
+fieldset #pnf_search div {
     padding: 1em 0 1em 0;
     overflow:hidden;
 }
 
-#pnfsearch .searchleft {
+#pnf_search dl dt {
+    display: block;
+    float: left;
+    text-align: right;
+    width: 40%;
+    padding: 0;
+    margin: 0.5em;
+}
+
+#pnf_search dl dd {
+    display: block;
+    float: left;
+    text-align: left;
+    width: 40%;
+    margin: 0.5em;
+    padding: 0;
+}
+
+.searchleft {
     margin: 4px 0 4px 0; 
     float: left; 
     width: 35%; 
     text-align: right;
 }
 
-#pnfsearch .searchright {
+.searchright {
     float: left; 
     width: 60%; 
     text-align: left; 
