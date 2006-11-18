@@ -2,8 +2,6 @@
 
 <!--[ include file='pnforum_admin_header.html' ]-->
 
-<!--[* pndebug *]-->
-
 <fieldset class="pnf_bordercolor2 pnf_bgcolor3">
     <legend>
         <!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE' ]-->
@@ -11,9 +9,12 @@
 
     <script type="text/javascript" src="modules/pnForum/pnjavascript/pnforum_admin_ranks.js"></script>
 
-    <div class="pnfadminrow98 pnf_bgcolor3 center">
+    <div class="content">
+        
+    <p>
         <!--[ pnml name='_PNFORUM_ADMINUSERRANK_INFO' html=1 ]-->
-    </div>
+    </p>
+    
     <div class="pnfadminrow98 pnf_clearfix pnf_bgcolor3">
         <div class="pnfadmincol24c">
             <strong><!--[ pnml name='_PNFORUM_ADMINUSERRANK_TITLE2' html=1 ]--></strong>
@@ -72,11 +73,12 @@
 
     </form>
     <!--[ foreachelse ]-->
-    <div class="pnfadminrow">
+    <p>
         <!--[ pnml name='_PNFORUM_NORANKSINDATABASE' ]-->
-    </div>
+    </p>
 
     <!--[ /foreach ]-->
+    </div>
 </fieldset>
 
 <!--[ include file='pnforum_admin_footer.html' ]-->

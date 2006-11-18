@@ -11,17 +11,17 @@
         <!--[ pnml name='_PNFORUM_REORDERFORUMS' ]-->
     </legend>
 
-    <div style="margin: 10px; width: 95%;">
-    <noscript>
-        <h1><!--[ pnml name='_PNFORUM_THISFUNCTIONNEEDSJAVASCRIPT' ]--></h1>
-    </noscript>
+    <div class="content">
+    
     <p>
     <!--[ pnml name="_PNFORUM_FORUM_SEQUENCE_DESCRIPTION" ]-->
     </p>
+    
     <div class="pnf_clearfix">
-        <button onclick="javascript:addcategory();" class="left"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINCATADD" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
-        <button onclick="javascript:storetreeorder();" class="right" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        <button onclick="javascript:addcategory();" class="image add left"><!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
+        <button onclick="javascript:storetreeorder();" class="image ok right" type="submit"><!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
     </div>
+    
     <div id="pnforuminformation" style="width: 60%; visibility: hidden;">&nbsp;</div>
     <ul id="category">
     <!--[ foreach item=category from=$categorytree]-->
@@ -126,8 +126,8 @@
 
     <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=pnForum]-->" />
     <div class="pnf_clearfix">
-        <button onclick="javascript:addcategory();" class="left"><!--[ pnimg src="icon_add.gif" alt="_PNFORUM_ADMINCATADD" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
-        <button onclick="javascript:storetreeorder();" class="right" type="submit"><!--[ pnimg src="icon_ok.gif" alt="_PNFORUM_PREFS_SAVE" altml=true ]-->&nbsp;<!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
+        <button onclick="javascript:addcategory();" class="image add left"><!--[ pnml name='_PNFORUM_ADMINCATADD' ]--></button>
+        <button onclick="javascript:storetreeorder();" class="image ok right" type="submit"><!--[ pnml name='_PNFORUM_PREFS_SAVE' ]--></button>
     </div>
     
     <script type="text/javascript">
