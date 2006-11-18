@@ -50,6 +50,7 @@ define('_PNFORUM_NEW_THREADS','New Topic in forum');
 define('_PNFORUM_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_PNFORUM_FOUNDIN', 'found in');
 define('_PNFORUM_FORUM_SETTINGS','Personal settings per forum');
 define('_PNFORUM_HOURS', 'hrs');
 define('_PNFORUM_PREFS_TIMESPANFORCHANGES', 'Allow changes in postings within x hours');
