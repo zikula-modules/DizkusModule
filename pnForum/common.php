@@ -1100,7 +1100,7 @@ function pnf_add_stylesheet_header($modname='')
  */
 function is_dot8()
 {
-    return function_exists('pnVarCleanFromCOOKIE');
+    return (version_compare(PN_VERSION_NUM, '0.8', '>=')==1);
 }
 
 /**
