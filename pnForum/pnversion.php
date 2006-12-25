@@ -31,17 +31,13 @@ $modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:',
 // .8 extension following: module depedencies
 $modversion['dependencies'] = array(
                                     array('modname'    => 'pn_bbcode', 
-                                          'minversion' => '1.20', 
+                                          'minversion' => '1.21', 
                                           'maxversion' => '', 
                                           'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
                                     array('modname'    => 'pn_bbsmile', 
-                                          'minversion' => '1.15', 
+                                          'minversion' => '1.17', 
                                           'maxversion' => '', 
-                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
-                                    array('modname'    => 'pn_bbclick', 
-                                          'minversion' => '1.06', 
-                                          'maxversion' => '', 
-                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
+                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED)
                                               );
 
 
