@@ -2579,18 +2579,14 @@ function pnForum_userapi_deletetopic($args)
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['pnforum_posts_text']."
-            WHERE ";
-    for($x = 0; $x < count($posts_to_remove); $x++) {
-        if(isset($set)) {
-            $sql .= " OR ";
-        }
-        $sql .= "post_id = '". pnVarPrepForStore($posts_to_remove[$x])."'";
-        $set = true;
+    // fix for bug [#3753] SQL Error in pnForum_userapi_deletetopic
+    // credits to rmaiwald for te fix
+    if (count($posts_to_remove)>0) {
+        $sql = "DELETE FROM ".$pntable['pnforum_posts_text']
+             . " WHERE post_id IN (" . implode(",",$posts_to_remove) . ")";
+        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        pnfCloseDB($result);
     }
-
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
 
     // bug [#2491] removal of topics doesn't remove the subscriptions
     $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']."
