@@ -3,7 +3,7 @@
  * forum backend (with permission check)
  * to be placed in the PostNuke root
  * @version $Id$
- * @author Andreas Krapohl, Frank Schummertz
+ * @author Andreas Krapohl, Frank Schummertz, Arjen Tebbenhof [short urls]
  * @copyright 2005 by pnForum Team
  * @package pnForum
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
@@ -22,6 +22,22 @@ pnInit();
 include_once 'modules/pnForum/common.php';
 
 list($count, $forum_id, $cat_id, $feed, $user) = pnVarCleanFromInput('count', 'forum_id', 'cat_id', 'feed', 'user');
+
+/**
+ * get the short urls extensions
+ */
+if(!is_dot8()) {
+    // need to check use of shorturls in .7
+    $urlsok = pnModGetVar('Xanthia', 'shorturls');
+    $urlextension = pnModGetVar('Xanthia', 'shorturlsextension');
+} else {
+    // pnModURL already handles correct shorturls in .8
+    $urlsok = 0;
+}
+// get the module info
+$baseurl = pnGetBaseURL();
+$pnfinfo = pnModGetInfo(pnModGetIdFromName('pnForum'));
+$pnfname = $pnfinfo['displayname'];
 
 /**
  * check for feed, if not set, use rss091 as default
@@ -67,8 +83,13 @@ if(!empty($user)) {
 /**
  * set some defaults
  */
-$link = pnModURL('pnForum', 'user', 'main');
-$forumname = 'Forum';
+// form the url
+if($urlsok == 1) {
+   $link = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}.$urlextension");
+} else {
+   $link = $baseurl.pnModURL('pnForum', 'user', 'main');
+}
+$forumname = pnVarPrepForDisplay($pnfname);
 // default where clause => no where clause
 $where = '';
 
@@ -83,7 +104,11 @@ if(!empty($forum_id)) {
         exit;
     }
     $where = "AND t.forum_id = '" . (int)pnVarPrepForStore($forum_id) . "' ";
-    $link = pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
+    if($urlsok == 1) {
+       $link = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}-viewforum-forum-{$forum_id}.$urlextension");
+    } else {
+       $link = $baseurl.pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
+    }
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
     if(!pnSecAuthAction(0, 'pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
@@ -95,9 +120,13 @@ if(!empty($forum_id)) {
         exit;
     }
     $where = "AND f.cat_id = '" . (int)pnVarPrepForStore($cat_id) . "' ";
-    $link = pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
+    if($urlsok == 1) {
+       $link = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}-main-viewcat-{$cat_id}.$urlextension");
+    } else {
+       $link = $baseurl.pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
+    }
     $forumname = $category['cat_title'];
-    
+
 } elseif (isset($uid) && ($uid<>false)) {
     $where = "AND p.poster_id=" . $uid . " ";
 }
@@ -135,7 +164,7 @@ $sql = "SELECT t.topic_id,
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id
               $where
-        ORDER BY t.topic_time DESC
+        ORDER BY p.post_time DESC
         LIMIT 100";
 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 $result_postmax = $result->PO_RecordCount();
@@ -164,12 +193,16 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
         $post['cat_title']          = $cat_title;
         $shown_results++;
         $start = ((ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page);
-        $post['post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                     array('topic' => $topic_id,
-                                           'start' => $start));
+        if($urlsok == 1) {
+           $post['post_url'] = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}-viewtopic-topic-{$topic_id}-start-{$start}.$urlextension");
+        } else {
+           $post['post_url'] = $baseurl.pnModURL('pnForum', 'user', 'viewtopic',
+                                        array('topic' => $topic_id,
+                                              'start' => $start));
+        }
         $post['last_post_url'] = $post['post_url'] . "#pid" . $topic_last_post_id;
         array_push($posts, $post);
-        $result->MoveNext();
+//        $result->MoveNext();
     }
 }
 
