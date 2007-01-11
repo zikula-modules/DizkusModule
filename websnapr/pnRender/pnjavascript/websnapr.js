@@ -65,7 +65,7 @@ var webSnapr = {
             return false;
         },
         preloadImages: function() {
-                var imgList = ["lt.png", "lb.png", "rt.png", "rb.png", "error.gif", "loading.jpg"];
+                var imgList = ["lt.png", "lb.png", "rt.png", "rb.png", "error.gif", "loading.gif"];
                 var imgObj  = document.createElement('img');
 
                 for(var i = 0, img; img = imgList[i]; i++) {
@@ -145,12 +145,13 @@ var webSnapr = {
                 webSnapr.obj.style.visibility = webSnapr.ind.style.visibility = 'visible';
                 webSnapr.obj.style.opacity = webSnapr.ind.style.opacity = '.1';
                 webSnapr.img.style.visibility = "hidden";
-                
-                var addy = String(webSnapr.lnk.href).replace(/[^:]*:\/\/([^:\/]*)(:{0,1}\/{1}.*)/, '$1');
 
+                var addy = String(webSnapr.lnk.href).replace(/(\?)([^?]+)/, "");
+                // Uncomment this next line to test a url containing a query string             
+                //var addy = "http://www.google.fr/search?hl=en&q=frequency+decoder&btnG=Google+Search";
                 webSnapr.errorTimer = window.setTimeout("webSnapr.imageError()",15000);
-                webSnapr.img.src = 'http://images.websnapr.com/?url='+ encodeURI(addy)+'&rndm='+parseInt(webSnapr.linkPool[webSnapr.lnk.href]);
-
+                webSnapr.img.src = 'http://images.websnapr.com/?url='+ encodeURIComponent(addy)+'&rndm='+parseInt(webSnapr.linkPool[webSnapr.lnk.href]);
+                
                 /*@cc_on@*/
                 /*@if(@_win32)
                 return;
