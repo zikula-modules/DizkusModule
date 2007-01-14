@@ -1,6 +1,24 @@
 /*  $Id$  */
 
 /*
+ * colors
+ *
+ * if your theme support color definitionss and you want to use them, comment out the
+ * the following block and define your colors there
+ *
+ */
+.pnf_bgcolor1 { background-color: #FFFFFF; }
+.pnf_bgcolor2 { background-color: #AFBFC8; }
+.pnf_bgcolor3 { background-color: #CEDEE7; }
+.pnf_bgcolor4 { background-color: #EDF3F7; }
+.pnf_bgcolor5 { background-color: #EDF3F7; }
+.pnf_bordercolor1 { border-color: #FFFFFF; }
+.pnf_bordercolor2 { border-color: #AFBFC8; }
+.pnf_bordercolor3 { border-color: #CEDEE7; }
+.pnf_bordercolor4 { border-color: #EDF3F7; }
+.pnf_bordercolor5 { border-color: #EDF3F7; }
+
+/*
  * general settings
  */
 button, button.right, button.left {
