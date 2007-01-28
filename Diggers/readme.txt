@@ -1,4 +1,4 @@
-Diggers Plugin 3.0
+Diggers Plugin 1.0
 ------------------
 (landseer + kafferinge.de, 28.01.2007)
 bases on the original version by InvalidResponse
