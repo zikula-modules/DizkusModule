@@ -38,7 +38,7 @@ automatisch mit einer Grafik ausgezeichnet werden. Dies verhindert diese Auszeic
 da sonst zuviele Icons angezeigt werden und das Ganze unübersichtlich wird.
 
 Unterstützt werden Deutsch und Englisch, weitere Sprachen können im Plugin hinzugefügt
-werden (siehe Kopf des Pluzgins). Neue Übersetzungen bitte an landseer@pn-cms.de senden,
+werden (siehe Kopf des Plugins). Neue Übersetzungen bitte an landseer@pn-cms.de senden,
 dann werden sie in die nächste Version aufgenommen.
 
 Weitere Änderungen im Plugin sind nicht notwendig.

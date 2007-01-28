@@ -1,21 +1,39 @@
 <?php
-/*
-
-Usage
-
-<!--[diggers ]-->
---> uses current url + sitename
-
-<!--[diggers title=$info.title]-->
---> uses current url and given title
-
-<!--[diggers title=$info.title url=$info.url]-->
---> uses given url and title
-
-Displays "diggers", links to news and bookmark services for specified article
-
-*/
-
+// $Id: pnadmin.php 156 2007-01-04 12:06:36Z landseer $
+// ----------------------------------------------------------------------
+// LICENSE
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License (GPL)
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// To read the license please visit http://www.gnu.org/copyleft/gpl.html
+// ----------------------------------------------------------------------
+// Author of file: Frank Schummertz
+// based on the work of InvalidResponse
+// Purpose of file: Displays "diggers", links to news and bookmark 
+//                  services for specified article
+// ----------------------------------------------------------------------
+//
+// Usage
+// 
+// <!--[diggers ]-->
+// --> uses current url + sitename
+// 
+// <!--[diggers title=$info.title]-->
+// --> uses current url and given title
+// 
+// <!--[diggers title=$info.title url=$info.url]-->
+// --> uses given url and title
+// 
+// 
+// 
 /** start of poor man's language file **/
 $lang = pnUserGetLang();
 switch($lang) {
