@@ -1,0 +1,70 @@
+Diggers Plugin 3.0
+------------------
+(landseer + kafferinge.de, 28.01.2007)
+basierend auf der Originalversion von InvalidResponse
+
+Mit diesem Plugin kann man auf jeder beliebigen Seite eine Reihe von Links
+anzeigen, um diese Seite einer ganzen Reihe von Social Bookmark-Seiten hinzu-
+zufügen.
+
+Neu hinzugekommen: 
+* Link zu mister-wong.de und technorati.com
+* generische Unterstützung aller Module ;-)
+* mehrsprachig
+
+Installation
+------------
+
+* Plugin kopieren nach themes/<theme-name>/plugins
+* Grafiken kopieren nach themes/<theme-name>/images/icons
+
+* Stylesheet ergänzen um:
+
+p.diggers {
+    margin-top: 1em; /* optional */
+	padding:5px;
+	background:#eee;
+	border:1px solid #ccc;
+}
+
+p.diggers a {
+    margin-left: 15px;
+    padding-left: 0 ! important;
+    background: none no-repeat bottom left ! important;
+}
+
+Letzteres ist nur dann notwendig, wenn mittels eines CSS3-Features externe Links 
+automatisch mit einer Grafik ausgezeichnet werden. Dies verhindert diese Auszeichnung,
+da sonst zuviele Icons angezeigt werden und das Ganze unübersichtlich wird.
+
+Unterstützt werden Deutsch und Englisch, weitere Sprachen können im Plugin hinzugefügt
+werden (siehe Kopf des Pluzgins). Neue Übersetzungen bitte an landseer@pn-cms.de senden,
+dann werden sie in die nächste Version aufgenommen.
+
+Weitere Änderungen im Plugin sind nicht notwendig.
+
+Templateänderungen:
+-------------------
+
+Möglich Formen des Pluginaufrufs sind:
+
+<p class="diggers"><!--[diggers ]--></p>
+
+--> verwendet die aktuelle URL und den in der Konfiguration hinterlegten Seitennamen
+
+<p class="diggers"><!--[diggers title=$title]--></p>
+
+--> verwendet die aktuelle URL und den angegebenen Titel, wahrscheinlich die beste Art, 
+    das Plugin zu verwenden
+
+<p class="diggers"><!--[diggers title=$title url=$url]--></p>
+
+--> verwendet angegebene URL und Titel
+
+Vorsicht: Bei der Verwendung des MultiHook im News-Modul kann es durch ausvorkommen, 
+das im Titel ($info.title) HTML-Tags enthalten sind. Diese sollten mit dem strip_tags
+Modifier entfernt werden:
+
+<p class="diggers"><!--[diggers title=$info.title|strip_tags]--></p>
+
+
