@@ -630,16 +630,58 @@ function quickEditsave_response(originalRequest)
 
 function createQuote(postid)
 {
-    var pars = "module=pnForum&type=ajax&func=preparequote&post=" + postid;
-    Ajax.Responders.register(pnf_globalhandlers);
-    var myAjax = new Ajax.Request(
-        "index.php",
-        {
-            method: 'post',
-            parameters: pars,
-            onComplete: createQuoteInit
-        });
+    // check if the user highlighted a text portion and quote this instead of loading the
+    // posting text from the server
+    var selection;
+    if( window.getSelection )
+    {
+        selection = window.getSelection();
+        if(selection) {
+            quotetext = selection+ '';
+            if(selection.anchorNode) {
+                this.parentObj = selection.anchorNode.parentNode;
+            }
+        }
+    }
+    // opera
+    else if( document.getSelection )
+    {
+        selection = document.getSelection();
+        if(selection) {
+            quotetext = selection;
+            this.parentObj = selection.parent;
+        }
+    }
+    // internet explorer
+    else if(document.selection.createRange) {
+        selection = document.selection.createRange();
+        if(selection) {
+            quotetext = selection.text;
+            this.parentObj = selection.parentElement();
+        }
+    }
+    quotetext.strip();
+    if(quotetext.length == 0) {
+        // read the messages text using ajax
+        var pars = "module=pnForum&type=ajax&func=preparequote&post=" + postid;
+        Ajax.Responders.register(pnf_globalhandlers);
+        var myAjax = new Ajax.Request(
+            "index.php",
+            {
+                method: 'post',
+                parameters: pars,
+                onComplete: createQuoteInit
+            });
+        return;
+    }
 
+    var oldvalue = $('message').value;
+    if(oldvalue.length != 0) {
+        oldvalue += '\n\n';
+    }
+    $('message').value = oldvalue + '[quote]' + quotetext  + '[/quote]\n';
+    Field.focus('message');
+    return;
 }
 
 function createQuoteInit(originalRequest)
