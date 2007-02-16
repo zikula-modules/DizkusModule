@@ -67,6 +67,7 @@ PostNuke pnForum Module changelog
 - fixed [#3121] Signatur nach Editieren bei Posting obwohl nicht aktiviert
 - added [#3494] Ability to call topic by post_id (credits to Arjen Tebbenhof)
 - fixed [#3599] blending probléme
+- fixed [#4089] Duplicate define
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

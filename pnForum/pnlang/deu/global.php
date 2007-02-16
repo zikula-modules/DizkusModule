@@ -53,7 +53,7 @@ define('_PNFORUM_SOURCEEQUALSTARGETFORUM', 'Fehler: Quell- und Zielforum sind id
 define('_PNFORUM_SOURCEEQUALSTARGETTOPIC', 'Fehler: Quell- und Zielthema sind identisch.');
 define('_PNFORUM_FOUNDIN', 'gefunden in');
 define('_PNFORUM_FORUM_SETTINGS','Foreneinstellungen');
-define('_PNFORUM_HOURS', 'Std.');
+define('_PNFORUM_HOURSSHORT', 'Std.');
 define('_PNFORUM_PREFS_TIMESPANFORCHANGES', 'Änderungen an Posts innerhalb von x Stunden zulassen');
 define('_PNFORUM_LATESTRSS', 'RSS');
 define('_PNFORUM_VIEWYOURPOSTS', 'meine Beiträge');

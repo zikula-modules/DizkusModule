@@ -54,7 +54,7 @@ define('_PNFORUM_SOURCEEQUALSTARGETFORUM', 'Error: Source forum must differ from
 define('_PNFORUM_SOURCEEQUALSTARGETTOPIC', 'Error: Source topic must differ from target topic.');
 define('_PNFORUM_FOUNDIN', 'found in');
 define('_PNFORUM_FORUM_SETTINGS','Personal settings per forum');
-define('_PNFORUM_HOURS', 'hrs');
+define('_PNFORUM_HOURSSHORT', 'hrs');
 define('_PNFORUM_PREFS_TIMESPANFORCHANGES', 'Allow changes in postings within x hours');
 define('_PNFORUM_LATESTRSS', 'RSS');
 define('_PNFORUM_VIEWYOURPOSTS', 'view your posts');
