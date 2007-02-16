@@ -1429,14 +1429,32 @@ a.normallink {
     cursor: move;
 }
 
-.pnf_textarea {
-    background-image: url(../pnimages/posthint.gif);
-    background-repeat: no-repeat;
-    background-position: top right;    
+/*
+ * show posthint depending oin users language
+ *
+ */
+.pnf_textarea_deu {
+    background: #efefef url(../pnimages/posthint_deu.gif) no-repeat top right;
 }
-.pnf_textarea:focus {
+.pnf_textarea_deu:focus {
     background-image: none;
 }
+
+.pnf_textarea_eng {
+    background: #efefef url(../pnimages/posthint_eng.gif) no-repeat top right;    
+}
+.pnf_textarea_eng:focus {
+    background-image: none;
+}
+
+.pnf_textarea_nld {
+    background: #efefef url(../pnimages/posthint_nld.gif) no-repeat top right;    
+}
+.pnf_textarea_nld:focus {
+    background-image: none;
+}
+
+
 
 .pnf_newcategory {
     width: 95%; 
