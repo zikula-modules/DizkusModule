@@ -68,6 +68,7 @@ PostNuke pnForum Module changelog
 - added [#3494] Ability to call topic by post_id (credits to Arjen Tebbenhof)
 - fixed [#3599] blending probléme
 - fixed [#4089] Duplicate define
+- fixed [#4156] searchAPI change to make Xanthia search-plugin function correctly
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)

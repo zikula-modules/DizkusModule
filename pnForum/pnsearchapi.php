@@ -114,7 +114,7 @@ function pnForum_searchapi_search($args)
     }
     if(!is_array($vars['forums']) || count($vars['forums'])== 0) {
         // set default
-        $vars['forums'][0] = '';
+        $vars['forums'][0] = -1;
     }
 
     if(empty($vars['order']) || ($vars['order']<>0 && $vars['order']<>1) ) {
