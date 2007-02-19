@@ -58,7 +58,7 @@ function pnForum_ajax_reply()
 
     pnSessionSetVar('pn_ajax_call', 'ajax');
     
-    $message = pnfstriptags(utf8_decode($message));
+    $message = pnfstriptags(pnf_convert_from_utf8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
@@ -121,7 +121,6 @@ function pnForum_ajax_preparequote()
                              array('post_id'     => $post_id,
                                    'quote'       => true,
                                    'reply_start' => true));
-        //$post['message'] = utf8_encode($post['message']);
         pnf_jsonizeoutput($post, false);
         exit;
     }
@@ -137,7 +136,6 @@ function pnForum_ajax_readpost()
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if($post['poster_data']['edit'] == true) {
-            //$post['post_rawtext'] = utf8_encode($post['post_rawtext']);
             pnf_jsonizeoutput($post, false);
             exit;
         } else {
@@ -193,8 +191,8 @@ function pnForum_ajax_updatepost()
         }
         pnModAPIFunc('pnForum', 'user', 'updatepost',
                      array('post_id'          => $post_id,
-                           'subject'          => utf8_decode($subject),
-                           'message'          => utf8_decode($message),
+                           'subject'          => pnf_convert_from_utf8($subject),
+                           'message'          => pnf_convert_from_utf8($message),
                            'delete'           => $delete,
                            'attach_signature' => ($attach_signature==1)));
         if($delete <> '1') {
@@ -239,7 +237,6 @@ function pnForum_ajax_lockunlocktopic()
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
     $newmode = ($mode=='lock') ? 'locked' : 'unlocked';
-//    pnf_jsonizeoutput(utf8_encode($newmode));
     pnf_jsonizeoutput($newmode);
     exit;
 }
@@ -270,7 +267,6 @@ function pnForum_ajax_stickyunstickytopic()
     pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic',
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
-//    pnf_jsonizeoutput(utf8_encode($mode));
     pnf_jsonizeoutput($mode);
     exit;
 }
@@ -314,7 +310,6 @@ function pnForum_ajax_subscribeunsubscribetopic()
 
 
     pnSessionDelVar('pn_ajax_call');
-//    pnf_jsonizeoutput(utf8_encode($newmode));
     pnf_jsonizeoutput($newmode);
     exit;
 }
@@ -454,16 +449,16 @@ function pnForum_ajax_updatetopicsubject()
             return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
         }
 
-        $subject = trim(utf8_decode($subject));
+
+        $subject = trim(pnf_convert_from_utf8($subject));
         if(empty($subject)) {
             pnf_ajaxerror(_PNFORUM_NOSUBJECT);
         }
 
         list($dbconn, $pntable) = pnfOpenDB();
 
-        $subject = pnVarPrepForStore(pnVarCensor($subject));
         $sql = "UPDATE ".$pntable['pnforum_topics']."
-                SET topic_title = '$subject'
+                SET topic_title = '" . pnVarPrepForStore($subject) . "'
                 WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -471,7 +466,6 @@ function pnForum_ajax_updatetopicsubject()
         // Let any hooks know that we have updated an item.
         pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
                                                           'topic_id' => $topic_id));
-
         pnf_jsonizeoutput(array('topic_title' => $subject,
                                 'topic_id' => $topic_id),
                           true);
@@ -529,7 +523,7 @@ function pnForum_ajax_newtopic()
     //$attach_signature = ($attach_signature=='1') ? true : false;
     //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
-    $message = pnfstriptags(utf8_decode($message));
+    $message = pnfstriptags(pnf_convert_from_utf8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
@@ -538,7 +532,7 @@ function pnForum_ajax_newtopic()
         pnf_ajaxerror(_PNFORUM_EMPTYMSG);
     }
 
-    $subject = utf8_decode($subject);
+    $subject = pnf_convert_from_utf8($subject);
     if(strlen($subject)==0) {
         pnf_ajaxerror(_PNFORUM_NOSUBJECT);
     }

@@ -1016,7 +1016,7 @@ function pnf_ajaxerror($error='unspecified ajax error')
 
 /**
  * pnf_convert_to_utf8()
- * converts a string or an array (recursivly) to utf-8
+ * converts a string or an array (recursivly) from CHARSET to utf-8
  *
  */
 function pnf_convert_to_utf8($input='')
@@ -1028,11 +1028,32 @@ function pnf_convert_to_utf8($input='')
         }
         return $return;
     } elseif(is_string($input)) {
-        return utf8_encode($input);
+        return mb_convert_encoding($input, 'UTF-8', _CHARSET);
     } else {
         return $input;
     }
 }
+
+/**
+ * pnf_convert_from_utf8()
+ * converts a string or an array (recursivly) from utf-8 to _CHARSET
+ *
+ */
+function pnf_convert_from_utf8($input='')
+{
+    if (is_array($input)) {
+        $return = array();
+        foreach($input as $key => $value) {
+            $return[$key] = pnf_convert_from_utf8($value);
+        }
+        return $return;
+    } elseif (is_string($input)) {
+        return mb_convert_encoding($input, _CHARSET, 'UTF-8');
+    } else {
+        return $input;
+    }
+}
+
 /**
  * encode data in JSON
  * This functions can add a new authid if requested to do so.

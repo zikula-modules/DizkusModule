@@ -813,7 +813,7 @@ function pnForum_admin_storecategory()
                                         'add',
                                         'delete');
 
-    $cat_title = utf8_decode($cat_title);
+    $cat_title = pnf_convert_from_utf8($cat_title);
     if(!empty($delete)) {
         $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
                                array('cat_id'    => $cat_id,
@@ -944,16 +944,16 @@ function pnForum_admin_storeforum()
         $pntopic = pnVarCleanFromInput('pntopic');
     }
 
-    $forum_name           = utf8_decode($forum_name);           
-    $desc                 = utf8_decode($desc);                 
-    $pop3_server          = utf8_decode($pop3_server);          
-    $pop3_login           = utf8_decode($pop3_login);           
-    $pop3_password        = utf8_decode($pop3_password);        
-    $pop3_passwordconfirm = utf8_decode($pop3_passwordconfirm); 
-    $pop3_matchstring     = utf8_decode($pop3_matchstring);     
-    $pnuser               = utf8_decode($pnuser);               
-    $pnpassword           = utf8_decode($pnpassword);           
-    $pnpasswordconfirm    = utf8_decode($pnpasswordconfirm);    
+    $forum_name           = pnf_convert_from_utf8($forum_name);           
+    $desc                 = pnf_convert_from_utf8($desc);                 
+    $pop3_server          = pnf_convert_from_utf8($pop3_server);          
+    $pop3_login           = pnf_convert_from_utf8($pop3_login);           
+    $pop3_password        = pnf_convert_from_utf8($pop3_password);        
+    $pop3_passwordconfirm = pnf_convert_from_utf8($pop3_passwordconfirm); 
+    $pop3_matchstring     = pnf_convert_from_utf8($pop3_matchstring);     
+    $pnuser               = pnf_convert_from_utf8($pnuser);               
+    $pnpassword           = pnf_convert_from_utf8($pnpassword);           
+    $pnpasswordconfirm    = pnf_convert_from_utf8($pnpasswordconfirm);    
 
     $pop3testresulthtml = '';
     if(!empty($delete)) {
