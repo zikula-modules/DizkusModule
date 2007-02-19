@@ -47,6 +47,7 @@ PostNuke pnForum Module changelog
 - fixed some html and validation issues, removed some more tables
 - fixed [#2490] wrong number of guests in online list
 - fixed [#2491] removal of topics doesn't remove the subscriptions
+- fixed [#4199] block templates call readlastposts plugin with only maxposts
 - added [#2492] admin option to remove subscriptions
 - fixed [#2557] no protection against posting many new threads
 - fixed [#2569] pnForum preferences always visible in user profile
