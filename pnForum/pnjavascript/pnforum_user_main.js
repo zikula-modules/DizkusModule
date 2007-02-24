@@ -26,11 +26,7 @@ Event.observe(window, 'load',
                                       function(cat)
                                       {
                                           if(cat.id == 'category_' + thiscat) {
-                                              if(Element.hasClassName(cat, 'hidden')) {
-                                                  Element.removeClassName(cat, 'hidden');
-                                              } else {
-                                                  Element.addClassName(cat, 'hidden');
-                                              }
+                                              cat.toggleClassName('hidden');
                                           } else {
                                               Element.addClassName(cat, 'hidden');
                                           }
@@ -49,4 +45,5 @@ Event.observe(window, 'load',
         Behaviour.apply();
     }, 
     false);
+
 
