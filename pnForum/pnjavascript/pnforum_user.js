@@ -323,17 +323,11 @@ function addremovefavorite_response(originalRequest)
     }
     var result = dejsonize(originalRequest.responseText);
 
-    switch(result.newmode) {
-        case 'added':
-            Element.hide('addfavoritebutton_' + result.forum_id);
-            Element.show('removefavoritebutton_' + result.forum_id);
-            break;
-        case 'removed':
-            Element.hide('removefavoritebutton_' + result.forum_id);
-            Element.show('addfavoritebutton_' + result.forum_id);
-            break;
-        default:
-             alert('wrong result from add/remove favorite');
+    if(['added', 'removed'].include(result.newmode)) {
+        $('addfavoritebutton_'  + result.forum_id).toggleClassName('hidden');
+        $('removefavoritebutton_'  + result.forum_id).toggleClassName('hidden');
+    } else {
+         alert('wrong result from add/remove favorite');
     }
 }
 
@@ -363,17 +357,11 @@ function subscribeunsubscribeforum_response(originalRequest)
     }
     var result = dejsonize(originalRequest.responseText);
 
-    switch(result.newmode) {
-        case 'subscribed':
-            Element.hide('subscribeforumbutton_' + result.forum_id);
-            Element.show('unsubscribeforumbutton_' + result.forum_id);
-            break;
-        case 'unsubscribed':
-            Element.hide('unsubscribeforumbutton_' + result.forum_id);
-            Element.show('subscribeforumbutton_' + result.forum_id);
-            break;
-        default:
-             alert('wrong result from subscribe/unsubscribe');
+    if(['subscribed', 'unsubscribed'].include(result.newmode)) {
+        $('subscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');
+        $('unsubscribeforumbutton_' + result.forum_id).toggleClassName('hidden');
+    } else {
+         alert('wrong result from subscribe/unsubscribe');
     }
 }
 
@@ -403,17 +391,11 @@ function subscribeunsubscribetopic_response(originalRequest)
     }
     var result = dejsonize(originalRequest.responseText);
 
-    switch(result.data) {
-        case 'subscribed':
-            Element.hide('subscribetopicbutton');
-            Element.show('unsubscribetopicbutton');
-            break;
-        case 'unsubscribed':
-            Element.hide('unsubscribetopicbutton');
-            Element.show('subscribetopicbutton');
-            break;
-        default:
-             alert('wrong result from subscribe/unsubscribe');
+    if(['subscribed', 'unsubscribed'].include(result.data)) {
+        $('subscribetopicbutton').toggleClassName('hidden');
+        $('unsubscribetopicbutton').toggleClassName('hidden');
+    } else {
+         alert('wrong result from subscribe/unsubscribe');
     }
 }
 
@@ -443,17 +425,11 @@ function stickyunstickytopic_response(originalRequest)
     }
     var result = dejsonize(originalRequest.responseText);
 
-    switch(result.data) {
-        case 'sticky':
-            Element.hide('stickytopicbutton');
-            Element.show('unstickytopicbutton');
-            break;
-        case 'unsticky':
-            Element.hide('unstickytopicbutton');
-            Element.show('stickytopicbutton');
-            break;
-        default:
-             alert('wrong result from sticky/unsticky');
+    if(['sticky', 'unsticky'].include(result.data)) {
+        $('stickytopicbutton').toggleClassName('hidden');
+        $('unstickytopicbutton').toggleClassName('hidden');
+    } else {
+         alert('wrong result from sticky/unsticky');
     }
 }
 
@@ -483,17 +459,11 @@ function lockunlocktopic_response(originalRequest)
     }
     var result = dejsonize(originalRequest.responseText);
 
-    switch(result.data) {
-        case 'locked':
-            Element.hide('locktopicbutton');
-            Element.show('unlocktopicbutton');
-            break;
-        case 'unlocked':
-            Element.hide('unlocktopicbutton');
-            Element.show('locktopicbutton');
-            break;
-        default:
-             alert('wrong result from lock/unlock');
+    if(['locked', 'unlocked'].include(result.data)) {
+        $('locktopicbutton').toggleClassName('hidden');
+        $('unlocktopicbutton').toggleClassName('hidden');
+    } else {
+         alert('wrong result from lock/unlock');
     }
 }
 
@@ -528,8 +498,8 @@ function quickEditInit(originalRequest)
     var postingtextID = 'postingtext_' + result.post_id;
     var postinguserID = 'posting_' + result.post_id + '_userinfo';
 
-    Element.hide(postingtextID);
-    Element.hide(postinguserID);
+    $(postingtextID).hide();
+    $(postinguserID).hide();
     updateAuthid(result.authid);
 
     new Insertion.After($(postingtextID), result.data);
@@ -555,9 +525,9 @@ function quickEditcancel(postid)
 {
     var postingtextID = 'postingtext_' + postid;
     var postinguserID = 'posting_' + postid + '_userinfo';
-    Element.show(postingtextID);
-    Element.show(postinguserID);
-    Element.remove(postingtextID + '_editor');
+    $(postingtextID).show();
+    $(postinguserID).show();
+    $(postingtextID + '_editor').remove();
     editstatus = false;
 }
 function quickEditsave(postid)
@@ -616,14 +586,13 @@ function quickEditsave_response(originalRequest)
     var postinguserID = postingobjID + '_userinfo';
     updateAuthid(result.authid);
 
-    Element.remove(postingtextID + '_editor');
+    $(postingtextID + '_editor').remove();
 
     if(result.action == 'deleted') {
-        Element.remove(postingobjID);
+        $(postingobjID).remove();
     } else {
-        Element.update(postingtextID, result.post_text);
-        Element.show(postingtextID);
-        Element.show(postinguserID);
+        $(postingtextID).update(result.post_text).show();
+        $(postinguserID).show();
     }
     editstatus = false;
 }
@@ -743,16 +712,11 @@ function createQuickReply_response(originalRequest)
 
     updateAuthid(result.authid);
 
-    // clear textarea
-    $('message').value = '';
-
-    // reset preview
-    Element.update('quickreplypreview', '&nbsp;');
-    Element.hide('quickreplypreview');
+    // clear textarea and reset preview
+    clearQuickReply()
 
     // show new posting
-    Element.update('quickreplyposting', result.data);
-    Element.show('quickreplyposting');
+    $('quickreplyposting').update(result.data).removeClassName('hidden');
 
     // prepare everything for another quick reply
     new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
@@ -804,15 +768,13 @@ function previewQuickReply_response(originalRequest)
     var result = dejsonize(originalRequest.responseText);
 
     updateAuthid(result.authid);
-    Element.update('quickreplypreview', result.data);
-    Element.show('quickreplypreview');
+    $('quickreplypreview').update(result.data).removeClassName('hidden');
     replystatus = false;
 }
 
 function clearQuickReply()
 {
     $('message').value = '';
-    Element.update('quickreplypreview', '&nbsp;');
-    Element.hide('quickreplypreview');
+    $('quickreplypreview').update('&nbsp;').addClassName('hidden');
     replystatus = false;
 }

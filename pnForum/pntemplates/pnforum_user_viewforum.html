@@ -51,14 +51,14 @@
 <!--[ /if ]-->
 
 <!--[ if $pncore.logged_in ]-->
-<a class="image subscribelink" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->" style="display:none;" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a> 
-<a class="image unsubscribelink" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->"style="display:none;" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a>
+<a class="image hidden subscribelink" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a> 
+<a class="image hidden unsubscribelink" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a>
 <script type="text/javascript">
     var is_subscribed = <!--[ $forum.is_subscribed ]-->;
     if(is_subscribed == 0) {
-        Element.show('subscribeforumbutton_' + <!--[ $forum.forum_id ]-->);
+        $('subscribeforumbutton_' + <!--[ $forum.forum_id ]-->).removeClassName('hidden');
     } else {
-        Element.show('unsubscribeforumbutton_' + <!--[ $forum.forum_id ]-->);
+        $('unsubscribeforumbutton_' + <!--[ $forum.forum_id ]-->).removeClassName('hidden');;
     }
 </script>
 <noscript>
@@ -70,14 +70,14 @@
 </noscript>
 
 <!--[ if $pncore.pnForum.favorites_enabled eq "yes" ]-->
-<a class="image addfavoritelink" id="addfavoritebutton_<!--[ $forum.forum_id ]-->" style="display:none;" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a>
-<a class="image removefavoritelink" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" style="display:none;" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a>
+<a class="image hidden addfavoritelink" id="addfavoritebutton_<!--[ $forum.forum_id ]-->"  onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a>
+<a class="image hidden removefavoritelink" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a>
 <script type="text/javascript">
     var is_favorite = <!--[ $forum.is_favorite ]-->;
     if(is_favorite == 0) {
-        Element.show('addfavoritebutton_' + <!--[ $forum.forum_id ]-->);
+        $('addfavoritebutton_' + <!--[ $forum.forum_id ]-->).removeClassName('hidden');;
     } else {
-        Element.show('removefavoritebutton_' + <!--[ $forum.forum_id ]-->);
+        $('removefavoritebutton_' + <!--[ $forum.forum_id ]-->).removeClassName('hidden');;
     }
 </script>
 <noscript>

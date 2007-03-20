@@ -23,8 +23,8 @@
         <!--[ printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id ]-->
         
         <!--[ if $pncore.logged_in ]-->
-        <a id="subscribetopicbutton" class="image subscribetopiclink" style="display: none;" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a>
-        <a id="unsubscribetopicbutton" class="image unsubscribetopiclink" style="display: none;" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]--></a>
+        <a id="subscribetopicbutton" class="image hidden subscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a>
+        <a id="unsubscribetopicbutton" class="image hidden unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_TOPIC' ]--></a>
         <noscript>
             <!--[ if $topic.is_subscribed == 0 ]-->
                 <a class="image subscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a>
@@ -40,8 +40,8 @@
 
     <!--[ if $topic.access_moderate eq 1 ]-->
     <div id="pnf_moderatetopicoptions">
-        <a style="display: none;" id="locktopicbutton" class="image locktopiclink" title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_PNFORUM_LOCKTOPIC' ]--></a>
-        <a style="display: none;" id="unlocktopicbutton" class="image unlocktopiclink" title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]--></a>
+        <a id="locktopicbutton" class="image hidden locktopiclink" title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_PNFORUM_LOCKTOPIC' ]--></a>
+        <a id="unlocktopicbutton" class="image hidden unlocktopiclink" title="<!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_PNFORUM_UNLOCKTOPIC' ]--></a>
         <noscript>
             <!--[ if $topic.topic_status eq 0 ]-->
                 <a class="image locktopiclink" title="<!--[ pnml name='_PNFORUM_LOCKTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=lock topic=$topic.topic_id ]-->"><!--[ pnml name="_PNFORUM_LOCKTOPIC" ]--></a>
@@ -50,8 +50,8 @@
             <!--[ /if ]-->
         </noscript>
     
-        <a class="image stickytopiclink" style="display: none;" id="stickytopicbutton" title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'sticky')"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a>
-        <a class="image unstickytopiclink" style="display: none;" id="unstickytopicbutton" title="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'unsticky')"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></a>
+        <a class="image hidden stickytopiclink" id="stickytopicbutton" title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'sticky')"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a>
+        <a class="image hidden unstickytopiclink" id="unstickytopicbutton" title="<!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'unsticky')"><!--[ pnml name='_PNFORUM_UNSTICKYTOPIC' ]--></a>
         <noscript>
             <!--[ if $topic.sticky eq 0 ]-->
                 <a class="image stickytopiclink" title="<!--[ pnml name='_PNFORUM_STICKYTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=topicadmin mode=sticky topic=$topic.topic_id ]-->"><!--[ pnml name='_PNFORUM_STICKYTOPIC' ]--></a>
@@ -120,7 +120,7 @@
             <!--[ include file="pnforum_user_singlepost.html" ]-->
         </li>
         <!--[ /foreach ]-->
-        <li id="quickreplyposting" style="display: none;">
+        <li id="quickreplyposting" class="hidden">
             
         </li>
     </ul>
@@ -156,7 +156,7 @@ end of unused code **** *]-->
     <fieldset class="pnf_bordercolor2 pnf_bgcolor3" >
         <legend><!--[ pnml name='_PNFORUM_QUICKREPLY' ]--></legend>
         <div>
-            <div id="quickreplypreview" style="display: none;">&nbsp;</div>
+            <div id="quickreplypreview" class="hidden">&nbsp;</div>
             <div id="pnforuminformation">&nbsp;</div>
             <textarea class="pnf_textarea_<!--[ pnusergetlang]-->" id="message" name="message"></textarea>
             <!--[ if $pncore.pnForum.striptags == 'yes' ]-->
@@ -178,7 +178,7 @@ end of unused code **** *]-->
                             <label for="subscribe_topic"><!--[ pnml name='_PNFORUM_NOTIFYME' ]--></label>
                         </li>
                         <!--[ /if ]-->
-                        <li id="quickreplybuttons" style="display: none;">
+                        <li id="quickreplybuttons" class="hidden">
                             <button class="image ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[ pnml name='_PNFORUM_SUBMIT' ]-->">
                             <!--[ pnml name='_PNFORUM_SUBMIT' ]-->
                             </button>
@@ -234,33 +234,33 @@ end of unused code **** *]-->
     <!--[ if $topic.access_moderate eq true ]-->
     var topic_sticky = <!--[ $topic.sticky ]-->;
     if(topic_sticky == 0) {
-        Element.show('stickytopicbutton');
+        $('stickytopicbutton').removeClassName('hidden');
     } else {
-        Element.show('unstickytopicbutton');
+        $('unstickytopicbutton').removeClassName('hidden');
     }
 
     var topic_status = <!--[ $topic.topic_status ]-->;
     if(topic_status == 0) {
-        Element.show('locktopicbutton');
+        $('locktopicbutton').removeClassName('hidden');
     } else {
-        Element.show('unlocktopicbutton');
+        $('unlocktopicbutton').removeClassName('hidden');
     }
     <!--[ /if ]-->
     
     if($('subscribetopicbutton') && $('unsubscribetopicbutton')) {
         var is_subscribed = <!--[ $topic.is_subscribed ]-->;
         if(is_subscribed == 0) {
-            Element.show('subscribetopicbutton');
+            $('subscribetopicbutton').removeClassName('hidden');
         } else {
-            Element.show('unsubscribetopicbutton');
+            $('unsubscribetopicbutton').removeClassName('hidden');
         }
     }
     
     
     if($('pnf_quickreply')) {
         Resizable.initialize("message");
-        Element.show($('quickreplybuttons'));
-        Element.hide($('nonajaxquickreplybuttons'));
+        $('quickreplybuttons').removeClassName('hidden');
+        $('nonajaxquickreplybuttons').addClassName('hidden');
         $('quickreplyform').action = '';
     }
 </script>
