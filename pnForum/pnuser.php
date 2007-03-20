@@ -252,7 +252,7 @@ function pnForum_user_reply($args=array())
 
     $message = pnfstriptags($message);
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
@@ -338,7 +338,7 @@ function pnForum_user_newtopic($args=array())
 
     $message = pnfstriptags($message);
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
@@ -440,7 +440,7 @@ function pnForum_user_editpost($args=array())
 
     $message = pnfstriptags($message);
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
