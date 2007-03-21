@@ -43,6 +43,10 @@
 
 include_once('modules/pnForum/common.php');
 
+/**
+ * reply
+ *
+ */
 function pnForum_ajax_reply()
 {
     list($topic_id,
@@ -60,7 +64,7 @@ function pnForum_ajax_reply()
     
     $message = pnfstriptags(pnf_convert_from_utf8($message));
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
     }
 
@@ -111,6 +115,10 @@ function pnForum_ajax_reply()
     exit;
 }
 
+/**
+ * preparequote
+ *
+ */
 function pnForum_ajax_preparequote()
 {
     $post_id = pnVarCleanFromInput('post');
@@ -127,6 +135,10 @@ function pnForum_ajax_preparequote()
     pnf_ajaxerror('internal error: no post id in pnForum_ajax_preparequote()');
 }
 
+/**
+ * readpost
+ *
+ */
 function pnForum_ajax_readpost()
 {
     $post_id = pnVarCleanFromInput('post');
@@ -145,6 +157,10 @@ function pnForum_ajax_readpost()
     pnf_ajaxerror('internal error: no post id in pnForum_ajax_readpost()');
 }
 
+/**
+ * editpost
+ *
+ */
 function pnForum_ajax_editpost()
 {
     $post_id = pnVarCleanFromInput('post');
@@ -173,6 +189,10 @@ function pnForum_ajax_editpost()
 
 }
 
+/**
+ * updatepost
+ *
+ */
 function pnForum_ajax_updatepost()
 {
     list($post_id,
@@ -189,10 +209,16 @@ function pnForum_ajax_updatepost()
         if (!pnSecConfirmAuthKey()) {
             pnf_ajaxerror(_BADAUTHKEY);
         }
+ 
+        $message = pnfstriptags(pnf_convert_from_utf8($message));
+        // check for maximum message size
+        if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
+            pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
+        }
         pnModAPIFunc('pnForum', 'user', 'updatepost',
                      array('post_id'          => $post_id,
                            'subject'          => pnf_convert_from_utf8($subject),
-                           'message'          => pnf_convert_from_utf8($message),
+                           'message'          => $message,
                            'delete'           => $delete,
                            'attach_signature' => ($attach_signature==1)));
         if($delete <> '1') {
@@ -210,6 +236,10 @@ function pnForum_ajax_updatepost()
 
 }
 
+/**
+ * lockunlocktopic
+ *
+ */
 function pnForum_ajax_lockunlocktopic()
 {
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
@@ -241,6 +271,10 @@ function pnForum_ajax_lockunlocktopic()
     exit;
 }
 
+/**
+ * stickyunstickytopic
+ *
+ */
 function pnForum_ajax_stickyunstickytopic()
 {
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
@@ -271,6 +305,10 @@ function pnForum_ajax_stickyunstickytopic()
     exit;
 }
 
+/**
+ * subscribeunsubscribetopic
+ *
+ */
 function pnForum_ajax_subscribeunsubscribetopic()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -314,6 +352,10 @@ function pnForum_ajax_subscribeunsubscribetopic()
     exit;
 }
 
+/**
+ * subscribeunsubscribeforum
+ *
+ */
 function pnForum_ajax_subscribeunsubscribeforum()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -358,6 +400,10 @@ function pnForum_ajax_subscribeunsubscribeforum()
     exit;
 }
 
+/**
+ * addremovefavorite
+ *
+ */
 function pnForum_ajax_addremovefavorite()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -404,6 +450,10 @@ function pnForum_ajax_addremovefavorite()
     exit;
 }
 
+/**
+ * edittopicsubject
+ *
+ */
 function pnForum_ajax_edittopicsubject()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -429,6 +479,10 @@ function pnForum_ajax_edittopicsubject()
     pnf_ajaxerror('internal error: no topic id in pnForum_ajax_readtopic()');
 }
 
+/**
+ * updatetopicsubject
+ *
+ */
 function pnForum_ajax_updatetopicsubject()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -466,7 +520,7 @@ function pnForum_ajax_updatetopicsubject()
         // Let any hooks know that we have updated an item.
         pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
                                                           'topic_id' => $topic_id));
-        pnf_jsonizeoutput(array('topic_title' => $subject,
+        pnf_jsonizeoutput(array('topic_title' => pnVarPrepForDisplay($subject),
                                 'topic_id' => $topic_id),
                           true);
 
@@ -474,6 +528,10 @@ function pnForum_ajax_updatetopicsubject()
     pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()');
 }
 
+/**
+ * changesortorder
+ *
+ */
 function pnForum_ajax_changesortorder()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -492,6 +550,10 @@ function pnForum_ajax_changesortorder()
     exit;
 }
 
+/**
+ * newtopic
+ *
+ */
 function pnForum_ajax_newtopic()
 {
     pnSessionSetVar('pn_ajax_call', 'ajax');
@@ -525,7 +587,7 @@ function pnForum_ajax_newtopic()
 
     $message = pnfstriptags(pnf_convert_from_utf8($message));
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 66535  ) {
+    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
     }
     if(strlen($message)==0) {
@@ -612,4 +674,43 @@ function pnForum_ajax_newtopic()
                       true);
 }
 
+/**
+ * forumusers
+ * update the "users online" section in the footer
+ * original version by gf
+ *
+ */
+function pnForum_ajax_forumusers ()
+{
+    $pnRender = new pnRender('pnForum');
+    $pnRender->caching = false;
+    if(is_dot8()) {
+        Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
+    } else {
+        include_once 'modules/Xanthia/plugins/outputfilter.shorturls.php';
+    }
+    $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
+    $pnRender->display('pnforum_ajax_forumusers.html');
+    exit;
+}
+
+/**
+ * newposts
+ * update the "new posts" block
+ * original version by gf
+ *
+ */
+function pnForum_ajax_newposts ()
+{
+    $pnRender = new pnRender('pnForum');
+    $pnRender->caching = false;
+    if(is_dot8()) {
+        Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
+    } else {
+        include_once 'modules/Xanthia/plugins/outputfilter.shorturls.php';
+    }
+    $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
+    $pnRender->display('pnforum_ajax_newposts.html');
+    exit;
+}
 ?>
