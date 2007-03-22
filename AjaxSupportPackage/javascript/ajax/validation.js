@@ -1,24 +1,70 @@
 /*
- * Really easy field validation with Prototype
- * http://tetlaw.id.au/view/blog/really-easy-field-validation-with-prototype
- * Andrew Tetlaw
- * Version 1.5.3 (2006-07-15)
- * 
- * Copyright (c) 2006 Andrew Tetlaw
- * http://www.opensource.org/licenses/mit-license.php
- */
-Validator = Class.create();
+* Really easy field validation with Prototype
+* http://tetlaw.id.au/view/javascript/really-easy-field-validation
+* Andrew Tetlaw
+* Version 1.5.4.1 (2007-01-05)
+* 
+* Copyright (c) 2007 Andrew Tetlaw
+* Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without
+* restriction, including without limitation the rights to use, copy,
+* modify, merge, publish, distribute, sublicense, and/or sell copies
+* of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+* BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+* ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* 
+*/
+var Validator = Class.create();
 
 Validator.prototype = {
 	initialize : function(className, error, test, options) {
-		this.options = Object.extend({}, options || {});
-		this._test = test ? test : function(v,elm){ return true };
-		this.error = error ? error : 'Validation failed.';
+		if(typeof test == 'function'){
+			this.options = $H(options);
+			this._test = test;
+		} else {
+			this.options = $H(test);
+			this._test = function(){return true};
+		}
+		this.error = error || 'Validation failed.';
 		this.className = className;
 	},
 	test : function(v, elm) {
-		return this._test(v,elm);
+		return (this._test(v,elm) && this.options.all(function(p){
+			return Validator.methods[p.key] ? Validator.methods[p.key](v,elm,p.value) : true;
+		}));
 	}
+}
+Validator.methods = {
+	pattern : function(v,elm,opt) {return Validation.get('IsEmpty').test(v) || opt.test(v)},
+	minLength : function(v,elm,opt) {return v.length >= opt},
+	maxLength : function(v,elm,opt) {return v.length <= opt},
+	min : function(v,elm,opt) {return v >= parseFloat(opt)}, 
+	max : function(v,elm,opt) {return v <= parseFloat(opt)},
+	notOneOf : function(v,elm,opt) {return $A(opt).all(function(value) {
+		return v != value;
+	})},
+	oneOf : function(v,elm,opt) {return $A(opt).any(function(value) {
+		return v == value;
+	})},
+	is : function(v,elm,opt) {return v == opt},
+	isNot : function(v,elm,opt) {return v != opt},
+	equalToField : function(v,elm,opt) {return v == $F(opt)},
+	notEqualToField : function(v,elm,opt) {return v != $F(opt)},
+	include : function(v,elm,opt) {return $A(opt).all(function(value) {
+		return Validation.get(value).test(v,elm);
+	})}
 }
 
 var Validation = Class.create();
@@ -84,10 +130,11 @@ Object.extend(Validation, {
 	test : function(name, elm, useTitle) {
 		var v = Validation.get(name);
 		var prop = '__advice'+name.camelize();
+		try {
 		if(Validation.isVisible(elm) && !v.test($F(elm), elm)) {
 			if(!elm[prop]) {
 				var advice = Validation.getAdvice(name, elm);
-				if(typeof advice == 'undefined') {
+				if(advice == null) {
 					var errorMsg = useTitle ? ((elm && elm.title) ? elm.title : v.error) : v.error;
 					advice = '<div class="validation-advice" id="advice-' + name + '-' + Validation.getElmID(elm) +'" style="display:none">' + errorMsg + '</div>'
 					switch (elm.type.toLowerCase()) {
@@ -103,7 +150,7 @@ Object.extend(Validation, {
 						default:
 							new Insertion.After(elm, advice);
 				    }
-					advice = $('advice-' + name + '-' + Validation.getElmID(elm));
+					advice = Validation.getAdvice(name, elm);
 				}
 				if(typeof Effect == 'undefined') {
 					advice.style.display = 'block';
@@ -117,11 +164,14 @@ Object.extend(Validation, {
 			return false;
 		} else {
 			var advice = Validation.getAdvice(name, elm);
-			if(typeof advice != 'undefined') advice.hide();
+			if(advice != null) advice.hide();
 			elm[prop] = '';
 			elm.removeClassName('validation-failed');
 			elm.addClassName('validation-passed');
 			return true;
+		}
+		} catch(e) {
+			throw(e)
 		}
 	},
 	isVisible : function(elm) {
@@ -132,10 +182,7 @@ Object.extend(Validation, {
 		return true;
 	},
 	getAdvice : function(name, elm) {
-		return Try.these(
-			function(){ return $('advice-' + name + '-' + Validation.getElmID(elm)) },
-			function(){ return $('advice-' + Validation.getElmID(elm)) }
-		);
+		return $('advice-' + name + '-' + Validation.getElmID(elm)) || $('advice-' + Validation.getElmID(elm));
 	},
 	getElmID : function(elm) {
 		return elm.id ? elm.id : elm.name;
@@ -167,9 +214,11 @@ Object.extend(Validation, {
 		Object.extend(Validation.methods, nv);
 	},
 	get : function(name) {
-		return  Validation.methods[name] ? Validation.methods[name] : new Validator();
+		return  Validation.methods[name] ? Validation.methods[name] : Validation.methods['_LikeNoIDIEverSaw_'];
 	},
-	methods : {}
+	methods : {
+		'_LikeNoIDIEverSaw_' : new Validator('_LikeNoIDIEverSaw_','',{})
+	}
 });
 
 Validation.add('IsEmpty', '', function(v) {
@@ -217,6 +266,9 @@ Validation.addAllThese([
 				// [$]0.##
 				// [$].##
 				return Validation.get('IsEmpty').test(v) ||  /^\$?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(v)
+			}],
+	['validate-selection', 'Please make a selection', function(v,elm){
+				return elm.options ? elm.selectedIndex > 0 : !Validation.get('IsEmpty').test(v);
 			}],
 	['validate-one-required', 'Please select one of the above options.', function (v,elm) {
 				var p = elm.parentNode;
