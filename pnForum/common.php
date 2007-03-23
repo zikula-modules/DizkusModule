@@ -345,7 +345,11 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
+        if(is_dot8()) {
+            $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
+        } else {
+            $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);
+        }
     }
     $result =& $dbconn->Execute($sql);
     $dbconn->debug = false;
