@@ -1091,7 +1091,7 @@ ul#pnf_onlinelist {
 }
 
 ul#pnf_onlinelist li {
-    font-size: 90%;
+    font-size: 85%;
     display: inline;
     color: black;
 }
@@ -1099,8 +1099,8 @@ ul#pnf_onlinelist li {
 #pnf_footer p.onlinehint {
     clear: left; 
     margin: 0;
-    padding: 1em 0 1em 2px;    
-    font-size: 90%;
+    padding: 1em 0 2px 2px;    
+    font-size: 85%;
 }
 
 #pnf_footer_line {
