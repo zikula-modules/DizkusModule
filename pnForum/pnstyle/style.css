@@ -450,6 +450,17 @@ ul#pnf_forumlegend {
  pnforum_user_viewtopic.html
 *****************************/
 
+div#pnf_javascriptareatopic,
+div#pnf_nonjavascriptareatopic {
+}
+
+ul.pnf_topicoptions {
+    /* wrapper */
+}
+ul.pnf_topicoptions li {
+    display: inline;
+}
+
 div#pnf_moderatetopicoptions {
     margin: 0.5em 0;
 }
