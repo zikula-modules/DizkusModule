@@ -121,30 +121,48 @@ Template for single postings
 
         <!--[ if $preview neq true ]-->
             <div class="postingfooterright">
-                <!--[ if $post.poster_data.moderate eq true]-->
-                    <!--[ if ($num neq 0) or ($topic.start neq 0)  ]-->
-                        <a class="image movepostlink" title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_MOVEPOSTSHORT' ]--></a>
-                        <a class="image splittopiclink" title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_SPLITSHORT' ]--></a>
+                <ul class="javascriptpostingoptions hidden">
+                    <!--[ if $post.poster_data.moderate eq true]-->
+                        <!--[ if ($num neq 0) or ($topic.start neq 0)  ]-->
+                        <li><a class="image movepostlink" title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_MOVEPOSTSHORT' ]--></a></li>
+                        <li><a class="image splittopiclink" title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_SPLITSHORT' ]--></a></li>
+                        <!--[ /if ]-->
                     <!--[ /if ]-->
-                <!--[ /if ]-->
-        
-                <!--[ if $topic.topic_status neq 1 ]-->
-                    <!--[ if $post.poster_data.reply eq true]-->
-                        <a style="display:none;" class="image quotepostlink" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
-                        <noscript>
-                        <a class="image quotepostlink" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a>
-                        </noscript>
+                    
+                    <!--[ if $topic.topic_status neq 1 ]-->
+                        <!--[ if $post.poster_data.reply eq true]-->
+                        <li><a class="image quotepostlink" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a></li>
+                        <!--[ /if ]-->
+                        <!--[ if $post.poster_data.edit eq 1 ]-->
+                        <li><a class="image editpostlink" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a></li>
+                        <!--[ /if ]-->
+                    <!--[ else ]-->
+                        <!--[ pnimg src=icon_locked.gif alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
                     <!--[ /if ]-->
-                    <!--[ if $post.poster_data.edit eq 1 ]-->
-                        <a style="display:none;" class="image editpostlink" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
-                        <noscript>
-                        <a class="image editpostlink" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a>
-                        </noscript>
+                    <li><a class="image notifymoderatorlink" href="<!--[ pnmodurl modname=pnForum type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnml name='_PNFORUM_NOTIFYMODERATOR' ]--></a></li>
+                </ul>
+                <noscript>
+                    <ul class="nonjavascriptpostingoptions">
+                    <!--[ if $post.poster_data.moderate eq true]-->
+                        <!--[ if ($num neq 0) or ($topic.start neq 0)  ]-->
+                        <li><a class="image movepostlink" title="<!--[ pnml name='_PNFORUM_MOVEPOST' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_MOVEPOSTSHORT' ]--></a></li>
+                        <li><a class="image splittopiclink" title="<!--[ pnml name='_PNFORUM_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=splittopic post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_SPLITSHORT' ]--></a></li>
+                        <!--[ /if ]-->
                     <!--[ /if ]-->
-                <!--[ else ]-->
-                    <!--[ pnimg src=icon_locked.gif alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
-                <!--[ /if ]-->
-                <a class="image notifymoderatorlink" href="<!--[ pnmodurl modname=pnForum type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnml name='_PNFORUM_NOTIFYMODERATOR' ]--></a>
+                
+                    <!--[ if $topic.topic_status neq 1 ]-->
+                        <!--[ if $post.poster_data.reply eq true]-->
+                        <li><a class="image quotepostlink" title="<!--[ pnml name='_PNFORUM_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=reply post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_REPLYQUOTE' ]--></a></li>
+                        <!--[ /if ]-->
+                        <!--[ if $post.poster_data.edit eq 1 ]-->
+                        <li><a class="image editpostlink" title="<!--[ pnml name='_PNFORUM_EDITDELETE' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=editpost post=$post.post_id ]-->"><!--[ pnml name='_PNFORUM_EDITSHORT' ]--></a></li>
+                        <!--[ /if ]-->
+                    <!--[ else ]-->
+                        <!--[ pnimg src=icon_locked.gif alt="_PNFORUM_TOPICLOCKED" altml=true ]-->
+                    <!--[ /if ]-->
+                        <li><a class="image notifymoderatorlink" href="<!--[ pnmodurl modname=pnForum type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_PNFORUM_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnml name='_PNFORUM_NOTIFYMODERATOR' ]--></a></li>
+                    </ul>
+                </noscript>
             </div>
         <!--[ /if ]-->
     </div>

@@ -553,7 +553,7 @@ div#pnf_viewforum {
 
 ul#pnf_breadcrumbs,
 ul#pnf_moderatorlist {
-    padding-bottom: 1em;
+    padding-bottom: 1em ! important;
 }
 
 ul#pnf_breadcrumbs li {
@@ -1285,6 +1285,16 @@ div.rankuser-alphanav {
 /*******************************
  * pnforum_user_singlepost.html
  *******************************/
+
+ul.nonjavascriptpostingoptions,
+ul.javascriptpostingoptions {
+    padding-top: 5px ! important;
+}
+
+ul.nonjavascriptpostingoptions li,
+ul.javascriptpostingoptions li {
+    display: inline;
+}
 
 .posting {
     margin: 5px 0 10px 0; 
