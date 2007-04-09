@@ -1120,11 +1120,15 @@ ul#pnf_onlinelist li {
 /* do not delete */
 }
 
-div#latestposts .optionline {
+div#latestposts ul {
     font-size: 1em;
     height: 1.8em;
     padding-top: 0.4em;
     text-align: center; 
+}
+
+div#latestposts ul li {
+    display: inline;
 }
 
 div#latestposts table col.col_forum {
