@@ -540,26 +540,23 @@ div#pnf_viewforum {
     margin: 2em 0;
 }
 
-div#pnf_breadcrumbs, div#pnf_moderatorlist {
-    margin-bottom: 1em;
+ul#pnf_breadcrumbs,
+ul#pnf_moderatorlist {
+    padding-bottom: 1em;
 }
 
-div#pnf_breadcrumbs ul, div#pnf_moderatorlist ul {
-    float: left;
-}
-
-div#pnf_breadcrumbs li {
+ul#pnf_breadcrumbs li {
     font-size: 140%;
     font-weight: bold;
-    float: left;
+    display: inline;
 }
 
-div#pnf_moderatorlist li {
-    float: left;
+ul#pnf_moderatorlist li {
+    display: inline;
 }
 
-div#pnf_moderatorlist li span {
-    margin-right: 1em;
+ul#pnf_moderatorlist li.intro {
+    padding-right: 1em;
 }
 
 div#pnf_forumdescription {

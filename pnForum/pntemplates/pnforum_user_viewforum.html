@@ -7,30 +7,26 @@
 <div id="pnf_viewforum">  
   
 <!--[* start of breadcrumbs *]-->
-<div id="pnf_breadcrumbs" class="pnf_clearfix">
-    <ul>
-        <li>
-            <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
-        </li>
-        <li>
-            <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
-        </li>
-        <li>
-            <!--[ $forum.forum_name|pnvarprepfordisplay ]-->
-        </li>
-    </ul>
-</div>
+<ul id="pnf_breadcrumbs">
+    <li>
+        <a title="<!--[ pnml name='_PNFORUM_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+    </li>
+    <li>
+        <a title="<!--[ pnml name='_PNFORUM_GOTO_CAT' ]--> <!--[ $forum.cat_title|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=main viewcat=$forum.cat_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--></a><!--[ pnml name='_PNFORUM_SEPARATOR' html=1 ]-->
+    </li>
+    <li>
+        <!--[ $forum.forum_name|pnvarprepfordisplay ]-->
+    </li>
+</ul>
 <!--[* end of breadcrumbs *]-->
 
 <!--[ if $forum.forum_mods|@count > 0 ]-->
-<div id="pnf_moderatorlist" class="pnf_clearfix">
-    <ul>
-        <li><span><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</span></li>
-        <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
-        <li><!--[$mod|profilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
-        <!--[ /foreach ]-->
-    </ul>
-</div>
+<ul id="pnf_moderatorlist">
+    <li class="intro"><!--[ pnml name='_PNFORUM_MODERATEDBY' ]-->:</li>
+    <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
+    <li><!--[$mod|profilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
+    <!--[ /foreach ]-->
+</ul>
 <!--[ /if ]-->
 
 <!--[ if $forum.forum_desc <> "" ]-->
