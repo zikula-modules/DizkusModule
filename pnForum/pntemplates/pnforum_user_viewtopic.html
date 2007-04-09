@@ -62,10 +62,12 @@
         
         <li><!--[ printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id ]--></li>
 
-        <!--[ if $topic.is_subscribed == 0 ]-->
-        <li><a class="image subscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></li>
-        <!--[ else ]-->
-        <li><a class="image unsubscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></li>
+        <!--[ if $pncore.logged_in ]-->
+            <!--[ if $topic.is_subscribed == 0 ]-->
+            <li><a class="image subscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></li>
+            <!--[ else ]-->
+            <li><a class="image unsubscribetopiclink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_TOPIC' ]--></a></li>
+            <!--[ /if ]-->
         <!--[ /if ]-->
 
         <!--[ if $topic.topic_id neq $topic.next_topic_id ]-->
