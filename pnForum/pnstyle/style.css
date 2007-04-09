@@ -815,6 +815,18 @@ pnforum_admin tr td {
 }
 
 /*******************************
+ * pnforum_user_header.html
+ *******************************/
+
+ul#pnf_headeroptions {
+    /* wrapper */
+}
+
+ul#pnf_headeroptions li {
+    display: inline;
+}
+
+/*******************************
  * pnforum_admin_header.html
  *******************************/
 
