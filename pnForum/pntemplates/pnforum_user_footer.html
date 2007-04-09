@@ -6,31 +6,32 @@
 <!--[ pnconfiggetvar name='secinactivemins' assign=mins ]-->
 
 <div id="pnf_footer" class="pnf_bgcolor3 pnf_bordercolor2 pnf_clearfix">
-    <p class="onlinetop pnf_bgcolor3">
+    <p class="onlinetop">
         <!--[ pnml name='_PNFORUM_USERSONLINE' ]-->:
     </p>
-    <div id="pnf_onlinelist">
+    <ul id="pnf_onlinelist">
         <!--[ if $online.numusers > 0]-->
-            <ul>
-                <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
-                <li>
-                    <!--[ if $user.admin == '1' ]--><!--[ $user.uname|profilelink:"pnfadminuser"]--><!--[ else ]--><!--[ $user.uname|profilelink:"pnfnoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
-                </li>
-                <!--[ /foreach ]-->
-            </ul>
-            <!--[ if $online.numguests > 0 ]-->
-                &nbsp;<!--[ pnml name='_PNFORUM_AND' ]-->&nbsp;
+            <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
+            <li>
+                <!--[ if $user.admin == '1' ]--><!--[ $user.uname|profilelink:"pnfadminuser"]--><!--[ else ]--><!--[ $user.uname|profilelink:"pnfnoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
+            </li>
+            <!--[ /foreach ]-->
+            <!--[ if $online.numguests > 0 or $anonsessions == 1 ]-->
+            <li><!--[ pnml name='_PNFORUM_AND' ]--></li>
             <!--[ /if ]-->
         <!--[ /if ]-->
+    
         <!--[ if $anonsessions == 1 ]-->
-        <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
+        <li>
+            <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
+        </li>
         <!--[ /if ]-->
-        <p>
-            <!--[ pnml name='_PNFORUM_BASEDONLASTXMINUTES' m=$mins ]-->
-        </p>
-    </div>
+    </ul>
+    <p class="onlinehint">
+        <!--[ pnml name='_PNFORUM_BASEDONLASTXMINUTES' m=$mins ]-->
+    </p>
 </div>
-<p id="pnf_footer_line" class="pnf_clearfix">
+<p id="pnf_footer_line"">
     <!--[ pnml name='_PNFORUM_POWEREDBY' html=1 ]-->&nbsp;<!--[pnmodgetinfo modname=pnForum info=version ]-->
 </p>
 

@@ -1086,28 +1086,26 @@ div#replyposting {
     font-weight: bold;
 }
 
-#pnf_onlinelist {
-    margin: 2px; 
-    float: left;
+ul#pnf_onlinelist {
+    margin: 2px ! important; 
 }
 
-#pnf_onlinelist ul li {
-    margin-left: 0.8em; 
-    font-size: 85%;
-    float: left;
+ul#pnf_onlinelist li {
+    font-size: 90%;
+    display: inline;
     color: black;
 }
 
-#pnf_onlinelist p {
+#pnf_footer p.onlinehint {
     clear: left; 
     margin: 0;
-    padding: 1em 0 0 0;    
-    font-size: 80%;
+    padding: 1em 0 1em 2px;    
+    font-size: 90%;
 }
 
 #pnf_footer_line {
-    float: left; 
-    margin: 1em 0 1em 0; 
+    /* float: left; */ 
+    margin: 1em 0; 
     width: 99%; 
     font-size: 80%;
     line-height: 2em; 
