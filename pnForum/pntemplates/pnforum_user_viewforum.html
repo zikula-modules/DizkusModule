@@ -162,7 +162,7 @@
             <td class="pnf_bordercolor2" headers="col_replies" align="center"><!--[ $topic.topic_replies ]--></td>
             <td class="pnf_bordercolor2" headers="col_poster" align="center"><!--[ $topic.pn_uname|profilelink ]--></td>
             <td class="pnf_bordercolor2" headers="col_views" align="center"><!--[ $topic.topic_views ]--></td>
-            <td class="pnf_bordercolor2" headers="col_date" align="center"><!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief':'':true ]--><br /><!--[ $topic.last_poster|profilelink ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
+            <td class="pnf_bordercolor2" headers="col_lastpost" align="center"><!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief':'':true ]--><br /><!--[ $topic.last_poster|profilelink ]-->&nbsp;<a title="<!--[ pnml name='_PNFORUM_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
         </tr>
     
         <!--[ foreachelse ]-->
