@@ -50,11 +50,11 @@
     <li><a class="image <!--[ if $forum.is_subscribed eq 1 ]-->hidden<!--[ /if ]--> subscribelink" id="subscribeforumbutton_<!--[ $forum.forum_id ]-->" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a> 
         <a class="image <!--[ if $forum.is_subscribed eq 0 ]-->hidden<!--[ /if ]--> unsubscribelink" id="unsubscribeforumbutton_<!--[ $forum.forum_id ]-->" onclick="javascript:subscribeunsubscribeforum(<!--[ $forum.forum_id ]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a></li>
 
-    <!--[ if $pncore.pnForum.favorites_enabled eq "yes" ]-->
-    <li><a class="image <!--[ if $forum.is_favorite eq 1 ]-->hidden<!--[ /if ]--> addfavoritelink" id="addfavoritebutton_<!--[ $forum.forum_id ]-->"  onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a>
-        <a class="image <!--[ if $forum.is_favorite eq 0 ]-->hidden<!--[ /if ]--> removefavoritelink" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a></li>
-    <!--[ /if ]-->
-<!--[ /if ]--> 
+        <!--[ if $pncore.pnForum.favorites_enabled eq "yes" ]-->
+        <li><a class="image <!--[ if $forum.is_favorite eq 1 ]-->hidden<!--[ /if ]--> addfavoritelink" id="addfavoritebutton_<!--[ $forum.forum_id ]-->"  onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'add');"    href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a>
+            <a class="image <!--[ if $forum.is_favorite eq 0 ]-->hidden<!--[ /if ]--> removefavoritelink" id="removefavoritebutton_<!--[ $forum.forum_id ]-->" onclick="javascript:addremovefavorite(<!--[ $forum.forum_id ]-->, 'remove');" href="javascript:void(0);" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a></li>
+        <!--[ /if ]-->
+    <!--[ /if ]--> 
 </ul>
 
 <noscript>
@@ -68,16 +68,20 @@
     <li><a class="image newtopiclink" title="<!--[ pnml name='_PNFORUM_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=newtopic forum=$forum.forum_id ]-->"><!--[ pnml name='_PNFORUM_NEWTOPIC' ]--></a></li>
     <!--[ /if ]-->
 
-    <!--[ if $forum.is_subscribed == 0 ]-->
-    <li><a class="image subscribelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a></li>
-    <!--[ else ]-->
-    <li><a class="image unsubscribelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a></li>
-    <!--[ /if ]-->
-
-    <!--[ if $forum.is_favorite == 0 ]-->
-    <li><a class="image addfavoritelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a></li>
-    <!--[ else ]-->
-    <li><a class="image removefavoritelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a></li>
+    <!--[ if $pncore.logged_in ]-->
+        <!--[ if $forum.is_subscribed == 0 ]-->
+        <li><a class="image subscribelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_SUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_SUBSCRIBE_FORUM' ]--></a></li>
+        <!--[ else ]-->
+        <li><a class="image unsubscribelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_UNSUBSCRIBE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_UNSUBSCRIBE_FORUM' ]--></a></li>
+        <!--[ /if ]-->
+        
+        <!--[ if $pncore.pnForum.favorites_enabled eq "yes" ]-->
+            <!--[ if $forum.is_favorite == 0 ]-->
+            <li><a class="image addfavoritelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_ADD_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_ADD_FAVORITE_FORUM' ]--></a></li>
+            <!--[ else ]-->
+            <li><a class="image removefavoritelink" href="<!--[ pnmodurl modname="pnForum" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id ]-->" title="<!--[ pnml name="_PNFORUM_REMOVE_FAVORITE_FORUM" ]-->"><!--[ pnml name='_PNFORUM_REMOVE_FAVORITE_FORUM' ]--></a></li>
+            <!--[ /if ]-->
+        <!--[ /if ]-->
     <!--[ /if ]-->
 </ul>
 </noscript>
