@@ -559,6 +559,17 @@ ul#pnf_moderatorlist li.intro {
     padding-right: 1em;
 }
 
+ul#pnf_javascriptareaforum,
+ul#pnf_nonjavascriptareaforum {
+/* wrapper */
+}
+
+ul#pnf_javascriptareaforum li,
+ul#pnf_nonjavascriptareaforum li {
+    display: inline;
+    margin-right: 15px;
+}
+
 div#pnf_forumdescription {
     padding: 1em;
 }
