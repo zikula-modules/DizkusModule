@@ -724,6 +724,8 @@ function createQuickReply_response(originalRequest)
     $('quickreplyposting').id = '';
     // rename new id
     $('new_quickreplyposting').id = 'quickreplyposting';
+    // enable js options in quickreply
+    $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
 
     replystatus = false;
 
