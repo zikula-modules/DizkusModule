@@ -94,11 +94,15 @@ function pnForum_ajax_reply()
         $post['post_textdisplay'] = phpbb_br2nl($message);
         if($attach_signature == 1) {
             $post['post_textdisplay'] .= '[addsig]';
-            $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+            if(is_dot8()) {
+                $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
+            } else {
+                $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+            }
         }
         // call hooks for $message_display ($message remains untouched for the textarea)
         list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-        $post['post_textdisplay'] =pnVarCensor(nl2br($post['post_textdisplay']));
+        $post['post_textdisplay'] =pnfVarPrepHTMLDisplay($post['post_textdisplay']);
 
         $post['post_text'] = $post['post_textdisplay'];
 
@@ -648,11 +652,15 @@ function pnForum_ajax_newtopic()
 
     if($attach_signature==1) {
         $newtopic['message_display'] .= '[addsig]';
-        $newtopic['message_display'] = pnForum_replacesignature($newtopic['message_display'], $newtopic['poster_data']['pn_user_sig']);
+        if(is_dot8()) {
+            $newtopic['message_display'] = pnForum_replacesignature($newtopic['message_display'], $newtopic['poster_data']['_SIGNATURE']);
+        } else {
+            $newtopic['message_display'] = pnForum_replacesignature($newtopic['message_display'], $newtopic['poster_data']['pn_user_sig']);
+        }
     }
 
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
-    $newtopic['message_display'] = nl2br($newtopic['message_display']);
+    $newtopic['message_display'] = pnfVarPrepHTMLDisplay($newtopic['message_display']);
 
     $topic_start = (empty($subject) && empty($message));
     if(pnUserLoggedIn()) {

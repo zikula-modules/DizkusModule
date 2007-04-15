@@ -1007,11 +1007,17 @@ function pnForum_userapi_readtopic($args)
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
-            $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['pn_user_sig']);
+            if(is_dot8()) {
+                $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
+            } else {
+                $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['pn_user_sig']);
+            }
+            
+            $post['post_text'] = pnfVarPrepHTMLDisplay($post['post_text']);
 
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
-            $post['post_text'] = pnVarPrepHTMLDisplay(nl2br($post['post_text']));
+
             //$post['post_text'] = pnVarPrepHTMLDisplay($post['post_text']);
 
             $post['poster_data']['reply'] = false;
@@ -1217,7 +1223,11 @@ function pnForum_userapi_preparereply($args)
         // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
 
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
-        $message = pnForum_replacesignature($message, $review['poster_data']['pn_user_sig']);
+        if(is_dot8()) {
+            $message = pnForum_replacesignature($message, $review['poster_data']['_SIGNATURE']);
+        } else {
+            $message = pnForum_replacesignature($message, $review['poster_data']['pn_user_sig']);
+        }
 
         // call hooks for $message
         list($message) = pnModCallHooks('item', 'transform', $review['post_id'], array($message));
@@ -1827,11 +1837,15 @@ function pnForum_userapi_readpost($args)
     }
 //////////// ende neu
     $post['post_textdisplay'] = phpbb_br2nl($message);
-    $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+    if(is_dot8()) {
+        $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
+    } else {
+        $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
+    }
 
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-    $post['post_textdisplay'] = pnVarPrepHTMLDisplay(nl2br($post['post_textdisplay']));
+    $post['post_textdisplay'] = pnfVarPrepHTMLDisplay($post['post_textdisplay']);
 /*
     //$message = pnVarPrepForDisplay($message);
     //  remove [addsig]

@@ -644,8 +644,10 @@ function pnfVarPrepHTMLDisplay($text)
     for($i=0; $i < $codecount1; $i++) {
         $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " PNFORUMCODEREPLACEMENT{$i} ", $text, 1);
     }
+    
     // the real work
-    $text = pnVarPrepHTMLDisplay($text);
+    $text = nl2br(pnVarPrepHTMLDisplay($text));
+    
     // re-insert code tags
     for ($i = 0; $i < $codecount1; $i++) {
         $text = preg_replace("/ PNFORUMCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
