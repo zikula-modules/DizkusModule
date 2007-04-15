@@ -31,71 +31,119 @@
  *@param $params['total'] int total number of posts in this topic
  *@param $params['topic_id'] int topic id
  *@param $params['start'] int start value, if -1 then show all pages as links (= no start page)
- *@param $params['nonextprev'] string if set then do not show nextpage and prevpage text
  *@param $params['separator'] string  text to show between the pages, default |
- *@param $params['divclass'] string  if set the embracing div will get this class
- *@param $params['linkclass'] string  if set the links will get this class
  *
  */
 function smarty_function_topicpager($params, &$smarty)
 {
-    extract($params);
-	unset($params);
-
-    if(!isset($total) | empty($total) || !isset($topic_id) || empty($topic_id)) {
-		$smarty->trigger_error(pnVarPrepForDisplay(_MODARGSERROR));
-	}
-
-    if(!isset($separator) || empty($separator)) {
-		$separator = "|";
-	}
-
-	if(isset($linkclass) && !empty($linkclass)) {
-	    $linkclass = 'class="' . $linkclass . '"';
-	}
-
-    $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
-    $pager = "";
-    if($total > $posts_per_page) {
-        //$start = (!empty($start)) ? (int)$start : 0;
-        $start = (int)$start;
-        $times = 1;
-        if(isset($class)&& !empty($class)) {
-            $pager = '<div class="' . $class . '">';
-        } else {
-            $pager = '<div>';
-        }
-        $pager .= pnVarPrepForDisplay(_PNFORUM_GOTOPAGE)."&nbsp;:&nbsp;";
-        $last_page = $start - $posts_per_page;
-        if(($start > 0) && empty($nonextprev) ) {
-            $pager .= "<a $linkclass href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $last_page))) . "\" title=\"" . pnVarPrepForDisplay(_PNFORUM_PREVPAGE) . "\">".pnVarPrepForDisplay(_PNFORUM_PREVPAGE).'</a> ';
-        }
-        for($x = 0; $x < $total; $x += $posts_per_page) {
-            if($times != 1) {
-                $pager .= " $separator ";
-            }
-            if($start == -1) {
-                // show all pages - no starting page
-                $pager .= "<a $linkclass href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $x))) . "\" title=\"" . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . " $times\">$times</a>";
-            } else {
-                if($start && ($start == $x)) {
-                    $pager .= $times;
-                } else if($start == 0 && $x == 0) {
-                    $pager .= "1";
-                } else {
-                    $pager .= "<a $linkclass href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $x))) . "\" title=\"" . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . " $times\">$times</a>";
-                }
-            }
-            $times++;
-        }
-
-        if( (($start + $posts_per_page) < $total) && empty($nonextprev) ) {
-            $next_page = $start + $posts_per_page;
-            $pager .= " <a $linkclass href=\"" . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $next_page))) . "\" title=\"" . pnVarPrepForDisplay(_PNFORUM_NEXTPAGE) . "\">".pnVarPrepForDisplay(_PNFORUM_NEXTPAGE).'</a>';
-        }
-        $pager .= " </div>\n";
+    $total             = $params['total'];
+    $per_page          = pnModGetVar('pnForum', 'posts_per_page');
+    $start             = pnVarCleanFromInput('start');
+    if(empty($start)) {
+        $start= 1;
     }
-    return $pager;
+    $add_prevnext_text = (isset($params['add_prevnext_text']) && !empty($params['add_prevnext_text'])) ? (bool)$params['add_prevnext_text'] : true;
+    $topic_id          = $params['topic_id'];
+    if(empty($forum_id)) {
+		$smarty->trigger_error('forumpager: missing parameter topic_id');
+	}
+	
+    $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';
+
+    $total_pages = ceil($total/$per_page);                                                                                                                             
+    if ( $total_pages == 1 ) {                                                                                                                                                                      
+        return '';                                                                                                                                                             
+    }                                                                                                                                                                      
+    $on_page = floor($start / $per_page) + 1;                                                                                                                         
+                                                                                                                                                                          
+    $page_string = '';                                                                                                                                                     
+    if ( $total_pages > 10 ) {                                                                                                                                                                      
+        $init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;                                                                                                              
+                                                                                                                                                                           
+        for($i = 1; $i < $init_page_max + 1; $i++) {                                                                                                                            
+            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            if ( $i <  $init_page_max ) {                                                                                                                                           
+                $page_string .= $separator;                                                                                                                                                  
+            }                                                                                                                                                                      
+        }                                                                                                                                                                      
+                                                                                                                                                                           
+        if ( $total_pages > 3 ) {                                                                                                                                               
+            if ( $on_page > 1  && $on_page < $total_pages ) {                                                                                                                       
+                $page_string .= ( $on_page > 5 ) ? ' ... ' : $separator;                                                                                                                     
+                                                                                                                                                                           
+                $init_page_min = ( $on_page > 4 ) ? $on_page : 5;                                                                                                                      
+                $init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;                                                                                        
+                                                                                                                                                                           
+                for($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {    
+                    $page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';       
+                    if ( $i <  $init_page_max + 1 ) {                                                                                                                                       
+                                                                                                                                                                           
+                        $page_string .= $separator;                                                                                                                                                  
+                    }                                                                                                                                                                      
+                }                                                                                                                                                                      
+                                                                                                                                                                           
+                $page_string .= ( $on_page < $total_pages - 4 ) ? ' ... ' : $separator;                                                                                                      
+            } else  {                                                                                                                                                                      
+                $page_string .= ' ... ';                                                                                                                                               
+            }                                                                                                                                                                      
+                                                                                                                                                                           
+            for($i = $total_pages - 2; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
+                $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>'  : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';    
+                if( $i <  $total_pages ) {                                                                                                                                                                      
+                    $page_string .= $separator;                                                                                                                                                  
+                }                                                                                                                                                                      
+            }                                                                                                                                                                      
+        }                                                                                                                                                                      
+    } else {                                                                                                                                                                      
+        for($i = 1; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
+            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            if ( $i <  $total_pages ) {                                                                                                                                                                      
+                $page_string .= $separator;                                                                                                                                                  
+            }                                                                                                                                                                      
+        }                                                                                                                                                                      
+    }                                                                                                                                                                      
+      
+    $add_prev_set = false;                                                                                                                                                                     
+    $add_next_set = false;                                                                                                                                                                     
+    if ( $add_prevnext_text ) {                                                                                                                                                                      
+        if ( $on_page > 1 ) {                                                                                                                                                                      
+            $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 2 ) * $per_page ))) . '">-1</a>] ' . $page_string;
+            $add_prev_set = true;
+        }                                                                                                                                                                      
+        if ( $on_page > 10 ) {                                                                                                                                                                      
+            $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 11) * $per_page ))) . '">-10</a> ' . $page_string;
+            $add_prev_set = true;
+        }                                                                                                                                                                      
+        if ( $on_page > 100 ) {                                                                                                                                                                      
+            $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 101) * $per_page ))) . '">-100</a> ' . $page_string;
+            $add_prev_set = true;
+        }                                                                                                                                                                      
+        if($add_prev_set == true) {
+            $page_string = '[' . $page_string;
+        }
+                                                                                                                                                                           
+        if ( $on_page < $total_pages ) {                                                                                                                                                                      
+            $page_string .= ' [<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $on_page * $per_page ))) . '">+1</a>';                           
+            $add_next_set = true;
+        }
+        if($total_pages - $on_page > 10) {
+            $page_string .= ' <a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ($on_page + 9) * $per_page ))) . '">+10</a>';                           
+            $add_next_set = true;
+        }                                                                                                                                                                      
+        if($total_pages - $on_page > 100) {
+            $page_string .= ' <a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ($on_page + 99) * $per_page ))) . '">+100</a>';                           
+            $add_next_set = true;
+        }                                                                                                                                                                      
+        if($add_next_set == true) {
+            $page_string .= ']';
+        }
+                                                                                                                                                                           
+    }                                                                                                                                                                      
+                                                                                                                                                                           
+    $page_string = '<p>' . _PNFORUM_GOTOPAGE . ': ' . $page_string . '</p>';                                                                                                                
+                                                                                                                                                                           
+    return $page_string;                                                                                                                                                   
+
 }
 
 ?>
