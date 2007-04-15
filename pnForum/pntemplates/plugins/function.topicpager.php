@@ -32,6 +32,7 @@
  *@param $params['topic_id'] int topic id
  *@param $params['start'] int start value, if -1 then show all pages as links (= no start page)
  *@param $params['separator'] string  text to show between the pages, default |
+ *@param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
  *
  */
 function smarty_function_topicpager($params, &$smarty)
@@ -42,7 +43,7 @@ function smarty_function_topicpager($params, &$smarty)
     if(empty($start)) {
         $start= 1;
     }
-    $add_prevnext_text = (isset($params['add_prevnext_text']) && !empty($params['add_prevnext_text'])) ? (bool)$params['add_prevnext_text'] : true;
+    $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $topic_id          = $params['topic_id'];
     if(empty($forum_id)) {
 		$smarty->trigger_error('forumpager: missing parameter topic_id');
@@ -105,7 +106,7 @@ function smarty_function_topicpager($params, &$smarty)
       
     $add_prev_set = false;                                                                                                                                                                     
     $add_next_set = false;                                                                                                                                                                     
-    if ( $add_prevnext_text ) {                                                                                                                                                                      
+    if ( $add_prevnext ) {                                                                                                                                                                      
         if ( $on_page > 1 ) {                                                                                                                                                                      
             $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 2 ) * $per_page ))) . '">-1</a>] ' . $page_string;
             $add_prev_set = true;
