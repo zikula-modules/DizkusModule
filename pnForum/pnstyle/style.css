@@ -24,7 +24,7 @@
 button, button.right, button.left {
     border: none;
     background: transparent;
-    margin: 0 0.5em 0 0.5em;
+    margin: 0 0.5em;
     padding: 0;
     border-bottom: 1px dashed black;
     cursor: pointer;
@@ -667,8 +667,8 @@ ul.pnf_statslist li {
 }
 
 div.pnf_statusmsg {
-    margin: 5px 0 5px 0;
-    padding: 5px 0 5px 0;
+    margin: 5px 0;
+    padding: 5px 0;
     text-align:center;
     width:99%;
     border: 1px solid red;
@@ -796,12 +796,12 @@ pnforum_admin tr td {
     border-width: 2px;
     text-align:left; 
     font-size: 1em;
-    margin: 1em 0 1em 0;
+    margin: 1em 0;
     line-height: 2em;
 }
 
 #pnforum .headerlink {
-    margin: 0 0.5em 0 0.5em;
+    margin: 0 0.5em;
 }
 
 #pnforum_admin ul {
@@ -817,12 +817,12 @@ pnforum_admin tr td {
 
 #pnforum_admin h1 {
     font-size: 2em;
-    margin: 0.5em 0 0.5em 0;
+    margin: 0.5em 0;
 }
 
 #pnforum_admin h2 {
     font-size: 1.5em;
-    margin: 0.5em 0 0.5em 0;
+    margin: 0.5em 0;
 }
 
 /*******************************
@@ -1220,10 +1220,20 @@ div#topicsubject_content {
 }
 
 /*******************************
+ * pnforum_centerblock_display.html
+ *******************************/
+
+div.pnf_centerblockheader {
+    padding: 3px; 
+    border-width: 2px;
+    border-style: solid;
+}
+
+/*******************************
  * pnforum_hook_display.html
  *******************************/
 
-div#pnf_displayhook {
+div#pnf_forumdisplayhook {
     margin: 1.5em 0; 
     width: 99%;
 }
@@ -1234,7 +1244,7 @@ div#pnf_displayhook {
  *******************************/
 
 fieldset #pnf_search div {
-    padding: 1em 0 1em 0;
+    padding: 1em 0;
     overflow:hidden;
 }
 
@@ -1257,7 +1267,7 @@ fieldset #pnf_search div {
 }
 
 .searchleft {
-    margin: 4px 0 4px 0; 
+    margin: 4px 0; 
     float: left; 
     width: 35%; 
     text-align: right;
@@ -1267,7 +1277,7 @@ fieldset #pnf_search div {
     float: left; 
     width: 60%; 
     text-align: left; 
-    margin: 4px 0 4px 0; 
+    margin: 4px 0; 
 }
 
 /**
@@ -1276,7 +1286,7 @@ fieldset #pnf_search div {
  */
 div.rankuser-alphanav {
   text-align:center;
-  margin: 1em 0 1em 0;
+  margin: 1em 0;
 }
    
 /*
@@ -1440,11 +1450,11 @@ ul.javascriptpostingoptions li {
 }
 
 .postingbutton a {
-    margin: 0 3px 0 3px;
+    margin: 0 3px;
 }
 
 .postingbuttonhidden {
-    margin: 0 3px 0 3px;
+    margin: 0 3px;
     display: none;
 }
 
@@ -1458,8 +1468,8 @@ a.normallink {
     color: red; 
     text-align: center; 
     font-weight: bold; 
-    margin: 2px 0 2px 0; 
-    padding: 2px 0 2px 0;
+    margin: 2px 0; 
+    padding: 2px 0;
 }
 
 
@@ -1484,7 +1494,7 @@ a.normallink {
 #newtopicconfirmation {
     text-align: center; 
     width: 99%; 
-    padding: 5em 0 5em 0;
+    padding: 5em 0;
 }
 
 .pnf_handle {
