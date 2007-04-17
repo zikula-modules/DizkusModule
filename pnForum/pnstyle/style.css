@@ -1220,6 +1220,15 @@ div#topicsubject_content {
 }
 
 /*******************************
+ * pnforum_hook_display.html
+ *******************************/
+
+div#pnf_displayhook {
+    margin: 1.5em 0; 
+    width: 99%;
+}
+
+/*******************************
  * pnforum_user_search.html
  * pnforum_search.html
  *******************************/
