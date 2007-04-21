@@ -1,0 +1,11 @@
+Morpheus für PnForum 2.6
+
+Die Templates Morpheus für pnForum 2.6 sind von phpbb Theme Morpheus zu pnForum konvertiert.
+Um die originalen Templates des pnForums nicht zu überschreiben Kopiere die Templates in dein Theme.
+Dies hat auch den Vorteil das bei anderen Themes die original pnForum Templates weiter genutzt werden.
+Kopiere das Verzeichniss pnForum in das Verzeichniss modules deines Themes
+und
+das Verzeichniss style in das Verzeichniss "style" deines Themes.
+
+Dann viel Spass
+euer Charlie
