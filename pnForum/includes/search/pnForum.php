@@ -60,6 +60,7 @@ function search_pnForum($vars)
     if(!isset($vars['active_pnForum'])) {
         return;
     }
+    pnModLangLoad('pnForum', 'user');
     return pnModAPIFunc('pnForum', 'search', 'search');
 }
 
