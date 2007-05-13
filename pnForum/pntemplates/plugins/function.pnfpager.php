@@ -28,6 +28,7 @@
  * pnfpager plugin
  * creates a forum or a topic pager
  *
+ *@param $params['objectid'] int the id of the obejct to page, maybe a topic or forum id. If not supplied, this will be taken from the url
  *@param $params['total'] int total number of topics in this forum
  *@param $params['separator'] string  text to show between the pages, default |
  *@param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
@@ -54,12 +55,12 @@ function smarty_function_pnfpager($params, &$smarty)
         case 'moderateforum':
             $per_page = pnModGetVar('pnForum', 'topics_per_page');
             $objectname = 'forum';
-            $objectid = pnVarCleanFromInput('forum');
+            $objectid = isset($params['objectid']) ? $params['objectid'] : pnVarCleanFromInput('forum');
             break;
         case 'viewtopic':
             $per_page = pnModGetVar('pnForum', 'posts_per_page');
             $objectname = 'topic';
-            $objectid = pnVarCleanFromInput('topic');
+            $objectid = isset($params['objectid']) ? $params['objectid'] : pnVarCleanFromInput('topic');
             break;
         default:
             // silently stop....
