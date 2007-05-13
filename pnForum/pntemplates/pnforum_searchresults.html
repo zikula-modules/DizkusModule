@@ -51,7 +51,7 @@
         </td>
         <td headers="col_topic" class="pnf_bordercolor2">
             <!--[ $searchresult.topic_id|viewtopiclink:$searchresult.topic_title:$searchresult.forum_name ]-->
-            <!--[ topicpager total=$searchresult.total_posts nonextprev=1 start=-1 topic_id=$searchresult.topic_id ]-->
+            <!--[ pnfpager total=$searchresult.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" ]-->
             <p><!--[ pnml name="_PNFORUM_FOUNDIN" ]-->: <a title="<!--[ pnml name='_PNFORUM_GOTO_FORUM' ]--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
          </td>
         <td class="pnf_bordercolor2" headers="col_replies" align="center"><!--[ $searchresult.topic_replies ]--></td>
