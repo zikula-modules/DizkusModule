@@ -326,10 +326,10 @@ function pnForum_searchapi_nonfulltext($args)
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
                 
                 // without signature
-                $sresult['post_text'] = $sresult['topic_replies'] + 1;
+                $sresult['total_posts'] = $sresult['topic_replies'] + 1;
 
                 // topic size
-                $sresult['total_posts'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
+                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
                                 
                 // strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
@@ -612,13 +612,12 @@ function pnForum_searchapi_fulltext($args)
                 $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
                 $sresult['topic_title'] = stripslashes($sresult['topic_title']);
     
+                 // topic size
+                $sresult['total_posts'] = $sresult['topic_replies'] + 1;
+                                
                 // without signature
                 $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
  
-                 // topic size
-                $sresult['total_posts'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
-                                
-   
                 // strip_tags is needed here 'cause maybe we cut within a html-tag...
                 $sresult['post_text'] = strip_tags($sresult['post_text']);
     
