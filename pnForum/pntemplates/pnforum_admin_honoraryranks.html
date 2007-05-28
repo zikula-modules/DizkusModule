@@ -30,7 +30,7 @@
 
     <!--[ foreach key=num item=rank from=$ranks ]-->
     <form name="Rank<!--[ $num ]-->" action="<!--[ pnmodurl modname= pnForum type=admin func=ranks ]-->" method="post">
-    <div class="pnfadminrow98">
+    <div class="pnfadminrow98 pnf_clearfix">
         <input type="hidden" name="ranktype" value="<!--[ $ranktype ]-->" />
         <input type="hidden" name="min_posts" value="-1" />
         <input type="hidden" name="max_posts" value="0" />

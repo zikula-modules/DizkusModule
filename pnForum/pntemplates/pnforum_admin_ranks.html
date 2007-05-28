@@ -37,7 +37,7 @@
     <!--[ foreach key=num item=rank from=$ranks ]-->
 
     <form name="Rank<!--[ $num ]-->" action="<!--[ pnmodurl modname=pnForum type=admin func=ranks ]-->" method="post">
-    <div class="pnfadminrow98">
+    <div class="pnfadminrow98 pnf_clearfix">
         <input type="hidden" name="ranktype" value="<!--[ $ranktype ]-->" />
         <div class="pnfadmincol24c">
             <input type="text" name="title" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20" />
