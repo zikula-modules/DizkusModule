@@ -87,7 +87,7 @@ function smarty_modifier_profilelink($string, $class='', $image='')
             $show = $string;
         }
         if(is_dot8()) {
-            return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="' . pnModURL('Profile', 'user', 'view', array('uname' =>  $string)) . '">' . $show . '</a>';
+            return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="' . pnVarPrepForDisplay(pnModURL('Profile', 'user', 'view', array('uname' =>  $string))) . '">' . $show . '</a>';
         } else {
             return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="user.php?op=userinfo&amp;uname=' . $string . '">' . $show . '</a>';
         }
