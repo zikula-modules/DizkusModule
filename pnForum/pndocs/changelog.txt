@@ -37,6 +37,7 @@ PostNuke pnForum Module changelog
   <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
   The last parameter is activating the timezone support which adds the difference between
   the users timezone and the main timezone configured in your PostNuke settings.
++ added option to disable forum
 + added [#2512]	centerblock links inkl. PID
 + added [#2636] similar topics plugin
 + added [#2899] Link back to forum index in search and latest posts.
@@ -70,6 +71,7 @@ PostNuke pnForum Module changelog
 - fixed [#3599] blending probléme
 - fixed [#4089] Duplicate define
 - fixed [#4156] searchAPI change to make Xanthia search-plugin function correctly
+- fixed [#5142] modifier.profilelink.php - incorrect target
 
 ---------------------------------------------------------------------------------------------
 2.6 (fs)
