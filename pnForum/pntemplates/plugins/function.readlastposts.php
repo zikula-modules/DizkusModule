@@ -164,6 +164,7 @@ function smarty_function_readlastposts($params, &$smarty)
 
     $sql = 'SELECT t.topic_id,
                    t.topic_title,
+                   t.topic_poster,
                    t.topic_replies,
                    t.topic_time,
                    t.topic_last_post_id,
@@ -205,6 +206,7 @@ function smarty_function_readlastposts($params, &$smarty)
         for (; !$result->EOF; $result->MoveNext()) {
             list($lastpost['topic_id'],
                  $lastpost['topic_title'],
+                 $lastpost['topic_poster'],
                  $lastpost['topic_replies'],
                  $lastpost['topic_time'],
                  $lastpost['topic_last_post_id'],
