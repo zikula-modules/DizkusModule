@@ -51,6 +51,11 @@ include_once('modules/pnForum/common.php');
  */
 function pnForum_user_main($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+    
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -124,6 +129,11 @@ function pnForum_user_main($args=array())
  */
 function pnForum_user_viewforum($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -157,6 +167,11 @@ function pnForum_user_viewforum($args=array())
  */
 function pnForum_user_viewtopic($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -213,6 +228,11 @@ function pnForum_user_viewtopic($args=array())
  */
 function pnForum_user_reply($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -305,6 +325,11 @@ function pnForum_user_reply($args=array())
  */
 function pnForum_user_newtopic($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -397,6 +422,11 @@ function pnForum_user_newtopic($args=array())
  */
 function pnForum_user_editpost($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -499,6 +529,11 @@ function pnForum_user_editpost($args=array())
  */
 function pnForum_user_topicadmin($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -625,6 +660,11 @@ function pnForum_user_topicadmin($args=array())
  */
 function pnForum_user_prefs($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     if(!pnUserLoggedIn()) {
         return pnModFunc('pnForum', 'user', 'login', array('redirect' => pnModURL('pnForum', 'user', 'prefs')));
     }
@@ -724,6 +764,11 @@ function pnForum_user_prefs($args=array())
  */
 function pnForum_user_emailtopic($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -794,6 +839,11 @@ function pnForum_user_emailtopic($args=array())
  */
 function pnForum_user_viewlatest($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     if(useragent_is_bot() == true) {
         return pnRedirect(pnModURL('pnForum', 'user', 'main'));
     }
@@ -855,6 +905,11 @@ function pnForum_user_viewlatest($args=array())
  */
 function pnForum_user_splittopic($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -903,6 +958,11 @@ function pnForum_user_splittopic($args=array())
  */
 function pnForum_user_print($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -971,6 +1031,11 @@ function pnForum_user_print($args=array())
  */
 function pnForum_user_search($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     $submit = pnVarCleanFromInput('submit');
     if(!$submit) {
         return pnModAPIFunc('pnForum', 'search', 'internalsearchoptions');
@@ -987,6 +1052,11 @@ function pnForum_user_search($args=array())
  */
 function pnForum_user_movepost($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1037,6 +1107,11 @@ function pnForum_user_movepost($args=array())
  */
 function pnForum_user_jointopics($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1091,6 +1166,11 @@ function pnForum_user_jointopics($args=array())
  */
 function pnForum_user_moderateforum($args=array())
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1211,6 +1291,11 @@ function pnForum_user_moderateforum($args=array())
  */
 function pnForum_user_report($args)
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     // get the input
     if(count($args)>0) {
         extract($args);
@@ -1273,6 +1358,11 @@ function pnForum_user_report($args)
  */
 function pnForum_user_topicsubscriptions($args)
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     if(!pnUserLoggedIn()) {
         return pnModFunc('pnForum', 'user', 'login', array('redirect' => pnModURL('pnForum', 'user', 'prefs')));
     }
@@ -1313,6 +1403,11 @@ function pnForum_user_topicsubscriptions($args)
  */
 function pnForum_user_login($args)
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
     if(pnUserLoggedIn()) {
         return pnRedirect(pnModURL('pnForum', 'user', 'main'));
     }

@@ -81,6 +81,14 @@ function pnForum_statisticsblock_display($row)
         return; 
     }
 
+    pnModLangLoad('pnForum', 'user');
+    // check if forum is turned off
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        $row['content'] = $disabled;
+	    return themesideblock($row);
+    }
+
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
@@ -97,7 +105,7 @@ function pnForum_statisticsblock_display($row)
         pnf_add_stylesheet_header();
     }
 
-    $pnr =& new pnRender('pnForum');
+    $pnr = new pnRender('pnForum');
     $pnr->add_core_data();
     $pnr->caching = false;
 

@@ -1015,7 +1015,7 @@ function pnf_ajaxerror($error='unspecified ajax error')
     if(!empty($error)) {
         pnSessionDelVar('pn_ajax_call');
         header('HTTP/1.0 400 Bad Data');
-        echo $error;
+        echo pnVarPrepForDisplay($error);
         exit;
     }
 }
@@ -1347,4 +1347,25 @@ function pnf_str2time($strStr, $strPattern = 'Y-m-d H:i')
    return $intTime;
 }
 
+/**
+ * pnf_available
+ * check if pnForum is available or not
+ *
+ *@params deliverhtml     boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
+ *return html or boolean
+ *
+ */
+function pnf_available($deliverhtml = true)
+{
+    if((pnModGetVar('pnForum', 'forum_enabled') == 'no') && !pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+        if($deliverhtml == true) {
+            $pnf = new pnRender('pnForum');
+            $pnf->add_core_data();
+            return $pnf->fetch('pnforum_disabled.html');
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
 ?>

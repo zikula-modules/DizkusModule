@@ -49,6 +49,10 @@ include_once('modules/pnForum/common.php');
  */
 function pnForum_ajax_reply()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     list($topic_id,
          $message,
          $attach_signature,
@@ -125,6 +129,10 @@ function pnForum_ajax_reply()
  */
 function pnForum_ajax_preparequote()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     $post_id = pnVarCleanFromInput('post');
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
@@ -145,6 +153,10 @@ function pnForum_ajax_preparequote()
  */
 function pnForum_ajax_readpost()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     $post_id = pnVarCleanFromInput('post');
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
@@ -167,6 +179,10 @@ function pnForum_ajax_readpost()
  */
 function pnForum_ajax_editpost()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     $post_id = pnVarCleanFromInput('post');
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
@@ -199,6 +215,10 @@ function pnForum_ajax_editpost()
  */
 function pnForum_ajax_updatepost()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     list($post_id,
          $subject,
          $message,
@@ -246,6 +266,10 @@ function pnForum_ajax_updatepost()
  */
 function pnForum_ajax_lockunlocktopic()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
@@ -281,6 +305,10 @@ function pnForum_ajax_lockunlocktopic()
  */
 function pnForum_ajax_stickyunstickytopic()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
@@ -315,6 +343,10 @@ function pnForum_ajax_stickyunstickytopic()
  */
 function pnForum_ajax_subscribeunsubscribetopic()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
 
@@ -362,6 +394,10 @@ function pnForum_ajax_subscribeunsubscribetopic()
  */
 function pnForum_ajax_subscribeunsubscribeforum()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
     list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
 
@@ -410,6 +446,10 @@ function pnForum_ajax_subscribeunsubscribeforum()
  */
 function pnForum_ajax_addremovefavorite()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
     if(pnModGetVar('pnForum', 'favorites_enabled')=='no') {
         pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED);
@@ -460,6 +500,10 @@ function pnForum_ajax_addremovefavorite()
  */
 function pnForum_ajax_edittopicsubject()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
     $topic_id = pnVarCleanFromInput('topic');
 
@@ -489,6 +533,10 @@ function pnForum_ajax_edittopicsubject()
  */
 function pnForum_ajax_updatetopicsubject()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
     list($topic_id,
          $subject) = pnVarCleanFromInput('topic',
@@ -538,6 +586,10 @@ function pnForum_ajax_updatetopicsubject()
  */
 function pnForum_ajax_changesortorder()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if(!pnUserLoggedIn()) {
@@ -560,6 +612,10 @@ function pnForum_ajax_changesortorder()
  */
 function pnForum_ajax_newtopic()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     pnSessionSetVar('pn_ajax_call', 'ajax');
 
     if (!pnSecConfirmAuthKey()) {
@@ -690,6 +746,10 @@ function pnForum_ajax_newtopic()
  */
 function pnForum_ajax_forumusers ()
 {
+    if(pnf_available(false) == false) {
+       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    }
+
     $pnRender = new pnRender('pnForum');
     $pnRender->caching = false;
     if(is_dot8()) {
@@ -710,6 +770,11 @@ function pnForum_ajax_forumusers ()
  */
 function pnForum_ajax_newposts ()
 {
+    $disabled = pnf_available();
+    if(!is_bool($disabled)) {
+        echo $disabled;
+        exit;
+    }
     $pnRender = new pnRender('pnForum');
     $pnRender->caching = false;
     if(is_dot8()) {
