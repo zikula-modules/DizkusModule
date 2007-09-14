@@ -108,7 +108,7 @@ function smarty_function_pnforumonline($params, &$smarty)
         if ($uid != 0) {
             $unames[$uid] = array('uid'   => $uid,
                                   'uname' => $uname,
-                                  'admin' => ($moderators[$uid] == $uname));
+                                  'admin' => ($moderators[$uid] == $uname) || allowedtoadmincategoryandforum($category_id, $forum_id, $uid));
             $numusers++;
         } else {
             $numguests++;
