@@ -17,6 +17,10 @@ var subjectstatus = false;
 var sortorderstatus = false;
 var newtopicstatus = false;
 
+// global setting of combination effect
+var comboeffect = 'slide';
+var comboparams = {duration: 1};
+
 var indicatorimage = '<img src="modules/pnForum/pnimages/ajaxindicator.gif" alt="" />';
 
 var pnf_globalhandlers = {
@@ -501,6 +505,11 @@ function quickEditInit(originalRequest)
     $(postingtextID).hide();
     $(postinguserID).hide();
     updateAuthid(result.authid);
+    
+    // hide quickreply
+    if($('pnf_quickreply')) {
+        Effect.toggle($('pnf_quickreply'), comboeffect, comboparams);
+    }
 
     new Insertion.After($(postingtextID), result.data);
 
@@ -529,6 +538,11 @@ function quickEditcancel(postid)
     $(postinguserID).show();
     $(postingtextID + '_editor').remove();
     editstatus = false;
+
+    // unhide quickreply
+    if($('pnf_quickreply')) {
+        Effect.toggle($('pnf_quickreply'), comboeffect, comboparams);
+    }
 }
 function quickEditsave(postid)
 {
@@ -595,6 +609,11 @@ function quickEditsave_response(originalRequest)
         $(postinguserID).show();
     }
     editstatus = false;
+
+    // hide quickreply
+    if($('pnf_quickreply')) {
+        Effect.toggle($('pnf_quickreply'), comboeffect, comboparams);
+    }
 }
 
 function createQuote(postid)
