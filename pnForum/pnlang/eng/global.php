@@ -50,6 +50,9 @@ define('_PNFORUM_NEW_THREADS','New Topic in forum');
 define('_PNFORUM_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_PNFORUM_DISABLED_INFO', 'The forum is currently disabled for maintenance, please come back later.');
+define('_PNFORUM_PREFS_ENABLEDISABLE', 'Enabled forum<br />(turning it off allows access for Admins only)');
+define('_PNFORUM_PREFS_DISABLEDTEXT', 'Enter info text for users if forum is disabled');
 define('_PNFORUM_SOURCEEQUALSTARGETFORUM', 'Error: Source forum must differ from target forum.');
 define('_PNFORUM_SOURCEEQUALSTARGETTOPIC', 'Error: Source topic must differ from target topic.');
 define('_PNFORUM_FOUNDIN', 'found in');

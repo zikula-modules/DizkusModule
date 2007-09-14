@@ -49,6 +49,9 @@ define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien m
 define('_PNFORUM_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_PNFORUM_DISABLED_INFO', 'Das Forum steht im Augenblick nicht zur Verfügung, bitte später noch mal probieren.');
+define('_PNFORUM_PREFS_ENABLEDISABLE', 'Forum einschalten<br />(abgeschaltetes Forum ist nur für Admins zugänglich)');
+define('_PNFORUM_PREFS_DISABLEDTEXT', 'Hinweistext für User, wenn das Forum abgeschaltet ist');
 define('_PNFORUM_SOURCEEQUALSTARGETFORUM', 'Fehler: Quell- und Zielforum sind identisch.');
 define('_PNFORUM_SOURCEEQUALSTARGETTOPIC', 'Fehler: Quell- und Zielthema sind identisch.');
 define('_PNFORUM_FOUNDIN', 'gefunden in');
