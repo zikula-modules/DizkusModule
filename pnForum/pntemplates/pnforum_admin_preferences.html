@@ -105,6 +105,17 @@
                 <input type="radio" name="newtopicconfirmation" value="no" <!--[ $newtopicconf_offchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
             </dd>
 
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_ENABLEDISABLE' html=1 ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="forum_enabled" value="yes" <!--[ $forumenabled_onchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_YES' ]-->
+                <input type="radio" name="forum_enabled" value="no" <!--[ $forumenabled_offchecked ]--> />&nbsp;<!--[ pnml name='_PNFORUM_PREFS_NO' ]-->
+            </dd>
+
+            <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_DISABLEDTEXT' ]--></dt>
+            <dd class="pnfadmin">
+                <textarea rows="2" cols="40" name="forum_disabled_info"><!--[ $pncore.pnForum.forum_disabled_info|pnvarprepfordisplay ]--></textarea>
+            </dd>
+
             <dt class="pnfadmin"><!--[ pnml name='_PNFORUM_PREFS_TIMESPANFORCHANGES' ]--></dt>
             <dd class="pnfadmin"><input type="text" id="timespanforchanges" name="timespanforchanges" size="10" maxlength="10" value="<!--[ $pncore.pnForum.timespanforchanges|pnvarprepfordisplay ]-->" />&nbsp;<!--[ pnml name="_PNFORUM_HOURS" ]--></dd>
 

@@ -166,7 +166,15 @@ function pnForum_admin_preferences()
         	$newtopicconf_offchecked = $checked;
         }
 
-        $pnr =& new pnRender("pnForum");
+        if (pnModGetVar('pnForum', 'forum_enabled') == "yes") {
+        	$forumenabled_onchecked = $checked;
+        	$forumenabled_offchecked = " ";
+        } else {
+        	$forumenabled_onchecked = " ";
+        	$forumenabled_offchecked = $checked;
+        }
+
+        $pnr = new pnRender("pnForum");
         $pnr->caching = false;
         $pnr->add_core_data();
         $pnr->assign('autosubscribe', $autosubscribechecked);
@@ -196,10 +204,14 @@ function pnForum_admin_preferences()
         $pnr->assign('rss2f_enabledoffchecked', $rss2f_enabledoffchecked);
         $pnr->assign('newtopicconf_onchecked',  $newtopicconf_onchecked);
         $pnr->assign('newtopicconf_offchecked', $newtopicconf_offchecked);
+        $pnr->assign('forumenabled_onchecked',  $forumenabled_onchecked);
+        $pnr->assign('forumenabled_offchecked', $forumenabled_offchecked);
         return $pnr->fetch( "pnforum_admin_preferences.html");
     } else { // submit is set
         $actiontype = pnVarCleanfromInput('actiontype');
         if($actiontype=="Save") {
+            pnModSetVar('pnForum', 'forum_enabled', pnVarPrepForStore(pnVarCleanFromInput('forum_enabled')));
+            pnModSetVar('pnForum', 'forum_disabled_info', pnVarPrepForStore(pnVarCleanFromInput('forum_disabled_info')));
             pnModSetVar('pnForum', 'newtopicconfirmation', pnVarPrepForStore(pnVarCleanFromInput('newtopicconfirmation')));
             pnModSetVar('pnForum', 'rss2f_enabled', pnVarPrepForStore(pnVarCleanFromInput('rss2f_enabled')));
             pnModSetVar('pnForum', 'deletehookaction', pnVarPrepForStore(pnVarCleanFromInput('deletehookaction')));
@@ -255,6 +267,8 @@ function pnForum_admin_preferences()
             pnModSetVar('pnForum', 'timespanforchanges', pnVarPrepForStore($timespanforchanges));
         }
         if($actiontype=="RestoreDefaults")  {
+            pnModSetVar('pnForum', 'forum_enabled', 'yes');
+            pnModSetVar('pnForum', 'forum_disabled_info', _PNFORUM_DISABLED_INFO);
             pnModSetVar('pnForum', 'newtopicconfirmation', 'no');
             pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
             pnModSetVar('pnForum', 'deletehookaction', 'lock');

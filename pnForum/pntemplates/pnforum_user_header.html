@@ -26,6 +26,7 @@ This div will be closed in the footer template.
 
 <div id="pnforum" class="pnf_clearfix">
 
+    <!--[ if $pncore.pnForum.forum_enabled neq 'no' ]-->
     <ul id="pnf_headeroptions" class="optionrow pnf_bgcolor3 pnf_bordercolor2">
 	    <li><a class="image homelink" title="<!--[ pnml name='_PNFORUM_START' ]-->" href="<!--[ pnmodurl modname=pnForum ]-->"><!--[ pnml name='_PNFORUM_START' ]--></a></li>
 	    <li><a class="image searchlink" title="<!--[ pnml name='_PNFORUM_SEARCH' ]-->" href="<!--[ pnmodurl modname=pnForum type=user func=search ]-->"><!--[ pnml name='_PNFORUM_SEARCHSHORT' ]--></a></li>
@@ -40,9 +41,10 @@ This div will be closed in the footer template.
 	    <!--[ /if ]-->
     </ul>
 
-<!--[ pngetstatusmsg class="pnf_statusmsg" tag="div"|pnvarprephtmldisplay]-->
+    <!--[ pngetstatusmsg class="pnf_statusmsg" tag="div"|pnvarprephtmldisplay]-->
 
-<!--[ if $numposts ]-->
-    <p><!--[ pnml name='_PNFORUM_STATSBLOCK' ]-->&nbsp;<!--[ $numposts ]--></p>
-<!--[ /if ]-->
+    <!--[ if $numposts ]-->
+        <p><!--[ pnml name='_PNFORUM_STATSBLOCK' ]-->&nbsp;<!--[ $numposts ]--></p>
+    <!--[ /if ]-->
 
+    <!--[ /if ]-->

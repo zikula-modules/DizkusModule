@@ -712,6 +712,8 @@ function pnForum_upgrade_to_2_7()
 {
     pnModSetVar('pnForum', 'shownewtopicconfirmation', 'no');
     pnModSetVar('pnForum', 'timespanforchanges', 24);
+    pnModSetVar('pnForum', 'forum_enabled', 'yes');
+    pnModSetVar('pnForum', 'forum_disabled_info', _PNFORUM_DISABLED_INFO);
     return true;
 }
 

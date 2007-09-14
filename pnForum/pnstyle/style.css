@@ -938,6 +938,7 @@ form#pnf_topicsubscriptions td {
  * pnforum_user_notifymoderator.html
  * pnforum_user_viewip.html
  * pnforum_user_search.html
+ * pnforum_disabled.html
  ************************************/
 
 fieldset#pnf_movepost div,
@@ -947,6 +948,7 @@ fieldset#pnf_jointopic div,
 fieldset#pnf_deletetopic div,
 fieldset#pnf_stickytopic div,
 fieldset#pnf_search div,
+fieldset#pnf_forumdisabled div,
 fieldset#pnf_splittopic div {
     text-align: center;
     margin: 1em;
