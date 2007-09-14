@@ -73,7 +73,7 @@ function createnewtopic()
 function createnewtopic_response(originalRequest)
 {
     hidepnforuminfo();
-
+    
     // show error if necessary
     if( originalRequest.status != 200 ) {
         pnf_showajaxerror(originalRequest.responseText);
@@ -87,7 +87,7 @@ function createnewtopic_response(originalRequest)
     if((json.confirmation == false) || !$('newtopicconfirmation')) {
         showpnforuminfo(redirecting);
     } else {
-        Element.hide('newtopic');
+        Element.hide('pnf_newtopic');
         Element.update('newtopicconfirmation', json.confirmation);
         Element.show('newtopicconfirmation');
     }
