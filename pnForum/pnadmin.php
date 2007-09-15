@@ -576,13 +576,12 @@ function pnForum_admin_reordertreesave()
     }
     
     $categoryarray = pnVarCleanFromInput('category');
-
     // the last entry in the $category is the placeholder for a new
-    // category, we need ot remove this
-    array_pop($categoryarray);
+    // category, we need to remove this
+    // not used any longer: array_pop($categoryarray);
     if(is_array($categoryarray) && count($categoryarray) > 0) {
         foreach($categoryarray as $catorder => $cat_id) {
-            // array key start with 0, but we need 1, so we increase the order
+            // array key = catorder starts with 0, but we need 1, so we increase the order
             // value
             $catorder++;
             if(pnModAPIFunc('pnForum', 'admin', 'storenewcategoryorder',
@@ -597,7 +596,7 @@ function pnForum_admin_reordertreesave()
             // do not remove them
             array_pop($forumsincategoryarray);
             array_pop($forumsincategoryarray);
-            
+
             if(is_array($forumsincategoryarray) && count($forumsincategoryarray) > 0) {
                 foreach($forumsincategoryarray as $forumorder => $forum_id) {
                     if(!empty($forum_id) && is_numeric($forum_id)) {
