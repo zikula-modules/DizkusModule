@@ -8,6 +8,7 @@ Rename this to pnforum_user_footer.html if you want to use it
 
 <div id="pnf_footer" class="pnf_bgcolor3 pnf_bordercolor2 pnf_clearfix">
     <script type="text/javascript">
+        // <![CDATA[
         new Ajax.PeriodicalUpdater(
     	    	         'pnf_footer', 
       	                 'index.php',
@@ -16,6 +17,7 @@ Rename this to pnforum_user_footer.html if you want to use it
     	                     parameters: 'module=pnForum&type=ajax&func=forumusers',
     	                     frequency: 60
     			          });
+        // ]]>
     </script>
     <noscript>
         <!--[ include file=pnforum_ajax_forumusers.html ]-->

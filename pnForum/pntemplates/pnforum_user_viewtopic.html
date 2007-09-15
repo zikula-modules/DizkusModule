@@ -247,6 +247,7 @@ end of unused code **** *]-->
 </div>
 
 <script type="text/javascript">
+    // <![CDATA[
     var storingReply = '<!--[ pnml name='_PNFORUM_STORINGREPLY' ]-->';
     var preparingPreview = '<!--[ pnml name='_PNFORUM_PREPARINGPREVIEW' ]-->';
     var storingPost = '<!--[ pnml name='_PNFORUM_STORINGPOST' ]-->';
@@ -254,8 +255,6 @@ end of unused code **** *]-->
     var updatingPost = '<!--[ pnml name='_PNFORUM_UPDATINGPOST' ]-->';
     var statusNotChanged = '<!--[ pnml name='_PNFORUM_STATUS_NOTCHANGED' ]-->';
     var statusChanged = '<!--[ pnml name='_PNFORUM_STATUS_CHANGED' ]-->';
-
-
 
     Event.observe(window, 'load', init_topicview);
     function init_topicview() 
@@ -269,7 +268,7 @@ end of unused code **** *]-->
         }
         $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
     }
-
+    // ]]>  
 </script>
 
 <!--[ include file='pnforum_user_footer.html' ]-->
