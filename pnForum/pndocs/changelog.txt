@@ -18,7 +18,6 @@ PostNuke pnForum Module changelog
 + using resizable.js written by Kazuki Ohta (ohta@uei.co.jp)
 + animated gifs made Klaus Petzka (mail@petzi-juist.de)
 + optimized all functions that search forums (better performance)
-+ search function is .8 compatible
 + Templates and layout reworked
 + The following plugins are declared obsolete and may not be present in
   future versions:

@@ -25,7 +25,9 @@ Installation
   kopieren
   Die Datei modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php nach modules/Xanthia/plugins kopieren
   Im Head-Bereich des Themes <!--[ pnforumcolorcss ]--> einfügen
-  
+
+* AjaxSupportPackage von http://noc.postnuke.com/frs/?group_id=8&release_id=1069 
+  herunterladen und nach Anleitung installieren. 
 * Modulliste neu erzeugen lassen
 * pnForum installieren und aktivieren
 * Hooks nach Bedarf für pnForum einstellen.

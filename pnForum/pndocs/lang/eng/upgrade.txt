@@ -52,9 +52,11 @@ Users | pnForum:: | .* | comment
 
 allows all registered users to write in all forums.
 
-Upgrade from pnForum 2.6
-------------------------
-Perform the ususal module upgrade steps, then copy 
-modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php to 
-modules/Xanthia/plugins and add this plugin to the head section
-of your theme template: <!--[ pnforumcolorcss ]-->
+Upgrade from pnForum 2.6 or even older version
+----------------------------------------------
+* Perform the ususal module upgrade steps, then copy 
+  modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php to 
+  modules/Xanthia/plugins and add this plugin to the head section
+  of your theme template: <!--[ pnforumcolorcss ]-->
+* Download the AjaxSupportPackage from http://noc.postnuke.com/frs/?group_id=8&release_id=1069 
+  and install it as documented. 
