@@ -1,5 +1,15 @@
 <?php
 /**
+ * pnForum
+ *
+ * @copyright (c) 2001-now, pnForum Development Team
+ * @link http://www.pnforum.de
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package pnForum
+ */
+
+/**
  * main entry point - used for bckwards compatibility to old phpBB_14 links in search engines
  * @version $Id$
  * @author Andreas Krapohl, Frank Schummertz 
@@ -58,5 +68,3 @@ if(pnModAvailable('pnForum')) {
     pnRedirect('index.php');
     return true;
 }
-
-?>
