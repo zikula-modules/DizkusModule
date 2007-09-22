@@ -1,47 +1,18 @@
 <?php
-/************************************************************************
- * pnForum - The Post-Nuke Module                                       *
- * ==============================                                       *
- *                                                                      *
- * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
- * http://www.pnforum.de/                                               *
- ************************************************************************
- * Modified version of:                                                 *
- ************************************************************************
- * phpBB version 1.4                                                    *
- * begin                : Wed July 19 2000                              *
- * copyright            : (C) 2001 The phpBB Group                      *
- * email                : support@phpbb.com                             *
- ************************************************************************
- * License                                                              *
- ************************************************************************
- * This program is free software; you can redistribute it and/or modify *
- * it under the terms of the GNU General Public License as published by *
- * the Free Software Foundation; either version 2 of the License, or    *
- * (at your option) any later version.                                  *
- *                                                                      *
- * This program is distributed in the hope that it will be useful,      *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
- * GNU General Public License for more details.                         *
- *                                                                      *
- * You should have received a copy of the GNU General Public License    *
- * along with this program; if not, write to the Free Software          *
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 *
- * USA                                                                  *
- ************************************************************************
+/**
+ * pnForum
  *
- * @version $Id: global.php,v 1.7 2005/11/23 14:52:31 landseer Exp $
- * @author various
- * @copyright 2004 by pnForum team
- * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html>
+ * @copyright (c) 2001-now, pnForum Development Team
  * @link http://www.pnforum.de
- *
+ * @version $Id: pnadmin.php 815 2007-09-22 13:12:50Z landseer $
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package pnForum
  ************************************************************************
- * spanish language defines - Traslate by el_cuervo dev-posnuke.com
+ * spanish language defines - Translate by el_cuervo dev-postnuke.com
  * http://www.dev-postnuke.com - Soporte y ayuda en español
  ***********************************************************************/
+ */
+ 
 define('_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS', 'Faltam parámetros para poder realizar la búsqueda');
 define('_PNFORUM_NOMOVETO', 'No se ha seleccionado Foro de destino');
 define('_PNFORUM_NOJOINTO', 'No se ha seleccionado Tema de destino para la unión');
@@ -492,4 +463,3 @@ define('_PNFORUM_VIEWS','Visitado');
 define('_PNFORUM_VISITCATEGORY', 'visite esta categoría');
 define('_PNFORUM_VISITFORUM', 'visite este foro');
 define('_PNFORUM_YESTERDAY','ayer');
-?>
