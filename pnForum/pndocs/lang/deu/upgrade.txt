@@ -53,3 +53,11 @@ Wie üblich braucht man zum Schreiben das Kommentieren-Recht:
 Users | pnForum:: | .* | comment
 
 erlaubt allen registrieren Usern das Schreiben in allen Foren.
+
+Upgrade von pnForum 2.6
+------------------------
+Abgesehen vom üblichen Modulupgrade ist hier nur zu beachten, das man die Datei 
+modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php nach 
+modules/Xanthia/plugins kopieren und dieses Plugin im Head-Bereich des Theme-
+Templates einfügen muss:
+<!--[ pnforumcolorcss ]-->

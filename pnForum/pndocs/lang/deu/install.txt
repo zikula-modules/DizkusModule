@@ -12,8 +12,6 @@ Installation
   |  |
   |  -- search
   |
-  -- javascript
-  |
   -- modules
      |
      -- pnForum
@@ -21,13 +19,12 @@ Installation
         -- weitere Unterverzeichnisse
 
   Den Inhalt von includes/search ins PostNuke includes/search Verzeichnis kopieren
-  Den Inhalt von javascript/ajax inach PostNuke_Rootverzeichnis/javascript/ajax Verzeichnis kopieren
   Den Inhalt von modules ins PostNuke modules Verzeichnis kopieren
   (nicht modules/Modules!!)
   Die Datei backforum.php aus dem pnForumverzeichnis ins PostNuke Verzeichnis
   kopieren
-  Die Datei modules/pnForum/pntemplates/plugins/function.pnforucolorcss.php nach modules/Xanthia/plugins kopieren
-  Im Head-Berei des Themes <!--[ pnforumcolorcss ]--> einfügen
+  Die Datei modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php nach modules/Xanthia/plugins kopieren
+  Im Head-Bereich des Themes <!--[ pnforumcolorcss ]--> einfügen
   
 * Modulliste neu erzeugen lassen
 * pnForum installieren und aktivieren
