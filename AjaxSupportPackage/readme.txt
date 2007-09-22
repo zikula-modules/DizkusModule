@@ -1,5 +1,5 @@
 //
-// AjaxSupportPackage 7.03.22
+// AjaxSupportPackage 7.09.22
 //
 
 
@@ -7,12 +7,13 @@
 -------
 This package contains a collection of javascript libraries that can be used
 for rich internet sites in PostNuke:
-prototype 1.5.0         http://prototypejs.org
-scriptaculous 1.7.0     http://script.aculo.us
-behaviour 1.1           http://bennolan.com/behaviour/behaviour.js
-validation 1.5.4.1      http://tetlaw.id.au/view/blog/really-easy-field-validation-with-prototype/
-resizable               http://lists.rubyonrails.org/pipermail/rails-spinoffs/2006-April/003645.html
-windows 1.2.1           http://prototype-window.xilinus.com
+prototype 1.5.1               http://prototypejs.org
+scriptaculous 1.7.1 beta3     http://script.aculo.us
+behaviour 1.1                 http://bennolan.com/behaviour/behaviour.js
+validation 1.5.4.1            http://tetlaw.id.au/view/javascript/really-easy-field-validation
+resizable                     http://lists.rubyonrails.org/pipermail/rails-spinoffs/2006-April/003645.html
+windows 1.3                   http://prototype-window.xilinus.com
+lightbox 2.03.3               http://huddletogether.com/projects/lightbox2/
 If you think, something valuable is missing, contact me (see #3).This package is designed for users, 
 not for developers. It does not contain any docs or stylesheets for the libraries.
 
@@ -22,7 +23,7 @@ There are more and more modules that require those libs now. While .8 comes
 with them out of the box, every module devs has to maintain his own copies
 for now. This might lead different versions used in different modules.
 So I created this package to minimize these problems.
-Right now (Mar 2007) the following modules use Ajax and/or the supplied effect libs:
+Right now (Sept 2007) the following modules use Ajax and/or the supplied effect libs:
 Formicula (beginning with 1.0)
 MultiHook (beginning with 2.0)
 pnForum (beginning with 2.7)
@@ -47,6 +48,7 @@ Compiled by Frank Schummertz, frank.schummertz@landseer-stuttgart.de
 
 4. When
 -------
+7.09.22: prototype 1.5.1, scriptaculous 1.7.1 beta3, windows 1.3, lightbox 2.03.3
 7.03.22: validation 1.5.4.1, windows 1.2.1
 7.02.6:  scriptaculous 1.7.0, prototype 1.5.0
 6.09.8:  scriptaculous 1.6.4, prototype 1.5.0_rc1
