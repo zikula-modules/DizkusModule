@@ -63,8 +63,8 @@ function pnForum_centerblock_display($row)
     }
 
     if(pnModGetName() <> 'pnForum') {
-        // add the pnForum stylesheet file to the addtional_header array
-        pnf_add_stylesheet_header();
+        // add the pnForum stylesheet file to the page vars
+        PageUtil::addVar('stylesheet', ThemeUtil::getModuleStylesheet('pnForum'));
     }
 
     // Break out options from our content field

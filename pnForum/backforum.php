@@ -19,7 +19,7 @@ pnInit();
 /**
  * load pnForum specific support functions
  */
-include_once 'modules/pnForum/common.php';
+Loader::includeOnce('modules/pnForum/common.php');
 
 list($count, $forum_id, $cat_id, $feed, $user) = pnVarCleanFromInput('count', 'forum_id', 'cat_id', 'feed', 'user');
 
@@ -55,8 +55,7 @@ if(isset($cat_id) && !is_numeric($cat_id)) {
 /**
  * create pnRender object
  */
-$pnr =& new pnRender('pnForum');
-$pnr->caching = false;
+$pnr = pnRender::getInstance('pnForum', false);
 
 /**
  * check if template for feed exists

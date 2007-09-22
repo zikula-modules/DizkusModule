@@ -34,7 +34,7 @@ function pnForum_ajax_reply()
 
     pnSessionSetVar('pn_ajax_call', 'ajax');
     
-    $message = pnfstriptags(pnf_convert_from_utf8($message));
+    $message = pnfstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
@@ -198,14 +198,14 @@ function pnForum_ajax_updatepost()
             pnf_ajaxerror(_BADAUTHKEY);
         }
  
-        $message = pnfstriptags(pnf_convert_from_utf8($message));
+        $message = pnfstriptags(DataUtil::convertFromUTF8($message));
         // check for maximum message size
         if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
             pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
         }
         pnModAPIFunc('pnForum', 'user', 'updatepost',
                      array('post_id'          => $post_id,
-                           'subject'          => pnf_convert_from_utf8($subject),
+                           'subject'          => DataUtil::convertFromUTF8($subject),
                            'message'          => $message,
                            'delete'           => $delete,
                            'attach_signature' => ($attach_signature==1)));
@@ -520,7 +520,7 @@ function pnForum_ajax_updatetopicsubject()
         }
 
 
-        $subject = trim(pnf_convert_from_utf8($subject));
+        $subject = trim(DataUtil::convertFromUTF8($subject));
         if(empty($subject)) {
             pnf_ajaxerror(_PNFORUM_NOSUBJECT);
         }
@@ -609,7 +609,7 @@ function pnForum_ajax_newtopic()
     //$attach_signature = ($attach_signature=='1') ? true : false;
     //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
-    $message = pnfstriptags(pnf_convert_from_utf8($message));
+    $message = pnfstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
@@ -618,7 +618,7 @@ function pnForum_ajax_newtopic()
         pnf_ajaxerror(_PNFORUM_EMPTYMSG);
     }
 
-    $subject = pnf_convert_from_utf8($subject);
+    $subject = DataUtil::convertFromUTF8($subject);
     if(strlen($subject)==0) {
         pnf_ajaxerror(_PNFORUM_NOSUBJECT);
     }

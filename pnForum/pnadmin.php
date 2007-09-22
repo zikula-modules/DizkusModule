@@ -23,9 +23,7 @@ function pnForum_admin_main()
 
     $categories = pnModAPIFunc('pnForum', 'admin', 'readcategories');
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
-    $pnr =& new pnRender("pnForum");
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('total_categories', count($categories));
     $pnr->assign('categories', $categories);
     $pnr->assign('forums', $forums);
@@ -142,9 +140,7 @@ function pnForum_admin_preferences()
         	$forumenabled_offchecked = $checked;
         }
 
-        $pnr = new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
+        $pnr = pnRender::getInstance('pnForum', false, null, true);
         $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
         $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
@@ -293,9 +289,7 @@ function pnForum_admin_advancedpreferences()
         if (pnModGetVar('pnForum', 'extendedsearch') == "1") {
         	$extendedsearch_checked = $checked;
         }
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
+        $pnr = pnRender::getInstance('pnForum', false, null, true);
         $pnr->assign('dbversion', $dbversion);
         $pnr->assign('dbtype', $dbconn->databaseType);
         $pnr->assign('dbname', $dbconn->databaseName);
@@ -368,9 +362,7 @@ function pnForum_admin_ranks()
                                              array('ranktype' => $ranktype));
 
     if(!$submit) {
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
+        $pnr = pnRender::getInstance('pnForum', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('ranktype', $ranktype);
         $pnr->assign('rankimages', $rankimages);
@@ -474,9 +466,7 @@ function pnForum_admin_assignranks()
         
         unset($users);
 
-        $pnr =& new pnRender("pnForum");
-        $pnr->caching = false;
-        $pnr->add_core_data();
+        $pnr = pnRender::getInstance('pnForum', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
         $pnr->assign('allusers', $allusers);
@@ -515,9 +505,7 @@ function pnForum_admin_reordertree()
             }
         }
     }
-    $pnr =& new pnRender("pnForum");
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('categorytree', $categorytree);
     $pnr->assign('catids', $catids);
     $pnr->assign('forumids', $forumids);
@@ -683,9 +671,7 @@ function pnForum_admin_editforum($args=array())
                                     array('forum_id' => $forum['forum_id']));
 
 
-    $pnr = new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('hooked_modules', $hooked_modules);
     $pnr->assign('rssfeeds', $rssfeeds);
     $pnr->assign('externalsourceoptions', $externalsourceoptions);
@@ -750,9 +736,7 @@ function pnForum_admin_editcategory($args=array())
                                      'permcheck' => 'nocheck'));
         $category['forum_count'] = count($forums);
     }
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('category', $category );
     $pnr->assign('newcategory', $new);
     pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_ajax_editcategory.html'),
@@ -788,7 +772,7 @@ function pnForum_admin_storecategory()
                                         'add',
                                         'delete');
 
-    $cat_title = pnf_convert_from_utf8($cat_title);
+    $cat_title = DataUtil::convertFromUTF8($cat_title);
     if(!empty($delete)) {
         $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
                                array('cat_id'    => $cat_id,
@@ -817,9 +801,7 @@ function pnForum_admin_storecategory()
         if(!is_bool($cat_id)) {
             $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            $pnr =& new pnRender('pnForum');
-            $pnr->caching = false;
-            $pnr->add_core_data();
+            $pnr = pnRender::getInstance('pnForum', false, null, true);
             $pnr->assign('category', $category );
             $pnr->assign('newcategory', false);
             pnf_jsonizeoutput(array('cat_id'      => $cat_id,
@@ -915,16 +897,16 @@ function pnForum_admin_storeforum()
 
     $pntopic = (int)FormUtil::getpassedValue('pncategory', 0);
 
-    $forum_name           = pnf_convert_from_utf8($forum_name);           
-    $desc                 = pnf_convert_from_utf8($desc);                 
-    $pop3_server          = pnf_convert_from_utf8($pop3_server);          
-    $pop3_login           = pnf_convert_from_utf8($pop3_login);           
-    $pop3_password        = pnf_convert_from_utf8($pop3_password);        
-    $pop3_passwordconfirm = pnf_convert_from_utf8($pop3_passwordconfirm); 
-    $pop3_matchstring     = pnf_convert_from_utf8($pop3_matchstring);     
-    $pnuser               = pnf_convert_from_utf8($pnuser);               
-    $pnpassword           = pnf_convert_from_utf8($pnpassword);           
-    $pnpasswordconfirm    = pnf_convert_from_utf8($pnpasswordconfirm);    
+    $forum_name           = DataUtil::convertFromUTF8($forum_name);           
+    $desc                 = DataUtil::convertFromUTF8($desc);                 
+    $pop3_server          = DataUtil::convertFromUTF8($pop3_server);          
+    $pop3_login           = DataUtil::convertFromUTF8($pop3_login);           
+    $pop3_password        = DataUtil::convertFromUTF8($pop3_password);        
+    $pop3_passwordconfirm = DataUtil::convertFromUTF8($pop3_passwordconfirm); 
+    $pop3_matchstring     = DataUtil::convertFromUTF8($pop3_matchstring);     
+    $pnuser               = DataUtil::convertFromUTF8($pnuser);               
+    $pnpassword           = DataUtil::convertFromUTF8($pnpassword);           
+    $pnpasswordconfirm    = DataUtil::convertFromUTF8($pnpasswordconfirm);    
 
     $pop3testresulthtml = '';
     if(!empty($delete)) {
@@ -1024,9 +1006,7 @@ function pnForum_admin_storeforum()
         if($pop3_test==1) {
             $pop3testresult = pnModAPIFunc('pnForum', 'user', 'testpop3connection',
                                            array('forum_id' => $forum_id));
-            $pnr =& new pnRender('pnForum');
-            $pnr->caching = false;
-            $pnr->add_core_data();
+            $pnr = pnRender::getInstance('pnForum', false, null, true);
             $pnr->assign('messages', $pop3testresult);
             $pnr->assign('forum_id', $forum_id);
             $pop3testresulthtml = $pnr->fetch('pnforum_admin_pop3test.html');
@@ -1064,9 +1044,7 @@ function pnForum_admin_managesubscriptions()
     }
     if(!$submit) {
         // submit is empty
-        $pnr = new pnRender('pnForum');
-        $pnr->caching = false;
-        $pnr->add_core_data();
+        $pnr = pnRender::getInstance('pnForum', false, null, true);
         $pnr->assign('pnusername', $pnusername);
         $pnr->assign('pnuid', $pnuid);
         $pnr->assign('topicsubscriptions', $topicsubscriptions);

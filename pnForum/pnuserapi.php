@@ -2671,7 +2671,7 @@ function pnForum_userapi_notify_by_email($args)
             $pn_email = pnUserGetVar('email', $pn_uid);
             if(empty($pn_email)) { continue; }
             // check permissions
-            if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+            if(SecurityUtil::checkPermission('pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
@@ -2700,7 +2700,7 @@ function pnForum_userapi_notify_by_email($args)
             $pn_email = pnUserGetVar('email', $pn_uid);
             if(empty($pn_email)) { continue; }
             // check permissions
-            if(pnfSecAuthAction(0, 'pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+            if(SecurityUtil::checkPermission('pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;

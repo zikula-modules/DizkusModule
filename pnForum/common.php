@@ -135,9 +135,7 @@ function showforumerror($error_text, $file='', $line=0)
         pnf_ajaxerror($error_text);
     }
 
-    $pnr =& new pnRender('pnForum');
-    $pnr->add_core_data();
-    $pnr->caching = false;
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
@@ -748,185 +746,6 @@ function pnfstriptags($text='')
 }
 
 /**
- * see if a user is authorised to carry out a particular task
- * @public
- * @param realm the realm under test
- * @param component the component under test
- * @param instance the instance under test
- * @param level the level of access required
- * @return bool true if authorised, false if not
- */
-function pnfSecAuthAction($testrealm, $testcomponent, $testinstance, $testlevel, $testuser=null)
-{
-    static $userperms, $groupperms;
-
-    if(!isset($userperms) || !isset($groupperms)) {
-        $userperms  = array();
-        $groupperms = array();
-    }
-
-    if(!isset($testuser)) {
-        $testuser = pnUserGetVar('uid');
-    }
-
-    if (!isset($GLOBALS['pnfauthinfogathered'][$testuser]) || (int)$GLOBALS['pnfauthinfogathered'][$testuser] == 0) {
-        // First time here - get auth info
-        list($userperms[$testuser], $groupperms[$testuser]) = pnfSecGetAuthInfo($testuser);
-
-        if ((count($userperms[$testuser]) == 0) &&
-            (count($groupperms[$testuser]) == 0)) {
-                // No permissions
-                return;
-        }
-    }
-
-    // Get user access level
-    $userlevel = pnSecGetLevel($userperms[$testuser], $testrealm, $testcomponent, $testinstance);
-
-    // User access level is override, so return that if it exists
-    if ($userlevel > ACCESS_INVALID) {
-        // user has explicitly defined access level for this
-        // realm/component/instance combination
-    return $userlevel >= $testlevel;
-    }
-
-  return pnSecGetLevel($groupperms[$testuser], $testrealm, $testcomponent, $testinstance) >= $testlevel;
-}
-
-/**
- * get authorisation information for this user
- *
- * @public
- * @return array two element array of user and group permissions
- */
-function pnfSecGetAuthInfo($testuser=null)
-{
-    // Load the groups db info
-    pnModDBInfoLoad('Groups', 'Groups');
-    pnModDBInfoLoad('Permissions', 'Permissions');
-
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
-
-    // Tables we use
-    $userpermtable = $pntable['user_perms'];
-    $userpermcolumn = &$pntable['user_perms_column'];
-
-    $groupmembershiptable = $pntable['group_membership'];
-    $groupmembershipcolumn = &$pntable['group_membership_column'];
-
-    $grouppermtable = $pntable['group_perms'];
-    $grouppermcolumn = &$pntable['group_perms_column'];
-
-    $realmtable = $pntable['realms'];
-    $realmcolumn = &$pntable['realms_column'];
-
-    // Empty arrays
-    $userperms = array();
-    $groupperms = array();
-
-    $uids[] = -1;
-    // Get user ID
-    if(!isset($testuser)) {
-        if (!pnUserLoggedIn()) {
-            // Unregistered UID
-            $uids[] = 0;
-            $vars['Active User'] = 'unregistered';
-        } else {
-            $uids[] = pnUserGetVar('uid');
-            $vars['Active User'] = pnUserGetVar('uid');
-        }
-    } else {
-        $uids[] = $testuser;
-        $vars['Active User'] = $testuser;
-    }
-
-    $uids = implode(",", $uids);
-
-    // Get user permissions
-    $query = "SELECT $userpermcolumn[realm],
-                     $userpermcolumn[component],
-                     $userpermcolumn[instance],
-                     $userpermcolumn[level]
-              FROM $userpermtable
-              WHERE $userpermcolumn[uid] IN (" . pnVarPrepForStore($uids) . ")
-              ORDER by $userpermcolumn[sequence]";
-    $result =& $dbconn->Execute($query);
-
-    if ($dbconn->ErrorNo() != 0) {
-        return array($userperms, $groupperms);
-    }
-
-    while (list($realm, $component, $instance, $level) = $result->fields) {
-        $result->MoveNext();
-
-        $component = fixsecuritystring($component);
-        $instance = fixsecuritystring($instance);
-        $userperms[] = array('realm'     => $realm,
-                             'component' => $component,
-                             'instance'  => $instance,
-                             'level'     => $level);
-    }
-
-    // Get all groups that user is in
-    $query = "SELECT $groupmembershipcolumn[gid]
-              FROM $groupmembershiptable
-              WHERE $groupmembershipcolumn[uid] IN (" . pnVarPrepForStore($uids) . ")";
-
-    $result =& $dbconn->Execute($query);
-
-    if ($dbconn->ErrorNo() != 0) {
-        return array($userperms, $groupperms);
-    }
-
-    $usergroups[] = -1;
-    if (!pnUserLoggedIn()) {
-        // Unregistered GID
-        $usergroups[] = 0;
-    }
-    while (list($gid) = $result->fields) {
-        $result->MoveNext();
-        $usergroups[] = $gid;
-    }
-    $usergroups = implode(",", $usergroups);
-
-    // Get all group permissions
-    $query = "SELECT $grouppermcolumn[realm],
-                     $grouppermcolumn[component],
-                     $grouppermcolumn[instance],
-                     $grouppermcolumn[level]
-              FROM $grouppermtable
-              WHERE $grouppermcolumn[gid] IN (" . pnVarPrepForStore($usergroups) . ")
-              ORDER by $grouppermcolumn[sequence]";
-    $result =& $dbconn->Execute($query);
-
-    if ($dbconn->ErrorNo() != 0) {
-        return array($userperms, $groupperms);
-    }
-
-    while(list($realm, $component, $instance, $level) = $result->fields) {
-        $result->MoveNext();
-
-        $component = fixsecuritystring($component);
-        $instance = fixsecuritystring($instance);
-        // Search/replace of special names
-        preg_match_all("/<([^>]+)>/", $instance, $res);
-        for($i = 0; $i < count($res[1]); $i++) {
-          $instance = preg_replace("/<([^>]+)>/", $vars[$res[1][$i]], $instance, 1);
-        }
-        $groupperms[] = array('realm'     => $realm,
-                              'component' => $component,
-                              'instance'  => $instance,
-                              'level'     => $level);
-    }
-
-    // we've now got the permissions info
-    $GLOBALS['pnfauthinfogathered'][$testuser] = 1;
-
-    return array($userperms, $groupperms);
-}
-
-/**
  * array_csort implementation
  *
  */
@@ -971,46 +790,6 @@ function pnf_ajaxerror($error='unspecified ajax error')
 }
 
 /**
- * pnf_convert_to_utf8()
- * converts a string or an array (recursivly) from CHARSET to utf-8
- *
- */
-function pnf_convert_to_utf8($input='')
-{
-    if(is_array($input)) {
-        $return = array();
-        foreach($input as $key => $value) {
-            $return[$key] = pnf_convert_to_utf8($value);
-        }
-        return $return;
-    } elseif(is_string($input)) {
-        return mb_convert_encoding($input, 'UTF-8', _CHARSET);
-    } else {
-        return $input;
-    }
-}
-
-/**
- * pnf_convert_from_utf8()
- * converts a string or an array (recursivly) from utf-8 to _CHARSET
- *
- */
-function pnf_convert_from_utf8($input='')
-{
-    if (is_array($input)) {
-        $return = array();
-        foreach($input as $key => $value) {
-            $return[$key] = pnf_convert_from_utf8($value);
-        }
-        return $return;
-    } elseif (is_string($input)) {
-        return mb_convert_encoding($input, _CHARSET, 'UTF-8');
-    } else {
-        return $input;
-    }
-}
-
-/**
  * encode data in JSON
  * This functions can add a new authid if requested to do so.
  * If the supplied args is not an array, it will be converted to an
@@ -1031,7 +810,7 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
     if($createauthid == true) {
         $data['authid'] = pnSecGenAuthKey('pnForum');
     }
-    $output = $json->encode(pnf_convert_to_utf8($data));
+    $output = $json->encode(DataUtil::convertToUTF8($data));
 
     pnSessionDelVar('pn_ajax_call');
     header('HTTP/1.0 200 OK');
@@ -1043,32 +822,6 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
     }
     exit;
 
-}
-
-/**
- * pnf_add_stylesheet_header
- *
- */
-function pnf_add_stylesheet_header($modname='')
-{
-    if(empty($modname)) {
-        $modname = pnModGetName();
-    }
-
-    // load the modulestylesheet plugin to determine the stylesheet path
-    $pnr =& new pnRender('pnForum');
-    require_once $pnr->_get_plugin_filepath('function','modulestylesheet');
-    $css = smarty_function_modulestylesheet(array('xhtml' => 1,
-                                                  'modname' => $modname), $pnr);
-    global $additional_header;
-    if(is_array($additional_header)) {
-        if(!in_array($css, $additional_header)) {
-            $additional_header[] = $css;
-        }
-    } else {
-        $additional_header[] = $css;
-    }
-    return;
 }
 
 /**
@@ -1247,8 +1000,7 @@ function pnf_available($deliverhtml = true)
 {
     if((pnModGetVar('pnForum', 'forum_enabled') == 'no') && !pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         if($deliverhtml == true) {
-            $pnf = new pnRender('pnForum');
-            $pnf->add_core_data();
+            $pnr = pnRender::getInstance('pnForum', true, 'pnforum_disabled', true);
             return $pnf->fetch('pnforum_disabled.html');
         } else {
             return false;
