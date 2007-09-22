@@ -26,14 +26,8 @@ list($count, $forum_id, $cat_id, $feed, $user) = pnVarCleanFromInput('count', 'f
 /**
  * get the short urls extensions
  */
-if(!is_dot8()) {
-    // need to check use of shorturls in .7
-    $urlsok = pnModGetVar('Xanthia', 'shorturls');
-    $urlextension = pnModGetVar('Xanthia', 'shorturlsextension');
-} else {
-    // pnModURL already handles correct shorturls in .8
-    $urlsok = 0;
-}
+// pnModURL already handles correct shorturls in .8
+
 // get the module info
 $baseurl = pnGetBaseURL();
 $pnfinfo = pnModGetInfo(pnModGetIdFromName('pnForum'));
@@ -84,11 +78,8 @@ if(!empty($user)) {
  * set some defaults
  */
 // form the url
-if($urlsok == 1) {
-   $link = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}.$urlextension");
-} else {
-   $link = $baseurl.pnModURL('pnForum', 'user', 'main');
-}
+$link = $baseurl.pnModURL('pnForum', 'user', 'main');
+
 $forumname = pnVarPrepForDisplay($pnfname);
 // default where clause => no where clause
 $where = '';
@@ -104,11 +95,7 @@ if(!empty($forum_id)) {
         exit;
     }
     $where = "AND t.forum_id = '" . (int)pnVarPrepForStore($forum_id) . "' ";
-    if($urlsok == 1) {
-       $link = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}-viewforum-forum-{$forum_id}.$urlextension");
-    } else {
-       $link = $baseurl.pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
-    }
+    $link = $baseurl.pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
     if(!pnSecAuthAction(0, 'pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
@@ -120,11 +107,7 @@ if(!empty($forum_id)) {
         exit;
     }
     $where = "AND f.cat_id = '" . (int)pnVarPrepForStore($cat_id) . "' ";
-    if($urlsok == 1) {
-       $link = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}-main-viewcat-{$cat_id}.$urlextension");
-    } else {
-       $link = $baseurl.pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
-    }
+    $link = $baseurl.pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
     $forumname = $category['cat_title'];
 
 } elseif (isset($uid) && ($uid<>false)) {
@@ -193,13 +176,10 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
         $post['cat_title']          = $cat_title;
         $shown_results++;
         $start = ((ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page);
-        if($urlsok == 1) {
-           $post['post_url'] = pnVarPrepForDisplay("{$baseurl}module-{$pnfname}-viewtopic-topic-{$topic_id}-start-{$start}.$urlextension");
-        } else {
-           $post['post_url'] = $baseurl.pnModURL('pnForum', 'user', 'viewtopic',
-                                        array('topic' => $topic_id,
-                                              'start' => $start));
-        }
+        $post['post_url'] = $baseurl.pnModURL('pnForum', 'user', 'viewtopic',
+                                              array('topic' => $topic_id,
+                                                    'start' => $start));
+
         $post['last_post_url'] = $post['post_url'] . "#pid" . $topic_last_post_id;
         array_push($posts, $post);
 //        $result->MoveNext();

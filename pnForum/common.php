@@ -1,45 +1,14 @@
 <?php
-/************************************************************************
- * pnForum - The Post-Nuke Module                                       *
- * ==============================                                       *
- *                                                                      *
- * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
- * http://www.pnforum.de/                                               *
- ************************************************************************
- * Modified version of:                                                 *
- ************************************************************************
- * phpBB version 1.4                                                    *
- * begin                : Wed July 19 2000                              *
- * copyright            : (C) 2001 The phpBB Group                      *
- * email                : support@phpbb.com                             *
- ************************************************************************
- * License                                                              *
- ************************************************************************
- * This program is free software; you can redistribute it and/or modify *
- * it under the terms of the GNU General Public License as published by *
- * the Free Software Foundation; either version 2 of the License, or    *
- * (at your option) any later version.                                  *
- *                                                                      *
- * This program is distributed in the hope that it will be useful,      *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
- * GNU General Public License for more details.                         *
- *                                                                      *
- * You should have received a copy of the GNU General Public License    *
- * along with this program; if not, write to the Free Software          *
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 *
- * USA                                                                  *
- ************************************************************************
+/**
+ * pnForum
  *
- * general functions
- * @version $Id$
- * @author Frank Schummertz
- * @copyright 2004 by Frank Schummertz
- * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html>
+ * @copyright (c) 2001-now, pnForum Development Team
  * @link http://www.pnforum.de
- *
- ***********************************************************************/
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package pnForum
+ */
+
 /*
  * getforumerror
  *
@@ -345,11 +314,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-        if(is_dot8()) {
-            $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
-        } else {
-            $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);
-        }
+        $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
     }
     $result =& $dbconn->Execute($sql);
     $dbconn->debug = false;
@@ -539,9 +504,6 @@ function phpbb_br2nl($str)
  */
 function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    if(!is_dot8()) {
-        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
-    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
 }
 
@@ -550,9 +512,6 @@ function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
  */
 function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    if(!is_dot8()) {
-        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
-    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
 }
 
@@ -561,9 +520,6 @@ function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
  */
 function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    if(!is_dot8()) {
-        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
-    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
 }
 
@@ -572,9 +528,6 @@ function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = nu
  */
 function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    if(!is_dot8()) {
-        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
-    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
 }
 
@@ -583,9 +536,6 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = n
  */
 function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    if(!is_dot8()) {
-        return pnfSecAuthAction(0, 'pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
-    }
     return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
 }
 
@@ -1122,68 +1072,6 @@ function pnf_add_stylesheet_header($modname='')
 }
 
 /**
- * pn version check
- *
- */
-function is_dot8()
-{
-    return (version_compare(PN_VERSION_NUM, '0.8', '>=')==1);
-}
-
-/**
- * pnfUserGetAll
- *
- */
-function pnfUserGetAll($regexpfield='', $regexpression='')
-{
-    if(is_dot8()) {
-        return pnUserGetAll('uname', 'ASC', 0, 1, '', $regexpfield, $regexpression);
-    }
-
-    $dbconn =& pnDBGetConn(true);
-    $pntable =& pnDBGetTables();
-
-    pnModDBInfoLoad('Users');
-
-    $userstable = $pntable['users'];
-    $userscolumn = &$pntable['users_column'];
-    $sql = "SELECT $userscolumn[uname],
-                   $userscolumn[uid],
-                   $userscolumn[name],
-                   $userscolumn[email],
-                   $userscolumn[url],
-                   $userscolumn[user_avatar]
-            FROM $userstable";
-    if(!empty($regexpfield) && (array_key_exists($regexpfield, $userscolumn)) && !empty($regexpression)) {
-        $sql .= ' WHERE ' . $userscolumn[$regexpfield]. ' REGEXP "' . pnVarPrepForStore($regexpression) . '"';
-    }
-    $result =& $dbconn->Execute($sql);
-
-    if ($dbconn->ErrorNo() != 0) {
-        return;
-    }
-
-    if ($result->EOF) {
-        return false;
-    }
-
-    $resarray = array();
-    while (!$result->EOF) {
-        list($uname, $uid, $name, $email, $url, $user_avatar) = $result->fields;
-        $result->MoveNext();
-        $resarray[$uid] = array('uname' => $uname,
-                                'uid' => $uid,
-                                'name' => $name,
-                                'email' => $email,
-                                'url' => $url,
-                                'avatar' => $user_avatar);
-    }
-    $result->Close();
-
-    return $resarray;
-}
-
-/**
  * sorting user lists by ['uname']
  *
  */
@@ -1368,4 +1256,3 @@ function pnf_available($deliverhtml = true)
     }
     return true;
 }
-?>

@@ -41,11 +41,7 @@ function smarty_function_printtopic_button($params, &$smarty)
 
     include_once('modules/pnForum/common.php');
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        if(is_dot8()) {
-            $themeinfo = pnThemeGetInfo('Printer');
-        } else {
-            $themeinfo = pnThemeInfo('Printer');
-        }
+        $themeinfo = pnThemeGetInfo('Printer');
         if($themeinfo['active']) {
             return '<a class="image printlink" title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
         }

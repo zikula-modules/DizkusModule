@@ -1,47 +1,15 @@
 <?php
-/************************************************************************
- * pnForum - The Post-Nuke Module                                       *
- * ==============================                                       *
- *                                                                      *
- * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
- * http://www.pnforum.de/                                               *
- ************************************************************************
- * Modified version of:                                                 *
- ************************************************************************
- * phpBB version 1.4                                                    *
- * begin                : Wed July 19 2000                              *
- * copyright            : (C) 2001 The phpBB Group                      *
- * email                : support@phpbb.com                             *
- ************************************************************************
- * License                                                              *
- ************************************************************************
- * This program is free software; you can redistribute it and/or modify *
- * it under the terms of the GNU General Public License as published by *
- * the Free Software Foundation; either version 2 of the License, or    *
- * (at your option) any later version.                                  *
- *                                                                      *
- * This program is distributed in the hope that it will be useful,      *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
- * GNU General Public License for more details.                         *
- *                                                                      *
- * You should have received a copy of the GNU General Public License    *
- * along with this program; if not, write to the Free Software          *
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 *
- * USA                                                                  *
- ************************************************************************
+/**
+ * pnForum
  *
- * user api functions
- * @version $Id$
- * @author Frank Schummertz
- * @copyright 2004 by Frank Schummertz
- * @package pnForum
- * @license GPL <http://www.gnu.org/licenses/gpl.html>
+ * @copyright (c) 2001-now, pnForum Development Team
  * @link http://www.pnforum.de
- *
- ***********************************************************************/
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package pnForum
+ */
 
-include_once('modules/pnForum/common.php');
+Loader::includeOnce('modules/pnForum/common.php');
 
 /**
  * get_userdata_from_id
@@ -1007,11 +975,7 @@ function pnForum_userapi_readtopic($args)
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
-            if(is_dot8()) {
-                $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
-            } else {
-                $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['pn_user_sig']);
-            }
+            $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
             
             $post['post_text'] = pnfVarPrepHTMLDisplay($post['post_text']);
 
@@ -1223,11 +1187,7 @@ function pnForum_userapi_preparereply($args)
         // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
 
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
-        if(is_dot8()) {
-            $message = pnForum_replacesignature($message, $review['poster_data']['_SIGNATURE']);
-        } else {
-            $message = pnForum_replacesignature($message, $review['poster_data']['pn_user_sig']);
-        }
+        $message = pnForum_replacesignature($message, $review['poster_data']['_SIGNATURE']);
 
         // call hooks for $message
         list($message) = pnModCallHooks('item', 'transform', $review['post_id'], array($message));
@@ -1837,11 +1797,7 @@ function pnForum_userapi_readpost($args)
     }
 //////////// ende neu
     $post['post_textdisplay'] = phpbb_br2nl($message);
-    if(is_dot8()) {
-        $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
-    } else {
-        $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['pn_user_sig']);
-    }
+    $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
 
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
@@ -4846,5 +4802,3 @@ function pnForum_userapi_get_forum_subscriptions($args)
 
     return $subscriptions;
 }
-
-?>

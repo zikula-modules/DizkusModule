@@ -56,27 +56,6 @@
             </div>
         </div>
 
-        <!--[ if $is_dot8 eq false ]-->
-
-        <div class="pnfadminrow98 pnf_clearfix">
-            <div class="pnfadmincol24">
-                <label for="pntopic"><!--[ pnml name='_PNFORUM_PNTOPIC' html=1]-->:</label>
-            </div>
-            <div class="pnfadmincol66">
-                <select id="pntopic" name="pntopic" size="1">
-                    <option value="0"><!--[ pnml name='_PNFORUM_NOPNTOPIC' ]--></option>
-                    <option value="-1"><!--[ pnml name='_PNFORUM_ALLPNTOPIC' ]--></option>
-                    <!--[ foreach item=pntopic from=$pntopics ]-->
-                    <option value="<!--[ $pntopic.topicid ]-->" <!--[ if $forum.forum_pntopic == $pntopic.topicid ]-->selected="selected"<!--[ /if ]-->><!--[ $pntopic.topicname ]--></option>
-                    <!--[ foreachelse ]-->
-                    <!--[ /foreach ]-->
-                </select>
-                <br /><!--[ pnml name='_PNFORUM_PNTOPIC_HINT' ]-->
-            </div>
-        </div>
-        
-        <!--[ else ]-->
-
         <div class="pnfadminrow98 pnf_clearfix">
             <div class="pnfadmincol24">
                 <label for="pncategory"><!--[ pnml name='_PNFORUM_PNCATEGORIES' html=1]-->:</label>
@@ -85,9 +64,6 @@
                 <!--[ $categoryselector ]-->
             </div>
         </div>
-
-        
-        <!--[ /if ]-->
 
         <div class="pnfadminrow98 pnf_clearfix">
             <div class="pnfadmincol24">

@@ -44,4 +44,3 @@ function pnForum_title() {
     pnfCloseDB($result);
     return  pnConfigGetVar('sitename').' - '.$title;
 }
-?>

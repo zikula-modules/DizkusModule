@@ -39,6 +39,3 @@ $modversion['dependencies'] = array(
                                           'maxversion' => '', 
                                           'status'     => PNMODULE_DEPENDENCY_RECOMMENDED)
                                               );
-
-
-?>
