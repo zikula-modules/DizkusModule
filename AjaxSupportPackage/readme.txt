@@ -48,6 +48,7 @@ Compiled by Frank Schummertz, frank.schummertz@landseer-stuttgart.de
 
 4. When
 -------
+SVN: fixed image path in lightbox.js
 7.09.22: prototype 1.5.1, scriptaculous 1.7.1 beta3, windows 1.3, lightbox 2.03.3
 7.03.22: validation 1.5.4.1, windows 1.2.1
 7.02.6:  scriptaculous 1.7.0, prototype 1.5.0
