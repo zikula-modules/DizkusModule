@@ -94,7 +94,7 @@ function pnForum_user_viewforum($args=array())
     }
 
     // get the input
-    $forum_id = (int)FormUtil::getPassedValue('forum_id', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
     $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
