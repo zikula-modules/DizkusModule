@@ -30,8 +30,8 @@ function smarty_function_topicpager($params, &$smarty)
     }
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $topic_id          = $params['topic_id'];
-    if(empty($forum_id)) {
-		$smarty->trigger_error('forumpager: missing parameter topic_id');
+    if(empty($topic_id)) {
+		$smarty->trigger_error('topicpager: missing parameter topic_id');
 	}
 	
     $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';

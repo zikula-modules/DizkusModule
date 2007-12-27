@@ -46,10 +46,10 @@ if(!empty($feed)) {
 }
 
 if(isset($forum_id) && !is_numeric($forum_id)) {
-    die('backforum.php: invalid forum id "' . pnVarPrepForDisplay($forum_id) . '"');
+    die('backforum.php: invalid forum id "' . DataUtil::formatForDisplay($forum_id) . '"');
 }
 if(isset($cat_id) && !is_numeric($cat_id)) {
-    die('backforum.php: invalid category id "' . pnVarPrepForDisplay($cat_id) . '"');
+    die('backforum.php: invalid category id "' . DataUtil::formatForDisplay($cat_id) . '"');
 }
 
 /**
@@ -63,7 +63,7 @@ $pnr = pnRender::getInstance('pnForum', false);
 $templatefile = 'pnforum_feed_' . pnVarPrepForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
-    die('no template for ' . pnVarPrepForDisplay($feed));
+    die('no template for ' . DataUtil::formatForDisplay($feed));
 }
 
 /**
@@ -79,7 +79,7 @@ if(!empty($user)) {
 // form the url
 $link = $baseurl.pnModURL('pnForum', 'user', 'main');
 
-$forumname = pnVarPrepForDisplay($pnfname);
+$forumname = DataUtil::formatForDisplay($pnfname);
 // default where clause => no where clause
 $where = '';
 
@@ -93,11 +93,11 @@ if(!empty($forum_id)) {
         // not allowed to see forum
         exit;
     }
-    $where = "AND t.forum_id = '" . (int)pnVarPrepForStore($forum_id) . "' ";
+    $where = "AND t.forum_id = '" . (int)DataUtil::formatForStore($forum_id) . "' ";
     $link = $baseurl.pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
-    if(!pnSecAuthAction(0, 'pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
+    if(!SecurityUtil::checkPermission('pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
         exit;
     }
     $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
@@ -105,7 +105,7 @@ if(!empty($forum_id)) {
     if($category == false) {
         exit;
     }
-    $where = "AND f.cat_id = '" . (int)pnVarPrepForStore($cat_id) . "' ";
+    $where = "AND f.cat_id = '" . (int)DataUtil::formatForStore($cat_id) . "' ";
     $link = $baseurl.pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
     $forumname = $category['cat_title'];
 
@@ -191,5 +191,3 @@ $pnr->assign('now', time());
 
 header("Content-Type: text/xml");
 $pnr->display($templatefile);
-
-?>

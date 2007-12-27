@@ -772,7 +772,7 @@ function cmp_forumtopicsort($a, $b)
  *@params $args['complete'] bool if true, reads the complete thread and does not care about
  *                               the posts_per_page setting, ignores 'start'
  *@params $args['last_visit'] string the users last visit date
- *@params $args['count']      bool  true if we have raise the read counter, default true
+ *@params $args['count']      bool  true if we have raise the read counter, default false
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
 function pnForum_userapi_readtopic($args)
@@ -789,7 +789,7 @@ function pnForum_userapi_readtopic($args)
     $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order');
 
     $complete = (isset($complete)) ? $complete : false;
-    $count    = (isset($count)) ? $count : true;
+    $count    = (isset($count)) ? $count : false;
     $start    = (isset($start)) ? $start : 0;
 
     $currentuserid = pnUserGetVar('uid');
@@ -803,7 +803,7 @@ function pnForum_userapi_readtopic($args)
     $coltopics = $pntable['pnforum_topics_column'];
     $colforums = $pntable['pnforum_forums_column'];
     $colcats   = $pntable['pnforum_categories_column'];
-
+/*
     $sql = "SELECT    $coltopics[topic_title],
                       $coltopics[topic_status],
                       $coltopics[topic_poster],
@@ -822,7 +822,7 @@ function pnForum_userapi_readtopic($args)
             LEFT JOIN $tblcats
             ON        $colcats[cat_id]     = $colforums[cat_id]
             WHERE     $coltopics[topic_id] = '".(int)pnVarPrepForStore($topic_id)."'";
-    /*
+*/
     $sql = "SELECT t.topic_title,
                    t.topic_status,
                    t.forum_id,
@@ -837,7 +837,7 @@ function pnForum_userapi_readtopic($args)
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
-*/
+
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $topic = array();
@@ -903,10 +903,13 @@ function pnForum_userapi_readtopic($args)
          * update topic counter
          */
         if($count == true) {
+            DBUtil::incrementObjectFieldByID('pnforum_topics', 'topic_views', $topic_id, 'topic_id');
+            /*
             $sql = "UPDATE ".$pntable['pnforum_topics']."
                     SET topic_views = topic_views + 1
                     WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            */
         }
         /**
          * more then one page in this topic?
@@ -2769,7 +2772,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     if(isset($user_id)) {
-        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
             return showforumerror(_PNFORUM_NOAUTH);
         }
     } else {
@@ -2859,8 +2862,8 @@ function pnForum_userapi_subscribe_topic($args)
 
     list($dbconn, $pntable) = pnfOpenDB();
 
-    if(isset($user_id) && !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-        return showforumerror(_PNFORUM_NOAUTH);
+    if(isset($user_id) && !SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+        return LogUtil::registerPermissionError();
     } else {
         $user_id = pnUserGetVar('uid');
     }
@@ -2899,8 +2902,8 @@ function pnForum_userapi_unsubscribe_topic($args)
     $tsubcolumn = $pntable['pnforum_topic_subscription_column'];
 
     if(isset($user_id)) {
-        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
-            return showforumerror(_PNFORUM_NOAUTH);
+        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
         }
     } else {
         $user_id = pnUserGetVar('uid');
@@ -2936,8 +2939,8 @@ function pnForum_userapi_subscribe_forum($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
 
-    if(isset($user_id) && !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-        return showforumerror(_PNFORUM_NOAUTH);
+    if(isset($user_id) && !SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+        return LogUtil::registerPermissionError();
     } else {
         $user_id = pnUserGetVar('uid');
     }
@@ -2977,8 +2980,8 @@ function pnForum_userapi_unsubscribe_forum($args)
     $fsubcolumn = $pntable['pnforum_subscription_column'];
 
     if(isset($user_id)) {
-        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
-            return showforumerror(_PNFORUM_NOAUTH);
+        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
         }
     } else {
         $user_id = pnUserGetVar('uid');
@@ -3671,7 +3674,7 @@ function pnForum_userapi_get_favorite_status($args)
     extract($args);
     unset($args);
 
-    if (!isset($user_id)) {
+    if (!isset($args['user_id'])) {
         $user_id = (int)pnUserGetVar('uid');
     }
 
@@ -4759,8 +4762,8 @@ function pnForum_userapi_get_forum_subscriptions($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     if(isset($user_id)) {
-        if(!pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
-            return showforumerror(_PNFORUM_NOAUTH);
+        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
         }
     } else {
         $user_id = pnUserGetVar('uid');

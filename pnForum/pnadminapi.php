@@ -21,40 +21,17 @@ Loader::includeOnce('modules/pnForum/common.php');
  */
 function pnForum_adminapi_readcategories($args)
 {
-    extract($args);
-    unset($args);
+    $pntables = pnDBGetTables();
+    $catcolumn = $pntables['pnforum_categories_column'];
 
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    $categories = array();
-
-    $cattable = $pntable['pnforum_categories'];
-    $catcolumn = $pntable['pnforum_categories_column'];
-    $where = "";
-    if(isset($cat_id)) {
-        $where .= "WHERE $catcolumn[cat_id]=" . pnVarPrepForStore($cat_id) . " ";
+    $where = '';
+    if(isset($args['cat_id'])) {
+        $where .= "WHERE $catcolumn[cat_id]=" . DataUtil::formatForStore($args['cat_id']) . " ";
     }
+    $orderby = 'cat_order ASC';
 
-    $sql = "SELECT $catcolumn[cat_id], $catcolumn[cat_title], $catcolumn[cat_order]
-            FROM $cattable
-            $where
-            ORDER BY $catcolumn[cat_order]";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $category = array();
-            list( $category['cat_id'],
-                  $category['cat_title'],
-                  $category['cat_order'] ) = $result->fields;
-            if(isset($cat_id)) {
-                return $category;
-            }
-            array_push( $categories, $category );
-        }
-        usort($categories, 'cmp_catorder');
-    }
-    pnfCloseDB($result);
-    if(isset($cat_id)) {
+    $categories = DBUtil::selectObjectArray('pnforum_categories', $where, $orderby);
+    if(isset($args['cat_id'])) {
         return $categories[0];
     }
 
@@ -64,63 +41,53 @@ function pnForum_adminapi_readcategories($args)
     // the fact that is array is sorted by cat_order simplifies this :-)
     $last_cat_order = 0;   // for comparison
     $cat_order_adjust = 0; // holds the number of shifts we have to do
+    $shifted = false; // trigger, if true we have to update the db
     for($i=0; $i<count($categories); $i++) {
         // we leave cat_order = 0 untouched!
         if($cat_order_adjust>0) {
             // we have done at least one change before which means that all foloowing categories
             // have to be changed too.
             $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
-            // update db immediately
-            $sql = "UPDATE $cattable
-                    SET $catcolumn[cat_order]= '" . pnVarPrepForStore($categories[$i]['cat_order']) . "'
-                    WHERE $catcolumn[cat_id] = '" . pnVarPrepForStore($categories[$i]['cat_id']) . "'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+            $shifted = true;
         } else if($categories[$i]['cat_order'] == $last_cat_order ) {
             $cat_order_adjust++;
             $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
-            $sql = "UPDATE $cattable
-                    SET $catcolumn[cat_order]= '" . pnVarPrepForStore($categories[$i]['cat_order']) . "'
-                    WHERE $catcolumn[cat_id] = '" . pnVarPrepForStore($categories[$i]['cat_id']) . "'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+            $shifted = true;
         }
         $last_cat_order = $categories[$i]['cat_order'];
     }
+    if($shifted == true) {
+        DBUtil::updateObjectArray($categories, 'pnforum_categories', 'cat_id');
+    }
+
     return $categories;
 }
 
 /**
  * updatecategory
- * update a category in database
+ * update a category in database, either cat_title or cat_order
 
  *@params $args['cat_title'] string category title
  *@params $args['cat_id'] int category id
  */
 function pnForum_adminapi_updatecategory($args)
 {
-    extract($args);
-    unset($args);
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
+    
+    // copy all entries from $args to $obj that are found in the categories table
+    // this prevents possible SQL errors if non existing keys are passed to this function
+    $pntables = pnDBGetTables();
+    $obj = array();
+    foreach($args as $key => $arg) {
+        if (array_key_exists($key, $pntables['pnforum_categories_column'])) {
+            $obj[$key] = $arg;
+        }
+    }
 
-    if(isset($cat_title) && isset($cat_id)) {
-        list($dbconn, $pntable) = pnfOpenDB();
-
-        $cattable = $pntable['pnforum_categories'];
-        $catcolumn = $pntable['pnforum_categories_column'];
-
-        // prepare for db
-        $cat_title = pnVarPrepForStore($cat_title);
-        $cat_id = pnVarPrepForStore($cat_id);
-
-        $sql = "UPDATE $cattable
-                SET $catcolumn[cat_title]= '$cat_title'
-                WHERE $catcolumn[cat_id] = '$cat_id'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+    if(isset($obj['cat_id'])) {
+        $obj = DBUtil::updateObject($obj, 'pnforum_categories', null, 'cat_id');
         return true;
     }
     return false;
@@ -134,34 +101,14 @@ function pnForum_adminapi_updatecategory($args)
  */
 function pnForum_adminapi_addcategory($args)
 {
-    extract($args);
-    unset($args);
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
-    if(isset($cat_title)) {
-        list($dbconn, $pntable) = pnfOpenDB();
-
-        $cattable = $pntable['pnforum_categories'];
-        $catcolumn = $pntable['pnforum_categories_column'];
-
-        $cat_title = pnVarPrepForStore($cat_title);
-        $sql = "SELECT $catcolumn[cat_id]
-                FROM $cattable";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-        $numcats = $result->PO_RecordCount();
-        pnfCloseDB($result);
-        $neworder = $numcats + 1;
-        $cat_id = $dbconn->GenID($cattable);
-        $sql = "INSERT INTO $cattable ($catcolumn[cat_id], $catcolumn[cat_title], $catcolumn[cat_order])
-                VALUES (" . pnVarPrepForStore($cat_id) . ", '$cat_title', " . pnVarPrepForStore($neworder) . ")";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        $new_cat_id = $dbconn->PO_Insert_ID($cattable, 'cat_id');
-        pnfCloseDB($result);
-        return $new_cat_id;   // true;
+    if(isset($args['cat_title'])) {
+        $args['cat_order'] = DBUtil::selectObjectCount('pnforum_categories') + 1;
+        $obj = DBUtil::insertObject($args, 'pnforum_categories', 'cat_id');
+        return $obj['cat_id'];
     }
     return false;
 }
@@ -175,21 +122,13 @@ function pnForum_adminapi_addcategory($args)
  */
 function pnForum_adminapi_deletecategory($args)
 {
-    extract($args);
-    unset($args);
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
-    if(isset($cat_id)) {
-        list($dbconn, $pntable) = pnfOpenDB();
-
-        $cattable = $pntable['pnforum_categories'];
-        $catcolumn = $pntable['pnforum_categories_column'];
-
+    if(isset($args['cat_id'])) {
         // read all the forums in this category
-        $forums = pnForum_adminapi_readforums(array('cat_id' => $cat_id));
+        $forums = pnForum_adminapi_readforums(array('cat_id' => $args['cat_id']));
         if(is_array($forums) && count($forums)>0) {
             foreach($forums as $forum) {
                 // remove all forums in this category
@@ -199,10 +138,7 @@ function pnForum_adminapi_deletecategory($args)
             }  //foreach forum
         }
         // now we can delete the category
-        $sql = "DELETE FROM $cattable
-                WHERE $catcolumn[cat_id] = " . pnVarPrepForStore($cat_id) . " ";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $res = DBUtil::deleteObject($args, 'pnforum_categories', null, 'cat_id');
         return true;
     }
     return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
@@ -222,108 +158,78 @@ function pnForum_adminapi_deletecategory($args)
  */
 function pnForum_adminapi_readforums($args=array())
 {
-    extract($args);
-    unset($args);
+    $pntable =&pnDBGetTables();
+    $forumcolumn = $pntable['pnforum_forums_column'];
+    $catcolumn   = $pntable['pnforum_categories_column'];
 
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    $permcheck = (isset($permcheck)) ? strtolower($permcheck): 'read';
+    $permcheck = (isset($args['permcheck'])) ? strtoupper($args['permcheck']): ACCESS_READ;
     if( !empty($permcheck) &&
-        ($permcheck <> 'see') &&
-        ($permcheck <> 'read') &&
-        ($permcheck <> 'write') &&
-        ($permcheck <> 'moderate') &&
-        ($permcheck <> 'admin') &&
-        ($permcheck <> 'nocheck')  ) {
+        ($permcheck <> ACCESS_OVERVIEW) &&
+        ($permcheck <> ACCESS_READ) &&
+        ($permcheck <> ACCESS_COMMENT) &&
+        ($permcheck <> ACCESS_MODERATE) &&
+        ($permcheck <> ACCESS_ADMIN) &&
+        ($permcheck <> 'NOCHECK')  ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
-    $where = "";
-    if(isset($forum_id)) {
-        $where = "WHERE f.forum_id=" . pnVarPrepForStore($forum_id) ." ";
-    } elseif (isset($cat_id)) {
-        $where = "WHERE c.cat_id=" . pnVarPrepForStore($cat_id) . " ";
+    $where = '';
+    if(isset($args['forum_id'])) {
+        $where = "WHERE tbl.forum_id=" . DataUtil::formatForStore($args['forum_id']) ." ";
+    } elseif (isset($args['cat_id'])) {
+        $where = "WHERE tbl.cat_id=" . DataUtil::formatForStore($args['cat_id']) . " ";
     }
-    $sql = "SELECT f.forum_name,
-                   f.forum_id,
-                   f.forum_desc,
-                   f.forum_access,
-                   f.forum_type,
-                   f.forum_order,
-                   f.forum_topics,
-                   f.forum_posts,
-                   f.forum_pop3_active,
-                   f.forum_pop3_server,
-                   f.forum_pop3_port,
-                   f.forum_pop3_login,
-                   f.forum_pop3_password,
-                   f.forum_pop3_interval,
-                   f.forum_pop3_lastconnect,
-                   f.forum_pop3_matchstring,
-                   f.forum_pop3_pnuser,
-                   f.forum_pop3_pnpassword,
-                   f.forum_moduleref,
-                   f.forum_pntopic,
-                   c.cat_title,
-                   c.cat_id
-            FROM ".$pntable['pnforum_forums']." AS f
-            LEFT JOIN ".$pntable['pnforum_categories']." AS c
-            ON c.cat_id=f.cat_id
-            $where
-            ORDER BY c.cat_order, f.forum_order, f.forum_name";
-
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    $forums = array();
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
-            $forum = array();
-            list( $forum['forum_name'],
-                  $forum['forum_id'],
-                  $forum['forum_desc'],
-                  $forum['forum_access'],
-                  $forum['forum_type'],
-                  $forum['forum_order'],
-                  $forum['forum_topics'],
-                  $forum['forum_posts'],
-                  $forum['pop3_active'],
-                  $forum['pop3_server'],
-                  $forum['pop3_port'],
-                  $forum['pop3_login'],
-                  $forum['pop3_password'],
-                  $forum['pop3_interval'],
-                  $forum['pop3_lastconnect'],
-                  $forum['pop3_matchstring'],
-                  $forum['pop3_pnuser'],
-                  $forum['pop3_pnpassword'],
-                  $forum['forum_moduleref'],
-                  $forum['forum_pntopic'],
-                  $forum['cat_title'],
-                  $forum['cat_id'] ) = $result->fields;
-            // we re-use the pop3_active field to distinguish between
-            // 0 - no external source
-            // 1 - mail
-            // 2 - rss
-            // now
-            // to do: rename the db fields:
-            $forum['externalsource']     = $forum['pop3_active'];
-            $forum['externalsourceurl']  = $forum['pop3_server'];
-            $forum['externalsourceport'] = $forum['pop3_port'];
-            $forum['pnuser']             = $forum['pop3_pnuser'];
-            $forum['pnpassword']         = $forum['pop3_pnpassword'];
-            if( ( ($permcheck=="see") && allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id']) )
-              ||( ($permcheck=="read") && allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id']) )
-              ||( ($permcheck=="write") && allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id']) )
-              ||( ($permcheck=="moderate") && allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id']) )
-              ||( ($permcheck=="admin") && allowedtoadmincategoryandforum($forum['cat_id'], $forum['forum_id']) )
-              ||  ($permcheck=="nocheck") ) {
-                array_push( $forums, $forum );
-            }
-        }
+    
+    if($permcheck <> 'NOCHECK') {
+        $permfilter[] = array('realm' => 0,
+                              'component_left'   =>  'pnForum',
+                              'component_middle' =>  '',
+                              'component_right'  =>  '',
+                              'instance_left'    =>  'cat_id',
+                              'instance_middle'  =>  'forum_id',
+                              'instance_right'   =>  '',
+                              'level'            =>  $permcheck);
+    } else {
+        $permfilter = null;
     }
-    pnfCloseDB($result);
+
+    $joininfo[] = array ('join_table'         =>  'pnforum_categories',
+                         'join_field'         =>  array('cat_title', 'cat_id'),
+                         'object_field_name'  =>  array('cat_title', 'cat_id'),
+                         'compare_field_table'=>  'cat_id',
+                         'compare_field_join' =>  'cat_id');
+    $orderby = 'a.cat_order, tbl.forum_order, tbl.forum_name';
+    
+    $forums = DBUtil::selectExpandedObjectArray('pnforum_forums', $joininfo, $where, $orderby, -1, -1, '', $permfilter);
+    
+    for($i=0; $i<count($forums); $i++) {
+        // rename some fields for BC compatibility
+        /*
+        $forums[$i]['pop3_active']      = $forums[$i]['forum_pop3_active'];
+        $forums[$i]['pop3_server']      = $forums[$i]['forum_pop3_server'];
+        $forums[$i]['pop3_port']        = $forums[$i]['forum_pop3_port'];
+        $forums[$i]['pop3_login']       = $forums[$i]['forum_pop3_login'];
+        $forums[$i]['pop3_password']    = $forums[$i]['forum_pop3_password'];
+        $forums[$i]['pop3_interval']    = $forums[$i]['forum_pop3_interval'];
+        $forums[$i]['pop3_lastconnect'] = $forums[$i]['forum_pop3_lastconnect'];
+        $forums[$i]['pop3_matchstring'] = $forums[$i]['forum_pop3_matchstring'];
+        $forums[$i]['pop3_pnuser']      = $forums[$i]['forum_pop3_pnuser'];
+        $forums[$i]['pop3_pnpassword']  = $forums[$i]['forum_pop3_pnpassword'];
+        */
+        // we re-use the pop3_active field to distinguish between
+        // 0 - no external source
+        // 1 - mail
+        // 2 - rss
+        // now
+        // to do: rename the db fields:   
+        $forums[$i]['externalsource']     = $forums[$i]['forum_pop3_active'];
+        $forums[$i]['externalsourceurl']  = $forums[$i]['forum_pop3_server'];
+        $forums[$i]['externalsourceport'] = $forums[$i]['forum_pop3_port'];
+        $forums[$i]['pnuser']             = $forums[$i]['forum_pop3_pnuser'];
+        $forums[$i]['pnpassword']         = $forums[$i]['forum_pop3_pnpassword'];
+    }
+
     if(count($forums)>0) {
-        if(isset($forum_id)) {
+        if(isset($args['forum_id'])) {
             return $forums[0];
         }
     }
@@ -473,13 +379,11 @@ function pnForum_adminapi_readgroups($args)
 
 /**
  * readranks
+ *@params ranktype   
  *
  */
 function pnForum_adminapi_readranks($args)
 {
-    extract($args);
-    unset($args);
-
     // read images
     $handle = opendir(pnModGetVar('pnForum', 'url_ranks_images'));
     $filelist = array();
@@ -490,44 +394,24 @@ function pnForum_adminapi_readranks($args)
     }
     asort($filelist);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    $pntables = pnDBGetTables();
+    $rcol = $pntables['pnforum_ranks_column'];
 
-    $rtable = $pntable['pnforum_ranks'];
-    $rcol = $pntable['pnforum_ranks_column'];
-
-    $sql = "SELECT $rcol[rank_id],
-                   $rcol[rank_title],
-                   $rcol[rank_min],
-                   $rcol[rank_max],
-                   $rcol[rank_special],
-                   $rcol[rank_image],
-                   $rcol[rank_style]
-            FROM $rtable
-            WHERE $rcol[rank_special] = " . pnVarPrepForStore($ranktype) . " ";
-    if($ranktype==0) {
-        $ql .= "ORDER BY $rcol[rank_min]";
+    if($args['ranktype']==0) {
+        $orderby = 'ORDER BY ' . $rcol['rank_min'];
     } else {
-        $sql .="ORDER BY $rcol[rank_title]";
+        $orderby = 'ORDER BY ' . $rcol['rank_title'];
     }
+    $ranks = DBUtil::selectObjectArray('pnforum_ranks', 'WHERE ' . $rcol['rank_special'] . '=' . DataUtil::formatForStore($args['ranktype']), $orderby);
+    if(is_array($ranks)) {
+        $rankcount = count($ranks);
+        for($cnt=0; $cnt++; $cnt < $rankcount) {
+            $ranks[$cnt]['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
+                                          array('rank_id' => $ranks[$cnt]['rank_id']));
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    $ranks = array();
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $rank = array();
-            list( $rank['rank_id'],
-                  $rank['rank_title'],
-                  $rank['rank_min'],
-                  $rank['rank_max'],
-                  $rank['rank_special'],
-                  $rank['rank_image'],
-                  $rank['rank_style'] ) = $result->fields;
-            $rank['users'] = pnModAPIFunc('pnForum', 'admin', 'readrankusers',
-                                          array('rank_id' => $rank['rank_id']));
-            array_push( $ranks, $rank );
         }
     }
+
     // add a dummy rank on top for new ranks
     array_unshift($ranks, array('rank_id'      => -1,
                                 'rank_title'   => '',
@@ -537,57 +421,32 @@ function pnForum_adminapi_readranks($args)
                                 'rank_image'   => 'onestar.gif',
                                 'rank_style'   => '',
                                 'users'        => array()));
-
-
-    pnfCloseDB($result);
     return array($filelist, $ranks);
 }
 
 /**
  * saverank
+ *@params rank_special, rank_title, rank_min, rank_max, rank_image, rank_id
  *
  */
 function pnForum_adminapi_saverank($args)
 {
-    extract($args);
-    unset($args);
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    // Prep for DB
-    $title = pnVarPrepForStore($title);
-    $min_posts = pnVarPrepForStore($min_posts);
-    $max_posts = pnVarPrepForStore($max_posts);
-    $image = pnVarPrepForStore($image);
-    $rank_id = pnVarPrepForStore($rank_id);
+    $actiontype = $args['actiontype'];
+    unset($args['actiontype']);
 
     switch($actiontype) {
         case 'Add':
-            $rank_id = $dbconn->GenID($pntable['pnforum_ranks']);
-            $sql = "INSERT INTO ".$pntable['pnforum_ranks']." (rank_id, rank_title, rank_min, rank_max, rank_special, rank_image) VALUES ("
-                   . pnVarPrepForStore($rank_id) . ", '$title', '$min_posts', '$max_posts', '$ranktype', '$image')";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+            $obj = DBUtil::insertObject($args, 'pnforum_ranks', 'rank_id');
             break;
-      case 'Update':
-            if($ranktype==1)
-            {
-                $sql = "UPDATE ".$pntable['pnforum_ranks']." SET rank_title = '$title', rank_image = '$image' WHERE rank_id = '$rank_id'";
-            }else{
-                $sql = "UPDATE ".$pntable['pnforum_ranks']." SET rank_title = '$title', rank_max = '$max_posts', rank_min = '$min_posts', rank_image = '$image' WHERE rank_id = '$rank_id'";
-            }
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+        case 'Update':
+            $res = DBUtil::updateObject($args, 'pnforum_ranks', null, 'rank_id');
             break;
-
-      case 'Delete':
-            $sql = "DELETE FROM ".$pntable['pnforum_ranks']." WHERE rank_id = '$rank_id'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+        case 'Delete':
+            $res = DBUtil::deleteObject($args, 'pnforum_ranks', null, 'rank_id');
     }
     return;
 }
@@ -662,7 +521,7 @@ function pnForum_adminapi_assignranksave($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
@@ -673,70 +532,6 @@ function pnForum_adminapi_assignranksave($args)
             $sql = "UPDATE ".$pntable['pnforum_users']."
                     SET user_rank='" . pnVarPrepForStore($rank_id) . "'
                     WHERE user_id = '" . pnVarPrepForStore($user_id) . "'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
-        }
-    }
-    return;
-}
-
-/**
- * reorder categories
- */
-function pnForum_adminapi_reordercategoriessave($args)
-{
-    extract($args);
-    unset($args);
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-        return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
-    }
-
-    // read all categories
-    $categories = pnForum_adminapi_readcategories();
-    if(!is_array($categories) || count($categories)==0) {
-        return showforumerror(_PNFORUM_NOCATEGORIES, __FILE__, __LINE__);
-    }
-
-    $cat_id    = (int)$cat_id;
-    $cat_order = (int)$cat_order;
-
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    if ($direction=='up') {
-        if ($cat_order>1) {
-            $order = $cat_order - 1;
-            $sql = "UPDATE ".$pntable['pnforum_categories']."
-                    SET cat_order = '".pnVarPrepForStore($order)."'
-                    WHERE cat_id = '".pnVarPrepForStore($cat_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
-            $sql = "UPDATE ".$pntable['pnforum_categories']."
-                    SET cat_order = '".pnVarPrepForStore($cat_order)."'
-                    WHERE cat_order = '".pnVarPrepForStore($order)."'
-                    AND cat_id <> '".pnVarPrepForStore($cat_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
-        }
-    } else {
-        // shift down
-        $sql = "SELECT COUNT(1)
-                FROM ".$pntable['pnforum_categories']."";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        list($numcategories) = $result->fields;
-        $numcategories = (int)$numcategories;
-        pnfCloseDB($result);
-        if ($cat_order < $numcategories) {
-            $newno = $cat_order + 1;
-            $sql = "UPDATE ".$pntable['pnforum_categories']."
-                    SET cat_order = '".pnVarPrepForStore($newno)."'
-                    WHERE cat_id = '".pnVarPrepForStore($cat_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
-            $sql = "UPDATE ".$pntable['pnforum_categories']."
-                    SET cat_order = '".pnVarPrepForStore($cat_order)."'
-                    WHERE cat_order = '".pnVarPrepForStore($newno)."'
-                    AND cat_id <> '".pnVarPrepForStore($cat_id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
         }
@@ -909,8 +704,9 @@ function pnForum_adminapi_addforum($args)
 {
     extract($args);
     unset($args);
-    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN) &&
-        !pnSecAuthAction(0, 'pnForum::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
+
+    if( !SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN) &&
+        !SecurityUtil::checkPermission('pnForum::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
@@ -971,7 +767,7 @@ function pnForum_adminapi_addforum($args)
                     '".pnVarPrepForStore($moduleref)."',
                     '".pnVarPrepForStore($pntopic)."')";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-pnf_ajaxerror($dbconn->ErrorMsg());
+//pnf_ajaxerror($dbconn->ErrorMsg());
     pnfCloseDB($result);
     $newforumid = $dbconn->PO_Insert_ID($pntable['pnforum_forums'], 'forum_id');
     $count = 0;
@@ -1010,7 +806,7 @@ function pnForum_adminapi_editforum($args)
     extract($args);
     unset($args);
 
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
@@ -1071,78 +867,41 @@ function pnForum_adminapi_editforum($args)
  * delete forum
  *
  *@params $args['forum_id']
- *@params $args['ok']
  *
  */
 function pnForum_adminapi_deleteforum($args)
 {
-// $forum_id, $ok
-    extract($args);
-    unset($args);
-
-    if (!pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    $whereforumid = 'WHERE forum_id=' . DataUtil::formatForStore($args['forum_id']);
+    // delete forum
+    $res = DBUtil::deleteObject($args, 'pnforum_forums', null, 'forum_id');
+    
+    // delete mods
+    $res = DBUtil::deleteWhere('pnforum_forum_mods', $whereforumid);
 
-    if($ok==1) {
-        // delet forum
-        $sql = "DELETE FROM ".$pntable['pnforum_forums']."
-                WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
-        // delete mods
-        $sql = "DELETE FROM ".$pntable['pnforum_forum_mods']."
-                WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
-        // delete forum subscription
-        $sql = "DELETE FROM ".$pntable['pnforum_subscription']."
-                WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+    // delete forum subscription
+    $res = DBUtil::deleteWhere('pnforum_subscription', $whereforumid);
 
-        // topics
-        $sql = "SELECT topic_id
-                FROM ".$pntable['pnforum_topics']."
-                WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        if($result->RecordCount()>0) {
-            for (; !$result->EOF; $result->MoveNext()) {
-                list($topic_id) = $result->fields;
-                $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']."
-                        WHERE topic_id = '".pnVarPrepForStore($topic_id)."'";
-                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($del);
-                $sql = "DELETE FROM ".$pntable['pnforum_topics']."
-                        WHERE topic_id = '".pnVarPrepForStore($topic_id)."'";
-                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($del);
-            }
+    // topics
+    $topics = DBUtil::selectObjectArray('pnforum_topics', $whereforumid);
+    if(is_array($topics) && count($topics) > 0) {        
+        foreach($topics as $topic) {
+            $res = DBUtil::deleteWhere('pnforum_topic_subscription', 'WHERE topic_id=' . DataUtil::formatForStore($topic['topic_id']));
         }
-        pnfCloseDB($result);
-
-        // posts
-        $sql = "SELECT post_id
-                FROM ".$pntable['pnforum_posts']."
-                WHERE forum_id = '".pnVarPrepForStore($forum_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        if($result->RecordCount()>0) {
-            for (; !$result->EOF; $result->MoveNext()) {
-                list($post_id) = $result->fields;
-                $sql = "DELETE FROM ".$pntable['pnforum_posts_text']."
-                        WHERE post_id = '".pnVarPrepForStore($post_id)."'";
-                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($del);
-                $sql = "DELETE FROM ".$pntable['pnforum_posts']."
-                        WHERE post_id = '".pnVarPrepForStore($post_id)."'";
-                $del = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($del);
-            }
-        }
-        pnfCloseDB($result);
     }
+    $res = DBUtil::deleteWhere('pnforum_topics', $whereforumid);
+
+    // posts
+    $posts = DBUtil::selectObjectArray('pnforum_posts', $whereforumid);
+    if(is_array($posts) && count($posts) > 0) {
+        foreach($posts as $post) {
+            $res = DBUtil::deleteWhere('pnforum_posts_text', 'WHERE post_id=' . DataUtil::formatForStore($post['post_id']));
+        }
+    }
+    $res = DBUtil::deleteWhere('pnforum_posts', $whereforumid);
     return;
 }
 
@@ -1168,7 +927,7 @@ function pnForum_adminapi_storenewforumorder($args)
     extract($args);
     unset($args);
 
-    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
+    if( !SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
         return showforumerror(_PNFORUM_NOAUTH, __FILE__, __LINE__);
     }
 
@@ -1176,7 +935,7 @@ function pnForum_adminapi_storenewforumorder($args)
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), forumid=' . $forum_id);
     }
     if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
-        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), cat_id=' . $cat_id);
+        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), cat_id=' . $cat_id);
     }
     if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
         pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewforumorder(), order=' . $order);
@@ -1191,46 +950,6 @@ function pnForum_adminapi_storenewforumorder($args)
             SET " . $forumcolumn['forum_order'] ."='" . (int)pnVarPrepForStore($order) . "',
                 " . $forumcolumn['cat_id'] . "='" . (int)pnVarPrepForStore($cat_id) . "'
             WHERE " . $forumcolumn['forum_id'] . "='" . (int)pnVarPrepForStore($forum_id) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
-    if(is_bool($result) && $result==false) {
-        return false;
-    }
-    pnfCloseDB($result);
-    return true;
-
-}
-
-/**
- * store new category order
- *
- *@params $args['cat_id'] int the category id
- *@params $args['order']  int the category order number
- *
- */
-function pnForum_adminapi_storenewcategoryorder($args)
-{
-    extract($args);
-    unset($args);
-
-    if( !pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) {
-        pnf_ajaxerror(_PNFORUM_NOAUTH);
-    }
-
-    if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
-        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), cat_id=' . $cat_id);
-    }
-    if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
-        pnf_ajaxerror(_MODARGSERROR . ' (pnForum_adminapi_storenewcategoryorder(), order=' . $order);
-    }
-
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    $cattable   = $pntable['pnforum_categories'];
-    $catcolumn  = &$pntable['pnforum_categories_column'];
-
-    $sql = "UPDATE $cattable
-            SET $catcolumn[cat_order] = '" . (int)pnVarPrepForStore($order) . "'
-            WHERE $catcolumn[cat_id] = '" . (int)pnVarPrepForStore($cat_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
     if(is_bool($result) && $result==false) {
         return false;

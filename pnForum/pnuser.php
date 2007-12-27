@@ -45,7 +45,7 @@ function pnForum_user_main($args=array())
             // not go to it if there is only one
             // check if we have one category and one forum only
             if(count($tree)==1) {
-                foreach($tree as $catname=>$forumarray) {
+                foreach($tree as $catname => $forumarray) {
                     if(count($forumarray['forums'])==1) {
                         return pnRedirect(pnModURL('pnForum', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));
                     } else {
@@ -125,17 +125,12 @@ function pnForum_user_viewtopic($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $topic_id = (int)pnVarCleanFromInput('topic');
-        // begin patch #3494 part 1, credits to teb
-        $post_id  = (int)pnVarCleanFromInput('post');
-        // end patch #3494 part 1
-        $start    = (int)pnVarCleanFromInput('start');
-        $view     = strtolower(pnVarCleanFromInput('view'));
-    }
+    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    // begin patch #3494 part 1, credits to teb
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    // end patch #3494 part 1
+    $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
+    $view     = strtolower(FormUtil::getPassedValue('view', (isset($args['view'])) ? $args['view'] : '', 'GETPOST'));
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
 
@@ -161,7 +156,8 @@ function pnForum_user_viewtopic($args=array())
     $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
                           array('topic_id'   => $topic_id,
                                 'start'      => $start,
-                                'last_visit' => $last_visit));
+                                'last_visit' => $last_visit,
+                                'count'      => true));
 
     $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign( 'topic', $topic);
@@ -188,25 +184,21 @@ function pnForum_user_reply($args=array())
         extract($args);
         unset($args);
     } else {
-        list($topic_id,
-        	 $post_id,
-        	 $message,
+        list($message,
         	 $attach_signature,
         	 $subscribe_topic,
         	 $preview,
         	 $submit,
-        	 $cancel ) = pnVarCleanFromInput('topic',
-        									'post',
-        									'message',
+        	 $cancel ) = pnVarCleanFromInput('message',
         									'attach_signature',
         									'subscribe_topic',
         									'preview',
         									'submit',
         									'cancel');
     }
+    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
 
-    $post_id = (int)$post_id;
-    $topic_id = (int)$topic_id;
     $attach_signature = (int)$attach_signature;
     $subscribe_topic = (int)$subscribe_topic;
 
@@ -223,15 +215,15 @@ function pnForum_user_reply($args=array())
     $message = pnfstriptags($message);
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-        pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
+        LogUtil::registerStatus(_PNFORUM_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
     }
 
     if ($submit==true && $preview==false) {
         // Confirm authorisation code
-        if (!pnSecConfirmAuthKey()) {
-            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
 
         list($start,
@@ -312,7 +304,7 @@ function pnForum_user_newtopic($args=array())
     $message = pnfstriptags($message);
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-        pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
+        LogUtil::registerStatus(_PNFORUM_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
     }
@@ -329,8 +321,8 @@ function pnForum_user_newtopic($args=array())
     if($submit==true && $preview==false) {
         // it's a submitted page
         // Confirm authorisation code
-        if (!pnSecConfirmAuthKey()) {
-            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
 
         //store the new topic
@@ -376,17 +368,13 @@ function pnForum_user_editpost($args=array())
         extract($args);
         unset($args);
     } else {
-        list($post_id,
-             $topic_id,
-        	 $message,
+        list($message,
         	 $subject,
         	 $submit,
         	 $delete,
         	 $attach_signature,
         	 $cancel,
-        	 $preview) =  pnVarCleanFromInput('post',
-        	                                  'topic',
-                                              'message',
+        	 $preview) =  pnVarCleanFromInput('message',
                                               'subject',
                                               'submit',
                                               'delete',
@@ -394,6 +382,8 @@ function pnForum_user_editpost($args=array())
                                               'cancel',
                                               'preview');
     }
+    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
 
     if(empty($post_id) || !is_numeric($post_id)) {
         return pnRedirect(pnModURL('pnForum', 'user', 'main'));
@@ -415,7 +405,7 @@ function pnForum_user_editpost($args=array())
     $message = pnfstriptags($message);
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-        pnSessionSetVar('statusmsg', _PNFORUM_ILLEGALMESSAGESIZE);
+        LogUtil::registerStatus(_PNFORUM_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
     }
@@ -426,8 +416,8 @@ function pnForum_user_editpost($args=array())
         /**
          * Confirm authorisation code
          */
-        if (!pnSecConfirmAuthKey()) {
-            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         //store the new topic
         $redirect = pnModAPIFunc('pnForum', 'user', 'updatepost',
@@ -481,8 +471,8 @@ function pnForum_user_topicadmin($args=array())
         extract($args);
         unset($args);
     } else {
-        $topic_id = (int)pnVarCleanFromInput('topic');
-        $post_id  = (int)pnVarCleanFromInput('post');
+        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
         $forum_id = (int)pnVarCleanFromInput('forum');  // for move
         $mode     = pnVarCleanFromInput('mode');
         $submit   = pnVarCleanFromInput('submit');
@@ -535,8 +525,8 @@ function pnForum_user_topicadmin($args=array())
         return $pnr->fetch($templatename);
 
     } else { // submit is set
-    	if (!pnSecConfirmAuthKey()) {
-          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+    	if (!SecurityUtil::confirmAuthKey()) {
+          	return LogUtil::registerAuthidError();
         }
         switch($mode) {
             case 'del':
@@ -614,13 +604,12 @@ function pnForum_user_prefs($args=array())
         extract($args);
         unset($args);
     } else {
+        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
         list($act,
              $return_to,
-             $topic_id,
              $forum_id,
              $user_id ) = pnVarCleanFromInput('act',
                                               'return_to',
-                                              'topic',
                                               'forum',
                                               'user');
     }
@@ -712,7 +701,7 @@ function pnForum_user_emailtopic($args=array())
         extract($args);
         unset($args);
     } else {
-        $topic_id = (int)pnVarCleanFromInput('topic');
+        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
         $message = pnVarCleanFromInput('message');
         $emailsubject = pnVarCleanFromInput('emailsubject');
         $sendto_email = pnVarCleanFromInput('sendto_email');
@@ -728,14 +717,14 @@ function pnForum_user_emailtopic($args=array())
     if(!empty($submit)) {
 	    if (!pnVarValidate($sendto_email, 'email')) {
 	    	// Empty e-mail is checked here too
-        	$error_msg = pnVarPrepForDisplay(_PNFORUM_MAILTO_WRONGEMAIL);
+        	$error_msg = DataUtil::formatForDisplay(_PNFORUM_MAILTO_WRONGEMAIL);
         	$sendto_email = '';
         	unset($submit);
 	    } else if ($message == '') {
-        	$error_msg = pnVarPrepForDisplay(_PNFORUM_MAILTO_NOBODY);
+        	$error_msg = DataUtil::formatForDisplay(_PNFORUM_MAILTO_NOBODY);
         	unset($submit);
 	    } else if ($emailsubject == '') {
-        	$error_msg = pnVarPrepForDisplay(_PNFORUM_MAILTO_NOSUBJECT);
+        	$error_msg = DataUtil::formatForDisplay(_PNFORUM_MAILTO_NOSUBJECT);
         	unset($submit);
 	    }
     }
@@ -744,8 +733,8 @@ function pnForum_user_emailtopic($args=array())
 //                          array('topic_id'   => $topic_id));
 
     if(!empty($submit)) {
-        if (!pnSecConfirmAuthKey()) {
-            return showforumerror(_PNFORUM_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
 
         pnModAPIFunc('pnForum', 'user', 'emailtopic',
@@ -762,7 +751,7 @@ function pnForum_user_emailtopic($args=array())
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
         $pnr->assign('emailsubject', $emailsubject);
-        $pnr->assign('message', pnVarPrepForDisplay(_PNFORUM_EMAILTOPICMSG) ."\n\n" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
+        $pnr->assign('message', DataUtil::formatForDisplay(_PNFORUM_EMAILTOPICMSG) ."\n\n" . pnModURL('pnForum', 'user', 'viewtopic', array('topic'=>$topic_id)));
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('pnforum_user_emailtopic.html');
@@ -849,10 +838,9 @@ function pnForum_user_splittopic($args=array())
         extract($args);
         unset($args);
     } else {
-        list($post_id,
-             $submit,
-             $newsubject) = pnVarCleanFromInput('post',
-                                                'submit',
+        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+        list($submit,
+             $newsubject) = pnVarCleanFromInput('submit',
                                                 'newsubject');
     }
 
@@ -866,8 +854,8 @@ function pnForum_user_splittopic($args=array())
 
     if(!empty($submit)) {
         // Confirm authorisation code
-        if (!pnSecConfirmAuthKey()) {
-            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         // submit is set, we split the topic now
         $post['topic_subject'] = $newsubject;
@@ -900,8 +888,8 @@ function pnForum_user_print($args=array())
         extract($args);
         unset($args);
     } else {
-        $post_id  = (int)pnVarCleanFromInput('post');
-        $topic_id = (int)pnVarCleanFromInput('topic');
+        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
     }
 
     if(useragent_is_bot() == true) {
@@ -936,7 +924,7 @@ function pnForum_user_print($args=array())
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
         echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$lang\" xml:lang=\"$lang\">\n";
         echo "<head>\n";
-        echo "<title>" . $topic['topic_title'] . "</title>\n";
+        echo "<title>" . DataUtil::formatForDisplay($topic['topic_title']) . "</title>\n";
         echo "<link rel=\"StyleSheet\" href=\"themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";
         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('pnForum', 'default_lang') ."\" />\n";
 
@@ -951,7 +939,7 @@ function pnForum_user_print($args=array())
         echo $output;
         echo "</body>\n";
         echo "</html>\n";
-        exit;
+        pnShutDown();
     }
 }
 
@@ -993,10 +981,9 @@ function pnForum_user_movepost($args=array())
         extract($args);
         unset($args);
     } else {
-        list($post_id,
-             $submit,
-			 $to_topic) = pnVarCleanFromInput('post',
-                                               'submit',
+        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+        list($submit,
+			 $to_topic) = pnVarCleanFromInput( 'submit',
 											   'to_topic');
     }
     $post = pnModAPIFunc('pnForum', 'user', 'readpost', array('post_id' => $post_id));
@@ -1007,8 +994,8 @@ function pnForum_user_movepost($args=array())
     }
 
     if(!empty($submit)) {
-        if (!pnSecConfirmAuthKey()) {
-            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         // submit is set, we move the posting now
 		// Existe el Topic ? --- Exists new Topic ?
@@ -1046,11 +1033,10 @@ function pnForum_user_jointopics($args=array())
         extract($args);
         unset($args);
     } else {
-        list($post_id,
-             $submit,
+        $post_id  = (int)FormUtil::getPassedValue('post_id', (isset($args['post_id'])) ? $args['post_id'] : null, 'GETPOST');
+        list($submit,
              $to_topic_id,
-			 $from_topic_id) = pnVarCleanFromInput('post_id',
-                                                   'submit',
+			 $from_topic_id) = pnVarCleanFromInput('submit',
                                                    'to_topic_id',
 											       'from_topic_id');
     }
@@ -1067,8 +1053,8 @@ function pnForum_user_jointopics($args=array())
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_jointopics.html');
     } else {
-    	if (!pnSecConfirmAuthKey()) {
-          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
 
 		// check if from_topic exists. this function will return an error if not
@@ -1104,7 +1090,7 @@ function pnForum_user_moderateforum($args=array())
         unset($args);
     } else {
         $forum_id = (int)pnVarCleanFromInput('forum');
-        $start    = (int)pnVarCleanFromInput('start');
+        $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
         $mode     = pnVarCleanFromInput('mode');
         $submit   = pnVarCleanFromInput('submit');
 		$topic_ids= pnVarCleanFromInput('topic_id');
@@ -1144,8 +1130,8 @@ function pnForum_user_moderateforum($args=array())
 
     } else {
         // submit is set
-    	if (!pnSecConfirmAuthKey()) {
-          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         if(count($topic_ids)<>0) {
     	    switch($mode) {
@@ -1226,10 +1212,9 @@ function pnForum_user_report($args)
         extract($args);
         unset($args);
     } else {
-        list($post_id,
-             $comment,
-             $submit) = pnVarCleanFromInput('post',
-                                            'comment',
+        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+        list($comment,
+             $submit) = pnVarCleanFromInput('comment',
                                             'submit');
     }
 
@@ -1240,7 +1225,7 @@ function pnForum_user_report($args)
     // - remove html and compare with original comment
     // - use censor and compare with original omment
     // if only one of this comparisons fails -> trash it, its spam.
-    if(!pnUserLoggedIn() && pnSecConfirmAuthKey()) {
+    if(!pnUserLoggedIn() && SecurityUtil::confirmAuthKey()) {
         if((strip_tags($comment) <> $comment) ||
            (pnVarCensor($comment) <> $comment)) {
             // possibly spam, stop now
@@ -1257,8 +1242,8 @@ function pnForum_user_report($args)
         $pnr->assign('post', $post);
         return $pnr->fetch('pnforum_user_notifymod.html');
     } else {   // submit is set
-    	if (!pnSecConfirmAuthKey()) {
-          	return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         pnModAPIFunc('pnForum', 'user', 'notify_moderator',
                      array('post'    => $post,
@@ -1295,9 +1280,8 @@ function pnForum_user_topicsubscriptions($args)
         extract($args);
         unset($args);
     } else {
-        list($topic_id,
-             $submit) = pnVarCleanFromInput('topic_id',
-                                            'submit');
+        $topic_id = (int)FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : null, 'GETPOST');
+        $submit = pnVarCleanFromInput('submit');
     }
 
     if(!$submit) {
@@ -1306,8 +1290,8 @@ function pnForum_user_topicsubscriptions($args)
         $pnr->assign('subscriptions', $subscriptions);
         return $pnr->fetch('pnforum_user_topicsubscriptions.html');
     } else {  // submit is set
-        if(!pnSecConfirmAuthKey()) {
-            return showforumerror(_BADAUTHKEY, __FILE__, __LINE__);
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         if(is_array($topic_id) && (count($topic_id) > 0)) {
             for($i=0; $i<count($topic_id); $i++) {

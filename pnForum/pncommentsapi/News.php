@@ -36,7 +36,7 @@ function pnForum_commentsapi_News($args)
                    $pntopicscolumn[topicname]
             FROM   $pnstoriestable
             LEFT JOIN $pntopicstable ON $pnstoriescolumn[topic]=$pntopicscolumn[topicid]
-            WHERE $pnstoriescolumn[sid] ='" . pnVarPrepForStore($objectid) . "'";
+            WHERE $pnstoriescolumn[sid] ='" . DataUtil::formatForStore($objectid) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     //echo $sql;
     //exit;

@@ -9,12 +9,16 @@
  * @package pnForum
  */
 
+define('_PNFORUM_INSTALLATION', 'pnForum installieren');
+define('_PNFORUM_WELCOMETOINTERACTIVEINIT', 'Willkommen zur pnForum-Installation');
+define('_PNFORUM_INTERACTIVEINITHINT', 'In den nächsten Schritten wird pnForum %version% installiert. Weitere Informationen zu Konfiguration und Optionen befinden sich in der <a href="http://support.pn-cms.de/modules/dokuwiki/doku.php?id=pnforum:index">Dokumentation</a>');
+
 define('_PNFORUM_WELCOMETOINTERACTIVEUPGRADE', 'pnForum Upgrade');
 define('_PNFORUM_OLDVERSION', 'alte Version');
 define('_PNFORUM_NEWVERSION', 'neue Version');
 define('_PNFORUM_NEXTVERSION', 'nächste Version');
 
-define('_PNFORUM_BACKUPHINT', 'Vor der Durchführung dieses Upgrades<br />bitte eine Sicherung der Datenbank erstellen!');
+define('_PNFORUM_BACKUPHINT', 'Vor der Durchführung dieses Upgrades bitte eine Sicherung der Datenbank erstellen!');
 define('_PNFORUM_UPGRADE_ADDINDEXNOW', 'Indexfelder jetzt anlegen');
 define('_PNFORUM_UPGRADE_ADDINDEXLATER', 'Indexfelder manuell in phpmyadmin o.ä anlegen');
 
@@ -26,3 +30,8 @@ define('_PNFORUM_TO26_FAILED', 'Upgrade auf pnForum 2.6 fehlgeschlagen');
 
 define('_PNFORUM_TO27_HINT', 'Das Upgrade auf Version 2.7 beinhaltet keine Änderung an der Datenbankstruktur.<br />Die wichtigste Neuerung in dieser Version ist die Verwendung von Ajax (<a href="http://de.wikipedia.org/wiki/Ajax_(Programmierung)">mehr dazu</a>).<br /><br />');
 define('_PNFORUM_TO27_FAILED', 'Upgrade auf pnForum 2.7 fehlgeschlagen');
+
+define('_PNFORUM_TO30_HINT', 'Das Upgrade auf Version 3.0 beinhaltet keine Änderung an der Datenbankstruktur.<br />');
+define('_PNFORUM_TO30_FAILED', 'Upgrade auf pnForum 3.0 fehlgeschlagen');
+
+define('_PNFORUM_DOT8ISREQUIRED', 'Diese Version von pnForum benötigt mind. PostNuke .8. Die Installation wurde abgebrochen.');

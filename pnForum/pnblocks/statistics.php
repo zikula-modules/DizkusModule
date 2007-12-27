@@ -45,7 +45,7 @@ function pnForum_statisticsblock_display($row)
     }
     
     //check for Permission
-    if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_READ)){ 
+    if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', $row['title'] . '::', ACCESS_READ)){ 
         return; 
     }
 
@@ -77,7 +77,7 @@ function pnForum_statisticsblock_display($row)
     $pnr->add_core_data();
     $pnr->caching = false;
 
-    $params = explode(",", $vars['sb_parameters']);
+    $params = explode(',', $vars['sb_parameters']);
 
     if(is_array($params) && count($params)>0) {
         foreach($params as $param) {
@@ -94,7 +94,7 @@ function pnForum_statisticsblock_display($row)
  */
 function pnForum_statisticsblock_update($row)
 {
-	if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
 	    return false;
 	}
     list($sb_template,
@@ -113,7 +113,7 @@ function pnForum_statisticsblock_update($row)
  */
 function pnForum_statisticsblock_modify($row)
 {
-	if (!pnSecAuthAction(0, 'pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', $row['title'] . '::', ACCESS_ADMIN)) {
 	    return false;
 	}
 

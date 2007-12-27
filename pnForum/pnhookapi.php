@@ -67,7 +67,7 @@ function pnForum_hookapi_createbyitem($args)
         $pntopic   = 0;
         $authorid  = pnUserGetVar('uid');
 
-        $functionfilename = pnVarPrepForStore('modules/pnForum/pncommentsapi/' . $modname . '.php');
+        $functionfilename = DataUtil::formatForStore('modules/pnForum/pncommentsapi/' . $modname . '.php');
         if(file_exists($functionfilename) && is_readable($functionfilename)) {
             list($subject, $message, $pntopic, $authorid) = pnModAPIFunc('pnForum', 'comments', $modname, array('objectid' => $objectid));
         }
@@ -80,7 +80,7 @@ function pnForum_hookapi_createbyitem($args)
         $sql = "SELECT $forumcolumn[forum_id],
                        $forumcolumn[forum_pntopic]
                 FROM $forumtable
-                WHERE $forumcolumn[forum_moduleref]='" . pnVarPrepForStore($modid) . "'";
+                WHERE $forumcolumn[forum_moduleref]='" . DataUtil::formatForStore($modid) . "'";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
         $forumsfound = array();
@@ -155,7 +155,7 @@ function pnForum_hookapi_updatebyitem($args)
                                       'id_only'  => true));
 
         if($post_id <> false) {
-            $functionfilename = pnVarPrepForStore('modules/pnForum/pncommentsapi/' . $modname . '.php');
+            $functionfilename = DataUtil::formatForStore('modules/pnForum/pncommentsapi/' . $modname . '.php');
             if(file_exists($functionfilename) && is_readable($functionfilename)) {
                 list($subject, $message, $pntopic, $authorid) = pnModAPIFunc('pnForum', 'comments', $modname, array('objectid' => $objectid));
             }

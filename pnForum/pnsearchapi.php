@@ -1,15 +1,47 @@
 <?php
-/**
- * pnForum
+/************************************************************************
+ * pnForum - The Post-Nuke Module                                       *
+ * ==============================                                       *
+ *                                                                      *
+ * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
+ * http://www.pnforum.de/                                            *
+ ************************************************************************
+ * Modified version of: *
+ ************************************************************************
+ * phpBB version 1.4                                                    *
+ * begin                : Wed July 19 2000                              *
+ * copyright            : (C) 2001 The phpBB Group                      *
+ * email                : support@phpbb.com                             *
+ ************************************************************************
+ * License *
+ ************************************************************************
+ * This program is free software; you can redistribute it and/or modify *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation; either version 2 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * This program is distributed in the hope that it will be useful,      *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with this program; if not, write to the Free Software          *
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 *
+ * USA                                                                  *
+ ************************************************************************
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * search functions
  * @version $Id$
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @author Frank Schummertz
+ * @copyright 2004 by Frank Schummertz
  * @package pnForum
- */
+ * @license GPL <http://www.gnu.org/licenses/gpl.html>
+ * @link http://www.pnforum.de
+ *
+ ***********************************************************************/
 
-Loader::includeOnce('modules/pnForum/common.php');
+include_once("modules/pnForum/common.php");
 
 /**
  * Search plugin info
@@ -51,7 +83,7 @@ function pnForum_searchapi_internalsearchoptions($args)
 /**
  * Search plugin main function
  **/
-function pnForum_searchapi_search($args)
+function pnForum_searchapi_search()
 {
     list($active_pnForum,
          $vars['searchfor'],
@@ -98,8 +130,7 @@ function pnForum_searchapi_search($args)
     $funcname = (pnModGetVar('pnForum', 'fulltextindex')==1) ? 'fulltext' : 'nonfulltext';
     list($searchresults,
          $total_hits) =  pnModAPIFunc('pnForum', 'search', $funcname, $vars);
-
-    $pnr =& new pnRender('pnForum');
+    $pnr = new pnRender('pnForum');
     $pnr->caching = false;
     $pnr->add_core_data();
     $pnr->assign('total_hits', $total_hits);
@@ -220,7 +251,7 @@ function pnForum_searchapi_nonfulltext($args)
         array_push($allowedforums, $userforums[$i]['forum_id']);
     }
 
-    if($forums[0]== -1) {
+    if((!is_array($forums) && $forums == -1) || $forums[0]==-1) {
         // search in all forums we are allowed to see
         $query .= ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
     } else {
@@ -261,7 +292,6 @@ function pnForum_searchapi_nonfulltext($args)
         default:
             $query .= ' ORDER BY pt.post_id DESC';
     }
-
     $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
 
     $total_hits = 0;
@@ -463,7 +493,7 @@ function pnForum_searchapi_fulltext($args)
         array_push($allowedforums, $userforums[$i]['forum_id']);
     }
 
-    if($forums[0]== -1) {
+    if((!is_array($forums) && $forums == -1) || $forums[0]==-1) {
         // search in all forums we are allowed to see
         $whereforums = ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
     } else {
@@ -612,3 +642,6 @@ function pnForum_searchapi_fulltext($args)
     pnfCloseDB($result);
     return array($searchresults, $total_hits);
 }
+
+
+?>

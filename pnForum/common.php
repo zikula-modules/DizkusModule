@@ -73,8 +73,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
+    $pnr = pnRender::getInstance('pnForum', false);
 
     // start with a fresh array
     $test_array = array();
@@ -131,14 +130,14 @@ function showforumerror($error_text, $file='', $line=0)
     pnModLangLoad('pnForum');
 
     $GLOBALS['info']['title'] = $error_text;
-    if(pnSessionGetVar('pn_ajax_call') == 'ajax') {
+    if(SessionUtil::getVar('pn_ajax_call') == 'ajax') {
         pnf_ajaxerror($error_text);
     }
 
     $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         $pnr->assign( 'file', $file);
         $pnr->assign( 'line', $line);
     }
@@ -193,7 +192,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
                        'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
         pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
     }
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
                                 code : $sql_errno <br />
@@ -209,7 +208,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
  */
 function pnfdebug($name='', $data, $die = false)
 {
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         $type = gettype($data);
         echo "\n<!-- begin debug of $name -->\n<div style=\"color: red;\">$name ($type";
         if(is_array($data)||is_object($data)) {
@@ -231,7 +230,7 @@ function pnfdebug($name='', $data, $die = false)
         }
         echo "</div><br />\n<!-- end debug of $name -->";
         if($die==true) {
-            die();
+            pnShutDown();
         }
     }
 }
@@ -309,7 +308,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
         $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
@@ -343,7 +342,7 @@ function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     if(!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
         $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
@@ -377,7 +376,7 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
         $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
@@ -665,11 +664,11 @@ function pnf_getimagepath($image=null)
     $modname = pnModGetName();
 
     // language
-    $lang =  pnVarPrepForOS(pnUserGetLang());
+    $lang =  DataUtil::formatForOS(pnUserGetLang());
 
     // theme directory
-    $theme         = pnVarPrepForOS(pnUserGetTheme());
-    $osmodname     = pnVarPrepForOS($modname);
+    $theme         = DataUtil::formatForOS(pnUserGetTheme());
+    $osmodname     = DataUtil::formatForOS($modname);
     $cWhereIsPerso = WHERE_IS_PERSO;
     if (!(empty($cWhereIsPerso))) {
         $themelangpath = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images/$lang";
@@ -682,13 +681,13 @@ function pnf_getimagepath($image=null)
     }
     // module directory
     $modinfo       = pnModGetInfo(pnModGetIDFromName($modname));
-    $osmoddir      = pnVarPrepForOS($modinfo['directory']);
+    $osmoddir      = DataUtil::formatForOS($modinfo['directory']);
     $modlangpath   = "modules/$osmoddir/pnimages/$lang";
     $modpath       = "modules/$osmoddir/pnimages";
     $syslangpath   = "system/$osmoddir/pnimages/$lang";
     $syspath       = "system/$osmoddir/pnimages";
 
-    $ossrc = pnVarPrepForOS($image);
+    $ossrc = DataUtil::formatForOS($image);
 
     // search for the image
     foreach (array($themelangpath,
@@ -782,10 +781,10 @@ if (!function_exists('array_csort')) {
 function pnf_ajaxerror($error='unspecified ajax error')
 {
     if(!empty($error)) {
-        pnSessionDelVar('pn_ajax_call');
+        SessionUtil::delVar('pn_ajax_call');
         header('HTTP/1.0 400 Bad Data');
-        echo pnVarPrepForDisplay($error);
-        exit;
+        echo DataUtil::formatForDisplay($error);
+        pnShutDown();
     }
 }
 
@@ -808,11 +807,11 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
         $data = $args;
     }
     if($createauthid == true) {
-        $data['authid'] = pnSecGenAuthKey('pnForum');
+        $data['authid'] = SecurityUtil::generateAuthKey('pnForum');
     }
     $output = $json->encode(DataUtil::convertToUTF8($data));
 
-    pnSessionDelVar('pn_ajax_call');
+    SessionUtil::delVar('pn_ajax_call');
     header('HTTP/1.0 200 OK');
     if($xjsonheader == false) {
         echo $output;
@@ -820,7 +819,7 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
         header('X-JSON:(' . $output . ')');
         echo $output;
     }
-    exit;
+    pnShutDown();
 
 }
 
@@ -854,7 +853,7 @@ function pnf_blacklist()
                                    pnServerGetVar('SERVER_PROTOCOL'),
                                    pnServerGetVar('HTTP_REFERRER'),
                                    pnServerGetVar('HTTP_USER_AGENT')));
-        fwrite($fh, pnVarPrepForStore($line) . "\n");                           
+        fwrite($fh, DataUtil::formatForStore($line) . "\n");                           
         fclose($fh);
     }
     return;
@@ -998,7 +997,7 @@ function pnf_str2time($strStr, $strPattern = 'Y-m-d H:i')
  */
 function pnf_available($deliverhtml = true)
 {
-    if((pnModGetVar('pnForum', 'forum_enabled') == 'no') && !pnSecAuthAction(0, 'pnForum::', '::', ACCESS_ADMIN)) {
+    if((pnModGetVar('pnForum', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         if($deliverhtml == true) {
             $pnr = pnRender::getInstance('pnForum', true, 'pnforum_disabled', true);
             return $pnf->fetch('pnforum_disabled.html');

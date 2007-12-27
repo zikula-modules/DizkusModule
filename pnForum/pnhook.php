@@ -36,10 +36,7 @@ function pnForum_hook_showdiscussionlink($args)
                               array('topic_id'   => $topic_id,
                                     'last_visit' => $last_visit,
                                     'count'      => false));
-        $pnr =& new pnRender('pnForum');
-
-        $pnr->caching = false;
-        $pnr->add_core_data();
+        $pnr = pnRender::getInstance('pnForum', false, null, true);
         $pnr->assign('topic', $topic);
         return $pnr->fetch('pnforum_hook_display.html');
     }

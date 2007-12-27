@@ -45,7 +45,7 @@ function pnForum_centerblock_display($row)
     }
 
     //check for Permission
-	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_READ)){
+	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', $row['title'] . '::', ACCESS_READ)){
 	    return;
 	}
 
@@ -99,7 +99,7 @@ function pnForum_centerblock_display($row)
  */
 function pnForum_centerblock_update($row)
 {
-	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
 	    return false;
 	}
     list($cb_template,
@@ -119,7 +119,7 @@ function pnForum_centerblock_update($row)
  */
 function pnForum_centerblock_modify($row)
 {
-	if (!pnSecAuthAction(0, 'pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', $row['title'] . '::', ACCESS_ADMIN)) {
 	    return false;
 	}
 

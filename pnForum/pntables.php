@@ -20,117 +20,228 @@ function pnForum_pntables()
     // Initialise table array
     $pntable = array();
 
-    // Set the column names.  Note that the array has been formatted
-    // on-screen to be very easy to read by a user.
+    //
+    // categories
+    //
+    $pntable['pnforum_categories'] = DBUtil::getLimitedTablename('pnforum_categories');
+    $pntable['pnforum_categories_column'] = array('cat_id'    => 'cat_id',
+                                                  'cat_title' => 'cat_title',
+                                                  'cat_order' => 'cat_order');
+    $pntable['pnforum_categories_column_def'] = array('cat_id'    => 'I AUTO PRIMARY',
+                                                      'cat_title' => 'C(100) NOTNULL DEFAULT \'\'',
+                                                      'cat_order' => 'C(10) NOTNULL DEFAULT \'\'');
 
-    $pnforum_categories = pnConfigGetVar('prefix') . '_pnforum_categories';
-    $pntable['pnforum_categories'] = $pnforum_categories;
-    $pntable['pnforum_categories_column'] = array('cat_id'    => $pnforum_categories . '.cat_id',
-                                                  'cat_title' => $pnforum_categories . '.cat_title',
-                                                  'cat_order' => $pnforum_categories . '.cat_order');
+    //
+    // forum_mods
+    //
+    $pntable['pnforum_forum_mods'] = DBUtil::getLimitedTablename('pnforum_forum_mods');
+    $pntable['pnforum_forum_mods_column'] = array('forum_id' => 'forum_id',
+                                                  'user_id'  => 'user_id');
+    $pntable['pnforum_forum_mods_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
+                                                      'user_id'   => 'I NOTNULL DEFAULT 0');
+    $pntable['pnforum_forum_mods_column_idx'] = array ('forum_id'  => 'forum_id',
+                                                       'user_id'   => 'user_id');
 
-    $pnforum_forum_mods = pnConfigGetVar('prefix') . '_pnforum_forum_mods';
-    $pntable['pnforum_forum_mods'] = $pnforum_forum_mods;
-    $pntable['pnforum_forum_mods_column'] = array('forum_id' => $pnforum_forum_mods . '.forum_id',
-                                                  'user_id'  => $pnforum_forum_mods . '.user_id');
-
-    $pnforum_forums = pnConfigGetVar('prefix') . '_pnforum_forums';
-    $pntable['pnforum_forums'] = $pnforum_forums;
-    $pntable['pnforum_forums_column'] = array('forum_id'               => $pnforum_forums . '.forum_id',
-                                              'forum_name'             => $pnforum_forums . '.forum_name',
-                                              'forum_desc'             => $pnforum_forums . '.forum_desc',
-                                              'forum_access'           => $pnforum_forums . '.forum_access',
-                                              'forum_topics'           => $pnforum_forums . '.forum_topics',
-                                              'forum_posts'            => $pnforum_forums . '.forum_posts',
-                                              'forum_last_post_id'     => $pnforum_forums . '.forum_last_post_id',
-                                              'cat_id'                 => $pnforum_forums . '.cat_id',
-                                              'forum_type'             => $pnforum_forums . '.forum_type',
-                                              'forum_order'            => $pnforum_forums . '.forum_order',
-                                              'forum_pop3_active'      => $pnforum_forums . '.forum_pop3_active',
-                                              'forum_pop3_server'      => $pnforum_forums . '.forum_pop3_server',
-                                              'forum_pop3_port'        => $pnforum_forums . '.forum_pop3_port',
-                                              'forum_pop3_login'       => $pnforum_forums . '.forum_pop3_login',
-                                              'forum_pop3_password'    => $pnforum_forums . '.forum_pop3_password',
-                                              'forum_pop3_interval'    => $pnforum_forums . '.forum_pop3_interval',
-                                              'forum_pop3_lastconnect' => $pnforum_forums . '.forum_pop3_lastconnect',
-                                              'forum_pop3_pnuser'      => $pnforum_forums . '.forum_pop3_pnuser',
-                                              'forum_pop3_pnpassword'  => $pnforum_forums . '.forum_pop3_pnpassword',
-                                              'forum_pop3_matchstring' => $pnforum_forums . '.forum_pop3_matchstring',
-                                              'forum_moduleref'        => $pnforum_forums . '.forum_moduleref',
-                                              'forum_pntopic'          => $pnforum_forums . '.forum_pntopic'
+    
+    //
+    // forums
+    //
+    $pntable['pnforum_forums'] = DBUtil::getLimitedTablename('pnforum_forums');
+    $pntable['pnforum_forums_column'] = array('forum_id'               => 'forum_id',
+                                              'forum_name'             => 'forum_name',
+                                              'forum_desc'             => 'forum_desc',
+                                              'forum_access'           => 'forum_access',
+                                              'forum_topics'           => 'forum_topics',
+                                              'forum_posts'            => 'forum_posts',
+                                              'forum_last_post_id'     => 'forum_last_post_id',
+                                              'cat_id'                 => 'cat_id',
+                                              'forum_type'             => 'forum_type',
+                                              'forum_order'            => 'forum_order',
+                                              'forum_pop3_active'      => 'forum_pop3_active',
+                                              'forum_pop3_server'      => 'forum_pop3_server',
+                                              'forum_pop3_port'        => 'forum_pop3_port',
+                                              'forum_pop3_login'       => 'forum_pop3_login',
+                                              'forum_pop3_password'    => 'forum_pop3_password',
+                                              'forum_pop3_interval'    => 'forum_pop3_interval',
+                                              'forum_pop3_lastconnect' => 'forum_pop3_lastconnect',
+                                              'forum_pop3_pnuser'      => 'forum_pop3_pnuser',
+                                              'forum_pop3_pnpassword'  => 'forum_pop3_pnpassword',
+                                              'forum_pop3_matchstring' => 'forum_pop3_matchstring',
+                                              'forum_moduleref'        => 'forum_moduleref',
+                                              'forum_pntopic'          => 'forum_pntopic'
                                               );
+    $pntable['pnforum_forums_column_def'] = array('forum_id'               => 'I AUTO PRIMARY',
+                                                  'forum_name'             => 'C(150) NOTNULL DEFAULT \'\'',
+                                                  'forum_desc'             => 'X NOTNULL DEFAULT \'\'',
+                                                  'forum_access'           => 'I NOTNULL DEFAULT 1',
+                                                  'forum_topics'           => 'I UNSIGNED NOTNULL DEFAULT 0',
+                                                  'forum_posts'            => 'I UNSIGNED NOTNULL DEFAULT 0',
+                                                  'forum_last_post_id'     => 'I NOTNULL DEFAULT 0',
+                                                  'cat_id'                 => 'I NOTNULL DEFAULT 0',
+                                                  'forum_type'             => 'I NOTNULL DEFAULT 0',
+                                                  'forum_order'            => 'I NOTNULL DEFAULT 0',
+                                                  'forum_pop3_active'      => 'I(1) NOTNULL DEFAULT 0',
+                                                  'forum_pop3_server'      => 'C(60) NOTNULL DEFAULT \'\'',
+                                                  'forum_pop3_port'        => 'I(5) NOTNULL DEFAULT 110',
+                                                  'forum_pop3_login'       => 'C(60) NOTNULL DEFAULT \'\'',
+                                                  'forum_pop3_password'    => 'C(60) NOTNULL DEFAULT \'\'',
+                                                  'forum_pop3_interval'    => 'I(4) NOTNULL DEFAULT 0',
+                                                  'forum_pop3_lastconnect' => 'I NOTNULL DEFAULT 0',
+                                                  'forum_pop3_pnuser'      => 'C(60) NOTNULL DEFAULT \'\'',
+                                                  'forum_pop3_pnpassword'  => 'C(40) NOTNULL DEFAULT \'\'',
+                                                  'forum_pop3_matchstring' => 'C(255) NOTNULL DEFAULT \'\'', 
+                                                  'forum_moduleref'        => 'I NOTNULL DEFAULT 0',
+                                                  'forum_pntopic'          => 'I(4) NOTNULL DEFAULT 0');  
+    $pntable['pnforum_forums_column_idx'] = array ('forum_last_post_id'  => 'forum_last_post_id',
+                                                   'forum_moduleref'     => 'forum_moduleref');
 
-    $pnforum_posts = pnConfigGetVar('prefix') . '_pnforum_posts';
-    $pntable['pnforum_posts'] = $pnforum_posts;
-    $pntable['pnforum_posts_column'] = array('post_id'    => $pnforum_posts . '.post_id',
-                                             'topic_id'   => $pnforum_posts . '.topic_id',
-                                             'forum_id'   => $pnforum_posts . '.forum_id',
-                                             'poster_id'  => $pnforum_posts . '.poster_id',
-                                             'post_time'  => $pnforum_posts . '.post_time',
-                                             'poster_ip'  => $pnforum_posts . '.poster_ip',
-                                             'post_msgid' => $pnforum_posts . '.post_msgid');
+    //
+    // posts
+    //
+    $pntable['pnforum_posts'] = DBUtil::getLimitedTablename('pnforum_posts');
+    $pntable['pnforum_posts_column'] = array('post_id'    => 'post_id',
+                                             'topic_id'   => 'topic_id',
+                                             'forum_id'   => 'forum_id',
+                                             'poster_id'  => 'poster_id',
+                                             'post_time'  => 'post_time',
+                                             'poster_ip'  => 'poster_ip',
+                                             'post_msgid' => 'post_msgid');
+    $pntable['pnforum_posts_column_def'] = array('post_id'     => 'I AUTO PRIMARY',
+                                                 'topic_id'    => 'I NOTNULL DEFAULT 0',
+                                                 'forum_id'    => 'I NOTNULL DEFAULT 0',
+                                                 'poster_id'   => 'I NOTNULL DEFAULT 1',
+                                                 'post_time'   => 'C(20) NOTNULL DEFAULT \'\'',
+                                                 'poster_ip'   => 'C(16) NOTNULL DEFAULT \'\'',
+                                                 'post_msgid'  => 'C(100) NOTNULL DEFAULT \'\'');
+    $pntable['pnforum_posts_column_idx'] = array ('topic_id'   => 'topic_id',
+                                                  'forum_id'   => 'forum_id',
+                                                  'poster_id'  => 'poster_id',
+                                                  'post_msgid' => 'post_msgid');
 
-    $pnforum_posts_text = pnConfigGetVar('prefix') . '_pnforum_posts_text';
-    $pntable['pnforum_posts_text'] = $pnforum_posts_text;
-    $pntable['pnforum_posts_text_column'] = array('post_id'   => $pnforum_posts_text . '.post_id',
-                                                  'post_text' => $pnforum_posts_text . '.post_text');
+    // 
+    // posts_text
+    //
+    $pntable['pnforum_posts_text'] = DBUtil::getLimitedTablename('pnforum_posts_text');
+    $pntable['pnforum_posts_text_column'] = array('post_id'   => 'post_id',
+                                                  'post_text' => 'post_text');
+    $pntable['pnforum_posts_text_column_def'] = array('post_id'    => 'I NOTNULL DEFAULT 0',
+                                                      'post_text'  => 'X NOTNULL DEFAULT \'\'');
+    $pntable['pnforum_posts_text_column_idx'] = array ('post_id'  => 'post_id');
 
-    $pnforum_ranks = pnConfigGetVar('prefix') . '_pnforum_ranks';
-    $pntable['pnforum_ranks'] = $pnforum_ranks;
-    $pntable['pnforum_ranks_column'] = array('rank_id'      => $pnforum_ranks . '.rank_id',
-                                             'rank_title'   => $pnforum_ranks . '.rank_title',
-                                             'rank_min'     => $pnforum_ranks . '.rank_min',
-                                             'rank_max'     => $pnforum_ranks . '.rank_max',
-                                             'rank_special' => $pnforum_ranks . '.rank_special',
-                                             'rank_image'   => $pnforum_ranks . '.rank_image',
-                                             'rank_style'   => $pnforum_ranks . '.rank_style');
+    //
+    // ranks
+    //
+    $pntable['pnforum_ranks'] = DBUtil::getLimitedTablename('pnforum_ranks');
+    $pntable['pnforum_ranks_column'] = array('rank_id'      => 'rank_id',
+                                             'rank_title'   => 'rank_title',
+                                             'rank_min'     => 'rank_min',
+                                             'rank_max'     => 'rank_max',
+                                             'rank_special' => 'rank_special',
+                                             'rank_image'   => 'rank_image',
+                                             'rank_style'   => 'rank_style');
+    $pntable['pnforum_ranks_column_def'] = array('rank_id'       => 'I AUTO PRIMARY',
+                                                 'rank_title'    => 'C(50) NOTNULL DEFAULT \'\'',
+                                                 'rank_min'      => 'I NOTNULL DEFAULT 0',
+                                                 'rank_max'      => 'I NOTNULL DEFAULT 0',
+                                                 'rank_special'  => 'I(2) NOTNULL DEFAULT 0',
+                                                 'rank_image'    => 'C(255) NOTNULL DEFAULT \'\'',
+                                                 'rank_style'    => 'C(255) NOTNULL DEFAULT \'\'');
+    $pntable['pnforum_ranks_column_idx'] = array ('rank_min'  => 'rank_min',
+                                                  'rank_max'  => 'rank_max');
 
-    $pnforum_subscription = pnConfigGetVar('prefix') . '_pnforum_subscription';
-    $pntable['pnforum_subscription'] = $pnforum_subscription;
-    $pntable['pnforum_subscription_column'] = array('msg_id'   => $pnforum_subscription . '.msg_id',
-                                                    'forum_id' => $pnforum_subscription . '.forum_id',
-                                                    'user_id'  => $pnforum_subscription . '.user_id');
+    // 
+    // subscriptions
+    //
+    $pntable['pnforum_subscription'] = DBUtil::getLimitedTablename('pnforum_subscription');
+    $pntable['pnforum_subscription_column'] = array('msg_id'   => 'msg_id',
+                                                    'forum_id' => 'forum_id',
+                                                    'user_id'  => 'user_id');
+    $pntable['pnforum_subscription_column_def'] = array('msg_id'      => 'I AUTO PRIMARY',
+                                                        'forum_id'    => 'I NOTNULL DEFAULT 0',
+                                                        'user_id'     => 'I NOTNULL DEFAULT 0');
+    $pntable['pnforum_subscription_column_idx'] = array ('forum_id' => 'forum_id',
+                                                         'user_id'  => 'user_id');
 
-    $pnforum_topics = pnConfigGetVar('prefix') . '_pnforum_topics';
-    $pntable['pnforum_topics'] = $pnforum_topics;
-    $pntable['pnforum_topics_column'] = array('topic_id'           => $pnforum_topics . '.topic_id',
-                                              'topic_title'        => $pnforum_topics . '.topic_title',
-                                              'topic_poster'       => $pnforum_topics . '.topic_poster',
-                                              'topic_time'         => $pnforum_topics . '.topic_time',
-                                              'topic_views'        => $pnforum_topics . '.topic_views',
-                                              'topic_replies'      => $pnforum_topics . '.topic_replies',
-                                              'topic_last_post_id' => $pnforum_topics . '.topic_last_post_id',
-                                              'forum_id'           => $pnforum_topics . '.forum_id',
-                                              'topic_status'       => $pnforum_topics . '.topic_status',
-                                              'topic_notify'       => $pnforum_topics . '.topic_notify',
-                                              'sticky'             => $pnforum_topics . '.sticky',
-                                              'sticky_label'       => $pnforum_topics . '.sticky_label',
-                                              'poll_id'            => $pnforum_topics . '.poll_id',
-                                              'topic_reference'    => $pnforum_topics . '.topic_reference');
+    //
+    // topics
+    //
+    $pntable['pnforum_topics'] = DBUtil::getLimitedTablename('pnforum_topics');
+    $pntable['pnforum_topics_column'] = array('topic_id'           => 'topic_id',
+                                              'topic_title'        => 'topic_title',
+                                              'topic_poster'       => 'topic_poster',
+                                              'topic_time'         => 'topic_time',
+                                              'topic_views'        => 'topic_views',
+                                              'topic_replies'      => 'topic_replies',
+                                              'topic_last_post_id' => 'topic_last_post_id',
+                                              'forum_id'           => 'forum_id',
+                                              'topic_status'       => 'topic_status',
+                                              'topic_notify'       => 'topic_notify',
+                                              'sticky'             => 'sticky',
+                                              'sticky_label'       => 'sticky_label',
+                                              'poll_id'            => 'poll_id',
+                                              'topic_reference'    => 'topic_reference');
+    $pntable['pnforum_topics_column_def'] = array('topic_id'           => 'I AUTO PRIMARY',
+                                                  'topic_title'        => 'C(255) NOTNULL DEFAULT \'\'',
+                                                  'topic_poster'       => 'I NOTNULL DEFAULT 0',
+                                                  'topic_time'         => 'C(20) NOTNULL DEFAULT \'\'',
+                                                  'topic_views'        => 'I NOTNULL DEFAULT 0',
+                                                  'topic_replies'      => 'I UNSIGNED NOTNULL DEFAULT 0',
+                                                  'topic_last_post_id' => 'I NOTNULL DEFAULT 0',
+                                                  'forum_id'           => 'I NOTNULL DEFAULT 0',
+                                                  'topic_status'       => 'I NOTNULL DEFAULT 0',
+                                                  'topic_notify'       => 'I(2) NOTNULL DEFAULT 0',
+                                                  'sticky'             => 'I(3) UNSIGNED NOTNULL DEFAULT 0',
+                                                  'sticky_label'       => 'C(255) NOTNULL DEFAULT \'\'',
+                                                  'poll_id'            => 'I UNSIGNED NOTNULL DEFAULT 0',
+                                                  'topic_reference'    => 'C(60) NOTNULL DEFAULT \'\'');
+    $pntable['pnforum_topics_column_idx'] = array('forum_id'           => 'forum_id',
+                                                  'topic_last_post_id' => 'topic_last_post_id');
 
-
-    $pnforum_users = pnConfigGetVar('prefix') . '_pnforum_users';
-    $pntable['pnforum_users'] = $pnforum_users;
-    $pntable['pnforum_users_column'] = array('user_id'         => $pnforum_users . '.user_id',
-                                             'user_posts'      => $pnforum_users . '.user_posts',
-                                             'user_rank'       => $pnforum_users . '.user_rank',
-                                             'user_level'      => $pnforum_users . '.user_level',
-                                             'user_lastvisit'  => $pnforum_users . '.user_lastvisit',
-                                             'user_favorites'  => $pnforum_users . '.user_favorites',
-                                             'user_post_order' => $pnforum_users . '.user_post_order');
+    //
+    // users
+    //
+    $pntable['pnforum_users'] = DBUtil::getLimitedTablename('pnforum_users');
+    $pntable['pnforum_users_column'] = array('user_id'         => 'user_id',
+                                             'user_posts'      => 'user_posts',
+                                             'user_rank'       => 'user_rank',
+                                             'user_level'      => 'user_level',
+                                             'user_lastvisit'  => 'user_lastvisit',
+                                             'user_favorites'  => 'user_favorites',
+                                             'user_post_order' => 'user_post_order');
+    $pntable['pnforum_users_column_def'] = array('user_id'         => 'I NOTNULL DEFAULT 0',
+                                                 'user_posts'      => 'I UNSIGNED NOTNULL DEFAULT 0',
+                                                 'user_rank'       => 'I UNSIGNED NOTNULL DEFAULT 0',
+                                                 'user_level'      => 'I UNSIGNED NOTNULL DEFAULT 1',
+                                                 'user_lastvisit'  => 'T DEFAULT NULL',
+                                                 'user_favorites'  => 'I(1) NOTNULL DEFAULT 0',
+                                                 'user_post_order' => 'I(1) NOTNULL DEFAULT 0');
 
     // new in 1.7.5
-    $pnforum_topic_subscription = pnConfigGetVar('prefix') . '_pnforum_topic_subscription';
-    $pntable['pnforum_topic_subscription'] = $pnforum_topic_subscription;
-    $pntable['pnforum_topic_subscription_column'] = array('topic_id' => $pnforum_topic_subscription . '.topic_id',
-                                                          'forum_id' => $pnforum_topic_subscription . '.forum_id',
-                                                          'user_id'  => $pnforum_topic_subscription . '.user_id');
+    // 
+    // topic_subscriptions
+    //
+    $pntable['pnforum_topic_subscription'] = DBUtil::getLimitedTablename('pnforum_topic_subscription');
+    $pntable['pnforum_topic_subscription_column'] = array('topic_id' => 'topic_id',
+                                                          'forum_id' => 'forum_id',
+                                                          'user_id'  => 'user_id');
+    $pntable['pnforum_topic_subscription_column_def'] = array('topic_id'  => 'I NOTNULL DEFAULT 0',
+                                                              'forum_id'  => 'I NOTNULL DEFAULT 0',
+                                                              'user_id'   => 'I NOTNULL DEFAULT 0');
+    $pntable['pnforum_topic_subscription_column_idx'] = array ('topic_id' => 'topic_id',
+                                                               'forum_id' => 'forum_id',
+                                                               'user_id'  => 'user_id');
 
     // new in 2.0.1
-    $pnforum_forum_favorites = pnConfigGetVar('prefix') . '_pnforum_forum_favorites';
-    $pntable['pnforum_forum_favorites'] = $pnforum_forum_favorites;
-    $pntable['pnforum_forum_favorites_column'] = array('forum_id' => $pnforum_forum_favorites . '.forum_id',
-                                                       'user_id'  => $pnforum_forum_favorites . '.user_id');
+    //
+    // favorites
+    //
+    $pntable['pnforum_forum_favorites'] = DBUtil::getLimitedTablename('pnforum_forum_favorites');
+    $pntable['pnforum_forum_favorites_column'] = array('forum_id' => 'forum_id',
+                                                       'user_id'  => 'user_id');
+    $pntable['pnforum_forum_favorites_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
+                                                           'user_id'   => 'I NOTNULL DEFAULT 0');
+    $pntable['pnforum_forum_favorites_column_idx'] = array('forum_id' => 'forum_id',
+                                                           'user_id'  => 'user_id');
 
 
     // Return the table information

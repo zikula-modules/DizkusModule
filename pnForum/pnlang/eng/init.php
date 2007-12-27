@@ -9,6 +9,10 @@
  * @package pnForum
  */
 
+define('_PNFORUM_INSTALLATION', 'Install pnForum');
+define('_PNFORUM_WELCOMETOINTERACTIVEINIT', 'Welcome to the pnForum installation');
+define('_PNFORUM_INTERACTIVEINITHINT', 'You are now going to install pnForum %version% on your site. Please refer to the documentation for more information about its confuguration and options.');
+
 define('_PNFORUM_WELCOMETOINTERACTIVEUPGRADE', 'pnForum Upgrade');
 define('_PNFORUM_OLDVERSION', 'old version');
 define('_PNFORUM_NEWVERSION', 'new version');
@@ -26,3 +30,5 @@ define('_PNFORUM_TO26_FAILED', 'Upgrade to pnForum 2.6 failed');
 
 define('_PNFORUM_TO27_HINT', 'This upgrade does not not change the database structure.<br />The new feature in this version is the use of Ajax (<a href="http://en.wikipedia.org/wiki/Ajax_(programming)">read more about it</a>).<br /><br />');
 define('_PNFORUM_TO27_FAILED', 'Upgrade auf pnForum 2.7 fehlgeschlagen');
+
+define('_PNFORUM_DOT8ISREQUIRED', 'This version of pnForum requires PostNuke .8 or later. Installation has been stopped because this requirement is not met');

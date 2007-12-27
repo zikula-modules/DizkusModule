@@ -32,7 +32,7 @@ function pnForum_ajax_reply()
                                          'preview');
     $preview          = ($preview=='1') ? true : false;
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     
     $message = pnfstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
@@ -76,15 +76,12 @@ function pnForum_ajax_reply()
 
     }
 
-    $pnr = new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
     pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_user_singlepost.html'),
                             'post_id' => $post['post_id']),
                       true);
-    exit;
 }
 
 /**
@@ -98,7 +95,7 @@ function pnForum_ajax_preparequote()
     }
 
     $post_id = pnVarCleanFromInput('post');
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
         $post = pnModAPIFunc('pnForum', 'user', 'preparereply',
@@ -106,7 +103,6 @@ function pnForum_ajax_preparequote()
                                    'quote'       => true,
                                    'reply_start' => true));
         pnf_jsonizeoutput($post, false);
-        exit;
     }
     pnf_ajaxerror('internal error: no post id in pnForum_ajax_preparequote()');
 }
@@ -122,14 +118,13 @@ function pnForum_ajax_readpost()
     }
 
     $post_id = pnVarCleanFromInput('post');
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if($post['poster_data']['edit'] == true) {
             pnf_jsonizeoutput($post, false);
-            exit;
         } else {
             pnf_ajaxerror(_PNFORUM_NOAUTH);
         }
@@ -148,15 +143,13 @@ function pnForum_ajax_editpost()
     }
 
     $post_id = pnVarCleanFromInput('post');
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
         $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if($post['poster_data']['edit'] == true) {
-            $pnr = new pnRender('pnForum');
-            $pnr->caching = false;
-            $pnr->add_core_data();
+            $pnr = pnRender::getInstance('pnForum', false, null, true);
             $pnr->assign('post', $post);
             // simplify our live
             $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
@@ -164,13 +157,11 @@ function pnForum_ajax_editpost()
             pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_ajax_editpost.html'),
                                     'post_id' => $post['post_id']),
                                     true);
-            exit;
         } else {
             pnf_ajaxerror(_PNFORUM_NOAUTH);
         }
     }
     pnf_ajaxerror('internal error: no post id in pnForum_ajax_readrawtext()');
-
 }
 
 /**
@@ -192,9 +183,9 @@ function pnForum_ajax_updatepost()
                                                   'message',
                                                   'delete',
                                                   'attach_signature');
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     if(!empty($post_id)) {
-        if (!pnSecConfirmAuthKey()) {
+        if (!SecurityUtil::confirmAuthKey()) {
             pnf_ajaxerror(_BADAUTHKEY);
         }
  
@@ -218,10 +209,8 @@ function pnForum_ajax_updatepost()
                           'post_id' => $post_id);
         }
         pnf_jsonizeoutput($post, true);
-        exit;
     }
     pnf_ajaxerror('internal error: no post id in pnForum_ajax_updatepost()');
-
 }
 
 /**
@@ -235,9 +224,9 @@ function pnForum_ajax_lockunlocktopic()
     }
 
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
 
@@ -260,7 +249,6 @@ function pnForum_ajax_lockunlocktopic()
                        'mode'     => $mode));
     $newmode = ($mode=='lock') ? 'locked' : 'unlocked';
     pnf_jsonizeoutput($newmode);
-    exit;
 }
 
 /**
@@ -274,9 +262,9 @@ function pnForum_ajax_stickyunstickytopic()
     }
 
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
 
@@ -298,7 +286,6 @@ function pnForum_ajax_stickyunstickytopic()
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
     pnf_jsonizeoutput($mode);
-    exit;
 }
 
 /**
@@ -311,10 +298,10 @@ function pnForum_ajax_subscribeunsubscribetopic()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
 
@@ -346,10 +333,7 @@ function pnForum_ajax_subscribeunsubscribetopic()
         pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribetopic()');
     }
 
-
-    pnSessionDelVar('pn_ajax_call');
     pnf_jsonizeoutput($newmode);
-    exit;
 }
 
 /**
@@ -362,10 +346,10 @@ function pnForum_ajax_subscribeunsubscribeforum()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
 
@@ -397,11 +381,8 @@ function pnForum_ajax_subscribeunsubscribeforum()
         pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribeforum()');
     }
 
-
-    pnSessionDelVar('pn_ajax_call');
     pnf_jsonizeoutput(array('newmode' => $newmode,
                             'forum_id' => $forum_id));
-    exit;
 }
 
 /**
@@ -414,14 +395,14 @@ function pnForum_ajax_addremovefavorite()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     if(pnModGetVar('pnForum', 'favorites_enabled')=='no') {
         pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED);
     }
 
     list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
     }
 
@@ -451,11 +432,8 @@ function pnForum_ajax_addremovefavorite()
         pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_addremovefavorite()');
     }
 
-
-    pnSessionDelVar('pn_ajax_call');
     pnf_jsonizeoutput(array('newmode' => $newmode,
                             'forum_id' => $forum_id));
-    exit;
 }
 
 /**
@@ -468,7 +446,7 @@ function pnForum_ajax_edittopicsubject()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     $topic_id = pnVarCleanFromInput('topic');
 
     if(!empty($topic_id)) {
@@ -477,13 +455,10 @@ function pnForum_ajax_edittopicsubject()
                                    'count'    => false,
                                    'complete' => false  ));
         if($topic['access_topicsubjectedit'] == true) {
-            $pnr = new pnRender('pnForum');
-            $pnr->caching = false;
-            $pnr->add_core_data();
+            $pnr = pnRender::getInstance('pnForum', false, null, true);
             $pnr->assign('topic', $topic);
             pnf_jsonizeoutput(array('data' => $pnr->fetch('pnforum_ajax_edittopicsubject.html'),
                                     'topic_id' => $topic_id), true);
-            exit;
         } else {
             pnf_ajaxerror(_PNFORUM_NOAUTH);
         }
@@ -501,13 +476,13 @@ function pnForum_ajax_updatetopicsubject()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
     list($topic_id,
          $subject) = pnVarCleanFromInput('topic',
                                          'subject');
     
     if(!empty($topic_id)) {
-        if (!pnSecConfirmAuthKey()) {
+        if (!SecurityUtil::confirmAuthKey()) {
            pnf_ajaxerror(_BADAUTHKEY);
         }
 
@@ -554,7 +529,7 @@ function pnForum_ajax_changesortorder()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!pnUserLoggedIn()) {
        pnf_ajaxerror(_PNFORUM_USERLOGINTITLE);
@@ -567,7 +542,6 @@ function pnForum_ajax_changesortorder()
     pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
     $newmode = strtolower(pnModAPIFunc('pnForum','user','get_user_post_order'));
     pnf_jsonizeoutput($newmode, true, true);
-    exit;
 }
 
 /**
@@ -580,9 +554,9 @@ function pnForum_ajax_newtopic()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        pnf_ajaxerror(_BADAUTHKEY);
     }
 
@@ -623,9 +597,7 @@ function pnForum_ajax_newtopic()
         pnf_ajaxerror(_PNFORUM_NOSUBJECT);
     }
 
-    $pnr = new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
 
     if($preview == false) {
         // store new topic
@@ -710,12 +682,11 @@ function pnForum_ajax_forumusers ()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    $pnRender = new pnRender('pnForum');
-    $pnRender->caching = false;
+    $pnRender = pnRender::getInstance('pnForum', false);
     Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
     $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
     $pnRender->display('pnforum_ajax_forumusers.html');
-    exit;
+    pnShutDown();
 }
 
 /**
@@ -731,10 +702,9 @@ function pnForum_ajax_newposts ()
         echo $disabled;
         exit;
     }
-    $pnRender = new pnRender('pnForum');
-    $pnRender->caching = false;
+    $pnRender = pnRender::getInstance('pnForum', false);
     Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
     $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
     $pnRender->display('pnforum_ajax_newposts.html');
-    exit;
+    pnShutDown();
 }
