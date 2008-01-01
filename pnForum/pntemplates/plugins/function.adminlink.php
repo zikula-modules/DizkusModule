@@ -29,9 +29,9 @@ function smarty_function_adminlink($params, &$smarty)
         }
         
         if($type=="category") {
-            return "<a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'admin', 'category', array('cat_id'=>(int)$id)))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINCATEDIT)."]</a>";
+            return "<a href=\"".DataUtil::formatForDisplay(pnModURL('pnForum', 'admin', 'category', array('cat_id'=>(int)$id)))."\">[".DataUtil::formatForDisplay(_PNFORUM_ADMINCATEDIT)."]</a>";
         } elseif ($type=="forum") {
-            return "<a href=\"".pnVarPrepForDisplay(pnModURL('pnForum', 'admin', 'forum', array('forum_id'=>(int)$id)))."\">[".pnVarPrepForDisplay(_PNFORUM_ADMINFORUMEDIT)."]</a>";
+            return "<a href=\"".DataUtil::formatForDisplay(pnModURL('pnForum', 'admin', 'forum', array('forum_id'=>(int)$id)))."\">[".DataUtil::formatForDisplay(_PNFORUM_ADMINFORUMEDIT)."]</a>";
         }
     }
     return;

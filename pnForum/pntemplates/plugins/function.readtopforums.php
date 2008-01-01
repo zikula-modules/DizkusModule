@@ -41,10 +41,10 @@ function smarty_function_readtopforums($params, &$smarty)
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             $topforum = array();
             $topforum['forum_id'] = $forum_id;
-            $topforum['forum_name'] = pnVarPrepForDisplay($forum_name);
+            $topforum['forum_name'] = DataUtil::formatForDisplay($forum_name);
             $topforum['forum_topics'] = $forum_topics;
             $topforum['forum_posts'] = $forum_posts;
-            $topforum['cat_title'] = pnVarPrepForDisplay($cat_title);
+            $topforum['cat_title'] = DataUtil::formatForDisplay($cat_title);
             $topforum['cat_id'] = $cat_id;
             array_push($topforums, $topforum);
         }

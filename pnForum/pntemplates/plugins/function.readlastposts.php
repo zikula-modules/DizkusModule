@@ -57,7 +57,7 @@ function smarty_function_readlastposts($params, &$smarty)
             $smarty->assign('lastposts', array());
             return;
         }
-        $whereforum = 't.forum_id = ' . pnVarPrepForStore($forum_id) . ' AND ';
+        $whereforum = 't.forum_id = ' . DataUtil::formatForStore($forum_id) . ' AND ';
     } else {
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
@@ -75,7 +75,7 @@ function smarty_function_readlastposts($params, &$smarty)
             }
             $whereforum .= $userforum['forum_id'];
         }
-        $whereforum = 't.forum_id IN (' . pnVarPrepForStore($whereforum) . ') AND';
+        $whereforum = 't.forum_id IN (' . DataUtil::formatForStore($whereforum) . ') AND';
        }
 
     $wherefavorites = '';
@@ -89,12 +89,12 @@ function smarty_function_readlastposts($params, &$smarty)
                 FROM ' . $pntable['pnforum_forum_favorites'] . ' fav
                 LEFT JOIN ' . $pntable['pnforum_forums'] . ' f
                 ON f.forum_id = fav.forum_id
-                WHERE fav.user_id = ' . pnVarPrepForStore($uid);
+                WHERE fav.user_id = ' . DataUtil::formatForStore($uid);
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         while (!$result->EOF) {
             list($forum_id, $cat_id) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-                $wherefavorites .= 'f.forum_id=' .  (int)pnVarPrepForStore($forum_id) . ' OR ';
+                $wherefavorites .= 'f.forum_id=' .  (int)DataUtil::formatForStore($forum_id) . ' OR ';
             }
             $result->MoveNext();
         }
@@ -125,9 +125,9 @@ function smarty_function_readlastposts($params, &$smarty)
     $whereuser = "";
     if(!empty($user_id)) {
         if($user_id==-1 && $loggedIn) {
-            $whereuser = 'pt.poster_id = ' . pnVarPrepForStore($uid) . ' AND ';
+            $whereuser = 'pt.poster_id = ' . DataUtil::formatForStore($uid) . ' AND ';
         } else {
-            $whereuser = 'pt.poster_id = ' . pnVarPrepForStore($user_id) . ' AND ';
+            $whereuser = 'pt.poster_id = ' . DataUtil::formatForStore($user_id) . ' AND ';
         }
     }
 
@@ -190,11 +190,10 @@ function smarty_function_readlastposts($params, &$smarty)
                  $lastpost['post_id'],
                  $lastpost['post_text']) = $result->fields;
 
-            list($lastpost['topic_title'],
-                 $lastpost['forum_name'],
-                 $lastpost['cat_title']) = pnVarPrepForDisplay($lastpost['topic_title'],
-                                                               $lastpost['forum_name'],
-                                                               $lastpost['cat_title']);
+            $lastpost['topic_title'] = DataUtil::formatforDisplay($lastpost['forum_name']);
+            $lastpost['forum_name']  = DataUtil::formatforDisplay($lastpost['cat_title']);
+            $lastpost['cat_title'])  = DataUtil::formatforDisplay($lastpost['topic_title']);
+
             // backwards compatibility... :puke:
             $lastpost['title_tag'] = $lastpost['topic_title'];
 
@@ -214,12 +213,12 @@ function smarty_function_readlastposts($params, &$smarty)
             } else {
                 $user_name = pnConfigGetVar('anonymous');
             }
-            $lastpost['poster_name'] = pnVarPrepForDisplay($user_name);
+            $lastpost['poster_name'] = DataUtil::formatForDisplay($user_name);
 
             $lastpost['post_text'] = pnForum_replacesignature($lastpost['post_text'], '');
             // call hooks for $message
             list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
-            $lastpost['post_text'] = pnVarPrepForDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
+            $lastpost['post_text'] = DataUtil::formatForDisplay(pnVarCensor(nl2br($lastpost['post_text'])));
 
             $posted_unixtime= strtotime ($lastpost['topic_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
@@ -229,7 +228,7 @@ function smarty_function_readlastposts($params, &$smarty)
             // we now create the url to the last post in the thread. This might be
             // on site 1, 2 or what ever in the thread, depending on topic_replies
             // count and the posts_per_page setting
-            $lastpost['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+            $lastpost['last_post_url'] = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
                                                              array('topic' => $lastpost['topic_id'],
                                                                    'start' => $lastpost['start'])));
             $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];

@@ -46,7 +46,7 @@ function smarty_function_readtopposters($params, &$smarty)
             list($user_id, $user_posts) = $result->fields;
             $topposter = array();
             $topposter['user_id'] = $user_id;
-            $topposter['user_name'] = pnVarPrepforDisplay(pnUserGetVar('uname', $user_id));
+            $topposter['user_name'] = DataUtil::formatForDisplay(pnUserGetVar('uname', $user_id));
             $topposter['user_posts'] = $user_posts;
             array_push($topposters, $topposter);
         }

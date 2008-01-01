@@ -54,7 +54,7 @@
  */
 function smarty_modifier_profilelink($string, $class='', $image='')
 {
-    $string = pnVarPrepForDisplay($string);
+    $string = DataUtil::formatForDisplay($string);
 
     if(!empty($class)) {
         $class = 'class="' . $class . '" ';
@@ -72,7 +72,7 @@ function smarty_modifier_profilelink($string, $class='', $image='')
         } else {
             $show = $string;
         }
-        return '<a ' . $class . 'title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="' . pnVarPrepForDisplay(pnModURL('Profile', 'user', 'view', array('uname' =>  $string))) . '">' . $show . '</a>';
+        return '<a ' . $class . 'title="'. DataUtil::formatForDisplay(_PNFORUM_PROFILE) . ': ' . $string . '" href="' . DataUtil::formatForDisplay(pnModURL('Profile', 'user', 'view', array('uname' =>  $string))) . '">' . $show . '</a>';
     } else {
         return $string;
     }

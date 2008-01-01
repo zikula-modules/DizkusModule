@@ -27,9 +27,9 @@ function smarty_function_printtopic_button($params, &$smarty)
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         $themeinfo = pnThemeGetInfo('Printer');
         if($themeinfo['active']) {
-            return '<a class="image printlink" title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
+            return '<a class="image printlink" title="' . DataUtil::formatForDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('theme' => 'Printer', 'topic'=>$topic_id))) . '">' . DataUtil::formatForDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
         }
-        return '<a class="image printlink" title="' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . pnVarPrepHTMLDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
+        return '<a class="image printlink" title="' . DataUtil::formatForDisplay(_PNFORUM_PRINT_TOPIC) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'print', array('topic'=>$topic_id))) . '">' . DataUtil::formatForDisplay(_PNFORUM_PRINT_TOPIC) . '</a>';
     }
     return '';
 }

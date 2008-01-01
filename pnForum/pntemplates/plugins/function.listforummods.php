@@ -18,9 +18,9 @@ function smarty_function_listforummods($params, &$smarty)
 	        $out .= ", ";
 	    }
 	    if($mod_id < 1000000) {
-	        $out .= '<a title="'. pnVarPrepForDisplay(_PNFORUM_PROFILE) . ': ' . pnVarPrepForDisplay($mod_name) . '" href="user.php?op=userinfo&amp;uname='.pnVarPrepForDisplay($mod_name).'">'.pnVarPrepForDisplay($mod_name).'</a>';
+	        $out .= '<a title="'. DataUtil::formatForDisplay(_PNFORUM_PROFILE) . ': ' . DataUtil::formatForDisplay($mod_name) . '" href="user.php?op=userinfo&amp;uname='.DataUtil::formatForDisplay($mod_name).'">'.DataUtil::formatForDisplay($mod_name).'</a>';
 	    } else {
-	        $out .= pnVarPrepForDisplay($mod_name);
+	        $out .= DataUtil::formatForDisplay($mod_name);
 	    }
 	    $count++;
     }

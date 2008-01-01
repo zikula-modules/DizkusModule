@@ -24,10 +24,8 @@ function smarty_function_topicpager($params, &$smarty)
 {
     $total             = $params['total'];
     $per_page          = pnModGetVar('pnForum', 'posts_per_page');
-    $start             = pnVarCleanFromInput('start');
-    if(empty($start)) {
-        $start= 1;
-    }
+    $start             = (int)FormUtil::getPassedValue('start', 1, 'GETPOST');
+
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $topic_id          = $params['topic_id'];
     if(empty($topic_id)) {
@@ -47,7 +45,7 @@ function smarty_function_topicpager($params, &$smarty)
         $init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;                                                                                                              
                                                                                                                                                                            
         for($i = 1; $i < $init_page_max + 1; $i++) {                                                                                                                            
-            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
             if ( $i <  $init_page_max ) {                                                                                                                                           
                 $page_string .= $separator;                                                                                                                                                  
             }                                                                                                                                                                      
@@ -61,7 +59,7 @@ function smarty_function_topicpager($params, &$smarty)
                 $init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;                                                                                        
                                                                                                                                                                            
                 for($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {    
-                    $page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';       
+                    $page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';       
                     if ( $i <  $init_page_max + 1 ) {                                                                                                                                       
                                                                                                                                                                            
                         $page_string .= $separator;                                                                                                                                                  
@@ -74,7 +72,7 @@ function smarty_function_topicpager($params, &$smarty)
             }                                                                                                                                                                      
                                                                                                                                                                            
             for($i = $total_pages - 2; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
-                $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>'  : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';    
+                $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>'  : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';    
                 if( $i <  $total_pages ) {                                                                                                                                                                      
                     $page_string .= $separator;                                                                                                                                                  
                 }                                                                                                                                                                      
@@ -82,7 +80,7 @@ function smarty_function_topicpager($params, &$smarty)
         }                                                                                                                                                                      
     } else {                                                                                                                                                                      
         for($i = 1; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
-            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
             if ( $i <  $total_pages ) {                                                                                                                                                                      
                 $page_string .= $separator;                                                                                                                                                  
             }                                                                                                                                                                      
@@ -93,15 +91,15 @@ function smarty_function_topicpager($params, &$smarty)
     $add_next_set = false;                                                                                                                                                                     
     if ( $add_prevnext ) {                                                                                                                                                                      
         if ( $on_page > 1 ) {                                                                                                                                                                      
-            $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 2 ) * $per_page ))) . '">-1</a>] ' . $page_string;
+            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 2 ) * $per_page ))) . '">-1</a>] ' . $page_string;
             $add_prev_set = true;
         }                                                                                                                                                                      
         if ( $on_page > 10 ) {                                                                                                                                                                      
-            $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 11) * $per_page ))) . '">-10</a> ' . $page_string;
+            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 11) * $per_page ))) . '">-10</a> ' . $page_string;
             $add_prev_set = true;
         }                                                                                                                                                                      
         if ( $on_page > 100 ) {                                                                                                                                                                      
-            $page_string = '<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 101) * $per_page ))) . '">-100</a> ' . $page_string;
+            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $on_page - 101) * $per_page ))) . '">-100</a> ' . $page_string;
             $add_prev_set = true;
         }                                                                                                                                                                      
         if($add_prev_set == true) {
@@ -109,15 +107,15 @@ function smarty_function_topicpager($params, &$smarty)
         }
                                                                                                                                                                            
         if ( $on_page < $total_pages ) {                                                                                                                                                                      
-            $page_string .= ' [<a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $on_page * $per_page ))) . '">+1</a>';                           
+            $page_string .= ' [<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => $on_page * $per_page ))) . '">+1</a>';                           
             $add_next_set = true;
         }
         if($total_pages - $on_page > 10) {
-            $page_string .= ' <a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ($on_page + 9) * $per_page ))) . '">+10</a>';                           
+            $page_string .= ' <a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ($on_page + 9) * $per_page ))) . '">+10</a>';                           
             $add_next_set = true;
         }                                                                                                                                                                      
         if($total_pages - $on_page > 100) {
-            $page_string .= ' <a href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ($on_page + 99) * $per_page ))) . '">+100</a>';                           
+            $page_string .= ' <a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ($on_page + 99) * $per_page ))) . '">+100</a>';                           
             $add_next_set = true;
         }                                                                                                                                                                      
         if($add_next_set == true) {

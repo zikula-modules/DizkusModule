@@ -73,9 +73,7 @@ function pnForum_statisticsblock_display($row)
         PageUtil::addVar('stylesheet', ThemeUtil::getModuleStylesheet('pnForum'));
     }
 
-    $pnr = new pnRender('pnForum');
-    $pnr->add_core_data();
-    $pnr->caching = false;
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
 
     $params = explode(',', $vars['sb_parameters']);
 
@@ -97,12 +95,9 @@ function pnForum_statisticsblock_update($row)
 	if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
 	    return false;
 	}
-    list($sb_template,
-         $sb_parameters) = pnVarCleanFromInput('sb_template',
-                                               'sb_parameters');
 
-    if(empty($sb_parameters)) { $sb_parameters = 'maxposts=5'; }
-    if(empty($sb_template))   { $sb_template = 'pnforum_statisticsblock_display.html'; }
+	$sb_template   = FormUtil::getPassedValue('sb_template', 'pnforum_statisticsblock_display.html', 'POST');
+	$sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 
     $row['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
     return($row);
@@ -123,9 +118,7 @@ function pnForum_statisticsblock_modify($row)
     if(!isset($vars['sb_parameters']) || empty($vars['sb_parameters'])) { $vars['sb_parameters'] = 'maxposts=5'; }
     if(!isset($vars['sb_template']) || empty($vars['sb_template']))   { $vars['sb_template']   = 'pnforum_statisticsblock_display.html'; }
 
-    $pnRender = new pnRender('pnForum');
-    $pnRender->caching = false;
-    $pnRender->add_core_data();
+    $pnRender = pnRender::getInstance('pnForum', false, null, true);
     $pnRender->assign('vars', $vars);
     return $pnRender->fetch('pnforum_statisticsblock_config.html');
 }

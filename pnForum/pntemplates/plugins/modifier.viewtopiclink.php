@@ -61,11 +61,11 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     }
     $title = _PNFORUM_GOTO_TOPIC;
     if(isset($forum_name) && !empty($forum_name)) {
-        $title .= ' ' . pnVarPrepForDisplay($forum_name) . ' ::';
+        $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';
     }
     if(isset($subject) && !empty($subject)) {
-        $subject = pnVarPrepForDisplay($subject);
+        $subject = DataUtil::formatForDisplay($subject);
         $title .= ' ' . $subject;
     }
-    return '<a '. pnVarPrepForDisplay($class) .' href="' . pnVarPrepForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
+    return '<a '. DataUtil::formatForDisplay($class) .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
 }

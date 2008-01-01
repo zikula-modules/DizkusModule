@@ -63,7 +63,7 @@ function smarty_function_simplepager($params, &$smarty)
             ) { 
             // Not on this page - show link 
             $url = preg_replace('/%%/', $curnum, $urltemplate); 
-            $compoutput .= "<a href=\"$url\" title=\"".pnVarPrepForDisplay(_PNFORUM_PAGE)." $pagenum\">$pagenum</a>";
+            $compoutput .= "<a href=\"$url\" title=\"".DataUtil::formatForDisplay(_PNFORUM_PAGE)." $pagenum\">$pagenum</a>";
             $compoutput .= " "; 
             } 
             //end mod by marsu 
@@ -76,7 +76,7 @@ function smarty_function_simplepager($params, &$smarty)
     if (($curnum >= $perpage + 1) && ($startnum < $curnum - $perpage)) {
         $temp = $curnum - $perpage;
         $url = preg_replace('/%%/', $curnum - $perpage, $urltemplate);
-        $compoutput .= "<a href=\"$url\" title=\"".pnVarPrepForDisplay(_PNFORUM_PAGE)." $temp\">>></a>";
+        $compoutput .= "<a href=\"$url\" title=\"".DataUtil::formatForDisplay(_PNFORUM_PAGE)." $temp\">>></a>";
     } else {
         $compoutput .= ">>";
     }

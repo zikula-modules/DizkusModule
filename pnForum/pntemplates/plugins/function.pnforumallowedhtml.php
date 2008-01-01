@@ -18,7 +18,7 @@ function smarty_function_pnforumallowedhtml($params, &$smarty)
 {
     extract($params); 
 	unset($params);
-    $out = "<br />".pnVarPrepForDisplay(_ALLOWEDHTML)."<br />";
+    $out = "<br />".DataUtil::formatForDisplay(_ALLOWEDHTML)."<br />";
     $AllowableHTML = pnConfigGetVar('AllowableHTML');
     while (list($key, $access, ) = each($AllowableHTML)) {
     	if ($access > 0) $out .= " &lt;".$key."&gt;";

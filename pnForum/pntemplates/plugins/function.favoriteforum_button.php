@@ -41,19 +41,19 @@ function smarty_function_favoriteforum_button($params, &$smarty)
                                   'forum_id'=>$forum_id))==false) {
                 $imagedata = pnf_getimagepath($image_addfavorite);
                 if($imagedata == false) {
-                    $show = pnVarPrepForDisplay(_PNFORUM_ADD_FAVORITE_FORUM);
+                    $show = DataUtil::formatForDisplay(_PNFORUM_ADD_FAVORITE_FORUM);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_ADD_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_ADD_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_ADD_FAVORITE_FORUM) . '" href="' . pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_ADD_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
                 $imagedata = pnf_getimagepath($image_remfavorite);
                 if($imagedata == false) {
-                    $show = pnVarPrepForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM);
+                    $show = DataUtil::formatForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM) . '" href="' . pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             }
         }
     }

@@ -59,9 +59,7 @@ function pnForum_searchapi_options($args)
 {
     // Create output object - this object will store all of our output so that
     // we can return it easily when required
-    $pnr = new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('forums', pnModAPIFunc('pnForum', 'admin', 'readforums'));
     return $pnr->fetch('pnforum_search.html');
 }
@@ -73,9 +71,7 @@ function pnForum_searchapi_internalsearchoptions($args)
 {
     // Create output object - this object will store all of our output so that
     // we can return it easily when required
-    $pnr =& new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('forums', pnModAPIFunc('pnForum', 'admin', 'readforums'));
     return $pnr->fetch('pnforum_user_search.html');
 }
@@ -85,23 +81,16 @@ function pnForum_searchapi_internalsearchoptions($args)
  **/
 function pnForum_searchapi_search()
 {
-    list($active_pnForum,
-         $vars['searchfor'],
-         $vars['bool'],
-         $vars['forums'],
-         $vars['author'],
-         $vars['order'],
-         $vars['limit'],
-         $vars['startnum'],
-         $internalsearch) = pnVarCleanFromInput('active_pnForum',
-                                                'q',
-                                                'bool',
-                                                'pnForum_forum',
-                                                'pnForum_author',
-                                                'pnForum_order',
-                                                'pnForum_limit',
-                                                'pnForum_startnum',
-                                                'internalsearch');
+    $active_pnForum = FormUtil::getPassedValue('active_pnForum', '');
+    $vars['searchfor'] = FormUtil::getPassedValue('q');
+    $vars['bool'] = FormUtil::getPassedValue('bool', 'AND');
+    $vars['forums'] = FormUtil::getPassedValue('pnForum_forum');
+    $vars['author'] = FormUtil::getPassedValue('pnForum_author');
+    $vars['order'] = (int)FormUtil::getPassedValue('pnForum_order', 1);
+    $vars['limit'] = (int)FormUtil::getPassedValue('pnForum_limit', 10);
+    $vars['startnum'] = (int)FormUtil::getPassedValue('pnForum_startnum', 0);
+    $internalsearch = FormUtil::getPassedValue('internalsearch');
+
     if(empty($active_pnForum)) {
         return;
     }
@@ -130,9 +119,7 @@ function pnForum_searchapi_search()
     $funcname = (pnModGetVar('pnForum', 'fulltextindex')==1) ? 'fulltext' : 'nonfulltext';
     list($searchresults,
          $total_hits) =  pnModAPIFunc('pnForum', 'search', $funcname, $vars);
-    $pnr = new pnRender('pnForum');
-    $pnr->caching = false;
-    $pnr->add_core_data();
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign('total_hits', $total_hits);
     $pnr->assign('searchresults', $searchresults);
     $pnr->assign('searchfor',    $vars['searchfor']);

@@ -249,7 +249,7 @@ function pnForum_adminapi_readmoderators($args)
 
     $sql = "SELECT u.pn_uname, u.pn_uid
             FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
-            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
+            WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND u.pn_uid = f.user_id
             AND f.user_id<1000000";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -267,7 +267,7 @@ function pnForum_adminapi_readmoderators($args)
 
     $sql = "SELECT g.pn_name, g.pn_gid
             FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
-            WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
+            WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
             AND f.user_id>1000000";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -306,7 +306,7 @@ function pnForum_adminapi_readusers($args)
     foreach($moderators as $mod) {
         if($mod['uid']<=1000000) {
             // mod uids > 1000000 are groups
-            $sql .= "AND n.pn_uid != '".pnVarPrepForStore($mod['uid'])."'";
+            $sql .= "AND n.pn_uid != '".DataUtil::formatForStore($mod['uid'])."'";
         }
     }
     $sql .= "ORDER BY pn_uname";
@@ -353,7 +353,7 @@ function pnForum_adminapi_readgroups($args)
             if($group_flag) {
                 $sql .= ' AND ';
             }
-            $sql .= "g.pn_gid != '".pnVarPrepForStore((int)$mod['uid']-1000000)."' ";
+            $sql .= "g.pn_gid != '".DataUtil::formatForStore((int)$mod['uid']-1000000)."' ";
             $group_flag = true;
         }
     }
@@ -465,7 +465,7 @@ function pnForum_adminapi_readrankusers($args)
     $sql = 'SELECT  u.user_id
             FROM ' . $pntable['pnforum_ranks'] . ' as r,
                  ' . $pntable['pnforum_users'].' as u
-            WHERE r.rank_id=' . pnVarPrepForStore($rank_id) . '
+            WHERE r.rank_id=' . DataUtil::formatForStore($rank_id) . '
               AND u.user_rank=r.rank_id
               AND (r.rank_special=1) AND (u.user_id <>"")';
 
@@ -530,8 +530,8 @@ function pnForum_adminapi_assignranksave($args)
     if(is_array($setrank)) {
         foreach($setrank as $user_id => $rank_id) {
             $sql = "UPDATE ".$pntable['pnforum_users']."
-                    SET user_rank='" . pnVarPrepForStore($rank_id) . "'
-                    WHERE user_id = '" . pnVarPrepForStore($user_id) . "'";
+                    SET user_rank='" . DataUtil::formatForStore($rank_id) . "'
+                    WHERE user_id = '" . DataUtil::formatForStore($user_id) . "'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
         }
@@ -555,7 +555,7 @@ function pnForum_adminapi_sync($args)
         case 'forum':
             $sql = "SELECT max(post_id) AS last_post
                     FROM ".$pntable['pnforum_posts']."
-                    WHERE forum_id = ".(int)pnVarPrepForStore($id)."";
+                    WHERE forum_id = ".(int)DataUtil::formatForStore($id)."";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $result_lastpost = $dbconn->Affected_Rows();
             pnfCloseDB($result);
@@ -567,7 +567,7 @@ function pnForum_adminapi_sync($args)
 
             $sql = "SELECT count(post_id) AS total
                     FROM ".$pntable['pnforum_posts']."
-                    WHERE forum_id = ".(int)pnVarPrepForStore($id)."";
+                    WHERE forum_id = ".(int)DataUtil::formatForStore($id)."";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
             pnfCloseDB($result);
@@ -575,14 +575,14 @@ function pnForum_adminapi_sync($args)
 
             $sql = "SELECT count(topic_id) AS total
                     FROM ".$pntable['pnforum_topics']."
-                    WHERE forum_id = ".(int)pnVarPrepForStore($id)."";
+                    WHERE forum_id = ".(int)DataUtil::formatForStore($id)."";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
             pnfCloseDB($result);
             $total_topics = $row["total"];
             $sql = "UPDATE ".$pntable['pnforum_forums']."
-                    SET forum_last_post_id = '".(int)pnVarPrepForStore($last_post)."', forum_posts = '".(int)pnVarPrepForStore($total_posts)."', forum_topics = '".pnVarPrepForStore($total_topics)."'
-                    WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
+                    SET forum_last_post_id = '".(int)DataUtil::formatForStore($last_post)."', forum_posts = '".(int)DataUtil::formatForStore($total_posts)."', forum_topics = '".DataUtil::formatForStore($total_topics)."'
+                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
             break;
@@ -590,7 +590,7 @@ function pnForum_adminapi_sync($args)
         case 'topic':
             $sql = "SELECT max(post_id) AS last_post
                     FROM ".$pntable['pnforum_posts']."
-                    WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
+                    WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $result_lastpost = $dbconn->Affected_Rows();
             pnfCloseDB($result);
@@ -602,7 +602,7 @@ function pnForum_adminapi_sync($args)
 
             $sql = "SELECT count(post_id) AS total
                     FROM ".$pntable['pnforum_posts']."
-                    WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
+                    WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             //$row = $result->GetRowAssoc(false);
             list($total_posts) = $result->FetchRow(); // $row["total"];
@@ -610,8 +610,8 @@ function pnForum_adminapi_sync($args)
 
             $total_posts -= 1;
             $sql = "UPDATE ".$pntable['pnforum_topics']."
-                    SET topic_replies = '".(int)pnVarPrepForStore($total_posts)."', topic_last_post_id = '".(int)pnVarPrepForStore($last_post)."'
-                    WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
+                    SET topic_replies = '".(int)DataUtil::formatForStore($total_posts)."', topic_last_post_id = '".(int)DataUtil::formatForStore($last_post)."'
+                    WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
             break;
@@ -645,8 +645,8 @@ function pnForum_adminapi_sync($args)
                     list($poster_id,
                          $total_posts) = $result->fields;
                     $sub_sql = "UPDATE ".$pntable['pnforum_users']."
-                                SET user_posts = '".(int)pnVarPrepForStore($total_posts)."'
-                                WHERE user_id = '".(int)pnVarPrepForStore($poster_id)."'";
+                                SET user_posts = '".(int)DataUtil::formatForStore($total_posts)."'
+                                WHERE user_id = '".(int)DataUtil::formatForStore($poster_id)."'";
                     $result2 = pnfExecuteSQL($dbconn, $sub_sql, __FILE__, __LINE__);
                 }
             }
@@ -665,7 +665,7 @@ function pnForum_adminapi_sync($args)
                 for (; !$result->EOF; $result->MoveNext()) {
                     list($pn_uid) = $result->fields;
                     $sql2 = "INSERT into ".$pntable['pnforum_users']." (user_id)
-                             VALUES ('".(int)pnVarPrepForStore($pn_uid)."')";
+                             VALUES ('".(int)DataUtil::formatForStore($pn_uid)."')";
                     $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
                 } //$result->MoveNext();
             }
@@ -722,12 +722,12 @@ function pnForum_adminapi_addforum($args)
         $desc = '';
     }
     $desc = nl2br($desc); // to be fixed ASAP
-    //$desc = pnVarPrepForStore($desc);
-    //$forum_name = pnVarPrepForStore($forum_name);
-    //$cat_id = pnVarPrepForStore($cat_id);
+    //$desc = DataUtil::formatForStore($desc);
+    //$forum_name = DataUtil::formatForStore($forum_name);
+    //$cat_id = DataUtil::formatForStore($cat_id);
     $sql = "SELECT max(forum_order) AS highest
             FROM " . $forumtable . "
-            WHERE " . $forumcolumn['cat_id'] ."= '" . pnVarPrepForStore($cat_id) . "'";
+            WHERE " . $forumcolumn['cat_id'] ."= '" . DataUtil::formatForStore($cat_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($highest) = $result->fields;
     pnfCloseDB($result);
@@ -750,22 +750,22 @@ function pnForum_adminapi_addforum($args)
                  " . $forumcolumn['forum_pop3_pnpassword'] . ",
                  " . $forumcolumn['forum_moduleref'] . ",
                  " . $forumcolumn['forum_pntopic'] . ")
-            VALUES ('".pnVarPrepForStore($forum_id)."',
-                    '".pnVarPrepForStore($forum_name)."',
-                    '".pnVarPrepForStore($desc)."',
-                    '".pnVarPrepForStore($cat_id)."',
-                    '".pnVarPrepForStore($highest)."',
-                    '".(int)pnVarPrepForStore($pop3_active)."',
-                    '".pnVarPrepForStore($pop3_server)."',
-                    '".(int)pnVarPrepForStore($pop3_port)."',
-                    '".pnVarPrepForStore($pop3_login)."',
-                    '".pnVarPrepForStore($pop3_password)."',
-                    '".(int)pnVarPrepForStore($pop3_interval)."',
-                    '".pnVarPrepForStore($pop3_matchstring)."',
-                    '".pnVarPrepForStore($pop3_pnuser)."',
-                    '".pnVarPrepForStore($pop3_pnpassword)."',
-                    '".pnVarPrepForStore($moduleref)."',
-                    '".pnVarPrepForStore($pntopic)."')";
+            VALUES ('".DataUtil::formatForStore($forum_id)."',
+                    '".DataUtil::formatForStore($forum_name)."',
+                    '".DataUtil::formatForStore($desc)."',
+                    '".DataUtil::formatForStore($cat_id)."',
+                    '".DataUtil::formatForStore($highest)."',
+                    '".(int)DataUtil::formatForStore($pop3_active)."',
+                    '".DataUtil::formatForStore($pop3_server)."',
+                    '".(int)DataUtil::formatForStore($pop3_port)."',
+                    '".DataUtil::formatForStore($pop3_login)."',
+                    '".DataUtil::formatForStore($pop3_password)."',
+                    '".(int)DataUtil::formatForStore($pop3_interval)."',
+                    '".DataUtil::formatForStore($pop3_matchstring)."',
+                    '".DataUtil::formatForStore($pop3_pnuser)."',
+                    '".DataUtil::formatForStore($pop3_pnpassword)."',
+                    '".DataUtil::formatForStore($moduleref)."',
+                    '".DataUtil::formatForStore($pntopic)."')";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 //pnf_ajaxerror($dbconn->ErrorMsg());
     pnfCloseDB($result);
@@ -776,8 +776,8 @@ function pnForum_adminapi_addforum($args)
             $mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']."
                                 (forum_id,
                                 user_id)
-                            VALUES ('".pnVarPrepForStore($newforumid)."',
-                                    '".pnVarPrepForStore($mod)."')";
+                            VALUES ('".DataUtil::formatForStore($newforumid)."',
+                                    '".DataUtil::formatForStore($mod)."')";
             $mod_res = pnfExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
             pnfCloseDB($mod_res);
         }
@@ -815,30 +815,30 @@ function pnForum_adminapi_editforum($args)
     $pop3passwordupdate = "";
     if(!empty($pop3_password)) {
         // pop3_password is not empty - save it
-        $pop3passwordupdate = "forum_pop3_password    ='".pnVarPrepForStore($pop3_password)."',";
+        $pop3passwordupdate = "forum_pop3_password    ='".DataUtil::formatForStore($pop3_password)."',";
     }
     $pnpasswordupdate = "";
     if(!empty($pop3_pnpassword)) {
         // pop3_pnpassword is not empty - save it
-        $pnpasswordupdate = "forum_pop3_pnpassword    ='".pnVarPrepForStore($pop3_pnpassword)."',";
+        $pnpasswordupdate = "forum_pop3_pnpassword    ='".DataUtil::formatForStore($pop3_pnpassword)."',";
     }
 
     $sql = "UPDATE ".$pntable['pnforum_forums']."
-            SET forum_name='".pnVarPrepForStore(strip_tags($forum_name))."',
-            forum_desc='".pnVarPrepForStore($desc)."',
-            cat_id=" . (int)pnVarPrepForStore($cat_id) . ",
-            forum_pop3_active      =".(int)pnVarPrepForStore($pop3_active).",
-            forum_pop3_server      ='".pnVarPrepForStore($pop3_server)."',
-            forum_pop3_port        =".(int)pnVarPrepForStore($pop3_port).",
-            forum_pop3_login       ='".pnVarPrepForStore($pop3_login)."',
+            SET forum_name='".DataUtil::formatForStore(strip_tags($forum_name))."',
+            forum_desc='".DataUtil::formatForStore($desc)."',
+            cat_id=" . (int)DataUtil::formatForStore($cat_id) . ",
+            forum_pop3_active      =".(int)DataUtil::formatForStore($pop3_active).",
+            forum_pop3_server      ='".DataUtil::formatForStore($pop3_server)."',
+            forum_pop3_port        =".(int)DataUtil::formatForStore($pop3_port).",
+            forum_pop3_login       ='".DataUtil::formatForStore($pop3_login)."',
             $pop3passwordupdate
-            forum_pop3_interval    =".(int)pnVarPrepForStore($pop3_interval).",
-            forum_pop3_pnuser      ='".pnVarPrepForStore($pop3_pnuser)."',
+            forum_pop3_interval    =".(int)DataUtil::formatForStore($pop3_interval).",
+            forum_pop3_pnuser      ='".DataUtil::formatForStore($pop3_pnuser)."',
             $pnpasswordupdate
-            forum_pop3_matchstring ='".pnVarPrepForStore($pop3_matchstring)."',
-            forum_moduleref        =".pnVarPrepForStore($moduleref).",
-            forum_pntopic          =".pnVarPrepForStore($pntopic)."
-            WHERE forum_id=".pnVarPrepForStore($forum_id)."";
+            forum_pop3_matchstring ='".DataUtil::formatForStore($pop3_matchstring)."',
+            forum_moduleref        =".DataUtil::formatForStore($moduleref).",
+            forum_pntopic          =".DataUtil::formatForStore($pntopic)."
+            WHERE forum_id=".DataUtil::formatForStore($forum_id)."";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -846,7 +846,7 @@ function pnForum_adminapi_editforum($args)
         $recentmods = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
                                    array('forum_id' => $forum_id));
         foreach ($mods as $mod) {
-            $mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']." (forum_id, user_id) VALUES ('".pnVarPrepForStore($forum_id)."', '".pnVarPrepForStore($mod)."')";
+            $mod_query = "INSERT INTO ".$pntable['pnforum_forum_mods']." (forum_id, user_id) VALUES ('".DataUtil::formatForStore($forum_id)."', '".DataUtil::formatForStore($mod)."')";
             $mods = pnfExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
             pnfCloseDB($mods);
         }
@@ -854,7 +854,7 @@ function pnForum_adminapi_editforum($args)
     if(isset($rem_mods) && !empty($rem_mods)) {
         foreach ($rem_mods as $mod) {
             $rem_query = "DELETE FROM ".$pntable['pnforum_forum_mods']."
-                        WHERE forum_id = '".pnVarPrepForStore($forum_id)."' AND user_id = '".pnVarPrepForStore($mod)."'";
+                        WHERE forum_id = '".DataUtil::formatForStore($forum_id)."' AND user_id = '".DataUtil::formatForStore($mod)."'";
             $rem = pnfExecuteSQL($dbconn, $rem_query, __FILE__, __LINE__);
             pnfCloseDB($rem);
         }
@@ -947,9 +947,9 @@ function pnForum_adminapi_storenewforumorder($args)
     $forumcolumn  = &$pntable['pnforum_forums_column'];
 
     $sql = "UPDATE " . $forumtable. "
-            SET " . $forumcolumn['forum_order'] ."='" . (int)pnVarPrepForStore($order) . "',
-                " . $forumcolumn['cat_id'] . "='" . (int)pnVarPrepForStore($cat_id) . "'
-            WHERE " . $forumcolumn['forum_id'] . "='" . (int)pnVarPrepForStore($forum_id) . "'";
+            SET " . $forumcolumn['forum_order'] ."='" . (int)DataUtil::formatForStore($order) . "',
+                " . $forumcolumn['cat_id'] . "='" . (int)DataUtil::formatForStore($cat_id) . "'
+            WHERE " . $forumcolumn['forum_id'] . "='" . (int)DataUtil::formatForStore($forum_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
     if(is_bool($result) && $result==false) {
         return false;

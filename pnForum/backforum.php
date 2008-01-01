@@ -21,7 +21,11 @@ pnInit();
  */
 Loader::includeOnce('modules/pnForum/common.php');
 
-list($count, $forum_id, $cat_id, $feed, $user) = pnVarCleanFromInput('count', 'forum_id', 'cat_id', 'feed', 'user');
+$forum_id =      FormUtil::getPassedValue('forum_id', null, 'GET');
+$cat_id   =      FormUtil::getPassedValue('cat_id', null, 'GET');
+$count    = (int)FormUtil::getPassedValue('count', 10, 'GET');
+$feed     =      FormUtil::getPassedValue('feed', 'rss20', 'GET');
+$user     =      FormUtil::getPassedValue('user', '', 'GET');
 
 /**
  * get the short urls extensions
@@ -60,7 +64,7 @@ $pnr = pnRender::getInstance('pnForum', false);
 /**
  * check if template for feed exists
  */
-$templatefile = 'pnforum_feed_' . pnVarPrepForOS($feed) . '.html';
+$templatefile = 'pnforum_feed_' . DataUtil::formatForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
     die('no template for ' . DataUtil::formatForDisplay($feed));
@@ -91,19 +95,19 @@ if(!empty($forum_id)) {
                           array('forum_id' => $forum_id));
     if(count($forum) == 0) {
         // not allowed to see forum
-        exit;
+        pnShutDown();
     }
     $where = "AND t.forum_id = '" . (int)DataUtil::formatForStore($forum_id) . "' ";
     $link = $baseurl.pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
     if(!SecurityUtil::checkPermission('pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
-        exit;
+        pnShutDown();
     }
     $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
                              array('cat_id' => $cat_id));
     if($category == false) {
-        exit;
+        pnShutDown();
     }
     $where = "AND f.cat_id = '" . (int)DataUtil::formatForStore($cat_id) . "' ";
     $link = $baseurl.pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));

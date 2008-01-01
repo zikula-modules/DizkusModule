@@ -45,7 +45,7 @@ function pnForum_userapi_get_userdata_from_id($args)
     }
 
     list($dbconn, $pntable) = pnfOpenDB();
-    $sql = 'SELECT * FROM ' . $pntable['pnforum_users'] . ' WHERE ' . $pntable['pnforum_users_column']['user_id'] . '="' . (int)pnVarPrepForStore($userid) . '";';
+    $sql = 'SELECT * FROM ' . $pntable['pnforum_users'] . ' WHERE ' . $pntable['pnforum_users_column']['user_id'] . '="' . (int)DataUtil::formatForStore($userid) . '";';
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -73,12 +73,12 @@ function pnForum_userapi_get_userdata_from_id($args)
         if ($userdata['user_rank'] != 0) {
             $sql = 'SELECT rank_title, rank_image
                     FROM ' . $pntable['pnforum_ranks']. "
-                    WHERE rank_id = '".(int)pnVarPrepForStore($userdata['user_rank'])."'";
+                    WHERE rank_id = '".(int)DataUtil::formatForStore($userdata['user_rank'])."'";
         } elseif ($userdata['user_posts'] != 0) {
             $sql = "SELECT rank_title, rank_image
                     FROM ".$pntable['pnforum_ranks']."
-                    WHERE rank_min <= '".(int)pnVarPrepForStore($userdata['user_posts'])."'
-                    AND rank_max >= '".(int)pnVarPrepForStore($userdata['user_posts'])."'";
+                    WHERE rank_min <= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'
+                    AND rank_max >= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'";
         }
         $rank_result = pnfExecuteSQL($dbconn, $sql);
 
@@ -106,7 +106,7 @@ function pnForum_userapi_get_userdata_from_id($args)
             $userhack = "SELECT pn_uid
                          FROM ".$pntable['session_info']."
                          WHERE pn_uid = '".$userdata['pn_uid']."'
-                         AND pn_lastused > '".pnVarPrepForStore($activetime)."'";
+                         AND pn_lastused > '".DataUtil::formatForStore($activetime)."'";
 
             $userresult = pnfExecuteSQL($dbconn, $userhack);
 
@@ -119,7 +119,7 @@ function pnForum_userapi_get_userdata_from_id($args)
 
             // avatar
             if($userdata['pn_user_avatar']){
-                $avatarfilename = 'images/avatar/' . pnVarPrepForOS($userdata['pn_user_avatar']);
+                $avatarfilename = 'images/avatar/' . DataUtil::formatForOS($userdata['pn_user_avatar']);
                 $avatardata = @getimagesize($avatarfilename);
                 if($avatardata <> false) {
                     $userdata['pn_user_avatar'] = $avatarfilename;
@@ -138,13 +138,13 @@ function pnForum_userapi_get_userdata_from_id($args)
     if($makedummy == true) {
         // we create a dummy user, so we need to adjust some of the information
         // gathered so far
-        $userdata['pn_name']   = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
-        $userdata['pn_uname']  = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['pn_name']   = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['pn_uname']  = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
         $userdata['pn_email']  = '';
         $userdata['pn_femail'] = '';
         $userdata['pn_url']    = '';
-        $userdata['name']      = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
-        $userdata['uname']     = pnVarPrepForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['name']      = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['uname']     = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
         $userdata['email']     = '';
         $userdata['femail']    = '';
         $userdata['url']       = '';
@@ -182,17 +182,17 @@ function pnForum_userapi_boardstats($args)
         case 'topic':
             $sql = "SELECT count(*) AS total
                     FROM ".$pntable['pnforum_posts']."
-                    WHERE topic_id = '".(int)pnVarPrepForStore($id)."'";
+                    WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
             break;
         case 'forumposts':
             $sql = "SELECT count(*) AS total
                     FROM ".$pntable['pnforum_posts']."
-                    WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
+                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
             break;
         case 'forumtopics':
             $sql = "SELECT count(*) AS total
                     FROM ".$pntable['pnforum_topics']."
-                    WHERE forum_id = '".(int)pnVarPrepForStore($id)."'";
+                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
             break;
         case 'allposts':
             $sql = 'SELECT count(*) AS total
@@ -248,7 +248,7 @@ function pnForum_userapi_get_firstlast_post_in_topic($args)
     if(!empty($topic_id) && is_numeric($topic_id)) {
         $sql = 'SELECT p.post_id
                 FROM ' . $pntable['pnforum_posts'] . ' AS p
-                WHERE p.topic_id = "'.(int)pnVarPrepForStore($topic_id) . '"
+                WHERE p.topic_id = "'.(int)DataUtil::formatForStore($topic_id) . '"
                 ORDER BY p.post_time ' . $sortorder;
 
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
@@ -285,7 +285,7 @@ function pnForum_userapi_get_last_post_in_forum($args)
     if(!empty($forum_id) && is_numeric($forum_id)) {
         $sql = "SELECT p.post_id
                 FROM ".$pntable['pnforum_posts']." AS p
-                WHERE p.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
+                WHERE p.forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
                 ORDER BY p.post_time DESC";
 
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
@@ -497,7 +497,7 @@ function pnForum_userapi_get_moderators($args)
     if(!empty($forum_id)) {
         $sql = "SELECT u.pn_uname, u.pn_uid
                 FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
-                WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND u.pn_uid = f.user_id
+                WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND u.pn_uid = f.user_id
                 AND f.user_id<1000000";
     } else {
         $sql = "SELECT u.pn_uname, u.pn_uid
@@ -521,7 +521,7 @@ function pnForum_userapi_get_moderators($args)
     if(!empty($forum_id)) {
         $sql = "SELECT g.pn_name, g.pn_gid
                 FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
-                WHERE f.forum_id = '".pnVarPrepForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
+                WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
                 AND f.user_id>1000000";
     } else {
         $sql = "SELECT g.pn_name, g.pn_gid
@@ -658,7 +658,7 @@ function pnForum_userapi_readforum($args)
             LEFT JOIN ".$pntable['users']." AS u ON t.topic_poster = u.pn_uid
             LEFT JOIN ".$pntable['pnforum_posts']." AS p ON t.topic_last_post_id = p.post_id
             LEFT JOIN ".$pntable['users']." AS u2 ON p.poster_id = u2.pn_uid
-            WHERE t.forum_id = '".(int)pnVarPrepForStore($forum_id)."'
+            WHERE t.forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
             ORDER BY t.sticky DESC, p.post_time DESC";
             //ORDER BY t.sticky DESC"; // RNG
             //ORDER BY t.sticky DESC, p.post_time DESC";
@@ -680,7 +680,7 @@ function pnForum_userapi_readforum($args)
 
         $topic['post_time_unix'] = pnf_str2time($topic['post_time']); //strtotime ($topic['post_time']);
         $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
-        $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, pnVarPrepForDisplay($posted_ml), pnVarPrepForDisplay($topic['last_poster']));
+        $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, DataUtil::formatForDisplay($posted_ml), DataUtil::formatForDisplay($topic['last_poster']));
 
         // does this topic have enough postings to be hot?
         $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
@@ -706,7 +706,7 @@ function pnForum_userapi_readforum($args)
                 $topic['last_page_start'] = 0;
             }
 
-            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . pnVarPrepForDisplay(_PNFORUM_GOTOPAGE) . '&nbsp;';
+            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . DataUtil::formatForDisplay(_PNFORUM_GOTOPAGE) . '&nbsp;';
             $pagenr = 1;
             $skippages = 0;
             for($x = 0; $x < $topic['topic_replies'] + 1; $x += $posts_per_page) {
@@ -727,7 +727,7 @@ function pnForum_userapi_readforum($args)
 
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ', ';
-                    $pagination .= '<a href="' . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . pnVarPrepForDisplay(_PNFORUM_PAGE) . ' ' . $pagenr . '">' . $pagenr . '</a>';
+                    $pagination .= '<a href="' . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(_PNFORUM_PAGE) . ' ' . $pagenr . '">' . $pagenr . '</a>';
                 }
 
                 $pagenr++;
@@ -821,7 +821,7 @@ function pnForum_userapi_readtopic($args)
             ON        $colforums[forum_id] = $coltopics[forum_id]
             LEFT JOIN $tblcats
             ON        $colcats[cat_id]     = $colforums[cat_id]
-            WHERE     $coltopics[topic_id] = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE     $coltopics[topic_id] = '".(int)DataUtil::formatForStore($topic_id)."'";
 */
     $sql = "SELECT t.topic_title,
                    t.topic_status,
@@ -836,7 +836,7 @@ function pnForum_userapi_readtopic($args)
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -907,7 +907,7 @@ function pnForum_userapi_readtopic($args)
             /*
             $sql = "UPDATE ".$pntable['pnforum_topics']."
                     SET topic_views = topic_views + 1
-                    WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                    WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             */
         }
@@ -938,7 +938,7 @@ function pnForum_userapi_readtopic($args)
                         pt.post_text
                 FROM ".$pntable['pnforum_posts']." p,
                      ".$pntable['pnforum_posts_text']." pt
-                WHERE p.topic_id = '".(int)pnVarPrepForStore($topic['topic_id'])."'
+                WHERE p.topic_id = '".(int)DataUtil::formatForStore($topic['topic_id'])."'
                 AND p.post_id = pt.post_id
                 ORDER BY p.post_id $post_sort_order";
 
@@ -985,7 +985,7 @@ function pnForum_userapi_readtopic($args)
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
 
-            //$post['post_text'] = pnVarPrepHTMLDisplay($post['post_text']);
+            //$post['post_text'] = DataUtil::formatForDisplayHTML($post['post_text']);
 
             $post['poster_data']['reply'] = false;
             if ($topic['access_comment'] || $topic['access_moderate'] || $topic['access_admin']) {
@@ -1075,7 +1075,7 @@ function pnForum_userapi_preparereply($args)
                      ".$pntable['pnforum_posts']." AS p,
                      ".$pntable['pnforum_posts_text']." AS pt,
                      ".$pntable['users']." AS u
-                WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
+                WHERE (p.post_id = '".(int)DataUtil::formatForStore($post_id)."')
                 AND (t.forum_id = f.forum_id)
                 AND (p.topic_id = t.topic_id)
                 AND (pt.post_id = p.post_id)
@@ -1090,7 +1090,7 @@ function pnForum_userapi_preparereply($args)
                        t.topic_status
                 FROM ".$pntable['pnforum_forums']." AS f,
                      ".$pntable['pnforum_topics']." AS t
-                WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
+                WHERE (t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."')
                 AND (t.forum_id = f.forum_id)";
     }
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1102,11 +1102,11 @@ function pnForum_userapi_preparereply($args)
     }
     pnfCloseDB($result);
 
-    $reply['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
-    $reply['cat_id'] = pnVarPrepForDisplay($myrow['cat_id']);
-    $reply['topic_subject'] = pnVarPrepForDisplay($myrow['topic_title']);
-    $reply['topic_status'] = pnVarPrepForDisplay($myrow['topic_status']);
-    $reply['topic_id'] = pnVarPrepForDisplay($myrow['topic_id']);
+    $reply['forum_id'] = DataUtil::formatForDisplay($myrow['forum_id']);
+    $reply['cat_id'] = DataUtil::formatForDisplay($myrow['cat_id']);
+    $reply['topic_subject'] = DataUtil::formatForDisplay($myrow['topic_title']);
+    $reply['topic_status'] = DataUtil::formatForDisplay($myrow['topic_status']);
+    $reply['topic_id'] = DataUtil::formatForDisplay($myrow['topic_id']);
     // the next line is only producing a valid result, if we get a post_id which
     // means we are producing a reply with quote
     if(array_key_exists('post_text', $myrow)) {
@@ -1163,7 +1163,7 @@ function pnForum_userapi_preparereply($args)
                    t.topic_title
                     FROM $pntable[pnforum_posts_text] pt, $pntable[pnforum_posts] p
                         LEFT JOIN $pntable[pnforum_topics] t ON t.topic_id=p.topic_id
-                        WHERE p.topic_id = '" . (int)pnVarPrepForStore($reply['topic_id']) . "' AND p.post_id = pt.post_id
+                        WHERE p.topic_id = '" . (int)DataUtil::formatForStore($reply['topic_id']) . "' AND p.post_id = pt.post_id
                         ORDER BY p.post_id DESC";
 
     $result = pnfSelectLimit($dbconn, $sql, 10, false, __FILE__, __LINE__);
@@ -1272,7 +1272,7 @@ function pnForum_userapi_storereply($args)
     $sql = "SELECT f.forum_id
             FROM ".$pntable['pnforum_forums']." AS f,
                  ".$pntable['pnforum_topics']." AS t
-            WHERE (t.topic_id = '".(int)pnVarPrepForStore($topic_id)."')
+            WHERE (t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."')
             AND (t.forum_id = f.forum_id)";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -1282,22 +1282,22 @@ function pnForum_userapi_storereply($args)
         $myrow = $result->GetRowAssoc(false);
     }
     pnfCloseDB($result);
-    $forum_id = (int)pnVarPrepForStore($myrow['forum_id']);
+    $forum_id = (int)DataUtil::formatForStore($myrow['forum_id']);
 
     // Prep for DB
     $time = date('Y-m-d H:i');
-    $topic_id = pnVarPrepForStore($topic_id);
-    $message = pnVarPrepForStore($message);
-    $pn_uid = pnVarPrepForStore($pn_uid);
-    $time = pnVarPrepForStore($time);
-    $poster_ip = pnVarPrepForStore($poster_ip);
+    $topic_id = DataUtil::formatForStore($topic_id);
+    $message = DataUtil::formatForStore($message);
+    $pn_uid = DataUtil::formatForStore($pn_uid);
+    $time = DataUtil::formatForStore($time);
+    $poster_ip = DataUtil::formatForStore($poster_ip);
 
     // insert values into posts-table
     $postid = $dbconn->GenID($pntable['pnforum_posts']);
     $sql = "INSERT INTO $pntable[pnforum_posts]
                         (post_id, topic_id, forum_id, poster_id, post_time, poster_ip)
                         VALUES
-                        ('".pnVarPrepForStore($postid)."', '$topic_id', '$forum_id', '$pn_uid','$time', '$poster_ip')";
+                        ('".DataUtil::formatForStore($postid)."', '$topic_id', '$forum_id', '$pn_uid','$time', '$poster_ip')";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1307,7 +1307,7 @@ function pnForum_userapi_storereply($args)
         $sql = "INSERT INTO $pntable[pnforum_posts_text]
                 (post_id, post_text)
                 VALUES
-                ('".pnVarPrepForStore($this_post)."', '$message')";
+                ('".DataUtil::formatForStore($this_post)."', '$message')";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -1315,8 +1315,8 @@ function pnForum_userapi_storereply($args)
 
     // update topics-table
     $sql = "UPDATE $pntable[pnforum_topics]
-            SET topic_replies = topic_replies+1, topic_last_post_id = '".pnVarPrepForStore($this_post)."', topic_time = '".pnVarPrepForStore($time). "'
-            WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
+            SET topic_replies = topic_replies+1, topic_last_post_id = '".DataUtil::formatForStore($this_post)."', topic_time = '".DataUtil::formatForStore($time). "'
+            WHERE topic_id = '" . (int)DataUtil::formatForStore($topic_id) . "'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1325,7 +1325,7 @@ function pnForum_userapi_storereply($args)
         // user logged in we have to update users-table
         $sql = "UPDATE $pntable[pnforum_users]
                 SET user_posts=user_posts+1
-                WHERE (user_id = " . pnVarPrepForStore($pn_uid) . ")";
+                WHERE (user_id = " . DataUtil::formatForStore($pn_uid) . ")";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -1343,8 +1343,8 @@ function pnForum_userapi_storereply($args)
 
     // update forums-table
     $sql = "UPDATE $pntable[pnforum_forums]
-            SET forum_posts = forum_posts+1, forum_last_post_id = '" . pnVarPrepForStore($this_post) . "'
-            WHERE forum_id = '" . (int)pnVarPrepForStore($forum_id) ."'";
+            SET forum_posts = forum_posts+1, forum_last_post_id = '" . DataUtil::formatForStore($this_post) . "'
+            WHERE forum_id = '" . (int)DataUtil::formatForStore($forum_id) ."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -1377,7 +1377,7 @@ function pnForum_userapi_get_topic_subscription_status($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_topic_subscription']."
-            WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE user_id = '".(int)DataUtil::formatForStore($userid)."' AND topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
     pnfCloseDB($result);
@@ -1404,7 +1404,7 @@ function pnForum_userapi_get_forum_subscription_status($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_subscription']."
-            WHERE user_id = '".(int)pnVarPrepForStore($userid)."' AND forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+            WHERE user_id = '".(int)DataUtil::formatForStore($userid)."' AND forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
@@ -1432,7 +1432,7 @@ function pnForum_userapi_get_forum_favorites_status($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_forum_favorites']."
-            WHERE user_id = " . (int)pnVarPrepForStore($userid) . " AND forum_id = " . (int)pnVarPrepForStore($forum_id);
+            WHERE user_id = " . (int)DataUtil::formatForStore($userid) . " AND forum_id = " . (int)DataUtil::formatForStore($forum_id);
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
@@ -1472,7 +1472,7 @@ function pnForum_userapi_preparenewtopic($args)
                    c.cat_title
             FROM ".$pntable['pnforum_forums']." AS f,
                 ".$pntable['pnforum_categories']." AS c
-            WHERE (forum_id = '".(int)pnVarPrepForStore($forum_id)."'
+            WHERE (forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
             AND f.cat_id=c.cat_id)";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1480,8 +1480,8 @@ function pnForum_userapi_preparenewtopic($args)
     pnfCloseDB($result);
 
     $newtopic['cat_id']     = $myrow['cat_id'];
-    $newtopic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
-    $newtopic['cat_title']  = pnVarPrepForDisplay($myrow['cat_title']);
+    $newtopic['forum_name'] = DataUtil::formatForDisplay($myrow['forum_name']);
+    $newtopic['cat_title']  = DataUtil::formatForDisplay($myrow['cat_title']);
 
     $newtopic['topic_unixtime'] = time();
 
@@ -1586,15 +1586,15 @@ function pnForum_userapi_storenewtopic($args)
     $time = (isset($time)) ? $time : date('Y-m-d H:i');
 
     // Prep for DB
-    $subject   = pnVarPrepForStore($subject);
-    $message   = pnVarPrepForStore($message);
-    $pn_uid    = pnVarPrepForStore($pn_uid);
-    $forum_id  = pnVarPrepForStore($forum_id);
-    $time      = pnVarPrepForStore($time);
-    $poster_ip = pnVarPrepForStore($poster_ip);
+    $subject   = DataUtil::formatForStore($subject);
+    $message   = DataUtil::formatForStore($message);
+    $pn_uid    = DataUtil::formatForStore($pn_uid);
+    $forum_id  = DataUtil::formatForStore($forum_id);
+    $time      = DataUtil::formatForStore($time);
+    $poster_ip = DataUtil::formatForStore($poster_ip);
 
-    $reference = (isset($reference)) ? pnVarPrepForStore($reference) : '';
-    $msgid     = (isset($msgid)) ? pnVarPrepForStore($msgid) : '';
+    $reference = (isset($reference)) ? DataUtil::formatForStore($reference) : '';
+    $msgid     = (isset($msgid)) ? DataUtil::formatForStore($msgid) : '';
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
@@ -1607,7 +1607,7 @@ function pnForum_userapi_storenewtopic($args)
              topic_notify,
              topic_reference)
             VALUES
-            ('".pnVarPrepForStore($topic_id)."',
+            ('".DataUtil::formatForStore($topic_id)."',
              '$subject',
              '$pn_uid',
              '$forum_id',
@@ -1631,8 +1631,8 @@ function pnForum_userapi_storenewtopic($args)
              poster_ip,
              post_msgid)
             VALUES
-            ('".pnVarPrepForStore($post_id)."',
-             '".pnVarPrepForStore($topic_id)."',
+            ('".DataUtil::formatForStore($post_id)."',
+             '".DataUtil::formatForStore($topic_id)."',
              '$forum_id',
              '$pn_uid',
              '$time',
@@ -1647,14 +1647,14 @@ function pnForum_userapi_storenewtopic($args)
         //  insert values into posts_text-table
         $sql = "INSERT INTO ".$pntable['pnforum_posts_text']."
                 (post_id, post_text)
-                VALUES ('".pnVarPrepForStore($post_id)."', '$message')";
+                VALUES ('".DataUtil::formatForStore($post_id)."', '$message')";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
         //  updates topics-table
         $sql = "UPDATE ".$pntable['pnforum_topics']."
-                SET topic_last_post_id = '".pnVarPrepForStore($post_id)."'
-                WHERE topic_id = '".pnVarPrepForStore($topic_id)."'";
+                SET topic_last_post_id = '".DataUtil::formatForStore($post_id)."'
+                WHERE topic_id = '".DataUtil::formatForStore($topic_id)."'";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -1680,18 +1680,17 @@ function pnForum_userapi_storenewtopic($args)
     }
     //  update forums-table
     $sql = "UPDATE $pntable[pnforum_forums]
-            SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = '" . pnVarPrepForStore($post_id) . "'
+            SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = '" . DataUtil::formatForStore($post_id) . "'
             WHERE forum_id = '$forum_id'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     //  notify for newtopic
-    pnForum_userapi_notify_by_email(array('topic_id'=>$topic_id, 'poster_id'=>$pn_uid, 'post_message'=>$posted_message, 'type'=>'0'));
-
+    pnForum_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '0'));
 
     // delete temporary session var
-    pnSessionDelVar('topic_started');
+    SessionUtil::delVar('topic_started');
 
     //  switch to topic display
     return $topic_id;
@@ -1729,7 +1728,7 @@ function pnForum_userapi_readpost($args)
             LEFT JOIN ".$pntable['pnforum_posts_text']." pt ON pt.post_id = p.post_id
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." c ON c.cat_id = f.cat_id
-            WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')";
+            WHERE (p.post_id = '".(int)DataUtil::formatForStore($post_id)."')";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -1742,23 +1741,23 @@ function pnForum_userapi_readpost($args)
     pnfCloseDB($result);
 
     $post = array();
-    $post['post_id']      = pnVarPrepForDisplay($myrow['post_id']);
-    $post['post_time']    = pnVarPrepForDisplay($myrow['post_time']);
+    $post['post_id']      = DataUtil::formatForDisplay($myrow['post_id']);
+    $post['post_time']    = DataUtil::formatForDisplay($myrow['post_time']);
     $message              = $myrow['post_text'];
     $post['has_signature']= (substr($message, -8, 8)=='[addsig]');
     $post['post_rawtext'] = pnForum_replacesignature($message, '');
     $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
     $post['post_rawtext'] = eregi_replace('<br />', '', $post['post_rawtext']);
 
-    $post['topic_id']     = pnVarPrepForDisplay($myrow['topic_id']);
+    $post['topic_id']     = DataUtil::formatForDisplay($myrow['topic_id']);
     $post['topic_rawsubject']= strip_tags($myrow['topic_title']);
-    $post['topic_subject']= pnVarPrepForDisplay($myrow['topic_title']);
-    $post['topic_notify'] = pnVarPrepForDisplay($myrow['topic_notify']);
-    $post['topic_replies']= pnVarPrepForDisplay($myrow['topic_replies']);
-    $post['forum_id']     = pnVarPrepForDisplay($myrow['forum_id']);
-    $post['forum_name']   = pnVarPrepForDisplay($myrow['forum_name']);
-    $post['cat_title']    = pnVarPrepForDisplay($myrow['cat_title']);
-    $post['cat_id']       = pnVarPrepForDisplay($myrow['cat_id']);
+    $post['topic_subject']= DataUtil::formatForDisplay($myrow['topic_title']);
+    $post['topic_notify'] = DataUtil::formatForDisplay($myrow['topic_notify']);
+    $post['topic_replies']= DataUtil::formatForDisplay($myrow['topic_replies']);
+    $post['forum_id']     = DataUtil::formatForDisplay($myrow['forum_id']);
+    $post['forum_name']   = DataUtil::formatForDisplay($myrow['forum_name']);
+    $post['cat_title']    = DataUtil::formatForDisplay($myrow['cat_title']);
+    $post['cat_id']       = DataUtil::formatForDisplay($myrow['cat_id']);
     $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
     // create unix timestamp
     $post['post_unixtime'] = pnf_str2time($post['post_time']); //strtotime ($post['post_time']);
@@ -1806,7 +1805,7 @@ function pnForum_userapi_readpost($args)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
     $post['post_textdisplay'] = pnfVarPrepHTMLDisplay($post['post_textdisplay']);
 /*
-    //$message = pnVarPrepForDisplay($message);
+    //$message = DataUtil::formatForDisplay($message);
     //  remove [addsig]
     $message = eregi_replace("\[addsig]$", '', $message);
     //  remove <!-- editby -->
@@ -1844,7 +1843,7 @@ function pnForum_userapi_is_first_post($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'
             ORDER BY post_id
             LIMIT 1";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1891,7 +1890,7 @@ function pnForum_userapi_updatepost($args)
             FROM  ".$pntable['pnforum_posts']." as p,
                   ".$pntable['pnforum_topics']." as t,
                   ".$pntable['pnforum_forums']." as f
-            WHERE (p.post_id = '".(int)pnVarPrepForStore($post_id)."')
+            WHERE (p.post_id = '".(int)DataUtil::formatForStore($post_id)."')
               AND (t.topic_id = p.topic_id)
               AND (f.forum_id = p.forum_id)";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1947,11 +1946,11 @@ function pnForum_userapi_updatepost($args)
         if(($poster_id <> 1) && ($attach_signature==true)){
             $message .= '[addsig]';
         }
-        $message = pnVarPrepForStore($message);
+        $message = DataUtil::formatForStore($message);
 
         $sql = "UPDATE ".$pntable['pnforum_posts_text']."
                 SET post_text = '$message'
-                WHERE (post_id = '".(int)pnVarPrepForStore($post_id)."')";
+                WHERE (post_id = '".(int)DataUtil::formatForStore($post_id)."')";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -1959,10 +1958,10 @@ function pnForum_userapi_updatepost($args)
         if (!empty ($subject)) {
             //  topic has a new subject
             if (trim($subject) != '') {
-                $subject = pnVarPrepForStore($subject);
+                $subject = DataUtil::formatForStore($subject);
                 $sql = "UPDATE ".$pntable['pnforum_topics']."
                         SET topic_title = '$subject'
-                        WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                        WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
                 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
@@ -1985,14 +1984,14 @@ function pnForum_userapi_updatepost($args)
 
         // delete the post from the posts table
         $sql = "DELETE FROM ".$pntable['pnforum_posts']."
-                WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
+                WHERE post_id = '".(int)DataUtil::formatForStore($post_id)."'";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
         // delete the post from the posts_text table
         $sql = "DELETE FROM ".$pntable['pnforum_posts_text']."
-                WHERE post_id = '".(int)pnVarPrepForStore($post_id)."'";
+                WHERE post_id = '".(int)DataUtil::formatForStore($post_id)."'";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
@@ -2023,7 +2022,7 @@ function pnForum_userapi_updatepost($args)
             //
             $sql = "UPDATE ".$pntable['pnforum_forums']."
                     SET forum_posts=forum_posts - 1
-                    WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+                    WHERE forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
 
@@ -2032,7 +2031,7 @@ function pnForum_userapi_updatepost($args)
             //
             $sql = "UPDATE ".$pntable['pnforum_topics']."
                     SET topic_replies=topic_replies-1
-                    WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                    WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
             $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             pnfCloseDB($result);
 
@@ -2064,7 +2063,7 @@ function pnForum_userapi_updatepost($args)
                 // it was the last post in the thread, remove topic
                 //
                 $sql = "DELETE FROM ".$pntable['pnforum_topics']."
-                        WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                        WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
                 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
 
@@ -2079,8 +2078,8 @@ function pnForum_userapi_updatepost($args)
                 $sql = "UPDATE ".$pntable['pnforum_forums']."
                         SET forum_topics=forum_topics - 1,
                             forum_posts=forum_posts - 1,
-                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."'
-                        WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+                            forum_last_post_id = '".(int)DataUtil::formatForStore($forum_last_post_id)."'
+                        WHERE forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
                 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
 
@@ -2099,10 +2098,10 @@ function pnForum_userapi_updatepost($args)
                 //
                 $lastposttime = date('Y-m-d H:i', $last_topic_post['post_unixtime']);
                 $sql = "UPDATE ".$pntable['pnforum_topics']."
-                        SET topic_time = '".pnVarPrepForStore($lastposttime)."',
-                            topic_last_post_id = '".(int)pnVarPrepForStore($last_topic_post['post_id'])."',
+                        SET topic_time = '".DataUtil::formatForStore($lastposttime)."',
+                            topic_last_post_id = '".(int)DataUtil::formatForStore($last_topic_post['post_id'])."',
                             topic_replies=topic_replies-1
-                        WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                        WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
                 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
 
@@ -2116,8 +2115,8 @@ function pnForum_userapi_updatepost($args)
                 //
                 $sql = "UPDATE ".$pntable['pnforum_forums']."
                         SET forum_posts=forum_posts - 1,
-                            forum_last_post_id = '".(int)pnVarPrepForDisplay($forum_last_post_id)."'
-                        WHERE forum_id = '".(int)pnVarPrepForStore($forum_id)."'";
+                            forum_last_post_id = '".(int)DataUtil::formatForStore($forum_last_post_id)."'
+                        WHERE forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
                 $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
                 pnfCloseDB($result);
 
@@ -2162,7 +2161,7 @@ function pnForum_userapi_get_last_boardpost($args)
 
     $sql = "SELECT p.post_time, u.pn_uname
             FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
-            WHERE p.topic_id = '".(int)pnVarPrepForStore($id)."'
+            WHERE p.topic_id = '".(int)DataUtil::formatForStore($id)."'
             AND p.poster_id = u.pn_uid
             ORDER BY post_time DESC";
 
@@ -2207,7 +2206,7 @@ function pnForum_userapi_get_viewip_data($args)
 
     $sql = "SELECT u.pn_uname, p.poster_ip
             FROM ".$pntable['users']." u, ".$pntable['pnforum_posts']." p
-            WHERE p.post_id = '".(int)pnVarPrepForStore($post_id)."'
+            WHERE p.post_id = '".(int)DataUtil::formatForStore($post_id)."'
             AND u.pn_uid = p.poster_id";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
@@ -2222,7 +2221,7 @@ function pnForum_userapi_get_viewip_data($args)
 
     $sql = "SELECT pn_uid, pn_uname, count(*) AS postcount
             FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
-            WHERE poster_ip='".pnVarPrepForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid
+            WHERE poster_ip='".DataUtil::formatForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid
             GROUP BY pn_uid";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2257,7 +2256,7 @@ function pnForum_userapi_lockunlocktopic($args)
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_status = $new_status
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -2281,7 +2280,7 @@ function pnForum_userapi_stickyunstickytopic($args)
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET sticky = '$new_sticky'
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -2308,7 +2307,7 @@ function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
@@ -2319,8 +2318,8 @@ function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
     }
     pnfCloseDB($result);
 
-    $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
-    $cat_id = pnVarPrepForDisplay($myrow['cat_id']);
+    $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
+    $cat_id = DataUtil::formatForDisplay($myrow['cat_id']);
 
     return array( $forum_id, $cat_id);
 }
@@ -2348,9 +2347,9 @@ function pnForum_userapi_readuserforums($args)
 
     $where = '';
     if(isset($forum_id)) {
-        $where = 'WHERE f.forum_id=' . pnVarPrepForStore($forum_id) . ' ';
+        $where = 'WHERE f.forum_id=' . DataUtil::formatForStore($forum_id) . ' ';
     } elseif (isset($cat_id)) {
-        $where = 'WHERE c.cat_id=' . pnVarPrepForStore($cat_id) . ' ';
+        $where = 'WHERE c.cat_id=' . DataUtil::formatForStore($cat_id) . ' ';
     }
     $sql = "SELECT f.forum_name,
                    f.forum_id,
@@ -2442,7 +2441,7 @@ function pnForum_userapi_movetopic($args)
                    t.topic_time,
                    t.topic_title
             FROM  ".$pntable['pnforum_topics']." t
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
@@ -2453,28 +2452,28 @@ function pnForum_userapi_movetopic($args)
     }
     pnfCloseDB($result);
 
-    $oldforum_id  = pnVarPrepForDisplay($myrow['forum_id']);
+    $oldforum_id  = DataUtil::formatForDisplay($myrow['forum_id']);
     $topic_time   = $myrow['topic_time'];
     $topic_title  = $myrow['topic_title'];
 
     if($oldforum_id <> $forum_id) {
         // set new forum id
         $sql = "UPDATE ".$pntable['pnforum_topics']."
-                SET forum_id = '".(int)pnVarPrepForStore($forum_id)."'
-                WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                SET forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
+                WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
         $sql = "UPDATE ".$pntable['pnforum_posts']."
-                SET forum_id = '".(int)pnVarPrepForStore($forum_id)."'
-                WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                SET forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
+                WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
         if($shadow==true) {
             // user wants to have a shadow topic
             $message = sprintf(_PNFORUM_SHADOWTOPIC_MESSAGE, pnModURL('pnForum','user','viewtopic', array('topic'=> $topic_id)) );
-            $subject = '***' . pnVarPrepForDisplay(_PNFORUM_MOVED_SUBJECT) . ': ' . $topic_title;
+            $subject = '***' . DataUtil::formatForDisplay(_PNFORUM_MOVED_SUBJECT) . ': ' . $topic_title;
 
             pnForum_userapi_storenewtopic(array('subject'  => $subject,
                                                 'message'  => $message,
@@ -2504,7 +2503,7 @@ function pnForum_userapi_deletetopic($args)
     // get the forum id
     $sql = "SELECT t.forum_id
             FROM  ".$pntable['pnforum_topics']." t
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
@@ -2515,13 +2514,13 @@ function pnForum_userapi_deletetopic($args)
     }
     pnfCloseDB($result);
 
-    $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
+    $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
 
     // Update the users's post count, this might be slow on big topics but it makes other parts of the
     // forum faster so we win out in the long run.
     $sql = "SELECT poster_id, post_id
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -2530,7 +2529,7 @@ function pnForum_userapi_deletetopic($args)
         if($row['poster_id'] != -1) {
             $sql2 = "UPDATE ".$pntable['pnforum_users']."
                      SET user_posts = user_posts - 1
-                     WHERE user_id = '".pnVarPrepForStore($row['poster_id'])."'";
+                     WHERE user_id = '".DataUtil::formatForStore($row['poster_id'])."'";
             $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
             pnfCloseDB($result2);
         }
@@ -2541,13 +2540,13 @@ function pnForum_userapi_deletetopic($args)
     pnfCloseDB($result);
 
     $sql = "DELETE FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     $sql = "DELETE FROM ".$pntable['pnforum_topics']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -2563,7 +2562,7 @@ function pnForum_userapi_deletetopic($args)
 
     // bug [#2491] removal of topics doesn't remove the subscriptions
     $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']."
-            WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
+            WHERE topic_id = '" . (int)DataUtil::formatForStore($topic_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -2612,7 +2611,7 @@ function pnForum_userapi_notify_by_email($args)
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON t.forum_id = f.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." c ON f.cat_id = c.cat_id
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -2629,10 +2628,10 @@ function pnForum_userapi_notify_by_email($args)
 
     $poster_name = pnUserGetVar('uname',$poster_id);
 
-    $forum_id = pnVarPrepForDisplay($myrow['forum_id']);
-    $forum_name = pnVarPrepForDisplay($myrow['forum_name']);
-    $category_name = pnVarPrepForDisplay($myrow['cat_title']);
-    $topic_subject = pnVarPrepForDisplay($myrow['topic_title']);
+    $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
+    $forum_name = DataUtil::formatForDisplay($myrow['forum_name']);
+    $category_name = DataUtil::formatForDisplay($myrow['cat_title']);
+    $topic_subject = DataUtil::formatForDisplay($myrow['topic_title']);
 
     if ($type == 0) {
         // New message
@@ -2649,8 +2648,8 @@ function pnForum_userapi_notify_by_email($args)
     $fs_wherenotuser = '';
     $ts_wherenotuser = '';
     if(!empty($thisuser)) {
-        $fs_wherenotuser = ' AND fs.user_id <> ' . pnVarPrepForStore($thisuser);
-        $ts_wherenotuser = ' AND ts.user_id <> ' . pnVarPrepForStore($thisuser);
+        $fs_wherenotuser = ' AND fs.user_id <> ' . DataUtil::formatForStore($thisuser);
+        $ts_wherenotuser = ' AND ts.user_id <> ' . DataUtil::formatForStore($thisuser);
     }
 
     //  get list of forum subscribers with non-empty emails
@@ -2659,7 +2658,7 @@ function pnForum_userapi_notify_by_email($args)
             FROM " . $pntable['pnforum_subscription'] . " as fs,
                  " . $pntable['pnforum_forums'] . " as f,
                  " . $pntable['pnforum_categories'] . " as c
-            WHERE fs.forum_id=".pnVarPrepForStore($forum_id)."
+            WHERE fs.forum_id=".DataUtil::formatForStore($forum_id)."
               " . $fs_wherenotuser . "
               AND f.forum_id = fs.forum_id
               AND c.cat_id = f.cat_id";
@@ -2691,7 +2690,7 @@ function pnForum_userapi_notify_by_email($args)
             FROM " . $pntable['pnforum_topic_subscription'] . " as ts,
                  " . $pntable['pnforum_forums'] . " as f,
                  " . $pntable['pnforum_categories'] . " as c
-            WHERE ts.topic_id=".pnVarPrepForStore($topic_id)."
+            WHERE ts.topic_id=".DataUtil::formatForStore($topic_id)."
               " . $ts_wherenotuser . "
               AND f.forum_id = ts.forum_id
               AND c.cat_id = f.cat_id";
@@ -2717,7 +2716,7 @@ function pnForum_userapi_notify_by_email($args)
 
     $message = _PNFORUM_NOTIFYBODY1 . ' '. $sitename . "\n"
             . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
-            . $poster_name . ' ' .pnVarPrepForDisplay(_PNFORUM_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
+            . $poster_name . ' ' .DataUtil::formatForDisplay(_PNFORUM_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
             . "---------------------------------------------------------------------\n\n"
             . strip_tags($post_message) . "\n"
             . "---------------------------------------------------------------------\n\n"
@@ -2802,7 +2801,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
                  $topicstable AS t,
                  $userstable AS u,
                  $forumstable AS f
-            WHERE (ts.user_id='".(int)pnVarPrepForStore($user_id)."'
+            WHERE (ts.user_id='".(int)DataUtil::formatForStore($user_id)."'
               AND t.topic_id=ts.topic_id
               AND u.pn_uid=ts.user_id
               AND f.forum_id=ts.forum_id)
@@ -2833,7 +2832,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
         // we now create the url to the last post in the thread. This might
         // on site 1, 2 or what ever in the thread, depending on topic_replies
         // count and the posts_per_page setting
-        $subscription['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+        $subscription['last_post_url'] = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
                                                              array('topic' => $subscription['topic_id'],
                                                                    'start' => $start)));
         $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . '#pid' . $subscription['topic_last_post_id'];
@@ -2876,7 +2875,7 @@ function pnForum_userapi_subscribe_topic($args)
     if (pnForum_userapi_get_topic_subscription_status(array('userid' => $user_id, 'topic_id' => $topic_id)) == false) {
         // add user only if not already subscribed to the topic
         $sql = "INSERT INTO ".$pntable['pnforum_topic_subscription']." (user_id, forum_id, topic_id)
-                VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."','".(int)pnVarPrepForStore($topic_id)."')";
+                VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."','".(int)DataUtil::formatForStore($topic_id)."')";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
@@ -2911,11 +2910,11 @@ function pnForum_userapi_unsubscribe_topic($args)
 
     $wheretopic = '';
     if(!empty($topic_id)) {
-        $wheretopic = ' AND ' . $tsubcolumn['topic_id'] . '=' . (int)pnVarPrepForStore($topic_id);
+        $wheretopic = ' AND ' . $tsubcolumn['topic_id'] . '=' . (int)DataUtil::formatForStore($topic_id);
     }
 
     $sql = 'DELETE FROM ' .$tsubtable . '
-            WHERE ' . $tsubcolumn['user_id'] . '=' . (int)pnVarPrepForStore($user_id) .
+            WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) .
             $wheretopic;
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2954,7 +2953,7 @@ function pnForum_userapi_subscribe_forum($args)
     if (pnForum_userapi_get_forum_subscription_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
         // add user only if not already subscribed to the forum
         $sql = "INSERT INTO ".$pntable['pnforum_subscription']." (user_id, forum_id)
-                VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."')";
+                VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."')";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -2989,11 +2988,11 @@ function pnForum_userapi_unsubscribe_forum($args)
 
     $whereforum = '';
     if(!empty($forum_id)) {
-        $whereforum = ' AND ' . $fsubcolumn['forum_id'] . '=' . (int)pnVarPrepForStore($forum_id);
+        $whereforum = ' AND ' . $fsubcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($forum_id);
     }
 
     $sql = 'DELETE FROM ' . $fsubtable . '
-            WHERE ' . $fsubcolumn['user_id'] . '=' . (int)pnVarPrepForStore($user_id) .
+            WHERE ' . $fsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) .
             $whereforum;
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -3029,7 +3028,7 @@ function pnForum_userapi_add_favorite_forum($args)
     if (pnForum_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
         // add user only if not already a favorite
         $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id)
-                VALUES ('".(int)pnVarPrepForStore($user_id)."','".(int)pnVarPrepForStore($forum_id)."')";
+                VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."')";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -3058,8 +3057,8 @@ function pnForum_userapi_remove_favorite_forum($args)
     if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == true) {
         // remove from favorites
         $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']."
-                WHERE user_id='".(int)pnVarPrepForStore($user_id)."'
-                AND forum_id='".(int)pnVarPrepForStore($forum_id)."'";
+                WHERE user_id='".(int)DataUtil::formatForStore($user_id)."'
+                AND forum_id='".(int)DataUtil::formatForStore($forum_id)."'";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
@@ -3090,7 +3089,7 @@ function pnForum_userapi_prepareemailtopic($args)
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -3102,12 +3101,12 @@ function pnForum_userapi_prepareemailtopic($args)
     }
     pnfCloseDB($result);
 
-    $topic['topic_id'] = pnVarPrepForDisplay($myrow['topic_id']);
-    $topic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
-    $topic['cat_title'] = pnVarPrepForDisplay($myrow['cat_title']);
-    $topic['forum_id'] = pnVarPrepForDisplay($myrow['forum_id']);
-    $topic['cat_id'] = pnVarPrepForDisplay($myrow['cat_id']);
-    $topic['topic_subject'] = pnVarPrepForDisplay($myrow['topic_title']);
+    $topic['topic_id'] = DataUtil::formatForDisplay($myrow['topic_id']);
+    $topic['forum_name'] = DataUtil::formatForDisplay($myrow['forum_name']);
+    $topic['cat_title'] = DataUtil::formatForDisplay($myrow['cat_title']);
+    $topic['forum_id'] = DataUtil::formatForDisplay($myrow['forum_id']);
+    $topic['cat_id'] = DataUtil::formatForDisplay($myrow['cat_id']);
+    $topic['topic_subject'] = DataUtil::formatForDisplay($myrow['topic_title']);
 
     /**
      * base security check
@@ -3205,11 +3204,11 @@ function pnForum_userapi_get_latest_posts($args)
                    $text= _PNFORUM_LASTWEEK;
                    break;
         case '5' : // last x hours
-                   $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . pnVarPrepForStore($nohours) . " HOUR) ";
+                   $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($nohours) . " HOUR) ";
                    $text = _PNFORUM_LAST . ' ' . $nohours . ' ' . _PNFORUM_HOURS;
                    break;
         case '6' : // last visit
-                   $wheretime = " AND t.topic_time > '" . pnVarPrepForStore($last_visit) . "' ";
+                   $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($last_visit) . "' ";
                    $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
                    break;
         case '1' :
@@ -3232,7 +3231,7 @@ function pnForum_userapi_get_latest_posts($args)
     for($i=0; $i<count($userforums); $i++) {
         array_push($allowedforums, $userforums[$i]['forum_id']);
     }
-    $whereforum = ' f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
+    $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
 
 
     // build the tricky sql
@@ -3278,18 +3277,18 @@ function pnForum_userapi_get_latest_posts($args)
                  $post_time,
                  $poster_id) = $result->fields) && !$limit_reached ) {
         $post=array();
-        $post['topic_id'] = pnVarPrepForDisplay($topic_id);
-        $post['topic_title'] = pnVarPrepForDisplay($topic_title);
-        $post['forum_id'] = pnVarPrepForDisplay($forum_id);
-        $post['forum_name'] = pnVarPrepForDisplay($forum_name);
-        $post['cat_id'] = pnVarPrepForDisplay($cat_id);
-        $post['cat_title'] = pnVarPrepForDisplay($cat_title);
-        $post['topic_replies'] = pnVarPrepForDisplay($topic_replies);
-        $post['topic_last_post_id'] = pnVarPrepForDisplay($topic_last_post_id);
-        $post['sticky'] = pnVarPrepForDisplay($sticky);
-        $post['topic_status'] = pnVarPrepForDisplay($topic_status);
-        $post['post_time'] = pnVarPrepForDisplay($post_time);
-        $post['poster_id'] = pnVarPrepForDisplay($poster_id);
+        $post['topic_id'] = DataUtil::formatForDisplay($topic_id);
+        $post['topic_title'] = DataUtil::formatForDisplay($topic_title);
+        $post['forum_id'] = DataUtil::formatForDisplay($forum_id);
+        $post['forum_name'] = DataUtil::formatForDisplay($forum_name);
+        $post['cat_id'] = DataUtil::formatForDisplay($cat_id);
+        $post['cat_title'] = DataUtil::formatForDisplay($cat_title);
+        $post['topic_replies'] = DataUtil::formatForDisplay($topic_replies);
+        $post['topic_last_post_id'] = DataUtil::formatForDisplay($topic_last_post_id);
+        $post['sticky'] = DataUtil::formatForDisplay($sticky);
+        $post['topic_status'] = DataUtil::formatForDisplay($topic_status);
+        $post['post_time'] = DataUtil::formatForDisplay($post_time);
+        $post['poster_id'] = DataUtil::formatForDisplay($poster_id);
 
         // does this topic have enough postings to be hot?
         $post['hot_topic'] = ($post['topic_replies'] >= $hot_threshold) ? true : false;
@@ -3318,7 +3317,7 @@ function pnForum_userapi_get_latest_posts($args)
         $post['posted_unixtime'] = pnf_str2time($post['post_time']); // strtotime ($post['post_time']);
         $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
 
-        $post['last_post_url'] = pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+        $post['last_post_url'] = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
                                                      array('topic' => $post['topic_id'],
                                                            'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page)));
         $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
@@ -3394,11 +3393,11 @@ function pnForum_userapi_splittopic($args)
              topic_time,
              topic_notify)
             VALUES
-            ('".pnVarPrepForStore($topic_id)."',
-             '".pnVarPrepForStore($post['topic_subject'])."',
-             '".pnVarPrepForStore($post['poster_data']['pn_uid'])."',
-             '".pnVarPrepForStore($post['forum_id'])."',
-             '".pnVarPrepForStore($time)."',
+            ('".DataUtil::formatForStore($topic_id)."',
+             '".DataUtil::formatForStore($post['topic_subject'])."',
+             '".DataUtil::formatForStore($post['poster_data']['pn_uid'])."',
+             '".DataUtil::formatForStore($post['forum_id'])."',
+             '".DataUtil::formatForStore($time)."',
              '' )";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $newtopic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
@@ -3408,8 +3407,8 @@ function pnForum_userapi_splittopic($args)
     // first step: count the number of posting we have to move
     $sql = "SELECT COUNT(*) AS total
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
-              AND post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'
+              AND post_id >= '".(int)DataUtil::formatForStore($post['post_id'])."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($posts_to_move) = $result->fields;
@@ -3419,8 +3418,8 @@ function pnForum_userapi_splittopic($args)
     // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
     // post_id > $post['post_id']
     $sql = "UPDATE ".$pntable['pnforum_posts']."
-            SET topic_id = '" . pnVarPrepForStore($newtopic_id) . "'
-            WHERE post_id >= '".(int)pnVarPrepForStore($post['post_id'])."'
+            SET topic_id = '" . DataUtil::formatForStore($newtopic_id) . "'
+            WHERE post_id >= '".(int)DataUtil::formatForStore($post['post_id'])."'
             AND topic_id = '".$post['topic_id']."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -3429,7 +3428,7 @@ function pnForum_userapi_splittopic($args)
     $sql = "SELECT post_id,
                    post_time
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'
             ORDER BY post_time DESC";
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id, $new_topic_time) = $result->fields;
@@ -3439,18 +3438,18 @@ function pnForum_userapi_splittopic($args)
     $newtopic_replies = (int)$posts_to_move - 1;
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_replies = '$newtopic_replies',
-                topic_last_post_id = '" . pnVarPrepForStore($old_last_post_id) . "'
-            WHERE topic_id = '" . pnVarPrepForStore($newtopic_id) . "'";
+                topic_last_post_id = '" . DataUtil::formatForStore($old_last_post_id) . "'
+            WHERE topic_id = '" . DataUtil::formatForStore($newtopic_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     // update the old topic
     $old_replies = (int)$old_replies - (int)$posts_to_move;
     $sql = "UPDATE ".$pntable['pnforum_topics']."
-            SET topic_replies = " . pnVarPrepForStore($old_replies) . ",
-                topic_last_post_id = '" . pnVarPrepForStore($new_last_post_id) . "',
-                topic_time = '" . pnVarPrepForStore($new_topic_time) . "'
-            WHERE topic_id = '". (int)pnVarPrepForStore($post['topic_id'])."'";
+            SET topic_replies = " . DataUtil::formatForStore($old_replies) . ",
+                topic_last_post_id = '" . DataUtil::formatForStore($new_last_post_id) . "',
+                topic_time = '" . DataUtil::formatForStore($new_topic_time) . "'
+            WHERE topic_id = '". (int)DataUtil::formatForStore($post['topic_id'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -3484,7 +3483,7 @@ function pnForum_userapi_update_user_post_count($args)
 
     $sql = "UPDATE ".$pntable['pnforum_users']."
             SET user_posts = user_posts $math 1
-            WHERE user_id = '".(int)pnVarPrepForStore($user_id)."'";
+            WHERE user_id = '".(int)DataUtil::formatForStore($user_id)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return true;
@@ -3518,7 +3517,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     $sql = "SELECT t1.topic_id
             FROM ".$pntable['pnforum_topics']." AS t1,
                  ".$pntable['pnforum_topics']." AS t2
-            WHERE t2.topic_id = ".(int)pnVarPrepForStore($topic_id)."
+            WHERE t2.topic_id = ".(int)DataUtil::formatForStore($topic_id)."
               AND t1.topic_time $math t2.topic_time
               AND t1.forum_id = t2.forum_id
               AND t1.sticky = 0
@@ -3551,7 +3550,7 @@ function pnForum_userapi_get_previous_or_next_topic_idXX($args)
     $sql = "SELECT t1.topic_id
             FROM ".$pntable['pnforum_topics']." AS t1,
                  ".$pntable['pnforum_topics']." AS t2
-            WHERE t2.topic_id = ".(int)pnVarPrepForStore($topic_id)."
+            WHERE t2.topic_id = ".(int)DataUtil::formatForStore($topic_id)."
               AND t1.topic_time $math t2.topic_time
               AND t1.forum_id = t2.forum_id
               AND t1.sticky = 0
@@ -3605,7 +3604,7 @@ function pnForum_userapi_getfavorites($args)
 
     $sql = "SELECT f.forum_id
             FROM ".$pntable['pnforum_forum_favorites']." AS f
-            WHERE f.user_id='" . (int)pnVarPrepForStore($user_id) . "'";
+            WHERE f.user_id='" . (int)DataUtil::formatForStore($user_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     // make sure we start with an empty array
@@ -3683,7 +3682,7 @@ function pnForum_userapi_get_favorite_status($args)
     $userscol    = $pntable['pnforum_users_column'];
     $sql = "SELECT $userscol[user_favorites]
             FROM $userstable
-            WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
+            WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($favorite) = $result->fields;
     pnfCloseDB($result);
@@ -3715,7 +3714,7 @@ function pnForum_userapi_change_favorite_status($args)
     $userscol    = $pntable['pnforum_users_column'];
     $sql = "UPDATE $userstable
             SET $userscol[user_favorites] = $newstatus
-            WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
+            WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return (bool)$newstatus;
@@ -3765,7 +3764,7 @@ function pnForum_userapi_get_user_post_order($args)
 
     $sql = 'SELECT ' . $pnfusercolumn['user_post_order'] . '
             FROM  ' . $pnfusertable . '
-            WHERE ' . $pnfusercolumn['user_id'] . ' = "' . (int)pnVarPrepForStore($user_id).'"';
+            WHERE ' . $pnfusercolumn['user_id'] . ' = "' . (int)DataUtil::formatForStore($user_id).'"';
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -3809,7 +3808,7 @@ function pnForum_userapi_change_user_post_order($args)
     $userscol    = $pntable['pnforum_users_column'];
     $sql = "UPDATE $userstable
             SET $userscol[user_post_order] = $new_post_order
-            WHERE $userscol[user_id] = '".pnVarPrepForStore($user_id)."'";
+            WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
     return true;
@@ -3837,7 +3836,7 @@ function pnForum_userapi_get_forum_category($args)
 
     $sql = "SELECT $forumcol[cat_id]
             FROM  $forumtable
-            WHERE $forumcol[forum_id] = '".(int)pnVarPrepForStore($forum_id)."'";
+            WHERE $forumcol[forum_id] = '".(int)DataUtil::formatForStore($forum_id)."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -3976,7 +3975,7 @@ function pnForum_userapi_mailcron($args)
                                         }
                                     }
                                     if(empty($subject)) {
-                                        $subject = pnVarPrepForDisplay(_PNFORUM_NOSUBJECT);
+                                        $subject = DataUtil::formatForDisplay(_PNFORUM_NOSUBJECT);
                                     }
 
                                     // check if subject matches our matchstring
@@ -4050,8 +4049,8 @@ function pnForum_userapi_mailcron($args)
         // store the timestamp of the last connection to the database
         list($dbconn, $pntable) = pnfOpenDB();
         $sql = "UPDATE ".$pntable['pnforum_forums']."
-                SET forum_pop3_lastconnect='". pnVarPrepForStore(time()) . "'
-                WHERE forum_id=" . pnVarPrepForStore($forum['forum_id']) . "";
+                SET forum_pop3_lastconnect='". DataUtil::formatForStore(time()) . "'
+                WHERE forum_id=" . DataUtil::formatForStore($forum['forum_id']) . "";
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
 
@@ -4144,7 +4143,7 @@ function pnForum_userapi_get_topic_by_postmsgid($args)
 
     $sql = "SELECT $postscolumn[topic_id]
             FROM $poststable
-            WHERE $postscolumn[post_msgid]='" . pnVarPrepForStore($msgid) . "'";
+            WHERE $postscolumn[post_msgid]='" . DataUtil::formatForStore($msgid) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if(!$result->EOF) {
         list($topic_id) = $result->fields;
@@ -4178,7 +4177,7 @@ function pnForum_userapi_get_topicid_by_postid($args)
 
     $sql = "SELECT $postscolumn[topic_id]
             FROM $poststable
-            WHERE $postscolumn[post_id]='" . pnVarPrepForStore($post_id) . "'";
+            WHERE $postscolumn[post_id]='" . DataUtil::formatForStore($post_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if(!$result->EOF) {
         list($topic_id) = $result->fields;
@@ -4212,8 +4211,8 @@ function pnForum_userapi_movepost($args)
     // 1 . update topic_id in posts table
 
     $sql = "UPDATE ".$pntable['pnforum_posts']."
-            SET topic_id='".(int)pnVarPrepForStore($to_topic)."'
-            WHERE (post_id = '".(int)pnVarPrepForStore($post['post_id'])."')";
+            SET topic_id='".(int)DataUtil::formatForStore($to_topic)."'
+            WHERE (post_id = '".(int)DataUtil::formatForStore($post['post_id'])."')";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4223,7 +4222,7 @@ function pnForum_userapi_movepost($args)
     // get the new topic_last_post_id of to_topic
     $sql = "SELECT post_id, post_time
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($to_topic)."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($to_topic)."'
             ORDER BY post_time DESC";
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($to_last_post_id, $to_post_time) = $result->fields;
@@ -4231,9 +4230,9 @@ function pnForum_userapi_movepost($args)
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_replies = topic_replies + 1,
-        topic_last_post_id='".(int)pnVarPrepForStore($to_last_post_id)."',
-        topic_time='".pnVarPrepForStore($to_post_time)."'
-            WHERE topic_id='".(int)pnVarPrepForStore($to_topic)."'";
+        topic_last_post_id='".(int)DataUtil::formatForStore($to_last_post_id)."',
+        topic_time='".DataUtil::formatForStore($to_post_time)."'
+            WHERE topic_id='".(int)DataUtil::formatForStore($to_topic)."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4245,7 +4244,7 @@ function pnForum_userapi_movepost($args)
     // get the new topic_last_post_id of the old topic
     $sql = "SELECT post_id, post_time
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'
             ORDER BY post_time DESC";
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($old_last_post_id, $old_post_time) = $result->fields;
@@ -4254,9 +4253,9 @@ function pnForum_userapi_movepost($args)
     // update
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_replies = topic_replies - 1,
-        topic_last_post_id = '".(int)pnVarPrepForStore($old_last_post_id)."',
-        topic_time='".pnVarPrepForStore($old_post_time)."'
-            WHERE topic_id = '".(int)pnVarPrepForStore($post['topic_id'])."'";
+        topic_last_post_id = '".(int)DataUtil::formatForStore($old_last_post_id)."',
+        topic_time='".DataUtil::formatForStore($old_post_time)."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4283,7 +4282,7 @@ function pnForum_userapi_get_last_topic_page($args)
     list($dbconn, $pntable) = pnfOpenDB();
 
     // get topic_replies for correct redirect (start parameter)
-    $sql = "SELECT topic_replies FROM " . $pntable['pnforum_topics'] . " WHERE topic_id = '" . (int)pnVarPrepForStore($topic_id) . "'";
+    $sql = "SELECT topic_replies FROM " . $pntable['pnforum_topics'] . " WHERE topic_id = '" . (int)DataUtil::formatForStore($topic_id) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list ($topic_replies) = $result->fields;
     pnfCloseDB($result);
@@ -4337,9 +4336,9 @@ function pnForum_userapi_jointopics($args)
     // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
     // and from_topic['forum_id'] to to_topic['forum_id']
     $sql = "UPDATE ".$pntable['pnforum_posts']."
-            SET topic_id = '".(int)pnVarPrepForStore($to_topic['topic_id'])."',
-        forum_id = '".(int)pnVarPrepForStore($to_topic['forum_id'])."'
-            WHERE topic_id='".(int)pnVarPrepForStore($from_topic['topic_id'])."'";
+            SET topic_id = '".(int)DataUtil::formatForStore($to_topic['topic_id'])."',
+        forum_id = '".(int)DataUtil::formatForStore($to_topic['forum_id'])."'
+            WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
   $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4349,7 +4348,7 @@ function pnForum_userapi_jointopics($args)
     // get new topic_time and topic_last_post_id
     $sql = "SELECT post_id, post_time
             FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)pnVarPrepForStore($to_topic['topic_id'])."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($to_topic['topic_id'])."'
             ORDER BY post_time DESC";
     $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id, $new_post_time) = $result->fields;
@@ -4358,15 +4357,15 @@ function pnForum_userapi_jointopics($args)
     $topic_replies = $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
-            SET topic_replies = '".(int)pnVarPrepForStore($topic_replies)."',
-        topic_last_post_id='".(int)pnVarPrepForStore($new_last_post_id)."',
-        topic_time='".pnVarPrepForStore($new_post_time)."'
-            WHERE topic_id='".(int)pnVarPrepForStore($to_topic['topic_id'])."'";
+            SET topic_replies = '".(int)DataUtil::formatForStore($topic_replies)."',
+        topic_last_post_id='".(int)DataUtil::formatForStore($new_last_post_id)."',
+        topic_time='".DataUtil::formatForStore($new_post_time)."'
+            WHERE topic_id='".(int)DataUtil::formatForStore($to_topic['topic_id'])."'";
   $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
     // delete from_topic from pnforum_topics
-  $sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)pnVarPrepForStore($from_topic['topic_id'])."'";
+  $sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
   $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4374,7 +4373,7 @@ function pnForum_userapi_jointopics($args)
     // get topics count: decrement from_topic['forum_id']'s topic count by 1
     $sql = "UPDATE ".$pntable['pnforum_forums']."
             SET forum_topics = forum_topics - 1
-            WHERE forum_id='".(int)pnVarPrepForStore($from_topic['forum_id'])."'";
+            WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
   $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4390,7 +4389,7 @@ function pnForum_userapi_jointopics($args)
         // same forum
         $sql = "UPDATE ".$pntable['pnforum_forums']."
                 SET forum_posts = forum_posts + 1
-                WHERE forum_id='".(int)pnVarPrepForStore($to_topic['forum_id'])."'";
+                WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
       $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     } else {
@@ -4398,30 +4397,30 @@ function pnForum_userapi_jointopics($args)
         // get last post in forums
         $sql = "SELECT post_id
                 FROM ".$pntable['pnforum_posts']."
-                WHERE forum_id = '".(int)pnVarPrepForStore($from_topic['forum_id'])."'
+                WHERE forum_id = '".(int)DataUtil::formatForStore($from_topic['forum_id'])."'
                 ORDER BY post_time DESC";
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         list($from_forum_last_post_id) = $result->fields;
         pnfCloseDB($result);
         $sql = "SELECT post_id
                 FROM ".$pntable['pnforum_posts']."
-                WHERE forum_id = '".(int)pnVarPrepForStore($to_topic['forum_id'])."'
+                WHERE forum_id = '".(int)DataUtil::formatForStore($to_topic['forum_id'])."'
                 ORDER BY post_time DESC";
         $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         list($to_forum_last_post_id) = $result->fields;
         pnfCloseDB($result);
-        $post_count_difference = (int)pnVarPrepForStore($from_topic['topic_replies']+1);
+        $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies']+1);
         // decrement from_topic's forum post_count
         $sql = "UPDATE ".$pntable['pnforum_forums']."
                 SET forum_posts = forum_posts - $post_count_difference,
-                    forum_last_post_id = '" . (int)pnVarPrepForStore($from_forum_last_post) . "'
-                WHERE forum_id='".(int)pnVarPrepForStore($from_topic['forum_id'])."'";
+                    forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post) . "'
+                WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
       $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
         $sql = "UPDATE ".$pntable['pnforum_forums']."
                 SET forum_posts = forum_posts + $post_count_difference,
-                    forum_last_post_id = '" . (int)pnVarPrepForStore($to_forum_last_post) . "'
-                WHERE forum_id='".(int)pnVarPrepForStore($to_topic['forum_id'])."'";
+                    forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post) . "'
+                WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
       $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
     }
@@ -4432,7 +4431,7 @@ function pnForum_userapi_jointopics($args)
 // 1. Select all posts to move from pnforum_posts table
   $sql = "SELECT post_id,topic_id,forum_id,poster_id,post_time,poster_ip
           FROM ".$pntable['pnforum_posts']."
-        WHERE topic_id='".(int)pnVarPrepForStore($post['old_topic'])."'";
+        WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
   $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 // 2. Updated date for all moved posts
   $time = date("Y-m-d H:i");
@@ -4442,31 +4441,31 @@ function pnForum_userapi_jointopics($args)
     // Every post is inserted at the end of the table pnforum_post, so we are sure every message
     // is moved in the correct order and with the right date
     $sql = "INSERT INTO ".$pntable['pnforum_posts']." (topic_id,forum_id,poster_id,post_time,poster_ip)
-        VALUES ('".(int)pnVarPrepForStore($post['new_topic'])."',
-        '".(int)pnVarPrepForStore($readedPost['forum_id'])."',
-        '".(int)pnVarPrepForStore($readedPost['poster_id'])."',
-        '".pnVarPrepForStore($time)."',
-        '".pnVarPrepForStore($readedPost['poster_ip'])."')";
+        VALUES ('".(int)DataUtil::formatForStore($post['new_topic'])."',
+        '".(int)DataUtil::formatForStore($readedPost['forum_id'])."',
+        '".(int)DataUtil::formatForStore($readedPost['poster_id'])."',
+        '".DataUtil::formatForStore($time)."',
+        '".DataUtil::formatForStore($readedPost['poster_ip'])."')";
     $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result2);
     // We get the new post_id from the moved post
     $last_post_id = $dbconn->PO_Insert_ID($pntable['pnforum_posts'], 'post_id');
     // Read post text using old post_id (post_id before move)
-    $sql = "SELECT post_text FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)pnVarPrepForStore($readedPost['post_id'])."'";
+    $sql = "SELECT post_text FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
     $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($post_text) = $result2->fields;
     pnfCloseDB($result2);
     // Text post is inserted at the end of the post_text table using new post_id values
-    $sql = "INSERT INTO ".$pntable['pnforum_posts_text']." (post_id,post_text) VALUES ('".(int)pnVarPrepForStore($last_post_id)."','".pnVarPrepForStore($post_text)."')";
+    $sql = "INSERT INTO ".$pntable['pnforum_posts_text']." (post_id,post_text) VALUES ('".(int)DataUtil::formatForStore($last_post_id)."','".DataUtil::formatForStore($post_text)."')";
     $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result2);
     // At this moment we have the post duplicated: in the old Topic and in the new Topic
     // Delete old post_text in old Topic
-    $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)pnVarPrepForStore($readedPost['post_id'])."'";
+    $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
     $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result2);
     // Delete old post in old Topic
-    $sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE post_id='".(int)pnVarPrepForStore($readedPost['post_id'])."'";
+    $sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
     $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result2);
     // Siguiente post
@@ -4474,18 +4473,18 @@ function pnForum_userapi_jointopics($args)
     }
     pnfCloseDB($result);
 // We can delete all moved posts just with 1 SQL for each table...
-  //$sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)pnVarPrepForStore($post['old_topic'])."'";
+  //$sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
   //$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
   //pnfCloseDB($result);
 // All posts should be moved, we don't need old Topic data
 // 4. Detele the old Topic from pnforum_topics
-  $sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)pnVarPrepForStore($post['old_topic'])."'";
+  $sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
   $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
   pnfCloseDB($result);
 // Sync
 // 6. Update last_post_id & topic_replies values of the Topic with the moved posts in pnforum_topics
 // 6.1. topic_replies : Count number of posts
-  $sql = "SELECT COUNT(*) FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)pnVarPrepForStore($post['new_topic'])."'";
+  $sql = "SELECT COUNT(*) FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)DataUtil::formatForStore($post['new_topic'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($topic_replies) = $result->fields;
     pnfCloseDB($result);
@@ -4493,10 +4492,10 @@ function pnForum_userapi_jointopics($args)
 
 // 6.3. Update
     $sql = "UPDATE ".$pntable['pnforum_topics']."
-            SET topic_replies = '".(int)pnVarPrepForStore($topic_replies)."',
-        topic_last_post_id='".(int)pnVarPrepForStore($last_post_id)."',
-        topic_time='".pnVarPrepForStore($time)."'
-            WHERE topic_id='".(int)pnVarPrepForStore($post['new_topic'])."'";
+            SET topic_replies = '".(int)DataUtil::formatForStore($topic_replies)."',
+        topic_last_post_id='".(int)DataUtil::formatForStore($last_post_id)."',
+        topic_time='".DataUtil::formatForStore($time)."'
+            WHERE topic_id='".(int)DataUtil::formatForStore($post['new_topic'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
 
@@ -4563,7 +4562,7 @@ function pnForum_userapi_notify_moderator($args)
         $email_from = pnConfigGetVar('adminmail');
     }
 
-    $subject .= pnVarPrepForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
+    $subject .= DataUtil::formatForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
     $sitename = pnConfigGetVar('sitename');
 
     $recipients = array();
@@ -4669,7 +4668,7 @@ function pnForum_userapi_get_topicid_by_reference($args)
 
     $sql = "SELECT $topicscolumn[topic_id]
             FROM $topicstable
-            WHERE $topicscolumn[topic_reference]='" . pnVarPrepForStore($reference) . "'";
+            WHERE $topicscolumn[topic_reference]='" . DataUtil::formatForStore($reference) . "'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if(!$result->EOF) {
         list($topic_id) = $result->fields;
@@ -4784,7 +4783,7 @@ function pnForum_userapi_get_forum_subscriptions($args)
             FROM ' . $fstable . ',
                  ' . $forumstable . ',
                  ' . $categoriestable . '
-            WHERE ' . $fscolumn['user_id'] . '=' . (int)pnVarPrepForStore($user_id) . '
+            WHERE ' . $fscolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) . '
               AND ' . $forumscolumn['forum_id'] . '=' . $fscolumn['forum_id'] . '
               AND ' . $categoriescolumn['cat_id'] . '=' . $forumscolumn['cat_id']. '
             ORDER BY ' . $categoriescolumn['cat_order'] . ', ' . $forumscolumn['forum_order'];

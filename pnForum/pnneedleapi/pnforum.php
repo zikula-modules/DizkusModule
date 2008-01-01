@@ -55,7 +55,7 @@ function pnForum_needleapi_pnforum($args)
                         $sql = 'SELECT ' . $colforums['forum_name'] . ',
                                        ' . $colforums['cat_id'] . '
                                 FROM   ' . $tblforums . '
-                                WHERE  ' . $colforums['forum_id'] . '=' . (int)pnVarPrepForStore($id);
+                                WHERE  ' . $colforums['forum_id'] . '=' . (int)DataUtil::formatForStore($id);
                         $res = $dbconn->Execute($sql);
                         if($dbconn->ErrorNo()==0 && !$res->EOF) {
                             list($title, $cat_id) = $res->fields;
@@ -82,7 +82,7 @@ function pnForum_needleapi_pnforum($args)
                                 FROM      ' . $tbltopics . '
                                 LEFT JOIN ' . $tblforums . '
                                 ON        ' . $colforums['forum_id'] . '=' . $coltopics['forum_id'] . '
-                                WHERE     ' . $coltopics['topic_id'] . '=' . pnVarPrepForStore($id);
+                                WHERE     ' . $coltopics['topic_id'] . '=' . DataUtil::formatForStore($id);
                         $res = $dbconn->Execute($sql);
                         if($dbconn->ErrorNo()==0 && !$result->EOF) {
                             list($title, $forum_id, $cat_id) = $res->fields;

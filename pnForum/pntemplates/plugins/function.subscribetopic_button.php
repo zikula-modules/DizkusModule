@@ -41,19 +41,19 @@ function smarty_function_subscribetopic_button($params, &$smarty)
                                   'topic_id'=>$topic_id))==false) {
                 $imagedata = pnf_getimagepath($image_subscribe);
                 if($imagedata == false) {
-                    $show = pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_TOPIC);
+                    $show = DataUtil::formatForDisplay(_PNFORUM_SUBSCRIBE_TOPIC);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_SUBSCRIBE_TOPIC) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplayHTML(_PNFORUM_SUBSCRIBE_TOPIC) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_SUBSCRIBE_TOPIC) . '" href="' . pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_topic', 'topic'=>$topic_id))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_SUBSCRIBE_TOPIC) . '" href="' . DataUtil::formatForDisplayHTML(pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_topic', 'topic'=>$topic_id))) . '">' . $show . '</a>';
             } else {
                 $imagedata = pnf_getimagepath($image_unsubscribe);
                 if($imagedata == false) {
-                    $show = pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC);
+                    $show = DataUtil::formatForDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplayHTML(_PNFORUM_UNSUBSCRIBE_TOPIC) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC) . '" href="' . pnVarPrepHTMLDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_topic', 'topic'=>$topic_id))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_UNSUBSCRIBE_TOPIC) . '" href="' . DataUtil::formatForDisplayHTML(pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_topic', 'topic'=>$topic_id))) . '">' . $show . '</a>';
             }
         }
     }

@@ -265,7 +265,7 @@ function pnForum_admin_advancedpreferences()
     	return LogUtil::registerPermissionError();
     }
 
-    $submit = FormUtil::getPassedValue('submit');
+    $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
 
     if(!$submit) {
         list($dbconn, $pntable) = pnfOpenDB();
@@ -329,7 +329,7 @@ function pnForum_admin_syncforums()
 	$message .= DataUtil::formatForDisplay(_PNFORUM_SYNC_POSTSCOUNT) . "<br />";
 
 	if ($silent != 1) {
-        pnSessionSetVar('statusmsg', $message);
+        LogUtil::registerStatus($message);
 	}
     return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
 }
@@ -346,11 +346,8 @@ function pnForum_admin_ranks()
     	return LogUtil::registerPermissionError();
     }
 
-    list($submit, $ranktype) = pnVarCleanFromInput('submit', 'ranktype');
-
-    if(!is_numeric($ranktype)) {
-        return _MODARGSERROR;
-    }
+    $submit   = FormUtil::getPassedValue('submit', null, 'GETPOST');
+    $ranktype = (int)FormUtil::getPassedValue('ranktype', 0, 'GETPOST');
 
     list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
                                              array('ranktype' => $ranktype));
@@ -366,19 +363,13 @@ function pnForum_admin_ranks()
             return $pnr->fetch("pnforum_admin_honoraryranks.html");
         }
     } else {
-        list($actiontype,
-             $ranktype,
-             $rank_id,
-             $title,
-             $min_posts,
-             $max_posts,
-             $image ) = pnVarCleanFromInput('actiontype',
-                                            'ranktype',
-                                            'rank_id',
-                                            'title',
-                                            'min_posts',
-                                            'max_posts',
-                                            'image');
+        $actiontype = FormUtil::getPassedValue('actiontype');
+        $ranktype   = FormUtil::getPassedValue('ranktype');
+        $rank_id    = FormUtil::getPassedValue('rank_id');
+        $title      = FormUtil::getPassedValue('title');
+        $min_posts  = FormUtil::getPassedValue('min_posts');
+        $max_posts  = FormUtil::getPassedValue('max_posts');
+        $image      = FormUtil::getPassedValue('image');
         pnModAPIFunc('pnForum', 'admin', 'saverank', array('actiontype'=> $actiontype,
                                                             'rank_special' => $ranktype,
                                                             'rank_id'      => $rank_id,
@@ -400,7 +391,10 @@ function pnForum_admin_assignranks()
     	return LogUtil::registerPermissionError();
     }
 
-    list($submit, $letter, $lastletter) = pnVarCleanFromInput('submit', 'letter', 'lastletter');
+    $submit     = FormUtil::getPassedValue('submit');
+    $letter     = FormUtil::getPassedValue('letter');
+    $lastletter = FormUtil::getPassedValue('lastletter');
+
     // check for a letter parameter
     if(!empty($lastletter)) {
         $letter = $lastletter;
@@ -748,7 +742,7 @@ function pnForum_admin_editcategory($args=array())
  */
 function pnForum_admin_storecategory()
 {
-    pnSessionSetVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
     	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
@@ -758,13 +752,10 @@ function pnForum_admin_storecategory()
         pnf_ajaxerror(_BADAUTHKEY);
     }
 
-    list($cat_id, 
-         $cat_title, 
-         $add,
-         $delete) = pnVarCleanFromInput('cat_id', 
-                                        'cat_title', 
-                                        'add',
-                                        'delete');
+    $cat_id    = FormUtil::getPassedValue('cat_id');
+    $cat_title = FormUtil::getPassedValue('cat_title');
+    $add       = FormUtil::getPassedValue('add');
+    $delete    = FormUtil::getPassedValue('delete');
 
     $cat_title = DataUtil::convertFromUTF8($cat_title);
     if(!empty($delete)) {
@@ -843,51 +834,29 @@ function pnForum_admin_storeforum()
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    list($forum_name,
-         $forum_id,
-         $cat_id,
-         $desc,
-         $mods,
-         $rem_mods,
-         $extsource,
-         $rssfeed,
-         $pop3_server,
-         $pop3_port,
-         $pop3_login,
-         $pop3_password,
-         $pop3_passwordconfirm,
-         $pop3_interval,
-         $pop3_matchstring,
-         $pnuser,
-         $pnpassword,
-         $pnpasswordconfirm,
-         $moduleref,
-         /* $pntopic, */
-         $pop3_test,
-         $add,
-         $delete)   = pnVarCleanFromInput('forum_name',
-                                          'forum_id',
-                                          'cat_id',
-                                          'desc',
-                                          'mods',
-                                          'rem_mods',
-                                          'extsource',
-                                          'rssfeed',
-                                          'pop3_server',
-                                          'pop3_port',
-                                          'pop3_login',
-                                          'pop3_password',
-                                          'pop3_passwordconfirm',
-                                          'pop3_interval',
-                                          'pop3_matchstring',
-                                          'pnuser',
-                                          'pnpassword',
-                                          'pnpasswordconfirm',
-                                          'moduleref',
-                                          /* 'pntopic', */
-                                          'pop3_test',
-                                          'add',
-                                          'delete');
+
+    $forum_name    = FormUtil::getPassedValue('forum_name');
+    $forum_id    = FormUtil::getPassedValue('forum_id');
+    $cat_id    = FormUtil::getPassedValue('cat_id');
+    $desc    = FormUtil::getPassedValue('desc');
+    $mods    = FormUtil::getPassedValue('mods');
+    $rem_mods    = FormUtil::getPassedValue('rem_mods');
+    $extsource    = FormUtil::getPassedValue('extsource');
+    $rssfeed    = FormUtil::getPassedValue('rssfeed');
+    $pop3_server    = FormUtil::getPassedValue('pop3_server');
+    $pop3_port    = FormUtil::getPassedValue('pop3_port');
+    $pop3_login    = FormUtil::getPassedValue('pop3_login');
+    $pop3_password    = FormUtil::getPassedValue('pop3_password');
+    $pop3_passwordconfirm    = FormUtil::getPassedValue('pop3_passwordconfirm');
+    $pop3_interval    = FormUtil::getPassedValue('pop3_interval');
+    $pop3_matchstring    = FormUtil::getPassedValue('pop3_matchstring');
+    $pnuser    = FormUtil::getPassedValue('pnuser');
+    $pnpassword    = FormUtil::getPassedValue('pnpassword');
+    $pnpasswordconfirm    = FormUtil::getPassedValue('pnpasswordconfirm');
+    $moduleref    = FormUtil::getPassedValue('moduleref');
+    $pop3_test    = FormUtil::getPassedValue('pop3_test');
+    $add    = FormUtil::getPassedValue('add');
+    $delete    = FormUtil::getPassedValue('delete');
 
     $pntopic = (int)FormUtil::getpassedValue('pncategory', 0);
 
@@ -1026,7 +995,8 @@ function pnForum_admin_managesubscriptions()
     	return LogUtil::registerPermissionError();
     }
 
-    list($submit, $pnusername) = pnVarCleanFromInput('submit', 'pnusername');
+    $submit    = FormUtil::getPassedValue('submit');
+    $pnusername    = FormUtil::getPassedValue('pnusername');
     
     if(!empty($pnusername)) {
         $pnuid = pnUserGetIDFromName($pnusername);
@@ -1045,7 +1015,11 @@ function pnForum_admin_managesubscriptions()
         
         return $pnr->fetch('pnforum_admin_managesubscriptions.html');
     } else {  // submit not empty
-        list($pnuid, $allforums, $forum_ids, $alltopics, $topic_ids) = pnVarCleanFromInput('pnuid', 'allforum', 'forum_id', 'alltopic', 'topic_id');
+        $pnuid      = FormUtil::getPassedValue('pnuid');
+        $allforums  = FormUtil::getPassedValue('allforum');
+        $forum_ids  = FormUtil::getPassedValue('forum_id');
+        $alltopics  = FormUtil::getPassedValue('alltopic');
+        $topic_ids  = FormUtil::getPassedValue('topic_id');
         if($allforums == '1') {
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum', array('user_id' => $pnuid));
         } elseif(count($forum_ids) > 0) {

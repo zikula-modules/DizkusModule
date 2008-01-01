@@ -21,15 +21,11 @@ function pnForum_ajax_reply()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    list($topic_id,
-         $message,
-         $attach_signature,
-         $subscribe_topic,
-         $preview) = pnVarCleanFromInput('topic',
-                                         'message',
-                                         'attach_signature',
-                                         'subscribe_topic',
-                                         'preview');
+    $topic_id         = FormUtil::getPassedValue('topic');
+    $message          = FormUtil::getPassedValue('message', '');
+    $attach_signature = FormUtil::getPassedValue('attach_signature');
+    $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
+    $preview          = FormUtil::getPassedValue('preview', 0);
     $preview          = ($preview=='1') ? true : false;
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -94,7 +90,7 @@ function pnForum_ajax_preparequote()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    $post_id = pnVarCleanFromInput('post');
+    $post_id = FormUtil::getPassedValue('post');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
@@ -117,7 +113,7 @@ function pnForum_ajax_readpost()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    $post_id = pnVarCleanFromInput('post');
+    $post_id = FormUtil::getPassedValue('post');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
@@ -142,7 +138,7 @@ function pnForum_ajax_editpost()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    $post_id = pnVarCleanFromInput('post');
+    $post_id = FormUtil::getPassedValue('post');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
@@ -174,15 +170,12 @@ function pnForum_ajax_updatepost()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    list($post_id,
-         $subject,
-         $message,
-         $delete,
-         $attach_signature) = pnVarCleanFromInput('post',
-                                                  'subject',
-                                                  'message',
-                                                  'delete',
-                                                  'attach_signature');
+    $post_id = FormUtil::getPassedValue('post', '');
+    $subject = FormUtil::getPassedValue('subject', '');
+    $message = FormUtil::getPassedValue('message', '');
+    $delete = FormUtil::getPassedValue('delete');
+    $attach_signature = FormUtil::getPassedValue('attach_signature');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
     if(!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -223,7 +216,9 @@ function pnForum_ajax_lockunlocktopic()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
+    $topic_id = FormUtil::getPassedValue('topic', '');
+    $mode     = FormUtil::getPassedValue('mode', '');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
@@ -234,7 +229,7 @@ function pnForum_ajax_lockunlocktopic()
         pnf_ajaxerror('internal error: no topic id in pnForum_ajax_lockunlocktopic()');
     }
     if( empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_lockunlocktopic()');
+        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_lockunlocktopic()');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
@@ -261,7 +256,8 @@ function pnForum_ajax_stickyunstickytopic()
        pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
     }
 
-    list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
+    $topic_id = FormUtil::getPassedValue('topic', '');
+    $mode     = FormUtil::getPassedValue('mode', '');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
@@ -272,7 +268,7 @@ function pnForum_ajax_stickyunstickytopic()
         pnf_ajaxerror('internal error: no topic id in pnForum_ajax_stickyunstickytopic()');
     }
     if( empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_stickyunstickytopic()');
+        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_stickyunstickytopic()');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
@@ -299,7 +295,8 @@ function pnForum_ajax_subscribeunsubscribetopic()
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    list($topic_id, $mode) = pnVarCleanFromInput('topic', 'mode');
+    $topic_id = FormUtil::getPassedValue('topic', '');
+    $mode     = FormUtil::getPassedValue('mode', '');
 
     if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
@@ -330,7 +327,7 @@ function pnForum_ajax_subscribeunsubscribetopic()
             $newmode = 'unsubscribed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribetopic()');
+        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribetopic()');
     }
 
     pnf_jsonizeoutput($newmode);
@@ -347,7 +344,8 @@ function pnForum_ajax_subscribeunsubscribeforum()
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
+    $forum_id = FormUtil::getPassedValue('forum', '');
+    $mode     = FormUtil::getPassedValue('mode', '');
 
     if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
@@ -378,7 +376,7 @@ function pnForum_ajax_subscribeunsubscribeforum()
             $newmode = 'unsubscribed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribeforum()');
+        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribeforum()');
     }
 
     pnf_jsonizeoutput(array('newmode' => $newmode,
@@ -400,7 +398,8 @@ function pnForum_ajax_addremovefavorite()
         pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED);
     }
 
-    list($forum_id, $mode) = pnVarCleanFromInput('forum', 'mode');
+    $forum_id = FormUtil::getPassedValue('forum', '');
+    $mode     = FormUtil::getPassedValue('mode', '');
 
     if (!SecurityUtil::confirmAuthKey()) {
        //pnf_ajaxerror(_BADAUTHKEY);
@@ -429,7 +428,7 @@ function pnForum_ajax_addremovefavorite()
             $newmode = 'removed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . pnVarPrepForDisplay($mode) . ') parameter in pnForum_ajax_addremovefavorite()');
+        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_addremovefavorite()');
     }
 
     pnf_jsonizeoutput(array('newmode' => $newmode,
@@ -447,7 +446,7 @@ function pnForum_ajax_edittopicsubject()
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    $topic_id = pnVarCleanFromInput('topic');
+    $topic_id = FormUtil::getPassedValue('topic', '');
 
     if(!empty($topic_id)) {
         $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
@@ -477,9 +476,8 @@ function pnForum_ajax_updatetopicsubject()
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    list($topic_id,
-         $subject) = pnVarCleanFromInput('topic',
-                                         'subject');
+    $topic_id = FormUtil::getPassedValue('topic', '');
+    $subject = FormUtil::getPassedValue('subject', '');
     
     if(!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -503,15 +501,15 @@ function pnForum_ajax_updatetopicsubject()
         list($dbconn, $pntable) = pnfOpenDB();
 
         $sql = "UPDATE ".$pntable['pnforum_topics']."
-                SET topic_title = '" . pnVarPrepForStore($subject) . "'
-                WHERE topic_id = '".(int)pnVarPrepForStore($topic_id)."'";
+                SET topic_title = '" . DataUtil::formatForStore($subject) . "'
+                WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
         $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         pnfCloseDB($result);
         // Let any hooks know that we have updated an item.
         pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
                                                           'topic_id' => $topic_id));
-        pnf_jsonizeoutput(array('topic_title' => pnVarPrepForDisplay($subject),
+        pnf_jsonizeoutput(array('topic_title' => DataUtil::formatForDisplay($subject),
                                 'topic_id' => $topic_id),
                           true);
 
@@ -560,17 +558,12 @@ function pnForum_ajax_newtopic()
        pnf_ajaxerror(_BADAUTHKEY);
     }
 
-    list($forum_id,
-         $message,
-         $subject,
-         $attach_signature,
-         $subscribe_topic,
-         $preview) = pnVarCleanFromInput('forum',
-                                         'message',
-                                         'subject',
-                                         'attach_signature',
-                                         'subscribe_topic',
-                                         'preview');
+    $forum_id         = FormUtil::getPassedValue('forum');
+    $message          = FormUtil::getPassedValue('message', '');
+    $subject          = FormUtil::getPassedValue('subject', '');
+    $attach_signature = FormUtil::getPassedValue('attach_signature');
+    $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
+    $preview          = FormUtil::getPassedValue('preview', 0);
 
     $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
@@ -626,8 +619,8 @@ function pnForum_ajax_newtopic()
     // preview == true, create fake topic
     $newtopic['cat_id']     = $cat_id;
     $newtopic['forum_id']   = $forum_id;
-//    $newtopic['forum_name'] = pnVarPrepForDisplay($myrow['forum_name']);
-//    $newtopic['cat_title']  = pnVarPrepForDisplay($myrow['cat_title']);
+//    $newtopic['forum_name'] = DataUtil::formatForDisplay($myrow['forum_name']);
+//    $newtopic['cat_title']  = DataUtil::formatForDisplay($myrow['cat_title']);
 
     $newtopic['topic_unixtime'] = time();
 

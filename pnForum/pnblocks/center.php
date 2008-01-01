@@ -70,9 +70,7 @@ function pnForum_centerblock_display($row)
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
-    $pnr = new pnRender('pnForum');
-    $pnr->add_core_data();
-    $pnr->caching = false;
+    $pnr = pnRender::getInstance('pnForum', false, null, true);
 
     // check if cb_template is set, if not, use the default centerblock template
     if(empty($vars['cb_template'])) {
@@ -102,12 +100,9 @@ function pnForum_centerblock_update($row)
 	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
 	    return false;
 	}
-    list($cb_template,
-         $cb_parameters) = pnVarCleanFromInput('cb_template',
-                                               'cb_parameters');
-
-    if(empty($cb_parameters)) { $cb_parameters = 'maxposts=5'; }
-    if(empty($cb_template))   { $cb_template = 'pnforum_centerblock_display.html'; }
+	
+	$cb_template   = FormUtil::getPassedValue('cb_template', 'pnforum_centerblock_display.html', 'POST');
+	$cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
 
     $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
     return($row);
@@ -129,9 +124,7 @@ function pnForum_centerblock_modify($row)
     if(!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
     if(!isset($vars['cb_template']) || empty($vars['cb_template']))   { $vars['cb_template']   = 'pnforum_centerblock_display.html'; }
 
-    $pnRender = new pnRender('pnForum');
-    $pnRender->caching = false;
-    $pnRender->add_core_data();
+    $pnRender = pnRender::getInstance('pnForum', false, null, true);
     $pnRender->assign('vars', $vars);
     return $pnRender->fetch('pnforum_centerblock_config.html');
 }

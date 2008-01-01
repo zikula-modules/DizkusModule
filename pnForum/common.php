@@ -581,7 +581,7 @@ function mailcronecho($text, $debug)
 
 /**
  * pnfVarPrepHTMLDisplay
- * removes the  [code]...[/code] before really calling pnVarPrepHTMLDisplay()
+ * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML()
  *
  */
 function pnfVarPrepHTMLDisplay($text)
@@ -593,7 +593,7 @@ function pnfVarPrepHTMLDisplay($text)
     }
     
     // the real work
-    $text = nl2br(pnVarPrepHTMLDisplay($text));
+    $text = nl2br(DataUtil::formatForDisplayHTML($text));
     
     // re-insert code tags
     for ($i = 0; $i < $codecount1; $i++) {

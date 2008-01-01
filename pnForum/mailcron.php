@@ -46,15 +46,7 @@ chdir('/opt/lampp/htdocs/760');
 include "includes/pnAPI.php";
 pnInit();
 
-$debug = pnVarCleanFromInput('debug');
-
-if(!pnModAPILoad('pnForum', 'user')) {
-    die('unable to load pnForum userapi\n');
-}
-if(!pnModAPILoad('pnForum', 'admin')) {
-    die('unable to load pnForum adminapi\n');
-}
-
+$debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');
 $debug = ($debug==1) ? true : false;
 
 $forums = pnModAPIFunc('pnForum', 'admin', 'readforums', array('permcheck' => 'nocheck'));

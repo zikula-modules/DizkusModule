@@ -31,11 +31,11 @@ function smarty_function_splittopic_button($params, &$smarty)
     include_once('modules/pnForum/common.php');
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         if($imagedata == false) {
-            $show = pnVarPrepForDisplay(_PNFORUM_SPLITTOPIC_TITLE);
+            $show = DataUtil::formatForDisplay(_PNFORUM_SPLITTOPIC_TITLE);
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_SPLITTOPIC_TITLE) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_SPLITTOPIC_TITLE) .'" ' . $imagedata['size'] . ' />';
         }
-        $out = '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_SPLITTOPIC_TITLE) . '" href="'. pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'splittopic', array('post'=>$post_id))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_SPLITTOPIC_TITLE) . '" href="'. DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'splittopic', array('post'=>$post_id))) . '">' . $show . '</a>';
     }
     return $out;
 }

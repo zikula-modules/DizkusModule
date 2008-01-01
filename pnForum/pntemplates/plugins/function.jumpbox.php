@@ -29,13 +29,13 @@ function smarty_function_jumpbox($params, &$smarty)
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     if(count($forums)>0) {
         include_once('modules/pnForum/common.php');
-        $out ='<form action="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
-               <label for="pnforum_forum"><strong>' . pnVarPrepForDisplay(_PNFORUM_FORUM) . ': </strong></label>
+        $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
+               <label for="pnforum_forum"><strong>' . DataUtil::formatForDisplay(_PNFORUM_FORUM) . ': </strong></label>
                <select name="forum" id="pnforum_forum" onchange="location.href=this.options[this.selectedIndex].value">
-	           <option value="'.pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'main')).'">' . pnVarPrepForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
+	           <option value="'.DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'main')).'">' . DataUtil::formatForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
         foreach($forums as $forum) {
             if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-            	$out .= '<option value="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum['forum_id']))) . '">' . pnVarPrepForDisplay($forum['cat_title']) . '&nbsp;::&nbsp;' . pnVarPrepForDisplay($forum['forum_name']) . '</option>';
+            	$out .= '<option value="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum['forum_id']))) . '">' . DataUtil::formatForDisplay($forum['cat_title']) . '&nbsp;::&nbsp;' . DataUtil::formatForDisplay($forum['forum_name']) . '</option>';
             }
         }
         $out .= '</select>

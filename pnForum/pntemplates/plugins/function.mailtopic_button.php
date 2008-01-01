@@ -33,11 +33,11 @@ function smarty_function_mailtopic_button($params, &$smarty)
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = pnf_getimagepath($image);
         if($imagedata == false) {
-            $show = pnVarPrepForDisplay(_PNFORUM_EMAIL_TOPIC);
+            $show = DataUtil::formatForDisplay(_PNFORUM_EMAIL_TOPIC);
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_EMAIL_TOPIC) .'" ' . $imagedata['size'] . ' />';
         }
-	    $out = '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_EMAIL_TOPIC) . '" href="'. pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id))) . '">' . $show . '</a>';
+	    $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_EMAIL_TOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id))) . '">' . $show . '</a>';
 	}
     return $out;
 }

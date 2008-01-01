@@ -180,27 +180,14 @@ function pnForum_user_reply($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        list($message,
-        	 $attach_signature,
-        	 $subscribe_topic,
-        	 $preview,
-        	 $submit,
-        	 $cancel ) = pnVarCleanFromInput('message',
-        									'attach_signature',
-        									'subscribe_topic',
-        									'preview',
-        									'submit',
-        									'cancel');
-    }
     $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
     $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-
-    $attach_signature = (int)$attach_signature;
-    $subscribe_topic = (int)$subscribe_topic;
+    $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
+    $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
+    $subscribe_topic = (int)FormUtil::getPassedValue('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0, 'GETPOST');
+    $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
+    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
 
     /**
      * if cancel is submitted move to forum-view
@@ -271,26 +258,14 @@ function pnForum_user_newtopic($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        list($forum_id,
-        	 $message,
-        	 $subject,
-        	 $cancel,
-        	 $submit,
-        	 $attach_signature,
-        	 $subscribe_topic,
-        	 $preview) = pnVarCleanFromInput('forum',
-        	  								 'message',
-        									 'subject',
-        									 'cancel',
-        									 'submit',
-        									 'attach_signature',
-        									 'subscribe_topic',
-        									 'preview');
-    }
+    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
+    $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
+    $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
+    $subscribe_topic = (int)FormUtil::getPassedValue('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0, 'GETPOST');
+    $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
+    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
 
     $preview = (empty($preview)) ? false : true;
     $cancel  = (empty($cancel))  ? false : true;
@@ -364,26 +339,15 @@ function pnForum_user_editpost($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        list($message,
-        	 $subject,
-        	 $submit,
-        	 $delete,
-        	 $attach_signature,
-        	 $cancel,
-        	 $preview) =  pnVarCleanFromInput('message',
-                                              'subject',
-                                              'submit',
-                                              'delete',
-                                              'attach_signature',
-                                              'cancel',
-                                              'preview');
-    }
     $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
     $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
+    $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
+    $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
+    $delete = FormUtil::getPassedValue('delete', (isset($args['delete'])) ? $args['delete'] : '', 'GETPOST');
+    $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
+    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
 
     if(empty($post_id) || !is_numeric($post_id)) {
         return pnRedirect(pnModURL('pnForum', 'user', 'main'));
@@ -467,17 +431,12 @@ function pnForum_user_topicadmin($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $forum_id = (int)pnVarCleanFromInput('forum');  // for move
-        $mode     = pnVarCleanFromInput('mode');
-        $submit   = pnVarCleanFromInput('submit');
-        $shadow   = pnVarCleanFromInput('createshadowtopic');
-    }
+    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $mode   = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
+    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $shadow = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
     $shadow = (empty($shadow)) ? false : true;
 
     if(empty($topic_id) && !empty($post_id)) {
@@ -565,9 +524,9 @@ function pnForum_user_topicadmin($args=array())
                 pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                 break;
             case 'join':
-                $to_topic_id = pnVarCleanFromInput('to_topic_id');
+                $to_topic_id = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
                 if(!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
-                    // user wnats to copy topi to itself
+                    // user wants to copy topic to itself
                     return showforumerror(_PNFORUM_SOURCEEQUALSTARGETTOPIC, __FILE__, __LINE__);
                 }
                 list($f_id, $c_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $to_topic_id));
@@ -600,19 +559,11 @@ function pnForum_user_prefs($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        list($act,
-             $return_to,
-             $forum_id,
-             $user_id ) = pnVarCleanFromInput('act',
-                                              'return_to',
-                                              'forum',
-                                              'user');
-    }
+    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    $act = (int)FormUtil::getPassedValue('act', (isset($args['act'])) ? $args['act'] : '', 'GETPOST');
+    $return_to = (int)FormUtil::getPassedValue('return_to', (isset($args['return_to'])) ? $args['return_to'] : '', 'GETPOST');
+    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $user_id = (int)FormUtil::getPassedValue('user', (isset($args['user'])) ? $args['user'] : null, 'GETPOST');
 
     // user_id will only be used if we have admin permissions otherwise the
     // user can edit his prefs only but not others users prefs
@@ -623,32 +574,32 @@ function pnForum_user_prefs($args=array())
             $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('pnForum', 'user', 'subscribe_topic',
                          array('topic_id' => $topic_id ));
-            $params = array('topic'=>$topic_id);
+            $params = array('topic' => $topic_id);
             break;
         case 'unsubscribe_topic':
             $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
                          array('topic_id' => $topic_id ));
-            $params = array('topic'=>$topic_id);
+            $params = array('topic' => $topic_id);
             break;
         case 'subscribe_forum':
             $return_to = (!empty($return_to))? $return_to : 'viewforum';
             pnModAPIFunc('pnForum', 'user', 'subscribe_forum',
                          array('forum_id' => $forum_id ));
-            $params = array('forum'=>$forum_id);
+            $params = array('forum' => $forum_id);
             break;
         case 'unsubscribe_forum':
             $return_to = (!empty($return_to))? $return_to : 'viewforum';
             pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum',
                          array('forum_id' => $forum_id ));
-            $params = array('forum'=>$forum_id);
+            $params = array('forum' => $forum_id);
             break;
         case 'add_favorite_forum':
             if(pnModGetVar('pnForum', 'favorites_enabled')=='yes') {
                 $return_to = (!empty($return_to))? $return_to : 'viewforum';
                 pnModAPIFunc('pnForum', 'user', 'add_favorite_forum',
                              array('forum_id' => $forum_id ));
-                $params = array('forum'=>$forum_id);
+                $params = array('forum' => $forum_id);
             }
             break;
         case 'remove_favorite_forum':
@@ -656,13 +607,13 @@ function pnForum_user_prefs($args=array())
                 $return_to = (!empty($return_to))? $return_to : 'viewforum';
                 pnModAPIFunc('pnForum', 'user', 'remove_favorite_forum',
                              array('forum_id' => $forum_id ));
-                $params = array('forum'=>$forum_id);
+                $params = array('forum' => $forum_id);
             }
             break;
         case 'change_post_order':
             $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
-            $params = array('topic'=>$topic_id);
+            $params = array('topic' => $topic_id);
             break;
         case 'showallforums':
         case 'showfavorites':
@@ -697,16 +648,11 @@ function pnForum_user_emailtopic($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $message = pnVarCleanFromInput('message');
-        $emailsubject = pnVarCleanFromInput('emailsubject');
-        $sendto_email = pnVarCleanFromInput('sendto_email');
-        $submit = pnVarCleanFromInput('submit');
-    }
+    $topic_id      = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    $emailsubject  = FormUtil::getPassedValue('emailsubject', (isset($args['emailsubject'])) ? $args['emailsubject'] : '', 'GETPOST');
+    $message       = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
+    $sendto_email  = FormUtil::getPassedValue('sendto_email', (isset($args['sendto_email'])) ? $args['sendto_email'] : '', 'GETPOST');
+    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
 
     if(!pnUserLoggedIn()) {
         return showforumerror(_PNFORUM_NOTLOGGEDIN, __FILE__, __LINE__);
@@ -774,16 +720,10 @@ function pnForum_user_viewlatest($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        list($selorder, $nohours, $unanswered) = pnVarCleanFromInput('selorder', 'nohours', 'unanswered');
-    }
+    $selorder   = (int)FormUtil::getPassedValue('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1, 'GETPOST');
+    $nohours    = (int)FormUtil::getPassedValue('nohours', (isset($args['nohours'])) ? $args['nohours'] : 24, 'GETPOST');
+    $unanswered = (int)FormUtil::getPassedValue('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0, 'GETPOST');
 
-    if(empty($selorder) || !is_numeric($selorder)) {
-    	$selorder = 1;
-    }
     if(!empty($nohours) && !is_numeric($nohours)) {
     	unset($nohours);
     }
@@ -791,9 +731,7 @@ function pnForum_user_viewlatest($args=array())
     if(isset($nohours) && $nohours>336) {
         $nohours = 336;
     }
-    if(empty($unanswered) || !is_numeric($unanswered)) {
-    	$unanswered = 0;
-    }
+    
     if(!empty($nohours)) {
     	$selorder = 5;
     }
@@ -834,15 +772,9 @@ function pnForum_user_splittopic($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        list($submit,
-             $newsubject) = pnVarCleanFromInput('submit',
-                                                'newsubject');
-    }
+    $post_id    = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    $newsubject = FormUtil::getPassedValue('newsubject', (isset($args['newsubject'])) ? $args['newsubject'] : '', 'GETPOST');
+    $submit     = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
 
     $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                          array('post_id' => $post_id));
@@ -884,13 +816,8 @@ function pnForum_user_print($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-    }
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
 
     if(useragent_is_bot() == true) {
         if($post_id <> 0 ) {
@@ -955,7 +882,7 @@ function pnForum_user_search($args=array())
         return $disabled;
     }
 
-    $submit = pnVarCleanFromInput('submit');
+    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
     if(!$submit) {
         return pnModAPIFunc('pnForum', 'search', 'internalsearchoptions');
     } else {
@@ -977,15 +904,10 @@ function pnForum_user_movepost($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        list($submit,
-			 $to_topic) = pnVarCleanFromInput( 'submit',
-											   'to_topic');
-    }
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $to_topic = (int)FormUtil::getPassedValue('to_topic', (isset($args['to_topic'])) ? $args['to_topic'] : null, 'GETPOST');
+
     $post = pnModAPIFunc('pnForum', 'user', 'readpost', array('post_id' => $post_id));
 
     if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
@@ -1029,17 +951,10 @@ function pnForum_user_jointopics($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $post_id  = (int)FormUtil::getPassedValue('post_id', (isset($args['post_id'])) ? $args['post_id'] : null, 'GETPOST');
-        list($submit,
-             $to_topic_id,
-			 $from_topic_id) = pnVarCleanFromInput('submit',
-                                                   'to_topic_id',
-											       'from_topic_id');
-    }
+    $post_id       = (int)FormUtil::getPassedValue('post_id', (isset($args['post_id'])) ? $args['post_id'] : null, 'GETPOST');
+    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $to_topic_id   = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
+    $from_topic_id = (int)FormUtil::getPassedValue('from_topic_id', (isset($args['from_topic_id'])) ? $args['from_topic_id'] : null, 'GETPOST');
 
     $post = pnModAPIFunc('pnForum', 'user', 'readpost', array('post_id' => $post_id));
 
@@ -1085,19 +1000,15 @@ function pnForum_user_moderateforum($args=array())
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $forum_id = (int)pnVarCleanFromInput('forum');
-        $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
-        $mode     = pnVarCleanFromInput('mode');
-        $submit   = pnVarCleanFromInput('submit');
-		$topic_ids= pnVarCleanFromInput('topic_id');
-        $shadow   = pnVarCleanFromInput('createshadowtopic');
-        $moveto   = pnVarCleanFromInput('moveto');
-        $jointo   = pnVarCleanFromInput('jointo');
-    }
+    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
+    $mode   = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
+    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $topic_ids = FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : array(), 'GETPOST');
+    $shadow = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
+    $moveto = (int)FormUtil::getPassedValue('moveto', (isset($args['moveto'])) ? $args['moveto'] : null, 'GETPOST');
+    $jointo = (int)FormUtil::getPassedValue('jointo', (isset($args['jointo'])) ? $args['jointo'] : null, 'GETPOST');
+
     $shadow = (empty($shadow)) ? false : true;
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
@@ -1208,15 +1119,9 @@ function pnForum_user_report($args)
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        list($comment,
-             $submit) = pnVarCleanFromInput('comment',
-                                            'submit');
-    }
+    $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $comment        = FormUtil::getPassedValue('comment', (isset($args['comment'])) ? $args['comment'] : '', 'GETPOST');
 
     $post = pnModAPIFunc('pnForum', 'user', 'readpost',
                          array('post_id' => $post_id));
@@ -1233,7 +1138,7 @@ function pnForum_user_report($args)
             pnf_blacklist();
             // set 403 header and stop
             header('HTTP/1.0 403 Forbidden');
-            exit;
+            pnShutDown();
         }
     }
     
@@ -1276,13 +1181,8 @@ function pnForum_user_topicsubscriptions($args)
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        $topic_id = (int)FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : null, 'GETPOST');
-        $submit = pnVarCleanFromInput('submit');
-    }
+    $topic_id = FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : null, 'GETPOST');
+    $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
 
     if(!$submit) {
         $subscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions');
@@ -1318,24 +1218,11 @@ function pnForum_user_login($args)
     }
 
     // get the input
-    if(count($args)>0) {
-        extract($args);
-        unset($args);
-    } else {
-        list($submit,
-             $uname,
-             $pass,
-             $rememberme,
-             $redirect) = pnVarCleanFromInput('submit',
-                                              'uname',
-                                              'pass',
-                                              'rememberme',
-                                              'redirect');
-    }
-
-    if(empty($redirect)) {
-        $redirect = pnModURL('pnForum', 'user', 'main');
-    }
+    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $uname        = FormUtil::getPassedValue('uname', (isset($args['uname'])) ? $args['uname'] : '', 'GETPOST');
+    $pass        = FormUtil::getPassedValue('pass', (isset($args['pass'])) ? $args['pass'] : '', 'GETPOST');
+    $rememberme        = FormUtil::getPassedValue('rememberme', (isset($args['rememberme'])) ? $args['rememberme'] : '', 'GETPOST');
+    $redirect        = FormUtil::getPassedValue('redirect', (isset($args['redirect'])) ? $args['redirect'] : pnModURL('pnForum', 'user', 'main'), 'GETPOST');
 
     if(!$submit) {
         $pnr = pnRender::getInstance('pnForum', false);

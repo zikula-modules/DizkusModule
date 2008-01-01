@@ -47,19 +47,19 @@ function smarty_function_post_order_button($params, &$smarty)
         if ($post_order == 'ASC' ) {
             $imagedata = pnf_getimagepath($image_ascending);
             if($imagedata == false) {
-                $show = pnVarPrepForDisplay(_PNFORUM_NEWEST_FIRST);
+                $show = DataUtil::formatForDisplay(_PNFORUM_NEWEST_FIRST);
             } else {
-                $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
             }
         } else {
             $imagedata = pnf_getimagepath($image_descending);
             if($imagedata == false) {
-                $show = pnVarPrepForDisplay(_PNFORUM_OLDEST_FIRST);
+                $show = DataUtil::formatForDisplay(_PNFORUM_OLDEST_FIRST);
             } else {
-                $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
             }
         }
-        $out = '<a title="' . pnVarPrepForDisplay(_PNFORUM_CHANGE_POST_ORDER) . '" href="' . pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_CHANGE_POST_ORDER) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
     }
     return $out;
 }

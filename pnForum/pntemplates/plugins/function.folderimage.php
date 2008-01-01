@@ -24,7 +24,7 @@ function smarty_function_folderimage($params, &$smarty)
         $smarty->trigger_error("folderimage: missing parameter 'forom'");
         return false;
     }
-    $last_visit = pnSessionGetVar('pnForum_lastvisit');
+    $last_visit = SessionUtil::getVar('pnForum_lastvisit');
     $folder_image = pnModGetVar('pnForum', 'folder_image');
     $newposts_image = pnModGetVar('pnForum', 'newposts_image');
 

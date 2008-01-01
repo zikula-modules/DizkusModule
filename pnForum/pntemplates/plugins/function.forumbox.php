@@ -32,7 +32,7 @@ function smarty_function_forumbox($params, &$smarty)
 		$out.='<option value="" selected>'. _SRCHALLTOPICS .'</option>';
 		foreach($forums as $forum) {
 			if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-				$out .= '<option value="'.$forum['forum_id'].'">'.pnVarPrepForDisplay($forum['cat_title']).'::'.pnVarPrepForDisplay($forum['forum_name']).'</option>';
+				$out .= '<option value="'.$forum['forum_id'].'">'.DataUtil::formatForDisplay($forum['cat_title']).'::'.DataUtil::formatForDisplay($forum['forum_name']).'</option>';
 			}
         }
 	    $out .= '</select>';

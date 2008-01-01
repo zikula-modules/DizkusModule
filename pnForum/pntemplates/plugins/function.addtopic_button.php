@@ -32,11 +32,11 @@ function smarty_function_addtopic_button($params, &$smarty)
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = pnf_getimagepath($image);
         if($imagedata == false) {
-            $show = pnVarPrepForDisplay(_PNFORUM_NEWTOPIC);
+            $show = DataUtil::formatForDisplay(_PNFORUM_NEWTOPIC);
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_NEWTOPIC) .'" ' . $imagedata['size'] . ' />';
         }
-        $out = '<a title="' . pnVarPrepHTMLDisplay(_PNFORUM_NEWTOPIC) . '" href="'. pnVarPrepForDisplay(pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_NEWTOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id))) . '">' . $show . '</a>';
 	}
     return $out;
 }

@@ -22,6 +22,7 @@ Loader::includeOnce('modules/pnForum/common.php');
 function pnForum_init()
 {
     if(version_compare('0.8.0.0', PN_VERSION_NUM, '<')) {
+        // no SessionUtil::setVar here because this line is for <.9
         pnSessionSetVar('errormsg', _PNFORUM_DOT8ISREQUIRED);
         return false;
     }
