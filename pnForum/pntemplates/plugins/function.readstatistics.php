@@ -12,39 +12,20 @@
 /**
  * readstatistics
  * reads some statistics of the forum 
- * results are assign to
+ * results are assigned to
  *
  * $total_categories: total number of categories
  * $total_topics    : total number of topics 
  * $total_posts     : total number of posts
  * $total_forums    : total number of forums
+ * $last_user       : newest user
  */
 function smarty_function_readstatistics($params, &$smarty) 
 {
-    extract($params); 
-	unset($params);
-
-    include_once('modules/pnForum/common.php');
-    // get some environment
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    $sql = "SELECT SUM(forum_topics) AS total_topics, 
-          SUM(forum_posts) AS total_posts, 
-          COUNT(*) AS total_forums
-          FROM ".$pntable['pnforum_forums'];
-          
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
-    list ($total_topics,$total_posts,$total_forums) = $result->fields;
-    pnfCloseDB($result);
-    
-    $sql = "SELECT COUNT(*) FROM ".$pntable['pnforum_categories']."";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);        
-    list ($total_categories) = $result->fields;
-    pnfCloseDB($result);
-        
-    $smarty->assign('total_categories', $total_categories);
-    $smarty->assign('total_topics', $total_topics);
-    $smarty->assign('total_posts', $total_posts);
-    $smarty->assign('total_forums', $total_forums);
+    $smarty->assign('total_categories', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'category')));
+    $smarty->assign('total_topics', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'alltopics')));
+    $smarty->assign('total_posts', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'allposts')));
+    $smarty->assign('total_forums', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'forum')));
+    $smarty->assign('last_user', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'lastuser')));
     return;
 }

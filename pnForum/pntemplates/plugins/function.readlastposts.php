@@ -192,7 +192,7 @@ function smarty_function_readlastposts($params, &$smarty)
 
             $lastpost['topic_title'] = DataUtil::formatforDisplay($lastpost['forum_name']);
             $lastpost['forum_name']  = DataUtil::formatforDisplay($lastpost['cat_title']);
-            $lastpost['cat_title'])  = DataUtil::formatforDisplay($lastpost['topic_title']);
+            $lastpost['cat_title']   = DataUtil::formatforDisplay($lastpost['topic_title']);
 
             // backwards compatibility... :puke:
             $lastpost['title_tag'] = $lastpost['topic_title'];

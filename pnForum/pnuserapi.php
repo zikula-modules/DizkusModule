@@ -168,57 +168,40 @@ function pnForum_userapi_boardstats($args)
     $id   = isset($args['id']) ? $args['id'] : null;
     $type = isset($args['type']) ? $args['type'] : null;
 
-    list($dbconn, $pntable) = pnfOpenDB();
-
     switch($type) {
         case 'all':
-            $sql = 'SELECT SUM(forum_posts) as total
-                    FROM ' . $pntable['pnforum_forums'];
+        case 'allposts':
+            $total = DBUtil::selectObjectCount('pnforum_posts');
             break;
         case 'category':
-            $sql = 'SELECT count(*) AS total
-                    FROM ' . $pntable['pnforum_categories'];
+            $total = DBUtil::selectObjectCount('pnforum_categories');
+            break;
+        case 'forum':
+            $total = DBUtil::selectObjectCount('pnforum_forums');
             break;
         case 'topic':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_posts']."
-                    WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
+            $total = DBUtil::selectObjectCount('pnforum_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
             break;
         case 'forumposts':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_posts']."
-                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
+            $total = DBUtil::selectObjectCount('pnforum_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
             break;
         case 'forumtopics':
-            $sql = "SELECT count(*) AS total
-                    FROM ".$pntable['pnforum_topics']."
-                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
-            break;
-        case 'allposts':
-            $sql = 'SELECT count(*) AS total
-                    FROM ' . $pntable['pnforum_posts'];
+            $total = DBUtil::selectObjectCount('pnforum_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
             break;
         case 'alltopics':
-            $sql = 'SELECT count(*) AS total
-                    FROM ' . $pntable['pnforum_topics'];
+            $total = DBUtil::selectObjectCount('pnforum_topics');
             break;
         case 'allmembers':
-            $sql = 'SELECT count(*) AS total
-                    FROM ' . $pntable['pnforum_users'];
+            $total = DBUtil::selectObjectCount('pnforum_users');
             break;
         case 'lastmember':
-            $sql = 'SELECT u.pn_uname
-                    FROM ' . $pntable['users'] . ' AS u
-                    LEFT JOIN ' . $pntable['pnforum_users'] . ' AS p ON u.pn_uid=p.user_id
-                    ORDER BY p.user_id DESC
-                    LIMIT 1';
+        case 'lastuser':
+            $res = DBUtil::selectObjectArray('users', null, 'uid DESC', 1, 1);
+            $total = $res[0]['uname'];
             break;
         default:
             return showforumerror(_MODARGSERROR . ' in pnForum_userapi_boardstats()', __FILE__, __LINE__);
         }
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    list ($total) = $result->fields;
-    pnfCloseDB($result);
     return $total;
 }
 
@@ -1371,13 +1354,10 @@ function pnForum_userapi_storereply($args)
  */
 function pnForum_userapi_get_topic_subscription_status($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_topic_subscription']."
-            WHERE user_id = '".(int)DataUtil::formatForStore($userid)."' AND topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+            WHERE user_id = '".(int)DataUtil::formatForStore($args['userid'])."' AND topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
     pnfCloseDB($result);
@@ -1398,13 +1378,10 @@ function pnForum_userapi_get_topic_subscription_status($args)
  */
 function pnForum_userapi_get_forum_subscription_status($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_subscription']."
-            WHERE user_id = '".(int)DataUtil::formatForStore($userid)."' AND forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
+            WHERE user_id = '".(int)DataUtil::formatForStore($args['userid'])."' AND forum_id = '".(int)DataUtil::formatForStore($args['forum_id'])."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
@@ -1426,13 +1403,10 @@ function pnForum_userapi_get_forum_subscription_status($args)
  */
 function pnForum_userapi_get_forum_favorites_status($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT user_id from ".$pntable['pnforum_forum_favorites']."
-            WHERE user_id = " . (int)DataUtil::formatForStore($userid) . " AND forum_id = " . (int)DataUtil::formatForStore($forum_id);
+            WHERE user_id = " . (int)DataUtil::formatForStore($args['userid']) . " AND forum_id = " . (int)DataUtil::formatForStore($args['forum_id']);
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $rc = $result->RecordCount();
@@ -1705,9 +1679,6 @@ function pnForum_userapi_storenewtopic($args)
  */
 function pnForum_userapi_readpost($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     // we know about the post_id, let's find out the forum and catgeory name for permission checks
@@ -1728,7 +1699,7 @@ function pnForum_userapi_readpost($args)
             LEFT JOIN ".$pntable['pnforum_posts_text']." pt ON pt.post_id = p.post_id
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." c ON c.cat_id = f.cat_id
-            WHERE (p.post_id = '".(int)DataUtil::formatForStore($post_id)."')";
+            WHERE (p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."')";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -1824,7 +1795,6 @@ function pnForum_userapi_readpost($args)
     // allow to edit the subject if first post
     $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
 
-
     return $post;
 }
 
@@ -1837,13 +1807,10 @@ function pnForum_userapi_readpost($args)
  */
 function pnForum_userapi_is_first_post($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']."
-            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'
+            WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'
             ORDER BY post_id
             LIMIT 1";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -1851,7 +1818,7 @@ function pnForum_userapi_is_first_post($args)
     if($result->RecordCount()>0) {
         list($read_post_id) = $result->fields;
         pnfCloseDB($result);
-        if($post_id == $read_post_id) {
+        if($args['post_id'] == $read_post_id) {
             return true;
         }
     }
@@ -2154,14 +2121,11 @@ function pnForum_userapi_updatepost($args)
  */
 function pnForum_userapi_get_last_boardpost($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $sql = "SELECT p.post_time, u.pn_uname
             FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
-            WHERE p.topic_id = '".(int)DataUtil::formatForStore($id)."'
+            WHERE p.topic_id = '".(int)DataUtil::formatForStore($args['id'])."'
             AND p.poster_id = u.pn_uid
             ORDER BY post_time DESC";
 
@@ -2172,7 +2136,7 @@ function pnForum_userapi_get_last_boardpost($args)
     $post_time = $row['post_time'];
 
     // format the return string
-    switch($type) {
+    switch($args['type']) {
         case 'topic':
             $userlink = '<a href="user.php?op=userinfo&amp;uname=' . $uname . '">' . $uname . '</a>';
             // correct the time
@@ -2197,20 +2161,17 @@ function pnForum_userapi_get_last_boardpost($args)
  */
 function pnForum_userapi_get_viewip_data($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     $viewip = array();
 
     $sql = "SELECT u.pn_uname, p.poster_ip
             FROM ".$pntable['users']." u, ".$pntable['pnforum_posts']." p
-            WHERE p.post_id = '".(int)DataUtil::formatForStore($post_id)."'
+            WHERE p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."'
             AND u.pn_uid = p.poster_id";
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
-        // TODO we have valid user here, but he didn't has posts
+        // TODO we have a valid user here, but he doesn't have posts
         return showforumerror(_PNFORUM_NOUSER_OR_POST, __FILE__, __LINE__);
     } else {
         $row = $result->GetRowAssoc(false);
@@ -2243,20 +2204,18 @@ function pnForum_userapi_get_viewip_data($args)
  * lockunlocktopic
  *
  *@params $args['topic_id'] int the topics id
+ *@params $args['mode']     string lock or unlock
  *@returns void
  */
 function pnForum_userapi_lockunlocktopic($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $new_status = ($mode=='lock') ? 1 : 0;
+    $new_status = ($args['mode']=='lock') ? 1 : 0;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET topic_status = $new_status
-            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -2267,20 +2226,18 @@ function pnForum_userapi_lockunlocktopic($args)
  * stickyunstickytopic
  *
  *@params $args['topic_id'] int the topics id
+ *@params $args['mode']     string sticky or unsticky
  *@returns void
  */
 function pnForum_userapi_stickyunstickytopic($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
-    $new_sticky = ($mode=='sticky') ? 1 : 0;
+    $new_sticky = ($args['mode']=='sticky') ? 1 : 0;
 
     $sql = "UPDATE ".$pntable['pnforum_topics']."
             SET sticky = '$new_sticky'
-            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+            WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     pnfCloseDB($result);
@@ -2296,9 +2253,6 @@ function pnForum_userapi_stickyunstickytopic($args)
  */
 function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
 {
-    extract($args);
-    unset($args);
-
     list($dbconn, $pntable) = pnfOpenDB();
 
     // we know about the topic_id, let's find out the forum and catgeory name for permission checks
@@ -2307,7 +2261,7 @@ function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
             FROM  ".$pntable['pnforum_topics']." t
             LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
             LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+            WHERE t.topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
     $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
@@ -2728,11 +2682,7 @@ function pnForum_userapi_notify_by_email($args)
             . pnModURL('pnForum', 'user', 'prefs') . "\n"
             . "\n"
             . _PNFORUM_NOTIFYBODY5 . ' ' . pnGetBaseURL();
-/*
-echo "<pre>";
-var_dump($recipients);
-echo "</pre>";
-*/
+
     if(count($recipients)>0) {
         foreach($recipients as $subscriber) {
 
@@ -2745,11 +2695,7 @@ echo "</pre>";
                            'headers'     => array('X-UserID: ' . md5($uid),
                                                   'X-Mailer: pnForum v' . $modinfo['version'],
                                                   'X-pnForumTopicID: ' . $topic_id));
-/*
-echo "<pre>";
-var_dump($args);
-echo "</pre>";
-*/
+
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
     }

@@ -49,7 +49,7 @@ function pnForum_centerblock_display($row)
 	    return;
 	}
 
-    pnModLangLoad('pnForum', 'user');
+    pnModLangLoad('pnForum', 'common');
     // check if forum is turned off
     $disabled = pnf_available();
     if(!is_bool($disabled)) {
