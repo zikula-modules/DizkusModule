@@ -27,7 +27,7 @@ function smarty_function_forumbox($params, &$smarty)
 	$forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
 
 	if(count($forums)>0) {
-        include_once('modules/pnForum/common.php');
+        Loader::includeOnce('modules/pnForum/common.php');
 		$out ='<select name="pnForum_forum[]" id="pnForum_forum[]" size="1">';
 		$out.='<option value="" selected>'. _SRCHALLTOPICS .'</option>';
 		foreach($forums as $forum) {

@@ -23,7 +23,7 @@ function smarty_function_printtopic_button($params, &$smarty)
     extract($params);
     unset($params);
 
-    include_once('modules/pnForum/common.php');
+    Loader::includeOnce('modules/pnForum/common.php');
     if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         $themeinfo = pnThemeGetInfo('Printer');
         if($themeinfo['active']) {

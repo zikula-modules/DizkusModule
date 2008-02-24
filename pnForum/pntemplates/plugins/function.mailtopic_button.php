@@ -28,7 +28,7 @@ function smarty_function_mailtopic_button($params, &$smarty)
         $image = 'sendto.gif';
     }
 
-    include_once('modules/pnForum/common.php');
+    Loader::includeOnce('modules/pnForum/common.php');
     $out = '';
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = pnf_getimagepath($image);

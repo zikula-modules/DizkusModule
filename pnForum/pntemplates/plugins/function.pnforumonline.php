@@ -48,7 +48,7 @@
  * @return       array
  */
 
-include_once 'modules/pnForum/common.php';
+Loader::includeOnce('modules/pnForum/common.php');
 
 function smarty_function_pnforumonline($params, &$smarty)
 {

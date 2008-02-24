@@ -27,7 +27,7 @@ function smarty_function_addtopic_button($params, &$smarty)
         $image = 'post.gif';
     }
 
-    include_once('modules/pnForum/common.php');
+    Loader::includeOnce('modules/pnForum/common.php');
     $out = "";
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = pnf_getimagepath($image);

@@ -34,7 +34,7 @@ function smarty_function_subscribetopic_button($params, &$smarty)
     $userid = pnUserGetVar('uid');
     $out = '';
     if (pnUserLoggedIn()) {
-        include_once('modules/pnForum/common.php');
+        Loader::includeOnce('modules/pnForum/common.php');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(pnModAPIFunc('pnForum', 'user', 'get_topic_subscription_status',
                             array('userid'=>$userid,

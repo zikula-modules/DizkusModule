@@ -28,7 +28,7 @@ function smarty_function_jumpbox($params, &$smarty)
     $out = "";
     $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
     if(count($forums)>0) {
-        include_once('modules/pnForum/common.php');
+        Loader::includeOnce('modules/pnForum/common.php');
         $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
                <label for="pnforum_forum"><strong>' . DataUtil::formatForDisplay(_PNFORUM_FORUM) . ': </strong></label>
                <select name="forum" id="pnforum_forum" onchange="location.href=this.options[this.selectedIndex].value">

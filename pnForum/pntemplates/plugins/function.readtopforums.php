@@ -13,7 +13,7 @@ function smarty_function_readtopforums($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    include_once('modules/pnForum/common.php');
+    Loader::includeOnce('modules/pnForum/common.php');
     // get some enviroment
     list($dbconn, $pntable) = pnfOpenDB();
 

@@ -33,7 +33,7 @@ function smarty_function_favoriteforum_button($params, &$smarty)
 
     $out = '';
     if (pnUserLoggedIn() && (pnModGetVar('pnForum', 'favorites_enabled')=='yes') ) {
-        include_once('modules/pnForum/common.php');
+        Loader::includeOnce('modules/pnForum/common.php');
         $userid = pnUserGetVar('uid');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if(pnModAPIFunc('pnForum', 'user', 'get_forum_favorites_status',

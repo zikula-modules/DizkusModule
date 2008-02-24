@@ -28,7 +28,7 @@ function smarty_function_plainbbcode($params, &$smarty)
     }
     $args['images'] = $images;
 
-	if(pnModAvailable('pn_bbcode') && pnModLoad('pn_bbcode', 'user') ) {
+	if(pnModAvailable('pn_bbcode') && pnModIsHooked('pn_bbcode', 'pnForum')) {
 	    $out = pnModFunc('pn_bbcode', 'user', 'bbcodes', $args);
 	}
 	return $out;
