@@ -345,7 +345,8 @@ function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
+//        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
+        $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);//dddd
     }
 
     $mode = (empty($where)) ? 'INSERT': 'UPDATE';
@@ -379,7 +380,8 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
+//        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
+        $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);//dddd
     }
     if( $start<>false && (is_numeric($start) && $start<>0 ) ){
         $result = $dbconn->SelectLimit($sql, $limit, $start);

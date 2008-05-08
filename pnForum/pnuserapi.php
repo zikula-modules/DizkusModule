@@ -118,8 +118,8 @@ function pnForum_userapi_get_userdata_from_id($args)
             pnfCloseDB($userresult);
 
             // avatar
-            if($userdata['pn_user_avatar']){
-                $avatarfilename = 'images/avatar/' . DataUtil::formatForOS($userdata['pn_user_avatar']);
+            if($userdata['_YOURAVATAR']){
+                $avatarfilename = 'images/avatar/' . DataUtil::formatForOS($userdata['_YOURAVATAR']);
                 $avatardata = @getimagesize($avatarfilename);
                 if($avatardata <> false) {
                     $userdata['pn_user_avatar'] = $avatarfilename;
