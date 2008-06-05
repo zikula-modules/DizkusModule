@@ -44,7 +44,7 @@ function smarty_function_folderimage($params, &$smarty)
 					$posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
 					if ($posted_unixtime) {
 						if ($row['pn_uid']==1) {
-							$username = pnConfigGetVar('anonymous');
+							$username = pnModGetVar('Users', 'anonymous');
 						} else {
 							$username = $row['pn_uname'];
 						}

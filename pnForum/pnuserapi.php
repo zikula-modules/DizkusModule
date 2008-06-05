@@ -131,7 +131,8 @@ function pnForum_userapi_get_userdata_from_id($args)
 
         } else {
             // user is anonymous
-            $userdata['pn_uname'] = pnConfigGetVar('anonymous');
+            $userdata['pn_uname'] = pnModGetVar('Users', 'anonymous');
+            
         }
     }
 
@@ -388,7 +389,7 @@ function pnForum_userapi_readcategorytree($args)
                     $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
                     if ($posted_unixtime) {
                         if ($forum['pn_uid']==1) {
-                            $username = pnConfigGetVar('anonymous');
+                            $username = pnModGetVar('Users', 'anonymous');
                         } else {
                             $username = $forum['pn_uname'];
                         }
@@ -657,8 +658,8 @@ function pnForum_userapi_readforum($args)
         $topic = $result->GetRowAssoc(false);
         //$topic = $row;
 
-        if ($topic['last_poster'] == 'Anonymous') {$topic['last_poster'] = pnConfigGetVar('anonymous'); }
-        if ($topic['pn_uname'] == 'Anonymous') {$topic['pn_uname'] = pnConfigGetVar('anonymous'); }
+        if ($topic['last_poster'] == 'Anonymous') {$topic['last_poster'] = pnModGetVar('Users', 'anonymous'); }
+        if ($topic['pn_uname'] == 'Anonymous') {$topic['pn_uname'] = pnModGetVar('Users', 'anonymous'); }
         $topic['total_posts'] = $topic['topic_replies'] + 1;
 
         $topic['post_time_unix'] = pnf_str2time($topic['post_time']); //strtotime ($topic['post_time']);
@@ -1903,7 +1904,7 @@ function pnForum_userapi_updatepost($args)
             if(pnUserLoggedIn()) {
                 $editname = pnUserGetVar('uname');
             } else {
-                $editname = pnConfigGetVar('anonymous');
+                $editname = pnModGetVar('Users', 'anonymous');
             }
             $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
             $message .= '<br /><br /><!-- editby --><br /><br /><em>' . _PNFORUM_EDITBY . ' ' . $editname . ', ' . $edit_date . '</em><!-- end editby --> ';
@@ -3079,7 +3080,7 @@ function pnForum_userapi_emailtopic($args)
     $sender_name = pnUserGetVar('uname');
     $sender_email = pnUserGetVar('email');
     if (!pnUserLoggedIn()) {
-        $sender_name = pnConfigGetVar('anonymous');
+        $sender_name = pnModGetVar('Users', 'anonymous');
         $sender_email = pnModGetVar('pnForum', 'email_from');
     }
     //pnMail($sendto_email, $topic_subject, $message, "From: \"$sender_name\" <$sender_email>\nX-Mailer: PHP/" . phpversion());
@@ -3255,7 +3256,7 @@ function pnForum_userapi_get_latest_posts($args)
         $post['start'] = $start;
 
         if ($post['poster_id'] == 1) {
-            $post['poster_name'] = pnConfigGetVar('anonymous');
+            $post['poster_name'] = pnModGetVar('Users', 'anonymous');
         } else {
             $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
         }

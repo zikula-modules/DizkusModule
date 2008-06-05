@@ -208,10 +208,10 @@ function smarty_function_readlastposts($params, &$smarty)
                 $user_name = pnUserGetVar('uname', $lastpost['poster_id']);
                 if ($user_name == "") {
                     // user deleted from the db?
-                    $user_name = pnConfigGetVar('anonymous');
+                    $user_name = pnModGetVar('Users', 'anonymous');
                 }
             } else {
-                $user_name = pnConfigGetVar('anonymous');
+                $user_name = pnModGetVar('Users', 'anonymous');
             }
             $lastpost['poster_name'] = DataUtil::formatForDisplay($user_name);
 
