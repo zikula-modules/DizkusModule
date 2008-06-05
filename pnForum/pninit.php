@@ -280,7 +280,7 @@ function pnForum_init_interactiveupgrade($args)
     
     $authid = pnSecGenAuthKey('Modules');
     switch($oldversion) {
-        case '2.7':
+        case '2.7.1':
             $templatefile = 'pnforum_upgrade_30.html';
             break;
         default:
