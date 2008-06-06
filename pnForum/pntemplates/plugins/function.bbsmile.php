@@ -21,8 +21,8 @@ function smarty_function_bbsmile($params, &$smarty)
 	unset($params);
 
     $out = "";
-	if(pnModAvailable('pn_bbsmile') && pnModIsHooked('pn_bbsmile', 'pnForum')) {
-	    $out = pnModFunc('pn_bbsmile', 'user', 'bbsmiles',
+	if(pnModAvailable('bbsmile') && pnModIsHooked('bbsmile', 'pnForum')) {
+	    $out = pnModFunc('bbsmile', 'user', 'bbsmiles',
 	                     array('textfieldid' => $textfieldid));
 	}
 	return $out;

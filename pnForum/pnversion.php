@@ -30,12 +30,12 @@ $modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:',
 
 // .8 extension following: module depedencies
 $modversion['dependencies'] = array(
-                                    array('modname'    => 'pn_bbcode', 
-                                          'minversion' => '1.21', 
+                                    array('modname'    => 'bbcode', 
+                                          'minversion' => '2.0', 
                                           'maxversion' => '', 
                                           'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
-                                    array('modname'    => 'pn_bbsmile', 
-                                          'minversion' => '1.17', 
+                                    array('modname'    => 'bbsmile', 
+                                          'minversion' => '2.1', 
                                           'maxversion' => '', 
                                           'status'     => PNMODULE_DEPENDENCY_RECOMMENDED)
                                               );
