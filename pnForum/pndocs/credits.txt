@@ -3,7 +3,7 @@ $Id$
 
 pnForum module developers team (current status):
 ----------------------------------------------------------
-Andreas Krapohl aka larsneo (larsneo@postnuke.com)
+Andreas Krapohl aka larsneo (larsneo@zikula.org)
 Jim Hadfield (jhadfiel@oldihc.org)
 Frank Schummertz aka landseer (frank.schummertz@landseer-stuttgart.de)
 Steffen Voss aka kafferinge.de (steffen.voss@online.de)

@@ -26,7 +26,7 @@ External source: Select Mail2Forum or RSS2Forum here, more configuration options
 after saving.
 
 PN username:
-PN password: User name and password of the PostNuke-user who shall be used as
+PN password: User name and password of the Zikula-user who shall be used as
 posting user in the forum
 
 Select RSS-Feed: Select one of the feeds defined in the RSS module.
@@ -40,7 +40,7 @@ by a cron job e.g. once per hour.
 Before you can use this you have to do some changes to this file:
 
 Zeile 38: //
-Zeile 39: // store the absolut path to your PostNuke folder here
+Zeile 39: // store the absolut path to your Zikula folder here
 Zeile 40: chdir('/opt/lampp/htdocs/760');
 
 There are no changes necessary beyond this point.

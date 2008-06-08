@@ -25,7 +25,7 @@ Configuration per Forum
 
 Modulereference: In this list all modules where the pnForum hook is activated
 appear for selection.
-PostNuke Topic: Submission can be sorted into different forums depending on their
+Zikula Topic: Submission can be sorted into different forums depending on their
 topic.
 
 Usage

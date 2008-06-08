@@ -15,7 +15,7 @@ Loader::includeOnce('modules/pnForum/common.php');
  *	Initialize a new install of the pnForum module
  *
  *	This function will initialize a new installation of pnForum.
- *	It is accessed via the PostNuke Admin interface and should
+ *	It is accessed via the Zikula Admin interface and should
  *	not be called directly.
  */
 
@@ -182,8 +182,8 @@ function pnForum_init()
  *	Deletes an install of the pnForum module
  *
  *	This function removes pnForum from your
- *	PostNuke install and should be accessed via
- *	the PostNuke Admin interface
+ *	Zikula install and should be accessed via
+ *	the Zikula Admin interface
  */
 
 function pnForum_delete()

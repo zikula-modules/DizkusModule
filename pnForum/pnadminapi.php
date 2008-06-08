@@ -693,8 +693,8 @@ function pnForum_adminapi_sync($args)
  *@params $args['pop3_password'] string password
  *@params $args['pop3_interval'] int poll interval
  *@params $args['pop3_matchstring'] string  reg exp
- *@params $args['pop3_pnuser'] string postnuke username
- *@params $args['pop3_pnpassword'] string postnuke password
+ *@params $args['pop3_pnuser'] string Zikula username
+ *@params $args['pop3_pnpassword'] string Zikula password
  *@params $args['moduleref'] string reference module
  *@params $args['pntopic']   int PN topic id
  *@returns int the new forums id

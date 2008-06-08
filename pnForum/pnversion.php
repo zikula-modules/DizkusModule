@@ -28,7 +28,7 @@ $modversion['user'] = 1;
 $modversion['securityschema'] = array('pnForum::' => 'CategoryID:ForumID:',
                                       'pnForum::CreateForum' => 'CategoryID::');
 
-// .8 extension following: module depedencies
+// Zikula 1.0 extension following: module depedencies
 $modversion['dependencies'] = array(
                                     array('modname'    => 'bbcode', 
                                           'minversion' => '2.0', 

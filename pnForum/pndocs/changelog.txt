@@ -2,7 +2,7 @@ $Id$
 
 
 ---------------------------------------------------------------------------------------------
-PostNuke pnForum Module changelog
+Zikula pnForum Module changelog
 ---------------------------------------------------------------------------------------------
 
 
@@ -12,7 +12,7 @@ PostNuke pnForum Module changelog
 *** Note: Most of the bugs fixed in this list have been reported during the extensive
 ***       testphase before the release and do not necessarily fix bugs of the 2.6 version
 ***       because some new functionality introduced in 2.7 is affected.          
-+ .8 ready, Topics module from .8-SVN needs to be installed!
++ Zikula 1.0 ready, Topics module from Zikula 1.0-SVN needs to be installed!
 + Using Ajax now for some features, this implied a major rewrite of some templates
   and adding a few new ones. Non-javascript fallbacks are included.
 + using resizable.js written by Kazuki Ohta (ohta@uei.co.jp)
@@ -35,7 +35,7 @@ PostNuke pnForum Module changelog
   your templates, use the new pnfdate_format modifier instead of pndate_format, e.g.:
   <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
   The last parameter is activating the timezone support which adds the difference between
-  the users timezone and the main timezone configured in your PostNuke settings.
+  the users timezone and the main timezone configured in your Zikula settings.
 + added option to disable forum
 + added [#2512]	centerblock links inkl. PID
 + added [#2636] similar topics plugin
@@ -176,7 +176,7 @@ Fixes:
 - improved permission checks and sql-statement (modpanel.php)
 - added /user folder for user's profile page (forum subscriptions)
 - started with wcag/section 508 validation
-- less problems when author was removed from postnuke's main user table
+- less problems when author was removed from Zikula's main user table
 - fixed pager for large forums
 - added paranoic (int) checks
 - renamed make_jumpbox function

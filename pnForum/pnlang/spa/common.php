@@ -426,7 +426,7 @@ define('_PNFORUM_SUBSCRIBE_TOPIC','Subscribir tema');
 define('_PNFORUM_SYNC_FORUMINDEX', 'Índice del foro sincronizado ');
 define('_PNFORUM_SYNC_POSTSCOUNT', 'Contador de mensajes sincronizado ');
 define('_PNFORUM_SYNC_TOPICS', 'Temas sincronizados');
-define('_PNFORUM_SYNC_USERS', 'Usuarios de PostNuke y pnForum sincronizados');
+define('_PNFORUM_SYNC_USERS', 'Usuarios de Zikula y pnForum sincronizados');
 //
 // T
 //

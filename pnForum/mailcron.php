@@ -35,7 +35,7 @@
  ***********************************************************************/
 
 //
-// store the absolut path to your PostNuke folder here
+// store the absolut path to your Zikula folder here
 //
 chdir('/opt/lampp/htdocs/760');
 //<img src="">chdir('/www/htdocs/postnet');

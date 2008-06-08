@@ -28,7 +28,7 @@
 <p><br>
   4.<a href="#setup">Setup</a><br>
   =<a href="#410"> 4.1</a> Forums Administration<br>
-  =<a href="#420"> 4.2</a> Using PostNuke Permissions<br>
+  =<a href="#420"> 4.2</a> Using Zikula Permissions<br>
   =<a href="#430"> 4.3</a> Setting up the Statistics block<br>
   =<a href="#440"> 4.4</a> Setting up Search Include</p>
 <hr>
@@ -36,13 +36,13 @@
   Introduction</span></p>
 <blockquote>
   <p class="MsoPlainText"><span style='mso-fareast-font-family:"MS Mincho"'>Thank
-  		 you for choosing pnForum as your PostNuke forum software. pnForum is
+  		 you for choosing pnForum as your Zikula forum software. pnForum is
   		based
     on the phpBB-forum originally created by '<a href="http://www.phpbb.com/" target="_blank">The
      phpBB Group</a>'. We have added an extensive list of features to pnForum
       that I am sure you will enjoy. pnForum is designed for use as a module
      with
-    the PostNuke, .75x (<a href="http://postnuke.com" target="_blank">http://postnuke.com</a>)</span></p>
+    the PostNuke, .75x (<a href="http://zikula.org">http://zikula.org</a>)</span></p>
   <p class="MsoPlainText"><span style='mso-fareast-font-family:"MS Mincho"'>We
   		 have spent a lot of time on this product and hope that you find it to
   		be	as
@@ -72,7 +72,7 @@
 <p><a name="210"></a>2.1 Requirements</p>
 <blockquote>
   <p>pnForum is designed to run as a module under the PostNuke .75x
-  	 series. It is assumed that you have the appropriate version of PostNuke
+  	 series. It is assumed that you have the appropriate version of Zikula
   	already running on your web site.</p>
 </blockquote>
 <p><a name="220"></a>2.2 Install preparations</p>
@@ -81,7 +81,7 @@
     or<a href="http://snowbankih.tzo.com" target="_blank"> http://snowbankih.tzo.com</a>
     first. These are the primary support sites for the pnForum module with a
      multilingual FAQ area both for Users and Admins.</p>
-  <p>2.2.2. Make a backup of your PostNuke database (we recommend using phpMyAdmin)
+  <p>2.2.2. Make a backup of your Zikula database (we recommend using phpMyAdmin)
     and the entire /html/modules/pnForum directory. Then, remove the following
     directories and files: <br>
     /modules/pnForum <br>
@@ -110,14 +110,14 @@
 <p align="left"><a name="230"></a>2.3. Installation </p>
 <blockquote>
   <p><br>
-    2.3.1. Extract directories from distribution into the appropriate PostNuke
-      Phoenix html directories.
+    2.3.1. Extract directories from distribution into the appropriate Zikula
+      html directories.
     <br>
     No files from Phoenix or other modules can be damaged by doing this. <br>
     Do not rename the pnForum module directory. There are hard coded
      links to its name within this directory.<br>
     You can use any names in your forums when creating links in menublocks. </p>
-  <p>2.3.2. Go to the PostNuke Administration panel,<br>
+  <p>2.3.2. Go to the Zikula Administration panel,<br>
     enter the Modules section. Press the 'Regenerate' link. <br>
     You should see pnForum in the modules list. <br>
     Press 'Initialize' on the right side of the page. This will create the module's
@@ -125,7 +125,7 @@
     Normally you should get a 'Module initialized' message at the top of the screen.
     <br>
     Press 'Activate' in pnForum line. <br>
-    This will make pnForum Administration panel visible in PostNuke Administration.<br>
+    This will make pnForum Administration panel visible in Zikula Administration.<br>
     Then,
     do the same 'Initialize' and 'Activate' procedures with the pn_bbcode, pn_bbclick
     and pn_bbsmile modules.<br>
@@ -135,9 +135,9 @@
     'Deactivate
     | Edit'. Click on 'Edit'. Place a check mark in the three boxes to activate
     pn_bbcode, pn_bbclick and pn_bbsmile. Then save.</p>
-  <p>2.3.3. Go to PostNuke Administration panel. <br>
+  <p>2.3.3. Go to Zikula Administration panel. <br>
     Select the pnForum link. <br>
-    Click on 'Sync forum/topic index'. This will sync the list of users in PostNuke
+    Click on 'Sync forum/topic index'. This will sync the list of users in Zikula
     and pnForum.<br>
     Click on the 'Forum Wide Options' link .<br>
     Click on 'Restore defaults'. This will set parameters for pnForum </p>
@@ -148,7 +148,7 @@
     {pnForum}<br>
     Save it. </p>
   <p>2.3.5. You're done with the pnForum module installation.<br>
-    pnForum is now administered using the PostNuke Administration panel. <br>
+    pnForum is now administered using the Zikula Administration panel. <br>
     There you can make general forum settings, define new Categories, Forums,
     Private Forums, User Rights, User Ranks, Honorary Ranks, re-order categories
  and forums within them.</p>
@@ -196,7 +196,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
 <blockquote>
   <p>Copy new files into place.<br>
     Delete the existing file /includes/blocks/phpBB_14.php<br>
-    Go to PostNuke/Administration/Modules. Use 'regenerate' link.<br>
+    Go to Zikula/Administration/Modules. Use 'regenerate' link.<br>
     Find pnForum module link and use 'Upgrade' link nearby.<br>
     You will need to 'Activate' the module after the page reloads.<br>
     Delete any old phpBB_14 related blocks you had created and make new ones. <br>
@@ -306,9 +306,9 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     'Delete': This will allow you to 'Edit' or 'Delete' any Honorary Ranks that
     have been previously made. </p>
 </blockquote>
-<p> <a name="420"></a>4.2 Using PostNuke permissions with the pnForum bulletin board:</p>
+<p> <a name="420"></a>4.2 Using Zikula permissions with the pnForum bulletin board:</p>
 <blockquote>
- <p> This chapter assumes that you already know PostNuke permissions principles.
+ <p> This chapter assumes that you already know Zikula permissions principles.
     <br>
     pnForum implements four levels/instances of controlling access rights to
     the module. <br>
@@ -321,7 +321,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     forum. <br>
  </p>
   <p>This is also correct regarding moderator access to forums and categories.
-    Moderator access is checked against MODERATE_ACCESS in PostNuke permission
+    Moderator access is checked against MODERATE_ACCESS in Zikula permission
     system for any given user or group. Setting the moderator parameter inside
     pnForum administration panel is only for display purposes in forum and category
     view. The permissions are only defined by the permission system.</p>
@@ -385,7 +385,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     First you have to define the user as a moderator of the forum, using the pnForum
     admin pane. (Note, this is only for viewing purposes in the forums at this
     time...)<br>
-    Next, you have to give the same user moderator rights in the PostNuke <br>
+    Next, you have to give the same user moderator rights in the Zikula <br>
     permission system. This is done using this scheme: </p>
   <p>User Component Instance Permissions level <br>
     JimDude pnForum::Forum Chitchat:: Moderate </p>
@@ -398,7 +398,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     Assign a user to be moderator for two forums.<br>
     This is done in two parts. First you assign the user as moderator to both
     the forums, using the pnForum admin pane. <br>
-    Next, you have to give the same user moderator rights in the PostNuke <br>
+    Next, you have to give the same user moderator rights in the Zikula <br>
     permission system. This is done using this scheme: </p>
   <p>User Component Instance Permissions level <br>
     JimDude pnForum::Forum (ChitChat|discussion):: Moderate </p>
@@ -407,7 +407,7 @@ pn_bbclick and pn_bbsmile. Then save.<br>
     group permissions. If you do something wrong, you may end up shutting your
     self out! Always use other usernames than your ADMIN name, when playing around
     with user permissions!!</p>
-  <p>We also suggest looking at the PostNuke permissions documentation :<br>
+  <p>We also suggest looking at the Zikula permissions documentation :<br>
     <a href="http://sourceforge.net/docman/index.php?group_id=27927" target="_blank">http://sourceforge.net/docman/index.php?group_id=27927</a></p>
 </blockquote>
 <p><a name="430"></a>4.3 Setting up Statistics/Center block </p>
@@ -415,12 +415,12 @@ pn_bbclick and pn_bbsmile. Then save.<br>
   <p>You can activate and place these blocks, using standard Phoenix Blocks administrating.
     <br>
     Create a either a side block or center block of type 'pnForum/pnForum Statistics'/'pnForum/pnForum Centerblock'.
-    Configure it with the PostNuke 'Edit' feature to meet your needs.</p>
+    Configure it with the Zikula 'Edit' feature to meet your needs.</p>
 </blockquote>
 <p> <a name="430"></a>4.4 Setting up Search Include</p>
 <blockquote>
   <p>The search routine for pnForum is included in the module core and needs
-    no special set-up to be used with PostNuke.</p>
+    no special set-up to be used with Zikula.</p>
 </blockquote>
 <p>&nbsp;</p>
 </body>

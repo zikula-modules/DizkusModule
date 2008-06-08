@@ -27,7 +27,7 @@ Einstellungen pro Forum:
 
 Modulreferenz: In dieser Liste erscheinen alle Module, für die der pnForum Hook
 aktivert ist.
-PostNuke Topic: Beiträge können anhand ihres Topics in verschiedene Foren ein-
+Zikula Topic: Beiträge können anhand ihres Topics in verschiedene Foren ein-
 sortiert werden. So können z.B. Beiträge zum Thema Linux in einem anderen Foren
 landen als die zum Thema Windows.
 

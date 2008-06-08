@@ -313,7 +313,7 @@ define('_PNFORUM_PERMDENY','Accès refusé !');
 define('_PNFORUM_PERSONAL_SETTINGS','Préférences');
 define('_PNFORUM_PNPASSWORD', 'Mot de passe PN');
 define('_PNFORUM_PNPASSWORDCONFIRM', 'Confirmer le mot de passe PN');
-define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) PostNuke');
+define('_PNFORUM_PNTOPIC', 'Catégorie (Sujet) Zikula');
 define('_PNFORUM_PNTOPIC_HINT', '');
 define('_PNFORUM_PNUSER', 'Pseudo PN');
 define('_PNFORUM_POP3ACTIVE', 'Mail2Forum activé');
@@ -477,7 +477,7 @@ define('_PNFORUM_SUBSCRIBE_TOPIC','s\'inscrire au sujet');
 define('_PNFORUM_SYNC_FORUMINDEX', 'Index du forum synchronisé');
 define('_PNFORUM_SYNC_POSTSCOUNT', 'Compteur de sujets synchronisé');
 define('_PNFORUM_SYNC_TOPICS', 'Sujets synchronisés');
-define('_PNFORUM_SYNC_USERS', 'Membres de PostNuke et pnForum synchronisés');
+define('_PNFORUM_SYNC_USERS', 'Membres de Zikula et pnForum synchronisés');
 
 //
 // T

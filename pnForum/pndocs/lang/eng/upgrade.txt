@@ -58,5 +58,5 @@ Upgrade from pnForum 2.6 or even older version
   modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php to 
   modules/Xanthia/plugins and add this plugin to the head section
   of your theme template: <!--[ pnforumcolorcss ]-->
-* Download the AjaxSupportPackage from http://noc.postnuke.com/frs/?group_id=8&release_id=1069 
+* Download the AjaxSupportPackage from http://code.zikula.org/pnforum/downloads
   and install it as documented. 

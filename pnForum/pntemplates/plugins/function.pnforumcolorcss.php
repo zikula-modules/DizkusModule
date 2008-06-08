@@ -22,7 +22,7 @@ function smarty_function_pnforumcolorcss($params, &$smarty)
 {
     // The second parameter in pnThemeGetVar() defines the default value
     // which will be used when nothing else is defined (which might be the
-    // case for some Xanthia 3.0 themes in .8. It will be ignored in .764.
+    // case for some Xanthia 3.0 themes in Zikula 1.0. It will be ignored in .764.
     // If you do not like those defaults, remove the pnforumcolorcss plugin
     // from your theme and define the colors in your pnForums style.css
     // See modules/pnForum/pnstyle/style.css for more information about this

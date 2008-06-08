@@ -386,7 +386,7 @@ define('_PNFORUM_PERMDENY','keine Berechtigung!');
 define('_PNFORUM_PERSONAL_SETTINGS','Einstellungen');
 define('_PNFORUM_PNPASSWORD', 'PN Kennwort');
 define('_PNFORUM_PNPASSWORDCONFIRM', 'PN Kennwort bestätigen');
-define('_PNFORUM_PNTOPIC', 'PostNuke Topic');
+define('_PNFORUM_PNTOPIC', 'Zikula Topic');
 define('_PNFORUM_PNTOPIC_HINT', '');
 define('_PNFORUM_PNUSER', 'PN Username');
 define('_PNFORUM_POP3ACTIVE', 'Mail2Forum aktivieren');
@@ -549,7 +549,7 @@ define('_PNFORUM_SUBSCRIBE_TOPIC','Thema abonnieren');
 define('_PNFORUM_SYNC_FORUMINDEX', 'Forumindex neu erstellt');
 define('_PNFORUM_SYNC_POSTSCOUNT', 'Beitragszähler neu erstellt');
 define('_PNFORUM_SYNC_TOPICS', 'Themenindex neu erstellt');
-define('_PNFORUM_SYNC_USERS', 'PostNuke und pnForum User synchronisiert');
+define('_PNFORUM_SYNC_USERS', 'Zikula und pnForum User synchronisiert');
 
 //
 // T

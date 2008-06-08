@@ -34,4 +34,4 @@ define('_PNFORUM_TO27_FAILED', 'Upgrade auf pnForum 2.7 fehlgeschlagen');
 define('_PNFORUM_TO30_HINT', 'Das Upgrade auf Version 3.0 beinhaltet keine Änderung an der Datenbankstruktur.<br />');
 define('_PNFORUM_TO30_FAILED', 'Upgrade auf pnForum 3.0 fehlgeschlagen');
 
-define('_PNFORUM_DOT8ISREQUIRED', 'Diese Version von pnForum benötigt mind. PostNuke .8. Die Installation wurde abgebrochen.');
+define('_PNFORUM_DOT8ISREQUIRED', 'Diese Version von pnForum benötigt mind. Zikula 1.0. Die Installation wurde abgebrochen.');

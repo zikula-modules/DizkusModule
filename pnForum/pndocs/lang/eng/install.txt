@@ -18,13 +18,13 @@ Installation
         |
         -- more subfolders
 
-  Copy the content of includes/search to your PostNuke's includes/search folder
-  Copy the content of modules to your PostNuke's modules folder (not modules/Modules!!)
-  Copy backforum.php from the pnForum folder to your PostNuke root folder
+  Copy the content of includes/search to your Zikula's includes/search folder
+  Copy the content of modules to your Zikula's modules folder (not modules/Modules!!)
+  Copy backforum.php from the pnForum folder to your Zikula root folder
   Copy modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php to modules/Xanthia/plugins
   Add <!--[ pnforumcolorcss ]--> to the head section of your theme.
 
-* Download the AjaxSupportPackage from http://noc.postnuke.com/frs/?group_id=8&release_id=1069 
+* Download the AjaxSupportPackage from http://code.zikula.org/pnforum/downloads
   and install it as documented. 
 * regenerate module list
 * install and activate pnForum

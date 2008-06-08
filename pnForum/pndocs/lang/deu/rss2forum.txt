@@ -26,7 +26,7 @@ Externe Quelle: Hier kann Mail2Forum oderRSS2Forum ausgewählt werden. Die weiter
 Konfiguration erscheint nach dem Speichern.
 
 PN Username:
-PN Kennwort: Name und Kennwort des PostNuke-Users, unter dessen Namen die
+PN Kennwort: Name und Kennwort des Zikula-Users, unter dessen Namen die
 Mails im Forum gespeichert werden
 
 RSS-Feed auswählen: Hier erscheinen alle im RSS Modul definierten Feeds zu Auswahl.
@@ -40,7 +40,7 @@ per Cron in einem festen Interval, z.B. stündlich, aufgerufen.
 Vor dem ersten Aufruf muss rss2pnforum.php angepasst werden:
 
 Zeile 38: //
-Zeile 39: // store the absolut path to your PostNuke folder here
+Zeile 39: // store the absolut path to your Zikula folder here
 Zeile 40: chdir('/opt/lampp/htdocs/760');
 
 Danach sind keine Änderungen notwendig.

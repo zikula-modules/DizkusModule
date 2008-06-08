@@ -18,15 +18,15 @@ Installation
         |
         -- weitere Unterverzeichnisse
 
-  Den Inhalt von includes/search ins PostNuke includes/search Verzeichnis kopieren
-  Den Inhalt von modules ins PostNuke modules Verzeichnis kopieren
+  Den Inhalt von includes/search ins Zikula includes/search Verzeichnis kopieren
+  Den Inhalt von modules ins Zikula modules Verzeichnis kopieren
   (nicht modules/Modules!!)
-  Die Datei backforum.php aus dem pnForumverzeichnis ins PostNuke Verzeichnis
+  Die Datei backforum.php aus dem pnForumverzeichnis ins Zikula Verzeichnis
   kopieren
   Die Datei modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php nach modules/Xanthia/plugins kopieren
   Im Head-Bereich des Themes <!--[ pnforumcolorcss ]--> einfügen
 
-* AjaxSupportPackage von http://noc.postnuke.com/frs/?group_id=8&release_id=1069 
+* AjaxSupportPackage von http://code.zikula.org/pnforum/downloads
   herunterladen und nach Anleitung installieren. 
 * Modulliste neu erzeugen lassen
 * pnForum installieren und aktivieren

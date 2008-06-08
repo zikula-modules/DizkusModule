@@ -1,7 +1,7 @@
 <?php
 /**
  * forum backend (with permission check)
- * to be placed in the PostNuke root
+ * to be placed in the Zikula root
  * @version $Id$
  * @author Andreas Krapohl, Frank Schummertz, Arjen Tebbenhof [short urls]
  * @copyright 2005 by pnForum Team
@@ -11,7 +11,7 @@
  */
 
 /**
- * initialize the PostNuke environment
+ * initialize the Zikula environment
  */
 include 'includes/pnAPI.php';
 pnInit();
@@ -30,7 +30,7 @@ $user     =      FormUtil::getPassedValue('user', '', 'GET');
 /**
  * get the short urls extensions
  */
-// pnModURL already handles correct shorturls in .8
+// pnModURL already handles correct shorturls in Zikula 1.0
 
 // get the module info
 $baseurl = pnGetBaseURL();

@@ -12,14 +12,14 @@
 /**
  * pnRender plugin
  * 
- * This file is a plugin for pnRender, the PostNuke implementation of Smarty
+ * This file is a plugin for pnRender, the Zikula implementation of Smarty
  *
  * @package      Xanthia_Templating_Environment
  * @subpackage   pnRender
  * @version      $Id$
- * @author       The PostNuke development team
- * @link         http://www.postnuke.com  The PostNuke Home Page
- * @copyright    Copyright (C) 2002 by the PostNuke Development Team
+ * @author       The Zikula development team
+ * @link         http://www.zikula.org  The Zikula Home Page
+ * @copyright    Copyright (C) 2002 by the Zikula Development Team
  * @license      http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */ 
 

@@ -60,6 +60,6 @@ Abgesehen vom üblichen Modulupgrade sind hier zwei Dinge zu beachten:
 * Die Datei modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php nach 
   modules/Xanthia/plugins kopieren und dieses Plugin im Head-Bereich des Theme-
     Templates einfügen: <!--[ pnforumcolorcss ]-->
-* AjaxSupportPackage von http://noc.postnuke.com/frs/?group_id=8&release_id=1069 
+* AjaxSupportPackage von http://code.zikula.org/pnforum/downloads
   herunterladen und nach Anleitung installieren. 
     

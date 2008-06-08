@@ -35,17 +35,17 @@
  ***********************************************************************/
 
 //
-// store the absolut path to your PostNuke folder here
+// store the absolut path to your Zikula folder here
 //
 chdir('/opt/lampp/htdocs/761');
 
-// NOTE : This will work with the PostNuke backend... I did not
+// NOTE : This will work with the Zikula backend... I did not
 // tried other rss feed (1.0, 2.0, Atom)... RSS mod could
 // return a different information (timestamp - array keys like title, etc.
 
 include 'modules/pnForum/common.php';
 
-// start PostNuke
+// start Zikula
 /****************************************************************/
 include 'includes/pnAPI.php';
 pnInit();

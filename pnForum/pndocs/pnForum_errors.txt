@@ -1,6 +1,6 @@
 This document is an attempt to describe the process used to create custom error messages for use in pnForum.
 
-Custom error messages can be created for each individual category or forum inside pnForum.  You can also create different error messages for each language used on your site without the need to modify any PostNuke or pnForum language files.
+Custom error messages can be created for each individual category or forum inside pnForum.  You can also create different error messages for each language used on your site without the need to modify any Zikula or pnForum language files.
 
 pnForum offers 5 basic permission levels:
 1) Overview
@@ -25,7 +25,7 @@ errors -
             eng
             deu
 
-The language specific folders must use the same naming convention for the folder name as the rest of the language specific files in PostNuke.
+The language specific folders must use the same naming convention for the folder name as the rest of the language specific files in Zikula.
 
 The error messages are named as follows.
 
@@ -103,7 +103,7 @@ Let's walk through the previous 6 files and explain what each would contain if i
 
 2) this file holds the default message to be displayed when the user is attempting to comment, but is not allowed, that will be shown if a) the user hasn't chosen a specific language, or b) the particular language that was chosen doesn't have an error message available.  The default language for the website should store it's error messages at this level.  If my site is set to use English as the default language then I should NOT create an errors/[forum|category]/lang/eng/pnforum_error_auth_[access level][_[forum id|category id]].html file.  Instead I should create an errors/[forum|category]/pnforum_error_auth_[access level][_[forum id|category id]].html file.
   Then if a user has their language set to German but there is no specific German file the English version will be displayed instead.  This also holds true if German is the default language and English has been selected by the user.  If the English version can't be found it will default back to the German version.
-  This process also allows the administrator to build an error file that uses the standard PostNuke language defines and use it as the default file.  The error file is created as a standard pnRender (Smarty) template.  Therefore all the standard pnRender (Smarty) plugins and functions can be used inside the template.  This allows you to use the PostNuke language system to display the error message in the correct language by using <!--[ pnml name="_YOUR_ERROR_MESSAGE_DEFINE" ]--> and then placing a:
+  This process also allows the administrator to build an error file that uses the standard Zikula language defines and use it as the default file.  The error file is created as a standard pnRender (Smarty) template.  Therefore all the standard pnRender (Smarty) plugins and functions can be used inside the template.  This allows you to use the Zikula language system to display the error message in the correct language by using <!--[ pnml name="_YOUR_ERROR_MESSAGE_DEFINE" ]--> and then placing a:
 define('_YOUR_ERROR_MESSAGE_DEFINE','My cool error message');
 in the appropriate language file for pnForum.
 

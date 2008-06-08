@@ -386,7 +386,7 @@ define('_PNFORUM_PERMDENY','Access denied!');
 define('_PNFORUM_PERSONAL_SETTINGS','personal settings');
 define('_PNFORUM_PNPASSWORD', 'PN password');
 define('_PNFORUM_PNPASSWORDCONFIRM', 'PN password confirmation');
-define('_PNFORUM_PNTOPIC', 'PostNuke Topic');
+define('_PNFORUM_PNTOPIC', 'Zikula Topic');
 define('_PNFORUM_PNTOPIC_HINT', '');
 define('_PNFORUM_PNUSER', 'PN username');
 define('_PNFORUM_POP3ACTIVE', 'Mail2Forum active');
@@ -549,7 +549,7 @@ define('_PNFORUM_SUBSCRIBE_TOPIC','subscribe topic');
 define('_PNFORUM_SYNC_FORUMINDEX', 'Forum index synced');
 define('_PNFORUM_SYNC_POSTSCOUNT', 'Posts counter synced');
 define('_PNFORUM_SYNC_TOPICS', 'Topics synced');
-define('_PNFORUM_SYNC_USERS', 'PostNuke and pnForum users synchronized');
+define('_PNFORUM_SYNC_USERS', 'Zikula and pnForum users synchronized');
 
 //
 // T
