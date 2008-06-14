@@ -21,7 +21,9 @@
 /*
  * general settings
  */
-button, button.right, button.left {
+#pnforum button, 
+#pnforum button.right,
+#pnforum button.left {
     border: none;
     background: transparent;
     margin: 0 0.5em;
@@ -30,12 +32,12 @@ button, button.right, button.left {
     cursor: pointer;
 }
 
-button.right {
+#pnforum button.right {
     float:right; 
     margin: 1em 2em 1em 0;
 }
 
-button.left {
+#pnforum button.left {
     float: left; 
     margin: 1em 0 1em 2em;
 }

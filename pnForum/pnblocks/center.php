@@ -62,11 +62,6 @@ function pnForum_centerblock_display($row)
         return;
     }
 
-    if(pnModGetName() <> 'pnForum') {
-        // add the pnForum stylesheet file to the page vars
-        PageUtil::addVar('stylesheet', ThemeUtil::getModuleStylesheet('pnForum'));
-    }
-
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 

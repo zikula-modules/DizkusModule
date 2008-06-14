@@ -68,11 +68,6 @@ function pnForum_statisticsblock_display($row)
         $vars['sb_parameters'] = "maxposts=5";
     }
 
-    if(pnModGetName() <> 'pnForum') {
-        // add the pnForum stylesheet file to the page vars
-        PageUtil::addVar('stylesheet', ThemeUtil::getModuleStylesheet('pnForum'));
-    }
-
     $pnr = pnRender::getInstance('pnForum', false, null, true);
 
     $params = explode(',', $vars['sb_parameters']);
