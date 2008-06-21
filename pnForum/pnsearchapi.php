@@ -41,7 +41,7 @@
  *
  ***********************************************************************/
 
-include_once("modules/pnForum/common.php");
+Loader::includeOnce('modules/pnForum/common.php');
 
 /**
  * Search plugin info
