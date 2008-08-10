@@ -309,7 +309,7 @@ function pnForum_user_newtopic($args=array())
                                        'subscribe_topic'  => $subscribe_topic));
         if(pnModGetVar('pnForum', 'newtopicconfirmation') == 'yes') {
             $pnr = pnRender::getInstance('pnForum', false, null, true);
-            $pnr->assign('topic', pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $topic_id)));
+            $pnr->assign('topic', pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
             return $pnr->fetch('pnforum_user_newtopicconfirmation.html');
 
         } else {
@@ -444,7 +444,7 @@ function pnForum_user_topicadmin($args=array())
                                  array('post_id' => $post_id));
     }
     $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
-                          array('topic_id' => $topic_id));
+                          array('topic_id' => $topic_id, 'count' => false));
     if($topic['access_moderate']<>true) {
         return showforumerror(_PNFORUM_NOAUTH_TOMODERATE, __FILE__, __LINE__);
     }
@@ -840,7 +840,8 @@ function pnForum_user_print($args=array())
         } elseif($topic_id<>0) {
             $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
                                  array('topic_id'  => $topic_id,
-                                       'complete' => true ));
+                                       'complete' => true,
+                                       'count' => false ));
             $pnr->assign('topic', $topic);
             $output = $pnr->fetch('pnforum_user_printtopic.html');
         } else {
@@ -922,7 +923,8 @@ function pnForum_user_movepost($args=array())
         // submit is set, we move the posting now
 		// Existe el Topic ? --- Exists new Topic ?
 		$topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $to_topic,
-		                                                            'complete' => false));
+		                                                            'complete' => false,
+		                                                            'count' => false));
         $post['new_topic'] = $to_topic;
 		$post['old_topic'] = $topic['topic_id'];
         $start = pnModAPIFunc('pnForum', 'user', 'movepost', array('post'     => $post,
@@ -973,9 +975,9 @@ function pnForum_user_jointopics($args=array())
         }
 
 		// check if from_topic exists. this function will return an error if not
-		$from_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false));
+		$from_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
 		// check if to_topic exists. this function will return an error if not
-		$to_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false));
+		$to_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
         // submit is set, we split the topic now
         //$post['new_topic'] = $totopic;
 		//$post['old_topic'] = $old_topic;
