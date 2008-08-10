@@ -21,9 +21,9 @@ Loader::includeOnce('modules/pnForum/common.php');
 
 function pnForum_init()
 {
-    if(version_compare('0.8.0.0', PN_VERSION_NUM, '<')) {
+    if(version_compare(PN_VERSION_NUM, '1.0.0', '<')) {
         // no SessionUtil::setVar here because this line is for <.9
-        pnSessionSetVar('errormsg', _PNFORUM_DOT8ISREQUIRED);
+        pnSessionSetVar('errormsg', _PNFORUM_ZIKULA10ISREQUIRED);
         return false;
     }
     
@@ -328,5 +328,9 @@ function pnForum_init_interactiveupgrade_to_3_0()
  */
 function pnForum_upgrade_to_3_0()
 {
+    // add some columns to the post table - with DBUtil this is a one-liner, you just have to
+    // define the new columns in the pntables array, see pntables.php
+    DBUtil::changeTable('pnforum_posts');
+
     return true;
 }
