@@ -21,7 +21,8 @@
 /*
  * general settings
  */
-#pnforum button, 
+#pnforum button,
+#pnforum_admin button, 
 #pnforum button.right,
 #pnforum button.left {
     border: none;
@@ -1118,7 +1119,7 @@ ul#pnf_onlinelist li {
 }
 
 #pnf_footer_line {
-    /* float: left; */ 
+    float: left;
     margin: 1em 0; 
     width: 99%; 
     font-size: 80%;
