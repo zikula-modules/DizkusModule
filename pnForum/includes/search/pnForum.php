@@ -41,7 +41,7 @@
  *
  ***********************************************************************/
 
-include_once("modules/pnForum/common.php");
+Loader::includeOnce("modules/pnForum/common.php");
 
 $search_modules[] = array(
     'title' => 'pnForum',
