@@ -123,7 +123,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
  * display a simple error message showing $text
  *@param text string The error text
  */
-function showforumerror($error_text, $file='', $line=0)
+function showforumerror($error_text, $file='', $line=0, $httperror=null)
 {
     // we need to load the languages
     // available
@@ -137,6 +137,12 @@ function showforumerror($error_text, $file='', $line=0)
     $pnr = pnRender::getInstance('pnForum', false, null, true);
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
+    
+    // show http error if requested
+    if($httperror <> null) {
+        header("HTTP/1.0 " . DataUtil::formatForDisplay($httperror));
+    }
+    
     if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
         $pnr->assign( 'file', $file);
         $pnr->assign( 'line', $line);

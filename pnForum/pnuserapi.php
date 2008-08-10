@@ -582,7 +582,7 @@ function pnForum_userapi_readforum($args)
                           array('forum_id' => $forum_id,
                                 'permcheck' => 'nocheck' ));
     if($forum==false) {
-        return showforumerror(_PNFORUM_FORUM_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_PNFORUM_FORUM_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
 
     if(!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
@@ -1032,7 +1032,7 @@ pnShutDown();
         unset($userdata);
     } else {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
     pnfCloseDB($result);
 /*
@@ -1708,7 +1708,7 @@ function pnForum_userapi_readpost($args)
 
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
