@@ -144,9 +144,9 @@ function showforumerror($error_text, $file='', $line=0)
     $output = $pnr->fetch('pnforum_errorpage.html');
     if(preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
         // __FILE__ ends with api.php or is common.php or pninit.php
-        include_once('header.php');
+        Loader::includeOnce('header.php');
         echo $output;
-        include_once('footer.php');
+        Loader::includeOnce('footer.php');
         exit;
     }
     return $output;
@@ -801,7 +801,7 @@ function pnf_ajaxerror($error='unspecified ajax error')
  */
 function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
 {
-    require_once('modules/pnForum/pnincludes/JSON.php');
+    Loader::includeOnce('modules/pnForum/pnincludes/JSON.php');
     $json = new Services_JSON();
     if(!is_array($args)) {
         $data = array('data' => $args);

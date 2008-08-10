@@ -601,7 +601,8 @@ function pnForum_ajax_newtopic()
                                        'attach_signature' => $attach_signature,
                                        'subscribe_topic'  => $subscribe_topic));
         $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
-                              array('topic_id' => $topic_id));
+                              array('topic_id' => $topic_id, 
+                                    'count' => false));
         if(pnModGetVar('pnForum', 'newtopicconfirmation') == 'yes') {
             $pnr->assign('topic', $topic);
             $confirmation = $pnr->fetch('pnforum_ajax_newtopicconfirmation.html');
@@ -696,8 +697,10 @@ function pnForum_ajax_newposts ()
         exit;
     }
     $pnRender = pnRender::getInstance('pnForum', false);
-    Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
-    $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
+    if(pnConfigGetVar('shorturls')) {
+        Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
+        $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
+    }
     $pnRender->display('pnforum_ajax_newposts.html');
     pnShutDown();
 }
