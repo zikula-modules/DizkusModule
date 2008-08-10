@@ -8,7 +8,7 @@
 Event.observe(window, 'load', 
     function()
     {
-        if($A(document.getElementsByClassName('openclosecategory')).length == 0) {
+        if($$('.openclosecategory').length == 0) {
             // no categories defined - return now
             return;
         }
@@ -22,7 +22,7 @@ Event.observe(window, 'load',
                               function()
                               { 
                                   var thiscat = catlink.id.split('_')[1];
-                                  $A(document.getElementsByClassName('category')).each(
+                                  $$('.category').each(
                                       function(cat)
                                       {
                                           if(cat.id == 'category_' + thiscat) {

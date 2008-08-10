@@ -557,7 +557,7 @@ function storenewforumorder_response(originalRequest, json)
 
 function create_sortables()
 {
-    /* var cids = document.getElementsByClassName('pnf_treeforumlist');
+    /* var cids = $$('.pnf_treeforumlist');
     if(cids.length > 0) {
         for(var i=0; i<cids.length; i++) {
             containments[containments.length] = cids[i].id;
@@ -565,7 +565,7 @@ function create_sortables()
     }
     */
     // create containments array
-    $A(document.getElementsByClassName('pnf_treeforumlist')).each(
+    $$('.pnf_treeforumlist').each(
         function(containment)
         {
             containments[containments.length] = containment.id;

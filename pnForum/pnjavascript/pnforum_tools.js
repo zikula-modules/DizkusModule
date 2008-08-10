@@ -14,13 +14,13 @@ function getcheckboxvalue(id)
 }
 
 function CheckAll(formtype) {
-    document.getElementsByClassName(formtype + '_checkbox').each(function(el) { el.checked = $('all' + formtype).checked;});
+    $$('.' + formtype + '_checkbox').each(function(el) { el.checked = $('all' + formtype).checked;});
 }
 
 function CheckCheckAll(formtype) {
     var totalon = 0;
-    document.getElementsByClassName(formtype + '_checkbox').each(function(el) { if (el.checked) { totalon++; } });
-    $('all' + formtype).checked = (document.getElementsByClassName(formtype + '_checkbox').length==totalon);
+    $$('.' + formtype + '_checkbox').each(function(el) { if (el.checked) { totalon++; } });
+    $('all' + formtype).checked = ($$('.' + formtype + '_checkbox').length==totalon);
 }
 
 function dejsonize(jsondata)
