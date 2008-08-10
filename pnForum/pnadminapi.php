@@ -958,3 +958,26 @@ function pnForum_adminapi_storenewforumorder($args)
     return true;
 
 }
+
+/**
+ * get available admin panel links
+ *
+ * @author Mark West
+ * @return array array of admin links
+ */
+function pnForum_adminapi_getlinks()
+{
+    $links = array();
+    if (SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'preferences'), 'text' => _PNFORUM_ADMINFORUMOPTIONS, 'title' => _PNFORUM_ADMINFORUMOPTIONS_INFO);
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'advancedpreferences', array('cid' => -1)), 'text' => _PNFORUM_ADMINADVANCEDCONFIG, 'title' => _PNFORUM_ADMINADVANCEDCONFIG_INFO);
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'reordertree'), 'text' => _PNFORUM_ADMINREORDERTREE, 'title' => _PNFORUM_ADMINREORDERTREE_INFO);
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'syncforums'), 'text' => _PNFORUM_ADMINFORUMSYNC, 'title' => _PNFORUM_ADMINFORUMSYNC_INFO);
+   
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'ranks', array('ranktype' => 0)), 'text' => _PNFORUM_ADMINRANKS, 'title' => _PNFORUM_ADMINRANKS_INFO);
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'ranks', array('ranktype' => 1)), 'text' => _PNFORUM_ADMINHONORARYRANKS, 'title' => _PNFORUM_ADMINHONORARYRANKS_INFO);
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'assignranks'), 'text' => _PNFORUM_ADMINHONORARYASSIGN, 'title' => _PNFORUM_ADMINHONORARYASSIGN_INFO);
+        $links[] = array('url' => pnModURL('pnForum', 'admin', 'managesubscriptions'), 'text' => _PNFORUM_ADMINMANAGESUBSCRIPTIONS, 'title' => _PNFORUM_ADMINMANAGESUBSCRIPTIONS_INFO);
+    }
+    return $links;
+}
