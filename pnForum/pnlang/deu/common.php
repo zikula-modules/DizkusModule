@@ -17,6 +17,10 @@ define('_PNFORUM_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien m
 define('_PNFORUM_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_PNFORUM_SEARCHWHERE', 'Suche in');
+define('_PNFORUM_SEARCH_POSTINGS', 'Beiträgen');
+define('_PNFORUM_SEARCH_AUTHOR', 'Autoren');
+
 define('_PNFORUM_DISABLED_INFO', 'Das Forum steht im Augenblick nicht zur Verfügung, bitte später noch mal probieren.');
 define('_PNFORUM_PREFS_ENABLEDISABLE', 'Forum einschalten<br />(abgeschaltetes Forum ist nur für Admins zugänglich)');
 define('_PNFORUM_PREFS_DISABLEDTEXT', 'Hinweistext für User, wenn das Forum abgeschaltet ist');

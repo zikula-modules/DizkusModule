@@ -1,9 +1,12 @@
 <!--[*  $Id$  *]-->
 
+<!--[modulestylesheet stylesheet=style.css modname=pnForum xhtml=true]-->
+
 <div id="pnf_search" class="pnf_clearfix">
 
     <div style="background-color: <!--[ $bgcolor2 ]-->;">
-        <input type="checkbox" name="active_pnForum" id="active_pnForum" value="1" checked="checked" />&nbsp;<!--[ pnml name='_PNFORUM_SEARCHINCLUDE_TITLE' ]-->
+        <input type="checkbox" name="active[pnForum]" id="active_pnForum" value="1" <!--[ if $active ]-->checked="checked"<!--[ /if ]--> />
+        <label for="active_pnForum"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_TITLE' ]--></label>
     </div>
    
     <input type="hidden" name="pnForum_startnum" value="0" />
@@ -21,14 +24,24 @@
             <!--[ /foreach ]-->
             </select>
         </dd>
+
+        <dt>
+            <label for="pnForum_searchwhere"><!--[ pnml name='_PNFORUM_SEARCHWHERE' ]-->:</label>
+        </dt>
+        <dd>
+            <select name="pnForum_searchwhere" id="pnForum_searchwhere" size="1">
+            <option value="post" selected="selected"><!--[ pnml name='_PNFORUM_SEARCH_POSTINGS' ]--></option>
+            <option value="author"><!--[ pnml name='_PNFORUM_SEARCH_AUTHOR' ]--></option>
+            </select>
+        </dd>
     
+<!--[*    
         <dt>
             <label for="pnForum_author"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_AUTHOR' ]-->:</label>
         </dt>
         <dd>
             <input type="text" name="pnForum_author" id="pnForum_author" size="20" maxlength="255" />
         </dd>
-    
         <dt>
             <label for="pnForum_order"><!--[ pnml name='_PNFORUM_SEARCHINCLUDE_ORDER' ]-->:</label>
         </dt>
@@ -55,7 +68,7 @@
             </select>
             <!--[ pnml name='_PNFORUM_SEARCHINCLUDE_HITS' ]-->
         </dd>
-    
+*]-->    
     </dl>
 
 </div>

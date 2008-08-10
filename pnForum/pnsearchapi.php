@@ -41,15 +41,15 @@
  *
  ***********************************************************************/
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce("modules/pnForum/common.php");
 
 /**
  * Search plugin info
  **/
 function pnForum_searchapi_info()
 {
-    $search_modules = array('title' => 'pnForum', 'type' => 'API');
-    return $search_modules;
+    return array('title'     => 'pnForum',
+                 'functions' => array('pnForum' => 'search'));
 }
 
 /**
@@ -57,12 +57,30 @@ function pnForum_searchapi_info()
  **/
 function pnForum_searchapi_options($args)
 {
-    // Create output object - this object will store all of our output so that
-    // we can return it easily when required
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
-    $pnr->assign('forums', pnModAPIFunc('pnForum', 'admin', 'readforums'));
-    return $pnr->fetch('pnforum_search.html');
+    if (SecurityUtil::checkPermission('pnforum::', '::', ACCESS_READ)) {
+        $pnr = pnRender::getInstance('pnForum');
+        $pnr->assign('active', (isset($args['active']) && isset($args['active']['pnForum'])) || !isset($args['active']));
+        $pnr->assign('forums', pnModAPIFunc('pnForum', 'admin', 'readforums'));
+        return $pnr->fetch('pnforum_search.html');
+    }
+    return '';
 }
+
+/**
+ * Do last minute access checking and assign URL to items
+ *
+ * Access checking is ignored since access check has
+ * already been done. But we do add a URL to the found user
+ */
+function pnForum_searchapi_search_check(&$args)
+{
+    $datarow = &$args['datarow'];
+    $extra = unserialize($datarow['extra']);
+    
+    $datarow['url'] = pnModUrl('pnForum', 'user', 'viewtopic', array('topic' => $extra['topic_id']));
+    return true;
+}
+
 
 /**
  * Search form component
@@ -78,59 +96,37 @@ function pnForum_searchapi_internalsearchoptions($args)
 
 /**
  * Search plugin main function
+ *
+ *@params q             string the text to search
+ *@params searchtype    string 'AND', 'OR' or 'EXACT'
+ *@params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+ *@params numlimit      int    limit for search, defaultsto 10
+ *@params page          int    number of page t show
+ *@params startnum      int    the first item to show
+ *
  **/
-function pnForum_searchapi_search()
+function pnForum_searchapi_search($args)
 {
-    $active_pnForum = FormUtil::getPassedValue('active_pnForum', '');
-    $vars['searchfor'] = FormUtil::getPassedValue('q');
-    $vars['bool'] = FormUtil::getPassedValue('bool', 'AND');
-    $vars['forums'] = FormUtil::getPassedValue('pnForum_forum');
-    $vars['author'] = FormUtil::getPassedValue('pnForum_author');
-    $vars['order'] = (int)FormUtil::getPassedValue('pnForum_order', 1);
-    $vars['limit'] = (int)FormUtil::getPassedValue('pnForum_limit', 10);
-    $vars['startnum'] = (int)FormUtil::getPassedValue('pnForum_startnum', 0);
-    $internalsearch = FormUtil::getPassedValue('internalsearch');
+    if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_READ)) {
+        return false;
+    }
 
-    if(empty($active_pnForum)) {
-        return;
-    }
-    // check for valid input
-    if(empty($vars['limit']) || ($vars['limit']<0) || ($vars['limit']>50)) {
-        $vars['limit'] = 10;
-    }
-    if($vars['bool']<>'AND' && $vars['bool']<>'OR') {
-        $vars['bool'] = 'AND';
-    }
-    if(!is_array($vars['forums']) || count($vars['forums'])== 0) {
+    $args['forums']       = FormUtil::getPassedValue('pnForum_forum', null, 'POST');
+    $args['searchwhere']  = FormUtil::getPassedValue('pnForum_searchwhere', 'post', 'POST');
+
+    if(!is_array($args['forums']) || count($args['forums'])== 0) {
         // set default
-        $vars['forums'][0] = -1;
+        $args['forums'][0] = -1;
     }
-
-    if(empty($vars['order']) || ($vars['order']<>0 && $vars['order']<>1) ) {
-        // set default
-        $vars['order'] = 1;
-    }
-
-    if(empty($vars['startnum'])) {
-        $vars['startnum'] = 0;
+    
+    if($args['searchwhere'] <> 'post' && $args['searchwhere'] <> 'author') {
+        $args['searchwhere'] = 'post';
     }
 
     // check mod var for fulltext support
-    $funcname = (pnModGetVar('pnForum', 'fulltextindex')==1) ? 'fulltext' : 'nonfulltext';
-    list($searchresults,
-         $total_hits) =  pnModAPIFunc('pnForum', 'search', $funcname, $vars);
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
-    $pnr->assign('total_hits', $total_hits);
-    $pnr->assign('searchresults', $searchresults);
-    $pnr->assign('searchfor',    $vars['searchfor']);
-    $pnr->assign('searchbool',   $vars['bool']);
-    $pnr->assign('searchauthor', $vars['author']);
-    $pnr->assign('searchforums', $vars['forums']);
-    $pnr->assign('searchorder',  $vars['order']);
-    $pnr->assign('searchlimit',  $vars['limit']);
-    $pnr->assign('searchstart',  $vars['startnum']);
-    $template = (!empty($internalsearch)) ? 'pnforum_user_searchresults.html' : 'pnforum_searchresults.html';
-    return $pnr->fetch($template);
+    $funcname = (pnModGetVar('pnForum', 'fulltextindex', 0)==1) ? 'fulltext' : 'nonfulltext';
+    pnModAPIFunc('pnForum', 'search', $funcname, $args);
+    return true;
 }
 
 /**
@@ -141,88 +137,61 @@ function pnForum_searchapi_search()
  *
  *@private
  *
- *@params $args['searchfor']  string the search term
- *@params $args['bool']       string 'AND' or 'OR'
- *@params $args['forums']     array array of forum ids to search in
- *@params $args['author']     string search for postings of this author only
- *@params $args['order']      array array of order to display results
- *@params $args['startnum']   int number of entry to start showing when on page > 1
- *@params $args['limit']      int number of hits to show per page > 1
- *@returns array with search results
+ *@params q             string the text to search
+ *@params searchtype    string 'AND', 'OR' or 'EXACT'
+ *@params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+ *@params numlimit      int    limit for search, defaultsto 10
+ *@params page          int    number of page t show
+ *@params startnum      int    the first item to show
+ * from pnForum:
+ *@params searchwhere   string 'posts' or 'author'
+ *@params forums        array of forums to dearch
+ *@returns true or false
  */
 function pnForum_searchapi_nonfulltext($args)
 {
-    extract($args);
-    unset($args);
-
-    if( empty($searchfor) && empty($author) ) {
-        return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
+    if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_READ)) {
+        return false;
     }
 
-    $posts_per_page     = pnModGetVar('pnForum', 'posts_per_page');
-    
-    if(!isset($limit) || empty($limit)) {
-        $limit = 10;
-    }
+    pnModDBInfoLoad('Search');
+    $pntable      = pnDBGetTables();
+    $searchtable  = $pntable['search_result'];
+    $searchcolumn = $pntable['search_result_column'];
 
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    // prepare searchresults array
-    $searchresults = array();
-
-    $query = "SELECT DISTINCT
-              f.forum_id,
-              f.forum_name,
-              f.cat_id,
-              c.cat_title,
-              pt.post_text,
-              pt.post_id,
-              t.topic_id,
-              t.topic_title,
-              t.topic_poster,
-              t.topic_replies,
-              t.topic_views,
-              t.topic_status,
-              t.topic_last_post_id,
-              p.poster_id,
-              p.post_time
-              FROM ".$pntable['pnforum_posts']." AS p,
-                   ".$pntable['pnforum_forums']." AS f,
-                   ".$pntable['pnforum_posts_text']." AS pt,
-                   ".$pntable['pnforum_topics']." AS t,
-                   ".$pntable['pnforum_categories']." AS c
-              WHERE ";
-
-    $searchfor = pnVarPrepForStore(trim($searchfor));
-    if(!empty($searchfor)) {
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $query .= '( ';
-        foreach($words as $word) {
-            if($flag) {
-                switch($bool) {
-                    case 'AND' :
-                        $query .= ' AND ';
-                        break;
-                    case 'OR' :
-                    default :
-                        $query .= ' OR ';
-                        break;
-                }
+    switch ($args['searchwhere']) {
+        case 'author':
+            // searchfor is empty, we search by author only (done later on)
+            $searchauthor = pnUserGetIDFromName($args['q']);
+            if ($searchauthor > 0){
+                $wherematch = ' p.poster_id=' . DataUtil::formatForStore($searchauthor) . ' AND ';
+            } else {
+                return false;
             }
-            // get post_text and match up forums/topics/posts
-            $query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $flag = true;
-        }
-        $query .= ' ) AND ';
-    } else {
-        // searchfor is empty, we search by author only
+            break;
+        case 'post':  
+        default:
+            $flag = false;
+            $words = explode(' ', $args['q']);
+            $wherematch = '( ';
+            foreach($words as $word) {
+                if($flag) {
+                    switch($bool) {
+                        case 'AND' :
+                            $wherematch .= ' AND ';
+                            break;
+                        case 'OR' :
+                        default :
+                            $wherematch .= ' OR ';
+                            break;
+                    }
+                }
+                // get post_text and match up forums/topics/posts
+                $wherematch .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                $flag = true;
+            }
+            $wherematch .= ' ) AND ';
     }
-    $query .= "p.post_id=pt.post_id \n";
-    $query .= "AND p.topic_id=t.topic_id \n";
-    $query .= "AND p.forum_id=f.forum_id\n";
-    $query .= "AND c.cat_id=f.cat_id\n";
-
 
     // get all forums the user is allowed to read
     $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
@@ -231,22 +200,22 @@ function pnForum_searchapi_nonfulltext($args)
         // return empty result set without even doing a db access
         return(array($searchresults, 0));
     }
-    // now create a very simle array of forum_ids only. we do not need
+    // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
     $allowedforums = array();
     for($i=0; $i<count($userforums); $i++) {
         array_push($allowedforums, $userforums[$i]['forum_id']);
     }
 
-    if((!is_array($forums) && $forums == -1) || $forums[0]==-1) {
+    if((!is_array($args['forums']) && $args['forums'] == -1) || $args['forums'][0]==-1) {
         // search in all forums we are allowed to see
-        $query .= ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
+        $whereforums = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
     } else {
         // filter out forums we are not allowed to read
         $forums2 = array();
-        for($i=0;$i<count($forums); $i++) {
-            if(in_array($forums[$i], $allowedforums)) {
-                $forums2[] = $forums[$i];
+        for($i=0;$i<count($args['forums']); $i++) {
+            if(in_array($args['forums'][$i], $allowedforums)) {
+                $forums2[] = $args['forums'][$i];
             }
         }
         if(count($forums2)==0) {
@@ -254,95 +223,11 @@ function pnForum_searchapi_nonfulltext($args)
             // return empty result set without even doing a db access
             return(array($searchresults, 0));
         }
-        $query .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
+        $whereforums = ' AND f.forum_id IN(' . DataUtil::formatForStore(implode($forums2, ',')) . ') ';
     }
 
-    // authors
-    if($author) {
-        $searchauthor = pnUserGetIDFromName($author);
-        if ($searchauthor > 0){
-            $query .= ' AND p.poster_id=' . pnVarPrepForStore($searchauthor);
-        }
-    }
-
-    // Not sure this is needed and is not cross DB compat
-    //$query .= ' GROUP BY pt.post_id ';
-
-    switch($order) {
-        case 2:
-            $query .= ' ORDER BY t.topic_title';
-            break;
-        case 3:
-            $query .= ' ORDER BY f.forum_name';
-            break;
-        case 1:
-        default:
-            $query .= ' ORDER BY pt.post_id DESC';
-    }
-    $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
-
-    $total_hits = 0;
-    $skip_hits = 0;
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
-                $skip_hits++;
-            } else {
-                $sresult = array();
-                list($sresult['forum_id'],
-                     $sresult['forum_name'],
-                     $sresult['cat_id'],
-                     $sresult['cat_title'],
-                     $sresult['post_text'],
-                     $sresult['post_id'],
-                     $sresult['topic_id'],
-                     $sresult['topic_title'],
-                     $sresult['topic_poster'],
-                     $sresult['topic_replies'],
-                     $sresult['topic_views'],
-                     $sresult['topic_status'],
-                     $sresult['topic_last_post_id'],
-                     $sresult['poster_id'],
-                     $sresult['post_time']) = $result->fields;
-                // no auth check for forum and category needed here
-                // timezone
-                $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-                $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-                $sresult['topic_title'] = stripslashes($sresult['topic_title']);
-                
-                // without signature
-                $sresult['total_posts'] = $sresult['topic_replies'] + 1;
-
-                // topic size
-                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
-                                
-                // strip_tags is needed here 'cause maybe we cut within a html-tag...
-                $sresult['post_text'] = strip_tags($sresult['post_text']);
-                
-                // last poster username
-                $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
-
-                // topic starter username
-                $sresult['topicstarter_name'] = pnUserGetVar('uname', $sresult['topic_poster']);
-
-                // last posting links
-                $sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                                     array('topic' => $sresult['topic_id'],
-                                                           'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-                $sresult['last_post_url_anchor'] = $sresult['last_post_url'] . '#pid' . $sresult['topic_last_post_id'];
-                
-                // check if we have to skip the first $startnum entries or not
-                // check if we have a limit and wether we have reached it or not
-                if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                    $searchresults[$sresult['topic_id']] = $sresult;
-                }
-            }
-            $total_hits++;
-        }
-    }
-
-    pnfCloseDB($result);
-    return array($searchresults, $total_hits);
+    start_search($wherematch, $selectmatch, $whereforums, $args);
+    return true;
 }
 
 /**
@@ -354,112 +239,83 @@ function pnForum_searchapi_nonfulltext($args)
  *
  *@private
  *
- *@params $args['searchfor']  string the search term
- *@params $args['bool']       string 'AND' or 'OR'
- *@params $args['forums']     array array of forum ids to search in
- *@params $args['author']     string searhc for postings of this author only
- *@params $args['order']      int order to display results
- *@params $args['startnum']   int number of entry to start showing when on page > 1
- *@params $args['limit']      int number of hits to show per page > 1
- *@returns array with search results
+ *@params q             string the text to search
+ *@params searchtype    string 'AND', 'OR' or 'EXACT'
+ *@params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+ *@params numlimit      int    limit for search, defaultsto 10
+ *@params page          int    number of page t show
+ *@params startnum      int    the first item to show
+ * from pnForum:
+ *@params searchwhere   string 'posts' or 'author'
+ *@params forums        array of forums to dearch
+ *@returns true or false
  */
 function pnForum_searchapi_fulltext($args)
 {
-    extract($args);
-    unset($args);
-
-    if( empty($searchfor) && empty($author) ) {
-        return showforumerror(_PNFORUM_SEARCHINCLUDE_MISSINGPARAMETERS, __FILE__, __LINE__);
+    if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_READ)) {
+        return false;
     }
 
-    if(!isset($limit) || empty($limit)) {
-        $limit = 10;
-    }
-
-    list($dbconn, $pntable) = pnfOpenDB();
-
-    // prepare array for search results
-    $searchresults = array();
-
-    $searchfor = pnVarPrepForStore(trim($searchfor));
     // partial sql stored in $wherematch
     $wherematch = '';
     // selectmatch contains almost the same as wherematch without the last AND and
     // will be used in the SELECT part like ... selectmatch as score
     // to enable ordering the results by score
     $selectmatch = '';
-    if(!empty($searchfor)) {
-
-        if($bool == 'AND') {
-            // AND
-            $wherematch = "(MATCH pt.post_text AGAINST ('%$searchfor%') OR MATCH t.topic_title AGAINST ('%$searchfor%')) \n";
-            $selectmatch = ", MATCH pt.post_text AGAINST ('%$searchfor%') as textscore, MATCH t.topic_title AGAINST ('%$searchfor%') as subjectscore \n";
-        } else {
-            // OR
-            $flag = false;
-            $words = explode(' ', $searchfor);
-            $wherematch .= '( ';
-            foreach($words as $word) {
-                if($flag) {
-                    $wherematch .= ' OR ';
+    switch ($args['searchwhere']) {
+        case 'author':
+            // we search by author only
+            $searchauthor = pnUserGetIDFromName($args['q']);
+            if ($searchauthor > 0){
+                $wherematch = ' p.poster_id=' . DataUtil::formatForStore($searchauthor) . ' AND ';
+            } else {
+                return false;
+            }
+            break;
+        case 'post':
+        default:
+            if($args['searchtype'] == 'AND') {
+                // AND
+                $wherematch = "(MATCH pt.post_text AGAINST ('%" . $args['q'] . "%') OR MATCH t.topic_title AGAINST ('%" . $args['q'] ."%')) \n";
+                $selectmatch = ", MATCH pt.post_text AGAINST ('%" .$args['q'] . "%') as textscore, MATCH t.topic_title AGAINST ('%" . $args['q'] . "%') as subjectscore \n";
+            } else {
+                // OR
+                $flag = false;
+                $words = explode(' ', $args['q']);
+                $wherematch .= '( ';
+                foreach($words as $word) {
+                    if($flag) {
+                        $wherematch .= ' OR ';
+                    }
+                    $word = DataUtil::formatForStore($word);
+                    // get post_text and match up forums/topics/posts
+                    //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                    $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
+                    $flag = true;
                 }
-                $word = pnVarPrepForStore($word);
-                // get post_text and match up forums/topics/posts
-                //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                $wherematch .= ' ) ';
+            }
+            $wherematch .= ' AND ';
+            
+            $flag = false;
+            $words = explode(' ', $args['q']);
+            $wherematch = '( ';
+            foreach($words as $word) {
+                if($flag==true) {
+                    switch(strtolower($args['searchtype'])) {
+                        case 'or':
+                            $wherematch .= ' OR ';
+                            break;
+                        case 'and':
+                        default:
+                            $wherematch .= 'AND ';
+                    }
+                }
+                $word = DataUtil::formatForStore($word);
                 $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
                 $flag = true;
             }
-            $wherematch .= ' ) ';
-        }
-        $wherematch .= ' AND ';
-
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $wherematch = '( ';
-        foreach($words as $word) {
-            if($flag==true) {
-                switch(strtolower($bool)) {
-                    case 'or':
-                        $wherematch .= ' OR ';
-                        break;
-                    case 'and':
-                    default:
-                        $wherematch .= 'AND ';
-                }
-            }
-            $word = pnVarPrepForStore($word);
-            // get post_text and match up forums/topics/posts
-            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-            $flag = true;
-        }
-        $wherematch .= ' ) AND ';
-
-        $flag = false;
-        $words = explode(' ', $searchfor);
-        $query .= '( ';
-        foreach($words as $word) {
-            if($flag==true) {
-                switch(strtolower($bool)) {
-                    case 'or':
-                        $query .= ' OR ';
-                        break;
-                    case 'and':
-                    default:
-                        $query .= 'AND ';
-                }
-            }
-            $word = pnVarPrepForStore($word);
-            // get post_text and match up forums/topics/posts
-            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-            $query .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-            $flag = true;
-        }
-        $query .= ' ) ';
-        $query .= ' AND ';
-
-    } else {
-        // searchfor is empty, we search by author only
+            $wherematch .= ' ) AND ';
     }
 
     // check forums (multiple selection is possible!)
@@ -473,22 +329,22 @@ function pnForum_searchapi_fulltext($args)
         // return empty result set without even doing a db access
         return(array($searchresults, 0));
     }
-    // now create a very simle array of forum_ids only. we do not need
+    // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
     $allowedforums = array();
     for($i=0; $i<count($userforums); $i++) {
         array_push($allowedforums, $userforums[$i]['forum_id']);
     }
 
-    if((!is_array($forums) && $forums == -1) || $forums[0]==-1) {
+    if((!is_array($args['forums']) && $args['forums'] == -1) || $args['forums'][0]==-1) {
         // search in all forums we are allowed to see
-        $whereforums = ' AND f.forum_id IN (' . pnVarPrepForStore(implode($allowedforums, ',')) . ') ';
+        $whereforums = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
     } else {
         // filter out forums we are not allowed to read
         $forums2 = array();
-        for($i=0;$i<count($forums); $i++) {
-            if(in_array($forums[$i], $allowedforums)) {
-                $forums2[] = $forums[$i];
+        for($i=0;$i<count($args['forums']); $i++) {
+            if(in_array($args['forums'][$i], $allowedforums)) {
+                $forums2[] = $args['forums'][$i];
             }
         }
         if(count($forums2)==0) {
@@ -496,40 +352,20 @@ function pnForum_searchapi_fulltext($args)
             // return empty result set without even doing a db access
             return(array($searchresults, 0));
         }
-        $whereforums .= ' AND f.forum_id IN(' . pnVarPrepForStore(implode($forums2, ',')) . ') ';
+        $whereforums .= ' AND f.forum_id IN(' . DataUtil::formatForStore(implode($forums2, ',')) . ') ';
     }
+                 
+    start_search($wherematch, $selectmatch, $whereforums, $args);
+    return true;
+}
 
-    // authors with adodb
-    // partial sql stored in $whereauthor
-    $whereauthor = '';
-    if($author) {
-        $searchuid = pnUserGetIDFromName($author);
-        if(is_numeric($searchuid)) {
-            $whereauthor = " AND p.poster_id=$searchuid \n";
-        }
-    }
+function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
+{
+    pnModDBInfoLoad('Search');
+    $pntable      = pnDBGetTables();
+    $searchtable  = $pntable['search_result'];
+    $searchcolumn = $pntable['search_result_column'];
 
-    // Not sure this is needed and is not cross DB compat
-    //$query .= " GROUP BY pt.post_id ";
-
-    switch($order) {
-        case 2:
-            $searchordersql = ' ORDER BY t.topic_title ';
-            break;
-        case 3:
-            $searchordersql = ' ORDER BY f.forum_name ';
-            break;
-        case 4:
-            if($selectmatch) {
-                $searchordersql = ' ORDER BY textscore DESC, subjectscore DESC ';
-                break;
-            } // no selectmatch, we slip through to default
-        case 1:
-        default:
-            $searchordersql = ' ORDER BY pt.post_id DESC ';
-            break;
-    }
-    
     $query = "SELECT DISTINCT
               f.forum_id,
               f.forum_name,
@@ -558,77 +394,38 @@ function pnForum_searchapi_fulltext($args)
               AND p.topic_id=t.topic_id
               AND p.forum_id=f.forum_id
               AND c.cat_id=f.cat_id
-              $whereforums
-              $whereauthor
-              $searchordersql";
+              $whereforums";
 
-//    $result = pnfSelectLimit($dbconn, $query, $limit, $startnum, __FILE__, __LINE__, $debug=false);
-
-    $result = pnfExecuteSQL($dbconn, $query, __FILE__, __LINE__);
-
-    $total_hits = $result->RecordCount();
-    $skip_hits = 0;
-    if($total_hits > 0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            if( ($startnum > 0) && ($skip_hits < $startnum-1) ) {
-                $skip_hits++;
-            } else {
-                $sresult = array();
-                list($sresult['forum_id'],
-                     $sresult['forum_name'],
-                     $sresult['cat_id'],
-                     $sresult['cat_title'],
-                     $sresult['post_text'],
-                     $sresult['post_id'],
-                     $sresult['topic_id'],
-                     $sresult['topic_title'],
-                     $sresult['topic_poster'],
-                     $sresult['topic_replies'],
-                     $sresult['topic_views'],
-                     $sresult['topic_status'],
-                     $sresult['topic_last_post_id'],
-                     $sresult['poster_id'],
-                     $sresult['post_time']) = $result->fields;
-                // check if we have to skip the first $startnum entries or not
-                // no further auth check needed, we are only searching forums we
-                // are allowed to read
-                // timezone
-                $sresult['posted_unixtime'] = strtotime ($sresult['post_time']);
-                $sresult['posted_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($sresult['posted_unixtime']));
-                $sresult['topic_title'] = stripslashes($sresult['topic_title']);
-    
-                 // topic size
-                $sresult['total_posts'] = $sresult['topic_replies'] + 1;
-                                
-                // without signature
-                $sresult['post_text'] = eregi_replace("\[addsig]$", '', $sresult['post_text']);
- 
-                // strip_tags is needed here 'cause maybe we cut within a html-tag...
-                $sresult['post_text'] = strip_tags($sresult['post_text']);
-    
-                // last poster username
-                $sresult['poster_name'] = pnUserGetVar('uname', $sresult['poster_id']);
-
-                // topic starter username
-                $sresult['topicstarter_name'] = pnUserGetVar('uname', $sresult['topic_poster']);
-
-                // last posting links
-                $sresult['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
-                                                     array('topic' => $sresult['topic_id'],
-                                                           'start' => (ceil(($sresult['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
-                $sresult['last_post_url_anchor'] = $sresult['last_post_url'] . '#pid' . $sresult['topic_last_post_id'];
-    
-                // check if we have a limit and if we have reached it or not
-                if( ( ($limit > 0) && (count($searchresults) < $limit) ) || ($limit==0) ) {
-                    $searchresults[$sresult['topic_id']] = $sresult;
-                }
-            }
-        }
+    $result = DBUtil::executeSQL($query);
+    if (!$result) {
+        return LogUtil::registerError (_GETFAILED);
     }
 
-    pnfCloseDB($result);
-    return array($searchresults, $total_hits);
+    $sessionId = session_id();
+
+    $insertSql = 'INSERT INTO ' . $searchtable . '('
+                . $searchcolumn['title'] . ','
+                . $searchcolumn['text'] . ','
+                . $searchcolumn['extra'] . ','
+                . $searchcolumn['module'] . ','
+                . $searchcolumn['created'] . ','
+                . $searchcolumn['session']
+                . ') VALUES ';
+
+    // Process the result set and insert into search result table
+    for (; !$result->EOF; $result->MoveNext()) {
+        $topic = $result->GetRowAssoc(2);
+        $sql = $insertSql . '('
+               . '\'' . DataUtil::formatForStore($topic['topic_title']) . '\', '
+               . '\'' . DataUtil::formatForStore(str_replace('[addsig]', '', $topic['post_text'])) . '\', '
+               . '\'' . DataUtil::formatForStore(serialize(array('searchwhere' => $args['searchwhere'], 'searchfor' => $args['q'], 'topic_id' => $topic['topic_id']))) . '\', '
+               . '\'' . 'pnForum' . '\', '
+               . '\'' . DataUtil::formatForStore($topic['post_time']) . '\', '
+               . '\'' . DataUtil::formatForStore($sessionId) . '\')';
+        $insertResult = DBUtil::executeSQL($sql);
+        if (!$insertResult) {
+            return LogUtil::registerError (_GETFAILED);
+        }
+    }
+    return true;
 }
-
-
-?>
