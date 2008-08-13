@@ -32,3 +32,4 @@ define('_PNFORUM_TO27_HINT', 'This upgrade does not not change the database stru
 define('_PNFORUM_TO27_FAILED', 'Upgrade auf pnForum 2.7 fehlgeschlagen');
 
 define('_PNFORUM_ZIKULA10ISREQUIRED', 'This version of pnForum requires Zikula 1.0 or later. Installation has been stopped because this requirement is not met');
+define('_PNFORUM_DISABLED_INFO', 'The forum is currently disabled for maintenance, please come back later.');

@@ -35,3 +35,4 @@ define('_PNFORUM_TO30_HINT', 'Das Upgrade auf Version 3.0 beinhaltet keine Änder
 define('_PNFORUM_TO30_FAILED', 'Upgrade auf pnForum 3.0 fehlgeschlagen');
 
 define('_PNFORUM_ZIKULA10ISREQUIRED', 'Diese Version von pnForum benötigt mind. Zikula 1.0. Die Installation wurde abgebrochen.');
+define('_PNFORUM_DISABLED_INFO', 'Das Forum steht im Augenblick nicht zur Verfügung, bitte später noch mal probieren.');

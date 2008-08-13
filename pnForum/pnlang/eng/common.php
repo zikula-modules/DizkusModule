@@ -22,7 +22,6 @@ define('_PNFORUM_SEARCHWHERE', 'Search in');
 define('_PNFORUM_SEARCH_POSTINGS', 'postings');
 define('_PNFORUM_SEARCH_AUTHOR', 'authors');
 
-define('_PNFORUM_DISABLED_INFO', 'The forum is currently disabled for maintenance, please come back later.');
 define('_PNFORUM_PREFS_ENABLEDISABLE', 'Enabled forum<br />(turning it off allows access for Admins only)');
 define('_PNFORUM_PREFS_DISABLEDTEXT', 'Enter info text for users if forum is disabled');
 define('_PNFORUM_SOURCEEQUALSTARGETFORUM', 'Error: Source forum must differ from target forum.');
