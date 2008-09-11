@@ -281,7 +281,31 @@ function Dizkus_init_interactiveupgrade_to_3_0()
  *
  */
 function Dizkus_upgrade_to_3_0()
-{
+{        
+    // rename the old pnForum tablenames to Dizkus tablenames
+    $tables = array('pnforum_categories']         => 'dizkus_categories',
+                    'pnforum_forum_mods']         => 'dizkus_forum_mods',
+                    'pnforum_forums']             => 'dizkus_forums',
+                    'pnforum_posts']              => 'dizkus_posts',
+                    'pnforum_posts_text']         => 'dizkus_posts_text',
+                    'pnforum_ranks']              => 'dizkus_ranks',
+                    'pnforum_subscription']       => 'dizkus_subscription',
+                    'pnforum_topics']             => 'dizkus_topics',
+                    'pnforum_users']              => 'dizkus_users',
+                    'pnforum_topic_subscription'] => 'dizkus_topic_subscription',
+                    'pnforum_forum_favorites']    => 'dizkus_forum_favorites');
+    $dbconn   = DBConnectionStack::getConnection();
+    $dict     = NewDataDictionary($dbconn);
+    foreach($tables as $oldtable => $newtable) {
+        $sqlarray = $dict->RenameTableSQL($oldtable, $newtable);
+        $result   = $dict->ExecuteSQLArray($sqlarray);
+        $success  = ($result==2);
+        if (!$success) {
+            $dberrmsg = $dbconn->ErrorNo().' - '.$dbconn->ErrorMSg();
+            LogUtil::registerError (_RENAMETABLEFAILED. " ($tablename, $result, $dberrmsg)");
+        }
+    }
+    
     // add some columns to the post table - with DBUtil this is a one-liner, you just have to
     // define the new columns in the pntables array, see pntables.php
     DBUtil::changeTable('dizkus_posts');
