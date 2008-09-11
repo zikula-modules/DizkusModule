@@ -1,0 +1,75 @@
+<!--[*  $Id$  *]-->
+
+<!--[modulestylesheet stylesheet=style.css modname=Dizkus xhtml=true]-->
+
+<div id="dzk_search" class="dzk_clearfix">
+
+    <div style="background-color: <!--[ $bgcolor2 ]-->;">
+        <input type="checkbox" name="active[Dizkus]" id="active_Dizkus" value="1" <!--[ if $active ]-->checked="checked"<!--[ /if ]--> />
+        <label for="active_Dizkus"><!--[ pnml name='_DZK_SEARCHINCLUDE_TITLE' ]--></label>
+    </div>
+   
+    <input type="hidden" name="Dizkus_startnum" value="0" />
+
+    <dl>
+         
+        <dt>
+            <label for="Dizkus_forum"><!--[ pnml name='_DZK_SEARCHINCLUDE_FORUM' ]-->:</label>
+        </dt>
+        <dd>
+            <select name="Dizkus_forum[]" id="Dizkus_forum" size="5" multiple="multiple">
+            <option value="-1" selected="selected"><!--[ pnml name='_DZK_SEARCHALLFORUMS' ]--></option>
+            <!--[ foreach item=forum from=$forums ]-->
+            <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
+            <!--[ /foreach ]-->
+            </select>
+        </dd>
+
+        <dt>
+            <label for="Dizkus_searchwhere"><!--[ pnml name='_DZK_SEARCHWHERE' ]-->:</label>
+        </dt>
+        <dd>
+            <select name="Dizkus_searchwhere" id="Dizkus_searchwhere" size="1">
+            <option value="post" selected="selected"><!--[ pnml name='_DZK_SEARCH_POSTINGS' ]--></option>
+            <option value="author"><!--[ pnml name='_DZK_SEARCH_AUTHOR' ]--></option>
+            </select>
+        </dd>
+    
+<!--[*    
+        <dt>
+            <label for="Dizkus_author"><!--[ pnml name='_DZK_SEARCHINCLUDE_AUTHOR' ]-->:</label>
+        </dt>
+        <dd>
+            <input type="text" name="Dizkus_author" id="Dizkus_author" size="20" maxlength="255" />
+        </dd>
+        <dt>
+            <label for="Dizkus_order"><!--[ pnml name='_DZK_SEARCHINCLUDE_ORDER' ]-->:</label>
+        </dt>
+        <dd>
+            <select name="Dizkus_order" id="Dizkus_order" size="1">
+            <option value="1" selected="selected"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYDATE' ]--></option>
+            <option value="2"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYTITLE' ]--></option>
+            <option value="3"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYFORUM' ]--></option>
+            <!--[ if $pncore.Dizkus.fulltextindex == 1 ]-->
+            <option value="4"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYSCORE' ]--></option>
+            <!--[ /if ]-->
+            </select>
+        </dd>
+    
+        <dt>
+            <label for="Dizkus_limit"><!--[ pnml name='_DZK_SEARCHINCLUDE_LIMIT' ]-->:</label>
+        </dt>
+        <dd>
+            <select name="Dizkus_limit" id="Dizkus_limit" size="1">
+            <option value="0"><!--[ pnml name='_DZK_SEARCHINCLUDE_NOLIMIT' ]--></option>
+            <option value="10" selected="selected">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            </select>
+            <!--[ pnml name='_DZK_SEARCHINCLUDE_HITS' ]-->
+        </dd>
+*]-->    
+    </dl>
+
+</div>
+

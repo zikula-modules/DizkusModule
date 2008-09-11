@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -20,22 +20,22 @@ function smarty_function_jumpbox($params, &$smarty)
     extract($params);
 	unset($params);
 
-    if(!pnModAPILoad('pnForum', 'admin')) {
-        $smarty->trigger_error("loading pnForum adminapi failed");
+    if(!pnModAPILoad('Dizkus', 'admin')) {
+        $smarty->trigger_error("loading Dizkus adminapi failed");
         return;
     }
 
     $out = "";
-    $forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
+    $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums');
     if(count($forums)>0) {
-        Loader::includeOnce('modules/pnForum/common.php');
-        $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewforum')) . '" method="get">
-               <label for="pnforum_forum"><strong>' . DataUtil::formatForDisplay(_PNFORUM_FORUM) . ': </strong></label>
-               <select name="forum" id="pnforum_forum" onchange="location.href=this.options[this.selectedIndex].value">
-	           <option value="'.DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'main')).'">' . DataUtil::formatForDisplay(_PNFORUM_QUICKSELECTFORUM) . '</option>';
+        Loader::includeOnce('modules/Dizkus/common.php');
+        $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum')) . '" method="get">
+               <label for="dizkus_forum"><strong>' . DataUtil::formatForDisplay(_DZK_FORUM) . ': </strong></label>
+               <select name="forum" id="dizkus_forum" onchange="location.href=this.options[this.selectedIndex].value">
+	           <option value="'.DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'main')).'">' . DataUtil::formatForDisplay(_DZK_QUICKSELECTFORUM) . '</option>';
         foreach($forums as $forum) {
             if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-            	$out .= '<option value="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum['forum_id']))) . '">' . DataUtil::formatForDisplay($forum['cat_title']) . '&nbsp;::&nbsp;' . DataUtil::formatForDisplay($forum['forum_name']) . '</option>';
+            	$out .= '<option value="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum['forum_id']))) . '">' . DataUtil::formatForDisplay($forum['cat_title']) . '&nbsp;::&nbsp;' . DataUtil::formatForDisplay($forum['forum_name']) . '</option>';
             }
         }
         $out .= '</select>

@@ -1,10 +1,10 @@
 <?php
 /************************************************************************
- * pnForum - The Post-Nuke Module                                       *
+ * Dizkus - The Post-Nuke Module                                       *
  * ==============================                                       *
  *                                                                      *
- * Copyright (c) 2001-2004 by the pnForum Module Development Team       *
- * http://www.pnforum.de/                                            *
+ * Copyright (c) 2001-2004 by the Dizkus Module Development Team       *
+ * http://www.dizkus.com/                                            *
  ************************************************************************
  * Modified version of: *
  ************************************************************************
@@ -35,33 +35,33 @@
  * @version $Id$
  * @author Frank Schummertz
  * @copyright 2004 by Frank Schummertz
- * @package pnForum
+ * @package Dizkus
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
- * @link http://www.pnforum.de
+ * @link http://www.dizkus.com
  *
  ***********************************************************************/
 
-Loader::includeOnce("modules/pnForum/common.php");
+Loader::includeOnce("modules/Dizkus/common.php");
 
 /**
  * Search plugin info
  **/
-function pnForum_searchapi_info()
+function Dizkus_searchapi_info()
 {
-    return array('title'     => 'pnForum',
-                 'functions' => array('pnForum' => 'search'));
+    return array('title'     => 'Dizkus',
+                 'functions' => array('Dizkus' => 'search'));
 }
 
 /**
  * Search form component
  **/
-function pnForum_searchapi_options($args)
+function Dizkus_searchapi_options($args)
 {
-    if (SecurityUtil::checkPermission('pnforum::', '::', ACCESS_READ)) {
-        $pnr = pnRender::getInstance('pnForum');
-        $pnr->assign('active', (isset($args['active']) && isset($args['active']['pnForum'])) || !isset($args['active']));
-        $pnr->assign('forums', pnModAPIFunc('pnForum', 'admin', 'readforums'));
-        return $pnr->fetch('pnforum_search.html');
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
+        $pnr = pnRender::getInstance('Dizkus');
+        $pnr->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
+        $pnr->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
+        return $pnr->fetch('dizkus_search.html');
     }
     return '';
 }
@@ -72,12 +72,12 @@ function pnForum_searchapi_options($args)
  * Access checking is ignored since access check has
  * already been done. But we do add a URL to the found user
  */
-function pnForum_searchapi_search_check(&$args)
+function Dizkus_searchapi_search_check(&$args)
 {
     $datarow = &$args['datarow'];
     $extra = unserialize($datarow['extra']);
     
-    $datarow['url'] = pnModUrl('pnForum', 'user', 'viewtopic', array('topic' => $extra['topic_id']));
+    $datarow['url'] = pnModUrl('Dizkus', 'user', 'viewtopic', array('topic' => $extra['topic_id']));
     return true;
 }
 
@@ -85,13 +85,13 @@ function pnForum_searchapi_search_check(&$args)
 /**
  * Search form component
  **/
-function pnForum_searchapi_internalsearchoptions($args)
+function Dizkus_searchapi_internalsearchoptions($args)
 {
     // Create output object - this object will store all of our output so that
     // we can return it easily when required
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
-    $pnr->assign('forums', pnModAPIFunc('pnForum', 'admin', 'readforums'));
-    return $pnr->fetch('pnforum_user_search.html');
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
+    return $pnr->fetch('dizkus_user_search.html');
 }
 
 /**
@@ -105,14 +105,14 @@ function pnForum_searchapi_internalsearchoptions($args)
  *@params startnum      int    the first item to show
  *
  **/
-function pnForum_searchapi_search($args)
+function Dizkus_searchapi_search($args)
 {
-    if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_READ)) {
+    if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
         return false;
     }
 
-    $args['forums']       = FormUtil::getPassedValue('pnForum_forum', null, 'POST');
-    $args['searchwhere']  = FormUtil::getPassedValue('pnForum_searchwhere', 'post', 'POST');
+    $args['forums']       = FormUtil::getPassedValue('Dizkus_forum', null, 'POST');
+    $args['searchwhere']  = FormUtil::getPassedValue('Dizkus_searchwhere', 'post', 'POST');
 
     if(!is_array($args['forums']) || count($args['forums'])== 0) {
         // set default
@@ -124,8 +124,8 @@ function pnForum_searchapi_search($args)
     }
 
     // check mod var for fulltext support
-    $funcname = (pnModGetVar('pnForum', 'fulltextindex', 0)==1) ? 'fulltext' : 'nonfulltext';
-    pnModAPIFunc('pnForum', 'search', $funcname, $args);
+    $funcname = (pnModGetVar('Dizkus', 'fulltextindex', 0)==1) ? 'fulltext' : 'nonfulltext';
+    pnModAPIFunc('Dizkus', 'search', $funcname, $args);
     return true;
 }
 
@@ -133,7 +133,7 @@ function pnForum_searchapi_search($args)
  * nonfulltext
  * the function that will search the forum
  *
- * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL pnForum_searchapi_search INSTEAD
+ * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL Dizkus_searchapi_search INSTEAD
  *
  *@private
  *
@@ -143,14 +143,14 @@ function pnForum_searchapi_search($args)
  *@params numlimit      int    limit for search, defaultsto 10
  *@params page          int    number of page t show
  *@params startnum      int    the first item to show
- * from pnForum:
+ * from Dizkus:
  *@params searchwhere   string 'posts' or 'author'
  *@params forums        array of forums to dearch
  *@returns true or false
  */
-function pnForum_searchapi_nonfulltext($args)
+function Dizkus_searchapi_nonfulltext($args)
 {
-    if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_READ)) {
+    if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
         return false;
     }
 
@@ -194,7 +194,7 @@ function pnForum_searchapi_nonfulltext($args)
     }
 
     // get all forums the user is allowed to read
-    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+    $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
     if(!is_array($userforums) || count($userforums)==0) {
         // error or user is not allowed to read any forum at all
         // return empty result set without even doing a db access
@@ -235,7 +235,7 @@ function pnForum_searchapi_nonfulltext($args)
  * the function that will search the forum using fulltext indices - does not work on
  * InnoDB databases!!!
  *
- * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL pnForum_searchapi_search INSTEAD
+ * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL Dizkus_searchapi_search INSTEAD
  *
  *@private
  *
@@ -245,14 +245,14 @@ function pnForum_searchapi_nonfulltext($args)
  *@params numlimit      int    limit for search, defaultsto 10
  *@params page          int    number of page t show
  *@params startnum      int    the first item to show
- * from pnForum:
+ * from Dizkus:
  *@params searchwhere   string 'posts' or 'author'
  *@params forums        array of forums to dearch
  *@returns true or false
  */
-function pnForum_searchapi_fulltext($args)
+function Dizkus_searchapi_fulltext($args)
 {
-    if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_READ)) {
+    if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
         return false;
     }
 
@@ -323,7 +323,7 @@ function pnForum_searchapi_fulltext($args)
     $whereforums = '';
     
     // get all forums the user is allowed to read
-    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+    $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
     if(!is_array($userforums) || count($userforums)==0) {
         // error or user is not allowed to read any forum at all
         // return empty result set without even doing a db access
@@ -383,11 +383,11 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
               p.poster_id,
               p.post_time
               $selectmatch
-              FROM ".$pntable['pnforum_posts']." AS p,
-                   ".$pntable['pnforum_forums']." AS f,
-                   ".$pntable['pnforum_posts_text']." AS pt,
-                   ".$pntable['pnforum_topics']." AS t,
-                   ".$pntable['pnforum_categories']." AS c
+              FROM ".$pntable['dizkus_posts']." AS p,
+                   ".$pntable['dizkus_forums']." AS f,
+                   ".$pntable['dizkus_posts_text']." AS pt,
+                   ".$pntable['dizkus_topics']." AS t,
+                   ".$pntable['dizkus_categories']." AS c
               WHERE
               $wherematch
               p.post_id=pt.post_id
@@ -419,7 +419,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
                . '\'' . DataUtil::formatForStore($topic['topic_title']) . '\', '
                . '\'' . DataUtil::formatForStore(str_replace('[addsig]', '', $topic['post_text'])) . '\', '
                . '\'' . DataUtil::formatForStore(serialize(array('searchwhere' => $args['searchwhere'], 'searchfor' => $args['q'], 'topic_id' => $topic['topic_id']))) . '\', '
-               . '\'' . 'pnForum' . '\', '
+               . '\'' . 'Dizkus' . '\', '
                . '\'' . DataUtil::formatForStore($topic['post_time']) . '\', '
                . '\'' . DataUtil::formatForStore($sessionId) . '\')';
         $insertResult = DBUtil::executeSQL($sql);

@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -28,16 +28,16 @@ function smarty_function_mailtopic_button($params, &$smarty)
         $image = 'sendto.gif';
     }
 
-    Loader::includeOnce('modules/pnForum/common.php');
+    Loader::includeOnce('modules/Dizkus/common.php');
     $out = '';
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        $imagedata = pnf_getimagepath($image);
+        $imagedata = dzk_getimagepath($image);
         if($imagedata == false) {
-            $show = DataUtil::formatForDisplay(_PNFORUM_EMAIL_TOPIC);
+            $show = DataUtil::formatForDisplay(_DZK_EMAIL_TOPIC);
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_EMAIL_TOPIC) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_EMAIL_TOPIC) .'" ' . $imagedata['size'] . ' />';
         }
-	    $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_EMAIL_TOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'emailtopic', array('topic'=>$topic_id))) . '">' . $show . '</a>';
+	    $out = '<a title="' . DataUtil::formatForDisplay(_DZK_EMAIL_TOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'emailtopic', array('topic'=>$topic_id))) . '">' . $show . '</a>';
 	}
     return $out;
 }

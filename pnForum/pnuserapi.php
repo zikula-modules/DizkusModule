@@ -1,25 +1,25 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * get_userdata_from_id
- * This function dynamically reads all fields of the <prefix>_users and <prefix>_pnforum_users
+ * This function dynamically reads all fields of the <prefix>_users and <prefix>_dizkus_users
  * tables. When ever data fields are added there, they will be read too without any change here.
  *
  *@params $args{'userid'] int the users id (pn_uid)
  *@returns array of userdata information
  */
-function pnForum_userapi_get_userdata_from_id($args)
+function Dizkus_userapi_get_userdata_from_id($args)
 {
     $userid = $args['userid'];
 
@@ -44,14 +44,14 @@ function pnForum_userapi_get_userdata_from_id($args)
         $makedummy = true;
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
-    $sql = 'SELECT * FROM ' . $pntable['pnforum_users'] . ' WHERE ' . $pntable['pnforum_users_column']['user_id'] . '="' . (int)DataUtil::formatForStore($userid) . '";';
+    list($dbconn, $pntable) = dzkOpenDB();
+    $sql = 'SELECT * FROM ' . $pntable['dizkus_users'] . ' WHERE ' . $pntable['dizkus_users_column']['user_id'] . '="' . (int)DataUtil::formatForStore($userid) . '";';
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if(!$result->EOF) {
         $userdata = array_merge($userdata, $result->GetRowAssoc(false));
-        pnfCloseDB($result);
+        dzkCloseDB($result);
 
         // set some basic data
         $userdata['moderate'] = false;
@@ -72,15 +72,15 @@ function pnForum_userapi_get_userdata_from_id($args)
         //
         if ($userdata['user_rank'] != 0) {
             $sql = 'SELECT rank_title, rank_image
-                    FROM ' . $pntable['pnforum_ranks']. "
+                    FROM ' . $pntable['dizkus_ranks']. "
                     WHERE rank_id = '".(int)DataUtil::formatForStore($userdata['user_rank'])."'";
         } elseif ($userdata['user_posts'] != 0) {
             $sql = "SELECT rank_title, rank_image
-                    FROM ".$pntable['pnforum_ranks']."
+                    FROM ".$pntable['dizkus_ranks']."
                     WHERE rank_min <= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'
                     AND rank_max >= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'";
         }
-        $rank_result = pnfExecuteSQL($dbconn, $sql);
+        $rank_result = dzkExecuteSQL($dbconn, $sql);
 
         $rank = "";
         $rank_image = "";
@@ -89,13 +89,13 @@ function pnForum_userapi_get_userdata_from_id($args)
             if($rank) {
                 $userdata['rank'] = $rank;
                 if($rank_image) {
-                    $userdata['rank_image'] =  pnModGetVar('pnForum', 'url_ranks_images') . "/" . $rank_image;
+                    $userdata['rank_image'] =  pnModGetVar('Dizkus', 'url_ranks_images') . "/" . $rank_image;
                     $userdata['rank_image_attr'] = getimagesize($userdata['rank_image']);
                 }
             }
             $rank_result->MoveNext();
         }
-        pnfCloseDB($rank_result);
+        dzkCloseDB($rank_result);
 
         //
         // user name and avatar
@@ -108,14 +108,14 @@ function pnForum_userapi_get_userdata_from_id($args)
                          WHERE pn_uid = '".$userdata['pn_uid']."'
                          AND pn_lastused > '".DataUtil::formatForStore($activetime)."'";
 
-            $userresult = pnfExecuteSQL($dbconn, $userhack);
+            $userresult = dzkExecuteSQL($dbconn, $userhack);
 
             $online_state = $userresult->GetRowAssoc(false);
             $userdata['online'] = false;
             if($online_state['pn_uid'] == $userdata['pn_uid']) {
                 $userdata['online'] = true; //$online_state[$userdata['pn_uid']];
             }
-            pnfCloseDB($userresult);
+            dzkCloseDB($userresult);
 
             // avatar
             if($userdata['_YOURAVATAR']){
@@ -138,13 +138,13 @@ function pnForum_userapi_get_userdata_from_id($args)
     if($makedummy == true) {
         // we create a dummy user, so we need to adjust some of the information
         // gathered so far
-        $userdata['pn_name']   = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
-        $userdata['pn_uname']  = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['pn_name']   = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
+        $userdata['pn_uname']  = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
         $userdata['pn_email']  = '';
         $userdata['pn_femail'] = '';
         $userdata['pn_url']    = '';
-        $userdata['name']      = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
-        $userdata['uname']     = DataUtil::formatForDisplay(_PNFORUM_UNKNOWNUSER);
+        $userdata['name']      = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
+        $userdata['uname']     = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
         $userdata['email']     = '';
         $userdata['femail']    = '';
         $userdata['url']       = '';
@@ -163,7 +163,7 @@ function pnForum_userapi_get_userdata_from_id($args)
  *@params $args['type'] string, defines the id parameter
  *@returns int (depending on type and id)
  */
-function pnForum_userapi_boardstats($args)
+function Dizkus_userapi_boardstats($args)
 {
     $id   = isset($args['id']) ? $args['id'] : null;
     $type = isset($args['type']) ? $args['type'] : null;
@@ -171,28 +171,28 @@ function pnForum_userapi_boardstats($args)
     switch($type) {
         case 'all':
         case 'allposts':
-            $total = DBUtil::selectObjectCount('pnforum_posts');
+            $total = DBUtil::selectObjectCount('dizkus_posts');
             break;
         case 'category':
-            $total = DBUtil::selectObjectCount('pnforum_categories');
+            $total = DBUtil::selectObjectCount('dizkus_categories');
             break;
         case 'forum':
-            $total = DBUtil::selectObjectCount('pnforum_forums');
+            $total = DBUtil::selectObjectCount('dizkus_forums');
             break;
         case 'topic':
-            $total = DBUtil::selectObjectCount('pnforum_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
+            $total = DBUtil::selectObjectCount('dizkus_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
             break;
         case 'forumposts':
-            $total = DBUtil::selectObjectCount('pnforum_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+            $total = DBUtil::selectObjectCount('dizkus_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
             break;
         case 'forumtopics':
-            $total = DBUtil::selectObjectCount('pnforum_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+            $total = DBUtil::selectObjectCount('dizkus_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
             break;
         case 'alltopics':
-            $total = DBUtil::selectObjectCount('pnforum_topics');
+            $total = DBUtil::selectObjectCount('dizkus_topics');
             break;
         case 'allmembers':
-            $total = DBUtil::selectObjectCount('pnforum_users');
+            $total = DBUtil::selectObjectCount('dizkus_users');
             break;
         case 'lastmember':
         case 'lastuser':
@@ -200,7 +200,7 @@ function pnForum_userapi_boardstats($args)
             $total = $res[0]['uname'];
             break;
         default:
-            return showforumerror(_MODARGSERROR . ' in pnForum_userapi_boardstats()', __FILE__, __LINE__);
+            return showforumerror(_MODARGSERROR . ' in Dizkus_userapi_boardstats()', __FILE__, __LINE__);
         }
     return $total;
 }
@@ -214,13 +214,13 @@ function pnForum_userapi_boardstats($args)
  *@params $args['id_only'] boolean if true, only return the id, not the complete post information
  *@returns array with post information or false or (int)id if id_only is true
  */
-function pnForum_userapi_get_firstlast_post_in_topic($args)
+function Dizkus_userapi_get_firstlast_post_in_topic($args)
 {
     $topic_id = $args['topic_id'];
     $first    = $args['first'];
     $id_only  = $args['id_only'];
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(empty($first) || !is_bool($first) || (is_bool($first) && $first==false)) {
         $sortorder = 'DESC';
@@ -230,22 +230,22 @@ function pnForum_userapi_get_firstlast_post_in_topic($args)
 
     if(!empty($topic_id) && is_numeric($topic_id)) {
         $sql = 'SELECT p.post_id
-                FROM ' . $pntable['pnforum_posts'] . ' AS p
+                FROM ' . $pntable['dizkus_posts'] . ' AS p
                 WHERE p.topic_id = "'.(int)DataUtil::formatForStore($topic_id) . '"
                 ORDER BY p.post_time ' . $sortorder;
 
-        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
-            pnfCloseDB($result);
+            dzkCloseDB($result);
             return false;
         }
         $row = $result->GetRowAssoc(false);
         $post_id = $row['post_id'];
-        pnfCloseDB($result);
+        dzkCloseDB($result);
         if($id_only == true) {
             return $post_id;
         }
-        return pnForum_userapi_readpost(array('post_id' => $post_id));
+        return Dizkus_userapi_readpost(array('post_id' => $post_id));
     }
     return false;
 }
@@ -258,31 +258,31 @@ function pnForum_userapi_get_firstlast_post_in_topic($args)
  *@params $args['id_only'] boolean if true, only return the id, not the complete post information
  *@returns array with post information of false
  */
-function pnForum_userapi_get_last_post_in_forum($args)
+function Dizkus_userapi_get_last_post_in_forum($args)
 {
     $forum_id = $args['forum_id'];
     $id_only  = $args['id_only'];
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(!empty($forum_id) && is_numeric($forum_id)) {
         $sql = "SELECT p.post_id
-                FROM ".$pntable['pnforum_posts']." AS p
+                FROM ".$pntable['dizkus_posts']." AS p
                 WHERE p.forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
                 ORDER BY p.post_time DESC";
 
-        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         if($result->EOF) {
-            pnfCloseDB($result);
+            dzkCloseDB($result);
             return false;
         }
         $row = $result->GetRowAssoc(false);
         $post_id = $row['post_id'];
-        pnfCloseDB($result);
+        dzkCloseDB($result);
         if($id_only == true) {
             return $post_id;
         }
-        return pnForum_userapi_readpost(array('post_id' => $post_id));
+        return Dizkus_userapi_readpost(array('post_id' => $post_id));
     }
     return false;
 }
@@ -295,24 +295,24 @@ function pnForum_userapi_get_last_post_in_forum($args)
  *@returns array of categories with an array of forums in the catgories
  *
  */
-function pnForum_userapi_readcategorytree($args)
+function Dizkus_userapi_readcategorytree($args)
 {
     $last_visit = (isset($args['last_visit'])) ? $args['last_visit'] : 0;
 
     static $tree;
 
-    $pnforumvars = pnModGetVar('pnForum');
+    $dizkusvars = pnModGetVar('Dizkus');
 
     // if we have already called this once during the script
     if (isset($tree)) {
         return $tree;
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
-    $cattable = $pntable['pnforum_categories'];
-    $forumstable = $pntable['pnforum_forums'];
-    $poststable = $pntable['pnforum_posts'];
-    $topicstable = $pntable['pnforum_topics'];
+    list($dbconn, $pntable) = dzkOpenDB();
+    $cattable = $pntable['dizkus_categories'];
+    $forumstable = $pntable['dizkus_forums'];
+    $poststable = $pntable['dizkus_posts'];
+    $topicstable = $pntable['dizkus_topics'];
     $userstable = $pntable['users'];
 
     $sql = 'SELECT ' . $cattable . '.cat_id AS cat_id,
@@ -339,9 +339,9 @@ function pnForum_userapi_readcategorytree($args)
             LEFT JOIN ' . $userstable . ' ON ' . $userstable . '.pn_uid=' . $poststable . '.poster_id
             ORDER BY ' . $cattable . '.cat_order, ' . $forumstable . '.forum_order, ' . $forumstable . '.forum_name';
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+    $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
 
     $tree = array();
     while(!$result->EOF) {
@@ -384,7 +384,7 @@ function pnForum_userapi_readcategorytree($args)
                         $forum['new_posts'] = false;
                     }
 
-                    $posted_unixtime= pnf_str2time($forum['post_time']); // strtotime ($forum['post_time']);
+                    $posted_unixtime= dzk_str2time($forum['post_time']); // strtotime ($forum['post_time']);
                     $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
                     if ($posted_unixtime) {
                         if ($forum['pn_uid']==1) {
@@ -393,9 +393,9 @@ function pnForum_userapi_readcategorytree($args)
                             $username = $forum['pn_uname'];
                         }
 
-                        $last_post = sprintf(_PNFORUM_LASTPOSTSTRING, $posted_ml, $username);
-                        $last_post = $last_post.' <a href="' . pnModURL('pnForum','user','viewtopic', array('topic' =>$forum['topic_id'])). '">
-                                                  <img src="modules/pnForum/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
+                        $last_post = sprintf(_DZK_LASTPOSTSTRING, $posted_ml, $username);
+                        $last_post = $last_post.' <a href="' . pnModURL('Dizkus','user','viewtopic', array('topic' =>$forum['topic_id'])). '">
+                                                  <img src="modules/Dizkus/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                         // new in 2.0.2 - no more preformattd output
                         $last_post_data['name']     = $username;
                         $last_post_data['subject']  = $topic_title;
@@ -403,13 +403,13 @@ function pnForum_userapi_readcategorytree($args)
                         $last_post_data['unixtime'] = $posted_unixtime;
                         $last_post_data['topic']    = $forum['topic_id'];
                         $last_post_data['post']     = $forum['forum_last_post_id'];
-                        $last_post_data['url'] = pnModURL('pnForum', 'user', 'viewtopic',
+                        $last_post_data['url'] = pnModURL('Dizkus', 'user', 'viewtopic',
                                                                     array('topic' => $forum['topic_id'],
                                                                           'start' => (ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page));
                         $last_post_data['url_anchor'] = $last_post_data['url'] . '#pid' . $forum['forum_last_post_id'];
                     } else {
                         // no posts in forum
-                        $last_post = _PNFORUM_NOPOSTS;
+                        $last_post = _DZK_NOPOSTS;
                         $last_post_data['name']       = '';
                         $last_post_data['subject']    = '';
                         $last_post_data['time']       = '';
@@ -423,21 +423,21 @@ function pnForum_userapi_readcategorytree($args)
                 } else {
                     // there are no posts in this forum
                     $forum['new_posts']= false;
-                    $last_post = _PNFORUM_NOPOSTS;
+                    $last_post = _DZK_NOPOSTS;
                 }
                 $forum['last_post'] = $last_post;
-                $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
+                $forum['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
 
                 // is the user subscribed to the forum?
                 $forum['is_subscribed'] = 0;
-                if(pnForum_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                if(Dizkus_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                     $forum['is_subscribed'] = 1;
                 }
 
                 // is this forum in the favorite list?
                 $forum['is_favorite'] = 0;
-                if($pnforumvars['favorites_enabled'] == 'yes') {
-                    if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                if($dizkusvars['favorites_enabled'] == 'yes') {
+                    if(Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                         $forum['is_favorite'] = 1;
                     }
                 }
@@ -461,7 +461,7 @@ function pnForum_userapi_readcategorytree($args)
     }
     // sort the array by cat_order
     uasort($tree, 'cmp_catorder');
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return $tree;
 }
 
@@ -471,25 +471,25 @@ function pnForum_userapi_readcategorytree($args)
  *@params $args['forum_id'] int the forums id
  *@returns array containing the pn_uid as index and the users name as value
  */
-function pnForum_userapi_get_moderators($args)
+function Dizkus_userapi_get_moderators($args)
 {
     $forum_id = $args['forum_id'];
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(!empty($forum_id)) {
         $sql = "SELECT u.pn_uname, u.pn_uid
-                FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
+                FROM ".$pntable['users']." u, ".$pntable['dizkus_forum_mods']." f
                 WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND u.pn_uid = f.user_id
                 AND f.user_id<1000000";
     } else {
         $sql = "SELECT u.pn_uname, u.pn_uid
-                FROM ".$pntable['users']." u, ".$pntable['pnforum_forum_mods']." f
+                FROM ".$pntable['users']." u, ".$pntable['dizkus_forum_mods']." f
                 WHERE u.pn_uid = f.user_id
                 AND f.user_id<1000000
                 GROUP BY f.user_id";
     }
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $mods = array();
     if($result->RecordCount()>0) {
@@ -499,21 +499,21 @@ function pnForum_userapi_get_moderators($args)
             $mods[$uid] = $uname;
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     if(!empty($forum_id)) {
         $sql = "SELECT g.pn_name, g.pn_gid
-                FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
+                FROM ".$pntable['groups']." g, ".$pntable['dizkus_forum_mods']." f
                 WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
                 AND f.user_id>1000000";
     } else {
         $sql = "SELECT g.pn_name, g.pn_gid
-                FROM ".$pntable['groups']." g, ".$pntable['pnforum_forum_mods']." f
+                FROM ".$pntable['groups']." g, ".$pntable['dizkus_forum_mods']." f
                 WHERE g.pn_gid = f.user_id-1000000
                 AND f.user_id>1000000
                 GROUP BY f.user_id";
     }
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
@@ -522,7 +522,7 @@ function pnForum_userapi_get_moderators($args)
             $mods[$gid + 1000000] = $gname;
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     return $mods;
 }
@@ -536,7 +536,7 @@ function pnForum_userapi_get_moderators($args)
  *@returns array of (readable last visits data, unix time last visit date)
  *
  */
-function pnForum_userapi_setcookies()
+function Dizkus_userapi_setcookies()
 {
     /**
      * set last visit cookies and get last visit time
@@ -573,48 +573,48 @@ function pnForum_userapi_setcookies()
  *@params $args['topics_per_page'] int number of topics to read, -1 = all topics
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
-function pnForum_userapi_readforum($args)
+function Dizkus_userapi_readforum($args)
 {
     extract($args);
     unset($args);
 
-    $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+    $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $forum_id,
                                 'permcheck' => 'nocheck' ));
     if($forum==false) {
-        return showforumerror(_PNFORUM_FORUM_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(_DZK_FORUM_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
 
     if(!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOSEE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOSEE), __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    $posts_per_page     = pnModGetVar('pnForum', 'posts_per_page');
+    $posts_per_page     = pnModGetVar('Dizkus', 'posts_per_page');
     if(empty($topics_per_page)) {
-        $topics_per_page    = pnModGetVar('pnForum', 'topics_per_page');
+        $topics_per_page    = pnModGetVar('Dizkus', 'topics_per_page');
     }
-    $hot_threshold      = pnModGetVar('pnForum', 'hot_threshold');
-    $posticon           = pnModGetVar('pnForum', 'posticon');
-    $firstnew_image     = pnModGetVar('pnForum', 'firstnew_image');
-    $post_sort_order    = pnModAPIFunc('pnForum','user','get_user_post_order');
+    $hot_threshold      = pnModGetVar('Dizkus', 'hot_threshold');
+    $posticon           = pnModGetVar('Dizkus', 'posticon');
+    $firstnew_image     = pnModGetVar('Dizkus', 'firstnew_image');
+    $post_sort_order    = pnModAPIFunc('Dizkus','user','get_user_post_order');
 
     // read moderators
-    $forum['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
+    $forum['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
     $forum['last_visit'] = $last_visit;
 
     $forum['topic_start'] = (!empty ($start)) ? $start : 0;
 
     // is the user subscribed to the forum?
     $forum['is_subscribed'] = 0;
-    if(pnForum_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+    if(Dizkus_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
         $forum['is_subscribed'] = 1;
     }
 
     // is this forum in the favorite list?
     $forum['is_favorite'] = 0;
-    if(pnForum_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+    if(Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
         $forum['is_favorite'] = 1;
     }
 
@@ -637,9 +637,9 @@ function pnForum_userapi_readforum($args)
                    u.pn_uname,
                    u2.pn_uname as last_poster,
                    p.post_time
-            FROM ".$pntable['pnforum_topics']." AS t
+            FROM ".$pntable['dizkus_topics']." AS t
             LEFT JOIN ".$pntable['users']." AS u ON t.topic_poster = u.pn_uid
-            LEFT JOIN ".$pntable['pnforum_posts']." AS p ON t.topic_last_post_id = p.post_id
+            LEFT JOIN ".$pntable['dizkus_posts']." AS p ON t.topic_last_post_id = p.post_id
             LEFT JOIN ".$pntable['users']." AS u2 ON p.poster_id = u2.pn_uid
             WHERE t.forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
             ORDER BY t.sticky DESC, p.post_time DESC";
@@ -648,7 +648,7 @@ function pnForum_userapi_readforum($args)
 //FC            ORDER BY t.sticky DESC"; // RNG
 //FC            //ORDER BY t.sticky DESC, p.post_time DESC";
 
-    $result = pnfSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, $topics_per_page, $start, __FILE__, __LINE__);
 
     $forum['forum_id'] = $forum_id;
     $forum['topics'] = array();
@@ -661,9 +661,9 @@ function pnForum_userapi_readforum($args)
         if ($topic['pn_uname'] == 'Anonymous') {$topic['pn_uname'] = pnModGetVar('Users', 'anonymous'); }
         $topic['total_posts'] = $topic['topic_replies'] + 1;
 
-        $topic['post_time_unix'] = pnf_str2time($topic['post_time']); //strtotime ($topic['post_time']);
+        $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
         $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
-        $topic['last_post'] = sprintf(_PNFORUM_LASTPOSTSTRING, DataUtil::formatForDisplay($posted_ml), DataUtil::formatForDisplay($topic['last_poster']));
+        $topic['last_post'] = sprintf(_DZK_LASTPOSTSTRING, DataUtil::formatForDisplay($posted_ml), DataUtil::formatForDisplay($topic['last_poster']));
 
         // does this topic have enough postings to be hot?
         $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
@@ -689,7 +689,7 @@ function pnForum_userapi_readforum($args)
                 $topic['last_page_start'] = 0;
             }
 
-            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . DataUtil::formatForDisplay(_PNFORUM_GOTOPAGE) . '&nbsp;';
+            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . DataUtil::formatForDisplay(_DZK_GOTOPAGE) . '&nbsp;';
             $pagenr = 1;
             $skippages = 0;
             for($x = 0; $x < $topic['topic_replies'] + 1; $x += $posts_per_page) {
@@ -710,7 +710,7 @@ function pnForum_userapi_readforum($args)
 
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ', ';
-                    $pagination .= '<a href="' . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(_PNFORUM_PAGE) . ' ' . $pagenr . '">' . $pagenr . '</a>';
+                    $pagination .= '<a href="' . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(_DZK_PAGE) . ' ' . $pagenr . '">' . $pagenr . '</a>';
                 }
 
                 $pagenr++;
@@ -723,7 +723,7 @@ function pnForum_userapi_readforum($args)
         // count and the posts_per_page setting
 
         // we keep this for backwardscompatibility
-        $topic['last_post_url'] = pnModURL('pnForum', 'user', 'viewtopic',
+        $topic['last_post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
                                            array('topic' => $topic['topic_id'],
                                                  'start' => (ceil(($topic['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page));
         $topic['last_post_url_anchor'] = $topic['last_post_url'] . '#pid' . $topic['topic_last_post_id'];
@@ -731,7 +731,7 @@ function pnForum_userapi_readforum($args)
         array_push( $forum['topics'], $topic );
         $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $topics_start = $start; // RNG: is this still correct?
 
@@ -758,18 +758,18 @@ function cmp_forumtopicsort($a, $b)
  *@params $args['count']      bool  true if we have raise the read counter, default false
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
-function pnForum_userapi_readtopic($args)
+function Dizkus_userapi_readtopic($args)
 {
 //$time_start = microtime_float();
     extract($args);
     unset($args);
 
-    $pnforumvars     = pnModGetVar('pnForum');
-    $posts_per_page  = $pnforumvars['posts_per_page'];
-    $topics_per_page = $pnforumvars['topics_per_page'];
-    $posticon        = $pnforumvars['posticon'];
+    $dizkusvars     = pnModGetVar('Dizkus');
+    $posts_per_page  = $dizkusvars['posts_per_page'];
+    $topics_per_page = $dizkusvars['topics_per_page'];
+    $posticon        = $dizkusvars['posticon'];
 
-    $post_sort_order = pnModAPIFunc('pnForum','user','get_user_post_order');
+    $post_sort_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
 
     $complete = (isset($complete)) ? $complete : false;
     $count    = (isset($count)) ? $count : false;
@@ -777,15 +777,15 @@ function pnForum_userapi_readtopic($args)
 
     $currentuserid = pnUserGetVar('uid');
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    $tbltopics = $pntable['pnforum_topics'];
-    $tblforums = $pntable['pnforum_forums'];
-    $tblcats   = $pntable['pnforum_categories'];
+    $tbltopics = $pntable['dizkus_topics'];
+    $tblforums = $pntable['dizkus_forums'];
+    $tblcats   = $pntable['dizkus_categories'];
 
-    $coltopics = $pntable['pnforum_topics_column'];
-    $colforums = $pntable['pnforum_forums_column'];
-    $colcats   = $pntable['pnforum_categories_column'];
+    $coltopics = $pntable['dizkus_topics_column'];
+    $colforums = $pntable['dizkus_forums_column'];
+    $colcats   = $pntable['dizkus_categories_column'];
 /*
     $sql = "SELECT    $coltopics[topic_title],
                       $coltopics[topic_status],
@@ -808,24 +808,24 @@ function pnForum_userapi_readtopic($args)
 */
 
     $pntables = pnDBGetTables();
-    $topicscolumn = $pntables['pnforum_topics_column'];
+    $topicscolumn = $pntables['dizkus_topics_column'];
 /*
     $joinarray = array();
     // join for forums table
-    $joinarray[] = array('join_table'          => 'pnforum_forums',
+    $joinarray[] = array('join_table'          => 'dizkus_forums',
                          'join_field'          => array('forum_name', 'cat_id'),
                          'object_field_name'   => array('forum_name', 'cat_id'),
                          'compare_field_table' => 'forum_id',
                          'compare_field_join'  => 'forum_id');
     // join for categories table
-    $joinarray[] = array('base_table'          => 'pnforum_forums',
-                         'join_table'          => 'pnforum_categories',
+    $joinarray[] = array('base_table'          => 'dizkus_forums',
+                         'join_table'          => 'dizkus_categories',
                          'join_field'          => array('cat_title'),
                          'object_field_name'   => array('cat_title'),
                          'compare_field_table' => 'cat_id',
                          'compare_field_join'  => 'cat_id');
     $where = 'WHERE ' . $topicscolumn['topic_id'] . '=' . DataUtil::formatForStore($topic_id);
-    $topic = DBUtil::selectExpandedObject('pnforum_topics', $joinarray, $where);
+    $topic = DBUtil::selectExpandedObject('dizkus_topics', $joinarray, $where);
 prayer($topic);
 pnShutDown();
 */
@@ -839,19 +839,19 @@ pnShutDown();
                    f.forum_name,
                    f.cat_id,
                    c.cat_title
-            FROM  ".$pntable['pnforum_topics']." t
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
+            FROM  ".$pntable['dizkus_topics']." t
+            LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
+            LEFT JOIN ".$pntable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $topic = array();
     if(!$result->EOF) {
         $topic = $result->GetRowAssoc(false);
         $topic['topic_id'] = $topic_id;
         $topic['start'] = $start;
-        $topic['topic_unixtime'] = pnf_str2time($topic['topic_time']); //strtotime ($topic['topic_time']);
+        $topic['topic_unixtime'] = dzk_str2time($topic['topic_time']); //strtotime ($topic['topic_time']);
         $topic['post_sort_order'] = $post_sort_order;
 
         // pop3_active contains the external source (if any), create the correct var name
@@ -863,10 +863,10 @@ pnShutDown();
         unset($topic['pop3_active']);
         
         if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
+            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
         }
 
-        $topic['forum_mods'] = pnForum_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
+        $topic['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
 
         $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
@@ -893,12 +893,12 @@ pnShutDown();
         }
         
         // get the next and previous topic_id's for the next / prev button
-        $topic['next_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'next'));
-        $topic['prev_topic_id'] = pnForum_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'previous'));
+        $topic['next_topic_id'] = Dizkus_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'next'));
+        $topic['prev_topic_id'] = Dizkus_userapi_get_previous_or_next_topic_id(array('topic_id'=>$topic['topic_id'], 'view'=>'previous'));
 
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly
-        if(pnForum_userapi_get_topic_subscription_status(array('userid'   => $currentuserid,
+        if(Dizkus_userapi_get_topic_subscription_status(array('userid'   => $currentuserid,
                                                                'topic_id' => $topic['topic_id'])) == true) {
             $topic['is_subscribed'] = 1;
         } else {
@@ -909,18 +909,18 @@ pnShutDown();
          * update topic counter
          */
         if($count == true) {
-            DBUtil::incrementObjectFieldByID('pnforum_topics', 'topic_views', $topic_id, 'topic_id');
+            DBUtil::incrementObjectFieldByID('dizkus_topics', 'topic_views', $topic_id, 'topic_id');
             //
-            //$sql = "UPDATE ".$pntable['pnforum_topics']."
+            //$sql = "UPDATE ".$pntable['dizkus_topics']."
             //        SET topic_views = topic_views + 1
             //        WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-            //$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            //$result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             //
         }
         /**
          * more then one page in this topic?
          */
-        $topic['total_posts'] = pnForum_userapi_boardstats(array('id'=>$topic_id, 'type' => 'topic'));
+        $topic['total_posts'] = Dizkus_userapi_boardstats(array('id'=>$topic_id, 'type' => 'topic'));
 
         if($topic['total_posts'] > $posts_per_page) {
             $times = 0;
@@ -942,19 +942,19 @@ pnShutDown();
                         p.poster_id,
                         p.post_time,
                         pt.post_text
-                FROM ".$pntable['pnforum_posts']." p,
-                     ".$pntable['pnforum_posts_text']." pt
+                FROM ".$pntable['dizkus_posts']." p,
+                     ".$pntable['dizkus_posts_text']." pt
                 WHERE p.topic_id = '".(int)DataUtil::formatForStore($topic['topic_id'])."'
                 AND p.post_id = pt.post_id
                 ORDER BY p.post_id $post_sort_order";
 
         if($complete==true) {
-            $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
+            $result2 = dzkExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
         } elseif(isset($start)) {
             // $start is given
-            $result2 = pnfSelectLimit($dbconn, $sql2, $posts_per_page, $start, __FILE__, __LINE__);
+            $result2 = dzkSelectLimit($dbconn, $sql2, $posts_per_page, $start, __FILE__, __LINE__);
         } else {
-            $result2 = pnfSelectLimit($dbconn, $sql2, $posts_per_page, false, __FILE__, __LINE__);
+            $result2 = dzkSelectLimit($dbconn, $sql2, $posts_per_page, false, __FILE__, __LINE__);
         }
 
         // performance patch:
@@ -975,18 +975,18 @@ pnShutDown();
             //if(!array_key_exists($post['poster_id'], $userdata)) {
             if (!isset($userdata[$post['poster_id']])) {
                 // not in array, load the data now...
-                $userdata[$post['poster_id']] = pnForum_userapi_get_userdata_from_id(array('userid' => $post['poster_id']));
+                $userdata[$post['poster_id']] = Dizkus_userapi_get_userdata_from_id(array('userid' => $post['poster_id']));
             }
             // we now have the data and use them
             $post['poster_data'] = $userdata[$post['poster_id']];
-            $post['posted_unixtime'] = pnf_str2time($post['post_time']); //strtotime ($post['post_time']);
+            $post['posted_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
-            $post['post_text'] = pnForum_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
+            $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
             
-            $post['post_text'] = pnfVarPrepHTMLDisplay($post['post_text']);
+            $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
 
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
@@ -1000,8 +1000,8 @@ pnShutDown();
             }
 
             $post['poster_data']['seeip'] = false;
-            if (($topic['access_moderate'] || $topic['access_admin']) && $pnforumvars['log_ip'] == 'yes') {
-                //pnModGetVar('pnForum', 'log_ip') == 'yes') {
+            if (($topic['access_moderate'] || $topic['access_admin']) && $dizkusvars['log_ip'] == 'yes') {
+                //pnModGetVar('Dizkus', 'log_ip') == 'yes') {
                 // user is allowed to see ip
                 $post['poster_data']['seeip'] = true;
             }
@@ -1017,7 +1017,7 @@ pnShutDown();
                 // if the timespanforchanges (in hrs!) setting allows it
                 $now = time();
                 // timespanforchanges is in hours, but we need seconds:
-                $timespansecs = $pnforumvars['timespanforchanges'] * 60 * 60;
+                $timespansecs = $dizkusvars['timespanforchanges'] * 60 * 60;
                 if(($now - $post['posted_unixtime']) <= $timespansecs ) {
                     $post['poster_data']['edit'] = true;
                 }
@@ -1028,17 +1028,17 @@ pnShutDown();
             array_push($topic['posts'], $post);
             $result2->MoveNext();
         }
-        pnfCloseDB($result2);
+        dzkCloseDB($result2);
         unset($userdata);
     } else {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 /*
 $time_end = microtime_float();
 $time_used = $time_end - $time_start;
-pnfdebug('time:', $time_used);
+dzkdebug('time:', $time_used);
 */
     return $topic;
 }
@@ -1056,12 +1056,12 @@ pnfdebug('time:', $time_used);
  *@params $args['subscribe_topic'] int =subscribe topic, otherwise no
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
-function pnForum_userapi_preparereply($args)
+function Dizkus_userapi_preparereply($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $reply = array();
 
@@ -1076,10 +1076,10 @@ function pnForum_userapi_preparereply($args)
                        pt.post_text,
                        p.post_time,
                        u.pn_uname
-                FROM ".$pntable['pnforum_forums']." AS f,
-                     ".$pntable['pnforum_topics']." AS t,
-                     ".$pntable['pnforum_posts']." AS p,
-                     ".$pntable['pnforum_posts_text']." AS pt,
+                FROM ".$pntable['dizkus_forums']." AS f,
+                     ".$pntable['dizkus_topics']." AS t,
+                     ".$pntable['dizkus_posts']." AS p,
+                     ".$pntable['dizkus_posts_text']." AS pt,
                      ".$pntable['users']." AS u
                 WHERE (p.post_id = '".(int)DataUtil::formatForStore($post_id)."')
                 AND (t.forum_id = f.forum_id)
@@ -1094,19 +1094,19 @@ function pnForum_userapi_preparereply($args)
                        t.topic_id,
                        t.topic_title,
                        t.topic_status
-                FROM ".$pntable['pnforum_forums']." AS f,
-                     ".$pntable['pnforum_topics']." AS t
+                FROM ".$pntable['dizkus_forums']." AS f,
+                     ".$pntable['dizkus_topics']." AS t
                 WHERE (t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."')
                 AND (t.forum_id = f.forum_id)";
     }
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if ($result->EOF) {
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $reply['forum_id'] = DataUtil::formatForDisplay($myrow['forum_id']);
     $reply['cat_id'] = DataUtil::formatForDisplay($myrow['cat_id']);
@@ -1116,10 +1116,10 @@ function pnForum_userapi_preparereply($args)
     // the next line is only producing a valid result, if we get a post_id which
     // means we are producing a reply with quote
     if(array_key_exists('post_text', $myrow)) {
-        $text = pnForum_bbdecode($myrow['post_text']);
+        $text = Dizkus_bbdecode($myrow['post_text']);
         $text = preg_replace('/(<br[ \/]*?>)/i', '', $text);
         // just for backwards compatibility
-        $text = pnForum_undo_make_clickable($text);
+        $text = Dizkus_undo_make_clickable($text);
         $text = str_replace('[addsig]', '', $text);
         $reply['message'] = '[quote='.$myrow['pn_uname'].']'.$text.'[/quote]';
     } else {
@@ -1139,9 +1139,9 @@ function pnForum_userapi_preparereply($args)
         if($reply_start==true) {
             $reply['attach_signature'] = true;
             $reply['subscribe_topic'] = false;
-            $is_subscribed = pnForum_userapi_get_topic_subscription_status(array('userid'   => $pn_uid,
+            $is_subscribed = Dizkus_userapi_get_topic_subscription_status(array('userid'   => $pn_uid,
                                                                                  'topic_id' => $reply['topic_id']));
-            if(($is_subscribed==true) ||(pnModGetVar('pnForum', 'autosubscribe')=='yes')) {
+            if(($is_subscribed==true) ||(pnModGetVar('Dizkus', 'autosubscribe')=='yes')) {
                 $reply['subscribe_topic'] = true;
             } else {
                 $reply['subscribe_topic'] = false;
@@ -1151,14 +1151,14 @@ function pnForum_userapi_preparereply($args)
             $reply['subscribe_topic'] = $subscribe_topic;
         }
     }
-    $reply['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
+    $reply['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
 
     if($reply['topic_status']==1) {
-        return showforumerror(_PNFORUM_NOPOSTLOCK, __FILE__, __LINE__);
+        return showforumerror(_DZK_NOPOSTLOCK, __FILE__, __LINE__);
     }
 
     if(!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
-        return showforumerror( _PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror( _DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 
     // Topic review (show last 10)
@@ -1167,12 +1167,12 @@ function pnForum_userapi_preparereply($args)
                    p.post_time,
                    pt.post_text,
                    t.topic_title
-                    FROM $pntable[pnforum_posts_text] pt, $pntable[pnforum_posts] p
-                        LEFT JOIN $pntable[pnforum_topics] t ON t.topic_id=p.topic_id
+                    FROM $pntable[dizkus_posts_text] pt, $pntable[dizkus_posts] p
+                        LEFT JOIN $pntable[dizkus_topics] t ON t.topic_id=p.topic_id
                         WHERE p.topic_id = '" . (int)DataUtil::formatForStore($reply['topic_id']) . "' AND p.post_id = pt.post_id
                         ORDER BY p.post_id DESC";
 
-    $result = pnfSelectLimit($dbconn, $sql, 10, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 10, false, __FILE__, __LINE__);
     $reply['topic_review'] = array();
     while(!$result->EOF) {
         $review = array();
@@ -1184,10 +1184,10 @@ function pnForum_userapi_preparereply($args)
             $review['poster_id'] = 1;
         }
 
-        $review['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid'=>$review['poster_id']));
+        $review['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid'=>$review['poster_id']));
 
         // TODO extract unixtime directly from MySql
-        $review['post_unixtime'] = pnf_str2time($review['post_time']); //strtotime ($review['post_time']);
+        $review['post_unixtime'] = dzk_str2time($review['post_time']); //strtotime ($review['post_time']);
         $review['post_ml'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($review['post_unixtime']));
 
         $message = $review['post_text'];
@@ -1196,7 +1196,7 @@ function pnForum_userapi_preparereply($args)
         // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
 
         // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
-        $message = pnForum_replacesignature($message, $review['poster_data']['_SIGNATURE']);
+        $message = Dizkus_replacesignature($message, $review['poster_data']['_SIGNATURE']);
 
         // call hooks for $message
         list($message) = pnModCallHooks('item', 'transform', $review['post_id'], array($message));
@@ -1205,7 +1205,7 @@ function pnForum_userapi_preparereply($args)
         array_push($reply['topic_review'], $review);
         $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return $reply;
 }
 
@@ -1220,32 +1220,32 @@ function pnForum_userapi_preparereply($args)
  *@params $args['subscribe_topic'] int 1=yes, otherwise no
  *@returns array(int, int) start parameter and new post_id
  */
-function pnForum_userapi_storereply($args)
+function Dizkus_userapi_storereply($args)
 {
 //$time_start = microtime_float();
     extract($args);
     unset($args);
 
-    list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+    list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOWRITE);
+        return showforumerror(_DZK_NOAUTH_TOWRITE);
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(trim($message) == '') {
-        return showforumerror(_PNFORUM_EMPTYMSG, __FILE__, __LINE__);
+        return showforumerror(_DZK_EMPTYMSG, __FILE__, __LINE__);
     }
 
     /*
     it's a submitted page and message is not empty
     */
 
-    // sync the users, so that new pn users get into the pnForum
+    // sync the users, so that new pn users get into the Dizkus
     // database
-    pnModAPIFunc('pnForum', 'user', 'usersync');
+    pnModAPIFunc('Dizkus', 'user', 'usersync');
 
     // grab message for notification
     // without html-specialchars, bbcode, smilies <br> and [addsig]
@@ -1263,7 +1263,7 @@ function pnForum_userapi_storereply($args)
         $pn_uid = 1;
     }
 
-    if (pnModGetVar('pnForum', 'log_ip') == 'no') {
+    if (pnModGetVar('Dizkus', 'log_ip') == 'no') {
         // for privavy issues ip logging can be deactivated
         $poster_ip = '127.0.0.1';
     } else {
@@ -1276,18 +1276,18 @@ function pnForum_userapi_storereply($args)
 
     // read forum_id from topic_id
     $sql = "SELECT f.forum_id
-            FROM ".$pntable['pnforum_forums']." AS f,
-                 ".$pntable['pnforum_topics']." AS t
+            FROM ".$pntable['dizkus_forums']." AS f,
+                 ".$pntable['dizkus_topics']." AS t
             WHERE (t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."')
             AND (t.forum_id = f.forum_id)";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if ($result->EOF) {
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     $forum_id = (int)DataUtil::formatForStore($myrow['forum_id']);
 
     // Prep for DB
@@ -1299,71 +1299,71 @@ function pnForum_userapi_storereply($args)
     $poster_ip = DataUtil::formatForStore($poster_ip);
 
     // insert values into posts-table
-    $postid = $dbconn->GenID($pntable['pnforum_posts']);
-    $sql = "INSERT INTO $pntable[pnforum_posts]
+    $postid = $dbconn->GenID($pntable['dizkus_posts']);
+    $sql = "INSERT INTO $pntable[dizkus_posts]
                         (post_id, topic_id, forum_id, poster_id, post_time, poster_ip)
                         VALUES
                         ('".DataUtil::formatForStore($postid)."', '$topic_id', '$forum_id', '$pn_uid','$time', '$poster_ip')";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
-    $this_post = $dbconn->PO_Insert_ID($pntable['pnforum_posts'], 'post_id');
+    $this_post = $dbconn->PO_Insert_ID($pntable['dizkus_posts'], 'post_id');
     if($this_post) {
-        $sql = "INSERT INTO $pntable[pnforum_posts_text]
+        $sql = "INSERT INTO $pntable[dizkus_posts_text]
                 (post_id, post_text)
                 VALUES
                 ('".DataUtil::formatForStore($this_post)."', '$message')";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
 
     // update topics-table
-    $sql = "UPDATE $pntable[pnforum_topics]
+    $sql = "UPDATE $pntable[dizkus_topics]
             SET topic_replies = topic_replies+1, topic_last_post_id = '".DataUtil::formatForStore($this_post)."', topic_time = '".DataUtil::formatForStore($time). "'
             WHERE topic_id = '" . (int)DataUtil::formatForStore($topic_id) . "'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     if($islogged) {
         // user logged in we have to update users-table
-        $sql = "UPDATE $pntable[pnforum_users]
+        $sql = "UPDATE $pntable[dizkus_users]
                 SET user_posts=user_posts+1
                 WHERE (user_id = " . DataUtil::formatForStore($pn_uid) . ")";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         // update subscription
         if($subscribe_topic==1) {
             // user wants to subscribe the topic
-            pnForum_userapi_subscribe_topic(array('topic_id' => $topic_id));
+            Dizkus_userapi_subscribe_topic(array('topic_id' => $topic_id));
         } else {
             // user wants not to subscribe the topic
-            pnForum_userapi_unsubscribe_topic(array('topic_id' => $topic_id,
+            Dizkus_userapi_unsubscribe_topic(array('topic_id' => $topic_id,
                                                     'silent'   => true));
         }
     }
 
     // update forums-table
-    $sql = "UPDATE $pntable[pnforum_forums]
+    $sql = "UPDATE $pntable[dizkus_forums]
             SET forum_posts = forum_posts+1, forum_last_post_id = '" . DataUtil::formatForStore($this_post) . "'
             WHERE forum_id = '" . (int)DataUtil::formatForStore($forum_id) ."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // get the last topic page
-    $start = pnForum_userapi_get_last_topic_page(array('topic_id' => $topic_id));
+    $start = Dizkus_userapi_get_last_topic_page(array('topic_id' => $topic_id));
 
     // Let any hooks know that we have created a new item.
-    //pnModCallHooks('item', 'create', $this_post, array('module' => 'pnForum'));
-    pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
+    //pnModCallHooks('item', 'create', $this_post, array('module' => 'Dizkus'));
+    pnModCallHooks('item', 'update', $topic_id, array('module' => 'Dizkus',
                                                       'post_id' => $this_post));
 
-    pnForum_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '2'));
+    Dizkus_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '2'));
 
     return array($start, $this_post);
 }
@@ -1375,14 +1375,14 @@ function pnForum_userapi_storereply($args)
  *@params $args['topic_id'] int the topic id
  *@returns bool true if the user is subscribed or false if not
  */
-function pnForum_userapi_get_topic_subscription_status($args)
+function Dizkus_userapi_get_topic_subscription_status($args)
 {
     $pntables = pnDBGetTables();
-    $tsubcolumn = $pntables['pnforum_topic_subscription_column'];
+    $tsubcolumn = $pntables['dizkus_topic_subscription_column'];
     
     $where = ' WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
              ' AND '   . $tsubcolumn['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
-    $count = DBUtil::selectObjectCount('pnforum_topic_subscription', $where);
+    $count = DBUtil::selectObjectCount('dizkus_topic_subscription', $where);
     return $count>0;
 }
 
@@ -1393,14 +1393,14 @@ function pnForum_userapi_get_topic_subscription_status($args)
  *@params $args['forum_id'] int the forums id
  *@returns bool true if the user is subscribed or false if not
  */
-function pnForum_userapi_get_forum_subscription_status($args)
+function Dizkus_userapi_get_forum_subscription_status($args)
 {
     $pntables = pnDBGetTables();
-    $subcolumn = $pntables['pnforum_subscription_column'];
+    $subcolumn = $pntables['dizkus_subscription_column'];
     
     $where = ' WHERE ' . $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
              ' AND '   . $subcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
-    $count = DBUtil::selectObjectCount('pnforum_subscription', $where);
+    $count = DBUtil::selectObjectCount('dizkus_subscription', $where);
     return $count>0;
 }
 
@@ -1411,14 +1411,14 @@ function pnForum_userapi_get_forum_subscription_status($args)
  *@params $args['forum_id'] int the forums id
  *@returns bool true if the user is subscribed or false if not
  */
-function pnForum_userapi_get_forum_favorites_status($args)
+function Dizkus_userapi_get_forum_favorites_status($args)
 {
     $pntables = pnDBGetTables();
-    $favcolumn = $pntables['pnforum_forum_favorites_column'];
+    $favcolumn = $pntables['dizkus_forum_favorites_column'];
     
     $where = ' WHERE ' . $favcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
              ' AND '   . $favcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
-    $count = DBUtil::selectObjectCount('pnforum_forum_favorites', $where);
+    $count = DBUtil::selectObjectCount('dizkus_forum_favorites', $where);
     return $count>0;
 }
 
@@ -1433,12 +1433,12 @@ function pnForum_userapi_get_forum_favorites_status($args)
  *@params $args['subscribe_topic'] int 1= subscribe topic, otherwise no
  *@returns array with information....
  */
-function pnForum_userapi_preparenewtopic($args)
+function Dizkus_userapi_preparenewtopic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $newtopic = array();
     $newtopic['forum_id'] = $forum_id;
@@ -1447,14 +1447,14 @@ function pnForum_userapi_preparenewtopic($args)
     $sql = "SELECT f.forum_name,
                    c.cat_id,
                    c.cat_title
-            FROM ".$pntable['pnforum_forums']." AS f,
-                ".$pntable['pnforum_categories']." AS c
+            FROM ".$pntable['dizkus_forums']." AS f,
+                ".$pntable['dizkus_categories']." AS c
             WHERE (forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
             AND f.cat_id=c.cat_id)";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $myrow = $result->GetRowAssoc(false);
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $newtopic['cat_id']     = $myrow['cat_id'];
     $newtopic['forum_name'] = DataUtil::formatForDisplay($myrow['forum_name']);
@@ -1465,9 +1465,9 @@ function pnForum_userapi_preparenewtopic($args)
     // need at least "comment" to add newtopic
     if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
-    $newtopic['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
+    $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
 
     $newtopic['subject'] = $subject;
     $newtopic['message'] = $message;
@@ -1479,7 +1479,7 @@ function pnForum_userapi_preparenewtopic($args)
     if(pnUserLoggedIn()) {
         if($topic_start==true) {
             $newtopic['attach_signature'] = true;
-            $newtopic['subscribe_topic']  = (pnModGetVar('pnForum', 'autosubscribe')=='yes') ? true : false;
+            $newtopic['subscribe_topic']  = (pnModGetVar('Dizkus', 'autosubscribe')=='yes') ? true : false;
         } else {
             $newtopic['attach_signature'] = $attach_signature;
             $newtopic['subscribe_topic']  = $subscribe_topic;
@@ -1506,27 +1506,27 @@ function pnForum_userapi_preparenewtopic($args)
  *@params $args['post_as']    int used id under which this topic should be posted
  *@returns int the new topics id
  */
-function pnForum_userapi_storenewtopic($args)
+function Dizkus_userapi_storenewtopic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    $cat_id = pnForum_userapi_get_forum_category(array('forum_id' => $forum_id));
+    $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $forum_id));
     if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
 
 
     if(trim($message)=='' || trim($subject) == '') {
         // either message or subject is empty
-        return showforumerror(_PNFORUM_EMPTYMSG, __FILE__, __LINE__);
+        return showforumerror(_DZK_EMPTYMSG, __FILE__, __LINE__);
     }
 
-    // sync the users, so that new pn users get into the pnForum
+    // sync the users, so that new pn users get into the Dizkus
     // database
-    pnModAPIFunc('pnForum', 'user', 'usersync');
+    pnModAPIFunc('Dizkus', 'user', 'usersync');
 
     /*
     it's a submitted page and message and subject are not empty
@@ -1556,7 +1556,7 @@ function pnForum_userapi_storenewtopic($args)
         $poster_ip = pnServerGetVar('REMOTE_ADDR');
     }
     // for privavy issues ip logging can be deactivated
-    if (pnModGetVar('pnForum', 'log_ip') == 'no') {
+    if (pnModGetVar('Dizkus', 'log_ip') == 'no') {
         $poster_ip = '127.0.0.1';
     }
 
@@ -1574,8 +1574,8 @@ function pnForum_userapi_storenewtopic($args)
     $msgid     = (isset($msgid)) ? DataUtil::formatForStore($msgid) : '';
 
     //  insert values into topics-table
-    $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
-    $sql = "INSERT INTO ".$pntable['pnforum_topics']."
+    $topic_id = $dbconn->GenID($pntable['dizkus_topics']);
+    $sql = "INSERT INTO ".$pntable['dizkus_topics']."
             (topic_id,
              topic_title,
              topic_poster,
@@ -1592,14 +1592,14 @@ function pnForum_userapi_storenewtopic($args)
              '',
              '$reference' )";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     //  insert values into posts-table
-    $topic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
+    $topic_id = $dbconn->PO_Insert_ID($pntable['dizkus_topics'], 'topic_id');
 
-    $post_id = $dbconn->GenID($pntable['pnforum_posts']);
-    $sql = "INSERT INTO ".$pntable['pnforum_posts']."
+    $post_id = $dbconn->GenID($pntable['dizkus_posts']);
+    $sql = "INSERT INTO ".$pntable['dizkus_posts']."
             (post_id,
              topic_id,
              forum_id,
@@ -1616,55 +1616,55 @@ function pnForum_userapi_storenewtopic($args)
              '$poster_ip',
              '$msgid')";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
-    $post_id = $dbconn->PO_Insert_ID($pntable['pnforum_posts'], 'post_id');
+    $post_id = $dbconn->PO_Insert_ID($pntable['dizkus_posts'], 'post_id');
     if($post_id) {
         //  insert values into posts_text-table
-        $sql = "INSERT INTO ".$pntable['pnforum_posts_text']."
+        $sql = "INSERT INTO ".$pntable['dizkus_posts_text']."
                 (post_id, post_text)
                 VALUES ('".DataUtil::formatForStore($post_id)."', '$message')";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         //  updates topics-table
-        $sql = "UPDATE ".$pntable['pnforum_topics']."
+        $sql = "UPDATE ".$pntable['dizkus_topics']."
                 SET topic_last_post_id = '".DataUtil::formatForStore($post_id)."'
                 WHERE topic_id = '".DataUtil::formatForStore($topic_id)."'";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         // Let any hooks know that we have created a new item.
-        pnModCallHooks('item', 'create', $topic_id, array('module' => 'pnForum'));
+        pnModCallHooks('item', 'create', $topic_id, array('module' => 'Dizkus'));
     }
 
     if(pnUserLoggedin()) {
         // user logged in we have to update users-table
-        $sql = "UPDATE $pntable[pnforum_users]
+        $sql = "UPDATE $pntable[dizkus_users]
                 SET user_posts=user_posts+1
                 WHERE (user_id = $pn_uid)";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         // update subscription
         if($subscribe_topic==1) {
             // user wants to subscribe the new topic
-            pnForum_userapi_subscribe_topic(array('topic_id'=>$topic_id));
+            Dizkus_userapi_subscribe_topic(array('topic_id'=>$topic_id));
         }
     }
     //  update forums-table
-    $sql = "UPDATE $pntable[pnforum_forums]
+    $sql = "UPDATE $pntable[dizkus_forums]
             SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = '" . DataUtil::formatForStore($post_id) . "'
             WHERE forum_id = '$forum_id'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     //  notify for newtopic
-    pnForum_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '0'));
+    Dizkus_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '0'));
 
     // delete temporary session var
     SessionUtil::delVar('topic_started');
@@ -1680,9 +1680,9 @@ function pnForum_userapi_storenewtopic($args)
  *@params $args['post_id'] int the postings id
  *@returns array with posting information...
  */
-function pnForum_userapi_readpost($args)
+function Dizkus_userapi_readpost($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // we know about the post_id, let's find out the forum and catgeory name for permission checks
     $sql = "SELECT p.post_id,
@@ -1697,29 +1697,29 @@ function pnForum_userapi_readpost($args)
                     f.forum_name,
                     c.cat_title,
                     c.cat_id
-            FROM ".$pntable['pnforum_posts']." p
-            LEFT JOIN ".$pntable['pnforum_topics']." t ON t.topic_id = p.topic_id
-            LEFT JOIN ".$pntable['pnforum_posts_text']." pt ON pt.post_id = p.post_id
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['pnforum_categories']." c ON c.cat_id = f.cat_id
+            FROM ".$pntable['dizkus_posts']." p
+            LEFT JOIN ".$pntable['dizkus_topics']." t ON t.topic_id = p.topic_id
+            LEFT JOIN ".$pntable['dizkus_posts_text']." pt ON pt.post_id = p.post_id
+            LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
+            LEFT JOIN ".$pntable['dizkus_categories']." c ON c.cat_id = f.cat_id
             WHERE (p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."')";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $post = array();
     $post['post_id']      = DataUtil::formatForDisplay($myrow['post_id']);
     $post['post_time']    = DataUtil::formatForDisplay($myrow['post_time']);
     $message              = $myrow['post_text'];
     $post['has_signature']= (substr($message, -8, 8)=='[addsig]');
-    $post['post_rawtext'] = pnForum_replacesignature($message, '');
+    $post['post_rawtext'] = Dizkus_replacesignature($message, '');
     $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
     $post['post_rawtext'] = eregi_replace('<br />', '', $post['post_rawtext']);
 
@@ -1732,13 +1732,13 @@ function pnForum_userapi_readpost($args)
     $post['forum_name']   = DataUtil::formatForDisplay($myrow['forum_name']);
     $post['cat_title']    = DataUtil::formatForDisplay($myrow['cat_title']);
     $post['cat_id']       = DataUtil::formatForDisplay($myrow['cat_id']);
-    $post['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
+    $post['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
     // create unix timestamp
-    $post['post_unixtime'] = pnf_str2time($post['post_time']); //strtotime ($post['post_time']);
+    $post['post_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
     $post['posted_unixtime'] = $post['post_unixtime'];
 
     if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
     $pn_uid = pnUserGetVar('uid');
@@ -1762,7 +1762,7 @@ function pnForum_userapi_readpost($args)
     }
 
     if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) &&
-        pnModGetVar('pnForum', 'log_ip') == 'yes') {
+        pnModGetVar('Dizkus', 'log_ip') == 'yes') {
         // user is allowed to see ip
         $post['poster_data']['seeip'] = true;
     }
@@ -1773,11 +1773,11 @@ function pnForum_userapi_readpost($args)
     }
 //////////// ende neu
     $post['post_textdisplay'] = phpbb_br2nl($message);
-    $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
+    $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
 
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-    $post['post_textdisplay'] = pnfVarPrepHTMLDisplay($post['post_textdisplay']);
+    $post['post_textdisplay'] = dzkVarPrepHTMLDisplay($post['post_textdisplay']);
 /*
     //$message = DataUtil::formatForDisplay($message);
     //  remove [addsig]
@@ -1788,15 +1788,15 @@ function pnForum_userapi_readpost($args)
     //$message = eregi_replace('<br />', '', $message);
     $message = phpbb_br2nl($message);
     //  convert bbcode (just for backwards compatibility)
-    $message = pnForum_bbdecode($message);
+    $message = Dizkus_bbdecode($message);
     //  convert autolinks (just for backwards compatibility)
-    $message = pnForum_undo_make_clickable($message);
+    $message = Dizkus_undo_make_clickable($message);
     $post['post_text'] = $message;
 */
     $post['post_text'] = $post['post_textdisplay'];
 
     // allow to edit the subject if first post
-    $post['first_post'] = pnForum_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
+    $post['first_post'] = Dizkus_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post_id));
 
     return $post;
 }
@@ -1808,24 +1808,24 @@ function pnForum_userapi_readpost($args)
  *@params $args['post_id'] int the postings id
  *@returns boolean
  */
-function pnForum_userapi_is_first_post($args)
+function Dizkus_userapi_is_first_post($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    $sql = "SELECT post_id FROM ".$pntable['pnforum_posts']."
+    $sql = "SELECT post_id FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'
             ORDER BY post_id
             LIMIT 1";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         list($read_post_id) = $result->fields;
-        pnfCloseDB($result);
+        dzkCloseDB($result);
         if($args['post_id'] == $read_post_id) {
             return true;
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return false;
 }
 
@@ -1840,12 +1840,12 @@ function pnForum_userapi_is_first_post($args)
  *@params $args['attach_signature'] boolean true if the addsig place holder has to be appended
  *@returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
  */
-function pnForum_userapi_updatepost($args)
+function Dizkus_userapi_updatepost($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $sql = "SELECT p.poster_id,
                    p.post_time,
@@ -1857,21 +1857,21 @@ function pnForum_userapi_updatepost($args)
                    t.topic_replies,
                    f.cat_id,
                    f.forum_last_post_id
-            FROM  ".$pntable['pnforum_posts']." as p,
-                  ".$pntable['pnforum_topics']." as t,
-                  ".$pntable['pnforum_forums']." as f
+            FROM  ".$pntable['dizkus_posts']." as p,
+                  ".$pntable['dizkus_topics']." as t,
+                  ".$pntable['dizkus_forums']." as f
             WHERE (p.post_id = '".(int)DataUtil::formatForStore($post_id)."')
               AND (t.topic_id = p.topic_id)
               AND (f.forum_id = p.forum_id)";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     extract($myrow);
 
     $pn_uid = pnUserGetVar('uid');
@@ -1879,18 +1879,18 @@ function pnForum_userapi_updatepost($args)
     if (!($pn_uid == $poster_id) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // user is not allowed to edit post
-        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     if(($topic_status == 1) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // topic is locked, user is not moderator
-        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     if(trim($message) == '') {
         // no message
-        return showforumerror( _PNFORUM_EMPTYMSG, __FILE__, __LINE__);
+        return showforumerror( _DZK_EMPTYMSG, __FILE__, __LINE__);
     }
 
     if (empty($delete)) {
@@ -1909,7 +1909,7 @@ function pnForum_userapi_updatepost($args)
                 $editname = pnModGetVar('Users', 'anonymous');
             }
             $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
-            $message .= '<br /><br /><!-- editby --><br /><br /><em>' . _PNFORUM_EDITBY . ' ' . $editname . ', ' . $edit_date . '</em><!-- end editby --> ';
+            $message .= '<br /><br /><!-- editby --><br /><br /><em>' . _DZK_EDITBY . ' ' . $editname . ', ' . $edit_date . '</em><!-- end editby --> ';
         }
 
         // add signature placeholder
@@ -1918,32 +1918,32 @@ function pnForum_userapi_updatepost($args)
         }
         $message = DataUtil::formatForStore($message);
 
-        $sql = "UPDATE ".$pntable['pnforum_posts_text']."
+        $sql = "UPDATE ".$pntable['dizkus_posts_text']."
                 SET post_text = '$message'
                 WHERE (post_id = '".(int)DataUtil::formatForStore($post_id)."')";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         if (!empty ($subject)) {
             //  topic has a new subject
             if (trim($subject) != '') {
                 $subject = DataUtil::formatForStore($subject);
-                $sql = "UPDATE ".$pntable['pnforum_topics']."
+                $sql = "UPDATE ".$pntable['dizkus_topics']."
                         SET topic_title = '$subject'
                         WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($result);
+                $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                dzkCloseDB($result);
             }
         }
         // Let any hooks know that we have updated an item.
-        //pnModCallHooks('item', 'update', $post_id, array('module' => 'pnForum'));
-        pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
+        //pnModCallHooks('item', 'update', $post_id, array('module' => 'Dizkus'));
+        pnModCallHooks('item', 'update', $topic_id, array('module' => 'Dizkus',
                                                           'post_id' => $post_id));
 
         // update done, return now
-        return pnModURL('pnForum', 'user', 'viewtopic',
+        return pnModURL('Dizkus', 'user', 'viewtopic',
                         array('topic' => $topic_id /*,
                               'start' => $start*/) );
 
@@ -1953,20 +1953,20 @@ function pnForum_userapi_updatepost($args)
         //
 
         // delete the post from the posts table
-        $sql = "DELETE FROM ".$pntable['pnforum_posts']."
+        $sql = "DELETE FROM ".$pntable['dizkus_posts']."
                 WHERE post_id = '".(int)DataUtil::formatForStore($post_id)."'";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         // delete the post from the posts_text table
-        $sql = "DELETE FROM ".$pntable['pnforum_posts_text']."
+        $sql = "DELETE FROM ".$pntable['dizkus_posts_text']."
                 WHERE post_id = '".(int)DataUtil::formatForStore($post_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         // Let any hooks know that we have deleted an item.
-        //pnModCallHooks('item', 'delete', $post_id, array('module' => 'pnForum'));
+        //pnModCallHooks('item', 'delete', $post_id, array('module' => 'Dizkus'));
 
         //
         // there are several possibilities now:
@@ -1985,25 +1985,25 @@ function pnForum_userapi_updatepost($args)
 
             // the deleted posting was not the last one
             // adjust the users post count
-            pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+            Dizkus_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
 
             //
             // adjust the post counter in the forum, topic counter and last_post_id not changed
             //
-            $sql = "UPDATE ".$pntable['pnforum_forums']."
+            $sql = "UPDATE ".$pntable['dizkus_forums']."
                     SET forum_posts=forum_posts - 1
                     WHERE forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            dzkCloseDB($result);
 
             //
             //  adjust the topic_replies
             //
-            $sql = "UPDATE ".$pntable['pnforum_topics']."
+            $sql = "UPDATE ".$pntable['dizkus_topics']."
                     SET topic_replies=topic_replies-1
                     WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-            $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            pnfCloseDB($result);
+            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+            dzkCloseDB($result);
 
             //
             // no more actions necessary, just return to the topic and show the last page
@@ -2011,7 +2011,7 @@ function pnForum_userapi_updatepost($args)
             // posts in this topic :-)
             // $topic_replies - one deleted post + one initial post
             // get some enviroment
-            $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+            $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
             $times = 0;
             if (($topic_replies-$posts_per_page)>= 0) {
                 for ($x = 0; $x < $topic_replies-$posts_per_page; $x+= $posts_per_page) {
@@ -2019,47 +2019,47 @@ function pnForum_userapi_updatepost($args)
                 }
             }
             $start = $times * $posts_per_page;
-            return pnModURL('pnForum', 'user', 'viewtopic',
+            return pnModURL('Dizkus', 'user', 'viewtopic',
                             array('topic' => $topic_id,
                                   'start' => $start));
         } else {
             //
             // check if this was the last post in the topic, if yes, remove topic
             //
-            $last_topic_post = pnForum_userapi_get_firstlast_post_in_topic(array('topic_id' => $topic_id));
-            $forum_last_post_id = pnForum_userapi_get_last_post_in_forum(array('forum_id' => $forum_id, 'id_only' => true));
+            $last_topic_post = Dizkus_userapi_get_firstlast_post_in_topic(array('topic_id' => $topic_id));
+            $forum_last_post_id = Dizkus_userapi_get_last_post_in_forum(array('forum_id' => $forum_id, 'id_only' => true));
             if($last_topic_post == false) {
                 //
                 // it was the last post in the thread, remove topic
                 //
-                $sql = "DELETE FROM ".$pntable['pnforum_topics']."
+                $sql = "DELETE FROM ".$pntable['dizkus_topics']."
                         WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($result);
+                $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                dzkCloseDB($result);
 
                 //
                 // adjust the users post counter
                 //
-                pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+                Dizkus_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
 
                 //
                 // adjust the post and topic counter and forum_last_post_id in the forum
                 //
-                $sql = "UPDATE ".$pntable['pnforum_forums']."
+                $sql = "UPDATE ".$pntable['dizkus_forums']."
                         SET forum_topics=forum_topics - 1,
                             forum_posts=forum_posts - 1,
                             forum_last_post_id = '".(int)DataUtil::formatForStore($forum_last_post_id)."'
                         WHERE forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($result);
+                $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                dzkCloseDB($result);
 
                 // Let any hooks know that we have deleted an item (topic).
-                pnModCallHooks('item', 'delete', $topic_id, array('module' => 'pnForum'));
+                pnModCallHooks('item', 'delete', $topic_id, array('module' => 'Dizkus'));
 
                 //
                 // ready to return
                 //
-                return pnModURL('pnForum', 'user', 'viewforum',
+                return pnModURL('Dizkus', 'user', 'viewforum',
                                 array('forum' => $forum_id));
             } else {
                 //
@@ -2067,35 +2067,35 @@ function pnForum_userapi_updatepost($args)
                 // $post contains the data of the last posting
                 //
                 $lastposttime = date('Y-m-d H:i', $last_topic_post['post_unixtime']);
-                $sql = "UPDATE ".$pntable['pnforum_topics']."
+                $sql = "UPDATE ".$pntable['dizkus_topics']."
                         SET topic_time = '".DataUtil::formatForStore($lastposttime)."',
                             topic_last_post_id = '".(int)DataUtil::formatForStore($last_topic_post['post_id'])."',
                             topic_replies=topic_replies-1
                         WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($result);
+                $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                dzkCloseDB($result);
 
                 //
                 // adjust the users post counter
                 //
-                pnForum_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+                Dizkus_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
 
                 //
                 // adjust the post counter in the forum, topi counter not changed
                 //
-                $sql = "UPDATE ".$pntable['pnforum_forums']."
+                $sql = "UPDATE ".$pntable['dizkus_forums']."
                         SET forum_posts=forum_posts - 1,
                             forum_last_post_id = '".(int)DataUtil::formatForStore($forum_last_post_id)."'
                         WHERE forum_id = '".(int)DataUtil::formatForStore($forum_id)."'";
-                $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-                pnfCloseDB($result);
+                $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+                dzkCloseDB($result);
 
                 //
                 // after removing the posting the $topic_replies now contains the total number
                 // posts in this topic :-)
                 // $topic_replies - one deleted post + one initial post
                 // get some enviroment
-                $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
+                $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
                 $times = 0;
                 if (($topic_replies-$posts_per_page)>= 0) {
                     for ($x = 0; $x < $topic_replies-$posts_per_page; $x+= $posts_per_page) {
@@ -2103,14 +2103,14 @@ function pnForum_userapi_updatepost($args)
                     }
                 }
                 $start = $times * $posts_per_page;
-                return pnModURL('pnForum', 'user', 'viewtopic',
+                return pnModURL('Dizkus', 'user', 'viewtopic',
                                 array('topic' => $topic_id,
                                       'start' => $start));
             }
         }
     }
     // we should not get here, but who knows...
-    return pnModURL('pnForum', 'user', 'main');
+    return pnModURL('Dizkus', 'user', 'main');
 }
 
 /**
@@ -2122,19 +2122,19 @@ function pnForum_userapi_updatepost($args)
  *@params $args['type'] string, either topic of timefix
  *returns ???
  */
-function pnForum_userapi_get_last_boardpost($args)
+function Dizkus_userapi_get_last_boardpost($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $sql = "SELECT p.post_time, u.pn_uname
-            FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
+            FROM ".$pntable['dizkus_posts']." p, ".$pntable['users']." u
             WHERE p.topic_id = '".(int)DataUtil::formatForStore($args['id'])."'
             AND p.poster_id = u.pn_uid
             ORDER BY post_time DESC";
 
-    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     $row = $result->GetRowAssoc(false);
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     $uname = $row['pn_uname'];
     $post_time = $row['post_time'];
 
@@ -2143,7 +2143,7 @@ function pnForum_userapi_get_last_boardpost($args)
         case 'topic':
             $userlink = '<a href="user.php?op=userinfo&amp;uname=' . $uname . '">' . $uname . '</a>';
             // correct the time
-            $posted_unixtime= pnf_str2time($post_time); //strtotime ($post_time);
+            $posted_unixtime= dzk_str2time($post_time); //strtotime ($post_time);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
             $val = '<td><span class="pn-normal">' . $userlink . '</span></td><td><span class="pn-normal">' . $posted_ml . '</span></td>';
             break;
@@ -2162,33 +2162,33 @@ function pnForum_userapi_get_last_boardpost($args)
  *@params $args['post_id] int the postings id
  *@returns array with informstion ...
  */
-function pnForum_userapi_get_viewip_data($args)
+function Dizkus_userapi_get_viewip_data($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $viewip = array();
 
     $sql = "SELECT u.pn_uname, p.poster_ip
-            FROM ".$pntable['users']." u, ".$pntable['pnforum_posts']." p
+            FROM ".$pntable['users']." u, ".$pntable['dizkus_posts']." p
             WHERE p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."'
             AND u.pn_uid = p.poster_id";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // TODO we have a valid user here, but he doesn't have posts
-        return showforumerror(_PNFORUM_NOUSER_OR_POST, __FILE__, __LINE__);
+        return showforumerror(_DZK_NOUSER_OR_POST, __FILE__, __LINE__);
     } else {
         $row = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     $viewip['poster_ip']   = $row['poster_ip'];
     $viewip['poster_host'] = gethostbyaddr($row['poster_ip']);
 
     $sql = "SELECT pn_uid, pn_uname, count(*) AS postcount
-            FROM ".$pntable['pnforum_posts']." p, ".$pntable['users']." u
+            FROM ".$pntable['dizkus_posts']." p, ".$pntable['users']." u
             WHERE poster_ip='".DataUtil::formatForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid
             GROUP BY pn_uid";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $viewip['users'] = array();
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
@@ -2199,7 +2199,7 @@ function pnForum_userapi_get_viewip_data($args)
         array_push($viewip['users'], $user);
         $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return $viewip;
 }
 
@@ -2210,18 +2210,18 @@ function pnForum_userapi_get_viewip_data($args)
  *@params $args['mode']     string lock or unlock
  *@returns void
  */
-function pnForum_userapi_lockunlocktopic($args)
+function Dizkus_userapi_lockunlocktopic($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $new_status = ($args['mode']=='lock') ? 1 : 0;
 
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_status = $new_status
             WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
     return;
 }
 
@@ -2232,18 +2232,18 @@ function pnForum_userapi_lockunlocktopic($args)
  *@params $args['mode']     string sticky or unsticky
  *@returns void
  */
-function pnForum_userapi_stickyunstickytopic($args)
+function Dizkus_userapi_stickyunstickytopic($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $new_sticky = ($args['mode']=='sticky') ? 1 : 0;
 
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET sticky = '$new_sticky'
             WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
     return;
 }
 
@@ -2254,26 +2254,26 @@ function pnForum_userapi_stickyunstickytopic($args)
  *@params $args['topic_id'] int the topics id
  *@returns array(forum_id, category_id)
  */
-function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
+function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
 {
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // we know about the topic_id, let's find out the forum and catgeory name for permission checks
     $sql = "SELECT f.forum_id,
                    c.cat_id
-            FROM  ".$pntable['pnforum_topics']." t
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
+            FROM  ".$pntable['dizkus_topics']." t
+            LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
+            LEFT JOIN ".$pntable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
     $cat_id = DataUtil::formatForDisplay($myrow['cat_id']);
@@ -2289,18 +2289,18 @@ function pnForum_userapi_get_forumid_and_categoryid_from_topicid($args)
  *@params $args['forum_id'] int a forums id (optional, if set, only reads this category
  *@returns array of forums, maybe empty
  */
-function pnForum_userapi_readuserforums($args)
+function Dizkus_userapi_readuserforums($args)
 {
     extract($args);
     unset($args);
 
     if(!empty($cat_id) && !empty($forum_id)) {
         if(!allowedtoseecategoryandforum($cat_id, $forum_id)) {
-            return showforumerror(getforumerror('auth_overview',$forum_id, 'forum', _PNFORUM_NOAUTH_TOSEE), __FILE__, __LINE__);
+            return showforumerror(getforumerror('auth_overview',$forum_id, 'forum', _DZK_NOAUTH_TOSEE), __FILE__, __LINE__);
         }
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $where = '';
     if(isset($forum_id)) {
@@ -2330,13 +2330,13 @@ function pnForum_userapi_readuserforums($args)
                    f.forum_pntopic,
                    c.cat_title,
                    c.cat_id
-            FROM ".$pntable['pnforum_forums']." AS f
-            LEFT JOIN ".$pntable['pnforum_categories']." AS c
+            FROM ".$pntable['dizkus_forums']." AS f
+            LEFT JOIN ".$pntable['dizkus_categories']." AS c
             ON c.cat_id=f.cat_id
             $where
             ORDER BY c.cat_order, f.forum_order";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $forums = array();
     if($result->RecordCount()>0) {
@@ -2370,7 +2370,7 @@ function pnForum_userapi_readuserforums($args)
             }
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     if(isset($forum_id)) {
         return $forums[0];
     }
@@ -2386,28 +2386,28 @@ function pnForum_userapi_readuserforums($args)
  *@params $args['shadow']   boolean true = create shadow topic
  *@returns void
  */
-function pnForum_userapi_movetopic($args)
+function Dizkus_userapi_movetopic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // get the old forum id and old post date
     $sql = "SELECT t.forum_id,
                    t.topic_time,
                    t.topic_title
-            FROM  ".$pntable['pnforum_topics']." t
+            FROM  ".$pntable['dizkus_topics']." t
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $oldforum_id  = DataUtil::formatForDisplay($myrow['forum_id']);
     $topic_time   = $myrow['topic_time'];
@@ -2415,31 +2415,31 @@ function pnForum_userapi_movetopic($args)
 
     if($oldforum_id <> $forum_id) {
         // set new forum id
-        $sql = "UPDATE ".$pntable['pnforum_topics']."
+        $sql = "UPDATE ".$pntable['dizkus_topics']."
                 SET forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
                 WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
-        $sql = "UPDATE ".$pntable['pnforum_posts']."
+        $sql = "UPDATE ".$pntable['dizkus_posts']."
                 SET forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
                 WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
         if($shadow==true) {
             // user wants to have a shadow topic
-            $message = sprintf(_PNFORUM_SHADOWTOPIC_MESSAGE, pnModURL('pnForum','user','viewtopic', array('topic'=> $topic_id)) );
-            $subject = '***' . DataUtil::formatForDisplay(_PNFORUM_MOVED_SUBJECT) . ': ' . $topic_title;
+            $message = sprintf(_DZK_SHADOWTOPIC_MESSAGE, pnModURL('Dizkus','user','viewtopic', array('topic'=> $topic_id)) );
+            $subject = '***' . DataUtil::formatForDisplay(_DZK_MOVED_SUBJECT) . ': ' . $topic_title;
 
-            pnForum_userapi_storenewtopic(array('subject'  => $subject,
+            Dizkus_userapi_storenewtopic(array('subject'  => $subject,
                                                 'message'  => $message,
                                                 'forum_id' => $oldforum_id,
                                                 'time'     => $topic_time,
                                                 'no_sig'   => true));
         }
-        pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
-        pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $oldforum_id, 'type' => 'forum'));
+        pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
+        pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $oldforum_id, 'type' => 'forum'));
     }
     return;
 }
@@ -2450,83 +2450,83 @@ function pnForum_userapi_movetopic($args)
  *@params $args['topic_id'] int the topics id
  *@returns int the forums id for redirecting
  */
-function pnForum_userapi_deletetopic($args)
+function Dizkus_userapi_deletetopic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // get the forum id
     $sql = "SELECT t.forum_id
-            FROM  ".$pntable['pnforum_topics']." t
+            FROM  ".$pntable['dizkus_topics']." t
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
 
     // Update the users's post count, this might be slow on big topics but it makes other parts of the
     // forum faster so we win out in the long run.
     $sql = "SELECT poster_id, post_id
-            FROM ".$pntable['pnforum_posts']."
+            FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
         if($row['poster_id'] != -1) {
-            $sql2 = "UPDATE ".$pntable['pnforum_users']."
+            $sql2 = "UPDATE ".$pntable['dizkus_users']."
                      SET user_posts = user_posts - 1
                      WHERE user_id = '".DataUtil::formatForStore($row['poster_id'])."'";
-            $result2 = pnfExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-            pnfCloseDB($result2);
+            $result2 = dzkExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
+            dzkCloseDB($result2);
         }
         // collect the post ID's we have to remove.
         $posts_to_remove[] = $row['post_id'];
         $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['pnforum_posts']."
+    $sql = "DELETE FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['pnforum_topics']."
+    $sql = "DELETE FROM ".$pntable['dizkus_topics']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
-    // fix for bug [#3753] SQL Error in pnForum_userapi_deletetopic
+    // fix for bug [#3753] SQL Error in Dizkus_userapi_deletetopic
     // credits to rmaiwald for te fix
     if (count($posts_to_remove)>0) {
-        $sql = "DELETE FROM ".$pntable['pnforum_posts_text']
+        $sql = "DELETE FROM ".$pntable['dizkus_posts_text']
              . " WHERE post_id IN (" . implode(",",$posts_to_remove) . ")";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
 
     // bug [#2491] removal of topics doesn't remove the subscriptions
-    $sql = "DELETE FROM ".$pntable['pnforum_topic_subscription']."
+    $sql = "DELETE FROM ".$pntable['dizkus_topic_subscription']."
             WHERE topic_id = '" . (int)DataUtil::formatForStore($topic_id) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // Let any hooks know that we have deleted an item (topic).
-    pnModCallHooks('item', 'delete', $topic_id, array('module' => 'pnForum'));
+    pnModCallHooks('item', 'delete', $topic_id, array('module' => 'Dizkus'));
 
-    pnModAPIFunc('pnForum', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
+    pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
     return $forum_id;
 
 }
@@ -2540,18 +2540,18 @@ function pnForum_userapi_deletetopic($args)
  *@params $args['type'] int, 0=new message, 2=reply
  *@returns void
  */
-function pnForum_userapi_notify_by_email($args)
+function Dizkus_userapi_notify_by_email($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     setlocale (LC_TIME, pnConfigGetVar('locale'));
     $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
 
     // generate the mailheader info
-    $email_from = pnModGetVar('pnForum', 'email_from');
+    $email_from = pnModGetVar('Dizkus', 'email_from');
     if ($email_from == '') {
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
@@ -2565,22 +2565,22 @@ function pnForum_userapi_notify_by_email($args)
                    c.cat_title,
                    f.forum_name,
                    f.forum_id
-            FROM  ".$pntable['pnforum_topics']." t
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON t.forum_id = f.forum_id
-            LEFT JOIN ".$pntable['pnforum_categories']." c ON f.cat_id = c.cat_id
+            FROM  ".$pntable['dizkus_topics']." t
+            LEFT JOIN ".$pntable['dizkus_forums']." f ON t.forum_id = f.forum_id
+            LEFT JOIN ".$pntable['dizkus_categories']." c ON f.cat_id = c.cat_id
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
-    $topic_unixtime= pnf_str2time($myrow['topic_time']); //strtotime ($myrow['topic_time']);
+    $topic_unixtime= dzk_str2time($myrow['topic_time']); //strtotime ($myrow['topic_time']);
     $topic_time_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic_unixtime));
 
     $poster_name = pnUserGetVar('uname',$poster_id);
@@ -2612,14 +2612,14 @@ function pnForum_userapi_notify_by_email($args)
     //  get list of forum subscribers with non-empty emails
     $sql = "SELECT DISTINCT fs.user_id,
                             c.cat_id
-            FROM " . $pntable['pnforum_subscription'] . " as fs,
-                 " . $pntable['pnforum_forums'] . " as f,
-                 " . $pntable['pnforum_categories'] . " as c
+            FROM " . $pntable['dizkus_subscription'] . " as fs,
+                 " . $pntable['dizkus_forums'] . " as f,
+                 " . $pntable['dizkus_categories'] . " as c
             WHERE fs.forum_id=".DataUtil::formatForStore($forum_id)."
               " . $fs_wherenotuser . "
               AND f.forum_id = fs.forum_id
               AND c.cat_id = f.cat_id";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $recipients = array();
     // check if list is empty - then do nothing
@@ -2630,7 +2630,7 @@ function pnForum_userapi_notify_by_email($args)
             $pn_email = pnUserGetVar('email', $pn_uid);
             if(empty($pn_email)) { continue; }
             // check permissions
-            if(SecurityUtil::checkPermission('pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+            if(SecurityUtil::checkPermission('Dizkus::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
@@ -2638,20 +2638,20 @@ function pnForum_userapi_notify_by_email($args)
             }
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     //  get list of topic_subscribers with non-empty emails
     $sql = "SELECT DISTINCT ts.user_id,
                             c.cat_id,
                             f.forum_id
-            FROM " . $pntable['pnforum_topic_subscription'] . " as ts,
-                 " . $pntable['pnforum_forums'] . " as f,
-                 " . $pntable['pnforum_categories'] . " as c
+            FROM " . $pntable['dizkus_topic_subscription'] . " as ts,
+                 " . $pntable['dizkus_forums'] . " as f,
+                 " . $pntable['dizkus_categories'] . " as c
             WHERE ts.topic_id=".DataUtil::formatForStore($topic_id)."
               " . $ts_wherenotuser . "
               AND f.forum_id = ts.forum_id
               AND c.cat_id = f.cat_id";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
@@ -2659,7 +2659,7 @@ function pnForum_userapi_notify_by_email($args)
             $pn_email = pnUserGetVar('email', $pn_uid);
             if(empty($pn_email)) { continue; }
             // check permissions
-            if(SecurityUtil::checkPermission('pnForum::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+            if(SecurityUtil::checkPermission('Dizkus::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
@@ -2667,24 +2667,24 @@ function pnForum_userapi_notify_by_email($args)
             }
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $sitename = pnConfigGetVar('sitename');
 
-    $message = _PNFORUM_NOTIFYBODY1 . ' '. $sitename . "\n"
+    $message = _DZK_NOTIFYBODY1 . ' '. $sitename . "\n"
             . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
-            . $poster_name . ' ' .DataUtil::formatForDisplay(_PNFORUM_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
+            . $poster_name . ' ' .DataUtil::formatForDisplay(_DZK_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
             . "---------------------------------------------------------------------\n\n"
             . strip_tags($post_message) . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . _PNFORUM_NOTIFYBODY3 . "\n"
-            . pnModURL('pnForum', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id)) . "\n\n"
-            . _PNFORUM_NOTIFYBODY4 . "\n"
-            . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $topic_id)) . "\n\n"
-            . _PNFORUM_NOTIFYBODY6 . "\n"
-            . pnModURL('pnForum', 'user', 'prefs') . "\n"
+            . _DZK_NOTIFYBODY3 . "\n"
+            . pnModURL('Dizkus', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id)) . "\n\n"
+            . _DZK_NOTIFYBODY4 . "\n"
+            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)) . "\n\n"
+            . _DZK_NOTIFYBODY6 . "\n"
+            . pnModURL('Dizkus', 'user', 'prefs') . "\n"
             . "\n"
-            . _PNFORUM_NOTIFYBODY5 . ' ' . pnGetBaseURL();
+            . _DZK_NOTIFYBODY5 . ' ' . pnGetBaseURL();
 
     if(count($recipients)>0) {
         foreach($recipients as $subscriber) {
@@ -2696,8 +2696,8 @@ function pnForum_userapi_notify_by_email($args)
                            'subject'     => $subject,
                            'body'        => $message,
                            'headers'     => array('X-UserID: ' . md5($uid),
-                                                  'X-Mailer: pnForum v' . $modinfo['version'],
-                                                  'X-pnForumTopicID: ' . $topic_id));
+                                                  'X-Mailer: Dizkus v' . $modinfo['version'],
+                                                  'X-DizkusTopicID: ' . $topic_id));
 
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
@@ -2712,27 +2712,27 @@ function pnForum_userapi_notify_by_email($args)
  *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns array with topic ids, may be empty
  */
-function pnForum_userapi_get_topic_subscriptions($args)
+function Dizkus_userapi_get_topic_subscriptions($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(isset($user_id)) {
-        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
-            return showforumerror(_PNFORUM_NOAUTH);
+        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+            return showforumerror(_DZK_NOAUTH);
         }
     } else {
         $user_id = pnUserGetVar('uid');
     }
 
-    $tstable = $pntable['pnforum_topic_subscription'];
-    $tscolumn = $pntable['pnforum_topic_subscription_column'];
-    $topicstable = $pntable['pnforum_topics'];
-    $topicscolumn = $pntable['pnforum_topics_column'];
-    $forumstable = $pntable['pnforum_forums'];
-    $forumscolumn = $pntable['pnforum_forums_column'];
+    $tstable = $pntable['dizkus_topic_subscription'];
+    $tscolumn = $pntable['dizkus_topic_subscription_column'];
+    $topicstable = $pntable['dizkus_topics'];
+    $topicscolumn = $pntable['dizkus_topics_column'];
+    $forumstable = $pntable['dizkus_forums'];
+    $forumscolumn = $pntable['dizkus_forums_column'];
     $userstable = $pntable['users'];
     $userscolumn = $pntable['users_column'];
 
@@ -2755,11 +2755,11 @@ function pnForum_userapi_get_topic_subscriptions($args)
               AND u.pn_uid=ts.user_id
               AND f.forum_id=ts.forum_id)
             ORDER BY ts.forum_id, ts.topic_id";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $subscriptions = array();
-    $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order', array('user_id' => $user_id));
-    $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
+    $post_sort_order = pnModAPIFunc('Dizkus', 'user', 'get_user_post_order', array('user_id' => $user_id));
+    $posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
 
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
@@ -2781,7 +2781,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
         // we now create the url to the last post in the thread. This might
         // on site 1, 2 or what ever in the thread, depending on topic_replies
         // count and the posts_per_page setting
-        $subscription['last_post_url'] = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+        $subscription['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
                                                              array('topic' => $subscription['topic_id'],
                                                                    'start' => $start)));
         $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . '#pid' . $subscription['topic_last_post_id'];
@@ -2790,7 +2790,7 @@ function pnForum_userapi_get_topic_subscriptions($args)
         $result->MoveNext();
     }
 
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     return $subscriptions;
 }
@@ -2803,30 +2803,30 @@ function pnForum_userapi_get_topic_subscriptions($args)
  *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns void
  */
-function pnForum_userapi_subscribe_topic($args)
+function Dizkus_userapi_subscribe_topic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    if(isset($user_id) && !SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if(isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
         $user_id = pnUserGetVar('uid');
     }
 
-    list($forum_id, $cat_id) = pnForum_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
+    list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (pnForum_userapi_get_topic_subscription_status(array('userid' => $user_id, 'topic_id' => $topic_id)) == false) {
+    if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $user_id, 'topic_id' => $topic_id)) == false) {
         // add user only if not already subscribed to the topic
-        $sql = "INSERT INTO ".$pntable['pnforum_topic_subscription']." (user_id, forum_id, topic_id)
+        $sql = "INSERT INTO ".$pntable['dizkus_topic_subscription']." (user_id, forum_id, topic_id)
                 VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."','".(int)DataUtil::formatForStore($topic_id)."')";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
     return;
 }
@@ -2839,18 +2839,18 @@ function pnForum_userapi_subscribe_topic($args)
  *@params $args['silent'] bool true=no error message when not subscribed, simply return void (obsolete)
  *@returns void
  */
-function pnForum_userapi_unsubscribe_topic($args)
+function Dizkus_userapi_unsubscribe_topic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    $tsubtable  = $pntable['pnforum_topic_subscription'];
-    $tsubcolumn = $pntable['pnforum_topic_subscription_column'];
+    $tsubtable  = $pntable['dizkus_topic_subscription'];
+    $tsubcolumn = $pntable['dizkus_topic_subscription_column'];
 
     if(isset($user_id)) {
-        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
@@ -2866,8 +2866,8 @@ function pnForum_userapi_unsubscribe_topic($args)
             WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) .
             $wheretopic;
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     return;
 }
@@ -2879,33 +2879,33 @@ function pnForum_userapi_unsubscribe_topic($args)
  *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns void
  */
-function pnForum_userapi_subscribe_forum($args)
+function Dizkus_userapi_subscribe_forum($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
 
-    if(isset($user_id) && !SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if(isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
         $user_id = pnUserGetVar('uid');
     }
 
-    $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+    $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (pnForum_userapi_get_forum_subscription_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
+    if (Dizkus_userapi_get_forum_subscription_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
         // add user only if not already subscribed to the forum
-        $sql = "INSERT INTO ".$pntable['pnforum_subscription']." (user_id, forum_id)
+        $sql = "INSERT INTO ".$pntable['dizkus_subscription']." (user_id, forum_id)
                 VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."')";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
     return;
 }
@@ -2917,18 +2917,18 @@ function pnForum_userapi_subscribe_forum($args)
  *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns void
  */
-function pnForum_userapi_unsubscribe_forum($args)
+function Dizkus_userapi_unsubscribe_forum($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
-    $fsubtable  = $pntable['pnforum_subscription'];
-    $fsubcolumn = $pntable['pnforum_subscription_column'];
+    $fsubtable  = $pntable['dizkus_subscription'];
+    $fsubcolumn = $pntable['dizkus_subscription_column'];
 
     if(isset($user_id)) {
-        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
@@ -2944,8 +2944,8 @@ function pnForum_userapi_unsubscribe_forum($args)
             WHERE ' . $fsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) .
             $whereforum;
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     return;
 }
@@ -2956,31 +2956,31 @@ function pnForum_userapi_unsubscribe_forum($args)
  *@params $args['user_id'] int - Optional - the user id
  *@returns void
  */
-function pnForum_userapi_add_favorite_forum($args)
+function Dizkus_userapi_add_favorite_forum($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if (!isset($user_id)) {
         $user_id = (int)pnUserGetVar('uid');
     }
 
-    $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+    $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
 
     if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (pnForum_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
+    if (Dizkus_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
         // add user only if not already a favorite
-        $sql = "INSERT INTO ".$pntable['pnforum_forum_favorites']." (user_id, forum_id)
+        $sql = "INSERT INTO ".$pntable['dizkus_forum_favorites']." (user_id, forum_id)
                 VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."')";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
     return;
 }
@@ -2992,25 +2992,25 @@ function pnForum_userapi_add_favorite_forum($args)
  *@params $args['user_id'] int - Optional - the user id
  *@returns void
  */
-function pnForum_userapi_remove_favorite_forum($args)
+function Dizkus_userapi_remove_favorite_forum($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if (!isset($user_id)) {
         $user_id = (int)pnUserGetVar('uid');
     }
 
-    if (pnForum_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == true) {
+    if (Dizkus_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == true) {
         // remove from favorites
-        $sql = "DELETE FROM ".$pntable['pnforum_forum_favorites']."
+        $sql = "DELETE FROM ".$pntable['dizkus_forum_favorites']."
                 WHERE user_id='".(int)DataUtil::formatForStore($user_id)."'
                 AND forum_id='".(int)DataUtil::formatForStore($forum_id)."'";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
     return;
 }
@@ -3022,12 +3022,12 @@ function pnForum_userapi_remove_favorite_forum($args)
  *@params $args['topic_id'] int the topics id
  *returns array with topic information
  */
-function pnForum_userapi_prepareemailtopic($args)
+function Dizkus_userapi_prepareemailtopic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $sql = "SELECT t.topic_title,
                    t.topic_id,
@@ -3035,20 +3035,20 @@ function pnForum_userapi_prepareemailtopic($args)
                    f.forum_name,
                    f.cat_id,
                    c.cat_title
-            FROM  ".$pntable['pnforum_topics']." t
-            LEFT JOIN ".$pntable['pnforum_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['pnforum_categories']." AS c ON c.cat_id = f.cat_id
+            FROM  ".$pntable['dizkus_topics']." t
+            LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
+            LEFT JOIN ".$pntable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_PNFORUM_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $topic['topic_id'] = DataUtil::formatForDisplay($myrow['topic_id']);
     $topic['forum_name'] = DataUtil::formatForDisplay($myrow['forum_name']);
@@ -3061,7 +3061,7 @@ function pnForum_userapi_prepareemailtopic($args)
      * base security check
      */
     if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     return $topic;
 }
@@ -3074,13 +3074,13 @@ function pnForum_userapi_prepareemailtopic($args)
  *@params $args['subject'] string the subject
  *@returns void
  */
-function pnForum_userapi_emailtopic($args)
+function Dizkus_userapi_emailtopic($args)
 {
     $sender_name = pnUserGetVar('uname');
     $sender_email = pnUserGetVar('email');
     if (!pnUserLoggedIn()) {
         $sender_name = pnModGetVar('Users', 'anonymous');
-        $sender_email = pnModGetVar('pnForum', 'email_from');
+        $sender_email = pnModGetVar('Dizkus', 'email_from');
     }
 
     $args2 = array( 'fromname'    => $sender_name,
@@ -3089,7 +3089,7 @@ function pnForum_userapi_emailtopic($args)
                     'toaddress'   => $args['sendto_email'],
                     'subject'     => $args['subject'],
                     'body'        => $args['message'],
-                    'headers'     => array('X-Mailer: pnForum v' . $modinfo['version']));
+                    'headers'     => array('X-Mailer: Dizkus v' . $modinfo['version']));
     pnModAPIFunc('Mailer', 'user', 'sendmessage', $args2);
     return;
 }
@@ -3105,12 +3105,12 @@ function pnForum_userapi_emailtopic($args)
  *@params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
  *@returns array (postings, mail2forumpostings, rsspostings, text_to_display)
  */
-function pnForum_userapi_get_latest_posts($args)
+function Dizkus_userapi_get_latest_posts($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // init some arrays
     $posts = array();
@@ -3122,10 +3122,10 @@ function pnForum_userapi_get_latest_posts($args)
         $limit = 100;
     }
 
-    $pnforumvars = pnModGetVar('pnForum');
-    $posts_per_page  = $pnforumvars['posts_per_page'];
-    $post_sort_order = $pnforumvars['post_sort_order'];
-    $hot_threshold   = $pnforumvars['hot_threshold'];
+    $dizkusvars = pnModGetVar('Dizkus');
+    $posts_per_page  = $dizkusvars['posts_per_page'];
+    $post_sort_order = $dizkusvars['post_sort_order'];
+    $hot_threshold   = $dizkusvars['hot_threshold'];
 
     if ($unanswered==1) {
         $unanswered = "AND t.topic_replies='0' ORDER BY t.topic_time DESC";
@@ -3138,33 +3138,33 @@ function pnForum_userapi_get_latest_posts($args)
     switch ($selorder) {
         case '2' : // today
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ";
-                   $text = _PNFORUM_TODAY;
+                   $text = _DZK_TODAY;
                    break;
         case '3' : // yesterday
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ";
-                   $text = _PNFORUM_YESTERDAY;
+                   $text = _DZK_YESTERDAY;
                    break;
         case '4' : // lastweek
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) < 8 ";
-                   $text= _PNFORUM_LASTWEEK;
+                   $text= _DZK_LASTWEEK;
                    break;
         case '5' : // last x hours
                    $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($nohours) . " HOUR) ";
-                   $text = _PNFORUM_LAST . ' ' . $nohours . ' ' . _PNFORUM_HOURS;
+                   $text = _DZK_LAST . ' ' . $nohours . ' ' . _DZK_HOURS;
                    break;
         case '6' : // last visit
                    $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($last_visit) . "' ";
-                   $text = _PNFORUM_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
+                   $text = _DZK_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
                    break;
         case '1' :
         default:   // last 24 hours
                    $wheretime = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ";
-                   $text  =_PNFORUM_LAST24;
+                   $text  =_DZK_LAST24;
                    break;
     }
 
     // get all forums the user is allowed to read
-    $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+    $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
     if(!is_array($userforums) || count($userforums)==0) {
         // error or user is not allowed to read any forum at all
         // return empty result set without even doing a db access
@@ -3193,10 +3193,10 @@ function pnForum_userapi_get_latest_posts($args)
                       c.cat_title,
                       p.post_time,
                       p.poster_id
-          FROM        ".$pntable['pnforum_topics']." AS t,
-                      ".$pntable['pnforum_forums']." AS f,
-                      ".$pntable['pnforum_categories']." AS c,
-                      ".$pntable['pnforum_posts']." AS p
+          FROM        ".$pntable['dizkus_topics']." AS t,
+                      ".$pntable['dizkus_forums']." AS f,
+                      ".$pntable['dizkus_categories']." AS c,
+                      ".$pntable['dizkus_posts']." AS p
           WHERE f.forum_id = t.forum_id
             AND c.cat_id = f.cat_id
             AND p.post_id = t.topic_last_post_id
@@ -3205,7 +3205,7 @@ function pnForum_userapi_get_latest_posts($args)
             $wheretime .
             $unanswered;
 //pnfdebug('sql', $sql, true);
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $limit_reached = false;
     while ((list($topic_id,
@@ -3259,10 +3259,10 @@ function pnForum_userapi_get_latest_posts($args)
             $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
         }
 
-        $post['posted_unixtime'] = pnf_str2time($post['post_time']); // strtotime ($post['post_time']);
+        $post['posted_unixtime'] = dzk_str2time($post['post_time']); // strtotime ($post['post_time']);
         $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
 
-        $post['last_post_url'] = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+        $post['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
                                                      array('topic' => $post['topic_id'],
                                                            'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page)));
         $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
@@ -3283,20 +3283,20 @@ function pnForum_userapi_get_latest_posts($args)
         }
         $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return array($posts, $m2fposts, $rssposts, $text);
 }
 
 /**
  * usersync
- * stub function for syncing new pn users to pnforum
+ * stub function for syncing new pn users to Dizkus
  *
  *@params none
  *@returns void
  */
-function pnForum_userapi_usersync()
+function Dizkus_userapi_usersync()
 {
-    pnModAPIFunc('pnForum', 'admin', 'sync',
+    pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array( 'id'   => NULL,
                       'type' => 'users'));
     return;
@@ -3308,29 +3308,29 @@ function pnForum_userapi_usersync()
  *@params $args['post'] array with posting data as returned from readpost()
  *@returns int id of the new topic
  */
-function pnForum_userapi_splittopic($args)
+function Dizkus_userapi_splittopic($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // before we do anything we will read the topic_last_post_id because we will need
     // this one later (it will become the topic_last_post_id of the new thread)
     $sql = "SELECT topic_last_post_id,
                    topic_replies
-            FROM ".$pntable['pnforum_topics']."
+            FROM ".$pntable['dizkus_topics']."
             WHERE topic_id = '".$post['topic_id']."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     list($old_last_post_id, $old_replies) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $time = date('Y-m-d H:i');
 
     //  insert values into topics-table
-    $topic_id = $dbconn->GenID($pntable['pnforum_topics']);
-    $sql = "INSERT INTO ".$pntable['pnforum_topics']."
+    $topic_id = $dbconn->GenID($pntable['dizkus_topics']);
+    $sql = "INSERT INTO ".$pntable['dizkus_topics']."
             (topic_id,
              topic_title,
              topic_poster,
@@ -3344,59 +3344,59 @@ function pnForum_userapi_splittopic($args)
              '".DataUtil::formatForStore($post['forum_id'])."',
              '".DataUtil::formatForStore($time)."',
              '' )";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    $newtopic_id = $dbconn->PO_Insert_ID($pntable['pnforum_topics'], 'topic_id');
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $newtopic_id = $dbconn->PO_Insert_ID($pntable['dizkus_topics'], 'topic_id');
+    dzkCloseDB($result);
 
     // now we need to change the postings:
     // first step: count the number of posting we have to move
     $sql = "SELECT COUNT(*) AS total
-            FROM ".$pntable['pnforum_posts']."
+            FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'
               AND post_id >= '".(int)DataUtil::formatForStore($post['post_id'])."'";
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($posts_to_move) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     // update the topic_id in the postings
     // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
     // post_id > $post['post_id']
-    $sql = "UPDATE ".$pntable['pnforum_posts']."
+    $sql = "UPDATE ".$pntable['dizkus_posts']."
             SET topic_id = '" . DataUtil::formatForStore($newtopic_id) . "'
             WHERE post_id >= '".(int)DataUtil::formatForStore($post['post_id'])."'
             AND topic_id = '".$post['topic_id']."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // get the new topic_last_post_id of the old topic
     $sql = "SELECT post_id,
                    post_time
-            FROM ".$pntable['pnforum_posts']."
+            FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'
             ORDER BY post_time DESC";
-    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id, $new_topic_time) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     // update the new topic
     $newtopic_replies = (int)$posts_to_move - 1;
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_replies = '$newtopic_replies',
                 topic_last_post_id = '" . DataUtil::formatForStore($old_last_post_id) . "'
             WHERE topic_id = '" . DataUtil::formatForStore($newtopic_id) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // update the old topic
     $old_replies = (int)$old_replies - (int)$posts_to_move;
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_replies = " . DataUtil::formatForStore($old_replies) . ",
                 topic_last_post_id = '" . DataUtil::formatForStore($new_last_post_id) . "',
                 topic_time = '" . DataUtil::formatForStore($new_topic_time) . "'
             WHERE topic_id = '". (int)DataUtil::formatForStore($post['topic_id'])."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     return $newtopic_id;
 }
@@ -3408,12 +3408,12 @@ function pnForum_userapi_splittopic($args)
  *@params $args['mode']    string, either "inc" (+1) or "dec" (-1)
  *@returns bool true or false
  */
-function pnForum_userapi_update_user_post_count($args)
+function Dizkus_userapi_update_user_post_count($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(!isset($user_id) || !isset($mode)) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
@@ -3426,11 +3426,11 @@ function pnForum_userapi_update_user_post_count($args)
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    $sql = "UPDATE ".$pntable['pnforum_users']."
+    $sql = "UPDATE ".$pntable['dizkus_users']."
             SET user_posts = user_posts $math 1
             WHERE user_id = '".(int)DataUtil::formatForStore($user_id)."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
     return true;
 }
 
@@ -3442,7 +3442,7 @@ function pnForum_userapi_update_user_post_count($args)
  *@params $args['view']     string either "next" or "previous"
  *@returns int topic_id maybe the same as the reference id if no more topics exist in the selectd direction
  */
-function pnForum_userapi_get_previous_or_next_topic_id($args)
+function Dizkus_userapi_get_previous_or_next_topic_id($args)
 {
     extract($args);
     unset($args);
@@ -3451,7 +3451,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     switch($view) {
         case 'previous': $math = '<'; $sort = 'DESC'; break;
@@ -3460,19 +3460,19 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
     }
 
     $sql = "SELECT t1.topic_id
-            FROM ".$pntable['pnforum_topics']." AS t1,
-                 ".$pntable['pnforum_topics']." AS t2
+            FROM ".$pntable['dizkus_topics']." AS t1,
+                 ".$pntable['dizkus_topics']." AS t2
             WHERE t2.topic_id = ".(int)DataUtil::formatForStore($topic_id)."
               AND t1.topic_time $math t2.topic_time
               AND t1.forum_id = t2.forum_id
               AND t1.sticky = 0
             ORDER BY t1.topic_time $sort";
-    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     if(!$result->EOF) {
         $row = $result->GetRowAssoc(false);
         $topic_id = $row['topic_id'];
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return $topic_id;
 }
 
@@ -3485,7 +3485,7 @@ function pnForum_userapi_get_previous_or_next_topic_id($args)
  *@returns array of categories with an array of forums in the catgories
  *
  */
-function pnForum_userapi_getfavorites($args)
+function Dizkus_userapi_getfavorites($args)
 {
     static $tree;
 
@@ -3501,7 +3501,7 @@ function pnForum_userapi_getfavorites($args)
 
     // lets get all the forums just like we would a normal display
     // we'll figure out which ones aren't needed further down.
-    $tree = pnModAPIFunc('pnForum', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
+    $tree = pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
 
     // if they are anonymous they can't have favorites
     if (!pnUserLoggedIn()) {
@@ -3512,12 +3512,12 @@ function pnForum_userapi_getfavorites($args)
         $user_id = (int)pnUserGetVar('uid');
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $sql = "SELECT f.forum_id
-            FROM ".$pntable['pnforum_forum_favorites']." AS f
+            FROM ".$pntable['dizkus_forum_favorites']." AS f
             WHERE f.user_id='" . (int)DataUtil::formatForStore($user_id) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     // make sure we start with an empty array
     $favoritesArray = array();
@@ -3527,7 +3527,7 @@ function pnForum_userapi_getfavorites($args)
         array_push($favoritesArray, (int)$forum_id);
         $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     // categoryCount is needed since the categories aren't stored as numerical
     // indexes.  They are stored as associative arrays.
@@ -3580,7 +3580,7 @@ function pnForum_userapi_getfavorites($args)
  *@returns 0 or 1
  *
  */
-function pnForum_userapi_get_favorite_status($args)
+function Dizkus_userapi_get_favorite_status($args)
 {
     extract($args);
     unset($args);
@@ -3589,15 +3589,15 @@ function pnForum_userapi_get_favorite_status($args)
         $user_id = (int)pnUserGetVar('uid');
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
-    $userstable = $pntable['pnforum_users'];
-    $userscol    = $pntable['pnforum_users_column'];
+    list($dbconn, $pntable) = dzkOpenDB();
+    $userstable = $pntable['dizkus_users'];
+    $userscol    = $pntable['dizkus_users_column'];
     $sql = "SELECT $userscol[user_favorites]
             FROM $userstable
             WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($favorite) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return (bool)$favorite;
 }
 
@@ -3609,7 +3609,7 @@ function pnForum_userapi_get_favorite_status($args)
  *@returns 0 or 1
  *
  */
-function pnForum_userapi_change_favorite_status($args)
+function Dizkus_userapi_change_favorite_status($args)
 {
     extract($args);
     unset($args);
@@ -3618,17 +3618,17 @@ function pnForum_userapi_change_favorite_status($args)
         $user_id = (int)pnUserGetVar('uid');
     }
 
-    $recentstatus = pnForum_userapi_get_favorite_status(array('user_id' => $user_id));
+    $recentstatus = Dizkus_userapi_get_favorite_status(array('user_id' => $user_id));
     $newstatus = ($recentstatus==true) ? 0 : 1;
 
-    list($dbconn, $pntable) = pnfOpenDB();
-    $userstable = $pntable['pnforum_users'];
-    $userscol    = $pntable['pnforum_users_column'];
+    list($dbconn, $pntable) = dzkOpenDB();
+    $userstable = $pntable['dizkus_users'];
+    $userscol    = $pntable['dizkus_users_column'];
     $sql = "UPDATE $userstable
             SET $userscol[user_favorites] = $newstatus
             WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
     return (bool)$newstatus;
 }
 
@@ -3642,7 +3642,7 @@ function pnForum_userapi_change_favorite_status($args)
  *                  are trying to determine
  *@returns string on success, false on failure
  */
-function pnForum_userapi_get_user_post_order($args)
+function Dizkus_userapi_get_user_post_order($args)
 {
     extract($args);
     unset($args);
@@ -3657,7 +3657,7 @@ function pnForum_userapi_get_user_post_order($args)
         // from another module or function as an admin, moderator, etc
         // so the logged in user may not be the person we want the info about.
         if ($user_id < 2 || !$loggedIn) {
-            return pnModGetVar('pnForum', 'post_sort_order');
+            return pnModGetVar('Dizkus', 'post_sort_order');
         }
     } else {
         // we didn't get a user_id passed into the function so if
@@ -3666,27 +3666,27 @@ function pnForum_userapi_get_user_post_order($args)
         if ($loggedIn) {
             $user_id = pnUserGetVar('uid');
         } else {
-            return pnModGetVar('pnForum', 'post_sort_order');
+            return pnModGetVar('Dizkus', 'post_sort_order');
         }
     }
 
-    list($dbconn, $pntable) = pnfOpenDB();
-    $pnfusertable = $pntable['pnforum_users'];
-    $pnfusercolumn = $pntable['pnforum_users_column'];
+    list($dbconn, $pntable) = dzkOpenDB();
+    $pnfusertable = $pntable['dizkus_users'];
+    $pnfusercolumn = $pntable['dizkus_users_column'];
 
     $sql = 'SELECT ' . $pnfusercolumn['user_post_order'] . '
             FROM  ' . $pnfusertable . '
             WHERE ' . $pnfusercolumn['user_id'] . ' = "' . (int)DataUtil::formatForStore($user_id).'"';
 
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if(!$result->EOF) {
         list($post_order) = $result->fields;
         $post_order = ($post_order) ? 'DESC' : 'ASC';
     } else {
-        $post_order = pnModGetVar('pnForum', 'post_sort_order');
+        $post_order = pnModGetVar('Dizkus', 'post_sort_order');
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     return $post_order;
 }
 
@@ -3698,7 +3698,7 @@ function pnForum_userapi_get_user_post_order($args)
  *@returns bool - true on success, false on failure
  *
  */
-function pnForum_userapi_change_user_post_order($args)
+function Dizkus_userapi_change_user_post_order($args)
 {
     $user_id = $args['user_id'];
 
@@ -3710,18 +3710,18 @@ function pnForum_userapi_change_user_post_order($args)
         return false;
     }
 
-    $post_order = pnModAPIFunc('pnForum','user','get_user_post_order');
+    $post_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
 
     $new_post_order = ($post_order=='DESC') ? 0 : 1;
 
-    list($dbconn, $pntable) = pnfOpenDB();
-    $userstable = $pntable['pnforum_users'];
-    $userscol    = $pntable['pnforum_users_column'];
+    list($dbconn, $pntable) = dzkOpenDB();
+    $userstable = $pntable['dizkus_users'];
+    $userscol    = $pntable['dizkus_users_column'];
     $sql = "UPDATE $userstable
             SET $userscol[user_post_order] = $new_post_order
             WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
     return true;
 }
 /**
@@ -3731,13 +3731,13 @@ function pnForum_userapi_change_user_post_order($args)
  *@params forum_id - The forum id to find the category of
  *@returns int on success, false on failure
  */
-function pnForum_userapi_get_forum_category($args)
+function Dizkus_userapi_get_forum_category($args)
 {
     if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
         return false;
     }
 
-    $cat_id = (int)DBUtil::selectFieldByID('pnforum_forums', 'cat_id', $args['forum_id'], 'forum_id');
+    $cat_id = (int)DBUtil::selectFieldByID('dizkus_forums', 'cat_id', $args['forum_id'], 'forum_id');
     return $cat_id;
 }
 
@@ -3749,15 +3749,15 @@ function pnForum_userapi_get_forum_category($args)
  *@params $args['topic_replies'] int number of topic replies
  *@return int page number of last posting in the thread
  */
-function pnForum_userapi_get_page_from_topic_replies($args)
+function Dizkus_userapi_get_page_from_topic_replies($args)
 {
     if(!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0 ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
     // get some enviroment
-    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
-    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+    $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
+    $post_sort_order = pnModGetVar('Dizkus', 'post_sort_order');
 
     $last_page = 0;
     if ($post_sort_order == 'ASC') {
@@ -3776,18 +3776,18 @@ function pnForum_userapi_get_page_from_topic_replies($args)
  *@params $args['debug'] boolean indicates debug mode on/off
  *@returns none
  */
-function pnForum_userapi_mailcron($args)
+function Dizkus_userapi_mailcron($args)
 {
     extract($args);
     unset($args);
 
-    if(pnModGetVar('pnForum', 'm2f_enabled') <> 'yes') {
+    if(pnModGetVar('Dizkus', 'm2f_enabled') <> 'yes') {
         return;
     }
 
     $force = (isset($force)) ? (boolean)$force : false;
 
-    Loader::includeOnce('modules/pnForum/pnincludes/pop3.php');
+    Loader::includeOnce('modules/Dizkus/pnincludes/pop3.php');
     if( (($forum['pop3_active']==1) && ($forum['pop3_last_connect']<=time()-($forum['pop3_interval']*60)) ) || ($force==true) ) {
         mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $debug);
         // get new mails for this forum
@@ -3854,14 +3854,14 @@ function pnForum_userapi_mailcron($args)
                                             $msgid = trim(strip_tags(substr($header, 11)));
                                         }
 
-                                        // check for X-pnForumTopicID, if set, then this is a possible
+                                        // check for X-DizkusTopicID, if set, then this is a possible
                                         // loop (mailinglist subscribed to the forum too)
-                                        if(strpos($header, 'X-pnForumTopicID:')===0) {
+                                        if(strpos($header, 'X-DizkusTopicID:')===0) {
                                             $original_topic_id = trim(strip_tags(substr($header, 17)));
                                         }
                                     }
                                     if(empty($subject)) {
-                                        $subject = DataUtil::formatForDisplay(_PNFORUM_NOSUBJECT);
+                                        $subject = DataUtil::formatForDisplay(_DZK_NOSUBJECT);
                                     }
 
                                     // check if subject matches our matchstring
@@ -3871,7 +3871,7 @@ function pnForum_userapi_mailcron($args)
                                             if(!empty($replyto)) {
                                                 // this seems to be a reply, we find the original posting
                                                 // and store this mail in the same thread
-                                                $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topic_by_postmsgid',
+                                                $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topic_by_postmsgid',
                                                                          array('msgid' => $replyto));
                                                 if(is_bool($topic_id) && $topic_id==false) {
                                                     // msgid not found, we clear replyto to create a new topic
@@ -3879,7 +3879,7 @@ function pnForum_userapi_mailcron($args)
                                                 } else {
                                                     // topic_id found, add this posting as a reply there
                                                     list($start,
-                                                         $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
+                                                         $post_id ) = pnModAPIFunc('Dizkus', 'user', 'storereply',
                                                                                    array('topic_id'         => $topic_id,
                                                                                          'message'          => $message,
                                                                                          'attach_signature' => 1,
@@ -3892,7 +3892,7 @@ function pnForum_userapi_mailcron($args)
                                             // check again for replyto and create a new topic
                                             if(empty($replyto)) {
                                                 // store message in forum
-                                                $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+                                                $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
                                                                          array('subject'          => $subject,
                                                                                'message'          => $message,
                                                                                'forum_id'         => $forum['forum_id'],
@@ -3933,12 +3933,12 @@ function pnForum_userapi_mailcron($args)
         }
 
         // store the timestamp of the last connection to the database
-        list($dbconn, $pntable) = pnfOpenDB();
-        $sql = "UPDATE ".$pntable['pnforum_forums']."
+        list($dbconn, $pntable) = dzkOpenDB();
+        $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_pop3_lastconnect='". DataUtil::formatForStore(time()) . "'
                 WHERE forum_id=" . DataUtil::formatForStore($forum['forum_id']) . "";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
 
     }
     return;
@@ -3951,15 +3951,15 @@ function pnForum_userapi_mailcron($args)
  *@returns array of messages from pop3 connection test
  *
  */
-function pnForum_userapi_testpop3connection($args)
+function Dizkus_userapi_testpop3connection($args)
 {
     if( !isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+    $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $args['forum_id']));
-    Loader::includeOnce('modules/pnForum/pnincludes/pop3.php');
+    Loader::includeOnce('modules/Dizkus/pnincludes/pop3.php');
 
     $pop3 =& new pop3_class;
     $pop3->hostname = $forum['pop3_server'];
@@ -4009,13 +4009,13 @@ function pnForum_userapi_testpop3connection($args)
  *@returns int topic_id or false if not found
  *
  */
-function pnForum_userapi_get_topic_by_postmsgid($args)
+function Dizkus_userapi_get_topic_by_postmsgid($args)
 {
     if(!isset($args['msgid']) || empty($args['msgid'])) {
         return showforumerror(_MODSRGSERROR, __FILE__, __LINE__);
     }
 
-    $topic_id = DBUtil::selectFieldByID('pnforum_posts', 'topic_id', $args['msgid'], 'post_msgid');
+    $topic_id = DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['msgid'], 'post_msgid');
     return $topic_id;
 }
 
@@ -4027,13 +4027,13 @@ function pnForum_userapi_get_topic_by_postmsgid($args)
  *@returns int topic_id or false if not found
  *
  */
-function pnForum_userapi_get_topicid_by_postid($args)
+function Dizkus_userapi_get_topicid_by_postid($args)
 {
     if(!isset($args['post_id']) || empty($args['post_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    $topic_id = DBUtil::selectFieldByID('pnforum_posts', 'topic_id', $args['post_id'], 'post_id');
+    $topic_id = DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['post_id'], 'post_id');
     return $topic_id;
 }
 
@@ -4044,73 +4044,73 @@ function pnForum_userapi_get_topicid_by_postid($args)
  *@params $args['to_topic']
  *@returns int id of the new topic
  */
-function pnForum_userapi_movepost($args)
+function Dizkus_userapi_movepost($args)
 {
     extract($args); // $post, $to_topic
     unset($args);
     // 1 . update topic_id, post_time in posts table
     // for post[post_id]
-    // 2 . update topic_replies in nuke_pnforum_topics ( COUNT )
+    // 2 . update topic_replies in nuke_dizkus_topics ( COUNT )
     // for old_topic
-    // 3 . update topic_last_post_id in nuke_pnforum_topics
+    // 3 . update topic_last_post_id in nuke_dizkus_topics
     // for old_topic
-    // 4 . update topic_replies in nuke_pnforum_topics ( COUNT )
-    // 5 . update topic_last_post_id in nuke_pnforum_topics if necessary
+    // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
+    // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // 1 . update topic_id in posts table
 
-    $sql = "UPDATE ".$pntable['pnforum_posts']."
+    $sql = "UPDATE ".$pntable['dizkus_posts']."
             SET topic_id='".(int)DataUtil::formatForStore($to_topic)."'
             WHERE (post_id = '".(int)DataUtil::formatForStore($post['post_id'])."')";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // for to_topic
-    // 2 . update topic_replies in nuke_pnforum_topics ( COUNT )
-    // 3 . update topic_last_post_id in nuke_pnforum_topics
+    // 2 . update topic_replies in nuke_dizkus_topics ( COUNT )
+    // 3 . update topic_last_post_id in nuke_dizkus_topics
     // get the new topic_last_post_id of to_topic
     $sql = "SELECT post_id, post_time
-            FROM ".$pntable['pnforum_posts']."
+            FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($to_topic)."'
             ORDER BY post_time DESC";
-    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($to_last_post_id, $to_post_time) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_replies = topic_replies + 1,
         topic_last_post_id='".(int)DataUtil::formatForStore($to_last_post_id)."',
         topic_time='".DataUtil::formatForStore($to_post_time)."'
             WHERE topic_id='".(int)DataUtil::formatForStore($to_topic)."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // for old topic ($post[topic_id]
-    // 4 . update topic_replies in nuke_pnforum_topics ( COUNT )
-    // 5 . update topic_last_post_id in nuke_pnforum_topics if necessary
+    // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
+    // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
 
     // Se obtiene el valor de topic_last_pos_id en el topic antiguo
     // get the new topic_last_post_id of the old topic
     $sql = "SELECT post_id, post_time
-            FROM ".$pntable['pnforum_posts']."
+            FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'
             ORDER BY post_time DESC";
-    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($old_last_post_id, $old_post_time) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     // update
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_replies = topic_replies - 1,
         topic_last_post_id = '".(int)DataUtil::formatForStore($old_last_post_id)."',
         topic_time='".DataUtil::formatForStore($old_post_time)."'
             WHERE topic_id = '".(int)DataUtil::formatForStore($post['topic_id'])."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
-    return pnForum_userapi_get_last_topic_page(array('topic_id' => $post['topic_id']));
+    return Dizkus_userapi_get_last_topic_page(array('topic_id' => $post['topic_id']));
 }
 
 /**
@@ -4121,18 +4121,18 @@ function pnForum_userapi_movepost($args)
  *@params $args['topic_id'] int the topic id
  *@returns int the page number
  */
-function pnForum_userapi_get_last_topic_page($args)
+function Dizkus_userapi_get_last_topic_page($args)
 {
     // get some enviroment
-    $posts_per_page = pnModGetVar('pnForum', 'posts_per_page');
-    $post_sort_order = pnModGetVar('pnForum', 'post_sort_order');
+    $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
+    $post_sort_order = pnModGetVar('Dizkus', 'post_sort_order');
 
     if(!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
     if ($post_sort_order == 'ASC') {
-        $num_postings = DBUtil::selectFieldByID('pnforum_topics', 'topic_replies', $topic_id, 'topic_id');
+        $num_postings = DBUtil::selectFieldByID('dizkus_topics', 'topic_replies', $topic_id, 'topic_id');
         // add 1 for the initial posting as we deal with the replies here
         $num_postings++;
         $last_page = floor($num_postings / $posts_per_page);                                                                                                                             
@@ -4150,69 +4150,69 @@ function pnForum_userapi_get_last_topic_page($args)
  *@params $args['from_topic_id'] int this topic get integrated into to_topic
  *@params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
  */
-function pnForum_userapi_jointopics($args)
+function Dizkus_userapi_jointopics($args)
 {
   extract($args); // $new_topic, $old_topic (parameters)
     unset($args);
 
   // check if from_topic exists. this function will return an error if not
-  $from_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
+  $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
     if(!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
   // check if to_topic exists. this function will return an error if not
-    $to_topic = pnModAPIFunc('pnForum', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
+    $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
     if(!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', _PNFORUM_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-  list($dbconn, $pntable) = pnfOpenDB();
+  list($dbconn, $pntable) = dzkOpenDB();
 
     // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
     // and from_topic['forum_id'] to to_topic['forum_id']
-    $sql = "UPDATE ".$pntable['pnforum_posts']."
+    $sql = "UPDATE ".$pntable['dizkus_posts']."
             SET topic_id = '".(int)DataUtil::formatForStore($to_topic['topic_id'])."',
         forum_id = '".(int)DataUtil::formatForStore($to_topic['forum_id'])."'
             WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
-  $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // to_topic['topic_replies'] must be incremented by from_topic['topic_replies'] + 1 (initial
     // posting
     // update to_topic['topic_time'] and to_topic['topic_last_post_id']
     // get new topic_time and topic_last_post_id
     $sql = "SELECT post_id, post_time
-            FROM ".$pntable['pnforum_posts']."
+            FROM ".$pntable['dizkus_posts']."
             WHERE topic_id = '".(int)DataUtil::formatForStore($to_topic['topic_id'])."'
             ORDER BY post_time DESC";
-    $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     list($new_last_post_id, $new_post_time) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     $topic_replies = $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1;
 
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_replies = '".(int)DataUtil::formatForStore($topic_replies)."',
         topic_last_post_id='".(int)DataUtil::formatForStore($new_last_post_id)."',
         topic_time='".DataUtil::formatForStore($new_post_time)."'
             WHERE topic_id='".(int)DataUtil::formatForStore($to_topic['topic_id'])."'";
-  $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
-    // delete from_topic from pnforum_topics
-  $sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
-  $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    // delete from_topic from dizkus_topics
+  $sql = "DELETE FROM ".$pntable['dizkus_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
+  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // update forums table
     // get topics count: decrement from_topic['forum_id']'s topic count by 1
-    $sql = "UPDATE ".$pntable['pnforum_forums']."
+    $sql = "UPDATE ".$pntable['dizkus_forums']."
             SET forum_topics = forum_topics - 1
             WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
-  $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
     // get posts count: if both topics are in the same forum, we just have to increment
     // the post count by 1 for the initial postig that is now part of the to_topic,
@@ -4224,117 +4224,117 @@ function pnForum_userapi_jointopics($args)
 
     if($from_topic['forum_id'] == $to_topic['forum_id']) {
         // same forum
-        $sql = "UPDATE ".$pntable['pnforum_forums']."
+        $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_posts = forum_posts + 1
                 WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
-      $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+      $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     } else {
         // different forum
         // get last post in forums
         $sql = "SELECT post_id
-                FROM ".$pntable['pnforum_posts']."
+                FROM ".$pntable['dizkus_posts']."
                 WHERE forum_id = '".(int)DataUtil::formatForStore($from_topic['forum_id'])."'
                 ORDER BY post_time DESC";
-        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         list($from_forum_last_post_id) = $result->fields;
-        pnfCloseDB($result);
+        dzkCloseDB($result);
         $sql = "SELECT post_id
-                FROM ".$pntable['pnforum_posts']."
+                FROM ".$pntable['dizkus_posts']."
                 WHERE forum_id = '".(int)DataUtil::formatForStore($to_topic['forum_id'])."'
                 ORDER BY post_time DESC";
-        $result = pnfSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+        $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         list($to_forum_last_post_id) = $result->fields;
-        pnfCloseDB($result);
+        dzkCloseDB($result);
         $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies']+1);
         // decrement from_topic's forum post_count
-        $sql = "UPDATE ".$pntable['pnforum_forums']."
+        $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_posts = forum_posts - $post_count_difference,
                     forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post) . "'
                 WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
-      $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
-        $sql = "UPDATE ".$pntable['pnforum_forums']."
+      $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
+        $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_posts = forum_posts + $post_count_difference,
                     forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post) . "'
                 WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
-      $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+      $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
     }
 
 
 
 /*
-// 1. Select all posts to move from pnforum_posts table
+// 1. Select all posts to move from dizkus_posts table
   $sql = "SELECT post_id,topic_id,forum_id,poster_id,post_time,poster_ip
-          FROM ".$pntable['pnforum_posts']."
+          FROM ".$pntable['dizkus_posts']."
         WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
-  $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 // 2. Updated date for all moved posts
   $time = date("Y-m-d H:i");
 // 3. Make a loop with all readed posts: Readed post = moved post
   while(!$result->EOF) {
     $readedPost = $result->GetRowAssoc(false);
-    // Every post is inserted at the end of the table pnforum_post, so we are sure every message
+    // Every post is inserted at the end of the table dizkus_post, so we are sure every message
     // is moved in the correct order and with the right date
-    $sql = "INSERT INTO ".$pntable['pnforum_posts']." (topic_id,forum_id,poster_id,post_time,poster_ip)
+    $sql = "INSERT INTO ".$pntable['dizkus_posts']." (topic_id,forum_id,poster_id,post_time,poster_ip)
         VALUES ('".(int)DataUtil::formatForStore($post['new_topic'])."',
         '".(int)DataUtil::formatForStore($readedPost['forum_id'])."',
         '".(int)DataUtil::formatForStore($readedPost['poster_id'])."',
         '".DataUtil::formatForStore($time)."',
         '".DataUtil::formatForStore($readedPost['poster_ip'])."')";
-    $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result2);
+    $result2 = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result2);
     // We get the new post_id from the moved post
-    $last_post_id = $dbconn->PO_Insert_ID($pntable['pnforum_posts'], 'post_id');
+    $last_post_id = $dbconn->PO_Insert_ID($pntable['dizkus_posts'], 'post_id');
     // Read post text using old post_id (post_id before move)
-    $sql = "SELECT post_text FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
-    $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $sql = "SELECT post_text FROM ".$pntable['dizkus_posts_text']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
+    $result2 = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($post_text) = $result2->fields;
-    pnfCloseDB($result2);
+    dzkCloseDB($result2);
     // Text post is inserted at the end of the post_text table using new post_id values
-    $sql = "INSERT INTO ".$pntable['pnforum_posts_text']." (post_id,post_text) VALUES ('".(int)DataUtil::formatForStore($last_post_id)."','".DataUtil::formatForStore($post_text)."')";
-    $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result2);
+    $sql = "INSERT INTO ".$pntable['dizkus_posts_text']." (post_id,post_text) VALUES ('".(int)DataUtil::formatForStore($last_post_id)."','".DataUtil::formatForStore($post_text)."')";
+    $result2 = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result2);
     // At this moment we have the post duplicated: in the old Topic and in the new Topic
     // Delete old post_text in old Topic
-    $sql = "DELETE FROM ".$pntable['pnforum_posts_text']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
-    $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result2);
+    $sql = "DELETE FROM ".$pntable['dizkus_posts_text']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
+    $result2 = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result2);
     // Delete old post in old Topic
-    $sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
-    $result2 = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result2);
+    $sql = "DELETE FROM ".$pntable['dizkus_posts']." WHERE post_id='".(int)DataUtil::formatForStore($readedPost['post_id'])."'";
+    $result2 = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result2);
     // Siguiente post
     $result->MoveNext();
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 // We can delete all moved posts just with 1 SQL for each table...
-  //$sql = "DELETE FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
-  //$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-  //pnfCloseDB($result);
+  //$sql = "DELETE FROM ".$pntable['dizkus_posts']." WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
+  //$result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+  //dzkCloseDB($result);
 // All posts should be moved, we don't need old Topic data
-// 4. Detele the old Topic from pnforum_topics
-  $sql = "DELETE FROM ".$pntable['pnforum_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
-  $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-  pnfCloseDB($result);
+// 4. Detele the old Topic from dizkus_topics
+  $sql = "DELETE FROM ".$pntable['dizkus_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($post['old_topic'])."'";
+  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+  dzkCloseDB($result);
 // Sync
-// 6. Update last_post_id & topic_replies values of the Topic with the moved posts in pnforum_topics
+// 6. Update last_post_id & topic_replies values of the Topic with the moved posts in dizkus_topics
 // 6.1. topic_replies : Count number of posts
-  $sql = "SELECT COUNT(*) FROM ".$pntable['pnforum_posts']." WHERE topic_id='".(int)DataUtil::formatForStore($post['new_topic'])."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+  $sql = "SELECT COUNT(*) FROM ".$pntable['dizkus_posts']." WHERE topic_id='".(int)DataUtil::formatForStore($post['new_topic'])."'";
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($topic_replies) = $result->fields;
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 // 6.2. last_post_id : we get from last loop :)
 
 // 6.3. Update
-    $sql = "UPDATE ".$pntable['pnforum_topics']."
+    $sql = "UPDATE ".$pntable['dizkus_topics']."
             SET topic_replies = '".(int)DataUtil::formatForStore($topic_replies)."',
         topic_last_post_id='".(int)DataUtil::formatForStore($last_post_id)."',
         topic_time='".DataUtil::formatForStore($time)."'
             WHERE topic_id='".(int)DataUtil::formatForStore($post['new_topic'])."'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    pnfCloseDB($result);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    dzkCloseDB($result);
 
 // 7. All done, return $topic_id of the Topic with moved posts
 */
@@ -4349,9 +4349,9 @@ function pnForum_userapi_jointopics($args)
  *@params none
  *@return int post_id or false on error
  */
-function pnForum_userapi_get_last_post()
+function Dizkus_userapi_get_last_post()
 {
-    $post_id = (int)DBUtil::selectFieldMax('pnforum_posts', 'post_id');
+    $post_id = (int)DBUtil::selectFieldMax('dizkus_posts', 'post_id');
     return $post_id;
 }
 
@@ -4361,7 +4361,7 @@ function pnForum_userapi_get_last_post()
  *@params $args['post'] array the post array
  *@returns void
  */
-function pnForum_userapi_notify_moderator($args)
+function Dizkus_userapi_notify_moderator($args)
 {
     extract($args);
     unset($args);
@@ -4369,17 +4369,17 @@ function pnForum_userapi_notify_moderator($args)
     setlocale (LC_TIME, pnConfigGetVar('locale'));
     $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
 
-    $mods = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
+    $mods = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
                          array('forum_id' => $post['forum_id']));
 
     // generate the mailheader
-    $email_from = pnModGetVar('pnForum', 'email_from');
+    $email_from = pnModGetVar('Dizkus', 'email_from');
     if ($email_from == '') {
         // nothing in forumwide-settings, use PN adminmail
         $email_from = pnConfigGetVar('adminmail');
     }
 
-    $subject .= DataUtil::formatForDisplay(_PNFORUM_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
+    $subject .= DataUtil::formatForDisplay(_DZK_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
     $sitename = pnConfigGetVar('sitename');
 
     $recipients = array();
@@ -4430,20 +4430,20 @@ function pnForum_userapi_notify_moderator($args)
     $reporting_userid   = pnUserGetVar('uid');
     $reporting_username = pnUserGetVar('uname');
 
-    $start = pnModAPIFunc('pnForum', 'user', 'get_page_from_topic_replies',
+    $start = pnModAPIFunc('Dizkus', 'user', 'get_page_from_topic_replies',
                           array('topic_replies' => $post['topic_replies'],
                                 'start'         => $start));
 
-    $message = _PNFORUM_NOTIFYMODBODY1 . ' ' . pnConfigGetVar('sitename') . "\n"
+    $message = _DZK_NOTIFYMODBODY1 . ' ' . pnConfigGetVar('sitename') . "\n"
             . $post['cat_title'] . '::' . $post['forum_name'] . '::' . $post['topic_rawsubject'] . "\n\n"
-            . _PNFORUM_REPORTINGUSERNAME . ": $reporting_username \n"
-            . _PNFORUM_NOTIFYMODBODY2 . ": \n"
+            . _DZK_REPORTINGUSERNAME . ": $reporting_username \n"
+            . _DZK_NOTIFYMODBODY2 . ": \n"
             . $comment . " \n\n"
             . "---------------------------------------------------------------------\n"
             . strip_tags($post['post_text']) . " \n"
             . "---------------------------------------------------------------------\n\n"
-            . _PNFORUM_NOTIFYMODBODY3 . ":\n"
-            . pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
+            . _DZK_NOTIFYMODBODY3 . ":\n"
+            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
             . "\n";
     if(count($recipients)>0) {
         foreach($recipients as $recipient) {
@@ -4464,11 +4464,11 @@ function pnForum_userapi_notify_moderator($args)
 /**
  * get_topicid_by_reference
  * gets a topic reference as parameter and delivers the internal topic id
- * used for pnForum as comment module
+ * used for Dizkus as comment module
  *
  *@params $args['reference'] string the refernce
  */
-function pnForum_userapi_get_topicid_by_reference($args)
+function Dizkus_userapi_get_topicid_by_reference($args)
 {
     extract($args);
     unset($args);
@@ -4477,7 +4477,7 @@ function pnForum_userapi_get_topicid_by_reference($args)
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    $topic_id = DBUtil::selectFieldByID('pnforum_topics', 'topic_id', $args['reference'], 'topic_reference');
+    $topic_id = DBUtil::selectFieldByID('dizkus_topics', 'topic_id', $args['reference'], 'topic_reference');
     return $topic_id;
 }
 
@@ -4488,7 +4488,7 @@ function pnForum_userapi_get_topicid_by_reference($args)
  *@params $args['items']    array with feed data as returned from RSS module
  *@return boolean true or false
  */
-function pnForum_userapi_insertrss($args)
+function Dizkus_userapi_insertrss($args)
 {
     extract($args);
 
@@ -4518,7 +4518,7 @@ function pnForum_userapi_insertrss($args)
         }
 
         // Checking if the forum already has that news.
-        $check = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_reference',
+        $check = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                               array('reference' => $reference));
 
         if ($check == false) {
@@ -4527,10 +4527,10 @@ function pnForum_userapi_insertrss($args)
             $subject  = $item['title'];
 
             // Adding little display goodies - finishing with the url of the news...
-            $message  = $boldstart . _PNFORUM_RSS_SUMMARY . ' :' . $boldend . "\n\n" . $item['summary'] . "\n\n" . $urlstart . $item['link'] . $urlend . "\n\n";
+            $message  = $boldstart . _DZK_RSS_SUMMARY . ' :' . $boldend . "\n\n" . $item['summary'] . "\n\n" . $urlstart . $item['link'] . $urlend . "\n\n";
 
             // store message in forum
-            $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+            $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
                                      array('subject'          => $subject,
                                            'message'          => $message,
                                            'time'             => date("Y-m-d H:i", $item['date_timestamp']),
@@ -4557,41 +4557,41 @@ function pnForum_userapi_insertrss($args)
  *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
  *@returns array with forum ids, may be empty
  */
-function pnForum_userapi_get_forum_subscriptions($args)
+function Dizkus_userapi_get_forum_subscriptions($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     if(isset($user_id)) {
-        if(!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
         $user_id = pnUserGetVar('uid');
     }
 
-    $fstable  = $pntable['pnforum_subscription'];
-    $fscolumn = $pntable['pnforum_subscription_column'];
-    $forumstable  = $pntable['pnforum_forums'];
-    $forumscolumn = $pntable['pnforum_forums_column'];
-    $categoriestable  = $pntable['pnforum_categories'];
-    $categoriescolumn = $pntable['pnforum_categories_column'];
+    $fstable  = $pntable['dizkus_subscription'];
+    $fscolumn = $pntable['dizkus_subscription_column'];
+    $forumstable  = $pntable['dizkus_forums'];
+    $forumscolumn = $pntable['dizkus_forums_column'];
+    $categoriestable  = $pntable['dizkus_categories'];
+    $categoriescolumn = $pntable['dizkus_categories_column'];
 
     // read the topic ids
-    $sql = 'SELECT ' . $forumscolumn['forum_id'] . ',
-                   ' . $forumscolumn['forum_name'] . ',
-                   ' . $categoriescolumn['cat_id'] . ',
-                   ' . $categoriescolumn['cat_title'] . '
-            FROM ' . $fstable . ',
-                 ' . $forumstable . ',
-                 ' . $categoriestable . '
-            WHERE ' . $fscolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) . '
-              AND ' . $forumscolumn['forum_id'] . '=' . $fscolumn['forum_id'] . '
-              AND ' . $categoriescolumn['cat_id'] . '=' . $forumscolumn['cat_id']. '
-            ORDER BY ' . $categoriescolumn['cat_order'] . ', ' . $forumscolumn['forum_order'];
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $sql = 'SELECT f.' . $forumscolumn['forum_id'] . ',
+                   f.' . $forumscolumn['forum_name'] . ',
+                   c.' . $categoriescolumn['cat_id'] . ',
+                   c.' . $categoriescolumn['cat_title'] . '
+            FROM ' . $fstable . ' AS fs,
+                 ' . $forumstable . ' AS f,
+                 ' . $categoriestable . ' AS c 
+            WHERE fs.' . $fscolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) . '
+              AND f.' . $forumscolumn['forum_id'] . '=fs.' . $fscolumn['forum_id'] . '
+              AND c.' . $categoriescolumn['cat_id'] . '=f.' . $forumscolumn['cat_id']. '
+            ORDER BY c.' . $categoriescolumn['cat_order'] . ', f.' . $forumscolumn['forum_order'];
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $subscriptions = array();
     while (!$result->EOF) {
@@ -4604,7 +4604,7 @@ function pnForum_userapi_get_forum_subscriptions($args)
         $result->MoveNext();
     }
 
-    pnfCloseDB($result);
+    dzkCloseDB($result);
 
     return $subscriptions;
 }

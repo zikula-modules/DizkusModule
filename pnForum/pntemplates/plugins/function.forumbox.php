@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -19,16 +19,16 @@ function smarty_function_forumbox($params, &$smarty)
 	extract($params); 
 	unset($params);
 
-	if(!pnModAPILoad('pnForum', 'admin')) {
-		$smarty->trigger_error("loading pnForum adminapi failed");
+	if(!pnModAPILoad('Dizkus', 'admin')) {
+		$smarty->trigger_error("loading Dizkus adminapi failed");
 	} 
 
 	$out = "";
-	$forums = pnModAPIFunc('pnForum', 'admin', 'readforums');
+	$forums = pnModAPIFunc('Dizkus', 'admin', 'readforums');
 
 	if(count($forums)>0) {
-        Loader::includeOnce('modules/pnForum/common.php');
-		$out ='<select name="pnForum_forum[]" id="pnForum_forum[]" size="1">';
+        Loader::includeOnce('modules/Dizkus/common.php');
+		$out ='<select name="Dizkus_forum[]" id="Dizkus_forum[]" size="1">';
 		$out.='<option value="" selected>'. _SRCHALLTOPICS .'</option>';
 		foreach($forums as $forum) {
 			if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {

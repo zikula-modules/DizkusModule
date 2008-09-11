@@ -14,27 +14,22 @@ Installation
   |
   -- modules
      |
-     -- pnForum
+     -- Dizkus
         |
         -- more subfolders
 
-  Copy the content of includes/search to your Zikula's includes/search folder
   Copy the content of modules to your Zikula's modules folder (not modules/Modules!!)
-  Copy backforum.php from the pnForum folder to your Zikula root folder
-  Copy modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php to modules/Xanthia/plugins
-  Add <!--[ pnforumcolorcss ]--> to the head section of your theme.
+  Copy backforum.php from the Dizkus folder to your Zikula root folder
 
-* Download the AjaxSupportPackage from http://code.zikula.org/pnforum/downloads
-  and install it as documented. 
 * regenerate module list
-* install and activate pnForum
-* activate hooks for pnForum as needed
+* install and activate Dizkus
+* activate hooks for Dizkus as needed
 
-For more information about the pnForum features see
+For more information about the Dizkus features see
 
 mail2forum.txt
 rss2forum.txt
-pnForumcomments.txt
+Dizkuscomments.txt
 
 For more information about the permission schemes see
 

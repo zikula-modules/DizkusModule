@@ -1,0 +1,37 @@
+<!--[*  $Id: dizkus_user_footer.html 694 2006-10-27 20:49:05Z landseer $  *]-->
+
+<!--[*
+
+Rename this to dizkus_user_footer.html if you want to use it
+  
+*]-->
+
+<div id="dzk_footer" class="dzk_bgcolor3 dzk_bordercolor2 dzk_clearfix">
+    <script type="text/javascript">
+        // <![CDATA[
+        new Ajax.PeriodicalUpdater(
+    	    	         'dzk_footer', 
+      	                 'index.php',
+    	                 {
+    	                     method: 'get',
+    	                     parameters: 'module=Dizkus&type=ajax&func=forumusers',
+    	                     frequency: 60
+    			          });
+        // ]]>
+    </script>
+    <noscript>
+        <!--[ include file=dizkus_ajax_forumusers.html ]-->
+    </noscript>
+</div>
+<p id="dzk_footer_line">
+    <!--[ pnml name='_DZK_POWEREDBY' html=1 ]-->&nbsp;<!--[pnmodgetinfo modname=Dizkus info=version ]-->
+</p>
+
+
+<!--[*
+
+This is the end of the main Dizkus div, see dizkus_user_header for more information
+
+*]-->
+
+</div>

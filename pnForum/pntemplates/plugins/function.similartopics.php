@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -45,7 +45,7 @@
  * @return       array
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 function smarty_function_similartopics($params, &$smarty)
 {
@@ -66,7 +66,7 @@ function smarty_function_similartopics($params, &$smarty)
     $vars['limit']     = $limit;
     $vars['startnum']  = 0;
 
-    if(pnModGetVar('pnForum', 'fulltextindex')==1) {
+    if(pnModGetVar('Dizkus', 'fulltextindex')==1) {
         $funcname = 'fulltext';
         $vars['order'] = 4; // score
     } else {
@@ -74,7 +74,7 @@ function smarty_function_similartopics($params, &$smarty)
         $vars['order'] = 2; // title
     }
     list($searchresults,
-         $total_hits) =  pnModAPIFunc('pnForum', 'search', $funcname, $vars);
+         $total_hits) =  pnModAPIFunc('Dizkus', 'search', $funcname, $vars);
 
     $assign = (isset($assign)) ? $assign : 'similartopics';
     $smarty->assign($assign, $searchresults);

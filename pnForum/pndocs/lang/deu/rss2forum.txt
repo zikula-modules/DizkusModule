@@ -34,10 +34,10 @@ RSS-Feed auswählen: Hier erscheinen alle im RSS Modul definierten Feeds zu Auswa
 Benutzung:
 ----------
 
-Die RSS Feeds werden mit dem rss2pnforum.php Skript abgeholt. Dies wird üblicherweise
+Die RSS Feeds werden mit dem rss2dizkus.php Skript abgeholt. Dies wird üblicherweise
 per Cron in einem festen Interval, z.B. stündlich, aufgerufen.
 
-Vor dem ersten Aufruf muss rss2pnforum.php angepasst werden:
+Vor dem ersten Aufruf muss rss2dizkus.php angepasst werden:
 
 Zeile 38: //
 Zeile 39: // store the absolut path to your Zikula folder here
@@ -48,6 +48,6 @@ Danach sind keine Änderungen notwendig.
 Manueller Aufruf:
 -----------------
 
-http://www.meinedomain.de/modules/pnForum/rss2pnforum.php
+http://www.meinedomain.de/modules/Dizkus/rss2dizkus.php
 
 holt für alle Foren, die für RSS2Forum konfiguriert sind, die neue Beiträge ab.

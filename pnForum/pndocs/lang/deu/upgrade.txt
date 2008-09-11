@@ -1,6 +1,6 @@
 $Id$
 
-Crossupgrade phpBB_14 -> pnForum
+Crossupgrade phpBB_14 -> Dizkus
 --------------------------------
 
 Als erstes, wie immer: Backup anlegen!
@@ -8,18 +8,18 @@ Dann: Backup sichern..
 Danach: Tief durchatmen...
 
 
-Bei der Installation von pnForum werden alle Tabellen von phpBB_14 komplett übernommen,
+Bei der Installation von Dizkus werden alle Tabellen von phpBB_14 komplett übernommen,
 d.h. kopiert, die alten Daten sind also alle noch vorhanden.
 
 Beim Upgrade hat sich folgende Reihenfolge als sinnvoll erwiesen:
 * allen Usern die Recht auf phpBB_14 entziehen (damit keiner währen des Upgrades noch was
   schreiben kann)
 * phpBB_14 Blöcke entfernen
-* pnForum initialisieren (phpBB_14 muss aktiv sein, sonst werden die Daten nicht übernommen)
+* Dizkus initialisieren (phpBB_14 muss aktiv sein, sonst werden die Daten nicht übernommen)
 * phpBB_14 deaktivieren
-* pnForum aktivieren
+* Dizkus aktivieren
 * Permissions neu setzen (siehe unten: neues Permissionschema)
-* pnForum Blöcke hinzufügen
+* Dizkus Blöcke hinzufügen
 
 
 Das Permissionschema hat sich geändert:
@@ -31,35 +31,25 @@ phpBB_14:Forum Forumname::
 
 gibts jetzt
 
-pnForum::  CategoryID:ForumID:
+Dizkus::  CategoryID:ForumID:
 
 Will ich meinen Gästen z.B. den Zugriff auf ein internes Forum (z.b. KategorieID 7, ForumID 12)
 entziehen, wäre dies
 
-unreg. User | pnForum:: | 7:12: | keines
+unreg. User | Dizkus:: | 7:12: | keines
 
 Moderatoren für dieses Forum:
 
-Moderatorengruppe | pnForum:: | 7:12: | moderieren
+Moderatorengruppe | Dizkus:: | 7:12: | moderieren
 
 Gibts in der Kategorie 7 noch ein zweites Forum, z.B. ForumID 14, geht auch
 
-Moderatorengruppe | pnForum:: | 7:(12|14): | moderieren
+Moderatorengruppe | Dizkus:: | 7:(12|14): | moderieren
 
 Weiteres siehe Handbuch auf http://support.pn-cms.de
 
 Wie üblich braucht man zum Schreiben das Kommentieren-Recht:
 
-Users | pnForum:: | .* | comment
+Users | Dizkus:: | .* | comment
 
 erlaubt allen registrieren Usern das Schreiben in allen Foren.
-
-Upgrade von pnForum 2.6 oder sogar älteren Versionen
-----------------------------------------------------
-Abgesehen vom üblichen Modulupgrade sind hier zwei Dinge zu beachten:
-* Die Datei modules/pnForum/pntemplates/plugins/function.pnforumcolorcss.php nach 
-  modules/Xanthia/plugins kopieren und dieses Plugin im Head-Bereich des Theme-
-    Templates einfügen: <!--[ pnforumcolorcss ]-->
-* AjaxSupportPackage von http://code.zikula.org/pnforum/downloads
-  herunterladen und nach Anleitung installieren. 
-    

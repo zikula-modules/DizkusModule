@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id: pnuser.php 804 2007-09-14 18:00:46Z landseer $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -15,7 +15,7 @@
  * @params   uname   string   the user name
  * @return   array   array of items, or false on failure
  */
-function pnForum_accountapi_getall($args)
+function Dizkus_accountapi_getall($args)
 {
     // the array that will hold the options
     $items = null;
@@ -34,10 +34,10 @@ function pnForum_accountapi_getall($args)
     }
 
     // Create an array of links to return
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_OVERVIEW)) {
-        pnModLangLoad('pnForum', 'user'); 
-        $items = array(array('url'     => pnModURL('pnForum', 'user', 'prefs'),
-                             'title'   => _PNFORUM_FORUM,
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
+        pnModLangLoad('Dizkus', 'user'); 
+        $items = array(array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
+                             'title'   => _DZK_FORUM,
                              'icon'    => 'icon_forumprefs.gif'));
     }
 

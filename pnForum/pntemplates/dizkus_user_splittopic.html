@@ -1,0 +1,26 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file=dizkus_user_header.html ]-->
+
+<!--[* pndebug *]-->
+
+<fieldset id="dzk_splittopic" class="dzk_bgcolor3 dzk_bordercolor2">
+    <legend>
+        <!--[ pnml name='_DZK_SPLITTOPIC' ]-->
+    </legend>
+    <form action="<!--[ pnmodurl modname=Dizkus type=user func=splittopic ]-->" method="post">
+    <div>
+        <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+        
+        <p><!--[ pnml name='_DZK_SPLITTOPIC_INFO' html=1 ]--></p>
+        <p>
+            <label for="newsubject"><!--[ pnml name='_DZK_SPLITTOPIC_NEWTOPIC' html=1 ]--></label>
+            <input type="text" id="newsubject" name="newsubject" value="<!--[ pnml name='_DZK_SPLIT' ]-->: <!--[ $post.topic_subject ]-->" size="40" maxlength="100" />
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SPLITTOPIC' ]-->"><!--[ pnml name='_DZK_SPLITTOPIC' ]--></button>
+        </p>
+    </div>
+    </form>
+</fieldset>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

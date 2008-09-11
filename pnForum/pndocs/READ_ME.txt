@@ -1,7 +1,7 @@
 Important:
 ==========
 
-This version of pnForum basically works with Zikula 1.0 but not to its full extend:
+This version of Dizkus basically works with Zikula 1.0 but not to its full extend:
 * Search is not updated
 * RSS module is renamed to Feeds in Zikula 1.0
 * You need the Zikula 1.0 Topics module in certain situations, categories are not supported yet

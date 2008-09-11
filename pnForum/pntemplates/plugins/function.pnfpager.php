@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id: pnajax.php 815 2007-09-22 13:12:50Z landseer $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -38,12 +38,12 @@ function smarty_function_pnfpager($params, &$smarty)
     switch($func) {
         case 'viewforum':
         case 'moderateforum':
-            $per_page = pnModGetVar('pnForum', 'topics_per_page');
+            $per_page = pnModGetVar('Dizkus', 'topics_per_page');
             $objectname = 'forum';
             $objectid = isset($params['objectid']) ? $params['objectid'] : FormUtil::getPassedValue('forum');
             break;
         case 'viewtopic':
-            $per_page = pnModGetVar('pnForum', 'posts_per_page');
+            $per_page = pnModGetVar('Dizkus', 'posts_per_page');
             $objectname = 'topic';
             $objectid = isset($params['objectid']) ? $params['objectid'] : FormUtil::getPassedValue('topic');
             break;
@@ -68,7 +68,7 @@ function smarty_function_pnfpager($params, &$smarty)
         $init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;                                                                                                              
                                                                                                                                                                            
         for($i = 1; $i < $init_page_max + 1; $i++) {                                                                                                                            
-            $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
             if ( $i <  $init_page_max ) {                                                                                                                                           
                 $page_string .= $separator;                                                                                                                                                  
             }                                                                                                                                                                      
@@ -82,7 +82,7 @@ function smarty_function_pnfpager($params, &$smarty)
                 $init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;                                                                                        
                                                                                                                                                                            
                 for($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {    
-                    $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';       
+                    $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';       
                     if ( $i <  $init_page_max + 1 ) {                                                                                                                                       
                         $page_string .= $separator;                                                                                                                                                  
                     }                                                                                                                                                                      
@@ -94,7 +94,7 @@ function smarty_function_pnfpager($params, &$smarty)
             }                                                                                                                                                                      
                                                                                                                                                                            
             for($i = $total_pages - 2; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
-                $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>'  : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';    
+                $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>'  : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';    
                 if( $i <  $total_pages ) {                                                                                                                                                                      
                     $page_string .= $separator;                                                                                                                                                  
                 }                                                                                                                                                                      
@@ -102,7 +102,7 @@ function smarty_function_pnfpager($params, &$smarty)
         }                                                                                                                                                                      
     } else {                                                                                                                                                                      
         for($i = 1; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
-            $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
             if ( $i <  $total_pages ) {                                                                                                                                                                      
                 $page_string .= $separator;                                                                                                                                                  
             }                                                                                                                                                                      
@@ -113,15 +113,15 @@ function smarty_function_pnfpager($params, &$smarty)
     $add_next_set = false;                                                                                                                                                                     
     if($add_prevnext==true) {                                                                                                                                                                      
         if ( $on_page > 1 ) {                                                                                                                                                                      
-            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 2 ) * $per_page ))) . '">-1</a>] ' . $page_string;
+            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 2 ) * $per_page ))) . '">-1</a>] ' . $page_string;
             $add_prev_set = true;
         }                                                                                                                                                                      
         if ( $on_page > 10 ) {                                                                                                                                                                      
-            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 11) * $per_page ))) . '">-10</a> ' . $page_string;
+            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 11) * $per_page ))) . '">-10</a> ' . $page_string;
             $add_prev_set = true;
         }                                                                                                                                                                      
         if ( $on_page > 100 ) {                                                                                                                                                                      
-            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 101) * $per_page ))) . '">-100</a> ' . $page_string;
+            $page_string = '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 101) * $per_page ))) . '">-100</a> ' . $page_string;
             $add_prev_set = true;
         }                                                                                                                                                                      
         if($add_prev_set == true) {
@@ -129,15 +129,15 @@ function smarty_function_pnfpager($params, &$smarty)
         }
                                                                                                                                                                            
         if ( $on_page < $total_pages ) {                                                                                                                                                                      
-            $page_string .= ' [<a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => $on_page * $per_page ))) . '">+1</a>';                           
+            $page_string .= ' [<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => $on_page * $per_page ))) . '">+1</a>';                           
             $add_next_set = true;
         }
         if($total_pages - $on_page > 10) {
-            $page_string .= ' <a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ($on_page + 9) * $per_page ))) . '">+10</a>';                           
+            $page_string .= ' <a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ($on_page + 9) * $per_page ))) . '">+10</a>';                           
             $add_next_set = true;
         }                                                                                                                                                                      
         if($total_pages - $on_page > 100) {
-            $page_string .= ' <a href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', $func, array($objectname => $objectid, 'start' => ($on_page + 99) * $per_page ))) . '">+100</a>';                           
+            $page_string .= ' <a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ($on_page + 99) * $per_page ))) . '">+100</a>';                           
             $add_next_set = true;
         }                                                                                                                                                                      
         if($add_next_set == true) {
@@ -146,7 +146,7 @@ function smarty_function_pnfpager($params, &$smarty)
                                                                                                                                                                            
     }                                                                                                                                                                      
                                                                                                                                                                            
-    $page_string = '<p>' . _PNFORUM_GOTOPAGE . ': ' . $page_string . '</p>';                                                                                                                
+    $page_string = '<p>' . _DZK_GOTOPAGE . ': ' . $page_string . '</p>';                                                                                                                
                                                                                                                                                                            
     return $page_string;                                                                                                                                                   
 

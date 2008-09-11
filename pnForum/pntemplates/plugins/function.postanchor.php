@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -35,7 +35,7 @@ function smarty_function_postanchor($params, &$smarty)
     if(empty($post_id)) { return; }
     if(empty($postings) || $postings==0) { return; }
     if(empty($min)) {
-        $min = pnModGetVar('pnForum', 'min_postings_for_anchor');
+        $min = pnModGetVar('Dizkus', 'min_postings_for_anchor');
         $min = (!empty($min)) ? $min : 2;
     }
 

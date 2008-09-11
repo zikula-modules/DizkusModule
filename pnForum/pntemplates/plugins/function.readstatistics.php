@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -22,10 +22,10 @@
  */
 function smarty_function_readstatistics($params, &$smarty) 
 {
-    $smarty->assign('total_categories', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'category')));
-    $smarty->assign('total_topics', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'alltopics')));
-    $smarty->assign('total_posts', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'allposts')));
-    $smarty->assign('total_forums', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'forum')));
-    $smarty->assign('last_user', pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'lastuser')));
+    $smarty->assign('total_categories', pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'category')));
+    $smarty->assign('total_topics', pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'alltopics')));
+    $smarty->assign('total_posts', pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'allposts')));
+    $smarty->assign('total_forums', pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'forum')));
+    $smarty->assign('last_user', pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'lastuser')));
     return;
 }

@@ -5,7 +5,7 @@ Mail2Forum
 ----------
 
 Mail2forum erlaubt es, Mailinglisten in ein Forum zu spiegeln. Dazu verbindet
-sich pnForum mit einem Scriupt, das üblicherweise per Cron aufgerufen wird, zu
+sich Dizkus mit einem Scriupt, das üblicherweise per Cron aufgerufen wird, zu
 einem POP3-Server, holt die Mails und speichert sie unter einem beliebigen User-
 account ins Forum
 
@@ -60,7 +60,7 @@ Danach sind keine Änderungen notwendig.
 Manueller Aufruf:
 -----------------
 
-http://www.meinedomain.de/modules/pnForum/mailcron.php?debug=1
+http://www.meinedomain.de/modules/Dizkus/mailcron.php?debug=1
 
 verbindet zum Mailserver, holt Mails ab und sortiert sie ein. ?debug=1 zeigt
 dabei, was das Script gerade macht.

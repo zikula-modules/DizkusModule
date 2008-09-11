@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 
@@ -16,20 +16,15 @@ function smarty_function_forumimage($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    if(!pnModAPILoad('pnForum', 'user')) {
-        $smarty->trigger_error("loading upnForum userapi failed");
-        return;
-    } 
-
-    $assign = (!empty($assign)) ? $assign : 'forumimage';
+    $assign = (!empty($params['assign'])) ? $params['assign'] : 'forumimage';
     
-    if(empty($name)) {
+    if(empty($params['name'])) {
         $smarty->trigger_error("folderimage: missing parameter 'name'");
         return false;
     }
 
-    $img = pnModGetVar('pnForum', $name);
-    if(empty($name)) {
+    $img = pnModGetVar('Dizkus', $params['name'], null);
+    if(is_null($img)) {
         $smarty->trigger_error("folderimage: invalid value for parameter 'name'");
         return false;
     }

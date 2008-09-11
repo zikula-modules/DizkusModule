@@ -1,7 +1,7 @@
 $Id$
 
 
-pnForum module developers team (current status):
+Dizkus module developers team (current status):
 ----------------------------------------------------------
 Andreas Krapohl aka larsneo (larsneo@zikula.org)
 Jim Hadfield (jhadfiel@oldihc.org)

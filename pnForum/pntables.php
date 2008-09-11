@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -15,7 +15,7 @@
  */
 
 
-function pnForum_pntables()
+function Dizkus_pntables()
 {
     // Initialise table array
     $pntable = array();
@@ -23,31 +23,31 @@ function pnForum_pntables()
     //
     // categories
     //
-    $pntable['pnforum_categories'] = DBUtil::getLimitedTablename('pnforum_categories');
-    $pntable['pnforum_categories_column'] = array('cat_id'    => 'cat_id',
+    $pntable['dizkus_categories'] = DBUtil::getLimitedTablename('dizkus_categories');
+    $pntable['dizkus_categories_column'] = array('cat_id'    => 'cat_id',
                                                   'cat_title' => 'cat_title',
                                                   'cat_order' => 'cat_order');
-    $pntable['pnforum_categories_column_def'] = array('cat_id'    => 'I AUTO PRIMARY',
+    $pntable['dizkus_categories_column_def'] = array('cat_id'    => 'I AUTO PRIMARY',
                                                       'cat_title' => 'C(100) NOTNULL DEFAULT \'\'',
                                                       'cat_order' => 'C(10) NOTNULL DEFAULT \'\'');
 
     //
     // forum_mods
     //
-    $pntable['pnforum_forum_mods'] = DBUtil::getLimitedTablename('pnforum_forum_mods');
-    $pntable['pnforum_forum_mods_column'] = array('forum_id' => 'forum_id',
+    $pntable['dizkus_forum_mods'] = DBUtil::getLimitedTablename('dizkus_forum_mods');
+    $pntable['dizkus_forum_mods_column'] = array('forum_id' => 'forum_id',
                                                   'user_id'  => 'user_id');
-    $pntable['pnforum_forum_mods_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_forum_mods_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
                                                       'user_id'   => 'I NOTNULL DEFAULT 0');
-    $pntable['pnforum_forum_mods_column_idx'] = array ('forum_id'  => 'forum_id',
+    $pntable['dizkus_forum_mods_column_idx'] = array ('forum_id'  => 'forum_id',
                                                        'user_id'   => 'user_id');
 
     
     //
     // forums
     //
-    $pntable['pnforum_forums'] = DBUtil::getLimitedTablename('pnforum_forums');
-    $pntable['pnforum_forums_column'] = array('forum_id'               => 'forum_id',
+    $pntable['dizkus_forums'] = DBUtil::getLimitedTablename('dizkus_forums');
+    $pntable['dizkus_forums_column'] = array('forum_id'               => 'forum_id',
                                               'forum_name'             => 'forum_name',
                                               'forum_desc'             => 'forum_desc',
                                               'forum_access'           => 'forum_access',
@@ -70,7 +70,7 @@ function pnForum_pntables()
                                               'forum_moduleref'        => 'forum_moduleref',
                                               'forum_pntopic'          => 'forum_pntopic'
                                               );
-    $pntable['pnforum_forums_column_def'] = array('forum_id'               => 'I AUTO PRIMARY',
+    $pntable['dizkus_forums_column_def'] = array('forum_id'               => 'I AUTO PRIMARY',
                                                   'forum_name'             => 'C(150) NOTNULL DEFAULT \'\'',
                                                   'forum_desc'             => 'X NOTNULL DEFAULT \'\'',
                                                   'forum_access'           => 'I NOTNULL DEFAULT 1',
@@ -92,28 +92,28 @@ function pnForum_pntables()
                                                   'forum_pop3_matchstring' => 'C(255) NOTNULL DEFAULT \'\'', 
                                                   'forum_moduleref'        => 'I NOTNULL DEFAULT 0',
                                                   'forum_pntopic'          => 'I(4) NOTNULL DEFAULT 0');  
-    $pntable['pnforum_forums_column_idx'] = array ('forum_last_post_id'  => 'forum_last_post_id',
+    $pntable['dizkus_forums_column_idx'] = array ('forum_last_post_id'  => 'forum_last_post_id',
                                                    'forum_moduleref'     => 'forum_moduleref');
 
     //
     // posts
     //
-    $pntable['pnforum_posts'] = DBUtil::getLimitedTablename('pnforum_posts');
-    $pntable['pnforum_posts_column'] = array('post_id'    => 'post_id',
+    $pntable['dizkus_posts'] = DBUtil::getLimitedTablename('dizkus_posts');
+    $pntable['dizkus_posts_column'] = array('post_id'    => 'post_id',
                                              'topic_id'   => 'topic_id',
                                              'forum_id'   => 'forum_id',
                                              'poster_id'  => 'poster_id',
                                              'post_time'  => 'post_time',
                                              'poster_ip'  => 'poster_ip',
                                              'post_msgid' => 'post_msgid');
-    $pntable['pnforum_posts_column_def'] = array('post_id'     => 'I AUTO PRIMARY',
+    $pntable['dizkus_posts_column_def'] = array('post_id'     => 'I AUTO PRIMARY',
                                                  'topic_id'    => 'I NOTNULL DEFAULT 0',
                                                  'forum_id'    => 'I NOTNULL DEFAULT 0',
                                                  'poster_id'   => 'I NOTNULL DEFAULT 1',
                                                  'post_time'   => 'C(20) NOTNULL DEFAULT \'\'',
                                                  'poster_ip'   => 'C(16) NOTNULL DEFAULT \'\'',
                                                  'post_msgid'  => 'C(100) NOTNULL DEFAULT \'\'');
-    $pntable['pnforum_posts_column_idx'] = array ('topic_id'   => 'topic_id',
+    $pntable['dizkus_posts_column_idx'] = array ('topic_id'   => 'topic_id',
                                                   'forum_id'   => 'forum_id',
                                                   'poster_id'  => 'poster_id',
                                                   'post_msgid' => 'post_msgid');
@@ -121,52 +121,52 @@ function pnForum_pntables()
     // 
     // posts_text
     //
-    $pntable['pnforum_posts_text'] = DBUtil::getLimitedTablename('pnforum_posts_text');
-    $pntable['pnforum_posts_text_column'] = array('post_id'   => 'post_id',
+    $pntable['dizkus_posts_text'] = DBUtil::getLimitedTablename('dizkus_posts_text');
+    $pntable['dizkus_posts_text_column'] = array('post_id'   => 'post_id',
                                                   'post_text' => 'post_text');
-    $pntable['pnforum_posts_text_column_def'] = array('post_id'    => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_posts_text_column_def'] = array('post_id'    => 'I NOTNULL DEFAULT 0',
                                                       'post_text'  => 'X NOTNULL DEFAULT \'\'');
-    $pntable['pnforum_posts_text_column_idx'] = array ('post_id'  => 'post_id');
+    $pntable['dizkus_posts_text_column_idx'] = array ('post_id'  => 'post_id');
 
     //
     // ranks
     //
-    $pntable['pnforum_ranks'] = DBUtil::getLimitedTablename('pnforum_ranks');
-    $pntable['pnforum_ranks_column'] = array('rank_id'      => 'rank_id',
+    $pntable['dizkus_ranks'] = DBUtil::getLimitedTablename('dizkus_ranks');
+    $pntable['dizkus_ranks_column'] = array('rank_id'      => 'rank_id',
                                              'rank_title'   => 'rank_title',
                                              'rank_min'     => 'rank_min',
                                              'rank_max'     => 'rank_max',
                                              'rank_special' => 'rank_special',
                                              'rank_image'   => 'rank_image',
                                              'rank_style'   => 'rank_style');
-    $pntable['pnforum_ranks_column_def'] = array('rank_id'       => 'I AUTO PRIMARY',
+    $pntable['dizkus_ranks_column_def'] = array('rank_id'       => 'I AUTO PRIMARY',
                                                  'rank_title'    => 'C(50) NOTNULL DEFAULT \'\'',
                                                  'rank_min'      => 'I NOTNULL DEFAULT 0',
                                                  'rank_max'      => 'I NOTNULL DEFAULT 0',
                                                  'rank_special'  => 'I(2) NOTNULL DEFAULT 0',
                                                  'rank_image'    => 'C(255) NOTNULL DEFAULT \'\'',
                                                  'rank_style'    => 'C(255) NOTNULL DEFAULT \'\'');
-    $pntable['pnforum_ranks_column_idx'] = array ('rank_min'  => 'rank_min',
+    $pntable['dizkus_ranks_column_idx'] = array ('rank_min'  => 'rank_min',
                                                   'rank_max'  => 'rank_max');
 
     // 
     // subscriptions
     //
-    $pntable['pnforum_subscription'] = DBUtil::getLimitedTablename('pnforum_subscription');
-    $pntable['pnforum_subscription_column'] = array('msg_id'   => 'msg_id',
+    $pntable['dizkus_subscription'] = DBUtil::getLimitedTablename('dizkus_subscription');
+    $pntable['dizkus_subscription_column'] = array('msg_id'   => 'msg_id',
                                                     'forum_id' => 'forum_id',
                                                     'user_id'  => 'user_id');
-    $pntable['pnforum_subscription_column_def'] = array('msg_id'      => 'I AUTO PRIMARY',
+    $pntable['dizkus_subscription_column_def'] = array('msg_id'      => 'I AUTO PRIMARY',
                                                         'forum_id'    => 'I NOTNULL DEFAULT 0',
                                                         'user_id'     => 'I NOTNULL DEFAULT 0');
-    $pntable['pnforum_subscription_column_idx'] = array ('forum_id' => 'forum_id',
+    $pntable['dizkus_subscription_column_idx'] = array ('forum_id' => 'forum_id',
                                                          'user_id'  => 'user_id');
 
     //
     // topics
     //
-    $pntable['pnforum_topics'] = DBUtil::getLimitedTablename('pnforum_topics');
-    $pntable['pnforum_topics_column'] = array('topic_id'           => 'topic_id',
+    $pntable['dizkus_topics'] = DBUtil::getLimitedTablename('dizkus_topics');
+    $pntable['dizkus_topics_column'] = array('topic_id'           => 'topic_id',
                                               'topic_title'        => 'topic_title',
                                               'topic_poster'       => 'topic_poster',
                                               'topic_time'         => 'topic_time',
@@ -180,7 +180,7 @@ function pnForum_pntables()
                                               'sticky_label'       => 'sticky_label',
                                               'poll_id'            => 'poll_id',
                                               'topic_reference'    => 'topic_reference');
-    $pntable['pnforum_topics_column_def'] = array('topic_id'           => 'I AUTO PRIMARY',
+    $pntable['dizkus_topics_column_def'] = array('topic_id'           => 'I AUTO PRIMARY',
                                                   'topic_title'        => 'C(255) NOTNULL DEFAULT \'\'',
                                                   'topic_poster'       => 'I NOTNULL DEFAULT 0',
                                                   'topic_time'         => 'C(20) NOTNULL DEFAULT \'\'',
@@ -194,21 +194,21 @@ function pnForum_pntables()
                                                   'sticky_label'       => 'C(255) NOTNULL DEFAULT \'\'',
                                                   'poll_id'            => 'I UNSIGNED NOTNULL DEFAULT 0',
                                                   'topic_reference'    => 'C(60) NOTNULL DEFAULT \'\'');
-    $pntable['pnforum_topics_column_idx'] = array('forum_id'           => 'forum_id',
+    $pntable['dizkus_topics_column_idx'] = array('forum_id'           => 'forum_id',
                                                   'topic_last_post_id' => 'topic_last_post_id');
 
     //
     // users
     //
-    $pntable['pnforum_users'] = DBUtil::getLimitedTablename('pnforum_users');
-    $pntable['pnforum_users_column'] = array('user_id'         => 'user_id',
+    $pntable['dizkus_users'] = DBUtil::getLimitedTablename('dizkus_users');
+    $pntable['dizkus_users_column'] = array('user_id'         => 'user_id',
                                              'user_posts'      => 'user_posts',
                                              'user_rank'       => 'user_rank',
                                              'user_level'      => 'user_level',
                                              'user_lastvisit'  => 'user_lastvisit',
                                              'user_favorites'  => 'user_favorites',
                                              'user_post_order' => 'user_post_order');
-    $pntable['pnforum_users_column_def'] = array('user_id'         => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_users_column_def'] = array('user_id'         => 'I NOTNULL DEFAULT 0',
                                                  'user_posts'      => 'I UNSIGNED NOTNULL DEFAULT 0',
                                                  'user_rank'       => 'I UNSIGNED NOTNULL DEFAULT 0',
                                                  'user_level'      => 'I UNSIGNED NOTNULL DEFAULT 1',
@@ -220,14 +220,14 @@ function pnForum_pntables()
     // 
     // topic_subscriptions
     //
-    $pntable['pnforum_topic_subscription'] = DBUtil::getLimitedTablename('pnforum_topic_subscription');
-    $pntable['pnforum_topic_subscription_column'] = array('topic_id' => 'topic_id',
+    $pntable['dizkus_topic_subscription'] = DBUtil::getLimitedTablename('dizkus_topic_subscription');
+    $pntable['dizkus_topic_subscription_column'] = array('topic_id' => 'topic_id',
                                                           'forum_id' => 'forum_id',
                                                           'user_id'  => 'user_id');
-    $pntable['pnforum_topic_subscription_column_def'] = array('topic_id'  => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_topic_subscription_column_def'] = array('topic_id'  => 'I NOTNULL DEFAULT 0',
                                                               'forum_id'  => 'I NOTNULL DEFAULT 0',
                                                               'user_id'   => 'I NOTNULL DEFAULT 0');
-    $pntable['pnforum_topic_subscription_column_idx'] = array ('topic_id' => 'topic_id',
+    $pntable['dizkus_topic_subscription_column_idx'] = array ('topic_id' => 'topic_id',
                                                                'forum_id' => 'forum_id',
                                                                'user_id'  => 'user_id');
 
@@ -235,12 +235,12 @@ function pnForum_pntables()
     //
     // favorites
     //
-    $pntable['pnforum_forum_favorites'] = DBUtil::getLimitedTablename('pnforum_forum_favorites');
-    $pntable['pnforum_forum_favorites_column'] = array('forum_id' => 'forum_id',
+    $pntable['dizkus_forum_favorites'] = DBUtil::getLimitedTablename('dizkus_forum_favorites');
+    $pntable['dizkus_forum_favorites_column'] = array('forum_id' => 'forum_id',
                                                        'user_id'  => 'user_id');
-    $pntable['pnforum_forum_favorites_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_forum_favorites_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
                                                            'user_id'   => 'I NOTNULL DEFAULT 0');
-    $pntable['pnforum_forum_favorites_column_idx'] = array('forum_id' => 'forum_id',
+    $pntable['dizkus_forum_favorites_column_idx'] = array('forum_id' => 'forum_id',
                                                            'user_id'  => 'user_id');
 
 

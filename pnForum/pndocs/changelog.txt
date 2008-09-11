@@ -2,7 +2,7 @@ $Id$
 
 
 ---------------------------------------------------------------------------------------------
-Zikula pnForum Module changelog
+Zikula Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
 
 
@@ -50,7 +50,7 @@ Zikula pnForum Module changelog
 - fixed [#4199] block templates call readlastposts plugin with only maxposts
 - added [#2492] admin option to remove subscriptions
 - fixed [#2557] no protection against posting many new threads
-- fixed [#2569] pnForum preferences always visible in user profile
+- fixed [#2569] Dizkus preferences always visible in user profile
 - fixed [#2637] moderation navigation and
         [#2683] moderation function broken on multiple pages (same bug)
 - fixed [#2678] search does not honor sort field specification
@@ -96,10 +96,10 @@ Important changes:
   need to be updated!
 - finding the correct images for topics, new topics, hot topics and hot new topics (viewforum)
   is not longer done in program code but is now part of the template logic. There are two new fields in
-  the topic array: new_posts and hot_topic, see the pnforum_user_viewforum.html template for more
+  the topic array: new_posts and hot_topic, see the dizkus_user_viewforum.html template for more
   information. Custom templates might need some adjustments.
   The fields image, altimage and image_attr are obsolete now and have been removed!!
-- the same is valid for the image in the main pnForum view, new field $forum.new_posts
+- the same is valid for the image in the main Dizkus view, new field $forum.new_posts
   removed: fldr_img, fldr_img_attr, fldr_alt
 
 - added new option to remove all html tags outside of [code][/code] from new postings
@@ -149,7 +149,7 @@ Important changes:
 ---------------------------------------------------------------------------------------------
 2.0.0 RC1 (fs)
 ---------------------------------------------------------------------------------------------
-- changed phpBB_14 to pnForum (update from previous phpBB_14 during during module update)
+- changed phpBB_14 to Dizkus (update from previous phpBB_14 during during module update)
 - fully API compliant now
 - using pnRender templates
 - fixed some SQL statements
@@ -226,7 +226,7 @@ New Features
 - ip-logging can be turned off (due to privacy issues in germany)
 
 IMPORTANT NOTE:
-- since bbcode and smile functions are moved to hooks you'll need the pn_bbcode and pn_bbsmile hooks from http://www.pnforum.de or http://snowbankih.tzo.com
+- since bbcode and smile functions are moved to hooks you'll need the pn_bbcode and pn_bbsmile hooks from http://www.dizkus.com or http://snowbankih.tzo.com
 - with pn_bbclick you can convert url- and mail-adresses to links automatically - might be usefull, too ;)
 - BBCODES AND SMILIES ARE NOT SHOWN WHEN pn_bbcode and pn_bbsmile ARE NOT INSTALLED & ACTIVE!
 

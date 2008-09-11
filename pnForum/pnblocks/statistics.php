@@ -1,34 +1,34 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * init
  *
  */
-function pnForum_statisticsblock_init()
+function Dizkus_statisticsblock_init()
 {
-    pnSecAddSchema('pnForum_Statisticsblock::', 'Block title::');
+    SecurityUtil::registerPermissionSchema('Dizkus_Statisticsblock::', 'Block title::');
 }
 
 /**
  * info
  *
  */
-function pnForum_statisticsblock_info()
+function Dizkus_statisticsblock_info()
 {
-    return array( 'module' => 'pnForum',
-                  'text_type' => 'pnForum_statisticsblock',
-                  'text_type_long' => 'pnForum Statistics',
+    return array( 'module' => 'Dizkus',
+                  'text_type' => 'Dizkus_statisticsblock',
+                  'text_type_long' => 'Dizkus Statistics',
                   'allow_multiple' => true,
                   'form_content' => false,
                   'form_refresh' => false,
@@ -38,20 +38,20 @@ function pnForum_statisticsblock_info()
 /**
  * display the statisticsblock
  */
-function pnForum_statisticsblock_display($row)
+function Dizkus_statisticsblock_display($row)
 {
-    if(!pnModAvailable('pnForum')) {
+    if(!pnModAvailable('Dizkus')) {
         return;
     }
     
     //check for Permission
-    if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', $row['title'] . '::', ACCESS_READ)){ 
+    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', $row['title'] . '::', ACCESS_READ)){ 
         return; 
     }
 
-    pnModLangLoad('pnForum', 'common');
+    pnModLangLoad('Dizkus', 'common');
     // check if forum is turned off
-    $disabled = pnf_available();
+    $disabled = dzk_available();
     if(!is_bool($disabled)) {
         $row['content'] = $disabled;
 	    return themesideblock($row);
@@ -62,13 +62,13 @@ function pnForum_statisticsblock_display($row)
 
     // check if cb_template is set, if not, use the default centerblock template
     if(empty($vars['sb_template'])) {
-        $vars['sb_template'] = "pnforum_statisticsblock_display.html";
+        $vars['sb_template'] = "dizkus_statisticsblock_display.html";
     }
     if(empty($vars['sb_parameters'])) {
         $vars['sb_parameters'] = "maxposts=5";
     }
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
 
     $params = explode(',', $vars['sb_parameters']);
 
@@ -85,13 +85,13 @@ function pnForum_statisticsblock_display($row)
 /**
  * Update the block
  */
-function pnForum_statisticsblock_update($row)
+function Dizkus_statisticsblock_update($row)
 {
-	if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
 	    return false;
 	}
 
-	$sb_template   = FormUtil::getPassedValue('sb_template', 'pnforum_statisticsblock_display.html', 'POST');
+	$sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
 	$sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 
     $row['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
@@ -101,9 +101,9 @@ function pnForum_statisticsblock_update($row)
 /**
  * Modify the block
  */
-function pnForum_statisticsblock_modify($row)
+function Dizkus_statisticsblock_modify($row)
 {
-	if (!SecurityUtil::checkPermission('pnForum_Statisticsblock::', $row['title'] . '::', ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', $row['title'] . '::', ACCESS_ADMIN)) {
 	    return false;
 	}
 
@@ -111,9 +111,9 @@ function pnForum_statisticsblock_modify($row)
     $vars = pnBlockVarsFromContent($row['content']);
 
     if(!isset($vars['sb_parameters']) || empty($vars['sb_parameters'])) { $vars['sb_parameters'] = 'maxposts=5'; }
-    if(!isset($vars['sb_template']) || empty($vars['sb_template']))   { $vars['sb_template']   = 'pnforum_statisticsblock_display.html'; }
+    if(!isset($vars['sb_template']) || empty($vars['sb_template']))   { $vars['sb_template']   = 'dizkus_statisticsblock_display.html'; }
 
-    $pnRender = pnRender::getInstance('pnForum', false, null, true);
+    $pnRender = pnRender::getInstance('Dizkus', false, null, true);
     $pnRender->assign('vars', $vars);
-    return $pnRender->fetch('pnforum_statisticsblock_config.html');
+    return $pnRender->fetch('dizkus_statisticsblock_config.html');
 }

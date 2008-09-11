@@ -1,0 +1,26 @@
+<!--[*  $Id: dizkus_centerblock_display.html,v 1.13 2005/11/12 07:55:09 landseer Exp $  *]-->
+<!--[*
+
+Rename this to dizkus_centerblock_display.html if you want to use it
+  
+*]-->
+<!--[modulestylesheet stylesheet=style.css modname=Dizkus xhtml=true]-->
+<!--[ pnpageaddvar name="javascript" type="javascript/ajax/prototype.js" ]-->
+
+<div id="newposts" style="margin: 0 0 1.3em 0; border-bottom: 1px #666 dashed;">
+    <script type="text/javascript">
+        // <![CDATA[
+        new Ajax.PeriodicalUpdater(
+        		         'newposts', 
+          	             'index.php',
+        	             {
+        	                 method: 'get',
+        	                 parameters: 'module=Dizkus&type=ajax&func=newposts',
+        	                 frequency: 60
+        			     });
+        // ]]>  
+    </script>
+    <noscript>    
+        <!--[ include file="dizkus_ajax_newposts.html" ]-->
+    </noscript>
+</div>

@@ -1,0 +1,38 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_admin_header.html' ]-->
+
+<!--[* pndebug *]-->
+
+<fieldset>
+    <legend>
+        <!--[pnml name='_DZK_ADMINADVANCEDCONFIG_INFO']-->
+    </legend>
+    <form action="<!--[ pnmodurl modname=Dizkus type=admin func=advancedpreferences ]-->" method="post">
+    <div style="margin: 1em;" class="dzk_clearfix">
+        <strong><!--[ pnml name='_DZK_ADMINADVANCEDCONFIG_HINT' ]--></strong>
+        <div class="pnfadminrow98">
+            <!--[ pnml name='_DZK_DATABASEINUSE' ]-->: <!--[ $dbname ]--> (<!--[ $dbtype ]--> <!--[ $dbversion ]-->)<br />
+        </div>
+        <div class="pnfadminrow98">
+            <label for="fulltextindex"  class="pnfadmincol49"><!--[ pnml name='_DZK_PREFS_SEARCHWITHFULLTEXTINDEX' html=1 ]--></label>
+            <input class="pnfadmincol49" type="checkbox" name="fulltextindex" id="fulltextindex" value="1" <!--[ $fulltextindex_checked ]--> />
+        </div>
+        <div class="pnfadminrow98">
+            <!--[ pnml name='_DZK_PREFS_SEARCHWITHFULLTEXTINDEX_HINT' html=1 ]-->
+        </div>
+        <div class="pnfadminrow98">
+    		<label for="" class="pnfadmincol49"><!--[ pnml name='_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX' ]--></label>
+            <input class="pnfadmincol49" type="checkbox" name="extendedsearch" id="extendedsearch" value="1" <!--[ $extendedsearch_checked ]--> />
+    	</div>
+        <div class="pnfadminrow98">
+            <!--[ pnml name='_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT' html=1 ]-->
+        </div>
+        <p>
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
+        </p>
+    </div>
+    </form>
+</fieldset>
+
+<!--[ include file='dizkus_admin_footer.html' ]-->

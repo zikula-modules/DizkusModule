@@ -1,177 +1,131 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
- *	Initialize a new install of the pnForum module
+ *	Initialize a new install of the Dizkus module
  *
- *	This function will initialize a new installation of pnForum.
+ *	This function will initialize a new installation of Dizkus.
  *	It is accessed via the Zikula Admin interface and should
  *	not be called directly.
  */
 
-function pnForum_init()
+function Dizkus_init()
 {
     if(version_compare(PN_VERSION_NUM, '1.0.0', '<')) {
         // no SessionUtil::setVar here because this line is for <.9
-        pnSessionSetVar('errormsg', _PNFORUM_ZIKULA10ISREQUIRED);
+        pnSessionSetVar('errormsg', _DZK_ZIKULA10ISREQUIRED);
         return false;
     }
     
     // creating categories table
-    if (!DBUtil::createTable('pnforum_categories')) {
+    if (!DBUtil::createTable('dizkus_categories')) {
         return false;
     }
 
     // creating forum_mods table
-    if (!DBUtil::createTable('pnforum_forum_mods')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_forum_mods')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating forums table
-    if (!DBUtil::createTable('pnforum_forums')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_forums')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating posts table
-    if (!DBUtil::createTable('pnforum_posts')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_posts')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating posts text table
-    if (!DBUtil::createTable('pnforum_posts_text')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_posts_text')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating subscription table
-    if (!DBUtil::createTable('pnforum_subscription')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_subscription')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating ranks table
-    if (!DBUtil::createTable('pnforum_ranks')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_ranks')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating topics table
-    if (!DBUtil::createTable('pnforum_topics')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_topics')) {
+        Dizkus_delete();
         return false;
     }
 
     // creating users table
-    if (!DBUtil::createTable('pnforum_users')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_users')) {
+        Dizkus_delete();
         return false;
     }
 
 	// creating topic_subscription table (new in 1.7.5)
-    if (!DBUtil::createTable('pnforum_topic_subscription')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_topic_subscription')) {
+        Dizkus_delete();
         return false;
     }
 
-    if (!DBUtil::createTable('pnforum_forum_favorites')) {
-        pnForum_delete();
+    if (!DBUtil::createTable('dizkus_forum_favorites')) {
+        Dizkus_delete();
         return false;
     }
 
-    // create the hooks: create, delete, display.
-    // everything else is not needed , at least not atm.
-    //
-    // createhook
-    //
-    if (!pnModRegisterHook('item',
-                           'create',
-                           'API',
-                           'pnForum',
-                           'hook',
-                           'createbyitem')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTOCREATEHOOK . ' (create)');
-    }
-
-    //
-    // updatehook
-    //
-    if (!pnModRegisterHook('item',
-                           'update',
-                           'API',
-                           'pnForum',
-                           'hook',
-                           'updatebyitem')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTOCREATEHOOK . ' (update)');
-    }
-
-    //
-    // deletehook
-    //
-    if (!pnModRegisterHook('item',
-                           'delete',
-                           'API',
-                           'pnForum',
-                           'hook',
-                           'deletebyitem')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTOCREATEHOOK . ' (delete)');
-    }
-
-    //
-    // displayhook
-    //
-    if (!pnModRegisterHook('item',
-                           'display',
-                           'GUI',
-                           'pnForum',
-                           'hook',
-                           'showdiscussionlink')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTOCREATEHOOK . ' (display)');
+    if(createHooks() == false) {
+        return false;
     }
 
 	// forum settings
-	pnModSetVar('pnForum', 'posts_per_page', 15);
-	pnModSetVar('pnForum', 'topics_per_page', 15);
-	pnModSetVar('pnForum', 'hot_threshold', 20);
-	pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
-	pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
-	pnModSetVar('pnForum', 'url_ranks_images', "modules/pnForum/pnimages/ranks");
-	pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
-	pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
-	pnModSetVar('pnForum', 'post_sort_order', 'ASC');
-	pnModSetVar('pnForum', 'log_ip', 'yes');
-	pnModSetVar('pnForum', 'slimforum', 'no');
-	pnModSetVar('pnForum', 'hideusers', 'no');
-	pnModSetVar('pnForum', 'removesignature', 'no');
-	pnModSetVar('pnForum', 'striptags', 'no');
-    pnModSetVar('pnForum', 'deletehookaction', 'lock');
+	pnModSetVar('Dizkus', 'posts_per_page', 15);
+	pnModSetVar('Dizkus', 'topics_per_page', 15);
+	pnModSetVar('Dizkus', 'hot_threshold', 20);
+	pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
+	pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
+	pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
+	pnModSetVar('Dizkus', 'posticon', "modules/Dizkus/pnimages/posticon.gif");
+	pnModSetVar('Dizkus', 'firstnew_image', "modules/Dizkus/pnimages/firstnew.gif");
+	pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
+	pnModSetVar('Dizkus', 'log_ip', 'yes');
+	pnModSetVar('Dizkus', 'slimforum', 'no');
+	pnModSetVar('Dizkus', 'hideusers', 'no');
+	pnModSetVar('Dizkus', 'removesignature', 'no');
+	pnModSetVar('Dizkus', 'striptags', 'no');
+    pnModSetVar('Dizkus', 'deletehookaction', 'lock');
     // 2.5
-    pnModSetVar('pnForum', 'extendedsearch', 'no');
-    pnModSetVar('pnForum', 'm2f_enabled', 'yes');
-    pnModSetVar('pnForum', 'favorites_enabled', 'yes');
-	pnModSetVar('pnForum', 'hideusers', 'no');
-	pnModSetVar('pnForum', 'removesignature', 'no');
-	pnModSetVar('pnForum', 'striptags', 'no');
+    pnModSetVar('Dizkus', 'extendedsearch', 'no');
+    pnModSetVar('Dizkus', 'm2f_enabled', 'yes');
+    pnModSetVar('Dizkus', 'favorites_enabled', 'yes');
+	pnModSetVar('Dizkus', 'hideusers', 'no');
+	pnModSetVar('Dizkus', 'removesignature', 'no');
+	pnModSetVar('Dizkus', 'striptags', 'no');
     // 2.6
-    pnModSetVar('pnForum', 'deletehookaction', 'lock');
-    pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
+    pnModSetVar('Dizkus', 'deletehookaction', 'lock');
+    pnModSetVar('Dizkus', 'rss2f_enabled', 'yes');
     // 2.7
-    pnModSetVar('pnForum', 'shownewtopicconfirmation', 'no');
-    pnModSetVar('pnForum', 'timespanforchanges', 24);
-    pnModSetVar('pnForum', 'forum_enabled', 'yes');
-    pnModSetVar('pnForum', 'forum_disabled_info', _PNFORUM_DISABLED_INFO);
+    pnModSetVar('Dizkus', 'shownewtopicconfirmation', 'no');
+    pnModSetVar('Dizkus', 'timespanforchanges', 24);
+    pnModSetVar('Dizkus', 'forum_enabled', 'yes');
+    pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
 
     // Initialisation successful
     return true;
@@ -179,46 +133,46 @@ function pnForum_init()
 }
 
 /**
- *	Deletes an install of the pnForum module
+ *	Deletes an install of the Dizkus module
  *
- *	This function removes pnForum from your
+ *	This function removes Dizkus from your
  *	Zikula install and should be accessed via
  *	the Zikula Admin interface
  */
 
-function pnForum_delete()
+function Dizkus_delete()
 {
-    if (!DBUtil::dropTable('pnforum_categories')) {
+    if (!DBUtil::dropTable('dizkus_categories')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_forum_mods')) {
+    if (!DBUtil::dropTable('dizkus_forum_mods')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_forums')) {
+    if (!DBUtil::dropTable('dizkus_forums')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_forum_favorites')) {
+    if (!DBUtil::dropTable('dizkus_forum_favorites')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_posts')) {
+    if (!DBUtil::dropTable('dizkus_posts')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_posts_text')) {
+    if (!DBUtil::dropTable('dizkus_posts_text')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_subscription')) {
+    if (!DBUtil::dropTable('dizkus_subscription')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_ranks')) {
+    if (!DBUtil::dropTable('dizkus_ranks')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_topics')) {
+    if (!DBUtil::dropTable('dizkus_topics')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_users')) {
+    if (!DBUtil::dropTable('dizkus_users')) {
         return false;
     }
-    if (!DBUtil::dropTable('pnforum_topic_subscription')) {
+    if (!DBUtil::dropTable('dizkus_topic_subscription')) {
         return false;
     }
 
@@ -226,33 +180,33 @@ function pnForum_delete()
     //
     // createhook
     //
-    if (!pnModUnRegisterHook('item', 'create', 'API', 'pnForum', 'hook', 'createbyitem')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTODELETEHOOK . ' (create)');
+    if (!pnModUnRegisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (create)');
     }
 
     //
     // updatehook
     //
-    if (!pnModUnRegisterHook('item', 'update', 'API', 'pnForum', 'hook', 'updatebyitem')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTODELETEHOOK . ' (update)');
+    if (!pnModUnRegisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (update)');
     }
 
     //
     // deletehook
     //
-    if (!pnModUnRegisterHook('item', 'delete', 'API', 'pnForum', 'hook', 'deletebyitem')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTODELETEHOOK . ' (delete)');
+    if (!pnModUnRegisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (delete)');
     }
 
     //
     // displayhook
     //
-    if (!pnModUnRegisterHook('item', 'display', 'GUI', 'pnForum', 'hook', 'showdiscussionlink')) {
-        return LogUtil::registerError(_PNFORUM_FAILEDTODELETEHOOK . ' (display)');
+    if (!pnModUnRegisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (display)');
     }
 
 	// remove module vars
-	pnModDelVar('pnForum');
+	pnModDelVar('Dizkus');
 
     // Deletion successful
     return true;
@@ -264,10 +218,10 @@ function pnForum_delete()
  *
  *
  */
-function pnForum_init_interactiveupgrade($args)
+function Dizkus_init_interactiveupgrade($args)
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_DZK_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
     $oldversion = FormUtil::getPassedValue('oldversion', 0, 'GETPOST');
@@ -276,12 +230,12 @@ function pnForum_init_interactiveupgrade($args)
     unset($args);
 
     global $modversion;
-    Loader::includeOnce('modules/pnForum/pnversion.php');
+    Loader::includeOnce('modules/Dizkus/pnversion.php');
     
-    $authid = pnSecGenAuthKey('Modules');
+    $authid = SecurityUtil::generateAuthKey('Modules');
     switch($oldversion) {
         case '2.7.1':
-            $templatefile = 'pnforum_upgrade_30.html';
+            $templatefile = 'dizkus_upgrade_30.html';
             break;
         default:
             // no interactive upgrade for version < 2.7
@@ -294,7 +248,7 @@ function pnForum_init_interactiveupgrade($args)
             return pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('oldversion', $oldversion);
     $pnr->assign('authid', $authid);
     return $pnr->fetch($templatefile);
@@ -304,20 +258,20 @@ function pnForum_init_interactiveupgrade($args)
  * interactiveupgrade_to_3_0
  *
  */
-function pnForum_init_interactiveupgrade_to_3_0()
+function Dizkus_init_interactiveupgrade_to_3_0()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_PNFORUM_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_DZK_NOAUTH_TOADMIN, __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
 
     if(!empty($submit)) {
-        $result = pnForum_upgrade_to_3_0();
+        $result = Dizkus_upgrade_to_3_0();
         if($result<>true) {
-            return showforumerror(_PNFORUM_TO30_FAILED, __FILE__, __LINE__);
+            return showforumerror(_DZK_TO30_FAILED, __FILE__, __LINE__);
         }
-        return pnRedirect(pnModURL('pnForum', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
+        return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
     }
     return pnRedirect(pnModURL('Modules', 'admin', 'view'));
 }
@@ -326,11 +280,114 @@ function pnForum_init_interactiveupgrade_to_3_0()
  * upgrade to 3.0
  *
  */
-function pnForum_upgrade_to_3_0()
+function Dizkus_upgrade_to_3_0()
 {
     // add some columns to the post table - with DBUtil this is a one-liner, you just have to
     // define the new columns in the pntables array, see pntables.php
-    DBUtil::changeTable('pnforum_posts');
+    DBUtil::changeTable('dizkus_posts');
 
+    $oldvars = pnModGetVar('pnForum');
+    foreach ($oldvars as $varname => $oldvar) {
+        pnModSetVar('Dizkus', $varname, $oldvar);
+    }
+    pnModDelVar('pnForum');
+
+    // get list of hooked modules
+    $hookedmods = pnModAPIFunc('modules', 'admin', 'gethookedmodules', array('hookmodname' => 'pnForum'));
+
+    // remove the old hooks
+    //
+    // createhook
+    //
+    if (!pnModUnRegisterHook('item', 'create', 'API', 'pnForum', 'hook', 'createbyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/create)');
+    }
+
+    //
+    // updatehook
+    //
+    if (!pnModUnRegisterHook('item', 'update', 'API', 'pnForum', 'hook', 'updatebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/update)');
+    }
+
+    //
+    // deletehook
+    //
+    if (!pnModUnRegisterHook('item', 'delete', 'API', 'pnForum', 'hook', 'deletebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/delete)');
+    }
+
+    //
+    // displayhook
+    //
+    if (!pnModUnRegisterHook('item', 'display', 'GUI', 'pnForum', 'hook', 'showdiscussionlink')) {
+        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/display)');
+    }
+    
+    if(createHooks() == false) {
+        return false;
+    }
+    
+    // attach bbcode to previous hooked modules
+    foreach ($hookedmods as $hookedmod => $dummy) {
+        pnModAPIFunc('modules' ,'admin', 'enablehooks', 
+                     array('callermodname' => $hookedmod,
+                           'hookmodname'   => 'Dizkus'));
+    }
+
+    return true;
+}
+
+function createHooks()
+{
+    // create the hooks: create, delete, display.
+    // everything else is not needed , at least not atm.
+    //
+    // createhook
+    //
+    if (!pnModRegisterHook('item',
+                           'create',
+                           'API',
+                           'Dizkus',
+                           'hook',
+                           'createbyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (create)');
+    }
+
+    //
+    // updatehook
+    //
+    if (!pnModRegisterHook('item',
+                           'update',
+                           'API',
+                           'Dizkus',
+                           'hook',
+                           'updatebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (update)');
+    }
+
+    //
+    // deletehook
+    //
+    if (!pnModRegisterHook('item',
+                           'delete',
+                           'API',
+                           'Dizkus',
+                           'hook',
+                           'deletebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (delete)');
+    }
+
+    //
+    // displayhook
+    //
+    if (!pnModRegisterHook('item',
+                           'display',
+                           'GUI',
+                           'Dizkus',
+                           'hook',
+                           'showdiscussionlink')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (display)');
+    }
     return true;
 }

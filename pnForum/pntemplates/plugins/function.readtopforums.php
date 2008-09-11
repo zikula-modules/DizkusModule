@@ -13,9 +13,9 @@ function smarty_function_readtopforums($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    Loader::includeOnce('modules/pnForum/common.php');
+    Loader::includeOnce('modules/Dizkus/common.php');
     // get some enviroment
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $forummax = (!empty($maxforums)) ? $maxforums : 5;
     
@@ -25,12 +25,12 @@ function smarty_function_readtopforums($params, &$smarty)
                    f.forum_posts, 
                    c.cat_title,
                    c.cat_id
-          FROM ".$pntable['pnforum_forums']." AS f, 
-               ".$pntable['pnforum_categories']." AS c
+          FROM ".$pntable['dizkus_forums']." AS f, 
+               ".$pntable['dizkus_categories']." AS c
           WHERE f.cat_id = c.cat_id
           ORDER BY forum_posts DESC";
 
-    $result = pnfSelectLimit($dbconn, $sql, $forummax, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, $forummax, false, __FILE__, __LINE__);
     $result_forummax = $result->PO_RecordCount();
     if ($result_forummax <= $forummax) {
         $forummax = $result_forummax;
@@ -49,7 +49,7 @@ function smarty_function_readtopforums($params, &$smarty)
             array_push($topforums, $topforum);
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     $smarty->assign('topforumscount', count($topforums));
     $smarty->assign('topforums', $topforums);
     return;

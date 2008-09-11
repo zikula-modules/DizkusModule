@@ -1,15 +1,15 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * showdiscussionlink
@@ -17,7 +17,7 @@ Loader::includeOnce('modules/pnForum/common.php');
  *
  *@params $objectid string the id of the item to be discussed in the forum
  */
-function pnForum_hook_showdiscussionlink($args)
+function Dizkus_hook_showdiscussionlink($args)
 {
     extract($args);
     unset($args);
@@ -27,18 +27,18 @@ function pnForum_hook_showdiscussionlink($args)
     }
 
 
-    $topic_id = pnModAPIFunc('pnForum', 'user', 'get_topicid_by_reference',
+    $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => pnModGetIDFromName(pnModGetName()) . '-' . $objectid));
 
     if($topic_id <> false) {
-        list($last_visit, $last_visit_unix) = pnModAPIFunc('pnForum', 'user', 'setcookies');
-        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+        list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
+        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id,
                                     'last_visit' => $last_visit,
                                     'count'      => false));
-        $pnr = pnRender::getInstance('pnForum', false, null, true);
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('topic', $topic);
-        return $pnr->fetch('pnforum_hook_display.html');
+        return $pnr->fetch('dizkus_hook_display.html');
     }
     return;
 }

@@ -1,0 +1,41 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<!--[* pndebug *]-->
+
+<fieldset id="dzk_emailtopic" class="dzk_bgcolor3 dzk_bordercolor2">
+    <legend>
+        <!--[ pnml name='_DZK_EMAIL_TOPIC' html=1 ]-->
+    </legend>
+    <!--[ if $error_msg neq '' ]-->
+    <div>
+        <strong style="color: red;"><!--[ $error_msg ]--></strong>
+    </div>
+    <!--[ /if ]-->
+
+    <form action="<!--[ pnmodurl modname=Dizkus type=user func=emailtopic ]-->" method="post" name="emailtopic">
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
+    <div>
+        <p>
+            <label for="sendto_email"><!--[ pnml name='_DZK_SENDTO' ]--></label>
+            <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->" />
+        </p>
+        <p>
+            <label for="emailsubject"><!--[ pnml name='_DZK_SUBJECT' html=1 ]-->:&nbsp;</label>
+            <input type="text" id="emailsubject" name="emailsubject" size="50" maxlength="100" value="<!--[ $emailsubject ]-->" />
+        </p>
+        <p>
+            <label for="message"><!--[ pnml name='_DZK_BODY' ]--></label>
+            <textarea id="message" name="message" rows="10" cols="80"><!--[ $message|pnvarprepfordisplay ]--></textarea>
+        </p>
+        <p>
+        <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->"><!--[ pnml name='_DZK_SUBMIT' ]--></button>
+        </p>
+    </div>
+    </form>
+</fieldset>
+
+
+<!--[ include file='dizkus_user_footer.html' ]-->

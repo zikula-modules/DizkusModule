@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -36,21 +36,21 @@ function smarty_function_readlastposts($params, &$smarty)
     $uid = ($loggedIn == true) ? pnUserGetVar('uid') : 1;
 
     // get number of posts in db
-    $numposts = pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all'));
+    $numposts = pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'all'));
     if($numposts==0) {
         $smarty->assign('lastpostcount', 0);
         $smarty->assign('lastposts', array());
         return;
     }
 
-    Loader::includeOnce('modules/pnForum/common.php');
+    Loader::includeOnce('modules/Dizkus/common.php');
     // get some enviroment
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $whereforum = "";
     if(!empty($forum_id) && is_numeric($forum_id)) {
         // get the category id and check permissions
-        $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+        $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $forum_id));
         if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             $smarty->assign('lastpostcount', 0);
@@ -61,7 +61,7 @@ function smarty_function_readlastposts($params, &$smarty)
     } else {
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
-        $userforums = pnModAPIFunc('pnForum', 'user', 'readuserforums');
+        $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
         if(!is_array($userforums) || count($userforums)==0) {
             // error or user is not allowed to read any forum at all
             $smarty->assign('lastpostcount', 0);
@@ -86,11 +86,11 @@ function smarty_function_readlastposts($params, &$smarty)
         // get the favorites
         $sql = 'SELECT fav.forum_id,
                        f.cat_id
-                FROM ' . $pntable['pnforum_forum_favorites'] . ' fav
-                LEFT JOIN ' . $pntable['pnforum_forums'] . ' f
+                FROM ' . $pntable['dizkus_forum_favorites'] . ' fav
+                LEFT JOIN ' . $pntable['dizkus_forums'] . ' f
                 ON f.forum_id = fav.forum_id
                 WHERE fav.user_id = ' . DataUtil::formatForStore($uid);
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         while (!$result->EOF) {
             list($forum_id, $cat_id) = $result->fields;
             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
@@ -101,7 +101,7 @@ function smarty_function_readlastposts($params, &$smarty)
         if (!empty($wherefavorites)) {
             $wherefavorites = '(' . rtrim($wherefavorites, 'OR ') . ') AND';
         }
-        pnfCloseDB($result);
+        dzkCloseDB($result);
     }
 
     $wherespecial = ' (f.forum_pop3_active = 0';
@@ -147,11 +147,11 @@ function smarty_function_readlastposts($params, &$smarty)
                    p.poster_id,
                    p.post_id,
                    pt.post_text
-        FROM ' . $pntable['pnforum_topics']     . ' as t,
-             ' . $pntable['pnforum_forums']     . ' as f,
-             ' . $pntable['pnforum_posts']      . ' as p,
-             ' . $pntable['pnforum_posts_text'] . ' as pt,
-             ' . $pntable['pnforum_categories'] . ' as c
+        FROM ' . $pntable['dizkus_topics']     . ' as t,
+             ' . $pntable['dizkus_forums']     . ' as f,
+             ' . $pntable['dizkus_posts']      . ' as p,
+             ' . $pntable['dizkus_posts_text'] . ' as pt,
+             ' . $pntable['dizkus_categories'] . ' as c
         WHERE ' . $whereforum .'
               ' . $whereuser . '
               ' . $wherefavorites . '
@@ -167,11 +167,11 @@ function smarty_function_readlastposts($params, &$smarty)
     // if the user wants to see the last x postings we read 5 * x because
     // we might get to forums he is not allowed to see
     // we do this until we got the requested number of postings
-    $result = pnfSelectLimit($dbconn, $sql, $postmax, 0, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, $postmax, 0, __FILE__, __LINE__);
 
     if($result->RecordCount()>0) {
-        $post_sort_order = pnModAPIFunc('pnForum', 'user', 'get_user_post_order');
-        $posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
+        $post_sort_order = pnModAPIFunc('Dizkus', 'user', 'get_user_post_order');
+        $posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
         for (; !$result->EOF; $result->MoveNext()) {
             list($lastpost['topic_id'],
                  $lastpost['topic_title'],
@@ -215,7 +215,7 @@ function smarty_function_readlastposts($params, &$smarty)
             }
             $lastpost['poster_name'] = DataUtil::formatForDisplay($user_name);
 
-            $lastpost['post_text'] = pnForum_replacesignature($lastpost['post_text'], '');
+            $lastpost['post_text'] = Dizkus_replacesignature($lastpost['post_text'], '');
             // call hooks for $message
             list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text'])); // Removed pnVarCensor 
@@ -228,7 +228,7 @@ function smarty_function_readlastposts($params, &$smarty)
             // we now create the url to the last post in the thread. This might be
             // on site 1, 2 or what ever in the thread, depending on topic_replies
             // count and the posts_per_page setting
-            $lastpost['last_post_url'] = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic',
+            $lastpost['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
                                                              array('topic' => $lastpost['topic_id'],
                                                                    'start' => $lastpost['start'])));
             $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $lastpost['topic_last_post_id'];
@@ -237,7 +237,7 @@ function smarty_function_readlastposts($params, &$smarty)
         }
     }
 
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     $smarty->assign('lastpostcount', count($lastposts));
     $smarty->assign('lastposts', $lastposts);
     return;

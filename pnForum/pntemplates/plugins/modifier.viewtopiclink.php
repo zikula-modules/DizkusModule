@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -31,11 +31,11 @@
 
  * Example
  *
- *   <!--[$username|viewtopiclink]-->
+ *   <!--[$topic_id|viewtopiclink]-->
  *
  *
  * @author       Frank Schummertz
- * @author       The pnForum team
+ * @author       The Dizkus team
  * @since        16. Sept. 2003
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
@@ -47,7 +47,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     }
 
     if(isset($class) && !empty($class)) {
-        $class = 'class="' . $class . '"';
+        $class = 'class="' . DataUtil::formatForDisplay($class) . '"';
     }
 
     $args = array('topic' => (int)$topic_id);
@@ -55,11 +55,11 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $args['start'] = (int)$start;
     }
 
-    $url = pnModURL('pnForum', 'user', 'viewtopic', $args);
+    $url = pnModURL('Dizkus', 'user', 'viewtopic', $args);
     if(isset($last_post_id)) {
-        $url .= 'pid' . (int)$last_post_id;
+        $url .= '#pid' . (int)$last_post_id;
     }
-    $title = _PNFORUM_GOTO_TOPIC;
+    $title = _DZK_GOTO_TOPIC;
     if(isset($forum_name) && !empty($forum_name)) {
         $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';
     }
@@ -67,5 +67,5 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $subject = DataUtil::formatForDisplay($subject);
         $title .= ' ' . $subject;
     }
-    return '<a '. DataUtil::formatForDisplay($class) .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
+    return '<a '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
 }

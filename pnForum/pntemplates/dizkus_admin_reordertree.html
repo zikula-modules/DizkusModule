@@ -1,0 +1,143 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_admin_header.html' ]-->
+
+<!--[* pndebug *]-->
+
+<!--[ pnimg src="icon_dbaccess.gif" assign="progressicon ]-->
+
+<fieldset>
+    <legend>
+        <!--[ pnml name='_DZK_REORDERFORUMS' ]-->
+    </legend>
+
+    <div class="content">
+    
+    <p>
+    <!--[ pnml name="_DZK_FORUM_SEQUENCE_DESCRIPTION" ]-->
+    </p>
+    
+    <div class="dzk_clearfix">
+        <button onclick="javascript:addcategory();" class="image add left"><!--[ pnml name='_DZK_ADMINCATADD' ]--></button>
+        <button onclick="javascript:storetreeorder();" class="image ok right" type="submit"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
+    </div>
+    
+    <div id="dizkusinformation" style="width: 60%; visibility: hidden;">&nbsp;</div>
+    <ul id="category">
+    <!--[ foreach item=category from=$categorytree]-->
+        <li style="width: 95%; margin: 0.2em 0 0.2em 2em;" id="category_<!--[ $category.cat_id ]-->">
+            <div style="padding: 2px; border: 1px solid black; width:90%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_clearfix">
+                <div class="dzk_handle dzk_clearfix">
+                    <div id="categorytitle_<!--[ $category.cat_id ]-->" style="float: left; width: 60%;">
+                        <a title="<!--[ pnml name='_DZK_VISITCATEGORY' ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id ]-->"><!--[ $category.cat_title ]--></a> (<!--[ $category.cat_id ]-->)
+                    </div>
+                    <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
+                        <button id="loadcategory_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_DZK_LOADCATEGORYDATA' ]-->" onclick="javascript:loadcategory(<!--[ $category.cat_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_DZK_LOADCATEGORYDATA" altml=true ]--></button>
+                        <button id="hidecategory_<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_HIDECATEGORY' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                        <button id="showcategory_<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_SHOWCATEGORY' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                        <button onclick="javascript:hideshowforumlist(<!--[$category.cat_id ]-->);" id="hideforumlist_<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_HIDEFORUMS' ]-->"><!--[ pnimg src="icon_hideforums.gif" ]--></button>
+                        <button onclick="javascript:hideshowforumlist(<!--[$category.cat_id ]-->);" id="showforumlist_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_DZK_SHOWFORUMS' ]-->"><!--[ pnimg src="icon_showforums.gif" ]--></button>
+                        <button onclick="javascript:addforum(<!--[ $category.cat_id ]-->);" id="addforum_<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_DZK_ADMINFORUMADD' ]-->"><!--[ pnimg src="icon_addforum.gif" alt="_DZK_ADMINFORUMADD" altml=true ]--></button>
+                        <img id="progresscategoryimage_<!--[ $category.cat_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_DZK_PLEASEWAIT' ]-->" />
+                    </div>
+                </div>
+                <div id="editcategory_<!--[ $category.cat_id ]-->" style="display: none; margin-top: 0.5em; width: 90%;">&nbsp;</div>
+            </div>
+            <ul id="cid_<!--[ $category.cat_id ]-->" class="dzk_treeforumlist" style="display: none; margin: 0.2em 0 0.2em 2em;">
+                <!--[ foreach item=forum from=$category.forums ]-->
+                <li style="border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;" id="forum_<!--[ $forum.forum_id ]-->">
+                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle dzk_clearfix">
+                        <div id="forumtitle_<!--[ $forum.forum_id ]-->" style="float: left; width: 60%;">
+                            <a href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id ]-->" title="<!--[ $forum.forum_name|pnvarprepfordisplay ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a> (<!--[ $forum.forum_id ]-->)
+                        </div>
+                        <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
+                            <button id="loadforum_<!--[ $forum.forum_id ]-->"  title="<!--[ pnml name='_DZK_LOADFORUMDATA' ]-->" onclick="javascript:loadforum(<!--[ $forum.forum_id ]-->);"><!--[ pnimg src="icon_show.gif" alt="_DZK_LOADFORUMDATA" altml=true ]--></button>
+                            <button id="hideforum_<!--[ $forum.forum_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                            <button id="showforum_<!--[ $forum.forum_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                            <img id="progressforumimage_<!--[ $forum.forum_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_DZK_PLEASEWAIT' ]-->" />
+                        </div>
+                    </div>
+                    <div id="editforum_<!--[ $forum.forum_id ]-->" style="display: none; margin-top: 5px; width: 99%;">&nbsp;</div>
+                </li>
+                <!--[ /foreach ]-->
+                <li id="emptycategory_<!--[ $category.cat_id ]-->" style="<!--[ if $category.forums|@count <> 0 ]-->display: none; <!--[ /if ]-->border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor2 ]-->;">
+                    <!--[ pnml name='_DZK_EMPTYCATEGORY' ]-->
+                </li>
+                <li id="newforum_cat<!--[ $category.cat_id ]-->" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;">
+                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle dzk_clearfix">
+                        <div id="forumtitle_cat<!--[ $category.cat_id ]-->" style="float: left; width: 60%;">
+                            <!--[ pnml name='_DZK_ADDNEWFORUM' ]-->
+                        </div>
+                        <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
+                            <button id="hideforum_cat<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                            <button id="showforum_cat<!--[ $category.cat_id ]-->" style="display: none;" title="<!--[ pnml name='_DZK_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                            <button id="canceladdforum_cat<!--[ $category.cat_id ]-->" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_canceladdforum.gif" alt="_CANCEL" altml=true ]--></button>
+                            <img id="progressforumimage_cat<!--[ $category.cat_id ]-->" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_DZK_PLEASEWAIT' ]-->" />
+                        </div>
+                    </div>
+                    <div id="neweditforum_<!--[ $category.cat_id ]-->" style="display: none; margin-top: 5px; width: 99%;">&nbsp;</div>
+                </li>
+            </ul>
+        </li>
+            
+    <!--[ /foreach ]-->
+        <li style="display: none; width: 95%; margin: 0.2em 0 0.2em 2em;" id="newcategory">
+            <div style="padding: 2px; border: 1px solid black; width:90%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_clearfix">
+                <div class="dzk_handle dzk_clearfix">
+                    <div id="newcategorytitle" style="float: left; width: 60%;">
+                        <!--[ pnml name='_DZK_ADDNEWCATEGORY' ]-->
+                    </div>
+                    <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
+                        <button id="newhidecategory"  style="display: none;" title="<!--[ pnml name='_DZK_HIDECATEGORY' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                        <button id="newshowcategory"  style="display: none;" title="<!--[ pnml name='_DZK_SHOWCATEGORY' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                        <button id="newhideforumlist" style="display: none;" title="<!--[ pnml name='_DZK_HIDEFORUMS' ]-->"><!--[ pnimg src="icon_hideforums.gif" ]--></button>
+                        <button id="newshowforumlist" style="display: none;" title="<!--[ pnml name='_DZK_SHOWFORUMS' ]-->"><!--[ pnimg src="icon_showforums.gif" ]--></button>
+                        <button id="newaddforum"      style="display: none;" title="<!--[ pnml name='_DZK_ADMINFORUMADD' ]-->"><!--[ pnimg src="icon_addforum.gif" alt="_DZK_ADMINFORUMADD" altml=true ]--></button>
+                        <button id="newcanceladdcategory" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_cancel.gif" alt="_CANCEL" altml=true ]--></button>
+                        <img id="newprogresscategoryimage" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_DZK_PLEASEWAIT' ]-->" />
+                    </div>
+                </div>
+                <div id="neweditcategory" style="display: none; margin-top: 0.5em; width: 90%;">&nbsp;</div>
+            </div>
+            <ul id="newcid" class="dzk_treeforumlist" style="display: none; margin: 0.2em 0 0.2em 2em;">
+                <li id="newemptycategory" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor2 ]-->;">
+                    <!--[ pnml name='_DZK_EMPTYCATEGORY' ]-->
+                </li>
+
+                <li id="newforum" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;">
+                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle dzk_clearfix">
+                        <div id="newforumtitle" style="float: left; width: 60%;">
+                            <!--[ pnml name='_DZK_ADDNEWFORUM' ]-->
+                        </div>
+                        <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
+                            <button id="newhideforum" style="display: none;" title="<!--[ pnml name='_DZK_HIDEFORUM' ]-->"><!--[ pnimg src="icon_hide.gif" ]--></button>
+                            <button id="newshowforum" style="display: none;" title="<!--[ pnml name='_DZK_SHOWFORUM' ]-->"><!--[ pnimg src="icon_show.gif" ]--></button>
+                            <button id="newcanceladdforum" title="<!--[ pnml name='_CANCEL' ]-->"><!--[ pnimg src="icon_canceladdforum.gif" alt="_CANCEL" altml=true ]--></button>
+                            <img id="newprogressforumimage" style="visibility: hidden;" src="<!--[ $progressicon.src ]-->" width="<!--[ $progressicon.width ]-->" height="<!--[ $progressicon.height ]-->" alt="<!--[ pnml name='_DZK_PLEASEWAIT' ]-->" />
+                        </div>
+                    </div>
+                    <div id="neweditforum" style="display: none; margin-top: 5px; width: 99%;">&nbsp;</div>
+                </li>
+
+
+            </ul>
+        </li>
+    </ul>
+
+    <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus]-->" />
+    <div class="dzk_clearfix">
+        <button onclick="javascript:addcategory();" class="image add left"><!--[ pnml name='_DZK_ADMINCATADD' ]--></button>
+        <button onclick="javascript:storetreeorder();" class="image ok right" type="submit"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
+    </div>
+    
+    <script type="text/javascript">
+        // <![CDATA[
+        var storingnewsortorder = '<!--[ pnml name='_DZK_STORINGNEWSORTORDER' ]-->';
+        Event.observe(window, 'load', create_sortables, false);
+        // ]]>  
+    </script>
+    </div>
+ 
+</fieldset> 
+ 
+<!--[ include file='dizkus_admin_footer.html' ]-->

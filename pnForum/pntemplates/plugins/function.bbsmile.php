@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -17,13 +17,10 @@
  */
 function smarty_function_bbsmile($params, &$smarty)
 {
-    extract($params);
-	unset($params);
-
     $out = "";
-	if(pnModAvailable('bbsmile') && pnModIsHooked('bbsmile', 'pnForum')) {
+	if(pnModAvailable('bbsmile') && pnModIsHooked('bbsmile', 'Dizkus')) {
 	    $out = pnModFunc('bbsmile', 'user', 'bbsmiles',
-	                     array('textfieldid' => $textfieldid));
+	                     array('textfieldid' => $params['textfieldid']));
 	}
 	return $out;
 }

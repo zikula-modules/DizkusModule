@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -22,19 +22,19 @@ function smarty_function_readtopposters($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    Loader::includeOnce('modules/pnForum/common.php');
+    Loader::includeOnce('modules/Dizkus/common.php');
     // get some enviroment
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     $postermax = (!empty($maxposters)) ? $maxposters : 3;
 
     $sql = "SELECT user_id,user_posts
-          FROM ".$pntable['pnforum_users']." 
+          FROM ".$pntable['dizkus_users']." 
           WHERE user_id <> 1
           AND user_posts > 0
           ORDER BY user_posts DESC";
 
-    $result = pnfSelectLimit($dbconn, $sql, $postermax, false, __FILE__, __LINE__);
+    $result = dzkSelectLimit($dbconn, $sql, $postermax, false, __FILE__, __LINE__);
     $result_postermax = $result->PO_RecordCount();
     if ($result_postermax <= $postermax) {
       $postermax = $result_postermax;
@@ -51,7 +51,7 @@ function smarty_function_readtopposters($params, &$smarty)
             array_push($topposters, $topposter);
         }
     }
-    pnfCloseDB($result);
+    dzkCloseDB($result);
     $smarty->assign('toppostercount', count($topposters));
     $smarty->assign('topposters', $topposters);
     return;

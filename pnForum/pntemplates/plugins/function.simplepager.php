@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -63,7 +63,7 @@ function smarty_function_simplepager($params, &$smarty)
             ) { 
             // Not on this page - show link 
             $url = preg_replace('/%%/', $curnum, $urltemplate); 
-            $compoutput .= "<a href=\"$url\" title=\"".DataUtil::formatForDisplay(_PNFORUM_PAGE)." $pagenum\">$pagenum</a>";
+            $compoutput .= "<a href=\"$url\" title=\"".DataUtil::formatForDisplay(_DZK_PAGE)." $pagenum\">$pagenum</a>";
             $compoutput .= " "; 
             } 
             //end mod by marsu 
@@ -76,7 +76,7 @@ function smarty_function_simplepager($params, &$smarty)
     if (($curnum >= $perpage + 1) && ($startnum < $curnum - $perpage)) {
         $temp = $curnum - $perpage;
         $url = preg_replace('/%%/', $curnum - $perpage, $urltemplate);
-        $compoutput .= "<a href=\"$url\" title=\"".DataUtil::formatForDisplay(_PNFORUM_PAGE)." $temp\">>></a>";
+        $compoutput .= "<a href=\"$url\" title=\"".DataUtil::formatForDisplay(_DZK_PAGE)." $temp\">>></a>";
     } else {
         $compoutput .= ">>";
     }

@@ -1,0 +1,19 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_admin_header.html' ]-->
+
+<fieldset style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" >
+    <legend>
+        <b><!--[ pnml name='_DZK_POP3TESTRESULTS' ]--></b>
+    </legend>
+    <!--[ foreach item=message from=$messages ]-->
+        <div><!--[ $message ]--></div>
+    <!--[ /foreach ]-->
+    <br />
+    <form action="" method="post">
+        <div>
+            <input type="submit" name="backtoforum" value="<!--[ pnml name='_DZK_BACKTOFORUMADMIN' ]-->" />
+            <input type="hidden" name="forum_id" value="<!--[ $forum_id ]-->" />
+        </div>
+    </form>
+</fieldset>

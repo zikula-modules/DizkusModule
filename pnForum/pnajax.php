@@ -1,24 +1,24 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * reply
  *
  */
-function pnForum_ajax_reply()
+function Dizkus_ajax_reply()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id         = FormUtil::getPassedValue('topic');
@@ -30,31 +30,31 @@ function pnForum_ajax_reply()
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
     
-    $message = pnfstriptags(DataUtil::convertFromUTF8($message));
+    $message = dzkstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-        pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
+        dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
     }
 
     if($preview==false) {
         if (!pnSecConfirmAuthKey()) {
-           pnf_ajaxerror(_BADAUTHKEY);
+           dzk_ajaxerror(_BADAUTHKEY);
         }
 
         list($start,
-             $post_id ) = pnModAPIFunc('pnForum', 'user', 'storereply',
+             $post_id ) = pnModAPIFunc('Dizkus', 'user', 'storereply',
                                        array('topic_id'         => $topic_id,
                                              'message'          => $message,
                                              'attach_signature' => $attach_signature,
                                              'subscribe_topic'  => $subscribe_topic));
 
-        $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+        $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id' => $post_id));
     } else {
         // preview == true, create fake post
         $post['post_id']      = 0;
         $post['topic_id']     = $topic_id;
-        $post['poster_data'] = pnModAPIFunc('pnForum', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
+        $post['poster_data'] = pnModAPIFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
         // create unix timestamp
         $post['post_unixtime'] = time();
         $post['posted_unixtime'] = $post['post_unixtime'];
@@ -62,20 +62,20 @@ function pnForum_ajax_reply()
         $post['post_textdisplay'] = phpbb_br2nl($message);
         if($attach_signature == 1) {
             $post['post_textdisplay'] .= '[addsig]';
-            $post['post_textdisplay'] = pnForum_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
+            $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
         }
         // call hooks for $message_display ($message remains untouched for the textarea)
         list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-        $post['post_textdisplay'] =pnfVarPrepHTMLDisplay($post['post_textdisplay']);
+        $post['post_textdisplay'] =dzkVarPrepHTMLDisplay($post['post_textdisplay']);
 
         $post['post_text'] = $post['post_textdisplay'];
 
     }
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
-    pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_user_singlepost.html'),
+    dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
                             'post_id' => $post['post_id']),
                       true);
 }
@@ -84,90 +84,90 @@ function pnForum_ajax_reply()
  * preparequote
  *
  */
-function pnForum_ajax_preparequote()
+function Dizkus_ajax_preparequote()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
-        $post = pnModAPIFunc('pnForum', 'user', 'preparereply',
+        $post = pnModAPIFunc('Dizkus', 'user', 'preparereply',
                              array('post_id'     => $post_id,
                                    'quote'       => true,
                                    'reply_start' => true));
-        pnf_jsonizeoutput($post, false);
+        dzk_jsonizeoutput($post, false);
     }
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_preparequote()');
+    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_preparequote()');
 }
 
 /**
  * readpost
  *
  */
-function pnForum_ajax_readpost()
+function Dizkus_ajax_readpost()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
-        $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+        $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if($post['poster_data']['edit'] == true) {
-            pnf_jsonizeoutput($post, false);
+            dzk_jsonizeoutput($post, false);
         } else {
-            pnf_ajaxerror(_PNFORUM_NOAUTH);
+            dzk_ajaxerror(_DZK_NOAUTH);
         }
     }
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readpost()');
+    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_readpost()');
 }
 
 /**
  * editpost
  *
  */
-function pnForum_ajax_editpost()
+function Dizkus_ajax_editpost()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!empty($post_id)) {
-        $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+        $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if($post['poster_data']['edit'] == true) {
-            $pnr = pnRender::getInstance('pnForum', false, null, true);
+            $pnr = pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('post', $post);
             // simplify our live
             $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
 
-            pnf_jsonizeoutput(array('data'    => $pnr->fetch('pnforum_ajax_editpost.html'),
+            dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_ajax_editpost.html'),
                                     'post_id' => $post['post_id']),
                                     true);
         } else {
-            pnf_ajaxerror(_PNFORUM_NOAUTH);
+            dzk_ajaxerror(_DZK_NOAUTH);
         }
     }
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_readrawtext()');
+    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_readrawtext()');
 }
 
 /**
  * updatepost
  *
  */
-function pnForum_ajax_updatepost()
+function Dizkus_ajax_updatepost()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post', '');
@@ -179,41 +179,41 @@ function pnForum_ajax_updatepost()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
     if(!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-            pnf_ajaxerror(_BADAUTHKEY);
+            dzk_ajaxerror(_BADAUTHKEY);
         }
  
-        $message = pnfstriptags(DataUtil::convertFromUTF8($message));
+        $message = dzkstriptags(DataUtil::convertFromUTF8($message));
         // check for maximum message size
         if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-            pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
+            dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
         }
-        pnModAPIFunc('pnForum', 'user', 'updatepost',
+        pnModAPIFunc('Dizkus', 'user', 'updatepost',
                      array('post_id'          => $post_id,
                            'subject'          => DataUtil::convertFromUTF8($subject),
                            'message'          => $message,
                            'delete'           => $delete,
                            'attach_signature' => ($attach_signature==1)));
         if($delete <> '1') {
-            $post = pnModAPIFunc('pnForum', 'user', 'readpost',
+            $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                                  array('post_id'     => $post_id));
             $post['action'] = 'updated';
         } else {
             $post = array('action'  => 'deleted',
                           'post_id' => $post_id);
         }
-        pnf_jsonizeoutput($post, true);
+        dzk_jsonizeoutput($post, true);
     }
-    pnf_ajaxerror('internal error: no post id in pnForum_ajax_updatepost()');
+    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_updatepost()');
 }
 
 /**
  * lockunlocktopic
  *
  */
-function pnForum_ajax_lockunlocktopic()
+function Dizkus_ajax_lockunlocktopic()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
@@ -222,38 +222,38 @@ function pnForum_ajax_lockunlocktopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //pnf_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(_BADAUTHKEY);
     }
 
     if(empty($topic_id)) {
-        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_lockunlocktopic()');
+        dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_lockunlocktopic()');
     }
     if( empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
-        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_lockunlocktopic()');
+        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_lockunlocktopic()');
     }
 
-    list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+    list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
+        return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
     }
 
-    pnModAPIFunc('pnForum', 'user', 'lockunlocktopic',
+    pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic',
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
     $newmode = ($mode=='lock') ? 'locked' : 'unlocked';
-    pnf_jsonizeoutput($newmode);
+    dzk_jsonizeoutput($newmode);
 }
 
 /**
  * stickyunstickytopic
  *
  */
-function pnForum_ajax_stickyunstickytopic()
+function Dizkus_ajax_stickyunstickytopic()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
@@ -261,37 +261,37 @@ function pnForum_ajax_stickyunstickytopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //pnf_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(_BADAUTHKEY);
     }
 
     if(empty($topic_id)) {
-        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_stickyunstickytopic()');
+        dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_stickyunstickytopic()');
     }
     if( empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
-        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_stickyunstickytopic()');
+        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_stickyunstickytopic()');
     }
 
-    list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+    list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
+        return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
     }
 
-    pnModAPIFunc('pnForum', 'user', 'stickyunstickytopic',
+    pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic',
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
-    pnf_jsonizeoutput($mode);
+    dzk_jsonizeoutput($mode);
 }
 
 /**
  * subscribeunsubscribetopic
  *
  */
-function pnForum_ajax_subscribeunsubscribetopic()
+function Dizkus_ajax_subscribeunsubscribetopic()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -299,48 +299,48 @@ function pnForum_ajax_subscribeunsubscribetopic()
     $mode     = FormUtil::getPassedValue('mode', '');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //pnf_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(_BADAUTHKEY);
     }
 
     if(empty($topic_id)) {
-        pnf_ajaxerror('internal error: no topic id in pnForum_ajax_subscribeunsubscribetopic()');
+        dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_subscribeunsubscribetopic()');
     }
 
-    list($forum_id, $cat_id) = pnModAPIFunc('pnForum', 'user', 'get_forumid_and_categoryid_from_topicid',
+    list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOREAD);
+        return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
     }
 
     switch($mode) {
         case 'subscribe':
-            pnModAPIFunc('pnForum', 'user', 'subscribe_topic',
+            pnModAPIFunc('Dizkus', 'user', 'subscribe_topic',
                          array('topic_id' => $topic_id,
                                'silent'   => true));
             $newmode = 'subscribed';
             break;
         case 'unsubscribe':
-            pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic',
+            pnModAPIFunc('Dizkus', 'user', 'unsubscribe_topic',
                          array('topic_id' => $topic_id,
                                'silent'   => true));
             $newmode = 'unsubscribed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribetopic()');
+        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribetopic()');
     }
 
-    pnf_jsonizeoutput($newmode);
+    dzk_jsonizeoutput($newmode);
 }
 
 /**
  * subscribeunsubscribeforum
  *
  */
-function pnForum_ajax_subscribeunsubscribeforum()
+function Dizkus_ajax_subscribeunsubscribeforum()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -348,38 +348,38 @@ function pnForum_ajax_subscribeunsubscribeforum()
     $mode     = FormUtil::getPassedValue('mode', '');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //pnf_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(_BADAUTHKEY);
     }
 
     if(empty($forum_id)) {
-        pnf_ajaxerror('internal error: no forum id in pnForum_ajax_subscribeunsubscribeforum()');
+        dzk_ajaxerror('internal error: no forum id in Dizkus_ajax_subscribeunsubscribeforum()');
     }
 
-    $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+    $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOREAD);
+        return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
     }
 
     switch($mode) {
         case 'subscribe':
-            pnModAPIFunc('pnForum', 'user', 'subscribe_forum',
+            pnModAPIFunc('Dizkus', 'user', 'subscribe_forum',
                          array('forum_id' => $forum_id,
                                'silent'   => true));
             $newmode = 'subscribed';
             break;
         case 'unsubscribe':
-            pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum',
+            pnModAPIFunc('Dizkus', 'user', 'unsubscribe_forum',
                          array('forum_id' => $forum_id,
                                'silent'   => true));
             $newmode = 'unsubscribed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_subscribeunsubscribeforum()');
+        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribeforum()');
     }
 
-    pnf_jsonizeoutput(array('newmode' => $newmode,
+    dzk_jsonizeoutput(array('newmode' => $newmode,
                             'forum_id' => $forum_id));
 }
 
@@ -387,51 +387,51 @@ function pnForum_ajax_subscribeunsubscribeforum()
  * addremovefavorite
  *
  */
-function pnForum_ajax_addremovefavorite()
+function Dizkus_ajax_addremovefavorite()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    if(pnModGetVar('pnForum', 'favorites_enabled')=='no') {
-        pnf_ajaxerror(_PNFORUM_FAVORITESDISABLED);
+    if(pnModGetVar('Dizkus', 'favorites_enabled')=='no') {
+        dzk_ajaxerror(_DZK_FAVORITESDISABLED);
     }
 
     $forum_id = FormUtil::getPassedValue('forum', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //pnf_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(_BADAUTHKEY);
     }
 
     if(empty($forum_id)) {
-        pnf_ajaxerror('internal error: no forum id in pnForum_ajax_addremovefavorite()');
+        dzk_ajaxerror('internal error: no forum id in Dizkus_ajax_addremovefavorite()');
     }
 
-    $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+    $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
     if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOREAD);
+        return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
     }
 
     switch($mode) {
         case 'add':
-            pnModAPIFunc('pnForum', 'user', 'add_favorite_forum',
+            pnModAPIFunc('Dizkus', 'user', 'add_favorite_forum',
                          array('forum_id' => $forum_id ));
             $newmode = 'added';
             break;
         case 'remove':
-            pnModAPIFunc('pnForum', 'user', 'remove_favorite_forum',
+            pnModAPIFunc('Dizkus', 'user', 'remove_favorite_forum',
                          array('forum_id' => $forum_id ));
             $newmode = 'removed';
             break;
         default:
-        pnf_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in pnForum_ajax_addremovefavorite()');
+        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_addremovefavorite()');
     }
 
-    pnf_jsonizeoutput(array('newmode' => $newmode,
+    dzk_jsonizeoutput(array('newmode' => $newmode,
                             'forum_id' => $forum_id));
 }
 
@@ -439,40 +439,40 @@ function pnForum_ajax_addremovefavorite()
  * edittopicsubject
  *
  */
-function pnForum_ajax_edittopicsubject()
+function Dizkus_ajax_edittopicsubject()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
     $topic_id = FormUtil::getPassedValue('topic', '');
 
     if(!empty($topic_id)) {
-        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                              array('topic_id' => $topic_id,
                                    'count'    => false,
                                    'complete' => false  ));
         if($topic['access_topicsubjectedit'] == true) {
-            $pnr = pnRender::getInstance('pnForum', false, null, true);
+            $pnr = pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('topic', $topic);
-            pnf_jsonizeoutput(array('data' => $pnr->fetch('pnforum_ajax_edittopicsubject.html'),
+            dzk_jsonizeoutput(array('data' => $pnr->fetch('dizkus_ajax_edittopicsubject.html'),
                                     'topic_id' => $topic_id), true);
         } else {
-            pnf_ajaxerror(_PNFORUM_NOAUTH);
+            dzk_ajaxerror(_DZK_NOAUTH);
         }
     }
-    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_readtopic()');
+    dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_readtopic()');
 }
 
 /**
  * updatetopicsubject
  *
  */
-function pnForum_ajax_updatetopicsubject()
+function Dizkus_ajax_updatetopicsubject()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -481,81 +481,81 @@ function pnForum_ajax_updatetopicsubject()
     
     if(!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-           pnf_ajaxerror(_BADAUTHKEY);
+           dzk_ajaxerror(_BADAUTHKEY);
         }
 
-        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                              array('topic_id' => $topic_id,
                                    'count'    => false,
                                    'complete' => false  ));
         if(!$topic['access_topicsubjectedit']) {
-            return pnf_ajaxerror(_PNFORUM_NOAUTH_TOMODERATE);
+            return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
         }
 
 
         $subject = trim(DataUtil::convertFromUTF8($subject));
         if(empty($subject)) {
-            pnf_ajaxerror(_PNFORUM_NOSUBJECT);
+            dzk_ajaxerror(_DZK_NOSUBJECT);
         }
 
-        list($dbconn, $pntable) = pnfOpenDB();
+        list($dbconn, $pntable) = dzkOpenDB();
 
-        $sql = "UPDATE ".$pntable['pnforum_topics']."
+        $sql = "UPDATE ".$pntable['dizkus_topics']."
                 SET topic_title = '" . DataUtil::formatForStore($subject) . "'
                 WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        pnfCloseDB($result);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        dzkCloseDB($result);
         // Let any hooks know that we have updated an item.
-        pnModCallHooks('item', 'update', $topic_id, array('module' => 'pnForum',
+        pnModCallHooks('item', 'update', $topic_id, array('module' => 'Dizkus',
                                                           'topic_id' => $topic_id));
-        pnf_jsonizeoutput(array('topic_title' => DataUtil::formatForDisplay($subject),
+        dzk_jsonizeoutput(array('topic_title' => DataUtil::formatForDisplay($subject),
                                 'topic_id' => $topic_id),
                           true);
 
     }
-    pnf_ajaxerror('internal error: no topic id in pnForum_ajax_updatetopicsubject()');
+    dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_updatetopicsubject()');
 }
 
 /**
  * changesortorder
  *
  */
-function pnForum_ajax_changesortorder()
+function Dizkus_ajax_changesortorder()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if(!pnUserLoggedIn()) {
-       pnf_ajaxerror(_PNFORUM_USERLOGINTITLE);
+       dzk_ajaxerror(_DZK_USERLOGINTITLE);
     }
 
     if (!pnSecConfirmAuthKey()) {
-       pnf_ajaxerror(_BADAUTHKEY);
+       dzk_ajaxerror(_BADAUTHKEY);
     }
 
-    pnModAPIFunc('pnForum', 'user', 'change_user_post_order');
-    $newmode = strtolower(pnModAPIFunc('pnForum','user','get_user_post_order'));
-    pnf_jsonizeoutput($newmode, true, true);
+    pnModAPIFunc('Dizkus', 'user', 'change_user_post_order');
+    $newmode = strtolower(pnModAPIFunc('Dizkus','user','get_user_post_order'));
+    dzk_jsonizeoutput($newmode, true, true);
 }
 
 /**
  * newtopic
  *
  */
-function pnForum_ajax_newtopic()
+function Dizkus_ajax_newtopic()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       pnf_ajaxerror(_BADAUTHKEY);
+       dzk_ajaxerror(_BADAUTHKEY);
     }
 
     $forum_id         = FormUtil::getPassedValue('forum');
@@ -565,53 +565,53 @@ function pnForum_ajax_newtopic()
     $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
     $preview          = FormUtil::getPassedValue('preview', 0);
 
-    $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+    $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
     if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return pnf_ajaxerror(_PNFORUM_NOAUTH_TOWRITE);
+        return dzk_ajaxerror(_DZK_NOAUTH_TOWRITE);
     }
 
     $preview          = ($preview=='1') ? true : false;
     //$attach_signature = ($attach_signature=='1') ? true : false;
     //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
-    $message = pnfstriptags(DataUtil::convertFromUTF8($message));
+    $message = dzkstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-        pnf_ajaxerror(_PNFORUM_ILLEGALMESSAGESIZE);
+        dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
     }
     if(strlen($message)==0) {
-        pnf_ajaxerror(_PNFORUM_EMPTYMSG);
+        dzk_ajaxerror(_DZK_EMPTYMSG);
     }
 
     $subject = DataUtil::convertFromUTF8($subject);
     if(strlen($subject)==0) {
-        pnf_ajaxerror(_PNFORUM_NOSUBJECT);
+        dzk_ajaxerror(_DZK_NOSUBJECT);
     }
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
 
     if($preview == false) {
         // store new topic
-        $topic_id = pnModAPIFunc('pnForum', 'user', 'storenewtopic',
+        $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
                                  array('forum_id'         => $forum_id,
                                        'subject'          => $subject,
                                        'message'          => $message,
                                        'attach_signature' => $attach_signature,
                                        'subscribe_topic'  => $subscribe_topic));
-        $topic = pnModAPIFunc('pnForum', 'user', 'readtopic',
+        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id' => $topic_id, 
                                     'count' => false));
-        if(pnModGetVar('pnForum', 'newtopicconfirmation') == 'yes') {
+        if(pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
             $pnr->assign('topic', $topic);
-            $confirmation = $pnr->fetch('pnforum_ajax_newtopicconfirmation.html');
+            $confirmation = $pnr->fetch('dizkus_ajax_newtopicconfirmation.html');
         } else {
             $confirmation = false;
         }
-        pnf_jsonizeoutput(array('topic'        => $topic,
+        dzk_jsonizeoutput(array('topic'        => $topic,
                                 'confirmation' => $confirmation,
-                                'redirect'     => pnModURL('pnForum', 'user', 'viewtopic',
+                                'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
                                                            array('topic' => $topic_id))),
                           true);
 
@@ -628,9 +628,9 @@ function pnForum_ajax_newtopic()
     // need at least "comment" to add newtopic
     if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(_PNFORUM_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
-    $newtopic['poster_data'] = pnForum_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
+    $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
 
     $newtopic['subject'] = $subject;
     $newtopic['message'] = $message;
@@ -638,17 +638,17 @@ function pnForum_ajax_newtopic()
 
     if($attach_signature==1) {
         $newtopic['message_display'] .= '[addsig]';
-        $newtopic['message_display'] = pnForum_replacesignature($newtopic['message_display'], $newtopic['poster_data']['_SIGNATURE']);
+        $newtopic['message_display'] = Dizkus_replacesignature($newtopic['message_display'], $newtopic['poster_data']['_SIGNATURE']);
     }
 
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
-    $newtopic['message_display'] = pnfVarPrepHTMLDisplay($newtopic['message_display']);
+    $newtopic['message_display'] = dzkVarPrepHTMLDisplay($newtopic['message_display']);
 
     $topic_start = (empty($subject) && empty($message));
     if(pnUserLoggedIn()) {
         if($topic_start==true) {
             $newtopic['attach_signature'] = 1;
-            $newtopic['subscribe_topic']  = (pnModGetVar('pnForum', 'autosubscribe')=='yes') ? 1 : 0;
+            $newtopic['subscribe_topic']  = (pnModGetVar('Dizkus', 'autosubscribe')=='yes') ? 1 : 0;
         } else {
             $newtopic['attach_signature'] = $attach_signature;
             $newtopic['subscribe_topic']  = $subscribe_topic;
@@ -659,7 +659,7 @@ function pnForum_ajax_newtopic()
     }
 
     $pnr->assign('newtopic', $newtopic);
-    pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_user_newtopicpreview.html'),
+    dzk_jsonizeoutput(array('data'     => $pnr->fetch('dizkus_user_newtopicpreview.html'),
                             'newtopic' => $newtopic),
                       true);
 }
@@ -670,16 +670,16 @@ function pnForum_ajax_newtopic()
  * original version by gf
  *
  */
-function pnForum_ajax_forumusers ()
+function Dizkus_ajax_forumusers ()
 {
-    if(pnf_available(false) == false) {
-       pnf_ajaxerror(strip_tags(pnModGetVar('pnForum', 'forum_disabled_info')));
+    if(dzk_available(false) == false) {
+       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    $pnRender = pnRender::getInstance('pnForum', false);
+    $pnRender = pnRender::getInstance('Dizkus', false);
     Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
     $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
-    $pnRender->display('pnforum_ajax_forumusers.html');
+    $pnRender->display('dizkus_ajax_forumusers.html');
     pnShutDown();
 }
 
@@ -689,18 +689,18 @@ function pnForum_ajax_forumusers ()
  * original version by gf
  *
  */
-function pnForum_ajax_newposts ()
+function Dizkus_ajax_newposts ()
 {
-    $disabled = pnf_available();
+    $disabled = dzk_available();
     if(!is_bool($disabled)) {
         echo $disabled;
         exit;
     }
-    $pnRender = pnRender::getInstance('pnForum', false);
+    $pnRender = pnRender::getInstance('Dizkus', false);
     if(pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
         $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
     }
-    $pnRender->display('pnforum_ajax_newposts.html');
+    $pnRender->display('dizkus_ajax_newposts.html');
     pnShutDown();
 }

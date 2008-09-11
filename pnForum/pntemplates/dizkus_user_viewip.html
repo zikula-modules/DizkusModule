@@ -1,0 +1,37 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<!--[* pndebug *]-->
+
+<fieldset id="dzk_viewip" class="dzk_bgcolor3 dzk_bordercolor2">
+    <legend>
+        <!--[ pnml name='_DZK_ACCOUNT_INFORMATION' ]-->
+    </legend>
+    <div>
+        <p>
+            <label for="poster_ip"><strong><!--[ pnml name='_DZK_USER_IP' ]-->:</strong></label>
+            <span id="poster_ip"><!--[ $viewip.poster_ip ]--></span>
+        </p>
+        <p>
+            <label for="poster_host"><strong><!--[ pnml name='_DZK_HOST' ]-->:</strong></label>
+            <span id="poster_host"><!--[ $viewip.poster_host ]--></span>
+        </p>
+        <p>
+            <!--[ pnml name='_DZK_IP_USERNAMES ]-->
+        </p>
+        <ul>
+            <!--[ foreach item=user from=$viewip.users ]-->
+            <li>
+                <!--[ $user.pn_uname|userprofilelink ]-->&nbsp;(<!--[ $user.postcount ]--> <!--[ pnml name='_DZK_POSTS' ]-->)
+            </li>
+            <!--[ /foreach ]-->
+        </ul> 
+    
+    </div>
+    <p class="gobacklink">
+        <a class="image previoustopiclink" href="<!--[ pnmodurl modname=Dizkus type=user func=viewtopic topic=$topic_id ]-->" title="<!--[ pnml name='_DZK_RETURNTOTOPIC' ]-->"><!--[ pnml name='_DZK_RETURNTOTOPIC' ]--></a>
+    </p>
+</fieldset>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

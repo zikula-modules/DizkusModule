@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -35,26 +35,26 @@ function smarty_function_subscribeforum_button($params, &$smarty)
     $userid = pnUserGetVar('uid');
     $out = '';
     if (pnUserLoggedIn()) {
-        Loader::includeOnce('modules/pnForum/common.php');
+        Loader::includeOnce('modules/Dizkus/common.php');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            if(pnModAPIFunc('pnForum', 'user', 'get_forum_subscription_status',
+            if(pnModAPIFunc('Dizkus', 'user', 'get_forum_subscription_status',
                             array('userid'=>$userid,
                                   'forum_id'=>$forum_id))==false) {
-                $imagedata = pnf_getimagepath($image_subscribe);
+                $imagedata = dzk_getimagepath($image_subscribe);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_PNFORUM_SUBSCRIBE_FORUM);
+                    $show = DataUtil::formatForDisplay(_DZK_SUBSCRIBE_FORUM);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_SUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_SUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_SUBSCRIBE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_SUBSCRIBE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
-                $imagedata = pnf_getimagepath($image_unsubscribe);
+                $imagedata = dzk_getimagepath($image_unsubscribe);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM);
+                    $show = DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_FORUM);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_UNSUBSCRIBE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             }
         }
     }

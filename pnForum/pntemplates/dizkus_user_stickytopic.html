@@ -1,0 +1,34 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+<!--[* pndebug *]-->
+
+<fieldset id="dzk_stickytopic" class="dzk_bordercolor2 dzk_bgcolor3" >
+    <legend>
+        <!--[ if $mode eq "sticky" ]-->
+            <!--[ pnml name='_DZK_STICKYTOPIC' ]-->
+        <!--[ else ]-->
+            <!--[ pnml name='_DZK_UNSTICKYTOPIC' ]-->
+        <!--[ /if ]-->
+    </legend>
+    <form action="<!--[ pnmodurl modname=Dizkus type=user func=topicadmin ]-->" method="post">
+    <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
+    <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <div>
+        <!--[ if $mode eq "sticky" ]-->
+            <!--[ pnml name='_DZK_STICKYTOPIC_INFO' html=1 ]-->
+            <p>
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_STICKYTOPIC' ]-->"><!--[ pnml name='_DZK_STICKYTOPIC' ]--></button>
+            </p>
+        <!--[ else ]-->
+            <!--[ pnml name='_DZK_UNSTICKYTOPIC_INFO' html=1 ]-->
+            <p>
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_UNSTICKYTOPIC' ]-->"><!--[ pnml name='_DZK_UNSTICKYTOPIC' ]--></button>
+        </p>
+        <!--[ /if ]-->
+    </div>
+    </form>
+</fieldset>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

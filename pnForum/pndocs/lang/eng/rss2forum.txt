@@ -16,7 +16,7 @@ Preperations
 ------------
 
 The RSS module has to initialized and activated. All feeds you want to use in
-pnForum have to defined here and will be offered in the forum admin panel for
+Dizkus have to defined here and will be offered in the forum admin panel for
 selection.
 
 Configuration per Forum:
@@ -34,7 +34,7 @@ Select RSS-Feed: Select one of the feeds defined in the RSS module.
 Benutzung:
 ----------
 
-Feeds will be fetched using the rss2pnforum.php script which usually gets called
+Feeds will be fetched using the rss2dizkus.php script which usually gets called
 by a cron job e.g. once per hour.
 
 Before you can use this you have to do some changes to this file:
@@ -48,7 +48,7 @@ There are no changes necessary beyond this point.
 Manual usage:
 -------------
 
-http://www.example.com/modules/pnForum/rss2pnforum.php
+http://www.example.com/modules/Dizkus/rss2dizkus.php
 
 gets the new RSS entries for all forums that are configured for RSS2Forum.
 

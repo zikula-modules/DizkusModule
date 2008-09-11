@@ -1,17 +1,17 @@
 $Id$
 
 
-pnForumComments
+DizkusComments
 ---------------
 
-Since version 2.6 pnForum offers hooks that allow it to be used as comments
+Since version 2.6 Dizkus offers hooks that allow it to be used as comments
 module like EZComments.
 Whenever a new submission has been added a new forum topic will be created.
-For a special support a function in modules/pnForum/pncommentsapi/ is needed.
+For a special support a function in modules/Dizkus/pncommentsapi/ is needed.
 Currently such a support exists for the News module only. It reads the new
 submission and copies the content to the initial posting. For all other modules
 the postings get a default text.
-In order to use this feature the pnForum hook has to be activated for the
+In order to use this feature the Dizkus hook has to be activated for the
 target module.
 
 Basic configuration
@@ -23,7 +23,7 @@ a topic in the forum.
 Configuration per Forum
 -----------------------
 
-Modulereference: In this list all modules where the pnForum hook is activated
+Modulereference: In this list all modules where the Dizkus hook is activated
 appear for selection.
 Zikula Topic: Submission can be sorted into different forums depending on their
 topic.
@@ -37,7 +37,7 @@ the user who does this needs the permission to write to the target forum. If no
 approval is needed the submitter needs this permission.
 
 After a forum topic has been created a link to this topic will be displayed below
-the entry. This can be configured by changing the pnforum_hook_display.html
+the entry. This can be configured by changing the dizkus_hook_display.html
 template which gets an array of the complete discussion data so far as parameter,
 for more information the see the output of the pndebug plugin.
 

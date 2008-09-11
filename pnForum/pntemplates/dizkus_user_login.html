@@ -1,0 +1,29 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file="dizkus_user_header.html" ]-->
+
+<h1><!--[ pnml name='_DZK_USERLOGINTITLE' ]--></h1>
+<form action="<!--[ pnmodurl modname="Dizkus" type="user" func="login" ]-->" method="post">
+    <div id="dzk_loginform">
+        <p>
+            <label for="pnfuname"><!--[ pnml name='_DZK_USERNAME' ]--></label>
+            <input type="text" id="pnfuname" name="uname" size="14" maxlength="25"	onblur="if(this.value=='')this.value='<!--[ pnml name=_DZK_USERNAME ]-->';" onfocus="if(this.value=='<!--[ pnml name=_DZK_USERNAME ]-->')this.value='';" value="<!--[ pnml name='_DZK_USERNAME' ]-->"/>
+        </p>
+        <p>
+            <label for="pnfpass"><!--[ pnml name='_DZK_PASSWORD' ]--></label>
+            <input type="password" id="pnfpass" name="pass" size="14" maxlength="20" />
+        </p>
+        <!--[ if $pncore.pnconfig.seclevel != 'High' ]-->
+        <p>
+            <input type="checkbox" value="1" name="rememberme" id="pnfrememberme" />
+            <label for="pnfrememberme"><!--[ pnml name='_DZK_REMEMBERME' ]--></label>
+        </p>
+        <!--[ /if ]-->
+        <input type="hidden" name="redirect" value="<!--[ $redirect|pnvarprepfordisplay ]-->" />
+        <p>
+            <input name="submit" type="submit" value="<!--[ pnml name='_LOGIN' ]-->" />
+        </p>
+    </div>
+</form>
+
+<!--[ include file="dizkus_user_footer.html" ]-->

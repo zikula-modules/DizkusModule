@@ -4,7 +4,7 @@ $Id$
 Mail2Forum
 ----------
 
-Mail2forum allows you to mirror mailinglists into a forum. To do this, pnForum
+Mail2forum allows you to mirror mailinglists into a forum. To do this, Dizkus
 connects to a pop3 server, usually invoked by cron, fetches mails and stores
 them in the forum using a given user login.
 
@@ -58,7 +58,7 @@ There are no changes necessary beyond this point.
 Manual usage:
 -------------
 
-http://www.example.com/modules/pnForum/mailcron.php?debug=1
+http://www.example.com/modules/Dizkus/mailcron.php?debug=1
 
 connects to the mail server, fetches mails and stores them in the forums. The
 ?debug=1 shows what the script is doing.

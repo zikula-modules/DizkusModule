@@ -1,0 +1,76 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file=dizkus_user_header.html ]-->
+
+<!--[ if $pncore.logged_in eq true]-->
+    <!--[ if $pncore.Dizkus.favorites_enabled eq 'yes' ]-->
+    <div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
+        <strong><!--[ pnml name='_DZK_FAVORITES' ]-->:&nbsp;</strong>&nbsp;
+        <!--[ if $favorites]-->
+            <!--[ pnimg src="icon_removefavorite.gif ]-->&nbsp;<a href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_DZK_SHOWALLFORUMS' ]-->"><!--[ pnml name='_DZK_SHOWALLFORUMS' ]--></a>
+        <!--[ else ]-->
+            <!--[ pnimg src="icon_addfavorite.gif ]-->&nbsp;<a href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_DZK_SHOWFAVORITES' ]-->"><!--[ pnml name='_DZK_SHOWFAVORITES' ]--></a>
+        <!--[ /if ]-->
+    </div>
+    <!--[ /if ]-->
+<!--[ /if ]-->
+
+<table border="0"  cellpadding="5" cellspacing="0" width="99%" summary="<!--[ pnml name='_DZK_FORUMS' ]-->">
+    <tbody>
+        <!--[ assign var="headersdone" value="0" ]-->
+        <!--[ foreach item=category from=$tree ]-->
+        <tr align="left" valign="top" style="background-color:<!--[ $bgcolor3 ]-->;">
+            <td colspan="2" style="border: 2px solid <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->; border-right: 0;">     
+                <a title="<!--[ pnml name='_DZK_GOTO_CAT' ]--> '<!--[ $category.cat_title ]-->'" href="<!--[ pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id  ]-->"><strong><!--[ $category.cat_title ]--></strong></a>
+            </td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[ $bgcolor2 ]-->; border-left: 0; border-right: 0;" width="10%" abbr="<!--[ pnml name='_DZK_TOPICS' ]-->"><!--[ if $headersdone == 0 ]--><strong><!--[ pnml name='_DZK_TOPICS' ]--></strong><!--[ /if ]--></td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[ $bgcolor2 ]-->; border-left: 0; border-right: 0;" width="10%" abbr="<!--[ pnml name='_DZK_POSTS' ]-->"><!--[ if $headersdone == 0 ]--><strong><!--[ pnml name='_DZK_POSTS' ]--></strong><!--[ /if ]--></td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[ $bgcolor2 ]-->; border-left: 0;" width="30%" abbr="<!--[ pnml name='_DZK_LASTPOST' ]-->"><!--[ if $headersdone == 0 ]--><strong><!--[ pnml name='_DZK_LASTPOST' ]--></strong><!--[ assign var="headersdone" value="1" ]--><!--[ /if ]--></td>
+        </tr>
+        <tr align="left">
+            <td  colspan="5" style="line-height: 1px;"></td>
+        </tr>
+        <!--[ if ($view_category eq $category.cat_id) or ($view_category eq -1) ]-->
+        <!--[ foreach item=forum from=$category.forums ]-->
+         <tr align="left" valign="top" style="background-color:<!--[ $bgcolor1 ]-->;" onmouseover="this.style.background='<!--[ $bgcolor3 ]-->'" onmouseout="this.style.background='<!--[ $bgcolor1 ]-->'">
+            <td align="left" valign="middle" style="width:4%;">
+                &nbsp;
+            </td>
+            <td align="left" valign="middle" style="width:46%;">
+                <a class="image <!--[ if $forum.new_posts == true ]-->newpostsfolderlink<!--[ else ]-->folderlink<!--[ /if ]-->" title="<!--[ pnml name='_DZK_GOTO_FORUM' ]--> '<!--[ $forum.forum_name ]-->'" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id ]-->"><strong><!--[ $forum.forum_name ]--></strong></a>
+                <br /><!--[ $forum.forum_desc ]-->
+                <br /><!--[ pnml name='_DZK_MODERATEDBY' ]-->: <!--[ listforummods moderators=$forum.forum_mods ]-->
+            </td>
+            <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
+            <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|userprofilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_DZK_NOPOSTS' ]--><!--[ /if ]--></td>
+        </tr>
+        <!--[ foreachelse ]-->
+        <tr>
+            <td colspan="5">     
+                <strong><!--[ pnml name='_DZK_NOFORUMS' ]--></strong>
+            </td>
+        </tr>
+        <!--[ /foreach ]-->
+        <!--[ /if ]-->
+        <tr align="left">
+            <td colspan="5" style="line-height: 1px;"></td>
+        </tr>
+        <!--[ foreachelse ]-->
+        <tr>
+            <td colspan="5">     
+                <!--[ if $pncore.Dizkus.favorites_enabled eq 'yes' ]-->
+                <!--[ pnml name='_DZK_NOFAVORITES' ]-->
+                <!--[ else ]-->
+                <!--[ pnml name='_DZK_NO_FORUMS_DB' ]-->
+                <!--[ /if ]-->
+            </td>
+        </tr>
+        <!--[ /foreach ]-->
+    </tbody>
+</table>
+<ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
+<li><!--[ pnimg src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_DZK_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%e. %b %Y  - %R":'':true ]-->)</li>
+<li><!--[ pnimg src="icon_folder.gif" alt="_DZK_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_DZK_NONEWPOSTS' ]--></li>
+</ul>
+<!--[ include file='dizkus_user_footer.html ]-->

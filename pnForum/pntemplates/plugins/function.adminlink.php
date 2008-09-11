@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 // id, type
@@ -19,19 +19,16 @@
  */ 
 function smarty_function_adminlink($params, &$smarty) 
 {
-    extract($params); 
-	unset($params);
-
-    if (pnSecAuthAction(0, 'pnForum::', "::", ACCESS_ADMIN)) { 
-        if(empty($id) || empty($type)) {
+    if (SecurityUtil::checkPermission(0, 'Dizkus::', "::", ACCESS_ADMIN)) { 
+        if(empty($params['id']) || empty($params['type'])) {
             $smarty->trigger_error("adminlink: missing parameter(s)");
             return;
         }
         
-        if($type=="category") {
-            return "<a href=\"".DataUtil::formatForDisplay(pnModURL('pnForum', 'admin', 'category', array('cat_id'=>(int)$id)))."\">[".DataUtil::formatForDisplay(_PNFORUM_ADMINCATEDIT)."]</a>";
-        } elseif ($type=="forum") {
-            return "<a href=\"".DataUtil::formatForDisplay(pnModURL('pnForum', 'admin', 'forum', array('forum_id'=>(int)$id)))."\">[".DataUtil::formatForDisplay(_PNFORUM_ADMINFORUMEDIT)."]</a>";
+        if($params['type'] == 'category') {
+            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'category', array('cat_id'=>(int)$params['id']))) . '">[' . DataUtil::formatForDisplay(_DZK_ADMINCATEDIT) . ']</a>';
+        } elseif ($type=='forum') {
+            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'forum', array('forum_id'=>(int)$params['id']))) . '">['.DataUtil::formatForDisplay(_DZK_ADMINFORUMEDIT) . ']</a>';
         }
     }
     return;

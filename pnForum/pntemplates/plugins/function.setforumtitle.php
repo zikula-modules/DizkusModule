@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id: pnajax.php 815 2007-09-22 13:12:50Z landseer $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -26,7 +26,7 @@
  * @param        object      &$smarty     Reference to the Smarty object
  * @return       null
  *
- * This is a copy of Mark's settitle plugin renamed as setforumtitle to add some pnForum specific stuff  and to void conflicts
+ * This is a copy of Mark's settitle plugin renamed as setforumtitle to add some Dizkus specific stuff  and to void conflicts
  * with the original plugins as far as function names are concerned
  *
  */
@@ -37,6 +37,6 @@ function smarty_function_setforumtitle($params, &$smarty)
         return false;
     }
 
-    $GLOBALS['info']['title'] = strip_tags($params['title']);
+    PageUtil::setVar('title', strip_tags($params['title']));
 	return;
 }

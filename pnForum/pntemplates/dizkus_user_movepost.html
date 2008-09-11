@@ -1,0 +1,28 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file=dizkus_user_header.html ]-->
+
+<!--[* pndebug *]-->
+
+<fieldset id="dzk_movepost" class="dzk_bgcolor3 dzk_bordercolor2">
+    <legend>
+        <!--[ pnml name='_DZK_MOVEPOST' html=1 ]-->
+    </legend>
+    <form action="<!--[ pnmodurl modname=Dizkus type=user func=movepost ]-->" method="post">
+    <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
+    <input type="hidden" name="from_topic" value="<!--[ $post.topic_id ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <div >
+        <p>
+            <!--[ pnml name='_DZK_MOVEPOST_INFO' html=1 ]-->
+        </p>
+        <p>
+            <label for="to_topic"><!--[ pnml name='_DZK_MOVEPOST_TOTOPIC' html=1 ]--></label>
+            <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" /> (topic_id)
+            <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_MOVEPOST' ]-->"><!--[ pnml name='_DZK_MOVEPOST' ]--></button>
+        </p>
+    </div>
+    </form>
+</fieldset>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

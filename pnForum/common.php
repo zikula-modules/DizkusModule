@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /*
@@ -17,9 +17,9 @@
  * @param error_name string The name of the error.  auth_read,  auth_mod, someothertype, etc
  * @param error_id string The specific identifier for the error.  forum_id, cat_id, etc.  This will change depending on what error_type is set to.
  * @param default_msg string The message to display if a custom page can't be found
- * Example: getforumerror('auth_read', '2', 'category', _PNFORUM_NOAUTH_TOREAD);
+ * Example: getforumerror('auth_read', '2', 'category', _DZK_NOAUTH_TOREAD);
  *          This would look for the file:
- *          pnForum/pntemplates/errors/category/LANG/pnforum_error_auth_read_2.html
+ *          Dizkus/pntemplates/errors/category/LANG/dizkus_error_auth_read_2.html
  *          which would be the error message for someone who didn't have read
  *          access to the category with cat_id = 2;
  * The default is to look for a forum error, and if the forum doesn't have
@@ -27,7 +27,7 @@
  *
  * This is not limited strictly to forum and category errors though.  It can
  * easily be expanded in the future to accomodate any type by simply creating
- * the type folder: pnForum/pntemplates/errors/TYPE and placing the
+ * the type folder: Dizkus/pntemplates/errors/TYPE and placing the
  * type files in that directory.
  *
  * Language specific files should be placed in a language directory below the type directory.  The language directories follow the same naming convention as the pnlang subfolders.
@@ -43,26 +43,26 @@
  * 5) errors/type/generic
  *
  * Specific files should be named:
- * pnforum_error_TYPE_ID.html
+ * dizkus_error_TYPE_ID.html
  *
  * Generic files should be named:
- * pnforum_error_TYPE.html
+ * dizkus_error_TYPE.html
  *
  * Examples:
- * pnforum_error_auth_overview_2.html (Can see forum 2 or category 2 depending on whether this file is placed in the errors/forum or errors/category directory)
- * pnforum_error_auth_read.html (Generic file to use when a specific file isn't available
- * pnforum_error_auth_mod.html  (same as previous)
- * pnforum_error_auth_admin.html (same as previous)
+ * dizkus_error_auth_overview_2.html (Can see forum 2 or category 2 depending on whether this file is placed in the errors/forum or errors/category directory)
+ * dizkus_error_auth_read.html (Generic file to use when a specific file isn't available
+ * dizkus_error_auth_mod.html  (same as previous)
+ * dizkus_error_auth_admin.html (same as previous)
  *
  */
 function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
 {
-  $modinfo = pnModGetInfo(pnModGetIDFromName('pnForum'));
-//    $baseDir = realpath(pnModGetBaseDir('pnForum')) . '/pntemplates';
+  $modinfo = pnModGetInfo(pnModGetIDFromName('Dizkus'));
+//    $baseDir = realpath(pnModGetBaseDir('Dizkus')) . '/pntemplates';
     $baseDir = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
     $lang = pnUserGetLang();
     $error_path = 'errors/' . $error_type;
-    $prefix = 'pnforum_error_';
+    $prefix = 'dizkus_error_';
     $error_type = strtolower($error_type);
 
     // create the specific filename
@@ -73,7 +73,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
-    $pnr = pnRender::getInstance('pnForum', false);
+    $pnr = pnRender::getInstance('Dizkus', false);
 
     // start with a fresh array
     $test_array = array();
@@ -88,7 +88,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // if this is a forum check then we need to check the categories too
     // in case the forum specific ones don't exist
     if (($error_type == 'forum') && (is_numeric($error_id))) {
-        $cat_id = pnModAPIFunc('pnForum','user','get_forum_category', array('forum_id'=>$error_id));
+        $cat_id = pnModAPIFunc('Dizkus','user','get_forum_category', array('forum_id'=>$error_id));
         if ($cat_id) {
             // specific category and specific language
             array_push($test_array, 'errors/category/' . $lang . '/' . $prefix . $error_name . '_' . $cat_id . '.html');
@@ -127,14 +127,14 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
 {
     // we need to load the languages
     // available
-    pnModLangLoad('pnForum');
+    pnModLangLoad('Dizkus');
 
     $GLOBALS['info']['title'] = $error_text;
     if(SessionUtil::getVar('pn_ajax_call') == 'ajax') {
-        pnf_ajaxerror($error_text);
+        dzk_ajaxerror($error_text);
     }
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
     
@@ -143,11 +143,11 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
         header("HTTP/1.0 " . DataUtil::formatForDisplay($httperror));
     }
     
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         $pnr->assign( 'file', $file);
         $pnr->assign( 'line', $line);
     }
-    $output = $pnr->fetch('pnforum_errorpage.html');
+    $output = $pnr->fetch('dizkus_errorpage.html');
     if(preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
         // __FILE__ ends with api.php or is common.php or pninit.php
         Loader::includeOnce('header.php');
@@ -180,13 +180,13 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
         $message .= "Email: " . pnUserGetVar('email') . "\n";
         $message .= "error occured in " . $file . " at line " . $line . "\n";
 
-        $email_from = pnModGetVar('pnForum', 'email_from');
+        $email_from = pnModGetVar('Dizkus', 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use PN adminmail
             $email_from = pnConfigGetVar('adminmail');
         }
         $email_to = pnConfigGetVar('adminmail');
-        $subject = 'sql error in your pnForum';
+        $subject = 'sql error in your Dizkus';
         $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
 
         $args = array( 'fromname'    => pnConfigGetVar('sitename'),
@@ -198,7 +198,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
                        'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
         pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
     }
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
                                 code : $sql_errno <br />
@@ -212,9 +212,9 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
  * internal debug function
  *
  */
-function pnfdebug($name='', $data, $die = false)
+function dzkdebug($name='', $data, $die = false)
 {
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         $type = gettype($data);
         echo "\n<!-- begin debug of $name -->\n<div style=\"color: red;\">$name ($type";
         if(is_array($data)||is_object($data)) {
@@ -245,13 +245,13 @@ function pnfdebug($name='', $data, $die = false)
  * internal function
  *
  */
-function pnfsqldebug($sql)
+function dzksqldebug($sql)
 {
-    pnfdebug('sql', $sql);
+    dzkdebug('sql', $sql);
 }
 
 /**
- * pnfOpenDB
+ * dzkOpenDB
  * creates a dbconnection object and returns it to the calling function
  *
  *@params $table (string) name of the table you want to access, optional
@@ -265,9 +265,9 @@ function pnfsqldebug($sql)
  *@returns array  pntable array
  *        or false on error
  */
-function pnfOpenDB($tablename='')
+function dzkOpenDB($tablename='')
 {
-    pnModDBInfoLoad('pnForum');
+    pnModDBInfoLoad('Dizkus');
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
 
@@ -283,14 +283,14 @@ function pnfOpenDB($tablename='')
 }
 
 /**
- * pnfCloseDB
- * closes an db connection opened with pnfOpenDB
+ * dzkCloseDB
+ * closes an db connection opened with dzkOpenDB
  *
  *@params $resobj object as returned by $dbconn->Execute();
  *@returns nothing
  *
  */
-function pnfCloseDB($resobj)
+function dzkCloseDB($resobj)
 {
     if(is_object($resobj)) {
         $resobj->Close();
@@ -299,7 +299,7 @@ function pnfCloseDB($resobj)
 }
 
 /**
- * pnfExecuteSQL
+ * dzkExecuteSQL
  * executes an sql command and returns the result, shows error if necessary
  *
  *@params $dbconn object db onnection object
@@ -309,12 +309,12 @@ function pnfCloseDB($resobj)
  *@params $line   int    line in the calling file, important for error reorting
  *@returns object the result of $dbconn->Execute($sql)
  */
-function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false, $extendederror=true)
+function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false, $extendederror=true)
 {
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
         $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
@@ -323,7 +323,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
         if($extendederror == true) {
-            return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+            return showforumsqlerror(_DZK_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
         } else {
             return false;
         }
@@ -332,7 +332,7 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
 }
 
 /**
- * pnfAutoExecuteSQL
+ * dzkAutoExecuteSQL
  * executes an sql command and returns the result, shows error if necessary
  *
  *@params $dbconn object db onnection object
@@ -343,12 +343,12 @@ function pnfExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
  *@params $line   int    line in the calling file, important for error reorting
  *@returns boolean the result of $dbconn->AutoExecute()
  */
-function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FILE__, $line=__LINE__, $debug=false)
+function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FILE__, $line=__LINE__, $debug=false)
 {
     if(!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
 //        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
@@ -360,13 +360,13 @@ function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     $result = $dbconn->AutoExecute($table, $record, $mode, $where);
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT, $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
+        return showforumsqlerror(_DZK_ERROR_CONNECT, $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
 
 /**
- * pnfSelectLimit
+ * dzkSelectLimit
  * executes an sql command and returns a part of the result, shows error if necessary
  *
  *@params $dbconn object db onnection object
@@ -378,12 +378,12 @@ function pnfAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
  *@params $debug  bool   true if debug should be activated, default is false
  *@returns object the result of $dbconn->Execute($sql)
  */
-function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, $line=__LINE__, $debug=false)
+function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, $line=__LINE__, $debug=false)
 {
     if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
 //        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
@@ -396,7 +396,7 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     }
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_PNFORUM_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+        return showforumsqlerror(_DZK_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
@@ -409,8 +409,8 @@ function pnfSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
  *@returns boolean true or false
  *
  */
-if(!function_exists('pnForum_is_serialized')) {
-    function pnForum_is_serialized( $string ) {
+if(!function_exists('Dizkus_is_serialized')) {
+    function Dizkus_is_serialized( $string ) {
         return @unserialize($string)!=='';
         /*
         if( @unserialize( $string ) == '' ) {
@@ -434,7 +434,7 @@ if(!function_exists('pnForum_is_serialized')) {
  *
  */
 
-function pnForum_bbdecode($message)
+function Dizkus_bbdecode($message)
 {
     // Undo [code]
     $message = preg_replace("#<!-- BBCode Start --><TABLE BORDER=0 ALIGN=CENTER WIDTH=85%><TR><TD>Code:<HR></TD></TR><TR><TD><PRE>(.*?)</PRE></TD></TR><TR><TD><HR></TD></TR></TABLE><!-- BBCode End -->#s", "[code]\\1[/code]", $message);
@@ -489,7 +489,7 @@ function pnForum_bbdecode($message)
  *
  * obsolete function - we have pn_bbclick
  */
-function pnForum_undo_make_clickable($text)
+function Dizkus_undo_make_clickable($text)
 {
     $text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
     $text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
@@ -509,7 +509,7 @@ function phpbb_br2nl($str)
  */
 function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
+    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
 }
 
 /**
@@ -517,7 +517,7 @@ function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
  */
 function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
+    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
 }
 
 /**
@@ -525,7 +525,7 @@ function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
  */
 function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
+    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
 }
 
 /**
@@ -533,7 +533,7 @@ function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = nu
  */
 function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
+    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
 }
 
 /**
@@ -541,7 +541,7 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = n
  */
 function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return SecurityUtil::checkPermission('pnForum::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
+    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
 }
 
 /**
@@ -554,18 +554,18 @@ function cmp_catorder ($a, $b)
 }
 
 /**
- * pnForum_replacesignature
+ * Dizkus_replacesignature
  *
  */
-function pnForum_replacesignature($text, $signature='')
+function Dizkus_replacesignature($text, $signature='')
 {
-    $removesignature = pnModGetVar('pnForum', 'removesignature');
+    $removesignature = pnModGetVar('Dizkus', 'removesignature');
     if($removesignature == 'yes') {
         $signature = '';
     }
     if (!empty($signature)){
-        $sigstart = stripslashes(pnModGetVar('pnForum', 'signature_start'));
-        $sigend   = stripslashes(pnModGetVar('pnForum', 'signature_end'));
+        $sigstart = stripslashes(pnModGetVar('Dizkus', 'signature_start'));
+        $sigend   = stripslashes(pnModGetVar('Dizkus', 'signature_end'));
         $text = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $signature . $sigend, $text);
     } else {
         $text = eregi_replace("\[addsig]$", '', $text);
@@ -588,16 +588,16 @@ function mailcronecho($text, $debug)
 }
 
 /**
- * pnfVarPrepHTMLDisplay
+ * dzkVarPrepHTMLDisplay
  * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML()
  *
  */
-function pnfVarPrepHTMLDisplay($text)
+function dzkVarPrepHTMLDisplay($text)
 {
     // remove code tags
     $codecount1 = preg_match_all("/\[code(.*)\](.*)\[\/code\]/si", $text, $codes1);
     for($i=0; $i < $codecount1; $i++) {
-        $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " PNFORUMCODEREPLACEMENT{$i} ", $text, 1);
+        $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
     }
     
     // the real work
@@ -605,7 +605,7 @@ function pnfVarPrepHTMLDisplay($text)
     
     // re-insert code tags
     for ($i = 0; $i < $codecount1; $i++) {
-        $text = preg_replace("/ PNFORUMCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
+        $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
     }
     return $text;
 }
@@ -650,7 +650,7 @@ function useragent_is_bot()
 }
 
 /**
- * pnf_getimagepath
+ * dzk_getimagepath
  *
  * gets an path for a image - this is a copy of the pnimg logic
  *
@@ -660,7 +660,7 @@ function useragent_is_bot()
  *         ['size']   string 'width="xx" height="yy"' as delivered by getimagesize, may be empty
  * or false on error
  */
-function pnf_getimagepath($image=null)
+function dzk_getimagepath($image=null)
 {
     if(!isset($image)) {
         return false;
@@ -726,15 +726,15 @@ function pnf_getimagepath($image=null)
 }
 
 /**
- * pnfstriptags
+ * dzkstriptags
  * strip all thml tags outside of [code][/code]
  *
  *@params  $text     string the text
  *@returns string    the sanitized text
  */
-function pnfstriptags($text='')
+function dzkstriptags($text='')
 {
-    if(!empty($text) && (pnModGetVar('pnForum', 'striptags') == 'yes')) {
+    if(!empty($text) && (pnModGetVar('Dizkus', 'striptags') == 'yes')) {
         // save code tags
         $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
         for($i=0; $i < $codecount; $i++) {
@@ -782,11 +782,11 @@ if (!function_exists('array_csort')) {
 }
 
 /**
- * pnf_ajax_error
+ * dzk_ajaxerror
  *
  * display an error during Ajax execution
  */
-function pnf_ajaxerror($error='unspecified ajax error')
+function dzk_ajaxerror($error='unspecified ajax error')
 {
     if(!empty($error)) {
         SessionUtil::delVar('pn_ajax_call');
@@ -805,9 +805,9 @@ function pnf_ajaxerror($error='unspecified ajax error')
  * will be overwritten!
  *
  */
-function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
+function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
 {
-    Loader::includeOnce('modules/pnForum/pnincludes/JSON.php');
+    Loader::includeOnce('modules/Dizkus/pnincludes/JSON.php');
     $json = new Services_JSON();
     if(!is_array($args)) {
         $data = array('data' => $args);
@@ -815,7 +815,7 @@ function pnf_jsonizeoutput($args, $createauthid = false, $xjsonheader = false)
         $data = $args;
     }
     if($createauthid == true) {
-        $data['authid'] = SecurityUtil::generateAuthKey('pnForum');
+        $data['authid'] = SecurityUtil::generateAuthKey('Dizkus');
     }
     $output = $json->encode(DataUtil::convertToUTF8($data));
 
@@ -841,19 +841,19 @@ function cmp_userorder ($a, $b)
 }
 
 /**
- * pnf_blacklist()
+ * dzk_blacklist()
  * blacklist the users ip address if considered a spammer
  *
  */
-function pnf_blacklist()
+function dzk_blacklist()
 {
     $pntemp = pnConfigGetVar('temp');
-    $blacklistfile = $pntemp . '/pnForum_spammer.txt';
+    $blacklistfile = $pntemp . '/Dizkus_spammer.txt';
 
 
     $fh = fopen($blacklistfile, 'a');
     if($fh) {
-        $ip = pnf_getip();
+        $ip = dzk_getip();
         $line = implode(',', array(strftime('%Y-%m-%d %H:%M'),
                                    $ip,
                                    pnServerGetVar('REQUEST_METHOD'),
@@ -873,7 +873,7 @@ function pnf_blacklist()
  * @author       Thomas Zeithaml <info@spider-trap.de>
  * @copyright    (c) 2005-2006 Spider-Trap Team
  */
-function pnf_validip($ip) 
+function dzk_validip($ip) 
 {
    if (!empty($ip) && ip2long($ip)!=-1) {
        $reserved_ips = array (
@@ -905,23 +905,23 @@ function pnf_validip($ip)
  * @author       Thomas Zeithaml <info@spider-trap.de>
  * @copyright    (c) 2005-2006 Spider-Trap Team
  */
-function pnf_getip()
+function dzk_getip()
 {
-   if (pnf_validip(pnServerGetVar("HTTP_CLIENT_IP"))) {
+   if (dzk_validip(pnServerGetVar("HTTP_CLIENT_IP"))) {
        return pnServerGetVar("HTTP_CLIENT_IP");
    }
    foreach (explode(",",pnServerGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
-       if (pnf_validip(trim($ip))) {
+       if (dzk_validip(trim($ip))) {
            return $ip;
        }
    }
-   if (pnf_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
+   if (dzk_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
        return pnServerGetVar("HTTP_X_FORWARDED");
-   } elseif (pnf_validip(pnServerGetVar("HTTP_FORWARDED_FOR"))) {
+   } elseif (dzk_validip(pnServerGetVar("HTTP_FORWARDED_FOR"))) {
        return pnServerGetVar("HTTP_FORWARDED_FOR");
-   } elseif (pnf_validip(pnServerGetVar("HTTP_FORWARDED"))) {
+   } elseif (dzk_validip(pnServerGetVar("HTTP_FORWARDED"))) {
        return pnServerGetVar("HTTP_FORWARDED");
-   } elseif (pnf_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
+   } elseif (dzk_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
        return pnServerGetVar("HTTP_X_FORWARDED");
    } else {
        return pnServerGetVar("REMOTE_ADDR");
@@ -929,14 +929,14 @@ function pnf_getip()
 }
 
 /**
- * pnf_str2time
+ * dzk_str2time
  * as found on http://de3.php.net/manual/de/function.mktime.php
  * comment dated July 9th 2006, nicky
  *
  * THe only change is to set the default value for strPattern to the format we use in the database
  *
  */
-function pnf_str2time($strStr, $strPattern = 'Y-m-d H:i')
+function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
 {
    // an array of the valide date characters, see: http://php.net/date#AEN21898
    $arrCharacters = array(
@@ -996,19 +996,19 @@ function pnf_str2time($strStr, $strPattern = 'Y-m-d H:i')
 }
 
 /**
- * pnf_available
- * check if pnForum is available or not
+ * dzk_available
+ * check if Dizkus is available or not
  *
  *@params deliverhtml     boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
  *return html or boolean
  *
  */
-function pnf_available($deliverhtml = true)
+function dzk_available($deliverhtml = true)
 {
-    if((pnModGetVar('pnForum', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
+    if((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if($deliverhtml == true) {
-            $pnr = pnRender::getInstance('pnForum', true, 'pnforum_disabled', true);
-            return $pnf->fetch('pnforum_disabled.html');
+            $pnr = pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
+            return $pnf->fetch('dizkus_disabled.html');
         } else {
             return false;
         }

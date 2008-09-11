@@ -4,10 +4,10 @@
  * to be placed in the Zikula root
  * @version $Id$
  * @author Andreas Krapohl, Frank Schummertz, Arjen Tebbenhof [short urls]
- * @copyright 2005 by pnForum Team
- * @package pnForum
+ * @copyright 2005 by Dizkus Team
+ * @package Dizkus
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
- * @link http://www.pnforum.de
+ * @link http://www.dizkus.com
  */
 
 /**
@@ -17,9 +17,9 @@ include 'includes/pnAPI.php';
 pnInit();
 
 /**
- * load pnForum specific support functions
+ * load Dizkus specific support functions
  */
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 $forum_id =      FormUtil::getPassedValue('forum_id', null, 'GET');
 $cat_id   =      FormUtil::getPassedValue('cat_id', null, 'GET');
@@ -34,7 +34,7 @@ $user     =      FormUtil::getPassedValue('user', '', 'GET');
 
 // get the module info
 $baseurl = pnGetBaseURL();
-$pnfinfo = pnModGetInfo(pnModGetIdFromName('pnForum'));
+$pnfinfo = pnModGetInfo(pnModGetIdFromName('Dizkus'));
 $pnfname = $pnfinfo['displayname'];
 
 /**
@@ -59,12 +59,12 @@ if(isset($cat_id) && !is_numeric($cat_id)) {
 /**
  * create pnRender object
  */
-$pnr = pnRender::getInstance('pnForum', false);
+$pnr = pnRender::getInstance('Dizkus', false);
 
 /**
  * check if template for feed exists
  */
-$templatefile = 'pnforum_feed_' . DataUtil::formatForOS($feed) . '.html';
+$templatefile = 'dizkus_feed_' . DataUtil::formatForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
     die('no template for ' . DataUtil::formatForDisplay($feed));
@@ -81,7 +81,7 @@ if(!empty($user)) {
  * set some defaults
  */
 // form the url
-$link = $baseurl.pnModURL('pnForum', 'user', 'main');
+$link = $baseurl.pnModURL('Dizkus', 'user', 'main');
 
 $forumname = DataUtil::formatForDisplay($pnfname);
 // default where clause => no where clause
@@ -91,26 +91,26 @@ $where = '';
  * check for forum_id
  */
 if(!empty($forum_id)) {
-    $forum = pnModAPIFunc('pnForum', 'user', 'readuserforums',
+    $forum = pnModAPIFunc('Dizkus', 'user', 'readuserforums',
                           array('forum_id' => $forum_id));
     if(count($forum) == 0) {
         // not allowed to see forum
         pnShutDown();
     }
     $where = "AND t.forum_id = '" . (int)DataUtil::formatForStore($forum_id) . "' ";
-    $link = $baseurl.pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id));
+    $link = $baseurl.pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
-    if(!SecurityUtil::checkPermission('pnForum::', $cat_id . ':.*:', ACCESS_READ)) {
+    if(!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
         pnShutDown();
     }
-    $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+    $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                              array('cat_id' => $cat_id));
     if($category == false) {
         pnShutDown();
     }
     $where = "AND f.cat_id = '" . (int)DataUtil::formatForStore($cat_id) . "' ";
-    $link = $baseurl.pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id));
+    $link = $baseurl.pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id));
     $forumname = $category['cat_title'];
 
 } elseif (isset($uid) && ($uid<>false)) {
@@ -126,8 +126,8 @@ $pnr->assign('adminmail', pnConfigGetVar('adminmail'));
  * get database information
  */
 
-pnModDBInfoLoad('pnForum');
-list($dbconn, $pntable) = pnfOpenDB();
+pnModDBInfoLoad('Dizkus');
+list($dbconn, $pntable) = dzkOpenDB();
 
 /**
  * SQL statement to fetch last 10 topics
@@ -142,24 +142,24 @@ $sql = "SELECT t.topic_id,
                p.post_time,
                c.cat_id,
                c.cat_title
-        FROM ".$pntable['pnforum_topics']." as t,
-             ".$pntable['pnforum_forums']." as f,
-             ".$pntable['pnforum_posts']." as p,
-             ".$pntable['pnforum_categories']." as c
+        FROM ".$pntable['dizkus_topics']." as t,
+             ".$pntable['dizkus_forums']." as f,
+             ".$pntable['dizkus_posts']." as p,
+             ".$pntable['dizkus_categories']." as c
         WHERE t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id
               $where
         ORDER BY p.post_time DESC
         LIMIT 100";
-$result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+$result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 $result_postmax = $result->PO_RecordCount();
 
 if ($result_postmax <= $count) {
     $count = $result_postmax;
 }
 $shown_results=0;
-$posts_per_page  = pnModGetVar('pnForum', 'posts_per_page');
+$posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
 $posts = array();
 
 while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $forum_id, $forum_name, $poster_id, $post_time, $cat_id, $cat_title) = $result->FetchRow())
@@ -179,7 +179,7 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
         $post['cat_title']          = $cat_title;
         $shown_results++;
         $start = ((ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page);
-        $post['post_url'] = $baseurl.pnModURL('pnForum', 'user', 'viewtopic',
+        $post['post_url'] = $baseurl.pnModURL('Dizkus', 'user', 'viewtopic',
                                               array('topic' => $topic_id,
                                                     'start' => $start));
 
@@ -189,7 +189,7 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
     }
 }
 
-pnfCloseDB($result);
+dzkCloseDB($result);
 $pnr->assign('posts', $posts);
 $pnr->assign('now', time());
 

@@ -1,34 +1,34 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * init
  *
  */
-function pnForum_centerblock_init()
+function Dizkus_centerblock_init()
 {
-    pnSecAddSchema('pnForum_Centerblock::', 'Block title::');
+    SecurityUtil::registerPermissionSchema'Dizkus_Centerblock::', 'Block title::');
 }
 
 /**
  * info
  *
  */
-function pnForum_centerblock_info()
+function Dizkus_centerblock_info()
 {
-    return array( 'module' => 'pnForum',
-                  'text_type' => 'pnForum_centerblock',
-                  'text_type_long' => 'pnForum Centerblock',
+    return array( 'module' => 'Dizkus',
+                  'text_type' => 'Dizkus_centerblock',
+                  'text_type_long' => 'Dizkus Centerblock',
                   'allow_multiple' => true,
                   'form_content' => false,
                   'form_refresh' => false,
@@ -38,38 +38,38 @@ function pnForum_centerblock_info()
 /**
  * display the center block
  */
-function pnForum_centerblock_display($row)
+function Dizkus_centerblock_display($row)
 {
-    if(!pnModAvailable('pnForum')) {
+    if(!pnModAvailable('Dizkus')) {
         return;
     }
 
     //check for Permission
-	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', $row['title'] . '::', ACCESS_READ)){
+	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_READ)){
 	    return;
 	}
 
-    pnModLangLoad('pnForum', 'common');
+    pnModLangLoad('Dizkus', 'common');
     // check if forum is turned off
-    $disabled = pnf_available();
+    $disabled = dzk_available();
     if(!is_bool($disabled)) {
         $row['content'] = $disabled;
 	    return themesideblock($row);
     }
 
     // return immediately if no post exist
-    if(pnModAPIFunc('pnForum', 'user', 'boardstats', array('type' => 'all'))==0) {
+    if(pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'all'))==0) {
         return;
     }
 
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
 
     // check if cb_template is set, if not, use the default centerblock template
     if(empty($vars['cb_template'])) {
-        $vars['cb_template'] = "pnforum_centerblock_display.html";
+        $vars['cb_template'] = "dizkus_centerblock_display.html";
     }
     if(empty($vars['cb_parameters'])) {
         $vars['cb_parameters'] = "maxposts=5";
@@ -90,13 +90,13 @@ function pnForum_centerblock_display($row)
 /**
  * Update the block
  */
-function pnForum_centerblock_update($row)
+function Dizkus_centerblock_update($row)
 {
-	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
 	    return false;
 	}
 	
-	$cb_template   = FormUtil::getPassedValue('cb_template', 'pnforum_centerblock_display.html', 'POST');
+	$cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
 	$cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
 
     $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
@@ -107,9 +107,9 @@ function pnForum_centerblock_update($row)
 /**
  * Modify the block
  */
-function pnForum_centerblock_modify($row)
+function Dizkus_centerblock_modify($row)
 {
-	if (!SecurityUtil::checkPermission('pnForum_Centerblock::', $row['title'] . '::', ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_ADMIN)) {
 	    return false;
 	}
 
@@ -117,9 +117,9 @@ function pnForum_centerblock_modify($row)
     $vars = pnBlockVarsFromContent($row['content']);
 
     if(!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
-    if(!isset($vars['cb_template']) || empty($vars['cb_template']))   { $vars['cb_template']   = 'pnforum_centerblock_display.html'; }
+    if(!isset($vars['cb_template']) || empty($vars['cb_template']))   { $vars['cb_template']   = 'dizkus_centerblock_display.html'; }
 
-    $pnRender = pnRender::getInstance('pnForum', false, null, true);
+    $pnRender = pnRender::getInstance('Dizkus', false, null, true);
     $pnRender->assign('vars', $vars);
-    return $pnRender->fetch('pnforum_centerblock_config.html');
+    return $pnRender->fetch('dizkus_centerblock_config.html');
 }

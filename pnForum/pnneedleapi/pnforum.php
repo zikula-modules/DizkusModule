@@ -1,22 +1,22 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id: pnuser.php 804 2007-09-14 18:00:46Z landseer $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
- * pnforum needle
+ * Dizkus needle
  * @param $args['nid'] needle id
  * @return array()
  */
-function pnForum_needleapi_pnforum($args)
+function Dizkus_needleapi_pnforum($args)
 {
     // Get arguments from argument array
     $nid = $args['nid'];
@@ -33,7 +33,7 @@ function pnForum_needleapi_pnforum($args)
             // not in cache array
             // set the default
             $cache[$nid] = $result;
-            if(pnModAvailable('pnForum')) {
+            if(pnModAvailable('Dizkus')) {
                 
                 // nid is like F_## or T_##
                 $temp = explode('-', $nid);
@@ -43,14 +43,14 @@ function pnForum_needleapi_pnforum($args)
                     $id   = $temp[1];
                 }
                 
-                pnModDBInfoLoad('pnForum');
+                pnModDBInfoLoad('Dizkus');
                 $dbconn =& pnDBGetConn(true);
                 $pntable =& pnDBGetTables();
         
                 switch($type) {
                     case 'F':
-                        $tblforums = $pntable['pnforum_forums'];
-                        $colforums = $pntable['pnforum_forums_column'];
+                        $tblforums = $pntable['dizkus_forums'];
+                        $colforums = $pntable['dizkus_forums_column'];
                         
                         $sql = 'SELECT ' . $colforums['forum_name'] . ',
                                        ' . $colforums['cat_id'] . '
@@ -60,21 +60,21 @@ function pnForum_needleapi_pnforum($args)
                         if($dbconn->ErrorNo()==0 && !$res->EOF) {
                             list($title, $cat_id) = $res->fields;
                             if(allowedtoreadcategoryandforum($cat_id, $id)) {
-                                $url   = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewforum', array('forum' => $id)));
+                                $url   = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $id)));
                                 $title = DataUtil::formatForDisplay($title);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_NOAUTHFORFORUM . ' (' . $id . ')') . '</em>';
+                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_NOAUTHFORFORUM . ' (' . $id . ')') . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_UNKNOWNFORUM . ' (' . $id . ')') . '</em>';
+                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_UNKNOWNFORUM . ' (' . $id . ')') . '</em>';
                         }
                         break;
                     case 'T':
-                        $tbltopics = $pntable['pnforum_topics'];
-                        $coltopics = $pntable['pnforum_topics_column'];
-                        $tblforums = $pntable['pnforum_forums'];
-                        $colforums = $pntable['pnforum_forums_column'];
+                        $tbltopics = $pntable['dizkus_topics'];
+                        $coltopics = $pntable['dizkus_topics_column'];
+                        $tblforums = $pntable['dizkus_forums'];
+                        $colforums = $pntable['dizkus_forums_column'];
                         
                         $sql = 'SELECT    ' . $coltopics['topic_title'] . ',
                                           ' . $coltopics['forum_id'] . ',
@@ -87,26 +87,26 @@ function pnForum_needleapi_pnforum($args)
                         if($dbconn->ErrorNo()==0 && !$result->EOF) {
                             list($title, $forum_id, $cat_id) = $res->fields;
                             if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-                                $url   = DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'viewtopic', array('topic' => $id)));
+                                $url   = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
                                 $title = DataUtil::formatForDisplay($title);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_NOAUTHFORTOPIC . ' (' . $id . ')') . '</em>';
+                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_NOAUTHFORTOPIC . ' (' . $id . ')') . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_UNKNOWNTOPIC . ' (' . $id . ')') . '</em>';
+                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_UNKNOWNTOPIC . ' (' . $id . ')') . '</em>';
                         }
                         break;
                     default:
-                        $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_UNKNOWNTYPE) . '</em>';
+                        $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_UNKNOWNTYPE) . '</em>';
                 }
             } else {
-                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_NOTAVAILABLE) . '</em>';
+                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_NOTAVAILABLE) . '</em>';
             }    
         }
         $result = $cache[$nid];
     } else {
-        $result = '<em>' . DataUtil::formatForDisplay(_PNFORUM_NEEDLE_NONEEDLEID) . '</em>';
+        $result = '<em>' . DataUtil::formatForDisplay(_DZK_NEEDLE_NONEEDLEID) . '</em>';
     }
     return $result;
     

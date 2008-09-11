@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -19,24 +19,21 @@
  */
 function smarty_function_addtopic_button($params, &$smarty)
 {
-    extract($params);
-	unset($params);
-
     // set a default value
-    if(!isset($image) || empty($image)) {
-        $image = 'post.gif';
+    if(!isset($params['image']) || empty($params['image'])) {
+        $params['image'] = 'post.gif';
     }
 
-    Loader::includeOnce('modules/pnForum/common.php');
+    Loader::includeOnce('modules/Dizkus/common.php');
     $out = "";
-    if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        $imagedata = pnf_getimagepath($image);
+    if(allowedtowritetocategoryandforum($params['cat_id'], $params['forum_id'])) {
+        $imagedata = dzk_getimagepath($params['image']);
         if($imagedata == false) {
-            $show = DataUtil::formatForDisplay(_PNFORUM_NEWTOPIC);
+            $show = DataUtil::formatForDisplay(_DZK_NEWTOPIC);
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_NEWTOPIC) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_NEWTOPIC) .'" ' . $imagedata['size'] . ' />';
         }
-        $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_NEWTOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'newtopic', array('forum'=>$forum_id))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(_DZK_NEWTOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'newtopic', array('forum'=> $params['forum_id']))) . '">' . $show . '</a>';
 	}
     return $out;
 }

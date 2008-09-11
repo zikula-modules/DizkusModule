@@ -1,0 +1,66 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_admin_header.html' ]-->
+
+<fieldset>
+    <legend>
+        <!--[ pnml name='_DZK_ADMINHONORARYASSIGN' ]-->
+    </legend>
+
+    <div class="content">
+    <p>
+        <!--[ pnml name='_DZK_ADMINHONORARYASSIGN_INFO' html=1 ]-->
+    </p>
+
+    <div class="rankuser-alphanav">
+        [<!--[pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="*;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"]-->&nbsp;]
+    </div>
+
+    <!--[* Yes, it's a table, we are dealing with tabular data so a table is correct here *]-->
+    <form action="<!--[ pnmodurl modname=Dizkus type=admin func=assignranks ]-->" method="post">
+    <div>
+    <table cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+            <th class="leftcell dzk_bordercolor2">
+               <strong><!--[ pnml name='_DZK_USERNAME' ]--></strong>
+            </th>
+            <th class="midcell dzk_bordercolor2">
+                <!--[ pnml name='_DZK_NORANK' ]-->
+            </th>
+            <!--[ foreach name=ranks item=rank from=$ranks  ]-->
+            <th class="<!--[if !$smarty.foreach.ranks.last]-->midcell<!--[ else ]-->rightcell<!--[ /if ]--> dzk_bordercolor2">
+                <img src="<!--[ $pncore.Dizkus.url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" alt="<!--[ $rank.rank_image ]-->" title="<!--[ $rank.rank_title ]-->" /><br />
+                <!--[ $rank.rank_title ]-->
+            </th>
+            <!--[ /foreach ]-->
+        </tr>
+        </thead>
+        <tbody>
+        <!--[ foreach item=user from=$allusers ]-->
+        <tr>
+            <td>
+                <!--[$user.uname|userprofilelink]-->
+            </td>
+            <td class="center">
+                <input type="radio" name="setrank[<!--[ $user.uid ]-->]" value="0" <!--[ if $user.rank_id eq 0 ]-->checked="checked"<!--[ /if ]--> />
+            </td>
+            <!--[ foreach item=rank from=$ranks ]-->
+            <td class="center">
+                <input type="radio" name="setrank[<!--[ $user.uid ]-->]" value="<!--[ $rank.rank_id ]-->" <!--[ if $user.rank_id eq $rank.rank_id ]-->checked="checked"<!--[ /if ]--> />
+            </td>
+            <!--[ /foreach ]-->
+        </tr>
+        <!--[ /foreach ]--> 
+        </tbody>   
+    </table>
+    <p>
+        <input type="hidden" name="lastletter" value="<!--[ $letter ]-->" />
+        <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
+    </p>
+    </div>
+    </form>
+    </div>
+</fieldset>
+
+<!--[ include file='dizkus_admin_footer.html' ]-->

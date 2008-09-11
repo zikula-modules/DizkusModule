@@ -1,26 +1,26 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /*
  * param: objectid
  */
 
-function pnForum_commentsapi_News($args)
+function Dizkus_commentsapi_News($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = pnfOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
     $pnstoriestable = $pntable['stories'];
     $pnstoriescolumn = $pntable['stories_column'];
     $pntopicstable = $pntable['topics'];
@@ -37,7 +37,7 @@ function pnForum_commentsapi_News($args)
             FROM   $pnstoriestable
             LEFT JOIN $pntopicstable ON $pnstoriescolumn[topic]=$pntopicscolumn[topicid]
             WHERE $pnstoriescolumn[sid] ='" . DataUtil::formatForStore($objectid) . "'";
-    $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     //echo $sql;
     //exit;
 
@@ -50,7 +50,7 @@ function pnForum_commentsapi_News($args)
              $authorid,
              $format_type,
              $topicname) = $result->fields;
-        pnfCloseDB($result);
+        dzkCloseDB($result);
     } else {
         return false;
     }
@@ -61,9 +61,9 @@ function pnForum_commentsapi_News($args)
     $link  = pnGetBaseURL() . 'index.php?name=News&file=article&sid=' . $objectid;
     $title = ($topicname<>'' ? $topicname.' - '.$title : $title);
 
-    if(pnModIsHooked('pn_bbcode', 'pnForum')) {
+    if(pnModIsHooked('bbcode', 'Dizkus')) {
         $notes = '[i]' . $notes . '[/i]';
-        $link  = '[url=' . $link . ']' . _PNFORUM_BACKTOSUBMISSION . '[/url]';
+        $link  = '[url=' . $link . ']' . _DZK_BACKTOSUBMISSION . '[/url]';
     }
 
     $totaltext = $hometext . "\n\n" . $bodytext . "\n\n" . $notes . "\n\n" . $link . "\n\n";

@@ -1,12 +1,12 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
 /**
@@ -32,28 +32,28 @@ function smarty_function_favoriteforum_button($params, &$smarty)
     }
 
     $out = '';
-    if (pnUserLoggedIn() && (pnModGetVar('pnForum', 'favorites_enabled')=='yes') ) {
-        Loader::includeOnce('modules/pnForum/common.php');
+    if (pnUserLoggedIn() && (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') ) {
+        Loader::includeOnce('modules/Dizkus/common.php');
         $userid = pnUserGetVar('uid');
         if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            if(pnModAPIFunc('pnForum', 'user', 'get_forum_favorites_status',
+            if(pnModAPIFunc('Dizkus', 'user', 'get_forum_favorites_status',
                             array('userid'=>$userid,
                                   'forum_id'=>$forum_id))==false) {
-                $imagedata = pnf_getimagepath($image_addfavorite);
+                $imagedata = dzk_getimagepath($image_addfavorite);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_PNFORUM_ADD_FAVORITE_FORUM);
+                    $show = DataUtil::formatForDisplay(_DZK_ADD_FAVORITE_FORUM);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_ADD_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_ADD_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_ADD_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_ADD_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
-                $imagedata = pnf_getimagepath($image_remfavorite);
+                $imagedata = dzk_getimagepath($image_remfavorite);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM);
+                    $show = DataUtil::formatForDisplay(_DZK_REMOVE_FAVORITE_FORUM);
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_REMOVE_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_PNFORUM_REMOVE_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('pnForum', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_REMOVE_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             }
         }
     }

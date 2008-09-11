@@ -1,0 +1,89 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<fieldset id="dzk_search" class="dzk_bgcolor3 dzk_bordercolor2">
+    <legend>
+        <!--[ pnml name='_DZK_SEARCH' ]-->
+    </legend>
+
+    <form action="<!--[ pnmodurl modname=Dizkus type=user func=search ]-->" method="post">
+    
+    <div>
+        <dl>
+            <dt>
+                <label for="searchfor"><!--[ pnml name='_DZK_SEARCHFOR' ]-->:</label>
+            </dt>
+            <dd>
+                <input type="text" name="q" id="searchfor" size="20" maxlength="255" value="" tabindex="0" />
+                <button class="image search" type="submit" name="submit" value="<!--[ pnml name='_SEARCH' ]-->"><!--[ pnml name='_SEARCH' ]--></button>
+            </dd>
+
+            <dt>
+                <label for="searchbool"><!--[ pnml name='_DZK_SEARCHBOOL' ]-->:</label>
+            </dt>
+            <dd>
+                <select name="bool" size="1" id="searchbool">
+                <option value="AND" selected="selected"><!--[ pnml name='_DZK_SEARCHAND' ]--></option>
+                <option value="OR"><!--[ pnml name='_DZK_SEARCHOR' ]--></option>
+                </select>
+            </dd>
+
+            <dt>
+                <label for="searchforums"><!--[ pnml name='_DZK_SEARCHINCLUDE_FORUM' ]-->:</label>
+            </dt>
+            <dd>
+                <select name="Dizkus_forum[]" id="searchforums" size="5" multiple="multiple">
+                <option value="-1" selected="selected"><!--[ pnml name='_DZK_SEARCHALLFORUMS' ]--></option>
+                <!--[ foreach item=forum from=$forums ]-->
+                <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+            </dd>
+
+            <dt>
+                <label for="searchauthor"><!--[ pnml name='_DZK_SEARCHINCLUDE_AUTHOR' ]-->:</label>
+            </dt>
+            <dd>
+                <input type="text" name="Dizkus_author" id="searchauthor" size="20" maxlength="255" />
+            </dd>
+
+            <dt>
+                <label for="searchorder"><!--[ pnml name='_DZK_SEARCHINCLUDE_ORDER' ]-->:</label>
+            </dt>
+            <dd>
+                <select name="Dizkus_order[]" id="searchorder" size="1">
+                <option value="1" selected="selected"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYDATE' ]--></option>
+                <option value="2"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYTITLE' ]--></option>
+                <option value="3"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYFORUM' ]--></option>
+                <!--[ if $pncore.Dizkus.fulltextindex == 1 ]-->
+                <option value="4"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYSCORE' ]--></option>
+                <!--[ /if ]-->
+                </select>
+            </dd>
+
+            <dt>
+                <label for="searchlimit"><!--[ pnml name='_DZK_SEARCHINCLUDE_LIMIT' ]-->:</label>
+            </dt>
+            <dd>
+                <select name="Dizkus_limit" id="searchlimit" size="1">
+                <option value="0"><!--[ pnml name='_DZK_SEARCHINCLUDE_NOLIMIT' ]--></option>
+                <option value="10" selected="selected">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                </select>
+                <!--[ pnml name='_DZK_SEARCHINCLUDE_HITS' ]-->
+            </dd>
+
+        </dl>    
+    
+        <input name="internalsearch" type="hidden" value="1" />
+        <input name="active_Dizkus" type="hidden" value="1" />
+    
+    </div>
+    
+    </form>
+
+</fieldset>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

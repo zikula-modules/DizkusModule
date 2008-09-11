@@ -1,36 +1,36 @@
 <?php
 /**
- * pnForum
+ * Dizkus
  *
- * @copyright (c) 2001-now, pnForum Development Team
- * @link http://www.pnforum.de
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
  * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package pnForum
+ * @package Dizkus
  */
 
-Loader::includeOnce('modules/pnForum/common.php');
+Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * the main administration function
  *
  */
-function pnForum_admin_main()
+function Dizkus_admin_main()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
-    return $pnr->fetch("pnforum_admin_main.html");
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    return $pnr->fetch("dizkus_admin_main.html");
 }
 
 /**
  * preferences
  *
  */
-function pnForum_admin_preferences()
+function Dizkus_admin_preferences()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
 
@@ -38,63 +38,63 @@ function pnForum_admin_preferences()
 
     if(!$submit) {
         $checked = "checked=\"checked\" ";
-        if (pnModGetVar('pnForum', 'post_sort_order') == "ASC") {
+        if (pnModGetVar('Dizkus', 'post_sort_order') == "ASC") {
         	$post_sort_order_ascchecked  = $checked;
         	$post_sort_order_descchecked = " ";
         } else {
         	$post_sort_order_ascchecked  = "";
         	$post_sort_order_descchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'log_ip') == "yes") {
+        if (pnModGetVar('Dizkus', 'log_ip') == "yes") {
         	$logiponchecked = $checked;
         	$logipoffchecked = " ";
         } else {
         	$logiponchecked = " ";
         	$logipoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'slimforum') == "yes") {
+        if (pnModGetVar('Dizkus', 'slimforum') == "yes") {
         	$slimforumonchecked = $checked;
         	$slimforumoffchecked = " ";
         } else {
         	$slimforumonchecked = " ";
         	$slimforumoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'autosubscribe') == "yes") {
+        if (pnModGetVar('Dizkus', 'autosubscribe') == "yes") {
         	$autosubscribeonchecked = $checked;
         	$autosubscribeoffchecked = " ";
         } else {
         	$autosubscribeonchecked = " ";
         	$autosubscribeoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'm2f_enabled') == "yes") {
+        if (pnModGetVar('Dizkus', 'm2f_enabled') == "yes") {
         	$m2f_enabledonchecked = $checked;
         	$m2f_enabledoffchecked = " ";
         } else {
         	$m2f_enabledonchecked = " ";
         	$m2f_enabledoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'favorites_enabled') == "yes") {
+        if (pnModGetVar('Dizkus', 'favorites_enabled') == "yes") {
         	$favorites_enabledonchecked = $checked;
         	$favorites_enabledoffchecked = " ";
         } else {
         	$favorites_enabledonchecked = " ";
         	$favorites_enabledoffchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'hideusers') == "yes") {
+        if (pnModGetVar('Dizkus', 'hideusers') == "yes") {
         	$hideusers_onchecked = $checked;
         	$hideusers_offchecked = " ";
         } else {
         	$hideusers_onchecked = " ";
         	$hideusers_offchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'removesignature') == "yes") {
+        if (pnModGetVar('Dizkus', 'removesignature') == "yes") {
         	$removesignature_onchecked = $checked;
         	$removesignature_offchecked = " ";
         } else {
         	$removesignature_onchecked = " ";
         	$removesignature_offchecked = $checked;
         }
-        if (pnModGetVar('pnForum', 'striptags') == "yes") {
+        if (pnModGetVar('Dizkus', 'striptags') == "yes") {
         	$striptags_onchecked = $checked;
         	$striptags_offchecked = " ";
         } else {
@@ -102,7 +102,7 @@ function pnForum_admin_preferences()
         	$striptags_offchecked = $checked;
         }
 
-        if (pnModGetVar('pnForum', 'deletehookaction') == 'lock') {
+        if (pnModGetVar('Dizkus', 'deletehookaction') == 'lock') {
         	$deletehookaction_lock = $checked;
         	$deletehookaction_remove  = ' ';
         } else {
@@ -110,7 +110,7 @@ function pnForum_admin_preferences()
         	$deletehookaction_remove  = $checked;
         }
 
-        if (pnModGetVar('pnForum', 'rss2f_enabled') == "yes") {
+        if (pnModGetVar('Dizkus', 'rss2f_enabled') == "yes") {
         	$rss2f_enabledonchecked = $checked;
         	$rss2f_enabledoffchecked = " ";
         } else {
@@ -118,7 +118,7 @@ function pnForum_admin_preferences()
         	$rss2f_enabledoffchecked = $checked;
         }
 
-        if (pnModGetVar('pnForum', 'newtopicconfirmation') == "yes") {
+        if (pnModGetVar('Dizkus', 'newtopicconfirmation') == "yes") {
         	$newtopicconf_onchecked = $checked;
         	$newtopicconf_offchecked = " ";
         } else {
@@ -126,7 +126,7 @@ function pnForum_admin_preferences()
         	$newtopicconf_offchecked = $checked;
         }
 
-        if (pnModGetVar('pnForum', 'forum_enabled') == "yes") {
+        if (pnModGetVar('Dizkus', 'forum_enabled') == "yes") {
         	$forumenabled_onchecked = $checked;
         	$forumenabled_offchecked = " ";
         } else {
@@ -134,10 +134,10 @@ function pnForum_admin_preferences()
         	$forumenabled_offchecked = $checked;
         }
 
-        $pnr = pnRender::getInstance('pnForum', false, null, true);
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('autosubscribe', $autosubscribechecked);
-        $pnr->assign('signature_start', stripslashes(pnModGetVar('pnForum', 'signature_start')));
-        $pnr->assign('signature_end', stripslashes(pnModGetVar('pnForum', 'signature_end')));
+        $pnr->assign('signature_start', stripslashes(pnModGetVar('Dizkus', 'signature_start')));
+        $pnr->assign('signature_end', stripslashes(pnModGetVar('Dizkus', 'signature_end')));
         $pnr->assign('post_sort_order_ascchecked', $post_sort_order_ascchecked);
         $pnr->assign('post_sort_order_descchecked', $post_sort_order_descchecked);
         $pnr->assign('logiponchecked', $logiponchecked);
@@ -164,174 +164,174 @@ function pnForum_admin_preferences()
         $pnr->assign('newtopicconf_offchecked', $newtopicconf_offchecked);
         $pnr->assign('forumenabled_onchecked',  $forumenabled_onchecked);
         $pnr->assign('forumenabled_offchecked', $forumenabled_offchecked);
-        return $pnr->fetch( "pnforum_admin_preferences.html");
+        return $pnr->fetch( "dizkus_admin_preferences.html");
     } else { // submit is set
         $actiontype = FormUtil::getPassedValue('actiontype', 'Save', 'GETPOST');
         if($actiontype=="Save") {
-            pnModSetVar('pnForum', 'forum_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('forum_enabled')));
-            pnModSetVar('pnForum', 'forum_disabled_info', DataUtil::formatForStore(FormUtil::getPassedValue('forum_disabled_info')));
-            pnModSetVar('pnForum', 'newtopicconfirmation', DataUtil::formatForStore(FormUtil::getPassedValue('newtopicconfirmation')));
-            pnModSetVar('pnForum', 'rss2f_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('rss2f_enabled')));
-            pnModSetVar('pnForum', 'deletehookaction', DataUtil::formatForStore(FormUtil::getPassedValue('deletehookaction')));
-            pnModSetVar('pnForum', 'striptags', DataUtil::formatForStore(FormUtil::getPassedValue('striptags')));
-            pnModSetVar('pnForum', 'removesignature', DataUtil::formatForStore(FormUtil::getPassedValue('removesignature')));
-            pnModSetVar('pnForum', 'hideusers', DataUtil::formatForStore(FormUtil::getPassedValue('hideusers')));
-            pnModSetVar('pnForum', 'favorites_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('favorites_enabled')));
-            pnModSetVar('pnForum', 'm2f_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('m2f_enabled')));
-            pnModSetVar('pnForum', 'autosubscribe', DataUtil::formatForStore(FormUtil::getPassedValue('autosubscribe')));
-            pnModSetVar('pnForum', 'signature_start', DataUtil::formatForStore(FormUtil::getPassedValue('signature_start')));
-            pnModSetVar('pnForum', 'signature_end', DataUtil::formatForStore(FormUtil::getPassedValue('signature_end')));
+            pnModSetVar('Dizkus', 'forum_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('forum_enabled')));
+            pnModSetVar('Dizkus', 'forum_disabled_info', DataUtil::formatForStore(FormUtil::getPassedValue('forum_disabled_info')));
+            pnModSetVar('Dizkus', 'newtopicconfirmation', DataUtil::formatForStore(FormUtil::getPassedValue('newtopicconfirmation')));
+            pnModSetVar('Dizkus', 'rss2f_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('rss2f_enabled')));
+            pnModSetVar('Dizkus', 'deletehookaction', DataUtil::formatForStore(FormUtil::getPassedValue('deletehookaction')));
+            pnModSetVar('Dizkus', 'striptags', DataUtil::formatForStore(FormUtil::getPassedValue('striptags')));
+            pnModSetVar('Dizkus', 'removesignature', DataUtil::formatForStore(FormUtil::getPassedValue('removesignature')));
+            pnModSetVar('Dizkus', 'hideusers', DataUtil::formatForStore(FormUtil::getPassedValue('hideusers')));
+            pnModSetVar('Dizkus', 'favorites_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('favorites_enabled')));
+            pnModSetVar('Dizkus', 'm2f_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('m2f_enabled')));
+            pnModSetVar('Dizkus', 'autosubscribe', DataUtil::formatForStore(FormUtil::getPassedValue('autosubscribe')));
+            pnModSetVar('Dizkus', 'signature_start', DataUtil::formatForStore(FormUtil::getPassedValue('signature_start')));
+            pnModSetVar('Dizkus', 'signature_end', DataUtil::formatForStore(FormUtil::getPassedValue('signature_end')));
 
             $topics_per_page = (int)FormUtil::getPassedValue('topics_per_page');
             if(empty($topics_per_page) || $topics_per_page<0) {
                 $topics_per_page = 15;
             }
-            pnModSetVar('pnForum', 'topics_per_page', DataUtil::formatForStore($topics_per_page));
+            pnModSetVar('Dizkus', 'topics_per_page', DataUtil::formatForStore($topics_per_page));
             
             $posts_per_page = (int)FormUtil::getPassedValue('posts_per_page');
             if(empty($posts_per_page) || $posts_per_page<0) {
                 $posts_per_page = 15;
             }
-            pnModSetVar('pnForum', 'posts_per_page', DataUtil::formatForStore($posts_per_page));
+            pnModSetVar('Dizkus', 'posts_per_page', DataUtil::formatForStore($posts_per_page));
 
             $hot_threshold = (int)FormUtil::getPassedValue('hot_threshold');
             if(empty($hot_threshold) || $hot_threshold<0) {
                 $hot_threshold = 20;
             }
-            pnModSetVar('pnForum', 'hot_threshold', DataUtil::formatForStore($hot_threshold));
+            pnModSetVar('Dizkus', 'hot_threshold', DataUtil::formatForStore($hot_threshold));
             
             $email_from = FormUtil::getPassedValue('email_from');
             if(empty($email_from) || !pnVarValidate($email_from, 'email')) {
                 $email_from = pnConfigGetVar('adminmail');
             }
-            pnModSetVar('pnForum', 'email_from', DataUtil::formatForStore($email_from));
+            pnModSetVar('Dizkus', 'email_from', DataUtil::formatForStore($email_from));
             
             $default_lang = FormUtil::getPassedValue('default_lang');
             if(empty($default_lang)) {
                 $default_lang = _CHARSET;
             }
-            pnModSetVar('pnForum', 'default_lang', DataUtil::formatForStore($default_lang));
+            pnModSetVar('Dizkus', 'default_lang', DataUtil::formatForStore($default_lang));
 
-            pnModSetVar('pnForum', 'url_ranks_images', DataUtil::formatForStore(FormUtil::getPassedValue('url_ranks_images')));
-            pnModSetVar('pnForum', 'posticon', DataUtil::formatForStore(FormUtil::getPassedValue('posticon')));
-            pnModSetVar('pnForum', 'firstnew_image', DataUtil::formatForStore(FormUtil::getPassedValue('firstnew_image')));
-            pnModSetVar('pnForum', 'post_sort_order', DataUtil::formatForStore(FormUtil::getPassedValue('post_sort_order')));
-            pnModSetVar('pnForum', 'log_ip', DataUtil::formatForStore(FormUtil::getPassedValue('log_ip')));
-            pnModSetVar('pnForum', 'slimforum', DataUtil::formatForStore(FormUtil::getPassedValue('slimforum')));
+            pnModSetVar('Dizkus', 'url_ranks_images', DataUtil::formatForStore(FormUtil::getPassedValue('url_ranks_images')));
+            pnModSetVar('Dizkus', 'posticon', DataUtil::formatForStore(FormUtil::getPassedValue('posticon')));
+            pnModSetVar('Dizkus', 'firstnew_image', DataUtil::formatForStore(FormUtil::getPassedValue('firstnew_image')));
+            pnModSetVar('Dizkus', 'post_sort_order', DataUtil::formatForStore(FormUtil::getPassedValue('post_sort_order')));
+            pnModSetVar('Dizkus', 'log_ip', DataUtil::formatForStore(FormUtil::getPassedValue('log_ip')));
+            pnModSetVar('Dizkus', 'slimforum', DataUtil::formatForStore(FormUtil::getPassedValue('slimforum')));
             $timespanforchanges = (int)FormUtil::getPassedValue('timespanforchanges');
             if(empty($timespanforchanges) || $timespanforchanges<0) {
                 $timespanforchanges = 24;
             }
-            pnModSetVar('pnForum', 'timespanforchanges', DataUtil::formatForStore($timespanforchanges));
+            pnModSetVar('Dizkus', 'timespanforchanges', DataUtil::formatForStore($timespanforchanges));
         }
         if($actiontype=="RestoreDefaults")  {
-            pnModSetVar('pnForum', 'forum_enabled', 'yes');
-            pnModSetVar('pnForum', 'forum_disabled_info', _PNFORUM_DISABLED_INFO);
-            pnModSetVar('pnForum', 'newtopicconfirmation', 'no');
-            pnModSetVar('pnForum', 'rss2f_enabled', 'yes');
-            pnModSetVar('pnForum', 'deletehookaction', 'lock');
-            pnModSetVar('pnForum', 'striptags', 'no');
-            pnModSetVar('pnForum', 'removesignature', 'no');
-            pnModSetVar('pnForum', 'hideusers', 'no');
-            pnModSetVar('pnForum', 'favorites_enabled', 'yes');
-            pnModSetVar('pnForum', 'm2f_enabled', 'yes');
-            pnModSetVar('pnForum', 'autosubscribe', 'yes');
-            pnModSetVar('pnForum', 'signature_start', '<div style="border: 1px solid black;">');
-            pnModSetVar('pnForum', 'signature_end', '</div>');
-		    pnModSetVar('pnForum', 'posts_per_page', 15);
-		    pnModSetVar('pnForum', 'topics_per_page', 15);
-		    pnModSetVar('pnForum', 'hot_threshold', 20);
-		    pnModSetVar('pnForum', 'email_from', pnConfigGetVar('adminmail'));
-		    pnModSetVar('pnForum', 'default_lang', 'iso-8859-1');
-		    pnModSetVar('pnForum', 'url_ranks_images', "modules/pnForum/pnimages/ranks");
-		    pnModSetVar('pnForum', 'posticon', "modules/pnForum/pnimages/posticon.gif");
-		    pnModSetVar('pnForum', 'firstnew_image', "modules/pnForum/pnimages/firstnew.gif");
-		    pnModSetVar('pnForum', 'post_sort_order', "ASC");
-		    pnModSetVar('pnForum', 'log_ip', "yes");
-		    pnModSetVar('pnForum', 'slimforum', "no");
-		    pnModSetVar('pnForum', 'timespanforchanges', 12);
+            pnModSetVar('Dizkus', 'forum_enabled', 'yes');
+            pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
+            pnModSetVar('Dizkus', 'newtopicconfirmation', 'no');
+            pnModSetVar('Dizkus', 'rss2f_enabled', 'yes');
+            pnModSetVar('Dizkus', 'deletehookaction', 'lock');
+            pnModSetVar('Dizkus', 'striptags', 'no');
+            pnModSetVar('Dizkus', 'removesignature', 'no');
+            pnModSetVar('Dizkus', 'hideusers', 'no');
+            pnModSetVar('Dizkus', 'favorites_enabled', 'yes');
+            pnModSetVar('Dizkus', 'm2f_enabled', 'yes');
+            pnModSetVar('Dizkus', 'autosubscribe', 'yes');
+            pnModSetVar('Dizkus', 'signature_start', '<div style="border: 1px solid black;">');
+            pnModSetVar('Dizkus', 'signature_end', '</div>');
+		    pnModSetVar('Dizkus', 'posts_per_page', 15);
+		    pnModSetVar('Dizkus', 'topics_per_page', 15);
+		    pnModSetVar('Dizkus', 'hot_threshold', 20);
+		    pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
+		    pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
+		    pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
+		    pnModSetVar('Dizkus', 'posticon', "modules/Dizkus/pnimages/posticon.gif");
+		    pnModSetVar('Dizkus', 'firstnew_image', "modules/Dizkus/pnimages/firstnew.gif");
+		    pnModSetVar('Dizkus', 'post_sort_order', "ASC");
+		    pnModSetVar('Dizkus', 'log_ip', "yes");
+		    pnModSetVar('Dizkus', 'slimforum', "no");
+		    pnModSetVar('Dizkus', 'timespanforchanges', 12);
         }
     }
-    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+    return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));
 }
 
 /**
  * advancedpreferences
  *
  */
-function pnForum_admin_advancedpreferences()
+function Dizkus_admin_advancedpreferences()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
 
     if(!$submit) {
-        list($dbconn, $pntable) = pnfOpenDB();
+        list($dbconn, $pntable) = dzkOpenDB();
         $sql = "SELECT  VERSION()";
-        $result = pnfExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         list($dbversion) = $result->fields;
-        pnfCloseDB($result);
+        dzkCloseDB($result);
 
         $checked = "checked=\"checked\" ";
      	$fulltextindex_checked  = "";
         $extendedsearch_checked = "";
-        if (pnModGetVar('pnForum', 'fulltextindex') == "1") {
+        if (pnModGetVar('Dizkus', 'fulltextindex') == "1") {
         	$fulltextindex_checked  = $checked;
         }
-        if (pnModGetVar('pnForum', 'extendedsearch') == "1") {
+        if (pnModGetVar('Dizkus', 'extendedsearch') == "1") {
         	$extendedsearch_checked = $checked;
         }
-        $pnr = pnRender::getInstance('pnForum', false, null, true);
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('dbversion', $dbversion);
         $pnr->assign('dbtype', $dbconn->databaseType);
         $pnr->assign('dbname', $dbconn->databaseName);
         $pnr->assign('fulltextindex_checked', $fulltextindex_checked);
         $pnr->assign('extendedsearch_checked', $extendedsearch_checked);
-        return $pnr->fetch( "pnforum_admin_advancedpreferences.html");
+        return $pnr->fetch( "dizkus_admin_advancedpreferences.html");
     } else { // submit is set
-        pnModSetVar('pnForum', 'fulltextindex', DataUtil::formatForStore(FormUtil::getPassedValue('fulltextindex')));
-        pnModSetVar('pnForum', 'extendedsearch', DataUtil::formatForStore(FormUtil::getPassedValue('extendedsearch')));
+        pnModSetVar('Dizkus', 'fulltextindex', DataUtil::formatForStore(FormUtil::getPassedValue('fulltextindex')));
+        pnModSetVar('Dizkus', 'extendedsearch', DataUtil::formatForStore(FormUtil::getPassedValue('extendedsearch')));
     }
-    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+    return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));
 }
 
 /**
  * syncforums
  *
  */
-function pnForum_admin_syncforums()
+function Dizkus_admin_syncforums()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
     $silent = FormUtil::getPassedValue('silent');
 
-	pnModAPIFunc('pnForum', 'admin', 'sync',
+	pnModAPIFunc('Dizkus', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "users"));
-	$message = DataUtil::formatForDisplay(_PNFORUM_SYNC_USERS) . "<br />";
+	$message = DataUtil::formatForDisplay(_DZK_SYNC_USERS) . "<br />";
 
-	pnModAPIFunc('pnForum', 'admin', 'sync',
+	pnModAPIFunc('Dizkus', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "all forums"));
-	$message .= DataUtil::formatForDisplay(_PNFORUM_SYNC_FORUMINDEX) . "<br />";
+	$message .= DataUtil::formatForDisplay(_DZK_SYNC_FORUMINDEX) . "<br />";
 
-	pnModAPIFunc('pnForum', 'admin', 'sync',
+	pnModAPIFunc('Dizkus', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "all topics"));
-	$message .= DataUtil::formatForDisplay(_PNFORUM_SYNC_TOPICS) . "<br />";
+	$message .= DataUtil::formatForDisplay(_DZK_SYNC_TOPICS) . "<br />";
 
-	pnModAPIFunc('pnForum', 'admin', 'sync',
+	pnModAPIFunc('Dizkus', 'admin', 'sync',
 	             array( 'id'   => NULL,
 	                    'type' => "all posts"));
-	$message .= DataUtil::formatForDisplay(_PNFORUM_SYNC_POSTSCOUNT) . "<br />";
+	$message .= DataUtil::formatForDisplay(_DZK_SYNC_POSTSCOUNT) . "<br />";
 
 	if ($silent != 1) {
         LogUtil::registerStatus($message);
 	}
-    return pnRedirect(pnModURL('pnForum', 'admin', 'main'));
+    return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));
 }
 
 
@@ -340,27 +340,27 @@ function pnForum_admin_syncforums()
  * ranks
  *
  */
-function pnForum_admin_ranks()
+function Dizkus_admin_ranks()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
 
     $submit   = FormUtil::getPassedValue('submit', null, 'GETPOST');
     $ranktype = (int)FormUtil::getPassedValue('ranktype', 0, 'GETPOST');
 
-    list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
+    list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                              array('ranktype' => $ranktype));
 
     if(!$submit) {
-        $pnr = pnRender::getInstance('pnForum', false, null, true);
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('ranktype', $ranktype);
         $pnr->assign('rankimages', $rankimages);
         if($ranktype==0) {
-            return $pnr->fetch("pnforum_admin_ranks.html");
+            return $pnr->fetch("dizkus_admin_ranks.html");
         } else {
-            return $pnr->fetch("pnforum_admin_honoraryranks.html");
+            return $pnr->fetch("dizkus_admin_honoraryranks.html");
         }
     } else {
         $actiontype = FormUtil::getPassedValue('actiontype');
@@ -370,7 +370,7 @@ function pnForum_admin_ranks()
         $min_posts  = FormUtil::getPassedValue('min_posts');
         $max_posts  = FormUtil::getPassedValue('max_posts');
         $image      = FormUtil::getPassedValue('image');
-        pnModAPIFunc('pnForum', 'admin', 'saverank', array('actiontype'=> $actiontype,
+        pnModAPIFunc('Dizkus', 'admin', 'saverank', array('actiontype'=> $actiontype,
                                                             'rank_special' => $ranktype,
                                                             'rank_id'      => $rank_id,
                                                             'rank_title'   => $title,
@@ -378,16 +378,16 @@ function pnForum_admin_ranks()
                                                             'rank_max'     => $max_posts,
                                                             'rank_image'   => $image));
     }
-    return pnRedirect(pnModURL('pnForum','admin', 'ranks', array('ranktype' => $ranktype)));
+    return pnRedirect(pnModURL('Dizkus','admin', 'ranks', array('ranktype' => $ranktype)));
 }
 
 /**
  * ranks
  *
  */
-function pnForum_admin_assignranks()
+function Dizkus_admin_assignranks()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
 
@@ -404,11 +404,11 @@ function pnForum_admin_assignranks()
     }
 
     if(!$submit) {
-        // sync the users, so that new pn users get into the pnForum
+        // sync the users, so that new pn users get into the Dizkus
         // database
-        pnModAPIFunc('pnForum', 'user', 'usersync');
+        pnModAPIFunc('Dizkus', 'user', 'usersync');
     
-        list($rankimages, $ranks) = pnModAPIFunc('pnForum', 'admin', 'readranks',
+        list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                  array('ranktype' => 1));
 
         // remove the first rank, its used for adding new ranks only
@@ -454,18 +454,18 @@ function pnForum_admin_assignranks()
         
         unset($users);
 
-        $pnr = pnRender::getInstance('pnForum', false, null, true);
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
         $pnr->assign('allusers', $allusers);
         $pnr->assign('letter', $letter);
-        return $pnr->fetch("pnforum_admin_assignranks.html");
+        return $pnr->fetch("dizkus_admin_assignranks.html");
     } else {
         $setrank = FormUtil::getPassedValue('setrank');
-        pnModAPIFunc('pnForum', 'admin', 'assignranksave', 
+        pnModAPIFunc('Dizkus', 'admin', 'assignranksave', 
                      array('setrank' => $setrank));
     }
-    return pnRedirect(pnModURL('pnForum','admin', 'assignranks',
+    return pnRedirect(pnModURL('Dizkus','admin', 'assignranks',
                                array('letter' => $letter)));
 }
 
@@ -474,13 +474,13 @@ function pnForum_admin_assignranks()
  * reordertree
  *
  */
-function pnForum_admin_reordertree()
+function Dizkus_admin_reordertree()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
 
-    $categorytree = pnModAPIFunc('pnForum', 'user', 'readcategorytree');
+    $categorytree = pnModAPIFunc('Dizkus', 'user', 'readcategorytree');
     $catids = array();
     $forumids = array();
     if(is_array($categorytree) && count($categorytree) > 0) {
@@ -493,11 +493,11 @@ function pnForum_admin_reordertree()
             }
         }
     }
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('categorytree', $categorytree);
     $pnr->assign('catids', $catids);
     $pnr->assign('forumids', $forumids);
-    return $pnr->fetch("pnforum_admin_reordertree.html");
+    return $pnr->fetch("dizkus_admin_reordertree.html");
 }
 
 
@@ -507,16 +507,16 @@ function pnForum_admin_reordertree()
  * AJAX result function
  *
  */
-function pnForum_admin_reordertreesave()
+function Dizkus_admin_reordertreesave()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
-        pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
     
     if(!SecurityUtil::confirmAuthKey()) {
-//        pnf_ajaxerror(_BADAUTHKEY);
+//        dzk_ajaxerror(_BADAUTHKEY);
     }
     
     $categoryarray = FormUtil::getPassedValue('category');
@@ -528,10 +528,10 @@ function pnForum_admin_reordertreesave()
             // array key = catorder starts with 0, but we need 1, so we increase the order
             // value
             $catorder++;
-            if(pnModAPIFunc('pnForum', 'admin', 'updatecategory',
+            if(pnModAPIFunc('Dizkus', 'admin', 'updatecategory',
                                               array('cat_id'    => $cat_id,
                                                     'cat_order' => $catorder)) == false) {
-                pnf_ajaxerror('updatecategory(): cannot reorder category ' . $cat_id . ' (' . $catorder . ')');
+                dzk_ajaxerror('updatecategory(): cannot reorder category ' . $cat_id . ' (' . $catorder . ')');
             }
 
             $forumsincategoryarray = FormUtil::getPassedValue('cid_' . $cat_id);
@@ -547,18 +547,18 @@ function pnForum_admin_reordertreesave()
                         // array key start with 0, but we need 1, so we increase the order
                         // value
                         $forumorder++;
-                        if(pnModAPIFunc('pnForum', 'admin', 'storenewforumorder',
+                        if(pnModAPIFunc('Dizkus', 'admin', 'storenewforumorder',
                                                           array('forum_id' => $forum_id,
                                                                 'cat_id'   => $cat_id,
                                                                 'order'    => $forumorder)) == false) {
-                            pnf_ajaxerror('storenewforumorder(): cannot reorder forum ' . $forum_id . ' in category ' . $cat_id . ' (' . $forumorder . ')');
+                            dzk_ajaxerror('storenewforumorder(): cannot reorder forum ' . $forum_id . ' in category ' . $cat_id . ' (' . $forumorder . ')');
                         }
                     }
                 }
             }
         } 
     }
-    pnf_jsonizeoutput('', true, true);
+    dzk_jsonizeoutput('', true, true);
     
 }
 
@@ -568,10 +568,10 @@ function pnForum_admin_reordertreesave()
  * AJAX function
  *
  */
-function pnForum_admin_editforum($args=array())
+function Dizkus_admin_editforum($args=array())
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
-        pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
     }
     
     if(count($args)>0) {
@@ -582,14 +582,14 @@ function pnForum_admin_editforum($args=array())
     }
      
     if(!isset($forum_id)) {
-        pnf_ajaxerror(_MODARGSERROR . ': forum_id ' . DataUtil::formatForDisplay($forum_id) . ' in pnForum_admin_editforum()');
+        dzk_ajaxerror(_MODARGSERROR . ': forum_id ' . DataUtil::formatForDisplay($forum_id) . ' in Dizkus_admin_editforum()');
     }
     
     if($forum_id == -1) {
         // create a new forum 
         $new = true;
         $cat_id = FormUtil::getPassedValue('cat');
-        $forum = array('forum_name'       => _PNFORUM_ADDNEWFORUM,
+        $forum = array('forum_name'       => _DZK_ADDNEWFORUM,
                        'forum_id'         => time(), /* for new forums only! */
                        'forum_desc'       => '',
                        'forum_access'     => -1,
@@ -611,27 +611,27 @@ function pnForum_admin_editforum($args=array())
     } else {
         // we are editing
         $new = false;            
-        $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+        $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                               array('forum_id'  => $forum_id,
                                     'permcheck' => ACCESS_ADMIN));
 
     }
     $externalsourceoptions = array( 0 => array('checked'  => '',
-                                               'name'     => _PNFORUM_NOEXTERNALSOURCE,
+                                               'name'     => _DZK_NOEXTERNALSOURCE,
                                                'ok'       => '',
                                                'extended' => false),   // none
                                     1 => array('checked'  => '',
-                                               'name'     => _PNFORUM_MAIL2FORUM,
+                                               'name'     => _DZK_MAIL2FORUM,
                                                'ok'       => '',
                                                'extended' => true),  // mail
                                     2 => array('checked'  => '',
-                                               'name'     => _PNFORUM_RSS2FORUM,
-                                               'ok'       => (pnModAvailable('Feeds')==true) ? '' : _PNFORUM_RSSMODULENOTAVAILABLE,
+                                               'name'     => _DZK_RSS2FORUM,
+                                               'ok'       => (pnModAvailable('Feeds')==true) ? '' : _DZK_RSSMODULENOTAVAILABLE,
                                                'extended' => true)); // rss
     $externalsourceoptions[$forum['forum_pop3_active']]['checked'] = ' checked="checked"';
     $hooked_modules_raw = pnModAPIFunc('modules', 'admin', 'gethookedmodules',
-                                   array('hookmodname' => 'pnForum'));
-    $hooked_modules = array(array('name' => _PNFORUM_NOHOOKEDMODULES,
+                                   array('hookmodname' => 'Dizkus'));
+    $hooked_modules = array(array('name' => _DZK_NOHOOKEDMODULES,
                                            'id'   => 0));
     $foundsel = false;
     foreach($hooked_modules_raw as $hookmod => $dummy) {
@@ -655,11 +655,11 @@ function pnForum_admin_editforum($args=array())
         $rssfeeds = pnModAPIFunc('Feeds', 'user', 'getall');
     }
 
-    $moderators = pnModAPIFunc('pnForum', 'admin', 'readmoderators',
+    $moderators = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
                                     array('forum_id' => $forum['forum_id']));
 
 
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('hooked_modules', $hooked_modules);
     $pnr->assign('rssfeeds', $rssfeeds);
     $pnr->assign('externalsourceoptions', $externalsourceoptions);
@@ -670,21 +670,21 @@ function pnForum_admin_editforum($args=array())
     $pnr->assign('categoryselector', $catselector);        
     
     $pnr->assign('moderators', $moderators);
-    $hideusers = pnModGetVar('pnForum', 'hideusers');
+    $hideusers = pnModGetVar('Dizkus', 'hideusers');
     if($hideusers == 'no') {
-        $users = pnModAPIFunc('pnForum', 'admin', 'readusers',
+        $users = pnModAPIFunc('Dizkus', 'admin', 'readusers',
                               array('moderators' => $moderators));
     } else {
         $users = array();
     }
     $pnr->assign('users', $users);
-    $pnr->assign('groups', pnModAPIFunc('pnForum', 'admin', 'readgroups',
+    $pnr->assign('groups', pnModAPIFunc('Dizkus', 'admin', 'readgroups',
                                         array('moderators' => $moderators)));
     $pnr->assign('forum', $forum);
     $pnr->assign('newforum', $new);
-    $html = $pnr->fetch('pnforum_ajax_editforum.html');
+    $html = $pnr->fetch('dizkus_ajax_editforum.html');
     if(!isset($returnhtml)) {
-        pnf_jsonizeoutput(array('forum_id' => $forum['forum_id'],
+        dzk_jsonizeoutput(array('forum_id' => $forum['forum_id'],
                                 'cat_id'   => $forum['cat_id'],
                                 'new'      => $new,
                                 'data'     => $html),
@@ -697,10 +697,10 @@ function pnForum_admin_editforum($args=array())
  * editcategory
  *
  */
-function pnForum_admin_editcategory($args=array())
+function Dizkus_admin_editcategory($args=array())
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
-    	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    	dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
     }
 
     if(!empty($args)) {
@@ -711,23 +711,23 @@ function pnForum_admin_editcategory($args=array())
     }   
     if( $cat_id == 'new') {
         $new = true;
-        $category = array('cat_title'    => _PNFORUM_ADDNEWCATEGORY,
+        $category = array('cat_title'    => _DZK_ADDNEWCATEGORY,
                           'cat_id'       => time(),
                           'forum_count'  => 0);
         // we add a new category
     } else {
         $new = false;
-        $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+        $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                                  array( 'cat_id' => $cat_id ));
-        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
+        $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                                array('cat_id'    => $cat_id,
                                      'permcheck' => 'nocheck'));
         $category['forum_count'] = count($forums);
     }
-    $pnr = pnRender::getInstance('pnForum', false, null, true);
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('category', $category );
     $pnr->assign('newcategory', $new);
-    pnf_jsonizeoutput(array('data'     => $pnr->fetch('pnforum_ajax_editcategory.html'),
+    dzk_jsonizeoutput(array('data'     => $pnr->fetch('dizkus_ajax_editcategory.html'),
                             'cat_id'   => $category['cat_id'],
                             'new'      => $new),
                       false,
@@ -740,16 +740,16 @@ function pnForum_admin_editcategory($args=array())
  * AJAX function
  *
  */
-function pnForum_admin_storecategory()
+function Dizkus_admin_storecategory()
 {
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if (!SecurityUtil::checkPermission('pnForum::', '::', ACCESS_ADMIN)) {
-    	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    	dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
     }
     
     if(!SecurityUtil::confirmAuthKey()) {
-        pnf_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(_BADAUTHKEY);
     }
 
     $cat_id    = FormUtil::getPassedValue('cat_id');
@@ -759,61 +759,61 @@ function pnForum_admin_storecategory()
 
     $cat_title = DataUtil::convertFromUTF8($cat_title);
     if(!empty($delete)) {
-        $forums = pnModAPIFunc('pnForum', 'admin', 'readforums',
+        $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                                array('cat_id'    => $cat_id,
                                      'permcheck' => 'nocheck'));
         if(count($forums) > 0) {
-            $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+            $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            pnf_ajaxerror('error: category "' . $category['cat_title'] . '" contains ' . count($forums) . ' forums!');
+            dzk_ajaxerror('error: category "' . $category['cat_title'] . '" contains ' . count($forums) . ' forums!');
         }
-        $res = pnModAPIFunc('pnForum', 'admin', 'deletecategory',
+        $res = pnModAPIFunc('Dizkus', 'admin', 'deletecategory',
                             array('cat_id' => $cat_id));
         if($res==true) {
-            pnf_jsonizeoutput(array('cat_id' => $cat_id,
+            dzk_jsonizeoutput(array('cat_id' => $cat_id,
                                     'old_id' => $cat_id,
                                     'action' => 'delete'),
                               true,
                               false); 
         } else {
-            pnf_ajaxerror('error deleting category ' . DataUtil::formatForDisplay($cat_id));
+            dzk_ajaxerror('error deleting category ' . DataUtil::formatForDisplay($cat_id));
         }
         
     } else if(!empty($add)) {
         $original_catid = $cat_id;
-        $cat_id = pnModAPIFunc('pnForum', 'admin', 'addcategory',
+        $cat_id = pnModAPIFunc('Dizkus', 'admin', 'addcategory',
                                array('cat_title' => $cat_title));
         if(!is_bool($cat_id)) {
-            $category = pnModAPIFunc('pnForum', 'admin', 'readcategories',
+            $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            $pnr = pnRender::getInstance('pnForum', false, null, true);
+            $pnr = pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('category', $category );
             $pnr->assign('newcategory', false);
-            pnf_jsonizeoutput(array('cat_id'      => $cat_id,
+            dzk_jsonizeoutput(array('cat_id'      => $cat_id,
                                     'old_id'      => $original_catid,
                                     'cat_title'   => $cat_title,
                                     'action'      => 'add',
-                                    'edithtml'    => $pnr->fetch('pnforum_ajax_editcategory.html'),
-                                    'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
+                                    'edithtml'    => $pnr->fetch('dizkus_ajax_editcategory.html'),
+                                    'cat_linkurl' => pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id))),
                               true,
                               false); 
         } else {
-            pnf_ajaxerror('error creating category "' . DataUtil::formatForDisplay($cat_title) . '"');
+            dzk_ajaxerror('error creating category "' . DataUtil::formatForDisplay($cat_title) . '"');
         }
         
     } else {
-        if(pnModAPIFunc('pnForum', 'admin', 'updatecategory',
+        if(pnModAPIFunc('Dizkus', 'admin', 'updatecategory',
                         array('cat_title' => $cat_title,
                               'cat_id'    => $cat_id)) == true) {
-            pnf_jsonizeoutput(array('cat_id'      => $cat_id,
+            dzk_jsonizeoutput(array('cat_id'      => $cat_id,
                                     'old_id'      => $cat_id,
                                     'cat_title'   => $cat_title,
                                     'action'      => 'update',
-                                    'cat_linkurl' => pnModURL('pnForum', 'user', 'main', array('viewcat' => $cat_id))),
+                                    'cat_linkurl' => pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id))),
                               true,
                               false); 
         } else {
-            pnf_ajaxerror('error updating cat_id ' . DataUtil::formatForDisplay($cat_id) . ' with title "' . DataUtil::formatForDisplay($cat_title) . '"');
+            dzk_ajaxerror('error updating cat_id ' . DataUtil::formatForDisplay($cat_id) . ' with title "' . DataUtil::formatForDisplay($cat_title) . '"');
         }
     }
 }
@@ -823,14 +823,14 @@ function pnForum_admin_storecategory()
  *
  * AJAX function
  */
-function pnForum_admin_storeforum()
+function Dizkus_admin_storeforum()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
-    	pnf_ajaxerror(_PNFORUM_NOAUTH_TOADMIN);
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    	dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
     }
 
     if(!SecurityUtil::confirmAuthKey()) {
-        pnf_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(_BADAUTHKEY);
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -878,10 +878,10 @@ function pnForum_admin_storeforum()
         $forumtitle = '';
         $editforumhtml = '';
         $old_id = $forum_id;
-        $cat_id = pnModAPIFunc('pnForum', 'user', 'get_forum_category',
+        $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $forum_id)); 
         // no security check!!!
-        pnModAPIFunc('pnForum', 'admin', 'deleteforum',
+        pnModAPIFunc('Dizkus', 'admin', 'deleteforum',
                      array('forum_id'   => $forum_id));
     } else {
         // add or update - the next steps are the same for both
@@ -891,10 +891,10 @@ function pnForum_admin_storeforum()
         }
 
         if($pop3_password <> $pop3_passwordconfirm) {
-        	pnf_ajaxerror(_PNFORUM_PASSWORDNOMATCH);
+        	dzk_ajaxerror(_DZK_PASSWORDNOMATCH);
         }
         if($pnpassword <> $pnpasswordconfirm) {
-        	pnf_ajaxerror(_PNFORUM_PASSWORDNOMATCH);
+        	dzk_ajaxerror(_DZK_PASSWORDNOMATCH);
         }
         
         if(!empty($add)) {
@@ -902,7 +902,7 @@ function pnForum_admin_storeforum()
             $old_id = $forum_id;
             $pop3_password = base64_encode($pop3_password);
             $pnpassword = base64_encode($pnpassword);
-            $forum_id = pnModAPIFunc('pnForum', 'admin', 'addforum',
+            $forum_id = pnModAPIFunc('Dizkus', 'admin', 'addforum',
                                      array('forum_name'       => $forum_name,
                                            'cat_id'           => $cat_id,
                                            'desc'             => $desc,
@@ -921,7 +921,7 @@ function pnForum_admin_storeforum()
         } else {
             $action = 'update';
             $old_id = '';
-            $forum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+            $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                                   array('forum_id' => $forum_id));
             // check if user has changed the password
             if($forum['pop3_password'] == $pop3_password) {
@@ -939,7 +939,7 @@ function pnForum_admin_storeforum()
                 $pnpassword = base64_encode($pnpassword);
             }
              
-            pnModAPIFunc('pnForum', 'admin', 'editforum',
+            pnModAPIFunc('Dizkus', 'admin', 'editforum',
                          array('forum_name'       => $forum_name,
                                'forum_id'         => $forum_id,
                                'cat_id'           => $cat_id,
@@ -958,24 +958,24 @@ function pnForum_admin_storeforum()
                                'moduleref'        => $moduleref,
                                'pntopic'          => $pntopic));
         }
-        $editforumhtml = pnForum_admin_editforum(array('forum_id'   => $forum_id,
+        $editforumhtml = Dizkus_admin_editforum(array('forum_id'   => $forum_id,
                                                        'returnhtml' => true));
-        $forumtitle = '<a href="' . pnModURL('pnForum', 'user', 'viewforum', array('forum' => $forum_id)) .'">' . $forum_name . '</a> (' . $forum_id . ')';
+        $forumtitle = '<a href="' . pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)) .'">' . $forum_name . '</a> (' . $forum_id . ')';
         // re-read forum data 
-        $newforum = pnModAPIFunc('pnForum', 'admin', 'readforums',
+        $newforum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                               array('forum_id'  => $forum_id,
                                     'permcheck' => 'nocheck'));
         if($pop3_test==1) {
-            $pop3testresult = pnModAPIFunc('pnForum', 'user', 'testpop3connection',
+            $pop3testresult = pnModAPIFunc('Dizkus', 'user', 'testpop3connection',
                                            array('forum_id' => $forum_id));
-            $pnr = pnRender::getInstance('pnForum', false, null, true);
+            $pnr = pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('messages', $pop3testresult);
             $pnr->assign('forum_id', $forum_id);
-            $pop3testresulthtml = $pnr->fetch('pnforum_admin_pop3test.html');
+            $pop3testresulthtml = $pnr->fetch('dizkus_admin_pop3test.html');
         }
     } 
       
-    pnf_jsonizeoutput(array('action'         => $action,
+    dzk_jsonizeoutput(array('action'         => $action,
                             'forum'          => $newforum,
                             'cat_id'         => $cat_id,
                             'old_id'         => $old_id,
@@ -989,9 +989,9 @@ function pnForum_admin_storeforum()
  * managesubscriptions
  *
  */
-function pnForum_admin_managesubscriptions()
+function Dizkus_admin_managesubscriptions()
 {
-    if (!SecurityUtil::checkPermission('pnForum::', "::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
     	return LogUtil::registerPermissionError();
     }
 
@@ -1001,19 +1001,19 @@ function pnForum_admin_managesubscriptions()
     if(!empty($pnusername)) {
         $pnuid = pnUserGetIDFromName($pnusername);
         if(!empty($pnuid)) {
-            $topicsubscriptions = pnModAPIFunc('pnForum', 'user', 'get_topic_subscriptions', array('user_id' => $pnuid));
-            $forumsubscriptions = pnModAPIFunc('pnForum', 'user', 'get_forum_subscriptions', array('user_id' => $pnuid));
+            $topicsubscriptions = pnModAPIFunc('Dizkus', 'user', 'get_topic_subscriptions', array('user_id' => $pnuid));
+            $forumsubscriptions = pnModAPIFunc('Dizkus', 'user', 'get_forum_subscriptions', array('user_id' => $pnuid));
         }
     }
     if(!$submit) {
         // submit is empty
-        $pnr = pnRender::getInstance('pnForum', false, null, true);
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('pnusername', $pnusername);
         $pnr->assign('pnuid', $pnuid);
         $pnr->assign('topicsubscriptions', $topicsubscriptions);
         $pnr->assign('forumsubscriptions', $forumsubscriptions);
         
-        return $pnr->fetch('pnforum_admin_managesubscriptions.html');
+        return $pnr->fetch('dizkus_admin_managesubscriptions.html');
     } else {  // submit not empty
         $pnuid      = FormUtil::getPassedValue('pnuid');
         $allforums  = FormUtil::getPassedValue('allforum');
@@ -1021,20 +1021,20 @@ function pnForum_admin_managesubscriptions()
         $alltopics  = FormUtil::getPassedValue('alltopic');
         $topic_ids  = FormUtil::getPassedValue('topic_id');
         if($allforums == '1') {
-            pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum', array('user_id' => $pnuid));
+            pnModAPIFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $pnuid));
         } elseif(count($forum_ids) > 0) {
             for($i=0; $i<count($forum_ids); $i++) {
-                pnModAPIFunc('pnForum', 'user', 'unsubscribe_forum', array('user_id' => $pnuid, 'forum_id' => $forum_ids[$i]));
+                pnModAPIFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $pnuid, 'forum_id' => $forum_ids[$i]));
             }
         }
 
         if($alltopics == '1') {
-            pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic', array('user_id' => $pnuid));
+            pnModAPIFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $pnuid));
         } elseif(count($topic_ids) > 0) {
             for($i=0; $i<count($topic_ids); $i++) {
-                pnModAPIFunc('pnForum', 'user', 'unsubscribe_topic', array('user_id' => $pnuid, 'topic_id' => $topic_ids[$i]));
+                pnModAPIFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $pnuid, 'topic_id' => $topic_ids[$i]));
             }
         }
     }
-    return pnRedirect(pnModURL('pnForum', 'admin', 'managesubscriptions', array('pnusername' => pnUserGetVar('uname', $pnuid))));
+    return pnRedirect(pnModURL('Dizkus', 'admin', 'managesubscriptions', array('pnusername' => pnUserGetVar('uname', $pnuid))));
 }
