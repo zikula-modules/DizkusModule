@@ -1,5 +1,10 @@
 $Id$
 
+Upgrading from pnForum to Dizkus
+---------------------------------
+** this is work in progress and not yet complete ** 
+- Block names changed so blocks have to be reinstalled and the permissions need to be upgraded manually.
+- Display name gets reset to Dizkus. If you changed it you have to reconfigure this.
 
 Crossupgrade phpBB_14 -> Dizkus
 --------------------------------

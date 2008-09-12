@@ -12,6 +12,9 @@
  * http://www.dev-postnuke.com - Soporte y ayuda en español
  ***********************************************************************/
  */
+ 
+define('_DZK_FAILEDTOUPGRADEHOOK', 'Error upgrading the hooks');
+
 define('_DZK_WELCOMETOINTERACTIVEUPGRADE', 'Actualización de Dizkus');
 define('_DZK_OLDVERSION', 'Versión antigua');
 define('_DZK_NEWVERSION', 'Nueva versión');

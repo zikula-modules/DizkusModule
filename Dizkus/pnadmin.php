@@ -213,8 +213,6 @@ function Dizkus_admin_preferences()
             pnModSetVar('Dizkus', 'default_lang', DataUtil::formatForStore($default_lang));
 
             pnModSetVar('Dizkus', 'url_ranks_images', DataUtil::formatForStore(FormUtil::getPassedValue('url_ranks_images')));
-            pnModSetVar('Dizkus', 'posticon', DataUtil::formatForStore(FormUtil::getPassedValue('posticon')));
-            pnModSetVar('Dizkus', 'firstnew_image', DataUtil::formatForStore(FormUtil::getPassedValue('firstnew_image')));
             pnModSetVar('Dizkus', 'post_sort_order', DataUtil::formatForStore(FormUtil::getPassedValue('post_sort_order')));
             pnModSetVar('Dizkus', 'log_ip', DataUtil::formatForStore(FormUtil::getPassedValue('log_ip')));
             pnModSetVar('Dizkus', 'slimforum', DataUtil::formatForStore(FormUtil::getPassedValue('slimforum')));
@@ -244,8 +242,6 @@ function Dizkus_admin_preferences()
 		    pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
 		    pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
 		    pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
-		    pnModSetVar('Dizkus', 'posticon', "modules/Dizkus/pnimages/posticon.gif");
-		    pnModSetVar('Dizkus', 'firstnew_image', "modules/Dizkus/pnimages/firstnew.gif");
 		    pnModSetVar('Dizkus', 'post_sort_order', "ASC");
 		    pnModSetVar('Dizkus', 'log_ip', "yes");
 		    pnModSetVar('Dizkus', 'slimforum', "no");

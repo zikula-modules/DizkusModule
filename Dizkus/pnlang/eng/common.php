@@ -428,9 +428,7 @@ define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Use extended fullt
 define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>The extended fulltext search enables parameters like "+dizkus -skype" for postings that contain "dizkus" but not "skype". Minimum requirement is MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Extended fulltest search in MySQL">Extended fulltest search in MySQL</a>.');
 define('_DZK_PREFS_LOGIP', 'Log IP addresses :');
 define('_DZK_PREFS_M2FENABLED', 'Mail2Forum enabled');
-define('_DZK_PREFS_NEWPOSTSICON', 'New posts image:<br /><em>(Folder with new posts since user\'s last visit)</em>');
 define('_DZK_PREFS_NO', 'No');
-define('_DZK_PREFS_POSTICON', 'Post Icon:');
 define('_DZK_PREFS_POSTSORTORDER', 'Posts sorting order:');
 define('_DZK_PREFS_POSTSPERPAGE', 'Posts per Page:<br /><em>(This is the number of posts per topic that will be displayed per page of a topic. 15 by default.)</em>');
 define('_DZK_PREFS_RANKLOCATION', 'Ranks icons location:');

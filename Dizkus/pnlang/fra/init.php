@@ -9,6 +9,8 @@
  * @package Dizkus
  */
 
+define('_DZK_FAILEDTOUPGRADEHOOK', 'Error upgrading the hooks');
+
 define('_DZK_WELCOMETOINTERACTIVEUPGRADE', 'Mise à jour Dizkus');
 define('_DZK_OLDVERSION', 'Ancienne version');
 define('_DZK_NEWVERSION', 'Nouvelle version');

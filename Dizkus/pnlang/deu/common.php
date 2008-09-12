@@ -428,9 +428,7 @@ define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Erweiterte Volltex
 define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>Die erweiterte Volltextsuche erlaubt z.B. Suchparameter in der Form "+dizkus -skype" für Beiträge, in denen der Begriff dizkus, aber nicht der Begriff skype vorkommt. Voraussetzung ist mind. MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Erweiterte Volltextsuche in MySQL">Erweiterte Volltextsuche in MySQL</a>.');
 define('_DZK_PREFS_LOGIP', 'IP-Adressen speichern :');
 define('_DZK_PREFS_M2FENABLED', 'Mail2Forum aktivieren');
-define('_DZK_PREFS_NEWPOSTSICON', 'Neue Beiträge:<br /><em>(Thema mit neuen Beiträgen seit dem letzten Besuch)</em>');
 define('_DZK_PREFS_NO', 'Nein');
-define('_DZK_PREFS_POSTICON', 'Beitrag:');
 define('_DZK_PREFS_POSTSORTORDER', 'Reihenfolge der Beiträge');
 define('_DZK_PREFS_POSTSPERPAGE', 'Anzahl der Beiträge pro Seite:<br /><em>(Dieser Wert legt fest, wieviele Beiträg auf einer Seite eines Themas angezeigt werden. Standard ist 15.)</em>');
 define('_DZK_PREFS_RANKLOCATION', 'Pfad zu den Grafiken für die Userränge:');

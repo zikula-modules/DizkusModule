@@ -352,9 +352,7 @@ define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Utiliser la recher
 define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>La recherche étendue permet l\'utilisation de paramètres comme "+dizkus -skype" pour trouver les messages contenant "dizkus" mais ne contenant pas "skype". Minimum requis : MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Recherche étendue sur MySQL">Recherche étendue sur MySQL</a>.');
 define('_DZK_PREFS_LOGIP', 'Enregistrer les adresses IP :');
 define('_DZK_PREFS_M2FENABLED', 'Mail2Forum activé');
-define('_DZK_PREFS_NEWPOSTSICON', 'Icône de nouveaux messages :<br /><em>(sujet contenant de nouveaux messages depuis la dernière visite)</em>');
 define('_DZK_PREFS_NO', 'Non');
-define('_DZK_PREFS_POSTICON', 'Icône d\'envoi de message :');
 define('_DZK_PREFS_POSTSORTORDER', 'Ordre de tri des messages :');
 define('_DZK_PREFS_POSTSPERPAGE', 'Nombre de messages par page :<br /><em>(c\'est le nombre de messages d\'un sujet qui seront affichés par page. La valeur par défaut est 15)</em>');
 define('_DZK_PREFS_RANKLOCATION', 'Emplacement des icônes de notation :');

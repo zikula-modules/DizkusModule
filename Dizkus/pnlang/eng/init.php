@@ -9,6 +9,8 @@
  * @package Dizkus
  */
 
+define('_DZK_FAILEDTOUPGRADEHOOK', 'Error upgrading the hooks');
+
 define('_DZK_INSTALLATION', 'Install Dizkus');
 define('_DZK_WELCOMETOINTERACTIVEINIT', 'Welcome to the Dizkus installation');
 define('_DZK_INTERACTIVEINITHINT', 'You are now going to install Dizkus %version% on your site. Please refer to the documentation for more information about its confuguration and options.');

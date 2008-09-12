@@ -102,8 +102,6 @@ function Dizkus_init()
 	pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
 	pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
 	pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
-	pnModSetVar('Dizkus', 'posticon', "modules/Dizkus/pnimages/posticon.gif");
-	pnModSetVar('Dizkus', 'firstnew_image', "modules/Dizkus/pnimages/firstnew.gif");
 	pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
 	pnModSetVar('Dizkus', 'log_ip', 'yes');
 	pnModSetVar('Dizkus', 'slimforum', 'no');
@@ -311,53 +309,35 @@ function Dizkus_upgrade_to_3_0()
     // define the new columns in the pntables array, see pntables.php
     DBUtil::changeTable('dizkus_posts');
 
+    // remove obsolete module vars    
+	pnModDelVar('Dizkus', 'posticon');
+	pnModDelVar('Dizkus', 'firstnew_image');
+	
+
     $oldvars = pnModGetVar('pnForum');
     foreach ($oldvars as $varname => $oldvar) {
+    	// update path to rank images - simply replace pnForum with Dizkus
+    	if($varname == 'url_ranks_images') {
+    	    $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
+    	}
         pnModSetVar('Dizkus', $varname, $oldvar);
     }
     pnModDelVar('pnForum');
-
-    // get list of hooked modules
-    $hookedmods = pnModAPIFunc('modules', 'admin', 'gethookedmodules', array('hookmodname' => 'pnForum'));
-
-    // remove the old hooks
-    //
-    // createhook
-    //
-    if (!pnModUnRegisterHook('item', 'create', 'API', 'pnForum', 'hook', 'createbyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/create)');
-    }
-
-    //
-    // updatehook
-    //
-    if (!pnModUnRegisterHook('item', 'update', 'API', 'pnForum', 'hook', 'updatebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/update)');
-    }
-
-    //
-    // deletehook
-    //
-    if (!pnModUnRegisterHook('item', 'delete', 'API', 'pnForum', 'hook', 'deletebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/delete)');
-    }
-
-    //
-    // displayhook
-    //
-    if (!pnModUnRegisterHook('item', 'display', 'GUI', 'pnForum', 'hook', 'showdiscussionlink')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (pnforum/display)');
+    
+    // update hooks
+    $pntables = pnDBGetTables();
+    $hookstable  = $pntables['hooks'];
+    $hookscolumn = $pntables['hooks_column'];
+    $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['smodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['smodule'] . '=\'pnForum\'';
+    $res   = DBUtil::executeSQL ($sql);
+    if ($res === false) {
+        return LogUtil::registerError(_DZK_FAILEDTOUPGRADEHOOK . ' (smodule)');
     }
     
-    if(createHooks() == false) {
-        return false;
-    }
-    
-    // attach bbcode to previous hooked modules
-    foreach ($hookedmods as $hookedmod => $dummy) {
-        pnModAPIFunc('modules' ,'admin', 'enablehooks', 
-                     array('callermodname' => $hookedmod,
-                           'hookmodname'   => 'Dizkus'));
+    $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['tmodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['tmodule'] . '=\'pnForum\'';
+    $res   = DBUtil::executeSQL ($sql);
+    if ($res === false) {
+        return LogUtil::registerError(_DZK_FAILEDTOUPGRADEHOOK . ' (tmodule)');
     }
 
     return true;

@@ -596,8 +596,6 @@ function Dizkus_userapi_readforum($args)
         $topics_per_page    = pnModGetVar('Dizkus', 'topics_per_page');
     }
     $hot_threshold      = pnModGetVar('Dizkus', 'hot_threshold');
-    $posticon           = pnModGetVar('Dizkus', 'posticon');
-    $firstnew_image     = pnModGetVar('Dizkus', 'firstnew_image');
     $post_sort_order    = pnModAPIFunc('Dizkus','user','get_user_post_order');
 
     // read moderators
@@ -767,7 +765,6 @@ function Dizkus_userapi_readtopic($args)
     $dizkusvars     = pnModGetVar('Dizkus');
     $posts_per_page  = $dizkusvars['posts_per_page'];
     $topics_per_page = $dizkusvars['topics_per_page'];
-    $posticon        = $dizkusvars['posticon'];
 
     $post_sort_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
 
