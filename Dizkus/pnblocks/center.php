@@ -17,7 +17,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_centerblock_init()
 {
-    SecurityUtil::registerPermissionSchema'Dizkus_Centerblock::', 'Block title::');
+    SecurityUtil::registerPermissionSchema('Dizkus_Centerblock::', 'Block title::');
 }
 
 /**
