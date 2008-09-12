@@ -294,10 +294,11 @@ function Dizkus_upgrade_to_3_0()
                     'pnforum_users']              => 'dizkus_users',
                     'pnforum_topic_subscription'] => 'dizkus_topic_subscription',
                     'pnforum_forum_favorites']    => 'dizkus_forum_favorites');
-    $dbconn   = DBConnectionStack::getConnection();
-    $dict     = NewDataDictionary($dbconn);
+    $dbconn = DBConnectionStack::getConnection();
+    $dict   = NewDataDictionary($dbconn);
+    $prefix = pnDBGetTablePrefix($tablename);
     foreach($tables as $oldtable => $newtable) {
-        $sqlarray = $dict->RenameTableSQL($oldtable, $newtable);
+        $sqlarray = $dict->RenameTableSQL($prefix.'_'.$oldtable, $prefix.'_'.$newtable);
         $result   = $dict->ExecuteSQLArray($sqlarray);
         $success  = ($result==2);
         if (!$success) {
