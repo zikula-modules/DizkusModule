@@ -296,7 +296,7 @@ function Dizkus_upgrade_to_3_0()
                     'pnforum_forum_favorites']    => 'dizkus_forum_favorites');
     $dbconn = DBConnectionStack::getConnection();
     $dict   = NewDataDictionary($dbconn);
-    $prefix = pnDBGetTablePrefix($tablename);
+    $prefix = pnConfigGetVar('prefix');
     foreach($tables as $oldtable => $newtable) {
         $sqlarray = $dict->RenameTableSQL($prefix.'_'.$oldtable, $prefix.'_'.$newtable);
         $result   = $dict->ExecuteSQLArray($sqlarray);
