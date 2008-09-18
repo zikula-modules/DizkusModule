@@ -19,7 +19,6 @@
 function smarty_function_plainbbcode($params, &$smarty)
 {
     extract($params);
-	unset($params);
 
     $out = "";
     if(isset($params['textfieldid']) && !empty($params['textfieldid'])) {
