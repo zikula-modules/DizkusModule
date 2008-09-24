@@ -1,4 +1,6 @@
 <!--[*  $Id$  *]-->
+<!--[pndebug]-->
+
 
 <!--[ include file=dizkus_user_header.html ]-->
 
@@ -83,6 +85,7 @@
     <!--[ /foreach ]-->
 </table>
 
+<!--[if $pncore.Dizkus.rss2f_enabled eq "yes"]-->
 <table cellspacing="0">
 	<caption class="dzk_bordercolor2 dzk_bgcolor3">
 	    <a id="rsspostings"></a><!--[ pnml name='_DZK_RSS2FORUMPOSTS' ]-->
@@ -142,7 +145,9 @@
     </tr>
     <!--[ /foreach ]-->
 </table>
+<!--[/if]-->
 
+<!--[if $pncore.Dizkus.m2f_enabled eq "yes"]-->
 <table cellspacing="0">
 	<caption class="dzk_bordercolor2 dzk_bgcolor3">
 	    <a id="m2fpostings"></a><!--[ pnml name='_DZK_MAIL2FORUMPOSTS' ]-->
@@ -202,6 +207,7 @@
     </tr>
     <!--[ /foreach ]-->
 </table>
+<!--[/if]-->
 
 </div>
 
