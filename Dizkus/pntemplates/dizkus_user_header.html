@@ -25,19 +25,20 @@ This div will be closed in the footer template.
 <!--[ pnpageaddvar name="javascript" value="modules/Dizkus/pnjavascript/dizkus_tools.js" ]-->
 <!--[ pnpageaddvar name="javascript" value="modules/Dizkus/pnjavascript/dizkus_user.js" ]-->
 
+<!--raw-->
 <div id="dizkus" class="dzk_clearfix">
 
     <!--[ if $pncore.Dizkus.forum_enabled neq 'no' ]-->
     <ul id="dzk_headeroptions" class="optionrow dzk_bgcolor3 dzk_bordercolor2">
 	    <li><a class="image homelink" title="<!--[ pnml name='_DZK_START' ]-->" href="<!--[ pnmodurl modname=Dizkus ]-->"><!--[ pnml name='_DZK_START' ]--></a></li>
-	    <li><a class="image searchlink" title="<!--[ pnml name='_DZK_SEARCH' ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=search ]-->"><!--[ pnml name='_DZK_SEARCHSHORT' ]--></a></li>
+	    <li><a class="image searchlink" title="<!--[ pnml name='_DZK_SEARCH' ]-->" href="<!--[ pnmodurl modname=Search type=user func=search ]-->"><!--[ pnml name='_DZK_SEARCHSHORT' ]--></a></li>
         <li><a class="image latestpostslink" title="<!--[ pnml name='_DZK_LATEST' ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewlatest ]-->"><!--[ pnml name='_DZK_LATEST' ]--></a></li>
         <li><a class="image rsslink" title="<!--[ pnml name='_DZK_LATESTRSS' ]-->" href="backforum.php"><!--[ pnml name='_DZK_LATESTRSS' ]--></a></li>
 	    <!--[ if $pncore.logged_in neq 1 ]-->
 	        <li><a class="image loginlink" title="<!--[ pnml name='_DZK_LOGIN' ]-->" href="<!--[ pnmodurl modname="Users" type="user" func="loginscreen"]-->"><!--[ pnml name='_DZK_LOGIN' ]--></a></li>
 	    	<li><a class="image registerlink" title="<!--[ pnml name='_DZK_REGISTER' ]-->" href="<!--[ pnmodurl modname="Users" type="user" func="register"]-->"><!--[ pnml name='_DZK_REGISTER' ]--></a></li>
 	    <!--[ else ]-->
-	    	<li><a class="image searchpostslink" title="<!--[ pnml name='_DZK_VIEWYOURPOSTS' ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=search ]-->&amp;q=&amp;submit=Search&amp;bool=AND&amp;Dizkus_forum[]=-1&amp;Dizkus_author=<!--[ $pncore.user.pn_uname ]-->&amp;Dizkus_order[]=1&amp;Dizkus_limit=20&amp;internalsearch=1&amp;active_Dizkus=1"><!--[ pnml name='_DZK_VIEWYOURPOSTS' ]--></a></li>
+	    	<li><a class="image searchpostslink" title="<!--[ pnml name='_DZK_VIEWYOURPOSTS' ]-->" href="<!--[ $pncore.user.uname|searchlink]-->"><!--[ pnml name='_DZK_VIEWYOURPOSTS' ]--></a></li>
 	    	<li><a class="image configurelink" title="<!--[ pnml name='_DZK_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="Dizkus" func="prefs" ]-->"><!--[ pnml name='_DZK_PERSONAL_SETTINGS' ]--></a></li>
 	    <!--[ /if ]-->
     </ul>
@@ -49,3 +50,4 @@ This div will be closed in the footer template.
     <!--[ /if ]-->
 
     <!--[ /if ]-->
+<!--/raw-->
