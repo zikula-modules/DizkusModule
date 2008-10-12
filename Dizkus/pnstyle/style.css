@@ -469,6 +469,7 @@ div#dzk_moderatetopicoptions {
 }
 
 div#dzk_postinglist {
+    width: 100%;
     float: left; 
     text-align: left;
     padding: 0; 
