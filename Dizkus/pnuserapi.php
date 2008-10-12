@@ -983,10 +983,10 @@ pnShutDown();
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
             $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
             
-            $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
-
             // call hooks for $message
             list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
+
+            $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
 
             //$post['post_text'] = DataUtil::formatForDisplayHTML($post['post_text']);
 
