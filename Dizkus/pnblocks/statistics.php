@@ -107,6 +107,8 @@ function Dizkus_statisticsblock_modify($row)
 	    return false;
 	}
 
+    pnModLangLoad('Dizkus', 'common');
+
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 

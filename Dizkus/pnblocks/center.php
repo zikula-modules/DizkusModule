@@ -113,7 +113,9 @@ function Dizkus_centerblock_modify($row)
 	    return false;
 	}
 
-    // Break out options from our content field
+    pnModLangLoad('Dizkus', 'common');
+    
+	// Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
     if(!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
