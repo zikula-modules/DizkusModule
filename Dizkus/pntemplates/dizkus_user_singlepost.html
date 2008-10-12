@@ -47,7 +47,7 @@ Template for single postings
                 <!--[ if $post.poster_data.pn_uid neq 1 ]-->
                     <!--[ if $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                         <div style="margin: 1em 0 0.5em 0; width:99%; text-align: center;">
-                            <img src="<!--[ $post.poster_data.pn_user_avatar ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
+                            <img src="<!--[pngetbaseurl]--><!--[ $post.poster_data.pn_user_avatar ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
                         </div>
                     <!--[ /if ]-->
                 <!--[ else ]-->
