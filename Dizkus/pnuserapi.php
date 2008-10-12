@@ -2675,11 +2675,11 @@ function Dizkus_userapi_notify_by_email($args)
             . strip_tags($post_message) . "\n"
             . "---------------------------------------------------------------------\n\n"
             . _DZK_NOTIFYBODY3 . "\n"
-            . pnModURL('Dizkus', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id)) . "\n\n"
+            . pnModURL('Dizkus', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id), null, null, true) . "\n\n"
             . _DZK_NOTIFYBODY4 . "\n"
-            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)) . "\n\n"
+            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true) . "\n\n"
             . _DZK_NOTIFYBODY6 . "\n"
-            . pnModURL('Dizkus', 'user', 'prefs') . "\n"
+            . pnModURL('Dizkus', 'user', 'prefs', array(), null, null, true) . "\n"
             . "\n"
             . _DZK_NOTIFYBODY5 . ' ' . pnGetBaseURL();
 
