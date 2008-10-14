@@ -611,7 +611,7 @@ function Dizkus_ajax_newtopic()
         }
         dzk_jsonizeoutput(array('topic'        => $topic,
                                 'confirmation' => $confirmation,
-                                'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
+                                'redirect'     => pnGetBaseURL().pnModURL('Dizkus', 'user', 'viewtopic',
                                                            array('topic' => $topic_id))),
                           true);
 

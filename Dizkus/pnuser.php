@@ -642,11 +642,20 @@ function Dizkus_user_prefs($args=array())
  */
 function Dizkus_user_signaturemanagement()
 {
+   $disabled = dzk_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
+    if(!pnUserLoggedIn()) {
+        return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
+    }
     // Security check
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) return LogUtil::registerPermissionError();
 	// Create output and assign data
 	$render = FormUtil::newpnForm('Dizkus');
     $render->caching = false;
+    $render->add_core_data('PNConfig');
     // Return the output
     return $render->pnFormExecute('dizkus_user_signaturemanagement.html', new dizkus_user_signaturemanagementHandler());
 }
