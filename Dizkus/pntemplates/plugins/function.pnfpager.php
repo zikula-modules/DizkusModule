@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  * @link http://www.dizkus.com
- * @version $Id: pnajax.php 815 2007-09-22 13:12:50Z landseer $
+ * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */

@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  * @link http://www.dizkus.com
- * @version $Id: modifier.viewtopiclink.php 885 2008-09-11 18:36:37Z Landseer $
+ * @version $Id$
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -16,7 +16,7 @@
  *
  * @package      Xanthia_Templating_Environment
  * @subpackage   pnRender
- * @version      $Id: modifier.viewtopiclink.php 885 2008-09-11 18:36:37Z Landseer $
+ * @version      $Id$
  * @author       The Zikula development team
  * @link         http://www.zikula.org  The Zikula Home Page
  * @copyright    Copyright (C) 2002 by the Zikula Development Team
