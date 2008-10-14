@@ -106,6 +106,7 @@ function Dizkus_init()
 	pnModSetVar('Dizkus', 'log_ip', 'yes');
 	pnModSetVar('Dizkus', 'slimforum', 'no');
 	pnModSetVar('Dizkus', 'hideusers', 'no');
+	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
 	pnModSetVar('Dizkus', 'removesignature', 'no');
 	pnModSetVar('Dizkus', 'striptags', 'no');
     pnModSetVar('Dizkus', 'deletehookaction', 'lock');
@@ -340,6 +341,8 @@ function Dizkus_upgrade_to_3_0()
         return LogUtil::registerError(_DZK_FAILEDTOUPGRADEHOOK . ' (tmodule)');
     }
 
+	// introduce new module variable
+	pnModSetVar('Dizkus', 'signaturemanagement', 'no');	
     return true;
 }
 

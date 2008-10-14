@@ -628,11 +628,27 @@ function Dizkus_user_prefs($args=array())
             $pnr->assign('last_visit', $last_visit);
             $pnr->assign('favorites_enabled', pnModGetVar('Dizkus', 'favorites_enabled'));
             $pnr->assign('last_visit_unix', $last_visit_unix);
+            $pnr->assign('signaturemanagement', pnModGetVar('Dizkus','signaturemanagement'));
             $pnr->assign('post_order', strtolower(pnModAPIFunc('Dizkus','user','get_user_post_order')));
             $pnr->assign('tree', pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('dizkus_user_prefs.html');
     }
     return pnRedirect(pnModURL('Dizkus', 'user', $return_to, $params));
+}
+
+/**
+ * signature management
+ * 
+ */
+function Dizkus_user_signaturemanagement()
+{
+    // Security check
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) return LogUtil::registerPermissionError();
+	// Create output and assign data
+	$render = FormUtil::newpnForm('Dizkus');
+    $render->caching = false;
+    // Return the output
+    return $render->pnFormExecute('dizkus_user_signaturemanagement.html', new dizkus_user_signaturemanagementHandler());
 }
 
 /**
@@ -1238,4 +1254,31 @@ function Dizkus_user_login($args)
         return pnRedirect($redirect);
     }
 
+}
+
+/* classes for pnForms handlers */
+ 
+class Dizkus_user_signaturemanagementHandler
+{
+	function initialize(&$render)
+	{	    
+		$render->assign('signature',	pnUserGetVar('_SIGNATURE'));
+		return true;
+    }
+	function handleCommand(&$render, &$args)
+	{
+		if ($args['commandName']=='update') {
+		    // Security check 
+		    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) return LogUtil::registerPermissionError();
+
+			// get the pnForm data and do a validation check
+		    $obj = $render->pnFormGetValues();		    
+		    if (!$render->pnFormIsValid()) return false;
+
+			pnUserSetVar('_SIGNATURE',$obj['signature']);
+			
+			return pnRedirect(pnModURL('Dizkus','user','signaturemanagement'));
+		}
+		return true;
+    }
 }

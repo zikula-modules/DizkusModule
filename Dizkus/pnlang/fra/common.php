@@ -14,6 +14,9 @@
  */
  
 //nouveau (sp?, damn, I should have learned french in school, but latin was more interesting :-))
+define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
+define('_DZK_MANAGESIGNATURE', 'Manage my signature');
+define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');
 
 // alphasorting starts here
 

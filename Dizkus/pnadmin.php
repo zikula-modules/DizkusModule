@@ -87,6 +87,13 @@ function Dizkus_admin_preferences()
         	$hideusers_onchecked = " ";
         	$hideusers_offchecked = $checked;
         }
+        if (pnModGetVar('Dizkus', 'signaturemanagement') == "yes") {
+        	$signaturemanagement_onchecked = $checked;
+        	$signaturemanagement_offchecked = " ";
+        } else {
+        	$signaturemanagement_onchecked = " ";
+        	$signaturemanagement_offchecked = $checked;
+        }
         if (pnModGetVar('Dizkus', 'removesignature') == "yes") {
         	$removesignature_onchecked = $checked;
         	$removesignature_offchecked = " ";
@@ -152,6 +159,8 @@ function Dizkus_admin_preferences()
         $pnr->assign('favorites_enabledoffchecked', $favorites_enabledoffchecked);
         $pnr->assign('hideusers_onchecked',  $hideusers_onchecked);
         $pnr->assign('hideusers_offchecked', $hideusers_offchecked);
+        $pnr->assign('signaturemanagement_onchecked',  $signaturemanagement_onchecked);
+        $pnr->assign('signaturemanagement_offchecked', $signaturemanagement_offchecked);
         $pnr->assign('removesignature_onchecked',  $removesignature_onchecked);
         $pnr->assign('removesignature_offchecked', $removesignature_offchecked);
         $pnr->assign('striptags_onchecked',  $striptags_onchecked);
@@ -174,6 +183,7 @@ function Dizkus_admin_preferences()
             pnModSetVar('Dizkus', 'rss2f_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('rss2f_enabled')));
             pnModSetVar('Dizkus', 'deletehookaction', DataUtil::formatForStore(FormUtil::getPassedValue('deletehookaction')));
             pnModSetVar('Dizkus', 'striptags', DataUtil::formatForStore(FormUtil::getPassedValue('striptags')));
+            pnModSetVar('Dizkus', 'signaturemanagement', DataUtil::formatForStore(FormUtil::getPassedValue('signaturemanagement')));
             pnModSetVar('Dizkus', 'removesignature', DataUtil::formatForStore(FormUtil::getPassedValue('removesignature')));
             pnModSetVar('Dizkus', 'hideusers', DataUtil::formatForStore(FormUtil::getPassedValue('hideusers')));
             pnModSetVar('Dizkus', 'favorites_enabled', DataUtil::formatForStore(FormUtil::getPassedValue('favorites_enabled')));
@@ -229,6 +239,7 @@ function Dizkus_admin_preferences()
             pnModSetVar('Dizkus', 'rss2f_enabled', 'yes');
             pnModSetVar('Dizkus', 'deletehookaction', 'lock');
             pnModSetVar('Dizkus', 'striptags', 'no');
+            pnModSetVar('Dizkus', 'signaturemanagement', 'no');
             pnModSetVar('Dizkus', 'removesignature', 'no');
             pnModSetVar('Dizkus', 'hideusers', 'no');
             pnModSetVar('Dizkus', 'favorites_enabled', 'yes');

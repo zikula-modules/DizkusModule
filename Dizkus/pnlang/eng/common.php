@@ -18,6 +18,9 @@ define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
+define('_DZK_MANAGESIGNATURE', 'Manage my signature');
+define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');
 define('_DZK_SEARCHWHERE', 'Search in');
 define('_DZK_SEARCH_POSTINGS', 'postings');
 define('_DZK_SEARCH_AUTHOR', 'authors');
