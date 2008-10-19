@@ -17,7 +17,6 @@ define('_DZK_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien mit d
 define('_DZK_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
-define('_MODIFYCONFIG', 'Moduleinstellungen');
 define('_DZK_POSTSAPPEARANCE', 'Erscheinungsbild der Beiträge');
 define('_DZK_MANAGESIGNATURE', 'Meine Signatur verwalten');
 define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Signaturverwaltung über Dizkus-Einstellungen ermöglichen');

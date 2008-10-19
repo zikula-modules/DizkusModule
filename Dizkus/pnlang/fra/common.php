@@ -17,7 +17,6 @@
 define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
 define('_DZK_MANAGESIGNATURE', 'Manage my signature');
 define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');
-define('_MODIFYCONFIG', 'Modify module settings');
 
 // alphasorting starts here
 

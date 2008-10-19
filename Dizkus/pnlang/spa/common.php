@@ -17,7 +17,6 @@
 define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
 define('_DZK_MANAGESIGNATURE', 'Manage my signature');
 define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');
-define('_MODIFYCONFIG', 'Modify module settings');
  
 define('_DZK_SEARCHINCLUDE_MISSINGPARAMETERS', 'Faltam parámetros para poder realizar la búsqueda');
 define('_DZK_NOMOVETO', 'No se ha seleccionado Foro de destino');
