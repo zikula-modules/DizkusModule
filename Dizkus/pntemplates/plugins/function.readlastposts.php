@@ -125,9 +125,9 @@ function smarty_function_readlastposts($params, &$smarty)
     $whereuser = "";
     if(!empty($user_id)) {
         if($user_id==-1 && $loggedIn) {
-            $whereuser = 'pt.poster_id = ' . DataUtil::formatForStore($uid) . ' AND ';
+            $whereuser = 'p.poster_id = ' . DataUtil::formatForStore($uid) . ' AND ';
         } else {
-            $whereuser = 'pt.poster_id = ' . DataUtil::formatForStore($user_id) . ' AND ';
+            $whereuser = 'p.poster_id = ' . DataUtil::formatForStore($user_id) . ' AND ';
         }
     }
 
