@@ -17,6 +17,7 @@ define('_DZK_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien mit d
 define('_DZK_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_DZK_PREFS_SENDEMAILSWITHSQLERRORS', 'Sende E-Mails, falls SQL-Fehler auftreten');
 define('_DZK_TO30_HINT', 'Dieser Schritt wird pnForum 2.7.1 auf Dizkus 3.0 umstellen und alle notwendigen Datenbankänderungen durchführen.');
 define('_DZK_POSTSAPPEARANCE', 'Erscheinungsbild der Beiträge');
 define('_DZK_MANAGESIGNATURE', 'Meine Signatur verwalten');

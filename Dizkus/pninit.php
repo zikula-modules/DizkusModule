@@ -106,7 +106,6 @@ function Dizkus_init()
 	pnModSetVar('Dizkus', 'log_ip', 'yes');
 	pnModSetVar('Dizkus', 'slimforum', 'no');
 	pnModSetVar('Dizkus', 'hideusers', 'no');
-	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
 	pnModSetVar('Dizkus', 'removesignature', 'no');
 	pnModSetVar('Dizkus', 'striptags', 'no');
     pnModSetVar('Dizkus', 'deletehookaction', 'lock');
@@ -125,6 +124,9 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'timespanforchanges', 24);
     pnModSetVar('Dizkus', 'forum_enabled', 'yes');
     pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
+    // 3.0
+	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
+    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no')
 
     // Initialisation successful
     return true;
@@ -343,7 +345,8 @@ function Dizkus_upgrade_to_3_0()
 
 	// introduce new module variable
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');	
-    return true;
+    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no')
+	return true;
 }
 
 function createHooks()

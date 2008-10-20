@@ -168,7 +168,7 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
  */
 function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file='', $line)
 {
-    if(!empty($sql)) {
+    if(!empty($sql) && pnModGetVar('Dizkus', 'sendemailswithsqlerrors') == 'yes') {
         // Sending notify e-mail for error
         $message = "Error occured\n\n";
         $message .= "SQL statement:\n" . $sql . "\n\n";

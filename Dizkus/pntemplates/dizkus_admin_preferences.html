@@ -125,6 +125,12 @@
             <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_TIMESPANFORCHANGES' ]--></dt>
             <dd class="pnfadmin"><input type="text" id="timespanforchanges" name="timespanforchanges" size="10" maxlength="10" value="<!--[ $pncore.Dizkus.timespanforchanges|pnvarprepfordisplay ]-->" />&nbsp;<!--[ pnml name="_DZK_HOURS" ]--></dd>
 
+            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_SENDEMAILSWITHSQLERRORS' ]--></dt>
+            <dd class="pnfadmin">
+                <input type="radio" name="sendemailswithsqlerrors" value="yes" <!--[ $sqlmails_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
+                <input type="radio" name="sendemailswithsqlerrors" value="no" <!--[ $sqlmails_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
+            </dd>
+
             <dt class="pnfadmin"><label for="url_ranks_images"><!--[ pnml name='_DZK_PREFS_RANKLOCATION' ]--></label></dt>
             <dd class="pnfadmin"><input type="text" id="url_ranks_images" name="url_ranks_images" size="40" maxlength="100" value="<!--[ $pncore.Dizkus.url_ranks_images|pnvarprepfordisplay ]-->" /></dd>
 

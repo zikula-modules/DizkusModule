@@ -141,6 +141,13 @@ function Dizkus_admin_preferences()
         	$forumenabled_offchecked = $checked;
         }
 
+        if (pnModGetVar('Dizkus', 'sendemailswithsqlerrors') == "yes") {
+        	$sqlmails_onchecked = $checked;
+        	$sqlmails_offchecked = " ";
+        } else {
+        	$sqlmails_onchecked = " ";
+        	$sqlmails_offchecked = $checked;
+        }
         $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('autosubscribe', $autosubscribechecked);
         $pnr->assign('signature_start', stripslashes(pnModGetVar('Dizkus', 'signature_start')));
@@ -173,6 +180,8 @@ function Dizkus_admin_preferences()
         $pnr->assign('newtopicconf_offchecked', $newtopicconf_offchecked);
         $pnr->assign('forumenabled_onchecked',  $forumenabled_onchecked);
         $pnr->assign('forumenabled_offchecked', $forumenabled_offchecked);
+        $pnr->assign('sqlmails_onchecked',  $sqlmails_onchecked);
+        $pnr->assign('sqlmails_offchecked', $sqlmails_offchecked);
         return $pnr->fetch( "dizkus_admin_preferences.html");
     } else { // submit is set
         $actiontype = FormUtil::getPassedValue('actiontype', 'Save', 'GETPOST');
@@ -191,7 +200,8 @@ function Dizkus_admin_preferences()
             pnModSetVar('Dizkus', 'autosubscribe', DataUtil::formatForStore(FormUtil::getPassedValue('autosubscribe')));
             pnModSetVar('Dizkus', 'signature_start', DataUtil::formatForStore(FormUtil::getPassedValue('signature_start')));
             pnModSetVar('Dizkus', 'signature_end', DataUtil::formatForStore(FormUtil::getPassedValue('signature_end')));
-
+            pnModSetVar('Dizkus', 'sendemailswithsqlerrors', DataUtil::formatForStore(FormUtil::getPassedValue('sendemailswithsqlerrors')));
+            
             $topics_per_page = (int)FormUtil::getPassedValue('topics_per_page');
             if(empty($topics_per_page) || $topics_per_page<0) {
                 $topics_per_page = 15;
@@ -257,6 +267,7 @@ function Dizkus_admin_preferences()
 		    pnModSetVar('Dizkus', 'log_ip', "yes");
 		    pnModSetVar('Dizkus', 'slimforum', "no");
 		    pnModSetVar('Dizkus', 'timespanforchanges', 12);
+            pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
         }
     }
     return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));

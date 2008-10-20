@@ -13,6 +13,7 @@
 // define('_DZK_TOGGLEALL', 'Remove all topic subscriptions');
 
 // changed
+define('_DZK_PREFS_SENDEMAILSWITHSQLERRORS', 'Send emails, if SQL-errors occur');
 define('_DZK_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
 define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_ADD_FAVORITE_FORUM','add to favorites');
