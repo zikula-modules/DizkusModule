@@ -102,7 +102,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
         //
         if($userdata['pn_uid'] != 1) {
             // user is logged in, display some info
-            $activetime = time() - (pnConfigGetVar('secinactivemins') * 60);
+            $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
             $userhack = "SELECT pn_uid
                          FROM ".$pntable['session_info']."
                          WHERE pn_uid = '".$userdata['pn_uid']."'

@@ -62,7 +62,7 @@ function smarty_function_dizkusonline($params, &$smarty)
     $sessioninfocolumn = &$pntable['session_info_column'];
     $sessioninfotable = $pntable['session_info'];
 
-    $activetime = time() - (pnConfigGetVar('secinactivemins') * 60);
+    $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
 
     // set some defaults
     $numguests = 0;
@@ -78,7 +78,7 @@ function smarty_function_dizkusonline($params, &$smarty)
     }
     $sql = "SELECT   $pntable[session_info].pn_uid, $pntable[users].pn_uname
             FROM     $pntable[session_info], $pntable[users]
-            WHERE    $pntable[session_info].pn_lastused > $activetime
+            WHERE    $pntable[session_info].pn_lastused > '$activetime'
             $anonwhere
             AND      IF($pntable[session_info].pn_uid='0','1',$pntable[session_info].pn_uid) = $pntable[users].pn_uid
             GROUP BY $pntable[session_info].pn_ipaddr, $pntable[session_info].pn_uid";
