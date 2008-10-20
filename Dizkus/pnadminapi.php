@@ -403,12 +403,11 @@ function Dizkus_adminapi_readranks($args)
         $orderby = 'ORDER BY ' . $rcol['rank_title'];
     }
     $ranks = DBUtil::selectObjectArray('dizkus_ranks', 'WHERE ' . $rcol['rank_special'] . '=' . DataUtil::formatForStore($args['ranktype']), $orderby);
-    if(is_array($ranks)) {
-        $rankcount = count($ranks);
-        for($cnt=0; $cnt++; $cnt < $rankcount) {
-            $ranks[$cnt]['users'] = pnModAPIFunc('Dizkus', 'admin', 'readrankusers',
-                                          array('rank_id' => $ranks[$cnt]['rank_id']));
 
+    if(is_array($ranks)) {
+        foreach($ranks as $cnt => $rank) {
+        	$ranks[$cnt]['users'] = pnModAPIFunc('Dizkus', 'admin', 'readrankusers',
+                                          array('rank_id' => $ranks[$cnt]['rank_id']));
         }
     }
 
@@ -431,7 +430,7 @@ function Dizkus_adminapi_readranks($args)
  */
 function Dizkus_adminapi_saverank($args)
 {
-    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+	if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return showforumerror(_DZK_NOAUTH, __FILE__, __LINE__);
     }
 
@@ -457,7 +456,7 @@ function Dizkus_adminapi_saverank($args)
  */
 function Dizkus_adminapi_readrankusers($args)
 {
-    extract($args);
+	extract($args);
     unset($args);
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -480,6 +479,7 @@ function Dizkus_adminapi_readrankusers($args)
             array_push( $users, $user_id );
         }
     }
+
     dzkCloseDB($result);
     return $users;
 }
@@ -518,20 +518,18 @@ function Dizkus_adminapi_readnorankusers()
  */
 function Dizkus_adminapi_assignranksave($args)
 {
-    extract($args);
-    unset($args);
-
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return showforumerror(_DZK_NOAUTH, __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
 
-    if(is_array($setrank)) {
-        foreach($setrank as $user_id => $rank_id) {
+    if(is_array($args['setrank'])) {
+        foreach($args['setrank'] as $user_id => $rank_id) {
             $sql = "UPDATE ".$pntable['dizkus_users']."
                     SET user_rank='" . DataUtil::formatForStore($rank_id) . "'
                     WHERE user_id = '" . DataUtil::formatForStore($user_id) . "'";
+
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             dzkCloseDB($result);
         }

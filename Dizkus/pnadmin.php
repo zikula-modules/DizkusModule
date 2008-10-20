@@ -428,7 +428,6 @@ function Dizkus_admin_assignranks()
     
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                  array('ranktype' => 1));
-
         // remove the first rank, its used for adding new ranks only
         array_splice($ranks, 0, 1);
     
@@ -451,7 +450,7 @@ function Dizkus_admin_assignranks()
     
         $allusers = array();
         foreach ($users as $user) {
-            if ($user['uname'] == 'Anonymous')  continue;
+        	if ($user['uname'] == 'Anonymous')  continue;
             
             $alias = '';
             if (!empty($user['name'])) {
@@ -468,10 +467,19 @@ function Dizkus_admin_assignranks()
             }
             array_push($allusers, $user);
         }
+/*        
+        $inlinecss = '<style type="text/css">' ."\n";
+        $rankpath = pnModGetVar('Dizkus', 'url_ranks_images') .'/';
+        foreach($ranks as $rank) {
+        	$inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.pnGetBaseURL() . $rankpath . $rank['rank_image'].'"); }' . "\n";
+        }
+        $inlinecss .= '</style>' . "\n";
+        PageUtil::addVar('rawtext', $inlinecss);
+*/        
         usort($allusers, 'cmp_userorder');
-        
-        unset($users);
 
+        unset($users);
+        
         $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);

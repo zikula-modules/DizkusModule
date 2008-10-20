@@ -790,7 +790,8 @@ div.dzk_statusmsg {
     text-align: right;
 }
 
-#dizkus .center {
+#dizkus .center,
+#dizkus_admin .center {
     text-align: center;
 }
 
