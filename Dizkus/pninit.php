@@ -103,7 +103,7 @@ function Dizkus_init()
 	pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
 	pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
 	pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
-	pnModSetVar('Dizkus', 'log_ip', 'yes');
+	pnModSetVar('Dizkus', 'log_ip', 'no');
 	pnModSetVar('Dizkus', 'slimforum', 'no');
 	pnModSetVar('Dizkus', 'hideusers', 'no');
 	pnModSetVar('Dizkus', 'removesignature', 'no');

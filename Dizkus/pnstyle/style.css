@@ -85,7 +85,7 @@ a.Dizkus_links {
     color: yellow;
 }
 
-div.pnfadminrow98 {
+div.dzkadminrow98 {
     /* clear: both; */
     width: 98%;
     padding-top: 0.5em;
@@ -133,11 +133,7 @@ div.pnfadmincol12, div.pnfadmincol12c {
     width: 12%;
 }
 
-div.pnfadminclear {
-    clear: both;
-}
-
-dt.pnfadmin {
+dt.dzkadmin {
     clear: both;
     width: 40%;
     float: left;
@@ -145,7 +141,7 @@ dt.pnfadmin {
     padding-bottom: 1em;
 }
 
-dd.pnfadmin {
+dd.dzkadmin {
     width: 40%;
     float: left;
     padding-top: 1em;

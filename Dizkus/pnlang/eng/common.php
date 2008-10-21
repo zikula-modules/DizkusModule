@@ -19,6 +19,13 @@ define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_DZK_ADMINGENERALOPTIONS', 'General options');
+define('_DZK_ADMINUSERRELATEDOPTIONS', 'User related options');
+define('_DZK_ADMINSECURITYOPTIONS', 'Security options');
+define('_DZK_ADMINFEATURESOPTIONS', 'Features');
+define('_DZK_DISABLED_INFO', 'The forum is currently disabled for maintenance, please come back later.');
+define('_DZK_CONFIGRESTORED', 'The configuration has been reset to the default values');
+define('_DZK_CONFIGCHANGED', 'The configuration has been changed');
 define('_DZK_SIGNATUREUPDATED', 'Signature updated');
 define('_DZK_TO30_HINT', 'This step will upgrade pnForum 2.7.1 to Dizkus 3.0 including all necessary database changes.');
 define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
@@ -419,8 +426,8 @@ define('_DZK_PREFS_ASCENDING', 'Ascending');
 define('_DZK_PREFS_AUTOSUBSCRIBE', 'Autosubscribe to new topics or posts');
 define('_DZK_PREFS_CHARSET', 'Default charset:<br /><em>(This is the charset that will be used in e-mail headers)</em>');
 define('_DZK_PREFS_DELETEHOOKACTION', 'Action to be performed when deletehook is called');
-define('_DZK_PREFS_DELETEHOOKACTIONLOCK', 'delete topic');
-define('_DZK_PREFS_DELTEHOOKACTIONREMOVE', 'close topic');
+define('_DZK_PREFS_DELETEHOOKACTIONLOCK', 'close topic');
+define('_DZK_PREFS_DELETEHOOKACTIONREMOVE', 'delete topic');
 define('_DZK_PREFS_DESCENDING', 'Descending');
 define('_DZK_PREFS_EMAIL', 'Email From Address:<br /><em>(This is the address that will appear on every email sent by the forums)</em>');
 define('_DZK_PREFS_FAVORITESENABLED', 'Favorites enabled');

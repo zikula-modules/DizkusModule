@@ -16,7 +16,7 @@
         <!--[ pnml name='_DZK_ADMINUSERRANK_INFO' html=1 ]-->
     </p>
     
-    <div class="pnfadminrow98 dzk_clearfix dzk_bgcolor3">
+    <div class="dzkadminrow98 dzk_clearfix dzk_bgcolor3">
         <div class="pnfadmincol24c">
             <strong><!--[ pnml name='_DZK_ADMINUSERRANK_TITLE2' html=1 ]--></strong>
         </div>
@@ -37,7 +37,7 @@
     <!--[ foreach key=num item=rank from=$ranks ]-->
 
     <form name="Rank<!--[ $num ]-->" action="<!--[ pnmodurl modname=Dizkus type=admin func=ranks ]-->" method="post">
-    <div class="pnfadminrow98 dzk_clearfix">
+    <div class="dzkadminrow98 dzk_clearfix">
         <input type="hidden" name="ranktype" value="<!--[ $ranktype ]-->" />
         <div class="pnfadmincol24c">
             <input type="text" name="title" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20" />

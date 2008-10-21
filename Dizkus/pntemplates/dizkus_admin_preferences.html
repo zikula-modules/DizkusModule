@@ -2,151 +2,143 @@
 
 <!--[ include file='dizkus_admin_header.html' ]-->
 
-<!--[* pndebug *]-->
+<!--[ pnform ]-->
+<div style="margin: 1em;" class="dzk_clearfix"> 
+    <!--[ pnformvalidationsummary ]-->
 
-<fieldset>
-    <legend>
-        <!--[pnml name='_DZK_ADMINFORUMOPTIONS']-->
-    </legend>
-
-    <form action="<!--[ pnmodurl modname=Dizkus type=admin func=preferences ]-->" method="post">
-    <div style="margin: 1em;" class="dzk_clearfix">
+    <fieldset>
+        <legend>
+            <!--[pnml name='_DZK_ADMINGENERALOPTIONS']-->
+        </legend>
         <dl class="dzk_clearfix">
-            <dt class="pnfadmin"><label for="email_from"><!--[ pnml name='_DZK_PREFS_EMAIL' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="email_from" name="email_from" size="30" maxlength="100" value="<!--[ $pncore.Dizkus.email_from|pnvarprepfordisplay ]-->" /></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="forum_enabled" text='_DZK_PREFS_ENABLEDISABLE' html=1]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked ]--></dd>
+            
+            <dt class="dzkadmin "><!--[ pnformlabel for="forum_disabled_info" text="_DZK_PREFS_DISABLEDTEXT" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info ]--></dd>
 
-            <dt class="pnfadmin"><label for="default_lang"><!--[ pnml name='_DZK_PREFS_CHARSET' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="default_lang" name="default_lang" size="30" maxlength="30" value="<!--[ $pncore.Dizkus.default_lang|pnvarprepfordisplay ]-->" /></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="email_from" text="_DZK_PREFS_EMAIL" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformtextinput id="email_from" text=$pncore.Dizkus.email_from size="30" maxLength="100" ]--></dd>
 
-            <dt class="pnfadmin"><label for="hot_threshold"><!--[ pnml name='_DZK_PREFS_HOTTOPIC' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="hot_threshold" name="hot_threshold" size="3" maxlength="3" value="<!--[ $pncore.Dizkus.hot_threshold|pnvarprepfordisplay ]-->" /></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="default_lang" text="_DZK_PREFS_CHARSET" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformtextinput id="default_lang" text=$pncore.Dizkus.default_lang size="30" maxLength="100" ]--></dd>
 
-            <dt class="pnfadmin"><label for="posts_per_page"><!--[ pnml name='_DZK_PREFS_POSTSPERPAGE' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="posts_per_page" name="posts_per_page" size="3" maxlength="3" value="<!--[ $pncore.Dizkus.posts_per_page|pnvarprepfordisplay ]-->" /></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="hot_threshold" text="_DZK_PREFS_HOTTOPIC" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformintinput id="hot_threshold" text=$pncore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999 ]--></dd>
 
-            <dt class="pnfadmin"><label for="topics_per_page"><!--[ pnml name='_DZK_PREFS_TOPICSPERPAGE' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="topics_per_page" name="topics_per_page" size="3" maxlength="3" value="<!--[ $pncore.Dizkus.topics_per_page|pnvarprepfordisplay ]-->" /></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="posts_per_page" text="_DZK_PREFS_POSTSPERPAGE" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformintinput id="posts_per_page" text=$pncore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]--></dd>
 
-            <dt class="pnfadmin"><label for="signature_start"><!--[ pnml name='_DZK_PREFS_SIGNATURESTART' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><textarea id="signature_start" name="signature_start" rows="2" cols="40"><!--[ $signature_start|pnvarprepfordisplay ]--></textarea></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="topics_per_page" text="_DZK_PREFS_TOPICSPERPAGE" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformintinput id="topics_per_page" text=$pncore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]--></dd>
 
-            <dt class="pnfadmin"><label for="signature_end"><!--[ pnml name='_DZK_PREFS_SIGNATUREEND' html=1 ]--></label></dt>
-            <dd class="pnfadmin"><textarea id="signature_end" name="signature_end" rows="2" cols="40"><!--[ $signature_end|pnvarprepfordisplay ]--></textarea></dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="hideusers" text='_DZK_PREFS_HIDEUSERSINFORUMADMIN' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="hideusers" checked=$hideusers_checked ]--></dd>
 
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_POSTSORTORDER' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="post_sort_order" value="ASC" <!--[ $post_sort_order_ascchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_ASCENDING' ]-->
-                <input type="radio" name="post_sort_order" value="DESC" <!--[ $post_sort_order_descchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_DESCENDING' ]-->
-            </dd>
+            <dt class="dzkadmin "><!--[ pnformlabel for="sendemailswithsqlerrors" text='_DZK_PREFS_SENDEMAILSWITHSQLERRORS' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="sendemailswithsqlerrors" checked=$sendemailswithsqlerrors_checked ]--></dd>
 
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_LOGIP' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="log_ip" value="yes" <!--[ $logiponchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="log_ip" value="no" <!--[ $logipoffchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_SLIMFORUM' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="slimforum" value="yes" <!--[ $slimforumonchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="slimforum" value="no" <!--[ $slimforumoffchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_AUTOSUBSCRIBE' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="autosubscribe" value="yes" <!--[ $autosubscribeonchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="autosubscribe" value="no" <!--[ $autosubscribeoffchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_M2FENABLED' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="m2f_enabled" value="yes" <!--[ $m2f_enabledonchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="m2f_enabled" value="no" <!--[ $m2f_enabledoffchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_RSS2FENABLED' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="rss2f_enabled" value="yes" <!--[ $rss2f_enabledonchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="rss2f_enabled" value="no" <!--[ $rss2f_enabledoffchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_FAVORITESENABLED' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="favorites_enabled" value="yes" <!--[ $favorites_enabledonchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="favorites_enabled" value="no" <!--[ $favorites_enabledoffchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_HIDEUSERSINFORUMADMIN' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="hideusers" value="yes" <!--[ $hideusers_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="hideusers" value="no" <!--[ $hideusers_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_ENABLESIGNATUREMANAGEMENT' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="signaturemanagement" value="yes" <!--[ $signaturemanagement_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="signaturemanagement" value="no" <!--[ $signaturemanagement_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_REMOVESIGNATUREFROMPOST' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="removesignature" value="yes" <!--[ $removesignature_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="removesignature" value="no" <!--[ $removesignature_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_STRIPTAGSFROMPOST' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="striptags" value="yes" <!--[ $striptags_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="striptags" value="no" <!--[ $striptags_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_DELETEHOOKACTION' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="deletehookaction" value="lock" <!--[ $deletehookaction_lock ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_DELTEHOOKACTIONREMOVE' ]-->
-                <input type="radio" name="deletehookaction" value="remove" <!--[ $deletehookaction_remove ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_DELETEHOOKACTIONLOCK' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_SHOWNEWTOPICCONFIRMATION' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="newtopicconfirmation" value="yes" <!--[ $newtopicconf_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="newtopicconfirmation" value="no" <!--[ $newtopicconf_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_ENABLEDISABLE' html=1 ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="forum_enabled" value="yes" <!--[ $forumenabled_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="forum_enabled" value="no" <!--[ $forumenabled_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_DISABLEDTEXT' ]--></dt>
-            <dd class="pnfadmin">
-                <textarea rows="2" cols="40" name="forum_disabled_info"><!--[ $pncore.Dizkus.forum_disabled_info|pnvarprepfordisplay ]--></textarea>
-            </dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_TIMESPANFORCHANGES' ]--></dt>
-            <dd class="pnfadmin"><input type="text" id="timespanforchanges" name="timespanforchanges" size="10" maxlength="10" value="<!--[ $pncore.Dizkus.timespanforchanges|pnvarprepfordisplay ]-->" />&nbsp;<!--[ pnml name="_DZK_HOURS" ]--></dd>
-
-            <dt class="pnfadmin"><!--[ pnml name='_DZK_PREFS_SENDEMAILSWITHSQLERRORS' ]--></dt>
-            <dd class="pnfadmin">
-                <input type="radio" name="sendemailswithsqlerrors" value="yes" <!--[ $sqlmails_onchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_YES' ]-->
-                <input type="radio" name="sendemailswithsqlerrors" value="no" <!--[ $sqlmails_offchecked ]--> />&nbsp;<!--[ pnml name='_DZK_PREFS_NO' ]-->
-            </dd>
-
-            <dt class="pnfadmin"><label for="url_ranks_images"><!--[ pnml name='_DZK_PREFS_RANKLOCATION' ]--></label></dt>
-            <dd class="pnfadmin"><input type="text" id="url_ranks_images" name="url_ranks_images" size="40" maxlength="100" value="<!--[ $pncore.Dizkus.url_ranks_images|pnvarprepfordisplay ]-->" /></dd>
-
+            <dt class="dzkadmin "><!--[ pnformlabel for="url_ranks_images" text="_DZK_PREFS_RANKLOCATION" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformtextinput id="url_ranks_images" text=$pncore.Dizkus.url_ranks_images size="30" maxLength="100" ]--></dd>
         </dl>
+    </fieldset>
 
-        <div class="pnfadminrow98 dzk_clearfix" style="float: left;">
-            <input type="radio" name="actiontype" value="Save" checked="checked" />&nbsp;<!--[ pnml name='_DZK_PREFS_SAVE' ]-->&nbsp;
-            <input type="radio" name="actiontype" value="RestoreDefaults" />&nbsp;<!--[ pnml name='_DZK_PREFS_RESTOREDEFAULTS' ]-->
-            <p>
-                <button class="image ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
-            </p>
+    <fieldset>
+        <legend>
+            <!--[pnml name='_DZK_ADMINADVANCEDCONFIG_INFO']-->
+        </legend>
+        <div style="margin: 1em;">
+        <strong><!--[ pnml name='_DZK_ADMINADVANCEDCONFIG_HINT' ]--></strong>
+        <p><!--[ pnml name='_DZK_DATABASEINUSE' ]-->: <!--[ $dbname ]--> (<!--[ $dbtype ]--> <!--[ $dbversion ]-->)</p>
         </div>
+        <dl class="dzk_clearfix">
+            <dt class="dzkadmin "><!--[ pnformlabel for="fulltextindex" text="_DZK_PREFS_SEARCHWITHFULLTEXTINDEX" html=1 ]--></dt>
+            <dd class="dzkadmin ">
+                <!--[ pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked ]-->
+                <br /><!--[ pnml name='_DZK_PREFS_SEARCHWITHFULLTEXTINDEX_HINT' html=1 ]-->
+            </dd>
+           
+            <dt class="dzkadmin "><!--[ pnformlabel for="extendedsearch" text="_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX" html=1 ]--></dt>
+            <dd class="dzkadmin ">
+                <!--[ pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked ]-->
+                <br /><!--[ pnml name='_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT' html=1 ]-->
+        	</dd>
+        </dl>
+    </fieldset>
 
-    </div>
-    </form>
+    <fieldset>
+        <legend>
+            <!--[pnml name='_DZK_ADMINUSERRELATEDOPTIONS']-->
+        </legend>
+        <dl class="dzk_clearfix">
+            <dt class="dzkadmin "><!--[ pnformlabel for="post_sort_order" text="_DZK_PREFS_POSTSORTORDER" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$pncore.Dizkus.post_sort_order ]--></dd>
 
-</fieldset>
+            <dt class="dzkadmin "><!--[ pnformlabel for="signature_start" text="_DZK_PREFS_SIGNATURESTART" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$signature_start ]--></dd>
+            
+            <dt class="dzkadmin "><!--[ pnformlabel for="signature_end" text="_DZK_PREFS_SIGNATUREEND" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$signature_end ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="autosubscribe" text='_DZK_PREFS_AUTOSUBSCRIBE' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="autosubscribe" checked=$autosubscribe_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="signaturemanagement" text='_DZK_PREFS_ENABLESIGNATUREMANAGEMENT' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="signaturemanagement" checked=$signaturemanagement_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="removesignature" text='_DZK_PREFS_REMOVESIGNATUREFROMPOST' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="removesignature" checked=$removesignature_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="newtopicconfirmation" text='_DZK_PREFS_SHOWNEWTOPICCONFIRMATION' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="newtopicconfirmation" checked=$newtopicconfirmation_checked ]--></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <!--[pnml name='_DZK_ADMINSECURITYOPTIONS']-->
+        </legend>
+        <dl class="dzk_clearfix">
+            <dt class="dzkadmin "><!--[ pnformlabel for="log_ip" text='_DZK_PREFS_LOGIP' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="log_ip" checked=$log_ip_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="striptags" text='_DZK_PREFS_STRIPTAGSFROMPOST' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="striptags" checked=$striptags_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="timespanforchanges" text="_DZK_PREFS_TIMESPANFORCHANGES" html=1 ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformintinput id="timespanforchanges" text=$pncore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72 ]-->&nbsp;<!--[ pnml name="_DZK_HOURS" ]--></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <!--[pnml name='_DZK_ADMINFEATURESOPTIONS']-->
+        </legend>
+        <dl class="dzk_clearfix">
+            <dt class="dzkadmin "><!--[ pnformlabel for="slimforum" text='_DZK_PREFS_SLIMFORUM' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="slimforum" checked=$slimforum_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="m2f_enabled" text='_DZK_PREFS_M2FENABLED' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="m2f_enabled" checked=$m2f_enabled_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="rss2f_enabled" text='_DZK_PREFS_RSS2FENABLED' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="favorites_enabled" text='_DZK_PREFS_FAVORITESENABLED' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformcheckbox id="favorites_enabled" checked=$favorites_enabled_checked ]--></dd>
+
+            <dt class="dzkadmin "><!--[ pnformlabel for="deletehookaction" text='_DZK_PREFS_DELETEHOOKACTION' ]--></dt>
+            <dd class="dzkadmin "><!--[ pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$pncore.Dizkus.deletehookaction ]--></dd>
+        </dl>
+    </fieldset>
+        
+    <p>
+        <!--[pnformbutton id="submit" commandName="submit" text="_DZK_PREFS_SAVE" class="image ok" ]-->
+        <!--[pnformbutton id="restore" commandName="restore" text="_DZK_PREFS_RESTOREDEFAULTS" class="image restore" ]-->
+    </p>
+
+</div>
+<!--[ /pnform ]-->
+
 
 <!--[ include file='dizkus_admin_footer.html' ]-->

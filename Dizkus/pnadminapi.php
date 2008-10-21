@@ -968,7 +968,6 @@ function Dizkus_adminapi_getlinks()
     $links = array();
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('Dizkus', 'admin', 'preferences'), 'text' => _DZK_ADMINFORUMOPTIONS, 'title' => _DZK_ADMINFORUMOPTIONS_INFO);
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'advancedpreferences', array('cid' => -1)), 'text' => _DZK_ADMINADVANCEDCONFIG, 'title' => _DZK_ADMINADVANCEDCONFIG_INFO);
         $links[] = array('url' => pnModURL('Dizkus', 'admin', 'reordertree'), 'text' => _DZK_ADMINREORDERTREE, 'title' => _DZK_ADMINREORDERTREE_INFO);
         $links[] = array('url' => pnModURL('Dizkus', 'admin', 'syncforums'), 'text' => _DZK_ADMINFORUMSYNC, 'title' => _DZK_ADMINFORUMSYNC_INFO);
    
