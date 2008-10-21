@@ -19,6 +19,7 @@ define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_DZK_SIGNATUREUPDATED', 'Signature updated');
 define('_DZK_TO30_HINT', 'This step will upgrade pnForum 2.7.1 to Dizkus 3.0 including all necessary database changes.');
 define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
 define('_DZK_MANAGESIGNATURE', 'Manage my signature');
