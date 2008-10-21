@@ -1287,7 +1287,7 @@ class Dizkus_user_signaturemanagementHandler
 			pnUserSetVar('_SIGNATURE',$obj['signature']);
 			LogUtil::registerStatus(_DZK_SIGNATUREUPDATED);
 			
-			return pnRedirect(pnModURL('Dizkus','user','prefs'));
+			return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
 		}
 		return true;
     }
