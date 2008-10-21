@@ -126,7 +126,7 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
     // 3.0
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
-    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no')
+    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
 
     // Initialisation successful
     return true;
@@ -345,7 +345,7 @@ function Dizkus_upgrade_to_3_0()
 
 	// introduce new module variable
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');	
-    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no')
+    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
 	return true;
 }
 
