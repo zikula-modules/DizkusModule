@@ -147,7 +147,7 @@ class dizkus_admin_prefshandler
 
             LogUtil::registerStatus(_DZK_CONFIGRESTORED);
         }
-        return pnRedirect(pnModURL('dizkus', 'admin', 'preferences'));
+        return $pnRender->pnFormRedirect(pnModURL('Dizkus','admin','preferences'));
     }
 
 }
