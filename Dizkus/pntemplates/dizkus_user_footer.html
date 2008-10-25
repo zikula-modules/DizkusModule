@@ -14,7 +14,7 @@
         <!--[ if $online.numusers > 0]-->
             <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
             <li>
-                <!--[ if $user.admin == '1' ]--><!--[ $user.uname|userprofilelink:"pnfadminuser"]--><!--[ else ]--><!--[ $user.uname|userprofilelink:"pnfnoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
+                <!--[ if $user.admin == '1' ]--><!--[ $user.uname|userprofilelink:"dzkadminuser"]--><!--[ else ]--><!--[ $user.uname|userprofilelink:"dzknoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
             </li>
             <!--[ /foreach ]-->
             <!--[ if $online.numguests > 0 or $anonsessions == 1 ]-->

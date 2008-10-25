@@ -67,24 +67,6 @@
     /* */
 }
 
-/*
- * obsolete Dizkus-title and Dizkus-border;
- */    
-.Dizkus-title {
-    font-size: 12px;
-}
-
-.Dizkus-border {
-    border-collapse: collapse;
-
-}
-
-a.Dizkus_links {
-    background: red;
-    border: 1px solid blue;
-    color: yellow;
-}
-
 div.dzkadminrow98 {
     /* clear: both; */
     width: 98%;
@@ -92,28 +74,24 @@ div.dzkadminrow98 {
     padding-bottom: 0.5em;
 }
 
-div.pnfadmincol66,  div.pnfadmincol49,  div.pnfadmincol33,  div.pnfadmincol24,  div.pnfadmincol22,  div.pnfadmincol16,  div.pnfadmincol12,
-div.pnfadmincol66c, div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
+div.pnfadmincol66,  div.pnfadmincol24,  div.pnfadmincol22,  div.pnfadmincol16,  div.pnfadmincol12,
+div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
     float: left;
 }
 
-div.pnfadmincol66, div.pnfadmincol49, div.pnfadmincol33, div.pnfadmincol24, div.pnfadmincol22, div.pnfadmincol16, div.pnfadmincol12 {
+div.pnfadmincol66, div.pnfadmincol24, div.pnfadmincol22, div.pnfadmincol16, div.pnfadmincol12 {
     text-align: left;
 }
 
-div.pnfadmincol66c, div.pnfadmincol49c, div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
+div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
     text-align: center;
  }
 
-div.pnfadmincol66, div.pnfadmincol66c {
+div.pnfadmincol66 {
     width: 66%;
 }
 
-div.pnfadmincol49, div.pnfadmincol49c {
-    width: 49%;
-}
-
-div.pnfadmincol33, div.pnfadmincol33c {
+div.pnfadmincol33c {
     width: 33%;
 }
 
@@ -133,66 +111,17 @@ div.pnfadmincol12, div.pnfadmincol12c {
     width: 12%;
 }
 
-dt.dzkadmin {
+dl.dzkoptionlist dt {
     clear: both;
     width: 40%;
     float: left;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding: 1em 0;
 }
 
-dd.dzkadmin {
+dl.dzkoptionlist dd {
     width: 40%;
     float: left;
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-
-.pnfuserrow98 {
-    clear: both;
-    width: 98%;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-}
-
-.pnfusercol25 {
-    width: 25%;
-    float: left;
-}
-
-.pnfusercol49 {
-    width: 49%;
-    float: left;
-}
-
-.pnfusercol66 {
-    width: 66%;
-    float: left;
-}
-
-.pnfusercol33 {
-    width: 33%;
-    float: left;
-}
-
-.pnfusercol60 {
-    width: 60%;
-    float: left;
-}
-
-.pnfusercol30 {
-    width: 30%;
-    float: left;
-}
-
-.pnfusercol75 {
-    width: 75%;
-    float: left;
-}
-
-.pnfusercol37 {
-    width: 37%;
-    float: left;
+    padding: 1em 0;
 }
 
 #dizkus_admin legend {
@@ -676,10 +605,10 @@ div.dzk_statusmsg {
     font-weight: bold;
 }
 
-.pnfadminuser {
+.dzkadminuser {
     color: red;
 }
-.pnfnoadminuser {
+.dzknoadminuser {
     color: green;
 }
 
@@ -1504,33 +1433,6 @@ a.normallink {
     cursor: move;
 }
 
-/*
- * show posthint depending oin users language
- *
- */
-.dzk_textarea_deu {
-    background: #efefef url(../pnimages/posthint_deu.gif) no-repeat top right;
-}
-.dzk_textarea_deu:focus {
-    background-image: none;
-}
-
-.dzk_textarea_eng {
-    background: #efefef url(../pnimages/posthint_eng.gif) no-repeat top right;    
-}
-.dzk_textarea_eng:focus {
-    background-image: none;
-}
-
-.dzk_textarea_nld {
-    background: #efefef url(../pnimages/posthint_nld.gif) no-repeat top right;    
-}
-.dzk_textarea_nld:focus {
-    background-image: none;
-}
-
-
-
 .dzk_newcategory {
     width: 95%; 
     margin: 0.2em 0 0.2em 2em;
@@ -1538,29 +1440,6 @@ a.normallink {
 
 .dzk_treeforumlist {
 /* dont't remove this - needed for Ajax! */
-}
-
-/**
- *
- * css for resizable.js
- *
- */
-
-.textarea-active {
-	background-color: #eeeeee;
-}
-
-.textarea-wrapper {
-	border: 1px dashed #808080;
-}
-
-.textarea-resizer {
-	height: 11px;
-	font-size: 11px;
-	line-height: 11px;
-	background: #E0E0E0 url(../pnimages/resize-handler.gif) no-repeat 100% 100%;
-	border: 1px solid #B0B0B0;
-	cursor: se-resize;
 }
 
 /*

@@ -193,7 +193,7 @@ function Dizkus_user_reply($args=array())
      * if cancel is submitted move to forum-view
      */
     if(!empty($cancel)) {
-    	return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=> $topic_id)));
+        return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=> $topic_id)));
     }
 
     $preview = (empty($preview)) ? false : true;
@@ -271,7 +271,7 @@ function Dizkus_user_newtopic($args=array())
     $cancel  = (empty($cancel))  ? false : true;
     $submit  = (empty($submit))  ? false : true;
 
-    //	if cancel is submitted move to forum-view
+    //  if cancel is submitted move to forum-view
     if($cancel==true) {
         return pnRedirect(pnModURL('Dizkus','user', 'viewforum', array('forum'=>$forum_id)));
     }
@@ -314,7 +314,7 @@ function Dizkus_user_newtopic($args=array())
 
         } else {
             return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
-    	                        array('topic' => $topic_id)));
+                                array('topic' => $topic_id)));
         }
     } else {
         // new topic
@@ -361,7 +361,7 @@ function Dizkus_user_editpost($args=array())
 
     $preview = (empty($preview)) ? false : true;
 
-    //	if cancel is submitted move to forum-view
+    //  if cancel is submitted move to forum-view
     if(!empty($cancel)) {
         return pnRedirect(pnModURL('Dizkus','user', 'viewtopic', array('topic'=>$topic_id)));
     }
@@ -390,7 +390,7 @@ function Dizkus_user_editpost($args=array())
                                        'subject'          => $subject,
                                        'message'          => $message,
                                        'attach_signature' => ($attach_signature==1)));
-    	return pnRedirect($redirect);
+        return pnRedirect($redirect);
 
     } else {
         if(!empty($subject)) {
@@ -484,8 +484,8 @@ function Dizkus_user_topicadmin($args=array())
         return $pnr->fetch($templatename);
 
     } else { // submit is set
-    	if (!SecurityUtil::confirmAuthKey()) {
-          	return LogUtil::registerAuthidError();
+        if (!SecurityUtil::confirmAuthKey()) {
+            return LogUtil::registerAuthidError();
         }
         switch($mode) {
             case 'del':
@@ -642,7 +642,7 @@ function Dizkus_user_prefs($args=array())
  */
 function Dizkus_user_signaturemanagement()
 {
-   $disabled = dzk_available();
+    $disabled = dzk_available();
     if(!is_bool($disabled)) {
         return $disabled;
     }
@@ -651,11 +651,11 @@ function Dizkus_user_signaturemanagement()
         return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
     }
     // Security check
-    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) return LogUtil::registerPermissionError();
-	// Create output and assign data
-	$render = FormUtil::newpnForm('Dizkus');
-    $render->caching = false;
-    $render->add_core_data('PNConfig');
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) {
+        return LogUtil::registerPermissionError();
+    }
+    // Create output and assign data
+    $render = FormUtil::newpnForm('Dizkus');
     // Return the output
     return $render->pnFormExecute('dizkus_user_signaturemanagement.html', new dizkus_user_signaturemanagementHandler());
 }
@@ -685,18 +685,18 @@ function Dizkus_user_emailtopic($args=array())
     list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
 
     if(!empty($submit)) {
-	    if (!pnVarValidate($sendto_email, 'email')) {
-	    	// Empty e-mail is checked here too
-        	$error_msg = DataUtil::formatForDisplay(_DZK_MAILTO_WRONGEMAIL);
-        	$sendto_email = '';
-        	unset($submit);
-	    } else if ($message == '') {
-        	$error_msg = DataUtil::formatForDisplay(_DZK_MAILTO_NOBODY);
-        	unset($submit);
-	    } else if ($emailsubject == '') {
-        	$error_msg = DataUtil::formatForDisplay(_DZK_MAILTO_NOSUBJECT);
-        	unset($submit);
-	    }
+        if (!pnVarValidate($sendto_email, 'email')) {
+            // Empty e-mail is checked here too
+            $error_msg = DataUtil::formatForDisplay(_DZK_MAILTO_WRONGEMAIL);
+            $sendto_email = '';
+            unset($submit);
+        } else if ($message == '') {
+            $error_msg = DataUtil::formatForDisplay(_DZK_MAILTO_NOBODY);
+            unset($submit);
+        } else if ($emailsubject == '') {
+            $error_msg = DataUtil::formatForDisplay(_DZK_MAILTO_NOSUBJECT);
+            unset($submit);
+        }
     }
 
 //    $topic = pnModAPIFunc('Dizkus', 'user', 'prepareemailtopic',
@@ -749,7 +749,7 @@ function Dizkus_user_viewlatest($args=array())
     $unanswered = (int)FormUtil::getPassedValue('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0, 'GETPOST');
 
     if(!empty($nohours) && !is_numeric($nohours)) {
-    	unset($nohours);
+        unset($nohours);
     }
     // maximum two weeks back = 2 * 24 * 7 hours
     if(isset($nohours) && $nohours>336) {
@@ -757,7 +757,7 @@ function Dizkus_user_viewlatest($args=array())
     }
     
     if(!empty($nohours)) {
-    	$selorder = 5;
+        $selorder = 5;
     }
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
@@ -945,12 +945,12 @@ function Dizkus_user_movepost($args=array())
             return LogUtil::registerAuthidError();
         }
         // submit is set, we move the posting now
-		// Existe el Topic ? --- Exists new Topic ?
-		$topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic,
-		                                                            'complete' => false,
-		                                                            'count' => false));
+        // Existe el Topic ? --- Exists new Topic ?
+        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic,
+                                                                    'complete' => false,
+                                                                    'count' => false));
         $post['new_topic'] = $to_topic;
-		$post['old_topic'] = $topic['topic_id'];
+        $post['old_topic'] = $topic['topic_id'];
         $start = pnModAPIFunc('Dizkus', 'user', 'movepost', array('post'     => $post,
                                                                    'to_topic' => $to_topic));
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
@@ -998,13 +998,13 @@ function Dizkus_user_jointopics($args=array())
             return LogUtil::registerAuthidError();
         }
 
-		// check if from_topic exists. this function will return an error if not
-		$from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
-		// check if to_topic exists. this function will return an error if not
-		$to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
+        // check if from_topic exists. this function will return an error if not
+        $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
+        // check if to_topic exists. this function will return an error if not
+        $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
         // submit is set, we split the topic now
         //$post['new_topic'] = $totopic;
-		//$post['old_topic'] = $old_topic;
+        //$post['old_topic'] = $old_topic;
         $res = pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic' => $from_topic,
                                                                    'to_topic'   => $to_topic));
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $res)));
@@ -1046,7 +1046,7 @@ function Dizkus_user_moderateforum($args=array())
                                 'last_visit'      => $last_visit,
                                 'last_visit_unix' => $last_visit_unix));
 
-	if(!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+    if(!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
@@ -1071,34 +1071,34 @@ function Dizkus_user_moderateforum($args=array())
             return LogUtil::registerAuthidError();
         }
         if(count($topic_ids)<>0) {
-    	    switch($mode) {
+            switch($mode) {
                 case 'del':
                 case 'delete':
-                	foreach($topic_ids as $topic_id) {
-                    	$forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id'=>$topic_id));
-                	}
+                    foreach($topic_ids as $topic_id) {
+                        $forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id'=>$topic_id));
+                    }
                     break;
                 case 'move':
-                	if(empty($moveto)) {
-                		return showforumerror(_DZK_NOMOVETO, __FILE__, __LINE__);
-                	}
-                	foreach ($topic_ids as $topic_id) {
-                    	pnModAPIFunc('Dizkus', 'user', 'movetopic', array('topic_id' => $topic_id,
-                        	                                               'forum_id' => $moveto,
-                            	                                           'shadow'   => $shadow ));
-                	}
+                    if(empty($moveto)) {
+                        return showforumerror(_DZK_NOMOVETO, __FILE__, __LINE__);
+                    }
+                    foreach ($topic_ids as $topic_id) {
+                        pnModAPIFunc('Dizkus', 'user', 'movetopic', array('topic_id' => $topic_id,
+                                                                           'forum_id' => $moveto,
+                                                                           'shadow'   => $shadow ));
+                    }
                     break;
                 case 'lock':
                 case 'unlock':
-                	foreach($topic_ids as $topic_id) {
-                    	pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
-                	}
+                    foreach($topic_ids as $topic_id) {
+                        pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+                    }
                     break;
                 case 'sticky':
                 case 'unsticky':
-                	foreach($topic_ids as $topic_id) {
-                    	pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
-                	}
+                    foreach($topic_ids as $topic_id) {
+                        pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+                    }
                     break;
                 case 'join':
                     if(empty($jointo)) {
@@ -1111,7 +1111,7 @@ function Dizkus_user_moderateforum($args=array())
                         unset($fliparray[$jointo]);
                         $topic_ids = array_flip($fliparray);
                     }
-                	foreach($topic_ids as $to_topic_id) {
+                    foreach($topic_ids as $to_topic_id) {
                         pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic_id' => $topic_id,
                                                                             'to_topic_id'   => $jointo));
                     }
@@ -1269,26 +1269,28 @@ function Dizkus_user_login($args)
  
 class Dizkus_user_signaturemanagementHandler
 {
-	function initialize(&$render)
-	{	    
-		$render->assign('signature',	pnUserGetVar('_SIGNATURE'));
-		return true;
+    function initialize(&$render)
+    {       
+        $render->assign('signature', pnUserGetVar('_SIGNATURE'));
+        $render->caching = false;
+        $render->add_core_data('PNConfig');
+        return true;
     }
-	function handleCommand(&$render, &$args)
-	{
-		if ($args['commandName']=='update') {
-		    // Security check 
-		    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) return LogUtil::registerPermissionError();
+    function handleCommand(&$render, &$args)
+    {
+        if ($args['commandName']=='update') {
+            // Security check 
+            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) return LogUtil::registerPermissionError();
 
-			// get the pnForm data and do a validation check
-		    $obj = $render->pnFormGetValues();		    
-		    if (!$render->pnFormIsValid()) return false;
+            // get the pnForm data and do a validation check
+            $obj = $render->pnFormGetValues();          
+            if (!$render->pnFormIsValid()) return false;
 
-			pnUserSetVar('_SIGNATURE',$obj['signature']);
-			LogUtil::registerStatus(_DZK_SIGNATUREUPDATED);
-			
-			return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
-		}
-		return true;
+            pnUserSetVar('_SIGNATURE',$obj['signature']);
+            LogUtil::registerStatus(_DZK_SIGNATUREUPDATED);
+            
+            return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
+        }
+        return true;
     }
 }

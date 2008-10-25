@@ -35,7 +35,7 @@ define('_DZK_SEARCHWHERE', 'Search in');
 define('_DZK_SEARCH_POSTINGS', 'postings');
 define('_DZK_SEARCH_AUTHOR', 'authors');
 
-define('_DZK_PREFS_ENABLEDISABLE', 'Enabled forum<br />(turning it off allows access for Admins only)');
+define('_DZK_PREFS_ENABLEDISABLE', 'Dizkus is available<br /><em>(turning it off allows access for Admins only)</em>');
 define('_DZK_PREFS_DISABLEDTEXT', 'Enter info text for users if forum is disabled');
 define('_DZK_SOURCEEQUALSTARGETFORUM', 'Error: Source forum must differ from target forum.');
 define('_DZK_SOURCEEQUALSTARGETTOPIC', 'Error: Source topic must differ from target topic.');
@@ -133,7 +133,7 @@ define('_DZK_ADMINFORUMADD','Add a Forum');
 define('_DZK_ADMINFORUMADD_INFO','This Link will take you to a page where you can add a forum to the database.');
 define('_DZK_ADMINFORUMEDIT','Edit a Forum');
 define('_DZK_ADMINFORUMEDIT_INFO','This link will allow you to edit an existing forum.');
-define('_DZK_ADMINFORUMOPTIONS','Forum-wide Options');
+define('_DZK_ADMINFORUMOPTIONS','Configuration');
 define('_DZK_ADMINFORUMOPTIONS_INFO','This link will allow you to set various forum-wide options.');
 define('_DZK_ADMINFORUMORDER','Re-Order Forums');
 define('_DZK_ADMINFORUMORDER_INFO','This allows you to change the order in which your forums display on the index page');

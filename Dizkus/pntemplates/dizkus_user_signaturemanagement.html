@@ -2,21 +2,21 @@
 
 <!--[ include file=dizkus_user_header.html ]-->
 
-<div id="dzk_userprefs">
-
 <h1><!--[ pnml name='_DZK_POSTSAPPEARANCE' ]--></h1>
 
 <!--[pnform]-->
+<div>
 	<!--[pnformvalidationsummary]-->
-
-	<!--[pnformlabel for="signature" text="_DZK_MANAGESIGNATURE"]-->:<br />
-	<!--[pnformtextinput id="signature" textMode="multiLine" rows="5" cols="25"]-->
-	<br /><br />
-
-	<!--[pnformbutton commandName="update" text="_UPDATE"]-->
-<!--[/pnform]-->
-
-
+    <dl class="dzkoptionlist dzk_clearfix"> 
+	    <dt><!--[pnformlabel for="signature" text="_DZK_MANAGESIGNATURE"]-->:</dt>
+	    <dd>
+	        <!--[pnformtextinput id="signature" textMode="multiLine" rows="5" cols="40"]-->
+            <!--[ plainbbcode textfieldid=signature ]-->
+            <!--[ bbsmile textfieldid=signature ]-->
+	    </dd>
+    </dl>
+    <p><!--[pnformbutton commandName="update" text="_UPDATE"]--></p>
 </div>
+<!--[/pnform]-->
 
 <!--[ include file='dizkus_user_footer.html' ]-->

@@ -20,7 +20,7 @@ var newtopicstatus = false;
 var comboeffect = 'slide';
 var comboparams = {duration: 1};
 
-var indicatorimage = '<img src="modules/Dizkus/pnimages/ajaxindicator.gif" alt="" />';
+var indicatorimage = '<img src="' + document.location.pnbaseURL + 'modules/Dizkus/pnimages/ajaxindicator.gif" alt="" />';
 
 var dzk_globalhandlers = {
     onCreate: function(){

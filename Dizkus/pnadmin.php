@@ -80,8 +80,6 @@ function Dizkus_admin_syncforums()
     return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));
 }
 
-
-
 /**
  * ranks
  *

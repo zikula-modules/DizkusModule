@@ -3,43 +3,43 @@
 <!--[ include file='dizkus_admin_header.html' ]-->
 
 <!--[ pnform ]-->
-<div style="margin: 1em;" class="dzk_clearfix"> 
+<div> 
     <!--[ pnformvalidationsummary ]-->
 
     <fieldset>
         <legend>
             <!--[pnml name='_DZK_ADMINGENERALOPTIONS']-->
         </legend>
-        <dl class="dzk_clearfix">
-            <dt class="dzkadmin "><!--[ pnformlabel for="forum_enabled" text='_DZK_PREFS_ENABLEDISABLE' html=1]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked ]--></dd>
+        <dl class="dzkoptionlist">
+            <dt><!--[ pnformlabel for="forum_enabled" text='_DZK_PREFS_ENABLEDISABLE' html=1]--></dt>
+            <dd><!--[ pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked ]--></dd>
             
-            <dt class="dzkadmin "><!--[ pnformlabel for="forum_disabled_info" text="_DZK_PREFS_DISABLEDTEXT" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info ]--></dd>
+            <dt><!--[ pnformlabel for="forum_disabled_info" text="_DZK_PREFS_DISABLEDTEXT" html=1 ]--></dt>
+            <dd><!--[ pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="email_from" text="_DZK_PREFS_EMAIL" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformtextinput id="email_from" text=$pncore.Dizkus.email_from size="30" maxLength="100" ]--></dd>
+            <dt><!--[ pnformlabel for="email_from" text="_DZK_PREFS_EMAIL" html=1 ]--></dt>
+            <dd><!--[ pnformtextinput id="email_from" text=$pncore.Dizkus.email_from size="30" maxLength="100" ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="default_lang" text="_DZK_PREFS_CHARSET" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformtextinput id="default_lang" text=$pncore.Dizkus.default_lang size="30" maxLength="100" ]--></dd>
+            <dt><!--[ pnformlabel for="default_lang" text="_DZK_PREFS_CHARSET" html=1 ]--></dt>
+            <dd><!--[ pnformtextinput id="default_lang" text=$pncore.Dizkus.default_lang size="30" maxLength="100" ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="hot_threshold" text="_DZK_PREFS_HOTTOPIC" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformintinput id="hot_threshold" text=$pncore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999 ]--></dd>
+            <dt><!--[ pnformlabel for="hot_threshold" text="_DZK_PREFS_HOTTOPIC" html=1 ]--></dt>
+            <dd><!--[ pnformintinput id="hot_threshold" text=$pncore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999 ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="posts_per_page" text="_DZK_PREFS_POSTSPERPAGE" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformintinput id="posts_per_page" text=$pncore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]--></dd>
+            <dt><!--[ pnformlabel for="posts_per_page" text="_DZK_PREFS_POSTSPERPAGE" html=1 ]--></dt>
+            <dd><!--[ pnformintinput id="posts_per_page" text=$pncore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="topics_per_page" text="_DZK_PREFS_TOPICSPERPAGE" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformintinput id="topics_per_page" text=$pncore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]--></dd>
+            <dt><!--[ pnformlabel for="topics_per_page" text="_DZK_PREFS_TOPICSPERPAGE" html=1 ]--></dt>
+            <dd><!--[ pnformintinput id="topics_per_page" text=$pncore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="hideusers" text='_DZK_PREFS_HIDEUSERSINFORUMADMIN' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="hideusers" checked=$hideusers_checked ]--></dd>
+            <dt><!--[ pnformlabel for="hideusers" text='_DZK_PREFS_HIDEUSERSINFORUMADMIN' ]--></dt>
+            <dd><!--[ pnformcheckbox id="hideusers" checked=$hideusers_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="sendemailswithsqlerrors" text='_DZK_PREFS_SENDEMAILSWITHSQLERRORS' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="sendemailswithsqlerrors" checked=$sendemailswithsqlerrors_checked ]--></dd>
+            <dt><!--[ pnformlabel for="sendemailswithsqlerrors" text='_DZK_PREFS_SENDEMAILSWITHSQLERRORS' ]--></dt>
+            <dd><!--[ pnformcheckbox id="sendemailswithsqlerrors" checked=$sendemailswithsqlerrors_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="url_ranks_images" text="_DZK_PREFS_RANKLOCATION" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformtextinput id="url_ranks_images" text=$pncore.Dizkus.url_ranks_images size="30" maxLength="100" ]--></dd>
+            <dt><!--[ pnformlabel for="url_ranks_images" text="_DZK_PREFS_RANKLOCATION" html=1 ]--></dt>
+            <dd><!--[ pnformtextinput id="url_ranks_images" text=$pncore.Dizkus.url_ranks_images size="30" maxLength="100" ]--></dd>
         </dl>
     </fieldset>
 
@@ -51,15 +51,15 @@
         <strong><!--[ pnml name='_DZK_ADMINADVANCEDCONFIG_HINT' ]--></strong>
         <p><!--[ pnml name='_DZK_DATABASEINUSE' ]-->: <!--[ $dbname ]--> (<!--[ $dbtype ]--> <!--[ $dbversion ]-->)</p>
         </div>
-        <dl class="dzk_clearfix">
-            <dt class="dzkadmin "><!--[ pnformlabel for="fulltextindex" text="_DZK_PREFS_SEARCHWITHFULLTEXTINDEX" html=1 ]--></dt>
-            <dd class="dzkadmin ">
+        <dl class="dzkoptionlist">
+            <dt><!--[ pnformlabel for="fulltextindex" text="_DZK_PREFS_SEARCHWITHFULLTEXTINDEX" html=1 ]--></dt>
+            <dd>
                 <!--[ pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked ]-->
                 <br /><!--[ pnml name='_DZK_PREFS_SEARCHWITHFULLTEXTINDEX_HINT' html=1 ]-->
             </dd>
            
-            <dt class="dzkadmin "><!--[ pnformlabel for="extendedsearch" text="_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX" html=1 ]--></dt>
-            <dd class="dzkadmin ">
+            <dt><!--[ pnformlabel for="extendedsearch" text="_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX" html=1 ]--></dt>
+            <dd>
                 <!--[ pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked ]-->
                 <br /><!--[ pnml name='_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT' html=1 ]-->
         	</dd>
@@ -70,27 +70,27 @@
         <legend>
             <!--[pnml name='_DZK_ADMINUSERRELATEDOPTIONS']-->
         </legend>
-        <dl class="dzk_clearfix">
-            <dt class="dzkadmin "><!--[ pnformlabel for="post_sort_order" text="_DZK_PREFS_POSTSORTORDER" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$pncore.Dizkus.post_sort_order ]--></dd>
+        <dl class="dzkoptionlist">
+            <dt><!--[ pnformlabel for="post_sort_order" text="_DZK_PREFS_POSTSORTORDER" html=1 ]--></dt>
+            <dd><!--[ pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$pncore.Dizkus.post_sort_order ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="signature_start" text="_DZK_PREFS_SIGNATURESTART" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$signature_start ]--></dd>
+            <dt><!--[ pnformlabel for="signature_start" text="_DZK_PREFS_SIGNATURESTART" html=1 ]--></dt>
+            <dd><!--[ pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$signature_start ]--></dd>
             
-            <dt class="dzkadmin "><!--[ pnformlabel for="signature_end" text="_DZK_PREFS_SIGNATUREEND" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$signature_end ]--></dd>
+            <dt><!--[ pnformlabel for="signature_end" text="_DZK_PREFS_SIGNATUREEND" html=1 ]--></dt>
+            <dd><!--[ pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$signature_end ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="autosubscribe" text='_DZK_PREFS_AUTOSUBSCRIBE' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="autosubscribe" checked=$autosubscribe_checked ]--></dd>
+            <dt><!--[ pnformlabel for="autosubscribe" text='_DZK_PREFS_AUTOSUBSCRIBE' ]--></dt>
+            <dd><!--[ pnformcheckbox id="autosubscribe" checked=$autosubscribe_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="signaturemanagement" text='_DZK_PREFS_ENABLESIGNATUREMANAGEMENT' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="signaturemanagement" checked=$signaturemanagement_checked ]--></dd>
+            <dt><!--[ pnformlabel for="signaturemanagement" text='_DZK_PREFS_ENABLESIGNATUREMANAGEMENT' ]--></dt>
+            <dd><!--[ pnformcheckbox id="signaturemanagement" checked=$signaturemanagement_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="removesignature" text='_DZK_PREFS_REMOVESIGNATUREFROMPOST' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="removesignature" checked=$removesignature_checked ]--></dd>
+            <dt><!--[ pnformlabel for="removesignature" text='_DZK_PREFS_REMOVESIGNATUREFROMPOST' ]--></dt>
+            <dd><!--[ pnformcheckbox id="removesignature" checked=$removesignature_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="newtopicconfirmation" text='_DZK_PREFS_SHOWNEWTOPICCONFIRMATION' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="newtopicconfirmation" checked=$newtopicconfirmation_checked ]--></dd>
+            <dt><!--[ pnformlabel for="newtopicconfirmation" text='_DZK_PREFS_SHOWNEWTOPICCONFIRMATION' ]--></dt>
+            <dd><!--[ pnformcheckbox id="newtopicconfirmation" checked=$newtopicconfirmation_checked ]--></dd>
         </dl>
     </fieldset>
 
@@ -98,15 +98,15 @@
         <legend>
             <!--[pnml name='_DZK_ADMINSECURITYOPTIONS']-->
         </legend>
-        <dl class="dzk_clearfix">
-            <dt class="dzkadmin "><!--[ pnformlabel for="log_ip" text='_DZK_PREFS_LOGIP' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="log_ip" checked=$log_ip_checked ]--></dd>
+        <dl class="dzkoptionlist">
+            <dt><!--[ pnformlabel for="log_ip" text='_DZK_PREFS_LOGIP' ]--></dt>
+            <dd><!--[ pnformcheckbox id="log_ip" checked=$log_ip_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="striptags" text='_DZK_PREFS_STRIPTAGSFROMPOST' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="striptags" checked=$striptags_checked ]--></dd>
+            <dt><!--[ pnformlabel for="striptags" text='_DZK_PREFS_STRIPTAGSFROMPOST' ]--></dt>
+            <dd><!--[ pnformcheckbox id="striptags" checked=$striptags_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="timespanforchanges" text="_DZK_PREFS_TIMESPANFORCHANGES" html=1 ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformintinput id="timespanforchanges" text=$pncore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72 ]-->&nbsp;<!--[ pnml name="_DZK_HOURS" ]--></dd>
+            <dt><!--[ pnformlabel for="timespanforchanges" text="_DZK_PREFS_TIMESPANFORCHANGES" html=1 ]--></dt>
+            <dd><!--[ pnformintinput id="timespanforchanges" text=$pncore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72 ]-->&nbsp;<!--[ pnml name="_DZK_HOURS" ]--></dd>
         </dl>
     </fieldset>
 
@@ -114,21 +114,21 @@
         <legend>
             <!--[pnml name='_DZK_ADMINFEATURESOPTIONS']-->
         </legend>
-        <dl class="dzk_clearfix">
-            <dt class="dzkadmin "><!--[ pnformlabel for="slimforum" text='_DZK_PREFS_SLIMFORUM' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="slimforum" checked=$slimforum_checked ]--></dd>
+        <dl class="dzkoptionlist">
+            <dt><!--[ pnformlabel for="slimforum" text='_DZK_PREFS_SLIMFORUM' ]--></dt>
+            <dd><!--[ pnformcheckbox id="slimforum" checked=$slimforum_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="m2f_enabled" text='_DZK_PREFS_M2FENABLED' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="m2f_enabled" checked=$m2f_enabled_checked ]--></dd>
+            <dt><!--[ pnformlabel for="m2f_enabled" text='_DZK_PREFS_M2FENABLED' ]--></dt>
+            <dd><!--[ pnformcheckbox id="m2f_enabled" checked=$m2f_enabled_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="rss2f_enabled" text='_DZK_PREFS_RSS2FENABLED' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked ]--></dd>
+            <dt><!--[ pnformlabel for="rss2f_enabled" text='_DZK_PREFS_RSS2FENABLED' ]--></dt>
+            <dd><!--[ pnformcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="favorites_enabled" text='_DZK_PREFS_FAVORITESENABLED' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformcheckbox id="favorites_enabled" checked=$favorites_enabled_checked ]--></dd>
+            <dt><!--[ pnformlabel for="favorites_enabled" text='_DZK_PREFS_FAVORITESENABLED' ]--></dt>
+            <dd><!--[ pnformcheckbox id="favorites_enabled" checked=$favorites_enabled_checked ]--></dd>
 
-            <dt class="dzkadmin "><!--[ pnformlabel for="deletehookaction" text='_DZK_PREFS_DELETEHOOKACTION' ]--></dt>
-            <dd class="dzkadmin "><!--[ pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$pncore.Dizkus.deletehookaction ]--></dd>
+            <dt><!--[ pnformlabel for="deletehookaction" text='_DZK_PREFS_DELETEHOOKACTION' ]--></dt>
+            <dd><!--[ pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$pncore.Dizkus.deletehookaction ]--></dd>
         </dl>
     </fieldset>
         
