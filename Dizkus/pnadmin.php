@@ -142,8 +142,6 @@ function Dizkus_admin_assignranks()
     
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                  array('ranktype' => 1));
-        // remove the first rank, its used for adding new ranks only
-        array_splice($ranks, 0, 1);
     
         switch($letter) {
             case '?':
