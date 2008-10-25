@@ -13,12 +13,15 @@
 // define('_DZK_TOGGLEALL', 'Remove all topic subscriptions');
 
 // changed
+define('_DZK_ADMINUSERRANK_INFO','To add a new rank simply enter the values in the fields and select ADD.<br />To modify a ranking simply change the values in the text boxes in the table that follows and click the SUBMIT button.<br />To remove a ranking simply check the corresponding checkbox and click the SUBMIT button.');
 define('_DZK_PREFS_SENDEMAILSWITHSQLERRORS', 'Send emails, if SQL-errors occur');
 define('_DZK_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
 define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_DZK_ADMINADDNEWRANK', 'Add a new rank');
+define('_DZK_ADMINDELETERANK', 'Delete this rank');
 define('_DZK_ADMINGENERALOPTIONS', 'General options');
 define('_DZK_ADMINUSERRELATEDOPTIONS', 'User related options');
 define('_DZK_ADMINSECURITYOPTIONS', 'Security options');
@@ -147,7 +150,6 @@ define('_DZK_ADMINHONORARYRANKS_INFO','This link will allow you to create specia
 define('_DZK_ADMINRANKS','Edit user ranks');
 define('_DZK_ADMINRANKS_INFO','This link will allow you to add/edit/delete different user rankings depending of the number of user posts.');
 define('_DZK_ADMINUSERRANK_IMAGE','Image');
-define('_DZK_ADMINUSERRANK_INFO','To modify a ranking simply change the values in the text boxes and click the Edit button.<br />To remove a ranking simply click on the "Delete" button next to the ranking.');
 define('_DZK_ADMINUSERRANK_INFO2','Use this form to add a ranking to the database.');
 define('_DZK_ADMINUSERRANK_MAX','Max posts');
 define('_DZK_ADMINUSERRANK_MIN','Min posts');

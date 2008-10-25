@@ -410,7 +410,7 @@ function Dizkus_adminapi_readranks($args)
                                           array('rank_id' => $ranks[$cnt]['rank_id']));
         }
     }
-
+/*
     // add a dummy rank on top for new ranks
     array_unshift($ranks, array('rank_id'      => -1,
                                 'rank_title'   => '',
@@ -420,6 +420,7 @@ function Dizkus_adminapi_readranks($args)
                                 'rank_image'   => 'onestar.gif',
                                 'rank_style'   => '',
                                 'users'        => array()));
+*/
     return array($filelist, $ranks);
 }
 
@@ -434,18 +435,17 @@ function Dizkus_adminapi_saverank($args)
         return showforumerror(_DZK_NOAUTH, __FILE__, __LINE__);
     }
 
-    $actiontype = $args['actiontype'];
-    unset($args['actiontype']);
-
-    switch($actiontype) {
-        case 'Add':
-            $obj = DBUtil::insertObject($args, 'dizkus_ranks', 'rank_id');
-            break;
-        case 'Update':
-            $res = DBUtil::updateObject($args, 'dizkus_ranks', null, 'rank_id');
-            break;
-        case 'Delete':
-            $res = DBUtil::deleteObject($args, 'dizkus_ranks', null, 'rank_id');
+    foreach($args['ranks'] as $rankid => $rank) {
+        if($rankid == '-1') {
+            $obj = DBUtil::insertObject($rank, 'dizkus_ranks', 'rank_id');
+        } else {
+            $rank['rank_id'] = $rankid;
+            if($rank['rank_delete'] == '1') {
+                $res = DBUtil::deleteObject($rank, 'dizkus_ranks', null, 'rank_id');
+            } else {
+                $res = DBUtil::updateObject($rank, 'dizkus_ranks', null, 'rank_id');
+            }
+        }
     }
     return;
 }

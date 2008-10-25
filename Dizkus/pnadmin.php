@@ -93,10 +93,10 @@ function Dizkus_admin_ranks()
     $submit   = FormUtil::getPassedValue('submit', null, 'GETPOST');
     $ranktype = (int)FormUtil::getPassedValue('ranktype', 0, 'GETPOST');
 
-    list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
-                                             array('ranktype' => $ranktype));
-
     if(!$submit) {
+        list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
+                                                 array('ranktype' => $ranktype));
+
         $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('ranktype', $ranktype);
@@ -107,20 +107,8 @@ function Dizkus_admin_ranks()
             return $pnr->fetch("dizkus_admin_honoraryranks.html");
         }
     } else {
-        $actiontype = FormUtil::getPassedValue('actiontype');
-        $ranktype   = FormUtil::getPassedValue('ranktype');
-        $rank_id    = FormUtil::getPassedValue('rank_id');
-        $title      = FormUtil::getPassedValue('title');
-        $min_posts  = FormUtil::getPassedValue('min_posts');
-        $max_posts  = FormUtil::getPassedValue('max_posts');
-        $image      = FormUtil::getPassedValue('image');
-        pnModAPIFunc('Dizkus', 'admin', 'saverank', array('actiontype'=> $actiontype,
-                                                            'rank_special' => $ranktype,
-                                                            'rank_id'      => $rank_id,
-                                                            'rank_title'   => $title,
-                                                            'rank_min'     => $min_posts,
-                                                            'rank_max'     => $max_posts,
-                                                            'rank_image'   => $image));
+        $ranks = FormUtil::getPassedValue('ranks');
+        pnModAPIFunc('Dizkus', 'admin', 'saverank', array('ranks' => $ranks));
     }
     return pnRedirect(pnModURL('Dizkus','admin', 'ranks', array('ranktype' => $ranktype)));
 }

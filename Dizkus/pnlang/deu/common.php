@@ -13,10 +13,13 @@
 // define('_DZK_TOGGLEALL', 'Alle Themenabos entfernen');
 
 // changed
+define('_DZK_ADMINUSERRANK_INFO','Um einen Rang neu zu erstellen, die entsprechenden Daten eintragen und HINZUFÜGEN anklicken.<br />Um einen Rang zu bearbeiten, die entsprechenden Werte in der Tabelle unten anpassen und ÜBERTRAGEN wählen.<br />Um einen Rang zu löschen, die entsprechende Checkbox markieren und anschliessend ÜBERTRAGEN anwählen.');
 define('_DZK_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien mit der Maus per Drag & Drop sortiert werden. Erst mit Klick auf Speichern werden die Änderungen in die Datenbank geschrieben.');
 define('_DZK_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_DZK_ADMINADDNEWRANK', 'Einen neuen Rang hinzufügen');
+define('_DZK_ADMINDELETERANK', 'Diesen Userrang löschen');
 define('_DZK_ADMINGENERALOPTIONS', 'Allgemeine Einstellungen');
 define('_DZK_ADMINUSERRELATEDOPTIONS', 'Benutzerbezogene Einstellungen');
 define('_DZK_ADMINSECURITYOPTIONS', 'Sicherheitseinstellungen');
@@ -147,7 +150,6 @@ define('_DZK_ADMINHONORARYRANKS_INFO','Diese Ehrenränge können bestimmten Benutz
 define('_DZK_ADMINRANKS','Benutzerränge verwalten');
 define('_DZK_ADMINRANKS_INFO','Bearbeitung von Rängen, die Benutzern aufgrund der Beitragsanzahl zugewiesen werden');
 define('_DZK_ADMINUSERRANK_IMAGE','Image');
-define('_DZK_ADMINUSERRANK_INFO','Um einen Rang neu zu erstellen, die entsprechenden Daten eintragen und HINZUFÜGEN anklicken.<br />Um einen Rang zu bearbeiten, die entsprechenden Werte anpassen und EDITIEREN wählen.<br />Um einen Rang zu löschen, LÖSCHEN wählen. Anschliessend BESTÄTIGEN anwählen');
 define('_DZK_ADMINUSERRANK_INFO2','Hier können Ränge erstellt werden');
 define('_DZK_ADMINUSERRANK_MAX','Max Beiträge');
 define('_DZK_ADMINUSERRANK_MIN','Min Beiträge');
