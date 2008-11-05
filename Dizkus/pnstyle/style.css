@@ -1135,6 +1135,19 @@ div#newtopicposting {
     padding: 0; 
     margin: 0; 
 }
+
+#dizkus .textarea-resizer {
+	height: 9px;
+	font-size: 9px;
+	line-height: 9px;
+  margin-top: -5px;
+  background: #F0F3F8 url(../pnimages/grippie.gif) no-repeat center 2px;
+  border: 1px solid #ddd;
+  border-top-width: 0;
+  cursor: s-resize;
+  overflow:hidden;
+}
+
  
 #dizkus li#newtopicbuttons,
 #dizkus li#nonajaxnewtopicbuttons {
