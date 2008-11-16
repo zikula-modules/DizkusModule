@@ -51,7 +51,6 @@ function smarty_modifier_pnfdate_format($string, $format='datebrief', $default_d
     if(empty($format)) {
         $format = 'datebrief';
     }
-
     if(substr_count($format, '%') == 0) {
         // format does not contain a % hence it is not a time format string but a name for a define
         $format = '_' . strtoupper($format);
@@ -65,7 +64,7 @@ function smarty_modifier_pnfdate_format($string, $format='datebrief', $default_d
 
     $tzoffset = 0;
     if(isset($usetzoffset)) {
-        $useroffset = (pnUserLoggedIn()) ? (float)pnUserGetVar('timezone_offset') : (float)pnUserGetVar('timezone_offset', 1);
+        $useroffset = (pnUserLoggedIn()) ? (float)pnUserGetVar('_TIMEZONEOFFSET') : (float)pnUserGetVar('_TIMEZONEOFFSET', 1);
         $tzoffset = ($useroffset - (float)pnConfigGetVar('timezone_offset')) * 3600;
     }
 
