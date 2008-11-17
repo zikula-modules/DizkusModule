@@ -512,7 +512,7 @@ function quickEditInit(originalRequest)
 
     new Insertion.After($(postingtextID), result.data);
 
-    Resizable.initialize('postingtext_' + result.post_id + '_edit');
+//    Resizable.initialize('postingtext_' + result.post_id + '_edit');
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
     Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);
