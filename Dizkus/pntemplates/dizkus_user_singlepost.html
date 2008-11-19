@@ -24,10 +24,10 @@ Template for single postings
         <div class="postingheadermiddle">
             <!--[ if $post.poster_data.pn_uid neq 1 ]-->
                 <a class="image viewprofilelink" href="<!--[pnmodurl modname="Profile" func=view uname=$post.poster_data.pn_uname ]-->" title="<!--[ $post.poster_data.pn_uname ]-->">&nbsp;</a>
-                <!--[pnmodavailable modname="pnMessages" assign="pnMessages"]-->
-                <!--[if $pnMessages]-->
+                <!--[pnmodavailable modname="InterCom" assign="InterCom"]-->
+                <!--[if $InterCom]-->
                   <!--[ if $pncore.logged_in ]-->
-                          <a class="image sendpmlink" title="<!--[ pnml name='_DZK_SEND_PM' ]-->" href="<!--[pnmodurl modname="pnMessages" func="newpm" uname=$post.poster_data.pn_uname ]-->">&nbsp;</a>
+                          <a class="image sendpmlink" title="<!--[ pnml name='_DZK_SEND_PM' ]-->" href="<!--[pnmodurl modname="InterCom" func="newpm" uname=$post.poster_data.pn_uname ]-->">&nbsp;</a>
                   <!--[ /if ]-->
                 <!--[ /if ]-->
                 <!--[ if $post.poster_data.pn_url neq "" ]-->
