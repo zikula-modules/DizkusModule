@@ -126,14 +126,19 @@ function Dizkus_admin_assignranks()
     $submit     = FormUtil::getPassedValue('submit');
     $letter     = FormUtil::getPassedValue('letter');
     $lastletter = FormUtil::getPassedValue('lastletter');
+    $page       = (int)FormUtil::getPassedValue('page', 1, 'GETPOST');
 
     // check for a letter parameter
     if(!empty($lastletter)) {
         $letter = $lastletter;
     }
-    if (empty($letter) || strlen($letter) != 1) {
-        $letter = 'A';
+
+    // count users and forbid '*' if more than 1000 users are present
+    $usercount = DBUtil::selectObjectCount('users');
+    if (empty($letter) || strlen($letter) != 1 || (($usercount >1000) && $letter=='*')) {
+        $letter = 'a';
     }
+    $letter = strtolower($letter);
 
     if(!$submit) {
         // sync the users, so that new pn users get into the Dizkus
@@ -142,23 +147,19 @@ function Dizkus_admin_assignranks()
     
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                  array('ranktype' => 1));
-    
-        switch($letter) {
-            case '?':
-                // read usernames beginning with special chars
-                $regexpfield = 'uname';
-                $regexpression = '^[[:punct:][:digit:]]';
-                break;
-            case '*':
-                // read allusers
-                $regexpfield = '';
-                $regexpression = '';
-                break;
-            default:
-                $regexpfield = 'uname';
-                $regexpression = '^' . $letter;
+            
+        $tables = pnDBGetTables();
+        
+        $userscol   = $tables['users_column'];
+        $where   = 'LEFT('.$userscol['uname'].',1) LIKE \''.DataUtil::formatForStore($letter).'%\'';
+        $orderby = $userscol['uname'].' ASC';
+        $usercount = DBUtil::selectObjectCount('users', $where);
+
+        $perpage = 50;
+        if ($page <> -1 && $perpage <> -1) {
+            $start = ($page-1) * $perpage;
+            $users = DBUtil::selectObjectArray('users', $where, $orderby, $start, $perpage);
         }
-        $users = pnUserGetAll('uname', 'ASC', 0, 1, '', $regexpfield, $regexpression);
     
         $allusers = array();
         foreach ($users as $user) {
@@ -188,23 +189,32 @@ function Dizkus_admin_assignranks()
         $inlinecss .= '</style>' . "\n";
         PageUtil::addVar('rawtext', $inlinecss);
 */        
-        usort($allusers, 'cmp_userorder');
+        //usort($allusers, 'cmp_userorder');
 
         unset($users);
-        
+                
         $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
         $pnr->assign('allusers', $allusers);
         $pnr->assign('letter', $letter);
+        $pnr->assign('page', $page);
+        $pnr->assign('perpage', $perpage);
+        $pnr->assign('usercount', $usercount);
+        $pnr->assign('allow_star', ($usercount<1000));
         return $pnr->fetch("dizkus_admin_assignranks.html");
     } else {
+        // avoid some vars in the url of the pager
+        unset($_GET['submit']);
+        unset($_POST['submit']);
+        unset($_REQUEST['submit']);
         $setrank = FormUtil::getPassedValue('setrank');
         pnModAPIFunc('Dizkus', 'admin', 'assignranksave', 
                      array('setrank' => $setrank));
     }
     return pnRedirect(pnModURL('Dizkus','admin', 'assignranks',
-                               array('letter' => $letter)));
+                               array('letter' => $letter,
+                                     'page'   => $page)));
 }
 
 
