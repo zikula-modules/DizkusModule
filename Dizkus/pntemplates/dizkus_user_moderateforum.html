@@ -51,7 +51,7 @@
             <th class="midcell dzk_bordercolor2"><!--[ pnml name='_DZK_POSTER' ]--></th>
             <th class="midcell dzk_bordercolor2"><!--[ pnml name='_DZK_VIEWS' ]--></th>
             <th class="midcell dzk_bordercolor2"><!--[ pnml name='_DZK_DATE' ]--></th>
-            <th class="rightcell dzk_bordercolor2"><!--[ pnml name='_DZK_SELECTED' ]--></th>
+            <th class="rightcell dzk_bordercolor2"><!--[ pnml name='_DZK_SELECTED' ]--><input onclick="CheckAll('topic');" type="checkbox" id="alltopic"  value="" /></th>
         </tr>
     </thead>
 
@@ -108,7 +108,7 @@
             <td class="dzk_bordercolor2" headers="col_poster" align="center"><!--[ $topic.pn_uname|userprofilelink ]--></td>
             <td class="dzk_bordercolor2" headers="col_views" align="center"><!--[ $topic.topic_views ]--></td>
             <td class="dzk_bordercolor2" headers="col_lastpost" align="center"><!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief':'':true ]--><br /><!--[ $topic.last_poster|userprofilelink ]-->&nbsp;<a title="<!--[ pnml name='_DZK_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg src=icon_latest_topic.gif ]--></a>&nbsp;</td>
-            <td class="dzk_bordercolor2" headers="col_selection" align="center"><input type="checkbox" name="topic_id[]" value="<!--[$topic.topic_id]-->" /></td>
+            <td class="dzk_bordercolor2" headers="col_selection" align="center"><input type="checkbox" onclick="CheckCheckAll('topic');" class="topic_checkbox" name="topic_id[]" value="<!--[$topic.topic_id]-->" /></td>
         </tr>
 
     <!--[ foreachelse ]-->
