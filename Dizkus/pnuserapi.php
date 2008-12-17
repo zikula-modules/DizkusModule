@@ -827,6 +827,7 @@ prayer($topic);
 pnShutDown();
 */
     $sql = "SELECT t.topic_title,
+                   t.topic_poster,
                    t.topic_status,
                    t.forum_id,
                    t.sticky,
