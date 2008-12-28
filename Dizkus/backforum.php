@@ -33,9 +33,8 @@ $user     =      FormUtil::getPassedValue('user', '', 'GET');
 // pnModURL already handles correct shorturls in Zikula 1.0
 
 // get the module info
-$baseurl = pnGetBaseURL();
-$pnfinfo = pnModGetInfo(pnModGetIdFromName('Dizkus'));
-$pnfname = $pnfinfo['displayname'];
+$dzkinfo = pnModGetInfo(pnModGetIdFromName('Dizkus'));
+$dzkname = $dzkinfo['displayname'];
 
 /**
  * check for feed, if not set, use rss091 as default
@@ -81,9 +80,9 @@ if(!empty($user)) {
  * set some defaults
  */
 // form the url
-$link = $baseurl.pnModURL('Dizkus', 'user', 'main');
+$link = pnModURL('Dizkus', 'user', 'main', null, null, null, true);
 
-$forumname = DataUtil::formatForDisplay($pnfname);
+$forumname = DataUtil::formatForDisplay($dzkname);
 // default where clause => no where clause
 $where = '';
 
@@ -98,7 +97,7 @@ if(!empty($forum_id)) {
         pnShutDown();
     }
     $where = "AND t.forum_id = '" . (int)DataUtil::formatForStore($forum_id) . "' ";
-    $link = $baseurl.pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
+    $link = pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
     if(!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
@@ -110,7 +109,7 @@ if(!empty($forum_id)) {
         pnShutDown();
     }
     $where = "AND f.cat_id = '" . (int)DataUtil::formatForStore($cat_id) . "' ";
-    $link = $baseurl.pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id));
+    $link = pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id), null, null, true);
     $forumname = $category['cat_title'];
 
 } elseif (isset($uid) && ($uid<>false)) {
@@ -179,19 +178,23 @@ while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $foru
         $post['cat_title']          = $cat_title;
         $shown_results++;
         $start = ((ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page);
-        $post['post_url'] = $baseurl.pnModURL('Dizkus', 'user', 'viewtopic',
-                                              array('topic' => $topic_id,
-                                                    'start' => $start));
+        $post['post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
+                                     array('topic' => $topic_id,
+                                           'start' => $start), 
+                                     null, null, true);
+        $post['last_post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
+                                          array('topic' => $topic_id,
+                                                'start' => $start), 
+                                          null, "pid" . $topic_last_post_id, true);
 
-        $post['last_post_url'] = $post['post_url'] . "#pid" . $topic_last_post_id;
         array_push($posts, $post);
-//        $result->MoveNext();
     }
 }
 
 dzkCloseDB($result);
 $pnr->assign('posts', $posts);
 $pnr->assign('now', time());
+$pnr->assign('dizkusinfo', $dzkinfo);
 
 header("Content-Type: text/xml");
 $pnr->display($templatefile);
