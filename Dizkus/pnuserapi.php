@@ -4468,9 +4468,6 @@ function Dizkus_userapi_notify_moderator($args)
  */
 function Dizkus_userapi_get_topicid_by_reference($args)
 {
-    extract($args);
-    unset($args);
-
     if(!isset($args['reference']) || empty($args['reference'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
@@ -4483,18 +4480,16 @@ function Dizkus_userapi_get_topicid_by_reference($args)
  * insertrss
  *
  *@params $args['forum']    array with forum data
- *@params $args['items']    array with feed data as returned from RSS module
+ *@params $args['items']    array with feed data as returned from Feeds module
  *@return boolean true or false
  */
 function Dizkus_userapi_insertrss($args)
 {
-    extract($args);
-
-    if (!$forum || !$items) {
+    if (!$args['forum'] || !$args['items']) {
         return false;
     }
 
-    $bbcode = pnModAvailable('pn_bbcode');
+    $bbcode = pnModAvailable('bbcode');
     $boldstart = '';
     $boldend   = '';
     $urlstart  = '';
@@ -4506,13 +4501,14 @@ function Dizkus_userapi_insertrss($args)
         $urlend    = '[/url]';
     }
 
-    foreach($items as $item) {
+    foreach($args['items'] as $item) {
         // create the reference, we need it twice
-        if(!isset($item['date_timestamp']) || empty($item['date_timestamp'])) {
-            $reference = md5($item['link']);
-            $item['date_timestamp'] = time();
+        $dateTimestamp = $item->get_date("Y-m-d H:i");
+        if(empty($dateTimestamp)) {
+            $reference = md5($item->get_link());
+            $dateTimestamp = date("Y-m-d H:i", time());
         } else {
-            $reference = md5($item['link'] . '-' . $item['date_timestamp']);
+            $reference = md5($item->get_link() . '-' . $dateTimestamp);
         }
 
         // Checking if the forum already has that news.
@@ -4520,19 +4516,18 @@ function Dizkus_userapi_insertrss($args)
                               array('reference' => $reference));
 
         if ($check == false) {
-
             // Not found... we can add the news.
-            $subject  = $item['title'];
+            $subject  = $item->get_title();
 
             // Adding little display goodies - finishing with the url of the news...
-            $message  = $boldstart . _DZK_RSS_SUMMARY . ' :' . $boldend . "\n\n" . $item['summary'] . "\n\n" . $urlstart . $item['link'] . $urlend . "\n\n";
+            $message  = $boldstart . _DZK_RSS_SUMMARY . ' :' . $boldend . "\n\n" . $item->get_description() . "\n\n" . $urlstart . $item->get_link() . $urlend . "\n\n";
 
             // store message in forum
             $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
                                      array('subject'          => $subject,
                                            'message'          => $message,
-                                           'time'             => date("Y-m-d H:i", $item['date_timestamp']),
-                                           'forum_id'         => $forum['forum_id'],
+                                           'time'             => $dateTimestamp,
+                                           'forum_id'         => $args['forum']['forum_id'],
                                            'attach_signature' => 0,
                                            'subscribe_topic'  => 0,
                                            'reference'        => $reference));

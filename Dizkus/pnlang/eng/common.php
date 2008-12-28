@@ -497,7 +497,7 @@ define('_DZK_REPORTINGUSERNAME', 'Reporting user');
 define('_DZK_RETURNTOTOPIC', 'Back to the topic');
 define('_DZK_RSS2FORUM', 'RSS2Forum');
 define('_DZK_RSS2FORUMPOSTS', 'RSS feeds');
-define('_DZK_RSSMODULENOTAVAILABLE', '<span style="color: red;">RSS module not available!</span>');
+define('_DZK_RSSMODULENOTAVAILABLE', '<span style="color: red;">Feeds module not available!</span>');
 define('_DZK_RSS_SUMMARY', 'Summary');
 
 //

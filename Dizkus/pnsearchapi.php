@@ -1,10 +1,10 @@
 <?php
 /************************************************************************
- * Dizkus - The Post-Nuke Module                                       *
+ * Dizkus - The Zikula forum                                            *
  * ==============================                                       *
  *                                                                      *
- * Copyright (c) 2001-2004 by the Dizkus Module Development Team       *
- * http://www.dizkus.com/                                            *
+ * Copyright (c) 2001-2004 by the Dizkus Module Development Team        *
+ * http://www.dizkus.com/                                               *
  ************************************************************************
  * Modified version of: *
  ************************************************************************

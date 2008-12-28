@@ -497,7 +497,7 @@ define('_DZK_REPORTINGUSERNAME', 'Einreicher');
 define('_DZK_RETURNTOTOPIC', 'Zurück zum Thema');
 define('_DZK_RSS2FORUM', 'RSS2Forum');
 define('_DZK_RSS2FORUMPOSTS', 'RSS Quellen');
-define('_DZK_RSSMODULENOTAVAILABLE', '<span style="color: red;">RSS Modul nicht verfügbar!</span>');
+define('_DZK_RSSMODULENOTAVAILABLE', '<span style="color: red;">Feeds Modul nicht verfügbar!</span>');
 define('_DZK_RSS_SUMMARY', 'Zusammenfassung');
 
 //
