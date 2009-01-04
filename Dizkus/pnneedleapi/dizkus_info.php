@@ -17,7 +17,7 @@
 function Dizkus_needleapi_dizkus_info()
 {
     $info = array('module'  => 'Dizkus', // module name
-                  'info'    => 'PNFORUM{F-forumid|T-topicid}',   // possible needles  
+                  'info'    => 'DIZKUS{F-forumid|T-topicid}',   // possible needles  
                   'inspect' => true);     //reverse lookpup possible, needs MultiHook_needleapi_dizkus_inspect() function
     return $info;
 }
