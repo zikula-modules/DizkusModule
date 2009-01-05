@@ -187,6 +187,7 @@ function Dizkus_searchapi_nonfulltext($args)
                     }
                 }
                 // get post_text and match up forums/topics/posts
+                $word = DataUtil::formatForStore($word);
                 $wherematch .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
                 $flag = true;
             }
