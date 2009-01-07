@@ -18,6 +18,7 @@ define('_DZK_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien mit d
 define('_DZK_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_DZK_PREFS_SHOWTEXTINSEARCHRESULTS', 'Textanlauf in Suchergebnissen zeigen<br /><em>Auf sehr aktiven Seiten sollte man dies ausschalten, um die Suchgeschwindigkeit zu erhöhen oder dafür Sorge tragen, das die Suchergebnistabelle regelmäßig bereinigt wird.</em>');
 define('_DZK_ADMINADDNEWRANK', 'Einen neuen Rang hinzufügen');
 define('_DZK_ADMINDELETERANK', 'Diesen Userrang löschen');
 define('_DZK_ADMINGENERALOPTIONS', 'Allgemeine Einstellungen');

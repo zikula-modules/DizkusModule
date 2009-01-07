@@ -46,6 +46,7 @@ class dizkus_admin_prefshandler
         $pnRender->assign('sendemailswithsqlerrors_checked', $modvars['sendemailswithsqlerrors'] == 'yes' ? 1 : 0);
         $pnRender->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
         $pnRender->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
+        $pnRender->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
 
         list($dbconn, $pntable) = dzkOpenDB();
         $sql = "SELECT  VERSION()";
@@ -91,6 +92,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'sendemailswithsqlerrors', $data['sendemailswithsqlerrors'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'fulltextindex',           $data['fulltextindex'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'extendedsearch',          $data['extendedsearch'] == 1 ? 'yes' : 'no');
+            pnModSetVar('Dizkus', 'showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
 
             // dropdowns
             pnModSetVar('Dizkus', 'post_sort_order',  $data['post_sort_order']);

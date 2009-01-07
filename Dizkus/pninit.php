@@ -127,6 +127,7 @@ function Dizkus_init()
     // 3.0
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
+    pnModSetVar('Dizkus', 'showtextinsearchresults', 'yes');
 
     // Initialisation successful
     return true;
@@ -346,6 +347,7 @@ function Dizkus_upgrade_to_3_0()
 	// introduce new module variable
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');	
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
+    pnModSetVar('Dizkus', 'showtextinsearchresults', 'no');
 	return true;
 }
 
