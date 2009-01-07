@@ -131,5 +131,3 @@ foreach($forums as $forum) {
         } // if loggedin
     }
 }
-
-?>
