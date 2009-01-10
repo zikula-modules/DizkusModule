@@ -654,6 +654,10 @@ function Dizkus_user_signaturemanagement()
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) {
         return LogUtil::registerPermissionError();
     }
+    
+    // Include handler class
+    Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_user_signaturemanagementhandler.class.php');
+    
     // Create output and assign data
     $render = FormUtil::newpnForm('Dizkus');
     // Return the output
@@ -1263,34 +1267,4 @@ function Dizkus_user_login($args)
         return pnRedirect($redirect);
     }
 
-}
-
-/* classes for pnForms handlers */
- 
-class Dizkus_user_signaturemanagementHandler
-{
-    function initialize(&$render)
-    {       
-        $render->assign('signature', pnUserGetVar('_SIGNATURE'));
-        $render->caching = false;
-        $render->add_core_data('PNConfig');
-        return true;
-    }
-    function handleCommand(&$render, &$args)
-    {
-        if ($args['commandName']=='update') {
-            // Security check 
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) return LogUtil::registerPermissionError();
-
-            // get the pnForm data and do a validation check
-            $obj = $render->pnFormGetValues();          
-            if (!$render->pnFormIsValid()) return false;
-
-            pnUserSetVar('_SIGNATURE',$obj['signature']);
-            LogUtil::registerStatus(_DZK_SIGNATUREUPDATED);
-            
-            return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
-        }
-        return true;
-    }
 }
