@@ -5,6 +5,7 @@
     <div style="background-color: <!--[ $bgcolor2 ]-->;">
         <input type="checkbox" name="active[Dizkus]" id="active_Dizkus" value="1" <!--[ if $active ]-->checked="checked"<!--[ /if ]--> />
         <label for="active_Dizkus"><!--[ pnml name='_DZK_SEARCHINCLUDE_TITLE' ]--></label>
+        <em style="display: block;"><!--[ pnml name="_DZK_SEARCHLENGTHHINT" minlen=$pncore.Dizkus.minsearchlength maxlen=$pncore.Dizkus.maxsearchlength ]--></em>
     </div>
    
     <input type="hidden" name="Dizkus_startnum" value="0" />

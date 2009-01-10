@@ -110,6 +110,8 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'posts_per_page',     $data['posts_per_page']);
             pnModSetVar('Dizkus', 'topics_per_page',    $data['topics_per_page']);
             pnModSetVar('Dizkus', 'timespanforchanges', $data['timespanforchanges']);
+            pnModSetVar('Dizkus', 'minsearchlength',    $data['minsearchlength']);
+            pnModSetVar('Dizkus', 'maxsearchlength',    $data['maxsearchlength']);
 
             // strings
             pnModSetVar('Dizkus', 'email_from',          $data['email_from']);
@@ -135,6 +137,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'newtopicconfirmation',    'no');
             pnModSetVar('Dizkus', 'forum_enabled',           'yes');
             pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
+            pnModSetVar('Dizkus', 'showtextinsearchresults', 'yes');
 
             // dropdowns
             pnModSetVar('Dizkus', 'post_sort_order',     'ASC');
@@ -146,6 +149,8 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'posts_per_page',     15);
             pnModSetVar('Dizkus', 'topics_per_page',    15);
             pnModSetVar('Dizkus', 'timespanforchanges', 24);
+            pnModSetVar('Dizkus', 'minsearchlength', 3);
+            pnModSetVar('Dizkus', 'maxsearchlength', 30);
 
             // strings
             pnModSetVar('Dizkus', 'email_from',          pnConfigGetVar('adminmail'));

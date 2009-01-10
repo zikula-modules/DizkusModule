@@ -23,6 +23,10 @@ define('_DZK_PREFS_NONE', 'none');
 define('_DZK_PREFS_IGNORELISTLEVELS', 'Users that are ignored by a topic poster can not reply to this topic in level "strict". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown.');
 
 // new
+define('_DZK_SEARCHLENGTHHINT', 'The forum accepts searchstrings with a length between %minlen% and %maxlen% chars only!');
+define('_DZK_PREFS_MINSEARCHLENGTH', 'Minimum length of search string (>=1 char)');
+define('_DZK_PREFS_MAXSEARCHLENGTH', 'Maximum length of search string (<=50 chars))');
+define('_DZK_PREFS_SHOWTEXTINSEARCHRESULTS', 'Show text in search results<br /><em>Turn this off in high volume sites to improve search performance or take care about constant cleaning of the search results table.</em>');
 define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
 define('_DZK_MANAGESIGNATURE', 'Manage my signature');
 define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');

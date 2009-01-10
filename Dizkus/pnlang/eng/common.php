@@ -29,6 +29,9 @@ define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_ADD_FAVORITE_FORUM','add to favorites');
 
 // new
+define('_DZK_SEARCHLENGTHHINT', 'The forum accepts searchstrings with a length between %minlen% and %maxlen% chars only!');
+define('_DZK_PREFS_MINSEARCHLENGTH', 'Minimum length of search string (>=1 char)');
+define('_DZK_PREFS_MAXSEARCHLENGTH', 'Maximum length of search string (<=50 chars))');
 define('_DZK_PREFS_SHOWTEXTINSEARCHRESULTS', 'Show text in search results<br /><em>Turn this off in high volume sites to improve search performance or take care about constant cleaning of the search results table.</em>');
 define('_DZK_ADMINADDNEWRANK', 'Add a new rank');
 define('_DZK_ADMINDELETERANK', 'Delete this rank');

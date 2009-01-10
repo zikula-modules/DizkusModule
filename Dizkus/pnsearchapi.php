@@ -58,7 +58,7 @@ function Dizkus_searchapi_info()
 function Dizkus_searchapi_options($args)
 {
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-        $pnr = pnRender::getInstance('Dizkus');
+        $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
         $pnr->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
         return $pnr->fetch('dizkus_search.html');
@@ -74,9 +74,7 @@ function Dizkus_searchapi_options($args)
  */
 function Dizkus_searchapi_search_check(&$args)
 {
-    $extra = unserialize($args['datarow']['extra']);
-    
-    $args['datarow']['url'] = pnModUrl('Dizkus', 'user', 'viewtopic', array('topic' => $extra['topic_id']));
+    $args['datarow']['url'] = pnModUrl('Dizkus', 'user', 'viewtopic', array('topic' => $args['datarow']['extra']));
     return true;
 }
 
@@ -113,6 +111,11 @@ function Dizkus_searchapi_search($args)
     $args['forums']       = FormUtil::getPassedValue('Dizkus_forum', null, 'GETPOST');
     $args['searchwhere']  = FormUtil::getPassedValue('Dizkus_searchwhere', 'post', 'GETPOST');
 
+    $minlen = pnModGetVar('Dizkus', 'minsearchlength', 3);
+    $maxlen = pnModGetVar('Dizkus', 'maxsearchlength', 30);
+    if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
+        return LogUtil::registerStatus(pnML('_DZK_SEARCHLENGTHHINT', array('minlen' => $minlen, 'maxlen' => $maxlen)));
+    }
     if(!is_array($args['forums']) || count($args['forums'])== 0) {
         // set default
         $args['forums'][0] = -1;
@@ -123,7 +126,7 @@ function Dizkus_searchapi_search($args)
     }
 
     // check mod var for fulltext support
-    $funcname = (pnModGetVar('Dizkus', 'fulltextindex', 0)==1) ? 'fulltext' : 'nonfulltext';
+    $funcname = (pnModGetVar('Dizkus', 'fulltextindex', 'no')=='yes') ? 'fulltext' : 'nonfulltext';
     pnModAPIFunc('Dizkus', 'search', $funcname, $args);
     return true;
 }
@@ -153,11 +156,6 @@ function Dizkus_searchapi_nonfulltext($args)
         return false;
     }
 
-    pnModDBInfoLoad('Search');
-    $pntable      = pnDBGetTables();
-    $searchtable  = $pntable['search_result'];
-    $searchcolumn = $pntable['search_result_column'];
-
     switch ($args['searchwhere']) {
         case 'author':
             // searchfor is empty, we search by author only (done later on)
@@ -172,25 +170,30 @@ function Dizkus_searchapi_nonfulltext($args)
         default:
             $flag = false;
             $words = explode(' ', $args['q']);
-            $wherematch = '( ';
-            foreach($words as $word) {
-                if($flag) {
-                    switch(strtoupper($args['searchtype'])) {
-                        case 'AND' :
-                            $wherematch .= ' AND ';
-                            break;
-                        case 'OR' :
-                        default :
-                            $wherematch .= ' OR ';
-                            break;
+            if(strtoupper($args['searchtype'])=='EXACT') {
+                $q = DataUtil::formatForStore($args['q']);
+                $wherematch .= "(pt.post_text LIKE '%$q%' OR t.topic_title LIKE '%$q%') \n";
+            } else {
+                $wherematch = '( ';
+                foreach($words as $word) {
+                    if($flag) {
+                        switch(strtoupper($args['searchtype'])) {
+                            case 'AND' :
+                                $wherematch .= ' AND ';
+                                break;
+                            case 'OR' :
+                            default :
+                                $wherematch .= ' OR ';
+                                break;
+                        }
                     }
+                    // get post_text and match up forums/topics/posts
+                    $word = DataUtil::formatForStore($word);
+                    $wherematch .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                    $flag = true;
                 }
-                // get post_text and match up forums/topics/posts
-                $word = DataUtil::formatForStore($word);
-                $wherematch .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                $flag = true;
+                $wherematch .= ' )';
             }
-            $wherematch .= ' )';
     }
 
     // get all forums the user is allowed to read
@@ -225,6 +228,8 @@ function Dizkus_searchapi_nonfulltext($args)
         }
         $whereforums = 'f.forum_id IN(' . DataUtil::formatForStore(implode($forums2, ',')) . ') ';
     }
+
+    // sorting not necessary, this is done when reading the serch_result table
 
     start_search($wherematch, $selectmatch, $whereforums, $args);
     return true;
@@ -274,50 +279,32 @@ function Dizkus_searchapi_fulltext($args)
             break;
         case 'post':
         default:
-            switch(strtoupper($args['searchtype'])) {
-                case 'AND':
-                    $wherematch = "(MATCH pt.post_text AGAINST ('%" . $args['q'] . "%') OR MATCH t.topic_title AGAINST ('%" . $args['q'] ."%')) \n";
-                    $selectmatch = ", MATCH pt.post_text AGAINST ('%" .$args['q'] . "%') as textscore, MATCH t.topic_title AGAINST ('%" . $args['q'] . "%') as subjectscore \n";
-                    break;
-                case 'OR':
-                default:
-                    // OR
-                    $flag = false;
-                    $words = explode(' ', $args['q']);
-                    $wherematch .= '( ';
-                    foreach($words as $word) {
-                        if($flag) {
+            $searchtype = strtoupper($args['searchtype']);
+            if ($searchtype == 'EXACT') {
+                $q = DataUtil::formatForStore($args['q']);
+                $wherematch = "(MATCH pt.post_text AGAINST ('%" . $q . "%') OR MATCH t.topic_title AGAINST ('%" . $q ."%')) \n";
+                $selectmatch = ", MATCH pt.post_text AGAINST ('%" .$q . "%') as textscore, MATCH t.topic_title AGAINST ('%" . $q . "%') as subjectscore \n";
+            } else {
+                $flag = false;
+                $words = explode(' ', $args['q']);
+                $wherematch .= '( ';
+                foreach($words as $word) {
+                    if($flag) {
+                        if ($searchtype == 'OR') {
                             $wherematch .= ' OR ';
+                        } else {
+                            $wherematch .= ' AND ';
                         }
-                        $word = DataUtil::formatForStore($word);
-                        // get post_text and match up forums/topics/posts
-                        //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                        $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-                        $flag = true;
                     }
-                    $wherematch .= ' ) ';
-            }
-            //$wherematch .= ' ';
-            
-            $flag = false;
-            $words = explode(' ', $args['q']);
-            $wherematch = '( ';
-            foreach($words as $word) {
-                if($flag==true) {
-                    switch(strtolower($args['searchtype'])) {
-                        case 'or':
-                            $wherematch .= ' OR ';
-                            break;
-                        case 'and':
-                        default:
-                            $wherematch .= 'AND ';
-                    }
+                    $word = DataUtil::formatForStore($word);
+                    // get post_text and match up forums/topics/posts
+                    //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                    $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
+                    $selectmatch = ", MATCH pt.post_text AGAINST ('%$word%') as textscore, MATCH t.topic_title AGAINST ('%$word%') as subjectscore \n";
+                    $flag = true;
                 }
-                $word = DataUtil::formatForStore($word);
-                $wherematch .= "(MATCH pt.post_text AGAINST ('%$word%') OR MATCH t.topic_title AGAINST ('%$word%')) \n";
-                $flag = true;
+                $wherematch .= ' ) ';
             }
-            $wherematch .= ' )';
     }
 
     // check forums (multiple selection is possible!)
@@ -356,7 +343,9 @@ function Dizkus_searchapi_fulltext($args)
         }
         $whereforums .= 'f.forum_id IN(' . DataUtil::formatForStore(implode($forums2, ',')) . ') ';
     }
-                 
+    
+    // sorting not necessary, this is done when reading the serch_result table
+
     start_search($wherematch, $selectmatch, $whereforums, $args);
     return true;
 }
@@ -369,9 +358,9 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
     $searchcolumn = $pntable['search_result_column'];
 
     $query = "SELECT DISTINCT
-              pt.post_text,
               t.topic_id,
               t.topic_title,
+              pt.post_text,
               p.post_time
               $selectmatch
               FROM ".$pntable['dizkus_posts']." AS p,
@@ -382,7 +371,8 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
               AND p.post_id=pt.post_id
               AND p.topic_id=t.topic_id
               AND p.forum_id=f.forum_id
-              AND $whereforums";
+              AND $whereforums
+              GROUP BY t.topic_id";
 
     $result = DBUtil::executeSQL($query);
     if (!$result) {
@@ -408,7 +398,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
         $sql = $insertSql . '('
                . '\'' . DataUtil::formatForStore($topic['topic_title']) . '\', '
                . '\'' . $topictext . '\', '
-               . '\'' . DataUtil::formatForStore(serialize(array('searchwhere' => $args['searchwhere'], 'searchfor' => $args['q'], 'topic_id' => $topic['topic_id']))) . '\', '
+               . '\'' . DataUtil::formatForStore($topic['topic_id']) . '\', '
                . '\'Dizkus\', '
                . '\'' . DataUtil::formatForStore($topic['post_time']) . '\', '
                . '\'' . DataUtil::formatForStore($sessionId) . '\')';

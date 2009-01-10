@@ -27,6 +27,9 @@ define('_DZK_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien mit d
 define('_DZK_NEW_THREADS','Neuer Beitrag in Forum');
 
 // new
+define('_DZK_SEARCHLENGTHHINT', 'Das Forum akzeptiert nur Suchstrings mit einer Länge zwischen %minlen% und %maxlen% Zeichen!');
+define('_DZK_PREFS_MINSEARCHLENGTH', 'Minimale Länge des Suchstrings (>=1 Zeichen)');
+define('_DZK_PREFS_MAXSEARCHLENGTH', 'Maximale Länge des Suchstrings (<=50 Zeichen))');
 define('_DZK_PREFS_SHOWTEXTINSEARCHRESULTS', 'Textanlauf in Suchergebnissen zeigen<br /><em>Auf sehr aktiven Seiten sollte man dies ausschalten, um die Suchgeschwindigkeit zu erhöhen oder dafür Sorge tragen, das die Suchergebnistabelle regelmäßig bereinigt wird.</em>');
 define('_DZK_ADMINADDNEWRANK', 'Einen neuen Rang hinzufügen');
 define('_DZK_ADMINDELETERANK', 'Diesen Userrang löschen');
