@@ -47,6 +47,15 @@
         <a class="image subscribelink" href="<!--[ pnmodurl modname=Dizkus type=user func=signaturemanagement ]-->" title="<!--[ pnml name='_DZK_MANAGESIGNATURE' ]-->"><!--[ pnml name='_DZK_MANAGESIGNATURE' ]--></a>
     </dd>
 	<!--[/if]-->
+
+	<!--[if $ignorelist_handling ne "none" and $contactlist_available]-->
+    <dt class="dzk_clearfix">
+        <!--[ pnml name='_DZK_IGNORELISTHANDLING' ]-->
+    </dt>
+    <dd>
+        <a class="image subscribelink" href="<!--[ pnmodurl modname=Dizkus type=user func=ignorelistmanagement ]-->" title="<!--[ pnml name='_DZK_MANAGEIGNORELIST' ]-->"><!--[ pnml name='_DZK_MANAGEIGNORELIST' ]--></a>
+    </dd>
+	<!--[/if]-->
 </dl>
 
 <table cellpadding="5" cellspacing="0" summary="<!--[ pnml name="_DZK_SETTING" ]-->">

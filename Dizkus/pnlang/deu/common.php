@@ -20,6 +20,8 @@ define('_DZK_PREFS_STRICT', 'streng');
 define('_DZK_PREFS_MEDIUM', 'medium');
 define('_DZK_PREFS_NONE', 'keines');
 define('_DZK_PREFS_IGNORELISTLEVELS', 'Benutzer, welche von einem anderen Mitglied ignoriert werden, können im strengen Level nicht auf neu erstellte Themen des Benutzers antworten. Im Level medium ist das Antworten möglich, jedoch werden Postings ignorierter Benutzer generell nicht angezeigt und es erfolgt keine Emailbenachrichtigung. Ein Einblenden der Postings per Klick ist möglich.');
+define('_DZK_IGNORELISTHANDLING', 'Einstellungen zu ignorierten Benutzern');
+define('_DZK_MANAGEIGNORELIST', 'Ignorierlisten-Einstellungen verwalten');
 
 // changed
 define('_DZK_ADMINUSERRANK_INFO','Um einen Rang neu zu erstellen, die entsprechenden Daten eintragen und HINZUFÜGEN anklicken.<br />Um einen Rang zu bearbeiten, die entsprechenden Werte in der Tabelle unten anpassen und ÜBERTRAGEN wählen.<br />Um einen Rang zu löschen, die entsprechende Checkbox markieren und anschliessend ÜBERTRAGEN anwählen.');

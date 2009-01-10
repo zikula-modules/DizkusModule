@@ -629,6 +629,8 @@ function Dizkus_user_prefs($args=array())
             $pnr->assign('favorites_enabled', pnModGetVar('Dizkus', 'favorites_enabled'));
             $pnr->assign('last_visit_unix', $last_visit_unix);
             $pnr->assign('signaturemanagement', pnModGetVar('Dizkus','signaturemanagement'));
+            $pnr->assign('ignorelist_handling', pnModGetVar('Dizkus','ignorelist_handling'));
+            $pnr->assign('contactlist_available', pnModAvailable('ContactList'));
             $pnr->assign('post_order', strtolower(pnModAPIFunc('Dizkus','user','get_user_post_order')));
             $pnr->assign('tree', pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
             return $pnr->fetch('dizkus_user_prefs.html');
