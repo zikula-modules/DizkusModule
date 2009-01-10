@@ -34,6 +34,7 @@ function Dizkus_admin_preferences()
     	return LogUtil::registerPermissionError();
     }
 
+	// Load handler class
     Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_admin_prefshandler.class.php');
 
     // Create output object
