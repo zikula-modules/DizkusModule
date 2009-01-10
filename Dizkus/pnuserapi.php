@@ -3176,6 +3176,19 @@ function Dizkus_userapi_get_latest_posts($args)
     }
     $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
 
+	// integrate contactlist's ignorelist here
+	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+	  	// get user's ignore list
+	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+	  	$ignored_uids = array();
+	  	foreach ($ignored_users as $item) {
+		    $ignored_uids[]=(int)$item['iuid'];
+		}
+	  	if (count($ignored_uids) > 0) {
+		    $whereignorelist = " AND t.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+		}
+	}
 
     // build the tricky sql
     $sql = "SELECT    t.topic_id,
@@ -3201,6 +3214,7 @@ function Dizkus_userapi_get_latest_posts($args)
             AND " .
             $whereforum .
             $wheretime .
+            $whereignorelist .
             $unanswered;
 //pnfdebug('sql', $sql, true);
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
