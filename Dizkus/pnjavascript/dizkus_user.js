@@ -511,6 +511,7 @@ function quickEditInit(originalRequest)
     }
 
     new Insertion.After($(postingtextID), result.data);
+    $('bbcode_'+postingtextID+'_edit').removeClassName('hidden');
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
     Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);
