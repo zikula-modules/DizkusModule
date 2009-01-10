@@ -681,7 +681,7 @@ function Dizkus_user_ignorelistmanagement()
         return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
     }
     // Security check
-    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) {
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
         return LogUtil::registerPermissionError();
     }
 
