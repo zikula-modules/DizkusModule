@@ -2661,6 +2661,7 @@ function Dizkus_userapi_notify_by_email($args)
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
+                $email['uid'] = $pn_uid;
                 $recipients[$email['name']] = $email;
             }
         }
@@ -2690,6 +2691,7 @@ function Dizkus_userapi_notify_by_email($args)
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
+                $email['uid'] = $pn_uid;
                 $recipients[$email['name']] = $email;
             }
         }
@@ -2715,19 +2717,30 @@ function Dizkus_userapi_notify_by_email($args)
 
     if(count($recipients)>0) {
         foreach($recipients as $subscriber) {
-
-            $args = array( 'fromname'    => $sitename,
-                           'fromaddress' => $email_from,
-                           'toname'      => $subscriber['name'],
-                           'toaddress'   => $subscriber['address'],
-                           'subject'     => $subject,
-                           'body'        => $message,
-                           'headers'     => array('X-UserID: ' . md5($uid),
-                                                  'X-Mailer: Dizkus v' . $modinfo['version'],
-                                                  'X-DizkusTopicID: ' . $topic_id));
-
-            pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-        }
+			// integrate contactlist's ignorelist here
+			$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
+			if (	pnModAvailable('ContactList') && 
+					(in_array($ignorelist_setting,array('medium','strict'))) && 
+					pnModAPIFunc('ContactList','user','isIgnored',array('uid' => $subscriber['uid'], 'iuid' => pnUserGetVar('uid')))	) {
+				$send = false;
+			}
+			else {
+			  	$send = true;
+			}
+			if ($send) {
+	            $args = array( 'fromname'    => $sitename,
+	                           'fromaddress' => $email_from,
+	                           'toname'      => $subscriber['name'],
+	                           'toaddress'   => $subscriber['address'],
+	                           'subject'     => $subject,
+	                           'body'        => $message,
+	                           'headers'     => array('X-UserID: ' . md5($uid),
+	                                                  'X-Mailer: Dizkus v' . $modinfo['version'],
+	                                                  'X-DizkusTopicID: ' . $topic_id));
+	
+	            pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+	        }
+	    }
     }
     return;
 }
