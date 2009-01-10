@@ -194,6 +194,9 @@ function Dizkus_init()
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
     pnModSetVar('Dizkus', 'showtextinsearchresults', 'yes');
+    pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
+    pnModSetVar('Dizkus', 'minsearchlength', 3);
+    pnModSetVar('Dizkus', 'maxsearchlength', 30);
     pnModSetVar('Dizkus', 'minsearchlength', 3);
     pnModSetVar('Dizkus', 'maxsearchlength', 30);
 
@@ -419,5 +422,6 @@ function Dizkus_upgrade_to_3_0()
     pnModSetVar('Dizkus', 'minsearchlength', 3);
     pnModSetVar('Dizkus', 'maxsearchlength', 30);
 
+    pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
 	return true;
 }
