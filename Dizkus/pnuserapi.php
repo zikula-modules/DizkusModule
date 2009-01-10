@@ -625,6 +625,20 @@ function Dizkus_userapi_readforum($args)
     // forum_pager is obsolete, inform the user about this
     $forum['forum_pager'] = 'deprecated data field $forum.forum_pager used, please update your template using the forumpager plugin';
 
+	// integrate contactlist's ignorelist here
+	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+	  	// get user's ignore list
+	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+	  	$ignored_uids = array();
+	  	foreach ($ignored_users as $item) {
+		    $ignored_uids[]=(int)$item['iuid'];
+		}
+	  	if (count($ignored_uids) > 0) {
+		    $whereignorelist = " AND t.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+		}
+	}
+
     $sql = "SELECT t.topic_id,
                    t.topic_title,
                    t.topic_views,
@@ -634,12 +648,14 @@ function Dizkus_userapi_readforum($args)
                    t.topic_last_post_id,
                    u.pn_uname,
                    u2.pn_uname as last_poster,
-                   p.post_time
+                   p.post_time,
+                   t.topic_poster
             FROM ".$pntable['dizkus_topics']." AS t
             LEFT JOIN ".$pntable['users']." AS u ON t.topic_poster = u.pn_uid
             LEFT JOIN ".$pntable['dizkus_posts']." AS p ON t.topic_last_post_id = p.post_id
             LEFT JOIN ".$pntable['users']." AS u2 ON p.poster_id = u2.pn_uid
             WHERE t.forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
+            ".$whereignorelist."
             ORDER BY t.sticky DESC, p.post_time DESC";
             //ORDER BY t.sticky DESC"; // RNG
             //ORDER BY t.sticky DESC, p.post_time DESC";
