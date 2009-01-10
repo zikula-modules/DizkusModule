@@ -667,6 +667,40 @@ function Dizkus_user_signaturemanagement()
 }
 
 /**
+ * ignorelist management
+ * 
+ */
+function Dizkus_user_ignorelistmanagement()
+{
+    $disabled = dzk_available();
+    if(!is_bool($disabled)) {
+        return $disabled;
+    }
+
+    if(!pnUserLoggedIn()) {
+        return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
+    }
+    // Security check
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) {
+        return LogUtil::registerPermissionError();
+    }
+
+	// check for Contactlist module and admin settings
+	$ignorelist_handling = pnModGetVar('Dizkus','ignorelist_handling');
+	if (!pnModAvailable('ContactList') || ($ignorelist_handling == 'none')) {
+	  	LogUtil::registerError(_DZK_PREFS_NOCONFIGPOSSIBLE);
+	  	return pnRedirect(pnModURL('Dizkus', 'user', 'prefs'));
+	}
+    // Include handler class
+    Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_user_ignorelistmanagementhandler.class.php');
+    
+    // Create output and assign data
+    $render = FormUtil::newpnForm('Dizkus');
+    // Return the output
+    return $render->pnFormExecute('dizkus_user_ignorelistmanagement.html', new dizkus_user_ignorelistmanagementHandler());
+}
+
+/**
  * emailtopic
  *
  */

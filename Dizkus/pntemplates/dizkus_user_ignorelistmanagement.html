@@ -1,0 +1,21 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file=dizkus_user_header.html ]-->
+
+<h1><!--[ pnml name='_DZK_IGNORELISTHANDLING' ]--></h1>
+
+<!--[pnform]-->
+<div>
+	<!--[pnformvalidationsummary]-->
+    <dl class="dzkoptionlist dzk_clearfix"> 
+            <dt><!--[ pnformlabel for="ignorelist_myhandling" text="_DZK_PREFS_IGNORELISTMYHANDLING" html=1 ]--><br />
+	    <dd>
+				<!--[ pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling ]--><br />
+				<!--[pnml name="_DZK_PREFS_IGNORELISTLEVELS"]-->
+	    </dd>
+    </dl>
+    <p><!--[pnformbutton commandName="update" text="_UPDATE"]--></p>
+</div>
+<!--[/pnform]-->
+
+<!--[ include file='dizkus_user_footer.html' ]-->

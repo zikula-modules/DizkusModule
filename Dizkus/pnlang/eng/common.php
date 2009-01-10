@@ -22,6 +22,9 @@ define('_DZK_PREFS_NONE', 'none');
 define('_DZK_PREFS_IGNORELISTLEVELS', 'Users that are ignored by a topic poster can not reply to this topic in level "strict". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown.');
 define('_DZK_IGNORELISTHANDLING', 'Ignorelist configuration');
 define('_DZK_MANAGEIGNORELIST', 'Manage my settings for my ignorelist');
+define('_DZK_PREFS_NOCONFIGPOSSIBLE', 'No ignorelist configuration possible');
+define('_DZK_PREFS_IGNORELISTMYHANDLING', 'My individual handling of ignored users');
+define('_DZK_IGNORELISTSETTINGSUPDATED', 'Ignorelist configuration updated');
 
 // changed
 define('_DZK_ADMINUSERRANK_INFO','To add a new rank simply enter the values in the fields and select ADD.<br />To modify a ranking simply change the values in the text boxes in the table that follows and click the SUBMIT button.<br />To remove a ranking simply check the corresponding checkbox and click the SUBMIT button.');
