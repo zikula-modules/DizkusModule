@@ -103,7 +103,7 @@ class dizkus_admin_prefshandler
             // dropdowns
             pnModSetVar('Dizkus', 'post_sort_order',     $data['post_sort_order']);
             pnModSetVar('Dizkus', 'deletehookaction',    $data['deletehookaction']);
-            pnModSetVar('Dizkus', 'ignorelist_handling', $data['deletehookaction']);
+            pnModSetVar('Dizkus', 'ignorelist_handling', $data['ignorelist_handling']);
 
             // ints
             pnModSetVar('Dizkus', 'hot_threshold',      $data['hot_threshold']);
