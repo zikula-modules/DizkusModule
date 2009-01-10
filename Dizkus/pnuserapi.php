@@ -3487,6 +3487,20 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
         default: return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
+	// integrate contactlist's ignorelist here
+	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+	  	// get user's ignore list
+	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+	  	$ignored_uids = array();
+	  	foreach ($ignored_users as $item) {
+		    $ignored_uids[]=(int)$item['iuid'];
+		}
+	  	if (count($ignored_uids) > 0) {
+		    $whereignorelist = " AND t1.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+		}
+	}
+
     $sql = "SELECT t1.topic_id
             FROM ".$pntable['dizkus_topics']." AS t1,
                  ".$pntable['dizkus_topics']." AS t2
@@ -3494,6 +3508,7 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
               AND t1.topic_time $math t2.topic_time
               AND t1.forum_id = t2.forum_id
               AND t1.sticky = 0
+              ".$whereignorelist."
             ORDER BY t1.topic_time $sort";
     $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
     if(!$result->EOF) {
