@@ -27,6 +27,8 @@ define('_DZK_PREFS_NOCONFIGPOSSIBLE', 'No ignorelist configuration possible');
 define('_DZK_PREFS_IGNORELISTMYHANDLING', 'My individual handling of ignored users');
 define('_DZK_IGNORELISTSETTINGSUPDATED', 'Ignorelist configuration updated');
 define('_DZK_IGNORELISTNOREPLY', 'Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.');
+define('_DZK_SHOWIGNOREDPOSTINGOF', 'Show hidden posting of ignored user');
+define('_DZK_CLICKHERE', 'Click here');
 
 // new
 define('_DZK_SEARCHLENGTHHINT', 'The forum accepts searchstrings with a length between %minlen% and %maxlen% chars only!');

@@ -26,6 +26,8 @@ define('_DZK_PREFS_NOCONFIGPOSSIBLE', 'Keine Konfiguration möglich');
 define('_DZK_PREFS_IGNORELISTMYHANDLING', 'Persönliches Handling von ignorierten Benutzern');
 define('_DZK_IGNORELISTSETTINGSUPDATED', 'Einstellungen zur Ignore-Liste wurden aktualisiert');
 define('_DZK_IGNORELISTNOREPLY', 'Leider stehen Sie auf der Ignorierliste des Themenstarters und dieser will nicht, dass Sie auf sein Thema antworten können. Dies sollten Sie respektieren und sich bei Rückfragen mit dem Themenstarter direkt in Verbindung setzen.');
+define('_DZK_SHOWIGNOREDPOSTINGOF', 'Zeige ausgeblendete Antwort des ignorierten Benutzers');
+define('_DZK_CLICKHERE', 'Hier klicken');
 
 // changed
 define('_DZK_ADMINUSERRANK_INFO','Um einen Rang neu zu erstellen, die entsprechenden Daten eintragen und HINZUFÜGEN anklicken.<br />Um einen Rang zu bearbeiten, die entsprechenden Werte in der Tabelle unten anpassen und ÜBERTRAGEN wählen.<br />Um einen Rang zu löschen, die entsprechende Checkbox markieren und anschliessend ÜBERTRAGEN anwählen.');

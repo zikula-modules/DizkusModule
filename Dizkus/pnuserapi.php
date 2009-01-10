@@ -860,6 +860,17 @@ pnShutDown();
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
+	// integrate contactlist's ignorelist here (part 1/2)
+	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+	  	// get user's ignore list
+	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+	  	$ignored_uids = array();
+	  	foreach ($ignored_users as $item) {
+		    $ignored_uids[]=(int)$item['iuid'];
+		}
+	}
+
     $topic = array();
     if(!$result->EOF) {
         $topic = $result->GetRowAssoc(false);
@@ -1037,7 +1048,9 @@ pnShutDown();
                 }
             }
 
-
+			// integrate contactlist's ignorelist here (part 2/2)
+			// the added variable will be handled in templates
+			if (in_array($post['poster_id'],$ignored_uids)) $post['contactlist_ignored'] = 1;
 
             array_push($topic['posts'], $post);
             $result2->MoveNext();

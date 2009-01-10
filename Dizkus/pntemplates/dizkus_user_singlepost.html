@@ -7,7 +7,11 @@ Template for single postings
 *]-->
 
 <!--[ pnimg src="icon_profile.gif" assign=profile alt='_DZK_PROFILE' altml=true ]-->
-
+<!--[if $post.contactlist_ignored == 1]-->
+	<div id="hidelink_posting_<!--[ $post.post_id ]-->">
+	<!--[pnml name="_DZK_SHOWIGNOREDPOSTINGOF"]--> <!--[$post.poster_data.pn_uname|userprofilelink]-->. <a onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();"><!--[pnml name="_DZK_CLICKHERE"]--></a><br />
+	</div>
+<!--[/if]-->
 <div id="posting_<!--[ $post.post_id ]-->" class="dzk_bordercolor2 dzk_bgcolor1 posting dzk_clearfix">
     <div class="dzk_bordercolor2 dzk_bgcolor3 postingheader dzk_clearfix">
         <div class="postingheaderleft">
@@ -164,4 +168,8 @@ Template for single postings
         <!--[ /if ]-->
     </div>
 </div>
-
+<!--[if $post.contactlist_ignored == 1]-->
+	<script type="text/javascript">
+		$('posting_<!--[ $post.post_id ]-->').toggle();
+	</script>
+<!--[/if]-->
