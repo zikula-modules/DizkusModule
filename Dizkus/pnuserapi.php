@@ -4601,3 +4601,38 @@ function Dizkus_userapi_get_forum_subscriptions($args)
 
     return $subscriptions;
 }
+
+/**
+ * get_settings_ignorelist
+ *
+ *@params none
+ *@params $args['uid'] 	int 	the users id
+ *@returns level for ignorelist handling as string
+ */
+function Dizkus_userapi_get_settings_ignorelist($args)
+{
+	// if Contactlist is not available there will be no ignore settings
+	if (!pnModAvailable('ContactList')) return false;
+  	// get parameters
+	$uid = (int)$args['uid'];
+	if (!($uid>1)) {
+	  	return false;
+	}
+	$attr = pnUserGetVar('__ATTRIBUTES__',$uid);
+	$ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
+	$default = pnModGetVar('Dizkus','ignorelist_handling');
+	if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != '')) {
+		if (($ignorelist_myhandling == 'strict') && ($default != $ignorelist_myhandling)) {
+		  	// maybe the admin value changed and the user's value is "higher" than the admin's value
+		  	return $default;
+		}
+		else {
+		  	// return user's value
+		  	return $ignorelist_myhandling;
+		}
+	}
+	else {
+		// return admin's default value
+		return $default;
+	}
+}

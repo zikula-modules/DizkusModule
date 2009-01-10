@@ -31,6 +31,14 @@ function Dizkus_ajax_reply()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
     
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
+
+	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
+	$topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
+	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
+	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
+		dzk_ajaxerror(_DZK_IGNORELISTNOREPLY);
+	}
+
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
         dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);

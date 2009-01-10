@@ -25,6 +25,7 @@ define('_DZK_MANAGEIGNORELIST', 'Manage my settings for my ignorelist');
 define('_DZK_PREFS_NOCONFIGPOSSIBLE', 'No ignorelist configuration possible');
 define('_DZK_PREFS_IGNORELISTMYHANDLING', 'My individual handling of ignored users');
 define('_DZK_IGNORELISTSETTINGSUPDATED', 'Ignorelist configuration updated');
+define('_DZK_IGNORELISTNOREPLY', 'Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.');
 
 // changed
 define('_DZK_ADMINUSERRANK_INFO','To add a new rank simply enter the values in the fields and select ADD.<br />To modify a ranking simply change the values in the text boxes in the table that follows and click the SUBMIT button.<br />To remove a ranking simply check the corresponding checkbox and click the SUBMIT button.');

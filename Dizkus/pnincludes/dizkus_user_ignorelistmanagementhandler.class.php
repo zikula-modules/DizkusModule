@@ -32,14 +32,11 @@ class Dizkus_user_ignorelistmanagementHandler
 		    	$ignorelist_options[] = array('text' => _DZK_PREFS_NONE, 'value' => 'none');
 		}
         // get user's configuration
-		$attr = pnUserGetVar('__ATTRIBUTES__');
-		if ($attr['dzk_ignorelist_myhandling'] == '') $ignorelist_myhandling = $ignorelist_handling;
-		else $ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
         $render->caching = false;
         $render->add_core_data('PNConfig');
         // assign data
         $render->assign('ignorelist_options',    $ignorelist_options);
-        $render->assign('ignorelist_myhandling', $ignorelist_myhandling);
+        $render->assign('ignorelist_myhandling', pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid'))));
         return true;
     }
     function handleCommand(&$render, &$args)
