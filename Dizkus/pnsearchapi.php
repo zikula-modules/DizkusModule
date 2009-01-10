@@ -161,9 +161,9 @@ function Dizkus_searchapi_nonfulltext($args)
             // searchfor is empty, we search by author only (done later on)
             $searchauthor = pnUserGetIDFromName($args['q']);
             if ($searchauthor > 0){
-                $wherematch = ' p.poster_id=' . DataUtil::formatForStore($searchauthor) . ' AND ';
+                $wherematch = ' p.poster_id=' . DataUtil::formatForStore($searchauthor);
             } else {
-                return false;
+                return;
             }
             break;
         case 'post':  
@@ -174,7 +174,7 @@ function Dizkus_searchapi_nonfulltext($args)
                 $q = DataUtil::formatForStore($args['q']);
                 $wherematch .= "(pt.post_text LIKE '%$q%' OR t.topic_title LIKE '%$q%') \n";
             } else {
-                $wherematch = '( ';
+                //$wherematch = '( ';
                 foreach($words as $word) {
                     if($flag) {
                         switch(strtoupper($args['searchtype'])) {
@@ -192,7 +192,7 @@ function Dizkus_searchapi_nonfulltext($args)
                     $wherematch .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
                     $flag = true;
                 }
-                $wherematch .= ' )';
+                //$wherematch .= ' )';
             }
     }
 
@@ -272,9 +272,9 @@ function Dizkus_searchapi_fulltext($args)
             // we search by author only
             $searchauthor = pnUserGetIDFromName($args['q']);
             if ($searchauthor > 0){
-                $wherematch = ' p.poster_id=' . DataUtil::formatForStore($searchauthor) . ' AND ';
+                $wherematch = ' p.poster_id=' . DataUtil::formatForStore($searchauthor);
             } else {
-                return false;
+                return;
             }
             break;
         case 'post':
@@ -287,7 +287,7 @@ function Dizkus_searchapi_fulltext($args)
             } else {
                 $flag = false;
                 $words = explode(' ', $args['q']);
-                $wherematch .= '( ';
+                //$wherematch .= '( ';
                 foreach($words as $word) {
                     if($flag) {
                         if ($searchtype == 'OR') {
@@ -303,7 +303,7 @@ function Dizkus_searchapi_fulltext($args)
                     $selectmatch = ", MATCH pt.post_text AGAINST ('%$word%') as textscore, MATCH t.topic_title AGAINST ('%$word%') as subjectscore \n";
                     $flag = true;
                 }
-                $wherematch .= ' ) ';
+                //$wherematch .= ' ) ';
             }
     }
 
@@ -316,7 +316,7 @@ function Dizkus_searchapi_fulltext($args)
     if(!is_array($userforums) || count($userforums)==0) {
         // error or user is not allowed to read any forum at all
         // return empty result set without even doing a db access
-        return false;
+        return;
     }
     // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
@@ -339,7 +339,7 @@ function Dizkus_searchapi_fulltext($args)
         if(count($forums2)==0) {
             // error or user is not allowed to read any forum at all
             // return empty result set without even doing a db access
-            return false;
+            return;
         }
         $whereforums .= 'f.forum_id IN(' . DataUtil::formatForStore(implode($forums2, ',')) . ') ';
     }

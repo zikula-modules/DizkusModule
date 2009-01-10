@@ -44,6 +44,6 @@ function smarty_modifier_searchlink($uname=null)
 {
     $link = pnModURL('Search', 'user', 'search', array('q'                  => $uname,
                                                        'active[Dizkus]'     => 1,
-                                                       'Dizkus_searchwhere' => 'author'));
+                                                       'Dizkus_searchwhere' => 'author'), null, null, null, true);
     return DataUtil::formatForDisplay($link);
 }
