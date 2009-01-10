@@ -12,6 +12,15 @@
 // removed
 // define('_DZK_TOGGLEALL', 'Remove all topic subscriptions');
 
+// new for contactlist integration
+define('_DZK_PREFS_HASTOBEINSTALLED', 'has to be installed');
+define('_DZK_PREFS_NOTAVAILABLE', 'not available');
+define('_DZK_PREFS_IGNORELISTHANDLING', 'Handling of ignored users');
+define('_DZK_PREFS_STRICT', 'strict');
+define('_DZK_PREFS_MEDIUM', 'medium');
+define('_DZK_PREFS_NONE', 'none');
+define('_DZK_PREFS_IGNORELISTLEVELS', 'Users that are ignored by a topic poster can not reply to this topic in level "strict". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown.');
+
 // changed
 define('_DZK_ADMINUSERRANK_INFO','To add a new rank simply enter the values in the fields and select ADD.<br />To modify a ranking simply change the values in the text boxes in the table that follows and click the SUBMIT button.<br />To remove a ranking simply check the corresponding checkbox and click the SUBMIT button.');
 define('_DZK_PREFS_SENDEMAILSWITHSQLERRORS', 'Send emails, if SQL-errors occur');

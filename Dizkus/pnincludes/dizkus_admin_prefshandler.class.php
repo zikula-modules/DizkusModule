@@ -25,11 +25,14 @@ class dizkus_admin_prefshandler
         $pnRender->add_core_data();
         
         
-        $pnRender->assign('post_sort_order_options', array(array('text' => _DZK_PREFS_ASCENDING, 'value' => 'ASC'),
+        $pnRender->assign('post_sort_order_options', array(array('text' => _DZK_PREFS_ASCENDING,  'value' => 'ASC'),
                                                            array('text' => _DZK_PREFS_DESCENDING, 'value' => 'DESC')));
         $pnRender->assign('deletehook_options', array(array('text' => _DZK_PREFS_DELETEHOOKACTIONREMOVE, 'value' => 'remove'),
-                                                      array('text' => _DZK_PREFS_DELETEHOOKACTIONLOCK, 'value' => 'lock')));
-        
+                                                      array('text' => _DZK_PREFS_DELETEHOOKACTIONLOCK,   'value' => 'lock')));
+        $pnRender->assign('ignorelist_options', array(array('text' => _DZK_PREFS_STRICT, 'value' => 'strict'),
+                                                      array('text' => _DZK_PREFS_MEDIUM, 'value' => 'medium'),
+                                                      array('text' => _DZK_PREFS_NONE,   'value' => 'none')));
+    
         $modvars = pnModGetVar('Dizkus');
         $pnRender->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
         $pnRender->assign('slimforum_checked', $modvars['slimforum'] == 'yes' ? 1 : 0);
@@ -40,6 +43,7 @@ class dizkus_admin_prefshandler
         $pnRender->assign('hideusers_checked', $modvars['hideusers'] == 'yes' ? 1 : 0);
         $pnRender->assign('signaturemanagement_checked', $modvars['signaturemanagement'] == 'yes' ? 1 : 0);
         $pnRender->assign('removesignature_checked', $modvars['removesignature'] == 'yes' ? 1 : 0);
+        $pnRender->assign('ignorelist_handling', $modvars['ignorelist_handling'] == 'yes' ? 1 : 0);
         $pnRender->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
         $pnRender->assign('newtopicconfirmation_checked', $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
         $pnRender->assign('forum_enabled_checked', $modvars['forum_enabled'] == 'yes' ? 1 : 0);
@@ -47,6 +51,8 @@ class dizkus_admin_prefshandler
         $pnRender->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
         $pnRender->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
         $pnRender->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
+
+		$pnRender->assign('contactlist_available', pnModAvailable('ContactList'));
 
         list($dbconn, $pntable) = dzkOpenDB();
         $sql = "SELECT  VERSION()";
@@ -95,8 +101,9 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
 
             // dropdowns
-            pnModSetVar('Dizkus', 'post_sort_order',  $data['post_sort_order']);
-            pnModSetVar('Dizkus', 'deletehookaction', $data['deletehookaction']);
+            pnModSetVar('Dizkus', 'post_sort_order',     $data['post_sort_order']);
+            pnModSetVar('Dizkus', 'deletehookaction',    $data['deletehookaction']);
+            pnModSetVar('Dizkus', 'ignorelist_handling', $data['deletehookaction']);
 
             // ints
             pnModSetVar('Dizkus', 'hot_threshold',      $data['hot_threshold']);
@@ -130,8 +137,9 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
 
             // dropdowns
-            pnModSetVar('Dizkus', 'post_sort_order',  'ASC');
-            pnModSetVar('Dizkus', 'deletehookaction', 'lock');
+            pnModSetVar('Dizkus', 'post_sort_order',     'ASC');
+            pnModSetVar('Dizkus', 'deletehookaction',    'lock');
+            pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
 
             // ints
             pnModSetVar('Dizkus', 'hot_threshold',      20);

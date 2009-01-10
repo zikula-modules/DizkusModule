@@ -12,6 +12,15 @@
 // removed
 // define('_DZK_TOGGLEALL', 'Alle Themenabos entfernen');
 
+// new for contactlist integration
+define('_DZK_PREFS_HASTOBEINSTALLED', 'muss installiert sein');
+define('_DZK_PREFS_NOTAVAILABLE', 'nicht verfügbar');
+define('_DZK_PREFS_IGNORELISTHANDLING', 'Handling von ignorierten Benutzern');
+define('_DZK_PREFS_STRICT', 'streng');
+define('_DZK_PREFS_MEDIUM', 'medium');
+define('_DZK_PREFS_NONE', 'keines');
+define('_DZK_PREFS_IGNORELISTLEVELS', 'Benutzer, welche von einem anderen Mitglied ignoriert werden, können im strengen Level nicht auf neu erstellte Themen des Benutzers antworten. Im Level medium ist das Antworten möglich, jedoch werden Postings ignorierter Benutzer generell nicht angezeigt und es erfolgt keine Emailbenachrichtigung. Ein Einblenden der Postings per Klick ist möglich.');
+
 // changed
 define('_DZK_ADMINUSERRANK_INFO','Um einen Rang neu zu erstellen, die entsprechenden Daten eintragen und HINZUFÜGEN anklicken.<br />Um einen Rang zu bearbeiten, die entsprechenden Werte in der Tabelle unten anpassen und ÜBERTRAGEN wählen.<br />Um einen Rang zu löschen, die entsprechende Checkbox markieren und anschliessend ÜBERTRAGEN anwählen.');
 define('_DZK_FORUM_SEQUENCE_DESCRIPTION','Hier können Foren und Kategorien mit der Maus per Drag & Drop sortiert werden. Erst mit Klick auf Speichern werden die Änderungen in die Datenbank geschrieben.');
