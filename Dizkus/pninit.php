@@ -91,10 +91,76 @@ function Dizkus_init()
         return false;
     }
 
-    if(createHooks() == false) {
-        return false;
+    // create the hooks: create, delete, display.
+    // everything else is not needed , at least not atm.
+    //
+    // createhook
+    //
+    if (!pnModRegisterHook('item',
+                           'create',
+                           'API',
+                           'Dizkus',
+                           'hook',
+                           'createbyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (create)');
     }
 
+    //
+    // updatehook
+    //
+    if (!pnModRegisterHook('item',
+                           'update',
+                           'API',
+                           'Dizkus',
+                           'hook',
+                           'updatebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (update)');
+    }
+
+    //
+    // deletehook
+    //
+    if (!pnModRegisterHook('item',
+                           'delete',
+                           'API',
+                           'Dizkus',
+                           'hook',
+                           'deletebyitem')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (delete)');
+    }
+
+    //
+    // displayhook
+    //
+    if (!pnModRegisterHook('item',
+                           'display',
+                           'GUI',
+                           'Dizkus',
+                           'hook',
+                           'showdiscussionlink')) {
+        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (display)');
+    }
+    
+    // create FULLTEXT index 
+    if (strtolower($GLOBALS['PNConfig']['default']['dbtabletype']) <> 'innodb') {
+        // FULLTEXT does not work an innodb - by design
+        // for now we assume that it works with all other table types, if not, please open a ticket
+        $pntable      = pnDBGetTables();
+        $topicstable  = DataUtil::formatForStore($pntable['dizkus_topics']);
+        $topictitle   = DataUtil::formatForStore($pntable['dizkus_topics_column']['topic_title']);
+        $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
+        
+        $posttexttable  = DataUtil::formatForStore($pntable['dizkus_posts_text']);
+        $posttext       = DataUtil::formatForStore($pntable['dizkus_posts_text_column']['post_text']);
+        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $posttexttable . ' ADD FULLTEXT ' . $posttext . ' (' . $posttext . ')');
+
+        if ($res1 == true && $res2 == true) {
+            pnModSetVar('Dizkus', 'fulltextindex', 'yes');
+        } else {
+            pnModSetVar('Dizkus', 'fulltextindex', 'no');
+        }
+    }
+    
 	// forum settings
 	pnModSetVar('Dizkus', 'posts_per_page', 15);
 	pnModSetVar('Dizkus', 'topics_per_page', 15);
@@ -128,6 +194,8 @@ function Dizkus_init()
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
     pnModSetVar('Dizkus', 'showtextinsearchresults', 'yes');
+    pnModSetVar('Dizkus', 'minsearchlength', 3);
+    pnModSetVar('Dizkus', 'maxsearchlength', 30);
 
     // Initialisation successful
     return true;
@@ -348,59 +416,8 @@ function Dizkus_upgrade_to_3_0()
 	pnModSetVar('Dizkus', 'signaturemanagement', 'no');	
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
     pnModSetVar('Dizkus', 'showtextinsearchresults', 'no');
+    pnModSetVar('Dizkus', 'minsearchlength', 3);
+    pnModSetVar('Dizkus', 'maxsearchlength', 30);
+
 	return true;
-}
-
-function createHooks()
-{
-    // create the hooks: create, delete, display.
-    // everything else is not needed , at least not atm.
-    //
-    // createhook
-    //
-    if (!pnModRegisterHook('item',
-                           'create',
-                           'API',
-                           'Dizkus',
-                           'hook',
-                           'createbyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (create)');
-    }
-
-    //
-    // updatehook
-    //
-    if (!pnModRegisterHook('item',
-                           'update',
-                           'API',
-                           'Dizkus',
-                           'hook',
-                           'updatebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (update)');
-    }
-
-    //
-    // deletehook
-    //
-    if (!pnModRegisterHook('item',
-                           'delete',
-                           'API',
-                           'Dizkus',
-                           'hook',
-                           'deletebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (delete)');
-    }
-
-    //
-    // displayhook
-    //
-    if (!pnModRegisterHook('item',
-                           'display',
-                           'GUI',
-                           'Dizkus',
-                           'hook',
-                           'showdiscussionlink')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (display)');
-    }
-    return true;
 }
