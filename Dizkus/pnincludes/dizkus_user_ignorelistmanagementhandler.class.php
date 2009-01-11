@@ -51,11 +51,6 @@ class Dizkus_user_ignorelistmanagementHandler
 
 			// update user's attributes
 		    $obj['uid'] = pnUserGetVar('uid');
-		   
-		    // Get parameters from environment 
-		    // ic_note: email notifiaction yes/no
-		    // ic_ar  : autoreply yes/no
-		    // ic_art  : autoreply text
 		    $obj['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling']; 
 		
 		    // store attributes 
