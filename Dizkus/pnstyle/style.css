@@ -1661,31 +1661,3 @@ a.normallink {
 #dizkus button.preview {
     background: url(../pnimages/icon_preview.gif) no-repeat 0 50% ! important;
 }
-
-
-/*******************************************************************************/
-/* Administration / Preferences
-/*******************************************************************************/
-
-#dizkus_admin dl dt {
-  clear: both;
-  display: block;
-  float: left;
-  text-align: right;
-  width: 30%;
-  padding: 0;
-  margin: 0.5em;
-  line-height: 2em;
-}
-#dizkus_admin dl dd {
-  display: block;
-  float: left;
-  text-align: left;
-  width: 65%;
-  margin: 0.5em;
-  padding: 0;
-  line-height: 2em;
-}
-#dizkus_admin dl dd div.pn-informationmsg {
-  margin-left: 0;
-}
