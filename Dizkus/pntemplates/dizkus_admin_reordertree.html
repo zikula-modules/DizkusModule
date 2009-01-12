@@ -4,7 +4,7 @@
 
 <!--[* pndebug *]-->
 
-<!--[ pnimg src="icon_dbaccess.gif" assign="progressicon ]-->
+<!--[ pnimg src="icon_dbaccess.gif" assign=progressicon ]-->
 
 <fieldset>
     <legend>
@@ -17,7 +17,7 @@
     <!--[ pnml name="_DZK_FORUM_SEQUENCE_DESCRIPTION" ]-->
     </p>
     
-    <div class="dzk_clearfix">
+    <div class="pn-clearfix">
         <button onclick="javascript:addcategory();" class="image add left"><!--[ pnml name='_DZK_ADMINCATADD' ]--></button>
         <button onclick="javascript:storetreeorder();" class="image ok right" type="submit"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
     </div>
@@ -26,8 +26,8 @@
     <ul id="category">
     <!--[ foreach item=category from=$categorytree]-->
         <li style="width: 95%; margin: 0.2em 0 0.2em 2em;" id="category_<!--[ $category.cat_id ]-->">
-            <div style="padding: 2px; border: 1px solid black; width:90%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_clearfix">
-                <div class="dzk_handle dzk_clearfix">
+            <div style="padding: 2px; border: 1px solid black; width:90%; background-color: <!--[ $bgcolor3 ]-->;" class="pn-clearfix">
+                <div class="dzk_handle pn-clearfix">
                     <div id="categorytitle_<!--[ $category.cat_id ]-->" style="float: left; width: 60%;">
                         <a title="<!--[ pnml name='_DZK_VISITCATEGORY' ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id ]-->"><!--[ $category.cat_title ]--></a> (<!--[ $category.cat_id ]-->)
                     </div>
@@ -46,7 +46,7 @@
             <ul id="cid_<!--[ $category.cat_id ]-->" class="dzk_treeforumlist" style="display: none; margin: 0.2em 0 0.2em 2em;">
                 <!--[ foreach item=forum from=$category.forums ]-->
                 <li style="border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;" id="forum_<!--[ $forum.forum_id ]-->">
-                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle dzk_clearfix">
+                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle pn-clearfix">
                         <div id="forumtitle_<!--[ $forum.forum_id ]-->" style="float: left; width: 60%;">
                             <a href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id ]-->" title="<!--[ $forum.forum_name|pnvarprepfordisplay ]-->"><!--[ $forum.forum_name|pnvarprepfordisplay ]--></a> (<!--[ $forum.forum_id ]-->)
                         </div>
@@ -64,7 +64,7 @@
                     <!--[ pnml name='_DZK_EMPTYCATEGORY' ]-->
                 </li>
                 <li id="newforum_cat<!--[ $category.cat_id ]-->" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;">
-                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle dzk_clearfix">
+                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle pn-clearfix">
                         <div id="forumtitle_cat<!--[ $category.cat_id ]-->" style="float: left; width: 60%;">
                             <!--[ pnml name='_DZK_ADDNEWFORUM' ]-->
                         </div>
@@ -82,8 +82,8 @@
             
     <!--[ /foreach ]-->
         <li style="display: none; width: 95%; margin: 0.2em 0 0.2em 2em;" id="newcategory">
-            <div style="padding: 2px; border: 1px solid black; width:90%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_clearfix">
-                <div class="dzk_handle dzk_clearfix">
+            <div style="padding: 2px; border: 1px solid black; width:90%; background-color: <!--[ $bgcolor3 ]-->;" class="pn-clearfix">
+                <div class="dzk_handle pn-clearfix">
                     <div id="newcategorytitle" style="float: left; width: 60%;">
                         <!--[ pnml name='_DZK_ADDNEWCATEGORY' ]-->
                     </div>
@@ -105,7 +105,7 @@
                 </li>
 
                 <li id="newforum" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3 ]-->;">
-                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle dzk_clearfix">
+                    <div style="height: 1.5em; padding: 2px; width:99%; background-color: <!--[ $bgcolor3 ]-->;" class="dzk_handle pn-clearfix">
                         <div id="newforumtitle" style="float: left; width: 60%;">
                             <!--[ pnml name='_DZK_ADDNEWFORUM' ]-->
                         </div>
@@ -125,7 +125,7 @@
     </ul>
 
     <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus]-->" />
-    <div class="dzk_clearfix">
+    <div class="pn-clearfix">
         <button onclick="javascript:addcategory();" class="image add left"><!--[ pnml name='_DZK_ADMINCATADD' ]--></button>
         <button onclick="javascript:storetreeorder();" class="image ok right" type="submit"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
     </div>

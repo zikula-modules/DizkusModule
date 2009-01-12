@@ -93,7 +93,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'signaturemanagement',     $data['signaturemanagement'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'removesignature',         $data['removesignature'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'striptags',               $data['striptags'] == 1 ? 'yes' : 'no');
-            pnModSetVar('Dizkus', 'newtopicconfirmation',    $data['newtopicconfirmation'] == 1 ? 'yes' : 'no');
+            pnModSetVar('Dizkus', 'newtopicconfirmation',    $data['newtopicconf'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'forum_enabled',           $data['forum_enabled'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'sendemailswithsqlerrors', $data['sendemailswithsqlerrors'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'fulltextindex',           $data['fulltextindex'] == 1 ? 'yes' : 'no');
