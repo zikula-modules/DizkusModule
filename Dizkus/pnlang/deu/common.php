@@ -14,7 +14,7 @@
 
 // new for contactlist integration
 define('_DZK_PREFS_HASTOBEINSTALLED', 'muss installiert sein');
-define('_DZK_PREFS_NOTAVAILABLE', 'nicht verfügbar');
+define('_DZK_PREFS_IGNORELISTHANDLINGNOTAVAILABLE', 'Handling von ignorierten Benutzern ist nicht verfügbar, ');
 define('_DZK_PREFS_IGNORELISTHANDLING', 'Handling von ignorierten Benutzern (max. Level)');
 define('_DZK_PREFS_STRICT', 'streng');
 define('_DZK_PREFS_MEDIUM', 'medium');

@@ -111,15 +111,14 @@
     <!--[ pnformcheckbox id="removesignature" checked=$removesignature_checked ]-->
   </div>
   <div class="pn-adminformrow pn-clearfix">
+    <!--[if $contactlist_available eq true]-->
     <!--[ pnformlabel for="ignorelist_handling" text="_DZK_PREFS_IGNORELISTHANDLING" html=1 ]--><br />
-    <!--[if $contactlist_available ne true]-->
-    <a href="http://code.zikula.org/contactlist/">ContactList <!--[pnml name="_DZK_PREFS_HASTOBEINSTALLED"]--></a>
-    <!--[/if]-->
-    <!--[if $contactlist_available]-->
     <!--[ pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling ]-->
     <div class="pn-informationmsg"><!--[pnml name="_DZK_PREFS_IGNORELISTLEVELS"]--></div>
     <!--[else]-->
-    <!--[pnml name="_DZK_PREFS_NOTAVAILABLE"]-->
+    <div class="pn-informationmsg"><!--[pnml name="_DZK_PREFS_IGNORELISTHANDLINGNOTAVAILABLE"]--><br />
+    <a href="http://code.zikula.org/contactlist/">ContactList <!--[pnml name="_DZK_PREFS_HASTOBEINSTALLED"]--></a>
+    </div>
     <!--[/if]-->
   </div>
   <div class="pn-adminformrow pn-clearfix">
