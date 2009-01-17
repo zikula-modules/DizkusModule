@@ -625,19 +625,19 @@ function Dizkus_userapi_readforum($args)
     // forum_pager is obsolete, inform the user about this
     $forum['forum_pager'] = 'deprecated data field $forum.forum_pager used, please update your template using the forumpager plugin';
 
-	// integrate contactlist's ignorelist here
-	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
-	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-	  	// get user's ignore list
-	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
-	  	$ignored_uids = array();
-	  	foreach ($ignored_users as $item) {
-		    $ignored_uids[]=(int)$item['iuid'];
-		}
-	  	if (count($ignored_uids) > 0) {
-		    $whereignorelist = " AND t.topic_poster NOT IN (".implode(',',$ignored_uids).")";
-		}
-	}
+    // integrate contactlist's ignorelist here
+    $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+    if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+        // get user's ignore list
+        $ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignored_uids = array();
+        foreach ($ignored_users as $item) {
+            $ignored_uids[]=(int)$item['iuid'];
+        }
+        if (count($ignored_uids) > 0) {
+            $whereignorelist = " AND t.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+        }
+    }
 
     $sql = "SELECT t.topic_id,
                    t.topic_title,
@@ -860,16 +860,16 @@ pnShutDown();
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-	// integrate contactlist's ignorelist here (part 1/2)
-	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
-	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-	  	// get user's ignore list
-	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
-	  	$ignored_uids = array();
-	  	foreach ($ignored_users as $item) {
-		    $ignored_uids[]=(int)$item['iuid'];
-		}
-	}
+    // integrate contactlist's ignorelist here (part 1/2)
+    $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+    if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+        // get user's ignore list
+        $ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignored_uids = array();
+        foreach ($ignored_users as $item) {
+            $ignored_uids[]=(int)$item['iuid'];
+        }
+    }
 
     $topic = array();
     if(!$result->EOF) {
@@ -1048,9 +1048,9 @@ pnShutDown();
                 }
             }
 
-			// integrate contactlist's ignorelist here (part 2/2)
-			// the added variable will be handled in templates
-			if (in_array($post['poster_id'],$ignored_uids)) $post['contactlist_ignored'] = 1;
+            // integrate contactlist's ignorelist here (part 2/2)
+            // the added variable will be handled in templates
+            if (in_array($post['poster_id'],$ignored_uids)) $post['contactlist_ignored'] = 1;
 
             array_push($topic['posts'], $post);
             $result2->MoveNext();
@@ -2717,30 +2717,30 @@ function Dizkus_userapi_notify_by_email($args)
 
     if(count($recipients)>0) {
         foreach($recipients as $subscriber) {
-			// integrate contactlist's ignorelist here
-			$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
-			if (	pnModAvailable('ContactList') && 
-					(in_array($ignorelist_setting,array('medium','strict'))) && 
-					pnModAPIFunc('ContactList','user','isIgnored',array('uid' => $subscriber['uid'], 'iuid' => pnUserGetVar('uid')))	) {
-				$send = false;
-			}
-			else {
-			  	$send = true;
-			}
-			if ($send) {
-	            $args = array( 'fromname'    => $sitename,
-	                           'fromaddress' => $email_from,
-	                           'toname'      => $subscriber['name'],
-	                           'toaddress'   => $subscriber['address'],
-	                           'subject'     => $subject,
-	                           'body'        => $message,
-	                           'headers'     => array('X-UserID: ' . md5($uid),
-	                                                  'X-Mailer: Dizkus v' . $modinfo['version'],
-	                                                  'X-DizkusTopicID: ' . $topic_id));
-	
-	            pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-	        }
-	    }
+            // integrate contactlist's ignorelist here
+            $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
+            if (    pnModAvailable('ContactList') && 
+                    (in_array($ignorelist_setting,array('medium','strict'))) && 
+                    pnModAPIFunc('ContactList','user','isIgnored',array('uid' => $subscriber['uid'], 'iuid' => pnUserGetVar('uid')))    ) {
+                $send = false;
+            }
+            else {
+                $send = true;
+            }
+            if ($send) {
+                $args = array( 'fromname'    => $sitename,
+                               'fromaddress' => $email_from,
+                               'toname'      => $subscriber['name'],
+                               'toaddress'   => $subscriber['address'],
+                               'subject'     => $subject,
+                               'body'        => $message,
+                               'headers'     => array('X-UserID: ' . md5($uid),
+                                                      'X-Mailer: Dizkus v' . $modinfo['version'],
+                                                      'X-DizkusTopicID: ' . $topic_id));
+    
+                pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+            }
+        }
     }
     return;
 }
@@ -3216,21 +3216,23 @@ function Dizkus_userapi_get_latest_posts($args)
     for($i=0; $i<count($userforums); $i++) {
         array_push($allowedforums, $userforums[$i]['forum_id']);
     }
-    $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
+    $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
 
-	// integrate contactlist's ignorelist here
-	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
-	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-	  	// get user's ignore list
-	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
-	  	$ignored_uids = array();
-	  	foreach ($ignored_users as $item) {
-		    $ignored_uids[]=(int)$item['iuid'];
-		}
-	  	if (count($ignored_uids) > 0) {
-		    $whereignorelist = " AND t.topic_poster NOT IN (".implode(',',$ignored_uids).")";
-		}
-	}
+    // integrate contactlist's ignorelist here
+    if ($dizkusvars['ignorelist_options']) <> 'none' && pnModAvailable()) {
+        $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+        if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+            // get user's ignore list
+            $ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+            $ignored_uids = array();
+            foreach ($ignored_users as $item) {
+                $ignored_uids[]=(int)$item['iuid'];
+            }
+            if (count($ignored_uids) > 0) {
+                $whereignorelist = " AND t.topic_poster NOT IN (".DataUtil::formatForStore(implode(',',$ignored_uids)).")";
+            }
+        }
+    }
 
     // build the tricky sql
     $sql = "SELECT    t.topic_id,
@@ -3513,19 +3515,19 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
         default: return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-	// integrate contactlist's ignorelist here
-	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
-	if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-	  	// get user's ignore list
-	  	$ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
-	  	$ignored_uids = array();
-	  	foreach ($ignored_users as $item) {
-		    $ignored_uids[]=(int)$item['iuid'];
-		}
-	  	if (count($ignored_uids) > 0) {
-		    $whereignorelist = " AND t1.topic_poster NOT IN (".implode(',',$ignored_uids).")";
-		}
-	}
+    // integrate contactlist's ignorelist here
+    $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+    if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+        // get user's ignore list
+        $ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignored_uids = array();
+        foreach ($ignored_users as $item) {
+            $ignored_uids[]=(int)$item['iuid'];
+        }
+        if (count($ignored_uids) > 0) {
+            $whereignorelist = " AND t1.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+        }
+    }
 
     $sql = "SELECT t1.topic_id
             FROM ".$pntable['dizkus_topics']." AS t1,
@@ -4677,33 +4679,33 @@ function Dizkus_userapi_get_forum_subscriptions($args)
  * get_settings_ignorelist
  *
  *@params none
- *@params $args['uid'] 	int 	the users id
+ *@params $args['uid']  int     the users id
  *@returns level for ignorelist handling as string
  */
 function Dizkus_userapi_get_settings_ignorelist($args)
 {
-	// if Contactlist is not available there will be no ignore settings
-	if (!pnModAvailable('ContactList')) return false;
-  	// get parameters
-	$uid = (int)$args['uid'];
-	if (!($uid>1)) {
-	  	return false;
-	}
-	$attr = pnUserGetVar('__ATTRIBUTES__',$uid);
-	$ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
-	$default = pnModGetVar('Dizkus','ignorelist_handling');
-	if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != '')) {
-		if (($ignorelist_myhandling == 'strict') && ($default != $ignorelist_myhandling)) {
-		  	// maybe the admin value changed and the user's value is "higher" than the admin's value
-		  	return $default;
-		}
-		else {
-		  	// return user's value
-		  	return $ignorelist_myhandling;
-		}
-	}
-	else {
-		// return admin's default value
-		return $default;
-	}
+    // if Contactlist is not available there will be no ignore settings
+    if (!pnModAvailable('ContactList')) {
+        return false;
+    }
+    // get parameters
+    $uid = (int)$args['uid'];
+    if (!($uid>1)) {
+        return false;
+    }
+    $attr = pnUserGetVar('__ATTRIBUTES__',$uid);
+    $ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
+    $default = pnModGetVar('Dizkus','ignorelist_handling');
+    if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != '')) {
+        if (($ignorelist_myhandling == 'strict') && ($default != $ignorelist_myhandling)) {
+            // maybe the admin value changed and the user's value is "higher" than the admin's value
+            return $default;
+        } else {
+            // return user's value
+            return $ignorelist_myhandling;
+        }
+    } else {
+        // return admin's default value
+        return $default;
+    }
 }
