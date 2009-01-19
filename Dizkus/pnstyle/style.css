@@ -1661,3 +1661,21 @@ a.normallink {
 #dizkus button.preview {
     background: url(../pnimages/icon_preview.gif) no-repeat 0 50% ! important;
 }
+
+
+
+
+/*---------------------------------------------------------*/
+/* Workaround: Clearfix-Modifikation for all IE-Versions   */
+/*
+** IE7 - x
+*/
+.pn-clearfix { display: inline-block; }
+/*
+** IE5.x/Win - x
+** IE6 - x
+*/
+* html .pn-clearfix { height: 1%; }
+.pn-clearfix { display: block; }
+
+/*--------------------------------------------------------*/
