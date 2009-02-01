@@ -50,11 +50,12 @@ class Dizkus_user_ignorelistmanagementHandler
             if (!$render->pnFormIsValid()) return false;
 
 			// update user's attributes
-		    $obj['uid'] = pnUserGetVar('uid');
-		    $obj['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling']; 
+			$uid = pnUserGetVar('uid'); 
+			$user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false); 		    $obj['uid'] = pnUserGetVar('uid');
+		    $user['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling']; 
 		
 		    // store attributes 
-		    DBUtil::updateObject($obj, 'users', '', 'uid');
+		    DBUtil::updateObject($user, 'users', '', 'uid');
 
             LogUtil::registerStatus(_DZK_IGNORELISTSETTINGSUPDATED);
             
