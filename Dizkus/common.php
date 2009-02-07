@@ -350,8 +350,8 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
 	if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
 		// only	admins shall see the debug output
 		$dbconn->debug = $debug;
-//		  $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1)	? true:false);//dddd
-		$dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1)	? true:false);//dddd
+//		  $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1)	? true:false);
+		$dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1)	? true:false);
 	}
 
 	$mode =	(empty($where))	? 'INSERT':	'UPDATE';
