@@ -996,7 +996,7 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d	H:i')
 
 /**
  * dzk_available
- * check if	Dizkus is available	or not
+ * check if	Dizkus is available
  *
  *@params deliverhtml	  boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
  *return html or boolean
