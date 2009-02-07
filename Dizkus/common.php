@@ -128,7 +128,7 @@ function showforumerror($error_text, $file='', $line=0,	$httperror=null)
 	// available
 	pnModLangLoad('Dizkus');
 
-	$GLOBALS['info']['title'] =	$error_text;
+	PageUtil::setVar('title', $error_text);
 	if(SessionUtil::getVar('pn_ajax_call') == 'ajax') {
 		dzk_ajaxerror($error_text);
 	}
