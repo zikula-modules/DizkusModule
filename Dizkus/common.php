@@ -412,10 +412,6 @@ if(!function_exists('Dizkus_is_serialized')) {
 	function Dizkus_is_serialized( $string ) {
 		return @unserialize($string)!=='';
 		/*
-		if(	@unserialize( $string )	== '' )	{
-			return false;
-		}
-		return true;
 		*/
 	}
 }
