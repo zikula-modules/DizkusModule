@@ -15,3 +15,4 @@ function ShowNewRankImage(path)
 	$('newimage').src =	path + '/' + $F('newrank_image');
 	return;
 }
+
