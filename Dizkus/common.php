@@ -482,13 +482,14 @@ function Dizkus_bbdecode($message)
  *
  * obsolete	function - we have pn_bbclick
  */
+/*
 function Dizkus_undo_make_clickable($text)
 {
 	$text =	preg_replace("#<!--	BBCode auto-link start --><a href=\"(.*?)\"	target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
 	$text =	preg_replace("#<!--	BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode	auto-mailto	end	-->#i",	"\\1", $text);
 	return $text;
 }
-
+*/
 /**
  * removes instances of	<br	/> since sometimes they	are	stored in DB :(
  */
