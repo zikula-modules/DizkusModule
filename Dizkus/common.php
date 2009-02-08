@@ -411,8 +411,6 @@ function dzkSelectLimit(&$dbconn, $sql,	$limit=0, $start=false,	$file=__FILE__,	
 if(!function_exists('Dizkus_is_serialized')) {
 	function Dizkus_is_serialized( $string ) {
 		return @unserialize($string)!=='';
-		/*
-		*/
 	}
 }
 
