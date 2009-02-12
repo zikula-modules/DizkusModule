@@ -1,8 +1,8 @@
 
 
 <?
- echo       "hello world";
- 	 echo       "bad php";
+ echo        "hello world";
+ 	 echo        "bad php";
 
 ?>
 
