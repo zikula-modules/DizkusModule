@@ -12,8 +12,8 @@ Template for single postings
 	<!--[pnml name="_DZK_SHOWIGNOREDPOSTINGOF"]--> <!--[$post.poster_data.pn_uname|userprofilelink]-->. <a onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();"><!--[pnml name="_DZK_CLICKHERE"]--></a><br />
 	</div>
 <!--[/if]-->
-<div id="posting_<!--[ $post.post_id ]-->" class="dzk_bordercolor2 dzk_bgcolor1 posting dzk_clearfix">
-    <div class="dzk_bordercolor2 dzk_bgcolor3 postingheader dzk_clearfix">
+<div id="posting_<!--[ $post.post_id ]-->" class="dzk_bordercolor2 dzk_bgcolor1 posting pn-clearfix">
+    <div class="dzk_bordercolor2 dzk_bgcolor3 postingheader pn-clearfix">
         <div class="postingheaderleft">
             <!--[ if $post_counter == $post_count ]-->
             <a id="bottom"></a>
@@ -43,7 +43,7 @@ Template for single postings
         <!--[ /if ]-->
     </div>
    
-    <div class="postingbody dzk_bgcolor1 dzk_clearfix">
+    <div class="postingbody dzk_bgcolor1 pn-clearfix">
         <div  class="userinfo dzk_bordercolor2 dzk_bgcolor3" <!--[ if $topic.externalsource eq 1 ]-->style="display: none;"<!--[ /if ]--> id="posting_<!--[ $post.post_id ]-->_userinfo">
             <button onclick="toggleuserinfo(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_DZK_HIDEUSERINFO' ]-->" style="float: right;">x</button>
             <div id="posting_<!--[ $post.post_id ]-->_userinfocontent">
@@ -110,7 +110,7 @@ Template for single postings
         
     </div>
 
-    <div class="postingfooter dzk_bordercolor2 dzk_bgcolor3 dzk_clearfix">
+    <div class="postingfooter dzk_bordercolor2 dzk_bgcolor3 pn-clearfix">
 
         <div class="postingfooterleft">
             <!--[ if $preview neq true ]-->

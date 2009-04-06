@@ -126,7 +126,7 @@
 
 <!--[ pnfpager total=$topic.total_posts ]-->
 
-<div class="topicheader dzk_bordercolor2 dzk_bgcolor3 dzk_clearfix">
+<div class="topicheader dzk_bordercolor2 dzk_bgcolor3 pn-clearfix">
     <div class="topicheaderleft">
         <a id="top" title="<!--[ pnml name='_DZK_BOTTOM' ]-->" href="#bottom"><!--[ pnimg src="icon_bottom.gif" alt="_DZK_BOTTOM" altml=true ]--></a>
     </div>
@@ -135,12 +135,12 @@
     </div>
 </div>
 
-<div id="dzk_postinglist" class="dzk_clearfix">
-    <ul class="dzk_clearfix">
+<div id="dzk_postinglist">
+    <ul>
         <!--[ counter start=0 print=false assign=post_counter]-->
         <!--[ foreach key=num item=post from=$topic.posts ]-->
         <!--[ counter ]-->
-        <li>
+        <li class="pn-clearfix">
             <!--[ include file="dizkus_user_singlepost.html" ]-->
         </li>
         <!--[ /foreach ]-->
@@ -155,7 +155,7 @@
 <!--[* **** unused, this is  performance hog, use it on your own risk, but don't blame me 
 <!--[ similartopics search=$topic.topic_title ]-->
 <!--[ if $similartopics|@count > 0]-->
-<ul id="dzk_similartopics" class="dzk_clearfix">
+<ul id="dzk_similartopics" class="pn-clearfix">
     <li>
         <!--[ pnml name='_DZK_SIMILARTOPICS' ]-->:
     </li>
@@ -171,7 +171,7 @@
 end of unused code **** *]-->
 
 <!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
-<div id="dzk_quickreply" class="dzk_clearfix">        
+<div id="dzk_quickreply" class="pn-clearfix">        
     <form name="quickreplyform" id="quickreplyform" action="<!--[ pnmodurl modname=Dizkus type=user func=reply ]-->" method="post" enctype="multipart/form-data">
     <input type="hidden" id="forum" name="forum" value="<!--[ $topic.forum_id ]-->" />
     <input type="hidden" id="topic" name="topic" value="<!--[ $topic.topic_id ]-->" />
@@ -186,7 +186,7 @@ end of unused code **** *]-->
             <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
                 <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
             <!--[ /if ]-->
-            <div class="dzk_clearfix">
+            <div class="pn-clearfix">
                 <div id="quickreplyoptions">
                     <ul>
                         <li>

@@ -1,12 +1,12 @@
 /*  $Id$  */
 
 /*
- * colors
- *
- * if your theme support color definitionss and you want to use them, comment out the
- * the following block and define your colors there
- *
- */
+* colors
+*
+* if your theme support color definitionss and you want to use them, comment out the
+* the following block and define your colors there
+*
+*/
 .dzk_bgcolor1 { background-color: #FFFFFF; }
 .dzk_bgcolor2 { background-color: #AFBFC8; }
 .dzk_bgcolor3 { background-color: #CEDEE7; }
@@ -19,10 +19,9 @@
 .dzk_bordercolor5 { border-color: #EDF3F7; }
 
 /*
- * general settings
- */
+* general settings
+*/
 #dizkus button,
-#dizkus_admin button, 
 #dizkus button.right,
 #dizkus button.left {
     border: none;
@@ -33,14 +32,12 @@
     cursor: pointer;
 }
 
-#dizkus_admin button.right,
 #dizkus button.right {
-    float:right; 
+    float:right;
     margin: 1em 2em 1em 0;
 }
-#dizkus_admin button.left,
 #dizkus button.left {
-    float: left; 
+    float: left;
     margin: 1em 0 1em 2em;
 }
 
@@ -68,50 +65,6 @@
     /* */
 }
 
-div.dzkadminrow98 {
-    /* clear: both; */
-    width: 98%;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-}
-
-div.pnfadmincol66,  div.pnfadmincol24,  div.pnfadmincol22,  div.pnfadmincol16,  div.pnfadmincol12,
-div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
-    float: left;
-}
-
-div.pnfadmincol66, div.pnfadmincol24, div.pnfadmincol22, div.pnfadmincol16, div.pnfadmincol12 {
-    text-align: left;
-}
-
-div.pnfadmincol33c, div.pnfadmincol24c, div.pnfadmincol22c, div.pnfadmincol16c, div.pnfadmincol12c {
-    text-align: center;
- }
-
-div.pnfadmincol66 {
-    width: 66%;
-}
-
-div.pnfadmincol33c {
-    width: 33%;
-}
-
-div.pnfadmincol24, div.pnfadmincol24c {
-    width: 24%;
-}
-
-div.pnfadmincol22, div.pnfadmincol22c {
-    width: 22%;
-}
-
-div.pnfadmincol16, div.pnfadmincol16c {
-    width: 16%;
-}
-
-div.pnfadmincol12, div.pnfadmincol12c {
-    width: 12%;
-}
-
 dl.dzkoptionlist dt {
     clear: both;
     width: 40%;
@@ -125,18 +78,11 @@ dl.dzkoptionlist dd {
     padding: 1em 0;
 }
 
-#dizkus_admin legend {
-    font-size: 110%;
-    font-weight: bold;
-    margin-bottom: 1em;
-}
-
 #dizkus fieldset {
-    width: 99%;
     padding: 0;
     margin: 0;
     border-style: solid;
-    border-width: 2px;
+    border-width: 1px;
 }
 
 #dizkus label {
@@ -154,7 +100,8 @@ dl.dzkoptionlist dd {
     text-align: center;
 }
 
-.post-header-row, .post-bottom-row {
+.post-header-row,
+.post-bottom-row {
     /* clear: both; */
     width: 98%;
     border: 1px solid red;
@@ -346,7 +293,7 @@ ul.dzk_mainforumlist li.nonewposts {
 }
 
 ul.dzk_mainforumlist li p.forumlastpostinfo {
-    font-size: 0.8em; 
+    font-size: 0.8em;
     margin-left: 0.3em;
 }
 
@@ -363,7 +310,7 @@ ul.dzk_forumlist li {
 }
 
 ul#dzk_forumlegend {
-    padding: 0; 
+    padding: 0;
     margin: 2em 0 1em 0;
     list-style-type: none;
     font-size: 90%;
@@ -371,7 +318,7 @@ ul#dzk_forumlegend {
 }
 
 /*****************************
- dizkus_user_viewtopic.html
+dizkus_user_viewtopic.html
 *****************************/
 
 div#dzk_javascriptareatopic,
@@ -390,29 +337,26 @@ div#dzk_moderatetopicoptions {
 }
 
 div#dzk_postinglist {
-    width: 100%;
-    float: left; 
     text-align: left;
-    padding: 0; 
+    padding: 0;
     margin: 0;
 }
 
 div#dzk_postinglist ul,
 div#dzk_postinglist ul li {
-    padding: 0; 
-    margin: 0; 
+    padding: 0;
+    margin: 0;
     text-align: left;
 }
 
 ul#dzk_similartopics li {
-    line-height: 1.5em; 
-    font-size: 110%; 
+    line-height: 1.5em;
+    font-size: 110%;
     font-weight: bold;
 }
 
 div#dzk_quickreply {
-    width: 99%; 
-    float: left; 
+    clear:both;
     margin-top: 1.5em;
 }
 
@@ -425,18 +369,18 @@ div#dzk_quickreply fieldset {
 }
 
 div#dzk_quickreply fieldset textarea {
-    width:99%; 
+    width:99%;
     height: 10em;
 }
 
 div#quickreplyposting {
-    padding: 0; 
-    margin: 0; 
+    padding: 0;
+    margin: 0;
 }
- 
+
 #dizkus li#quickreplybuttons,
 #dizkus li#nonajaxquickreplybuttons {
-    margin: 1.5em; 
+    margin: 1.5em;
     text-align: left;
 }
 
@@ -445,31 +389,29 @@ div#dzk_displayhooks {
 }
 
 .topicheader {
-    float: left; 
-    width: 99%; 
-    margin-top: 1em; 
-    border-width: 2px;
-    border-style: solid; 
-    
+    margin-top: 1em;
+    border-width: 1px;
+    border-style: solid;
+
 }
 
 .topicheaderleft {
-    float: left; 
-    width: 19%; 
+    float: left;
+    width: 19%;
     margin: 5px 0 0 5px;
 }
 
 .topicheaderright {
-    font-size: 1.6em; 
-    line-height: 1.65em; 
-    font-weight: bold; 
-    float: left; 
+    font-size: 1.6em;
+    line-height: 1.65em;
+    font-weight: bold;
+    float: left;
     width: 79%;
 }
 
 
 /*****************************
- dizkus_user_viewforum.html
+dizkus_user_viewforum.html
 *****************************/
 
 div#dzk_viewforum {
@@ -497,7 +439,7 @@ ul#dzk_moderatorlist li.intro {
 
 ul#dzk_javascriptareaforum,
 ul#dzk_nonjavascriptareaforum {
-/* wrapper */
+    /* wrapper */
 }
 
 ul#dzk_javascriptareaforum li,
@@ -517,9 +459,9 @@ table#dzk_topiclist {
 table#dzk_topiclist tr.subheader td {
     font-weight: bold;
     text-align: center;
-    border-width: 2px; 
+    border-width: 1px;
     border-style: solid;
-    border-top: none; 
+    border-top: none;
 }
 
 table#dzk_topiclist col#col_status {
@@ -543,10 +485,10 @@ table#dzk_topiclist col#col_lastpost {
 }
 
 table#dzk_topiclist tr.topicrow td {
-    border-bottom-width: 2px;
-    border-bottom-style: solid;   
-    vertical-align: middle;                 
-}                                  
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    vertical-align: middle;
+}
 
 p.dzk_notopics {
     padding: 1em;
@@ -619,8 +561,8 @@ div.dzk_statusmsg {
 }
 
 /*
- * main Dizkus div
- */
+* main Dizkus div
+*/
 #dizkus {
     font-size: small;
     width: 99%;
@@ -642,65 +584,54 @@ div.dzk_statusmsg {
 }
 
 /***********************
- styles for all tables
+styles for all tables
 ************************/
-#dizkus table,
-#dizkus_admin table {
-    width: 99%;
-    padding: 0;
-    margin: 0;
+#dizkus table {
+    width:100%;
+    padding:0;
+    margin:0;
 }
 
-#dizkus table caption,
-#dizkus_admin table caption {
-    text-align: center; 
-    margin: 1.5em 0 0.25em 0; 
+#dizkus table caption {
+    text-align: center;
+    margin: 1.5em 0 0.25em 0;
     border-style: solid;
-    border-width: 2px;
+    border-width: 1px;
     padding: 4px 0;
-    font-size: 130%;
+    font-size: 1.3em;
     font-weight: bold;
 }
 
-#dizkus tr td,
-#dizkus_admin tr td {
+#dizkus tr td {
     font-size: 90%;
 }
 
-#dizkus th,
-#dizkus_admin th {
+#dizkus th {
     font-size: 105%;
     font-weight: bold;
     text-align: center;
 }
 
 
-#dizkus .fullcell, #dizkus .leftcell, #dizkus .midcell, #dizkus .rightcell,
-#dizkus_admin .fullcell, #dizkus_admin .leftcell, #dizkus_admin .midcell, #dizkus_admin .rightcell {
-    border-width: 2px;
+#dizkus .fullcell,
+#dizkus .leftcell,
+#dizkus .midcell,
+#dizkus .rightcell {
+    border-width: 1px;
     border-style: solid;
 }
 
-#dizkus .leftcell,
-#dizkus_admin .leftcell {
+#dizkus .leftcell {
     border-right: none;
 }
 
-#dizkus .midcell,
-#dizkus_admin .midcell {
+#dizkus .midcell {
     border-right: none;
     border-left: none;
 }
 
-#dizkus .rightcell,
-#dizkus_admin .rightcell {
+#dizkus .rightcell {
     border-left: none;
-}
-
-
-#dizkus legend {
-    font-weight: bold;
-    font-size: 90%;
 }
 
 #dizkus .left {
@@ -711,16 +642,15 @@ div.dzk_statusmsg {
     text-align: right;
 }
 
-#dizkus .center,
-#dizkus_admin .center {
+#dizkus .center {
     text-align: center;
 }
 
 #dizkus .optionrow {
     padding: 3px;
-    border-style: solid; 
-    border-width: 2px;
-    text-align:left; 
+    border-style: solid;
+    border-width: 1px;
+    text-align:left;
     font-size: 1em;
     margin: 1em 0;
     line-height: 2em;
@@ -730,30 +660,34 @@ div.dzk_statusmsg {
     margin: 0 0.5em;
 }
 
-#dizkus_admin ul {
-    margin: 0;
+#dizkus_admin ul#category,
+#dizkus_admin .dzk_treeforumlist  {
     padding: 0;
-    list-style-type: none
-}
-
-#dizkus_admin li {
     margin: 0;
-    padding: 0;
+    list-style: none;
+    overflow:hidden;
 }
-
-#dizkus_admin h1 {
-    font-size: 2em;
-    margin: 0.5em 0;
+#dizkus_admin .catline {
+    border:1px solid #444;
+    margin:1em 0;
+    padding:0.2em;
+    overflow:hidden;
 }
-
-#dizkus_admin h2 {
-    font-size: 1.5em;
-    margin: 0.5em 0;
+#dizkus_admin .forumline {
+    border:1px solid #999;
+    margin:0.5em;
+    padding:0.2em;
+    overflow:hidden;
+}
+#dzk_adminfooter {
+    margin: 1em 0;
+    font-size: 0.9em;
+    text-align: center;
 }
 
 /*******************************
- * dizkus_user_header.html
- *******************************/
+* dizkus_user_header.html
+*******************************/
 
 ul#dzk_headeroptions {
     /* wrapper */
@@ -763,41 +697,9 @@ ul#dzk_headeroptions li {
     display: inline;
 }
 
-/*******************************
- * dizkus_admin_header.html
- *******************************/
-
-div#dzk_adminheader {
-    border-width: 2px;
-    border-style: solid;
-    padding: 0.5em 0; 
-    width:99%; 
-    text-align:center;
-    margin-bottom: 1em;
-}
-
-p.dzk_warning {
-    color: red;
-    border: 1px solid red;
-    text-align: center;
-    padding: 1em;
-}
-
-/*******************************
- * dizkus_admin_footer.html
- *******************************/
-
-#dzk_adminfooter {
-    float: left; 
-    margin: 1em 0; 
-    width: 99%; 
-    font-size: 80%; 
-    text-align: center;
-}
-
 /*************************
- * dizkus_user_prefs.html
- *************************/
+* dizkus_user_prefs.html
+*************************/
 
 div#dzk_userprefs {
     /* do not delete */
@@ -836,8 +738,8 @@ div#dzk_userprefs col#col_favorite {
 }
 
 /*******************************
- * dizkus_user_topicsubscriptions.html
- *******************************/
+* dizkus_user_topicsubscriptions.html
+*******************************/
 
 form#dzk_topicsubscriptions col#col_topic {
     width: 50%;
@@ -855,17 +757,17 @@ form#dzk_topicsubscriptions td {
 }
 
 /************************************
- * dizkus_user_movepost.html
- * dizkus_user_locktopic.html
- * dizkus_user_movetopic.html
- * dizkus_user_splittopic.html
- * dizkus_user_deletetopic.html
- * dizkus_user_emailtopic.html
- * dizkus_user_notifymoderator.html
- * dizkus_user_viewip.html
- * dizkus_user_search.html
- * dizkus_disabled.html
- ************************************/
+* dizkus_user_movepost.html
+* dizkus_user_locktopic.html
+* dizkus_user_movetopic.html
+* dizkus_user_splittopic.html
+* dizkus_user_deletetopic.html
+* dizkus_user_emailtopic.html
+* dizkus_user_notifymoderator.html
+* dizkus_user_viewip.html
+* dizkus_user_search.html
+* dizkus_disabled.html
+************************************/
 
 fieldset#dzk_movepost div,
 fieldset#dzk_movetopic div,
@@ -887,8 +789,8 @@ fieldset#dzk_notifymoderator div {
 }
 
 /************************************
- * dizkus_user_viewip.html
- ************************************/
+* dizkus_user_viewip.html
+************************************/
 
 fieldset#dzk_viewip div p {
     margin: 1em 0;
@@ -900,14 +802,14 @@ fieldset#dzk_viewip div label {
 
 fieldset#dzk_viewip .gobacklink {
     display: block;
-    text-align:center; 
+    text-align:center;
     margin: 1em 0;
 
 }
 
 /*******************************
- * dizkus_user_emailtopic.html
- *******************************/
+* dizkus_user_emailtopic.html
+*******************************/
 
 fieldset#dzk_emailtopic label {
     margin-left: 0;
@@ -916,63 +818,63 @@ fieldset#dzk_emailtopic label {
 }
 
 /*******************************
- * dizkus_ajax_editpost.html
- *******************************/
+* dizkus_ajax_editpost.html
+*******************************/
 
 div.dzk_ajaxeditpost {
-    width: 99%; 
-    margin-top: 3px; 
+    width: 99%;
+    margin-top: 3px;
     text-align: center;
 }
 
 div.dzk_ajaxeditpost textarea {
-    width: 99%; 
+    width: 99%;
     height: 15em;
 }
 
 div.dzk_ajaxeditpost .optionsleft {
-    margin: 10px 0 0 20px; 
-    float: left; 
-    width:45%; 
+    margin: 10px 0 0 20px;
+    float: left;
+    width:45%;
     text-align: left;
 }
 
 div.dzk_ajaxeditpost .optionsright {
-    margin: 10px 20px 0 0; 
-    float: right; 
-    width:45%; 
+    margin: 10px 20px 0 0;
+    float: right;
+    width:45%;
     text-align: left;
 }
 
 div.ajaxeditpoststatusbox {
-    border: 1px solid black; 
-    width: 99%; 
-    margin: 2px; 
+    border: 1px solid black;
+    width: 99%;
+    margin: 2px;
     text-align: left;
 }
 
 div.ajaxeditpoststatusbox strong {
     margin: 2px 5px 2px 2px;
-    padding: 2px; 
+    padding: 2px;
 }
 
 /*******************************
- * dizkus_user_login.html
- *******************************/
+* dizkus_user_login.html
+*******************************/
 
 div#dzk_loginform {
-    text-align: left; 
-    padding: 2px; 
+    text-align: left;
+    padding: 2px;
     margin: 1.5em 0;
 }
 
 /*******************************
- * dizkus_user_reply.html
- *******************************/
+* dizkus_user_reply.html
+*******************************/
 
 div#dzk_reply {
-    width: 99%; 
-    float: left; 
+    width: 99%;
+    float: left;
     margin-top: 1.5em;
 }
 
@@ -989,43 +891,41 @@ div#dzk_reply fieldset label {
 }
 
 div#dzk_reply fieldset textarea {
-    width:99%; 
+    width:99%;
     height: 10em;
 }
 
 div#replyposting {
-    padding: 0; 
-    margin: 0; 
+    padding: 0;
+    margin: 0;
 }
- 
+
 #dizkus li#replybuttons,
 #dizkus li#nonajaxreplybuttons {
-    margin: 1.5em; 
+    margin: 1.5em;
     text-align: left;
 }
 
 /*******************************
- * dizkus_user_footer.html
- *******************************/
+* dizkus_user_footer.html
+*******************************/
 
 #dzk_footer {
-    float: left; 
-    margin-top: 1em; 
-    width: 100%; 
-    padding: 0;
-    border-width: 2px;
-    border-style: solid; 
+    border-style:solid;
+    border-width:1px;
+    margin-top:1em;
+    padding:0.2em;
 }
 
 #dzk_footer p.onlinetop {
     margin: 0;
-    line-height: 1.4em; 
+    line-height: 1.4em;
     padding: 0.2em 0 0.2em 2px;
     font-weight: bold;
 }
 
 ul#dzk_onlinelist {
-    margin: 2px ! important; 
+    margin: 2px ! important;
 }
 
 ul#dzk_onlinelist li {
@@ -1035,34 +935,34 @@ ul#dzk_onlinelist li {
 }
 
 #dzk_footer p.onlinehint {
-    clear: left; 
     margin: 0;
-    padding: 1em 0 2px 2px;    
-    font-size: 85%;
+    padding: 1em 0 2px 2px;
+    font-size: 0.85em;
 }
 
 #dzk_footer_line {
-    float: left;
-    margin: 1em 0; 
-    width: 99%; 
-    font-size: 80%;
-    line-height: 2em; 
-    text-align: center;
-} 
+    float:left;
+    width:99%;
+    font-size:0.8em;
+    line-height:2em;
+    margin:1em 0;
+    padding:1em 0;
+    text-align:center;
+}
 
 /*******************************
- * dizkus_user_latestposts.html
- *******************************/
- 
+* dizkus_user_latestposts.html
+*******************************/
+
 #latestposts {
-/* do not delete */
+    /* do not delete */
 }
 
 div#latestposts ul {
-    font-size: 1em;
-    height: 1.8em;
-    padding-top: 0.4em;
-    text-align: center; 
+    font-size:1em;
+    height:1.8em;
+    padding:0.1em 0;
+    text-align:center;
 }
 
 div#latestposts ul li {
@@ -1101,12 +1001,12 @@ div#latestposts table tr td.nonewtopics {
 }
 
 /*******************************
- * dizkus_user_newtopic.html
- *******************************/
+* dizkus_user_newtopic.html
+*******************************/
 
 div#dzk_newtopic {
-    width: 99%; 
-    float: left; 
+    width: 99%;
+    float: left;
     margin-top: 1.5em;
 }
 
@@ -1123,53 +1023,53 @@ div#dzk_newtopic fieldset label {
 }
 
 div#dzk_newtopic fieldset textarea {
-    width:99%; 
+    width:99%;
     height: 10em;
 }
 
 div#newtopicposting {
-    padding: 0; 
-    margin: 0; 
+    padding: 0;
+    margin: 0;
 }
 
 #dizkus li#newtopicbuttons,
 #dizkus li#nonajaxnewtopicbuttons {
-    margin: 1.5em; 
+    margin: 1.5em;
     text-align: left;
 }
 
 div#topicsubject_content {
     font-size: 140%;
-    margin: 0; 
-    padding-left: 1em; 
-    padding-bottom: 0.3em; 
+    margin: 0;
+    padding-left: 1em;
+    padding-bottom: 0.3em;
     border-bottom-width: 2px;
     border-bottom-style: solid;
 }
 
 /*******************************
- * dizkus_centerblock_display.html
- *******************************/
+* dizkus_centerblock_display.html
+*******************************/
 
 div.dzk_centerblockheader {
-    padding: 3px; 
+    padding: 3px;
     border-width: 2px;
     border-style: solid;
 }
 
 /*******************************
- * dizkus_hook_display.html
- *******************************/
+* dizkus_hook_display.html
+*******************************/
 
 div#dzk_forumdisplayhook {
-    margin: 1.5em 0; 
+    margin: 1.5em 0;
     width: 99%;
 }
 
 /*******************************
- * dizkus_user_search.html
- * dizkus_search.html
- *******************************/
+* dizkus_user_search.html
+* dizkus_search.html
+*******************************/
 
 fieldset #dzk_search div {
     padding: 1em 0;
@@ -1195,55 +1095,31 @@ fieldset #dzk_search div {
 }
 
 .searchleft {
-    margin: 4px 0; 
-    float: left; 
-    width: 35%; 
+    margin: 4px 0;
+    float: left;
+    width: 35%;
     text-align: right;
 }
 
 .searchright {
-    float: left; 
-    width: 60%; 
-    text-align: left; 
-    margin: 4px 0; 
+    float: left;
+    width: 60%;
+    text-align: left;
+    margin: 4px 0;
 }
 
 /**
- * dizkus_admin_assignranks.html
- *
- */
+* dizkus_admin_assignranks.html
+*
+*/
 div.rankuser-alphanav {
-  text-align:center;
-  margin: 1em 0;
-}
-   
-/*
- * clearfix solution
- */
-
-.dzk_clearfix:after {
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
-    visibility: hidden;
-}
-
-.dzk_clearfix {display: inline-table;}
-
-/* Hides from IE-mac \*/
-* html .dzk_clearfix {height: 1%;}
-.dzk_clearfix {display: block;}
-/* End hide from IE-mac */
-
-/* Overflow-Methode zum Clearen der Float-Umgebungen */
-.dzk_floatbox { 
-    overflow:hidden; 
+    text-align:center;
+    margin: 1em 0;
 }
 
 /*******************************
- * dizkus_user_singlepost.html
- *******************************/
+* dizkus_user_singlepost.html
+*******************************/
 
 ul.nonjavascriptpostingoptions,
 ul.javascriptpostingoptions {
@@ -1256,15 +1132,15 @@ ul.javascriptpostingoptions li {
 }
 
 .posting {
-    margin: 5px 0 10px 0; 
+    margin: 5px 0 10px 0;
     border-width: 2px;
-    border-style: solid; 
+    border-style: solid;
 }
 
 .postingheader {
-    border-bottom-width: 2px; 
-    border-bottom-style: solid; 
-    height: 2.5em; 
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    height: 2.5em;
 }
 
 .postingheaderleft {
@@ -1277,50 +1153,45 @@ ul.javascriptpostingoptions li {
 }
 
 .postingheaderright {
-    text-align:right; 
-    margin: 0.5em 5px 0 0; 
+    text-align:right;
+    margin: 0.5em 5px 0 0;
     float: right;
 }
 
 .postingheadermiddle {
-    text-align: left; 
-    margin: 0.3em 5px 0 0; 
+    text-align: left;
+    margin: 0.3em 5px 0 0;
     float: left;
     width: 130px;
     line-height: 2em;
 }
 
 .postingbody, .postingbody_closed {
-    text-align: left; 
-    width: 99%;
+    text-align: left;
 }
 
-.postingbody_closed {    
-    background-image: url(../pnimages/closed_watermark.jpg); 
+.postingbody_closed {
+    background-image: url(../pnimages/closed_watermark.jpg);
     background-repeat: repeat;
 }
 
 .postingtext_small {
-    width: 73%; 
-    float: left; 
-    padding: 5px 5px 25px 5px; 
-    overflow: auto; 
+    padding: 5px 5px 25px 5px;
+    overflow: auto;
 }
 
 .postingtext_big {
-    width: 98%; 
-    float: left; 
-    padding: 5px 5px 25px 5px; 
+    padding: 5px 5px 25px 5px;
     overflow: auto;
 }
 
 .userinfo {
-    margin: 5px; 
+    margin: 5px;
     border-width: 2px;
-    border-style: solid; 
-    padding: 3px 3px 6px 3px; 
-    float: left; 
-    width: 20%; 
+    border-style: solid;
+    padding: 3px 3px 6px 3px;
+    float: left;
+    width: 20%;
 }
 
 .userinfoname {
@@ -1333,23 +1204,23 @@ ul.javascriptpostingoptions li {
 }
 
 .userinfodetails {
-    margin-top: 1em; 
-    width: 99%; 
+    margin-top: 1em;
+    width: 99%;
     border-top: 1px solid black;
 }
 
 .userinfodetails dl {
-    margin: 1em 0 0 0.5em; 
+    margin: 1em 0 0 0.5em;
     padding: 0;
 }
 
 .userinfodetails dt {
-    font-size: 0.8em; 
+    font-size: 0.8em;
     text-align: left;
 }
 
 .userinfodetails dd {
-    font-size: 0.8em; 
+    font-size: 0.8em;
     text-align: right;
     font-weight: bold;
 }
@@ -1359,20 +1230,20 @@ ul.javascriptpostingoptions li {
 }
 
 .postingfooter {
-    margin-top: 5px; 
+    margin-top: 5px;
     border-top-width: 2px;
-    border-top-style: solid; 
-    height: 2.5em; 
+    border-top-style: solid;
+    height: 2.5em;
 }
 
 .postingfooterleft {
-    text-align: left; 
-    margin: 3px 0 0 5px; 
+    text-align: left;
+    margin: 3px 0 0 5px;
     float: left;
 }
 
 .postingfooterright {
-    text-align: right; 
+    text-align: right;
     margin: 3px 10px 0 0;
     float: right;
 }
@@ -1392,11 +1263,11 @@ a.normallink {
 }
 
 #dizkusinformation {
-    visibility: hidden; 
-    color: red; 
-    text-align: center; 
-    font-weight: bold; 
-    margin: 2px 0; 
+    visibility: hidden;
+    color: red;
+    text-align: center;
+    font-weight: bold;
+    margin: 2px 0;
     padding: 2px 0;
 }
 
@@ -1407,9 +1278,9 @@ a.normallink {
 }
 
 #quickreplyoptions, #newtopicoptions, #editpostoptions, #replyoptions {
-    width: 49%; 
-    float: left; 
-    text-align: left; 
+    width: 49%;
+    float: left;
+    text-align: left;
     margin-top: 1em;
 }
 
@@ -1417,11 +1288,11 @@ a.normallink {
     width: 49%;
     float: right;
     margin-top: 1em;
-}    
+}
 
 #newtopicconfirmation {
-    text-align: center; 
-    width: 99%; 
+    text-align: center;
+    width: 99%;
     padding: 5em 0;
 }
 
@@ -1429,31 +1300,34 @@ a.normallink {
     cursor: move;
 }
 
+
+
+
 .dzk_newcategory {
-    width: 95%; 
+    width: 95%;
     margin: 0.2em 0 0.2em 2em;
 }
 
 .dzk_treeforumlist {
-/* dont't remove this - needed for Ajax! */
+    /* dont't remove this - needed for Ajax! */
 }
 
 /*
- * styling of links and buttons with images 
- *
- * Note: When use a CSS3 feature to highlight external the following image normally
- *       would not be visisble. The ! important fixes this.
- * a[href^="http:"],
- * a[href^="https:"] {
- *     padding-left: 1.5em;
- *     background: url('images/internet.gif') no-repeat bottom left;
- * }
- *
- */
+* styling of links and buttons with images
+*
+* Note: When use a CSS3 feature to highlight external the following image normally
+*       would not be visisble. The ! important fixes this.
+* a[href^="http:"],
+* a[href^="https:"] {
+*     padding-left: 1.5em;
+*     background: url('images/internet.gif') no-repeat bottom left;
+* }
+*
+*/
 
-#dizkus a.image, 
+#dizkus a.image,
 #dizkus button.image,
-#dizkus_admin a.image, 
+#dizkus_admin a.image,
 #dizkus_admin button.image {
     margin: 0 0.5em;
     font-size: 1em;
@@ -1662,20 +1536,3 @@ a.normallink {
     background: url(../pnimages/icon_preview.gif) no-repeat 0 50% ! important;
 }
 
-
-
-
-/*---------------------------------------------------------*/
-/* Workaround: Clearfix-Modifikation for all IE-Versions   */
-/*
-** IE7 - x
-*/
-.pn-clearfix { display: inline-block; }
-/*
-** IE5.x/Win - x
-** IE6 - x
-*/
-* html .pn-clearfix { height: 1%; }
-.pn-clearfix { display: block; }
-
-/*--------------------------------------------------------*/

@@ -9,9 +9,9 @@ Template for single postings
 
 
 
-    <div id="posting"  style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor1 ]-->;" class="posting dzk_clearfix">
+    <div id="posting"  style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor1 ]-->;" class="posting pn-clearfix">
         <h1 style="margin: 0; padding-left: 1em; padding-bottom: 0.3em; border-bottom: 2px solid <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" id="topicsubject_content"><!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor ]--></h1>
-        <div style="border-bottom-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" class="postingheader dzk_clearfix">
+        <div style="border-bottom-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" class="postingheader pn-clearfix">
             <div class="postingheaderleft">
                 <span class="userinfoname"><!--[ $post.poster_data.pn_uname ]--></span>
             </div>
@@ -20,7 +20,7 @@ Template for single postings
             </div>
         </div>
        
-        <div class="postingbody dzk_clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
+        <div class="postingbody pn-clearfix" style="background-color: <!--[ $bgcolor1 ]-->;">
             <div  class="userinfo" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;" id="posting_userinfo">
                 <button onclick="javascript:toggleuserinfo(<!--[ $post.topic_id ]-->);" title="<!--[ pnml name='_DZK_HIDEUSERINFO' ]-->" style="float: right;">x</button>
                 <div id="posting_userinfocontent">
@@ -85,7 +85,7 @@ Template for single postings
             
         </div>
 
-        <div class="postingfooter dzk_clearfix" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;">
+        <div class="postingfooter pn-clearfix" style="border-color: <!--[ $bgcolor2 ]-->; background-color: <!--[ $bgcolor3 ]-->;">
 
             <div class="postingfooterleft">
                 &nbsp;
