@@ -769,7 +769,7 @@ function Dizkus_user_emailtopic($args=array())
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
         $pnr->assign('emailsubject', $emailsubject);
-        $pnr->assign('message', DataUtil::formatForDisplay(_DZK_EMAILTOPICMSG) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id)));
+        $pnr->assign('message', DataUtil::formatForDisplay(_DZK_EMAILTOPICMSG) ."\n\n" . pnGetBaseURL() . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id)));        
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('dizkus_user_emailtopic.html');
