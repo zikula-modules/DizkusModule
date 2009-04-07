@@ -54,7 +54,7 @@ function createnewtopic()
         showdizkusinfo(indicatorimage + ' ' + storingPost);
 
         var pars = 'module=Dizkus&type=ajax&func=newtopic' +
-                   '&forum=' + $F('forum') +
+                   '&forum=' + $F('forum_id') +
                    '&subject=' + encodeURIComponent($F('subject')) +
                    '&message=' + encodeURIComponent($F('message')) +
                    '&attach_signature=' + getcheckboxvalue('attach_signature') +
@@ -63,7 +63,7 @@ function createnewtopic()
 
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-                        "index.php",
+                        document.location.pnbaseURL+'ajax.php',
                         {
                             method: 'post',
                             parameters: pars,
@@ -76,18 +76,23 @@ function createnewtopic()
 function createnewtopic_response(originalRequest)
 {
     hidedizkusinfo();
+    newtopicstatus = false;
     
     // show error if necessary
     if( originalRequest.status != 200 ) {
         dzk_showajaxerror(originalRequest.responseText);
-        newtopicstatus = false;
         return;
     }
 
-    newtopicstatus = false;
     var json = dejsonize(originalRequest.responseText);
 
-    if((json.confirmation == false) || !$('newtopicconfirmation')) {
+    if (json.error) {
+        dzk_showajaxerror(json.error);
+        updateAuthid(json.authid);
+        return;
+    }
+
+    if (json.confirmation == false || !$('newtopicconfirmation')) {
         showdizkusinfo(redirecting);
     } else {
         Element.hide('dzk_newtopic');
@@ -112,7 +117,7 @@ function previewnewtopic()
 
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-                        "index.php",
+                        document.location.pnbaseURL+'ajax.php',
                         {
                             method: 'post',
                             parameters: pars,
@@ -157,7 +162,7 @@ function changesortorder()
         var pars = "module=Dizkus&type=ajax&func=changesortorder&authid=" + $F('authid');
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -199,7 +204,7 @@ function topicsubjectedit(topicid)
         var pars = "module=Dizkus&type=ajax&func=edittopicsubject&topic=" + topicid;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -252,7 +257,7 @@ function topicsubjecteditsave(topicid)
                "&authid=" + $F(authID);
     Ajax.Responders.register(dzk_globalhandlers);
     var myAjax = new Ajax.Request(
-                    "index.php",
+                    document.location.pnbaseURL+"ajax.php",
                     {
                         method: 'post',
                         parameters: pars,
@@ -307,7 +312,7 @@ function addremovefavorite(forumid, mode)
         var pars = "module=Dizkus&type=ajax&func=addremovefavorite&forum=" + forumid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -341,7 +346,7 @@ function subscribeunsubscribeforum(forumid, mode)
         var pars = "module=Dizkus&type=ajax&func=subscribeunsubscribeforum&forum=" + forumid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -375,7 +380,7 @@ function subscribeunsubscribetopic(topicid, mode)
         var pars = "module=Dizkus&type=ajax&func=subscribeunsubscribetopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -409,7 +414,7 @@ function stickyunstickytopic(topicid, mode)
         var pars = "module=Dizkus&type=ajax&func=stickyunstickytopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -443,7 +448,7 @@ function lockunlocktopic(topicid, mode)
         var pars = "module=Dizkus&type=ajax&func=lockunlocktopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -478,7 +483,7 @@ function quickEdit(postid)
         var pars = "module=Dizkus&type=ajax&func=editpost&post=" + postid;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -572,7 +577,7 @@ function quickEditsave(postid)
 
     Ajax.Responders.register(dzk_globalhandlers);
     var myAjax = new Ajax.Request(
-                    "index.php",
+                    document.location.pnbaseURL+"ajax.php",
                     {
                         method: 'post',
                         parameters: pars,
@@ -652,7 +657,7 @@ function createQuote(postid)
         var pars = "module=Dizkus&type=ajax&func=preparequote&post=" + postid;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-            "index.php",
+            document.location.pnbaseURL+"ajax.php",
             {
                 method: 'post',
                 parameters: pars,
@@ -704,7 +709,7 @@ function createQuickReply()
                    '&authid=' + $F('authid');
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-                        "index.php",
+                        document.location.pnbaseURL+"ajax.php",
                         {
                             method: 'post',
                             parameters: pars,
@@ -763,7 +768,7 @@ function previewQuickReply()
 
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
-                        "index.php",
+                        document.location.pnbaseURL+"ajax.php",
                         {
                             method: 'post',
                             parameters: pars,
