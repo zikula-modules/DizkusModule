@@ -568,7 +568,12 @@ div.dzk_statusmsg {
     width: 99%;
 }
 
-#dizkus h1, h2, h3, h4, h5, h6 {
+#dizkus h1,
+#dizkus h2,
+#dizkus h3,
+#dizkus h4,
+#dizkus h5,
+#dizkus h6 {
     color: #000;
 }
 
