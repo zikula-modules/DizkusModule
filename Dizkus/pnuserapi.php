@@ -3219,7 +3219,7 @@ function Dizkus_userapi_get_latest_posts($args)
     $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
 
     // integrate contactlist's ignorelist here
-    if ($dizkusvars['ignorelist_options'] <> 'none' && pnModAvailable()) {
+    if ($dizkusvars['ignorelist_options'] <> 'none' && pnModAvailable('ContactList')) {
         $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
         if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
             // get user's ignore list
