@@ -587,15 +587,15 @@ function Dizkus_ajax_newtopic()
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
-        dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
+        dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE, true);
     }
     if(strlen($message)==0) {
-        dzk_ajaxerror(_DZK_EMPTYMSG);
+        dzk_ajaxerror(_DZK_EMPTYMSG, true);
     }
 
     $subject = DataUtil::convertFromUTF8($subject);
     if(strlen($subject)==0) {
-        dzk_ajaxerror(_DZK_NOSUBJECT);
+        dzk_ajaxerror(_DZK_NOSUBJECT, true);
     }
 
     $pnr = pnRender::getInstance('Dizkus', false, null, true);

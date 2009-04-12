@@ -132,7 +132,9 @@ function previewnewtopic_response(originalRequest)
     hidedizkusinfo();
     // show error if necessary
     if( originalRequest.status != 200 ) {
-        dzk_showajaxerror(originalRequest.responseText);
+        json = dejsonize(originalRequest.responseText);
+        updateAuthid(json.authid);
+        dzk_showajaxerror(json.data);
         newtopicstatus = false;
         return;
     }
