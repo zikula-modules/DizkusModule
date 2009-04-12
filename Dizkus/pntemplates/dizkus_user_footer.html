@@ -1,0 +1,49 @@
+<!--[* $Id$ *]-->
+<!--[ if $pncore.Dizkus.forum_enabled neq 'no' ]-->
+
+<div class="pn-floatbox" style="margin-bottom: 1em;">
+    <!--[formutil_getpassedvalue name='func' default='main' assign='func']-->
+    <!--[if $func eq 'main' OR $func eq 'viewforum']-->
+    <h3 class="footer_title"><!--[ pnml name='_DZK_LEGEND' ]--></h3>
+    <ul id="ctheme-legenda">
+        <!--[ assign var='last_visit_unix' value=$last_visit_unix|pnfdate_format:'(%b %e, %Y  - %R)':'':true ]-->
+        <li><!--[ pnimg modname='Dizkus' src='icon_redfolder.gif' alt='_DZK_NEWPOSTS' altml=true title="_DZK_NEWPOSTS" titleml=true ]--> : <!--[ pnml name='_DZK_NEWPOSTS ]--> <span class="pn-sub"><!--[ $last_visit_unix ]-->&nbsp;</span></li>
+        <li><!--[ pnimg modname='Dizkus' src='icon_folder.gif' alt='_DZK_NONEWPOSTS' altml=true title="_DZK_NONEWPOSTS" titleml=true ]--> : <!--[ pnml name='_DZK_NONEWPOSTS' ]--> <span class="pn-sub"><!--[ $last_visit_unix ]-->&nbsp;</span></li>
+    </ul>
+    <!--[ /if ]-->
+
+    <!--[if $func eq 'main']-->
+    <h3 class="footer_title"><!--[ pnml name='_DZK_TOTAL' ]--></h3>
+    <!--[ if $numposts ]-->
+    <p><!--[ pnml name='_DZK_STATSBLOCK' ]-->&nbsp;<!--[ $numposts ]--></p>
+    <!--[ /if ]-->
+    <!--[ /if ]-->
+
+    <!--[ dizkusonline assign='online' ]-->
+    <!--[ pnconfiggetvar name='anonymoussessions' assign='anonsessions' ]-->
+    <!--[ pnconfiggetvar name='secinactivemins' assign='mins' ]-->
+
+    <h3 class="footer_title"><!--[ pnml name='_DZK_USERSONLINE' ]--></h3>
+    <ul id="ctheme_onlinelist" class="pn-clearfix">
+        <!--[ if $online.numusers > 0]-->
+        <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
+        <li>
+            <!--[ if $user.admin == '1' ]--><!--[ $user.uname|userprofilelink:"pnfadminuser"]--><!--[ else ]--><!--[ $user.uname|userprofilelink:"pnfnoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
+        </li>
+        <!--[ /foreach ]-->
+        <!--[ if $online.numguests > 0 or $anonsessions == 1 ]-->
+        <li><!--[ pnml name='_DZK_AND' ]--></li>
+        <!--[ /if ]-->
+        <!--[ /if ]-->
+
+        <!--[ if $anonsessions == 1 ]-->
+        <li>
+            <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
+        </li>
+        <!--[ /if ]-->
+    </ul>
+    <p class="pn-sub"><!--[ pnml name='_DZK_BASEDONLASTXMINUTES' m=$mins ]--></p>
+</div>
+
+<!--[ /if ]-->
+</div>

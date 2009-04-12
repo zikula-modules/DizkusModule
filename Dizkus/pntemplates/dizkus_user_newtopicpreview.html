@@ -1,0 +1,46 @@
+<!--[*  $Id$  *]-->
+
+<h2><!--[ $newtopic.subject|pnvarprepfordisplay|pnvarcensor ]--></h2>
+
+<div id="posting" class="forum_post post_bg1 pn-floatbox">
+    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+
+        <div class="subcolumns">
+            <div class='post_author'>
+                <div class="avatar">
+                    <!--[$newtopic.poster_data.uname|userprofilelink]-->
+                    <!--[ if $newtopic.poster_data.pn_uid neq 1 AND $newtopic.poster_data._YOURAVATAR neq '' AND $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
+                    <br />
+                    <img src="<!--[$baseurl]-->/images/avatar/<!--[ $newtopic.poster_data._YOURAVATAR ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $newtopic.poster_data.uname ]-->" />
+                    <!--[ /if ]-->
+                    <!--[ if isset($newtopic.poster_data.rank_image) ]-->
+                    <br />
+                    <img class="userinforankimage" src="<!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
+                    <!--[ /if ]-->
+                </div>
+
+                <ul>
+                    <!--[ if isset($newtopic.poster_data.rank) ]-->
+                    <li><strong><!--[ pnml name='_DZK_RANK' ]-->: </strong><!--[ $newtopic.poster_data.rank|pnvarprepfordisplay ]--></li>
+                    <!--[ /if ]-->
+                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $newtopic.poster_data.pn_user_regdate|pnfdate_format:"%d.%m.%y" ]--></li>
+                    <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $newtopic.poster_data.user_posts ]--></li>
+                </ul>
+            </div>
+
+            <div class="postbody">
+
+                <div class="postinfo">
+                    <strong><!--[ pnml name='_DZK_POSTED' ]-->: </strong>&nbsp;<!--[ $newtopic.topic_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+                </div>
+
+                <div class="content"<!--[ if isset($newtopic.post_id) ]--> id="postingtext_<!--[ $newtopic.post_id ]-->"<!--[/if]-->>
+                    <!--[ $newtopic.message_display ]-->
+                </div>
+
+            </div>
+        </div>
+
+        <span class="corners-bottom"><span>&nbsp;</span></span>
+    </div>
+</div>

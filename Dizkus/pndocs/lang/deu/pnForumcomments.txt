@@ -1,0 +1,53 @@
+$Id$
+
+
+DizkusComments
+---------------
+
+Ab Version 2.6 bietet Dizkus Hooks, die es ermöglichen, es als Kommentarmodul
+ähnlich wie EZComments zu verwenden. Wenn neue Beiträge eingereicht werden,
+wird automatisch ein neues Diskussionsthema in einem Forum angelegt.
+Dazu sind spezielle 'Plugins' in Form von Funktionen notwendig, die in
+modules/Dizkus/pncommentsapi/ liegen. Zur Zeit wird nur das Newsmodul speziell
+unterstützt, d.h. der zu kommentierende Newsbeitrag wird in das erste Posting
+der neuen Diskussion kopiert. Bei allen anderen Modulen wird ein Standardtext
+verwendet.
+Um dieses Feature verwenden zu können, muss der Dizkus Hook für das Zielmodul,
+also z.B. News, aktiviert werden!
+
+Basiskonfiguration
+------------------
+
+Folgende Aktion beim Aufrufen des Deletehooks ausführen: Hier kann bestimmt
+werden, ob beim Löschen eines Beitrags die Diskussion gelöscht oder lediglich
+geschlossen wird.
+
+Einstellungen pro Forum:
+------------------------
+
+Modulreferenz: In dieser Liste erscheinen alle Module, für die der Dizkus Hook
+aktivert ist.
+Zikula Topic: Beiträge können anhand ihres Topics in verschiedene Foren ein-
+sortiert werden. So können z.B. Beiträge zum Thema Linux in einem anderen Foren
+landen als die zum Thema Windows.
+
+Benutzung:
+----------
+
+Die Forenthemen werden unter dem Namen des ursprünglichen Einreichers
+erstellt. Im Falle von News geschieht dies erst mit der Freigabe des Beitrags.
+Derjenige, der die Beiträge freigibt, braucht Schreibrechte für das Zielforum.
+Ist keine Freigabe notwendig, muss der Einreicher diese Schreibrechte besitzen.
+
+Nachdem die neue Diskussion erstellt wurde, erscheint unter dem (News-) Beitrag
+standardmässig ein entsprechender Link. Dies kann durch Anpassen des Templates
+dizkus_hook_display.html geändert werden. Dieses Template erhält die komplette
+bislang stattgefundene Diskussion in einem Array als Parameter (ähnlich wie
+dizkus_user_viewtopic.html, weiters Infos erhält man mit Hilfe des pndebug-
+Plugins ).
+
+Wird ein Beitrag nachträglich geändert, wird das ursprüngliche Forenposting
+angepasst. Beim Löschen des Beitrags wird so verfahren, wie in der Basiskonfi-
+guration festgelegt (s.o.).
+
+

@@ -1,0 +1,52 @@
+<!--[*  $Id$  *]-->
+<!--[ pnml name='_DZK_MANAGETOPICSUBSCRIPTIONS' assign=templatetitle]-->
+<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ include file=dizkus_user_header.html ]-->
+
+<h2><!--[ $templatetitle ]--></h2>
+<form id="dzk_topicsubscriptions" action="<!--[ pnmodurl modname=Dizkus type=user func=topicsubscriptions ]-->" method="post">
+    <p>
+        <label for="allbox"><!--[pnml name=_DZK_TOGGLEALLTOPICS]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />
+    </p>
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <table class="pn-datatable">
+        <colgroup>
+            <col id="col_topic" />
+            <col id="col_poster" />
+            <col id="col_action" />
+        </colgroup>
+
+        <thead>
+            <tr>
+                <th class="leftcell"><!--[ pnml name='_DZK_TOPIC' ]--></th>
+                <th class="midcell"><!--[ pnml name='_DZK_POSTER' ]--></th>
+                <th class="rightcell"><!--[ pnml name='_DZK_UNSUBSCRIBE_TOPIC' ]--></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--[ foreach item=subscription from=$subscriptions ]-->
+            <tr>
+                <td>
+                    <a href="<!--[ $subscription.last_post_url_anchor ]-->" title="<!--[ $subscription.forum_name|pnvarprepfordisplay ]--> :: <!--[ $subscription.topic_title|pnvarprepfordisplay ]-->"><!--[ $subscription.topic_title|pnvarcensor|pnvarprepfordisplay ]--></a>
+                </td>
+                <td class="center">
+                    <!--[ $subscription.poster_name|userprofilelink ]-->
+                </td>
+                <td class="center">
+                    <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="<!--[ $subscription.topic_id ]-->" />
+                </td>
+            </tr>
+            <!--[ foreachelse ]-->
+            <tr>
+                <td colspan="3" class="center;"><!--[ pnml name='_DZK_NOTOPICSUBSCRIPTIONSFOUND ]--></td>
+            </tr>
+            <!--[ /foreach ]-->
+        </tbody>
+    </table>
+    <br />
+    <p>
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->"><!--[ pnml name='_SUBMIT' ]--></button>
+    </p>
+</form>
+
+<!--[ include file=dizkus_user_footer.html ]-->

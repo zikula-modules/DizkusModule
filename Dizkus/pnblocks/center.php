@@ -1,0 +1,127 @@
+<?php
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
+
+Loader::includeOnce('modules/Dizkus/common.php');
+
+/**
+ * init
+ *
+ */
+function Dizkus_centerblock_init()
+{
+    SecurityUtil::registerPermissionSchema('Dizkus_Centerblock::', 'Block title::');
+}
+
+/**
+ * info
+ *
+ */
+function Dizkus_centerblock_info()
+{
+    return array( 'module' => 'Dizkus',
+                  'text_type' => 'Dizkus_centerblock',
+                  'text_type_long' => 'Dizkus Centerblock',
+                  'allow_multiple' => true,
+                  'form_content' => false,
+                  'form_refresh' => false,
+                  'show_preview' => true);
+}
+
+/**
+ * display the center block
+ */
+function Dizkus_centerblock_display($row)
+{
+    if(!pnModAvailable('Dizkus')) {
+        return;
+    }
+
+    //check for Permission
+	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_READ)){
+	    return;
+	}
+
+    pnModLangLoad('Dizkus', 'common');
+    // check if forum is turned off
+    $disabled = dzk_available();
+    if(!is_bool($disabled)) {
+        $row['content'] = $disabled;
+	    return themesideblock($row);
+    }
+
+    // return immediately if no post exist
+    if(pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'all'))==0) {
+        return;
+    }
+
+    // Break out options from our content field
+    $vars = pnBlockVarsFromContent($row['content']);
+
+    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+
+    // check if cb_template is set, if not, use the default centerblock template
+    if(empty($vars['cb_template'])) {
+        $vars['cb_template'] = "dizkus_centerblock_display.html";
+    }
+    if(empty($vars['cb_parameters'])) {
+        $vars['cb_parameters'] = "maxposts=5";
+    }
+    $params = explode(",", $vars['cb_parameters']);
+
+    if(is_array($params) &&(count($params)>0)) {
+        foreach($params as $param) {
+            $paramdata = explode("=", $param);
+            $pnr->assign(trim($paramdata[0]), trim($paramdata[1]));
+        }
+    }
+
+    $row['content'] = $pnr->fetch(trim($vars['cb_template']));
+	return themesideblock($row);
+}
+
+/**
+ * Update the block
+ */
+function Dizkus_centerblock_update($row)
+{
+	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+	    return false;
+	}
+	
+	$cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
+	$cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
+
+    $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
+    return($row);
+}
+
+
+/**
+ * Modify the block
+ */
+function Dizkus_centerblock_modify($row)
+{
+	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_ADMIN)) {
+	    return false;
+	}
+
+    pnModLangLoad('Dizkus', 'common');
+    
+	// Break out options from our content field
+    $vars = pnBlockVarsFromContent($row['content']);
+
+    if(!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
+    if(!isset($vars['cb_template']) || empty($vars['cb_template']))   { $vars['cb_template']   = 'dizkus_centerblock_display.html'; }
+
+    $pnRender = pnRender::getInstance('Dizkus', false, null, true);
+    $pnRender->assign('vars', $vars);
+    return $pnRender->fetch('dizkus_centerblock_config.html');
+}

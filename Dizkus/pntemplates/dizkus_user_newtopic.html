@@ -1,0 +1,101 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<div id="newtopicpreview" style="display: none;">&nbsp;</div>
+
+<div id="dzk_newtopic" class="forum_post post_bg2 pn-floatbox">
+    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+
+        <div class="subcolumns">
+            <form name="newtopicform" class="dzk_form" id="newtopicform" action="<!--[ pnmodurl modname='Dizkus' type='user' func='reply' ]-->" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="forum_id" name="forum_id" value="<!--[ $newtopic.forum_id ]-->" />
+                <input type="hidden" id="quote" name="quote" value="" />
+                <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+                <fieldset>
+                    <legend class="post_header"><!--[ pnml name='_DZK_NEW_THREADS' ]-->&nbsp;<a href='<!--[ pnmodurl modname='Dizkus' func=viewforum forum=$newtopic.forum_id|pnvarprepfordisplay ]-->'><!--[ $newtopic.forum_name|pnvarprepfordisplay|pnvarcensor ]--></a></legend>
+                    <div class="post_text_wrap">
+                        <!--[* <div id="newtopicpreview" style="display: none;">&nbsp;</div> *]-->
+                        <!--[ if $preview ]-->
+                        <div id="nonajaxnewtopicpreview">
+                            <!--[ include file='dizkus_user_newtopicpreview.html' ]-->
+                        </div>
+                        <!--[ /if ]-->
+                        <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
+                        <div>
+                            <label for="subject"><!--[ pnml name='_DZK_SUBJECT' ]-->:</label>
+                            <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[ $newtopic.subject|pnvarprephtmldisplay ]-->" />
+                        </div>
+                        <div>
+                            <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]-->:</label>
+                            <textarea id="message" name="message"></textarea>
+                            <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
+                            <span><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></span>
+                            <!--[ /if ]-->
+                        </div>
+                        <div class="subcolumns">
+                            <div id="newtopicoptions" class="dzk_col50l">
+                                <ul>
+                                    <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
+                                    <!--[ if $pncore.logged_in ]-->
+                                    <li>
+                                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                        <label for="attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $newtopic.subscribe_topic eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                                        <label for="subscribe_topic"><!--[ pnml name='_DZK_NOTIFYME' ]--></label>
+                                    </li>
+                                    <!--[ /if ]-->
+                                    <li id="newtopicbuttons" style="display: none;">
+                                        <button class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->">
+                                            <!--[ pnml name='_DZK_SUBMIT' ]-->
+                                        </button>
+                                        <button class="dzk_img preview" onclick="previewnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_PREVIEW' ]-->">
+                                            <!--[ pnml name='_DZK_PREVIEW' ]-->
+                                        </button>
+                                        <button class="dzk_img cancel" onclick="clearnewtopic();" type="reset" title="<!--[ pnml name='_DZK_CANCELPOST' ]-->">
+                                            <!--[ pnml name='_CANCEL' ]-->
+                                        </button>
+                                    </li>
+                                    <li id="nonajaxnewtopicbuttons">
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->" />
+                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[ pnml name='_DZK_PREVIEW' ]-->" />
+                                        <input class="dzk_img cancel" type="submit" name="reset" value="Cancel" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dzk_col50r">
+                                <!--[ plainbbcode textfieldid='message' ]-->
+                                <!--[ bbsmile textfieldid='message' ]-->
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+            </form>
+        </div>
+
+        <span class="corners-bottom"><span>&nbsp;</span></span>
+    </div>
+</div>
+
+<div id="newtopicconfirmation" style="display: none;">&nbsp;</div>
+
+<script type="text/javascript">
+    // <![CDATA[
+    var storingPost = '<!--[ pnml name='_DZK_STORINGPOST' ]-->';
+    var preparingPreview = '<!--[ pnml name='_DZK_PREPARINGPREVIEW' ]-->';
+    var redirecting = '<!--[ pnml name='_DZK_REDIRECTINGTONEWTOPIC' ]-->';
+
+    Element.show($('newtopicbuttons'));
+    Element.remove($('nonajaxnewtopicbuttons'));
+    if($('nonajaxnewtopicpreview')) {
+        Element.remove($('nonajaxnewtopicpreview'));
+    }
+    $('newtopicform').action = '';
+    // ]]>
+</script>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

@@ -1,0 +1,236 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false ]-->
+
+<div class="roundedbar pn-floatbox dzk_topicoptions">
+    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+        <div id="dzk_javascriptareatopic" class="hidden">
+            <ul class="dzk_topicoptions linklist">
+                <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
+                <li><a class="dzk_img previoustopiclink" title="<!--[ pnml name='_DZK_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id ]-->"></a></li>
+                <!--[ /if ]-->
+
+                <!--[ if $topic.access_comment ]-->
+                <li><a class="dzk_img newtopiclink" title="<!--[ pnml name='_DZK_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id ]-->"><!--[ pnml name='_DZK_NEWTOPIC' ]--></a></li>
+                <!--[ /if ]-->
+
+                <!--[ if $pncore.logged_in ]-->
+                <li><a class="dzk_img mailtolink" title="<!--[ pnml name='_DZK_EMAIL_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_EMAIL_TOPIC' ]--></a></li>
+                <!--[ /if ]-->
+
+                <li><!--[ printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id ]--></li>
+
+                <!--[ if $pncore.logged_in ]-->
+                <li>
+                    <a id="subscribetopicbutton" class="dzk_img <!--[ if $topic.is_subscribed eq 1 ]-->hidden<!--[ /if ]--> subscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'subscribe');" href="javascript:void(0);" title="<!--[ pnml name="_DZK_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_DZK_SUBSCRIBE_TOPIC' ]--></a>
+                    <a id="unsubscribetopicbutton" class="dzk_img <!--[ if $topic.is_subscribed eq 0]-->hidden<!--[ /if ]--> unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[ $topic.topic_id ]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[ pnml name="_DZK_UNSUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_DZK_UNSUBSCRIBE_TOPIC' ]--></a>
+                </li>
+                <!--[ /if ]-->
+                <!--[ if $topic.topic_id neq $topic.next_topic_id ]-->
+                <li><a class="dzk_img nexttopiclink" title="<!--[ pnml name='_DZK_NEXT_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id ]-->"></a></li>
+                <!--[ /if ]-->
+            </ul>
+
+            <!--[ if $topic.access_moderate eq 1 ]-->
+            <ul class="dzk_topicoptions linklist">
+                <li>
+                    <a id="locktopicbutton" class="dzk_img <!--[ if $topic.topic_status eq 1 ]-->hidden<!--[ /if ]--> locktopiclink" title="<!--[ pnml name='_DZK_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_DZK_LOCKTOPIC' ]--></a>
+                    <a id="unlocktopicbutton" class="dzk_img <!--[ if $topic.topic_status eq 0 ]-->hidden<!--[ /if ]--> unlocktopiclink" title="<!--[ pnml name='_DZK_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_DZK_UNLOCKTOPIC' ]--></a>
+                </li>
+
+                <li>
+                    <a class="dzk_img <!--[ if $topic.sticky eq 1]-->hidden<!--[ /if ]--> stickytopiclink" id="stickytopicbutton" title="<!--[ pnml name='_DZK_STICKYTOPIC' ]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'sticky')"><!--[ pnml name='_DZK_STICKYTOPIC' ]--></a>
+                    <a class="dzk_img <!--[ if $topic.sticky eq 0]-->hidden<!--[ /if ]--> unstickytopiclink" id="unstickytopicbutton" title="<!--[ pnml name='_DZK_UNSTICKYTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[ $topic.topic_id ]-->, 'unsticky')"><!--[ pnml name='_DZK_UNSTICKYTOPIC' ]--></a>
+                </li>
+
+                <li><a class="dzk_img movetopiclink" title="<!--[ pnml name='_DZK_MOVETOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_MOVETOPIC' ]--></a></li>
+                <li><a class="dzk_img deletetopiclink" title="<!--[ pnml name='_DZK_DELETETOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_DELETETOPIC' ]--></a></li>
+            </ul>
+            <!--[ /if ]-->
+        </div>
+
+        <noscript>
+            <div id="dzk_nonjavascriptareatopic">
+                <ul class="dzk_topicoptions linklist">
+                    <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
+                    <li><a class="dzk_img previoustopiclink" title="<!--[ pnml name='_DZK_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id ]-->">&nbsp;</a></li>
+                    <!--[ /if ]-->
+
+                    <!--[ if $topic.access_comment ]-->
+                    <li><a class="dzk_img newtopiclink" title="<!--[ pnml name='_DZK_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id ]-->"><!--[ pnml name='_DZK_NEWTOPIC' ]--></a></li>
+                    <!--[ /if ]-->
+
+                    <!--[ if $pncore.logged_in ]-->
+                    <li><a class="dzk_img mailtolink" title="<!--[ pnml name='_DZK_EMAIL_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_EMAIL_TOPIC' ]--></a></li>
+                    <!--[ /if ]-->
+
+                    <li><!--[ printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id ]--></li>
+
+                    <!--[ if $pncore.logged_in ]-->
+                    <!--[ if $topic.is_subscribed == 0 ]-->
+                    <li><a class="dzk_img subscribetopiclink" href="<!--[ pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_DZK_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_DZK_SUBSCRIBE_TOPIC' ]--></a></li>
+                    <!--[ else ]-->
+                    <li><a class="dzk_img unsubscribetopiclink" href="<!--[ pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id ]-->" title="<!--[ pnml name="_DZK_SUBSCRIBE_TOPIC" ]-->"><!--[ pnml name='_DZK_SUBSCRIBE_TOPIC' ]--></a></li>
+                    <!--[ /if ]-->
+                    <!--[ /if ]-->
+
+                    <!--[ if $topic.topic_id neq $topic.next_topic_id ]-->
+                    <li><a class="dzk_img nexttopiclink" title="<!--[ pnml name='_DZK_NEXT_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id ]-->">&nbsp;</a></li>
+                    <!--[ /if ]-->
+                </ul>
+
+                <!--[ if $topic.access_moderate eq 1 ]-->
+                <ul class="dzk_topicoptions linklist">
+                    <!--[ if $topic.topic_status eq 0 ]-->
+                    <li><a class="dzk_img locktopiclink" title="<!--[ pnml name='_DZK_LOCKTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id ]-->"><!--[ pnml name="_DZK_LOCKTOPIC" ]--></a></li>
+                    <!--[ else ]-->
+                    <li><a class="dzk_img unlocktopiclink" title="<!--[ pnml name='_DZK_UNLOCKTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=unlock topic=$topic.topic_id ]-->"><!--[ pnml name="_DZK_UNLOCKTOPIC" ]--></a></li>
+                    <!--[ /if ]-->
+
+                    <!--[ if $topic.sticky eq 0 ]-->
+                    <li><a class="dzk_img stickytopiclink" title="<!--[ pnml name='_DZK_STICKYTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=sticky topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_STICKYTOPIC' ]--></a></li>
+                    <!--[ else ]-->
+                    <li><a class="dzk_img unstickytopiclink" title="<!--[ pnml name='_DZK_UNSTICKYTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=unsticky topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_UNSTICKYTOPIC' ]--></a></li>
+                    <!--[ /if ]-->
+                    <li><a class="dzk_img movetopiclink" title="<!--[ pnml name='_DZK_MOVETOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_MOVETOPIC' ]--></a></li>
+                    <li><a class="dzk_img deletetopiclink" title="<!--[ pnml name='_DZK_DELETETOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id ]-->"><!--[ pnml name='_DZK_DELETETOPIC' ]--></a></li>
+                </ul>
+                <!--[ /if ]-->
+            </div>
+        </noscript>
+
+        <span class="corners-bottom"><span>&nbsp;</span></span>
+    </div>
+</div>
+
+<!--[ pnfpager total=$topic.total_posts ]-->
+
+<div id="dzk_postinglist">
+    <ul class="pn-clearfix">
+        <!--[ counter start=0 print=false assign=post_counter]-->
+        <!--[ foreach key=num item=post from=$topic.posts ]-->
+        <!--[ counter ]-->
+        <li class="post_<!--[$post.post_id]-->">
+            <!--[ include file="dizkus_user_singlepost.html" ]-->
+        </li>
+        <!--[ /foreach ]-->
+        <li id="quickreplyposting" class="hidden">&nbsp;</li>
+        <li id="quickreplypreview" class="hidden">&nbsp;</li>
+    </ul>
+</div>
+
+<!--[ pnfpager total=$topic.total_posts ]-->
+
+<!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
+<div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> pn-clearfix pn-floatbox">
+    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+        <div class="subcolumns">
+            <form name="quickreplyform" id="quickreplyform" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="forum" name="forum" value="<!--[ $topic.forum_id ]-->" />
+                <input type="hidden" id="topic" name="topic" value="<!--[ $topic.topic_id ]-->" />
+                <input type="hidden" id="quote" name="quote" value="" />
+                <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+                <div class="post_header">
+                    <strong class="quickreply_title"><!--[ pnml name='_DZK_QUICKREPLY' ]--></strong>
+                </div>
+                <div class="post_text_wrap">
+                    <div class="post_text">
+                        <div id="dizkusinformation"></div>
+                        <textarea class="dzk_textarea_<!--[pnusergetlang]-->" id="message" name="message"></textarea>
+                        <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
+                        <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
+                        <!--[ /if ]-->
+                        <div class="subcolumns">
+                            <div id="quickreplyoptions" class="dzk_col50l">
+                                <ul>
+                                    <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
+                                    <!--[ if $pncore.logged_in ]-->
+                                    <li>
+                                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                        <label for="attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                                        <label for="subscribe_topic"><!--[ pnml name='_DZK_NOTIFYME' ]--></label>
+                                    </li>
+                                    <!--[ /if ]-->
+                                    <li id="quickreplybuttons" class="hidden">
+                                        <button class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->"><!--[ pnml name='_DZK_SUBMIT' ]--></button>
+                                        <button class="dzk_img preview" onclick="previewQuickReply(); return false;" type="submit" title="<!--[ pnml name='_DZK_PREVIEW' ]-->"><!--[ pnml name='_DZK_PREVIEW' ]--></button>
+                                        <button class="dzk_img cancel" onclick="clearQuickReply();" type="reset" title="<!--[ pnml name='_DZK_CANCELPOST' ]-->"><!--[ pnml name="_DZK_CANCEL" ]--></button>
+                                    </li>
+
+                                    <li id="nonajaxquickreplybuttons">
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->" />
+                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[ pnml name='_DZK_PREVIEW' ]-->" />
+                                        <input class="dzk_img cancel" type="submit" name="reset" value="Cancel" onclick="self.location.href='<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.topic_id ]-->'" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dzk_col50r">
+                                <!--[ plainbbcode textfieldid='message' ]-->
+                                <!--[ bbsmile textfieldid='message' ]-->
+                                <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><br /><!--[/if]-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="post_footer">
+                    <span class="dzk_corners_bottom"><span>&nbsp;</span></span>
+                </div>
+            </form>
+        </div>
+
+        <span class="corners-bottom"><span>&nbsp;</span></span>
+    </div>
+</div>
+<!--[ /if ]-->
+
+<!--[if $topic.forum_mods|@count > 0]-->
+<ul id="dzk_moderatorlist" class="linklist">
+    <li><em><!--[ pnml name='_DZK_MODERATEDBY' ]-->&nbsp;:&nbsp;</em></li>
+    <!--[ foreach name=moderators item=mod from=$topic.forum_mods ]-->
+    <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
+    <!--[ /foreach ]-->
+</ul>
+<!--[/if]-->
+
+<div id="dzk_displayhooks">
+    <!--[if isset($hooks.Ratings)]--><!--[ $hooks.Ratings ]--><!--[/if]-->
+</div>
+
+<script type="text/javascript">
+    // <![CDATA[
+    var storingReply = '<!--[ pnml name='_DZK_STORINGREPLY' ]-->';
+    var preparingPreview = '<!--[ pnml name='_DZK_PREPARINGPREVIEW' ]-->';
+    var storingPost = '<!--[ pnml name='_DZK_STORINGPOST' ]-->';
+    var deletingPost = '<!--[ pnml name='_DZK_DELETINGPOST' ]-->';
+    var updatingPost = '<!--[ pnml name='_DZK_UPDATINGPOST' ]-->';
+    var statusNotChanged = '<!--[ pnml name='_DZK_STATUS_NOTCHANGED' ]-->';
+    var statusChanged = '<!--[ pnml name='_DZK_STATUS_CHANGED' ]-->';
+
+    Event.observe(window, 'load', init_topicview);
+    function init_topicview()
+    {
+        $('dzk_javascriptareatopic').removeClassName('hidden');
+        if($('dzk_quickreply')) {
+            $('quickreplybuttons').removeClassName('hidden');
+            $('nonajaxquickreplybuttons').addClassName('hidden');
+            $('quickreplyform').action = '';
+        }
+        $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
+
+        if($('subscribetopicbutton') && $('unsubscribetopicbutton')) {
+            var is_subscribed = 0;
+            if(is_subscribed == 0) {
+                Element.show('subscribetopicbutton');
+            } else {
+                Element.show('unsubscribetopicbutton');
+            }
+        }
+    }
+    // ]]>
+</script>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

@@ -1,0 +1,65 @@
+$Id$
+
+
+Mail2Forum
+----------
+
+Mail2forum allows you to mirror mailinglists into a forum. To do this, Dizkus
+connects to a pop3 server, usually invoked by cron, fetches mails and stores
+them in the forum using a given user login.
+
+#############
+# IMPORTANT #
+#############
+If you use this, make sure that the mailing list does not send a monthly
+password reminder! This will be mirrored to the forum as well!
+
+Configuration
+-------------
+
+Base Configuration ('Forum wide options'): Toggle Mail2Forum on or off globally.
+
+Configuration per Forum:
+------------------------
+
+External source: Select Mail2Forum or RSS2Forum here, more configuration options
+after saving.
+
+PN username:
+PN password: User name and password of the Zikula-user who shall be used as
+posting user in the forum
+
+Perform Pop3 test after saving: perform a connection test to the pop3 server
+after storing the onfiguration. No mails will be fetched.
+Pop3 server:
+Pop3 port:
+Pop3 login:
+Pop3 password: These fields are selfexplanatory imho
+Rule: not yet used
+
+Usage:
+------
+
+Mails will be fetched using the mailcron.php script which usually gets called
+by a cron job e.g. once per hour.
+
+Before you can use this you have to do some changes to this file:
+
+line 37: //
+line 38: // store the absolut path to your Zikula folder here
+line 39: //
+line 40: chdir('/opt/lampp/htdocs/760');
+
+Change the chdir to point to the absolute path to your Zikula installation
+on your server.
+
+There are no changes necessary beyond this point.
+
+Manual usage:
+-------------
+
+http://www.example.com/modules/Dizkus/mailcron.php?debug=1
+
+connects to the mail server, fetches mails and stores them in the forums. The
+?debug=1 shows what the script is doing.
+

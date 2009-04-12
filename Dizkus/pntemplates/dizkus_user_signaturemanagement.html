@@ -1,0 +1,26 @@
+<!--[*  $Id$  *]-->
+<!--[ pnml name='_DZK_POSTSAPPEARANCE' assign=templatetitle]-->
+<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ include file=dizkus_user_header.html ]-->
+<!--[cssversion assign=configclass]-->
+<!--[* assign var="configclass" value="pn-form" *]-->
+
+<h2><!--[ $templatetitle ]--></h2>
+
+<!--[pnform cssClass=$configclass]-->
+<!--[pnformvalidationsummary]-->
+<fieldset>
+    <legend><!--[$templatetitle]--></legend>
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="signature" text="_DZK_MANAGESIGNATURE"]-->
+        <!--[pnformtextinput id="signature" textMode="multiLine" rows="5" cols="40"]-->
+    </div>
+    <!--[* plainbbcode textfieldid=signature *]-->
+    <!--[* bbsmile textfieldid=signature *]-->
+</fieldset>
+<div class="<!--[$configclass]-->buttons">
+    <!--[pnformbutton commandName="update" text="_UPDATE" class="dzk_img ok" ]-->
+</div>
+<!--[/pnform]-->
+
+<!--[ include file='dizkus_user_footer.html' ]-->

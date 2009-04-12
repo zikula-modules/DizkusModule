@@ -1,0 +1,25 @@
+<!--[*  $Id$  *]-->
+
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<h2><!--[ pnml name='_DZK_ACCOUNT_INFORMATION' ]--></h2>
+
+<div class="pn-informationmsg">
+    <dl>
+        <dt><!--[ pnml name='_DZK_USER_IP' ]-->:</dt>
+        <dd><!--[ $viewip.poster_ip ]--></dd>
+        <dt><!--[ pnml name='_DZK_HOST' ]-->:</dt>
+        <dd><!--[ $viewip.poster_host ]--></dd>
+        <dt><!--[ pnml name='_DZK_IP_USERNAMES ]--></dt>
+        <!--[ foreach item=user from=$viewip.users ]-->
+        <dd><!--[ $user.pn_uname|userprofilelink ]-->&nbsp;(<!--[ $user.postcount ]--> <!--[ pnml name='_DZK_POSTS' ]-->)</dd>
+        <!--[ /foreach ]-->
+    </dl>
+    <br />
+</div>
+
+<p class="gobacklink">
+    <a class="previoustopiclink" href="<!--[ pnmodurl modname=Dizkus type=user func=viewtopic topic=$topic_id ]-->" title="<!--[ pnml name='_DZK_RETURNTOTOPIC' ]-->"><!--[ pnml name='_DZK_RETURNTOTOPIC' ]--></a>
+</p>
+
+<!--[ include file='dizkus_user_footer.html' ]-->

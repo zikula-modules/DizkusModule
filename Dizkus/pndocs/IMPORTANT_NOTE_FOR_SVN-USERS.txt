@@ -1,0 +1,21 @@
+$Id$
+
+IMPORTANT NOTE FOR SVN-USERS:
+=============================
+
+Users who installed 3.0 using a SVN-checkout from http://code.zikula.org/dizkus 
+before Jan 10, 2008 (to be exact: before rev. 970) will not be able to use the 
+FULLTEXT search due to a bug in the installer (for more information see
+http://code.zikula.org/dizkus/ticket/86).
+
+You need to execute the following SQL commands in phpmyadmin (or your favorite 
+tool for maintaining the database):
+
+ALTER TABLE dizkus_topics ADD FULLTEXT topic_title (topic_title)
+ALTER TABLE dizkus_posts_text ADD FULLTEXT post_text (post_text)
+
+If you don't know how to do this, you shouldn't have used a svn version :-).
+There will be no more support from our side.
+
+Upgrades from older version of pnForum are *not* affected by this.
+ 

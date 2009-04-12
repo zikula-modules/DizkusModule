@@ -1,0 +1,28 @@
+<!--[*  $Id$  *]-->
+<!--[ pnml name='_DZK_IGNORELISTHANDLING' assign=templatetitle]-->
+<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ include file=dizkus_user_header.html ]-->
+<!--[ cssversion assign=configclass ]-->
+<!--[* assign var="configclass" value="pn-form" *]-->
+
+<h2><!--[ $templatetitle ]--></h2>
+
+<div class="pn-informationmsg"><!--[pnml name="_DZK_PREFS_IGNORELISTLEVELS"]--></div>
+
+<!--[pnform cssClass=$configclass]-->
+<!--[pnformvalidationsummary]-->
+<fieldset>
+    <legend><!--[$templatetitle]--></legend>
+    <div class="<!--[$configclass]-->row">
+        <!--[ pnformlabel for="ignorelist_myhandling" text="_DZK_PREFS_IGNORELISTMYHANDLING" html=1 ]-->
+        <span>
+            <!--[ pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling ]-->
+        </span>
+    </div>
+</fieldset>
+<div class="<!--[$configclass]-->buttons">
+    <!--[pnformbutton commandName="update" text="_UPDATE" class="dzk_img ok"]-->
+</div>
+<!--[/pnform]-->
+
+<!--[ include file='dizkus_user_footer.html' ]-->

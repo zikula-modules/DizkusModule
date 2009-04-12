@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="<!--[ pnml name='_CHARSET' ]-->"?>
+
+<!--
+Possible parameters for backforum.php
+
+-> cat_id    read new postings in this category only
+-> forum_id  read new postings in this forum only
+-> username  read new postings from this user only
+             search sequence: cat_id, forum_id, username
+-> count     number of postings to read, default 10
+-> feed      type of feed to deliver, e.g. atom which needs a template
+             dizkus_feed_atom.html to work
+             default: rss091
+
+Dizkus permission still apply! The forum access will be tested against
+an unregistered user.
+
+IMPORTANT HINT:
+===============
+Do not configure pnRender to expose template information for debugging purposes if
+you want to use templated RSS feeds! This will result in an XML error message:
+
+XML Parsing Error: xml declaration not at start of external entity
+Location: http://www.example.com/backforum.php
+Line Number 3, Column 1:<?xml version="1.0" encoding="ISO-8859-1"?>
+
+If you have to do this kind of debugging, do not forget to switch it off as
+soon as possible!
+
+-->
+
+<rss version="2.0">
+<channel>
+    <title><!--[ $sitename|pnvarprepfordisplay ]--> - <!--[ $forum_name|pnvarprepfordisplay ]--></title>
+    <link><!--[ $forum_link|pnvarprepfordisplay ]--></link>
+    <description><!--[ $sitename|pnvarprepfordisplay ]--> - <!--[ $forum_name|pnvarprepfordisplay ]--></description>
+    <language><!--[ pnml name='_LOCALE' assign=lang ]--><!--[$lang|replace:"_":"-"|pnvarprepfordisplay]--></language>
+    
+    <pubDate><!--[ $now|pndate_format:"%a, %d %b %Y %T %Z" ]--></pubDate>
+    
+    <lastBuildDate><!--[ $now|pndate_format:"%a, %d %b %Y %T %Z" ]--></lastBuildDate>
+    
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <generator>Dizkus <!--[ $dizkusinfo.version]--></generator>
+    <webMaster><!--[ $adminmail|pnvarprepfordisplay ]--></webMaster>
+
+
+    <!--[ foreach item=post from=$posts ]-->
+    <item>
+        <title><!--[ $post.topic_title|pnvarprepfordisplay ]--></title>
+        <link><!--[ $post.last_post_url|pnvarprepfordisplay ]--></link>
+        <description><!--[ $post.cat_title|pnvarprepfordisplay ]--> :: <!--[ $post.forum_name|pnvarprepfordisplay ]--></description>
+        <pubDate><!--[ $post.unixtime|pnfdate_format:"%a, %d %b %Y %T %Z":'':true ]--></pubDate>
+        
+    </item>
+    <!--[ /foreach ]-->
+
+</channel>
+</rss>

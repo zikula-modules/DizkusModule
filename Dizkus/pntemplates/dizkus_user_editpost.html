@@ -1,0 +1,80 @@
+<!--[*  $Id$  *]-->
+<!--[ pnml name='_DZK_EDIT_POST' assign=templatetitle]-->
+<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<!--[ pnmodcallhooks hookobject='item' hookaction='display' hookid=$topic.topic_id implode=false ]-->
+
+<!--[ if $preview ]-->
+<div id="editpostpreview" style="margin:1em 0;">
+    <!--[ include file="dizkus_user_editpostpreview.html" ]-->
+</div>
+<!--[ /if ]-->
+
+<div id="dzk_newtopic" class="forum_post post_bg2 pn-floatbox">
+    <div class="inner">
+        <span class="corners-top"><span>&nbsp;</span></span>
+
+        <div class="subcolumns">
+
+            <form id="editpost" class="dzk_form" action="<!--[ pnmodurl modname='Dizkus' type='user' func='editpost' ]-->" method="post" enctype="multipart/form-data">
+                <fieldset>
+                    <legend class="post_header"><!--[ pnml name='_DZK_EDIT_POST' ]-->: <!--[ $post.topic_subject|pnvarprepfordisplay ]--></legend>
+                    <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
+                    <input type="hidden" name="forum"  value="<!--[ $post.forum_id ]-->" />
+                    <input type="hidden" name="topic"  value="<!--[ $post.topic_id ]-->" />
+                    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+                    <div class="post_text_wrap">
+                        <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
+
+                        <!--[ if $post.moderate eq true OR $post.edit_subject eq true ]-->
+                        <div>
+                            <label for="subject"><!--[ pnml name='_DZK_SUBJECT' ]--></label>:
+                            <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[ $post.topic_subject|pnvarprephtmldisplay ]-->" />
+                        </div>
+                        <!--[ /if ]-->
+                        <div>
+                            <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]--></label>:
+                            <textarea id="message" name="message"><!--[ $post.post_rawtext ]--></textarea>
+                            <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
+                            <span><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></span>
+                            <!--[ /if ]-->
+                        </div>
+
+                        <div class="subcolumns">
+                            <div id="editpostoptions" class="dzk_col50l">
+                                <ul>
+                                    <!--[ if $post.moderate eq true ]-->
+                                    <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
+                                    <li>
+                                        <input type="checkbox" name="delete" id="delete" tabindex="0" value="1" />
+                                        <label for="delete"><!--[ pnml name='_DZK_DELETE' ]--></label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="attach_signature" id="attach_signature" <!--[ if $post.has_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                                        <label for="attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label>
+                                    </li>
+                                    <!--[ /if ]-->
+                                    <li id="editpostbuttons">
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->" />
+                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[ pnml name='_DZK_PREVIEW' ]-->" />
+                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[ pnml name='_DZK_CANCELPOST' ]-->" onclick="self.location.href='<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.topic_id ]-->'" />
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="dzk_col50r">
+                                <!--[ plainbbcode textfieldid=message ]-->
+                                <!--[ bbsmile textfieldid=message ]-->
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <span class="corners-bottom"><span>&nbsp;</span></span>
+    </div>
+</div>
+<!--[ include file='dizkus_user_footer.html' ]-->

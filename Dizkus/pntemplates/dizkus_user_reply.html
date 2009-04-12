@@ -1,0 +1,71 @@
+<!--[*  $Id$  *]-->
+<!--[ pnml name='_DZK_REPLY_POST' assign=templatetitle]-->
+<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ include file='dizkus_user_header.html' ]-->
+
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false ]-->
+
+<!--[ if $preview ]-->
+<div id="replypreview" style="margin:1em 0;">
+    <!--[ include file="dizkus_user_replypreview.html" ]-->
+</div>
+<!--[ /if ]-->
+
+<div id="dzk_quickreply" class="forum_post post_bg2 pn-floatbox">
+    <div class="inner">
+        <span class="corners-top"><span>&nbsp;</span></span>
+
+        <div class="subcolumns">
+
+            <form id="post" class="dzk_form" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
+                <fieldset>
+                    <legend class="post_header"><!--[ pnml name='_DZK_REPLY_POST' ]-->: <!--[ $reply.topic_subject|dzkbbsmile|pnvarcensor ]--></legend>
+                    <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
+                    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+                    <div class="post_text_wrap">
+                        <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
+
+                        <div>
+                            <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]--></label>:
+                            <textarea id="message" name="message"><!--[ $reply.message ]--></textarea>
+                            <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
+                            <span><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></span>
+                            <!--[ /if ]-->
+                        </div>
+
+                        <div class="subcolumns">
+                            <div id="replyoptions" class="dzk_col50l">
+                                <ul>
+                                    <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
+                                    <!--[ if $pncore.logged_in ]-->
+                                    <li>
+                                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                        <label for="attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
+                                        <label for="subscribe_topic"><!--[ pnml name='_DZK_NOTIFYME' ]--></label>
+                                    </li>
+                                    <!--[ /if ]-->
+                                    <li id="nonajaxreplybuttons">
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->" />
+                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[ pnml name='_DZK_PREVIEW' ]-->" />
+                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[ pnml name='_DZK_CANCELPOST' ]-->" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dzk_col50l">
+                                <!--[ plainbbcode textfieldid='message' ]-->
+                                <!--[ bbsmile textfieldid='message' ]-->
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <span class="corners-bottom"><span>&nbsp;</span></span>
+    </div>
+</div>
+<!--[ include file='dizkus_user_footer.html' ]-->

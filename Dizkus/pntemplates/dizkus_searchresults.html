@@ -1,0 +1,72 @@
+<!--[*  $Id$  *]-->
+
+<h2><!--[ pnml name='_DZK_SEARCHINCLUDE_RESULTS' ]-->:&nbsp;(<!--[ $total_hits ]-->&nbsp;<!--[ pnml name='_DZK_SEARCHINCLUDE_HITS' ]-->)</h2>
+
+<div id="dizkus">
+
+    <table id="dzk_topiclist" cellpadding="5" cellspacing="0" summary="<!--[ pnml name='_DZK_SEARCHRESULTSFOR' ]-->&nbsp;'<!--[ if $searchfor neq '' ]--><!--[ $searchfor|pnvarprepfordisplay ]--><!--[ else ]--><!--[ $searchauthor|pnvarprepfordisplay ]--><!--[ /if ]-->">
+        <colgroup>
+            <col id="col_status" />
+            <col id="col_topic" />
+            <col id="col_replies" />
+            <col id="col_poster" />
+            <col id="col_view" />
+            <col id="col_lastpost" />
+        </colgroup>
+
+        <thead>
+            <tr>
+                <th class="leftcell" ><!--[ pnml name='_DZK_STATUS' ]--></th>
+                <th class="midcell"  ><!--[ pnml name='_DZK_TOPIC' ]--></th>
+                <th class="midcell"  ><!--[ pnml name='_DZK_REPLIES' ]--></th>
+                <th class="midcell"  ><!--[ pnml name='_DZK_POSTER' ]--></th>
+                <th class="midcell"  ><!--[ pnml name='_DZK_VIEWS' ]--></th>
+                <th class="rightcell"><!--[ pnml name='_DZK_DATE' ]--></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <!--[ foreach item=searchresult from=$searchresults ]-->
+
+            <tr id="topic<!--[ $searchresult.topic_id ]-->_<!--[ $searchresult.post_id ]-->" class="topicrow">
+                <td headers="col_status">
+                    <!--[ if $searchresult.sticky eq 1 ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_post_sticky.gif" alt="_DZK_STICKY" altml=true title="_DZK_STICKY" titleml=true]-->
+                    <!--[ /if ]-->
+                    <!--[ if $searchresult.topic_status eq 1 ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" alt="_DZK_ISLOCKED" altml=true title="_DZK_TOPICLOCKED" titleml=true ]-->
+                    <!--[ /if ]-->
+                    <!--[ if $searchresult.new_posts eq 1 ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true title="_DZK_NEWPOSTS" titleml=true ]-->
+                    <!--[ else ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_folder.gif" alt="_DZK_NORMALTOPIC" altml=true title="_DZK_NORMALTOPIC" titleml=true ]-->
+                    <!--[ /if ]-->
+                    <!--[ if $searchresult.hot_topic eq 1 ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
+                    <!--[ /if ]-->
+                </td>
+                <td headers="col_topic">
+                    <!--[ $searchresult.topic_id|viewtopiclink:$searchresult.topic_title:$searchresult.forum_name ]-->
+                    <!--[ pnfpager objectid=$searchresult.topic_id total=$searchresult.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" ]-->
+                    <p><!--[ pnml name="_DZK_FOUNDIN" ]-->: <a title="<!--[ pnml name='_DZK_GOTO_FORUM' ]--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
+                </td>
+                <td headers="col_replies" align="center"><!--[ $searchresult.topic_replies ]--></td>
+                <td headers="col_poster" align="center"><!--[ $searchresult.topicstarter_name|userprofilelink ]--></td>
+                <td headers="col_views" align="center"><!--[ $searchresult.topic_views ]--></td>
+                <td headers="col_date" align="center"><!--[ $searchresult.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->&nbsp;<a title="<!--[ pnml name='_DZK_GOTO_LATEST' ]-->" href="<!--[ $searchresult.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_latest.gif" alt="_DZK_GOTO_LATEST" altml=true ]--></a></td>
+            </tr>
+
+            <!--[ foreachelse ]-->
+            <tr class="notopics">
+                <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" colspan="6" align="center"><!--[ pnml name='_DZK_NOTOPICS' ]--></td>
+            </tr>
+            <!--[ /foreach ]-->
+        </tbody>
+    </table>
+
+</div>
+
+<!--[ pager rowcount=$total_hits limit=$searchlimit separator=" " posvar=Dizkus_startnum txt_prev="<<" txt_next=">>" ]-->
+<br />
+

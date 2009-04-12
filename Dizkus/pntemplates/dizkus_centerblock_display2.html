@@ -1,0 +1,22 @@
+<!--[*  $Id$  *]-->
+
+<!--[ pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css" ]-->
+
+<!--[ readlastposts forum_id=$forum_id maxposts=$maxposts ]-->
+<!--[ if $lastpostcount > 0 ]-->
+<table width="100%" border="0" cellpadding="3" cellspacing="1">
+    <tr>
+        <td colspan="4">
+            <strong><!--[ $lastpostcount ]-->&nbsp;<!--[ pnml name='_DZK_CB_RECENTPOSTS' ]--></strong>
+        </td>
+    </tr>
+    <!--[ foreach item=lastpost from=$lastposts ]-->
+    <tr>
+        <td><a href="<!--[ pnmodurl modname=Dizkus type=user func=viewtopic topic=$lastpost.topic_id ]-->"><!--[ $lastpost.topic_title ]--></a></td>
+        <td><a href="<!--[ $lastpost.last_post_url_anchor ]-->"><!--[ $lastpost.topic_title ]--></a></td>
+        <td><!--[ $lastpost.posted_time ]--></td>
+        <td><!--[ $lastpost.poster_name|userprofilelink ]--></td>
+    </tr>
+    <!--[ /foreach ]-->
+</table>
+<!--[ /if ]-->
