@@ -930,7 +930,7 @@ function dzk_getip()
  * THe only	change is to set the default value for strPattern to the format	we use in the database
  *
  */
-function dzk_str2time($strStr, $strPattern = 'Y-m-d	H:i')
+function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
 {
    // an array of the valide date characters, see: http://php.net/date#AEN21898
    $arrCharacters =	array(
