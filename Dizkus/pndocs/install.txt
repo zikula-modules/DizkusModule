@@ -1,7 +1,0 @@
-$Id$ $Name$
-
-Deutsche Anleitung: pndocs/deu/install.txt
-
-English manual: pndocs/eng/install.txt
-
-more to come...
