@@ -46,8 +46,10 @@
 #dizkus dd,
 #dizkus ul,
 #dizkus ul li {
-    margin: 0;
-    padding: 0;
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
     list-style: none;
 }
 #dizkus table {
