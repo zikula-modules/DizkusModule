@@ -11,11 +11,11 @@
                     <!--[$newtopic.poster_data.uname|userprofilelink]-->
                     <!--[ if $newtopic.poster_data.pn_uid neq 1 AND $newtopic.poster_data._YOURAVATAR neq '' AND $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     <br />
-                    <img src="<!--[$baseurl]-->/images/avatar/<!--[ $newtopic.poster_data._YOURAVATAR ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $newtopic.poster_data.uname ]-->" />
+                    <img src="<!--[$baseurl]-->images/avatar/<!--[ $newtopic.poster_data._YOURAVATAR ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $newtopic.poster_data.uname ]-->" />
                     <!--[ /if ]-->
                     <!--[ if isset($newtopic.poster_data.rank_image) ]-->
                     <br />
-                    <img class="userinforankimage" src="<!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
+                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
                     <!--[ /if ]-->
                 </div>
 

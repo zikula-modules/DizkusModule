@@ -709,6 +709,10 @@ function Dizkus_ajax_newposts ()
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
         $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
     }
-    $pnRender->display('dizkus_ajax_newposts.html');
+
+
+    $out = $pnRender->fetch('dizkus_ajax_newposts.html');
+    echo DataUtil::convertToUTF8($out);
     pnShutDown();
+
 }

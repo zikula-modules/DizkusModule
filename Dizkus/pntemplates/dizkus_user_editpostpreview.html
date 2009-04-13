@@ -18,11 +18,11 @@ Template for single postings
                     <!--[ $post.poster_data.pn_uname|userprofilelink ]-->
                     <!--[ if $post.poster_data.pn_uid neq 1 AND $post.poster_data._YOURAVATAR neq '' AND $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     <br />
-                    <img src="<!--[$baseurl]-->/images/avatar/<!--[ $post.poster_data._YOURAVATAR ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
+                    <img src="<!--[$baseurl]-->images/avatar/<!--[ $post.poster_data._YOURAVATAR ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
                     <!--[ /if ]-->
                     <!--[ if isset($post.poster_data.rank_image) && isset($post.poster_data.rank) ]-->
                     <br />
-                    <img class="userinforankimage" src="<!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
+                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
                     <!--[ /if ]-->
                 </div>
 

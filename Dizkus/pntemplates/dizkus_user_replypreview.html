@@ -16,11 +16,11 @@ Template for single postings
                     <!--[ $reply.poster_data.pn_uname|userprofilelink ]-->
                     <!--[ if $reply.poster_data.pn_uid neq 1 AND $reply.poster_data._YOURAVATAR neq '' AND $reply.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     <br />
-                    <img src="<!--[$baseurl]-->/images/avatar/<!--[ $reply.poster_data._YOURAVATAR ]-->" <!--[ $reply.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $reply.poster_data.uname ]-->" />
+                    <img src="<!--[$baseurl]-->images/avatar/<!--[ $reply.poster_data._YOURAVATAR ]-->" <!--[ $reply.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $reply.poster_data.uname ]-->" />
                     <!--[ /if ]-->
                     <!--[ if isset($reply.poster_data.rank_image) && isset($reply.poster_data.rank) ]-->
                     <br />
-                    <img class="userinforankimage" src="<!--[ $reply.poster_data.rank_image ]-->" alt="<!--[ $reply.poster_data.rank ]-->" <!--[ $reply.poster_data.rank_image_image_attr.3 ]--> />
+                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $reply.poster_data.rank_image ]-->" alt="<!--[ $reply.poster_data.rank ]-->" <!--[ $reply.poster_data.rank_image_image_attr.3 ]--> />
                     <!--[ /if ]-->
                 </div>
 

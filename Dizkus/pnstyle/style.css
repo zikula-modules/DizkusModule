@@ -10,7 +10,8 @@
 /*******************************************************************************/
 
 #dizkus {
-    width: 100%;
+    padding:1em;
+    width:100%;
 }
 #dizkus .dzk_col50l {
     width:50%;
@@ -69,7 +70,7 @@ div#editpostoptions ul li {
     color: #777777;
 }
 #dizkus .forum_post .postbody .postinfo {
-    color: #4D87C7
+    color: inherit;
 }
 #dizkus a.dzk_top {
     background-image: url("../pnimages/icon_up.gif");
@@ -650,6 +651,7 @@ div#editpostoptions ul li {
 }
 #dizkus .dzk_form legend {
     font-weight: bold;
+    border:none;
     padding: 0 10px;
 }
 #dizkus .dzk_form input {

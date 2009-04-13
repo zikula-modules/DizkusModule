@@ -7,6 +7,7 @@ Andreas Krapohl aka larsneo (larsneo@zikula.org)
 Jim Hadfield (jhadfiel@oldihc.org)
 Frank Schummertz aka landseer (frank.schummertz@landseer-stuttgart.de)
 Steffen Voss aka kafferinge.de (steffen.voss@online.de)
+Carsten Volmer aka herr.vorragend (carsten@zikula.org)
 
 People who contributed code for 2.0.0 or later
 ----------------------------------------------
