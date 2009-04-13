@@ -168,8 +168,11 @@
 <!--[if $forum.forum_mods|@count > 0 ]-->
 <ul id="dzk_moderatorlist" class="linklist">
     <li><em><!--[ pnml name='_DZK_MODERATEDBY' ]-->&nbsp;:&nbsp;</em></li>
-    <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
-    <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
+    <!--[ foreach name=moderators item=mod key=modid from=$forum.forum_mods ]-->
+    <li>
+        <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]-->
+        <!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
+    </li>
     <!--[ /foreach ]-->
 </ul>
 <!--[ /if ]-->
