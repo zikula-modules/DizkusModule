@@ -4,23 +4,23 @@
 
 <div id="newtopicpreview" style="display: none;">&nbsp;</div>
 
+<!--[ if $preview ]-->
+<div id="nonajaxnewtopicpreview">
+    <!--[ include file='dizkus_user_newtopicpreview.html' ]-->
+</div>
+<!--[ /if ]-->
+
 <div id="dzk_newtopic" class="forum_post post_bg2 pn-floatbox">
     <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
 
         <div class="subcolumns">
-            <form name="newtopicform" class="dzk_form" id="newtopicform" action="<!--[ pnmodurl modname='Dizkus' type='user' func='reply' ]-->" method="post" enctype="multipart/form-data">
+            <form name="newtopicform" class="dzk_form" id="newtopicform" action="<!--[ pnmodurl modname='Dizkus' type='user' func='newtopic' ]-->" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="forum_id" name="forum_id" value="<!--[ $newtopic.forum_id ]-->" />
                 <input type="hidden" id="quote" name="quote" value="" />
                 <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
                 <fieldset>
                     <legend class="post_header"><!--[ pnml name='_DZK_NEW_THREADS' ]-->:&nbsp;<a href='<!--[ pnmodurl modname='Dizkus' func=viewforum forum=$newtopic.forum_id|pnvarprepfordisplay ]-->'><!--[ $newtopic.forum_name|pnvarprepfordisplay|pnvarcensor ]--></a></legend>
                     <div class="post_text_wrap">
-                        <!--[* <div id="newtopicpreview" style="display: none;">&nbsp;</div> *]-->
-                        <!--[ if $preview ]-->
-                        <div id="nonajaxnewtopicpreview">
-                            <!--[ include file='dizkus_user_newtopicpreview.html' ]-->
-                        </div>
-                        <!--[ /if ]-->
                         <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                         <div>
                             <label for="subject"><!--[ pnml name='_DZK_SUBJECT' ]-->:</label>
