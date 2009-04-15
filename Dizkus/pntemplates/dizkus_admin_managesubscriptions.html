@@ -9,13 +9,13 @@
     </div>
 </form>
 
-<form class="<!--[$configclass]-->" id="managesubscriptions" action="<!--[ pnmodurl modname=Dizkus type=admin func=managesubscriptions ]-->" method="post">
+<form class="<!--[ $configclass ]-->" id="managesubscriptions" action="<!--[ pnmodurl modname=Dizkus type=admin func=managesubscriptions ]-->" method="post">
     <input type="hidden" name="pnuid" value="<!--[ $pnuid ]-->" />
     <!--[ if $topicsubscriptions|@count <> 0 ]-->
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
     <h2><!--[ pnml name='_DZK_MANAGETOPICSUBSCRIPTIONS' ]--></h2>
     <table class="pn-admintable">
-        <caption>(<label for="alltopic"><!--[pnml name=_DZK_TOGGLEALLTOPICS]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />&nbsp;)</caption>
+        <caption>(<label for="alltopic"><!--[ pnml name='_DZK_TOGGLEALLTOPICS' ]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />&nbsp;)</caption>
         <thead>
             <tr>
                 <th><!--[ pnml name='_DZK_TOPIC' ]--></th>
@@ -40,14 +40,14 @@
         </tbody>
     </table>
     <!--[ else ]-->
-    <h3><!--[ pnml name='_DZK_NOTOPICSUBSCRIPTIONSFOUND ]--></h3>
+    <h3><!--[ pnml name='_DZK_NOTOPICSUBSCRIPTIONSFOUND' ]--></h3>
     <!--[ /if ]-->
 
     <!--[ if $forumsubscriptions|@count <> 0 ]-->
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
     <h2><!--[ pnml name='_DZK_MANAGEFORUMSUBSCRIPTIONS' ]--></h2>
     <table class="pn-admintable">
-        <caption>(<label for="allforum"><!--[pnml name=_DZK_TOGGLEALLFORUMS]--></label>&nbsp;<input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />&nbsp;)</caption>
+        <caption>(<label for="allforum"><!--[ pnml name='_DZK_TOGGLEALLFORUMS' ]--></label>&nbsp;<input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />&nbsp;)</caption>
         <thead>
             <tr>
                 <th><!--[ pnml name='_DZK_FORUM' ]--></th>
@@ -69,7 +69,7 @@
     </table>
 
     <!--[ else ]-->
-    <h3><!--[ pnml name='_DZK_NOFORUMSUBSCRIPTIONSFOUND ]--></h3>
+    <h3><!--[ pnml name='_DZK_NOFORUMSUBSCRIPTIONSFOUND' ]--></h3>
     <!--[ /if ]-->
 
     <div style="margin-top: 1em;">

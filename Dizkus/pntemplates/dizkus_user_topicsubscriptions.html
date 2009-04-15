@@ -1,14 +1,14 @@
 <!--[*  $Id$  *]-->
 <!--[ pnml name='_DZK_MANAGETOPICSUBSCRIPTIONS' assign=templatetitle]-->
 <!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file=dizkus_user_header.html ]-->
+<!--[ include file='dizkus_user_header.html' ]-->
 
 <h2><!--[ $templatetitle ]--></h2>
 <form id="dzk_topicsubscriptions" action="<!--[ pnmodurl modname=Dizkus type=user func=topicsubscriptions ]-->" method="post">
     <p>
-        <label for="allbox"><!--[pnml name=_DZK_TOGGLEALLTOPICS]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />
+        <label for="allbox"><!--[ pnml name='_DZK_TOGGLEALLTOPICS' ]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />
     </p>
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
     <table class="pn-datatable">
         <colgroup>
             <col id="col_topic" />
@@ -38,7 +38,7 @@
             </tr>
             <!--[ foreachelse ]-->
             <tr>
-                <td colspan="3" class="center;"><!--[ pnml name='_DZK_NOTOPICSUBSCRIPTIONSFOUND ]--></td>
+                <td colspan="3" class="center;"><!--[ pnml name='_DZK_NOTOPICSUBSCRIPTIONSFOUND' ]--></td>
             </tr>
             <!--[ /foreach ]-->
         </tbody>
@@ -49,4 +49,4 @@
     </p>
 </form>
 
-<!--[ include file=dizkus_user_footer.html ]-->
+<!--[ include file='dizkus_user_footer.html' ]-->

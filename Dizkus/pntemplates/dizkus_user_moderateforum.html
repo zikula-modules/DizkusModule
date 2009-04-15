@@ -1,7 +1,7 @@
 <!--[*  $Id$  *]-->
 <!--[ pnml name='_DZK_MODERATE' assign=templatetitle]-->
 <!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file=dizkus_user_header.html ]-->
+<!--[ include file='dizkus_user_header.html' ]-->
 <!--[ cssversion assign=configclass ]-->
 
 <h2><!--[ $templatetitle ]--></h2>
@@ -28,7 +28,7 @@
 
 <!--[ pnfpager total=$forum.forum_topics ]-->
 
-<form class="<!--[$configclass]-->" method="post" action="<!--[ pnmodurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id ]-->">
+<form class="<!--[ $configclass ]-->" method="post" action="<!--[ pnmodurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id ]-->">
     <table id="dzk_topiclist" class="pn-datatable" summary="<!--[ $forum.cat_title ]--> :: <!--[ $forum.forum_name ]-->">
         <colgroup>
             <col id="col_status"    />
@@ -119,21 +119,21 @@
 
     <fieldset>
         <legend><!--[ pnml name='_DZK_MODERATORSOPTIONS' ]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="mode"><!--[ pnml name="_DZK_ACTIONS"]-->:</label>
             <select name="mode" id="mode" size="1">
                 <option value=""><< <!--[ pnml name='_DZK_SELECTACTION' ]--> >></option>
-                <option value="sticky"><!--[pnml name="_DZK_STICKYTOPICS"]--></option>
-                <option value="unsticky"><!--[pnml name="_DZK_UNSTICKYTOPICS"]--></option>
-                <option value="lock"><!--[pnml name="_DZK_LOCKTOPICS"]--></option>
-                <option value="unlock"><!--[pnml name="_DZK_UNLOCKTOPICS"]--></option>
-                <option value="delete"><!--[pnml name="_DZK_DELETETOPICS"]--></option>
-                <option value="move"><!--[pnml name="_DZK_MOVETOPICS"]--></option>
-                <option value="join"><!--[pnml name="_DZK_JOINTOPICS"]--></option>
+                <option value="sticky"><!--[ pnml name='_DZK_STICKYTOPICS' ]--></option>
+                <option value="unsticky"><!--[ pnml name='_DZK_UNSTICKYTOPICS' ]--></option>
+                <option value="lock"><!--[ pnml name='_DZK_LOCKTOPICS' ]--></option>
+                <option value="unlock"><!--[ pnml name='_DZK_UNLOCKTOPICS' ]--></option>
+                <option value="delete"><!--[ pnml name='_DZK_DELETETOPICS' ]--></option>
+                <option value="move"><!--[ pnml name='_DZK_MOVETOPICS' ]--></option>
+                <option value="join"><!--[ pnml name='_DZK_JOINTOPICS' ]--></option>
             </select>
         </div>
-        <div class="<!--[$configclass]-->row">
-            <label for="moveto"><!--[ pnml name="_DZK_MODERATE_MOVETOPICS_HINT"]-->:</label>
+        <div class="<!--[ $configclass ]-->row">
+            <label for="moveto"><!--[ pnml name='_DZK_MODERATE_MOVETOPICS_HINT' ]-->:</label>
             <select name="moveto" id="moveto">
                 <option value=''><< <!--[ pnml name='_DZK_SELECTTARGETFORUM' ]--> >></option>
                 <!--[ foreach item=singleforum from=$forums ]-->
@@ -141,12 +141,12 @@
                 <!--[ /foreach ]-->
             </select>
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="createshadowtopic"><!--[ pnml name='_DZK_CREATESHADOWTOPIC' html=1 ]-->:</label>
             <input type="checkbox" name="createshadowtopic" id="createshadowtopic" value="1" />
         </div>
-        <div class="<!--[$configclass]-->row">
-            <label for="jointotopic"><!--[ pnml name="_DZK_MODERATE_JOINTOPICS_HINT"]-->:</label>
+        <div class="<!--[ $configclass ]-->row">
+            <label for="jointotopic"><!--[ pnml name='_DZK_MODERATE_JOINTOPICS_HINT' ]-->:</label>
             <span id="jointotopic">
                 <select name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
                     <option value=''><< <!--[ pnml name='_DZK_SELECTTARGETTOPIC' ]--> >></option>
@@ -159,9 +159,9 @@
             </span>
         </div>
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="<!--[ $configclass ]-->buttons">
         <!--[* FOR Creating shadow topic the authkey is needed *]-->
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
         <button class="dzk_img ok" name="submit" type="submit" value="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->"><!--[ pnml name='_DZK_SUBMIT' ]--></button>
         <button class="dzk_img cancel" name="reset" type="reset" value="reset" title="<!--[ pnml name='_DZK_CANCEL' ]-->"><!--[ pnml name="_DZK_CANCEL" ]--></button>
     </div>

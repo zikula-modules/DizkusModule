@@ -1,23 +1,23 @@
 <!--[*  $Id$  *]-->
 <!--[ pnml name='_DZK_SPLITTOPIC' assign=templatetitle]-->
 <!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file=dizkus_user_header.html ]-->
+<!--[ include file='dizkus_user_header.html' ]-->
 <!--[ cssversion assign=configclass ]-->
 
 <h2><!--[ $templatetitle ]--></h2>
 
-<form class="<!--[$configclass]-->" action="<!--[ pnmodurl modname=Dizkus type=user func=splittopic ]-->" method="post">
+<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=user func=splittopic ]-->" method="post">
     <fieldset id="dzk_splittopic">
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[ $templatetitle ]--></legend>
         <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus ]-->" />
-        <div class="<!--[$configclass]-->row">
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+        <div class="<!--[ $configclass ]-->row">
             <p class="zk-formnote"><!--[ pnml name='_DZK_SPLITTOPIC_INFO' html=1 ]--></p>
             <label for="newsubject"><!--[ pnml name='_DZK_SPLITTOPIC_NEWTOPIC' html=1 ]--></label>
             <input type="text" id="newsubject" name="newsubject" value="<!--[ pnml name='_DZK_SPLIT' ]-->: <!--[ $post.topic_subject ]-->" size="40" maxlength="100" />
         </div>
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="<!--[ $configclass ]-->buttons">
         <button class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SPLITTOPIC' ]-->"><!--[ pnml name='_DZK_SPLITTOPIC' ]--></button>
     </div>
 </form>

@@ -3,15 +3,15 @@
 <!--[ include file='dizkus_admin_header.html' ]-->
 <!--[ cssversion assign=configclass ]-->
 
-<form class="<!--[$configclass]-->" action="" method="post">
+<form class="<!--[ $configclass ]-->" action="" method="post">
     <input type="hidden" name="forum_id" value="<!--[ $forum_id ]-->" />
     <fieldset>
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[ $templatetitle ]--></legend>
         <!--[ foreach item=message from=$messages ]-->
         <p><!--[ $message ]--></p>
         <!--[ /foreach ]-->
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="<!--[ $configclass ]-->buttons">
         <input type="submit" name="backtoforum" value="<!--[ pnml name='_DZK_BACKTOFORUMADMIN' ]-->" />
     </div>
 </form>

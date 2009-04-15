@@ -5,13 +5,13 @@
     <fieldset>
         <legend><!--[ pnml name='_DZK_ADMINFORUMEDIT' ]--></legend>
 
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="forum_name"><!--[ pnml name='_DZK_FORUM' ]--></label>
             <input type="text" id="forum_name" name="forum_name" size="70" maxlength="150" value="<!--[ $forum.forum_name|pnvarprepfordisplay ]-->" />
         </div>
 
         <!--[ if $newforum neq true ]-->
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="forum_info"><!--[ pnml name='_DZK_FORUMINFO' ]--></label>
             <span id="forum_info">
                 <!--[ boardstats type="forumtopics" id=$forum.forum_id assign=topiccount ]-->
@@ -24,12 +24,12 @@
         </div>
         <!--[ /if ]-->
 
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="forum_desc"><!--[ pnml name='_DZK_DESCRIPTION' ]--></label>
             <textarea id="forum_desc" name="desc"><!--[ $forum.forum_desc|pnvarprephtmldisplay ]--></textarea>
         </div>
 
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="modulref"><!--[ pnml name='_DZK_MODULEREFERENCE' html=1]--></label>
             <select id="moduleref" name="moduleref" size="1">
                 <!--[ foreach item=hookmod from=$hooked_modules ]-->
@@ -41,12 +41,12 @@
             <p class="zk-formnote pn-sub"><!--[ pnml name='_DZK_MODULEREFERENCE_HINT' ]--></p>
         </div>
 
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pncategory"><!--[ pnml name='_DZK_PNCATEGORIES' html=1]--></label>
             <!--[ $categoryselector ]-->
         </div>
 
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="forum_mods"><!--[ pnml name='_DZK_MODERATOR' ]--></label>
             <span id="forum_mods" class="zk-formnote">
                 <strong><!--[ pnml name='_DZK_CURRENT' ]-->:</strong><br />
@@ -68,7 +68,7 @@
             </span>
         </div>
 
-        <div id="extsource" class="<!--[$configclass]-->row">
+        <div id="extsource" class="<!--[ $configclass ]-->row">
             <label for="pop3_active"><!--[ pnml name='_DZK_EXTERNALSOURCE' ]--></label>
             <!--[ foreach item=extsource from=$externalsourceoptions key=num ]-->
             <div class="zk-formlist">
@@ -80,15 +80,15 @@
     </fieldset>
 
     <fieldset id="pnlogindata_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource == 0 ]-->style="display:none;"<!--[ /if ]-->>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pnuser"><!--[ pnml name='_DZK_PNUSER' ]--></label>
             <input type="text" id="pnuser" name="pnuser" maxlength="60" size="30"  value="<!--[ $forum.forum_pop3_pnuser ]-->" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pnpassword"><!--[ pnml name='_DZK_PNPASSWORD' ]--></label>
             <input type="password" id="pnpassword" name="pnpassword" maxlength="60" size="30"  value="<!--[ $forum.forum_pop3_pnpassword ]-->" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pnpasswordconfirm"><!--[ pnml name='_DZK_PNPASSWORDCONFIRM' ]--></label>
             <input type="password" id="pnpasswordconfirm" name="pnpasswordconfirm" maxlength="60" size="30"  value="<!--[ $forum.forum_pop3_pnpassword ]-->" />
         </div>
@@ -96,31 +96,31 @@
 
     <fieldset id="mail2forum_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource <> 1 ]-->style="display:none;"<!--[ /if ]-->>
         <legend><!--[ pnml name='_DZK_MAIL2FORUM' ]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_test"><!--[ pnml name='_DZK_POP3TEST' ]--></label>
             <input type="checkbox" id="pop3_test" name="pop3_test" value="1" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_server"><!--[ pnml name='_DZK_POP3SERVER' ]--></label>
             <input type="text" id="pop3_server" name="pop3_server" maxlength="60" size="30" value="<!--[ $forum.forum_pop3_server ]-->" /><br />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_port"><!--[ pnml name='_DZK_POP3PORT' ]--></label>
             <input type="text" id="pop3_port" name="pop3_port" maxlength="5" size="5" value="<!--[ $forum.forum_pop3_port ]-->" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_login"><!--[ pnml name='_DZK_POP3LOGIN' ]--></label>
             <input type="text" id="pop3_login" name="pop3_login" maxlength="60" size="30"  value="<!--[ $forum.forum_pop3_login ]-->" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_password"><!--[ pnml name='_DZK_POP3PASSWORD' ]--></label>
             <input type="password" id="pop3_password" name="pop3_password" maxlength="60" size="30"  value="<!--[ $forum.forum_pop3_password ]-->" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_passwordconfirm"><!--[ pnml name='_DZK_POP3PASSWORDCONFIRM' ]--></label>
             <input type="password" id="pop3_passwordconfirm" name="pop3_passwordconfirm" maxlength="60" size="30"  value="<!--[ $forum.forum_pop3_password ]-->" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="pop3_matchstring"><!--[ pnml name='_DZK_POP3MATCHSTRING' ]--></label>
             <input type="text" id="pop3_matchstring" name="pop3_matchstring" maxlength="255" size="30"  value="<!--[ $forum.forum_pop3_matchstring ]-->" />
             <p class="zk-formnote pn-sub"><!--[ pnml name='_DZK_POP3MATCHSTRINGHINT' ]--></p>
@@ -129,7 +129,7 @@
 
     <fieldset id="rss2forum_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource <> 2 ]-->style="display:none;"<!--[ /if ]-->>
         <legend><!--[ pnml name='_DZK_RSS2FORUM' ]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="rssfeed"><!--[ pnml name='_DZK_SELECTRSSFEED' ]--></label>
             <select name="rssfeed" size="1">
                 <option value="0"><!--[ pnml name='_DZK_NONE' ]--></option>
@@ -145,15 +145,15 @@
     <!--[ else ]-->
     <fieldset>
         <legend><!--[ pnml name='_DELETE' ]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="<!--[ $configclass ]-->row">
             <label for="delete_<!--[ $forum.forum_id ]-->"><!--[ pnml name='_DELETE' ]--></label>
             <input type="checkbox" id="delete_<!--[ $forum.forum_id ]-->" name="delete" value="delete" />
         </div>
     </fieldset>
     <!--[ /if ]-->
 
-    <div class="<!--[$configclass]-->buttons">
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module=Dizkus]-->" />
+    <div class="<!--[ $configclass ]-->buttons">
+        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
         <input type="hidden" name="forum_id" value="<!--[ $forum.forum_id ]-->" />
         <input type="hidden" name="cat_id" value="<!--[ $forum.cat_id ]-->" />
         <button class="dzk_img ok" onclick="javascript:storeforum(<!--[ $forum.forum_id ]-->); return false;" name="submit" type="submit"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
