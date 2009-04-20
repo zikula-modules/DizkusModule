@@ -189,14 +189,6 @@ function Dizkus_user_reply($args=array())
     $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
     $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
 
-	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-	$topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
-	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
-	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
-		LogUtil::registerError(_DZK_IGNORELISTNOREPLY);
-		return pnRedirect(pnModURL('Dizkus','user','viewtopic',array('topic' => $topic_id)));
-	}
-
     /**
      * if cancel is submitted move to forum-view
      */
@@ -219,6 +211,14 @@ function Dizkus_user_reply($args=array())
         // Confirm authorisation code
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
+        }
+
+        // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
+        $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
+        $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
+        if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
+            LogUtil::registerError(_DZK_IGNORELISTNOREPLY);
+            return pnRedirect(pnModURL('Dizkus','user','viewtopic',array('topic' => $topic_id)));
         }
 
         list($start,
