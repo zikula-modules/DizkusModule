@@ -634,24 +634,24 @@ function Dizkus_ajax_newtopic()
         } else {
             $confirmation = false;
         }
-
-	// ++++ MediaAttach Hack ++++
-	//old:
-	/*
-        dzk_jsonizeoutput(array('topic'        => $topic,
-                                'confirmation' => $confirmation,
-                                'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
-                                                           array('topic' => $topic_id),null,null,true)),
-                          true);
-	*/
-	//new:
-	if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
+        
+    // ++++ MediaAttach Hack ++++
+    //old:
+    /*
+    dzk_jsonizeoutput(array('topic'        => $topic,
+                            'confirmation' => $confirmation,
+                            'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
+                                                       array('topic' => $topic_id),null,null,true)),
+                      true);
+    */
+    //new:
+    if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
             dzk_jsonizeoutput(array('topic'        => $topic,
                                     'confirmation' => $confirmation,
                                     'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
-                                                               array('topic' => $topic_id),null,null,true),
+                                                               array('topic' => $topic_id)),
                                     'uploadredirect' => urlencode(pnModURL('Dizkus', 'user', 'viewtopic',
-                                                               array('topic' => $topic_id),null,null,true)),
+                                                               array('topic' => $topic_id))),
                                     'uploadobjectid' => $topic_id,
                                     'uploadauthid' => pnSecGenAuthKey('MediaAttach')),
                               true);
@@ -660,10 +660,10 @@ function Dizkus_ajax_newtopic()
             dzk_jsonizeoutput(array('topic'        => $topic,
                                     'confirmation' => $confirmation,
                                     'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
-                                                               array('topic' => $topic_id),null,null,true)),
+                                                               array('topic' => $topic_id))),
                               true);
         }
-	// ---- MediaAttach Hack ----
+    // ---- MediaAttach Hack ----
     }
 
     // preview == true, create fake topic

@@ -53,7 +53,7 @@ function createnewtopic(event)
         newtopicstatus = true;
         showdizkusinfo(indicatorimage + ' ' + storingPost);
 
-        var pars = 'module=Dizkus&type=ajax&func=newtopic' +
+        var pars = 'module=Dizkus&func=newtopic' +
                    '&forum=' + $F('forum_id') +
                    '&subject=' + encodeURIComponent($F('subject')) +
                    '&message=' + encodeURIComponent($F('message')) +
@@ -118,7 +118,7 @@ function previewnewtopic()
         newtopicstatus = true;
         showdizkusinfo(indicatorimage + ' ' + preparingPreview);
 
-        var pars = "module=Dizkus&type=ajax&func=newtopic" +
+        var pars = "module=Dizkus&func=newtopic" +
                    "&subject=" + encodeURIComponent($F('subject')) +
                    "&message=" + encodeURIComponent($F('message')) +
                    "&attach_signature=" + getcheckboxvalue('attach_signature') +
@@ -171,7 +171,7 @@ function changesortorder()
 {
     if(sortorderstatus == false) {
         sortorderstatus = true;
-        var pars = "module=Dizkus&type=ajax&func=changesortorder&authid=" + $F('authid');
+        var pars = "module=Dizkus&func=changesortorder&authid=" + $F('authid');
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -213,7 +213,7 @@ function topicsubjectedit(topicid)
 {
     if(subjectstatus == false) {
         subjectstatus = true;
-        var pars = "module=Dizkus&type=ajax&func=edittopicsubject&topic=" + topicid;
+        var pars = "module=Dizkus&func=edittopicsubject&topic=" + topicid;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -263,7 +263,7 @@ function topicsubjecteditsave(topicid)
         return;
     }
 
-    var pars = "module=Dizkus&type=ajax&func=updatetopicsubject" +
+    var pars = "module=Dizkus&func=updatetopicsubject" +
                "&topic=" + topicid +
                "&subject=" + encodeURIComponent($F(editID)) +
                "&authid=" + $F(authID);
@@ -321,7 +321,7 @@ function addremovefavorite(forumid, mode)
 {
     if(favoritestatus == false) {
         favoritestatus = true;
-        var pars = "module=Dizkus&type=ajax&func=addremovefavorite&forum=" + forumid + "&mode=" + mode;
+        var pars = "module=Dizkus&func=addremovefavorite&forum=" + forumid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -357,7 +357,7 @@ function subscribeunsubscribeforum(forumid, mode)
 {
     if(subscribeforumstatus == false) {
         subscribeforumstatus = true;
-        var pars = "module=Dizkus&type=ajax&func=subscribeunsubscribeforum&forum=" + forumid + "&mode=" + mode;
+        var pars = "module=Dizkus&func=subscribeunsubscribeforum&forum=" + forumid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -393,7 +393,7 @@ function subscribeunsubscribetopic(topicid, mode)
 {
     if(subscribestatus == false) {
         subscribestatus = true;
-        var pars = "module=Dizkus&type=ajax&func=subscribeunsubscribetopic&topic=" + topicid + "&mode=" + mode;
+        var pars = "module=Dizkus&func=subscribeunsubscribetopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -427,7 +427,7 @@ function stickyunstickytopic(topicid, mode)
 {
     if(stickystatus == false) {
         stickystatus = true;
-        var pars = "module=Dizkus&type=ajax&func=stickyunstickytopic&topic=" + topicid + "&mode=" + mode;
+        var pars = "module=Dizkus&func=stickyunstickytopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -461,7 +461,7 @@ function lockunlocktopic(topicid, mode)
 {
     if(lockstatus == false) {
         lockstatus = true;
-        var pars = "module=Dizkus&type=ajax&func=lockunlocktopic&topic=" + topicid + "&mode=" + mode;
+        var pars = "module=Dizkus&func=lockunlocktopic&topic=" + topicid + "&mode=" + mode;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -496,7 +496,7 @@ function quickEdit(postid)
     if(editstatus == false) {
         editstatus = true;
         editchanged = false;
-        var pars = "module=Dizkus&type=ajax&func=editpost&post=" + postid;
+        var pars = "module=Dizkus&func=editpost&post=" + postid;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -593,7 +593,7 @@ function quickEditsave(postid)
         Element.update(statusID, '<span style="color: red;">' + updatingPost + '</span>');
         deletepost = '';
     }
-    var pars = 'module=Dizkus&type=ajax&func=updatepost' +
+    var pars = 'module=Dizkus&func=updatepost' +
                '&post=' + postid +
                deletepost +
                '&message=' + encodeURIComponent($F(editID)) +
@@ -681,7 +681,7 @@ function createQuote(postid)
     quotetext.strip();
     if(quotetext.length == 0) {
         // read the messages text using ajax
-        var pars = "module=Dizkus&type=ajax&func=preparequote&post=" + postid;
+        var pars = "module=Dizkus&func=preparequote&post=" + postid;
         Ajax.Responders.register(dzk_globalhandlers);
         var myAjax = new Ajax.Request(
             document.location.pnbaseURL+"ajax.php",
@@ -728,7 +728,7 @@ function createQuickReply(event)
         replystatus = true;
         showdizkusinfo(indicatorimage + ' ' + storingReply);
 
-        var pars = 'module=Dizkus&type=ajax&func=reply' +
+        var pars = 'module=Dizkus&func=reply' +
                    '&topic=' + $F('topic') +
                    '&message=' + encodeURIComponent($F('message')) +
                    '&attach_signature=' + getcheckboxvalue('attach_signature') +
@@ -780,7 +780,7 @@ function createQuickReply_response(originalRequest)
     if ($('myuploadframe') && $('btnUpload') && result.uploadauthid) {
         updateAuthid(result.uploadauthid);
         $('btnUpload').click();
-        updateAuthid(result.authid);        
+        updateAuthid(result.authid);
     }
 
     replystatus = false;
@@ -793,7 +793,7 @@ function previewQuickReply()
         replystatus = true;
         showdizkusinfo(indicatorimage + ' ' + preparingPreview);
 
-        var pars = "module=Dizkus&type=ajax&func=reply" +
+        var pars = "module=Dizkus&func=reply" +
                    "&topic=" + $F('topic') +
                    "&message=" + encodeURIComponent($F('message')) +
                    "&attach_signature=" + getcheckboxvalue('attach_signature') +

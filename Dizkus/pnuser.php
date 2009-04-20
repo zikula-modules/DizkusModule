@@ -301,6 +301,7 @@ function Dizkus_user_newtopic($args=array())
                                    'topic_start'=> (empty($subject) && empty($message)),
                                    'attach_signature' => $attach_signature,
                                    'subscribe_topic'  => $subscribe_topic));
+
     if($submit==true && $preview==false) {
         // it's a submitted page
         // Confirm authorisation code
