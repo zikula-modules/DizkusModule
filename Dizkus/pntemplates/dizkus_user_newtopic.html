@@ -2,6 +2,8 @@
 
 <!--[ include file='dizkus_user_header.html' ]-->
 
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false ]-->
+
 <div id="newtopicpreview" style="display: none;">&nbsp;</div>
 
 <!--[ if $preview ]-->
@@ -29,8 +31,9 @@
                         <div>
                             <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]-->:</label>
                             <textarea id="message" name="message"></textarea>
+                            <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><!--[/if]-->
                             <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
-                            <span><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></span>
+                            <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
                             <!--[ /if ]-->
                         </div>
                         <div class="subcolumns">
@@ -48,7 +51,7 @@
                                     </li>
                                     <!--[ /if ]-->
                                     <li id="newtopicbuttons" style="display: none;">
-                                        <button class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->">
+                                        <button id="btnCreateNewTopic" class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->">
                                             <!--[ pnml name='_DZK_SUBMIT' ]-->
                                         </button>
                                         <button class="dzk_img preview" onclick="previewnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_PREVIEW' ]-->">
@@ -95,6 +98,11 @@
         Element.remove($('nonajaxnewtopicpreview'));
     }
     $('newtopicform').action = '';
+
+    var btnCreateNewTopic = $('btnCreateNewTopic');
+    btnCreateNewTopic.observe('click', createnewtopic, false);
+    btnCreateNewTopic.observe('keypress', createnewtopic, false);
+
     // ]]>
 </script>
 

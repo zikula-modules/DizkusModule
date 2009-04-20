@@ -181,6 +181,8 @@ define('_DZK_ALLPNTOPIC', 'alle Topics');
 define('_DZK_AND', 'und');
 define('_DZK_ASSIGN','zuweisen');
 define('_DZK_ATTACHSIGNATURE', 'Signatur anhängen');
+define('_DZK_ATTACHMENTS', 'Anhänge');
+define('_DZK_ATTACHMENTSTITLE', 'Dateianhänge');
 define('_DZK_AUTHOR','Autor');
 define('_DZK_AUTOMATICDISCUSSIONMESSAGE', 'Automatisch erstelltes Thema zur Diskussion von beliebigen Beiträgen');
 define('_DZK_AUTOMATICDISCUSSIONSUBJECT', 'Automatisch erstelltes Thema');

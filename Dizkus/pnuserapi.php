@@ -4709,3 +4709,42 @@ function Dizkus_userapi_get_settings_ignorelist($args)
         return $default;
     }
 }
+
+/**
+ * gettopicreadpermission
+ * determines if the current user has access to topic specified by given topic_id
+ *
+ *@params $args['topic_id'] int the id of testet topic
+ *@returns array of categories with an array of forums in the catgories
+ *
+ */
+function Dizkus_userapi_gettopicreadpermission($args)
+{
+    if(!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
+        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+    }
+
+    $topic_id = $args['topic_id'];
+    unset($args);
+
+    list($dbconn, $pntable) = dzkOpenDB();
+    $cattable = $pntable['dizkus_categories'];
+    $forumstable = $pntable['dizkus_forums'];
+    $topicstable = $pntable['dizkus_topics'];
+
+    $sql = 'SELECT ' . $forumstable . '.cat_id AS cat_id,
+                   ' . $forumstable . '.forum_id AS forum_id
+            FROM ' . $forumstable . ', ' . $topicstable . '
+            WHERE ' . $topicstable . '.topic_id = \'' . pnVarPrepForStore($topic_id) . '\'
+            AND ' . $forumstable . '.forum_id = ' . $topicstable . '.forum_id';
+
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+    $row = $result->GetRowAssoc(false);
+    $cat_id = $row['cat_id'];
+    $forum_id = $row['forum_id'];
+
+    dzkCloseDB($result);
+
+    return allowedtoreadcategoryandforum($cat_id, $forum_id);
+}

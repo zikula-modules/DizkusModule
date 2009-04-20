@@ -92,6 +92,7 @@
     <!--[ if $forum.topics ]-->
 
     <!--[ pnfpager total=$forum.forum_topics ]-->
+    <!--[mediaattach_attachicon topics=$forum.topics assign="uploadtopicids"]-->
 
     <div class="forumbg">
         <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
@@ -113,6 +114,14 @@
                 <!--[ assign var="topicstarted"  value="0" ]-->
 
                 <!--[ foreach item=topic from=$forum.topics ]-->
+
+                <!--[assign var="showattachment" value="0"]-->
+                <!--[ foreach item="hasuploads" key="topicid" from=$uploadtopicids]-->
+                <!--[if $topicid eq $topic.topic_id && $hasuploads eq 1]-->
+                <!--[assign var="showattachment" value="1"]-->
+                <!--[/if]-->
+                <!--[ /foreach ]-->
+
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
@@ -129,6 +138,9 @@
                             <!--[ /if ]-->
                             <!--[ if $topic.hot_topic eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
+                            <!--[ /if ]-->
+                            <!--[ if $showattachment eq 1 ]-->
+                            <!--[ pnimg modname='core' set="icons/extrasmall" src="attach.gif" alt="_DZK_ATTACHMENTS" altml=true title="_DZK_ATTACHMENTSTITLE" titleml=true ]-->
                             <!--[ /if ]-->
                             <!--[ $topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name ]-->
                             <span><!--[ pnml name='_DZK_POSTER' ]-->: <!--[ $topic.pn_uname|userprofilelink ]--></span>

@@ -38,7 +38,7 @@ var dzk_globalhandlers = {
     }
 };
 
-function createnewtopic()
+function createnewtopic(event)
 {
     if(newtopicstatus==false) {
         if($F('subject') == '') {
@@ -71,6 +71,7 @@ function createnewtopic()
                         }
                         );
     }
+    if (event) Event.stop(event);
 }
 
 function createnewtopic_response(originalRequest)
@@ -90,6 +91,15 @@ function createnewtopic_response(originalRequest)
         dzk_showajaxerror(json.error);
         updateAuthid(json.authid);
         return;
+    }
+
+    if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
+        newTopicUpload = true;
+        newTopicRedirect = json.redirect;
+        $('MediaAttach_redirect').value = json.uploadredirect;
+        $('MediaAttach_objectid').value = json.uploadobjectid;
+        updateAuthid(json.uploadauthid);
+        $('btnUpload').click();
     }
 
     if (json.confirmation == false || !$('newtopicconfirmation')) {
@@ -709,7 +719,7 @@ function createQuoteInit(originalRequest)
     Field.focus('message');
 }
 
-function createQuickReply()
+function createQuickReply(event)
 {
     if(replystatus==false) {
         if($F('message') == '') {
@@ -734,6 +744,7 @@ function createQuickReply()
                         }
                         );
     }
+    if (event) Event.stop(event);
 }
 
 function createQuickReply_response(originalRequest)
@@ -765,6 +776,12 @@ function createQuickReply_response(originalRequest)
     $('new_quickreplyposting').id = 'quickreplyposting';
     // enable js options in quickreply
     $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
+
+    if ($('myuploadframe') && $('btnUpload') && result.uploadauthid) {
+        updateAuthid(result.uploadauthid);
+        $('btnUpload').click();
+        updateAuthid(result.authid);        
+    }
 
     replystatus = false;
 

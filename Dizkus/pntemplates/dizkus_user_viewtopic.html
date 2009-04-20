@@ -3,7 +3,7 @@
 <!--[ include file='dizkus_user_header.html' ]-->
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false ]-->
 
-<div class="roundedbar pn-floatbox dzk_topicoptions">
+<div class="roundedbar pn-clearfix dzk_topicoptions">
     <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
         <div id="dzk_javascriptareatopic" class="hidden">
             <ul class="dzk_topicoptions linklist">
@@ -138,6 +138,7 @@
                     <div class="post_text">
                         <div id="dizkusinformation"></div>
                         <textarea class="dzk_textarea_<!--[pnusergetlang]-->" id="message" name="message"></textarea>
+                        <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><!--[/if]-->
                         <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
                         <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
                         <!--[ /if ]-->
@@ -156,7 +157,7 @@
                                     </li>
                                     <!--[ /if ]-->
                                     <li id="quickreplybuttons" class="hidden">
-                                        <button class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->"><!--[ pnml name='_DZK_SUBMIT' ]--></button>
+                                        <button id="btnCreateQuickReply" class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->"><!--[ pnml name='_DZK_SUBMIT' ]--></button>
                                         <button class="dzk_img preview" onclick="previewQuickReply(); return false;" type="submit" title="<!--[ pnml name='_DZK_PREVIEW' ]-->"><!--[ pnml name='_DZK_PREVIEW' ]--></button>
                                         <button class="dzk_img cancel" onclick="clearQuickReply();" type="reset" title="<!--[ pnml name='_DZK_CANCELPOST' ]-->"><!--[ pnml name="_DZK_CANCEL" ]--></button>
                                     </li>
@@ -171,7 +172,6 @@
                             <div class="dzk_col50r">
                                 <!--[ plainbbcode textfieldid='message' ]-->
                                 <!--[ bbsmile textfieldid='message' ]-->
-                                <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><br /><!--[/if]-->
                             </div>
                         </div>
                     </div>
@@ -185,6 +185,10 @@
         <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
+
+<!--[ mediaattach_fileuploads objectid=$topic.topic_id ]-->
+<!--[ if isset($hooks.Ratings)]--><!--[ $hooks.Ratings ]--><!--[/if]-->
+
 <!--[ /if ]-->
 
 <!--[if $topic.forum_mods|@count > 0]-->
@@ -195,10 +199,6 @@
     <!--[ /foreach ]-->
 </ul>
 <!--[/if]-->
-
-<div id="dzk_displayhooks">
-    <!--[if isset($hooks.Ratings)]--><!--[ $hooks.Ratings ]--><!--[/if]-->
-</div>
 
 <script type="text/javascript">
     // <![CDATA[
@@ -230,6 +230,13 @@
             }
         }
     }
+
+    <!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
+    var btnCreateQuickReply = $('btnCreateQuickReply');
+    btnCreateQuickReply.observe('click', createQuickReply, false);
+    btnCreateQuickReply.observe('keypress', createQuickReply, false);
+    <!--[/if]-->
+
     // ]]>
 </script>
 

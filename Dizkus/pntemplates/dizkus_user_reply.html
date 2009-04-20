@@ -28,8 +28,9 @@
                         <div>
                             <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]--></label>:
                             <textarea id="message" name="message"><!--[ $reply.message ]--></textarea>
+                            <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><!--[/if]-->
                             <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
-                            <span><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></span>
+                            <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
                             <!--[ /if ]-->
                         </div>
 
@@ -59,7 +60,6 @@
                                 <!--[ bbsmile textfieldid='message' ]-->
                             </div>
                         </div>
-
                     </div>
                 </fieldset>
             </form>
@@ -68,4 +68,5 @@
         <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
+
 <!--[ include file='dizkus_user_footer.html' ]-->

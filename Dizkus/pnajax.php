@@ -83,9 +83,26 @@ function Dizkus_ajax_reply()
     $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
+    //++++ MediaAttach Hack ++++
+    //old:
+    /*
     dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
                             'post_id' => $post['post_id']),
                       true);
+    */
+    //new:
+    if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
+        dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
+                                'post_id' => $post['post_id'],
+                                'uploadauthid' => pnSecGenAuthKey('MediaAttach')),
+                          true);
+    }
+    else {
+        dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
+                                'post_id' => $post['post_id']),
+                          true);
+    }
+    //---- MediaAttach Hack ----
 }
 
 /**
@@ -617,12 +634,36 @@ function Dizkus_ajax_newtopic()
         } else {
             $confirmation = false;
         }
+
+	// ++++ MediaAttach Hack ++++
+	//old:
+	/*
         dzk_jsonizeoutput(array('topic'        => $topic,
                                 'confirmation' => $confirmation,
                                 'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
                                                            array('topic' => $topic_id),null,null,true)),
                           true);
-
+	*/
+	//new:
+	if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
+            dzk_jsonizeoutput(array('topic'        => $topic,
+                                    'confirmation' => $confirmation,
+                                    'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
+                                                               array('topic' => $topic_id),null,null,true),
+                                    'uploadredirect' => urlencode(pnModURL('Dizkus', 'user', 'viewtopic',
+                                                               array('topic' => $topic_id),null,null,true)),
+                                    'uploadobjectid' => $topic_id,
+                                    'uploadauthid' => pnSecGenAuthKey('MediaAttach')),
+                              true);
+        }
+        else {
+            dzk_jsonizeoutput(array('topic'        => $topic,
+                                    'confirmation' => $confirmation,
+                                    'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
+                                                               array('topic' => $topic_id),null,null,true)),
+                              true);
+        }
+	// ---- MediaAttach Hack ----
     }
 
     // preview == true, create fake topic
