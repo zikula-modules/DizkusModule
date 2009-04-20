@@ -12,61 +12,25 @@
 Loader::includeOnce('modules/Dizkus/common.php');
 
 /*
- * param: objectid
- */
+* param: objectid
+*/
 
 function Dizkus_commentsapi_News($args)
 {
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = dzkOpenDB();
-    $pnstoriestable = $pntable['stories'];
-    $pnstoriescolumn = $pntable['stories_column'];
-    $pntopicstable = $pntable['topics'];
-    $pntopicscolumn = $pntable['topics_column'];
-
-    $sql = "SELECT $pnstoriescolumn[bodytext],
-                   $pnstoriescolumn[hometext],
-                   $pnstoriescolumn[notes],
-                   $pnstoriescolumn[title],
-                   $pnstoriescolumn[topic],
-                   $pnstoriescolumn[aid],
-                   $pnstoriescolumn[format_type],
-                   $pntopicscolumn[topicname]
-            FROM   $pnstoriestable
-            LEFT JOIN $pntopicstable ON $pnstoriescolumn[topic]=$pntopicscolumn[topicid]
-            WHERE $pnstoriescolumn[sid] ='" . DataUtil::formatForStore($objectid) . "'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    //echo $sql;
-    //exit;
-
-    if(!$result->EOF) {
-        list($bodytext,
-             $hometext,
-             $notes,
-             $title,
-             $topic,
-             $authorid,
-             $format_type,
-             $topicname) = $result->fields;
-        dzkCloseDB($result);
-    } else {
-        return false;
-    }
-
-    // workaround for bug in AddStories html fixed on 11-05-2005
-    $authorid = (int)$authorid;
-
-    $link  = pnGetBaseURL() . 'index.php?name=News&file=article&sid=' . $objectid;
-    $title = ($topicname<>'' ? $topicname.' - '.$title : $title);
+    $news = pnModApiFunc('News', 'user', 'get', array('objectid' => $objectid));
+    $link = pnGetBaseURL() . pnModURL('News', 'user', 'display', array('sid' => $objectid));
+    $lang = pnUserGetLang();
 
     if(pnModIsHooked('bbcode', 'Dizkus')) {
-        $notes = '[i]' . $notes . '[/i]';
-        $link  = '[url=' . $link . ']' . _DZK_BACKTOSUBMISSION . '[/url]';
+        $notes = '[i]' . $news['notes'] . '[/i]';
+        $link = '[url]' .$link. '[/url]';
     }
 
-    $totaltext = $hometext . "\n\n" . $bodytext . "\n\n" . $notes . "\n\n" . $link . "\n\n";
+    $topic = $news['__CATEGORIES__']['Main']['display_name'][$lang];
+    $totaltext = $news['hometext'] . "\n\n" . $news['bodytext'] . "\n\n" . $news['notes'] . "\n\n" . $link . "\n\n";
 
-    return array($title, $totaltext , $topic, $authorid);
+    return array($news['title'], $totaltext , $topic, $news['cr_uid']);
 }
