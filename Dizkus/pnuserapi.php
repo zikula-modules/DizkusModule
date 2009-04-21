@@ -4514,7 +4514,7 @@ function Dizkus_userapi_notify_moderator($args)
             . strip_tags($post['post_text']) . " \n"
             . "---------------------------------------------------------------------\n\n"
             . _DZK_NOTIFYMODBODY3 . ":\n"
-            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
+            . pnGetBaseURL() . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
             . "\n";
     if(count($recipients)>0) {
         foreach($recipients as $recipient) {

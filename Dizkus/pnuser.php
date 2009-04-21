@@ -1195,17 +1195,24 @@ function Dizkus_user_report($args)
 
     // get the input
     $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    $comment        = FormUtil::getPassedValue('comment', (isset($args['comment'])) ? $args['comment'] : '', 'GETPOST');
+    $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $comment  = FormUtil::getPassedValue('comment', (isset($args['comment'])) ? $args['comment'] : '', 'GETPOST');
 
     $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                          array('post_id' => $post_id));
 
+    
+    if (SecurityUtil::confirmAuthKey()) {
+        $authkeycheck = true;
+    } else {
+        $authkeycheck = false;
+    }
+
     // some spam checks:
     // - remove html and compare with original comment
-    // - use censor and compare with original omment
-    // if only one of this comparisons fails -> trash it, its spam.
-    if(!pnUserLoggedIn() && SecurityUtil::confirmAuthKey()) {
+    // - use censor and compare with original comment
+    // if only one of this comparisons fails -> trash it, it is spam.
+    if(!pnUserLoggedIn() && $authkeycheck == true ) {
         if((strip_tags($comment) <> $comment) ||
            (pnVarCensor($comment) <> $comment)) {
             // possibly spam, stop now
@@ -1222,7 +1229,7 @@ function Dizkus_user_report($args)
         $pnr->assign('post', $post);
         return $pnr->fetch('dizkus_user_notifymod.html');
     } else {   // submit is set
-        if (!SecurityUtil::confirmAuthKey()) {
+        if ($authkeycheck == false) {
             return LogUtil::registerAuthidError();
         }
         pnModAPIFunc('Dizkus', 'user', 'notify_moderator',

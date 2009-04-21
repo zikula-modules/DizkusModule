@@ -344,8 +344,6 @@ function addremovefavorite_response(originalRequest)
     var result = dejsonize(originalRequest.responseText);
 
     if(['added', 'removed'].include(result.newmode)) {
-        //Element.toggle('addfavoritebutton_'  + result.forum_id);
-        //Element.toggle('removefavoritebutton_'  + result.forum_id);
         $('addfavoritebutton_'  + result.forum_id).toggleClassName('hidden');
         $('removefavoritebutton_'  + result.forum_id).toggleClassName('hidden');
     } else {
@@ -382,8 +380,6 @@ function subscribeunsubscribeforum_response(originalRequest)
     if(['subscribed', 'unsubscribed'].include(result.newmode)) {
         $('subscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');
         $('unsubscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');        
-        //Element.toggle('subscribeforumbutton_'  + result.forum_id);
-        //Element.toggle('unsubscribeforumbutton_' + result.forum_id);
     } else {
          alert('wrong result from subscribe/unsubscribe');
     }

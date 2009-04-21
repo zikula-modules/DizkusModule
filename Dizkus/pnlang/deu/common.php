@@ -397,7 +397,7 @@ define('_DZK_NOTIFYMODBODY1', 'Moderationsanfrage');
 define('_DZK_NOTIFYMODBODY2', 'Kommentar');
 define('_DZK_NOTIFYMODBODY3', 'Link zum Thema');
 define('_DZK_NOTIFYMODERATOR', 'melden');
-define('_DZK_NOTIFYMODERATOR_INFO', 'Der gewählte Beitrag wird einem Moderator gemeldet.<br />Wichtige Gründe für eine Meldung sind z.B.<br /><dl><dd>Copryrightverletzungen</dd><dd>persönliche Beleidigungen</dd><dd>etc.</dd></dl>aber nicht <dl><dd>Rechtschreibfehler</dd><dd>andere Meinung zum Thema</dd><dd>etc.</dd></dl><br /><br />Kommentar:');
+define('_DZK_NOTIFYMODERATOR_INFO', 'Der gewählte Beitrag wird einem Moderator gemeldet.<br />Wichtige Gründe für eine Meldung sind z.B.<br /> <dl><dd>Copyrightverletzungen</dd><dd>persönliche Beleidigungen</dd><dd>etc.</dd></dl> aber nicht <dl><dd>Rechtschreibfehler</dd><dd>andere Meinung zum Thema</dd><dd>etc.</dd></dl><br /><br />Kommentar:');
 define('_DZK_NOTIFYMODERATOR_TITLE', 'Ein Beitrag einem Moderator melden');
 define('_DZK_NOTOPICS','noch keine Themen im Forum');
 define('_DZK_NOTOPICSUBSCRIPTIONSFOUND', 'Keine Themenabos gefunden');
