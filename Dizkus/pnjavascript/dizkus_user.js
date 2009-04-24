@@ -533,7 +533,10 @@ function quickEditInit(originalRequest)
     $('bbcode_'+postingtextID+'_edit').removeClassName('hidden');
     $$('.bbsmile_smilies').each(function(el) {
         el.removeClassName('bbsmile_smilies');
-    });    
+    });
+    if($('smiliemodal')) {
+        new Control.Modal($('smiliemodal'), {});
+    }
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
     Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);

@@ -122,7 +122,7 @@
         <div class="<!--[ $configclass ]-->row">
             <label for="mode"><!--[ pnml name="_DZK_ACTIONS"]-->:</label>
             <select name="mode" id="mode" size="1">
-                <option value=""><< <!--[ pnml name='_DZK_SELECTACTION' ]--> >></option>
+                <option value="">&lt;&lt; <!--[ pnml name='_DZK_SELECTACTION' ]--> &gt;&gt;</option>
                 <option value="sticky"><!--[ pnml name='_DZK_STICKYTOPICS' ]--></option>
                 <option value="unsticky"><!--[ pnml name='_DZK_UNSTICKYTOPICS' ]--></option>
                 <option value="lock"><!--[ pnml name='_DZK_LOCKTOPICS' ]--></option>
@@ -135,7 +135,7 @@
         <div class="<!--[ $configclass ]-->row">
             <label for="moveto"><!--[ pnml name='_DZK_MODERATE_MOVETOPICS_HINT' ]-->:</label>
             <select name="moveto" id="moveto">
-                <option value=''><< <!--[ pnml name='_DZK_SELECTTARGETFORUM' ]--> >></option>
+                <option value=''>&lt;&lt; <!--[ pnml name='_DZK_SELECTTARGETFORUM' ]--> &gt;&gt;</option>
                 <!--[ foreach item=singleforum from=$forums ]-->
                 <option value="<!--[ $singleforum.forum_id ]-->"><!--[ $singleforum.cat_title ]-->&nbsp;::&nbsp;<!--[ $singleforum.forum_name ]--></option>
                 <!--[ /foreach ]-->
@@ -149,7 +149,7 @@
             <label for="jointotopic"><!--[ pnml name='_DZK_MODERATE_JOINTOPICS_HINT' ]-->:</label>
             <span id="jointotopic">
                 <select name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
-                    <option value=''><< <!--[ pnml name='_DZK_SELECTTARGETTOPIC' ]--> >></option>
+                    <option value=''>&lt;&lt; <!--[ pnml name='_DZK_SELECTTARGETTOPIC' ]--> &gt;&gt;</option>
                     <!--[ foreach item=topic from=$forum.topics ]-->
                     <option value="<!--[ $topic.topic_id ]-->"><!--[ $topic.topic_title|pnvarprepfordisplay ]--></option>
                     <!--[ /foreach ]-->

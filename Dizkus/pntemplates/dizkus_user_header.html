@@ -22,7 +22,7 @@
 
 <div id="dizkus" class="pn-floatbox">
 
-    <a id="top" name="top" accesskey="t"></a>
+    <a id="top" accesskey="t"></a>
 
     <!--[ if $pncore.Dizkus.forum_enabled neq 'no' ]-->
     <div class="navbar pn-floatbox">
@@ -114,9 +114,9 @@
     <h2>
         <a href='<!--[ pnmodurl modname='Dizkus' func=viewforum forum=$topic.forum_id|pnvarprepfordisplay ]-->'><!--[ $topic.forum_name|pnvarprepfordisplay ]--></a>
         <!--[ pnml name='_DZK_SEPARATOR' html=1 ]-->
-        <div class="editabletopicheader" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_DZK_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
+        <span class="editabletopicheader" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_DZK_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
             <span id="topicsubject_<!--[ $topic.topic_id ]-->_content"><!--[ $topic.topic_title|pnvarprepfordisplay|pnvarcensor ]--></span>
-        </div>
+        </span>
         <a title="<!--[ pnml name='_DZK_BOTTOM' ]-->" href="#bottom">&nbsp;<!--[ pnimg modname='Dizkus' src="icon_bottom.gif" alt="_DZK_TOP" altml=true ]--></a>
     </h2>
 <!--[/if]-->
