@@ -167,37 +167,84 @@ function Dizkus_userapi_boardstats($args)
 {
     $id   = isset($args['id']) ? $args['id'] : null;
     $type = isset($args['type']) ? $args['type'] : null;
+   
+    static $cache = array();
 
     switch($type) {
         case 'all':
         case 'allposts':
-            $total = DBUtil::selectObjectCount('dizkus_posts');
+            if(!isset($cache[$type]))
+            {
+               $cache[$type] = DBUtil::selectObjectCount('dizkus_posts');
+            }
+            
+            return $cache[$type];
             break;
         case 'category':
-            $total = DBUtil::selectObjectCount('dizkus_categories');
+            if(!isset($cache[$type]))
+            {
+               $cache[$type] = DBUtil::selectObjectCount('dizkus_categories');
+            }
+            
+            return  $cache[$type];
             break;
         case 'forum':
-            $total = DBUtil::selectObjectCount('dizkus_forums');
+            if(!isset($cache[$type]))
+            {
+               $cache[$type] = DBUtil::selectObjectCount('dizkus_forums');
+            }
+            
+            return $cache[$type];
             break;
         case 'topic':
-            $total = DBUtil::selectObjectCount('dizkus_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
+            if(!isset($cache[$type][$id]))
+            {
+               $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
+            }
+            
+            return  $cache[$type][$id];
             break;
         case 'forumposts':
-            $total = DBUtil::selectObjectCount('dizkus_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+            if(!isset($cache[$type][$id]))
+            {
+               $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+            }
+            
+            return  $cache[$type][$id];
             break;
         case 'forumtopics':
-            $total = DBUtil::selectObjectCount('dizkus_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+            if(!isset($cache[$type][$id]))
+            {
+               $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+            }
+            
+            return  $cache[$type][$id];
             break;
         case 'alltopics':
-            $total = DBUtil::selectObjectCount('dizkus_topics');
+            if(!isset($cache[$type]))
+            {
+               $cache[$type] = DBUtil::selectObjectCount('dizkus_topics');
+            }
+            
+            return  $cache[$type];
             break;
         case 'allmembers':
-            $total = DBUtil::selectObjectCount('dizkus_users');
+            if(!isset($cache[$type]))
+            {
+               $cache[$type] = DBUtil::selectObjectCount('dizkus_users');
+            }
+            
+            return  $cache[$type];
             break;
         case 'lastmember':
         case 'lastuser':
-            $res = DBUtil::selectObjectArray('users', null, 'uid DESC', 1, 1);
-            $total = $res[0]['uname'];
+            if(!isset($cache[$type]))
+            {
+                $res = DBUtil::selectObjectArray('users', null, 'uid DESC', 1, 1);
+                $cache[$type] = $res[0]['uname'];
+            }
+            
+            return  $cache[$type];
             break;
         default:
             return showforumerror(_MODARGSERROR . ' in Dizkus_userapi_boardstats()', __FILE__, __LINE__);
@@ -1422,12 +1469,19 @@ function Dizkus_userapi_get_topic_subscription_status($args)
  */
 function Dizkus_userapi_get_forum_subscription_status($args)
 {
-    $pntables = pnDBGetTables();
-    $subcolumn = $pntables['dizkus_subscription_column'];
+    static $cache = array();
     
-    $where = ' WHERE ' . $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
-             ' AND '   . $subcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
-    $count = DBUtil::selectObjectCount('dizkus_subscription', $where);
+    if (!isset($cache[$args['userid']]))
+    {
+        $pntables = pnDBGetTables();
+        $subcolumn = $pntables['dizkus_subscription_column'];
+
+        $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
+        $cache[$args['userid']] = DBUtil::selectFieldMaxArray ('dizkus_subscription', 'msg_id', 'COUNT', $where, 'forum_id');
+    }
+
+    $count = $cache[$args['userid']][$args['forum_id']];
+
     return $count>0;
 }
 
@@ -1440,12 +1494,19 @@ function Dizkus_userapi_get_forum_subscription_status($args)
  */
 function Dizkus_userapi_get_forum_favorites_status($args)
 {
-    $pntables = pnDBGetTables();
-    $favcolumn = $pntables['dizkus_forum_favorites_column'];
+    static $cache = array();
     
-    $where = ' WHERE ' . $favcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
-             ' AND '   . $favcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
-    $count = DBUtil::selectObjectCount('dizkus_forum_favorites', $where);
+    if (!isset($cache[$args['userid']]))
+    {
+        $pntables = pnDBGetTables();
+        $subcolumn = $pntables['dizkus_subscription_column'];
+
+        $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
+        $cache[$args['userid']] = DBUtil::selectFieldMaxArray ('dizkus_forum_favorites', 'forum_id', 'COUNT', $where, 'forum_id');
+    }
+
+    $count = $cache[$args['userid']][$args['forum_id']];
+
     return $count>0;
 }
 
