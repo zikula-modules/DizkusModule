@@ -5,7 +5,7 @@ Mail2Forum
 ----------
 
 Mail2forum erlaubt es, Mailinglisten in ein Forum zu spiegeln. Dazu verbindet
-sich Dizkus mit einem Scriupt, das üblicherweise per Cron aufgerufen wird, zu
+sich Dizkus mit einem Script, das üblicherweise per Cron aufgerufen wird, zu
 einem POP3-Server, holt die Mails und speichert sie unter einem beliebigen User-
 account ins Forum
 

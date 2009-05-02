@@ -79,6 +79,7 @@ div#editpostoptions ul li {
 
 /* links */
 
+#dizkus a.dzk_notextdecoration,
 #dizkus .navbar a,
 #dizkus .roundedbar a,
 #dizkus .forumbg a,
@@ -112,8 +113,10 @@ div#editpostoptions ul li {
     display: inline;
 }
 #dizkus h3.footer_title {
+    border;none;
     border-bottom:1px solid #CCCCCC;
     clear:both;
+    color:inherit;
     font-size:1.05em;
     font-weight:bold;
     margin:1em 0 0.5em;
@@ -512,6 +515,8 @@ div#editpostoptions ul li {
     list-style: none;
 }
 #dizkus .forum_post .postbody {
+    background: inherit;
+    border: none;
     padding: 0;
     color: #333333;
     float: right;

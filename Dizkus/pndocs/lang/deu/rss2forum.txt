@@ -15,14 +15,14 @@ Basiskonfiguration: Hier kann RSS2Forum global ein- und ausgeschaltet werden.
 Vorbereitungen
 --------------
 
-Das RSS Modul muss installiert und aktiviert sein und die RSS Feeds müssen dort
+Das Feeds-Modul muss installiert und aktiviert sein und die RSS Feeds müssen dort
 angelegt sein.
 Alle hier definierten Quellen erscheinen nachher in der Forenkonfiguration zur Auswahl.
 
 Einstellungen pro Forum:
 ------------------------
 
-Externe Quelle: Hier kann Mail2Forum oderRSS2Forum ausgewählt werden. Die weitere
+Externe Quelle: Hier kann Mail2Forum oder RSS2Forum ausgewählt werden. Die weitere
 Konfiguration erscheint nach dem Speichern.
 
 PN Username:

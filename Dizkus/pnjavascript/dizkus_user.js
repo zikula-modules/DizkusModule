@@ -54,7 +54,7 @@ function createnewtopic(event)
         showdizkusinfo(indicatorimage + ' ' + storingPost);
 
         var pars = 'module=Dizkus&func=newtopic' +
-                   '&forum=' + $F('forum_id') +
+                   '&forum=' + $F('forum') +
                    '&subject=' + encodeURIComponent($F('subject')) +
                    '&message=' + encodeURIComponent($F('message')) +
                    '&attach_signature=' + getcheckboxvalue('attach_signature') +
