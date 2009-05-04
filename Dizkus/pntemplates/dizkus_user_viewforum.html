@@ -189,7 +189,7 @@
 </ul>
 <!--[ /if ]-->
 
-
+<!--[ if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in ]-->
 <script type="text/javascript">
     // <![CDATA[
     Event.observe(window, 'load', init_viewforum);
@@ -200,5 +200,6 @@
     }
     // ]]>
 </script>
+<!--[ /if ]-->
 
 <!--[ include file='dizkus_user_footer.html' ]-->
