@@ -28,14 +28,14 @@
                     <li><strong><!--[ pnml name='_DZK_LAST_SEEN' ]-->: </strong><!--[ $post.poster_data.user_lastvisit|pnfdate_format:"%d.%m.%y"  ]--></li>
                     <!--[ /if ]-->
                     <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $post.poster_data.user_posts ]--></li>
+                    <!--[ if $pncore.logged_in eq true]-->
                     <li>
-                        <!--[ if $pncore.logged_in eq true]-->
                         <a href="<!--[ pnmodurl modname="InterCom" type="user" func="newpm" uid=$post.poster_data.uid ]-->"><!--[pnimg modname='Dizkus' src='icon_post_pm.gif' alt='']--></a>
-                        <!--[/if]-->
                         <!--[ if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true ]-->
                         <a title="<!--[ pnml name='_DZK_VIEWIP' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id ]-->"><!--[pnimg modname='Dizkus' src='icon_post_ip.gif' alt='_DZK_VIEWIP']--></a>
                         <!--[ /if ]-->
                     </li>
+                    <!--[/if]-->
                 </ul>
             </div>
 
