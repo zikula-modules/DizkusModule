@@ -4,6 +4,14 @@
  *
  */
 
+
+Event.observe(window, 'load', function() {
+  $$('.dzk_texpand').each(function(el){
+    new Texpand(el, {autoShrink: false});
+  });
+});
+
+
 var editstatus = false;
 var replystatus = false;
 var editchanged = false;
@@ -537,6 +545,10 @@ function quickEditInit(originalRequest)
     if($('smiliemodal')) {
         new Control.Modal($('smiliemodal'), {});
     }
+
+    $$('.dzk_texpand').each(function(el){
+      new Texpand(el, {autoShrink: false});
+    });
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
     Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);
