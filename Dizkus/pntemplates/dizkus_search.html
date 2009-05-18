@@ -18,8 +18,8 @@
         <dd>
             <select name="Dizkus_forum[]" id="Dizkus_forum" size="5" multiple="multiple">
                 <option value="-1" selected="selected"><!--[ pnml name='_DZK_SEARCHALLFORUMS' ]--></option>
-                <!--[ foreach item=forum from=$forums ]-->
-                <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
+                <!--[ foreach item='forum' from=$forums ]-->
+                <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--> <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
                 <!--[ /foreach ]-->
             </select>
         </dd>
@@ -36,4 +36,3 @@
     </dl>
 
 </div>
-

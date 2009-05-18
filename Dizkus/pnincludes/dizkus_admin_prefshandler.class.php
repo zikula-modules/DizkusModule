@@ -36,7 +36,7 @@ class dizkus_admin_prefshandler
         $modvars = pnModGetVar('Dizkus');
         $pnRender->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
         $pnRender->assign('slimforum_checked', $modvars['slimforum'] == 'yes' ? 1 : 0);
-        $pnRender->assign('autosubscribe_checked', $modvars['autosubscribe'] == 'yes' ? 1 : 0);
+        $pnRender->assign('autosubscribe_checked', isset($modvars['autosubscribe']) && $modvars['autosubscribe'] == 'yes' ? 1 : 0);
         $pnRender->assign('m2f_enabled_checked', $modvars['m2f_enabled'] == 'yes' ? 1 : 0);
         $pnRender->assign('rss2f_enabled_checked', $modvars['rss2f_enabled'] == 'yes' ? 1 : 0);
         $pnRender->assign('favorites_enabled_checked', $modvars['favorites_enabled'] == 'yes' ? 1 : 0);
@@ -45,7 +45,7 @@ class dizkus_admin_prefshandler
         $pnRender->assign('removesignature_checked', $modvars['removesignature'] == 'yes' ? 1 : 0);
         $pnRender->assign('ignorelist_handling', $modvars['ignorelist_handling'] == 'yes' ? 1 : 0);
         $pnRender->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
-        $pnRender->assign('newtopicconfirmation_checked', $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
+        $pnRender->assign('newtopicconfirmation_checked', isset($modvars['newtopicconfirmation']) && $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
         $pnRender->assign('forum_enabled_checked', $modvars['forum_enabled'] == 'yes' ? 1 : 0);
         $pnRender->assign('sendemailswithsqlerrors_checked', $modvars['sendemailswithsqlerrors'] == 'yes' ? 1 : 0);
         $pnRender->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
@@ -73,12 +73,13 @@ class dizkus_admin_prefshandler
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError('index.php');
-        }  
+        }
+
         if ($args['commandName'] == 'submit') {
             $ok = $pnRender->pnFormIsValid(); 
             $data = $pnRender->pnFormGetValues();
 
-            if(!$ok) {
+            if (!$ok) {
                 return false;
             }
 
@@ -103,7 +104,9 @@ class dizkus_admin_prefshandler
             // dropdowns
             pnModSetVar('Dizkus', 'post_sort_order',     $data['post_sort_order']);
             pnModSetVar('Dizkus', 'deletehookaction',    $data['deletehookaction']);
-            pnModSetVar('Dizkus', 'ignorelist_handling', $data['ignorelist_handling']);
+            if (pnModAvailable('ContactList')) {
+                pnModSetVar('Dizkus', 'ignorelist_handling', $data['ignorelist_handling']);
+            }
 
             // ints
             pnModSetVar('Dizkus', 'hot_threshold',      $data['hot_threshold']);
@@ -122,6 +125,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
 
             LogUtil::registerStatus(_DZK_CONFIGCHANGED);
+
         } elseif ($args['commandName'] == 'restore') {
             // checkboxes 
             pnModSetVar('Dizkus', 'log_ip',                  'no');
@@ -149,8 +153,8 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'posts_per_page',     15);
             pnModSetVar('Dizkus', 'topics_per_page',    15);
             pnModSetVar('Dizkus', 'timespanforchanges', 24);
-            pnModSetVar('Dizkus', 'minsearchlength', 3);
-            pnModSetVar('Dizkus', 'maxsearchlength', 30);
+            pnModSetVar('Dizkus', 'minsearchlength',    3);
+            pnModSetVar('Dizkus', 'maxsearchlength',    30);
 
             // strings
             pnModSetVar('Dizkus', 'email_from',          pnConfigGetVar('adminmail'));

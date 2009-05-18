@@ -1,7 +1,7 @@
 <!--[*  $Id$  *]-->
+<!--[ pnmodcallhooks hookobject='item' hookaction='display' hookid=$topic.topic_id implode=false ]-->
 
 <!--[ include file='dizkus_user_header.html' ]-->
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$topic.topic_id implode=false ]-->
 
 <div class="roundedbar pn-clearfix dzk_topicoptions">
     <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
@@ -108,11 +108,11 @@
 
 <div id="dzk_postinglist">
     <ul class="pn-clearfix">
-        <!--[ counter start=0 print=false assign=post_counter]-->
-        <!--[ foreach key=num item=post from=$topic.posts ]-->
+        <!--[ counter start=0 print=false assign='post_counter']-->
+        <!--[ foreach key='num' item='post' from=$topic.posts ]-->
         <!--[ counter ]-->
         <li class="post_<!--[$post.post_id]-->">
-            <!--[ include file="dizkus_user_singlepost.html" ]-->
+            <!--[ include file='dizkus_user_singlepost.html' ]-->
         </li>
         <!--[ /foreach ]-->
         <li id="quickreplyposting" class="hidden">&nbsp;</li>
@@ -189,7 +189,9 @@
 </div>
 
 <!--[ mediaattach_fileuploads objectid=$topic.topic_id ]-->
+<div id="dzk_displayhooks">
 <!--[ if isset($hooks.Ratings)]--><!--[ $hooks.Ratings ]--><!--[/if]-->
+</div>
 
 <!--[ /if ]-->
 
@@ -204,13 +206,13 @@
 
 <script type="text/javascript">
     // <![CDATA[
-    var storingReply = '<!--[ pnml name='_DZK_STORINGREPLY' ]-->';
-    var preparingPreview = '<!--[ pnml name='_DZK_PREPARINGPREVIEW' ]-->';
-    var storingPost = '<!--[ pnml name='_DZK_STORINGPOST' ]-->';
-    var deletingPost = '<!--[ pnml name='_DZK_DELETINGPOST' ]-->';
-    var updatingPost = '<!--[ pnml name='_DZK_UPDATINGPOST' ]-->';
-    var statusNotChanged = '<!--[ pnml name='_DZK_STATUS_NOTCHANGED' ]-->';
-    var statusChanged = '<!--[ pnml name='_DZK_STATUS_CHANGED' ]-->';
+    var storingReply = "<!--[ pnml name='_DZK_STORINGREPLY' ]-->";
+    var preparingPreview = "<!--[ pnml name='_DZK_PREPARINGPREVIEW' ]-->";
+    var storingPost = "<!--[ pnml name='_DZK_STORINGPOST' ]-->";
+    var deletingPost = "<!--[ pnml name='_DZK_DELETINGPOST' ]-->";
+    var updatingPost = "<!--[ pnml name='_DZK_UPDATINGPOST' ]-->";
+    var statusNotChanged = "<!--[ pnml name='_DZK_STATUS_NOTCHANGED' ]-->";
+    var statusChanged = "<!--[ pnml name='_DZK_STATUS_CHANGED' ]-->";
 
     Event.observe(window, 'load', init_topicview);
     function init_topicview()

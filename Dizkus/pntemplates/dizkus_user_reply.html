@@ -1,13 +1,14 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_REPLY_POST' assign=templatetitle]-->
-<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ pnml name='_DZK_REPLY_POST' assign='templatetitle']-->
+<!--[ pnpagesetvar name='title' value=$templatetitle ]-->
+
 <!--[ include file='dizkus_user_header.html' ]-->
 
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false ]-->
 
-<!--[ if $preview ]-->
+<!--[ if $preview|default:false ]-->
 <div id="replypreview" style="margin:1em 0;">
-    <!--[ include file="dizkus_user_replypreview.html" ]-->
+    <!--[ include file='dizkus_user_replypreview.html' ]-->
 </div>
 <!--[ /if ]-->
 

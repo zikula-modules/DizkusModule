@@ -4,7 +4,7 @@
 * phpBB3's prosilver theme adapted for Dizkus
 *
 * @author Giacomo Gatelli [arthens]
-* @author Mateo Tibaquirá [nestormateo]
+* @author Mateo Tibaquirï¿½ [nestormateo]
 * @author Carsten Volmer [herr.vorragend]
 *
 /*******************************************************************************/
@@ -280,6 +280,16 @@ div#editpostoptions ul li {
 }
 
 /* topics list screen */
+
+#dizkus .dzk_empty,
+#dizkus .dzk_message strong {
+    padding: 0.75em;
+    text-align: center;
+}
+#dizkus .dzk_message strong {
+    color: #fff;
+    display: block;
+}
 
 #dizkus ul.topiclist {
     display: block;
@@ -574,7 +584,8 @@ div#editpostoptions ul li {
 #dizkus #dzk_quickreply .post_header,
 #dizkus #dzk_newtopic .post_header,
 #dizkus .ajaxeditpoststatusbox {
-    padding: 5px 10px;
+    font-size: 110%;
+    padding: 5px 0px;
 }
 #dizkus #dzk_quickreply .post_text_wrap textarea,
 #dizkus #dzk_newtopic .post_text_wrap textarea,
@@ -819,16 +830,16 @@ dl.icon {
     overflow:hidden;
 }
 #dizkus_admin .catline {
-    border:1px solid #444;
-    margin:1em 0;
-    padding:0.2em;
-    overflow:hidden;
+    border: 1px solid #aaa;
+    margin: 1em 0;
+    padding: 0.5em;
+    overflow: hidden;
 }
 #dizkus_admin .forumline {
-    border:1px solid #999;
-    margin:0.5em;
-    padding:0.2em;
-    overflow:hidden;
+    border: 1px solid #999;
+    margin: 0.5em 0;
+    padding: 0.4em;
+    overflow: hidden;
 }
 #dzk_adminfooter {
     margin: 1em 0;

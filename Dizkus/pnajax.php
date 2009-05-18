@@ -17,7 +17,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_ajax_reply()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
@@ -29,46 +29,49 @@ function Dizkus_ajax_reply()
     $preview          = ($preview=='1') ? true : false;
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    
+
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
 
 	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-	$topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
+	$topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
+	$topic['start'] = 0;
 	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
 	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
 		dzk_ajaxerror(_DZK_IGNORELISTNOREPLY);
 	}
 
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
+    if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
         dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
     }
 
-    if($preview==false) {
-        if (!pnSecConfirmAuthKey()) {
+    if ($preview == false) {
+        if (!SecurityUtil::confirmAuthKey()) {
            dzk_ajaxerror(_BADAUTHKEY);
         }
 
         list($start,
-             $post_id ) = pnModAPIFunc('Dizkus', 'user', 'storereply',
+             $post_id) = pnModAPIFunc('Dizkus', 'user', 'storereply',
                                        array('topic_id'         => $topic_id,
                                              'message'          => $message,
                                              'attach_signature' => $attach_signature,
                                              'subscribe_topic'  => $subscribe_topic));
 
+        $topic['start'] = $start;
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id' => $post_id));
+
     } else {
         // preview == true, create fake post
-        $post['post_id']      = 0;
-        $post['topic_id']     = $topic_id;
-        $post['poster_data'] = pnModAPIFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
+        $post['post_id']         = 0;
+        $post['topic_id']        = $topic_id;
+        $post['poster_data']     = pnModAPIFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => pnUserGetVar('uid')));
         // create unix timestamp
-        $post['post_unixtime'] = time();
+        $post['post_unixtime']   = time();
         $post['posted_unixtime'] = $post['post_unixtime'];
 
         $post['post_textdisplay'] = phpbb_br2nl($message);
-        if($attach_signature == 1) {
+        if ($attach_signature == 1) {
             $post['post_textdisplay'] .= '[addsig]';
             $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
         }
@@ -77,12 +80,13 @@ function Dizkus_ajax_reply()
         $post['post_textdisplay'] =dzkVarPrepHTMLDisplay($post['post_textdisplay']);
 
         $post['post_text'] = $post['post_textdisplay'];
-
     }
 
     $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr->assign('topic', $topic);
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
+
     //++++ MediaAttach Hack ++++
     //old:
     /*
@@ -111,14 +115,15 @@ function Dizkus_ajax_reply()
  */
 function Dizkus_ajax_preparequote()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if(!empty($post_id)) {
+    if (!empty($post_id)) {
         $post = pnModAPIFunc('Dizkus', 'user', 'preparereply',
                              array('post_id'     => $post_id,
                                    'quote'       => true,
@@ -134,17 +139,18 @@ function Dizkus_ajax_preparequote()
  */
 function Dizkus_ajax_readpost()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if(!empty($post_id)) {
+    if (!empty($post_id)) {
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id'     => $post_id));
-        if($post['poster_data']['edit'] == true) {
+        if ($post['poster_data']['edit'] == true) {
             dzk_jsonizeoutput($post, false);
         } else {
             dzk_ajaxerror(_DZK_NOAUTH);
@@ -159,25 +165,27 @@ function Dizkus_ajax_readpost()
  */
 function Dizkus_ajax_editpost()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if(!empty($post_id)) {
+    if (!empty($post_id)) {
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id'     => $post_id));
-        if($post['poster_data']['edit'] == true) {
+        if ($post['poster_data']['edit'] == true) {
             $pnr = pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('post', $post);
             // simplify our live
             $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
 
-            dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_ajax_editpost.html'),
-                                    'post_id' => $post['post_id']),
-                                    true);
+            SessionUtil::delVar('pn_ajax_call');
+
+            return array('data'    => $pnr->fetch('dizkus_ajax_editpost.html'),
+                         'post_id' => $post['post_id']);
         } else {
             dzk_ajaxerror(_DZK_NOAUTH);
         }
@@ -191,34 +199,37 @@ function Dizkus_ajax_editpost()
  */
 function Dizkus_ajax_updatepost()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post', '');
     $subject = FormUtil::getPassedValue('subject', '');
     $message = FormUtil::getPassedValue('message', '');
-    $delete = FormUtil::getPassedValue('delete');
+    $delete  = FormUtil::getPassedValue('delete');
     $attach_signature = FormUtil::getPassedValue('attach_signature');
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-    if(!empty($post_id)) {
+
+    if (!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
             dzk_ajaxerror(_BADAUTHKEY);
         }
  
         $message = dzkstriptags(DataUtil::convertFromUTF8($message));
         // check for maximum message size
-        if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
+        if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
             dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
         }
+
         pnModAPIFunc('Dizkus', 'user', 'updatepost',
                      array('post_id'          => $post_id,
                            'subject'          => DataUtil::convertFromUTF8($subject),
                            'message'          => $message,
                            'delete'           => $delete,
                            'attach_signature' => ($attach_signature==1)));
-        if($delete <> '1') {
+
+        if ($delete <> '1') {
             $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                                  array('post_id'     => $post_id));
             $post['action'] = 'updated';
@@ -226,7 +237,10 @@ function Dizkus_ajax_updatepost()
             $post = array('action'  => 'deleted',
                           'post_id' => $post_id);
         }
-        dzk_jsonizeoutput($post, true);
+
+        SessionUtil::delVar('pn_ajax_call');
+
+        return $post;
     }
     dzk_ajaxerror('internal error: no post id in Dizkus_ajax_updatepost()');
 }
@@ -237,7 +251,7 @@ function Dizkus_ajax_updatepost()
  */
 function Dizkus_ajax_lockunlocktopic()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
@@ -250,24 +264,26 @@ function Dizkus_ajax_lockunlocktopic()
        //dzk_ajaxerror(_BADAUTHKEY);
     }
 
-    if(empty($topic_id)) {
+    if (empty($topic_id)) {
         dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_lockunlocktopic()');
     }
-    if( empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
+    if (empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
         dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_lockunlocktopic()');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
-    if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
     }
 
     pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic',
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
+
     $newmode = ($mode=='lock') ? 'locked' : 'unlocked';
+
     dzk_jsonizeoutput($newmode);
 }
 
@@ -277,35 +293,37 @@ function Dizkus_ajax_lockunlocktopic()
  */
 function Dizkus_ajax_stickyunstickytopic()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
     $mode     = FormUtil::getPassedValue('mode', '');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
        //dzk_ajaxerror(_BADAUTHKEY);
     }
 
-    if(empty($topic_id)) {
+    if (empty($topic_id)) {
         dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_stickyunstickytopic()');
     }
-    if( empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
+    if (empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
         dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_stickyunstickytopic()');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
-    if(!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
     }
 
     pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic',
                  array('topic_id' => $topic_id,
                        'mode'     => $mode));
+
     dzk_jsonizeoutput($mode);
 }
 
@@ -315,26 +333,27 @@ function Dizkus_ajax_stickyunstickytopic()
  */
 function Dizkus_ajax_subscribeunsubscribetopic()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
     $topic_id = FormUtil::getPassedValue('topic', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
+/*
     if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(_BADAUTHKEY);
     }
-
-    if(empty($topic_id)) {
+*/
+    if (empty($topic_id)) {
         dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_subscribeunsubscribetopic()');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
-    if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
     }
 
@@ -352,7 +371,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
             $newmode = 'unsubscribed';
             break;
         default:
-        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribetopic()');
+            dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribetopic()');
     }
 
     dzk_jsonizeoutput($newmode);
@@ -364,26 +383,27 @@ function Dizkus_ajax_subscribeunsubscribetopic()
  */
 function Dizkus_ajax_subscribeunsubscribeforum()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
     $forum_id = FormUtil::getPassedValue('forum', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
+/*
     if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(_BADAUTHKEY);
     }
-
-    if(empty($forum_id)) {
+*/
+    if (empty($forum_id)) {
         dzk_ajaxerror('internal error: no forum id in Dizkus_ajax_subscribeunsubscribeforum()');
     }
 
     $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
-    if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
     }
 
@@ -401,7 +421,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
             $newmode = 'unsubscribed';
             break;
         default:
-        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribeforum()');
+            dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribeforum()');
     }
 
     dzk_jsonizeoutput(array('newmode' => $newmode,
@@ -414,30 +434,31 @@ function Dizkus_ajax_subscribeunsubscribeforum()
  */
 function Dizkus_ajax_addremovefavorite()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
-    if(pnModGetVar('Dizkus', 'favorites_enabled')=='no') {
+    if (pnModGetVar('Dizkus', 'favorites_enabled') == 'no') {
         dzk_ajaxerror(_DZK_FAVORITESDISABLED);
     }
 
     $forum_id = FormUtil::getPassedValue('forum', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
-    if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(_BADAUTHKEY);
-    }
-
-    if(empty($forum_id)) {
+    if (empty($forum_id)) {
         dzk_ajaxerror('internal error: no forum id in Dizkus_ajax_addremovefavorite()');
     }
+/*
+    if (!SecurityUtil::confirmAuthKey()) {
+        dzk_ajaxerror(_BADAUTHKEY);
+    }
+*/
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
-    if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
     }
 
@@ -453,7 +474,7 @@ function Dizkus_ajax_addremovefavorite()
             $newmode = 'removed';
             break;
         default:
-        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_addremovefavorite()');
+            dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_addremovefavorite()');
     }
 
     dzk_jsonizeoutput(array('newmode' => $newmode,
@@ -466,23 +487,28 @@ function Dizkus_ajax_addremovefavorite()
  */
 function Dizkus_ajax_edittopicsubject()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
     $topic_id = FormUtil::getPassedValue('topic', '');
 
-    if(!empty($topic_id)) {
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
+
+    if (!empty($topic_id)) {
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                              array('topic_id' => $topic_id,
                                    'count'    => false,
-                                   'complete' => false  ));
-        if($topic['access_topicsubjectedit'] == true) {
+                                   'complete' => false));
+
+        if ($topic['access_topicsubjectedit'] == true) {
             $pnr = pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('topic', $topic);
-            dzk_jsonizeoutput(array('data' => $pnr->fetch('dizkus_ajax_edittopicsubject.html'),
-                                    'topic_id' => $topic_id), true);
+
+            SessionUtil::delVar('pn_ajax_call');
+
+            return array('data'     => $pnr->fetch('dizkus_ajax_edittopicsubject.html'),
+                         'topic_id' => $topic_id);
         } else {
             dzk_ajaxerror(_DZK_NOAUTH);
         }
@@ -496,15 +522,16 @@ function Dizkus_ajax_edittopicsubject()
  */
 function Dizkus_ajax_updatetopicsubject()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
     $topic_id = FormUtil::getPassedValue('topic', '');
-    $subject = FormUtil::getPassedValue('subject', '');
-    
-    if(!empty($topic_id)) {
+    $subject  = FormUtil::getPassedValue('subject', '');
+
+    SessionUtil::setVar('pn_ajax_call', 'ajax');
+
+    if (!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
            dzk_ajaxerror(_BADAUTHKEY);
         }
@@ -512,32 +539,34 @@ function Dizkus_ajax_updatetopicsubject()
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                              array('topic_id' => $topic_id,
                                    'count'    => false,
-                                   'complete' => false  ));
-        if(!$topic['access_topicsubjectedit']) {
+                                   'complete' => false));
+
+        if (!$topic['access_topicsubjectedit']) {
             return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
         }
 
-
         $subject = trim(DataUtil::convertFromUTF8($subject));
-        if(empty($subject)) {
+        if (empty($subject)) {
             dzk_ajaxerror(_DZK_NOSUBJECT);
         }
 
         list($dbconn, $pntable) = dzkOpenDB();
 
-        $sql = "UPDATE ".$pntable['dizkus_topics']."
-                SET topic_title = '" . DataUtil::formatForStore($subject) . "'
-                WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+        $sql = 'UPDATE '.$pntable['dizkus_topics'].'
+                SET topic_title = \'' . DataUtil::formatForStore($subject) . '\'
+                WHERE topic_id = \''.(int)DataUtil::formatForStore($topic_id).'\'';
 
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
-        // Let any hooks know that we have updated an item.
-        pnModCallHooks('item', 'update', $topic_id, array('module' => 'Dizkus',
-                                                          'topic_id' => $topic_id));
-        dzk_jsonizeoutput(array('topic_title' => DataUtil::formatForDisplay($subject),
-                                'topic_id' => $topic_id),
-                          true);
 
+        // Let any hooks know that we have updated an item.
+        pnModCallHooks('item', 'update', $topic_id, array('module'   => 'Dizkus',
+                                                          'topic_id' => $topic_id));
+
+        SessionUtil::delVar('pn_ajax_call');
+
+        return array('topic_title' => DataUtil::formatForDisplay($subject),
+                     'topic_id'    => $topic_id);
     }
     dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_updatetopicsubject()');
 }
@@ -548,17 +577,17 @@ function Dizkus_ajax_updatetopicsubject()
  */
 function Dizkus_ajax_changesortorder()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
        dzk_ajaxerror(_DZK_USERLOGINTITLE);
     }
 
-    if (!pnSecConfirmAuthKey()) {
+    if (!SecurityUtil::confirmAuthKey()) {
        dzk_ajaxerror(_BADAUTHKEY);
     }
 
@@ -573,51 +602,56 @@ function Dizkus_ajax_changesortorder()
  */
 function Dizkus_ajax_newtopic()
 {
-    if(dzk_available(false) == false) {
+/*
+    if (!SecurityUtil::confirmAuthKey()) {
+       dzk_ajaxerror(_BADAUTHKEY);
+    }
+*/
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
-
-    if (!SecurityUtil::confirmAuthKey()) {
-       dzk_ajaxerror(_BADAUTHKEY);
-    }
 
     $forum_id         = FormUtil::getPassedValue('forum');
     $message          = FormUtil::getPassedValue('message', '');
     $subject          = FormUtil::getPassedValue('subject', '');
     $attach_signature = FormUtil::getPassedValue('attach_signature');
     $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
-    $preview          = FormUtil::getPassedValue('preview', 0);
+    $preview          = (int)FormUtil::getPassedValue('preview', 0);
 
     $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
-    if(!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         return dzk_ajaxerror(_DZK_NOAUTH_TOWRITE);
     }
 
-    $preview          = ($preview=='1') ? true : false;
+    $preview          = ($preview == 1) ? true : false;
     //$attach_signature = ($attach_signature=='1') ? true : false;
     //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
+    if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
         dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE, true);
     }
-    if(strlen($message)==0) {
+    if (strlen($message) == 0) {
         dzk_ajaxerror(_DZK_EMPTYMSG, true);
     }
 
     $subject = DataUtil::convertFromUTF8($subject);
-    if(strlen($subject)==0) {
+    if (strlen($subject) == 0) {
         dzk_ajaxerror(_DZK_NOSUBJECT, true);
     }
 
     $pnr = pnRender::getInstance('Dizkus', false, null, true);
 
-    if($preview == false) {
+    if ($preview == false) {
+        if (!SecurityUtil::confirmAuthKey()) {
+           dzk_ajaxerror(_BADAUTHKEY);
+        }
+
         // store new topic
         $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
                                  array('forum_id'         => $forum_id,
@@ -625,45 +659,41 @@ function Dizkus_ajax_newtopic()
                                        'message'          => $message,
                                        'attach_signature' => $attach_signature,
                                        'subscribe_topic'  => $subscribe_topic));
+
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id' => $topic_id, 
-                                    'count' => false));
-        if(pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
+                                    'count'    => false));
+
+        if (pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
             $pnr->assign('topic', $topic);
             $confirmation = $pnr->fetch('dizkus_ajax_newtopicconfirmation.html');
         } else {
             $confirmation = false;
         }
-        
-    // ++++ MediaAttach Hack ++++
-    //old:
-    /*
-    dzk_jsonizeoutput(array('topic'        => $topic,
-                            'confirmation' => $confirmation,
-                            'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
-                                                       array('topic' => $topic_id),null,null,true)),
-                      true);
-    */
-    //new:
-    if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
+
+        // --- MediaAttach check ---
+        if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
             dzk_jsonizeoutput(array('topic'        => $topic,
                                     'confirmation' => $confirmation,
                                     'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
-                                                               array('topic' => $topic_id)),
+                                                               array('topic' => $topic_id),
+                                                               null, null, true),
                                     'uploadredirect' => urlencode(pnModURL('Dizkus', 'user', 'viewtopic',
-                                                               array('topic' => $topic_id))),
+                                                                           array('topic' => $topic_id))),
                                     'uploadobjectid' => $topic_id,
-                                    'uploadauthid' => pnSecGenAuthKey('MediaAttach')),
+                                    'uploadauthid' => pnSecGenAuthKey('MediaAttach')
+                                   ),
                               true);
-        }
-        else {
+
+        } else {
             dzk_jsonizeoutput(array('topic'        => $topic,
                                     'confirmation' => $confirmation,
                                     'redirect'     => pnModURL('Dizkus', 'user', 'viewtopic',
-                                                               array('topic' => $topic_id))),
+                                                               array('topic' => $topic_id),
+                                                               null, null, true)
+                                   ),
                               true);
         }
-    // ---- MediaAttach Hack ----
     }
 
     // preview == true, create fake topic
@@ -675,29 +705,30 @@ function Dizkus_ajax_newtopic()
     $newtopic['topic_unixtime'] = time();
 
     // need at least "comment" to add newtopic
-    if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
+    if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
         return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
     }
+
     $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
 
     $newtopic['subject'] = $subject;
     $newtopic['message'] = $message;
     $newtopic['message_display'] = $message; // phpbb_br2nl($message);
 
-    if($attach_signature==1) {
+    if ($attach_signature == 1) {
         $newtopic['message_display'] .= '[addsig]';
         $newtopic['message_display'] = Dizkus_replacesignature($newtopic['message_display'], $newtopic['poster_data']['_SIGNATURE']);
     }
 
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
-    $newtopic['message_display'] = dzkVarPrepHTMLDisplay($newtopic['message_display']);
+    $newtopic['message_display']       = dzkVarPrepHTMLDisplay($newtopic['message_display']);
 
-    $topic_start = (empty($subject) && empty($message));
-    if(pnUserLoggedIn()) {
-        if($topic_start==true) {
+    if (pnUserLoggedIn()) {
+        // If it's the topic start
+        if (empty($subject) && empty($message)) {
             $newtopic['attach_signature'] = 1;
-            $newtopic['subscribe_topic']  = (pnModGetVar('Dizkus', 'autosubscribe')=='yes') ? 1 : 0;
+            $newtopic['subscribe_topic']  = (pnModGetVar('Dizkus', 'autosubscribe') == 'yes') ? 1 : 0;
         } else {
             $newtopic['attach_signature'] = $attach_signature;
             $newtopic['subscribe_topic']  = $subscribe_topic;
@@ -708,9 +739,11 @@ function Dizkus_ajax_newtopic()
     }
 
     $pnr->assign('newtopic', $newtopic);
-    dzk_jsonizeoutput(array('data'     => $pnr->fetch('dizkus_user_newtopicpreview.html'),
-                            'newtopic' => $newtopic),
-                      true);
+
+    SessionUtil::delVar('pn_ajax_call');
+
+    return array('data'     => $pnr->fetch('dizkus_user_newtopicpreview.html'),
+                 'newtopic' => $newtopic);
 }
 
 /**
@@ -719,16 +752,20 @@ function Dizkus_ajax_newtopic()
  * original version by gf
  *
  */
-function Dizkus_ajax_forumusers ()
+function Dizkus_ajax_forumusers()
 {
-    if(dzk_available(false) == false) {
+    if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    $pnRender = pnRender::getInstance('Dizkus', false);
-    Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
-    $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
-    $pnRender->display('dizkus_ajax_forumusers.html');
+    $pnr = pnRender::getInstance('Dizkus', false);
+
+    if (pnConfigGetVar('shorturls')) {
+        Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
+        $pnr->register_outputfilter('smarty_outputfilter_shorturls');
+    }
+
+    $pnr->display('dizkus_ajax_forumusers.html');
     pnShutDown();
 }
 
@@ -738,22 +775,21 @@ function Dizkus_ajax_forumusers ()
  * original version by gf
  *
  */
-function Dizkus_ajax_newposts ()
+function Dizkus_ajax_newposts()
 {
-    $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled = dzk_available())) {
         echo $disabled;
-        exit;
+        pnShutDown();
     }
-    $pnRender = pnRender::getInstance('Dizkus', false);
-    if(pnConfigGetVar('shorturls')) {
+
+    $pnr = pnRender::getInstance('Dizkus', false);
+
+    if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
-        $pnRender->register_outputfilter('smarty_outputfilter_shorturls');
+        $pnr->register_outputfilter('smarty_outputfilter_shorturls');
     }
 
-
-    $out = $pnRender->fetch('dizkus_ajax_newposts.html');
+    $out = $pnr->fetch('dizkus_ajax_newposts.html');
     echo DataUtil::convertToUTF8($out);
     pnShutDown();
-
 }

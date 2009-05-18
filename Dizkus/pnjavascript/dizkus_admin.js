@@ -32,7 +32,7 @@ function loadforum(forumid)
     //if(Element.visible('editforum_' + forumid) == false) {
     var pars = "module=Dizkus&type=admin&func=editforum&forum=" + forumid;
     var myAjax = new Ajax.Request(
-        "index.php", 
+        document.location.pnbaseURL+'ajax.php',
         {
             method: 'post', 
             parameters: pars, 
@@ -64,7 +64,7 @@ function loadcategory(catid)
     dzk_toggleprogressimage(true, catid);
     var pars = "module=Dizkus&type=admin&func=editcategory&cat=" + catid;
     var myAjax = new Ajax.Request(
-        "index.php", 
+        document.location.pnbaseURL+'ajax.php',
         {
             method: 'post', 
             parameters: pars, 
@@ -94,7 +94,7 @@ function storeforum(forumid)
     dzk_toggleprogressimage(false, forumid);
     var pars = "module=Dizkus&type=admin&func=storeforum&" + Form.serialize('editforumform_'+ forumid);
     var myAjax = new Ajax.Request(
-        "index.php", 
+        document.location.pnbaseURL+'ajax.php',
         {
             method: 'post', 
             parameters: pars, 
@@ -172,7 +172,7 @@ function storecategory(catid)
     dzk_toggleprogressimage(true, catid);
     var pars = "module=Dizkus&type=admin&func=storecategory&" + Form.serialize('editcategoryform_'+ catid);
     var myAjax = new Ajax.Request(
-        "index.php", 
+        document.location.pnbaseURL+'ajax.php',
         {
             method: 'post', 
             parameters: pars, 
@@ -283,7 +283,7 @@ function addforum(catid)
     dzk_toggleprogressimage(true, catid);
     var pars = "module=Dizkus&type=admin&func=editforum&forum=-1&cat=" + catid;
     var myAjax = new Ajax.Request(
-        "index.php", 
+        document.location.pnbaseURL+'ajax.php', 
         {
             method: 'post', 
             parameters: pars, 
@@ -311,7 +311,7 @@ function addforuminit(originalRequest)
     $('neweditforum_' + result.cat_id).id = neweditforum;
     Element.update(neweditforum, result.data);
     Element.show(neweditforum);
-    
+
     // set new id in newforum li
     var newforum = 'forum_' + result.forum_id;
     $('newforum_cat' + result.cat_id).id = newforum;
@@ -349,7 +349,7 @@ function addcategory()
 {
     var pars = "module=Dizkus&type=admin&func=editcategory&cat=new";
     var myAjax = new Ajax.Request(
-        "index.php", 
+        document.location.pnbaseURL+'ajax.php',
         {
             method: 'post', 
             parameters: pars, 
@@ -478,7 +478,7 @@ function storetreeorder()
         }
         pars = pars + '&authid=' + $F('authid');
         var myAjax = new Ajax.Request(
-            "index.php", 
+            document.location.pnbaseURL+'ajax.php',
             {
                 method: 'post', 
                 parameters: pars, 
@@ -532,7 +532,7 @@ function storenewforumorder()
         forumliststatus = true;
         var pars = 'module=Dizkus&type=admin&func=newforumordersave&' + Sortable.serialize('forums') + '&cat_id=' + $F('cat_id') + '&authid=' + $F('authid');
         var myAjax = new Ajax.Request(
-            "index.php", 
+            document.location.pnbaseURL+'ajax.php',
             {
                 method: 'post', 
                 parameters: pars, 

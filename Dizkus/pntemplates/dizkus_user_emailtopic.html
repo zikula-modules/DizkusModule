@@ -1,16 +1,14 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_EMAIL_TOPIC' assign=templatetitle]-->
-<!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file='dizkus_user_header.html' ]-->
-<!--[ cssversion assign=configclass ]-->
+<!--[ cssversion assign='configclass' ]-->
+<!--[ pnml name='_DZK_EMAIL_TOPIC' assign='maintitle']-->
 
-<h2><!--[ $templatetitle ]--></h2>
+<!--[ include file='dizkus_user_header.html' ]-->
 
 <!--[ if $error_msg neq '' ]-->
 <div class="pn-errormsg"><!--[ $error_msg ]--></div>
 <!--[ /if ]-->
 
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=user func=emailtopic ]-->" method="post" name="emailtopic">
+<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus' type='user' func='emailtopic' ]-->" method="post" name="emailtopic">
     <fieldset id="dzk_emailtopic">
         <legend><!--[ $templatetitle ]--></legend>
         <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />

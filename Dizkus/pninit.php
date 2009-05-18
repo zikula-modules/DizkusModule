@@ -18,7 +18,6 @@ Loader::includeOnce('modules/Dizkus/common.php');
  *	It is accessed via the Zikula Admin interface and should
  *	not be called directly.
  */
-
 function Dizkus_init()
 {
     if(version_compare(PN_VERSION_NUM, '1.0.0', '<')) {
@@ -142,7 +141,7 @@ function Dizkus_init()
     }
     
     // create FULLTEXT index 
-    if (strtolower($GLOBALS['PNConfig']['default']['dbtabletype']) <> 'innodb') {
+    if (strtolower($GLOBALS['PNConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
         // FULLTEXT does not work an innodb - by design
         // for now we assume that it works with all other table types, if not, please open a ticket
         $pntable      = pnDBGetTables();
@@ -191,7 +190,11 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'forum_enabled', 'yes');
     pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
     // 3.0
-	pnModSetVar('Dizkus', 'signaturemanagement', 'no');
+	pnModSetVar('Dizkus', 'autosubscribe', 'no');
+	pnModSetVar('Dizkus', 'newtopicconfirmation', 'no');
+    pnModSetVar('Dizkus', 'signaturemanagement', 'no');
+    pnModSetVar('Dizkus', 'signature_start', '');
+    pnModSetVar('Dizkus', 'signature_end', '');
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
     pnModSetVar('Dizkus', 'showtextinsearchresults', 'yes');
     pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
@@ -202,7 +205,6 @@ function Dizkus_init()
 
     // Initialisation successful
     return true;
-
 }
 
 /**
@@ -212,7 +214,6 @@ function Dizkus_init()
  *	Zikula install and should be accessed via
  *	the Zikula Admin interface
  */
-
 function Dizkus_delete()
 {
     if (!DBUtil::dropTable('dizkus_categories')) {
@@ -379,7 +380,7 @@ function Dizkus_upgrade_to_3_0()
             LogUtil::registerError (_RENAMETABLEFAILED. " ($tablename, $result, $dberrmsg)");
         }
     }
-    
+
     // add some columns to the post table - with DBUtil this is a one-liner, you just have to
     // define the new columns in the pntables array, see pntables.php
     DBUtil::changeTable('dizkus_posts');
@@ -387,7 +388,7 @@ function Dizkus_upgrade_to_3_0()
     // remove obsolete module vars
 	pnModDelVar('Dizkus', 'posticon');
 	pnModDelVar('Dizkus', 'firstnew_image');
-	
+
 
     $oldvars = pnModGetVar('pnForum');
     foreach ($oldvars as $varname => $oldvar) {
@@ -398,7 +399,7 @@ function Dizkus_upgrade_to_3_0()
         pnModSetVar('Dizkus', $varname, $oldvar);
     }
     pnModDelVar('pnForum');
-    
+
     // update hooks
     $pntables = pnDBGetTables();
     $hookstable  = $pntables['hooks'];
@@ -408,7 +409,7 @@ function Dizkus_upgrade_to_3_0()
     if ($res === false) {
         return LogUtil::registerError(_DZK_FAILEDTOUPGRADEHOOK . ' (smodule)');
     }
-    
+
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['tmodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['tmodule'] . '=\'pnForum\'';
     $res   = DBUtil::executeSQL ($sql);
     if ($res === false) {

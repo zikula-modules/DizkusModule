@@ -25,13 +25,13 @@ function Dizkus_adminapi_readcategories($args)
     $catcolumn = $pntables['dizkus_categories_column'];
 
     $where = '';
-    if(isset($args['cat_id'])) {
+    if (isset($args['cat_id'])) {
         $where .= "WHERE $catcolumn[cat_id]=" . DataUtil::formatForStore($args['cat_id']) . " ";
     }
     $orderby = 'cat_order ASC';
 
     $categories = DBUtil::selectObjectArray('dizkus_categories', $where, $orderby);
-    if(isset($args['cat_id'])) {
+    if (isset($args['cat_id'])) {
         return $categories[0];
     }
 
@@ -42,21 +42,21 @@ function Dizkus_adminapi_readcategories($args)
     $last_cat_order = 0;   // for comparison
     $cat_order_adjust = 0; // holds the number of shifts we have to do
     $shifted = false; // trigger, if true we have to update the db
-    for($i=0; $i<count($categories); $i++) {
+    for ($i = 0; $i < count($categories); $i++) {
         // we leave cat_order = 0 untouched!
-        if($cat_order_adjust>0) {
+        if ($cat_order_adjust > 0) {
             // we have done at least one change before which means that all foloowing categories
             // have to be changed too.
             $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
             $shifted = true;
-        } else if($categories[$i]['cat_order'] == $last_cat_order ) {
+        } else if ($categories[$i]['cat_order'] == $last_cat_order ) {
             $cat_order_adjust++;
             $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
             $shifted = true;
         }
         $last_cat_order = $categories[$i]['cat_order'];
     }
-    if($shifted == true) {
+    if ($shifted == true) {
         DBUtil::updateObjectArray($categories, 'dizkus_categories', 'cat_id');
     }
 
@@ -80,13 +80,13 @@ function Dizkus_adminapi_updatecategory($args)
     // this prevents possible SQL errors if non existing keys are passed to this function
     $pntables = pnDBGetTables();
     $obj = array();
-    foreach($args as $key => $arg) {
+    foreach ($args as $key => $arg) {
         if (array_key_exists($key, $pntables['dizkus_categories_column'])) {
             $obj[$key] = $arg;
         }
     }
 
-    if(isset($obj['cat_id'])) {
+    if (isset($obj['cat_id'])) {
         $obj = DBUtil::updateObject($obj, 'dizkus_categories', null, 'cat_id');
         return true;
     }
@@ -105,7 +105,7 @@ function Dizkus_adminapi_addcategory($args)
         return showforumerror(_DZK_NOAUTH, __FILE__, __LINE__);
     }
 
-    if(isset($args['cat_title'])) {
+    if (isset($args['cat_title'])) {
         $args['cat_order'] = DBUtil::selectObjectCount('dizkus_categories') + 1;
         $obj = DBUtil::insertObject($args, 'dizkus_categories', 'cat_id');
         return $obj['cat_id'];
@@ -126,11 +126,11 @@ function Dizkus_adminapi_deletecategory($args)
         return showforumerror(_DZK_NOAUTH, __FILE__, __LINE__);
     }
 
-    if(isset($args['cat_id'])) {
+    if (isset($args['cat_id'])) {
         // read all the forums in this category
         $forums = Dizkus_adminapi_readforums(array('cat_id' => $args['cat_id']));
-        if(is_array($forums) && count($forums)>0) {
-            foreach($forums as $forum) {
+        if (is_array($forums) && count($forums)>0) {
+            foreach ($forums as $forum) {
                 // remove all forums in this category
                 pnModAPIFunc('Dizkus', 'admin', 'deleteforum',
                              array('forum_id' => $forum['forum_id'],
@@ -158,12 +158,12 @@ function Dizkus_adminapi_deletecategory($args)
  */
 function Dizkus_adminapi_readforums($args=array())
 {
-    $pntable =&pnDBGetTables();
+    $pntable = &pnDBGetTables();
     $forumcolumn = $pntable['dizkus_forums_column'];
     $catcolumn   = $pntable['dizkus_categories_column'];
 
     $permcheck = (isset($args['permcheck'])) ? strtoupper($args['permcheck']): ACCESS_READ;
-    if( !empty($permcheck) &&
+    if (!empty($permcheck) &&
         ($permcheck <> ACCESS_OVERVIEW) &&
         ($permcheck <> ACCESS_READ) &&
         ($permcheck <> ACCESS_COMMENT) &&
@@ -172,14 +172,15 @@ function Dizkus_adminapi_readforums($args=array())
         ($permcheck <> 'NOCHECK')  ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
+
     $where = '';
     if(isset($args['forum_id'])) {
-        $where = "WHERE tbl.forum_id=" . DataUtil::formatForStore($args['forum_id']) ." ";
+        $where = "WHERE tbl.forum_id='". DataUtil::formatForStore($args['forum_id']) ."' ";
     } elseif (isset($args['cat_id'])) {
-        $where = "WHERE tbl.cat_id=" . DataUtil::formatForStore($args['cat_id']) . " ";
+        $where = "WHERE tbl.cat_id='". DataUtil::formatForStore($args['cat_id']) ."' ";
     }
     
-    if($permcheck <> 'NOCHECK') {
+    if ($permcheck <> 'NOCHECK') {
         $permfilter[] = array('realm' => 0,
                               'component_left'   =>  'Dizkus',
                               'component_middle' =>  '',
@@ -198,12 +199,11 @@ function Dizkus_adminapi_readforums($args=array())
                          'compare_field_table'=>  'cat_id',
                          'compare_field_join' =>  'cat_id');
     $orderby = 'a.cat_order, tbl.forum_order, tbl.forum_name';
-    
+
     $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joininfo, $where, $orderby, -1, -1, '', $permfilter);
-    
-    for($i=0; $i<count($forums); $i++) {
+
+    for ($i = 0; $i < count($forums); $i++) {
         // rename some fields for BC compatibility
-        /*
         $forums[$i]['pop3_active']      = $forums[$i]['forum_pop3_active'];
         $forums[$i]['pop3_server']      = $forums[$i]['forum_pop3_server'];
         $forums[$i]['pop3_port']        = $forums[$i]['forum_pop3_port'];
@@ -214,7 +214,7 @@ function Dizkus_adminapi_readforums($args=array())
         $forums[$i]['pop3_matchstring'] = $forums[$i]['forum_pop3_matchstring'];
         $forums[$i]['pop3_pnuser']      = $forums[$i]['forum_pop3_pnuser'];
         $forums[$i]['pop3_pnpassword']  = $forums[$i]['forum_pop3_pnpassword'];
-        */
+
         // we re-use the pop3_active field to distinguish between
         // 0 - no external source
         // 1 - mail
@@ -228,8 +228,8 @@ function Dizkus_adminapi_readforums($args=array())
         $forums[$i]['pnpassword']         = $forums[$i]['forum_pop3_pnpassword'];
     }
 
-    if(count($forums)>0) {
-        if(isset($args['forum_id'])) {
+    if (count($forums) > 0) {
+        if (isset($args['forum_id'])) {
             return $forums[0];
         }
     }
@@ -385,10 +385,11 @@ function Dizkus_adminapi_readgroups($args)
 function Dizkus_adminapi_readranks($args)
 {
     // read images
-    $handle = opendir(pnModGetVar('Dizkus', 'url_ranks_images'));
+    $path     = pnModGetVar('Dizkus', 'url_ranks_images');
+    $handle   = opendir($path);
     $filelist = array();
     while ($file = readdir($handle)) {
-        if(getimagesize(pnModGetVar('Dizkus', 'url_ranks_images') . '/' . $file) <> false) {
+        if (dzk_isimagefile($path.'/'.$file)) {
             $filelist[] = $file;
         }
     }

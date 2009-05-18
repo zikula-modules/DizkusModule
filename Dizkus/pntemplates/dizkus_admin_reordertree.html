@@ -1,8 +1,8 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_REORDERFORUMS' assign=templatetitle ]-->
+<!--[ pnml name='_DZK_REORDERFORUMS' assign='templatetitle' ]-->
+<!--[ pnimg src='icon_dbaccess.gif' assign='progressicon' ]-->
+<!--[ cssversion assign='configclass' ]-->
 <!--[ include file='dizkus_admin_header.html' ]-->
-<!--[ pnimg modname='Dizkus' src="ajaxindicator.gif" assign=progressicon ]-->
-<!--[ cssversion assign=configclass ]-->
 
 <p class="pn-informationmsg"><!--[ pnml name='_DZK_FORUM_SEQUENCE_DESCRIPTION' html=1 ]--></p>
 
@@ -14,7 +14,7 @@
 <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
 <ul id="category">
-    <!--[ foreach item=category from=$categorytree]-->
+    <!--[ foreach item='category' from=$categorytree]-->
     <li id="category_<!--[ $category.cat_id ]-->" class="catline">
         <div class="pn-clearfix">
             <div class="dzk_handle pn-clearfix">
@@ -34,7 +34,7 @@
             <div id="editcategory_<!--[ $category.cat_id ]-->" style="display: none; margin: 0 1em;">&nbsp;</div>
         </div>
         <ul id="cid_<!--[ $category.cat_id ]-->" class="dzk_treeforumlist" style="display: none;">
-            <!--[ foreach item=forum from=$category.forums ]-->
+            <!--[ foreach item='forum' from=$category.forums ]-->
             <li id="forum_<!--[ $forum.forum_id ]-->" class="forumline">
                 <div class="dzk_handle pn-clearfix">
                     <div id="forumtitle_<!--[ $forum.forum_id ]-->" style="float: left; width: 60%;">
@@ -71,7 +71,7 @@
     </li>
 
     <!--[ /foreach ]-->
-    
+
     <li style="display: none;" class="catline" id="newcategory">
         <div class="pn-clearfix">
             <div class="dzk_handle pn-clearfix">
@@ -90,14 +90,14 @@
             </div>
             <div id="neweditcategory" style="display: none; margin: 0 1em;">&nbsp;</div>
         </div>
-        
+
         <ul id="newcid" class="dzk_treeforumlist" style="display: none; margin: 0.2em 0 0.2em 2em;">
-            <li id="newemptycategory" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px;">
+            <li id="newemptycategory" style="display: none; border: 1px solid black; width: 90%; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor2|default:'transparent' ]-->;">
                 <!--[ pnml name='_DZK_EMPTYCATEGORY' ]-->
             </li>
 
-            <li id="newforum" style="display: none; border: 1px solid black; margin: 2px; padding: 2px;">
-                <div style="height: 1.5em; padding: 2px;" class="dzk_handle pn-clearfix">
+            <li id="newforum" style="display: none; border: 1px solid black; margin: 2px; padding: 2px; background-color: <!--[ $bgcolor3|default:'transparent' ]-->;">
+                <div style="height: 1.5em; padding: 2px; background-color: <!--[ $bgcolor3|default:'transparent' ]-->;" class="dzk_handle pn-clearfix">
                     <div id="newforumtitle" style="float: left; width: 60%;">
                         <!--[ pnml name='_DZK_ADDNEWFORUM' ]-->
                     </div>
@@ -111,7 +111,7 @@
                 <div id="neweditforum" style="display: none; margin: 0 1em; ">&nbsp;</div>
             </li>
         </ul>
-        
+
     </li>
 </ul>
 

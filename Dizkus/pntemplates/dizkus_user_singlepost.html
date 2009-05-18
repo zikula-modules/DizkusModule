@@ -2,6 +2,11 @@
 
 <!--[ if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count ]--><a id="bottom"></a><!--[ /if ]-->
 <a id="pid<!--[ $post.post_id ]-->" ></a>
+<!--[if $post.contactlist_ignored|default:0 == 1]-->
+	<div id="hidelink_posting_<!--[ $post.post_id ]-->">
+	<!--[pnml name='_DZK_SHOWIGNOREDPOSTINGOF']--> <!--[$post.poster_data.pn_uname|userprofilelink]-->. <a onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();"><!--[pnml name='_DZK_CLICKHERE']--></a><br />
+	</div>
+<!--[/if]-->
 <div id="posting_<!--[ $post.post_id ]-->" class="forum_post pn-floatbox <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
     <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
 
@@ -40,12 +45,10 @@
             </div>
 
             <div class="postbody">
-
                 <div class="postinfo">
-                    <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
-                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+                    <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
+                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:'%d.%m.%Y, %H:%M':'':true ]-->
                 </div>
-
                 <div class="content" id="postingtext_<!--[ $post.post_id ]-->">
                     <!--[ $post.post_text ]-->
                 </div>

@@ -55,12 +55,19 @@ function smarty_function_dizkusonline($params, &$smarty)
     extract($params);
     unset($params);
 
+    if (!isset($category_id)) {
+        $category_id = (isset($smarty->_tpl_vars['viewcat']) && $smarty->_tpl_vars['viewcat'] != -1) ? $smarty->_tpl_vars['viewcat'] : ''; 
+    }
+    if (!isset($forum_id)) {
+        $forum_id = isset($smarty->_tpl_vars['forum']) ? $smarty->_tpl_vars['forum'] : ''; 
+    }
+
     $checkgroups = (isset($checkgroups)) ? true : false;
-    
+
     list($dbconn, $pntable) = dzkOpenDB();
 
     $sessioninfocolumn = &$pntable['session_info_column'];
-    $sessioninfotable = $pntable['session_info'];
+    $sessioninfotable  = $pntable['session_info'];
 
     $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
 
@@ -72,9 +79,9 @@ function smarty_function_dizkusonline($params, &$smarty)
     $moderators = pnModAPIFunc('Dizkus', 'user', 'get_moderators', array());
 
     if (pnConfigGetVar('anonymoussessions')) {
-        $anonwhere = "AND      $pntable[session_info].pn_uid >= '0' ";
+        $anonwhere = "AND $pntable[session_info].pn_uid >= '0'";
     } else {
-        $anonwhere = "AND      $pntable[session_info].pn_uid > '0'";
+        $anonwhere = "AND $pntable[session_info].pn_uid > '0'";
     }
     $sql = "SELECT   $pntable[session_info].pn_uid, $pntable[users].pn_uname
             FROM     $pntable[session_info], $pntable[users]
@@ -93,7 +100,7 @@ function smarty_function_dizkusonline($params, &$smarty)
         if ($uid != 0) {
             $unames[$uid] = array('uid'   => $uid,
                                   'uname' => $uname,
-                                  'admin' => ($moderators[$uid] == $uname) || allowedtoadmincategoryandforum($category_id, $forum_id, $uid));
+                                  'admin' => (isset($moderators[$uid]) && $moderators[$uid] == $uname) || allowedtoadmincategoryandforum($category_id, $forum_id, $uid));
             $numusers++;
         } else {
             $numguests++;
@@ -102,8 +109,8 @@ function smarty_function_dizkusonline($params, &$smarty)
 
     dzkCloseDB($result);
 
-    if($checkgroups == true) {
-        foreach($unames as $user) {
+    if ($checkgroups == true) {
+        foreach ($unames as $user) {
             if ($user['admin'] == false) {
                 $groups = pnModAPIFunc('Groups', 'user', 'getusergroups', array('uid' => $user['uid']));
         

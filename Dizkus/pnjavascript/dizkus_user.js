@@ -48,12 +48,14 @@ var dzk_globalhandlers = {
 
 function createnewtopic(event)
 {
-    if(newtopicstatus==false) {
-        if($F('subject') == '') {
+    if (newtopicstatus==false)
+    {
+        if ($F('subject') == '') {
             // no subject
             return;
         }
-        if($F('message') == '') {
+
+        if ($F('message') == '') {
             // no text
             return;
         }
@@ -86,9 +88,9 @@ function createnewtopic_response(originalRequest)
 {
     hidedizkusinfo();
     newtopicstatus = false;
-    
+
     // show error if necessary
-    if( originalRequest.status != 200 ) {
+    if (originalRequest.status != 200) {
         dzk_showajaxerror(originalRequest.responseText);
         return;
     }
@@ -122,7 +124,7 @@ function createnewtopic_response(originalRequest)
 
 function previewnewtopic()
 {
-    if(newtopicstatus==false) {
+    if (newtopicstatus==false) {
         newtopicstatus = true;
         showdizkusinfo(indicatorimage + ' ' + preparingPreview);
 

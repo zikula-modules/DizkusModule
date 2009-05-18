@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-/*
+/**
  * getforumerror
  *
  * retrieve a custom error message
@@ -117,10 +117,11 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     }
 }
 
-/*
+/**
  * showforumerror
  * display a simple error message showing $text
- *@param text string The error text
+ * 
+ * @param text string The error text
  */
 function showforumerror($error_text, $file='', $line=0, $httperror=null)
 {
@@ -408,9 +409,9 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
  *@returns boolean true or false
  *
  */
-if(!function_exists('Dizkus_is_serialized')) {
+if (!function_exists('Dizkus_is_serialized')) {
     function Dizkus_is_serialized( $string ) {
-        return @unserialize($string)!=='';
+        return @unserialize($string) !== '';
     }
 }
 
@@ -426,7 +427,6 @@ if(!function_exists('Dizkus_is_serialized')) {
  * obsolete function - we have pn_bbcode
  *
  */
-
 function Dizkus_bbdecode($message)
 {
     // Undo [code]
@@ -472,7 +472,6 @@ function Dizkus_bbdecode($message)
     }
     return($message);
 }
-
 
 /**
  * Nathan Codding - Feb 6, 2001
@@ -535,14 +534,14 @@ function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = n
  */
 function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null)
 {
-    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_ADMIN, $user_id);
+    return SecurityUtil::checkPermission('Dizkus::', "{$category_id}:{$forum_id}:", ACCESS_ADMIN, $user_id);
 }
 
 /**
  * sorting categories by cat_order (this is a VARCHAR, so we need this function for sorting)
  *
  */
-function cmp_catorder ($a, $b)
+function cmp_catorder($a, $b)
 {
     return (int)$a['cat_order'] > (int)$b['cat_order'];
 }
@@ -656,7 +655,7 @@ function useragent_is_bot()
  */
 function dzk_getimagepath($image=null)
 {
-    if(!isset($image)) {
+    if (!isset($image)) {
         return false;
     }
 
@@ -709,11 +708,13 @@ function dzk_getimagepath($image=null)
         return false;
     }
 
-    if(!$_image_data = @getimagesize($result['path'])) {
-        // invalid image
-        $result['size']  = '';
-    } else {
-        $result['size']  = $_image_data[3];
+    if (function_exists('getimagesize')) {
+        if (!$_image_data = @getimagesize($result['path'])) {
+            // invalid image
+            $result['size']  = '';
+        } else {
+            $result['size']  = $_image_data[3];
+        }
     }
 
     return $result;
@@ -782,7 +783,7 @@ if (!function_exists('array_csort')) {
  */
 function dzk_ajaxerror($error='unspecified ajax error', $createauthid = false)
 {
-    if(!empty($error)) {
+    if (!empty($error)) {
         if ($createauthid == true) {
             dzk_jsonizeoutput($error, $createauthid, false, false);
         } else {    
@@ -837,7 +838,7 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
  * sorting user lists by ['uname']
  *
  */
-function cmp_userorder ($a, $b)
+function cmp_userorder($a, $b)
 {
     return strcmp($a['uname'], $b['uname']);
 }
@@ -1007,13 +1008,27 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
  */
 function dzk_available($deliverhtml = true)
 {
-    if((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        if($deliverhtml == true) {
+    if ((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if ($deliverhtml == true) {
             $pnr = pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
-            return $pnf->fetch('dizkus_disabled.html');
+            return $pnr->fetch('dizkus_disabled.html');
         } else {
             return false;
         }
     }
     return true;
+}
+
+/**
+ * dzk is an image
+ * check if a filename is an image or not
+ */
+function dzk_isimagefile($filepath) {
+    if (function_exists('getimagesize') && @getimagesize($filepath) <> false) {
+        return true;
+    }
+    if (preg_match('/^(.*)\.(gif|jpg|jpeg|png)/si', $filepath)) {
+        return true;
+    }
+    return false;
 }

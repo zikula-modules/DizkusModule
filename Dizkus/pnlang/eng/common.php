@@ -368,7 +368,7 @@ define('_DZK_NOAUTH_TOWRITE', 'You have no permission to write into this categor
 define('_DZK_NOCATEGORIES', 'no categories defined');
 define('_DZK_NOEXTERNALSOURCE', 'no external source');
 define('_DZK_NOFAVORITES','No favorites defined');
-define('_DZK_NOFORUMS', 'no forums defined');
+define('_DZK_NOFORUMS', 'No forums defined');
 define('_DZK_NOHOOKEDMODULES', 'no hooked module found');
 define('_DZK_NOHTMLALLOWED', 'No HTML-tags allowed (only inside of [code][/code])');
 define('_DZK_NOJOINTO', 'No target topic for joining selected');

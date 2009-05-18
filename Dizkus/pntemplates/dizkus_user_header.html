@@ -9,15 +9,19 @@
 
 <!--[ formutil_getpassedvalue name='func' default='main' assign='func']-->
 <!--[* set the page title *]-->
-<!--[ assign var='maintitle' value='' ]-->
+<!--[ assign var='maintitle' value=$maintitle|default:'' ]-->
 <!--[ if $func eq 'main' ]-->
     <!--[ pnml assign='maintitle' name='_DZK_CATEGORYOVERVIEW' ]-->
 <!--[ elseif $func eq 'viewforum' ]-->
     <!--[ assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name ]-->
 <!--[ elseif $func eq 'viewtopic' ]-->
     <!--[ assign var='maintitle' value=$topic.topic_title ]-->
+<!--[ elseif $func eq 'newtopic' ]-->
+    <!--[ pnml assign='maintitle' name='_DZK_NEW_THREADS' ]-->
 <!--[ /if ]-->
-<!--[ pnpagesetvar name=title value=$maintitle ]-->
+<!--[ if $maintitle neq '' ]-->
+    <!--[ pnpagesetvar name='title' value=$maintitle ]-->
+<!--[ /if ]-->
 
 <!--[insert name='getstatusmsg']-->
 
@@ -120,4 +124,6 @@
         </span>
         <a class="dzk_notextdecoration" title="<!--[ pnml name='_DZK_BOTTOM' ]-->" href="#bottom">&nbsp;<!--[ pnimg modname='Dizkus' src="icon_bottom.gif" alt="_DZK_TOP" altml=true ]--></a>
     </h2>
+<!--[elseif $maintitle neq '']-->
+    <h2><!--[ $maintitle|pnvarprepfordisplay ]--></h2>
 <!--[/if]-->

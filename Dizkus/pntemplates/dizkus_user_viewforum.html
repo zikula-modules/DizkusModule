@@ -92,7 +92,7 @@
     <!--[ if $forum.topics ]-->
 
     <!--[ pnfpager total=$forum.forum_topics ]-->
-    <!--[mediaattach_attachicon topics=$forum.topics assign="uploadtopicids"]-->
+    <!--[mediaattach_attachicon topics=$forum.topics assign='uploadtopicids']-->
 
     <div class="forumbg">
         <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
@@ -110,15 +110,15 @@
 
             <ul class="topiclist forums">
 
-                <!--[ assign var="stickystarted" value="0" ]-->
-                <!--[ assign var="topicstarted"  value="0" ]-->
+                <!--[ assign var='stickystarted' value='0' ]-->
+                <!--[ assign var='topicstarted'  value='0' ]-->
 
                 <!--[ foreach item=topic from=$forum.topics ]-->
 
-                <!--[assign var="showattachment" value="0"]-->
-                <!--[ foreach item="hasuploads" key="topicid" from=$uploadtopicids]-->
+                <!--[assign var='showattachment' value='0']-->
+                <!--[ foreach item='hasuploads' key='topicid' from=$uploadtopicids]-->
                 <!--[if $topicid eq $topic.topic_id && $hasuploads eq 1]-->
-                <!--[assign var="showattachment" value="1"]-->
+                <!--[assign var='showattachment' value='1']-->
                 <!--[/if]-->
                 <!--[ /foreach ]-->
 
@@ -126,21 +126,21 @@
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
                             <!--[ if $topic.sticky eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_post_sticky.gif" alt="_DZK_STICKY" altml=true title="_DZK_STICKY" titleml=true]-->
+                            <!--[ pnimg modname='Dizkus' src='icon_post_sticky.gif' alt='_DZK_STICKY' altml=true title='_DZK_STICKY' titleml=true]-->
                             <!--[ /if ]-->
                             <!--[ if $topic.topic_status eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" alt="_DZK_ISLOCKED" altml=true title="_DZK_TOPICLOCKED" titleml=true ]-->
+                            <!--[ pnimg modname='Dizkus' src='icon_post_close.gif' alt='_DZK_ISLOCKED' altml=true title='_DZK_TOPICLOCKED' titleml=true ]-->
                             <!--[ /if ]-->
                             <!--[ if $topic.new_posts eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true title="_DZK_NEWPOSTS" titleml=true ]-->
+                            <!--[ pnimg modname='Dizkus' src='icon_redfolder.gif' alt='_DZK_NEWPOSTS' altml=true title='_DZK_NEWPOSTS' titleml=true ]-->
                             <!--[ else ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_folder.gif" alt="_DZK_NORMALTOPIC" altml=true title="_DZK_NORMALTOPIC" titleml=true ]-->
+                            <!--[ pnimg modname='Dizkus' src='icon_folder.gif' alt='_DZK_NORMALTOPIC' altml=true title='_DZK_NORMALTOPIC' titleml=true ]-->
                             <!--[ /if ]-->
                             <!--[ if $topic.hot_topic eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
+                            <!--[ pnimg modname='Dizkus' src='icon_hottopic.gif' alt='_DZK_HOTTOPIC' altml=true title='_DZK_HOTTOPIC' titleml=true ]-->
                             <!--[ /if ]-->
                             <!--[ if $showattachment eq 1 ]-->
-                            <!--[ pnimg modname='core' set="icons/extrasmall" src="attach.gif" alt="_DZK_ATTACHMENTS" altml=true title="_DZK_ATTACHMENTSTITLE" titleml=true ]-->
+                            <!--[ pnimg modname='core' set='icons/extrasmall' src='attach.gif' alt='_DZK_ATTACHMENTS' altml=true title='_DZK_ATTACHMENTSTITLE' titleml=true ]-->
                             <!--[ /if ]-->
                             <!--[ $topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name ]-->
                             <span><!--[ pnml name='_DZK_POSTER' ]-->: <!--[ $topic.pn_uname|userprofilelink ]--></span>
@@ -167,8 +167,9 @@
 
     <!--[ else ]-->
 
-    <div class="message">
-        <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+    <div class="forumbg dzk_message">
+        <div class="inner">
+        	<span class="corners-top"><span>&nbsp;</span></span>
             <strong> <!--[ pnml name='_DZK_NOTOPICS' ]--></strong>
             <span class="corners-bottom"><span>&nbsp;</span></span>
         </div>

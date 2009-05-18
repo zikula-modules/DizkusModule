@@ -1,31 +1,31 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_ADMINUSERRANK_TITLE' assign=templatetitle ]-->
+<!--[ pnml name='_DZK_ADMINUSERRANK_TITLE' assign='templatetitle' ]-->
+<!--[ cssversion assign='configclass' ]-->
 <!--[ include file='dizkus_admin_header.html' ]-->
 <!--[ pnpageaddvar name="javascript" value="modules/Dizkus/pnjavascript/dizkus_admin_ranks.js ]-->
-<!--[ cssversion assign=configclass ]-->
 
 <p class="pn-informationmsg"><!--[ pnml name='_DZK_ADMINUSERRANK_INFO' html=1 ]--></p>
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=admin func=ranks ranktype=0 ]-->" method="post">
+<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='0' ]-->" method="post">
     <fieldset>
         <legend><!--[ pnml name="_DZK_ADMINADDNEWRANK" ]--></legend>
         <input type="hidden" name="ranks[-1][rank_special]" value="0" />
         <div class="<!--[ $configclass ]-->row">
             <label for="rank_title"><!--[ pnml name='_DZK_ADMINUSERRANK_TITLE2' html=1 ]--></label>
-            <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20" />
+            <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
         </div>
         <div class="<!--[ $configclass ]-->row">
             <label for="rank_min"><!--[ pnml name='_DZK_ADMINUSERRANK_MIN' html=1 ]--></label>
-            <input id="rank_min" type="text" name="ranks[-1][rank_min]" value="<!--[ $rank.rank_min ]-->" maxlength="5" size="4" />
+            <input id="rank_min" type="text" name="ranks[-1][rank_min]" value="" maxlength="5" size="4" />
         </div>
         <div class="<!--[ $configclass ]-->row">
             <label for="rank_max"><!--[ pnml name='_DZK_ADMINUSERRANK_MAX' html=1 ]--></label>
-            <input id="rank_max" type="text" name="ranks[-1][rank_max]" value="<!--[ $rank.rank_max ]-->" maxlength="5" size="4" />
+            <input id="rank_max" type="text" name="ranks[-1][rank_max]" value="" maxlength="5" size="4" />
         </div>
         <div class="<!--[ $configclass ]-->row">
             <label for="newrank_image"><!--[ pnml name='_DZK_IMAGE' html=1 ]--></label>
             <div>
                 <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('<!--[ $pncore.Dizkus.url_ranks_images ]-->')">
-                    <!--[ foreach name=availableranks item=rankimage from=$rankimages ]-->
+                    <!--[ foreach name='availableranks' item='rankimage' from=$rankimages ]-->
                     <option value="<!--[ $rankimage ]-->" <!--[if $smarty.foreach.availableranks.first]-->selected="selected"<!--[capture assign=selectedimage"]--><!--[$rankimage]--><!--[/capture]--><!--[ /if ]-->><!--[ $rankimage ]--></option>
                     <!--[ /foreach ]-->
                 </select>
@@ -38,7 +38,7 @@
     </div>
 </form>
 
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=admin func=ranks ranktype=0 ]-->" method="post">
+<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus type='admin' func='ranks' ranktype='0' ]-->" method="post">
     <table class="pn-admintable">
         <thead>
             <tr>
@@ -50,7 +50,7 @@
             </tr>
         </thead>
         <tbody>
-            <!--[ foreach key=num item=rank from=$ranks ]-->
+            <!--[ foreach key='num' item='rank' from=$ranks ]-->
             <tr class="<!--[cycle values=pn-odd,pn-even]-->">
                 <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_title]" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20" /></td>
                 <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_min]" value="<!--[ $rank.rank_min ]-->" maxlength="5" size="4" /></td>

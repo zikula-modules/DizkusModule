@@ -19,6 +19,7 @@ function smarty_function_cssversion($params, &$smarty)
     $assign = isset($params['assign']) ? $params['assign'] : null;
 
     if (version_compare(PN_VERSION_NUM, '1.2.0-dev', '>=')) {
+        PageUtil::addVar('stylesheet', 'javascript/style.css');
         $return = 'zk-form';
     } else {
         // get the type parameter so we can decide what template to use
@@ -38,4 +39,3 @@ function smarty_function_cssversion($params, &$smarty)
         return $return;
     }
 }
-

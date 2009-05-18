@@ -36,7 +36,7 @@
                             <!--[ if $forum.forum_desc neq '' ]--><!--[ $forum.forum_desc|pnvarprephtmldisplay ]--><br /><!--[/if]-->
                             <!--[if $forum.forum_mods|@count > 0 ]-->
                             <em><!--[ pnml name='_DZK_MODERATEDBY' ]-->:</em>
-                            <!--[ foreach name=moderators item=mod key=modid from=$forum.forum_mods ]-->
+                            <!--[ foreach name='moderators' item='mod' key='modid' from=$forum.forum_mods ]-->
                             <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
                             <!--[ /foreach ]-->
                             <!--[ /if ]-->
@@ -48,7 +48,7 @@
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
                                 <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|userprofilelink ]--><br />
-                                <!--[ pnml name='_DZK_WRITTENON' ]--> <!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:<br />
+                                <!--[ pnml name='_DZK_WRITTENON' ]--> <!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
                                 <!--[ if $forum.last_post_data.url_anchor neq '' ]-->
                                 <a class="latesttopicimage" href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
                                 <!--[ /if ]-->
@@ -59,6 +59,10 @@
                         </dd>
                     </dl>
                 </li>
+				<!--[ foreachelse ]-->
+				<li class="row dzk_empty">
+					<!--[ pnml name='_DZK_NOFORUMS' ]-->
+				</li>
                 <!--[ /foreach ]-->
             </ul>
 
@@ -93,7 +97,7 @@
             </ul>
 
             <ul class="topiclist forums">
-                <!--[ foreach item=forum from=$view_category_data.forums ]-->
+                <!--[ foreach item='forum' from=$view_category_data.forums ]-->
                 <li class="row">
                     <dl class="icon">
                         <dt <!--[ if $forum.new_posts == true ]-->class='new-posts'<!--[ else ]-->class='no-new-posts'<!--[ /if ]--> >
@@ -108,7 +112,7 @@
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
                                 <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|userprofilelink ]--><br />
-                                <!--[ pnml name='_DZK_WRITTENON' ]--> <!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:<br />
+                                <!--[ pnml name='_DZK_WRITTENON' ]--> <!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
                                 <!--[ if $forum.last_post_data.url_anchor neq '' ]-->
                                 <a class="latesttopicimage" href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>
                                 <!--[ /if ]-->
@@ -119,6 +123,10 @@
                         </dd>
                     </dl>
                 </li>
+				<!--[ foreachelse ]-->
+				<li class="row dzk_empty">
+					<!--[ pnml name='_DZK_NOFORUMS' ]-->
+				</li>
                 <!--[ /foreach ]-->
             </ul>
 
@@ -129,4 +137,4 @@
 
 <!--[/if]-->
 
-<!--[ include file='dizkus_user_footer.html ]-->
+<!--[ include file='dizkus_user_footer.html' ]-->
