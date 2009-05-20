@@ -1,7 +1,9 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_ADMINGENERALOPTIONS' assign=templatetitle ]-->
+<!--[ pnml name='_DZK_ADMINGENERALOPTIONS' assign='templatetitle' ]-->
+<!--[ cssversion assign='configclass' ]-->
+
 <!--[ include file='dizkus_admin_header.html' ]-->
-<!--[ cssversion assign=configclass ]-->
+
 <!--[ pnform cssClass=$configclass]-->
 <!--[ pnformvalidationsummary ]-->
 
@@ -91,11 +93,11 @@
     </div>
     <div class="<!--[ $configclass ]-->row">
         <!--[ pnformlabel for="signature_start" text="_DZK_PREFS_SIGNATURESTART" html=1 ]-->
-        <!--[ pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_start ]-->
+        <!--[ pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_start|default:'' ]-->
     </div>
     <div class="<!--[ $configclass ]-->row">
         <!--[ pnformlabel for="signature_end" text="_DZK_PREFS_SIGNATUREEND" html=1 ]-->
-        <!--[ pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_end ]-->
+        <!--[ pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_end|default:'' ]-->
     </div>
     <div class="<!--[ $configclass ]-->row">
         <!--[ pnformlabel for="autosubscribe" text='_DZK_PREFS_AUTOSUBSCRIBE' ]-->
