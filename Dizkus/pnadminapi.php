@@ -544,29 +544,31 @@ function Dizkus_adminapi_assignranksave($args)
  */
 function Dizkus_adminapi_sync($args)
 {
-//$id, $type)
+//$id, $type
     extract($args);
     unset($args);
 
     list($dbconn, $pntable) = dzkOpenDB();
 
-    switch($type) {
+    switch ($type)
+    {
         case 'forum':
             $sql = "SELECT max(post_id) AS last_post
                     FROM ".$pntable['dizkus_posts']."
-                    WHERE forum_id = ".(int)DataUtil::formatForStore($id)."";
+                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $result_lastpost = $dbconn->Affected_Rows();
-            dzkCloseDB($result);
+
             if ($result_lastpost != 0) {
                 list($last_post) = $result->FetchRow();
             } else {
                 $last_post = 0;
             }
+            dzkCloseDB($result);
 
             $sql = "SELECT count(post_id) AS total
                     FROM ".$pntable['dizkus_posts']."
-                    WHERE forum_id = ".(int)DataUtil::formatForStore($id)."";
+                    WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
             dzkCloseDB($result);
@@ -578,9 +580,12 @@ function Dizkus_adminapi_sync($args)
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $row = $result->GetRowAssoc(false);
             dzkCloseDB($result);
-            $total_topics = $row["total"];
+            $total_topics = $row['total'];
+
             $sql = "UPDATE ".$pntable['dizkus_forums']."
-                    SET forum_last_post_id = '".(int)DataUtil::formatForStore($last_post)."', forum_posts = '".(int)DataUtil::formatForStore($total_posts)."', forum_topics = '".DataUtil::formatForStore($total_topics)."'
+                    SET forum_last_post_id = '".(int)DataUtil::formatForStore($last_post)."',
+                        forum_posts = '".(int)DataUtil::formatForStore($total_posts)."',
+                        forum_topics = '".DataUtil::formatForStore($total_topics)."'
                     WHERE forum_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             dzkCloseDB($result);
@@ -592,19 +597,20 @@ function Dizkus_adminapi_sync($args)
                     WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             $result_lastpost = $dbconn->Affected_Rows();
-            dzkCloseDB($result);
+
             if ($result_lastpost != 0) {
                 list($last_post) = $result->FetchRow();
             } else {
                 $last_post = 0;
             }
+            dzkCloseDB($result);
 
             $sql = "SELECT count(post_id) AS total
                     FROM ".$pntable['dizkus_posts']."
                     WHERE topic_id = '".(int)DataUtil::formatForStore($id)."'";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
             //$row = $result->GetRowAssoc(false);
-            list($total_posts) = $result->FetchRow(); // $row["total"];
+            list($total_posts) = $result->FetchRow(); // $row['total'];
             dzkCloseDB($result);
 
             $total_posts -= 1;
@@ -615,64 +621,90 @@ function Dizkus_adminapi_sync($args)
             dzkCloseDB($result);
             break;
 
-    case 'all forums':
+        case 'all forums':
             $forums = Dizkus_adminapi_readforums();
-            foreach($forums as $forum) {
-                Dizkus_adminapi_sync(array('id' =>$forum['forum_id'], 'type' => "forum"));
+            foreach ($forums as $forum) {
+                Dizkus_adminapi_sync(array('id' => $forum['forum_id'], 'type' => 'forum'));
             }
             break;
-    case 'all topics':
+
+        case 'all topics':
             $sql = "SELECT topic_id
-                    FROM ".$pntable['dizkus_topics']."";
+                    FROM ".$pntable['dizkus_topics'];
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            if($result->RecordCount()>0) {
-                for (; !$result->EOF; $result->MoveNext())
-                {
+
+            if ($result->RecordCount() > 0) {
+                for (; !$result->EOF; $result->MoveNext()) {
                     list($topic_id) = $result->fields;
-                    Dizkus_adminapi_sync(array('id' =>$topic_id, 'type' => "topic"));
+                    Dizkus_adminapi_sync(array('id' => $topic_id, 'type' => 'topic'));
                 }
             }
             dzkCloseDB($result);
             break;
-    case 'all posts':
-            $sql = "SELECT poster_id, count(poster_id) as total_posts
+
+        case 'all posts':
+            $sql = "SELECT poster_id,
+                           count(poster_id) as total_posts
                     FROM ".$pntable['dizkus_posts']."
                     GROUP BY poster_id";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            if($result->RecordCount()>0) {
+
+            if ($result->RecordCount() > 0) {
                 for (; !$result->EOF; $result->MoveNext()) {
-                    list($poster_id,
+                    list($poster_id, 
                          $total_posts) = $result->fields;
+
                     $sub_sql = "UPDATE ".$pntable['dizkus_users']."
                                 SET user_posts = '".(int)DataUtil::formatForStore($total_posts)."'
                                 WHERE user_id = '".(int)DataUtil::formatForStore($poster_id)."'";
                     $result2 = dzkExecuteSQL($dbconn, $sub_sql, __FILE__, __LINE__);
+                    dzkCloseDB($result2);
                 }
             }
             dzkCloseDB($result);
             break;
-    case 'users':
+
+        case 'all users':
             $sql = "SELECT n.pn_uid,
                            b.*
                     FROM ".$pntable['users']." AS n
                     LEFT JOIN ".$pntable['dizkus_users']." AS b
-                    ON b.user_id=n.pn_uid
-                    WHERE b.user_id is NULL";
+                    ON b.user_id = n.pn_uid
+                    WHERE b.user_id IS NULL";
             $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            if($result->RecordCount()>0) {
 
+            if ($result->RecordCount() > 0) {
                 for (; !$result->EOF; $result->MoveNext()) {
                     list($pn_uid) = $result->fields;
-                    $sql2 = "INSERT into ".$pntable['dizkus_users']." (user_id)
+
+                    $sql2 = "INSERT INTO ".$pntable['dizkus_users']." (user_id)
                              VALUES ('".(int)DataUtil::formatForStore($pn_uid)."')";
                     $result2 = dzkExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
+                    dzkCloseDB($result2);
                 } //$result->MoveNext();
             }
             dzkCloseDB($result);
             break;
-    default:
-            return showforumerror("wrong parameter in sync", __FILE__, __LINE__);
+
+        case 'user': 
+            $sql = "SELECT user_id
+                    FROM ".$pntable['dizkus_users']."
+		            WHERE user_id = '".(int)DataUtil::formatForStore($id)."'";
+            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+
+            if ($result->RecordCount() == 0) {
+                $sql2 = "INSERT INTO ".$pntable['dizkus_users']." (user_id)
+                         VALUES ('".(int)DataUtil::formatForStore($id)."')";
+                $result2 = dzkExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
+                dzkCloseDB($result2);
+            }
+            dzkCloseDB($result);
+            break;
+
+        default:
+            return showforumerror('wrong parameter in sync', __FILE__, __LINE__);
     }
+
     return true;
 }
 

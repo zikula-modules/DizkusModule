@@ -382,8 +382,8 @@ function Dizkus_userapi_readcategorytree($args)
     $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
 
     $tree = array();
-    while(!$result->EOF) {
-        $row = $result->GetRowAssoc(false);
+    while (!$result->EOF) {
+        $row   = $result->GetRowAssoc(false);
         $cat   = array();
         $forum = array();
         $cat['last_post'] = array(); // get the last post in this category, this is an array
@@ -407,7 +407,7 @@ function Dizkus_userapi_readcategorytree($args)
         $forum['topic_id']            = $row['topic_id'];
         $forum['post_time']           = $row['post_time'];
         if (allowedtoseecategoryandforum($cat['cat_id'], $forum['forum_id'])) {
-            if (!array_key_exists( $cat['cat_title'], $tree)) {
+            if (!array_key_exists($cat['cat_title'], $tree)) {
                 $tree[$cat['cat_title']] = $cat;
             }
             $last_post_data = array();
@@ -519,12 +519,12 @@ function Dizkus_userapi_get_moderators($args)
         $sql = 'SELECT u.pn_uname, u.pn_uid
                 FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
                 WHERE f.forum_id = \''.DataUtil::formatForStore($forum_id).'\' AND u.pn_uid = f.user_id
-                AND f.user_id<1000000';
+                AND f.user_id < 1000000';
     } else {
         $sql = 'SELECT u.pn_uname, u.pn_uid
                 FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
                 WHERE u.pn_uid = f.user_id
-                AND f.user_id<1000000
+                AND f.user_id < 1000000
                 GROUP BY f.user_id';
     }
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -539,23 +539,22 @@ function Dizkus_userapi_get_moderators($args)
     dzkCloseDB($result);
 
     if (!empty($forum_id)) {
-        $sql = "SELECT g.pn_name, g.pn_gid
-                FROM ".$pntable['groups']." g, ".$pntable['dizkus_forum_mods']." f
+        $sql = 'SELECT g.pn_name, g.pn_gid
+                FROM '.$pntable['groups'].' g, '.$pntable['dizkus_forum_mods']." f
                 WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
-                AND f.user_id>1000000";
+                AND f.user_id > 1000000";
     } else {
-        $sql = "SELECT g.pn_name, g.pn_gid
-                FROM ".$pntable['groups']." g, ".$pntable['dizkus_forum_mods']." f
+        $sql = 'SELECT g.pn_name, g.pn_gid
+                FROM '.$pntable['groups'].' g, '.$pntable['dizkus_forum_mods'].' f
                 WHERE g.pn_gid = f.user_id-1000000
-                AND f.user_id>1000000
-                GROUP BY f.user_id";
+                AND f.user_id > 1000000
+                GROUP BY f.user_id';
     }
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount() > 0) {
         for (; !$result->EOF; $result->MoveNext()) {
-            list( $gname,
-                  $gid ) = $result->fields;
+            list($gname, $gid) = $result->fields;
             $mods[$gid + 1000000] = $gname;
         }
     }
@@ -1133,7 +1132,7 @@ function Dizkus_userapi_preparereply($args)
 
     $reply = array();
 
-    if($post_id<>0) {
+    if ($post_id <> 0) {
         // We have a post id, so include that in the checks
         // create a reply with quote
         $sql = "SELECT f.forum_id,
@@ -1208,8 +1207,9 @@ function Dizkus_userapi_preparereply($args)
             $reply['attach_signature'] = true;
             $reply['subscribe_topic'] = false;
             $is_subscribed = Dizkus_userapi_get_topic_subscription_status(array('userid'   => $pn_uid,
-                                                                                 'topic_id' => $reply['topic_id']));
-            if(($is_subscribed==true) ||(pnModGetVar('Dizkus', 'autosubscribe')=='yes')) {
+                                                                                'topic_id' => $reply['topic_id']));
+
+            if ($is_subscribed == true || pnModGetVar('Dizkus', 'autosubscribe') == 'yes') {
                 $reply['subscribe_topic'] = true;
             } else {
                 $reply['subscribe_topic'] = false;
@@ -1242,7 +1242,7 @@ function Dizkus_userapi_preparereply($args)
 
     $result = dzkSelectLimit($dbconn, $sql, 10, false, __FILE__, __LINE__);
     $reply['topic_review'] = array();
-    while(!$result->EOF) {
+    while (!$result->EOF) {
         $review = array();
         $row = $result->GetRowAssoc(false);
         $review = $row;
@@ -1252,7 +1252,7 @@ function Dizkus_userapi_preparereply($args)
             $review['poster_id'] = 1;
         }
 
-        $review['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid'=>$review['poster_id']));
+        $review['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $review['poster_id']));
 
         // TODO extract unixtime directly from MySql
         $review['post_unixtime'] = dzk_str2time($review['post_time']); //strtotime ($review['post_time']);
@@ -1274,6 +1274,7 @@ function Dizkus_userapi_preparereply($args)
         $result->MoveNext();
     }
     dzkCloseDB($result);
+
     return $reply;
 }
 
@@ -1311,25 +1312,25 @@ function Dizkus_userapi_storereply($args)
     it's a submitted page and message is not empty
     */
 
-    // sync the users, so that new pn users get into the Dizkus
-    // database
-    pnModAPIFunc('Dizkus', 'user', 'usersync');
-
     // grab message for notification
     // without html-specialchars, bbcode, smilies <br> and [addsig]
-    $posted_message=stripslashes($message);
+    $posted_message = stripslashes($message);
 
     // signature is always on, except anonymous user
     // anonymous user has uid=0, but needs pn_uid=1
     $islogged = pnUserLoggedIn();
-    if($islogged) {
-        if($attach_signature==1) {
+    if ($islogged) {
+        if ($attach_signature == 1) {
             $message .= '[addsig]';
         }
         $pn_uid = pnUserGetVar('uid');
     } else {
         $pn_uid = 1;
     }
+
+    // sync the current user, so that new users
+    // get into the Dizkus database
+    pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $pn_uid, 'type' => 'user')); 
 
     if (pnModGetVar('Dizkus', 'log_ip') == 'no') {
         // for privavy issues ip logging can be deactivated
@@ -1604,10 +1605,6 @@ function Dizkus_userapi_storenewtopic($args)
         return showforumerror(_DZK_EMPTYMSG, __FILE__, __LINE__);
     }
 
-    // sync the users, so that new pn users get into the Dizkus
-    // database
-    pnModAPIFunc('Dizkus', 'user', 'usersync');
-
     /*
     it's a submitted page and message and subject are not empty
     */
@@ -1629,6 +1626,11 @@ function Dizkus_userapi_storenewtopic($args)
             $pn_uid = 1;
         }
     }
+
+    // sync the current user, so that new users
+    // get into the Dizkus database
+    pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $pn_uid, 'type' => 'user'));
+
     // some enviroment for logging ;)
     if (pnServerGetVar('HTTP_X_FORWARDED_FOR')){
         $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
@@ -1723,8 +1725,8 @@ function Dizkus_userapi_storenewtopic($args)
     if (pnUserLoggedin()) {
         // user logged in we have to update users-table
         $sql = "UPDATE $pntable[dizkus_users]
-                SET user_posts=user_posts+1
-                WHERE (user_id = $pn_uid)";
+                SET user_posts = user_posts+1
+                WHERE (user_id = '".DataUtil::formatForStore($pn_uid)."')";
 
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
@@ -1732,12 +1734,15 @@ function Dizkus_userapi_storenewtopic($args)
         // update subscription
         if ($subscribe_topic == 1) {
             // user wants to subscribe the new topic
-            Dizkus_userapi_subscribe_topic(array('topic_id'=>$topic_id));
+            Dizkus_userapi_subscribe_topic(array('topic_id' => $topic_id));
         }
     }
+
     //  update forums-table
     $sql = "UPDATE $pntable[dizkus_forums]
-            SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = '" . DataUtil::formatForStore($post_id) . "'
+            SET forum_posts = forum_posts+1,
+                forum_topics = forum_topics+1,
+                forum_last_post_id = '".DataUtil::formatForStore($post_id)."'
             WHERE forum_id = '$forum_id'";
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -3406,8 +3411,8 @@ function Dizkus_userapi_get_latest_posts($args)
 function Dizkus_userapi_usersync()
 {
     pnModAPIFunc('Dizkus', 'admin', 'sync',
-                 array( 'id'   => NULL,
-                      'type' => 'users'));
+                 array('type' => 'all users'));
+
     return;
 }
 

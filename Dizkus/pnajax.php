@@ -35,8 +35,8 @@ function Dizkus_ajax_reply()
 	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
 	$topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
 	$topic['start'] = 0;
-	$ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
-	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
+	$ignorelist_setting = pnModAPIFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
+	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
 		dzk_ajaxerror(_DZK_IGNORELISTNOREPLY);
 	}
 
@@ -100,8 +100,8 @@ function Dizkus_ajax_reply()
                                 'post_id' => $post['post_id'],
                                 'uploadauthid' => pnSecGenAuthKey('MediaAttach')),
                           true);
-    }
-    else {
+
+    } else {
         dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
                                 'post_id' => $post['post_id']),
                           true);

@@ -53,31 +53,28 @@ function Dizkus_admin_syncforums()
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
-    $silent = FormUtil::getPassedValue('silent');
+    $silent = FormUtil::getPassedValue('silent', 0);
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
-                 array( 'id'   => NULL,
-                        'type' => 'users'));
+                 array('type' => 'all users'));
     $message = DataUtil::formatForDisplay(_DZK_SYNC_USERS) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
-                 array( 'id'   => NULL,
-                        'type' => 'all forums'));
+                 array('type' => 'all forums'));
     $message .= DataUtil::formatForDisplay(_DZK_SYNC_FORUMINDEX) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
-                 array( 'id'   => NULL,
-                        'type' => 'all topics'));
+                 array('type' => 'all topics'));
     $message .= DataUtil::formatForDisplay(_DZK_SYNC_TOPICS) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
-                 array( 'id'   => NULL,
-                        'type' => 'all posts'));
+                 array('type' => 'all posts'));
     $message .= DataUtil::formatForDisplay(_DZK_SYNC_POSTSCOUNT) . '<br />';
 
     if ($silent != 1) {
         LogUtil::registerStatus($message);
     }
+
     return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));
 }
 
@@ -141,19 +138,16 @@ function Dizkus_admin_assignranks()
     }
     $letter = strtolower($letter);
 
-    if(!$submit) {
-        // sync the users, so that new pn users get into the Dizkus
-        // database
-        pnModAPIFunc('Dizkus', 'user', 'usersync');
+    if (!$submit) {
 
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                  array('ranktype' => 1));
 
         $tables = pnDBGetTables();
 
-        $userscol   = $tables['users_column'];
-        $where   = 'LEFT('.$userscol['uname'].',1) LIKE \''.DataUtil::formatForStore($letter).'%\'';
-        $orderby = $userscol['uname'].' ASC';
+        $userscol  = $tables['users_column'];
+        $where     = 'LEFT('.$userscol['uname'].',1) LIKE \''.DataUtil::formatForStore($letter).'%\'';
+        $orderby   = $userscol['uname'].' ASC';
         $usercount = DBUtil::selectObjectCount('users', $where);
 
         $perpage = 50;
@@ -202,8 +196,9 @@ function Dizkus_admin_assignranks()
         $pnr->assign('page', $page);
         $pnr->assign('perpage', $perpage);
         $pnr->assign('usercount', $usercount);
-        $pnr->assign('allow_star', ($usercount<1000));
+        $pnr->assign('allow_star', ($usercount < 1000));
         return $pnr->fetch('dizkus_admin_assignranks.html');
+
     } else {
         // avoid some vars in the url of the pager
         unset($_GET['submit']);
@@ -213,6 +208,7 @@ function Dizkus_admin_assignranks()
         pnModAPIFunc('Dizkus', 'admin', 'assignranksave', 
                      array('setrank' => $setrank));
     }
+
     return pnRedirect(pnModURL('Dizkus','admin', 'assignranks',
                                array('letter' => $letter,
                                      'page'   => $page)));
