@@ -349,7 +349,7 @@ function Dizkus_user_newtopic($args=array())
 function Dizkus_user_editpost($args=array())
 {
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -359,17 +359,19 @@ function Dizkus_user_editpost($args=array())
     $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
     $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
     $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
-    $delete = FormUtil::getPassedValue('delete', (isset($args['delete'])) ? $args['delete'] : '', 'GETPOST');
-    $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
-    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
+    $delete   = FormUtil::getPassedValue('delete', (isset($args['delete'])) ? $args['delete'] : '', 'GETPOST');
+    $preview  = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
+    $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $cancel   = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
 
-    if(empty($post_id) || !is_numeric($post_id)) {
+    if (empty($post_id) || !is_numeric($post_id)) {
         return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
     }
+
     $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
-                         array('post_id'    => $post_id));
-    if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
+                         array('post_id' => $post_id));
+
+    if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
        && ($post['poster_data']['pn_uid'] <> pnUserGetVar('uid')) ) {
         return showforumerror(_DZK_NOAUTH, __FILE__, __LINE__);
     }
@@ -377,13 +379,13 @@ function Dizkus_user_editpost($args=array())
     $preview = (empty($preview)) ? false : true;
 
     //  if cancel is submitted move to forum-view
-    if(!empty($cancel)) {
-        return pnRedirect(pnModURL('Dizkus','user', 'viewtopic', array('topic'=>$topic_id)));
+    if (!empty($cancel)) {
+        return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
     }
 
     $message = dzkstriptags($message);
     // check for maximum message size
-    if( (strlen($message) +  strlen('[addsig]')) > 65535  ) {
+    if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
         LogUtil::registerStatus(_DZK_ILLEGALMESSAGESIZE);
         // switch to preview mode
         $preview = true;
@@ -391,24 +393,25 @@ function Dizkus_user_editpost($args=array())
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
 
-    if($submit && !$preview) {
-        /**
-         * Confirm authorisation code
-         */
+    if ($submit && !$preview) {
+
+        // Confirm authorisation code
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
-        //store the new topic
+
+        // store the new topic
         $redirect = pnModAPIFunc('Dizkus', 'user', 'updatepost',
                                  array('post_id'          => $post_id,
                                        'delete'           => $delete,
                                        'subject'          => $subject,
                                        'message'          => $message,
                                        'attach_signature' => ($attach_signature==1)));
+
         return pnRedirect($redirect);
 
     } else {
-        if(!empty($subject)) {
+        if (!empty($subject)) {
             $post['topic_subject'] = strip_tags($subject);
         }
 
@@ -417,14 +420,16 @@ function Dizkus_user_editpost($args=array())
         $firstpost = pnModAPIFunc('Dizkus', 'user', 'get_firstlast_post_in_topic',
                                   array('topic_id' => $post['topic_id'],
                                         'first'    => true));
-        if($post['poster_data']['pn_uid'] == $firstpost['poster_data']['pn_uid']) {
+
+        if ($post['poster_data']['pn_uid'] == $firstpost['poster_data']['pn_uid']) {
             $post['edit_subject'] = true;
         }
 
-        if(!empty($message)) {
+        if (!empty($message)) {
             $post['post_rawtext'] = $message;
             list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array(nl2br($message)));
         }
+
         $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign( 'preview', $preview);
         $pnr->assign( 'post', $post);
@@ -792,11 +797,11 @@ function Dizkus_user_emailtopic($args=array())
 function Dizkus_user_viewlatest($args=array())
 {
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
-    if(useragent_is_bot() == true) {
+    if (useragent_is_bot() == true) {
         return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
     }
 
@@ -805,15 +810,16 @@ function Dizkus_user_viewlatest($args=array())
     $nohours    = (int)FormUtil::getPassedValue('nohours', (isset($args['nohours'])) ? $args['nohours'] : null, 'GETPOST');
     $unanswered = (int)FormUtil::getPassedValue('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0, 'GETPOST');
 
-    if(!empty($nohours) && !is_numeric($nohours)) {
+    if (!empty($nohours) && !is_numeric($nohours)) {
         unset($nohours);
     }
+
     // maximum two weeks back = 2 * 24 * 7 hours
-    if(isset($nohours) && $nohours>336) {
+    if (isset($nohours) && $nohours > 336) {
         $nohours = 336;
     }
-    
-    if(!empty($nohours)) {
+
+    if (!empty($nohours)) {
         $selorder = 5;
     }
 

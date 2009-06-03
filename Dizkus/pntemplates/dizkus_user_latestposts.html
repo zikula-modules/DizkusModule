@@ -1,6 +1,7 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_OURLATESTPOSTS' assign=templatetitle]-->
+<!--[ pnml name='_DZK_OURLATESTPOSTS' assign='templatetitle']-->
 <!--[ pnpagesetvar name=title value="`$templatetitle` - `$text`" ]-->
+
 <!--[ include file='dizkus_user_header.html' ]-->
 
 <div id="latestposts">
@@ -47,7 +48,7 @@
             </ul>
 
             <ul class="topiclist forums">
-                <!--[ foreach item=post from=$posts ]-->
+                <!--[ foreach item='post' from=$posts ]-->
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
@@ -57,11 +58,6 @@
                             <!--[ if $post.topic_status eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" alt="_DZK_ISLOCKED" altml=true title="_DZK_TOPICLOCKED" titleml=true ]-->
                             <!--[ /if ]-->
-                            <!--[ if $post.new_posts eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true title="_DZK_NEWPOSTS" titleml=true ]-->
-                            <!--[ else ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_folder.gif" alt="_DZK_NORMALTOPIC" altml=true title="_DZK_NORMALTOPIC" titleml=true ]-->
-                            <!--[ /if ]-->                            
                             <!--[ if $post.hot_topic eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
                             <!--[ /if ]-->
@@ -106,7 +102,7 @@
             </ul>
 
             <ul class="topiclist forums">
-                <!--[ foreach item=post from=$rssposts ]-->
+                <!--[ foreach item='post' from=$rssposts ]-->
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
@@ -116,11 +112,6 @@
                             <!--[ if $post.topic_status eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" alt="_DZK_ISLOCKED" altml=true title="_DZK_TOPICLOCKED" titleml=true ]-->
                             <!--[ /if ]-->
-                            <!--[ if $post.new_posts eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true title="_DZK_NEWPOSTS" titleml=true ]-->
-                            <!--[ else ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_folder.gif" alt="_DZK_NORMALTOPIC" altml=true title="_DZK_NORMALTOPIC" titleml=true ]-->
-                            <!--[ /if ]-->                            
                             <!--[ if $post.hot_topic eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
                             <!--[ /if ]-->
@@ -166,7 +157,7 @@
             </ul>
 
             <ul class="topiclist forums">
-                <!--[ foreach item=post from=$m2fposts ]-->
+                <!--[ foreach item='post' from=$m2fposts ]-->
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
@@ -176,11 +167,6 @@
                             <!--[ if $post.topic_status eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" alt="_DZK_ISLOCKED" altml=true title="_DZK_TOPICLOCKED" titleml=true ]-->
                             <!--[ /if ]-->
-                            <!--[ if $post.new_posts eq 1 ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true title="_DZK_NEWPOSTS" titleml=true ]-->
-                            <!--[ else ]-->
-                            <!--[ pnimg modname='Dizkus' src="icon_folder.gif" alt="_DZK_NORMALTOPIC" altml=true title="_DZK_NORMALTOPIC" titleml=true ]-->
-                            <!--[ /if ]-->                            
                             <!--[ if $post.hot_topic eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
                             <!--[ /if ]-->

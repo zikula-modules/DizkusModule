@@ -540,12 +540,16 @@ function quickEditInit(originalRequest)
     }
 
     new Insertion.After($(postingtextID), result.data);
-    $('bbcode_'+postingtextID+'_edit').removeClassName('hidden');
-    $$('.bbsmile_smilies').each(function(el) {
-        el.removeClassName('bbsmile_smilies');
-    });
-    if($('smiliemodal')) {
-        new Control.Modal($('smiliemodal'), {});
+    if ($('bbcode_'+postingtextID+'_edit')) {
+        $('bbcode_'+postingtextID+'_edit').removeClassName('hidden');
+    }
+    if ($$('#postingtext_'+postingtextID+'_editor .bb_standardsmilies')) {
+        $$('.bbsmile_smilies').each(function(el) {
+            el.removeClassName('bbsmile_smilies');
+        });
+        if($('smiliemodal')) {
+            new Control.Modal($('smiliemodal'), {});
+        }
     }
 
     $$('.dzk_texpand').each(function(el){
