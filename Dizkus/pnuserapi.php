@@ -2497,7 +2497,7 @@ function Dizkus_userapi_movetopic($args)
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    if($result->EOF) {
+    if ($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
@@ -2509,9 +2509,9 @@ function Dizkus_userapi_movetopic($args)
     $topic_time   = $myrow['topic_time'];
     $topic_title  = $myrow['topic_title'];
 
-    if($oldforum_id <> $forum_id) {
+    if ($oldforum_id <> $forum_id) {
         // set new forum id
-        $sql = "UPDATE ".$pntable['dizkus_topics']."
+        $sql = "UPDATE $pntable[dizkus_topics]
                 SET forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
                 WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
@@ -2523,9 +2523,9 @@ function Dizkus_userapi_movetopic($args)
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
 
-        if($shadow==true) {
+        if ($shadow == true) {
             // user wants to have a shadow topic
-            $message = sprintf(_DZK_SHADOWTOPIC_MESSAGE, pnModURL('Dizkus','user','viewtopic', array('topic'=> $topic_id)) );
+            $message = sprintf(_DZK_SHADOWTOPIC_MESSAGE, pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)) );
             $subject = '***' . DataUtil::formatForDisplay(_DZK_MOVED_SUBJECT) . ': ' . $topic_title;
 
             Dizkus_userapi_storenewtopic(array('subject'  => $subject,
@@ -2537,6 +2537,7 @@ function Dizkus_userapi_movetopic($args)
         pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
         pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $oldforum_id, 'type' => 'forum'));
     }
+
     return;
 }
 
@@ -2559,7 +2560,7 @@ function Dizkus_userapi_deletetopic($args)
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    if($result->EOF) {
+    if ($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
@@ -2579,7 +2580,7 @@ function Dizkus_userapi_deletetopic($args)
 
     while (!$result->EOF) {
         $row = $result->GetRowAssoc(false);
-        if($row['poster_id'] != -1) {
+        if ($row['poster_id'] != -1) {
             $sql2 = "UPDATE ".$pntable['dizkus_users']."
                      SET user_posts = user_posts - 1
                      WHERE user_id = '".DataUtil::formatForStore($row['poster_id'])."'";
@@ -2668,7 +2669,7 @@ function Dizkus_userapi_notify_by_email($args)
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    if($result->EOF) {
+    if ($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
@@ -2700,7 +2701,7 @@ function Dizkus_userapi_notify_by_email($args)
     // anonymous does not have uid, so we need a sql to exclude real users
     $fs_wherenotuser = '';
     $ts_wherenotuser = '';
-    if(!empty($thisuser)) {
+    if (!empty($thisuser)) {
         $fs_wherenotuser = ' AND fs.user_id <> ' . DataUtil::formatForStore($thisuser);
         $ts_wherenotuser = ' AND ts.user_id <> ' . DataUtil::formatForStore($thisuser);
     }
@@ -2720,13 +2721,13 @@ function Dizkus_userapi_notify_by_email($args)
     $recipients = array();
     // check if list is empty - then do nothing
     // we create an array of recipients here
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             list($pn_uid, $cat_id) = $result->fields;
             $pn_email = pnUserGetVar('email', $pn_uid);
-            if(empty($pn_email)) { continue; }
+            if (empty($pn_email)) { continue; }
             // check permissions
-            if(SecurityUtil::checkPermission('Dizkus::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+            if (SecurityUtil::checkPermission('Dizkus::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
@@ -2750,13 +2751,13 @@ function Dizkus_userapi_notify_by_email($args)
               AND c.cat_id = f.cat_id";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             list($pn_uid, $cat_id, $forum_id) = $result->fields;
             $pn_email = pnUserGetVar('email', $pn_uid);
-            if(empty($pn_email)) { continue; }
+            if (empty($pn_email)) { continue; }
             // check permissions
-            if(SecurityUtil::checkPermission('Dizkus::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
+            if (SecurityUtil::checkPermission('Dizkus::', $cat_id . ':' . $forum_id . ':', ACCESS_READ, $pn_uid)) {
                 $pn_name  = pnUserGetVar('name', $pn_uid);
                 $email['name'] = (!empty($pn_name)) ? $pn_name : pnUserGetVar('uname', $pn_uid);
                 $email['address'] = $pn_email;
@@ -2784,16 +2785,15 @@ function Dizkus_userapi_notify_by_email($args)
             . "\n"
             . _DZK_NOTIFYBODY5 . ' ' . pnGetBaseURL();
 
-    if(count($recipients)>0) {
-        foreach($recipients as $subscriber) {
+    if (count($recipients) > 0) {
+        foreach ($recipients as $subscriber) {
             // integrate contactlist's ignorelist here
             $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
-            if (    pnModAvailable('ContactList') && 
-                    (in_array($ignorelist_setting,array('medium','strict'))) && 
-                    pnModAPIFunc('ContactList','user','isIgnored',array('uid' => $subscriber['uid'], 'iuid' => pnUserGetVar('uid')))    ) {
+            if (pnModAvailable('ContactList') && 
+                (in_array($ignorelist_setting, array('medium', 'strict'))) && 
+                pnModAPIFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => pnUserGetVar('uid')))) {
                 $send = false;
-            }
-            else {
+            } else {
                 $send = true;
             }
             if ($send) {
@@ -2828,8 +2828,8 @@ function Dizkus_userapi_get_topic_subscriptions($args)
 
     list($dbconn, $pntable) = dzkOpenDB();
 
-    if(isset($user_id)) {
-        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (isset($user_id)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return showforumerror(_DZK_NOAUTH);
         }
     } else {
@@ -2881,7 +2881,7 @@ function Dizkus_userapi_get_topic_subscriptions($args)
                               'topic_last_post_id' => $row['topic_last_post_id'],
                               'poster_name'        => $row['pn_uname'],
                               'forum_name'         => $row['forum_name']);
-        if($post_sort_order == 'ASC') {
+        if ($post_sort_order == 'ASC') {
             $start = ((ceil(($subscription['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
         } else {
             // latest topic is on top anyway...
@@ -2891,8 +2891,8 @@ function Dizkus_userapi_get_topic_subscriptions($args)
         // on site 1, 2 or what ever in the thread, depending on topic_replies
         // count and the posts_per_page setting
         $subscription['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
-                                                             array('topic' => $subscription['topic_id'],
-                                                                   'start' => $start)));
+                                                                             array('topic' => $subscription['topic_id'],
+                                                                                   'start' => $start)));
         $subscription['last_post_url_anchor'] = $subscription['last_post_url'] . '#pid' . $subscription['topic_last_post_id'];
 
         array_push($subscriptions, $subscription);
@@ -2918,14 +2918,14 @@ function Dizkus_userapi_subscribe_topic($args)
 
     list($dbconn, $pntable) = dzkOpenDB();
 
-    if(isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    if (isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
         $user_id = pnUserGetVar('uid');
     }
 
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
-    if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+    if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
         return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
@@ -2957,7 +2957,7 @@ function Dizkus_userapi_unsubscribe_topic($args)
     $tsubtable  = $pntable['dizkus_topic_subscription'];
     $tsubcolumn = $pntable['dizkus_topic_subscription_column'];
 
-    if(isset($user_id)) {
+    if (isset($user_id)) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
@@ -2966,7 +2966,7 @@ function Dizkus_userapi_unsubscribe_topic($args)
     }
 
     $wheretopic = '';
-    if(!empty($topic_id)) {
+    if (!empty($topic_id)) {
         $wheretopic = ' AND ' . $tsubcolumn['topic_id'] . '=' . (int)DataUtil::formatForStore($topic_id);
     }
 
@@ -2995,7 +2995,7 @@ function Dizkus_userapi_subscribe_forum($args)
     list($dbconn, $pntable) = dzkOpenDB();
 
 
-    if(isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    if (isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
         $user_id = pnUserGetVar('uid');
@@ -3003,7 +3003,7 @@ function Dizkus_userapi_subscribe_forum($args)
 
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
-    if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+    if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
@@ -3015,6 +3015,7 @@ function Dizkus_userapi_subscribe_forum($args)
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
     }
+
     return;
 }
 
@@ -3079,8 +3080,8 @@ function Dizkus_userapi_add_favorite_forum($args)
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $forum_id));
 
-    if(!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+    if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
@@ -3112,7 +3113,7 @@ function Dizkus_userapi_remove_favorite_forum($args)
         $user_id = (int)pnUserGetVar('uid');
     }
 
-    if (Dizkus_userapi_get_forum_favorites_status(array('userid'=>$user_id, 'forum_id'=>$forum_id)) == true) {
+    if (Dizkus_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == true) {
         // remove from favorites
         $sql = "DELETE FROM ".$pntable['dizkus_forum_favorites']."
                 WHERE user_id='".(int)DataUtil::formatForStore($user_id)."'
@@ -3121,6 +3122,7 @@ function Dizkus_userapi_remove_favorite_forum($args)
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
     }
+
     return;
 }
 
@@ -3151,7 +3153,7 @@ function Dizkus_userapi_prepareemailtopic($args)
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    if($result->EOF) {
+    if ($result->EOF) {
         // no results - topic does not exist
         return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
     } else {
@@ -3169,7 +3171,7 @@ function Dizkus_userapi_prepareemailtopic($args)
     /**
      * base security check
      */
-    if(!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
+    if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
     return $topic;
@@ -3199,6 +3201,7 @@ function Dizkus_userapi_emailtopic($args)
                     'subject'     => $args['subject'],
                     'body'        => $args['message'],
                     'headers'     => array('X-Mailer: Dizkus v' . $modinfo['version']));
+
     pnModAPIFunc('Mailer', 'user', 'sendmessage', $args2);
     return;
 }
@@ -3548,10 +3551,10 @@ function Dizkus_userapi_update_user_post_count($args)
 
     list($dbconn, $pntable) = dzkOpenDB();
 
-    if(!isset($user_id) || !isset($mode)) {
+    if (!isset($user_id) || !isset($mode)) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
-    if(strtolower($mode)=='inc') {
+    if (strtolower($mode)=='inc') {
         $math = '+';
     } elseif(strtolower($mode)=='dec') {
         $math = '-';
@@ -3693,11 +3696,11 @@ function Dizkus_userapi_getfavorites($args)
     // loop through all the forums and delete all forums that aren't part of
     // the favorites.
     $deleteMe = array();
-    foreach ($tree as $categoryIndex=>$category) {
+    foreach ($tree as $categoryIndex => $category) {
         // $count is needed because the index changes as we splice the array
         // but the foreach is working on a copy of the array so the $forumIndex
         // value will point to non-existent elements in the modified array.
-        $count=0;
+        $count = 0;
         foreach ($category['forums'] as $forumIndex=>$forum) {
             // if this isn't one of our favorites then we need to remove it
             if (!in_array((int)$forum['forum_id'],$favoritesArray,true)){
@@ -3711,7 +3714,7 @@ function Dizkus_userapi_getfavorites($args)
         }
         // lets see if the category is empty.  If it is we don't want to
         // display it in the favorites
-        if (count($tree[$categoryIndex]['forums'])===0) {
+        if (count($tree[$categoryIndex]['forums']) === 0) {
             $deleteMe[] = $categoryCount;
         }
         // increase the index number to keep track of where we are in the array
@@ -3756,6 +3759,7 @@ function Dizkus_userapi_get_favorite_status($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($favorite) = $result->fields;
     dzkCloseDB($result);
+
     return (bool)$favorite;
 }
 
@@ -3781,12 +3785,13 @@ function Dizkus_userapi_change_favorite_status($args)
 
     list($dbconn, $pntable) = dzkOpenDB();
     $userstable = $pntable['dizkus_users'];
-    $userscol    = $pntable['dizkus_users_column'];
+    $userscol   = $pntable['dizkus_users_column'];
     $sql = "UPDATE $userstable
             SET $userscol[user_favorites] = $newstatus
             WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
+
     return (bool)$newstatus;
 }
 
@@ -3838,13 +3843,14 @@ function Dizkus_userapi_get_user_post_order($args)
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    if(!$result->EOF) {
+    if (!$result->EOF) {
         list($post_order) = $result->fields;
         $post_order = ($post_order) ? 'DESC' : 'ASC';
     } else {
         $post_order = pnModGetVar('Dizkus', 'post_sort_order');
     }
     dzkCloseDB($result);
+
     return $post_order;
 }
 
@@ -3874,12 +3880,13 @@ function Dizkus_userapi_change_user_post_order($args)
 
     list($dbconn, $pntable) = dzkOpenDB();
     $userstable = $pntable['dizkus_users'];
-    $userscol    = $pntable['dizkus_users_column'];
+    $userscol   = $pntable['dizkus_users_column'];
     $sql = "UPDATE $userstable
             SET $userscol[user_post_order] = $new_post_order
             WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
+
     return true;
 }
 
@@ -3910,7 +3917,7 @@ function Dizkus_userapi_get_forum_category($args)
  */
 function Dizkus_userapi_get_page_from_topic_replies($args)
 {
-    if(!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0 ) {
+    if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0 ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
@@ -3923,6 +3930,7 @@ function Dizkus_userapi_get_page_from_topic_replies($args)
         // +1 for the initial posting
         $last_page = floor(($args['topic_replies'] + 1) / $posts_per_page);
     }
+
     // if not ASC then DESC which means latest topic is on top anyway...
     return $last_page;
 }
@@ -3940,14 +3948,14 @@ function Dizkus_userapi_mailcron($args)
     extract($args);
     unset($args);
 
-    if(pnModGetVar('Dizkus', 'm2f_enabled') <> 'yes') {
+    if (pnModGetVar('Dizkus', 'm2f_enabled') <> 'yes') {
         return;
     }
 
     $force = (isset($force)) ? (boolean)$force : false;
 
     Loader::includeOnce('modules/Dizkus/pnincludes/pop3.php');
-    if( (($forum['pop3_active']==1) && ($forum['pop3_last_connect']<=time()-($forum['pop3_interval']*60)) ) || ($force==true) ) {
+    if ( (($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time()-($forum['pop3_interval']*60)) ) || ($force == true) ) {
         mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $debug);
         // get new mails for this forum
         $pop3 =& new pop3_class;
@@ -3956,24 +3964,24 @@ function Dizkus_userapi_mailcron($args)
         $error = '';
 
         // open connection to pop3 server
-        if(($error = $pop3->Open())=='') {
+        if (($error = $pop3->Open()) == '') {
             mailcronecho("connected to the pop3 server '".$pop3->hostname."'.\n", $debug);
             // login to pop3 server
-            if(($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=="") {
+            if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
                 mailcronecho( "user '" . $forum['pop3_login'] . "' logged into pop3 server '".$pop3->hostname."'.\n", $debug);
                 // check for message
-                if(($error = $pop3->Statistics($messages,$size))=="") {
+                if (($error = $pop3->Statistics($messages,$size)) == '') {
                     mailcronecho("there are $messages messages in the mail box with a total of $size bytes.\n", $debug);
                     // get message list...
-                    $result = $pop3->ListMessages("",1);
-                    if(is_array($result) && count($result)>0) {
+                    $result = $pop3->ListMessages('', 1);
+                    if (is_array($result) && count($result) > 0) {
                         // logout the currentuser
                         mailcronecho("logging out '" . pnUserGetVar('uname') . "' from pn\n", $debug);
                         pnUserLogOut();
                         // login the correct user
-                        if(pnUserLogIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
+                        if (pnUserLogIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
                             mailcronecho('user ' . pnUserGetVar('uname') . ' successfully logged in', $debug);
-                            if(!allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+                            if (!allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id'])) {
                                 mailcronecho("stop: insufficient permissions for " . pnUserGetVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ")", $debug);
                                 pnUserLogOut();
                                 mailcronecho('user ' . pnUserGetVar('uname') . ' logged out', $debug);
@@ -3981,23 +3989,23 @@ function Dizkus_userapi_mailcron($args)
                             }
                             mailcronecho("adding new posts as user '" . pnUserGetVar('uname') . "' now\n", $debug);
                             // .cycle through the message list
-                            for($cnt=1; $cnt<=count($result); $cnt++) {
-                                if(($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1))=="") {
+                            for ($cnt = 1; $cnt <= count($result); $cnt++) {
+                                if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
                                     // echo "Message $i:\n---Message headers starts below---\n";
                                     $subject = '';
                                     $from = '';
                                     $msgid = '';
                                     $replyto = '';
                                     $original_topic_id = '';
-                                    foreach($headers as $header) {
+                                    foreach ($headers as $header) {
                                         //echo htmlspecialchars($header),"\n";
                                         // get subject
                                         $header = strtolower($header);
-                                        if(strpos($header, 'subject:')===0) {
+                                        if (strpos($header, 'subject:') === 0) {
                                             $subject = trim(strip_tags(substr($header, 8)));
                                         }
                                         // get sender
-                                        if(strpos($header, 'from:')===0) {
+                                        if (strpos($header, 'from:') === 0) {
                                             $from = trim(strip_tags(substr($header, 5)));
                                             // replace @ and . to make it harder for email harvesers,
                                             // credits to Teb for this idea
@@ -4005,34 +4013,34 @@ function Dizkus_userapi_mailcron($args)
                                         }
                                         // get msgid from In-Reply-To: if this is an nswer to a prior
                                         // posting
-                                        if(strpos($header, 'in-reply-to:')===0) {
+                                        if (strpos($header, 'in-reply-to:') === 0) {
                                             $replyto = trim(strip_tags(substr($header, 12)));
                                         }
                                         // this msg id
-                                        if(strpos($header, 'message-id:')===0) {
+                                        if (strpos($header, 'message-id:') === 0) {
                                             $msgid = trim(strip_tags(substr($header, 11)));
                                         }
 
                                         // check for X-DizkusTopicID, if set, then this is a possible
                                         // loop (mailinglist subscribed to the forum too)
-                                        if(strpos($header, 'X-DizkusTopicID:')===0) {
+                                        if (strpos($header, 'X-DizkusTopicID:') === 0) {
                                             $original_topic_id = trim(strip_tags(substr($header, 17)));
                                         }
                                     }
-                                    if(empty($subject)) {
+                                    if (empty($subject)) {
                                         $subject = DataUtil::formatForDisplay(_DZK_NOSUBJECT);
                                     }
 
                                     // check if subject matches our matchstring
-                                    if(empty($original_topic_id)) {
-                                        if( empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject)<>0) ) {
+                                    if (empty($original_topic_id)) {
+                                        if (empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject) <> 0)) {
                                             $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
-                                            if(!empty($replyto)) {
+                                            if (!empty($replyto)) {
                                                 // this seems to be a reply, we find the original posting
                                                 // and store this mail in the same thread
                                                 $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topic_by_postmsgid',
                                                                          array('msgid' => $replyto));
-                                                if(is_bool($topic_id) && $topic_id==false) {
+                                                if (is_bool($topic_id) && $topic_id == false) {
                                                     // msgid not found, we clear replyto to create a new topic
                                                     $replyto = '';
                                                 } else {
@@ -4049,7 +4057,7 @@ function Dizkus_userapi_mailcron($args)
                                             }
 
                                             // check again for replyto and create a new topic
-                                            if(empty($replyto)) {
+                                            if (empty($replyto)) {
                                                 // store message in forum
                                                 $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
                                                                          array('subject'          => $subject,
@@ -4071,14 +4079,14 @@ function Dizkus_userapi_mailcron($args)
                                 }
                             }
                             // logout the mail2forum user
-                            if(pnUserLogOut()) {
+                            if (pnUserLogOut()) {
                                 mailcronecho('user ' . $forum['pop3_pnuser'] . ' logged out', $debug);
                             }
                         } else {
                             mailcronecho("error: cannot login user '". $forum['pop3_pnuser'] ."' to pn\n");
                         }
                         // close pop3 connection and finally delete messages
-                        if($error=="" && ($error=$pop3->Close())=="") {
+                        if ($error == '' && ($error=$pop3->Close()) == '') {
                             mailcronecho("disconnected from the POP3 server '".$pop3->hostname."'.\n");
                         }
                     } else {
@@ -4087,7 +4095,7 @@ function Dizkus_userapi_mailcron($args)
                 }
             }
         }
-        if(!empty($error)) {
+        if (!empty($error)) {
             mailcronecho( "error: ",htmlspecialchars($error) . "\n");
         }
 
@@ -4098,8 +4106,8 @@ function Dizkus_userapi_mailcron($args)
                 WHERE forum_id=" . DataUtil::formatForStore($forum['forum_id']) . "";
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
-
     }
+
     return;
 }
 
@@ -4112,7 +4120,7 @@ function Dizkus_userapi_mailcron($args)
  */
 function Dizkus_userapi_testpop3connection($args)
 {
-    if( !isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
+    if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
@@ -4126,24 +4134,24 @@ function Dizkus_userapi_testpop3connection($args)
 
     $error = '';
     $pop3messages = array();
-    if(($error=$pop3->Open())=='') {
+    if (($error=$pop3->Open()) == '') {
         $pop3messages[] = "connected to the POP3 server '".$pop3->hostname."'";
-        if(($error=$pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=='') {
+        if (($error=$pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=='') {
             $pop3messages[] = "user '" . $forum['pop3_login'] . "' logged in";
-            if(($error=$pop3->Statistics($messages,$size))=='') {
+            if (($error=$pop3->Statistics($messages,$size))=='') {
                 $pop3messages[] = "there are $messages messages in the mail box with a total of $size bytes.";
                 $result=$pop3->ListMessages('',1);
-                if(is_array($result) && count($result)>0) {
-                    for($cnt=1; $cnt<=count($result); $cnt++) {
-                        if(($error=$pop3->RetrieveMessage($cnt, $headers, $body, -1))=='') {
-                            foreach($headers as $header) {
-                                if(strpos(strtolower($header), 'subject:')===0) {
+                if (is_array($result) && count($result)>0) {
+                    for ($cnt = 1; $cnt <= count($result); $cnt++) {
+                        if (($error=$pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
+                            foreach ($headers as $header) {
+                                if (strpos(strtolower($header), 'subject:') === 0) {
                                     $subject = trim(strip_tags(substr($header, 8)));
                                 }
                             }
                         }
                     }
-                    if($error=='' && ($error=$pop3->Close())=='') {
+                    if ($error == '' && ($error=$pop3->Close()) == '') {
                         $pop3messages[] = "disconnected from the POP3 server '".$pop3->hostname."'.\n";
                     }
 
@@ -4153,7 +4161,7 @@ function Dizkus_userapi_testpop3connection($args)
             }
         }
     }
-    if(!empty($error)) {
+    if (!empty($error)) {
         $pop3messages[] = 'error: ' . htmlspecialchars($error);
     }
 
@@ -4170,7 +4178,7 @@ function Dizkus_userapi_testpop3connection($args)
  */
 function Dizkus_userapi_get_topic_by_postmsgid($args)
 {
-    if(!isset($args['msgid']) || empty($args['msgid'])) {
+    if (!isset($args['msgid']) || empty($args['msgid'])) {
         return showforumerror(_MODSRGSERROR, __FILE__, __LINE__);
     }
 
@@ -4188,7 +4196,7 @@ function Dizkus_userapi_get_topic_by_postmsgid($args)
  */
 function Dizkus_userapi_get_topicid_by_postid($args)
 {
-    if(!isset($args['post_id']) || empty($args['post_id'])) {
+    if (!isset($args['post_id']) || empty($args['post_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
@@ -4286,7 +4294,7 @@ function Dizkus_userapi_get_last_topic_page($args)
     $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
     $post_sort_order = pnModGetVar('Dizkus', 'post_sort_order');
 
-    if(!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
+    if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
@@ -4299,6 +4307,7 @@ function Dizkus_userapi_get_last_topic_page($args)
         // DESC = latest topic is on top = page 0 anyway...
         $last_page = 0;
     }
+
     return $last_page;
 }
 
@@ -4311,23 +4320,24 @@ function Dizkus_userapi_get_last_topic_page($args)
  */
 function Dizkus_userapi_jointopics($args)
 {
-  extract($args); // $new_topic, $old_topic (parameters)
+    extract($args); // $new_topic, $old_topic (parameters)
     unset($args);
 
-  // check if from_topic exists. this function will return an error if not
-  $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
-    if(!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
+    // check if from_topic exists. this function will return an error if not
+    $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
+    if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
-  // check if to_topic exists. this function will return an error if not
+
+    // check if to_topic exists. this function will return an error if not
     $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
-    if(!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
+    if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
-  list($dbconn, $pntable) = dzkOpenDB();
+    list($dbconn, $pntable) = dzkOpenDB();
 
     // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
     // and from_topic['forum_id'] to to_topic['forum_id']
@@ -4335,7 +4345,7 @@ function Dizkus_userapi_jointopics($args)
             SET topic_id = '".(int)DataUtil::formatForStore($to_topic['topic_id'])."',
         forum_id = '".(int)DataUtil::formatForStore($to_topic['forum_id'])."'
             WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
-  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
 
     // to_topic['topic_replies'] must be incremented by from_topic['topic_replies'] + 1 (initial
@@ -4357,12 +4367,12 @@ function Dizkus_userapi_jointopics($args)
         topic_last_post_id='".(int)DataUtil::formatForStore($new_last_post_id)."',
         topic_time='".DataUtil::formatForStore($new_post_time)."'
             WHERE topic_id='".(int)DataUtil::formatForStore($to_topic['topic_id'])."'";
-  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
 
     // delete from_topic from dizkus_topics
-  $sql = "DELETE FROM ".$pntable['dizkus_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
-  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $sql = "DELETE FROM ".$pntable['dizkus_topics']." WHERE topic_id='".(int)DataUtil::formatForStore($from_topic['topic_id'])."'";
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
 
     // update forums table
@@ -4370,7 +4380,7 @@ function Dizkus_userapi_jointopics($args)
     $sql = "UPDATE ".$pntable['dizkus_forums']."
             SET forum_topics = forum_topics - 1
             WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
-  $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
 
     // get posts count: if both topics are in the same forum, we just have to increment
@@ -4381,12 +4391,12 @@ function Dizkus_userapi_jointopics($args)
     // get last_post: if both topics are in the same forum, everything stays
     // as-is, if not, we update both, even if it is not necessary
 
-    if($from_topic['forum_id'] == $to_topic['forum_id']) {
+    if ($from_topic['forum_id'] == $to_topic['forum_id']) {
         // same forum
         $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_posts = forum_posts + 1
                 WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
-      $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
     } else {
         // different forum
@@ -4398,6 +4408,7 @@ function Dizkus_userapi_jointopics($args)
         $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         list($from_forum_last_post_id) = $result->fields;
         dzkCloseDB($result);
+
         $sql = "SELECT post_id
                 FROM ".$pntable['dizkus_posts']."
                 WHERE forum_id = '".(int)DataUtil::formatForStore($to_topic['forum_id'])."'
@@ -4405,19 +4416,21 @@ function Dizkus_userapi_jointopics($args)
         $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
         list($to_forum_last_post_id) = $result->fields;
         dzkCloseDB($result);
+
         $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies']+1);
         // decrement from_topic's forum post_count
         $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_posts = forum_posts - $post_count_difference,
                     forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post) . "'
                 WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
-      $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
+
         $sql = "UPDATE ".$pntable['dizkus_forums']."
                 SET forum_posts = forum_posts + $post_count_difference,
                     forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post) . "'
                 WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
-      $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
     }
 
@@ -4545,20 +4558,20 @@ function Dizkus_userapi_notify_moderator($args)
     // check if list is empty - then do nothing
     // we create an array of recipients here
     $admin_is_mod = false;
-    if(is_array($mods) && count($mods) <> 0) {
-        foreach($mods as $mod) {
-            if($mod['uid'] > 1000000) {
+    if (is_array($mods) && count($mods) <> 0) {
+        foreach ($mods as $mod) {
+            if ($mod['uid'] > 1000000) {
                 // mod_uid is gid
                 $group = pnModAPIFunc('Groups', 'user', 'get', array('gid' => (int)$mod['uid'] - 1000000));
-                if($group <> false) {
+                if ($group <> false) {
                     foreach($group['members'] as $gm_uid) {
                         $mod_email = pnUserGetVar('email', $gm_uid);
                         $mod_uname = pnUserGetVar('uname', $gm_uid);
-                        if(!empty($mod_email)) {
+                        if (!empty($mod_email)) {
                             array_push($recipients, array('uname' => $mod_uname,
                                                           'email' => $mod_email));
                         }
-                        if($gm_uid==2) {
+                        if ($gm_uid == 2) {
                             // admin is also moderator
                             $admin_is_mod = true;
                         }
@@ -4568,11 +4581,11 @@ function Dizkus_userapi_notify_moderator($args)
             } else {
                 $mod_email = pnUserGetVar('email', $mod['uid']);
                 //uname is alread stored in $mod['uname']
-                if(!empty($mod_email)) {
+                if (!empty($mod_email)) {
                     array_push($recipients, array('uname' => $mod['uname'],
                                                   'email' => $mod_email));
                 }
-                if($mod['uid']==2) {
+                if ($mod['uid'] == 2) {
                     // admin is also moderator
                     $admin_is_mod = true;
                 }
@@ -4581,7 +4594,7 @@ function Dizkus_userapi_notify_moderator($args)
     }
     // always inform the admin. he might be a moderator to so we check the
     // admin_is_mod flag now
-    if($admin_is_mod == false) {
+    if ($admin_is_mod == false) {
         array_push($recipients, array('uname' => pnConfigGetVar('sitename'),
                                       'email' => $email_from));
     }
@@ -4604,7 +4617,8 @@ function Dizkus_userapi_notify_moderator($args)
             . _DZK_NOTIFYMODBODY3 . ":\n"
             . pnGetBaseURL() . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
             . "\n";
-    if(count($recipients)>0) {
+
+    if (count($recipients) > 0) {
         foreach($recipients as $recipient) {
             $args = array( 'fromname'    => $sitename,
                            'fromaddress' => $email_from,
@@ -4617,6 +4631,7 @@ function Dizkus_userapi_notify_moderator($args)
             pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
         }
     }
+
     return;
 }
 
@@ -4629,7 +4644,7 @@ function Dizkus_userapi_notify_moderator($args)
  */
 function Dizkus_userapi_get_topicid_by_reference($args)
 {
-    if(!isset($args['reference']) || empty($args['reference'])) {
+    if (!isset($args['reference']) || empty($args['reference'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
@@ -4655,17 +4670,17 @@ function Dizkus_userapi_insertrss($args)
     $boldend   = '';
     $urlstart  = '';
     $urlend    = '';
-    if($bbcode==true) {
+    if ($bbcode == true) {
         $boldstart = '[b]';
         $boldend   = '[/b]';
         $urlstart  = '[url]';
         $urlend    = '[/url]';
     }
 
-    foreach($args['items'] as $item) {
+    foreach ($args['items'] as $item) {
         // create the reference, we need it twice
         $dateTimestamp = $item->get_date("Y-m-d H:i");
-        if(empty($dateTimestamp)) {
+        if (empty($dateTimestamp)) {
             $reference = md5($item->get_link());
             $dateTimestamp = date("Y-m-d H:i", time());
         } else {
@@ -4718,7 +4733,7 @@ function Dizkus_userapi_get_forum_subscriptions($args)
 
     list($dbconn, $pntable) = dzkOpenDB();
 
-    if(isset($user_id)) {
+    if (isset($user_id)) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
@@ -4776,11 +4791,13 @@ function Dizkus_userapi_get_settings_ignorelist($args)
     if (!pnModAvailable('ContactList')) {
         return false;
     }
+
     // get parameters
     $uid = (int)$args['uid'];
-    if (!($uid>1)) {
+    if (!($uid > 1)) {
         return false;
     }
+
     $attr = pnUserGetVar('__ATTRIBUTES__',$uid);
     $ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
     $default = pnModGetVar('Dizkus','ignorelist_handling');
@@ -4808,7 +4825,7 @@ function Dizkus_userapi_get_settings_ignorelist($args)
  */
 function Dizkus_userapi_gettopicreadpermission($args)
 {
-    if(!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
+    if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 

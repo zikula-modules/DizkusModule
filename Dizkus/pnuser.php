@@ -474,34 +474,37 @@ function Dizkus_user_topicadmin($args=array())
     $pnr = pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('mode', $mode);
     $pnr->assign('topic_id', $topic_id);
-    $pnr->assign('last_visit', $last_visit);
-    $pnr->assign('last_visit_unix', $last_visit_unix);
 
-    if(empty($submit)) {
+    if (empty($submit)) {
         switch($mode) {
             case 'del':
             case 'delete':
                 $templatename = 'dizkus_user_deletetopic.html';
                 break;
+
             case 'move':
             case 'join':
                 $pnr->assign('forums', pnModAPIFunc('Dizkus', 'user', 'readuserforums'));
                 $templatename = 'dizkus_user_movetopic.html';
                 break;
+
             case 'lock':
             case 'unlock':
                 $templatename = 'dizkus_user_locktopic.html';
                 break;
+
             case 'sticky':
             case 'unsticky':
                 $templatename = 'dizkus_user_stickytopic.html';
                 break;
+
             case 'viewip':
                 $pnr->assign('viewip', pnModAPIFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
                 $templatename = 'dizkus_user_viewip.html';
                 break;
+
             default:
-                return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id)));
+                return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
         return $pnr->fetch($templatename);
 
@@ -512,56 +515,68 @@ function Dizkus_user_topicadmin($args=array())
         switch($mode) {
             case 'del':
             case 'delete':
-                $forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id'=>$topic_id));
-                return pnRedirect(pnModURL('Dizkus', 'user', 'viewforum', array('forum'=>$forum_id)));
+                $forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
+                return pnRedirect(pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)));
                 break;
+
             case 'move':
                 list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
-                if($forum_id == $f_id) {
+                if ($forum_id == $f_id) {
                     return showforumerror(_DZK_SOURCEEQUALSTARGETFORUM, __FILE__, __LINE__);
                 }
-                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
                 }
-                pnModAPIFunc('Dizkus', 'user', 'movetopic', array('topic_id' => $topic_id,
-                                                                   'forum_id' => $forum_id,
-                                                                   'shadow'   => $shadow ));
+                pnModAPIFunc('Dizkus', 'user', 'movetopic',
+                             array('topic_id' => $topic_id,
+                                   'forum_id' => $forum_id,
+                                   'shadow'   => $shadow ));
                 break;
+
             case 'lock':
             case 'unlock':
                 list($f_id, $c_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                   array('topic_id' => $topic_id));
-                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
                 }
-                pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+                pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic',
+                             array('topic_id' => $topic_id,
+                                   'mode'     => $mode));
                 break;
+
             case 'sticky':
             case 'unsticky':
                 list($f_id, $c_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                   array('topic_id' => $topic_id));
-                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
                 }
-                pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
+                pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic',
+                             array('topic_id' => $topic_id,
+                                   'mode'     => $mode));
                 break;
+
             case 'join':
                 $to_topic_id = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
-                if(!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
+                if (!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
                     // user wants to copy topic to itself
                     return showforumerror(_DZK_SOURCEEQUALSTARGETTOPIC, __FILE__, __LINE__);
                 }
                 list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $to_topic_id));
-                if(!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod',$f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+                if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
                 }
-                pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic_id' => $topic_id,
-                                                                    'to_topic_id'   => $to_topic_id));
+                pnModAPIFunc('Dizkus', 'user', 'jointopics',
+                             array('from_topic_id' => $topic_id,
+                                   'to_topic_id'   => $to_topic_id));
+
                 return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $to_topic_id)));
                 break;
+
             default:
         }
-        return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id)));
+        return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
     }
 }
 

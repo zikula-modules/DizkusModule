@@ -535,7 +535,7 @@ function quickEditInit(originalRequest)
     updateAuthid(result.authid);
     
     // hide quickreply
-    if($('dzk_quickreply')) {
+    if ($('dzk_quickreply')) {
         Effect.toggle($('dzk_quickreply'), comboeffect, comboparams);
     }
 
@@ -544,7 +544,7 @@ function quickEditInit(originalRequest)
         $('bbcode_'+postingtextID+'_edit').removeClassName('hidden');
     }
     if ($$('#postingtext_'+postingtextID+'_editor .bb_standardsmilies')) {
-        $$('.bbsmile_smilies').each(function(el) {
+        $$('#postingtext_'+postingtextID+'_editor .bbsmile_smilies').each(function(el) {
             el.removeClassName('bbsmile_smilies');
         });
         if($('smiliemodal')) {

@@ -4,7 +4,7 @@
 
 <!--[ include file='dizkus_user_header.html' ]-->
 
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$reply.topic_id implode=false ]-->
+<!--[ pnmodcallhooks hookobject='item' hookaction='display' hookid=$reply.topic_id implode=false ]-->
 
 <!--[ if $preview|default:false ]-->
 <div id="replypreview" style="margin:1em 0;">
@@ -22,7 +22,7 @@
                 <fieldset>
                     <legend class="post_header"><!--[ pnml name='_DZK_REPLY_POST' ]-->: <!--[ $reply.topic_subject|dzkbbsmile|pnvarcensor ]--></legend>
                     <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
-                    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+                    <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
                     <div class="post_text_wrap">
                         <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 

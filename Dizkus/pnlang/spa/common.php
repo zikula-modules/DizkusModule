@@ -317,6 +317,7 @@ define('_DZK_LASTVISIT', 'última visita');
 define('_DZK_LASTWEEK','la semana pasada');
 define('_DZK_LAST_SEEN', 'visto el');
 define('_DZK_LATEST','Ultimos mensajes');
+define('_DZK_LEGEND','Leyenda');
 define('_DZK_LOCKTOPIC','Cerrar este tema');
 define('_DZK_LOCKTOPICS','Cerrar los temas seleccionados');
 define('_DZK_LOCKTOPIC_INFO', 'Cuando presiones el botón el tema que has seleccionado será <strong>cerrado</strong>. Puedes volver abrirlo cuando quieras.');

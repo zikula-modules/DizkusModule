@@ -9,7 +9,7 @@
 <form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=user func=topicadmin ]-->" method="post">
     <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
     <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
-    <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+    <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
     <!--[ if $mode eq "lock" ]-->
     <fieldset id="dzk_locktopic">
         <legend><!--[ $templatetitle ]--></legend>

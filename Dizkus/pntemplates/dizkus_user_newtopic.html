@@ -19,7 +19,7 @@
             <form name="newtopicform" class="dzk_form" id="newtopicform" action="<!--[ pnmodurl modname='Dizkus' type='user' func='newtopic' ]-->" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="forum" name="forum" value="<!--[ $newtopic.forum_id ]-->" />
                 <input type="hidden" id="quote" name="quote" value="" />
-                <input type="hidden" id="authid" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+                <input type="hidden" id="authid" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
                 <fieldset>
                     <legend class="post_header"><!--[ pnml name='_DZK_NEW_THREADS' ]-->:&nbsp;<a href="<!--[ pnmodurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|pnvarprepfordisplay ]-->"><!--[ $newtopic.forum_name|pnvarprepfordisplay|pnmodcallhooks ]--></a></legend>
                     <div class="post_text_wrap">

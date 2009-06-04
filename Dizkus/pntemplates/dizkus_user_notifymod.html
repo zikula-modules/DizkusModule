@@ -11,7 +11,7 @@
     <fieldset id="dzk_notifymoderator">
         <legend><!--[ $templatetitle ]--></legend>
         <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
         <div class="<!--[ $configclass ]-->row">
             <textarea rows="6" cols="60" name="comment" class="dzk_texpand"></textarea>
         </div>

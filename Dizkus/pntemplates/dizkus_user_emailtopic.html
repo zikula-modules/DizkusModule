@@ -11,7 +11,7 @@
 <form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus' type='user' func='emailtopic' ]-->" method="post" name="emailtopic">
     <fieldset id="dzk_emailtopic">
         <legend><!--[ $templatetitle ]--></legend>
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
         <input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
         <div class="<!--[ $configclass ]-->row">
             <label for="sendto_email"><!--[ pnml name='_DZK_SENDTO' ]--></label>

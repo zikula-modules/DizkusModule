@@ -5,7 +5,7 @@
     <fieldset>
         <legend><!--[ pnml name='_DZK_ADMINCATEDIT' ]--></legend>
         <input type="hidden" name="cat_id" value="<!--[ $category.cat_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
         <div class="<!--[ $configclass ]-->row">
             <label for="cat_title"><!--[ pnml name='_DZK_CATEGORY ]--></label>&nbsp;
             <input type="text" id="cat_title" name="cat_title" value="<!--[ $category.cat_title ]-->" size="50" maxlength="100" />

@@ -1,22 +1,24 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_MOVETOPIC' assign=templatetitle]-->
-<!--[ pnpagesetvar name=title value=$templatetitle ]-->
+<!--[ pnml name='_DZK_MOVETOPIC' assign='maintitle']-->
+<!--[ cssversion assign='configclass' ]-->
+
 <!--[ include file='dizkus_user_header.html' ]-->
-<!--[ cssversion assign=configclass ]-->
 
 <h2><!--[ $templatetitle ]--></h2>
 
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=user func=topicadmin ]-->" method="post">
+<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus' type='user' func='topicadmin' ]-->" method="post">
     <fieldset id="dzk_movetopic">
         <legend><!--[ $templatetitle ]--></legend>
         <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
         <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
 
-        <div class="<!--[ $configclass ]-->row">
-            <label><!--[ pnml name='_DZK_MOVETOPIC_INFO' html=1 ]--></label>
+        <div class="pn-informationmsg"><!--[ pnml name='_DZK_MOVETOPIC_INFO' html=1 ]--></div>
+
+		<div class="<!--[ $configclass ]-->row">
+            <label><!--[ pnml name='_DZK_FORUM' ]--></label>
             <select name="forum">
-                <!--[ foreach item=forum from=$forums ]-->
+                <!--[ foreach item='forum' from=$forums ]-->
                 <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]-->&nbsp;::&nbsp;<!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
                 <!--[ /foreach ]-->
             </select>
@@ -36,7 +38,7 @@
         <legend><!--[ pnml name='_DZK_JOINTOPICS' html=1 ]--></legend>
         <input type="hidden" name="mode" value="join" />
         <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ pnsecgenauthkey module='Dizkus' ]-->" />
+        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
         <div class="<!--[ $configclass ]-->row">
             <label for="to_topic_id"><!--[ pnml name='_DZK_JOINTOPICS_TOTOPIC' html=1 ]--></label>
             <span>
