@@ -817,6 +817,7 @@ function cmp_forumtopicsort($a, $b)
  *                               the posts_per_page setting, ignores 'start'
  *@params $args['last_visit'] string the users last visit date
  *@params $args['count']      bool  true if we have raise the read counter, default false
+ *@params $args['nohook']    book   true if transform hooks should not modify post text
  *@returns very complex array, see <!--[ debug ]--> for more information
  */
 function Dizkus_userapi_readtopic($args)
@@ -834,6 +835,7 @@ function Dizkus_userapi_readtopic($args)
     $complete = (isset($complete)) ? $complete : false;
     $count    = (isset($count)) ? $count : false;
     $start    = (isset($start)) ? $start : 0;
+    $hooks    = (isset($nohook)) ? $hooks : 1;
 
     $currentuserid = pnUserGetVar('uid');
     $now = time();
@@ -1062,11 +1064,13 @@ pnShutDown();
             //$message = phpbb_br2nl($message);
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
             $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
-            
-            list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
 
-            // call hooks for $message
-            $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
+            if ($hooks) {
+                list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
+
+                // call hooks for $message
+                $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
+            }
             
             //$post['post_text'] = DataUtil::formatForDisplayHTML($post['post_text']);
 
