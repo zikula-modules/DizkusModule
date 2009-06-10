@@ -65,64 +65,49 @@
                     <a title="<!--[ pnml name='_DZK_GOTO_CAT' ]--> <!--[$newtopic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id]-->"><!--[$newtopic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[/if]-->
-
-                <!--[*
-                <!--[if $func eq 'viewforum']-->
-                <li>
-                    <!--[ pnml name='_DZK_SEPARATOR' html=1 ]-->
-                    <!--[ $forum.forum_name|pnvarprepfordisplay ]-->
-                </li>
-                <!--[/if]-->
-
-                <!--[if $func eq 'viewtopic']-->
-                <li>
-                    <!--[ pnml name='_DZK_SEPARATOR' html=1 ]-->
-                    <a href="<!--[ pnmodurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id]-->" title="<!--[ $topic.forum_name|pnvarprepfordisplay ]-->"><!--[ $topic.forum_name|pnvarprepfordisplay ]--></a>
-                </li>
-                <li>
-                    <!--[ pnml name='_DZK_SEPARATOR' html=1 ]-->
-                    <!--[ $topic.topic_title|pnvarprepfordisplay ]-->
-                </li>
-                <!--[/if]-->
-                *]-->
-
             </ul>
             <!--[* end of breadcrumbs *]-->
 
             <ul class="linklist" style="float:right;">
+                <!--[ if $pncore.logged_in eq 1 AND $func eq 'main' AND $pncore.Dizkus.favorites_enabled eq 'yes' ]-->
+                <!--[ if $favorites]-->
+                <li><a class="dzk_img showallforumslink" href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_DZK_SHOWALLFORUMS' ]-->"><!--[ pnml name='_DZK_SHOWALLFORUMS' ]--></a></li>
+                <!--[ else ]-->
+                <li><a class="dzk_img showfavoriteslink" href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_DZK_SHOWFAVORITES' ]-->"><!--[ pnml name='_DZK_SHOWFAVORITES' ]--></a></li>
+                <!--[ /if ]-->
+                <!--[ /if ]-->
                 <!--[if $func neq 'viewlatest']-->
                 <li><a class="dzk_img latestpostslink" title="<!--[ pnml name='_DZK_LATEST' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest ]-->"><!--[ pnml name='_DZK_LATEST' ]--></a></li>
                 <!--[/if]-->
                 <li><a class="dzk_img searchlink" title="<!--[ pnml name='_DZK_SEARCH' ]-->" href="<!--[ pnmodurl modname='Search' type=user func=main]-->"><!--[ pnml name='_DZK_SEARCHSHORT' ]--></a></li>
-            <!--[* <li><a class="dzk_img rsslink" title="<!--[ pnml name='_DZK_LATESTRSS' ]-->" href="backforum.php"><!--[ pnml name='_DZK_LATESTRSS' ]--></a></li> *]-->
-            <!--[ if $pncore.logged_in neq 1 ]-->
-            <li><a class="dzk_img loginlink" title="<!--[ pnml name='_DZK_LOGIN' ]-->" href="<!--[ pnmodurl modname="Users" type="user" func="loginscreen"]-->"><!--[ pnml name='_DZK_LOGIN' ]--></a></li>
-            <li><a class="dzk_img registerlink" title="<!--[ pnml name='_DZK_REGISTER' ]-->" href="<!--[ pnmodurl modname="Users" type="user" func="register"]-->"><!--[ pnml name='_DZK_REGISTER' ]--></a></li>
-            <!--[ else ]-->
-            <li><a class="dzk_img searchpostslink" title="<!--[ pnml name='_DZK_VIEWYOURPOSTS' ]-->" href="<!--[ $pncore.user.uname|searchlink]-->"><!--[ pnml name='_DZK_VIEWYOURPOSTS' ]--></a></li>
-            <li><a class="dzk_img configurelink" title="<!--[ pnml name='_DZK_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="Dizkus" func="prefs" ]-->"><!--[ pnml name='_DZK_PERSONAL_SETTINGS' ]--></a></li>
-            <!--[ /if ]-->
-        </ul>
+                <!--[ if $pncore.logged_in neq 1 ]-->
+                <li><a class="dzk_img loginlink" title="<!--[ pnml name='_DZK_LOGIN' ]-->" href="<!--[ pnmodurl modname="Users" type="user" func="loginscreen"]-->"><!--[ pnml name='_DZK_LOGIN' ]--></a></li>
+                <li><a class="dzk_img registerlink" title="<!--[ pnml name='_DZK_REGISTER' ]-->" href="<!--[ pnmodurl modname="Users" type="user" func="register"]-->"><!--[ pnml name='_DZK_REGISTER' ]--></a></li>
+                <!--[ else ]-->
+                <li><a class="dzk_img searchpostslink" title="<!--[ pnml name='_DZK_VIEWYOURPOSTS' ]-->" href="<!--[ $pncore.user.uname|searchlink]-->"><!--[ pnml name='_DZK_VIEWYOURPOSTS' ]--></a></li>
+                <li><a class="dzk_img configurelink" title="<!--[ pnml name='_DZK_PERSONAL_SETTINGS' ]-->" href="<!--[ pnmodurl type="user" modname="Dizkus" func="prefs" ]-->"><!--[ pnml name='_DZK_PERSONAL_SETTINGS' ]--></a></li>
+                <!--[ /if ]-->
+            </ul>
+        </div>
     </div>
-</div>
-<!--[ /if ]-->
+    <!--[ /if ]-->
 
-<!--[* print the subtitle *]-->
-<!--[if $func eq 'main' AND $view_category eq -1]-->
-<h2><!--[ pnml name='_DZK_CATEGORYOVERVIEW' ]--></h2>
-<!--[elseif $func eq 'main' AND $view_category neq -1]-->
-<h2><!--[ $view_category_data.cat_title|pnvarprepfordisplay ]--></h2>
-<!--[elseif $func eq 'viewforum']-->
-<h2><!--[ $forum.forum_name|pnvarprepfordisplay ]--></h2>
-<!--[elseif $func eq 'viewtopic']-->
-<h2>
-    <a href='<!--[ pnmodurl modname='Dizkus' func=viewforum forum=$topic.forum_id|pnvarprepfordisplay ]-->'><!--[ $topic.forum_name|pnvarprepfordisplay ]--></a>
-    <!--[ pnml name='_DZK_SEPARATOR' html=1 ]-->
-    <span class="editabletopicheader" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_DZK_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
-        <span id="topicsubject_<!--[ $topic.topic_id ]-->_content"><!--[ $topic.topic_title|pnvarprepfordisplay ]--></span>
-    </span>
-    <a class="dzk_notextdecoration" title="<!--[ pnml name='_DZK_BOTTOM' ]-->" href="#bottom">&nbsp;<!--[ pnimg modname='Dizkus' src="icon_bottom.gif" alt="_DZK_TOP" altml=true ]--></a>
-</h2>
-<!--[elseif $maintitle neq '']-->
-<h2><!--[ $maintitle|pnvarprepfordisplay ]--></h2>
-<!--[/if]-->
+    <!--[* print the subtitle *]-->
+    <!--[if $func eq 'main' AND $view_category eq -1]-->
+    <h2><!--[ pnml name='_DZK_CATEGORYOVERVIEW' ]--></h2>
+    <!--[elseif $func eq 'main' AND $view_category neq -1]-->
+    <h2><!--[ $view_category_data.cat_title|pnvarprepfordisplay ]--></h2>
+    <!--[elseif $func eq 'viewforum']-->
+    <h2><!--[ $forum.forum_name|pnvarprepfordisplay ]--></h2>
+    <!--[elseif $func eq 'viewtopic']-->
+    <h2>
+        <a href='<!--[ pnmodurl modname='Dizkus' func=viewforum forum=$topic.forum_id|pnvarprepfordisplay ]-->'><!--[ $topic.forum_name|pnvarprepfordisplay ]--></a>
+        <!--[ pnml name='_DZK_SEPARATOR' html=1 ]-->
+        <span class="editabletopicheader" id="topicsubject_<!--[ $topic.topic_id ]-->" <!--[ if $topic.access_topicsubjectedit eq 1 ]-->title="<!--[ pnml name='_DZK_CLICKTOEDIT' ]-->" onclick="javascript:topicsubjectedit(<!--[ $topic.topic_id ]-->)"<!--[ /if ]-->>
+            <span id="topicsubject_<!--[ $topic.topic_id ]-->_content"><!--[ $topic.topic_title|pnvarprepfordisplay ]--></span>
+        </span>
+        <a class="dzk_notextdecoration" title="<!--[ pnml name='_DZK_BOTTOM' ]-->" href="#bottom">&nbsp;<!--[ pnimg modname='Dizkus' src="icon_bottom.gif" alt="_DZK_TOP" altml=true ]--></a>
+    </h2>
+    <!--[elseif $maintitle neq '']-->
+    <h2><!--[ $maintitle|pnvarprepfordisplay ]--></h2>
+    <!--[/if]-->
