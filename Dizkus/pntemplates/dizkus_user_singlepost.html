@@ -2,15 +2,17 @@
 
 <!--[ if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count ]--><a id="bottom"></a><!--[ /if ]-->
 <a id="pid<!--[ $post.post_id ]-->" ></a>
-<!--[if $post.contactlist_ignored|default:0 == 1]-->
-	<div id="hidelink_posting_<!--[ $post.post_id ]-->">
-	<!--[pnml name='_DZK_SHOWIGNOREDPOSTINGOF']--> <!--[$post.poster_data.pn_uname|userprofilelink]-->. <a onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();"><!--[pnml name='_DZK_CLICKHERE']--></a><br />
-	</div>
-<!--[/if]-->
-<div id="posting_<!--[ $post.post_id ]-->" class="forum_post pn-floatbox <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
-    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
 
-        <div class="subcolumns pn-clearfix">
+<!--[if $post.contactlist_ignored|default:0 == 1]-->
+<div id="hidelink_posting_<!--[ $post.post_id ]-->">
+    <!--[pnml name='_DZK_SHOWIGNOREDPOSTINGOF']--> <!--[$post.poster_data.pn_uname|userprofilelink]-->. <a onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();"><!--[pnml name='_DZK_CLICKHERE']--></a><br />
+</div>
+<!--[/if]-->
+
+<div id="posting_<!--[ $post.post_id ]-->" class="forum_post pn-floatbox dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
+    <div class="inner">
+
+        <div class="subcolumns pn-floatbox">
             <div id="posting_<!--[ $post.post_id ]-->_userinfo" class='post_author'>
                 <div class="avatar">
                     <!--[$post.poster_data.uname|userprofilelink]-->
@@ -52,7 +54,6 @@
                 <div class="content" id="postingtext_<!--[ $post.post_id ]-->">
                     <!--[ $post.post_text ]-->
                 </div>
-
             </div>
 
             <div class='postlink pn-clearfix'>
@@ -106,6 +107,5 @@
             </div>
         </div>
 
-        <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>

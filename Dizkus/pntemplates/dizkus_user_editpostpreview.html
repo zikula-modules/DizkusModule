@@ -7,10 +7,10 @@ Template for single postings
 *]-->
 <!--[ pnimg modname='Dizkus' src='icon_post_pm.gif' assign=profile alt='_DZK_PROFILE' altml=true ]-->
 
-<h2><!--[ $post.topic_subject|pnvarprepfordisplay|pnvarcensor ]--></h2>
+<h2><!--[ $post.topic_subject|pnvarprepfordisplay ]--></h2>
 
-<div id="posting_<!--[ $post.post_id ]-->" class="forum_post pn-floatbox <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
-    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+<div id="posting_<!--[ $post.post_id ]-->" class="forum_post pn-floatbox dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
+    <div class="inner">
 
         <div class="subcolumns pn-clearfix">
             <div id="posting_<!--[ $post.post_id ]-->_userinfo" class='post_author'>
@@ -102,7 +102,6 @@ Template for single postings
             </div>
         </div>
 
-        <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
 

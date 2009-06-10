@@ -3,8 +3,8 @@
 
 <!--[ include file='dizkus_user_header.html' ]-->
 
-<div class="roundedbar pn-clearfix dzk_topicoptions">
-    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+<div class="dzk_topicoptions roundedbar pn-clearfix dzk_rounded">
+    <div class="inner">
         <div id="dzk_javascriptareatopic" class="hidden">
             <ul class="dzk_topicoptions linklist">
                 <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
@@ -100,7 +100,6 @@
             </div>
         </noscript>
 
-        <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
 
@@ -123,8 +122,8 @@
 <!--[ pnfpager total=$topic.total_posts ]-->
 
 <!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
-<div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> pn-clearfix pn-floatbox">
-    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+<div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> pn-clearfix pn-floatbox dzk_rounded">
+    <div class="inner">
         <div class="subcolumns">
             <form id="quickreplyform" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
                 <div>
@@ -143,7 +142,7 @@
                             <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
                             <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
                             <!--[ /if ]-->
-                            <div class="subcolumns">
+                            <div class="subcolumns pn-floatbox">
                                 <div id="quickreplyoptions" class="dzk_col50l">
                                     <ul>
                                         <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
@@ -177,20 +176,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="post_footer">
-                        <span class="dzk_corners_bottom"><span>&nbsp;</span></span>
-                    </div>
+                    <div class="post_footer"></div>
                 </div>
             </form>
         </div>
 
-        <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
 
 <!--[ mediaattach_fileuploads objectid=$topic.topic_id ]-->
 <div id="dzk_displayhooks">
-<!--[ if isset($hooks.Ratings)]--><!--[ $hooks.Ratings ]--><!--[/if]-->
+    <!--[ if isset($hooks.Ratings)]--><!--[ $hooks.Ratings ]--><!--[/if]-->
 </div>
 
 <!--[ /if ]-->

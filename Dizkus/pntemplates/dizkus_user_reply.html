@@ -12,15 +12,14 @@
 </div>
 <!--[ /if ]-->
 
-<div id="dzk_quickreply" class="forum_post post_bg2 pn-floatbox">
+<div id="dzk_quickreply" class="forum_post post_bg2 pn-floatbox dzk_rounded">
     <div class="inner">
-        <span class="corners-top"><span>&nbsp;</span></span>
 
         <div class="subcolumns">
 
             <form id="post" class="dzk_form" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
                 <fieldset>
-                    <legend class="post_header"><!--[ pnml name='_DZK_REPLY_POST' ]-->: <!--[ $reply.topic_subject|dzkbbsmile|pnvarcensor ]--></legend>
+                    <legend class="post_header"><!--[ pnml name='_DZK_REPLY_POST' ]-->: <!--[ $reply.topic_subject|dzkbbsmile ]--></legend>
                     <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
                     <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
                     <div class="post_text_wrap">
@@ -66,7 +65,6 @@
             </form>
         </div>
 
-        <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
 

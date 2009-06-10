@@ -21,7 +21,7 @@
 <ul class="dzk_postlist">
     <!--[ foreach item=lastpost from=$lastposts ]-->
     <li>
-        <a href="<!--[ $lastpost.last_post_url_anchor ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.topic_title ]-->"><!--[ $lastpost.topic_title|dzkbbsmile|pnvarcensor|truncate:21 ]--></a><br />
+        <a href="<!--[ $lastpost.last_post_url_anchor ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.topic_title ]-->"><!--[ $lastpost.topic_title|dzkbbsmile|truncate:21 ]--></a><br />
         <!--[ $lastpost.topic_replies ]-->
         <!--[ if $lastpost.topic_replies eq 1 ]-->
         <!--[ pnml name='_DZK_ONEREPLY' ]-->

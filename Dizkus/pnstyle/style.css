@@ -148,10 +148,16 @@ div#editpostoptions ul li {
 
 /* Rounded Corners */
 
+#dizkus .dzk_rounded {
+    border-radius: 6px;
+    -webkit-border-radius: 6px;    /* for Safari */
+    -moz-border-radius: 6px;       /* for Firefox */
+}
+
 #dizkus .navbar,
 #dizkus .roundedbar {
     background: #f2f3f3 url('../pnimages/innerbox_bg.gif') repeat-x scroll 0 0;
-    padding: 0 5px;
+    padding: 5px;
 }
 #dizkus .roundedbar {
     margin-bottom: 0.8em;
@@ -159,56 +165,9 @@ div#editpostoptions ul li {
 #dizkus .forabg,
 #dizkus .forumbg {
     margin-bottom: 4px;
-    padding: 0 5px;
+    padding: 5px;
     clear: both;
-    background-color: #616161;
-    background-image: url("../pnimages/forabg.gif");
-    background-repeat: repeat-x;
-}
-#dizkus span.corners-top,
-#dizkus span.corners-bottom,
-#dizkus span.corners-top span,
-#dizkus span.corners-bottom span {
-    font-size: 1px;
-    line-height: 1px;
-    display: block;
-    height: 5px;
-    background-repeat: no-repeat;
-}
-#dizkus span.corners-top {
-    background-image: none;
-    background-position: 0 0;
-    margin: 0 -5px;
-}
-#dizkus span.corners-top span {
-    background-image: none;
-    background-position: 100% 0;
-}
-#dizkus span.corners-bottom {
-    background-image: none;
-    background-position: 0 100%;
-    margin: 0 -5px;
-    clear: both;
-}
-#dizkus span.corners-bottom span {
-    background-image: none;
-    background-position: 100% 100%;
-}
-#dizkus .forum_post span.corners-top,
-#dizkus .forum_post span.corners-bottom {
-    margin: 0 -10px;
-}
-#dizkus span.corners-top {
-    background-image: url("../pnimages/corners_left.png");
-}
-#dizkus span.corners-top span {
-    background-image: url("../pnimages/corners_right.png");
-}
-#dizkus span.corners-bottom {
-    background-image: url("../pnimages/corners_left.png");
-}
-#dizkus span.corners-bottom span {
-    background-image: url("../pnimages/corners_right.png");
+    background: #616161 url('../pnimages/forabg.gif') repeat-x scroll 0 0;
 }
 
 /* Horizontal List */
@@ -498,7 +457,7 @@ div#editpostoptions ul li {
 
 /* Post body styles */
 #dizkus .forum_post {
-    padding: 0 10px;
+    padding: 5px 10px;
     margin: 0 0 15px 0;
 }
 #dizkus .post_bg1 {
@@ -721,12 +680,6 @@ div#editpostoptions ul li {
 
 * html hr { margin: 0; }
 
-* html span.corners-top,
-* html span.corners-bottom { background-image: url("../pnimages/corners_left.gif"); }
-
-* html span.corners-top span,
-* html span.corners-bottom span { background-image: url("../pnimages/corners_right.gif"); }
-
 * html ul.topiclist li { position: relative; }
 
 * html .forum_postbody h3 img { vertical-align: middle; }
@@ -846,3 +799,40 @@ dl.icon {
     font-size: 0.9em;
     text-align: center;
 }
+
+
+/*Nifty Corners Cube CSS by Alessandro Fulciniti
+The following classes are added dinamically by javascript,
+and their use should be avoided in the markup */
+
+b.niftycorners,b.niftyfill{display:block}
+b.niftycorners *{display:block;height: 1px;line-height:1px;font-size: 1px;
+    overflow:hidden;border-style:solid;border-width: 0 1px}
+/*normal*/
+b.r1{margin: 0 3px;border-width: 0 2px}
+b.r2{margin: 0 2px}
+b.r3{margin: 0 1px}
+b.r4{height: 2px}
+b.rb1{margin: 0 8px;border-width:0 2px}
+b.rb2{margin: 0 6px;border-width:0 2px}
+b.rb3{margin: 0 5px}
+b.rb4{margin: 0 4px}
+b.rb5{margin: 0 3px}
+b.rb6{margin: 0 2px}
+b.rb7{margin: 0 1px;height:2px}
+b.rb8{margin: 0;height:2px}
+b.rs1{margin: 0 1px}
+/*transparent inside*/
+b.t1{border-width: 0 5px}
+b.t2{border-width: 0 3px}
+b.t3{border-width: 0 2px}
+b.t4{height: 2px}
+b.tb1{border-width: 0 10px}
+b.tb2{border-width: 0 8px}
+b.tb3{border-width: 0 6px}
+b.tb4{border-width: 0 5px}
+b.tb5{border-width: 0 4px}
+b.tb6{border-width: 0 3px}
+b.tb7{border-width: 0 2px;height:2px}
+b.tb8{border-width: 0 1px;height:2px}
+b.ts1{border-width: 0 2px}

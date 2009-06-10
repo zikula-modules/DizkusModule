@@ -6,8 +6,8 @@
 
 <div id="dzk_maincategorylist" class="pn-floatbox">
     <!--[ foreach item='category' from=$tree ]-->
-    <div class="forabg">
-        <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+    <div class="forabg pn-floatbox dzk_rounded">
+        <div class="inner">
             <ul class="topiclist">
                 <li class="header">
                     <dl>
@@ -59,14 +59,13 @@
                         </dd>
                     </dl>
                 </li>
-				<!--[ foreachelse ]-->
-				<li class="row dzk_empty">
-					<!--[ pnml name='_DZK_NOFORUMS' ]-->
-				</li>
+                <!--[ foreachelse ]-->
+                <li class="row dzk_empty">
+                    <!--[ pnml name='_DZK_NOFORUMS' ]-->
+                </li>
                 <!--[ /foreach ]-->
             </ul>
 
-            <span class="corners-bottom"><span>&nbsp;</span></span>
         </div>
     </div>
     <!--[ /foreach ]-->
@@ -74,9 +73,9 @@
 
 <!--[else]-->
 
-<div id="dzk_categorylist" class="pn-floatbox">
-    <div class="forabg">
-        <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+<div id="dzk_categorylist">
+    <div class="forabg pn-floatbox dzk_rounded">
+        <div class="inner">
             <ul class="topiclist">
                 <li class="header">
                     <dl>
@@ -123,14 +122,13 @@
                         </dd>
                     </dl>
                 </li>
-				<!--[ foreachelse ]-->
-				<li class="row dzk_empty">
-					<!--[ pnml name='_DZK_NOFORUMS' ]-->
-				</li>
+                <!--[ foreachelse ]-->
+                <li class="row dzk_empty">
+                    <!--[ pnml name='_DZK_NOFORUMS' ]-->
+                </li>
                 <!--[ /foreach ]-->
             </ul>
 
-            <span class="corners-bottom"><span>&nbsp;</span></span>
         </div>
     </div>
 </div>

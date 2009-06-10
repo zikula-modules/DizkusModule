@@ -7,9 +7,8 @@
 <!--[ /if ]-->
 
 <!--[ if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in ]-->
-<div class="roundedbar pn-floatbox">
-    <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
-
+<div class="roundedbar pn-floatbox dzk_rounded">
+    <div class="inner">
         <ul id="dzk_javascriptareaforum" class="hidden linklist">
             <!--[* Moderate *]-->
             <!--[ if $forum.access_comment ]-->
@@ -81,8 +80,6 @@
                 <!--[ /if ]-->
             </ul>
         </noscript>
-
-        <span class="corners-bottom"><span>&nbsp;</span></span>
     </div>
 </div>
 <!--[ /if ]-->
@@ -94,8 +91,8 @@
     <!--[ pnfpager total=$forum.forum_topics ]-->
     <!--[mediaattach_attachicon topics=$forum.topics assign='uploadtopicids']-->
 
-    <div class="forumbg">
-        <div class="inner"><span class="corners-top"><span>&nbsp;</span></span>
+    <div class="forumbg pn-floatbox dzk_rounded">
+        <div class="inner">
 
             <ul class="topiclist">
                 <li class="header">
@@ -160,18 +157,15 @@
                 <!--[ /foreach ]-->
 
             </ul>
-            <span class="corners-bottom"><span>&nbsp;</span></span>
         </div>
     </div>
     <!--[ pnfpager total=$forum.forum_topics ]-->
 
     <!--[ else ]-->
 
-    <div class="forumbg dzk_message">
+    <div class="forumbg dzk_message pn-floatbox dzk_rounded">
         <div class="inner">
-        	<span class="corners-top"><span>&nbsp;</span></span>
-            <strong> <!--[ pnml name='_DZK_NOTOPICS' ]--></strong>
-            <span class="corners-bottom"><span>&nbsp;</span></span>
+            <strong><!--[ pnml name='_DZK_NOTOPICS' ]--></strong>
         </div>
     </div>
 
@@ -193,6 +187,7 @@
 <!--[ if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in ]-->
 <script type="text/javascript">
     // <![CDATA[
+
     Event.observe(window, 'load', init_viewforum);
 
     function init_viewforum()

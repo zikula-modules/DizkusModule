@@ -218,7 +218,7 @@ function smarty_function_readlastposts($params, &$smarty)
             $lastpost['post_text'] = Dizkus_replacesignature($lastpost['post_text'], '');
             // call hooks for $message
             list($lastpost['post_text']) = pnModCallHooks('item', 'transform', '', array($lastpost['post_text']));
-            $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text'])); // Removed pnVarCensor 
+            $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text']));
 
             $posted_unixtime= strtotime ($lastpost['topic_time']);
             $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
