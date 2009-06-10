@@ -7,7 +7,7 @@
 
 Event.observe(window, 'load', function() {
   $$('.dzk_texpand').each(function(el){
-    new Texpand(el, {autoShrink: true, shrinkOnBlur:false});
+    new Texpand(el, {autoShrink: false, shrinkOnBlur:false});
   });
 });
 
@@ -553,7 +553,7 @@ function quickEditInit(originalRequest)
     }
 
     $$('.dzk_texpand').each(function(el){
-      new Texpand(el, {autoShrink: true, shrinkOnBlur: false});
+      new Texpand(el, {autoShrink: false, shrinkOnBlur: false});
     });
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
