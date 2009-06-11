@@ -47,16 +47,18 @@
                     <a class="dzk_img subscribetopiclink" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicsubscriptions ]-->" title="<!--[ pnml name='_DZK_MANAGETOPICSUBSCRIPTIONS' ]-->"><!--[ pnml name='_DZK_MANAGETOPICSUBSCRIPTIONS' ]--></a>
                 </li>
             </ul>
+
+            <!--[ if $favorites_enabled eq 'yes' ]-->
             <ul class="linklist">
                 <li>
                     <!--[ pnml name='_DZK_FAVORITES' ]--><br />
-                    <!--[ if $favorites_enabled eq 'yes' ]-->
                     <a class="dzk_img showallforumslink" href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_DZK_SHOWALLFORUMS' ]-->"><!--[ pnml name='_DZK_SHOWALLFORUMS' ]--></a>
                     <br />
                     <a class="dzk_img showfavoriteslink" href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showfavorites ]-->" title="<!--[ pnml name='_DZK_SHOWFAVORITES' ]-->"><!--[ pnml name='_DZK_SHOWFAVORITES' ]--></a>
-                    <!--[ /if ]-->
                 </li>
             </ul>
+            <!--[ /if ]-->
+
             <!--[if $signaturemanagement eq "yes"]-->
             <ul class="linklist">
                 <li>
