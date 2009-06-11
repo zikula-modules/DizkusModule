@@ -65,6 +65,11 @@
                     <a title="<!--[ pnml name='_DZK_GOTO_CAT' ]--> <!--[$newtopic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id]-->"><!--[$newtopic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[/if]-->
+                <!--[ if $favorites]-->
+                <li>
+                    &nbsp;<em>(<!--[ pnml name='_DZK_FAVORITES' html=1 ]-->)</em>
+                </li>
+                <!--[/if]-->
             </ul>
             <!--[* end of breadcrumbs *]-->
 
