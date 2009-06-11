@@ -14,9 +14,10 @@
  */
 $modversion['name']        = 'Dizkus';
 $modversion['oldnames']    = array('pnForum');
+$modversion['displayname'] = _DZK_DISPLAYNAME;
 $modversion['id']          = '62';
 $modversion['version']     = '3.0';
-$modversion['description'] = 'Integrated forum module';
+$modversion['description'] = _DZK_DESCRIPTION;
 $modversion['credits']     = 'pndocs/credits.txt';
 $modversion['help']        = 'pndocs/install.txt';
 $modversion['changelog']   = 'pndocs/changelog.txt';
