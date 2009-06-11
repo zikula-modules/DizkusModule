@@ -20,7 +20,7 @@ define('_DZK_OLDVERSION', 'old version');
 define('_DZK_NEWVERSION', 'new version');
 define('_DZK_NEXTVERSION', 'next version');
 
-define('_DZK_BACKUPHINT', 'Create a database dump before<br/>performing this upgrade step!');
+define('_DZK_BACKUPHINT', 'Create a database dump before<br />performing this upgrade step!');
 define('_DZK_UPGRADE_ADDINDEXNOW', 'Create index fields now');
 define('_DZK_UPGRADE_ADDINDEXLATER', 'Create index fields manually with phpmyadmin etc.');
 

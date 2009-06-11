@@ -13,7 +13,7 @@ define('_DZK_FAILEDTOUPGRADEHOOK', 'Fehler beim Aktualisieren der Hooks');
 
 define('_DZK_INSTALLATION', 'Dizkus installieren');
 define('_DZK_WELCOMETOINTERACTIVEINIT', 'Willkommen zur Dizkus-Installation');
-define('_DZK_INTERACTIVEINITHINT', 'In den nächsten Schritten wird Dizkus %version% installiert. Weitere Informationen zu Konfiguration und Optionen befinden sich in der <a href="http://support.pn-cms.de/modules/dokuwiki/doku.php?id=pnforum:index">Dokumentation</a>');
+define('_DZK_INTERACTIVEINITHINT', 'In den nächsten Schritten wird Dizkus %version% installiert. Weitere Informationen zu Konfiguration und Optionen befinden sich in der <a href="http://code.zikula.org/dizkus/">Dokumentation</a>');
 
 define('_DZK_WELCOMETOINTERACTIVEUPGRADE', 'Dizkus Upgrade');
 define('_DZK_OLDVERSION', 'alte Version');
