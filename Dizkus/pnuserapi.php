@@ -3272,6 +3272,11 @@ function Dizkus_userapi_get_latest_posts($args)
                    $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($last_visit) . "' ";
                    $text = _DZK_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
                    break;
+        case '7' : // last x posts
+                   $wheretime = "";
+                   $limit = $amount-1;
+                   $text = _DZK_RECENT_POSTS . ' ' . $amount;
+                   break;
         case '1' :
         default:   // last 24 hours
                    $wheretime = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ";

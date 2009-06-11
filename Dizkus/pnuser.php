@@ -824,6 +824,20 @@ function Dizkus_user_viewlatest($args=array())
     $selorder   = (int)FormUtil::getPassedValue('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1, 'GETPOST');
     $nohours    = (int)FormUtil::getPassedValue('nohours', (isset($args['nohours'])) ? $args['nohours'] : null, 'GETPOST');
     $unanswered = (int)FormUtil::getPassedValue('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0, 'GETPOST');
+    $amount     = (int)FormUtil::getPassedValue('amount', (isset($args['amount'])) ? $args['amount'] : null, 'GETPOST');
+
+    if (!empty($amount) && !is_numeric($amount)) {
+        unset($amount);
+        }
+
+    // maximum last 100 posts maybe shown
+    if (isset($amount) && $amount>100) {
+        $amount = 100;
+        }
+
+    if (!empty($amount)) {
+        $selorder = 7;
+        }
 
     if (!empty($nohours) && !is_numeric($nohours)) {
         unset($nohours);
@@ -843,6 +857,7 @@ function Dizkus_user_viewlatest($args=array())
     list($posts, $m2fposts, $rssposts, $text) = pnModAPIFunc('Dizkus', 'user', 'get_latest_posts',
                                                              array('selorder'   => $selorder,
                                                                    'nohours'    => $nohours,
+                                                                   'amount'     => $amount,
                                                                    'unanswered' => $unanswered,
                                                                    'last_visit' => $last_visit,
                                                                    'last_visit_unix' => $last_visit_unix));

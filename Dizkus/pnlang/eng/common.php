@@ -501,7 +501,7 @@ define('_DZK_QUICKSELECTFORUM','- select -');
 //
 // R
 //
-define('_DZK_RECENT_POSTS','recent Topics:');
+define('_DZK_RECENT_POSTS','recent topics:');
 define('_DZK_RECENT_POST_ORDER', 'Recent post order in topic view');
 define('_DZK_REGISTER','Register');
 define('_DZK_REGISTRATION_NOTE','Note: Registered users can subscribe to notifications about new posts');
