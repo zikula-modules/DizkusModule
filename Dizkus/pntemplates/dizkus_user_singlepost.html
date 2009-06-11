@@ -4,8 +4,9 @@
 <a id="pid<!--[ $post.post_id ]-->" ></a>
 
 <!--[if $post.contactlist_ignored|default:0 == 1]-->
-<div id="hidelink_posting_<!--[ $post.post_id ]-->">
-    <!--[pnml name='_DZK_SHOWIGNOREDPOSTINGOF']--> <!--[$post.poster_data.pn_uname|userprofilelink]-->. <a onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();"><!--[pnml name='_DZK_CLICKHERE']--></a><br />
+<div id="hidelink_posting_<!--[ $post.post_id ]-->" class="roundedbar pn-floatbox dzk_rounded">
+    <!--[pnml name='_DZK_SHOWIGNOREDPOSTINGOF']--> <em><!--[$post.poster_data.pn_uname]--></em>
+    <a href="javascript:void(0);" title="<!--[pnml name='_DZK_CLICKHERE']-->" onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();">(<!--[pnml name='_DZK_CLICKHERE']-->)</a>
 </div>
 <!--[/if]-->
 
@@ -109,3 +110,9 @@
 
     </div>
 </div>
+
+<!--[if $post.contactlist_ignored == 1]-->
+<script type="text/javascript">
+    $('posting_<!--[ $post.post_id ]-->').toggle();
+</script>
+<!--[/if]-->

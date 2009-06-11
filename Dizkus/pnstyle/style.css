@@ -473,8 +473,9 @@ div#editpostoptions ul li {
 }
 #dizkus .forum_post .post_author {
     border-right: 1px solid white;
-    float:left; width:25%;
-    font-size:0.85em;
+    float:left;
+    width:25%;
+    font-size:0.9em;
 }
 #dizkus .forum_post .post_author .avatar {
     text-align: center;
