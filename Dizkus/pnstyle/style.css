@@ -658,7 +658,7 @@ div#editpostoptions ul li {
     padding: 3px;
     width: 60%;
 }
-#dizkus .dzk_form button {
+#dizkus #latestposts button {
     font-size:1em;
     background: transparent;
     border: 1px outset #CCCCCC;
