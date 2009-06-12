@@ -32,6 +32,7 @@ var indicatorimage = '<img src="' + document.location.pnbaseURL + 'modules/Dizku
 
 var dzk_globalhandlers = {
     onCreate: function(){
+        $$('.dzk_img').each(function(el){ el.disabled = true; });
         if($('dizkus')) {
             $('dizkus').style.cursor = 'wait';
         }
@@ -39,6 +40,7 @@ var dzk_globalhandlers = {
 
     onComplete: function() {
         if(Ajax.activeRequestCount == 0){
+            $$('.dzk_img').each(function(el){ el.disabled = false; });
             if($('dizkus')) {
                 $('dizkus').style.cursor = 'auto';
             }
