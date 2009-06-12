@@ -655,6 +655,7 @@ div#editpostoptions ul li {
 #dizkus .dzk_form input#subject,
 #dizkus .dzk_form textarea {
     font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+    font-size:1em;
     line-height: 1.4em;
     padding: 3px;
     width: 60%;
