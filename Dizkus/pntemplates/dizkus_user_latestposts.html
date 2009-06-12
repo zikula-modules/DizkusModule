@@ -58,8 +58,8 @@
                             <!--[ if $post.hot_topic eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
                             <!--[ /if ]-->
-                            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.cat_title ]--> :: <!--[ $post.forum_name ]-->"><!--[ $post.topic_title ]--></a>
-                            <span><!--[ pnml name='_DZK_FORUM' ]-->: <a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name]-->"><!--[ $post.forum_name|truncate:"50" ]--></a></span>
+                            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.topic_title|pnvarprepfordisplay|truncate:70 ]-->"><!--[ $post.topic_title|pnvarprepfordisplay|truncate:70 ]--></a>
+                            <span><!--[ pnml name='_DZK_FORUM' ]-->: <a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name|pnvarprepfordisplay|truncate:70]-->"><!--[ $post.forum_name|pnvarprepfordisplay|truncate:70 ]--></a></span>
                         </dt>
                         <dd class="posts"><!--[ $post.topic_replies ]--><dfn><!--[ pnml name='_DZK_REPLIES' ]--></dfn></dd>
                         <dd class="lastpost">
