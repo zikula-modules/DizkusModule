@@ -60,5 +60,3 @@ if(is_array($forums) && count($forums)>0 ) {
         }
     }
 }
-
-?>
