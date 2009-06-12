@@ -835,7 +835,7 @@ function Dizkus_userapi_readtopic($args)
     $complete = (isset($complete)) ? $complete : false;
     $count    = (isset($count)) ? $count : false;
     $start    = (isset($start)) ? $start : 0;
-    $hooks    = (isset($nohook)) ? $hooks : 1;
+    $hooks    = (!isset($nohook)) ? $hooks : 0;
 
     $currentuserid = pnUserGetVar('uid');
     $now = time();
@@ -1063,9 +1063,10 @@ pnShutDown();
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
-            $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
 
-            if ($hooks) {
+            if ($hooks == 1) {
+                $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
+
                 list($post['post_text']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_text']));
 
                 // call hooks for $message
