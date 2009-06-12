@@ -1678,15 +1678,13 @@ function Dizkus_userapi_storenewtopic($args)
              topic_poster,
              forum_id,
              topic_time,
-             topic_notify,
              topic_reference)
             VALUES
             ('".DataUtil::formatForStore($topic_id)."',
              '$subject',
-             '$pn_uid',
-             '$forum_id',
+             $pn_uid,
+             $forum_id,
              '$time',
-             '',
              '$reference' )";
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
