@@ -43,8 +43,6 @@ chdir('/opt/webdev/htdocs/z10');
 // tried other rss feed (1.0, 2.0, Atom)... RSS mod could
 // return a different information (timestamp - array keys like title, etc.
 
-include 'modules/Dizkus/common.php';
-
 // start Zikula
 /****************************************************************/
 include 'includes/pnAPI.php';
@@ -64,8 +62,8 @@ if (!pnModAvailable('Feeds')) {
 }
 /****************************************************************/
 
-// Getting All forums where RSS2DIZKUS is SET...
-/****************************************************************/
+// Getting All forums where RSS2DIZKUS is SET... this also loads modules/Dizkus/common.php
+/**************************************************************************/
 $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 
 if (!$forums) {
