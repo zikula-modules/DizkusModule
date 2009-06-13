@@ -12,12 +12,12 @@
 #dizkus {
     width:100%;
 }
-#dizkus .dzk_col50l {
-    width:50%;
+#dizkus .dzk_col_left {
+    width:45%;
     float:left;
 }
-#dizkus .dzk_col50r {
-    width:50%;
+#dizkus .dzk_col_right {
+    width:55%;
     float:right;
     margin-left:-5px;
 }
@@ -556,7 +556,7 @@ div#editpostoptions ul li {
 #dizkus #newtopicbuttons {
     margin: 1em 0.5em;
 }
-#dizkus #bbcode_message p {
+#dizkus .bbcode p {
     margin: 0;
 }
 

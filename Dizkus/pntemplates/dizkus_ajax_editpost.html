@@ -6,7 +6,7 @@
     </div>
     <textarea id="<!--[ $postingtextareaid ]-->" class="dzk_texpand" name="postingtext_<!--[ $post.post_id ]-->_edit"><!--[ $post.post_rawtext ]--></textarea>
     <div class="subcolumns">
-        <div id="editpostoptions" class="dzk_col50l">
+        <div id="editpostoptions" class="dzk_col_left">
             <ul>
                 <li><input type="checkbox" name="attach_signature" id="postingtext_<!--[ $post.post_id ]-->_attach_signature" <!--[ if $post.has_signature eq true ]-->checked="checked"<!--[ /if ]--> value="1" /><label for="postingtext_<!--[ $post.post_id ]-->_attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label></li>
                 <!--[ if $post.poster_data.moderate eq true ]-->
@@ -19,7 +19,7 @@
                 </li>
             </ul>
         </div>
-        <div class="dzk_col50r">
+        <div class="dzk_col_right">
             <!--[ plainbbcode textfieldid=$postingtextareaid ]-->
             <!--[ bbsmile textfieldid=$postingtextareaid ]-->
         </div>

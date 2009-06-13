@@ -391,7 +391,7 @@ function subscribeunsubscribeforum_response(originalRequest)
 
     if(['subscribed', 'unsubscribed'].include(result.newmode)) {
         $('subscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');
-        $('unsubscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');        
+        $('unsubscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');
     } else {
          alert('wrong result from subscribe/unsubscribe');
     }
@@ -546,7 +546,7 @@ function quickEditInit(originalRequest)
         $('bbcode_'+postingtextID+'_edit').removeClassName('hidden');
     }
     if ($$('#postingtext_'+postingtextID+'_editor .bb_standardsmilies')) {
-        $$('#postingtext_'+postingtextID+'_editor .bbsmile_smilies').each(function(el) {
+        $$('.bbsmile_smilies').each(function(el) {
             el.removeClassName('bbsmile_smilies');
         });
         if($('smiliemodal')) {
@@ -559,8 +559,8 @@ function quickEditInit(originalRequest)
     });
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);
-    Event.observe(postingtextID + '_save',   'click',  function(){quickEditsave(result.post_id)}, false);
-    Event.observe(postingtextID + '_cancel', 'click',  function(){quickEditcancel(result.post_id)}, false);
+    Event.observe(postingtextID + '_save',   'click', function(){quickEditsave(result.post_id)}, false);
+    Event.observe(postingtextID + '_cancel', 'click', function(){quickEditcancel(result.post_id)}, false);
 }
 
 function quickEditchanged(postid)
