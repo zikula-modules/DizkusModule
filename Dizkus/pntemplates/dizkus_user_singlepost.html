@@ -16,7 +16,7 @@
         <div class="subcolumns pn-floatbox">
             <div id="posting_<!--[ $post.post_id ]-->_userinfo" class='post_author'>
                 <div class="avatar">
-                    <!--[$post.poster_data.uname|userprofilelink]-->
+                    <strong><!--[$post.poster_data.uname|userprofilelink]--></strong>
                     <!--[ if $post.poster_data.pn_uid neq 1 AND $post.poster_data._YOURAVATAR neq '' AND $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
                     <br />
                     <img src="<!--[$baseurl]-->images/avatar/<!--[ $post.poster_data._YOURAVATAR ]-->" <!--[ $post.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $post.poster_data.uname ]-->" />
@@ -49,7 +49,7 @@
 
             <div class="postbody">
                 <div class="postinfo">
-                    <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
+                    <!--[if isset($topic)]--><a class="linktopostlink" href="<!--[ pnmodurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
                     <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:'%d.%m.%Y, %H:%M':'':true ]-->
                 </div>
                 <div class="content" id="postingtext_<!--[ $post.post_id ]-->">
