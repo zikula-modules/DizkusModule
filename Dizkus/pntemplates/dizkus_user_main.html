@@ -12,7 +12,7 @@
                 <li class="header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_<!--[ $category.cat_id ]-->" class="dzk_img <!--[ if $category.new_posts == true ]-->newpostscategorylink<!--[ else ]-->categorylink<!--[ /if ]-->" title="<!--[ pnml name='_DZK_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a></span>
+                            <span><a id="categorylink_<!--[ $category.cat_id ]-->" class="<!--[ if $category.new_posts == true ]-->newpostscategorylink<!--[ else ]-->categorylink<!--[ /if ]-->" title="<!--[ pnml name='_DZK_GOTO_CAT' ]--> '<!--[ $category.cat_title|pnvarprepfordisplay ]-->'" href="<!--[ pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id  ]-->"><!--[ $category.cat_title|pnvarprepfordisplay ]--></a></span>
                         </dt>
                         <dd class="topics">
                             <span><!--[ pnml name='_DZK_TOPICS' ]--></span>
@@ -117,7 +117,7 @@
                                 <!--[ /if ]-->
                             </span>
                             <!--[else]-->
-                            <!--[$forum.last_post]-->
+                            <span><!--[$forum.last_post]--></span>
                             <!--[/if]-->
                         </dd>
                     </dl>

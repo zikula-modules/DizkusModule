@@ -192,6 +192,7 @@ div#editpostoptions ul li {
 #dizkus ul.linklist li .homelink{
     background: url("../pnimages/icon_home.gif") no-repeat 1px 1px;
     padding-left: 20px;
+    margin-right:0;
 }
 #dizkus ul.linklist li .previoustopiclink{
     background: url("../pnimages/arrow_left.gif") no-repeat 1px 50%;
@@ -216,9 +217,6 @@ div#editpostoptions ul li {
 }
 #dizkus ul.navlinks li {
     margin-right: 0px;
-}
-#dizkus ul.navlinks li a {
-    margin-left: 5px;
 }
 #dizkus ul.leftside {
     float: left;
@@ -414,7 +412,7 @@ div#editpostoptions ul li {
 #dizkus dd.redirect span,
 #dizkus dd.moderation span {
     display: block;
-    padding-left: 5px;
+    padding-left: 5px!important;
 }
 #dizkus dd.time {
     width: auto;
