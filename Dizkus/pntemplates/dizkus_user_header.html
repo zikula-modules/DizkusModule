@@ -7,6 +7,15 @@
 <!--[ pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/dizkus_tools.js' ]-->
 <!--[ pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/dizkus_user.js' ]-->
 
+<!--[literal]--><!--[if IE]><!--[/literal]-->
+<!--[ pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/niftycube.js' ]-->
+<script type="text/javascript">
+    // <![CDATA[
+    document.observe('dom:loaded', function() { Nifty("div.dzk_rounded","transparent") });
+    // ]]>
+</script>
+<!--[literal]--><![endif]--><!--[/literal]-->
+
 <!--[ formutil_getpassedvalue name='func' default='main' assign='func']-->
 <!--[* set the page title *]-->
 <!--[ assign var='maintitle' value=$maintitle|default:'' ]-->

@@ -43,6 +43,7 @@
     float:right;
 }
 #dizkus dl,
+#dizkus dt,
 #dizkus dd,
 #dizkus ul,
 #dizkus ul li {
@@ -665,9 +666,10 @@ div#editpostoptions ul li {
     padding: 2px;
 }
 #dizkus .dzk_form label {
-    cursor: default;
-    padding-right: 5px;
-    color: #676767;
+    color:#676767;
+    cursor:default;
+    display:inline;
+    padding-right:5px;
 }
 #dizkus .dzk_form label input {
     vertical-align: middle;
