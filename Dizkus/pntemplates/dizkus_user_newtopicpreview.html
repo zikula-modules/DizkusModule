@@ -2,11 +2,11 @@
 
 <h2><!--[ $newtopic.subject|pnvarprepfordisplay ]--></h2>
 
-<div id="posting" class="forum_post post_bg1 pn-floatbox dzk_rounded">
+<div id="posting" class="forum_post post_bg1 dzk_rounded">
     <div class="inner">
 
         <div class="subcolumns">
-            <div class='post_author'>
+            <div class="post_author dzk_colpost_left">
                 <div class="avatar">
                     <!--[$newtopic.poster_data.uname|userprofilelink]-->
                     <!--[ if $newtopic.poster_data.pn_uid neq 1 AND $newtopic.poster_data._YOURAVATAR neq '' AND $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
@@ -28,7 +28,7 @@
                 </ul>
             </div>
 
-            <div class="postbody">
+            <div class="postbody dzk_colpost_right">
 
                 <div class="postinfo">
                     <strong><!--[ pnml name='_DZK_POSTED' ]-->: </strong>&nbsp;<!--[ $newtopic.topic_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->

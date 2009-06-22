@@ -29,7 +29,7 @@ function smarty_function_jumpbox($params, &$smarty)
     $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums');
     if(count($forums)>0) {
         Loader::includeOnce('modules/Dizkus/common.php');
-        $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum')) . '" method="get">
+        $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum')) . '" class="dzk_form dzk_float_right" method="get">
                <label for="dizkus_forum"><strong>' . DataUtil::formatForDisplay(_DZK_FORUM) . ': </strong></label>
                <select name="forum" id="dizkus_forum" onchange="location.href=this.options[this.selectedIndex].value">
 	           <option value="'.DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'main')).'">' . DataUtil::formatForDisplay(_DZK_QUICKSELECTFORUM) . '</option>';

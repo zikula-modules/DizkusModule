@@ -4,17 +4,17 @@
 <a id="pid<!--[ $post.post_id ]-->" ></a>
 
 <!--[if $post.contactlist_ignored|default:0 == 1]-->
-<div id="hidelink_posting_<!--[ $post.post_id ]-->" class="roundedbar pn-floatbox dzk_rounded">
+<div id="hidelink_posting_<!--[ $post.post_id ]-->" class="roundedbar dzk_rounded">
     <!--[pnml name='_DZK_SHOWIGNOREDPOSTINGOF']--> <em><!--[$post.poster_data.pn_uname]--></em>
     <a href="javascript:void(0);" title="<!--[pnml name='_DZK_CLICKHERE']-->" onclick="javascript:$('posting_<!--[ $post.post_id ]-->').toggle();javascript:$('hidelink_posting_<!--[ $post.post_id ]-->').toggle();">(<!--[pnml name='_DZK_CLICKHERE']-->)</a>
 </div>
 <!--[/if]-->
 
-<div id="posting_<!--[ $post.post_id ]-->" class="forum_post pn-floatbox dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
+<div id="posting_<!--[ $post.post_id ]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
     <div class="inner">
 
-        <div class="subcolumns pn-floatbox">
-            <div id="posting_<!--[ $post.post_id ]-->_userinfo" class='post_author'>
+        <div class="subcolumns pn-clearfix">
+            <div id="posting_<!--[ $post.post_id ]-->_userinfo" class="post_author dzk_colpost_left">
                 <div class="avatar">
                     <strong><!--[$post.poster_data.uname|userprofilelink]--></strong>
                     <!--[ if $post.poster_data.pn_uid neq 1 AND $post.poster_data._YOURAVATAR neq '' AND $post.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
@@ -47,7 +47,7 @@
                 </ul>
             </div>
 
-            <div class="postbody">
+            <div class="postbody dzk_colpost_right">
                 <div class="postinfo">
                     <!--[if isset($topic)]--><a class="linktopostlink" href="<!--[ pnmodurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
                     <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:'%d.%m.%Y, %H:%M':'':true ]-->
@@ -57,10 +57,10 @@
                 </div>
             </div>
 
-            <div class='postlink pn-clearfix'>
+            <div class="postlink">
                 <!--[ if !isset($preview) OR $preview neq true ]-->
-                <div style="float:right;width:75%;">
-                    <ul id="postingoptions_<!--[ $post.post_id ]-->" class="javascriptpostingoptions hidden linklist" style="float:right;">
+                <div class="dzk_colpost_right">
+                    <ul id="postingoptions_<!--[ $post.post_id ]-->" class="javascriptpostingoptions hidden linklist pn-clearfix" style="float:right;">
                         <!--[ if $post.poster_data.moderate eq true]-->
                         <!--[ if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)  ]-->
                         <li><a class="movepostlink" title="<!--[ pnml name='_DZK_MOVEPOST' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id ]-->"><!--[ pnimg modname='Dizkus' src='icon_post_move.gif' alt='_DZK_MOVEPOSTSHORT' altml=true ]--></a></li>
@@ -82,7 +82,7 @@
                         <li><a class="dzk_notextdecoration" title="<!--[ pnml name='_DZK_TOP' ]-->" href="#top">&nbsp;<!--[ pnimg modname='Dizkus' src="icon_up.gif" alt="_DZK_TOP" altml=true ]--></a></li>
                     </ul>
                     <noscript>
-                        <ul class="nonjavascriptpostingoptions linklist" style="float:right;">
+                        <ul class="nonjavascriptpostingoptions linklist pn-clearfix" style="float:right;">
                             <!--[ if $post.poster_data.moderate eq true]-->
                             <!--[ if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)  ]-->
                             <li><a class="dzk_img movepostlink" title="<!--[ pnml name='_DZK_MOVEPOST' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_DZK_MOVEPOSTSHORT' ]--></a></li>

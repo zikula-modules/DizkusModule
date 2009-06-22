@@ -34,15 +34,15 @@
 
 <!--[insert name='getstatusmsg']-->
 
-<div id="dizkus" class="pn-floatbox">
+<div id="dizkus">
 
     <a id="top" accesskey="t"></a>
 
     <!--[ if $pncore.Dizkus.forum_enabled neq 'no' ]-->
-    <div class="navbar pn-floatbox dzk_rounded">
+    <div class="navbar dzk_rounded">
         <div class="inner pn-clearfix">
             <!--[* start of breadcrumbs *]-->
-            <ul class="linklist navlinks">
+            <ul class="linklist navlinks pn-clearfix">
                 <!--[if $func eq 'main' AND $view_category eq -1]-->
                 <li class="icon-home">
                     <span class="dzk_img homelink"><!--[ pnml name='_DZK_START' ]--></span>
@@ -85,7 +85,7 @@
             </ul>
             <!--[* end of breadcrumbs *]-->
 
-            <ul class="linklist" style="float:right;">
+            <ul class="linklist pn-clearfix" style="float:right;">
                 <!--[ if $pncore.logged_in eq 1 AND $func eq 'main' AND $pncore.Dizkus.favorites_enabled eq 'yes' ]-->
                 <!--[ if $favorites]-->
                 <li><a class="dzk_img showallforumslink" href="<!--[ pnmodurl modname=Dizkus type=user func=prefs act=showallforums ]-->" title="<!--[ pnml name='_DZK_SHOWALLFORUMS' ]-->"><!--[ pnml name='_DZK_SHOWALLFORUMS' ]--></a></li>

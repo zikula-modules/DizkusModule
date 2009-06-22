@@ -7,9 +7,9 @@
 <!--[ /if ]-->
 
 <!--[ if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in ]-->
-<div class="roundedbar pn-floatbox dzk_rounded">
+<div class="roundedbar dzk_rounded">
     <div class="inner">
-        <ul id="dzk_javascriptareaforum" class="hidden linklist">
+        <ul id="dzk_javascriptareaforum" class="hidden linklist pn-clearfix">
             <!--[* Moderate *]-->
             <!--[ if $forum.access_comment ]-->
             <li><a class="dzk_img newtopiclink" title="<!--[ pnml name='_DZK_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id ]-->"><!--[ pnml name='_DZK_NEWTOPIC' ]--></a></li>
@@ -54,7 +54,7 @@
         </ul>
 
         <noscript>
-            <ul id="dzk_nonjavascriptareaforum" class="linklist">
+            <ul id="dzk_nonjavascriptareaforum" class="linklist pn-clearfix">
                 <!--[* Moderate *]-->
                 <!--[ if $forum.access_comment ]-->
                 <li><a class="dzk_img newtopiclink" title="<!--[ pnml name='_DZK_NEWTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id ]-->"><!--[ pnml name='_DZK_NEWTOPIC' ]--></a></li>
@@ -85,13 +85,13 @@
 <!--[ /if ]-->
 
 
-<div class="pn-floatbox">
+<div>
     <!--[ if $forum.topics ]-->
 
     <!--[ pnfpager total=$forum.forum_topics ]-->
     <!--[mediaattach_attachicon topics=$forum.topics assign='uploadtopicids']-->
 
-    <div class="forumbg pn-floatbox dzk_rounded">
+    <div class="forumbg dzk_rounded">
         <div class="inner">
 
             <ul class="topiclist">
@@ -163,7 +163,7 @@
 
     <!--[ else ]-->
 
-    <div class="forumbg dzk_message pn-floatbox dzk_rounded">
+    <div class="forumbg dzk_message dzk_rounded">
         <div class="inner">
             <strong><!--[ pnml name='_DZK_NOTOPICS' ]--></strong>
         </div>
@@ -173,7 +173,7 @@
 </div>
 
 <!--[if $forum.forum_mods|@count > 0 ]-->
-<ul id="dzk_moderatorlist" class="linklist">
+<ul id="dzk_moderatorlist" class="linklist pn-clearfix">
     <li><em><!--[ pnml name='_DZK_MODERATEDBY' ]-->&nbsp;:&nbsp;</em></li>
     <!--[ foreach name=moderators item=mod key=modid from=$forum.forum_mods ]-->
     <li>

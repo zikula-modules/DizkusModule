@@ -3,10 +3,10 @@
 
 <!--[ include file='dizkus_user_header.html' ]-->
 
-<div class="dzk_topicoptions roundedbar pn-clearfix dzk_rounded">
+<div class="dzk_topicoptions roundedbar dzk_rounded">
     <div class="inner">
         <div id="dzk_javascriptareatopic" class="hidden">
-            <ul class="dzk_topicoptions linklist">
+            <ul class="dzk_topicoptions linklist pn-clearfix">
                 <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
                 <li><a class="dzk_img previoustopiclink" title="<!--[ pnml name='_DZK_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id ]-->"></a></li>
                 <!--[ /if ]-->
@@ -33,7 +33,7 @@
             </ul>
 
             <!--[ if $topic.access_moderate eq 1 ]-->
-            <ul class="dzk_topicoptions linklist">
+            <ul class="dzk_topicoptions linklist pn-clearfix">
                 <li>
                     <a id="locktopicbutton" class="dzk_img <!--[ if $topic.topic_status eq 1 ]-->hidden<!--[ /if ]--> locktopiclink" title="<!--[ pnml name='_DZK_LOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'lock');"><!--[ pnml name='_DZK_LOCKTOPIC' ]--></a>
                     <a id="unlocktopicbutton" class="dzk_img <!--[ if $topic.topic_status eq 0 ]-->hidden<!--[ /if ]--> unlocktopiclink" title="<!--[ pnml name='_DZK_UNLOCKTOPIC' ]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[ $topic.topic_id ]-->, 'unlock');"><!--[ pnml name='_DZK_UNLOCKTOPIC' ]--></a>
@@ -52,7 +52,7 @@
 
         <noscript>
             <div id="dzk_nonjavascriptareatopic">
-                <ul class="dzk_topicoptions linklist">
+                <ul class="dzk_topicoptions linklist pn-clearfix">
                     <!--[ if $topic.topic_id neq $topic.prev_topic_id ]-->
                     <li><a class="dzk_img previoustopiclink" title="<!--[ pnml name='_DZK_PREVIOUS_TOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id ]-->">&nbsp;</a></li>
                     <!--[ /if ]-->
@@ -81,7 +81,7 @@
                 </ul>
 
                 <!--[ if $topic.access_moderate eq 1 ]-->
-                <ul class="dzk_topicoptions linklist">
+                <ul class="dzk_topicoptions linklist pn-clearfix">
                     <!--[ if $topic.topic_status eq 0 ]-->
                     <li><a class="dzk_img locktopiclink" title="<!--[ pnml name='_DZK_LOCKTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id ]-->"><!--[ pnml name="_DZK_LOCKTOPIC" ]--></a></li>
                     <!--[ else ]-->
@@ -106,7 +106,7 @@
 <!--[ pnfpager total=$topic.total_posts ]-->
 
 <div id="dzk_postinglist">
-    <ul class="pn-clearfix">
+    <ul>
         <!--[ counter start=0 print=false assign='post_counter']-->
         <!--[ foreach key='num' item='post' from=$topic.posts ]-->
         <!--[ counter ]-->
@@ -122,7 +122,7 @@
 <!--[ pnfpager total=$topic.total_posts ]-->
 
 <!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
-<div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> pn-clearfix pn-floatbox dzk_rounded">
+<div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> dzk_rounded">
     <div class="inner">
         <div class="subcolumns">
             <form id="quickreplyform" class="dzk_form" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
@@ -142,7 +142,7 @@
                             <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
                             <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
                             <!--[ /if ]-->
-                            <div class="subcolumns pn-floatbox">
+                            <div class="subcolumns pn-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
@@ -192,7 +192,7 @@
 <!--[ /if ]-->
 
 <!--[if $topic.forum_mods|@count > 0]-->
-<ul id="dzk_moderatorlist" class="linklist">
+<ul id="dzk_moderatorlist" class="linklist pn-clearfix">
     <li><em><!--[ pnml name='_DZK_MODERATEDBY' ]-->&nbsp;:&nbsp;</em></li>
     <!--[ foreach name=moderators item=mod from=$topic.forum_mods ]-->
     <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>

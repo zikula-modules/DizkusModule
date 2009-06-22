@@ -8,16 +8,16 @@
 
     <h2><!--[ pnml name='_DZK_OURLATESTPOSTS' ]--> (<!--[ $text ]-->)</h2>
 
-    <div class="roundedbar pn-floatbox dzk_rounded">
+    <div class="roundedbar dzk_rounded">
         <div class="inner">
             <form class="dzk_form" method="post" action="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest ]-->">
-                <ul class="linklist">
+                <ul class="linklist pn-clearfix">
                     <li><a class="dzk_img" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest selorder=3 ]-->"><!--[ pnml name='_DZK_YESTERDAY' ]--></a></li>
                     <li><a class="dzk_img" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest selorder=2 ]-->"><!--[ pnml name='_DZK_TODAY' ]--></a></li>
                     <li><a class="dzk_img" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest selorder=1 ]-->"><!--[ pnml name='_DZK_LAST24' ]--></a></li>
                     <li><a class="dzk_img"></a><button type="submit"><!--[ pnml name='_DZK_LAST' ]--></button> <input type="text" name="nohours" id="Dizkus_hours" size="3" value="<!--[ $nohours ]-->" maxlength="3" tabindex="0" /> <button type="submit"><!--[ pnml name='_DZK_HOURS' ]--></button></li>
                 </ul>
-                <ul class="linklist">
+                <ul class="linklist pn-clearfix">
                     <li><a class="dzk_img" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest selorder=4 ]-->"><!--[ pnml name='_DZK_LASTWEEK' ]--></a></li>
                     <li><a class="dzk_img" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewlatest selorder=4 unanswered=1 ]-->"><!--[ pnml name='_DZK_UALASTWEEK' ]--></a></li>
                     <!--[ if $last_visit_unix <> 0]-->
@@ -31,7 +31,7 @@
     <a id="postings"></a>
     <h2><!--[ pnml name='_DZK_FORUMS' ]--></h2>
 
-    <div class="forumbg pn-floatbox dzk_rounded">
+    <div class="forumbg dzk_rounded">
         <div class="inner">
 
             <ul class="topiclist">
@@ -58,8 +58,8 @@
                             <!--[ if $post.hot_topic eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" alt="_DZK_HOTTOPIC" altml=true title="_DZK_HOTTOPIC" titleml=true ]-->
                             <!--[ /if ]-->
-                            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.topic_title|pnvarprepfordisplay|truncate:70 ]-->"><!--[ $post.topic_title|pnvarprepfordisplay|truncate:70 ]--></a>
-                            <span><!--[ pnml name='_DZK_FORUM' ]-->: <a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name|pnvarprepfordisplay|truncate:70]-->"><!--[ $post.forum_name|pnvarprepfordisplay|truncate:70 ]--></a></span>
+                            <a href="<!--[ $post.last_post_url_anchor ]-->" title="<!--[ $post.topic_title|truncate:70 ]-->"><!--[ $post.topic_title|truncate:70 ]--></a>
+                            <span><!--[ pnml name='_DZK_FORUM' ]-->: <a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$post.forum_id]-->" title="<!--[$post.forum_name|truncate:70]-->"><!--[ $post.forum_name|truncate:70 ]--></a></span>
                         </dt>
                         <dd class="posts"><!--[ $post.topic_replies ]--><dfn><!--[ pnml name='_DZK_REPLIES' ]--></dfn></dd>
                         <dd class="lastpost">
@@ -84,7 +84,7 @@
     <!--[if $rssposts]-->
     <h2><!--[ pnml name='_DZK_RSS2FORUMPOSTS' ]--></h2>
 
-    <div class="forumbg pn-floatbox dzk_rounded">
+    <div class="forumbg dzk_rounded">
 
         <div class="inner">
 
@@ -139,7 +139,7 @@
     <!--[if $m2fposts]-->
     <h2><!--[ pnml name='_DZK_MAIL2FORUMPOSTS' ]--></h2>
 
-    <div class="forumbg pn-floatbox dzk_rounded">
+    <div class="forumbg dzk_rounded">
 
         <div class="inner">
 

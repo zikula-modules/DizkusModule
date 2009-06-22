@@ -9,15 +9,21 @@
 *
 /*******************************************************************************/
 
-#dizkus {
-    width:100%;
-}
 #dizkus .dzk_col_left {
-    width:45%;
+    width:47%;
     float:left;
 }
 #dizkus .dzk_col_right {
-    width:55%;
+    width:53%;
+    float:right;
+    margin-left:-5px;
+}
+#dizkus .dzk_colpost_left {
+    width:25%;
+    float:left;
+}
+#dizkus .dzk_colpost_right {
+    width:75%;
     float:right;
     margin-left:-5px;
 }
@@ -153,6 +159,7 @@ div#editpostoptions ul li {
     border-radius: 6px;
     -webkit-border-radius: 6px;    /* for Safari */
     -moz-border-radius: 6px;       /* for Firefox */
+    overflow: hidden;              /* for MSIE8 */
 }
 
 #dizkus .navbar,
@@ -255,6 +262,7 @@ div#editpostoptions ul li {
     margin: 0;
 }
 #dizkus ul.topiclist li {
+    clear: both;
     display: block;
     list-style-type: none;
     margin: 0;
@@ -321,8 +329,8 @@ div#editpostoptions ul li {
 #dizkus li.header dl dt,
 #dizkus li.header dl dd {
     border-left-width:0;
-    margin:0.5em 0;
-    padding:4px 0;
+    margin: 0.1em 0;
+    padding: 0.1em 0;
 }
 #dizkus li.header dl dt span,
 #dizkus li.header dl dd span {
@@ -472,8 +480,6 @@ div#editpostoptions ul li {
 }
 #dizkus .forum_post .post_author {
     border-right: 1px solid white;
-    float:left;
-    width:25%;
     font-size:0.9em;
 }
 #dizkus .forum_post .post_author .avatar {
@@ -488,9 +494,6 @@ div#editpostoptions ul li {
     border: none;
     padding: 0;
     color: #333333;
-    float: right;
-    width:75%;
-    margin-left:-5px;
 }
 #dizkus .forum_post .postbody .postinfo {
     border-bottom: 1px solid white;
@@ -573,6 +576,7 @@ div#editpostoptions ul li {
     margin: 1em 0.5em 0 0;
     padding: 2px 0 2px 19px;
     cursor: pointer;
+    line-height: 1em;
 }
 
 #dizkus a.dzk_img,
@@ -664,6 +668,7 @@ div#editpostoptions ul li {
     background: transparent;
     border: 1px outset #CCCCCC;
     padding: 2px;
+    line-height: 1em;
 }
 #dizkus .dzk_form label {
     color:#676767;
@@ -724,7 +729,7 @@ dl.polls {
 /* navbar fix */
 * html .navbar, ul.linklist {
     height: 4%;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 /* Simple fix so forum and topic lists always have a min-height set, even in IE6
@@ -784,11 +789,11 @@ dl.icon {
 }
 
 #dizkus_admin ul#category,
-#dizkus_admin .dzk_treeforumlist  {
+#dizkus_admin .dzk_treeforumlist {
     padding: 0;
     margin: 0;
     list-style: none;
-    overflow:hidden;
+    overflow: hidden;
 }
 #dizkus_admin .catline {
     border: 1px solid #aaa;
@@ -815,7 +820,7 @@ and their use should be avoided in the markup */
 
 b.niftycorners,b.niftyfill{display:block}
 b.niftycorners *{display:block;height: 1px;line-height:1px;font-size: 1px;
-    overflow:hidden;border-style:solid;border-width: 0 1px}
+overflow:hidden;border-style:solid;border-width: 0 1px}
 /*normal*/
 b.r1{margin: 0 3px;border-width: 0 2px}
 b.r2{margin: 0 2px}

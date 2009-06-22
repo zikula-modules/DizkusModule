@@ -9,7 +9,7 @@
 <!--[ forumimage name=firstnew_image assign=firstnew ]-->
 
 <!--[* start of breadcrumbs *]-->
-<ul id="dzk_breadcrumbs" class="linklist">
+<ul id="dzk_breadcrumbs" class="linklist pn-clearfix">
     <li><strong><!--[ pnml name='_DZK_MODERATE' ]-->&nbsp;::&nbsp;</strong></li>
     <li><a title="<!--[ pnml name='_DZK_GOTOSTART' ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=main ]-->"><strong><!--[ pnml name='_DZK_START' ]--></strong></a><strong><!--[ pnml name='_DZK_SEPARATOR' html=1 ]--></strong></li>
     <li><a title="<!--[ pnml name='_DZK_GOTO_CAT' ]--> <!--[ $forum.cat_title ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=main viewcat=$forum.cat_id ]-->"><strong><!--[ $forum.cat_title ]--></strong></a><strong><!--[ pnml name='_DZK_SEPARATOR' html=1 ]--></strong></li>
@@ -18,7 +18,7 @@
 <!--[* end of breadcrumbs *]-->
 
 <!--[ if $forum.forum_mods|@count > 0 ]-->
-<ul id="dzk_moderatorlist" class="linklist">
+<ul id="dzk_moderatorlist" class="linklist pn-clearfix">
     <li><em><!--[ pnml name='_DZK_MODERATEDBY' ]-->&nbsp;:&nbsp;</em></li>
     <!--[ foreach name=moderators item=mod from=$forum.forum_mods ]-->
     <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
