@@ -38,7 +38,7 @@
     </div>
 </form>
 
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus type='admin' func='ranks' ranktype='0' ]-->" method="post">
+<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='0' ]-->" method="post">
     <table class="pn-admintable">
         <thead>
             <tr>
@@ -54,7 +54,7 @@
             <tr class="<!--[cycle values=pn-odd,pn-even]-->">
                 <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_title]" value="<!--[ $rank.rank_title|pnvarprepfordisplay ]-->" maxlength="50" size="20" /></td>
                 <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_min]" value="<!--[ $rank.rank_min ]-->" maxlength="5" size="4" /></td>
-                <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][max_posts]" value="<!--[ $rank.rank_max ]-->" maxlength="5" size="4" /></td>
+                <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_max]" value="<!--[ $rank.rank_max ]-->" maxlength="5" size="4" /></td>
                 <td>
                     <select name="ranks[<!--[$rank.rank_id]-->][rank_image]" id="rank_image<!--[ $num ]-->" onchange="ShowRankImage(<!--[ $num ]-->, '<!--[ $pncore.Dizkus.url_ranks_images ]-->')">
                         <!--[ foreach item=rankimage from=$rankimages ]-->
