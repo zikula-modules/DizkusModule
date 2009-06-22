@@ -8,7 +8,9 @@
 * @author Carsten Volmer [herr.vorragend]
 *
 /*******************************************************************************/
-
+#dizkus {
+    overflow: hidden;
+}
 #dizkus .dzk_col_left {
     width:47%;
     float:left;
