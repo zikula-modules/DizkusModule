@@ -70,7 +70,7 @@ div#replyoptions ul li,
 div#editpostoptions ul li {
     list-style: none;
 }
-#dizkus .navbar,
+#dizkus .dzk_navbar,
 #dizkus .roundedbar,
 #dizkus .forumbg,
 #dizkus .forum_post {
@@ -89,13 +89,13 @@ div#editpostoptions ul li {
 /* links */
 
 #dizkus a.dzk_notextdecoration,
-#dizkus .navbar a,
+#dizkus .dzk_navbar a,
 #dizkus .roundedbar a,
 #dizkus .forumbg a,
 #dizkus .forum_post a {
     text-decoration : none;
 }
-#dizkus .navbar a:hover,
+#dizkus .dzk_navbar a:hover,
 #dizkus .roundedbar a:hover {
     text-decoration : underline;
 }
@@ -164,7 +164,7 @@ div#editpostoptions ul li {
     overflow: hidden;              /* for MSIE8 */
 }
 
-#dizkus .navbar,
+#dizkus .dzk_navbar,
 #dizkus .roundedbar {
     background: #f2f3f3 url('../pnimages/innerbox_bg.gif') repeat-x scroll 0 0;
     padding: 5px;
@@ -287,7 +287,7 @@ div#editpostoptions ul li {
     border-left: 1px solid #FFFFFF;
     padding: 4px 0;
 }
-#dizkus ul.topiclist li.header dt {
+#dizkus ul.topiclist li.dzk_header dt {
     width: 49%;
 }
 #dizkus ul.topiclist li dt {
@@ -319,22 +319,22 @@ div#editpostoptions ul li {
     padding: 5px;
     font-weight: bold;
 }
-#dizkus li.header dt a {
+#dizkus li.dzk_header dt a {
     font-weight: bold;
     color: white !important;
     margin-left: 20px;
 }
-#dizkus li.header dd {
+#dizkus li.dzk_header dd {
     margin-left: 1px;
 }
-#dizkus li.header dl dt,
-#dizkus li.header dl dd {
+#dizkus li.dzk_header dl dt,
+#dizkus li.dzk_header dl dd {
     border-left-width:0;
     margin: 0.1em 0;
     padding: 0.1em 0;
 }
-#dizkus li.header dl dt span,
-#dizkus li.header dl dd span {
+#dizkus li.dzk_header dl dt span,
+#dizkus li.dzk_header dl dd span {
     color: #FFFFFF;
     display: block;
     line-height: 1em;
@@ -343,10 +343,10 @@ div#editpostoptions ul li {
     padding: 2px 0;
     text-transform: uppercase;
 }
-#dizkus li.header dl.icon {
+#dizkus li.dzk_header dl.icon {
     min-height: 0;
 }
-#dizkus li.header dl.icon dt span {
+#dizkus li.dzk_header dl.icon dt span {
     display: block;
     /* Tweak for headers alignment when folder icon used */
     padding-left: 0;
@@ -728,8 +728,8 @@ dl.polls {
     overflow: hidden;
 }
 
-/* navbar fix */
-* html .navbar, ul.linklist {
+/* dzk_navbar fix */
+* html .dzk_navbar, ul.linklist {
     height: 4%;
     /*overflow: hidden;*/
 }
