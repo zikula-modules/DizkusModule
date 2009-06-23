@@ -484,7 +484,7 @@ div#editpostoptions ul li {
     border-right: 1px solid white;
     font-size:0.9em;
 }
-#dizkus .forum_post .post_author .avatar {
+#dizkus .forum_post .post_author .dzk_avatar {
     text-align: center;
     padding: 1em 0 0.5em 0;
 }
