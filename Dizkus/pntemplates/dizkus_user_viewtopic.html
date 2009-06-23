@@ -124,7 +124,7 @@
 <!--[ if ($topic.topic_status neq 1) and ($topic.access_comment eq true) ]-->
 <div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> dzk_rounded">
     <div class="inner">
-        <div class="subcolumns">
+        <div class="dzk_subcols pn-clearfix">
             <form id="quickreplyform" class="dzk_form" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
                 <div>
                     <input type="hidden" id="forum" name="forum" value="<!--[ $topic.forum_id ]-->" />
@@ -142,7 +142,7 @@
                             <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
                             <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
                             <!--[ /if ]-->
-                            <div class="subcolumns pn-clearfix">
+                            <div class="dzk_subcols pn-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
