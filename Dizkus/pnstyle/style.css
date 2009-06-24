@@ -363,6 +363,9 @@ div#editpostoptions ul li {
     clear: both;
     min-height: 35px;
 }
+#dizkus dl.dzk_sticky {
+    background:#eee;
+}
 #dizkus dl.icon dt {
     padding-left: 45px;
 }
@@ -438,7 +441,6 @@ div#editpostoptions ul li {
     float: right !important;
     width: 9%;
     text-align: center;
-    line-height: 200%;
 }
 #dizkus dd.info {
     width: 30%;

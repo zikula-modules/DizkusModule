@@ -89,7 +89,7 @@
     <!--[ if $forum.topics ]-->
 
     <!--[ pnfpager total=$forum.forum_topics ]-->
-    <!--[mediaattach_attachicon topics=$forum.topics assign='uploadtopicids']-->
+    <!--[ mediaattach_attachicon topics=$forum.topics assign='uploadtopicids' ]-->
 
     <div class="forumbg dzk_rounded">
         <div class="inner">
@@ -120,7 +120,7 @@
                 <!--[ /foreach ]-->
 
                 <li class="row">
-                    <dl class="icon">
+                    <dl class="icon <!--[ if $topic.sticky eq 1 ]-->dzk_sticky<!--[/if]-->">
                         <dt class='ctheme-topic-title'>
                             <!--[ if $topic.sticky eq 1 ]-->
                             <!--[ pnimg modname='Dizkus' src='icon_post_sticky.gif' alt='_DZK_STICKY' altml=true title='_DZK_STICKY' titleml=true]-->

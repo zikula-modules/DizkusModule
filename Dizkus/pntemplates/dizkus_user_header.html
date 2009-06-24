@@ -56,7 +56,7 @@
                 <li>
                     <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--><!--[$view_category_data.cat_title|pnvarprepfordisplay]-->
                 </li>
-                <!--[elseif $func eq 'viewforum']-->
+                <!--[elseif $func eq 'viewforum' OR $func eq 'moderateforum' ]-->
                 <li>
                     <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--><a title="<!--[ pnml name='_DZK_GOTO_CAT' ]-->: <!--[$forum.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]--></a>
                 </li>
@@ -69,7 +69,7 @@
                     <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--><a title="<!--[ pnml name='_DZK_GOTO_CAT' ]-->: <!--[$newtopic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id]-->"><!--[$newtopic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[/if]-->
-                <!--[if $func eq 'viewforum']-->
+                <!--[if $func eq 'viewforum' OR $func eq 'moderateforum']-->
                 <li>
                     <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--><!--[ $forum.forum_name|pnvarprepfordisplay ]-->
                 </li>
