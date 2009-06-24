@@ -1,28 +1,30 @@
-<!--[ dizkusonline assign=online ]-->
+<!--[ dizkusonline assign='online' ]-->
+<!--[ pnconfiggetvar name='anonymoussessions' assign='anonsessions' ]-->
+<!--[ pnconfiggetvar name='secinactivemins' assign='mins' ]-->
 
-<!--[ pnconfiggetvar name='anonymoussessions' assign=anonsessions ]-->
-<!--[ pnconfiggetvar name='secinactivemins' assign=mins ]-->
-    <p class="onlinetop">
-        <!--[ pnml name='_DZK_USERSONLINE' ]-->:
-    </p>
-    <ul id="dzk_onlinelist">
-        <!--[ if $online.numusers > 0]-->
-            <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
-            <li>
-                <!--[ if $user.admin == '1' ]--><!--[ $user.uname|userprofilelink:"dzkadminuser"]--><!--[ else ]--><!--[ $user.uname|userprofilelink:"dzknoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
-            </li>
-            <!--[ /foreach ]-->
-            <!--[ if $online.numguests > 0 or $anonsessions == 1 ]-->
-            <li><!--[ pnml name='_DZK_AND' ]--></li>
-            <!--[ /if ]-->
-        <!--[ /if ]-->
-    
-        <!--[ if $anonsessions == 1 ]-->
-        <li>
-            <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
-        </li>
-        <!--[ /if ]-->
-    </ul>
-    <p class="onlinehint">
-        <!--[ pnml name='_DZK_BASEDONLASTXMINUTES' m=$mins ]-->
-    </p>
+<p class="onlinetop">
+    <!--[ pnml name='_DZK_USERSONLINE' ]-->:
+</p>
+
+<ul id="dzk_onlinelist">
+    <!--[ if $online.numusers > 0]-->
+    <!--[ foreach name=onlineusers item=user from=$online.unames ]-->
+    <li>
+        <!--[ if $user.admin == '1' ]--><!--[ $user.uname|userprofilelink:"dzkadminuser"]--><!--[ else ]--><!--[ $user.uname|userprofilelink:"dzknoadminuser"]--><!--[ /if ]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
+    </li>
+    <!--[ /foreach ]-->
+    <!--[ if $online.numguests > 0 or $anonsessions == 1 ]-->
+    <li><!--[ pnml name='_DZK_AND' ]--></li>
+    <!--[ /if ]-->
+    <!--[ /if ]-->
+
+    <!--[ if $anonsessions == 1 ]-->
+    <li>
+        <!--[ $online.numguests]--> <!--[ if $online.numguests == 0 ]--><!--[ pnml name='_GUEST0' ]--><!--[ else ]--><!--[ if $online.numguests == 1]--><!--[ pnml name="_GUEST" ]--><!--[ else ]--><!--[ pnml name='_GUESTS' ]--><!--[ /if ]--><!--[ /if ]-->
+    </li>
+    <!--[ /if ]-->
+</ul>
+
+<p class="onlinehint">
+    <!--[ pnml name='_DZK_BASEDONLASTXMINUTES' m=$mins ]-->
+</p>
