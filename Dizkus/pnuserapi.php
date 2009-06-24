@@ -588,7 +588,15 @@ function Dizkus_userapi_setcookies()
      * set last visit cookies and get last visit time
      * set LastVisit cookie, which always gets the current time and lasts one year
      */
-    setcookie('phpBBLastVisit', time(), time()+31536000);
+
+    $path = pnGetBaseURI();
+    if (empty($path)) {
+        $path = '/';
+    } elseif (substr($path, -1, 1) != '/') {
+        $path .= '/';
+    }
+
+    setcookie('phpBBLastVisit', time(), time()+31536000, $path);
 
     if (!isset($_COOKIE['phpBBLastVisitTemp'])){
         $temptime = isset($_COOKIE['phpBBLastVisit']) ? $_COOKIE['phpBBLastVisit'] : '';
@@ -601,7 +609,7 @@ function Dizkus_userapi_setcookies()
     }
 
     // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-    setcookie('phpBBLastVisitTemp', $temptime, time()+1800);
+    setcookie('phpBBLastVisitTemp', $temptime, time()+1800, $path);
 
     // set vars for all scripts
     $last_visit = ml_ftime('%Y-%m-%d %H:%M',$temptime);
