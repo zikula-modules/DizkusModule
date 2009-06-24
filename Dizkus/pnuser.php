@@ -592,7 +592,7 @@ function Dizkus_user_prefs($args=array())
     }
 
     if(!pnUserLoggedIn()) {
-        return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
+        return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
 
     // get the input
@@ -687,7 +687,7 @@ function Dizkus_user_signaturemanagement()
     }
 
     if(!pnUserLoggedIn()) {
-        return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
+        return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
     // Security check
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) {
@@ -715,7 +715,7 @@ function Dizkus_user_ignorelistmanagement()
     }
 
     if(!pnUserLoggedIn()) {
-        return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
+        return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
     // Security check
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
@@ -1207,8 +1207,8 @@ function Dizkus_user_moderateforum($args=array())
                         unset($fliparray[$jointo]);
                         $topic_ids = array_flip($fliparray);
                     }
-                    foreach($topic_ids as $to_topic_id) {
-                        pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic_id' => $topic_id,
+                    foreach($topic_ids as $from_topic_id) {
+                        pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic_id' => $from_topic_id,
                                                                             'to_topic_id'   => $jointo));
                     }
                     break;
@@ -1306,7 +1306,7 @@ function Dizkus_user_topicsubscriptions($args)
     }
 
     if(!pnUserLoggedIn()) {
-        return pnModFunc('Dizkus', 'user', 'login', array('redirect' => pnModURL('Dizkus', 'user', 'prefs')));
+        return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
 
     // get the input
@@ -1329,41 +1329,4 @@ function Dizkus_user_topicsubscriptions($args)
         }
         return pnRedirect(pnModURL('Dizkus', 'user', 'topicsubscriptions'));
     }
-}
-
-/**
- * login
- *
- */
-function Dizkus_user_login($args)
-{
-    $disabled = dzk_available();
-    if(!is_bool($disabled)) {
-        return $disabled;
-    }
-
-    if(pnUserLoggedIn()) {
-        return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
-    }
-
-    // get the input
-    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    $uname        = FormUtil::getPassedValue('uname', (isset($args['uname'])) ? $args['uname'] : '', 'GETPOST');
-    $pass        = FormUtil::getPassedValue('pass', (isset($args['pass'])) ? $args['pass'] : '', 'GETPOST');
-    $rememberme        = FormUtil::getPassedValue('rememberme', (isset($args['rememberme'])) ? $args['rememberme'] : '', 'GETPOST');
-    $redirect        = FormUtil::getPassedValue('redirect', (isset($args['redirect'])) ? $args['redirect'] : pnModURL('Dizkus', 'user', 'main'), 'GETPOST');
-
-    if(!$submit) {
-        $pnr = pnRender::getInstance('Dizkus', false);
-        $pnr->add_core_data('PNConfig');
-        $pnr->assign('redirect', $redirect);
-        return $pnr->fetch('dizkus_user_login.html');
-    } else { // submit is set
-        // login
-        if(pnUserLogin($uname, $pass, $rememberme) == false) {
-            return showforumerror(_DZK_ERRORLOGGINGIN, __FILE__, __LINE__);
-        }
-        return pnRedirect($redirect);
-    }
-
 }
