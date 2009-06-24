@@ -2,7 +2,7 @@ $Id$
 
 Upgrade von pnForum nach Dizkus
 ---------------------------------
-** Achtng, dieser Teil der Doku ist noch nicht fertig ** 
+** Achtung, dieser Teil der Doku ist noch nicht fertig ** 
 - Blocknamen wurden geändert, Blöcke müssen neu eingerichtet und Zugriffsrechte angepasst werden.
 - Der angezeigte Modulname wird auf Dizkus zurückgesetzt und muss ggf. wieder angepasst werden
 

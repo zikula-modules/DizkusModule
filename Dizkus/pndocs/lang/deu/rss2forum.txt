@@ -16,7 +16,7 @@ Vorbereitungen
 --------------
 
 Das Feeds-Modul muss installiert und aktiviert sein und die RSS Feeds müssen dort
-angelegt sein.
+angelegt sein. 
 Alle hier definierten Quellen erscheinen nachher in der Forenkonfiguration zur Auswahl.
 
 Einstellungen pro Forum:
@@ -25,8 +25,8 @@ Einstellungen pro Forum:
 Externe Quelle: Hier kann Mail2Forum oder RSS2Forum ausgewählt werden. Die weitere
 Konfiguration erscheint nach dem Speichern.
 
-PN Username:
-PN Kennwort: Name und Kennwort des Zikula-Users, unter dessen Namen die
+Zikula-Username:
+Zikula-Kennwort: Name und Kennwort des Zikula-Users, unter dessen Namen die
 Mails im Forum gespeichert werden
 
 RSS-Feed auswählen: Hier erscheinen alle im RSS Modul definierten Feeds zu Auswahl.

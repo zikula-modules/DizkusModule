@@ -8,9 +8,6 @@ Installation
 
   html
   |
-  -- includes
-  |  |
-  |  -- search
   |
   -- modules
      |
@@ -30,8 +27,4 @@ For more information about the Dizkus features see
 mail2forum.txt
 rss2forum.txt
 Dizkuscomments.txt
-
-For more information about the permission schemes see
-
 upgrade.txt
-

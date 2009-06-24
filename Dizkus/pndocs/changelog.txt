@@ -5,13 +5,62 @@ $Id$
 Zikula Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
 
+---------------------------------------------------------------------------------------------
+3.0 (fs)
+---------------------------------------------------------------------------------------------
++ renamed to Dizkus
++ added #108    Streamline templates
++ added #110    branching prosilver-alternative
++ added #43     Move management of signature into Dizkus
++ added #63]    incorporate MediaAttach
++ added #123/124 external ref to language packs
++ added #144    gravatar support
++ added #22     Integrate ContactList's Ignore-List functionality
++ added #130    Textarea auto-expander
++ added #66     paging is needed when assigning a users rank
++ added #138    translatable modulenames
++ added #100    disable ajax-buttons after usage
++ added #98     check for double posts
++ added #92     showing last x posts like posts of last y hours
++ added #135    new parameter for readtopics / readforum functions
+- fixed #140    could not change rank_max (user-ranks)
+- fixed #133    missing links (showallforums/showfavorites)
+- fixed #105    Latest Forum-Posts
+- fixed #97     Date/Time Problems in New SVN Rev 1005
+- fixed #112    baseurl missing in Dizkus_user_emailtopic()
+- fixed #91     shorturl and honorary rank graphics
+- fixed #76     Template: centerblock
+- fixed #35     Honorary rank assignment: use drop downs instead of radio buttons
+- fixed #28     Manage forum subscriptions
+- fixed #145    jointopics not working / remove login-functions
+- fixed #137    dizkus_user_setcookies
+- fixed #136    no edit post function
+- fixed #132    When a topic is moved the forums are not updated
+- fixed #122    invalid auth when notifying a mod
+- fixed #99     userprofilelink modifier seems not to work correctly with dizkus
+- fixed #95     Fatal error: Cannot redeclare getforumerror() When accessing rss2dizkus.php
+- fixed #83     "view your posts" not working
+- fixed #55     create new topic with js disabled fails
+- fixed #40     dir based short urls: forwarding to new topic defect
+- fixed #38     width of postings not correct in firefox 3
+- fixed #21     error when calling user prefs
+- fixed #82     Error while using News (comments) hook
+- fixed #72     Patch for rss2forum
+- fixed #71     Many E_ALL errors
+- fixed #17     Subscriptions seems to not work properly
+- fixed #16     wrong links in notification email
+- fixed #131    Heavy user synchronization is made frequently
+- fixed #70     anonymous user can change topic name
+- fixed #121    listforummods plugin calls profile module
+
+for more information see http://code.zikula.org/dizkus/query?status=closed&group=resolution&milestone=3.0
 
 ---------------------------------------------------------------------------------------------
 2.7 (fs)
 ---------------------------------------------------------------------------------------------
 *** Note: Most of the bugs fixed in this list have been reported during the extensive
 ***       testphase before the release and do not necessarily fix bugs of the 2.6 version
-***       because some new functionality introduced in 2.7 is affected.          
+***       because some new functionality introduced in 2.7 is affected.
 + Zikula 1.0 ready, Topics module from Zikula 1.0-SVN needs to be installed!
 + Using Ajax now for some features, this implied a major rewrite of some templates
   and adding a few new ones. Non-javascript fallbacks are included.

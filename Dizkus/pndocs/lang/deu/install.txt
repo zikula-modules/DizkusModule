@@ -4,13 +4,10 @@ $Id$
 Installation
 ------------
 
-* Zippaket auspacken, es erscheint folgende Dateistruktur:
+* Zip-Paket auspacken, es erscheint folgende Dateistruktur:
 
   html
   |
-  -- includes
-  |  |
-  |  -- search
   |
   -- modules
      |
@@ -18,9 +15,9 @@ Installation
         |
         -- weitere Unterverzeichnisse
 
-  Den Inhalt von modules ins Zikula modules Verzeichnis kopieren
+  Den Inhalt von modules ins Zikula Moduleverzeichnis kopieren
   (nicht modules/Modules!!)
-  Die Datei backforum.php aus dem Dizkusverzeichnis ins Zikula Verzeichnis
+  Die Datei backforum.php aus dem Dizkusverzeichnis ins Zikula Root-Verzeichnis
   kopieren
 
 * Modulliste neu erzeugen lassen
@@ -32,8 +29,4 @@ Weitere Informationen zu den einzelnen Features gibts in
 mail2forum.txt
 rss2forum.txt
 Dizkuscomments.txt
-
-Information zum Berechtigungssystem gibts in
-
 upgrade.txt
-
