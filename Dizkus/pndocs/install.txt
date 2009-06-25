@@ -1,7 +1,7 @@
 $Id$ $Name$
 
-Deutsche Anleitung: pndocs/deu/install.txt
+Manuals:
+====================================================================
+english     http://code.zikula.org/dizkus
+german      http://code.zikula.org/community-german/wiki/Dizkus
 
-English manual: pndocs/eng/install.txt
-
-more to come...
