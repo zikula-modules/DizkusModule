@@ -1,11 +1,4 @@
-<!--[*
-
-$Id$
-
-Template for single postings
-
-*]-->
-<!--[ pnimg modname='Dizkus' src='icon_post_pm.gif' assign=profile alt='_DZK_PROFILE' altml=true ]-->
+<!--[* $Id$ *]-->
 
 <div id="posting_<!--[ $reply.post_id ]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $reply.poster_data.online  ]-->poster_online<!--[/if]-->" >
     <div class="inner">
@@ -40,7 +33,7 @@ Template for single postings
 
                 <div class="postinfo">
                     <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start ]-->#pid<!--[ $reply.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
-                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $reply.topic_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[$smarty.now|pnfdate_format:"%d.%m.%Y, %H:%M":'':true]-->
                 </div>
 
                 <div class="content" id="postingtext_<!--[ $reply.post_id ]-->">

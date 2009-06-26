@@ -1,5 +1,7 @@
 <!--[* $Id$ *]-->
 
+<!--[pnmodavailable modname="InterCom" assign="InterComOK"]-->
+
 <!--[ if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count ]--><a id="bottom"></a><!--[ /if ]-->
 <a id="pid<!--[ $post.post_id ]-->" ></a>
 
@@ -42,7 +44,10 @@
                     <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $post.poster_data.user_posts ]--></li>
                     <!--[ if $pncore.logged_in eq true]-->
                     <li>
-                        <a href="<!--[ pnmodurl modname="InterCom" type="user" func="newpm" uid=$post.poster_data.uid ]-->"><!--[pnimg modname='Dizkus' src='icon_post_pm.gif' alt='']--></a>
+                        <!--[$post.poster_data.uname|userprofilelink:'':'modules/Dizkus/pnimages/icon_post_profile.gif']-->
+                        <!--[if $InterComOK ]-->
+                        <a href="<!--[ pnmodurl modname="InterCom" type="user" func="newpm" uid=$post.poster_data.uid ]-->"><!--[pnimg modname='Dizkus' src='icon_post_pn.gif' alt='']--></a>
+                        <!--[/if]-->                        
                         <!--[ if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true ]-->
                         <a title="<!--[ pnml name='_DZK_VIEWIP' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id ]-->"><!--[pnimg modname='Dizkus' src='icon_post_ip.gif' alt='_DZK_VIEWIP']--></a>
                         <!--[ /if ]-->

@@ -970,7 +970,8 @@ function Dizkus_user_print($args=array())
         echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$lang\" xml:lang=\"$lang\">\n";
         echo "<head>\n";
         echo "<title>" . DataUtil::formatForDisplay($topic['topic_title']) . "</title>\n";
-        echo "<link rel=\"StyleSheet\" href=\"themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";
+        echo "<link rel=\"stylesheet\" href=\"" . pnGetBaseURL() . "modules/Dizkus/pnstyle/style.css\" type=\"text/css\" />\n";
+        echo "<link rel=\"stylesheet\" href=\"" . pnGetBaseURL() . "themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";        
         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('Dizkus', 'default_lang') ."\" />\n";
 
         global $additional_header;
