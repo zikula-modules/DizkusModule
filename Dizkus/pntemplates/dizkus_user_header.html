@@ -43,15 +43,9 @@
         <div class="inner pn-clearfix">
             <!--[* start of breadcrumbs *]-->
             <ul class="linklist navlinks pn-clearfix">
-                <!--[if $func eq 'main' AND $view_category eq -1]-->
-                <li class="icon-home">
-                    <span class="dzk_img homelink"><!--[ pnml name='_DZK_START' ]--></span>
-                </li>
-                <!--[else]-->
                 <li class="icon-home">
                     <a class="dzk_img homelink" title="<!--[pnml name='_DZK_START']-->" href="<!--[pnmodurl modname='Dizkus']-->"><!--[ pnml name='_DZK_START' ]--></a>
                 </li>
-                <!--[/if]-->
                 <!--[if $func eq 'main' AND $view_category neq -1]-->
                 <li>
                     <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--><!--[$view_category_data.cat_title|pnvarprepfordisplay]-->
