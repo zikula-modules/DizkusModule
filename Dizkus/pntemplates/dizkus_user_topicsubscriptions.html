@@ -16,7 +16,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt><span><!--[ pnml name='_DZK_TOPIC ]--></span></dt>
-                        <dd class="favorites"><span><!--[ pnml name='_DZK_POSTER' ]--></span></dd>
+                        <dd class="favorites"><span><!--[ pnml name='_DZK_POSTED' ]--></span></dd>
                         <dd class="lastpost"><span><!--[ pnml name='_DZK_UNSUBSCRIBE_TOPIC' ]--></span></dd>
                     </dl>
                 </li>
@@ -29,10 +29,14 @@
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
-                            <a href="<!--[ $subscription.last_post_url_anchor ]-->" title="<!--[ $subscription.forum_name|pnvarprepfordisplay ]--> :: <!--[ $subscription.topic_title|pnvarprepfordisplay ]-->"><strong><!--[ $subscription.topic_title|pnvarprepfordisplay ]--></strong></a>
+                            <a href="<!--[ $subscription.last_post_url_anchor ]-->" title="<!--[ $subscription.forum_name|pnvarprepfordisplay ]--> :: <!--[ $subscription.topic_title|pnvarprepfordisplay ]-->"><!--[ $subscription.topic_title|pnvarprepfordisplay ]--></a>
+                            <span><!--[ pnml name='_DZK_FORUM' ]-->: <!--[ $subscription.forum_name|truncate:70 ]--></span>
                         </dt>
                         <dd class="favorites">
-                            <!--[ $subscription.poster_name|userprofilelink ]-->
+                            <span>
+                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $subscription.poster_name|userprofilelink ]--><br />
+                                <!--[ $subscription.topic_time|pnfdate_format:'datetimebrief' ]-->
+                            </span>
                         </dd>
                         <dd class="lastpost">
                             <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="<!--[ $subscription.topic_id ]-->" />
