@@ -8,9 +8,7 @@
 * @author Carsten Volmer [herr.vorragend]
 *
 /*******************************************************************************/
-#dizkus {
-    overflow: hidden;
-}
+
 #dizkus .dzk_col_left {
     width:47%;
     float:left;
@@ -739,7 +737,7 @@ dl.polls {
 From http://www.dustindiaz.com/min-height-fast-hack */
 dl.icon {
     min-height: 35px;
-    height: auto !important;
+    /*height: auto !important;*/
     /*height: 35px;*/
 }
 
