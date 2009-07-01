@@ -64,7 +64,9 @@
                         <dd class="posts"><!--[ $post.topic_replies ]--><dfn><!--[ pnml name='_DZK_REPLIES' ]--></dfn></dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $post.poster_name|userprofilelink ]--><br />
+                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]-->
+                                <!--[ if $post.poster_id eq 1]--><!--[ $post.poster_name]--><!--[else]--><!--[ $post.poster_name|dzkprofilelink ]--><!--[ /if ]-->
+                                <br />
                                 <!--[ $post.posted_unixtime|pnfdate_format:'datetimebrief' ]-->
                             </span>
                         </dd>
@@ -118,7 +120,7 @@
                         <dd class="posts"><!--[ $post.topic_replies ]--><dfn><!--[ pnml name='_DZK_REPLIES' ]--></dfn></dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $post.poster_name|userprofilelink ]--><br />
+                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $post.poster_name|dzkprofilelink ]--><br />
                                 <!--[ $post.posted_unixtime|pnfdate_format:'datetimebrief' ]-->
                             </span>
                         </dd>
@@ -173,7 +175,7 @@
                         <dd class="posts"><!--[ $post.topic_replies ]--><dfn><!--[ pnml name='_DZK_REPLIES' ]--></dfn></dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $post.poster_name|userprofilelink ]--><br />
+                                <dfn><!--[ pnml name='_DZK_POSTED' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $post.poster_name|dzkprofilelink ]--><br />
                                 <!--[ $post.posted_unixtime|pnfdate_format:'datetimebrief' ]-->
                             </span>
                         </dd>

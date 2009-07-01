@@ -8,18 +8,22 @@
     <!--[ foreach key=num item=post from=$topic.posts ]-->
     <div id="posting_<!--[ $post.post_id ]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
         <div class="inner">
-
             <div class="dzk_subcols pn-clearfix">
                 <div id="posting_<!--[ $post.post_id ]-->_userinfo" class="post_author dzk_colpost_left">
+                    <!--[ if $post.poster_data.pn_uid eq 1 OR $post.poster_data.pn_uid eq "" ]-->
                     <div class="dzk_avatar">
-                        <strong><!--[$post.poster_data.uname|userprofilelink]--></strong>
-                        <!--[ if $post.poster_data.pn_uid neq 1 ]-->
+                        <strong><!--[$post.poster_data.pn_uname]--></strong>
+                        <br />
+                        <img src="<!--[$baseurl]-->modules/Dizkus/pnimages/gravatar_80.jpg" alt="empty gravatar" />
+                    </div>
+                    <!--[ else ]-->
+                    <div class="dzk_avatar">
+                        <strong><!--[$post.poster_data.pn_uname|dzkprofilelink]--></strong>
                         <br />
                         <!--[ assign var='defaultavatar' value="`$baseurl`modules/Dizkus/pnimages/gravatar_80.jpg" ]-->
                         <!--[ if isset($post.poster_data._YOURAVATAR) AND $post.poster_data._YOURAVATAR neq 'blank.gif' AND $post.poster_data._YOURAVATAR neq 'gravatar.gif' ]-->
                         <!--[ assign var='defaultavatar' value="`$baseurl`images/avatar/`$post.poster_data._YOURAVATAR`"|default:$defaultavatar ]-->
-                        <!--[ /if ]-->
-                        <img src="<!--[ gravatar email=$post.poster_data.pn_email size=80 default=$defaultavatar ]-->" alt="<!--[ $post.poster_data.uname ]-->'s Avatar" />
+                        <img src="<!--[ gravatar email=$post.poster_data.pn_email size=80 default=$defaultavatar ]-->" alt="<!--[ $post.poster_data.pn_uname ]-->'s Avatar" />
                         <!--[ /if ]-->
                         <!--[ if isset($post.poster_data.rank_image) && isset($post.poster_data.rank) ]-->
                         <br />
@@ -39,6 +43,7 @@
                         <!--[ if $pncore.logged_in eq true]-->
                         <!--[/if]-->
                     </ul>
+                    <!--[ /if ]-->
                 </div>
 
                 <div class="postbody dzk_colpost_right">

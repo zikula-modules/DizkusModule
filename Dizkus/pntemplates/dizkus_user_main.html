@@ -37,7 +37,7 @@
                             <!--[ if $forum.forum_mods|@count > 0 ]-->
                             <em><!--[ pnml name='_DZK_MODERATEDBY' ]-->:</em>
                             <!--[ foreach name='moderators' item='mod' key='modid' from=$forum.forum_mods ]-->
-                            <!--[ if $modid lt 1000000 ]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
+                            <!--[ if $modid lt 1000000 ]--><!--[$mod|dzkprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
                             <!--[ /foreach ]-->
                             <!--[ /if ]-->
                         </dt>
@@ -47,7 +47,7 @@
                         <dd class="lastpost">
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
-                                <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|userprofilelink ]--><br />
+                                <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|dzkprofilelink ]--><br />
                                 <!--[ pnml name='_DZK_WRITTENON' ]--> <!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
                                 <!--[ if $forum.last_post_data.url_anchor neq '' ]-->
                                 <a class="latesttopicimage" href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay|truncate:70 ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay|truncate:70 ]--></a>
@@ -110,7 +110,7 @@
                         <dd class="lastpost">
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
-                                <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|userprofilelink ]--><br />
+                                <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|dzkprofilelink ]--><br />
                                 <!--[ pnml name='_DZK_WRITTENON' ]--> <!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
                                 <!--[ if $forum.last_post_data.url_anchor neq '' ]-->
                                 <a class="latesttopicimage" href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ $forum.last_post_data.subject|pnvarprepfordisplay ]--></a>

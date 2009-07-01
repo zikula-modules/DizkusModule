@@ -52,13 +52,13 @@
                             <!--[ /if ]-->
                             <!--[ $topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name ]-->
                             <em class="pn-sub">(<!--[ $topic.topic_views ]--> <!--[ pnml name='_DZK_VIEWS' ]-->)</em>
-                            <span><!--[ pnml name='_DZK_POSTER' ]-->: <!--[ $topic.pn_uname|userprofilelink ]--></span>
+                            <span><!--[ pnml name='_DZK_POSTER' ]-->: <!--[ $topic.pn_uname|dzkprofilelink ]--></span>
                             <!--[ pnfpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"]-->
                         </dt>
                         <dd class="posts"><!--[ $topic.topic_replies ]--><dfn><!--[ pnml name='_DZK_REPLIES' ]--></dfn></dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $topic.last_poster|userprofilelink ]--><br />
+                                <dfn><!--[ pnml name='_DZK_LASTPOST' ]--></dfn> <!--[ pnml name='_BY' ]--> <!--[ $topic.last_poster|dzkprofilelink ]--><br />
                                 <!--[ $topic.post_time_unix|pnfdate_format:'datetimebrief' ]-->
                                 <a title="<!--[ pnml name='_DZK_GOTO_LATEST' ]-->" href="<!--[ $topic.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_latest.gif" alt="_DZK_GOTO_LATEST" altml=true ]--></a>
                             </span>

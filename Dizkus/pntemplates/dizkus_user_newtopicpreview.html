@@ -7,13 +7,22 @@
 
         <div class="dzk_subcols pn-clearfix">
             <div class="post_author dzk_colpost_left">
+                <!--[ if $newtopic.poster_data.pn_uid eq 1 OR $newtopic.poster_data.pn_uid eq ""]-->
                 <div class="dzk_avatar">
-                    <!--[$newtopic.poster_data.uname|userprofilelink]-->
-                    <!--[ if $newtopic.poster_data.pn_uid neq 1 AND $newtopic.poster_data._YOURAVATAR neq '' AND $newtopic.poster_data.pn_user_avatar_attr.0 neq 1 ]-->
+                    <strong><!--[$newtopic.poster_data.pn_uname]--></strong>
                     <br />
-                    <img src="<!--[$baseurl]-->images/avatar/<!--[ $newtopic.poster_data._YOURAVATAR ]-->" <!--[ $newtopic.poster_data.pn_user_avatar_attr.3 ]--> alt="<!--[ $newtopic.poster_data.uname ]-->" />
+                    <img src="<!--[$baseurl]-->modules/Dizkus/pnimages/gravatar_80.jpg" alt="empty gravatar" />
+                </div>
+                <!--[ else ]-->
+                <div class="dzk_avatar">
+                    <strong><!--[$newtopic.poster_data.pn_uname|userprofilelink]--></strong>
+                    <br />
+                    <!--[ assign var='defaultavatar' value="`$baseurl`modules/Dizkus/pnimages/gravatar_80.jpg" ]-->
+                    <!--[ if isset($newtopic.poster_data._YOURAVATAR) AND $newtopic.poster_data._YOURAVATAR neq 'blank.gif' AND $newtopic.poster_data._YOURAVATAR neq 'gravatar.gif' ]-->
+                    <!--[ assign var='defaultavatar' value="`$baseurl`images/avatar/`$newtopic.poster_data._YOURAVATAR`"|default:$defaultavatar ]-->
+                    <img src="<!--[ gravatar email=$newtopic.poster_data.pn_email size=80 default=$defaultavatar ]-->" alt="<!--[ $newtopic.poster_data.pn_uname ]-->'s Avatar" />
                     <!--[ /if ]-->
-                    <!--[ if isset($newtopic.poster_data.rank_image) ]-->
+                    <!--[ if isset($newtopic.poster_data.rank_image) && isset($newtopic.poster_data.rank) ]-->
                     <br />
                     <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $newtopic.poster_data.rank_image ]-->" alt="<!--[ $newtopic.poster_data.rank ]-->" <!--[ $newtopic.poster_data.rank_image_image_attr.3 ]--> />
                     <!--[ /if ]-->
@@ -26,6 +35,7 @@
                     <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $newtopic.poster_data.pn_user_regdate|pnfdate_format:"%d.%m.%y" ]--></li>
                     <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $newtopic.poster_data.user_posts ]--></li>
                 </ul>
+                <!--[ /if ]-->
             </div>
 
             <div class="postbody dzk_colpost_right">

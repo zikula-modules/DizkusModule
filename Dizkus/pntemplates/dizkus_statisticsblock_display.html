@@ -34,7 +34,7 @@
         <!--[ pnml name='_DZK_REPLIES' ]-->
         <!--[ /if ]-->
         <br />
-        <!--[ $lastpost.poster_name|userprofilelink ]--><br /><!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
+        <!--[ $lastpost.poster_name|dzkprofilelink ]--><br /><!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
     </li>
     <!--[ /foreach ]-->
 </ul>
@@ -47,7 +47,7 @@
 <br />
 <ul class="dzk_posterlist">
     <!--[ foreach item=topposter from=$topposters ]-->
-    <li><!--[ $topposter.user_name|userprofilelink ]--><br />(<!--[ $topposter.user_posts ]--> <!--[ pnml name='_DZK_POSTS' ]-->)</li>
+    <li><!--[ $topposter.user_name|dzkprofilelink ]--><br />(<!--[ $topposter.user_posts ]--> <!--[ pnml name='_DZK_POSTS' ]-->)</li>
     <!--[ /foreach ]-->
 </ul>
 <!--[ /if ]-->
