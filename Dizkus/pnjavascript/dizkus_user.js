@@ -131,6 +131,7 @@ function previewnewtopic()
         showdizkusinfo(indicatorimage + ' ' + preparingPreview);
 
         var pars = "module=Dizkus&func=newtopic" +
+                   '&forum=' + $F('forum') +        
                    "&subject=" + encodeURIComponent($F('subject')) +
                    "&message=" + encodeURIComponent($F('message')) +
                    "&attach_signature=" + getcheckboxvalue('attach_signature') +
