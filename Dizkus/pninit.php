@@ -48,13 +48,13 @@ function Dizkus_init()
         Dizkus_delete();
         return false;
     }
-
+/*
     // creating posts text table
-    if (!DBUtil::createTable('dizkus_posts_text')) {
+//  if (!DBUtil::createTable('dizkus_posts_text')) {
         Dizkus_delete();
         return false;
     }
-
+*/
     // creating subscription table
     if (!DBUtil::createTable('dizkus_subscription')) {
         Dizkus_delete();
@@ -149,9 +149,9 @@ function Dizkus_init()
         $topictitle   = DataUtil::formatForStore($pntable['dizkus_topics_column']['topic_title']);
         $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
         
-        $posttexttable  = DataUtil::formatForStore($pntable['dizkus_posts_text']);
-        $posttext       = DataUtil::formatForStore($pntable['dizkus_posts_text_column']['post_text']);
-        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $posttexttable . ' ADD FULLTEXT ' . $posttext . ' (' . $posttext . ')');
+//        $posttexttable  = DataUtil::formatForStore($pntable['dizkus_posts_text']);
+//        $posttext       = DataUtil::formatForStore($pntable['dizkus_posts_text_column']['post_text']);
+//        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $posttexttable . ' ADD FULLTEXT ' . $posttext . ' (' . $posttext . ')');
 
         if ($res1 == true && $res2 == true) {
             pnModSetVar('Dizkus', 'fulltextindex', 'yes');
@@ -216,14 +216,22 @@ function Dizkus_init()
  */
 function Dizkus_delete()
 {
-    if (!DBUtil::dropTable('dizkus_categories')) {
-        return false;
+    $tables = DBUtil::metaTables(true, true, '%dizkus%');
+    $ztables = pnDBGetTables();
+    
+    if (in_array($ztables['dizkus_categories'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_categories')) {
+            return false;
+        }
     }
     if (!DBUtil::dropTable('dizkus_forum_mods')) {
         return false;
     }
-    if (!DBUtil::dropTable('dizkus_forums')) {
-        return false;
+
+    if (in_array($ztables['dizkus_forums'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_forums')) {
+            return false;
+        }
     }
     if (!DBUtil::dropTable('dizkus_forum_favorites')) {
         return false;
@@ -231,8 +239,11 @@ function Dizkus_delete()
     if (!DBUtil::dropTable('dizkus_posts')) {
         return false;
     }
-    if (!DBUtil::dropTable('dizkus_posts_text')) {
-        return false;
+
+    if (in_array($ztables['dizkus_posts_text'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_posts_text')) {
+            return false;
+        }
     }
     if (!DBUtil::dropTable('dizkus_subscription')) {
         return false;
@@ -311,6 +322,9 @@ function Dizkus_init_interactiveupgrade($args)
         case '2.7.1':
             $templatefile = 'dizkus_upgrade_30.html';
             break;
+        case '3.0':
+            $templatefile = 'dizkus_upgrade_31.html';
+            break;
         default:
             // no interactive upgrade for version < 2.7
             // or latest step reached
@@ -345,7 +359,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
         if($result<>true) {
             return showforumerror(_DZK_TO30_FAILED, __FILE__, __LINE__);
         }
-        return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '2.5' )));
+        return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
     }
     return pnRedirect(pnModURL('Modules', 'admin', 'view'));
 }
@@ -425,4 +439,234 @@ function Dizkus_upgrade_to_3_0()
 
     pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
 	return true;
+}
+
+/**
+ * interactiveupgrade_to_3_1
+ *
+ */
+function Dizkus_init_interactiveupgrade_to_3_1()
+{
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    	return showforumerror(_DZK_NOAUTH_TOADMIN, __FILE__, __LINE__);
+    }
+
+    $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
+
+    if(!empty($submit)) {
+        $result = Dizkus_upgrade_to_3_1();
+        if($result<>true) {
+            return showforumerror(_DZK_TO31_FAILED, __FILE__, __LINE__);
+        }
+        return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
+    }
+    return pnRedirect(pnModURL('Modules', 'admin', 'view'));
+}
+
+/*
+ *
+ * upgrade to 3.1
+ *
+ */
+function Dizkus_upgrade_to_3_1()
+{
+    // merge posts and posts_text table
+    pnModDBInfoLoad('Dizkus');
+
+    // change t able structure
+    DBUtil::changeTable('dizkus_posts');
+    
+    $pntable = pnDBGetTables();
+    
+    $poststable  = $pntable['dizkus_posts'];
+    $postscolumn = $pntable['dizkus_posts_column'];
+    $poststexttable  = $pntable['dizkus_posts_text'];
+    $poststextcolumn = $pntable['dizkus_posts_text_column'];
+    
+    $sql = 'UPDATE ' . $poststable . ' AS p  
+            SET p.' . $postscolumn['post_text'] . '= ( 
+                SELECT pt1.' . $poststextcolumn['post_text'] . ' 
+                FROM ' . $poststexttable . ' AS pt1
+                WHERE pt1.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')
+            WHERE EXISTS (
+                SELECT pt.' . $poststextcolumn['post_text'] . ' 
+                FROM ' . $poststexttable . ' AS pt 
+                WHERE pt.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')';
+               
+            
+    if (DBUtil::executeSQL($sql) != true) {
+        LogUtil::registerError (_UPDATETABLEFAILED. " (dizkus_posts)");
+    }
+    
+    // _dizkus_migratecategories();
+
+    // drop old tables
+    //
+    // this will be done when the upgrade is finished and working - just before the release
+    //
+    // DBUtil::dropTable('dizkus_categories');
+    // DBUtil::dropTable('dizkus_forums');
+    // DBUtil::dropTable('dizkus_posts_text');
+    
+    return true;
+}
+
+/*
+ *
+ * create default categories
+ *
+ */
+function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', $languages)
+{
+    // load necessary classes
+    Loader::loadClass('CategoryUtil');
+    Loader::loadClassFromModule('Categories', 'Category');
+    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
+
+    // get the language file
+    $lang = pnUserGetLang();
+
+    // get the category path for which we're going to insert our place holder category
+    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules');
+    $nCat    = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Dizkus');
+
+    if (!$nCat) {
+        // create placeholder for all our migrated categories
+        $cat = new PNCategory ();
+        $cat->setDataField('parent_id', $rootcat['id']);
+        $cat->setDataField('name', 'Dizkus');
+        $cat->setDataField('display_name', array($lang => 'Dizkus')); 
+        $cat->setDataField('display_desc', array($lang => 'An integrated forum solution for Zikula')); // todo: lang defines
+        $cat->setDataField('__ATTRIBUTES__', array('can_contain_posts' => false));
+        if (!$cat->validate('admin')) {
+            die('error 1');
+        }
+        $cat->insert();
+        $cat->update();
+    }
+    // get the category path for which we are going to insert our upgraded Dizkus categories and forums
+    $rootcat = CategoryUtil::getCategoryByPath($regpath);
+    if ($rootcat) {
+        // create an entry in the categories registry to the Main property
+        $registry = new PNCategoryRegistry();
+        $registry->setDataField('modname', 'Dizkus');
+        $registry->setDataField('table', 'dizkus_topics');
+        $registry->setDataField('property', 'dizkus_topics');
+        $registry->setDataField('category_id', $rootcat['id']);
+        $registry->insert();
+    }
+
+    return true;
+}
+
+/*
+ *
+ * migrate old categories
+ *
+ */
+function _dizkus_migratecategories()
+{
+    // force loading of user api file
+    pnModAPILoad('Dizkus', 'user', true);
+    
+    // pull all data from the old tables
+    $tree = pnModAPIFunc('Dizkus', 'user', 'readcategorytree');
+
+    // load necessary classes
+    Loader::loadClass('CategoryUtil');
+    Loader::loadClassFromModule('Categories', 'Category');
+    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
+
+    // get the language file
+    $langs = LanguageUtil::getInstalledLanguages();
+
+    // create the Main category and entry in the categories registry
+    _dizkus_createdefaultcategory();
+
+    // get the category path for which we're going to insert our upgraded Dizkus categories
+    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Dizkus');
+
+    // get last forum id. new categories start there
+    $maxforumid = DBUtil::selectFieldMax('dizkus_forums', 'forum_id');
+
+    // migrate our old categories
+    //$categorymap = array();
+    foreach ($tree as $oldcategory) {
+        // increment max forum id
+        $maxforumid++;
+        $cat = new PNCategory();
+        $cat->setDataField('parent_id', $rootcat['id']);
+        $cat->setDataField('name', $oldcategory['cat_title']);
+        $titlelangarray = array();
+        foreach ($langs as $lang) {
+            // for now all names get the same value
+            $titlelangarray[$lang] = $oldcategory['cat_title'];
+        }
+        $cat->setDataField('display_name', $titlelangarray);
+        $cat->setDataField('display_desc', $titlelangarray);
+        if (!$cat->validate('admin')) {
+            return false;
+        }
+        $cat->insert();
+        $cat->setDataField('__ATTRIBUTES__', array('can_contain_posts' => false,
+                                                   'forum_id'          => $maxforumid,
+                                                   'topic_count'       => 0,
+                                                   'post_count'        => 0,
+                                                   'last_post_id'      => 0,
+                                                   'pop3_active'       => 0,
+                                                   'pop3_server'       => '',
+                                                   'pop3_port'         => 0,
+                                                   'pop3_login'        => '',
+                                                   'pop3_password'     => '',
+                                                   'pop3_interval'     => 0,
+                                                   'pop3_lastconnect'  => 0,
+                                                   'pop3_pnuser'       => '',
+                                                   'pop3_pnpassword'   => '',
+                                                   'pop3_matchstring'  => '',
+                                                   'moduleref'         => 0,
+                                                   'pntopic'           => 0)); // TODO: check if still in use    (fs)
+        $cat->update();
+
+        $newcatid = $cat->getDataField('id');
+        // forums in this category
+        foreach ($oldcategory['forums'] as $forum) {
+            $fcat = new PNCategory();
+            $fcat->setDataField('parent_id', $newcatid);
+            $fcat->setDataField('name', $forum['forum_name']);
+            $fnamelangarray = array();
+            $fdesclangarray = array();
+            foreach ($langs as $lang) {
+                // for now all fields get the same value
+                $fnamelangarray[$lang] = $forum['forum_name'];
+                $fdesclangarray[$lang] = $forum['forum_desc'];
+            }
+            $fcat->setDataField('display_name', $fnamelangarray);
+            $fcat->setDataField('display_desc', $fdesclangarray);
+            if (!$fcat->validate('admin')) {
+                return false;
+            }
+            $fcat->insert();
+            $fcat->setDataField('__ATTRIBUTES__', array('can_contain_posts' => true,
+                                                        'forum_id'          => $forum['forum_id'],
+                                                        'topic_count'       => $forum['forum_topics'],
+                                                        'post_count'        => $forum['forum_posts'],
+                                                        'last_post_id'      => $forum['forum_last_post_id'],
+                                                        'pop3_active'       => $forum['forum_pop3_active'],
+                                                        'pop3_server'       => $forum['forum_pop3_server'],
+                                                        'pop3_port'         => $forum['forum_pop3_port'],
+                                                        'pop3_login'        => $forum['forum_pop3_login'],
+                                                        'pop3_password'     => $forum['forum_pop3_password'],
+                                                        'pop3_interval'     => $forum['forum_pop3_interval'],
+                                                        'pop3_lastconnect'  => $forum['forum_pop3_lastconnect'],
+                                                        'pop3_pnuser'       => $forum['forum_pop3_pnuser'],
+                                                        'pop3_pnpassword'   => $forum['forum_pop3_pnpassword'],
+                                                        'pop3_matchstring'  => $forum['forum_pop3_matchstring'],
+                                                        'moduleref'         => $forum['forum_moduleref'],
+                                                        'pntopic'           => $forum['forum_pntopic'])); // TODO: check if still in use    (fs)
+
+            $fcat->update();
+        }
+    }
+
+    return true;
 }

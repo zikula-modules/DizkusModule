@@ -924,14 +924,15 @@ function Dizkus_adminapi_deleteforum($args)
         }
     }
     $res = DBUtil::deleteWhere('dizkus_topics', $whereforumid);
-
+/*
     // posts
     $posts = DBUtil::selectObjectArray('dizkus_posts', $whereforumid);
     if(is_array($posts) && count($posts) > 0) {
         foreach($posts as $post) {
-            $res = DBUtil::deleteWhere('dizkus_posts_text', 'WHERE post_id=' . DataUtil::formatForStore($post['post_id']));
+//          $res = DBUtil::deleteWhere('dizkus_posts_text', 'WHERE post_id=' . DataUtil::formatForStore($post['post_id']));
         }
     }
+*/
     $res = DBUtil::deleteWhere('dizkus_posts', $whereforumid);
     return;
 }

@@ -23,6 +23,7 @@ function Dizkus_ajax_reply()
 
     $topic_id         = FormUtil::getPassedValue('topic');
     $message          = FormUtil::getPassedValue('message', '');
+    $title            = FormUtil::getPassedValue('title', '');
     $attach_signature = FormUtil::getPassedValue('attach_signature');
     $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
     $preview          = FormUtil::getPassedValue('preview', 0);
@@ -31,6 +32,7 @@ function Dizkus_ajax_reply()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
+    $title   = dzkstriptags(DataUtil::convertFromUTF8($title));
 
 	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
 	$topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
@@ -55,7 +57,8 @@ function Dizkus_ajax_reply()
                                        array('topic_id'         => $topic_id,
                                              'message'          => $message,
                                              'attach_signature' => $attach_signature,
-                                             'subscribe_topic'  => $subscribe_topic));
+                                             'subscribe_topic'  => $subscribe_topic,
+                                             'title'            => $title));
 
         $topic['start'] = $start;
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
@@ -70,6 +73,7 @@ function Dizkus_ajax_reply()
         $post['post_unixtime']   = time();
         $post['posted_unixtime'] = $post['post_unixtime'];
 
+        $post['post_title'] = $title;
         $post['post_textdisplay'] = phpbb_br2nl($message);
         if ($attach_signature == 1) {
             $post['post_textdisplay'] .= '[addsig]';
@@ -87,14 +91,7 @@ function Dizkus_ajax_reply()
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
 
-    //++++ MediaAttach Hack ++++
-    //old:
-    /*
-    dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
-                            'post_id' => $post['post_id']),
-                      true);
-    */
-    //new:
+    //---- begin of MediaAttach integration ----
     if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
         dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
                                 'post_id' => $post['post_id'],
@@ -106,7 +103,7 @@ function Dizkus_ajax_reply()
                                 'post_id' => $post['post_id']),
                           true);
     }
-    //---- MediaAttach Hack ----
+    //---- end of MediaAttach integration ----
 }
 
 /**

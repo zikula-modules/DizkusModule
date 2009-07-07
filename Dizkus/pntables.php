@@ -105,21 +105,29 @@ function Dizkus_pntables()
                                              'poster_id'  => 'poster_id',
                                              'post_time'  => 'post_time',
                                              'poster_ip'  => 'poster_ip',
-                                             'post_msgid' => 'post_msgid');
+                                             'post_msgid' => 'post_msgid',
+                                             'post_text'  => 'post_text',
+                                             'post_title' => 'post_title');
     $pntable['dizkus_posts_column_def'] = array('post_id'     => 'I AUTO PRIMARY',
                                                  'topic_id'    => 'I NOTNULL DEFAULT 0',
                                                  'forum_id'    => 'I NOTNULL DEFAULT 0',
                                                  'poster_id'   => 'I NOTNULL DEFAULT 1',
                                                  'post_time'   => 'C(20) NOTNULL DEFAULT \'\'',
                                                  'poster_ip'   => 'C(16) NOTNULL DEFAULT \'\'',
-                                                 'post_msgid'  => 'C(100) NOTNULL DEFAULT \'\'');
+                                                 'post_msgid'  => 'C(100) NOTNULL DEFAULT \'\'',
+                                                 'post_text'   => 'X NOTNULL DEFAULT \'\'',
+                                                 'post_title'  => 'C(255) NOTNULL DEFAULT \'\'');
     $pntable['dizkus_posts_column_idx'] = array ('topic_id'   => 'topic_id',
                                                   'forum_id'   => 'forum_id',
                                                   'poster_id'  => 'poster_id',
                                                   'post_msgid' => 'post_msgid');
 
+    // Enable categorization services
+    $pntable['dizkus_posts_db_extra_enable_categorization'] = true;
+    $pntable['dizkus_posts_primary_key_column'] = 'post_id';
+
     // 
-    // posts_text
+    // posts_text - obsolete in 3.1, but still needed for upgrade purposes
     //
     $pntable['dizkus_posts_text'] = DBUtil::getLimitedTablename('dizkus_posts_text');
     $pntable['dizkus_posts_text_column'] = array('post_id'   => 'post_id',

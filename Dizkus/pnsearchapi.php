@@ -362,15 +362,13 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
     $query = "SELECT DISTINCT
               t.topic_id,
               t.topic_title,
-              pt.post_text,
+              p.post_text,
               p.post_time
               $selectmatch
               FROM ".$pntable['dizkus_posts']." AS p,
                    ".$pntable['dizkus_forums']." AS f,
-                   ".$pntable['dizkus_posts_text']." AS pt,
                    ".$pntable['dizkus_topics']." AS t
               WHERE $wherematch
-              AND p.post_id=pt.post_id
               AND p.topic_id=t.topic_id
               AND p.forum_id=f.forum_id
               AND $whereforums

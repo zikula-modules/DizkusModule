@@ -146,11 +146,10 @@ function smarty_function_readlastposts($params, &$smarty)
                    c.cat_id,
                    p.poster_id,
                    p.post_id,
-                   pt.post_text
+                   p.post_text
         FROM ' . $pntable['dizkus_topics']     . ' as t,
              ' . $pntable['dizkus_forums']     . ' as f,
              ' . $pntable['dizkus_posts']      . ' as p,
-             ' . $pntable['dizkus_posts_text'] . ' as pt,
              ' . $pntable['dizkus_categories'] . ' as c
         WHERE ' . $whereforum .'
               ' . $whereuser . '
@@ -158,8 +157,7 @@ function smarty_function_readlastposts($params, &$smarty)
               ' . $wherespecial . '
               t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
-              f.cat_id = c.cat_id AND
-              pt.post_id = p.post_id
+              f.cat_id = c.cat_id
         ORDER by t.topic_time DESC';
 
     $lastposts = array();
