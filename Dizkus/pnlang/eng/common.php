@@ -9,126 +9,11 @@
  * @package Dizkus
  */
 
+// removed defines
 
-// removed
-// define('_DZK_TOGGLEALL', 'Remove all topic subscriptions');
+// changed defines
 
-// new for contactlist integration
-define('_DZK_PREFS_HASTOBEINSTALLED', 'has to be installed');
-define('_DZK_PREFS_IGNORELISTHANDLINGNOTAVAILABLE', 'Handling of ignored users is not available, ');
-define('_DZK_PREFS_IGNORELISTHANDLING', 'Handling of ignored users');
-define('_DZK_PREFS_STRICT', 'strict');
-define('_DZK_PREFS_MEDIUM', 'medium');
-define('_DZK_PREFS_NONE', 'none');
-define('_DZK_PREFS_IGNORELISTLEVELS', 'Users that are ignored by a topic poster can not reply to this topic in level "strict". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown.');
-define('_DZK_IGNORELISTHANDLING', 'Ignorelist configuration');
-define('_DZK_MANAGEIGNORELIST', 'Manage my settings for my ignorelist');
-define('_DZK_PREFS_NOCONFIGPOSSIBLE', 'No ignorelist configuration possible');
-define('_DZK_PREFS_IGNORELISTMYHANDLING', 'My individual handling of ignored users');
-define('_DZK_IGNORELISTSETTINGSUPDATED', 'Ignorelist configuration updated');
-define('_DZK_IGNORELISTNOREPLY', 'Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.');
-define('_DZK_SHOWIGNOREDPOSTINGOF', 'Show hidden posting of ignored user');
-define('_DZK_CLICKHERE', 'Click here');
-
-// changed
-define('_DZK_ADMINUSERRANK_INFO','To add a new rank simply enter the values in the fields and select ADD.<br />To modify a ranking simply change the values in the text boxes in the table that follows and click the SUBMIT button.<br />To remove a ranking simply check the corresponding checkbox and click the SUBMIT button.');
-define('_DZK_PREFS_SENDEMAILSWITHSQLERRORS', 'Send emails, if SQL-errors occur');
-define('_DZK_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
-define('_DZK_NEW_THREADS','New Topic in forum');
-define('_DZK_ADD_FAVORITE_FORUM','Add to favorites');
-
-// new
-define('_DZK_SEARCHLENGTHHINT', 'The forum accepts searchstrings with a length between %minlen% and %maxlen% chars only!');
-define('_DZK_PREFS_MINSEARCHLENGTH', 'Minimum length of search string (>=1 char)');
-define('_DZK_PREFS_MAXSEARCHLENGTH', 'Maximum length of search string (<=50 chars)');
-define('_DZK_PREFS_SHOWTEXTINSEARCHRESULTS', 'Show text in search results<br /><em>Turn this off in high volume sites to improve search performance or take care about constant cleaning of the search results table.</em>');
-define('_DZK_ADMINADDNEWRANK', 'Add a new rank');
-define('_DZK_ADMINDELETERANK', 'Delete this rank');
-define('_DZK_ADMINGENERALOPTIONS', 'General options');
-define('_DZK_ADMINUSERRELATEDOPTIONS', 'User related options');
-define('_DZK_ADMINSECURITYOPTIONS', 'Security options');
-define('_DZK_ADMINFEATURESOPTIONS', 'Features');
-define('_DZK_DISABLED_INFO', 'The forum is currently disabled for maintenance, please come back later.');
-define('_DZK_CONFIGRESTORED', 'The configuration has been reset to the default values');
-define('_DZK_CONFIGCHANGED', 'The configuration has been changed');
-define('_DZK_SIGNATUREUPDATED', 'Signature updated');
-define('_DZK_TO30_HINT', 'This step will upgrade pnForum 2.7.1 to Dizkus 3.0 including all necessary database changes.');
-define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
-define('_DZK_MANAGESIGNATURE', 'Manage my signature');
-define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');
-define('_DZK_SEARCHWHERE', 'Search in');
-define('_DZK_SEARCH_POSTINGS', 'postings');
-define('_DZK_SEARCH_AUTHOR', 'authors');
-
-define('_DZK_PREFS_ENABLEDISABLE', 'Dizkus is available<br /><em>(turning it off allows access for Admins only)</em>');
-define('_DZK_PREFS_DISABLEDTEXT', 'Enter info text for users if forum is disabled');
-define('_DZK_SOURCEEQUALSTARGETFORUM', 'Error: Source forum must differ from target forum.');
-define('_DZK_SOURCEEQUALSTARGETTOPIC', 'Error: Source topic must differ from target topic.');
-define('_DZK_FOUNDIN', 'found in');
-define('_DZK_FORUM_SETTINGS','Personal settings per forum');
-define('_DZK_HOURSSHORT', 'hrs');
-define('_DZK_PREFS_TIMESPANFORCHANGES', 'Allow changes in postings within x hours');
-define('_DZK_LATESTRSS', 'RSS');
-define('_DZK_VIEWYOURPOSTS', 'View your posts');
-define('_DZK_PNCATEGORIES', 'Select Category');
-define('_DZK_LINKTOTHISPOST', 'Link to this posting');
-define('_DZK_SIMILARTOPICS', 'similar topics');
-define('_DZK_RANK', 'Rank');
-define('_DZK_CLICKTOEDIT', 'Click to edit');
-define('_DZK_EDITSHORT', 'Edit');
-define('_DZK_GOTOSTART', 'go to the forums startpage');
-define('_DZK_YOUAREHERE', 'You are here');
-define('_DZK_CURRENTSORTORDER', 'recent sort order');
-define('_DZK_ORDER_ASC', 'oldest submissions on top');
-define('_DZK_ORDER_DESC','newest submissions on top');
-define('_DZK_CANCEL','cancel');
-define('_DZK_MOVEPOSTSHORT', 'Move');
-define('_DZK_SPLITSHORT', 'Split');
-define('_DZK_LOGIN', 'Login');
-define('_DZK_SEARCHSHORT', 'Search');
-define('_DZK_SEARCHINCLUDE_BYSCORE', 'by score');
-define('_DZK_MAILTO_NOSUBJECT','You must enter a subject for this email.');
-define('_DZK_NOFORUMSUBSCRIPTIONSFOUND','no forum subscriptions found');
-define('_DZK_TOGGLEALLFORUMS', 'Remove all forum subscriptions');
-define('_DZK_TOGGLEALLTOPICS', 'Remove all topic subscriptions');
-define('_DZK_THISFUNCTIONNEEDSJAVASCRIPT', 'The Dizkus-administration needs javascript enabled!');
-define('_DZK_MANAGEFORUMSUBSCRIPTIONS', 'Manage forum subscriptions');
-define('_DZK_SHOWSUBSCRIPTIONS', 'Show users subscriptions');
-define('_DZK_ADMINMANAGESUBSCRIPTIONS', 'Manage subscriptions');
-define('_DZK_ADMINMANAGESUBSCRIPTIONS_INFO', 'Remove the users topic and forum subscriptions');
-define('_DZK_REDIRECTINGTONEWTOPIC', '...now redirecting to the new topic...');
-define('_DZK_PREFS_SHOWNEWTOPICCONFIRMATION', 'Show confirmation when a new topic has been created');
-define('_DZK_THANKSFORNEWTOPIC', 'Thanks for your submission');
-define('_DZK_CLICKHERETOGOTONEWTOPICORWAITFORREDIRECT', 'Click here to go the new topic or wait a few seconds to be redirected');
-define('_DZK_CLICKHERETOGOTONEWTOPIC', 'Click here to go the new topic.');
-define('_DZK_CLICKHERETOGOTOFORUM', 'Click here to go back to the forum');
-define('_DZK_EMPTYCATEGORY', 'This category does not contain any forums yet');
-define('_DZK_HIDEFORUMS', 'Hide forums');
-define('_DZK_SHOWFORUMS', 'Show forums');
-define('_DZK_HIDECATEGORY', 'Hide category');
-define('_DZK_SHOWCATEGORY', 'Show category');
-define('_DZK_HIDEFORUM', 'Hide forum');
-define('_DZK_SHOWFORUM', 'Show forum');
-define('_DZK_LOADCATEGORYDATA', 'Load category data');
-define('_DZK_LOADFORUMDATA', 'Load forum data');
-define('_DZK_ADMINREORDERTREE', 'Manipulate forum tree');
-define('_DZK_ADMINREORDERTREE_INFO', 'Here you can reorder the categories and forums');
-define('_DZK_REORDERFORUMTREE', 'Re-order forum tree');
-
-define('_DZK_STORINGNEWSORTORDER', '... storing new sort order ...');
-define('_DZK_TOGGLEUSERINFO', 'toggle user details');
-define('_DZK_HIDEUSERINFO', 'hide user details');
-define('_DZK_FAVORITESDISABLED', 'favorites disabled');
-define('_DZK_STATUS_NOTCHANGED', 'not changed');
-define('_DZK_STATUS_CHANGED', 'changed');
-define('_DZK_STORINGPOST', '... storing post ...');
-define('_DZK_UPDATINGPOST', '... updating post ...');
-define('_DZK_DELETINGPOST', '... deleting post ...');
-define('_DZK_PREPARINGPREVIEW', '... preparing preview ...');
-define('_DZK_STORINGREPLY', '... storing reply ...');
-
-define('_DZK_CATEGORYOVERVIEW', 'Category overview');
-define('_DZK_FORUMSOVERVIEW', 'Forums overview');
+// new defines 
 
 // alphasorting starts here
 
@@ -142,6 +27,8 @@ define('_DZK_ACTIVE_POSTERS','top active Posters:');
 define('_DZK_ADD','Add');
 define('_DZK_ADDNEWCATEGORY', '-- add new category --');
 define('_DZK_ADDNEWFORUM', '-- add new forum --');
+define('_DZK_ADD_FAVORITE_FORUM','Add to favorites');
+define('_DZK_ADMINADDNEWRANK', 'Add a new rank');
 define('_DZK_ADMINADVANCEDCONFIG', 'Advanced configuration');
 define('_DZK_ADMINADVANCEDCONFIG_HINT', 'Caution: wrong settings here can lead to unwanted side effects. If you do not understand what is going on here, stay away and leave the settings as they are!');
 define('_DZK_ADMINADVANCEDCONFIG_INFO', 'Set advanced configuration, caution!');
@@ -154,6 +41,8 @@ define('_DZK_ADMINCATEDIT','Edit a Category Title');
 define('_DZK_ADMINCATEDIT_INFO','This link will allow you edit the title of a category');
 define('_DZK_ADMINCATORDER','Re-Order Categories');
 define('_DZK_ADMINCATORDER_INFO','This link will allow you to change the order in which your categories display on the index page');
+define('_DZK_ADMINDELETERANK', 'Delete this rank');
+define('_DZK_ADMINFEATURESOPTIONS', 'Features');
 define('_DZK_ADMINFORUMADD','Add a Forum');
 define('_DZK_ADMINFORUMADD_INFO','This Link will take you to a page where you can add a forum to the database.');
 define('_DZK_ADMINFORUMEDIT','Edit a Forum');
@@ -165,25 +54,33 @@ define('_DZK_ADMINFORUMORDER_INFO','This allows you to change the order in which
 define('_DZK_ADMINFORUMSPANEL','Dizkus Administration');
 define('_DZK_ADMINFORUMSYNC','Sync forum/topic index');
 define('_DZK_ADMINFORUMSYNC_INFO','This link will allow you to sync up the forum and topic indexes to fix any discrepancies that might exist');
+define('_DZK_ADMINGENERALOPTIONS', 'General options');
 define('_DZK_ADMINHONORARYASSIGN','Assign honorary rank');
 define('_DZK_ADMINHONORARYASSIGN_INFO','This link will allow you to assign honorary user rankings to users');
 define('_DZK_ADMINHONORARYRANKS','Edit honorary ranks');
 define('_DZK_ADMINHONORARYRANKS_INFO','This link will allow you to create special ranks for special users.');
+define('_DZK_ADMINMANAGESUBSCRIPTIONS', 'Manage subscriptions');
+define('_DZK_ADMINMANAGESUBSCRIPTIONS_INFO', 'Remove the users topic and forum subscriptions');
 define('_DZK_ADMINRANKS','Edit user ranks');
 define('_DZK_ADMINRANKS_INFO','This link will allow you to add/edit/delete different user rankings depending of the number of user posts.');
+define('_DZK_ADMINREORDERTREE', 'Manipulate forum tree');
+define('_DZK_ADMINREORDERTREE_INFO', 'Here you can reorder the categories and forums');
+define('_DZK_ADMINSECURITYOPTIONS', 'Security options');
 define('_DZK_ADMINUSERRANK_IMAGE','Image');
+define('_DZK_ADMINUSERRANK_INFO','To add a new rank simply enter the values in the fields and select ADD.<br />To modify a ranking simply change the values in the text boxes in the table that follows and click the SUBMIT button.<br />To remove a ranking simply check the corresponding checkbox and click the SUBMIT button.');
 define('_DZK_ADMINUSERRANK_INFO2','Use this form to add a ranking to the database.');
 define('_DZK_ADMINUSERRANK_MAX','Max posts');
 define('_DZK_ADMINUSERRANK_MIN','Min posts');
 define('_DZK_ADMINUSERRANK_TITLE','Users Ranks Administration');
 define('_DZK_ADMINUSERRANK_TITLE2','User rank');
+define('_DZK_ADMINUSERRELATEDOPTIONS', 'User related options');
 define('_DZK_ADMIN_SYNC','Sync');
 define('_DZK_ALLPNTOPIC', 'all topics');
 define('_DZK_AND', 'and');
 define('_DZK_ASSIGN','Assign');
-define('_DZK_ATTACHSIGNATURE', 'Attach my signature');
 define('_DZK_ATTACHMENTS', 'Attachments');
 define('_DZK_ATTACHMENTSTITLE', 'File attachments');
+define('_DZK_ATTACHSIGNATURE', 'Attach my signature');
 define('_DZK_AUTHOR','Author');
 define('_DZK_AUTOMATICDISCUSSIONMESSAGE', 'Automatically created topic for discussion of submitted entries');
 define('_DZK_AUTOMATICDISCUSSIONSUBJECT', 'Automatically created topic');
@@ -203,18 +100,28 @@ define('_DZK_BOTTOM','Bottom');
 //
 // C
 //
+define('_DZK_CANCEL','cancel');
 define('_DZK_CANCELPOST','Cancel');
 define('_DZK_CATEGORIES','Categories');
 define('_DZK_CATEGORY','Category');
 define('_DZK_CATEGORYINFO', 'Category info');
+define('_DZK_CATEGORYOVERVIEW', 'Category overview');
 define('_DZK_CB_RECENTPOSTS','Recent postings:');
 define('_DZK_CHANGE_FORUM_ORDER','Change Forum Order');
 define('_DZK_CHANGE_POST_ORDER','Change Post Order');
 define('_DZK_CHOOSECATWITHFORUMS4REORDER','Select category containing forums you want to reorder');
 define('_DZK_CHOOSEFORUMEDIT','Select forum to edit');
+define('_DZK_CLICKHERE', 'Click here');
+define('_DZK_CLICKHERETOGOTOFORUM', 'Click here to go back to the forum');
+define('_DZK_CLICKHERETOGOTONEWTOPIC', 'Click here to go the new topic.');
+define('_DZK_CLICKHERETOGOTONEWTOPICORWAITFORREDIRECT', 'Click here to go the new topic or wait a few seconds to be redirected');
+define('_DZK_CLICKTOEDIT', 'Click to edit');
+define('_DZK_CONFIGCHANGED', 'The configuration has been changed');
+define('_DZK_CONFIGRESTORED', 'The configuration has been reset to the default values');
 define('_DZK_CREATEFORUM_INCOMPLETE','You did not fill in all required parts of the form.<br /> Did you assign at least one moderator? Please go back and correct the form');
 define('_DZK_CREATESHADOWTOPIC','Create shadow topic');
 define('_DZK_CURRENT', 'current');
+define('_DZK_CURRENTSORTORDER', 'recent sort order');
 
 //
 // D
@@ -225,7 +132,9 @@ define('_DZK_DELETE','Delete this Post');
 define('_DZK_DELETETOPIC','Delete this topic');
 define('_DZK_DELETETOPICS','Delete selected topics');
 define('_DZK_DELETETOPIC_INFO', 'When you press the delete button at the bottom of this form the topic you have selected, and all its related posts, will be <strong>permanently</strong> removed.');
+define('_DZK_DELETINGPOST', '... deleting post ...');
 define('_DZK_DESCRIPTION', 'Description');
+define('_DZK_DISABLED_INFO', 'The forum is currently disabled for maintenance, please come back later.');
 define('_DZK_DISCUSSINFORUM', 'Discuss this submission in the forums');
 define('_DZK_DOWN','Down');
 
@@ -236,9 +145,11 @@ define('_DZK_EDITBY','edited by:');
 define('_DZK_EDITDELETE', 'edit/delete');
 define('_DZK_EDITFORUMS','Edit forums');
 define('_DZK_EDITPREFS','Edit Your Preferences');
+define('_DZK_EDITSHORT', 'Edit');
 define('_DZK_EDIT_POST','Edit post');
 define('_DZK_EMAILTOPICMSG','Hi! Check this link, I think it should be interesting to you');
 define('_DZK_EMAIL_TOPIC', 'Send as email');
+define('_DZK_EMPTYCATEGORY', 'This category does not contain any forums yet');
 define('_DZK_EMPTYMSG','You must type a message to post. You cannot post an empty message. Please go back and try again.');
 define('_DZK_ERRORLOGGINGIN', 'Unable to log you in, wrong username or wrong password used?');
 define('_DZK_ERRORMAILTO', 'Send bug report');
@@ -254,21 +165,27 @@ define('_DZK_EXTERNALSOURCEURL_HINT', 'In case of an RSS feed enter the id of th
 define('_DZK_FAILEDTOCREATEHOOK', 'Failed to create hook');
 define('_DZK_FAILEDTODELETEHOOK', 'Failed to delete hook');
 define('_DZK_FAVORITES','Favorites');
+define('_DZK_FAVORITESDISABLED', 'favorites disabled');
 define('_DZK_FAVORITE_STATUS','Favorite status');
 define('_DZK_FORUM','Forum');
 define('_DZK_FORUMID', 'Forums ID');
 define('_DZK_FORUMINFO', 'Forum Info');
 define('_DZK_FORUMS','Forums');
 define('_DZK_FORUMSINDEX','Forum-Index');
+define('_DZK_FORUMSOVERVIEW', 'Forums overview');
 define('_DZK_FORUM_EDIT_FORUM','Edit Forum');
 define('_DZK_FORUM_EDIT_ORDER','Edit Order');
 define('_DZK_FORUM_NOEXIST','Error - The forum/topic you selected does not exist. Please go back and try again.');
 define('_DZK_FORUM_REORDER','Re-Order');
+define('_DZK_FORUM_SEQUENCE_DESCRIPTION','You can use drag & drop to manipulate the forum tree as you like. When done, click on save to store your changes.');
+define('_DZK_FORUM_SETTINGS','Personal settings per forum');
+define('_DZK_FOUNDIN', 'found in');
 
 //
 // G
 //
 define('_DZK_GOTOPAGE','Goto page');
+define('_DZK_GOTOSTART', 'go to the forums startpage');
 define('_DZK_GOTO_CAT','go to category');
 define('_DZK_GOTO_FORUM','go to forum');
 define('_DZK_GOTO_LATEST', 'View latest post');
@@ -278,6 +195,10 @@ define('_DZK_GROUP', 'Group');
 //
 // H
 //
+define('_DZK_HIDECATEGORY', 'Hide category');
+define('_DZK_HIDEFORUM', 'Hide forum');
+define('_DZK_HIDEFORUMS', 'Hide forums');
+define('_DZK_HIDEUSERINFO', 'hide user details');
 define('_DZK_HOMEPAGE','Homepage');
 define('_DZK_HONORARY_RANK','Honorary rank');
 define('_DZK_HONORARY_RANKS','Honorary ranks');
@@ -286,10 +207,14 @@ define('_DZK_HOTNEWTOPIC', 'hot topic with new postings');
 define('_DZK_HOTTHRES','More than %d posts');
 define('_DZK_HOTTOPIC', 'hot topic');
 define('_DZK_HOURS','hours');
+define('_DZK_HOURSSHORT', 'hrs');
 
 //
-// I
+//I
 //
+define('_DZK_IGNORELISTHANDLING', 'Ignorelist configuration');
+define('_DZK_IGNORELISTNOREPLY', 'Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.');
+define('_DZK_IGNORELISTSETTINGSUPDATED', 'Ignorelist configuration updated');
 define('_DZK_ILLEGALMESSAGESIZE', 'Illegal message size, max. 65535 chars');
 define('_DZK_IMAGE', 'Image');
 define('_DZK_IP_USERNAMES', 'Usernames of users that posted from this IP + post counts');
@@ -315,10 +240,15 @@ define('_DZK_LASTVISIT', 'last visit');
 define('_DZK_LASTWEEK','last week');
 define('_DZK_LAST_SEEN', 'last visit');
 define('_DZK_LATEST','Latest posts');
+define('_DZK_LATESTRSS', 'RSS');
 define('_DZK_LEGEND','Legend');
+define('_DZK_LINKTOTHISPOST', 'Link to this posting');
+define('_DZK_LOADCATEGORYDATA', 'Load category data');
+define('_DZK_LOADFORUMDATA', 'Load forum data');
 define('_DZK_LOCKTOPIC','Lock this topic');
 define('_DZK_LOCKTOPICS','Lock selected topics');
 define('_DZK_LOCKTOPIC_INFO', 'When you press the lock button at the bottom of this form the topic you have selected will be <strong>locked</strong>. You may unlock it at a later time if you like.');
+define('_DZK_LOGIN', 'Login');
 
 //
 // M
@@ -326,7 +256,11 @@ define('_DZK_LOCKTOPIC_INFO', 'When you press the lock button at the bottom of t
 define('_DZK_MAIL2FORUM', 'Mail2Forum');
 define('_DZK_MAIL2FORUMPOSTS', 'Mailinglists');
 define('_DZK_MAILTO_NOBODY','You must enter a message.');
+define('_DZK_MAILTO_NOSUBJECT','You must enter a subject for this email.');
 define('_DZK_MAILTO_WRONGEMAIL','You did not enter an email address for the person to send the email to, or you entered an invalid email address.');
+define('_DZK_MANAGEFORUMSUBSCRIPTIONS', 'Manage forum subscriptions');
+define('_DZK_MANAGEIGNORELIST', 'Manage my settings for my ignorelist');
+define('_DZK_MANAGESIGNATURE', 'Manage my signature');
 define('_DZK_MANAGETOPICSUBSCRIPTIONS', 'Manage topic subscriptions');
 define('_DZK_MANAGETOPICSUBSCRIPTIONS_HINT', 'Here you can manage your topic subscriptions.');
 define('_DZK_MINSHORT', 'min');
@@ -342,6 +276,7 @@ define('_DZK_MODULEREFERENCE_HINT', 'Used for comment feature, all topics to sub
 define('_DZK_MORETHAN','More than');
 define('_DZK_MOVED_SUBJECT', 'moved');
 define('_DZK_MOVEPOST', 'Move post');
+define('_DZK_MOVEPOSTSHORT', 'Move');
 define('_DZK_MOVEPOST_INFO', 'Move a post from one topic to another');
 define('_DZK_MOVEPOST_TOTOPIC', 'Target topic');
 define('_DZK_MOVETOPIC','Move this topic');
@@ -355,6 +290,7 @@ define('_DZK_MOVETOPIC_INFO', 'When you press the move button at the bottom of t
 define('_DZK_NEWEST_FIRST','Display the newest post first');
 define('_DZK_NEWPOSTS','New posts since your last visit.');
 define('_DZK_NEWTOPIC','New topic');
+define('_DZK_NEW_THREADS','New Topic in forum');
 define('_DZK_NEXTPAGE','Next Page');
 define('_DZK_NEXT_TOPIC','to next topic');
 define('_DZK_NOAUTH', 'No permission for this action');
@@ -369,6 +305,7 @@ define('_DZK_NOCATEGORIES', 'no categories defined');
 define('_DZK_NOEXTERNALSOURCE', 'no external source');
 define('_DZK_NOFAVORITES','No favorites defined');
 define('_DZK_NOFORUMS', 'No forums defined');
+define('_DZK_NOFORUMSUBSCRIPTIONSFOUND','no forum subscriptions found');
 define('_DZK_NOHOOKEDMODULES', 'no hooked module found');
 define('_DZK_NOHTMLALLOWED', 'No HTML-tags allowed (only inside of [code][/code])');
 define('_DZK_NOJOINTO', 'No target topic for joining selected');
@@ -417,6 +354,8 @@ define('_DZK_ONEREPLY','reply');
 define('_DZK_ONLINE', 'online');
 define('_DZK_OPTIONS','Options');
 define('_DZK_OR', 'or');
+define('_DZK_ORDER_ASC', 'oldest submissions on top');
+define('_DZK_ORDER_DESC','newest submissions on top');
 define('_DZK_OURLATESTPOSTS','Latest Forum-Posts');
 
 //
@@ -427,6 +366,7 @@ define('_DZK_PASSWORD', 'Password');
 define('_DZK_PASSWORDNOMATCH', 'Passwords do not match, please go back and correct');
 define('_DZK_PERMDENY','Access denied!');
 define('_DZK_PERSONAL_SETTINGS','Personal settings');
+define('_DZK_PNCATEGORIES', 'Select Category');
 define('_DZK_PNPASSWORD', 'Zikula password');
 define('_DZK_PNPASSWORDCONFIRM', 'Zikula password confirmation');
 define('_DZK_PNTOPIC', 'Zikula Topic');
@@ -447,6 +387,7 @@ define('_DZK_POST','post');
 define('_DZK_POSTED','Posted');
 define('_DZK_POSTER','Poster');
 define('_DZK_POSTS','Posts');
+define('_DZK_POSTSAPPEARANCE', 'Posting appearance');
 define('_DZK_POST_GOTO_NEWEST','go to the newest post in ');
 define('_DZK_POWEREDBY', 'Powered by <a href="http://www.dizkus.com/" title="Dizkus">Dizkus</a> Version');
 define('_DZK_PREFS_ASCENDING', 'Ascending');
@@ -456,19 +397,32 @@ define('_DZK_PREFS_DELETEHOOKACTION', 'Action to be performed when deletehook is
 define('_DZK_PREFS_DELETEHOOKACTIONLOCK', 'close topic');
 define('_DZK_PREFS_DELETEHOOKACTIONREMOVE', 'delete topic');
 define('_DZK_PREFS_DESCENDING', 'Descending');
+define('_DZK_PREFS_DISABLEDTEXT', 'Enter info text for users if forum is disabled');
 define('_DZK_PREFS_EMAIL', 'Email From Address<br /><em>(This is the address that will appear on every email sent by the forums)</em>');
+define('_DZK_PREFS_ENABLEDISABLE', 'Dizkus is available<br /><em>(turning it off allows access for Admins only)</em>');
+define('_DZK_PREFS_ENABLESIGNATUREMANAGEMENT',	'Enable signature management via Dizkus-User-Settings');
 define('_DZK_PREFS_FAVORITESENABLED', 'Favorites enabled');
 define('_DZK_PREFS_FIRSTNEWPOSTICON', 'First new post Icon:');
+define('_DZK_PREFS_HASTOBEINSTALLED', 'has to be installed');
 define('_DZK_PREFS_HIDEUSERSINFORUMADMIN', 'Hide users in forum admin');
 define('_DZK_PREFS_HOTNEWPOSTSICON', 'Topic with both many and new posts image:');
 define('_DZK_PREFS_HOTTOPIC', 'Hot Topic Threshold');
 define('_DZK_PREFS_HOTTOPICICON', 'Hot topic image<br /><em>(Topic with many posts)</em>');
 define('_DZK_PREFS_ICONS','<br /><strong>Icons</strong>');
+define('_DZK_PREFS_IGNORELISTHANDLING', 'Handling of ignored users');
+define('_DZK_PREFS_IGNORELISTHANDLINGNOTAVAILABLE', 'Handling of ignored users is not available, ');
+define('_DZK_PREFS_IGNORELISTLEVELS', 'Users that are ignored by a topic poster can not reply to this topic in level "strict". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown.');
+define('_DZK_PREFS_IGNORELISTMYHANDLING', 'My individual handling of ignored users');
 define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX', 'Use extended fulltext search in internal search');
 define('_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT', '<i>The extended fulltext search enables parameters like "+dizkus -skype" for postings that contain "dizkus" but not "skype". Minimum requirement is MySQL 4.01.</i><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html" title="Extended fulltest search in MySQL">Extended fulltest search in MySQL</a>.');
 define('_DZK_PREFS_LOGIP', 'Log IP addresses');
 define('_DZK_PREFS_M2FENABLED', 'Mail2Forum enabled');
+define('_DZK_PREFS_MAXSEARCHLENGTH', 'Maximum length of search string (<=50 chars)');
+define('_DZK_PREFS_MEDIUM', 'medium');
+define('_DZK_PREFS_MINSEARCHLENGTH', 'Minimum length of search string (>=1 char)');
 define('_DZK_PREFS_NO', 'No');
+define('_DZK_PREFS_NOCONFIGPOSSIBLE', 'No ignorelist configuration possible');
+define('_DZK_PREFS_NONE', 'none');
 define('_DZK_PREFS_POSTSORTORDER', 'Posts sorting order');
 define('_DZK_PREFS_POSTSPERPAGE', 'Posts per Page<br /><em>(This is the number of posts per topic that will be displayed per page of a topic. 15 by default.)</em>');
 define('_DZK_PREFS_RANKLOCATION', 'Ranks icons location');
@@ -478,13 +432,19 @@ define('_DZK_PREFS_RSS2FENABLED', 'RSS2Forum enabled');
 define('_DZK_PREFS_SAVE', 'Save');
 define('_DZK_PREFS_SEARCHWITHFULLTEXTINDEX', 'Search forums with fulltext index');
 define('_DZK_PREFS_SEARCHWITHFULLTEXTINDEX_HINT', '<em>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the index fields have been created. The search result might by empty if the query string is present in too many postings. This is a "feature" of MySQL.</em><br /><a href="http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL">Fulltext search in MySQL</a>.');
+define('_DZK_PREFS_SENDEMAILSWITHSQLERRORS', 'Send emails, if SQL-errors occur');
+define('_DZK_PREFS_SHOWNEWTOPICCONFIRMATION', 'Show confirmation when a new topic has been created');
+define('_DZK_PREFS_SHOWTEXTINSEARCHRESULTS', 'Show text in search results<br /><em>Turn this off in high volume sites to improve search performance or take care about constant cleaning of the search results table.</em>');
 define('_DZK_PREFS_SIGNATUREEND', 'End of signature format');
 define('_DZK_PREFS_SIGNATURESTART', 'Start of signature format');
 define('_DZK_PREFS_SLIMFORUM', 'Hide category view with one category only');
+define('_DZK_PREFS_STRICT', 'strict');
 define('_DZK_PREFS_STRIPTAGSFROMPOST', 'Strip all html tags from new posts (does not alter content of [code][/code]');
+define('_DZK_PREFS_TIMESPANFORCHANGES', 'Allow changes in postings within x hours');
 define('_DZK_PREFS_TOPICICON', 'Topic image:');
 define('_DZK_PREFS_TOPICSPERPAGE', 'Topics per Forum<br /><em>(This is the number of topics per forum that will be displayed per page of a forum. 15 by default.)</em>');
 define('_DZK_PREFS_YES', 'Yes');
+define('_DZK_PREPARINGPREVIEW', '... preparing preview ...');
 define('_DZK_PREVIEW','Preview');
 define('_DZK_PREVIOUS_TOPIC','to previous topic');
 define('_DZK_PREVPAGE','Previous Page');
@@ -501,8 +461,10 @@ define('_DZK_QUICKSELECTFORUM','- select -');
 //
 // R
 //
+define('_DZK_RANK', 'Rank');
 define('_DZK_RECENT_POSTS','recent topics:');
 define('_DZK_RECENT_POST_ORDER', 'Recent post order in topic view');
+define('_DZK_REDIRECTINGTONEWTOPIC', '...now redirecting to the new topic...');
 define('_DZK_REGISTER','Register');
 define('_DZK_REGISTRATION_NOTE','Note: Registered users can subscribe to notifications about new posts');
 define('_DZK_REG_SINCE', 'Registered');
@@ -512,6 +474,7 @@ define('_DZK_REMOVE_FAVORITE_FORUM','Remove favorite forum');
 define('_DZK_REORDER','Reorder');
 define('_DZK_REORDERCATEGORIES','Reorder categories');
 define('_DZK_REORDERFORUMS','Reorder forums');
+define('_DZK_REORDERFORUMTREE', 'Re-order forum tree');
 define('_DZK_REPLACE_WORDS','Replace words');
 define('_DZK_REPLIES','Replies');
 define('_DZK_REPLY', 'reply');
@@ -538,6 +501,7 @@ define('_DZK_SEARCHINCLUDE_ALLTOPICS', 'all');
 define('_DZK_SEARCHINCLUDE_AUTHOR','Author');
 define('_DZK_SEARCHINCLUDE_BYDATE','by date');
 define('_DZK_SEARCHINCLUDE_BYFORUM','by forum');
+define('_DZK_SEARCHINCLUDE_BYSCORE', 'by score');
 define('_DZK_SEARCHINCLUDE_BYTITLE','by title');
 define('_DZK_SEARCHINCLUDE_DATE','Date');
 define('_DZK_SEARCHINCLUDE_FORUM','Category and forum');
@@ -552,8 +516,13 @@ define('_DZK_SEARCHINCLUDE_REPLIES','Replies');
 define('_DZK_SEARCHINCLUDE_RESULTS','Forums');
 define('_DZK_SEARCHINCLUDE_TITLE','Search forums');
 define('_DZK_SEARCHINCLUDE_VIEWS','Views');
+define('_DZK_SEARCHLENGTHHINT', 'The forum accepts searchstrings with a length between %minlen% and %maxlen% chars only!');
 define('_DZK_SEARCHOR','single words [OR]');
 define('_DZK_SEARCHRESULTSFOR','Search results for');
+define('_DZK_SEARCHSHORT', 'Search');
+define('_DZK_SEARCHWHERE', 'Search in');
+define('_DZK_SEARCH_AUTHOR', 'authors');
+define('_DZK_SEARCH_POSTINGS', 'postings');
 define('_DZK_SELECTACTION', 'select action');
 define('_DZK_SELECTED','Selection');
 define('_DZK_SELECTEDITCAT','Select category');
@@ -567,19 +536,34 @@ define('_DZK_SEPARATOR','&nbsp;::&nbsp;');
 define('_DZK_SETTING', 'Settings');
 define('_DZK_SHADOWTOPIC_MESSAGE', 'The original posting has been moved <a title="moved" href="%s">here</a>.');
 define('_DZK_SHOWALLFORUMS','Show all forums');
+define('_DZK_SHOWCATEGORY', 'Show category');
 define('_DZK_SHOWFAVORITES','Show favorites');
+define('_DZK_SHOWFORUM', 'Show forum');
+define('_DZK_SHOWFORUMS', 'Show forums');
+define('_DZK_SHOWIGNOREDPOSTINGOF', 'Show hidden posting of ignored user');
+define('_DZK_SHOWSUBSCRIPTIONS', 'Show users subscriptions');
+define('_DZK_SIGNATUREUPDATED', 'Signature updated');
+define('_DZK_SIMILARTOPICS', 'similar topics');
 define('_DZK_SMILES','Smilies:');
+define('_DZK_SOURCEEQUALSTARGETFORUM', 'Error: Source forum must differ from target forum.');
+define('_DZK_SOURCEEQUALSTARGETTOPIC', 'Error: Source topic must differ from target topic.');
 define('_DZK_SPLIT','Split');
+define('_DZK_SPLITSHORT', 'Split');
 define('_DZK_SPLITTOPIC','Split topic');
 define('_DZK_SPLITTOPIC_INFO','This will split the topic before the selected posting.');
 define('_DZK_SPLITTOPIC_NEWTOPIC','Subject for the new topic');
 define('_DZK_START', 'Start');
 define('_DZK_STATSBLOCK','Total messages:');
 define('_DZK_STATUS', 'Status');
+define('_DZK_STATUS_CHANGED', 'changed');
+define('_DZK_STATUS_NOTCHANGED', 'not changed');
 define('_DZK_STICKY', 'Sticky');
 define('_DZK_STICKYTOPIC','Mark this topic sticky');
 define('_DZK_STICKYTOPICS','Make selected topics sticky');
 define('_DZK_STICKYTOPIC_INFO', 'When you press the sticky button at the bottom of this form the topic you have selected will be made <strong>\'sticky\'</strong>. You may unstick it again at a later time if you like.');
+define('_DZK_STORINGNEWSORTORDER', '... storing new sort order ...');
+define('_DZK_STORINGPOST', '... storing post ...');
+define('_DZK_STORINGREPLY', '... storing reply ...');
 define('_DZK_SUBJECT','Subject');
 define('_DZK_SUBJECT_MAX','(100 symbols max)');
 define('_DZK_SUBMIT','Submit');
@@ -595,7 +579,13 @@ define('_DZK_SYNC_USERS', 'Zikula and Dizkus users synchronized');
 //
 // T
 //
+define('_DZK_THANKSFORNEWTOPIC', 'Thanks for your submission');
+define('_DZK_THISFUNCTIONNEEDSJAVASCRIPT', 'The Dizkus-administration needs javascript enabled!');
+define('_DZK_TO30_HINT', 'This step will upgrade pnForum 2.7.1 to Dizkus 3.0 including all necessary database changes.');
 define('_DZK_TODAY','today');
+define('_DZK_TOGGLEALLFORUMS', 'Remove all forum subscriptions');
+define('_DZK_TOGGLEALLTOPICS', 'Remove all topic subscriptions');
+define('_DZK_TOGGLEUSERINFO', 'toggle user details');
 define('_DZK_TOP','Top');
 define('_DZK_TOPIC','Topic');
 define('_DZK_TOPICLOCKED','Topic locked');
@@ -621,6 +611,7 @@ define('_DZK_UNSUBSCRIBE_FORUM','Unsubscribe forum');
 define('_DZK_UNSUBSCRIBE_TOPIC','Unsubscribe topic');
 define('_DZK_UP','Up');
 define('_DZK_UPDATE','Update');
+define('_DZK_UPDATINGPOST', '... updating post ...');
 define('_DZK_USERLOGINTITLE', 'This functionality is for registered users only');
 define('_DZK_USERNAME','Username');
 define('_DZK_USERSONLINE', 'Users online');
@@ -632,6 +623,7 @@ define('_DZK_USER_IP', 'User IP');
 //
 define('_DZK_VIEWIP', 'View ip address');
 define('_DZK_VIEWS','Views');
+define('_DZK_VIEWYOURPOSTS', 'View your posts');
 define('_DZK_VIEW_IP', 'View IP');
 define('_DZK_VISITCATEGORY', 'Visit this category');
 define('_DZK_VISITFORUM', 'Visit this forum');
@@ -645,3 +637,4 @@ define('_DZK_WRITTENON', 'written on');
 // Y
 //
 define('_DZK_YESTERDAY','yesterday');
+define('_DZK_YOUAREHERE', 'You are here');
