@@ -14,6 +14,8 @@
 // changed defines
 
 // new defines 
+define('_DZK_ADMINUSERRANK_DESCRIPTION', 'Rank description (when starting with http:// the rank image will be linked to this page');
+define('_DZK_ADMINUSERRANK_DESC', 'Rank description');
 
 // alphasorting starts here
 

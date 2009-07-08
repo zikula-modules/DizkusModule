@@ -34,7 +34,9 @@
                     <!--[ /if ]-->
                     <!--[ if isset($post.poster_data.rank_image) && isset($post.poster_data.rank) ]-->
                     <br />
-                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
+                    <!--[ if $post.poster_data.rank_link neq '' ]--><a href="<!--[ $post.poster_data.rank_link ]-->" title="<!--[ $post.poster_data.rank_link ]-->"><!--[ /if ]-->
+                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" title="<!--[ $post.poster_data.rank_desc ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
+                    <!--[ if $post.poster_data.rank_link neq '' ]--></a><!--[ /if ]-->
                     <!--[ /if ]-->
                 </div>
 

@@ -71,11 +71,11 @@ function Dizkus_userapi_get_userdata_from_id($args)
         // get the users rank
         //
         if ($userdata['user_rank'] != 0) {
-            $sql = 'SELECT rank_title, rank_image
+            $sql = 'SELECT rank_title, rank_image, rank_desc
                     FROM ' . $pntable['dizkus_ranks']. "
                     WHERE rank_id = '".(int)DataUtil::formatForStore($userdata['user_rank'])."'";
         } elseif ($userdata['user_posts'] != 0) {
-            $sql = "SELECT rank_title, rank_image
+            $sql = "SELECT rank_title, rank_image, rank_desc
                     FROM ".$pntable['dizkus_ranks']."
                     WHERE rank_min <= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'
                     AND rank_max >= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'";
@@ -85,11 +85,13 @@ function Dizkus_userapi_get_userdata_from_id($args)
         $rank = '';
         $rank_image = '';
         while (!$rank_result->EOF) {
-            list($rank, $rank_image) = $rank_result->fields;
+            list($rank, $rank_image, $rank_desc) = $rank_result->fields;
             if ($rank) {
-                $userdata['rank'] = $rank;
+                $userdata['rank']      = $rank;
+                $userdata['rank_desc'] = $rank_desc;
+                $userdata['rank_link'] = (substr($rank_desc, 0, 7)=='http://') ? $rank_desc: '';
                 if ($rank_image) {
-                    $userdata['rank_image']      =  pnModGetVar('Dizkus', 'url_ranks_images') . '/' . $rank_image;
+                    $userdata['rank_image']      = pnModGetVar('Dizkus', 'url_ranks_images') . '/' . $rank_image;
                     $userdata['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($userdata['rank_image']) : null;
                 }
             }

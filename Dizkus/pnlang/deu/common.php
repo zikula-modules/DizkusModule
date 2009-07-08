@@ -14,6 +14,8 @@
 // geänderte defines
 
 // neue defines
+define('_DZK_ADMINUSERRANK_DESCRIPTION', 'Beschreibung des Rangs (falls die Beschreibung mit http:// beginnt, verlinkt das Bild des Rangs auf die angegebene Seite');;
+define('_DZK_ADMINUSERRANK_DESCRIPTION', 'Beschreibung');;
 
 // ab hier alphabetisch sortiert
 

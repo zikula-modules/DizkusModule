@@ -32,6 +32,10 @@
                 <img id="newimage" src="<!--[ $pncore.Dizkus.url_ranks_images ]-->/<!--[ $selectedimage ]-->" alt="rankimage" />
             </div>
         </div>
+        <div class="<!--[ $configclass ]-->row">
+            <label for="rank_desc"><!--[ pnml name='_DZK_ADMINUSERRANK_DESCRIPTION' html=1 ]--></label>
+            <input id="rank_desc" type="text" name="ranks[-1][rank_desc]" value="" maxlength="255" size="60" />
+        </div>
     </fieldset>
     <div class="<!--[ $configclass ]-->buttons">
         <button class="dzk_img add" type="submit" name="submit" value="<!--[ pnml name='_DZK_ADD' ]-->"><!--[ pnml name='_DZK_ADD' ]--></button>
@@ -46,6 +50,7 @@
                 <th><!--[ pnml name='_DZK_ADMINUSERRANK_MIN' html=1 ]--></th>
                 <th><!--[ pnml name='_DZK_ADMINUSERRANK_MAX' html=1 ]--></th>
                 <th><!--[ pnml name='_DZK_IMAGE' html=1 ]--></th>
+                <th><!--[ pnml name='_DZK_ADMINUSERRANK_DESC' html=1 ]--></th>
                 <th><!--[ pnml name='_DZK_ADMINDELETERANK' html=1 ]--></th>
             </tr>
         </thead>
@@ -63,6 +68,7 @@
                     </select>
                     <img id="image<!--[ $num ]-->" src="<!--[ $pncore.Dizkus.url_ranks_images ]-->/<!--[ $rank.rank_image ]-->" alt="rankimage" />
                 </td>
+                <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_desc]" value="<!--[ $rank.rank_desc ]-->" maxlength="255" size="40" /></td>
                 <td><input type="checkbox" value="1" name="ranks[<!--[$rank.rank_id]-->][rank_delete]" /></td>
             </tr>
             <!--[ /foreach ]-->
