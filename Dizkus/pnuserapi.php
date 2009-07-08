@@ -44,14 +44,12 @@ function Dizkus_userapi_get_userdata_from_id($args)
         $makedummy = true;
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-    $sql = 'SELECT * FROM ' . $pntable['dizkus_users'] . ' WHERE ' . $pntable['dizkus_users_column']['user_id'] . '="' . (int)DataUtil::formatForStore($userid) . '";';
+    $pntable = pnDBGetTables();
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    if(!$result->EOF) {
-        $userdata = array_merge($userdata, $result->GetRowAssoc(false));
-        dzkCloseDB($result);
+    $dizkus_userdata = DBUtil::selectObjectByID('dizkus_users', $userid, 'user_id');
+    
+    if (is_array($dizkus_userdata)) {
+        $userdata = array_merge($userdata, $dizkus_userdata);
 
         // set some basic data
         $userdata['moderate'] = false;
@@ -71,55 +69,34 @@ function Dizkus_userapi_get_userdata_from_id($args)
         // get the users rank
         //
         if ($userdata['user_rank'] != 0) {
-            $sql = 'SELECT rank_title, rank_image, rank_desc
-                    FROM ' . $pntable['dizkus_ranks']. "
-                    WHERE rank_id = '".(int)DataUtil::formatForStore($userdata['user_rank'])."'";
+            $rank = DBUtil::selectObjectByID('dizkus_ranks', $userdata['user_rank'], 'rank_id');
         } elseif ($userdata['user_posts'] != 0) {
-            $sql = "SELECT rank_title, rank_image, rank_desc
-                    FROM ".$pntable['dizkus_ranks']."
-                    WHERE rank_min <= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'
-                    AND rank_max >= '".(int)DataUtil::formatForStore($userdata['user_posts'])."'";
+            $where =        $pntable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
+                      AND '.$pntable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
+            $rank = DBUtil::selectObject('dizkus_ranks', $where);
         }
-        $rank_result = dzkExecuteSQL($dbconn, $sql);
-
-        $rank = '';
-        $rank_image = '';
-        while (!$rank_result->EOF) {
-            list($rank, $rank_image, $rank_desc) = $rank_result->fields;
-            if ($rank) {
-                $userdata['rank']      = $rank;
-                $userdata['rank_desc'] = $rank_desc;
-                $userdata['rank_link'] = (substr($rank_desc, 0, 7)=='http://') ? $rank_desc: '';
-                if ($rank_image) {
-                    $userdata['rank_image']      = pnModGetVar('Dizkus', 'url_ranks_images') . '/' . $rank_image;
-                    $userdata['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($userdata['rank_image']) : null;
-                }
+        if (is_array($rank)) {
+            $userdata = array_merge($userdata, $rank);
+            $userdata['rank'] = $userdata['rank_title']; // backwards compatibility
+            $userdata['rank_link'] = (substr($userdata['rank_desc'], 0, 7)=='http://') ? $userdata['rank_desc'] : '';
+            if ($userdata['rank_image']) {
+                $userdata['rank_image']      = pnModGetVar('Dizkus', 'url_ranks_images') . '/' . $userdata['rank_image'];
+                $userdata['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($userdata['rank_image']) : null;
             }
-            $rank_result->MoveNext();
         }
-        dzkCloseDB($rank_result);
-
+        
         //
         // user name and avatar
         //
         if($userdata['pn_uid'] != 1) {
             // user is logged in, display some info
             $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
-            $userhack = "SELECT pn_uid
-                         FROM ".$pntable['session_info']."
-                         WHERE pn_uid = '".$userdata['pn_uid']."'
-                         AND pn_lastused > '".DataUtil::formatForStore($activetime)."'";
+            $where = $pntable['session_info_column']['uid']." = '".$userdata['pn_uid']."'
+                      AND pn_lastused > '".DataUtil::formatForStore($activetime)."'";
+            $sessioninfo =  DBUtil::selectObject('session_info', $where);         
+            $userdata['online'] = ($sessioninfo['uid'] == $userdata['pn_uid']) ? true : false; 
 
-            $userresult = dzkExecuteSQL($dbconn, $userhack);
-
-            $online_state = $userresult->GetRowAssoc(false);
-            $userdata['online'] = false;
-            if($online_state['pn_uid'] == $userdata['pn_uid']) {
-                $userdata['online'] = true; //$online_state[$userdata['pn_uid']];
-            }
-            dzkCloseDB($userresult);
-
-            // avatar
+           // avatar
             if ($userdata['_YOURAVATAR']){
                 $avatarfilename = 'images/avatar/' . DataUtil::formatForOS($userdata['_YOURAVATAR']);
                 $avatardata = function_exists('getimagesize') ? @getimagesize($avatarfilename) : false;
