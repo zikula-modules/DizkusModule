@@ -144,7 +144,7 @@ function Dizkus_pntables()
                                             'rank_image'   => 'rank_image');
     $pntable['dizkus_ranks_column_def'] = array('rank_id'       => 'I AUTO PRIMARY',
                                                 'rank_title'    => 'C(50) NOTNULL DEFAULT \'\'',
-                                                'rank_desc'     => 'X NOTNULL DEFAULT \'\'',
+                                                'rank_desc'     => 'C(255) NOTNULL DEFAULT \'\'',
                                                 'rank_min'      => 'I NOTNULL DEFAULT 0',
                                                 'rank_max'      => 'I NOTNULL DEFAULT 0',
                                                 'rank_special'  => 'I(2) NOTNULL DEFAULT 0',
