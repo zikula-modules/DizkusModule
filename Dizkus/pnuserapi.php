@@ -2095,16 +2095,11 @@ function Dizkus_userapi_get_viewip_data($args)
  */
 function Dizkus_userapi_lockunlocktopic($args)
 {
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $new_status = ($args['mode']=='lock') ? 1 : 0;
-
-    $sql = "UPDATE ".$pntable['dizkus_topics']."
-            SET topic_status = $new_status
-            WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
+    if (isset($args['topic_id']) && is_numeric($args['topic_id']) && isset($args['mode'])) {
+        $tobj['topic_id']     = $args['topic_id'];
+        $tobj['topic_status'] = ($args['mode']=='lock') ? 1 : 0;
+        DBUtil::updateObject($tobj, 'dizkus_topics', '', 'topic_id');
+    }
     return;
 }
 
@@ -2117,16 +2112,11 @@ function Dizkus_userapi_lockunlocktopic($args)
  */
 function Dizkus_userapi_stickyunstickytopic($args)
 {
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $new_sticky = ($args['mode']=='sticky') ? 1 : 0;
-
-    $sql = "UPDATE ".$pntable['dizkus_topics']."
-            SET sticky = '$new_sticky'
-            WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
+    if (isset($args['topic_id']) && is_numeric($args['topic_id']) && isset($args['mode'])) {
+        $tobj['topic_id'] = $args['topic_id'];
+        $tobj['sticky']   = ($args['mode']=='sticky') ? 1 : 0;
+        DBUtil::updateObject($tobj, 'dizkus_topics', '', 'topic_id');
+    }
     return;
 }
 
