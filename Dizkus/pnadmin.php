@@ -335,8 +335,6 @@ function Dizkus_admin_editforum($args=array())
         $forum = array('forum_name'       => _DZK_ADDNEWFORUM,
                        'forum_id'         => time(), /* for new forums only! */
                        'forum_desc'       => '',
-                       'forum_access'     => -1,
-                       'forum_type'       => -1,
                        'forum_order'      => -1,
                        'cat_title'        => '',
                        'cat_id'           => $cat_id,

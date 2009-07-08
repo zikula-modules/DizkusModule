@@ -473,15 +473,23 @@ function Dizkus_upgrade_to_3_1()
     // merge posts and posts_text table
     pnModDBInfoLoad('Dizkus');
 
-    // change t able structure
-    DBUtil::changeTable('dizkus_posts');
-    
     $pntable = pnDBGetTables();
-    
+
     $poststable  = $pntable['dizkus_posts'];
     $postscolumn = $pntable['dizkus_posts_column'];
     $poststexttable  = $pntable['dizkus_posts_text'];
     $poststextcolumn = $pntable['dizkus_posts_text_column'];
+
+    // change table structures
+    DBUtil::changeTable('dizkus_posts');
+    DBUtil::changeTable('dizkus_ranks');
+
+    DBUtil::dropColumn('dizkus_topics', 'topic_notify');
+    DBUtil::dropColumn('dizkus_topics', 'sticky_label');
+    DBUtil::dropColumn('dizkus_topics', 'poll_id');
+    DBUtil::dropColumn('dizkus_forums', 'forum_access');
+    DBUtil::dropColumn('dizkus_forums', 'forum_type');
+    DBUtil::dropColumn('dizkus_ranks', 'rank_style');
     
     $sql = 'UPDATE ' . $poststable . ' AS p  
             SET p.' . $postscolumn['post_text'] . '= ( 

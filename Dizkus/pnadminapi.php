@@ -419,7 +419,6 @@ function Dizkus_adminapi_readranks($args)
                                 'rank_max'     => 0,
                                 'rank_special' => 0,
                                 'rank_image'   => 'onestar.gif',
-                                'rank_style'   => '',
                                 'users'        => array()));
 */
     return array($filelist, $ranks);

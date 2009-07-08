@@ -1750,7 +1750,6 @@ function Dizkus_userapi_readpost($args)
                     p.poster_id,
                     t.topic_id,
                     t.topic_title,
-                    t.topic_notify,
                     t.topic_replies,
                     f.forum_id,
                     f.forum_name,
@@ -1784,7 +1783,6 @@ function Dizkus_userapi_readpost($args)
     $post['topic_id']     = DataUtil::formatForDisplay($myrow['topic_id']);
     $post['topic_rawsubject']= strip_tags($myrow['topic_title']);
     $post['topic_subject']= DataUtil::formatForDisplay($myrow['topic_title']);
-    $post['topic_notify'] = DataUtil::formatForDisplay($myrow['topic_notify']);
     $post['topic_replies']= DataUtil::formatForDisplay($myrow['topic_replies']);
     $post['forum_id']     = DataUtil::formatForDisplay($myrow['forum_id']);
     $post['forum_name']   = DataUtil::formatForDisplay($myrow['forum_name']);
@@ -2370,8 +2368,6 @@ function Dizkus_userapi_readuserforums($args)
     $sql = "SELECT f.forum_name,
                    f.forum_id,
                    f.forum_desc,
-                   f.forum_access,
-                   f.forum_type,
                    f.forum_order,
                    f.forum_topics,
                    f.forum_posts,
@@ -2405,8 +2401,6 @@ function Dizkus_userapi_readuserforums($args)
             list( $forum['forum_name'],
                   $forum['forum_id'],
                   $forum['forum_desc'],
-                  $forum['forum_access'],
-                  $forum['forum_type'],
                   $forum['forum_order'],
                   $forum['forum_topics'],
                   $forum['forum_posts'],
@@ -3440,15 +3434,13 @@ function Dizkus_userapi_splittopic($args)
              topic_title,
              topic_poster,
              forum_id,
-             topic_time,
-             topic_notify)
+             topic_time)
             VALUES
             ('".DataUtil::formatForStore($topic_id)."',
              '".DataUtil::formatForStore($post['topic_subject'])."',
              '".DataUtil::formatForStore($post['poster_data']['pn_uid'])."',
              '".DataUtil::formatForStore($post['forum_id'])."',
-             '".DataUtil::formatForStore($time)."',
-             '' )";
+             '".DataUtil::formatForStore($time)."')";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     $newtopic_id = $dbconn->PO_Insert_ID($pntable['dizkus_topics'], 'topic_id');
     dzkCloseDB($result);
