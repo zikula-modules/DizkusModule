@@ -1503,7 +1503,7 @@ function Dizkus_userapi_storenewtopic($args)
     extract($args);
     unset($args);
 
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
     $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $forum_id));
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
@@ -1555,93 +1555,37 @@ function Dizkus_userapi_storenewtopic($args)
 
     $time = (isset($time)) ? $time : date('Y-m-d H:i');
 
-    // Prep for DB
-    $subject   = DataUtil::formatForStore($subject);
-    $message   = DataUtil::formatForStore($message);
-    $pn_uid    = DataUtil::formatForStore($pn_uid);
-    $forum_id  = DataUtil::formatForStore($forum_id);
-    $time      = DataUtil::formatForStore($time);
-    $poster_ip = DataUtil::formatForStore($poster_ip);
+    // create topic
+    $obj['topic_title']     = DataUtil::formatForStore($subject);
+    $obj['topic_poster']    = DataUtil::formatForStore($pn_uid);
+    $obj['forum_id']        = DataUtil::formatForStore($forum_id);
+    $obj['topic_time']      = DataUtil::formatForStore($time);
+    $obj['topic_reference'] = (isset($reference)) ? DataUtil::formatForStore($reference) : '';
+    DBUtil::insertObject($obj, 'dizkus_topics', 'topic_id');
+    
+    // create posting
+    $pobj['topic_id']   = DataUtil::formatForStore($obj['topic_id']);
+    $pobj['forum_id']   = $obj['forum_id'];
+    $pobj['poster_id']  = $obj['topic_poster'];
+    $pobj['post_time']  = $obj['topic_time'];
+    $pobj['poster_ip']  = DataUtil::formatForStore($poster_ip);
+    $pobj['post_msgid'] = (isset($msgid)) ? DataUtil::formatForStore($msgid) : '';
+    $pobj['post_text']  = DataUtil::formatForStore($message);
+    $pobj['post_title'] = $obj['topic_title'];
+    DBUtil::insertObject($pobj, 'dizkus_posts', 'post_id');
 
-    $reference = (isset($reference)) ? DataUtil::formatForStore($reference) : '';
-    $msgid     = (isset($msgid)) ? DataUtil::formatForStore($msgid) : '';
-
-    //  insert values into topics-table
-    $topic_id = $dbconn->GenID($pntable['dizkus_topics']);
-    $sql = "INSERT INTO ".$pntable['dizkus_topics']."
-            (topic_id,
-             topic_title,
-             topic_poster,
-             forum_id,
-             topic_time,
-             topic_reference)
-            VALUES
-            ('".DataUtil::formatForStore($topic_id)."',
-             '$subject',
-             $pn_uid,
-             $forum_id,
-             '$time',
-             '$reference' )";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
-    //  insert values into posts-table
-    $topic_id = $dbconn->PO_Insert_ID($pntable['dizkus_topics'], 'topic_id');
-
-    $post_id = $dbconn->GenID($pntable['dizkus_posts']);
-    $sql = "INSERT INTO ".$pntable['dizkus_posts']."
-            (post_id,
-             topic_id,
-             forum_id,
-             poster_id,
-             post_time,
-             poster_ip,
-             post_msgid,
-             post_text)
-            VALUES
-            ('".DataUtil::formatForStore($post_id)."',
-             '".DataUtil::formatForStore($topic_id)."',
-             '$forum_id',
-             '$pn_uid',
-             '$time',
-             '$poster_ip',
-             '$msgid',
-             '".DataUtil::formatForStore($message)."')";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
-    $post_id = $dbconn->PO_Insert_ID($pntable['dizkus_posts'], 'post_id');
-    if ($post_id) {
-/*
-        //  insert values into posts_text-table
-//      $sql = "INSERT INTO ".$pntable['dizkus_posts_text']."
-                (post_id, post_text)
-                VALUES ('".DataUtil::formatForStore($post_id)."', '$message')";
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
-*/
+   if ($pobj['post_id']) {
         //  updates topics-table
-        $sql = "UPDATE ".$pntable['dizkus_topics']."
-                SET topic_last_post_id = '".DataUtil::formatForStore($post_id)."'
-                WHERE topic_id = '".DataUtil::formatForStore($topic_id)."'";
-
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        $obj['topic_last_post_id'] = $pobj['post_id'];
+        DBUtil::updateObject($obj, 'dizkus_topics', '', 'topic_id');
 
         // Let any hooks know that we have created a new item.
-        pnModCallHooks('item', 'create', $topic_id, array('module' => 'Dizkus'));
+        pnModCallHooks('item', 'create', $obj['topic_id'], array('module' => 'Dizkus'));
     }
 
     if (pnUserLoggedin()) {
         // user logged in we have to update users-table
-        $sql = "UPDATE $pntable[dizkus_users]
-                SET user_posts = user_posts+1
-                WHERE (user_id = '".DataUtil::formatForStore($pn_uid)."')";
-
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        DBUtil::incrementObjectFieldByID('dizkus_users', 'user_posts', $obj['topic_poster'], 'user_id');
 
         // update subscription
         if ($subscribe_topic == 1) {
@@ -1651,23 +1595,20 @@ function Dizkus_userapi_storenewtopic($args)
     }
 
     //  update forums-table
-    $sql = "UPDATE $pntable[dizkus_forums]
-            SET forum_posts = forum_posts+1,
-                forum_topics = forum_topics+1,
-                forum_last_post_id = '".DataUtil::formatForStore($post_id)."'
-            WHERE forum_id = '$forum_id'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
+    $fobj['forum_id']           = $obj['forum_id'];
+    $fobj['forum_last_post_id'] = $pobj['post_id'];
+    DBUtil::updateObject($fobj, 'dizkus_forums', null, 'forum_id');
+    DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_posts',  $obj['forum_id'], 'forum_id');
+    DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_topics', $obj['forum_id'], 'forum_id');
 
     //  notify for newtopic
-    Dizkus_userapi_notify_by_email(array('topic_id' => $topic_id, 'poster_id' => $pn_uid, 'post_message' => $posted_message, 'type' => '0'));
+    Dizkus_userapi_notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['topic_poster'], 'post_message' => $posted_message, 'type' => '0'));
 
     // delete temporary session var
     SessionUtil::delVar('topic_started');
 
     //  switch to topic display
-    return $topic_id;
+    return $obj['topic_id'];
 }
 
 /**
@@ -1804,23 +1745,13 @@ function Dizkus_userapi_readpost($args)
  */
 function Dizkus_userapi_is_first_post($args)
 {
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $sql = "SELECT post_id FROM ".$pntable['dizkus_posts']."
-            WHERE topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'
-            ORDER BY post_id
-            LIMIT 1";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    if($result->RecordCount()>0) {
-        list($read_post_id) = $result->fields;
-        dzkCloseDB($result);
-        if($args['post_id'] == $read_post_id) {
-            return true;
-        }
-    }
-    dzkCloseDB($result);
-    return false;
+    // compare the given post_id with the lowest post_id in the topic
+    $minpost = pnModAPIFunc('Dizkus', 'user', 'get_firstlast_post_in_topic', 
+                             array('topic_id' => $args['topic_id'],
+                                   'first'    => true,
+                                   'id_only'  => true)); 
+    $isfirst = ($minpost == $args['post_id']) ? true : false;
+    return $isfirst;
 }
 
 /**
@@ -2106,49 +2037,6 @@ function Dizkus_userapi_updatepost($args)
 
     // we should not get here, but who knows...
     return pnModURL('Dizkus', 'user', 'main');
-}
-
-/**
- * Returns the most recent post in a forum, or a topic
- *
- * What does this function really do???
- *
- *@params $args['id'] int the id, defined by 'type' parameter
- *@params $args['type'] string, either topic of timefix
- *returns ???
- */
-function Dizkus_userapi_get_last_boardpost($args)
-{
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $sql = "SELECT p.post_time, u.pn_uname
-            FROM ".$pntable['dizkus_posts']." p, ".$pntable['users']." u
-            WHERE p.topic_id = '".(int)DataUtil::formatForStore($args['id'])."'
-            AND p.poster_id = u.pn_uid
-            ORDER BY post_time DESC";
-
-    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-    $row = $result->GetRowAssoc(false);
-    dzkCloseDB($result);
-    $uname = $row['pn_uname'];
-    $post_time = $row['post_time'];
-
-    // format the return string
-    switch ($args['type']) {
-        case 'topic':
-            $userlink = '<a href="user.php?op=userinfo&amp;uname=' . $uname . '">' . $uname . '</a>';
-            // correct the time
-            $posted_unixtime= dzk_str2time($post_time); //strtotime ($post_time);
-            $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
-            $val = '<td><span class="pn-normal">' . $userlink . '</span></td><td><span class="pn-normal">' . $posted_ml . '</span></td>';
-            break;
-        case 'time_fix':
-            $val = $post_time;
-            break;
-        default:
-            $val = false;
-    }
-    return($val);
 }
 
 /**
@@ -4712,43 +4600,4 @@ function Dizkus_userapi_get_settings_ignorelist($args)
         // return admin's default value
         return $default;
     }
-}
-
-/**
- * gettopicreadpermission
- * determines if the current user has access to topic specified by given topic_id
- *
- *@params $args['topic_id'] int the id of testet topic
- *@returns array of categories with an array of forums in the catgories
- *
- */
-function Dizkus_userapi_gettopicreadpermission($args)
-{
-    if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
-    }
-
-    $topic_id = $args['topic_id'];
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-    $cattable = $pntable['dizkus_categories'];
-    $forumstable = $pntable['dizkus_forums'];
-    $topicstable = $pntable['dizkus_topics'];
-
-    $sql = 'SELECT ' . $forumstable . '.cat_id AS cat_id,
-                   ' . $forumstable . '.forum_id AS forum_id
-            FROM ' . $forumstable . ', ' . $topicstable . '
-            WHERE ' . $topicstable . '.topic_id = \'' . pnVarPrepForStore($topic_id) . '\'
-            AND ' . $forumstable . '.forum_id = ' . $topicstable . '.forum_id';
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    $row = $result->GetRowAssoc(false);
-    $cat_id = $row['cat_id'];
-    $forum_id = $row['forum_id'];
-
-    dzkCloseDB($result);
-
-    return allowedtoreadcategoryandforum($cat_id, $forum_id);
 }
