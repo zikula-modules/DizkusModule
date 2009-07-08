@@ -233,42 +233,17 @@ function Dizkus_userapi_boardstats($args)
  */
 function Dizkus_userapi_get_firstlast_post_in_topic($args)
 {
-    $topic_id = $args['topic_id'];
-    $first    = isset($args['first']) ? $args['first'] : false;
-    $id_only  = isset($args['id_only']) ? $args['id_only'] : false;
+    if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
+        $pntable = pnDBGetTables();
+        $option    = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
+        $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', $option, $pntable['dizkus_posts_column']['topic_id'].' = '.(int)DataUtil::formatForStore($args['topic_id']));
 
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (!empty($first)) {
-        $sortorder = 'ASC';
-        $idorder = 'DESC';
-    } else {
-        $sortorder = 'DESC';
-        $idorder = 'ASC';
-    }
-
-    if (!empty($topic_id) && is_numeric($topic_id)) {
-        $sql = 'SELECT p.post_id
-                FROM ' . $pntable['dizkus_posts'] . ' AS p
-                WHERE p.topic_id = "'.(int)DataUtil::formatForStore($topic_id) . '"
-                ORDER BY p.post_time ' . $sortorder . ',
-                         p.post_id ' . $idorder;
-
-        $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-        if ($result->EOF) {
-            dzkCloseDB($result);
-            return false;
+        if ($post_id <> false) {
+            if (isset($args['id_only']) && $args['id_only'] == true) {
+                return $post_id;
+            }
+            return Dizkus_userapi_readpost(array('post_id' => $post_id));
         }
-
-        $row = $result->GetRowAssoc(false);
-        $post_id = $row['post_id'];
-        dzkCloseDB($result);
-
-        if ($id_only == true) {
-            return $post_id;
-        }
-
-        return Dizkus_userapi_readpost(array('post_id' => $post_id));
     }
 
     return false;
@@ -284,27 +259,11 @@ function Dizkus_userapi_get_firstlast_post_in_topic($args)
  */
 function Dizkus_userapi_get_last_post_in_forum($args)
 {
-    $forum_id = $args['forum_id'];
-    $id_only  = isset($args['id_only']) ? $args['id_only'] : false;
+    if (!empty($args['forum_id']) && is_numeric($args['forum_id'])) {
+        $pntable = pnDBGetTables();
+        $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $pntable['dizkus_posts_column']['forum_id'].' = '.(int)DataUtil::formatForStore($args['forum_id']));
 
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (!empty($forum_id) && is_numeric($forum_id)) {
-        $sql = "SELECT p.post_id
-                FROM ".$pntable['dizkus_posts']." AS p
-                WHERE p.forum_id = '".(int)DataUtil::formatForStore($forum_id)."'
-                ORDER BY p.post_time DESC";
-
-        $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
-        if ($result->EOF) {
-            dzkCloseDB($result);
-            return false;
-        }
-        $row = $result->GetRowAssoc(false);
-        $post_id = $row['post_id'];
-        dzkCloseDB($result);
-
-        if ($id_only == true) {
+        if (isset($args['id_only']) && $args['id_only'] == true) {
             return $post_id;
         }
 
@@ -1340,14 +1299,14 @@ function Dizkus_userapi_storereply($args)
     // Prep for DB
     $obj['post_time']  = DataUtil::formatForStore(date('Y-m-d H:i'));
     $obj['topic_id']   = DataUtil::formatForStore($args['topic_id']);
-    $obj['forum_id']   = DataUtil::formatForStore($forum_id);
+    $obj['forum_id']   = (int)DataUtil::formatForStore($forum_id);
     $obj['post_text']  = DataUtil::formatForStore($args['message']);
     $obj['poster_id']  = DataUtil::formatForStore($pn_uid);
     $obj['poster_ip']  = DataUtil::formatForStore($poster_ip);
     $obj['post_title'] = DataUtil::formatForStore($args['post_title']);
 
     DBUtil::insertObject($obj, 'dizkus_posts', 'post_id');
-    
+
     // update topics table
     $tobj['topic_last_post_id'] = $obj['post_id'];
     $tobj['topic_time']         = $obj['post_time'];
@@ -1373,7 +1332,7 @@ function Dizkus_userapi_storereply($args)
     // update forums table
     $fobj['forum_last_post_id'] = $obj['post_id'];
     $fobj['forum_id']           = $obj['forum_id'];
-    DBUtil::updateObject($tobj, 'dizkus_ts', null, 'topic_id');
+    DBUtil::updateObject($fobj, 'dizkus_forums', null, 'forum_id');
     DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_posts', $obj['forum_id'], 'forum_id');
 
     // get the last topic page
