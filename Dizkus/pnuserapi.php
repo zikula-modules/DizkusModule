@@ -2322,84 +2322,42 @@ function Dizkus_userapi_movetopic($args)
  */
 function Dizkus_userapi_deletetopic($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    // get the forum id
-    $sql = "SELECT t.forum_id
-            FROM  ".$pntable['dizkus_topics']." t
-            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    if ($result->EOF) {
-        // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
-    } else {
-        $myrow = $result->GetRowAssoc(false);
+    list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
+    if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
-    dzkCloseDB($result);
 
-    $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
+    $pntable = pnDBGetTables();
 
     // Update the users's post count, this might be slow on big topics but it makes other parts of the
     // forum faster so we win out in the long run.
-    $sql = "SELECT poster_id, post_id
-            FROM ".$pntable['dizkus_posts']."
-            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+    
+    // step #1: get all post ids and posters ids
+    $where = $pntable['dizkus_posts_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
+    $postsarray = DBUtil::selectObjectArray('dizkus_posts', $where);
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    while (!$result->EOF) {
-        $row = $result->GetRowAssoc(false);
-        if ($row['poster_id'] != -1) {
-            $sql2 = "UPDATE ".$pntable['dizkus_users']."
-                     SET user_posts = user_posts - 1
-                     WHERE user_id = '".DataUtil::formatForStore($row['poster_id'])."'";
-            $result2 = dzkExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-            dzkCloseDB($result2);
-        }
-        // collect the post ID's we have to remove.
-        $posts_to_remove[] = $row['post_id'];
-        $result->MoveNext();
+    // step #2 go through the posting array and decrement the posting counter
+    // TO-DO: for larger topics use IN(..., ..., ...) with 50 or 100 posting ids per sql
+    foreach ($postsarray as $posting) {
+        DBUtil::decrementObjectFieldByID('dizkus_users', 'user_posts', $posting['poster_id'], 'user_id');
     }
-    dzkCloseDB($result);
 
-    $sql = "DELETE FROM ".$pntable['dizkus_posts']."
-            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+   // now delete postings
+    // we will use the same $where as before!
+    DBUtil::deleteWhere('dizkus_posts', $where);
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
+    // now delete the topic itself
+    DBUtil::deleteObjectByID('dizkus_topics', $args['topic_id'], 'topic_id');
 
-    $sql = "DELETE FROM ".$pntable['dizkus_topics']."
-            WHERE topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
-    // fix for bug [#3753] SQL Error in Dizkus_userapi_deletetopic
-    // credits to rmaiwald for te fix
-/*
-    if (count($posts_to_remove)>0) {
-//      $sql = "DELETE FROM ".$pntable['dizkus_posts_text']
-             . " WHERE post_id IN (" . implode(",",$posts_to_remove) . ")";
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
-    }
-*/
-    // bug [#2491] removal of topics doesn't remove the subscriptions
-    $sql = "DELETE FROM ".$pntable['dizkus_topic_subscription']."
-            WHERE topic_id = '" . (int)DataUtil::formatForStore($topic_id) . "'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
+    // remove topic subscriptions
+    $where = $pntable['dizkus_topic_subscription_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
+    DBUtil::deleteWhere('dizkus_topic_subscription', $where);
 
     // Let any hooks know that we have deleted an item (topic).
-    pnModCallHooks('item', 'delete', $topic_id, array('module' => 'Dizkus'));
+    pnModCallHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
 
     pnModAPIFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
     return $forum_id;
-
 }
 
 /**
