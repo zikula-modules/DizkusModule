@@ -3425,31 +3425,19 @@ function Dizkus_userapi_getfavorites($args)
 /**
  * get_favorite_status
  *
- * read the flag fromthe users table that indicates the users last choice: show all forum (0) or favorites only (1)
+ * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
  *@params $args['user_id'] int the users id
- *@returns 0 or 1
+ *@returns boolean
  *
  */
 function Dizkus_userapi_get_favorite_status($args)
 {
-    extract($args);
-    unset($args);
-
     if (!isset($args['user_id'])) {
-        $user_id = (int)pnUserGetVar('uid');
+        $args['user_id'] = (int)pnUserGetVar('uid');
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-    $userstable = $pntable['dizkus_users'];
-    $userscol    = $pntable['dizkus_users_column'];
-    $sql = "SELECT $userscol[user_favorites]
-            FROM $userstable
-            WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    list($favorite) = $result->fields;
-    dzkCloseDB($result);
-
-    return (bool)$favorite;
+    $obj = DBUtil::selectObjectByID('dizkus_users', $args['user_id'], 'user_id', null, null, null, false);
+    return (bool)$obj['user_favorites'];
 }
 
 /**
@@ -3462,26 +3450,14 @@ function Dizkus_userapi_get_favorite_status($args)
  */
 function Dizkus_userapi_change_favorite_status($args)
 {
-    extract($args);
-    unset($args);
-
-    if (!isset($user_id)) {
-        $user_id = (int)pnUserGetVar('uid');
+    if (!isset($args['user_id'])) {
+        $args['user_id'] = (int)pnUserGetVar('uid');
     }
 
-    $recentstatus = Dizkus_userapi_get_favorite_status(array('user_id' => $user_id));
-    $newstatus = ($recentstatus==true) ? 0 : 1;
-
-    list($dbconn, $pntable) = dzkOpenDB();
-    $userstable = $pntable['dizkus_users'];
-    $userscol   = $pntable['dizkus_users_column'];
-    $sql = "UPDATE $userstable
-            SET $userscol[user_favorites] = $newstatus
-            WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
-    return (bool)$newstatus;
+    $recentstatus = Dizkus_userapi_get_favorite_status(array('user_id' => $args['user_id']));
+    $args['user_favorites'] = ($recentstatus==true) ? 0 : 1;
+    DBUtil::updateObject($args, 'dizkus_users', 'user_id');
+    return (bool)$args['user_favorites'];
 }
 
 /**
@@ -3497,18 +3473,17 @@ function Dizkus_userapi_change_favorite_status($args)
 function Dizkus_userapi_get_user_post_order($args)
 {
     extract($args);
-    unset($args);
 
     $loggedIn = pnUserLoggedIn();
 
     // if we are passed the user_id then lets use it
-    if (isset($user_id)) {
+    if (isset($args['user_id'])) {
         // we got passed the id but it is the anonymous user
         // and the user isn't logged in, so we return the default order.
         // We use this check because we may want to call this function
         // from another module or function as an admin, moderator, etc
         // so the logged in user may not be the person we want the info about.
-        if ($user_id < 2 || !$loggedIn) {
+        if ($args['user_id'] < 2 || !$loggedIn) {
             return pnModGetVar('Dizkus', 'post_sort_order');
         }
     } else {
@@ -3516,30 +3491,18 @@ function Dizkus_userapi_get_user_post_order($args)
         // the user is logged in then lets use their id.  If not
         // then return th default order.
         if ($loggedIn) {
-            $user_id = pnUserGetVar('uid');
+            $args['user_id'] = pnUserGetVar('uid');
         } else {
             return pnModGetVar('Dizkus', 'post_sort_order');
         }
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-    $pnfusertable = $pntable['dizkus_users'];
-    $pnfusercolumn = $pntable['dizkus_users_column'];
-
-    $sql = 'SELECT ' . $pnfusercolumn['user_post_order'] . '
-            FROM  ' . $pnfusertable . '
-            WHERE ' . $pnfusercolumn['user_id'] . ' = "' . (int)DataUtil::formatForStore($user_id).'"';
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    if (!$result->EOF) {
-        list($post_order) = $result->fields;
-        $post_order = ($post_order) ? 'DESC' : 'ASC';
+    $obj = DBUtil::selectObjectByID('dizkus_users', $args['user_id'], 'user_id', null, null, null, false);
+    if (is_array($obj)) {
+        $post_order = ($obj['user_post_order']) ? 'DESC' : 'ASC';
     } else {
         $post_order = pnModGetVar('Dizkus', 'post_sort_order');
     }
-    dzkCloseDB($result);
-
     return $post_order;
 }
 
@@ -3553,29 +3516,15 @@ function Dizkus_userapi_get_user_post_order($args)
  */
 function Dizkus_userapi_change_user_post_order($args)
 {
-    $user_id = $args['user_id'];
-
     // if we didn't get a user_id and the user isn't logged in then
     // return false because there is no database entry to update
-    if (!isset($user_id) && pnUserLoggedIn()) {
-        $user_id = (int)pnUserGetVar('uid');
-    } else {
-        return false;
+    if (!isset($args['user_id']) && pnUserLoggedIn()) {
+        $args['user_id'] = (int)pnUserGetVar('uid');
     }
 
     $post_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
-
-    $new_post_order = ($post_order=='DESC') ? 0 : 1;
-
-    list($dbconn, $pntable) = dzkOpenDB();
-    $userstable = $pntable['dizkus_users'];
-    $userscol   = $pntable['dizkus_users_column'];
-    $sql = "UPDATE $userstable
-            SET $userscol[user_post_order] = $new_post_order
-            WHERE $userscol[user_id] = '".DataUtil::formatForStore($user_id)."'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
+    $args['user_post_order'] = ($post_order=='DESC') ? 0 : 1;
+    DBUtil::updateObject($args, 'dizkus_users', 'user_id');
     return true;
 }
 

@@ -17,11 +17,8 @@ Loader::includeOnce('modules/Dizkus/common.php');
 
 function Dizkus_commentsapi_News($args)
 {
-    extract($args);
-    unset($args);
-
-    $news = pnModApiFunc('News', 'user', 'get', array('objectid' => $objectid));
-    $link = pnGetBaseURL() . pnModURL('News', 'user', 'display', array('sid' => $objectid));
+    $news = pnModAPIFunc('News', 'user', 'get', array('objectid' => $args['objectid']));
+    $link = pnGetBaseURL() . pnModURL('News', 'user', 'display', array('sid' => $args['objectid']));
     $lang = pnUserGetLang();
 
     if(pnModIsHooked('bbcode', 'Dizkus')) {

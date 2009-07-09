@@ -19,16 +19,13 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_hook_showdiscussionlink($args)
 {
-    extract($args);
-    unset($args);
-
-    if(!isset($objectid) || empty($objectid) ) {
+    if(!isset($args['objectid']) || empty($args['objectid']) ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
 
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
-                             array('reference' => pnModGetIDFromName(pnModGetName()) . '-' . $objectid));
+                             array('reference' => pnModGetIDFromName(pnModGetName()) . '-' . $args['objectid']));
 
     if($topic_id <> false) {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
