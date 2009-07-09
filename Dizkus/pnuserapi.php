@@ -2519,9 +2519,11 @@ function Dizkus_userapi_notify_by_email($args)
             FROM " . $pntable['dizkus_topic_subscription'] . " as ts,
                  " . $pntable['dizkus_forums'] . " as f,
                  " . $pntable['dizkus_categories'] . " as c
+                 " . $pntable['dizkus_topics'] . " as t
             WHERE ts.topic_id=".DataUtil::formatForStore($topic_id)."
               " . $ts_wherenotuser . "
-              AND f.forum_id = ts.forum_id
+              AND t.topic_id = ts.topic_id
+              AND f.forum_id = t.forum_id
               AND c.cat_id = f.cat_id";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
@@ -2621,13 +2623,13 @@ function Dizkus_userapi_get_topic_subscriptions($args)
 
     // read the topic ids
     $sql = "SELECT ts.topic_id,
-                   ts.forum_id,
                    t.topic_title,
                    t.topic_poster,
                    t.topic_time,
                    t.topic_replies,
                    t.topic_last_post_id,
                    u.pn_uname,
+                   f.forum_id,
                    f.forum_name
             FROM $tstable AS ts,
                  $topicstable AS t,
@@ -2636,8 +2638,8 @@ function Dizkus_userapi_get_topic_subscriptions($args)
             WHERE (ts.user_id='".(int)DataUtil::formatForStore($user_id)."'
               AND t.topic_id=ts.topic_id
               AND u.pn_uid=ts.user_id
-              AND f.forum_id=ts.forum_id)
-            ORDER BY ts.forum_id, ts.topic_id";
+              AND f.forum_id=t.forum_id)
+            ORDER BY f.forum_id, ts.topic_id";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $subscriptions = array();
@@ -2687,28 +2689,22 @@ function Dizkus_userapi_get_topic_subscriptions($args)
  */
 function Dizkus_userapi_subscribe_topic($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
-        $user_id = pnUserGetVar('uid');
+        $args['user_id'] = pnUserGetVar('uid');
     }
 
-    list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id'=>$topic_id));
+    list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_read',$forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $user_id, 'topic_id' => $topic_id)) == false) {
+    if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
         // add user only if not already subscribed to the topic
-        $sql = "INSERT INTO ".$pntable['dizkus_topic_subscription']." (user_id, forum_id, topic_id)
-                VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."','".(int)DataUtil::formatForStore($topic_id)."')";
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        $sobj['topic_id'] = $args['topic_id'];
+        $sobj['user_id'] =  $args['user_id'];
+        DBUtil::insertObject($sobj, 'dizkus_topic_subscription');
     }
     return;
 }
@@ -2723,34 +2719,22 @@ function Dizkus_userapi_subscribe_topic($args)
  */
 function Dizkus_userapi_unsubscribe_topic($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $tsubtable  = $pntable['dizkus_topic_subscription'];
-    $tsubcolumn = $pntable['dizkus_topic_subscription_column'];
-
-    if (isset($user_id)) {
+    if (isset($args['user_id'])) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
-        $user_id = pnUserGetVar('uid');
+        $args['user_id'] = pnUserGetVar('uid');
     }
 
-    $wheretopic = '';
-    if (!empty($topic_id)) {
-        $wheretopic = ' AND ' . $tsubcolumn['topic_id'] . '=' . (int)DataUtil::formatForStore($topic_id);
+    $pntable = pnDBGetTables();
+
+    $where = 'WHERE ' . $pntable['dizkus_topic_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
+    if (!empty($args['topic_id'])) {
+        $where .= ' AND ' . $pntable['dizkus_topic_subscription_column']['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
     }
 
-    $sql = 'DELETE FROM ' .$tsubtable . '
-            WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) .
-            $wheretopic;
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
+    DBUtil::deleteWhere('dizkus_topic_subscription', $where);
     return;
 }
 

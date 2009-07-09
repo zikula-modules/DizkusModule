@@ -219,13 +219,10 @@ function Dizkus_pntables()
     //
     $pntable['dizkus_topic_subscription'] = DBUtil::getLimitedTablename('dizkus_topic_subscription');
     $pntable['dizkus_topic_subscription_column'] = array('topic_id' => 'topic_id',
-                                                         'forum_id' => 'forum_id',
                                                          'user_id'  => 'user_id');
     $pntable['dizkus_topic_subscription_column_def'] = array('topic_id'  => 'I NOTNULL DEFAULT 0',
-                                                             'forum_id'  => 'I NOTNULL DEFAULT 0',
                                                              'user_id'   => 'I NOTNULL DEFAULT 0');
     $pntable['dizkus_topic_subscription_column_idx'] = array ('topic_id' => 'topic_id',
-                                                              'forum_id' => 'forum_id',
                                                               'user_id'  => 'user_id');
 
     // new in 2.0.1
