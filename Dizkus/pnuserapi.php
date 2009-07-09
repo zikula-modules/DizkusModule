@@ -1909,7 +1909,7 @@ function Dizkus_userapi_updatepost($args)
 
             // the deleted posting was not the last one
             // adjust the users post count
-            Dizkus_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+            DBUtil::decrementObjectFieldByID('dizkus_users', 'user_posts', $poster_id, 'user_id');
 
             //
             // adjust the post counter in the forum, topic counter and last_post_id not changed
@@ -1965,7 +1965,7 @@ function Dizkus_userapi_updatepost($args)
                 //
                 // adjust the users post counter
                 //
-                Dizkus_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+                DBUtil::decrementObjectFieldByID ('dizkus_users', 'user_posts', $poster_id, 'user_id');
 
                 //
                 // adjust the post and topic counter and forum_last_post_id in the forum
@@ -2003,7 +2003,7 @@ function Dizkus_userapi_updatepost($args)
                 //
                 // adjust the users post counter
                 //
-                Dizkus_userapi_update_user_post_count(array('user_id' => $poster_id, 'mode' => 'dec'));
+                DBUtil::decrementObjectFieldByID ('dizkus_users', 'user_posts', $poster_id, 'user_id');
 
                 //
                 // adjust the post counter in the forum, topic counter not changed
@@ -2518,7 +2518,7 @@ function Dizkus_userapi_notify_by_email($args)
                             f.forum_id
             FROM " . $pntable['dizkus_topic_subscription'] . " as ts,
                  " . $pntable['dizkus_forums'] . " as f,
-                 " . $pntable['dizkus_categories'] . " as c
+                 " . $pntable['dizkus_categories'] . " as c,
                  " . $pntable['dizkus_topics'] . " as t
             WHERE ts.topic_id=".DataUtil::formatForStore($topic_id)."
               " . $ts_wherenotuser . "
@@ -2747,31 +2747,22 @@ function Dizkus_userapi_unsubscribe_topic($args)
  */
 function Dizkus_userapi_subscribe_forum($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-
-    if (isset($user_id) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
-        $user_id = pnUserGetVar('uid');
+        $args['user_id'] = pnUserGetVar('uid');
     }
 
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
-                          array('forum_id' => $forum_id));
+                          array('forum_id' => $args['forum_id']));
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (Dizkus_userapi_get_forum_subscription_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
+    if (Dizkus_userapi_get_forum_subscription_status($args) == false) {
         // add user only if not already subscribed to the forum
-        $sql = "INSERT INTO ".$pntable['dizkus_subscription']." (user_id, forum_id)
-                VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."')";
-
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        // we can use the args parameter as-is
+        DBUtil::insertObject($args, 'dizkus_subscription');
     }
 
     return;
@@ -2786,34 +2777,22 @@ function Dizkus_userapi_subscribe_forum($args)
  */
 function Dizkus_userapi_unsubscribe_forum($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $fsubtable  = $pntable['dizkus_subscription'];
-    $fsubcolumn = $pntable['dizkus_subscription_column'];
-
-    if (isset($user_id)) {
+    if (isset($args['user_id'])) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
-        $user_id = pnUserGetVar('uid');
+        $args['user_id'] = pnUserGetVar('uid');
     }
 
-    $whereforum = '';
-    if (!empty($forum_id)) {
-        $whereforum = ' AND ' . $fsubcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($forum_id);
+    $pntable = pnDBGetTables();
+
+    $where = $pntable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
+    if (!empty($args['forum_id'])) {
+        $where .= ' AND ' . $pntable['dizkus_subscription_column']['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
     }
 
-    $sql = 'DELETE FROM ' . $fsubtable . '
-            WHERE ' . $fsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) .
-            $whereforum;
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
+    DBUtil::deleteWhere('dizkus_subscription', $where);
     return;
 }
 
@@ -2826,29 +2805,21 @@ function Dizkus_userapi_unsubscribe_forum($args)
  */
 function Dizkus_userapi_add_favorite_forum($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (!isset($user_id)) {
-        $user_id = (int)pnUserGetVar('uid');
+    if (!isset($args['user_id'])) {
+        $args['user_id'] = (int)pnUserGetVar('uid');
     }
 
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
-                          array('forum_id' => $forum_id));
+                          array('forum_id' => $args['forum_id']));
 
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
     }
 
-    if (Dizkus_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == false) {
+    if (Dizkus_userapi_get_forum_favorites_status($args) == false) {
         // add user only if not already a favorite
-        $sql = "INSERT INTO ".$pntable['dizkus_forum_favorites']." (user_id, forum_id)
-                VALUES ('".(int)DataUtil::formatForStore($user_id)."','".(int)DataUtil::formatForStore($forum_id)."')";
-
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        // we can use the args parameter as-is
+        DBUtil::insertObject($args, 'dizkus_forum_favorites');
     }
     return;
 }
@@ -2862,25 +2833,15 @@ function Dizkus_userapi_add_favorite_forum($args)
  */
 function Dizkus_userapi_remove_favorite_forum($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (!isset($user_id)) {
-        $user_id = (int)pnUserGetVar('uid');
+    if (!isset($args['user_id'])) {
+        $args['user_id'] = (int)pnUserGetVar('uid');
     }
 
-    if (Dizkus_userapi_get_forum_favorites_status(array('userid' => $user_id, 'forum_id' => $forum_id)) == true) {
-        // remove from favorites
-        $sql = "DELETE FROM ".$pntable['dizkus_forum_favorites']."
-                WHERE user_id='".(int)DataUtil::formatForStore($user_id)."'
-                AND forum_id='".(int)DataUtil::formatForStore($forum_id)."'";
+    // remove from favorites - no need to check the favorite status, we delete it anyway
+    $where = "user_id='".(int)DataUtil::formatForStore($args['user_id'])."'
+              AND forum_id='".(int)DataUtil::formatForStore($args['forum_id'])."'";
 
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
-    }
-
+    DBUtil::deleteWhere('dizkus_forum_favorites', $where);
     return;
 }
 
@@ -3296,39 +3257,6 @@ function Dizkus_userapi_splittopic($args)
     dzkCloseDB($result);
 
     return $newtopic_id;
-}
-
-/**
- * update_user_post_count
- *
- *@params $args['user_id'] int the users id
- *@params $args['mode']    string, either "inc" (+1) or "dec" (-1)
- *@returns bool true or false
- */
-function Dizkus_userapi_update_user_post_count($args)
-{
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (!isset($user_id) || !isset($mode)) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
-    }
-    if (strtolower($mode)=='inc') {
-        $math = '+';
-    } elseif(strtolower($mode)=='dec') {
-        $math = '-';
-    } else {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
-    }
-
-    $sql = "UPDATE ".$pntable['dizkus_users']."
-            SET user_posts = user_posts $math 1
-            WHERE user_id = '".(int)DataUtil::formatForStore($user_id)."'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-    return true;
 }
 
 /**
