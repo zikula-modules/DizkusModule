@@ -1,14 +1,14 @@
 $Id$
 
-WebSnapr plugin for Zikula Version 1.1.x
-Version 1.3
+WebSnapr plugin for Zikula
+Version 1.4
 
 0. What
 -------
 WebSnapr (http://websnapr.com) lets you capture screenshots of web pages.
 This plugin for enables this screenshot as some kind of tooltip when moving
-the mouse over an external link. It is supposed to be used with PostNuke .763
-or later, it may also work with older versions, but this is untested.
+the mouse over an external link. It is supposed to be used with Zikula.
+
  
 1. Who
 ------
@@ -17,28 +17,28 @@ http://www.frequency-decoder.com/2006/10/25/link-preview-v2/ for more
 information.
 The PostNuke-integration is (c) 2006 by Landseer / Frank Schummertz 
 (frank.schummertz@landseer-stuttgart.de)
-modified for Zikula by Charlie 
+The plugin was modified for Zikula by Charlie and Carsten Volmer (herr.vorragend)
 A demo is available at http://postnuke-themes.de
 
 2. How
 ------
-Unlike the original Link Preview V2 this solution does not need any changes in the supplied 
-files.
+Unlike the original Link Preview V2 this solution does not need any changes in the supplied files.
 
 WebSnapr consists of
 
-system/pnRender/plugins/function.websnapr.php
-system/pnRender/pndocs/websnapr.txt
-system/pnRender/pnimages/ (containing several images
-system/pnRender/pnjavascript/websnapr.js
-system/pnRender/pnstyle/websnapr.js
+config/plugins/function.websnapr.php
+config/plugins/websnapr/websnapr.txt
+config/plugins/websnapr/websnapr.js
+config/plugins/websnapr/websnapr.css
+images/websnapr/ (containing several images)
 
-Copy the content of the supplied pnRender folder to the pnRender folder of
-your PostNuke installation.
-Change your Xanthia-theme and add
+Just copy the content of the package to your Zikula-root.
+
+After that, change your theme and add the following line somewhere in your template:
 <!--[websnapr]-->
-somewhere in the head of the theme. Preferred place is just in front of the </head> tag.
-Thats it.
+
+That's it.
+
 
 Load any page that contains an external link (=not linking to your domain) and you will
 see a screenshot of the site behind the link when you move the mouse over it. If there is
@@ -52,10 +52,11 @@ It's cool, that is enough reason for this. If you don't like, don't use it.
 If you like it, you can find my Amazon wishlist here:
 http://www.amazon.de/gp/registry/wishlist/ref=topnav__w/028-9479686-9674169
 
-4. Wassup
+4. Changelog
 ---------
 1.0 initial version
-1.1 fixed bug in detection of javascript links, added support for .8
+1.1 fixed bug in detection of javascript links, added support for Zikula
 1.2 fixed naming for loading image, fixed bug in url for loading images from websnapr.com
     (websnapr always delivered google.de previews)
-
+1.3 modified for Zikula by Charlie
+1.4 new directory-structure and Zikula-modifications by Carsten Volmer
