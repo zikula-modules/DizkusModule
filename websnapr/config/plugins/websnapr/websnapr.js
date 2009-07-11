@@ -1,4 +1,6 @@
 /*
+        $Id$
+
         A link preview system that uses the rather good snapshot service available
         from websnapr.com to display thumbnail previews.
 

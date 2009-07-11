@@ -1,3 +1,5 @@
+$Id$
+
 WebSnapr plugin for Zikula Version 1.1.x
 Version 1.3
 
