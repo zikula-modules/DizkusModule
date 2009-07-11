@@ -1,5 +1,5 @@
-WebSnapr plugin for PostNuke 0.76x
-Version 1.2
+WebSnapr plugin for Zikula Version 1.1.x
+Version 1.3
 
 0. What
 -------
@@ -15,7 +15,8 @@ http://www.frequency-decoder.com/2006/10/25/link-preview-v2/ for more
 information.
 The PostNuke-integration is (c) 2006 by Landseer / Frank Schummertz 
 (frank.schummertz@landseer-stuttgart.de)
-A demo is available at http://support.pn-cms.de
+modified for Zikula by Charlie 
+A demo is available at http://postnuke-themes.de
 
 2. How
 ------
@@ -24,11 +25,11 @@ files.
 
 WebSnapr consists of
 
-modules/pnRender/plugins/function.websnapr.php
-modules/pnRender/pndocs/websnapr.txt
-modules/pnRender/pnimages/ (containing several images)
-modules/pnRender/pnjavascript/websnapr.js
-modules/pnRender/pnstyle/websnapr.js
+system/pnRender/plugins/function.websnapr.php
+system/pnRender/pndocs/websnapr.txt
+system/pnRender/pnimages/ (containing several images
+system/pnRender/pnjavascript/websnapr.js
+system/pnRender/pnstyle/websnapr.js
 
 Copy the content of the supplied pnRender folder to the pnRender folder of
 your PostNuke installation.

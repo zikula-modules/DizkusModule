@@ -13,15 +13,15 @@
     position: absolute;
     width: 32px;
     height: 32px;
-    background:transparent url(../pnimages/loading.gif) no-repeat 0 0;
+    background:transparent url(/images/websnapr/loading.gif) no-repeat 0 0;
     visibility:hidden;
     z-index:9999;
 }
 #fdImageThumb div.imageLoaded {
-    background:transparent url(../pnimages/loading.gif) no-repeat 0 0;
+    background:transparent url(/images/websnapr/loading.gif) no-repeat 0 0;
 }
 #fdImageThumb div.imageError {
-    background:transparent url(../pnimages/error.gif) no-repeat 0 0;
+    background:transparent url(/images/websnapr/error.gif) no-repeat 0 0;
 }
 #fdImageThumb img {
     position:absolute;
@@ -34,9 +34,9 @@
 .leftTop {
     z-index: 9999;
     /* Good browsers */
-    background:transparent url(../pnimages/rt.png) no-repeat 0 0 !important;
+    background:transparent url(/images/websnapr/rt.png) no-repeat 0 0 !important;
     background:none;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/rt.png',sizingMethod='image');
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/websnapr/rt.png',sizingMethod='image');
 }
 .leftTop img {
     top:16px;
@@ -49,10 +49,10 @@
 .leftBottom {
     z-index: 9999;
     /* Good browsers */
-    background:transparent url(../pnimages/lb.png) no-repeat 0 0 !important;
+    background:transparent url(/images/websnapr/lb.png) no-repeat 0 0 !important;
     /* IE badness */
     background:none;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/lb.png',sizingMethod='image');
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/websnapr/lb.png',sizingMethod='image');
 }
 .leftBottom img {
     top:28px;
@@ -65,10 +65,10 @@
 .rightTop {
     z-index: 9999;
     /* Good browsers */
-    background:transparent url(../pnimages/lt.png) no-repeat 0 0 !important;
+    background:transparent url(/images/websnapr/lt.png) no-repeat 0 0 !important;
     /* IE badness */
     background:none;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/lt.png',sizingMethod='image');
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/websnapr/lt.png',sizingMethod='image');
 }
 .rightTop img {
     top:16px;
@@ -81,10 +81,10 @@
 .rightBottom {
     z-index: 9999;
     /* Good browsers */
-    background:transparent url(../pnimages/rb.png) no-repeat 0 0 !important;
+    background:transparent url(/images/websnapr/rb.png) no-repeat 0 0 !important;
     /* IE badness */
     background:none;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../pnimages/rb.png',sizingMethod='image');
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/websnapr/rb.png',sizingMethod='image');
 }
 .rightBottom img {
     top:28px;
