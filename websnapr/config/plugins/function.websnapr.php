@@ -20,5 +20,4 @@ function smarty_function_websnapr($params, &$smarty)
           ."</script>\n\n";  
 
     PageUtil::addVar('rawtext', $out);
-    return true;
 }
