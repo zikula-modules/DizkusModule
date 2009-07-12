@@ -533,13 +533,9 @@ function Dizkus_ajax_updatetopicsubject()
            dzk_ajaxerror(_BADAUTHKEY);
         }
 
-        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
-                             array('topic_id' => $topic_id,
-                                   'count'    => false,
-                                   'complete' => false));
-
-        if (!$topic['access_topicsubjectedit']) {
-            return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
+        list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
+        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+            dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
         }
 
         $subject = trim(DataUtil::convertFromUTF8($subject));
@@ -547,14 +543,9 @@ function Dizkus_ajax_updatetopicsubject()
             dzk_ajaxerror(_DZK_NOSUBJECT);
         }
 
-        list($dbconn, $pntable) = dzkOpenDB();
-
-        $sql = 'UPDATE '.$pntable['dizkus_topics'].'
-                SET topic_title = \'' . DataUtil::formatForStore($subject) . '\'
-                WHERE topic_id = \''.(int)DataUtil::formatForStore($topic_id).'\'';
-
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        $topic['topic_id']    = $topic_id;
+        $topic['topic_title'] = DataUtil::formatForStore($subject);
+        $res = DBUtil::updateObject($topic, 'dizkus_topics', '', 'topic_id');
 
         // Let any hooks know that we have updated an item.
         pnModCallHooks('item', 'update', $topic_id, array('module'   => 'Dizkus',

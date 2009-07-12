@@ -2139,7 +2139,7 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
     $colarray[] = 'forum_id';
     $colarray[] = 'cat_id';
     $objarray = DBUtil::marshallObjects ($res, $colarray);
-    return array_values($objarray[0]);
+    return array_values($objarray[0]); // forum_id, cat_id
 }
 
 /**
