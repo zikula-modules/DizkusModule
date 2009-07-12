@@ -2861,7 +2861,7 @@ function Dizkus_userapi_get_latest_posts($args)
         return array($posts, $m2fposts, $rssposts, $text);
     }
 
-    // now create a very simle array of forum_ids only. we do not need
+    // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
     $allowedforums = array_map('_get_forum_ids', $userforums);
     $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';

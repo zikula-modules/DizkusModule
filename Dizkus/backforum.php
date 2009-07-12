@@ -96,7 +96,7 @@ if(!empty($forum_id)) {
         // not allowed to see forum
         pnShutDown();
     }
-    $where = "AND t.forum_id = '" . (int)DataUtil::formatForStore($forum_id) . "' ";
+    $where = 'AND t.forum_id = ' . (int)DataUtil::formatForStore($forum_id) . ' ';
     $link = pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
     $forumname = $forum['forum_name'];
 } elseif (!empty($cat_id)) {
@@ -108,13 +108,19 @@ if(!empty($forum_id)) {
     if($category == false) {
         pnShutDown();
     }
-    $where = "AND f.cat_id = '" . (int)DataUtil::formatForStore($cat_id) . "' ";
+    $where = 'AND f.cat_id = ' . (int)DataUtil::formatForStore($cat_id) . ' ';
     $link = pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id), null, null, true);
     $forumname = $category['cat_title'];
 
 } elseif (isset($uid) && ($uid<>false)) {
-    $where = "AND p.poster_id=" . $uid . " ";
-}
+    $where = 'AND p.poster_id=' . $uid . ' ';
+} else {
+    $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
+    // now create a very simple array of forum_ids only. we do not need
+    // all the other stuff in the $userforums array entries
+    $allowedforums = array_map('_get_forum_ids', $userforums);
+    $where = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
+}    
 
 $pnr->assign('forum_name', $forumname);
 $pnr->assign('forum_link', $link);
@@ -126,74 +132,62 @@ $pnr->assign('adminmail', pnConfigGetVar('adminmail'));
  */
 
 pnModDBInfoLoad('Dizkus');
-list($dbconn, $pntable) = dzkOpenDB();
+
+$pntable = pnDBGetTables();
 
 /**
  * SQL statement to fetch last 10 topics
  */
-$sql = "SELECT t.topic_id,
-               t.topic_title,
-               t.topic_replies,
-               t.topic_last_post_id,
-               f.forum_id,
-               f.forum_name,
-               p.poster_id,
-               p.post_time,
-               c.cat_id,
-               c.cat_title
-        FROM ".$pntable['dizkus_topics']." as t,
-             ".$pntable['dizkus_forums']." as f,
-             ".$pntable['dizkus_posts']." as p,
-             ".$pntable['dizkus_categories']." as c
+$topicscols = DBUtil::_getAllColumnsQualified('dizkus_topics', 't');
+$sql = 'SELECT '.$topicscols.',
+                 f.forum_name,
+                 p.poster_id,
+                 p.post_time,
+                 c.cat_id,
+                 c.cat_title
+        FROM '.$pntable['dizkus_topics'].' as t,
+             '.$pntable['dizkus_forums'].' as f,
+             '.$pntable['dizkus_posts'].' as p,
+             '.$pntable['dizkus_categories'].' as c
         WHERE t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id
-              $where
+             '.$where.'
         ORDER BY p.post_time DESC
-        LIMIT 100";
-$result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-$result_postmax = $result->PO_RecordCount();
+        LIMIT ' . DataUtil::formatForStore($count);
 
-if ($result_postmax <= $count) {
-    $count = $result_postmax;
-}
-$shown_results=0;
 $posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
-$posts = array();
 
-while ((list($topic_id, $topic_title, $topic_replies, $topic_last_post_id, $forum_id, $forum_name, $poster_id, $post_time, $cat_id, $cat_title) = $result->FetchRow())
-              && ($shown_results < $count) ) {
-    if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        $post = array();
-        $post['topic_id']           = $topic_id;
-        $post['topic_title']        = $topic_title;
-        $post['topic_replies']      = $topic_replies;
-        $post['topic_last_post_id'] = $topic_last_post_id;
-        $post['forum_id']           = $forum_id;
-        $post['forum_name']         = $forum_name;
-        $post['poster_id']          = $poster_id;
-        $post['time']               = $post_time;
-        $post['unixtime']           = strtotime ($post['time']);
-        $post['cat_id']             = $cat_id;
-        $post['cat_title']          = $cat_title;
-        $shown_results++;
-        $start = ((ceil(($topic_replies + 1)  / $posts_per_page) - 1) * $posts_per_page);
-        $post['post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
-                                     array('topic' => $topic_id,
-                                           'start' => $start), 
-                                     null, null, true);
-        $post['last_post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
-                                          array('topic' => $topic_id,
-                                                'start' => $start), 
-                                          null, "pid" . $topic_last_post_id, true);
+$res = DBUtil::executeSQL($sql);
 
-        array_push($posts, $post);
-    }
+$colarray = DBUtil::getColumnsArray ('dizkus_topics');
+$colarray[] = 'forum_name';
+$colarray[] = 'poster_id';
+$colarray[] = 'post_time';
+$colarray[] = 'cat_id';
+$colarray[] = 'cat_title';
+
+$posts = DBUtil::marshallObjects($res, $colarray);
+
+$keys = array_keys($posts);
+foreach ($keys as $key) {
+    $posts[$key]['time'] = $posts[$key]['post_time'];
+    $posts[$key]['unixtime'] = strtotime ($posts[$key]['post_time']);
+    $start = (int)((ceil(($posts[$key]['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
+    $posts[$key]['post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
+                                 array('topic' => $posts[$key]['topic_id'],
+                                       'start' => $start), 
+                                 null, null, true);
+    $posts[$key]['last_post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
+                                      array('topic' => $posts[$key]['topic_id'],
+                                            'start' => $start), 
+                                      null, "pid" . $posts[$key]['topic_last_post_id'], true);
+    $posts[$key]['rsstime'] = strftime('%a, %d %b %Y %H:%M:%S %Z', $posts[$key]['post_unixtime']);
 }
 
-dzkCloseDB($result);
 $pnr->assign('posts', $posts);
 $pnr->assign('now', time());
+$pnr->assign('lastbuilddate', strftime('%a, %d %b %Y %H:%M:%S %Z', time()));
 $pnr->assign('dizkusinfo', $dzkinfo);
 
 header("Content-Type: text/xml");

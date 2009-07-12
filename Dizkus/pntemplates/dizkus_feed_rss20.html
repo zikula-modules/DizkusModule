@@ -38,7 +38,7 @@ soon as possible!
     
     <pubDate><!--[ $now|pndate_format:"%a, %d %b %Y %T %Z" ]--></pubDate>
     
-    <lastBuildDate><!--[ $now|pndate_format:"%a, %d %b %Y %T %Z" ]--></lastBuildDate>
+    <lastBuildDate><!--[ $lastbuilddate ]--></lastBuildDate>
     
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
     <generator>Dizkus <!--[ $dizkusinfo.version]--></generator>
@@ -50,7 +50,7 @@ soon as possible!
         <title><!--[ $post.topic_title|pnvarprepfordisplay ]--></title>
         <link><!--[ $post.last_post_url|pnvarprepfordisplay ]--></link>
         <description><!--[ $post.cat_title|pnvarprepfordisplay ]--> :: <!--[ $post.forum_name|pnvarprepfordisplay ]--></description>
-        <pubDate><!--[ $post.unixtime|pnfdate_format:"%a, %d %b %Y %T %Z":'':true ]--></pubDate>
+        <pubDate><!--[ $post.rsstime ]--></pubDate>
         
     </item>
     <!--[ /foreach ]-->
