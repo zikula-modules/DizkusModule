@@ -776,9 +776,6 @@ function Dizkus_user_emailtopic($args=array())
         }
     }
 
-//    $topic = pnModAPIFunc('Dizkus', 'user', 'prepareemailtopic',
-//                          array('topic_id'   => $topic_id));
-
     if(!empty($submit)) {
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
@@ -790,15 +787,15 @@ function Dizkus_user_emailtopic($args=array())
                            'subject'      => $emailsubject));
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
     } else {
-        $topic = pnModAPIFunc('Dizkus', 'user', 'prepareemailtopic',
+        $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id));
-        $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_subject'];
+        $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
         $pnr = pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('topic', $topic);
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
         $pnr->assign('emailsubject', $emailsubject);
-        $pnr->assign('message', DataUtil::formatForDisplay(_DZK_EMAILTOPICMSG) ."\n\n" . pnGetBaseURL() . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id)));
+        $pnr->assign('message', DataUtil::formatForDisplay(_DZK_EMAILTOPICMSG) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('dizkus_user_emailtopic.html');

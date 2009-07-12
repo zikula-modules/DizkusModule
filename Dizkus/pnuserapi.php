@@ -1620,61 +1620,59 @@ function Dizkus_userapi_storenewtopic($args)
  */
 function Dizkus_userapi_readpost($args)
 {
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
+    $postscols = DBUtil::_getAllColumnsQualified('dizkus_posts', 'p');
 
-    // we know about the post_id, let's find out the forum and catgeory name for permission checks
-    $sql = "SELECT p.post_id,
-                    p.post_time,
-                    p.post_text,
-                    p.poster_id,
-                    t.topic_id,
-                    t.topic_title,
-                    t.topic_replies,
-                    f.forum_id,
-                    f.forum_name,
-                    c.cat_title,
-                    c.cat_id
-            FROM ".$pntable['dizkus_posts']." p
-            LEFT JOIN ".$pntable['dizkus_topics']." t ON t.topic_id = p.topic_id
-            LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['dizkus_categories']." c ON c.cat_id = f.cat_id
-            WHERE (p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."')";
+    $sql = 'SELECT '. $postscols .',
+                      t.topic_title,
+                      t.topic_replies,
+                      f.forum_name,
+                      c.cat_title,
+                      c.cat_id
+            FROM '.$pntable['dizkus_posts'].' p
+            LEFT JOIN '.$pntable['dizkus_topics'].' t ON t.topic_id = p.topic_id
+            LEFT JOIN '.$pntable['dizkus_forums'].' f ON f.forum_id = t.forum_id
+            LEFT JOIN '.$pntable['dizkus_categories'].' c ON c.cat_id = f.cat_id
+            WHERE p.post_id = '.(int)DataUtil::formatForStore($args['post_id']);
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    if($result->EOF) {
-        // no results - topic does not exist
+    $result = DBUtil::executeSQL($sql);
+    if ($result === false) {
         return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
-    } else {
-        $myrow = $result->GetRowAssoc(false);
     }
-    dzkCloseDB($result);
 
-    $post = array();
-    $post['post_id']      = DataUtil::formatForDisplay($myrow['post_id']);
-    $post['post_time']    = DataUtil::formatForDisplay($myrow['post_time']);
-    $message              = $myrow['post_text'];
+    $colarray     = DBUtil::getColumnsArray ('dizkus_posts');
+    $colarray[] = 'topic_title';
+    $colarray[] = 'topic_replies';
+    $colarray[] = 'forum_name';
+    $colarray[] = 'cat_title';
+    $colarray[] = 'cat_id';
+
+    $objarray = DBUtil::marshallObjects ($result, $colarray);
+    $post = $objarray[0];
+    if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
+        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+    }
+    
+    $post['post_id']      = DataUtil::formatForDisplay($post['post_id']);
+    $post['post_time']    = DataUtil::formatForDisplay($post['post_time']);
+    $message              = $post['post_text'];
     $post['has_signature']= (substr($message, -8, 8)=='[addsig]');
     $post['post_rawtext'] = Dizkus_replacesignature($message, '');
     $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
     $post['post_rawtext'] = eregi_replace('<br />', '', $post['post_rawtext']);
 
-    $post['topic_id']     = DataUtil::formatForDisplay($myrow['topic_id']);
-    $post['topic_rawsubject']= strip_tags($myrow['topic_title']);
-    $post['topic_subject']= DataUtil::formatForDisplay($myrow['topic_title']);
-    $post['topic_replies']= DataUtil::formatForDisplay($myrow['topic_replies']);
-    $post['forum_id']     = DataUtil::formatForDisplay($myrow['forum_id']);
-    $post['forum_name']   = DataUtil::formatForDisplay($myrow['forum_name']);
-    $post['cat_title']    = DataUtil::formatForDisplay($myrow['cat_title']);
-    $post['cat_id']       = DataUtil::formatForDisplay($myrow['cat_id']);
-    $post['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $myrow['poster_id']));
+    $post['topic_id']     = DataUtil::formatForDisplay($post['topic_id']);
+    $post['topic_rawsubject']= strip_tags($post['topic_title']);
+    $post['topic_subject']= DataUtil::formatForDisplay($post['topic_title']);
+    $post['topic_replies']= DataUtil::formatForDisplay($post['topic_replies']);
+    $post['forum_id']     = DataUtil::formatForDisplay($post['forum_id']);
+    $post['forum_name']   = DataUtil::formatForDisplay($post['forum_name']);
+    $post['cat_title']    = DataUtil::formatForDisplay($post['cat_title']);
+    $post['cat_id']       = DataUtil::formatForDisplay($post['cat_id']);
+    $post['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $post['poster_id']));
     // create unix timestamp
     $post['post_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
     $post['posted_unixtime'] = $post['post_unixtime'];
-
-    if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
-    }
 
     $pn_uid = pnUserGetVar('uid');
     $post['moderate'] = false;
@@ -1882,13 +1880,7 @@ function Dizkus_userapi_updatepost($args)
 
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         dzkCloseDB($result);
-/*
-        // delete the post from the posts_text table
-//      $sql = "DELETE FROM ".$pntable['dizkus_posts_text']."
-                WHERE post_id = '".(int)DataUtil::formatForStore($post_id)."'";
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
-*/
+
         // Let any hooks know that we have deleted an item.
         //pnModCallHooks('item', 'delete', $post_id, array('module' => 'Dizkus'));
 
@@ -2129,7 +2121,7 @@ function Dizkus_userapi_stickyunstickytopic($args)
  */
 function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
 {
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
     // we know about the topic_id, let's find out the forum and catgeory name for permission checks
     $sql = "SELECT f.forum_id,
@@ -2139,19 +2131,15 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
             LEFT JOIN ".$pntable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
             WHERE t.topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    if($result->EOF) {
-        // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
-    } else {
-        $myrow = $result->GetRowAssoc(false);
+    $res = DBUtil::executeSQL($sql);
+    if ($res === false) {
+        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
-    dzkCloseDB($result);
 
-    $forum_id = DataUtil::formatForDisplay($myrow['forum_id']);
-    $cat_id = DataUtil::formatForDisplay($myrow['cat_id']);
-
-    return array( $forum_id, $cat_id);
+    $colarray[] = 'forum_id';
+    $colarray[] = 'cat_id';
+    $objarray = DBUtil::marshallObjects ($res, $colarray);
+    return array_values($objarray[0]);
 }
 
 /**
@@ -2164,83 +2152,45 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
  */
 function Dizkus_userapi_readuserforums($args)
 {
-    extract($args);
-    unset($args);
+    $pntable = pnDBGetTables();
+    $forumscols = DBUtil::_getAllColumnsQualified('dizkus_forums', 'f');
 
-    if(!empty($cat_id) && !empty($forum_id)) {
-        if(!allowedtoseecategoryandforum($cat_id, $forum_id)) {
-            return showforumerror(getforumerror('auth_overview',$forum_id, 'forum', _DZK_NOAUTH_TOSEE), __FILE__, __LINE__);
-        }
+    if(isset($args['forum_id'])) {
+        $where = 'WHERE f.forum_id=' . DataUtil::formatForStore($args['forum_id']) . ' ';
+    } elseif (isset($args['cat_id'])) {
+        $where = 'WHERE c.cat_id=' . DataUtil::formatForStore($args['cat_id']) . ' ';
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
+    $sql = 'SELECT ' . $forumscols . ',
+                       c.cat_title
+            FROM ' . $pntable['dizkus_forums'] . ' f
+            LEFT JOIN ' . $pntable['dizkus_categories'] . ' AS c
+            ON c.cat_id=f.cat_id ' .
+            $where . '
+            ORDER BY c.cat_order, f.forum_order';
 
-    $where = '';
-    if(isset($forum_id)) {
-        $where = 'WHERE f.forum_id=' . DataUtil::formatForStore($forum_id) . ' ';
-    } elseif (isset($cat_id)) {
-        $where = 'WHERE c.cat_id=' . DataUtil::formatForStore($cat_id) . ' ';
+    $result = DBUtil::executeSQL($sql);
+    if ($result === false) {
+        return showforumerror(_DZK_FORUM_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
-    $sql = "SELECT f.forum_name,
-                   f.forum_id,
-                   f.forum_desc,
-                   f.forum_order,
-                   f.forum_topics,
-                   f.forum_posts,
-                   f.forum_pop3_active,
-                   f.forum_pop3_server,
-                   f.forum_pop3_port,
-                   f.forum_pop3_login,
-                   f.forum_pop3_password,
-                   f.forum_pop3_interval,
-                   f.forum_pop3_lastconnect,
-                   f.forum_pop3_matchstring,
-                   f.forum_pop3_pnuser,
-                   f.forum_pop3_pnpassword,
-                   f.forum_moduleref,
-                   f.forum_pntopic,
-                   c.cat_title,
-                   c.cat_id
-            FROM ".$pntable['dizkus_forums']." AS f
-            LEFT JOIN ".$pntable['dizkus_categories']." AS c
-            ON c.cat_id=f.cat_id
-            $where
-            ORDER BY c.cat_order, f.forum_order";
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $colarray     = DBUtil::getColumnsArray ('dizkus_forums');
+    $colarray[] = 'cat_title';
+    $permFilter[]  = array ('realm'            =>  0,
+                            'component_left'   =>  'Dizkus',
+                            'component_middle' =>  '',
+                            'component_right'  =>  '',
+                            'instance_left'    =>  'cat_id',
+                            'instance_middle'  =>  'forum_id',
+                            'instance_right'   =>  '',
+                            'level'            =>  ACCESS_READ);
 
-    $forums = array();
-    if($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
-            $forum = array();
-            list( $forum['forum_name'],
-                  $forum['forum_id'],
-                  $forum['forum_desc'],
-                  $forum['forum_order'],
-                  $forum['forum_topics'],
-                  $forum['forum_posts'],
-                  $forum['pop3_active'],
-                  $forum['pop3_server'],
-                  $forum['pop3_port'],
-                  $forum['pop3_login'],
-                  $forum['pop3_password'],
-                  $forum['pop3_interval'],
-                  $forum['pop3_lastconnect'],
-                  $forum['pop3_matchstring'],
-                  $forum['pop3_pnuser'],
-                  $forum['pop3_pnpassword'],
-                  $forum['forum_moduleref'],
-                  $forum['forum_pntopic'],
-                  $forum['cat_title'],
-                  $forum['cat_id'] ) = $result->fields;
-            if(allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-                array_push( $forums, $forum );
-            }
-        }
+    $forums = DBUtil::marshallObjects ($result, $colarray);
+    if (empty($forums)) {
+        return $forums;
     }
-    dzkCloseDB($result);
-    if(isset($forum_id)) {
+    
+    if(isset($args['forum_id'])) {
         return $forums[0];
     }
     return $forums;
@@ -2801,57 +2751,6 @@ function Dizkus_userapi_remove_favorite_forum($args)
 
     DBUtil::deleteWhere('dizkus_forum_favorites', $where);
     return;
-}
-
-/**
- * prepareemailtopic
- * prepares data for sending a "look at this topic" mail.
- *
- *@params $args['topic_id'] int the topics id
- *returns array with topic information
- */
-function Dizkus_userapi_prepareemailtopic($args)
-{
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $sql = "SELECT t.topic_title,
-                   t.topic_id,
-                   t.forum_id,
-                   f.forum_name,
-                   f.cat_id,
-                   c.cat_title
-            FROM  ".$pntable['dizkus_topics']." t
-            LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
-            LEFT JOIN ".$pntable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    if ($result->EOF) {
-        // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
-    } else {
-        $myrow = $result->GetRowAssoc(false);
-    }
-    dzkCloseDB($result);
-
-    $topic['topic_id'] = DataUtil::formatForDisplay($myrow['topic_id']);
-    $topic['forum_name'] = DataUtil::formatForDisplay($myrow['forum_name']);
-    $topic['cat_title'] = DataUtil::formatForDisplay($myrow['cat_title']);
-    $topic['forum_id'] = DataUtil::formatForDisplay($myrow['forum_id']);
-    $topic['cat_id'] = DataUtil::formatForDisplay($myrow['cat_id']);
-    $topic['topic_subject'] = DataUtil::formatForDisplay($myrow['topic_title']);
-
-    /**
-     * base security check
-     */
-    if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
-    }
-    return $topic;
 }
 
 /**
