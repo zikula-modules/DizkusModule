@@ -797,49 +797,10 @@ function Dizkus_userapi_readtopic($args)
     $coltopics = $pntable['dizkus_topics_column'];
     $colforums = $pntable['dizkus_forums_column'];
     $colcats   = $pntable['dizkus_categories_column'];
-/*
-    $sql = "SELECT    $coltopics[topic_title],
-                      $coltopics[topic_status],
-                      $coltopics[topic_poster],
-                      $coltopics[forum_id],
-                      $coltopics[sticky],
-                      $coltopics[topic_time],
-                      $coltopics[topic_replies],
-                      $coltopics[topic_last_post_id],
-                      $colforums[forum_name],
-                      $colforums[cat_id],
-                      $colforums[forum_pop3_active],
-                      $colcats[cat_title]
-            FROM      $tbltopics
-            LEFT JOIN $tblforums
-            ON        $colforums[forum_id] = $coltopics[forum_id]
-            LEFT JOIN $tblcats
-            ON        $colcats[cat_id]     = $colforums[cat_id]
-            WHERE     $coltopics[topic_id] = '".(int)DataUtil::formatForStore($topic_id)."'";
-*/
 
     $pntables = pnDBGetTables();
     $topicscolumn = $pntables['dizkus_topics_column'];
-/*
-    $joinarray = array();
-    // join for forums table
-    $joinarray[] = array('join_table'          => 'dizkus_forums',
-                         'join_field'          => array('forum_name', 'cat_id'),
-                         'object_field_name'   => array('forum_name', 'cat_id'),
-                         'compare_field_table' => 'forum_id',
-                         'compare_field_join'  => 'forum_id');
-    // join for categories table
-    $joinarray[] = array('base_table'          => 'dizkus_forums',
-                         'join_table'          => 'dizkus_categories',
-                         'join_field'          => array('cat_title'),
-                         'object_field_name'   => array('cat_title'),
-                         'compare_field_table' => 'cat_id',
-                         'compare_field_join'  => 'cat_id');
-    $where = 'WHERE ' . $topicscolumn['topic_id'] . '=' . DataUtil::formatForStore($topic_id);
-    $topic = DBUtil::selectExpandedObject('dizkus_topics', $joinarray, $where);
-prayer($topic);
-pnShutDown();
-*/
+
     $sql = "SELECT t.topic_title,
                    t.topic_poster,
                    t.topic_status,
@@ -1259,7 +1220,7 @@ function Dizkus_userapi_storereply($args)
         return showforumerror(_DZK_EMPTYMSG, __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
     /*
     it's a submitted page and message is not empty
@@ -3100,16 +3061,11 @@ function Dizkus_userapi_splittopic($args)
  */
 function Dizkus_userapi_get_previous_or_next_topic_id($args)
 {
-    extract($args);
-    unset($args);
-
-    if (!isset($topic_id) || !isset($view) ) {
+    if (!isset($args['topic_id']) || !isset($args['view']) ) {
         return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    switch ($view) {
+    switch ($args['view']) {
         case 'previous':
             $math = '<';
             $sort = 'DESC';
@@ -3121,6 +3077,8 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
         default:
             return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
     }
+
+    $pntable = pnDBGetTables();
 
     // integrate contactlist's ignorelist here
     $whereignorelist = '';
@@ -3137,24 +3095,19 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
         }
     }
 
-    $sql = "SELECT t1.topic_id
-            FROM ".$pntable['dizkus_topics']." AS t1,
-                 ".$pntable['dizkus_topics']." AS t2
-            WHERE t2.topic_id = ".(int)DataUtil::formatForStore($topic_id)."
-              AND t1.topic_time $math t2.topic_time
+    $sql = 'SELECT t1.topic_id
+            FROM '.$pntable['dizkus_topics'].' AS t1,
+                 '.$pntable['dizkus_topics'].' AS t2
+            WHERE t2.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']).'
+              AND t1.topic_time '.$math.' t2.topic_time
               AND t1.forum_id = t2.forum_id
               AND t1.sticky = 0
-              ".$whereignorelist."
-            ORDER BY t1.topic_time $sort";
-    $result = dzkSelectLimit($dbconn, $sql, 1, false, __FILE__, __LINE__);
+              '.$whereignorelist.'
+            ORDER BY t1.topic_time '.$sort;
 
-    if (!$result->EOF) {
-        $row = $result->GetRowAssoc(false);
-        $topic_id = $row['topic_id'];
-    }
-    dzkCloseDB($result);
-
-    return $topic_id;
+    $res = DBUtil::executeSQL($sql, -1, 1);
+    $newtopic = DBUtil::marshallObjects($res, array('topic_id'));
+    return $newtopic[0]['topic_id'];
 }
 
 /**
@@ -3559,12 +3512,9 @@ function Dizkus_userapi_mailcron($args)
         }
 
         // store the timestamp of the last connection to the database
-        list($dbconn, $pntable) = dzkOpenDB();
-        $sql = "UPDATE ".$pntable['dizkus_forums']."
-                SET forum_pop3_lastconnect='". DataUtil::formatForStore(time()) . "'
-                WHERE forum_id=" . DataUtil::formatForStore($forum['forum_id']) . "";
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        dzkCloseDB($result);
+        $fobj['forum_pop3_lastconnect'] = DataUtil::formatForStore(time());
+        $fobj['forum_id']               = DataUtil::formatForStore($forum['forum_id']);
+        DBUtil::updateObject($fobj, 'dizkus_forums', '', 'forum_id');
     }
 
     return;
@@ -3587,7 +3537,7 @@ function Dizkus_userapi_testpop3connection($args)
                           array('forum_id' => $args['forum_id']));
     Loader::includeOnce('modules/Dizkus/pnincludes/pop3.php');
 
-    $pop3 =& new pop3_class;
+    $pop3 = new pop3_class;
     $pop3->hostname = $forum['pop3_server'];
     $pop3->port     = $forum['pop3_port'];
 
@@ -3779,18 +3729,15 @@ function Dizkus_userapi_get_last_topic_page($args)
  */
 function Dizkus_userapi_jointopics($args)
 {
-    extract($args); // $new_topic, $old_topic (parameters)
-    unset($args);
-
     // check if from_topic exists. this function will return an error if not
-    $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
+    $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
     }
 
     // check if to_topic exists. this function will return an error if not
-    $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
+    $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
