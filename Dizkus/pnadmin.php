@@ -126,6 +126,10 @@ function Dizkus_admin_assignranks()
     $lastletter = FormUtil::getPassedValue('lastletter');
     $page       = (int)FormUtil::getPassedValue('page', 1, 'GETPOST');
 
+    // sync the current user, so that new users
+    // get into the Dizkus database
+    pnModAPIFunc('Dizkus', 'admin', 'sync', array('type' => 'all users')); 
+
     // check for a letter parameter
     if(!empty($lastletter)) {
         $letter = $lastletter;
