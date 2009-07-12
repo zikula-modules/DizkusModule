@@ -1640,7 +1640,7 @@ function Dizkus_userapi_readpost($args)
         return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
     }
 
-    $colarray     = DBUtil::getColumnsArray ('dizkus_posts');
+    $colarray   = DBUtil::getColumnsArray ('dizkus_posts');
     $colarray[] = 'topic_title';
     $colarray[] = 'topic_replies';
     $colarray[] = 'forum_name';
@@ -2795,18 +2795,15 @@ function Dizkus_userapi_emailtopic($args)
  */
 function Dizkus_userapi_get_latest_posts($args)
 {
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
     // init some arrays
     $posts = array();
     $m2fposts = array();
     $rssposts = array();
 
-    if (!isset($limit) || empty($limit) || ($limit < 0) || ($limit > 100)) {
-        $limit = 100;
+    if (!isset($args['limit']) || empty($args['limit']) || ($args['limit'] < 0) || ($args['limit'] > 100)) {
+        $args['limit'] = 100;
     }
 
     $dizkusvars = pnModGetVar('Dizkus');
@@ -2814,15 +2811,15 @@ function Dizkus_userapi_get_latest_posts($args)
     $post_sort_order = $dizkusvars['post_sort_order'];
     $hot_threshold   = $dizkusvars['hot_threshold'];
 
-    if ($unanswered == 1) {
-        $unanswered = "AND t.topic_replies = '0' ORDER BY t.topic_time DESC";
+    if ($args['unanswered'] == 1) {
+        $args['unanswered'] = "AND t.topic_replies = '0' ORDER BY t.topic_time DESC";
     } else {
-        $unanswered = 'ORDER BY t.topic_time DESC';
+        $args['unanswered'] = 'ORDER BY t.topic_time DESC';
     }
 
     // sql part per selected time frame
 
-    switch ($selorder)
+    switch ($args['selorder'])
     {
         case '2' : // today
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ";
@@ -2837,12 +2834,12 @@ function Dizkus_userapi_get_latest_posts($args)
                    $text= _DZK_LASTWEEK;
                    break;
         case '5' : // last x hours
-                   $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($nohours) . " HOUR) ";
-                   $text = _DZK_LAST . ' ' . $nohours . ' ' . _DZK_HOURS;
+                   $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($args['nohours']) . " HOUR) ";
+                   $text = _DZK_LAST . ' ' . DataUtil::formatForDisplay($args['nohours']) . ' ' . _DZK_HOURS;
                    break;
         case '6' : // last visit
-                   $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($last_visit) . "' ";
-                   $text = _DZK_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $last_visit_unix);
+                   $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($args['last_visit']) . "' ";
+                   $text = _DZK_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $args['last_visit_unix']);
                    break;
         case '7' : // last x posts
                    $wheretime = "";
@@ -2866,10 +2863,7 @@ function Dizkus_userapi_get_latest_posts($args)
 
     // now create a very simle array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
-    $allowedforums = array();
-    for ($i = 0; $i < count($userforums); $i++) {
-        array_push($allowedforums, $userforums[$i]['forum_id']);
-    }
+    $allowedforums = array_map('_get_forum_ids', $userforums);
     $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
 
     // integrate contactlist's ignorelist here
@@ -2889,65 +2883,42 @@ function Dizkus_userapi_get_latest_posts($args)
         }
     }
 
+    $topicscols = DBUtil::_getAllColumnsQualified('dizkus_topics', 't');
     // build the tricky sql
-    $sql = "SELECT    t.topic_id,
-                      t.topic_title,
-                      t.topic_replies,
-                      t.topic_last_post_id,
-                      t.sticky,
-                      t.topic_status,
-                      f.forum_id,
+    $sql = 'SELECT '. $topicscols .',
                       f.forum_name,
                       f.forum_pop3_active,
                       c.cat_id,
                       c.cat_title,
                       p.post_time,
                       p.poster_id
-          FROM        ".$pntable['dizkus_topics']." AS t,
-                      ".$pntable['dizkus_forums']." AS f,
-                      ".$pntable['dizkus_categories']." AS c,
-                      ".$pntable['dizkus_posts']." AS p
+          FROM        '.$pntable['dizkus_topics'].' AS t,
+                      '.$pntable['dizkus_forums'].' AS f,
+                      '.$pntable['dizkus_categories'].' AS c,
+                      '.$pntable['dizkus_posts'].' AS p
           WHERE f.forum_id = t.forum_id
             AND c.cat_id = f.cat_id
             AND p.post_id = t.topic_last_post_id
-            AND " .
+            AND ' .
             $whereforum .
             $wheretime .
             $whereignorelist .
-            $unanswered;
+            $args['unanswered'];
 
-//pnfdebug('sql', $sql, true);
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $res = DBUtil::executeSQL($sql, -1, $args['limit']);
+                
+    $colarray   = DBUtil::getColumnsArray ('dizkus_topics');
+    $colarray[] = 'forum_name';
+    $colarray[] = 'forum_pop3_active';
+    $colarray[] = 'cat_id';
+    $colarray[] = 'cat_title';
+    $colarray[] = 'post_time';
+    $colarray[] = 'poster_id';
+    $postarray = DBUtil::marshallObjects ($res, $colarray);
 
-    $limit_reached = false;
-    while ((list($topic_id,
-                 $topic_title,
-                 $topic_replies,
-                 $topic_last_post_id,
-                 $sticky,
-                 $topic_status,
-                 $forum_id,
-                 $forum_name,
-                 $pop3_active,
-                 $cat_id,
-                 $cat_title,
-                 $post_time,
-                 $poster_id) = $result->fields) && !$limit_reached ) {
-
-        $post = array();
-        $post['topic_id'] = DataUtil::formatForDisplay($topic_id);
-        $post['topic_title'] = DataUtil::formatForDisplay($topic_title);
-        $post['forum_id'] = DataUtil::formatForDisplay($forum_id);
-        $post['forum_name'] = DataUtil::formatForDisplay($forum_name);
-        $post['cat_id'] = DataUtil::formatForDisplay($cat_id);
-        $post['cat_title'] = DataUtil::formatForDisplay($cat_title);
-        $post['topic_replies'] = DataUtil::formatForDisplay($topic_replies);
-        $post['topic_last_post_id'] = DataUtil::formatForDisplay($topic_last_post_id);
-        $post['sticky'] = DataUtil::formatForDisplay($sticky);
-        $post['topic_status'] = DataUtil::formatForDisplay($topic_status);
-        $post['post_time'] = DataUtil::formatForDisplay($post_time);
-        $post['poster_id'] = DataUtil::formatForDisplay($poster_id);
-
+    foreach ($postarray as $post) {
+        $post = DataUtil::formatForDisplay($post);
+        
         // does this topic have enough postings to be hot?
         $post['hot_topic'] = ($post['topic_replies'] >= $hot_threshold) ? true : false;
 
@@ -2978,30 +2949,33 @@ function Dizkus_userapi_get_latest_posts($args)
 
         $post['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
                                                      array('topic' => $post['topic_id'],
-                                                           'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page)));
+                                                           'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page), null, null, true));
 
         $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
 
-        switch ((int)$pop3_active)
+        switch ((int)$post['forum_pop3_active'])
         {
             case 1: // mail2forum
                 array_push($m2fposts, $post);
-                $limit_reached = count($m2fposts) > $limit;
                 break;
             case 2:
                 array_push($rssposts, $post);
-                $limit_reached = count($rssposts) > $limit;
                 break;
             case 0: // normal posting
             default:
                 array_push($posts, $post);
-                $limit_reached = count($posts) > $limit;
         }
-        $result->MoveNext();
     }
-    dzkCloseDB($result);
-
     return array($posts, $m2fposts, $rssposts, $text);
+}
+
+/*
+ * helper function to extract forum_ids from forum array
+ *
+ */
+function _get_forum_ids($f)
+{
+    return $f['forum_id'];
 }
 
 /**
@@ -3196,9 +3170,6 @@ function Dizkus_userapi_getfavorites($args)
 {
     static $tree;
 
-    extract($args);
-    unset($args);
-
     // if we have already gone through this once then don't do it again
     // if we have a favorites block displayed and are looking at the
     // forums this will get called twice.
@@ -3208,33 +3179,20 @@ function Dizkus_userapi_getfavorites($args)
 
     // lets get all the forums just like we would a normal display
     // we'll figure out which ones aren't needed further down.
-    $tree = pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit ));
+    $tree = pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $args['last_visit'] ));
 
     // if they are anonymous they can't have favorites
     if (!pnUserLoggedIn()) {
         return $tree;
     }
 
-    if (!isset($user_id)) {
-        $user_id = (int)pnUserGetVar('uid');
+    if (!isset($args['user_id'])) {
+        $args['user_id'] = (int)pnUserGetVar('uid');
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $sql = "SELECT f.forum_id
-            FROM ".$pntable['dizkus_forum_favorites']." AS f
-            WHERE f.user_id='" . (int)DataUtil::formatForStore($user_id) . "'";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    // make sure we start with an empty array
-    $favoritesArray = array();
-    while(!$result->EOF) {
-        list($forum_id) = $result->fields;
-        // add this favorite to the favorites array
-        array_push($favoritesArray, (int)$forum_id);
-        $result->MoveNext();
-    }
-    dzkCloseDB($result);
+    $pntable = pnDBGetTables();
+    $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $pntable['dizkus_forum_favorites_column']['user_id'] - '=' . (int)DataUtil::formatForStore($args['user_id']));
+    $favorites = array_map('_get_favorites', $objarray);
 
     // categoryCount is needed since the categories aren't stored as numerical
     // indexes.  They are stored as associative arrays.
@@ -3247,9 +3205,9 @@ function Dizkus_userapi_getfavorites($args)
         // but the foreach is working on a copy of the array so the $forumIndex
         // value will point to non-existent elements in the modified array.
         $count = 0;
-        foreach ($category['forums'] as $forumIndex=>$forum) {
+        foreach ($category['forums'] as $forumIndex => $forum) {
             // if this isn't one of our favorites then we need to remove it
-            if (!in_array((int)$forum['forum_id'],$favoritesArray,true)){
+            if (!in_array((int)$forum['forum_id'], $favorites, true)){
                 // remove the forum that isn't one of the favorites
                 array_splice($tree[$categoryIndex]['forums'], ($forumIndex - $count) , 1);
                 // increment $count because we will need to subtract this number
@@ -3279,6 +3237,14 @@ function Dizkus_userapi_getfavorites($args)
     return $tree;
 }
 
+/*
+ * helper function
+ *
+ */
+function _get_favorites($f)
+{
+    return (int)$f['forum_id'];
+}
 /**
  * get_favorite_status
  *
@@ -3329,8 +3295,6 @@ function Dizkus_userapi_change_favorite_status($args)
  */
 function Dizkus_userapi_get_user_post_order($args)
 {
-    extract($args);
-
     $loggedIn = pnUserLoggedIn();
 
     // if we are passed the user_id then lets use it
@@ -4009,20 +3973,6 @@ function Dizkus_userapi_jointopics($args)
 }
 
 /**
- * get_last_post
- * gets the post_id of the very last posting stored in our database, independent
- * from topic or forum
- *
- *@params none
- *@return int post_id or false on error
- */
-function Dizkus_userapi_get_last_post()
-{
-    $post_id = (int)DBUtil::selectFieldMax('dizkus_posts', 'post_id');
-    return $post_id;
-}
-
-/**
  * notify moderators
  *
  *@params $args['post'] array the post array
@@ -4223,52 +4173,32 @@ function Dizkus_userapi_insertrss($args)
  */
 function Dizkus_userapi_get_forum_subscriptions($args)
 {
-    extract($args);
-    unset($args);
+    $pntable = pnDBGetTables();
 
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    if (isset($user_id)) {
+    if (isset($args['user_id'])) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
-        $user_id = pnUserGetVar('uid');
+        $args['user_id'] = pnUserGetVar('uid');
     }
-
-    $fstable  = $pntable['dizkus_subscription'];
-    $fscolumn = $pntable['dizkus_subscription_column'];
-    $forumstable  = $pntable['dizkus_forums'];
-    $forumscolumn = $pntable['dizkus_forums_column'];
-    $categoriestable  = $pntable['dizkus_categories'];
-    $categoriescolumn = $pntable['dizkus_categories_column'];
 
     // read the topic ids
-    $sql = 'SELECT f.' . $forumscolumn['forum_id'] . ',
-                   f.' . $forumscolumn['forum_name'] . ',
-                   c.' . $categoriescolumn['cat_id'] . ',
-                   c.' . $categoriescolumn['cat_title'] . '
-            FROM ' . $fstable . ' AS fs,
-                 ' . $forumstable . ' AS f,
-                 ' . $categoriestable . ' AS c 
-            WHERE fs.' . $fscolumn['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) . '
-              AND f.' . $forumscolumn['forum_id'] . '=fs.' . $fscolumn['forum_id'] . '
-              AND c.' . $categoriescolumn['cat_id'] . '=f.' . $forumscolumn['cat_id']. '
-            ORDER BY c.' . $categoriescolumn['cat_order'] . ', f.' . $forumscolumn['forum_order'];
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $sql = 'SELECT f.' . $pntable['dizkus_forums_column']['forum_id'] . ',
+                   f.' . $pntable['dizkus_forums_column']['forum_name'] . ',
+                   c.' . $pntable['dizkus_categories_column']['cat_id'] . ',
+                   c.' . $pntable['dizkus_categories_column']['cat_title'] . '
+            FROM ' . $pntable['dizkus_subscription'] . ' AS fs,
+                 ' . $pntable['dizkus_forums'] . ' AS f,
+                 ' . $pntable['dizkus_categories'] . ' AS c 
+            WHERE fs.' . $pntable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . '
+              AND f.' . $pntable['dizkus_forums_column']['forum_id'] . '=fs.' . $pntable['dizkus_subscription_column']['forum_id'] . '
+              AND c.' . $pntable['dizkus_categories_column']['cat_id'] . '=f.' . $pntable['dizkus_forums_column']['cat_id']. '
+            ORDER BY c.' . $pntable['dizkus_categories_column']['cat_order'] . ', f.' . $pntable['dizkus_forums_column']['forum_order'];
 
-    $subscriptions = array();
-    while (!$result->EOF) {
-        $row = $result->GetRowAssoc(false);
-        $subscription = array('forum_id'      => $row['forum_id'],
-                              'forum_name'    => $row['forum_name'],
-                              'cat_id'        => $row['cat_id'],
-                              'cat_title'     => $row['cat_title']);
-        array_push($subscriptions, $subscription);
-        $result->MoveNext();
-    }
-
-    dzkCloseDB($result);
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('forum_id', 'forum_name', 'cat_id', 'cat_title');
+    $subscriptions = DBUtil::marshallObjects($res, $colarray);
 
     return $subscriptions;
 }
