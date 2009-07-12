@@ -54,15 +54,10 @@ class dizkus_admin_prefshandler
 
 		$pnRender->assign('contactlist_available', pnModAvailable('ContactList'));
 
-        list($dbconn, $pntable) = dzkOpenDB();
-        $sql = "SELECT  VERSION()";
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        list($dbversion) = $result->fields;
-        dzkCloseDB($result);
-
-        $pnRender->assign('dbversion', $dbversion);
-        $pnRender->assign('dbtype', $dbconn->databaseType);
-        $pnRender->assign('dbname', $dbconn->databaseName);
+        $serverinfo = DBUtil::serverInfo();
+        $pnRender->assign('dbversion', $serverinfo['description']);
+        $pnRender->assign('dbtype', DBConnectionStack::getConnectionDBType());
+        $pnRender->assign('dbname', DBConnectionStack::getConnectionDBName());
 
         return true;
     }

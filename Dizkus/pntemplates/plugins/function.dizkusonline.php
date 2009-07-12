@@ -64,9 +64,9 @@ function smarty_function_dizkusonline($params, &$smarty)
 
     $checkgroups = (isset($checkgroups)) ? true : false;
 
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
-    $sessioninfocolumn = &$pntable['session_info_column'];
+    $sessioninfocolumn = $pntable['session_info_column'];
     $sessioninfotable  = $pntable['session_info'];
 
     $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
@@ -90,24 +90,20 @@ function smarty_function_dizkusonline($params, &$smarty)
             AND      IF($pntable[session_info].pn_uid='0','1',$pntable[session_info].pn_uid) = $pntable[users].pn_uid
             GROUP BY $pntable[session_info].pn_ipaddr, $pntable[session_info].pn_uid";
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    $total = $result->RecordCount();
-
-    for(; !$result->EOF; $result->MoveNext()) {
-        list($uid, $uname) = $result->fields;
-
-        if ($uid != 0) {
-            $unames[$uid] = array('uid'   => $uid,
-                                  'uname' => $uname,
-                                  'admin' => (isset($moderators[$uid]) && $moderators[$uid] == $uname) || allowedtoadmincategoryandforum($category_id, $forum_id, $uid));
-            $numusers++;
-        } else {
-            $numguests++;
+    $res = DBUtil::executeSQL($sql);
+    $onlineusers = DBUtil::marshallObjects($res, array('uid', 'uname'));
+    if (is_array($onlineusers)) {
+        $total = count($onlineusers);
+        foreach ($onlineusers as $onlineuser) {
+            if ($onlineuser['uid'] != 0) {
+                $onlineuser['admin'] = (isset($moderators[$uid]) && $moderators[$uid] == $uname) || allowedtoadmincategoryandforum($category_id, $forum_id, $uid);
+                $unames[$onlineuser['uid']] = $onlineuser;
+                $numusers++;
+            } else {
+                $numguests++;
+            }
         }
     }
-
-    dzkCloseDB($result);
 
     if ($checkgroups == true) {
         foreach ($unames as $user) {
