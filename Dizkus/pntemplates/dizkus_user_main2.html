@@ -48,7 +48,7 @@
             </td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_topics ]--></td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[ $forum.forum_posts ]--></td>
-            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief':'':true ]--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|dzkprofilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg modname='Dizkus' src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_DZK_NOPOSTS' ]--><!--[ /if ]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[ if $forum.last_post_data.name <> '' ]--><!--[ $forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']--><br /> <!--[ pnml name='_BY' ]--> <!--[ $forum.last_post_data.name|dzkprofilelink ]--><br /><a href="<!--[ $forum.last_post_data.url_anchor|pnvarprepfordisplay ]-->" title="<!--[ pnml name='_DZK_GOTO_LATEST' ]--> '<!--[ $forum.last_post_data.subject|pnvarprephtmldisplay ]-->'"><!--[ pnimg modname='Dizkus' src=icon_latest_topic.gif ]--></a><!--[ else ]--><!--[ pnml name='_DZK_NOPOSTS' ]--><!--[ /if ]--></td>
         </tr>
         <!--[ foreachelse ]-->
         <tr>
@@ -75,7 +75,7 @@
     </tbody>
 </table>
 <ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
-    <li><!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_DZK_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:"%e. %b %Y  - %R":'':true ]-->)</li>
+    <li><!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" alt="_DZK_NEWPOSTS" altml=true ]--> = <!--[ pnml name='_DZK_NEWPOSTS' ]--> (<!--[ $last_visit_unix|pnfdate_format:'datetimebrief' ]-->)</li>
     <li><!--[ pnimg modname='Dizkus' src="icon_folder.gif" alt="_DZK_NONEWPOSTS" altml=true ]--> = <!--[ pnml name='_DZK_NONEWPOSTS' ]--></li>
 </ul>
 <!--[ include file='dizkus_user_footer.html ]-->

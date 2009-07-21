@@ -30,9 +30,9 @@
                     <!--[ if isset($reply.poster_data.rank) ]-->
                     <li><strong><!--[ pnml name='_DZK_RANK' ]-->: </strong><!--[ $reply.poster_data.rank|pnvarprepfordisplay ]--></li>
                     <!--[ /if ]-->
-                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $reply.poster_data.pn_user_regdate|pnfdate_format:"%d.%m.%y" ]--></li>
+                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $reply.poster_data.pn_user_regdate|pnfdate_format:'datebrief' ]--></li>
                     <!--[ if !$reply.poster_data.online  ]-->
-                    <li><strong><!--[ pnml name='_DZK_LAST_SEEN' ]-->: </strong><!--[ $reply.poster_data.user_lastvisit|pnfdate_format:"%d.%m.%y"  ]--></li>
+                    <li><strong><!--[ pnml name='_DZK_LAST_SEEN' ]-->: </strong><!--[ $reply.poster_data.user_lastvisit|pnfdate_format:'datebrief'  ]--></li>
                     <!--[ /if ]-->
                     <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $reply.poster_data.user_posts ]--></li>
                 </ul>
@@ -43,7 +43,7 @@
 
                 <div class="postinfo">
                     <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start ]-->#pid<!--[ $reply.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
-                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[$smarty.now|pnfdate_format:"%d.%m.%Y, %H:%M":'':true]-->
+                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[$smarty.now|pnfdate_format:'datetimebrief' ]-->
                 </div>
 
                 <div class="content" id="postingtext_<!--[ $reply.post_id ]-->">

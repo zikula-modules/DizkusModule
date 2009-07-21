@@ -32,7 +32,7 @@
                     <!--[ if isset($newtopic.poster_data.rank) ]-->
                     <li><strong><!--[ pnml name='_DZK_RANK' ]-->: </strong><!--[ $newtopic.poster_data.rank|pnvarprepfordisplay ]--></li>
                     <!--[ /if ]-->
-                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $newtopic.poster_data.pn_user_regdate|pnfdate_format:"%d.%m.%y" ]--></li>
+                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $newtopic.poster_data.pn_user_regdate|pnfdate_format:'datebrief']--></li>
                     <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $newtopic.poster_data.user_posts ]--></li>
                 </ul>
                 <!--[ /if ]-->
@@ -41,7 +41,7 @@
             <div class="postbody dzk_colpost_right">
 
                 <div class="postinfo">
-                    <strong><!--[ pnml name='_DZK_POSTED' ]-->: </strong>&nbsp;<!--[ $newtopic.topic_unixtime|pnfdate_format:"%d.%m.%Y, %H:%M":'':true ]-->
+                    <strong><!--[ pnml name='_DZK_POSTED' ]-->: </strong>&nbsp;<!--[ $newtopic.topic_unixtime|pnfdate_format:'datetimebrief' ]-->
                 </div>
 
                 <div class="content"<!--[ if isset($newtopic.post_id) ]--> id="postingtext_<!--[ $newtopic.post_id ]-->"<!--[/if]-->>

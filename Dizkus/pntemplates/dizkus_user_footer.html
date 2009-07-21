@@ -8,7 +8,7 @@
     <!--[if $func eq 'main' OR $func eq 'viewforum']-->
     <h3 class="footer_title"><!--[ pnml name='_DZK_LEGEND' ]--></h3>
     <ul id="ctheme-legenda">
-        <!--[ assign var='last_visit_unix' value=$last_visit_unix|pnfdate_format:'(%b %e, %Y  - %R)':'':true ]-->
+        <!--[ assign var='last_visit_unix' value=$last_visit_unix|pnfdate_format:'datetimebrief' ]-->
         <li><!--[ pnimg modname='Dizkus' src='icon_redfolder.gif' alt='_DZK_NEWPOSTS' altml=true title="_DZK_NEWPOSTS" titleml=true ]--> : <!--[ pnml name='_DZK_NEWPOSTS ]--> <span class="pn-sub"><!--[ $last_visit_unix ]-->&nbsp;</span></li>
         <li><!--[ pnimg modname='Dizkus' src='icon_folder.gif' alt='_DZK_NONEWPOSTS' altml=true title="_DZK_NONEWPOSTS" titleml=true ]--> : <!--[ pnml name='_DZK_NONEWPOSTS' ]--> <span class="pn-sub"><!--[ $last_visit_unix ]-->&nbsp;</span></li>
     </ul>

@@ -44,9 +44,9 @@
                     <!--[ if isset($post.poster_data.rank) ]-->
                     <li><strong><!--[ pnml name='_DZK_RANK' ]-->: </strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></li>
                     <!--[ /if ]-->
-                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $post.poster_data.pn_user_regdate|pnfdate_format:"%d.%m.%y" ]--></li>
+                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $post.poster_data.pn_user_regdate|pnfdate_format:'datebrief' ]--></li>
                     <!--[ if !$post.poster_data.online  ]-->
-                    <li><strong><!--[ pnml name='_DZK_LAST_SEEN' ]-->: </strong><!--[ $post.poster_data.user_lastvisit|pnfdate_format:"%d.%m.%y"  ]--></li>
+                    <li><strong><!--[ pnml name='_DZK_LAST_SEEN' ]-->: </strong><!--[ $post.poster_data.user_lastvisit|pnfdate_format:'datebrief' ]--></li>
                     <!--[ /if ]-->
                     <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $post.poster_data.user_posts ]--></li>
                     <!--[ if $pncore.logged_in eq true]-->
@@ -67,7 +67,7 @@
             <div class="postbody dzk_colpost_right">
                 <div class="postinfo">
                     <!--[if isset($topic)]--><a class="linktopostlink" href="<!--[ pnmodurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
-                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:'%d.%m.%Y, %H:%M':'':true ]-->
+                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:'datetimebrief' ]-->
                 </div>
                 <div class="content" id="postingtext_<!--[ $post.post_id ]-->">
                     <!--[ $post.post_text ]-->
