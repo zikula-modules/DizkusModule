@@ -31,6 +31,8 @@
  */
 function smarty_function_pnfpager($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $total = $params['total'];
 
     // check if we are in view or moderate mode
@@ -147,7 +149,7 @@ function smarty_function_pnfpager($params, &$smarty)
 
     }
 
-    $page_string = '<' . $tag . '>' . _DZK_GOTOPAGE . ': ' . $page_string . '</' . $tag . '>';
+    $page_string = '<' . $tag . '>' . __f('go to page %s: ', $page_string, $dom) . '</' . $tag . '>';
 
     return $page_string;
 }

@@ -19,8 +19,10 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_hook_showdiscussionlink($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if(!isset($args['objectid']) || empty($args['objectid']) ) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
 

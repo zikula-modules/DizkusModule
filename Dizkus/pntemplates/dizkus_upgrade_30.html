@@ -1,20 +1,20 @@
 <!--[*  $Id$  *]-->
-<!--[ admincategorymenu xhtml=1 ]-->
+<!--[admincategorymenu xhtml=1]-->
 
-<form action="<!--[ pnmodurl modname=Dizkus type=init func="interactiveupgrade_to_3_0" ]-->" method="post">
+<form action="<!--[pnmodurl modname=Dizkus type=init func="interactiveupgrade_to_3_0"]-->" method="post">
     <div>
         <div style="height: 3em; vertical-align: middle; width: 90%;">
-            <h1><!--[ pnml name='_DZK_WELCOMETOINTERACTIVEUPGRADE' ]--></h1>
+            <h1><!--[gt text="Dizkus Upgrade"]--></h1>
         </div>
         <h2>
-            <!--[ pnml name='_DZK_OLDVERSION' ]-->: <!--[ $oldversion ]--><br />
-            <!--[ pnml name='_DZK_NEXTVERSION' ]-->: 3.0<br />
+            <!--[gt text="old version"]-->: <!--[$oldversion]--><br />
+            <!--[gt text="next version"]-->: 3.0<br />
         </h2>
         <div style="border: 1px solid red; padding: 4px; margin: 10px; color: red;">
-            <h2><!--[ pnml name='_DZK_BACKUPHINT' html=1 ]--></h2>
+            <h2><!--[gt text="Create a database dump before<br />performing this upgrade step!"]--></h2>
         </div>
-        <div><!--[ pnml name='_DZK_TO30_HINT' html=1 ]--></div>
-        <input type="hidden" name="authkey" value="<!--[ $authid ]-->" />
-        <input type="submit" name="submit" value="<!--[ pnml name='_SUBMIT' ]-->" />
+        <div><!--[gt text="This step will upgrade pnForum 2.7.1 to Dizkus 3.0 including all necessary database changes."]--></div>
+        <input type="hidden" name="authkey" value="<!--[$authid]-->" />
+        <input type="submit" name="submit" value="<!--[gt text="Submit"]-->" />
     </div>
 </form>

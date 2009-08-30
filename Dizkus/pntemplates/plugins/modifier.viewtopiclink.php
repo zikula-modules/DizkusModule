@@ -42,6 +42,8 @@
  */
 function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_name=null, $class=null, $start=null, $last_post_id=null)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if(!isset($topic_id)) {
         return '';
     }
@@ -59,7 +61,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     if(isset($last_post_id)) {
         $url .= '#pid' . (int)$last_post_id;
     }
-    $title = _DZK_GOTO_TOPIC;
+    $title = __('go to topic', $dom);
     if(isset($forum_name) && !empty($forum_name)) {
         $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';
     }

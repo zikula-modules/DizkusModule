@@ -12,12 +12,14 @@
 /**
  * set modversion info
  */
+$dom = ZLanguage::getModuleDomain('Dizkus');
+
 $modversion['name']        = 'Dizkus';
 $modversion['oldnames']    = array('pnForum');
-$modversion['displayname'] = _DZK_DISPLAYNAME;
+$modversion['displayname'] = 'Dizkus';
 $modversion['id']          = '62';
 $modversion['version']     = '3.1';
-$modversion['description'] = _DZK_DESCRIPTION;
+$modversion['description'] = __('An integrated forum solution for Zikula', $dom);
 $modversion['credits']     = 'pndocs/credits.txt';
 $modversion['help']        = 'pndocs/install.txt';
 $modversion['changelog']   = 'pndocs/changelog.txt';

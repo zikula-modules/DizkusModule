@@ -1,76 +1,76 @@
 <!--[*  $Id$  *]-->
 
-<!--[ include file='dizkus_user_header.html' ]-->
+<!--[include file='dizkus_user_header.html']-->
 
-<!--[ pnmodcallhooks hookobject='item' hookaction='display' hookid=$newtopic.topic_id|default:0 implode=false assign='hooks' ]-->
+<!--[pnmodcallhooks hookobject='item' hookaction='display' hookid=$newtopic.topic_id|default:0 implode=false assign='hooks']-->
 
 <div id="newtopicpreview" style="display: none;">&nbsp;</div>
 
-<!--[ if $preview ]-->
+<!--[if $preview]-->
 <div id="nonajaxnewtopicpreview">
-    <!--[ include file='dizkus_user_newtopicpreview.html' ]-->
+    <!--[include file='dizkus_user_newtopicpreview.html']-->
 </div>
-<!--[ /if ]-->
+<!--[/if]-->
 
 <div id="dzk_newtopic" class="forum_post post_bg2 dzk_rounded">
     <div class="inner">
 
         <div class="dzk_subcols pn-clearfix">
-            <form name="newtopicform" class="dzk_form" id="newtopicform" action="<!--[ pnmodurl modname='Dizkus' type='user' func='newtopic' ]-->" method="post" enctype="multipart/form-data">
-                <input type="hidden" id="forum" name="forum" value="<!--[ $newtopic.forum_id ]-->" />
+            <form name="newtopicform" class="dzk_form" id="newtopicform" action="<!--[pnmodurl modname='Dizkus' type='user' func='newtopic']-->" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="forum" name="forum" value="<!--[$newtopic.forum_id]-->" />
                 <input type="hidden" id="quote" name="quote" value="" />
-                <input type="hidden" id="authid" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
+                <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
                 <fieldset>
-                    <legend class="post_header"><!--[ pnml name='_DZK_NEW_THREADS' ]-->:&nbsp;<a href="<!--[ pnmodurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|pnvarprepfordisplay ]-->"><!--[ $newtopic.forum_name|pnvarprepfordisplay|pnmodcallhooks ]--></a></legend>
+                    <legend class="post_header"><!--[gt text="New Topic in forum"]-->:&nbsp;<a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|pnvarprepfordisplay]-->"><!--[$newtopic.forum_name|pnvarprepfordisplay|pnmodcallhooks]--></a></legend>
                     <div class="post_text_wrap">
                         <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                         <div>
-                            <label for="subject"><!--[ pnml name='_DZK_SUBJECT' ]-->:</label>
-                            <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[ $newtopic.subject|pnvarprephtmldisplay ]-->" />
+                            <label for="subject"><!--[gt text="Subject"]-->:</label>
+                            <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[$newtopic.subject|pnvarprephtmldisplay]-->" />
                         </div>
                         <div>
-                            <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]-->:</label>
-                            <textarea id="message" name="message" class="dzk_texpand"><!--[ $newtopic.message ]--></textarea>
-                            <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><!--[/if]-->
-                            <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
-                            <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
-                            <!--[ /if ]-->
+                            <br /><label for="message"><!--[gt text="Message Body"]-->:</label>
+                            <textarea id="message" name="message" class="dzk_texpand"><!--[$newtopic.message]--></textarea>
+                            <!--[if isset($hooks.MediaAttach)]--><!--[$hooks.MediaAttach]--><!--[/if]-->
+                            <!--[if $pncore.Dizkus.striptags == 'yes']-->
+                            <p><!--[gt text="No HTML-tags allowed (only inside of [code][/code])"]--></p>
+                            <!--[/if]-->
                         </div>
                         <div class="dzk_subcols pn-clearfix">
                             <div id="newtopicoptions" class="dzk_col_left">
                                 <ul>
-                                    <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
-                                    <!--[ if $pncore.logged_in ]-->
+                                    <li><strong><!--[gt text="Options"]--></strong></li>
+                                    <!--[if $pncore.logged_in]-->
                                     <li>
                                         <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                                        <label for="attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label>
+                                        <label for="attach_signature"><!--[gt text="Attach my signature"]--></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $newtopic.subscribe_topic eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
-                                        <label for="subscribe_topic"><!--[ pnml name='_DZK_NOTIFYME' ]--></label>
+                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[if $newtopic.subscribe_topic eq true]-->checked="checked"<!--[/if]--> value="1" />
+                                        <label for="subscribe_topic"><!--[gt text="Notify me when a reply is posted"]--></label>
                                     </li>
-                                    <!--[ /if ]-->
+                                    <!--[/if]-->
                                     <li id="newtopicbuttons" style="display: none;">
-                                        <button id="btnCreateNewTopic" class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_SUBMIT' ]-->">
-                                            <!--[ pnml name='_DZK_SUBMIT' ]-->
+                                        <button id="btnCreateNewTopic" class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[gt text="Submit"]-->">
+                                            <!--[gt text="Submit"]-->
                                         </button>
-                                        <button class="dzk_img preview" onclick="previewnewtopic(); return false;" type="submit" title="<!--[ pnml name='_DZK_PREVIEW' ]-->">
-                                            <!--[ pnml name='_DZK_PREVIEW' ]-->
+                                        <button class="dzk_img preview" onclick="previewnewtopic(); return false;" type="submit" title="<!--[gt text="Preview"]-->">
+                                            <!--[gt text="Preview"]-->
                                         </button>
-                                        <button class="dzk_img cancel" onclick="clearnewtopic();" type="reset" title="<!--[ pnml name='_DZK_CANCELPOST' ]-->">
-                                            <!--[ pnml name='_CANCEL' ]-->
+                                        <button class="dzk_img cancel" onclick="clearnewtopic();" type="reset" title="<!--[gt text="Cancel"]-->">
+                                            <!--[gt text="Cancel"]-->
                                         </button>
                                     </li>
                                     <li id="nonajaxnewtopicbuttons">
-                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->" />
-                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[ pnml name='_DZK_PREVIEW' ]-->" />
-                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[ pnml name='_CANCEL' ]-->" />
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->" />
+                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[gt text="Preview"]-->" />
+                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[gt text="Cancel"]-->" />
                                     </li>
                                 </ul>
                             </div>
                             <div class="dzk_col_right">
-                                <!--[ plainbbcode textfieldid='message' ]-->
-                                <!--[ bbsmile textfieldid='message' ]-->
+                                <!--[plainbbcode textfieldid='message']-->
+                                <!--[bbsmile textfieldid='message']-->
                             </div>
 
                         </div>
@@ -87,9 +87,9 @@
 
 <script type="text/javascript">
     // <![CDATA[
-    var storingPost = '<!--[ pnml name='_DZK_STORINGPOST' ]-->';
-    var preparingPreview = '<!--[ pnml name='_DZK_PREPARINGPREVIEW' ]-->';
-    var redirecting = '<!--[ pnml name='_DZK_REDIRECTINGTONEWTOPIC' ]-->';
+    var storingPost = '<!--[gt text="... storing post ..."]-->';
+    var preparingPreview = '<!--[gt text="... preparing preview ..."]-->';
+    var redirecting = '<!--[gt text="...now redirecting to the new topic..."]-->';
 
     Element.show($('newtopicbuttons'));
     Element.remove($('nonajaxnewtopicbuttons'));
@@ -105,4 +105,4 @@
     // ]]>
 </script>
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

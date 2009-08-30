@@ -1,27 +1,27 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_MOVEPOST' assign=templatetitle]-->
-<!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file='dizkus_user_header.html' ]-->
-<!--[ cssversion assign='configclass' ]-->
+<!--[gt text="Move post"]-->
+<!--[pnpagesetvar name=title value=$templatetitle]-->
+<!--[include file='dizkus_user_header.html']-->
+<!--[cssversion assign='configclass']-->
 
-<h2><!--[ $templatetitle ]--></h2>
-<form class="<!--[ $configclass ]-->"  action="<!--[ pnmodurl modname=Dizkus type=user func=movepost ]-->" method="post">
+<h2><!--[$templatetitle]--></h2>
+<form class="<!--[$configclass]-->"  action="<!--[pnmodurl modname=Dizkus type=user func=movepost]-->" method="post">
     <fieldset id="dzk_movepost">
-        <legend><!--[ $templatetitle ]--></legend>
-        <input type="hidden" name="post" value="<!--[ $post.post_id ]-->" />
-        <input type="hidden" name="from_topic" value="<!--[ $post.topic_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
-        <div class="<!--[ $configclass ]-->row">
-            <p class="zk-formnote"><!--[ pnml name='_DZK_MOVEPOST_INFO' html=1 ]--></p>
-            <label for="to_topic"><!--[ pnml name='_DZK_MOVEPOST_TOTOPIC' html=1 ]--></label>
+        <legend><!--[$templatetitle]--></legend>
+        <input type="hidden" name="post" value="<!--[$post.post_id]-->" />
+        <input type="hidden" name="from_topic" value="<!--[$post.topic_id]-->" />
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <div class="<!--[$configclass]-->row">
+            <p class="zk-formnote"><!--[gt text="Move a post from one topic to another"]--></p>
+            <label for="to_topic"><!--[gt text="Target topic"]--></label>
             <span>
                 <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" /> (topic_id)
             </span>
         </div>
     </fieldset>
-    <div class="<!--[ $configclass ]-->buttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_MOVEPOST' ]-->"><!--[ pnml name='_DZK_MOVEPOST' ]--></button>
+    <div class="<!--[$configclass]-->buttons">
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Move post"]-->"><!--[gt text="Move post"]--></button>
     </div>
 </form>
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

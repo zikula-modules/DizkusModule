@@ -1,18 +1,18 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_POP3TESTRESULTS' assign=templatetitle ]-->
-<!--[ include file='dizkus_admin_header.html' ]-->
-<!--[ cssversion assign='configclass' ]-->
+<!--[gt text="Pop3 test results" assign=templatetitle]-->
+<!--[include file='dizkus_admin_header.html']-->
+<!--[cssversion assign='configclass']-->
 
-<form class="<!--[ $configclass ]-->" action="" method="post">
-    <input type="hidden" name="forum_id" value="<!--[ $forum_id ]-->" />
+<form class="<!--[$configclass]-->" action="" method="post">
+    <input type="hidden" name="forum_id" value="<!--[$forum_id]-->" />
     <fieldset>
-        <legend><!--[ $templatetitle ]--></legend>
-        <!--[ foreach item=message from=$messages ]-->
-        <p><!--[ $message ]--></p>
-        <!--[ /foreach ]-->
+        <legend><!--[$templatetitle]--></legend>
+        <!--[foreach item=message from=$messages]-->
+        <p><!--[$message]--></p>
+        <!--[/foreach]-->
     </fieldset>
-    <div class="<!--[ $configclass ]-->buttons">
-        <input type="submit" name="backtoforum" value="<!--[ pnml name='_DZK_BACKTOFORUMADMIN' ]-->" />
+    <div class="<!--[$configclass]-->buttons">
+        <input type="submit" name="backtoforum" value="<!--[gt text="Back to forum admin"]-->" />
     </div>
 </form>
 

@@ -1,23 +1,23 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_DELETETOPIC' assign=templatetitle]-->
-<!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file='dizkus_user_header.html' ]-->
-<!--[ cssversion assign=configclass ]-->
+<!--[gt text="Delete this topic"]-->
+<!--[pnpagesetvar name=title value=$templatetitle]-->
+<!--[include file='dizkus_user_header.html']-->
+<!--[cssversion assign=configclass]-->
 
-<h2><!--[ $templatetitle ]--></h2>
+<h2><!--[$templatetitle]--></h2>
 
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname=Dizkus type=user func=topicadmin ]-->" method="post">
+<form class="<!--[$configclass]-->" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
     <fieldset id="dzk_deletetopic">
-        <legend><!--[ $templatetitle ]--></legend>
-        <input type="hidden" name="mode" value="<!--[ $mode ]-->" />
-        <input type="hidden" name="topic" value="<!--[ $topic_id ]-->" />
-        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
-        <div class="<!--[ $configclass ]-->row">
-            <p><!--[ pnml name='_DZK_DELETETOPIC_INFO' html=1 ]--></p>
+        <legend><!--[$templatetitle]--></legend>
+        <input type="hidden" name="mode" value="<!--[$mode]-->" />
+        <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <div class="<!--[$configclass]-->row">
+            <p><!--[gt text="When you press the delete button at the bottom of this form the topic you have selected, and all its related posts, will be <strong>permanently</strong> removed."]--></p>
         </div>
     </fieldset>
-    <div class="<!--[ $configclass ]-->buttons">
-        <button class="dzk_img delete" type="submit" name="submit" value="<!--[ pnml name='_DZK_DELETETOPIC' ]-->"><!--[ pnml name='_DZK_DELETETOPIC' ]--></button>
+    <div class="<!--[$configclass]-->buttons">
+        <button class="dzk_img delete" type="submit" name="submit" value="<!--[gt text="Delete this topic"]-->"><!--[gt text="Delete this topic"]--></button>
     </div>
 </form>
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

@@ -4,13 +4,17 @@ $Id$
 Dizkus module developers team (current status):
 ----------------------------------------------------------
 Andreas Krapohl aka larsneo (larsneo@zikula.org)
-Jim Hadfield (jhadfiel@oldihc.org)
 Frank Schummertz aka landseer (frank.schummertz@landseer-stuttgart.de)
-Steffen Voss aka kafferinge.de (steffen.voss@online.de)
 Carsten Volmer aka herr.vorragend (carsten@zikula.org)
 
-People who contributed code for 2.0.0 or later
+Contributors for 3.0 
 ----------------------------------------------
+Florian Schiessl aka flo (info@ifs-net.de)
+Steffen Voss aka kafferinge.de (steffen.voss@online.de)
+
+Ccontributors for 2.0 or later
+----------------------------------------------
+Jim Hadfield (jhadfiel@oldihc.org)
 Franky Chestnut (webmaster@pnconcept.com)
     rss2forum and a lot of other useful stuff and fixes
 Chris Miller aka R3ap3r (chris@bariatricsupportcenter.com)

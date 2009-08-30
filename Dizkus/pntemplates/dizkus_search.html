@@ -1,11 +1,10 @@
 <!--[*  $Id$  *]-->
 
 <div id="dzk_search">
-
     <div>
         <input type="checkbox" name="active[Dizkus]" id="active_Dizkus" value="1" <!--[ if $active ]-->checked="checked"<!--[ /if ]--> />
-        <label for="active_Dizkus"><!--[ pnml name='_DZK_SEARCHINCLUDE_TITLE' ]--></label>
-        <em style="display: block;"><!--[ pnml name="_DZK_SEARCHLENGTHHINT" minlen=$pncore.Dizkus.minsearchlength maxlen=$pncore.Dizkus.maxsearchlength ]--></em>
+        <label for="active_Dizkus"><!--[gt text='Search forums']--></label>
+        <div class="zk-formnote pn-informationmsg"><!--[gt text="The forum accepts searchstrings with a length between %1$s and %2$s chars only!" __tag1=$pncore.Dizkus.minsearchlength __tag2=$pncore.Dizkus.maxsearchlength]--></div>
     </div>
 
     <input type="hidden" name="Dizkus_startnum" value="0" />
@@ -13,24 +12,24 @@
     <dl>
 
         <dt>
-            <label for="Dizkus_forum"><!--[ pnml name='_DZK_SEARCHINCLUDE_FORUM' ]-->:</label>
+            <label for="Dizkus_forum"><!--[gt text='Category and forum:']--></label>
         </dt>
         <dd>
             <select name="Dizkus_forum[]" id="Dizkus_forum" size="5" multiple="multiple">
-                <option value="-1" selected="selected"><!--[ pnml name='_DZK_SEARCHALLFORUMS' ]--></option>
+                <option value="-1" selected="selected"><!--[gt text='All forums']--></option>
                 <!--[ foreach item='forum' from=$forums ]-->
-                <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> <!--[ pnml name='_DZK_SEPARATOR' html=1 ]--> <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
+                <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> <!--[gt text='&nbsp;::&nbsp;']--> <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
                 <!--[ /foreach ]-->
             </select>
         </dd>
 
         <dt>
-            <label for="Dizkus_searchwhere"><!--[ pnml name='_DZK_SEARCHWHERE' ]-->:</label>
+            <label for="Dizkus_searchwhere"><!--[gt text='Search in']-->:</label>
         </dt>
         <dd>
             <select name="Dizkus_searchwhere" id="Dizkus_searchwhere" size="1">
-                <option value="post" selected="selected"><!--[ pnml name='_DZK_SEARCH_POSTINGS' ]--></option>
-                <option value="author"><!--[ pnml name='_DZK_SEARCH_AUTHOR' ]--></option>
+                <option value="post" selected="selected"><!--[gt text='postings']--></option>
+                <option value="author"><!--[gt text='author']--></option>
             </select>
         </dd>
     </dl>

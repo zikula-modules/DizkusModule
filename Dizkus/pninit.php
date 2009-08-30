@@ -12,17 +12,18 @@
 Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
- *	Initialize a new install of the Dizkus module
+ *  Initialize a new install of the Dizkus module
  *
- *	This function will initialize a new installation of Dizkus.
- *	It is accessed via the Zikula Admin interface and should
- *	not be called directly.
+ *  This function will initialize a new installation of Dizkus.
+ *  It is accessed via the Zikula Admin interface and should
+ *  not be called directly.
  */
 function Dizkus_init()
 {
-    if(version_compare(PN_VERSION_NUM, '1.0.0', '<')) {
-        // no SessionUtil::setVar here because this line is for <.9
-        pnSessionSetVar('errormsg', _DZK_ZIKULA10ISREQUIRED);
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
+    if(version_compare(PN_VERSION_NUM, '1.2.0', '<')) {
+        SessionUtil::setVar('errormsg', __('This version of Dizkus requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met.', $dom));
         return false;
     }
     
@@ -79,7 +80,7 @@ function Dizkus_init()
         return false;
     }
 
-	// creating topic_subscription table (new in 1.7.5)
+  // creating topic_subscription table (new in 1.7.5)
     if (!DBUtil::createTable('dizkus_topic_subscription')) {
         Dizkus_delete();
         return false;
@@ -101,7 +102,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'createbyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (create)');
+        return LogUtil::registerError(__f('Failed to create %s hook', 'create'), $dom);
     }
 
     //
@@ -113,7 +114,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'updatebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (update)');
+        return LogUtil::registerError(__f('Failed to create %s hook', 'update'), $dom);
     }
 
     //
@@ -125,7 +126,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'deletebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (delete)');
+        return LogUtil::registerError(__f('Failed to create %s hook', 'delete'), $dom);
     }
 
     //
@@ -137,7 +138,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'showdiscussionlink')) {
-        return LogUtil::registerError(_DZK_FAILEDTOCREATEHOOK . ' (display)');
+        return LogUtil::registerError(__f('Failed to create %s hook', 'display'), $dom);
     }
     
     // create FULLTEXT index 
@@ -160,27 +161,27 @@ function Dizkus_init()
         }
     }
     
-	// forum settings
-	pnModSetVar('Dizkus', 'posts_per_page', 15);
-	pnModSetVar('Dizkus', 'topics_per_page', 15);
-	pnModSetVar('Dizkus', 'hot_threshold', 20);
-	pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
-	pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
-	pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
-	pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
-	pnModSetVar('Dizkus', 'log_ip', 'no');
-	pnModSetVar('Dizkus', 'slimforum', 'no');
-	pnModSetVar('Dizkus', 'hideusers', 'no');
-	pnModSetVar('Dizkus', 'removesignature', 'no');
-	pnModSetVar('Dizkus', 'striptags', 'no');
+    // forum settings
+    pnModSetVar('Dizkus', 'posts_per_page', 15);
+    pnModSetVar('Dizkus', 'topics_per_page', 15);
+    pnModSetVar('Dizkus', 'hot_threshold', 20);
+    pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
+    pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
+    pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
+    pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
+    pnModSetVar('Dizkus', 'log_ip', 'no');
+    pnModSetVar('Dizkus', 'slimforum', 'no');
+    pnModSetVar('Dizkus', 'hideusers', 'no');
+    pnModSetVar('Dizkus', 'removesignature', 'no');
+    pnModSetVar('Dizkus', 'striptags', 'no');
     pnModSetVar('Dizkus', 'deletehookaction', 'lock');
     // 2.5
     pnModSetVar('Dizkus', 'extendedsearch', 'no');
     pnModSetVar('Dizkus', 'm2f_enabled', 'yes');
     pnModSetVar('Dizkus', 'favorites_enabled', 'yes');
-	pnModSetVar('Dizkus', 'hideusers', 'no');
-	pnModSetVar('Dizkus', 'removesignature', 'no');
-	pnModSetVar('Dizkus', 'striptags', 'no');
+    pnModSetVar('Dizkus', 'hideusers', 'no');
+    pnModSetVar('Dizkus', 'removesignature', 'no');
+    pnModSetVar('Dizkus', 'striptags', 'no');
     // 2.6
     pnModSetVar('Dizkus', 'deletehookaction', 'lock');
     pnModSetVar('Dizkus', 'rss2f_enabled', 'yes');
@@ -188,10 +189,10 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'shownewtopicconfirmation', 'no');
     pnModSetVar('Dizkus', 'timespanforchanges', 24);
     pnModSetVar('Dizkus', 'forum_enabled', 'yes');
-    pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
+    pnModSetVar('Dizkus', 'forum_disabled_info', __('The forum is currently disabled for maintenance, please come back later.', $dom));
     // 3.0
-	pnModSetVar('Dizkus', 'autosubscribe', 'no');
-	pnModSetVar('Dizkus', 'newtopicconfirmation', 'no');
+    pnModSetVar('Dizkus', 'autosubscribe', 'no');
+    pnModSetVar('Dizkus', 'newtopicconfirmation', 'no');
     pnModSetVar('Dizkus', 'signaturemanagement', 'no');
     pnModSetVar('Dizkus', 'signature_start', '');
     pnModSetVar('Dizkus', 'signature_end', '');
@@ -200,25 +201,24 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
     pnModSetVar('Dizkus', 'minsearchlength', 3);
     pnModSetVar('Dizkus', 'maxsearchlength', 30);
-    pnModSetVar('Dizkus', 'minsearchlength', 3);
-    pnModSetVar('Dizkus', 'maxsearchlength', 30);
 
     // Initialisation successful
     return true;
 }
 
 /**
- *	Deletes an install of the Dizkus module
+ *  Deletes an install of the Dizkus module
  *
- *	This function removes Dizkus from your
- *	Zikula install and should be accessed via
- *	the Zikula Admin interface
+ *  This function removes Dizkus from your
+ *  Zikula install and should be accessed via
+ *  the Zikula Admin interface
  */
 function Dizkus_delete()
 {
     $tables = DBUtil::metaTables(true, true, '%dizkus%');
     $ztables = pnDBGetTables();
-    
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     if (in_array($ztables['dizkus_categories'], $tables)) {
         if (!DBUtil::dropTable('dizkus_categories')) {
             return false;
@@ -266,32 +266,32 @@ function Dizkus_delete()
     // createhook
     //
     if (!pnModUnRegisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (create)');
+        return LogUtil::registerError(__f('Failed to delete %s hook', 'create'), $dom);        
     }
 
     //
     // updatehook
     //
     if (!pnModUnRegisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (update)');
+        return LogUtil::registerError(__f('Failed to delete %s hook', 'update'), $dom);        
     }
 
     //
     // deletehook
     //
     if (!pnModUnRegisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (delete)');
+        return LogUtil::registerError(__f('Failed to delete %s hook', 'delete'), $dom);        
     }
 
     //
     // displayhook
     //
     if (!pnModUnRegisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
-        return LogUtil::registerError(_DZK_FAILEDTODELETEHOOK . ' (display)');
+        return LogUtil::registerError(__f('Failed to delete %s hook', 'display'), $dom);        
     }
 
-	// remove module vars
-	pnModDelVar('Dizkus');
+    // remove module vars
+    pnModDelVar('Dizkus');
 
     // Deletion successful
     return true;
@@ -305,8 +305,10 @@ function Dizkus_delete()
  */
 function Dizkus_init_interactiveupgrade($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_DZK_NOAUTH_TOADMIN, __FILE__, __LINE__);
+      return showforumerror(__('You have no permission to admin this module', $dom), __FILE__, __LINE__);
     }
 
     $oldversion = FormUtil::getPassedValue('oldversion', 0, 'GETPOST');
@@ -328,11 +330,11 @@ function Dizkus_init_interactiveupgrade($args)
         default:
             // no interactive upgrade for version < 2.7
             // or latest step reached
-           	$smarty =& new Smarty;
-           	$smarty->compile_dir = pnConfigGetVar('temp') . '/pnRender_compiled';
-           	$smarty->cache_dir = pnConfigGetVar('temp') . '/pnRender_cache';
-           	$smarty->use_sub_dirs = false;
-           	$smarty->clear_compiled_tpl();
+            $smarty =& new Smarty;
+            $smarty->compile_dir = pnConfigGetVar('temp') . '/pnRender_compiled';
+            $smarty->cache_dir = pnConfigGetVar('temp') . '/pnRender_cache';
+            $smarty->use_sub_dirs = false;
+            $smarty->clear_compiled_tpl();
             return pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
@@ -348,8 +350,10 @@ function Dizkus_init_interactiveupgrade($args)
  */
 function Dizkus_init_interactiveupgrade_to_3_0()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_DZK_NOAUTH_TOADMIN, __FILE__, __LINE__);
+      return showforumerror(__('You have no permission to admin this module', $dom), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -357,7 +361,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
     if(!empty($submit)) {
         $result = Dizkus_upgrade_to_3_0();
         if($result<>true) {
-            return showforumerror(_DZK_TO30_FAILED, __FILE__, __LINE__);
+            return showforumerror(_('The upgade to Dizkus 3.0 failed.'), __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
     }
@@ -370,6 +374,8 @@ function Dizkus_init_interactiveupgrade_to_3_0()
  */
 function Dizkus_upgrade_to_3_0()
 {        
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     // rename the old pnForum tablenames to Dizkus tablenames
     $tables = array('pnforum_categories'         => 'dizkus_categories',
                     'pnforum_forum_mods'         => 'dizkus_forum_mods',
@@ -391,7 +397,7 @@ function Dizkus_upgrade_to_3_0()
         $success  = ($result==2);
         if (!$success) {
             $dberrmsg = $dbconn->ErrorNo().' - '.$dbconn->ErrorMSg();
-            LogUtil::registerError (_RENAMETABLEFAILED. " ($tablename, $result, $dberrmsg)");
+            LogUtil::registerError (__('The renaming of table %1$s to %2$s failed: %3$s', array($tablename, $$newtable, $dberrmsg), $dom));
         }
     }
 
@@ -400,16 +406,16 @@ function Dizkus_upgrade_to_3_0()
     DBUtil::changeTable('dizkus_posts');
 
     // remove obsolete module vars
-	pnModDelVar('Dizkus', 'posticon');
-	pnModDelVar('Dizkus', 'firstnew_image');
+    pnModDelVar('Dizkus', 'posticon');
+    pnModDelVar('Dizkus', 'firstnew_image');
 
 
     $oldvars = pnModGetVar('pnForum');
     foreach ($oldvars as $varname => $oldvar) {
-    	// update path to rank images - simply replace pnForum with Dizkus
-    	if($varname == 'url_ranks_images') {
-    	    $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
-    	}
+      // update path to rank images - simply replace pnForum with Dizkus
+      if($varname == 'url_ranks_images') {
+          $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
+      }
         pnModSetVar('Dizkus', $varname, $oldvar);
     }
     pnModDelVar('pnForum');
@@ -421,24 +427,24 @@ function Dizkus_upgrade_to_3_0()
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['smodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['smodule'] . '=\'pnForum\'';
     $res   = DBUtil::executeSQL ($sql);
     if ($res === false) {
-        return LogUtil::registerError(_DZK_FAILEDTOUPGRADEHOOK . ' (smodule)');
+        return LogUtil::registerError(__('Error upgrading the source module for hooks (smodule)'));
     }
 
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['tmodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['tmodule'] . '=\'pnForum\'';
     $res   = DBUtil::executeSQL ($sql);
     if ($res === false) {
-        return LogUtil::registerError(_DZK_FAILEDTOUPGRADEHOOK . ' (tmodule)');
+        return LogUtil::registerError(__('Error upgrading the target module for hooks (tmodule)'));
     }
 
-	// introduce new module variable
-	pnModSetVar('Dizkus', 'signaturemanagement', 'no');	
+    // introduce new module variable
+    pnModSetVar('Dizkus', 'signaturemanagement', 'no'); 
     pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
     pnModSetVar('Dizkus', 'showtextinsearchresults', 'no');
     pnModSetVar('Dizkus', 'minsearchlength', 3);
     pnModSetVar('Dizkus', 'maxsearchlength', 30);
 
     pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
-	return true;
+    return true;
 }
 
 /**
@@ -447,8 +453,10 @@ function Dizkus_upgrade_to_3_0()
  */
 function Dizkus_init_interactiveupgrade_to_3_1()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-    	return showforumerror(_DZK_NOAUTH_TOADMIN, __FILE__, __LINE__);
+      return showforumerror(__('You have no permission to admin this module', $dom), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -456,7 +464,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
     if(!empty($submit)) {
         $result = Dizkus_upgrade_to_3_1();
         if($result<>true) {
-            return showforumerror(_DZK_TO31_FAILED, __FILE__, __LINE__);
+            return showforumerror(__('The upgrade to Dizkus 3.1 failed.', $dom), __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
     }
@@ -470,6 +478,8 @@ function Dizkus_init_interactiveupgrade_to_3_1()
  */
 function Dizkus_upgrade_to_3_1()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     // merge posts and posts_text table
     pnModDBInfoLoad('Dizkus');
 
@@ -504,7 +514,7 @@ function Dizkus_upgrade_to_3_1()
                
             
     if (DBUtil::executeSQL($sql) != true) {
-        LogUtil::registerError (_UPDATETABLEFAILED. " (dizkus_posts)");
+        LogUtil::registerError (__('Upgrading the table %s failed.', 'dizkus_posts', $dom));
     }
     
     // _dizkus_migratecategories();
@@ -527,6 +537,8 @@ function Dizkus_upgrade_to_3_1()
  */
 function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', $languages)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     // load necessary classes
     Loader::loadClass('CategoryUtil');
     Loader::loadClassFromModule('Categories', 'Category');
@@ -545,7 +557,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', 
         $cat->setDataField('parent_id', $rootcat['id']);
         $cat->setDataField('name', 'Dizkus');
         $cat->setDataField('display_name', array($lang => 'Dizkus')); 
-        $cat->setDataField('display_desc', array($lang => 'An integrated forum solution for Zikula')); // todo: lang defines
+        $cat->setDataField('display_desc', array($lang => __('An integrated forum solution for Zikula', $dom))); 
         $cat->setDataField('__ATTRIBUTES__', array('can_contain_posts' => false));
         if (!$cat->validate('admin')) {
             die('error 1');

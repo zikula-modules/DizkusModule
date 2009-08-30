@@ -1,64 +1,64 @@
 <!--[*  $Id$  *]-->
 
-<!--[ pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css" ]-->
+<!--[pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css"]-->
 
-<!--[ readtopforums maxforums=$maxforums]-->
-<!--[ if $topforumscount > 0 ]-->
+<!--[readtopforums maxforums=$maxforums]-->
+<!--[if $topforumscount > 0]-->
 <br />
-<strong><!--[ $topforumscount ]-->&nbsp;<!--[ pnml name='_DZK_ACTIVE_FORUMS' ]--></strong>
+<strong><!--[$topforumscount]-->&nbsp;<!--[gt text="top active Forums:"]--></strong>
 <br />
 <ul class="dzk_forumlist">
-    <!--[ foreach item=topforum from=$topforums ]-->
+    <!--[foreach item=topforum from=$topforums]-->
     <li>
-        <a href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$topforum.forum_id ]-->" title="<!--[ $topforum.cat_title ]--> :: <!--[ $topforum.forum_name ]-->"><!--[ $topforum.forum_name ]--></a>
-        (<!--[ $topforum.forum_topics ]-->/<!--[ $topforum.forum_posts ]-->)
+        <a href="<!--[pnmodurl modname=Dizkus type=user func=viewforum forum=$topforum.forum_id]-->" title="<!--[$topforum.cat_title]--> :: <!--[$topforum.forum_name]-->"><!--[$topforum.forum_name]--></a>
+        (<!--[$topforum.forum_topics]-->/<!--[$topforum.forum_posts]-->)
     </li>
-    <!--[ /foreach ]-->
+    <!--[/foreach]-->
 </ul>
-<!--[ /if ]-->
+<!--[/if]-->
 
 <!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, they are hidden per default *]-->
-<!--[ readlastposts maxposts=$maxposts forum_id=$forum_id  ]-->
-<!--[ if $lastpostcount > 0 ]-->
+<!--[readlastposts maxposts=$maxposts forum_id=$forum_id]-->
+<!--[if $lastpostcount > 0]-->
 <br />
-<strong><!--[ $lastpostcount ]--> <!--[ pnml name='_DZK_RECENT_POSTS' ]--></strong>
+<strong><!--[$lastpostcount]--> <!--[gt text="recent topics:"]--></strong>
 <br />
 <ul class="dzk_postlist">
-    <!--[ foreach item=lastpost from=$lastposts ]-->
+    <!--[foreach item=lastpost from=$lastposts]-->
     <li>
-        <a href="<!--[ $lastpost.last_post_url_anchor ]-->" title="<!--[ $lastpost.cat_title ]--> :: <!--[ $lastpost.forum_name ]--> :: <!--[ $lastpost.topic_title ]-->"><!--[ $lastpost.topic_title|dzkbbsmile|truncate:21 ]--></a><br />
-        <!--[ $lastpost.topic_replies ]-->
-        <!--[ if $lastpost.topic_replies eq 1 ]-->
-        <!--[ pnml name='_DZK_ONEREPLY' ]-->
-        <!--[ else ]-->
-        <!--[ pnml name='_DZK_REPLIES' ]-->
-        <!--[ /if ]-->
+        <a href="<!--[$lastpost.last_post_url_anchor]-->" title="<!--[$lastpost.cat_title]--> :: <!--[$lastpost.forum_name]--> :: <!--[$lastpost.topic_title]-->"><!--[$lastpost.topic_title|dzkbbsmile|truncate:21]--></a><br />
+        <!--[$lastpost.topic_replies]-->
+        <!--[if $lastpost.topic_replies eq 1]-->
+        <!--[gt text="reply"]-->
+        <!--[else]-->
+        <!--[gt text="Replies"]-->
+        <!--[/if]-->
         <br />
-        <!--[ $lastpost.poster_name|dzkprofilelink ]--><br /><!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
+        <!--[$lastpost.poster_name|dzkprofilelink]--><br /><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true]-->
     </li>
-    <!--[ /foreach ]-->
+    <!--[/foreach]-->
 </ul>
-<!--[ /if ]-->
+<!--[/if]-->
 
-<!--[ readtopposters maxposters=$maxposters]-->
-<!--[ if $toppostercount > 0 ]-->
+<!--[readtopposters maxposters=$maxposters]-->
+<!--[if $toppostercount > 0]-->
 <br />
-<strong><!--[ $toppostercount ]--> <!--[ pnml name='_DZK_ACTIVE_POSTERS' ]--></strong>
+<strong><!--[$toppostercount]--> <!--[gt text="top active Posters:"]--></strong>
 <br />
 <ul class="dzk_posterlist">
-    <!--[ foreach item=topposter from=$topposters ]-->
-    <li><!--[ $topposter.user_name|dzkprofilelink ]--><br />(<!--[ $topposter.user_posts ]--> <!--[ pnml name='_DZK_POSTS' ]-->)</li>
-    <!--[ /foreach ]-->
+    <!--[foreach item=topposter from=$topposters]-->
+    <li><!--[$topposter.user_name|dzkprofilelink]--><br />(<!--[$topposter.user_posts]--> <!--[gt text="Posts"]-->)</li>
+    <!--[/foreach]-->
 </ul>
-<!--[ /if ]-->
+<!--[/if]-->
 
-<!--[ readstatistics ]-->
+<!--[readstatistics]-->
 <br />
-<strong><!--[ pnml name='_DZK_TOTAL' ]-->:</strong>
+<strong><!--[gt text="Total"]-->:</strong>
 <br />
 <ul class="dzk_statslist">
-    <li><!--[ pnml name='_DZK_CATEGORIES' ]-->: <!--[ $total_categories ]--></li>
-    <li><!--[ pnml name='_DZK_FORUMS' ]-->: <!--[ $total_forums ]--></li>
-    <li><!--[ pnml name='_DZK_TOPICS' ]-->: <!--[ $total_topics ]--></li>
-    <li><!--[ pnml name='_DZK_POSTS' ]-->: <!--[ $total_posts ]--></li>
+    <li><!--[gt text="Categories"]-->: <!--[$total_categories]--></li>
+    <li><!--[gt text="Forums"]-->: <!--[$total_forums]--></li>
+    <li><!--[gt text="Topics"]-->: <!--[$total_topics]--></li>
+    <li><!--[gt text="Posts"]-->: <!--[$total_posts]--></li>
 </ul>

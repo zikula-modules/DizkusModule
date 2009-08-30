@@ -21,8 +21,10 @@
  */
 function smarty_function_subscribetopic_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     extract($params);
-	unset($params);
+	  unset($params);
 
     if(!isset($image_subscribe) || empty($image_subscribe)) {
         $image_subscribe = 't_abo_on.gif';
@@ -41,19 +43,19 @@ function smarty_function_subscribetopic_button($params, &$smarty)
                                   'topic_id'=>$topic_id))==false) {
                 $imagedata = dzk_getimagepath($image_subscribe);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_DZK_SUBSCRIBE_TOPIC);
+                    $show = DataUtil::formatForDisplay(__('Subscribe topic', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplayHTML(_DZK_SUBSCRIBE_TOPIC) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplayHTML(__('Subscribe topic', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_SUBSCRIBE_TOPIC) . '" href="' . DataUtil::formatForDisplayHTML(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'subscribe_topic', 'topic'=>$topic_id))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(__('Subscribe topic', $dom)) . '" href="' . DataUtil::formatForDisplayHTML(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'subscribe_topic', 'topic' => $topic_id))) . '">' . $show . '</a>';
             } else {
                 $imagedata = dzk_getimagepath($image_unsubscribe);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_TOPIC);
+                    $show = DataUtil::formatForDisplay(__('Unsubscribe topic', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplayHTML(_DZK_UNSUBSCRIBE_TOPIC) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplayHTML(__('Unsubscribe topic', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_TOPIC) . '" href="' . DataUtil::formatForDisplayHTML(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'unsubscribe_topic', 'topic'=>$topic_id))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(__('Unsubscribe topic', $dom)) . '" href="' . DataUtil::formatForDisplayHTML(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'unsubscribe_topic', 'topic' => $topic_id))) . '">' . $show . '</a>';
             }
         }
     }

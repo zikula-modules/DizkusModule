@@ -1,78 +1,78 @@
 <!--[*  $Id$  *]-->
 
-<!--[ include file='dizkus_user_header.html' ]-->
+<!--[include file='dizkus_user_header.html']-->
 
-<h2><!--[ pnml name='_SEARCH' ]--></h2>
+<h2><!--[gt text="Search"]--></h2>
 
-<form action="<!--[ pnmodurl modname='Dizkus' type='user' func='search' ]-->" method="post">
+<form action="<!--[pnmodurl modname='Dizkus' type='user' func='search']-->" method="post">
 
     <div id="dzk_search dzk_rounded">
         <div class="inner">
 
             <dl>
                 <dt>
-                    <label for="searchfor"><!--[ pnml name='_DZK_SEARCHFOR' ]-->:</label>
-                    <p><!--[ pnml name='_DZK_SEARCHLENGTHHINT' minlen=$pncore.Dizkus.minsearchlength|default:3 maxlen=$pncore.Dizkus.maxsearchlength|default:30 ]--></p>
+                    <label for="searchfor"><!--[gt text="Search for"]-->:</label>
+                    <div class="zk-formnote pn-informationmsg"><!--[gt text="The forum accepts searchstrings with a length between %1$s and %2$s chars only!" __tag1=$pncore.Dizkus.minsearchlength __tag2=$pncore.Dizkus.maxsearchlength]--></div>
                 </dt>
                 <dd>
                     <input type="text" name="q" id="searchfor" size="20" maxlength="255" value="" tabindex="0" />
-                    <button class="dzk_img search" type="submit" name="submit" value="<!--[ pnml name='_SEARCH' ]-->"><!--[ pnml name='_SEARCH' ]--></button>
+                    <button class="dzk_img search" type="submit" name="submit" value="<!--[gt text="Search"]-->"><!--[gt text="Search"]--></button>
                 </dd>
 
                 <dt>
-                    <label for="searchbool"><!--[ pnml name='_DZK_SEARCHBOOL' ]-->:</label>
+                    <label for="searchbool"><!--[gt text="Connection"]-->:</label>
                 </dt>
                 <dd>
                     <select name="bool" size="1" id="searchbool">
-                        <option value="AND" selected="selected"><!--[ pnml name='_DZK_SEARCHAND' ]--></option>
-                        <option value="OR"><!--[ pnml name='_DZK_SEARCHOR' ]--></option>
+                        <option value="AND" selected="selected"><!--[gt text="all words [AND]"]--></option>
+                        <option value="OR"><!--[gt text="single words [OR]"]--></option>
                     </select>
                 </dd>
 
                 <dt>
-                    <label for="searchforums"><!--[ pnml name='_DZK_SEARCHINCLUDE_FORUM' ]-->:</label>
+                    <label for="searchforums"><!--[gt text="Category and forum"]-->:</label>
                 </dt>
                 <dd>
                     <select name="Dizkus_forum[]" id="searchforums" size="5" multiple="multiple">
-                        <option value="-1" selected="selected"><!--[ pnml name='_DZK_SEARCHALLFORUMS' ]--></option>
-                        <!--[ foreach item=forum from=$forums ]-->
-                        <option value="<!--[ $forum.forum_id ]-->"><!--[ $forum.cat_title|pnvarprepfordisplay ]--> :: <!--[ $forum.forum_name|pnvarprepfordisplay ]--></option>
-                        <!--[ /foreach ]-->
+                        <option value="-1" selected="selected"><!--[gt text="All forums"]--></option>
+                        <!--[foreach item=forum from=$forums]-->
+                        <option value="<!--[$forum.forum_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]--> :: <!--[$forum.forum_name|pnvarprepfordisplay]--></option>
+                        <!--[/foreach]-->
                     </select>
                 </dd>
 
                 <dt>
-                    <label for="searchauthor"><!--[ pnml name='_DZK_SEARCHINCLUDE_AUTHOR' ]-->:</label>
+                    <label for="searchauthor"><!--[gt text="Author"]-->:</label>
                 </dt>
                 <dd>
                     <input type="text" name="Dizkus_author" id="searchauthor" size="20" maxlength="255" />
                 </dd>
 
                 <dt>
-                    <label for="searchorder"><!--[ pnml name='_DZK_SEARCHINCLUDE_ORDER' ]-->:</label>
+                    <label for="searchorder"><!--[gt text="Order"]-->:</label>
                 </dt>
                 <dd>
                     <select name="Dizkus_order[]" id="searchorder" size="1">
-                        <option value="1" selected="selected"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYDATE' ]--></option>
-                        <option value="2"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYTITLE' ]--></option>
-                        <option value="3"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYFORUM' ]--></option>
-                        <!--[ if $pncore.Dizkus.fulltextindex == 1 ]-->
-                        <option value="4"><!--[ pnml name='_DZK_SEARCHINCLUDE_BYSCORE' ]--></option>
-                        <!--[ /if ]-->
+                        <option value="1" selected="selected"><!--[gt text="by date"]--></option>
+                        <option value="2"><!--[gt text="by title"]--></option>
+                        <option value="3"><!--[gt text="by forum"]--></option>
+                        <!--[if $pncore.Dizkus.fulltextindex == 1]-->
+                        <option value="4"><!--[gt text="by score"]--></option>
+                        <!--[/if]-->
                     </select>
                 </dd>
 
                 <dt>
-                    <label for="searchlimit"><!--[ pnml name='_DZK_SEARCHINCLUDE_LIMIT' ]-->:</label>
+                    <label for="searchlimit"><!--[gt text="limit search to"]-->:</label>
                 </dt>
                 <dd>
                     <select name="Dizkus_limit" id="searchlimit" size="1">
-                        <option value="0"><!--[ pnml name='_DZK_SEARCHINCLUDE_NOLIMIT' ]--></option>
+                        <option value="0"><!--[gt text="no limits"]--></option>
                         <option value="10" selected="selected">10</option>
                         <option value="20">20</option>
                         <option value="50">50</option>
                     </select>
-                    <!--[ pnml name='_DZK_SEARCHINCLUDE_HITS' ]-->
+                    <!--[gt text="hits"]-->
                 </dd>
 
             </dl>
@@ -85,4 +85,4 @@
 
 </form>
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

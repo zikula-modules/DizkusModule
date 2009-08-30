@@ -17,6 +17,8 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_ajax_reply()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -39,17 +41,17 @@ function Dizkus_ajax_reply()
 	$topic['start'] = 0;
 	$ignorelist_setting = pnModAPIFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
 	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
-		dzk_ajaxerror(_DZK_IGNORELISTNOREPLY);
+		dzk_ajaxerror(__('Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.', $dom));
 	}
 
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-        dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
+        dzk_ajaxerror(__('Illegal message size, max. 65535 chars', $dom));
     }
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(_BADAUTHKEY);
+           dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
         }
 
         list($start,
@@ -112,6 +114,8 @@ function Dizkus_ajax_reply()
  */
 function Dizkus_ajax_preparequote()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -136,6 +140,8 @@ function Dizkus_ajax_preparequote()
  */
 function Dizkus_ajax_readpost()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -150,7 +156,7 @@ function Dizkus_ajax_readpost()
         if ($post['poster_data']['edit'] == true) {
             dzk_jsonizeoutput($post, false);
         } else {
-            dzk_ajaxerror(_DZK_NOAUTH);
+            dzk_ajaxerror(__('No permission for this action', $dom));
         }
     }
     dzk_ajaxerror('internal error: no post id in Dizkus_ajax_readpost()');
@@ -162,6 +168,8 @@ function Dizkus_ajax_readpost()
  */
 function Dizkus_ajax_editpost()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -184,7 +192,7 @@ function Dizkus_ajax_editpost()
             return array('data'    => $pnr->fetch('dizkus_ajax_editpost.html'),
                          'post_id' => $post['post_id']);
         } else {
-            dzk_ajaxerror(_DZK_NOAUTH);
+            dzk_ajaxerror(__('No permission for this action', $dom));
         }
     }
     dzk_ajaxerror('internal error: no post id in Dizkus_ajax_readrawtext()');
@@ -196,6 +204,8 @@ function Dizkus_ajax_editpost()
  */
 function Dizkus_ajax_updatepost()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -210,13 +220,13 @@ function Dizkus_ajax_updatepost()
 
     if (!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-            dzk_ajaxerror(_BADAUTHKEY);
+            dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
         }
  
         $message = dzkstriptags(DataUtil::convertFromUTF8($message));
         // check for maximum message size
         if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-            dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE);
+            dzk_ajaxerror(__('Illegal message size, max. 65535 chars', $dom));
         }
 
         pnModAPIFunc('Dizkus', 'user', 'updatepost',
@@ -248,6 +258,8 @@ function Dizkus_ajax_updatepost()
  */
 function Dizkus_ajax_lockunlocktopic()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -258,7 +270,7 @@ function Dizkus_ajax_lockunlocktopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 
     if (empty($topic_id)) {
@@ -272,7 +284,7 @@ function Dizkus_ajax_lockunlocktopic()
                                             array('topic_id' => $topic_id));
 
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
+        return dzk_ajaxerror(__('You have no permission to moderate this category or forum', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic',
@@ -290,6 +302,8 @@ function Dizkus_ajax_lockunlocktopic()
  */
 function Dizkus_ajax_stickyunstickytopic()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -300,7 +314,7 @@ function Dizkus_ajax_stickyunstickytopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(_BADAUTHKEY);
+       //dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 
     if (empty($topic_id)) {
@@ -314,7 +328,7 @@ function Dizkus_ajax_stickyunstickytopic()
                                             array('topic_id' => $topic_id));
 
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
+        return dzk_ajaxerror(__('You have no permission to moderate this category or forum', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic',
@@ -330,6 +344,8 @@ function Dizkus_ajax_stickyunstickytopic()
  */
 function Dizkus_ajax_subscribeunsubscribetopic()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -340,7 +356,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 */
     if (empty($topic_id)) {
@@ -351,7 +367,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
                                             array('topic_id' => $topic_id));
 
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
+        return dzk_ajaxerror(__('You have no permission to read the content of this category or forum', $dom));
     }
 
     switch($mode) {
@@ -380,6 +396,8 @@ function Dizkus_ajax_subscribeunsubscribetopic()
  */
 function Dizkus_ajax_subscribeunsubscribeforum()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -390,7 +408,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 */
     if (empty($forum_id)) {
@@ -401,7 +419,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
                            array('forum_id' => $forum_id));
 
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
+        return dzk_ajaxerror(__('You have no permission to read the content of this category or forum', $dom));
     }
 
     switch($mode) {
@@ -431,12 +449,14 @@ function Dizkus_ajax_subscribeunsubscribeforum()
  */
 function Dizkus_ajax_addremovefavorite()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     if (pnModGetVar('Dizkus', 'favorites_enabled') == 'no') {
-        dzk_ajaxerror(_DZK_FAVORITESDISABLED);
+        dzk_ajaxerror(__('Favorites have been disabled', $dom));
     }
 
     $forum_id = FormUtil::getPassedValue('forum', '');
@@ -447,7 +467,7 @@ function Dizkus_ajax_addremovefavorite()
     }
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 */
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -456,7 +476,7 @@ function Dizkus_ajax_addremovefavorite()
                            array('forum_id' => $forum_id));
 
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(_DZK_NOAUTH_TOREAD);
+        return dzk_ajaxerror(__('You have no permission to read the content of this category or forum', $dom));
     }
 
     switch($mode) {
@@ -484,6 +504,8 @@ function Dizkus_ajax_addremovefavorite()
  */
 function Dizkus_ajax_edittopicsubject()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -507,7 +529,7 @@ function Dizkus_ajax_edittopicsubject()
             return array('data'     => $pnr->fetch('dizkus_ajax_edittopicsubject.html'),
                          'topic_id' => $topic_id);
         } else {
-            dzk_ajaxerror(_DZK_NOAUTH);
+            dzk_ajaxerror(__('No permission for this action', $dom));
         }
     }
     dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_readtopic()');
@@ -519,6 +541,8 @@ function Dizkus_ajax_edittopicsubject()
  */
 function Dizkus_ajax_updatetopicsubject()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -530,17 +554,17 @@ function Dizkus_ajax_updatetopicsubject()
 
     if (!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(_BADAUTHKEY);
+           dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
         }
 
         list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-            dzk_ajaxerror(_DZK_NOAUTH_TOMODERATE);
+            dzk_ajaxerror(__('You have no permission to moderate this category or forum', $dom));
         }
 
         $subject = trim(DataUtil::convertFromUTF8($subject));
         if (empty($subject)) {
-            dzk_ajaxerror(_DZK_NOSUBJECT);
+            dzk_ajaxerror(__('no subject', $dom));
         }
 
         $topic['topic_id']    = $topic_id;
@@ -565,6 +589,8 @@ function Dizkus_ajax_updatetopicsubject()
  */
 function Dizkus_ajax_changesortorder()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -572,11 +598,11 @@ function Dizkus_ajax_changesortorder()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!pnUserLoggedIn()) {
-       dzk_ajaxerror(_DZK_USERLOGINTITLE);
+       dzk_ajaxerror(__('This functionality is for registered users only', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-       dzk_ajaxerror(_BADAUTHKEY);
+       dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'change_user_post_order');
@@ -592,9 +618,11 @@ function Dizkus_ajax_newtopic()
 {
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-       dzk_ajaxerror(_BADAUTHKEY);
+       dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 */
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -612,7 +640,7 @@ function Dizkus_ajax_newtopic()
                            array('forum_id' => $forum_id));
 
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(_DZK_NOAUTH_TOWRITE);
+        return dzk_ajaxerror(__('You have no permission to write into this category or forum', $dom));
     }
 
     $preview          = ($preview == 1) ? true : false;
@@ -622,22 +650,22 @@ function Dizkus_ajax_newtopic()
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-        dzk_ajaxerror(_DZK_ILLEGALMESSAGESIZE, true);
+        dzk_ajaxerror(__('Illegal message size, max. 65535 chars', $dom), true);
     }
     if (strlen($message) == 0) {
-        dzk_ajaxerror(_DZK_EMPTYMSG, true);
+        dzk_ajaxerror(__('You must type a message to post. You cannot post an empty message. Please go back and try again.', $dom), true);
     }
 
     $subject = DataUtil::convertFromUTF8($subject);
     if (strlen($subject) == 0) {
-        dzk_ajaxerror(_DZK_NOSUBJECT, true);
+        dzk_ajaxerror(__('no subject', $dom), true);
     }
 
     $pnr = pnRender::getInstance('Dizkus', false, null, true);
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(_BADAUTHKEY);
+           dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
         }
 
         // store new topic
@@ -695,7 +723,7 @@ function Dizkus_ajax_newtopic()
     // need at least "comment" to add newtopic
     if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror(__('You have no permission to write into this category or forum', $dom), __FILE__, __LINE__);
     }
 
     $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
@@ -742,6 +770,8 @@ function Dizkus_ajax_newtopic()
  */
 function Dizkus_ajax_forumusers()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (dzk_available(false) == false) {
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
@@ -765,6 +795,8 @@ function Dizkus_ajax_forumusers()
  */
 function Dizkus_ajax_newposts()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!is_bool($disabled = dzk_available())) {
         echo $disabled;
         pnShutDown();

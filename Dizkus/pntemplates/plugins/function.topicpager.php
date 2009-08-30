@@ -22,6 +22,8 @@
  */
 function smarty_function_topicpager($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $total             = $params['total'];
     $per_page          = pnModGetVar('Dizkus', 'posts_per_page');
     $start             = (int)FormUtil::getPassedValue('start', 1, 'GETPOST');
@@ -124,7 +126,7 @@ function smarty_function_topicpager($params, &$smarty)
 
     }
 
-    $page_string = '<p>' . _DZK_GOTOPAGE . ': ' . $page_string . '</p>';
+    $page_string = '<p>' . __f('go to page %s: ', $page_string, $dom) . '</p>';
 
     return $page_string;
 

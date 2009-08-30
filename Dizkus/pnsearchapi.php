@@ -1,45 +1,13 @@
 <?php
-/************************************************************************
- * Dizkus - The Zikula forum                                            *
- * ==============================                                       *
- *                                                                      *
- * Copyright (c) 2001-2004 by the Dizkus Module Development Team        *
- * http://www.dizkus.com/                                               *
- ************************************************************************
- * Modified version of: *
- ************************************************************************
- * phpBB version 1.4                                                    *
- * begin                : Wed July 19 2000                              *
- * copyright            : (C) 2001 The phpBB Group                      *
- * email                : support@phpbb.com                             *
- ************************************************************************
- * License *
- ************************************************************************
- * This program is free software; you can redistribute it and/or modify *
- * it under the terms of the GNU General Public License as published by *
- * the Free Software Foundation; either version 2 of the License, or    *
- * (at your option) any later version.                                  *
- *                                                                      *
- * This program is distributed in the hope that it will be useful,      *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
- * GNU General Public License for more details.                         *
- *                                                                      *
- * You should have received a copy of the GNU General Public License    *
- * along with this program; if not, write to the Free Software          *
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 *
- * USA                                                                  *
- ************************************************************************
+/**
+ * Dizkus
  *
- * search functions
- * @version $Id$
- * @author Frank Schummertz
- * @copyright 2004 by Frank Schummertz
- * @package Dizkus
- * @license GPL <http://www.gnu.org/licenses/gpl.html>
+ * @copyright (c) 2001-now, Dizkus Development Team
  * @link http://www.dizkus.com
- *
- ***********************************************************************/
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
 
 Loader::includeOnce('modules/Dizkus/common.php');
 
@@ -105,6 +73,8 @@ function Dizkus_searchapi_internalsearchoptions($args)
  **/
 function Dizkus_searchapi_search($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
         return false;
     }
@@ -115,7 +85,7 @@ function Dizkus_searchapi_search($args)
     $minlen = pnModGetVar('Dizkus', 'minsearchlength', 3);
     $maxlen = pnModGetVar('Dizkus', 'maxsearchlength', 30);
     if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
-        return LogUtil::registerStatus(pnML('_DZK_SEARCHLENGTHHINT', array('minlen' => $minlen, 'maxlen' => $maxlen)));
+        return LogUtil::registerStatus(__f('The forum accepts searchstrings with a length between %1$s and %2$s chars only!', array($minlen, $maxlen), $dom));
     }
     if (!is_array($args['forums']) || count($args['forums']) == 0) {
         // set default
@@ -376,7 +346,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
 
     $result = DBUtil::executeSQL($query);
     if (!$result) {
-        return LogUtil::registerError (_GETFAILED);
+        return LogUtil::registerError (__('Error! Could not load items.', $dom));
     }
 
     $sessionId = session_id();
@@ -404,7 +374,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $args)
                . '\'' . DataUtil::formatForStore($sessionId) . '\')';
         $insertResult = DBUtil::executeSQL($sql);
         if (!$insertResult) {
-            return LogUtil::registerError (_GETFAILED);
+            return LogUtil::registerError (__('Error! Could not load items.', $dom));
         }
     }
     return true;

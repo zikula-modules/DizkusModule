@@ -1,28 +1,28 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_IGNORELISTHANDLING' assign=templatetitle]-->
-<!--[ pnpagesetvar name=title value=$templatetitle ]-->
-<!--[ include file='dizkus_user_header.html' ]-->
-<!--[ cssversion assign='configclass' ]-->
+<!--[gt text="Ignorelist configuration"]-->
+<!--[pnpagesetvar name=title value=$templatetitle]-->
+<!--[include file='dizkus_user_header.html']-->
+<!--[cssversion assign='configclass']-->
 <!--[* assign var="configclass" value="pn-form" *]-->
 
-<h2><!--[ $templatetitle ]--></h2>
+<h2><!--[$templatetitle]--></h2>
 
-<div class="pn-informationmsg"><!--[ pnml name='_DZK_PREFS_IGNORELISTLEVELS' ]--></div>
+<div class="pn-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
 
 <!--[pnform cssClass=$configclass]-->
 <!--[pnformvalidationsummary]-->
 <fieldset>
-    <legend><!--[ $templatetitle ]--></legend>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="ignorelist_myhandling" text="_DZK_PREFS_IGNORELISTMYHANDLING" html=1 ]-->
+    <legend><!--[$templatetitle]--></legend>
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="ignorelist_myhandling" text="My individual handling of ignored users" html=1]-->
         <span>
-            <!--[ pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling ]-->
+            <!--[pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling]-->
         </span>
     </div>
 </fieldset>
-<div class="<!--[ $configclass ]-->buttons">
-    <!--[pnformbutton commandName="update" text="_UPDATE" class="dzk_img ok"]-->
+<div class="<!--[$configclass]-->buttons">
+    <!--[pnformbutton commandName="update" text="Update" class="dzk_img ok"]-->
 </div>
 <!--[/pnform]-->
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

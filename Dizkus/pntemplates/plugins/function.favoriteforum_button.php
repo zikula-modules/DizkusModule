@@ -21,8 +21,10 @@
  */
 function smarty_function_favoriteforum_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($params);
-	unset($params);
+	  unset($params);
 
     if(!isset($image_addfavorite) || empty($image_addfavorite)) {
         $image_addfavorite = 'add2favorites.gif';
@@ -41,19 +43,19 @@ function smarty_function_favoriteforum_button($params, &$smarty)
                                   'forum_id'=>$forum_id))==false) {
                 $imagedata = dzk_getimagepath($image_addfavorite);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_DZK_ADD_FAVORITE_FORUM);
+                    $show = DataUtil::formatForDisplay(__('Add to favorites', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_ADD_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Add to favorites', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_ADD_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(__('Add to favorites', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
                 $imagedata = dzk_getimagepath($image_remfavorite);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_DZK_REMOVE_FAVORITE_FORUM);
+                    $show = DataUtil::formatForDisplay(__('Remove favorite forum', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_REMOVE_FAVORITE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Remove favorite forum', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_REMOVE_FAVORITE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(__('Remove favorite forum', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'remove_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             }
         }
     }

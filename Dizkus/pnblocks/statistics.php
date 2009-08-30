@@ -49,12 +49,11 @@ function Dizkus_statisticsblock_display($row)
         return; 
     }
 
-    pnModLangLoad('Dizkus', 'common');
     // check if forum is turned off
     $disabled = dzk_available();
     if(!is_bool($disabled)) {
         $row['content'] = $disabled;
-	    return themesideblock($row);
+      return themesideblock($row);
     }
 
     // Break out options from our content field
@@ -79,7 +78,7 @@ function Dizkus_statisticsblock_display($row)
         }
     }
     $row['content'] = $pnr->fetch(trim($vars['sb_template']));
-	return themesideblock($row);
+    return themesideblock($row);
 }
 
 /**
@@ -87,12 +86,12 @@ function Dizkus_statisticsblock_display($row)
  */
 function Dizkus_statisticsblock_update($row)
 {
-	if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
-	    return false;
-	}
-
-	$sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
-	$sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
+    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+        return false;
+    }
+    
+    $sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
+    $sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 
     $row['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
     return($row);
@@ -103,11 +102,9 @@ function Dizkus_statisticsblock_update($row)
  */
 function Dizkus_statisticsblock_modify($row)
 {
-	if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', $row['title'] . '::', ACCESS_ADMIN)) {
-	    return false;
-	}
-
-    pnModLangLoad('Dizkus', 'common');
+    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', $row['title'] . '::', ACCESS_ADMIN)) {
+        return false;
+    }
 
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);

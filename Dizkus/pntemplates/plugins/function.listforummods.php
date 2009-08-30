@@ -9,6 +9,8 @@
  */
 function smarty_function_listforummods($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $count = 0;
     $out = '';
     if(isset($params['moderators']) && is_array($params['moderators'])) {
@@ -17,7 +19,7 @@ function smarty_function_listforummods($params, &$smarty)
 	            $out .= ', ';
 	        }
 	        if ($mod_id < 1000000) {
-	            $out .= '<a title="'. DataUtil::formatForDisplay(_DZK_PROFILE) . ': ' . DataUtil::formatForDisplay($mod_name) . '" href="' . DataUtil::formatForDisplay(pnModURL('Profile', 'user', 'view', array('uname' => $mod_name))) . '">' . DataUtil::formatForDisplay($mod_name) . '</a>';
+	            $out .= '<a title="'. DataUtil::formatForDisplay(__('Profile', $dom)) . ': ' . DataUtil::formatForDisplay($mod_name) . '" href="' . DataUtil::formatForDisplay(pnModURL('Profile', 'user', 'view', array('uname' => $mod_name))) . '">' . DataUtil::formatForDisplay($mod_name) . '</a>';
 	        } else {
 	            $out .= DataUtil::formatForDisplay($mod_name);
 	        }

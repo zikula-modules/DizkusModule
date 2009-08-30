@@ -17,7 +17,7 @@
  * @param error_name string The name of the error.  auth_read,  auth_mod, someothertype, etc
  * @param error_id string The specific identifier for the error.  forum_id, cat_id, etc.  This will change depending on what error_type is set to.
  * @param default_msg string The message to display if a custom page can't be found
- * Example: getforumerror('auth_read', '2', 'category', _DZK_NOAUTH_TOREAD);
+ * Example: getforumerror('auth_read', '2', 'category', 'you are not allowed to read this category');
  *          This would look for the file:
  *          Dizkus/pntemplates/errors/category/LANG/dizkus_error_auth_read_2.html
  *          which would be the error message for someone who didn't have read
@@ -57,7 +57,9 @@
  */
 function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
 {
-  $modinfo = pnModGetInfo(pnModGetIDFromName('Dizkus'));
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
+    $modinfo = pnModGetInfo(pnModGetIDFromName('Dizkus'));
     $baseDir = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
     $lang = pnUserGetLang();
     $error_path = 'errors/' . $error_type;
@@ -311,6 +313,8 @@ function dzkCloseDB($resobj)
  */
 function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false, $extendederror=true)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
@@ -323,7 +327,7 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
         if($extendederror == true) {
-            return showforumsqlerror(_DZK_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+            return showforumsqlerror(__('Error, unable to connect to the database!', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
         } else {
             return false;
         }
@@ -345,6 +349,8 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
  */
 function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FILE__, $line=__LINE__, $debug=false)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if(!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
@@ -360,7 +366,7 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     $result = $dbconn->AutoExecute($table, $record, $mode, $where);
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_DZK_ERROR_CONNECT, $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
+        return showforumsqlerror(__('Error, unable to connect to the database!', $dom), $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
@@ -380,6 +386,8 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
  */
 function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, $line=__LINE__, $debug=false)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
@@ -396,7 +404,7 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     }
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(_DZK_ERROR_CONNECT,$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+        return showforumsqlerror(__('Error, unable to connect to the database!', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
@@ -733,7 +741,7 @@ function dzkstriptags($text='')
         // save code tags
         $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
         for($i=0; $i < $codecount; $i++) {
-            $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " PNFSTREPLACEMENT{$i} ", $text, 1);
+            $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
         }
 
         // strip all html
@@ -741,7 +749,7 @@ function dzkstriptags($text='')
 
         // replace code tags saved before
         for ($i = 0; $i < $codecount; $i++) {
-            $text = preg_replace("/ PNFSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
+            $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
         }
     }
     return $text;

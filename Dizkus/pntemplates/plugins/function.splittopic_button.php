@@ -20,8 +20,10 @@
  */
 function smarty_function_splittopic_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($params);
-	unset($params);
+	  unset($params);
 
     // set a default value
     if(!isset($image) || empty($image)) {
@@ -31,11 +33,11 @@ function smarty_function_splittopic_button($params, &$smarty)
     Loader::includeOnce('modules/Dizkus/common.php');
     if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         if($imagedata == false) {
-            $show = DataUtil::formatForDisplay(_DZK_SPLITTOPIC_TITLE);
+            $show = DataUtil::formatForDisplay(__('Split topic', $dom));
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_SPLITTOPIC_TITLE) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Split topic', $dom)) .'" ' . $imagedata['size'] . ' />';
         }
-        $out = '<a title="' . DataUtil::formatForDisplay(_DZK_SPLITTOPIC_TITLE) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'splittopic', array('post'=>$post_id))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(__('Split topic', $dom)) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'splittopic', array('post'=>$post_id))) . '">' . $show . '</a>';
     }
     return $out;
 }

@@ -17,6 +17,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_admin_main()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -30,11 +31,13 @@ function Dizkus_admin_main()
  */
 function Dizkus_admin_preferences()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
-	// Load handler class
+	  // Load handler class
     Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_admin_prefshandler.class.php');
 
     // Create output object
@@ -50,6 +53,8 @@ function Dizkus_admin_preferences()
  */
 function Dizkus_admin_syncforums()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -57,19 +62,19 @@ function Dizkus_admin_syncforums()
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all users'));
-    $message = DataUtil::formatForDisplay(_DZK_SYNC_USERS) . '<br />';
+    $message = DataUtil::formatForDisplay(__('Zikula and Dizkus users synchronized', $dom)) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all forums'));
-    $message .= DataUtil::formatForDisplay(_DZK_SYNC_FORUMINDEX) . '<br />';
+    $message .= DataUtil::formatForDisplay(__('Forum index synced', $dom)) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all topics'));
-    $message .= DataUtil::formatForDisplay(_DZK_SYNC_TOPICS) . '<br />';
+    $message .= DataUtil::formatForDisplay(__('Topics synced', $dom)) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all posts'));
-    $message .= DataUtil::formatForDisplay(_DZK_SYNC_POSTSCOUNT) . '<br />';
+    $message .= DataUtil::formatForDisplay(__('Posts counter synced', $dom)) . '<br />';
 
     if ($silent != 1) {
         LogUtil::registerStatus($message);
@@ -84,6 +89,8 @@ function Dizkus_admin_syncforums()
  */
 function Dizkus_admin_ranks()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -117,6 +124,8 @@ function Dizkus_admin_ranks()
  */
 function Dizkus_admin_assignranks()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -224,7 +233,9 @@ function Dizkus_admin_assignranks()
  */
 function Dizkus_admin_reordertree()
 {
-    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+     $dom = ZLanguage::getModuleDomain('Dizkus');
+
+   if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -256,14 +267,16 @@ function Dizkus_admin_reordertree()
  */
 function Dizkus_admin_reordertreesave()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
+        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-//        dzk_ajaxerror(_BADAUTHKEY);
+//        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 
     $categoryarray = FormUtil::getPassedValue('category');
@@ -317,8 +330,10 @@ function Dizkus_admin_reordertreesave()
  */
 function Dizkus_admin_editforum($args=array())
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
+        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
     }
 
     if (count($args) > 0) {
@@ -336,7 +351,7 @@ function Dizkus_admin_editforum($args=array())
         // create a new forum
         $new = true;
         $cat_id = FormUtil::getPassedValue('cat');
-        $forum = array('forum_name'       => _DZK_ADDNEWFORUM,
+        $forum = array('forum_name'       => __('-- add new forum --', $dom),
                        'forum_id'         => time(), /* for new forums only! */
                        'forum_desc'       => '',
                        'forum_order'      => -1,
@@ -363,16 +378,16 @@ function Dizkus_admin_editforum($args=array())
 
     }
     $externalsourceoptions = array( 0 => array('checked'  => '',
-                                               'name'     => _DZK_NOEXTERNALSOURCE,
+                                               'name'     => __('no external source', $dom),
                                                'ok'       => '',
                                                'extended' => false),   // none
                                     1 => array('checked'  => '',
-                                               'name'     => _DZK_MAIL2FORUM,
+                                               'name'     => __('Mail2Forum', $dom),
                                                'ok'       => '',
                                                'extended' => true),  // mail
                                     2 => array('checked'  => '',
-                                               'name'     => _DZK_RSS2FORUM,
-                                               'ok'       => (pnModAvailable('Feeds') == true) ? '' : _DZK_RSSMODULENOTAVAILABLE,
+                                               'name'     => __('RSS2Forum', $dom),
+                                               'ok'       => (pnModAvailable('Feeds') == true) ? '' : __('<span style="color: red;">Feeds module not available!</span>', $dom),
                                                'extended' => true)); // rss
 
     $externalsourceoptions[$forum['pop3_active']]['checked'] = ' checked="checked"';
@@ -380,7 +395,7 @@ function Dizkus_admin_editforum($args=array())
     $hooked_modules_raw = pnModAPIFunc('modules', 'admin', 'gethookedmodules',
                                        array('hookmodname' => 'Dizkus'));
 
-    $hooked_modules = array(array('name' => _DZK_NOHOOKEDMODULES,
+    $hooked_modules = array(array('name' => __('no hooked module found', $dom),
                                   'id'   => 0));
 
     $foundsel = false;
@@ -449,8 +464,10 @@ function Dizkus_admin_editforum($args=array())
  */
 function Dizkus_admin_editcategory($args=array())
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
+        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
     }
 
     if (!empty($args)) {
@@ -461,7 +478,7 @@ function Dizkus_admin_editcategory($args=array())
     }
     if ($cat_id == 'new') {
         $new = true;
-        $category = array('cat_title'    => _DZK_ADDNEWCATEGORY,
+        $category = array('cat_title'    => __('-- add new category --', $dom),
                           'cat_id'       => time(),
                           'forum_count'  => 0);
         // we add a new category
@@ -492,14 +509,16 @@ function Dizkus_admin_editcategory($args=array())
  */
 function Dizkus_admin_storecategory()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
+        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 
     $cat_id    = FormUtil::getPassedValue('cat_id');
@@ -575,12 +594,14 @@ function Dizkus_admin_storecategory()
  */
 function Dizkus_admin_storeforum()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(_DZK_NOAUTH_TOADMIN);
+        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(_BADAUTHKEY);
+        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -641,10 +662,10 @@ function Dizkus_admin_storeforum()
         }
 
         if ($pop3_password <> $pop3_passwordconfirm) {
-            dzk_ajaxerror(_DZK_PASSWORDNOMATCH);
+            dzk_ajaxerror(__('Passwords do not match, please go back and correct', $dom));
         }
         if ($pnpassword <> $pnpasswordconfirm) {
-            dzk_ajaxerror(_DZK_PASSWORDNOMATCH);
+            dzk_ajaxerror(__('Passwords do not match, please go back and correct', $dom));
         }
 
         if (!empty($add)) {
@@ -746,7 +767,9 @@ function Dizkus_admin_storeforum()
  */
 function Dizkus_admin_managesubscriptions()
 {
-    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+     $dom = ZLanguage::getModuleDomain('Dizkus');
+
+   if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 

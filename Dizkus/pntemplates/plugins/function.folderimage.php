@@ -12,8 +12,10 @@
 // type, id
 function smarty_function_folderimage($params, &$smarty) 
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($params); 
-	unset($params);
+	  unset($params);
 
     if(!pnModAPILoad('Dizkus', 'user')) {
         $smarty->trigger_error("loading Dizkus userapi failed");
@@ -33,15 +35,15 @@ function smarty_function_folderimage($params, &$smarty)
 						if ($row['post_time'] > $last_visit) {
 							// we have new posts
 							$fldr_img = $newposts_image;
-							$fldr_alt = _DZK_NEWPOSTS;
+							$fldr_alt = __('New posts since your last visit.', $dom);
 						} else {
 							// no new posts
 							$fldr_img = $folder_image;
-							$fldr_alt = _DZK_NONEWPOSTS;
+							$fldr_alt = __('No new posts since your last visit.', $dom);
 						}
 
 					$posted_unixtime= strtotime ($row['post_time']);
-					$posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+					$posted_ml = ml_ftime('%b %d, %Y - %I:%M %p', GetUserTime($posted_unixtime));
 					if ($posted_unixtime) {
 						if ($row['pn_uid']==1) {
 							$username = pnModGetVar('Users', 'anonymous');
@@ -49,18 +51,18 @@ function smarty_function_folderimage($params, &$smarty)
 							$username = $row['pn_uname'];
 						}
 
-					$last_post = sprintf(_DZK_LASTPOSTSTRING, $posted_ml, $username);
+					$last_post = __f('%1$s<br />by %2$s', array($posted_ml, $username), $dom);
 					$last_post = $last_post." <a href=\"$baseurl&amp;action=viewtopic&amp;topic=".$row['topic_id']."\">"
 								."<img src=\"modules/$ModName/images/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
 				} else {
 					// no posts in forum
-					$last_post = _DZK_NOPOSTS;
+					$last_post = __('No Posts', $dom);
 				}
 			} else {
 				// there are no posts in this forum
 				$fldr_img = $folder_image;
-				$fldr_alt = _DZK_NONEWPOSTS;
-				$last_post = _DZK_NOPOSTS;
+				$fldr_alt = __('No new posts since your last visit.', $dom);
+				$last_post = __('No Posts', $dom);
 			}
     
     return pnModAPIFunc('Dizkus', 'admin', 'boardstats',

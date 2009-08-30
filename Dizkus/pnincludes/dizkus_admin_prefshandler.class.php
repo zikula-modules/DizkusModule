@@ -1,37 +1,32 @@
 <?php
-// $Id$
-// ----------------------------------------------------------------------
-// LICENSE
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License (GPL)
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// To read the license please visit http://www.gnu.org/copyleft/gpl.html
-// ----------------------------------------------------------------------
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
 
 class dizkus_admin_prefshandler
 {
 
     function initialize(&$pnRender)
     {
+        $dom = ZLanguage::getModuleDomain('Dizkus');
+
         $pnRender->caching = false;
         $pnRender->add_core_data();
         
         
-        $pnRender->assign('post_sort_order_options', array(array('text' => _DZK_PREFS_ASCENDING,  'value' => 'ASC'),
-                                                           array('text' => _DZK_PREFS_DESCENDING, 'value' => 'DESC')));
-        $pnRender->assign('deletehook_options', array(array('text' => _DZK_PREFS_DELETEHOOKACTIONREMOVE, 'value' => 'remove'),
-                                                      array('text' => _DZK_PREFS_DELETEHOOKACTIONLOCK,   'value' => 'lock')));
-        $pnRender->assign('ignorelist_options', array(array('text' => _DZK_PREFS_STRICT, 'value' => 'strict'),
-                                                      array('text' => _DZK_PREFS_MEDIUM, 'value' => 'medium'),
-                                                      array('text' => _DZK_PREFS_NONE,   'value' => 'none')));
+        $pnRender->assign('post_sort_order_options', array(array('text' => __('Ascencing', $dom),  'value' => 'ASC'),
+                                                           array('text' => __('Descending', $dom), 'value' => 'DESC')));
+        $pnRender->assign('deletehook_options', array(array('text' => __('delete topic', $dom), 'value' => 'remove'),
+                                                      array('text' => __('close topic', $dom),   'value' => 'lock')));
+        $pnRender->assign('ignorelist_options', array(array('text' => __('strict', $dom), 'value' => 'strict'),
+                                                      array('text' => __('medium', $dom), 'value' => 'medium'),
+                                                      array('text' => __('none', $dom),   'value' => 'none')));
     
         $modvars = pnModGetVar('Dizkus');
         $pnRender->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
@@ -65,6 +60,8 @@ class dizkus_admin_prefshandler
 
     function handleCommand(&$pnRender, &$args)
     {
+        $dom = ZLanguage::getModuleDomain('Dizkus');
+
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError('index.php');
@@ -119,7 +116,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'forum_disabled_info', $data['forum_disabled_info']);
             pnModSetVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
 
-            LogUtil::registerStatus(_DZK_CONFIGCHANGED);
+            LogUtil::registerStatus(__('The configuration has been changed', $dom));
 
         } elseif ($args['commandName'] == 'restore') {
             // checkboxes 
@@ -156,10 +153,10 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'default_lang',        'iso-8859-1');
             pnModSetVar('Dizkus', 'signature_start',     '');
             pnModSetVar('Dizkus', 'signature_end',       '');
-            pnModSetVar('Dizkus', 'forum_disabled_info', _DZK_DISABLED_INFO);
+            pnModSetVar('Dizkus', 'forum_disabled_info', __('The forum is currently disabled for maintenance, please come back later.', $dom));
             pnModSetVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/pnimages/ranks');
 
-            LogUtil::registerStatus(_DZK_CONFIGRESTORED);
+            LogUtil::registerStatus(__('The configuration has been reset to the default values', $dom));
         }
         return $pnRender->pnFormRedirect(pnModURL('Dizkus','admin','preferences'));
     }

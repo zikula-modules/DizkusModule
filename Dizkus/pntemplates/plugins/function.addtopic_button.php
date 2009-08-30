@@ -19,6 +19,8 @@
  */
 function smarty_function_addtopic_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     // set a default value
     if(!isset($params['image']) || empty($params['image'])) {
         $params['image'] = 'post.gif';
@@ -29,11 +31,11 @@ function smarty_function_addtopic_button($params, &$smarty)
     if(allowedtowritetocategoryandforum($params['cat_id'], $params['forum_id'])) {
         $imagedata = dzk_getimagepath($params['image']);
         if($imagedata == false) {
-            $show = DataUtil::formatForDisplay(_DZK_NEWTOPIC);
+            $show = DataUtil::formatForDisplay(__('New topic', $dom));
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_NEWTOPIC) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('New topic', $dom)) .'" ' . $imagedata['size'] . ' />';
         }
-        $out = '<a title="' . DataUtil::formatForDisplay(_DZK_NEWTOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'newtopic', array('forum'=> $params['forum_id']))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(__('New topic', $dom)) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'newtopic', array('forum'=> $params['forum_id']))) . '">' . $show . '</a>';
 	}
     return $out;
 }

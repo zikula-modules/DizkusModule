@@ -1,183 +1,183 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_ADMINGENERALOPTIONS' assign='templatetitle' ]-->
-<!--[ cssversion assign='configclass' ]-->
+<!--[gt text="General options" assign=templatetitle]-->
+<!--[cssversion assign='configclass']-->
 
-<!--[ include file='dizkus_admin_header.html' ]-->
+<!--[include file='dizkus_admin_header.html']-->
 
-<!--[ pnform cssClass=$configclass]-->
-<!--[ pnformvalidationsummary ]-->
+<!--[pnform cssClass=$configclass]-->
+<!--[pnformvalidationsummary]-->
 
 <fieldset>
-    <legend><!--[ $templatetitle ]--></legend>
+    <legend><!--[$templatetitle]--></legend>
 
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="forum_enabled" text='_DZK_PREFS_ENABLEDISABLE' html=1]-->
-        <!--[ pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="forum_enabled" text='Dizkus is available<br /><em>(turning it off allows access for Admins only)</em>' html=1]-->
+        <!--[pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="forum_disabled_info" text="_DZK_PREFS_DISABLEDTEXT" html=1 ]-->
-        <!--[ pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="forum_disabled_info" text="Enter info text for users if forum is disabled" html=1]-->
+        <!--[pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="email_from" text="_DZK_PREFS_EMAIL" html=1 ]-->
-        <!--[ pnformtextinput id="email_from" text=$pncore.Dizkus.email_from size="30" maxLength="100" ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="email_from" text="Email From Address<br /><em>(This is the address that will appear on every email sent by the forums)</em>" html=1]-->
+        <!--[pnformtextinput id="email_from" text=$pncore.Dizkus.email_from size="30" maxLength="100"]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="default_lang" text="_DZK_PREFS_CHARSET" html=1 ]-->
-        <!--[ pnformtextinput id="default_lang" text=$pncore.Dizkus.default_lang size="30" maxLength="100" ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="default_lang" text="Default charset<br /><em>(This is the charset that will be used in e-mail headers)</em>" html=1]-->
+        <!--[pnformtextinput id="default_lang" text=$pncore.Dizkus.default_lang size="30" maxLength="100"]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="hot_threshold" text="_DZK_PREFS_HOTTOPIC" html=1 ]-->
-        <!--[ pnformintinput id="hot_threshold" text=$pncore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999 ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="hot_threshold" text="Hot Topic Threshold" html=1]-->
+        <!--[pnformintinput id="hot_threshold" text=$pncore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="posts_per_page" text="_DZK_PREFS_POSTSPERPAGE" html=1 ]-->
-        <!--[ pnformintinput id="posts_per_page" text=$pncore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="posts_per_page" text="Posts per Page<br /><em>(This is the number of posts per topic that will be displayed per page of a topic. 15 by default.)</em>" html=1]-->
+        <!--[pnformintinput id="posts_per_page" text=$pncore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="topics_per_page" text="_DZK_PREFS_TOPICSPERPAGE" html=1 ]-->
-        <!--[ pnformintinput id="topics_per_page" text=$pncore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999 ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="topics_per_page" text="Topics per Forum<br /><em>(This is the number of topics per forum that will be displayed per page of a forum. 15 by default.)</em>" html=1]-->
+        <!--[pnformintinput id="topics_per_page" text=$pncore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="hideusers" text='_DZK_PREFS_HIDEUSERSINFORUMADMIN' ]-->
-        <!--[ pnformcheckbox id="hideusers" checked=$hideusers_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="hideusers" text='Hide users in forum admin']-->
+        <!--[pnformcheckbox id="hideusers" checked=$hideusers_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="sendemailswithsqlerrors" text='_DZK_PREFS_SENDEMAILSWITHSQLERRORS' ]-->
-        <!--[ pnformcheckbox id="sendemailswithsqlerrors" checked=$sendemailswithsqlerrors_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="sendemailswithsqlerrors" text='Send emails, if SQL-errors occur']-->
+        <!--[pnformcheckbox id="sendemailswithsqlerrors" checked=$sendemailswithsqlerrors_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="url_ranks_images" text="_DZK_PREFS_RANKLOCATION" html=1 ]-->
-        <!--[ pnformtextinput id="url_ranks_images" text=$pncore.Dizkus.url_ranks_images size="30" maxLength="100" ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="url_ranks_images" text="Ranks icons location" html=1]-->
+        <!--[pnformtextinput id="url_ranks_images" text=$pncore.Dizkus.url_ranks_images size="30" maxLength="100"]-->
     </div>
 </fieldset>
 
 <fieldset>
-    <legend><!--[ pnml name='_DZK_ADMINADVANCEDCONFIG_INFO' ]--></legend>
+    <legend><!--[gt text="Set advanced configuration, caution!"]--></legend>
     <div class="pn-warningmsg">
-        <strong><!--[ pnml name='_DZK_ADMINADVANCEDCONFIG_HINT' ]--></strong><br />
-        <!--[ pnml name='_DZK_DATABASEINUSE' ]-->: <!--[ $dbname ]--> (<!--[ $dbtype ]--> <!--[ $dbversion ]-->)
+        <strong><!--[gt text="Caution: wrong settings here can lead to unwanted side effects. If you do not understand what is going on here, stay away and leave the settings as they are!"]--></strong><br />
+        <!--[gt text="Database in use"]-->: <!--[$dbname]--> (<!--[$dbtype]--> <!--[$dbversion]-->)
     </div>
 
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="fulltextindex" text="_DZK_PREFS_SEARCHWITHFULLTEXTINDEX" html=1 ]-->
-        <!--[ pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="fulltextindex" text="Search forums with fulltext index" html=1]-->
+        <!--[pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked]-->
     </div>
-    <div class="zk-formnote pn-informationmsg"><!--[ pnml name='_DZK_PREFS_SEARCHWITHFULLTEXTINDEX_HINT' html=1 ]--></div>
+    <div class="zk-formnote pn-informationmsg"><!--[gt text="<em>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the index fields have been created. The search result might by empty if the query string is present in too many postings. This is a \"feature\" of MySQL.</em><br /><a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL\">Fulltext search in MySQL</a>."]--></div>
 
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="extendedsearch" text="_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX" html=1 ]-->
-        <!--[ pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="extendedsearch" text="Use extended fulltext search in internal search" html=1]-->
+        <!--[pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked]-->
     </div>
-    <div class="zk-formnote pn-informationmsg"><!--[ pnml name='_DZK_PREFS_INTERNALSEARCHWITHEXTENDEDFULLTEXTINDEX_HINT' html=1 ]--></div>
+    <div class="zk-formnote pn-informationmsg"><!--[gt text="<i>The extended fulltext search enables parameters like \"+dizkus -skype\" for postings that contain \"dizkus\" but not \"skype\". Minimum requirement is MySQL 4.01.</i><br /><a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended fulltest search in MySQL\">Extended fulltest search in MySQL</a>."]--></div>
 
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="showtextinsearchresults" text='_DZK_PREFS_SHOWTEXTINSEARCHRESULTS' html=1]-->
-        <!--[ pnformcheckbox id="showtextinsearchresults" checked=$showtextinsearchresults_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="showtextinsearchresults" text='Show text in search results<br /><em>Turn this off in high volume sites to improve search performance or take care about constant cleaning of the search results table.</em>' html=1]-->
+        <!--[pnformcheckbox id="showtextinsearchresults" checked=$showtextinsearchresults_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="minsearchlength" text="_DZK_PREFS_MINSEARCHLENGTH" html=1 ]-->
-        <!--[ pnformintinput id="minsearchlength" text=$pncore.Dizkus.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50 ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="minsearchlength" text="Minimum length of search string (>=1 char)" html=1]-->
+        <!--[pnformintinput id="minsearchlength" text=$pncore.Dizkus.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="maxsearchlength" text="_DZK_PREFS_MAXSEARCHLENGTH" html=1 ]-->
-        <!--[ pnformintinput id="maxsearchlength" text=$pncore.Dizkus.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50 ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="maxsearchlength" text="Maximum length of search string (<=50 chars)" html=1]-->
+        <!--[pnformintinput id="maxsearchlength" text=$pncore.Dizkus.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50]-->
     </div>
 </fieldset>
 
 <fieldset>
-    <legend><!--[ pnml name='_DZK_ADMINUSERRELATEDOPTIONS']--></legend>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="post_sort_order" text="_DZK_PREFS_POSTSORTORDER" html=1 ]-->
-        <!--[ pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$pncore.Dizkus.post_sort_order ]-->
+    <legend><!--[gt text="User related options"]--></legend>
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="post_sort_order" text="Posts sorting order" html=1]-->
+        <!--[pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$pncore.Dizkus.post_sort_order]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="signature_start" text="_DZK_PREFS_SIGNATURESTART" html=1 ]-->
-        <!--[ pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_start|default:'' ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="signature_start" text="Start of signature format" html=1]-->
+        <!--[pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_start|default:'']-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="signature_end" text="_DZK_PREFS_SIGNATUREEND" html=1 ]-->
-        <!--[ pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_end|default:'' ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="signature_end" text="End of signature format" html=1]-->
+        <!--[pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_end|default:'']-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="autosubscribe" text='_DZK_PREFS_AUTOSUBSCRIBE' ]-->
-        <!--[ pnformcheckbox id="autosubscribe" checked=$autosubscribe_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="autosubscribe" text='Autosubscribe to new topics or posts']-->
+        <!--[pnformcheckbox id="autosubscribe" checked=$autosubscribe_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="signaturemanagement" text='_DZK_PREFS_ENABLESIGNATUREMANAGEMENT' ]-->
-        <!--[ pnformcheckbox id="signaturemanagement" checked=$signaturemanagement_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="signaturemanagement" text='Enable signature management via Dizkus-User-Settings']-->
+        <!--[pnformcheckbox id="signaturemanagement" checked=$signaturemanagement_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="removesignature" text='_DZK_PREFS_REMOVESIGNATUREFROMPOST' ]-->
-        <!--[ pnformcheckbox id="removesignature" checked=$removesignature_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="removesignature" text='Remove users signature from posting']-->
+        <!--[pnformcheckbox id="removesignature" checked=$removesignature_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
+    <div class="<!--[$configclass]-->row">
         <!--[if $contactlist_available eq true]-->
-        <!--[ pnformlabel for="ignorelist_handling" text='_DZK_PREFS_IGNORELISTHANDLING' html=1 ]-->
-        <!--[ pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling ]-->
-        <div class="zk-formnote pn-informationmsg"><!--[ pnml name='_DZK_PREFS_IGNORELISTLEVELS' ]--></div>
+        <!--[pnformlabel for="ignorelist_handling" text='Handling of ignored users' html=1]-->
+        <!--[pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling]-->
+        <div class="zk-formnote pn-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
         <!--[else]-->
-        <div class="zk-formnote pn-informationmsg"><!--[ pnml name='_DZK_PREFS_IGNORELISTHANDLINGNOTAVAILABLE' ]--><br />
-            <a href="http://code.zikula.org/contactlist/">ContactList <!--[ pnml name='_DZK_PREFS_HASTOBEINSTALLED' ]--></a>
+        <div class="zk-formnote pn-informationmsg"><!--[gt text="Handling of ignored users is not available, "]--><br />
+            <a href="http://code.zikula.org/contactlist/"><!--[gt text="%1$s has to be installed" __tag1="Contactlist"]--></a>
         </div>
         <!--[/if]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="newtopicconf" text='_DZK_PREFS_SHOWNEWTOPICCONFIRMATION' ]-->
-        <!--[ pnformcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="newtopicconf" text='Show confirmation when a new topic has been created']-->
+        <!--[pnformcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked]-->
     </div>
 </fieldset>
 
 <fieldset>
-    <legend><!--[ pnml name='_DZK_ADMINSECURITYOPTIONS' ]--></legend>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="log_ip" text='_DZK_PREFS_LOGIP' ]-->
-        <!--[ pnformcheckbox id="log_ip" checked=$log_ip_checked ]-->
+    <legend><!--[gt text="Security options"]--></legend>
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="log_ip" text='Log IP addresses']-->
+        <!--[pnformcheckbox id="log_ip" checked=$log_ip_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="striptags" text='_DZK_PREFS_STRIPTAGSFROMPOST' ]-->
-        <!--[ pnformcheckbox id="striptags" checked=$striptags_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="striptags" text='Strip all html tags from new posts (does not alter content of [code][/code]']-->
+        <!--[pnformcheckbox id="striptags" checked=$striptags_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="timespanforchanges" text="_DZK_PREFS_TIMESPANFORCHANGES" html=1 ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="timespanforchanges" text="Allow changes in postings within x hours" html=1]-->
         <span>
-            <!--[ pnformintinput id="timespanforchanges" text=$pncore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72 ]-->
-            <!--[ pnml name='_DZK_HOURS' ]-->
+            <!--[pnformintinput id="timespanforchanges" text=$pncore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72]-->
+            <!--[gt text="hours"]-->
         </span>
     </div>
 </fieldset>
 
 <fieldset>
-    <legend><!--[ pnml name='_DZK_ADMINFEATURESOPTIONS' ]--></legend>
+    <legend><!--[gt text="Features"]--></legend>
 
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="slimforum" text='_DZK_PREFS_SLIMFORUM' ]-->
-        <!--[ pnformcheckbox id="slimforum" checked=$slimforum_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="slimforum" text='Hide category view with one category only']-->
+        <!--[pnformcheckbox id="slimforum" checked=$slimforum_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="m2f_enabled" text='_DZK_PREFS_M2FENABLED' ]-->
-        <!--[ pnformcheckbox id="m2f_enabled" checked=$m2f_enabled_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="m2f_enabled" text='Mail2Forum enabled']-->
+        <!--[pnformcheckbox id="m2f_enabled" checked=$m2f_enabled_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="rss2f_enabled" text='_DZK_PREFS_RSS2FENABLED' ]-->
-        <!--[ pnformcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="rss2f_enabled" text='RSS2Forum enabled']-->
+        <!--[pnformcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="favorites_enabled" text='_DZK_PREFS_FAVORITESENABLED' ]-->
-        <!--[ pnformcheckbox id="favorites_enabled" checked=$favorites_enabled_checked ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="favorites_enabled" text='Favorites enabled']-->
+        <!--[pnformcheckbox id="favorites_enabled" checked=$favorites_enabled_checked]-->
     </div>
-    <div class="<!--[ $configclass ]-->row">
-        <!--[ pnformlabel for="deletehookaction" text='_DZK_PREFS_DELETEHOOKACTION' ]-->
-        <!--[ pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$pncore.Dizkus.deletehookaction ]-->
+    <div class="<!--[$configclass]-->row">
+        <!--[pnformlabel for="deletehookaction" text='Action to be performed when deletehook is called']-->
+        <!--[pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$pncore.Dizkus.deletehookaction]-->
     </div>
 </fieldset>
 
-<div class="<!--[ $configclass ]-->buttons">
-    <!--[pnformbutton id="submit" commandName="submit" text="_DZK_PREFS_SAVE" class="dzk_img ok" ]-->
-    <!--[pnformbutton id="restore" commandName="restore" text="_DZK_PREFS_RESTOREDEFAULTS" class="dzk_img cancel" ]-->
+<div class="<!--[$configclass]-->buttons">
+    <!--[pnformbutton id="submit" commandName="submit" text="Save" class="dzk_img ok"]-->
+    <!--[pnformbutton id="restore" commandName="restore" text="Restore defaults" class="dzk_img cancel"]-->
 </div>
 
-<!--[ /pnform ]-->
+<!--[/pnform]-->
 
 
-<!--[ include file='dizkus_admin_footer.html' ]-->
+<!--[include file='dizkus_admin_footer.html']-->

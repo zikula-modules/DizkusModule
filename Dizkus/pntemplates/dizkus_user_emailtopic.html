@@ -1,34 +1,34 @@
 <!--[*  $Id$  *]-->
-<!--[ cssversion assign='configclass' ]-->
-<!--[ pnml name='_DZK_EMAIL_TOPIC' assign='maintitle']-->
+<!--[cssversion assign='configclass']-->
+<!--[gt text="Send as email"]-->
 
-<!--[ include file='dizkus_user_header.html' ]-->
+<!--[include file='dizkus_user_header.html']-->
 
-<!--[ if $error_msg neq '' ]-->
-<div class="pn-errormsg"><!--[ $error_msg ]--></div>
-<!--[ /if ]-->
+<!--[if $error_msg neq '']-->
+<div class="pn-errormsg"><!--[$error_msg]--></div>
+<!--[/if]-->
 
-<form class="<!--[ $configclass ]-->" action="<!--[ pnmodurl modname='Dizkus' type='user' func='emailtopic' ]-->" method="post" name="emailtopic">
+<form class="<!--[$configclass]-->" action="<!--[pnmodurl modname='Dizkus' type='user' func='emailtopic']-->" method="post" name="emailtopic">
     <fieldset id="dzk_emailtopic">
-        <legend><!--[ $templatetitle ]--></legend>
-        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
-        <input type="hidden" name="topic" value="<!--[ $topic.topic_id ]-->" />
-        <div class="<!--[ $configclass ]-->row">
-            <label for="sendto_email"><!--[ pnml name='_DZK_SENDTO' ]--></label>
-            <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[ $sendto_email ]-->" />
+        <legend><!--[$templatetitle]--></legend>
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <input type="hidden" name="topic" value="<!--[$topic.topic_id]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="sendto_email"><!--[gt text="Send to"]--></label>
+            <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="<!--[$sendto_email]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="emailsubject"><!--[ pnml name='_DZK_SUBJECT' html=1 ]-->:&nbsp;</label>
-            <input type="text" id="emailsubject" name="emailsubject" size="50" maxlength="100" value="<!--[ $emailsubject ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="emailsubject"><!--[gt text="Subject"]-->:&nbsp;</label>
+            <input type="text" id="emailsubject" name="emailsubject" size="50" maxlength="100" value="<!--[$emailsubject]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="message"><!--[ pnml name='_DZK_BODY' ]--></label>
-            <textarea id="message" class="dzk_texpand" name="message" rows="10" cols="80"><!--[ $message|pnvarprepfordisplay ]--></textarea>
+        <div class="<!--[$configclass]-->row">
+            <label for="message"><!--[gt text="Message Body"]--></label>
+            <textarea id="message" class="dzk_texpand" name="message" rows="10" cols="80"><!--[$message|pnvarprepfordisplay]--></textarea>
         </div>
     </fieldset>
-    <div class="<!--[ $configclass ]-->buttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->"><!--[ pnml name='_DZK_SUBMIT' ]--></button>
+    <div class="<!--[$configclass]-->buttons">
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>
     </div>
 </form>
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

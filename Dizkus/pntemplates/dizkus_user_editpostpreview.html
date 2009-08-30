@@ -5,110 +5,110 @@ $Id$
 Template for single postings
 
 *]-->
-<!--[ pnimg modname='Dizkus' src='icon_post_pm.gif' assign=profile alt='_DZK_PROFILE' altml=true ]-->
+<!--[pnimg modname='Dizkus' src='icon_post_pm.gif' assign=profile __alt='Profile' ]-->
 
-<h2><!--[ $post.topic_subject|pnvarprepfordisplay ]--></h2>
+<h2><!--[$post.topic_subject|pnvarprepfordisplay]--></h2>
 
-<div id="posting_<!--[ $post.post_id ]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[ if $post.poster_data.online  ]-->poster_online<!--[/if]-->" >
+<div id="posting_<!--[$post.post_id]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[if $post.poster_data.online]-->poster_online<!--[/if]-->" >
     <div class="inner">
 
         <div class="dzk_subcols pn-clearfix">
-            <div id="posting_<!--[ $post.post_id ]-->_userinfo" class="post_author dzk_colpost_left">
-                <!--[ if $post.poster_data.pn_uid eq 1 OR $post.poster_data.pn_uid eq ""]-->
+            <div id="posting_<!--[$post.post_id]-->_userinfo" class="post_author dzk_colpost_left">
+                <!--[if $post.poster_data.pn_uid eq 1 OR $post.poster_data.pn_uid eq ""]-->
                 <div class="dzk_avatar">
                     <strong><!--[$post.poster_data.pn_uname]--></strong>
                     <br />
                     <img src="<!--[$baseurl]-->modules/Dizkus/pnimages/gravatar_80.jpg" alt="empty gravatar" />
                 </div>
-                <!--[ else ]-->
+                <!--[else]-->
                 <div class="dzk_avatar">
                     <strong><!--[$post.poster_data.pn_uname|userprofilelink]--></strong>
                     <br />
-                    <!--[ assign var='defaultavatar' value="`$baseurl`modules/Dizkus/pnimages/gravatar_80.jpg" ]-->
-                    <!--[ if isset($post.poster_data._YOURAVATAR) AND $post.poster_data._YOURAVATAR neq 'blank.gif' AND $post.poster_data._YOURAVATAR neq 'gravatar.gif' ]-->
-                    <!--[ assign var='defaultavatar' value="`$baseurl`images/avatar/`$post.poster_data._YOURAVATAR`"|default:$defaultavatar ]-->
-                    <img src="<!--[ gravatar email=$post.poster_data.pn_email size=80 default=$defaultavatar ]-->" alt="<!--[ $post.poster_data.pn_uname ]-->'s Avatar" />
-                    <!--[ /if ]-->
-                    <!--[ if isset($post.poster_data.rank_image) && isset($post.poster_data.rank) ]-->
+                    <!--[assign var='defaultavatar' value="`$baseurl`modules/Dizkus/pnimages/gravatar_80.jpg"]-->
+                    <!--[if isset($post.poster_data._YOURAVATAR) AND $post.poster_data._YOURAVATAR neq 'blank.gif' AND $post.poster_data._YOURAVATAR neq 'gravatar.gif']-->
+                    <!--[assign var='defaultavatar' value="`$baseurl`images/avatar/`$post.poster_data._YOURAVATAR`"|default:$defaultavatar]-->
+                    <img src="<!--[gravatar email=$post.poster_data.pn_email size=80 default=$defaultavatar]-->" alt="<!--[$post.poster_data.pn_uname]-->'s Avatar" />
+                    <!--[/if]-->
+                    <!--[if isset($post.poster_data.rank_image) && isset($post.poster_data.rank)]-->
                     <br />
-                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[ $post.poster_data.rank_image ]-->" alt="<!--[ $post.poster_data.rank ]-->" <!--[ $post.poster_data.rank_image_image_attr.3 ]--> />
-                    <!--[ /if ]-->
+                    <img class="userinforankimage" src="<!--[$baseurl]--><!--[$post.poster_data.rank_image]-->" alt="<!--[$post.poster_data.rank]-->" <!--[$post.poster_data.rank_image_image_attr.3]--> />
+                    <!--[/if]-->
                 </div>
 
                 <ul>
-                    <!--[ if isset($post.poster_data.rank) ]-->
-                    <li><strong><!--[ pnml name='_DZK_RANK' ]-->: </strong><!--[ $post.poster_data.rank|pnvarprepfordisplay ]--></li>
-                    <!--[ /if ]-->
-                    <li><strong><!--[ pnml name='_DZK_REG_SINCE' ]-->: </strong><!--[ $post.poster_data.pn_user_regdate|pnfdate_format:'datebrief' ]--></li>
-                    <!--[ if !$post.poster_data.online  ]-->
-                    <li><strong><!--[ pnml name='_DZK_LAST_SEEN' ]-->: </strong><!--[ $post.poster_data.user_lastvisit|pnfdate_format:'datebrief' ]--></li>
-                    <!--[ /if ]-->
-                    <li><strong><!--[ pnml name='_DZK_POSTS' ]-->: </strong><!--[ $post.poster_data.user_posts ]--></li>
+                    <!--[if isset($post.poster_data.rank)]-->
+                    <li><strong><!--[gt text="Rank"]-->: </strong><!--[$post.poster_data.rank|pnvarprepfordisplay]--></li>
+                    <!--[/if]-->
+                    <li><strong><!--[gt text="Registered"]-->: </strong><!--[$post.poster_data.pn_user_regdate|pnfdate_format:'datebrief']--></li>
+                    <!--[if !$post.poster_data.online]-->
+                    <li><strong><!--[gt text="last visit"]-->: </strong><!--[$post.poster_data.user_lastvisit|pnfdate_format:'datebrief']--></li>
+                    <!--[/if]-->
+                    <li><strong><!--[gt text="Posts"]-->: </strong><!--[$post.poster_data.user_posts]--></li>
                 </ul>
-                <!--[ /if ]-->
+                <!--[/if]-->
             </div>
 
             <div class="postbody dzk_colpost_right">
 
                 <div class="postinfo">
-                    <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[ pnmodurl modname='Dizkus' type=user func=viewtopic topic=$post.topic_id start=$topic.start ]-->#pid<!--[ $post.post_id ]-->" title="<!--[ pnml name='_DZK_LINKTOTHISPOST' ]-->"><!--[pnimg modname='Dizkus' src='target.gif' alt='']--></a><!--[/if]-->
-                    <strong><!--[ pnml name='_DZK_POSTED' ]-->:</strong>&nbsp;<!--[ $post.posted_unixtime|pnfdate_format:'datetimebrief' ]-->
+                    <!--[if isset($topic)]--><a class="dzk_img linktopostlink" style="margin-right: 5px;" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$post.topic_id start=$topic.start]-->#pid<!--[$post.post_id]-->" title="<!--[gt text="Link to this posting"]-->"><!--[pnimg modname='Dizkus' src='target.gif' __alt='']--></a><!--[/if]-->
+                    <strong><!--[gt text="Posted"]-->:</strong>&nbsp;<!--[$post.posted_unixtime|pnfdate_format:'datetimebrief']-->
                 </div>
 
-                <div class="content" id="postingtext_<!--[ $post.post_id ]-->">
-                    <!--[ $post.post_textdisplay ]-->
+                <div class="content" id="postingtext_<!--[$post.post_id]-->">
+                    <!--[$post.post_textdisplay]-->
                 </div>
 
             </div>
 
             <div class="postlink">
-                <!--[ if !isset($preview) OR $preview neq true ]-->
+                <!--[if !isset($preview) OR $preview neq true]-->
                 <div class="dzk_colpost_right">
-                    <ul id="postingoptions_<!--[ $post.post_id ]-->" class="javascriptpostingoptions hidden linklist pn-clearfix" style="float:right;">
-                        <!--[ if $post.poster_data.moderate eq true]-->
-                        <!--[ if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)  ]-->
-                        <li><a class="movepostlink" title="<!--[ pnml name='_DZK_MOVEPOST' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id ]-->"><!--[ pnimg modname='Dizkus' src="icon_post_move.gif" alt="_DZK_MOVEPOSTSHORT" altml=true ]--></a></li>
-                        <li><a class="splittopiclink" title="<!--[ pnml name='_DZK_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=splittopic post=$post.post_id ]-->"><!--[ pnimg modname='Dizkus' src="icon_post_split.gif" alt="_DZK_SPLITSHORT" altml=true ]--></a></li>
-                        <!--[ /if ]-->
-                        <!--[ /if ]-->
+                    <ul id="postingoptions_<!--[$post.post_id]-->" class="javascriptpostingoptions hidden linklist pn-clearfix" style="float:right;">
+                        <!--[if $post.poster_data.moderate eq true]-->
+                        <!--[if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)]-->
+                        <li><a class="movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_move.gif" __alt="Move" ]--></a></li>
+                        <li><a class="splittopiclink" title="<!--[gt text="Split topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=splittopic post=$post.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_split.gif" __alt="Split" ]--></a></li>
+                        <!--[/if]-->
+                        <!--[/if]-->
 
-                        <!--[ if isset($topic) AND $topic.topic_status neq 1 ]-->
-                        <!--[ if $post.poster_data.reply eq true]-->
-                        <li><a class="quotepostlink" id="quotebutton_<!--[ $post.post_id ]-->" onclick="javascript:createQuote(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_DZK_REPLYQUOTE' ]-->" href="javascript:void(0);"><!--[ pnimg modname='Dizkus' src="icon_post_quote.gif" alt="_DZK_REPLYQUOTE" altml=true ]--></a></li>
-                        <!--[ /if ]-->
-                        <!--[ if $post.poster_data.edit eq 1 ]-->
-                        <li><a class="editpostlink" id="editbutton_<!--[ $post.post_id ]-->" onclick="javascript:quickEdit(<!--[ $post.post_id ]-->);" title="<!--[ pnml name='_DZK_EDITDELETE' ]-->" href="javascript:void(0);"><!--[ pnimg modname='Dizkus' src="icon_post_edit.gif" alt="_DZK_EDITSHORT" altml=true ]--></a></li>
-                        <!--[ /if ]-->
-                        <!--[ elseif isset($topic) ]-->
-                        <li><!--[ pnimg modname='Dizkus' src="icon_post_close.gif" alt="_DZK_TOPICLOCKED" altml=true ]--></li>
-                        <!--[ /if ]-->
-                        <li><a class="notifymoderatorlink" href="<!--[ pnmodurl modname='Dizkus' type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_DZK_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_mod.gif" alt="_DZK_NOTIFYMODERATOR" altml=true ]--></a></li>
-                        <li><a title="<!--[ pnml name='_DZK_TOP' ]-->" href="#top">&nbsp;<!--[ pnimg modname='Dizkus' src="icon_up.gif" alt="_DZK_TOP" altml=true ]--></a></li>
+                        <!--[if isset($topic) AND $topic.topic_status neq 1]-->
+                        <!--[if $post.poster_data.reply eq true]-->
+                        <li><a class="quotepostlink" id="quotebutton_<!--[$post.post_id]-->" onclick="javascript:createQuote(<!--[$post.post_id]-->);" title="<!--[gt text="Quote"]-->" href="javascript:void(0);"><!--[pnimg modname='Dizkus' src="icon_post_quote.gif" __alt="Quote" ]--></a></li>
+                        <!--[/if]-->
+                        <!--[if $post.poster_data.edit eq 1]-->
+                        <li><a class="editpostlink" id="editbutton_<!--[$post.post_id]-->" onclick="javascript:quickEdit(<!--[$post.post_id]-->);" title="<!--[gt text="edit/delete"]-->" href="javascript:void(0);"><!--[pnimg modname='Dizkus' src="icon_post_edit.gif" __alt="Edit" ]--></a></li>
+                        <!--[/if]-->
+                        <!--[elseif isset($topic)]-->
+                        <li><!--[pnimg modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked" ]--></li>
+                        <!--[/if]-->
+                        <li><a class="notifymoderatorlink" href="<!--[pnmodurl modname='Dizkus' type=user func=report post=$post.post_id]-->" title="<!--[gt text="Notify a moderator about a posting"]-->"><!--[pnimg modname='Dizkus' src="icon_topic_mod.gif" __alt="Notify mod" ]--></a></li>
+                        <li><a title="<!--[gt text="Top"]-->" href="#top">&nbsp;<!--[pnimg modname='Dizkus' src="icon_up.gif" __alt="Top" ]--></a></li>
                     </ul>
                     <noscript>
                         <ul class="nonjavascriptpostingoptions linklist pn-clearfix" style="float:right;">
-                            <!--[ if $post.poster_data.moderate eq true]-->
-                            <!--[ if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)  ]-->
-                            <li><a class="dzk_img movepostlink" title="<!--[ pnml name='_DZK_MOVEPOST' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id ]-->"><!--[ pnml name='_DZK_MOVEPOSTSHORT' ]--></a></li>
-                            <li><a class="dzk_img splittopiclink" title="<!--[ pnml name='_DZK_SPLITTOPIC' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=splittopic post=$post.post_id ]-->"><!--[ pnml name='_DZK_SPLITSHORT' ]--></a></li>
-                            <!--[ /if ]-->
-                            <!--[ /if ]-->
+                            <!--[if $post.poster_data.moderate eq true]-->
+                            <!--[if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)]-->
+                            <li><a class="dzk_img movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id]-->"><!--[gt text="Move"]--></a></li>
+                            <li><a class="dzk_img splittopiclink" title="<!--[gt text="Split topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=splittopic post=$post.post_id]-->"><!--[gt text="Split"]--></a></li>
+                            <!--[/if]-->
+                            <!--[/if]-->
 
-                            <!--[ if isset($topic) AND $topic.topic_status neq 1 ]-->
-                            <!--[ if $post.poster_data.reply eq true]-->
-                            <li><a class="dzk_img quotepostlink" title="<!--[ pnml name='_DZK_REPLYQUOTE' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=reply post=$post.post_id ]-->"><!--[ pnml name='_DZK_REPLYQUOTE' ]--></a></li>
-                            <!--[ /if ]-->
-                            <!--[ if $post.poster_data.edit eq 1 ]-->
-                            <li><a class="dzk_img editpostlink" title="<!--[ pnml name='_DZK_EDITDELETE' ]-->" href="<!--[ pnmodurl modname='Dizkus' type=user func=editpost post=$post.post_id ]-->"><!--[ pnml name='_DZK_EDITSHORT' ]--></a></li>
-                            <!--[ /if ]-->
-                            <!--[ elseif isset($topic) ]-->
-                            <!--[ pnimg modname='Dizkus' src=icon_post_close.gif alt="_DZK_TOPICLOCKED" altml=true ]-->
-                            <!--[ /if ]-->
-                            <li><a class="dzk_img notifymoderatorlink" href="<!--[ pnmodurl modname='Dizkus' type=user func=report post=$post.post_id ]-->" title="<!--[ pnml name='_DZK_NOTIFYMODERATOR_TITLE ]-->"><!--[ pnml name='_DZK_NOTIFYMODERATOR' ]--></a></li>
+                            <!--[if isset($topic) AND $topic.topic_status neq 1]-->
+                            <!--[if $post.poster_data.reply eq true]-->
+                            <li><a class="dzk_img quotepostlink" title="<!--[gt text="Quote"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=reply post=$post.post_id]-->"><!--[gt text="Quote"]--></a></li>
+                            <!--[/if]-->
+                            <!--[if $post.poster_data.edit eq 1]-->
+                            <li><a class="dzk_img editpostlink" title="<!--[gt text="edit/delete"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=editpost post=$post.post_id]-->"><!--[gt text="Edit"]--></a></li>
+                            <!--[/if]-->
+                            <!--[elseif isset($topic)]-->
+                            <!--[pnimg modname='Dizkus' src=icon_post_close.gif __alt="Topic locked" ]-->
+                            <!--[/if]-->
+                            <li><a class="dzk_img notifymoderatorlink" href="<!--[pnmodurl modname='Dizkus' type=user func=report post=$post.post_id]-->" title="<!--[gt text="Notify a moderator about a posting"]-->"><!--[gt text="Notify mod"]--></a></li>
                         </ul>
                     </noscript>
                 </div>
-                <!--[ /if ]-->
+                <!--[/if]-->
             </div>
         </div>
 
@@ -117,11 +117,11 @@ Template for single postings
 
 <script type="text/javascript">
     // <![CDATA[
-    if($('editbutton_<!--[ $post.post_id ]-->')) {
-        Element.show('editbutton_<!--[ $post.post_id ]-->');
+    if($('editbutton_<!--[$post.post_id]-->')) {
+        Element.show('editbutton_<!--[$post.post_id]-->');
     }
-    if($('quotebutton_<!--[ $post.post_id ]-->')) {
-        Element.show('quotebutton_<!--[ $post.post_id ]-->');
+    if($('quotebutton_<!--[$post.post_id]-->')) {
+        Element.show('quotebutton_<!--[$post.post_id]-->');
     }
     // ]]>
 </script>

@@ -20,8 +20,10 @@
  */
 function smarty_function_mailtopic_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');    
+
     extract($params);
-	unset($params);
+	  unset($params);
 
     // set a default value
     if(!isset($image) || empty($image)) {
@@ -33,11 +35,11 @@ function smarty_function_mailtopic_button($params, &$smarty)
     if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = dzk_getimagepath($image);
         if($imagedata == false) {
-            $show = DataUtil::formatForDisplay(_DZK_EMAIL_TOPIC);
+            $show = DataUtil::formatForDisplay(__('Send as e-mail', $dom));
         } else {
-            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_EMAIL_TOPIC) .'" ' . $imagedata['size'] . ' />';
+            $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Send as e-mail', $dom)) .'" ' . $imagedata['size'] . ' />';
         }
-	    $out = '<a title="' . DataUtil::formatForDisplay(_DZK_EMAIL_TOPIC) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'emailtopic', array('topic'=>$topic_id))) . '">' . $show . '</a>';
+	    $out = '<a title="' . DataUtil::formatForDisplay(__('Send as e-mail', $dom)) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'emailtopic', array('topic' => $topic_id))) . '">' . $show . '</a>';
 	}
     return $out;
 }

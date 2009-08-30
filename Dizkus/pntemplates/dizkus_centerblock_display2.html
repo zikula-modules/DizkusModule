@@ -1,22 +1,22 @@
 <!--[*  $Id$  *]-->
 
-<!--[ pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css" ]-->
+<!--[pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css"]-->
 
-<!--[ readlastposts forum_id=$forum_id maxposts=$maxposts ]-->
-<!--[ if $lastpostcount > 0 ]-->
+<!--[readlastposts forum_id=$forum_id maxposts=$maxposts]-->
+<!--[if $lastpostcount > 0]-->
 <table width="100%" border="0" cellpadding="3" cellspacing="1">
     <tr>
         <td colspan="4">
-            <strong><!--[ $lastpostcount ]-->&nbsp;<!--[ pnml name='_DZK_CB_RECENTPOSTS' ]--></strong>
+            <strong><!--[$lastpostcount]-->&nbsp;<!--[gt text="Recent postings:"]--></strong>
         </td>
     </tr>
-    <!--[ foreach item=lastpost from=$lastposts ]-->
+    <!--[foreach item=lastpost from=$lastposts]-->
     <tr>
-        <td><a href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$lastpost.forum_id ]-->"><!--[ $lastpost.forum_name ]--></a></td>
-        <td><a href="<!--[ $lastpost.last_post_url_anchor ]-->"><!--[ $lastpost.topic_title ]--></a></td>
-        <td><!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]--></td>
-        <td><!--[ $lastpost.poster_name|dzkprofilelink ]--></td>
+        <td><a href="<!--[pnmodurl modname=Dizkus type=user func=viewforum forum=$lastpost.forum_id]-->"><!--[$lastpost.forum_name]--></a></td>
+        <td><a href="<!--[$lastpost.last_post_url_anchor]-->"><!--[$lastpost.topic_title]--></a></td>
+        <td><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true]--></td>
+        <td><!--[$lastpost.poster_name|dzkprofilelink]--></td>
     </tr>
-    <!--[ /foreach ]-->
+    <!--[/foreach]-->
 </table>
-<!--[ /if ]-->
+<!--[/if]-->

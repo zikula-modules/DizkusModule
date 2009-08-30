@@ -1,25 +1,25 @@
 <!--[*  $Id$  *]-->
 
-<!--[ include file='dizkus_user_header.html' ]-->
+<!--[include file='dizkus_user_header.html']-->
 
-<h2><!--[ pnml name='_DZK_ACCOUNT_INFORMATION' ]--></h2>
+<h2><!--[gt text="Users IP and Account information"]--></h2>
 
 <div class="pn-informationmsg">
     <dl>
-        <dt><!--[ pnml name='_DZK_USER_IP' ]-->:</dt>
-        <dd><!--[ $viewip.poster_ip ]--></dd>
-        <dt><!--[ pnml name='_DZK_HOST' ]-->:</dt>
-        <dd><!--[ $viewip.poster_host ]--></dd>
-        <dt><!--[ pnml name='_DZK_IP_USERNAMES ]--></dt>
-        <!--[ foreach item=user from=$viewip.users ]-->
-        <dd><!--[ $user.pn_uname|dzkprofilelink ]-->&nbsp;(<!--[ $user.postcount ]--> <!--[ pnml name='_DZK_POSTS' ]-->)</dd>
-        <!--[ /foreach ]-->
+        <dt><!--[gt text="User IP"]-->:</dt>
+        <dd><!--[$viewip.poster_ip]--></dd>
+        <dt><!--[gt text="Host"]-->:</dt>
+        <dd><!--[$viewip.poster_host]--></dd>
+        <dt><!--[gt text="Usernames of users that posted from this IP + post counts"]--></dt>
+        <!--[foreach item=user from=$viewip.users]-->
+        <dd><!--[$user.pn_uname|dzkprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</dd>
+        <!--[/foreach]-->
     </dl>
     <br />
 </div>
 
 <p class="gobacklink">
-    <a class="previoustopiclink" href="<!--[ pnmodurl modname=Dizkus type=user func=viewtopic topic=$topic_id ]-->" title="<!--[ pnml name='_DZK_RETURNTOTOPIC' ]-->"><!--[ pnml name='_DZK_RETURNTOTOPIC' ]--></a>
+    <a class="previoustopiclink" href="<!--[pnmodurl modname=Dizkus type=user func=viewtopic topic=$topic_id]-->" title="<!--[gt text="Back to the topic"]-->"><!--[gt text="Back to the topic"]--></a>
 </p>
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

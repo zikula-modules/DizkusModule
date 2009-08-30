@@ -12,8 +12,10 @@
  */
 function smarty_function_post_order_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($params);
-	unset($params);
+	  unset($params);
 
     if(!isset($image_ascending) || empty($image_ascending)) {
         $image_ascending = 'postorderasc.gif';
@@ -47,19 +49,19 @@ function smarty_function_post_order_button($params, &$smarty)
         if ($post_order == 'ASC' ) {
             $imagedata = dzk_getimagepath($image_ascending);
             if($imagedata == false) {
-                $show = DataUtil::formatForDisplay(_DZK_NEWEST_FIRST);
+                $show = DataUtil::formatForDisplay(__('Display the newest post first', $dom));
             } else {
-                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change Post Order', $dom)) .'" ' . $imagedata['size'] . ' />';
             }
         } else {
             $imagedata = dzk_getimagepath($image_descending);
             if($imagedata == false) {
-                $show = DataUtil::formatForDisplay(_DZK_OLDEST_FIRST);
+                $show = DataUtil::formatForDisplay(__('Display the oldest post first', $dom));
             } else {
-                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_CHANGE_POST_ORDER) .'" ' . $imagedata['size'] . ' />';
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change Post Order', $dom)) .'" ' . $imagedata['size'] . ' />';
             }
         }
-        $out = '<a title="' . DataUtil::formatForDisplay(_DZK_CHANGE_POST_ORDER) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(__('Change Post Order', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
     }
     return $out;
 }

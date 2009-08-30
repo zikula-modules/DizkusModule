@@ -27,6 +27,8 @@ $count    = (int)FormUtil::getPassedValue('count', 10, 'GET');
 $feed     =      FormUtil::getPassedValue('feed', 'rss20', 'GET');
 $user     =      FormUtil::getPassedValue('user', '', 'GET');
 
+$dom = ZLanguage::getModuleDomain('Dizkus');
+
 /**
  * get the short urls extensions
  */
@@ -49,10 +51,10 @@ if(!empty($feed)) {
 }
 
 if(isset($forum_id) && !is_numeric($forum_id)) {
-    die('backforum.php: invalid forum id "' . DataUtil::formatForDisplay($forum_id) . '"');
+    die(DataUtil::formatForDisplay(__f('backforum.php: invalid forum id %s', $forum_id, $dom)));
 }
 if(isset($cat_id) && !is_numeric($cat_id)) {
-    die('backforum.php: invalid category id "' . DataUtil::formatForDisplay($cat_id) . '"');
+    die(DataUtil::formatForDisplay(__f('backforum.php: invalid category id %s', $cat_id, $dom)));
 }
 
 /**
@@ -66,7 +68,7 @@ $pnr = pnRender::getInstance('Dizkus', false);
 $templatefile = 'dizkus_feed_' . DataUtil::formatForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
-    die('no template for ' . DataUtil::formatForDisplay($feed));
+    die(DataUtil::formatForDisplay(__f('no template found for feed type %s', $feed, $dom)));
 }
 
 /**

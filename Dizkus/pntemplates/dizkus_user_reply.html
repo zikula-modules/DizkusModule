@@ -1,63 +1,63 @@
 <!--[*  $Id$  *]-->
-<!--[ pnml name='_DZK_REPLY_POST' assign='templatetitle']-->
-<!--[ pnpagesetvar name='title' value=$templatetitle ]-->
+<!--[gt text="Reply to"]-->
+<!--[pnpagesetvar name='title' value=$templatetitle]-->
 
-<!--[ include file='dizkus_user_header.html' ]-->
+<!--[include file='dizkus_user_header.html']-->
 
-<!--[ pnmodcallhooks hookobject='item' hookaction='display' hookid=$reply.topic_id implode=false ]-->
+<!--[pnmodcallhooks hookobject='item' hookaction='display' hookid=$reply.topic_id implode=false]-->
 
-<!--[ if $preview|default:false ]-->
+<!--[if $preview|default:false]-->
 <div id="replypreview" style="margin:1em 0;">
-    <!--[ include file='dizkus_user_replypreview.html' ]-->
+    <!--[include file='dizkus_user_replypreview.html']-->
 </div>
-<!--[ /if ]-->
+<!--[/if]-->
 
 <div id="dzk_quickreply" class="forum_post post_bg2 dzk_rounded">
     <div class="inner">
 
         <div class="dzk_subcols pn-clearfix">
 
-            <form id="post" class="dzk_form" action="<!--[ pnmodurl modname='Dizkus' type=user func=reply ]-->" method="post" enctype="multipart/form-data">
+            <form id="post" class="dzk_form" action="<!--[pnmodurl modname='Dizkus' type=user func=reply]-->" method="post" enctype="multipart/form-data">
                 <fieldset>
-                    <legend class="post_header"><!--[ pnml name='_DZK_REPLY_POST' ]-->: <!--[ $reply.topic_subject|dzkbbsmile ]--></legend>
-                    <input type="hidden" name="topic" value="<!--[ $reply.topic_id ]-->" />
-                    <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
+                    <legend class="post_header"><!--[gt text="Reply to"]-->: <!--[$reply.topic_subject|dzkbbsmile]--></legend>
+                    <input type="hidden" name="topic" value="<!--[$reply.topic_id]-->" />
+                    <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
                     <div class="post_text_wrap">
                         <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
                         <div>
-                            <br /><label for="message"><!--[ pnml name='_DZK_BODY' ]--></label>:
-                            <textarea id="message" name="message" class="dzk_texpand"><!--[ $reply.message ]--></textarea>
-                            <!--[ if isset($hooks.MediaAttach) ]--><!--[ $hooks.MediaAttach ]--><!--[/if]-->
-                            <!--[ if $pncore.Dizkus.striptags == 'yes' ]-->
-                            <p><!--[ pnml name='_DZK_NOHTMLALLOWED' ]--></p>
-                            <!--[ /if ]-->
+                            <br /><label for="message"><!--[gt text="Message Body"]--></label>:
+                            <textarea id="message" name="message" class="dzk_texpand"><!--[$reply.message]--></textarea>
+                            <!--[if isset($hooks.MediaAttach)]--><!--[$hooks.MediaAttach]--><!--[/if]-->
+                            <!--[if $pncore.Dizkus.striptags == 'yes']-->
+                            <p><!--[gt text="No HTML-tags allowed (only inside of [code][/code])"]--></p>
+                            <!--[/if]-->
                         </div>
 
                         <div class="dzk_subcols pn-clearfix">
                             <div id="replyoptions" class="dzk_col_left">
                                 <ul>
-                                    <li><strong><!--[ pnml name='_DZK_OPTIONS' ]--></strong></li>
-                                    <!--[ if $pncore.logged_in ]-->
+                                    <li><strong><!--[gt text="Options"]--></strong></li>
+                                    <!--[if $pncore.logged_in]-->
                                     <li>
                                         <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                                        <label for="attach_signature"><!--[ pnml name='_DZK_ATTACHSIGNATURE' ]--></label>
+                                        <label for="attach_signature"><!--[gt text="Attach my signature"]--></label>
                                     </li>
                                     <li>
-                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[ if $topic.is_subscribed eq true ]-->checked="checked"<!--[ /if ]--> value="1" />
-                                        <label for="subscribe_topic"><!--[ pnml name='_DZK_NOTIFYME' ]--></label>
+                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" <!--[if $topic.is_subscribed eq true]-->checked="checked"<!--[/if]--> value="1" />
+                                        <label for="subscribe_topic"><!--[gt text="Notify me when a reply is posted"]--></label>
                                     </li>
-                                    <!--[ /if ]-->
+                                    <!--[/if]-->
                                     <li id="nonajaxreplybuttons">
-                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[ pnml name='_DZK_SUBMIT' ]-->" />
-                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[ pnml name='_DZK_PREVIEW' ]-->" />
-                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[ pnml name='_DZK_CANCELPOST' ]-->" />
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->" />
+                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[gt text="Preview"]-->" />
+                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[gt text="Cancel"]-->" />
                                     </li>
                                 </ul>
                             </div>
                             <div class="dzk_col_left">
-                                <!--[ plainbbcode textfieldid='message' ]-->
-                                <!--[ bbsmile textfieldid='message' ]-->
+                                <!--[plainbbcode textfieldid='message']-->
+                                <!--[bbsmile textfieldid='message']-->
                             </div>
                         </div>
                     </div>
@@ -68,4 +68,4 @@
     </div>
 </div>
 
-<!--[ include file='dizkus_user_footer.html' ]-->
+<!--[include file='dizkus_user_footer.html']-->

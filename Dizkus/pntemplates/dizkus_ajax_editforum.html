@@ -1,166 +1,166 @@
 <!--[*  $Id$  *]-->
-<!--[ cssversion assign='configclass' ]-->
+<!--[cssversion assign='configclass']-->
 
-<form class="<!--[ $configclass]-->" id="editforumform_<!--[ $forum.forum_id ]-->" name="editforumform_<!--[ $forum.forum_id ]-->" action="<!--[ pnmodurl modname='Dizkus type='admin' func='forum' ]-->" method="post">
+<form class="<!--[$configclass]-->" id="editforumform_<!--[$forum.forum_id]-->" name="editforumform_<!--[$forum.forum_id]-->" action="<!--[pnmodurl modname='Dizkus type='admin' func='forum']-->" method="post">
     <fieldset>
-        <!--[ if $newforum eq true ]-->
-        <legend><!--[ pnml name='_DZK_ADMINFORUMADD' ]--></legend>
-        <!--[ else ]-->
-        <legend><!--[ pnml name='_DZK_ADMINFORUMEDIT' ]--></legend>
-        <!--[ /if ]-->
+        <!--[if $newforum eq true]-->
+        <legend><!--[gt text="Add a Forum"]--></legend>
+        <!--[else]-->
+        <legend><!--[gt text="Edit a Forum"]--></legend>
+        <!--[/if]-->
 
-        <div class="<!--[ $configclass ]-->row">
-            <label for="forum_name"><!--[ pnml name='_DZK_FORUM' ]--></label>
-            <input type="text" id="forum_name" name="forum_name" size="70" maxlength="150" value="<!--[ $forum.forum_name|pnvarprepfordisplay ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="forum_name"><!--[gt text="Forum"]--></label>
+            <input type="text" id="forum_name" name="forum_name" size="70" maxlength="150" value="<!--[$forum.forum_name|pnvarprepfordisplay]-->" />
         </div>
 
-        <!--[ if $newforum neq true ]-->
-        <div class="<!--[ $configclass ]-->row">
-            <label for="forum_info"><!--[ pnml name='_DZK_FORUMINFO' ]--></label>
+        <!--[if $newforum neq true]-->
+        <div class="<!--[$configclass]-->row">
+            <label for="forum_info"><!--[gt text="Forum Info"]--></label>
             <span id="forum_info">
-                <!--[ boardstats type='forumtopics' id=$forum.forum_id assign=topiccount ]-->
-                <!--[ boardstats type='forumposts' id=$forum.forum_id assign=postcount ]-->
-                <a title="<!--[ pnml name='_DZK_VISITFORUM' ]-->" href="<!--[ pnmodurl modname='Dizkus' type='user' func='viewforum forum=$forum.forum_id ]-->">
-                    <!--[ $topiccount ]-->&nbsp;<!--[ if $topiccount eq 1 ]--><!--[ pnml name='_DZK_TOPIC' ]--><!--[ else ]--><!--[ pnml name='_DZK_TOPICS ]--><!--[ /if ]-->&nbsp;/&nbsp;
-                    <!--[ $postcount ]-->&nbsp;<!--[ if $postcount eq 1 ]--><!--[ pnml name='_DZK_POST' ]--><!--[ else ]--><!--[ pnml name='_DZK_POSTS ]--><!--[ /if ]-->
+                <!--[boardstats type='forumtopics' id=$forum.forum_id assign=topiccount]-->
+                <!--[boardstats type='forumposts' id=$forum.forum_id assign=postcount]-->
+                <a title="<!--[gt text="Visit this forum"]-->" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum forum=$forum.forum_id]-->">
+                    <!--[$topiccount]-->&nbsp;<!--[if $topiccount eq 1]--><!--[gt text="Topic"]--><!--[else]--><!--[gt text="Topics"]--><!--[/if]-->&nbsp;/&nbsp;
+                    <!--[$postcount]-->&nbsp;<!--[if $postcount eq 1]--><!--[gt text="post"]--><!--[else]--><!--[gt text="Posts"]--><!--[/if]-->
                 </a>
             </span>
         </div>
-        <!--[ /if ]-->
+        <!--[/if]-->
 
-        <div class="<!--[ $configclass ]-->row">
-            <label for="forum_desc"><!--[ pnml name='_DZK_DESCRIPTION' ]--></label>
-            <textarea id="forum_desc" class="dzk_texpand" name="desc"><!--[ $forum.forum_desc|pnvarprephtmldisplay ]--></textarea>
+        <div class="<!--[$configclass]-->row">
+            <label for="forum_desc"><!--[gt text="Description"]--></label>
+            <textarea id="forum_desc" class="dzk_texpand" name="desc"><!--[$forum.forum_desc|pnvarprephtmldisplay]--></textarea>
         </div>
 
-        <div class="<!--[ $configclass ]-->row">
-            <label for="modulref"><!--[ pnml name='_DZK_MODULEREFERENCE' html=1]--></label>
+        <div class="<!--[$configclass]-->row">
+            <label for="modulref"><!--[gt text="Modulereference"]--></label>
             <select id="moduleref" name="moduleref" size="1">
-                <!--[ foreach item='hookmod' from=$hooked_modules ]-->
-                <option value="<!--[ $hookmod.id ]-->" <!--[ if $hookmod.sel == true ]-->selected="selected"<!--[ /if ]-->><!--[ $hookmod.name ]--></option>
-                <!--[ foreachelse ]-->
-                <option value="0" selected="selected"><!--[ pnml name='_DZK_NOHOOKEDMODULES' ]--></option>
-                <!--[ /foreach ]-->
+                <!--[foreach item='hookmod' from=$hooked_modules]-->
+                <option value="<!--[$hookmod.id]-->" <!--[if $hookmod.sel == true]-->selected="selected"<!--[/if]-->><!--[$hookmod.name]--></option>
+                <!--[foreachelse]-->
+                <option value="0" selected="selected"><!--[gt text="no hooked module found"]--></option>
+                <!--[/foreach]-->
             </select>
-            <p class="zk-formnote pn-sub"><!--[ pnml name='_DZK_MODULEREFERENCE_HINT' ]--></p>
+            <p class="zk-formnote pn-sub"><!--[gt text="Used for comment feature, all topics to submission in this module go into this forum. This list only contains the modules where the Dizkus hooks are activated for."]--></p>
         </div>
 
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pncategory"><!--[ pnml name='_DZK_PNCATEGORIES' html=1]--></label>
-            <!--[ $categoryselector ]-->
+        <div class="<!--[$configclass]-->row">
+            <label for="pncategory"><!--[gt text="Select Category"]--></label>
+            <!--[$categoryselector]-->
         </div>
 
-        <div class="<!--[ $configclass ]-->row">
-            <label for="forum_mods"><!--[ pnml name='_DZK_MODERATOR' ]--></label>
+        <div class="<!--[$configclass]-->row">
+            <label for="forum_mods"><!--[gt text="Moderator"]--></label>
             <span id="forum_mods" class="zk-formnote">
-                <strong><!--[ pnml name='_DZK_CURRENT' ]-->:</strong><br />
-                <!--[ foreach item='mod' from=$moderators ]-->
-                <!--[ $mod.uname|pnvarprepfordisplay ]-->&nbsp;<!--[ if $mod.uid > 1000000 ]-->(<!--[ pnml name='_DZK_GROUP' ]-->)<!--[ /if ]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[ $mod.uid ]-->" />&nbsp;<!--[ pnml name='_DZK_REMOVE' ]-->)<br />
-                <!--[ foreachelse ]-->
-                <!--[ pnml name='_DZK_NOMODERATORSASSIGNED' ]--><br /><br />
-                <!--[ /foreach ]-->
-                <strong><!--[ pnml name='_DZK_ADD' ]-->:</strong><br />
+                <strong><!--[gt text="current"]-->:</strong><br />
+                <!--[foreach item='mod' from=$moderators]-->
+                <!--[$mod.uname|pnvarprepfordisplay]-->&nbsp;<!--[if $mod.uid > 1000000]-->(<!--[gt text="Group"]-->)<!--[/if]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[$mod.uid]-->" />&nbsp;<!--[gt text="remove"]-->)<br />
+                <!--[foreachelse]-->
+                <!--[gt text="no moderator assigned"]--><br /><br />
+                <!--[/foreach]-->
+                <strong><!--[gt text="Add"]-->:</strong><br />
                 <select id="mods" name="mods[]" size="10" multiple="multiple">
-                    <option value="0"><!--[ pnml name='_DZK_NONE' ]--></option>
-                    <!--[ foreach item='group' from=$groups ]-->
-                    <option value="<!--[ $group.gid ]-->"><!--[ $group.name|pnvarprepfordisplay ]--> (<!--[ pnml name='_DZK_GROUP' ]-->)</option>
-                    <!--[ /foreach ]-->
-                    <!--[ foreach item='user' from=$users ]-->
-                    <option value="<!--[ $user.uid ]-->"><!--[ $user.uname|pnvarprepfordisplay ]--></option>
-                    <!--[ /foreach ]-->
+                    <option value="0"><!--[gt text="none"]--></option>
+                    <!--[foreach item='group' from=$groups]-->
+                    <option value="<!--[$group.gid]-->"><!--[$group.name|pnvarprepfordisplay]--> (<!--[gt text="Group"]-->)</option>
+                    <!--[/foreach]-->
+                    <!--[foreach item='user' from=$users]-->
+                    <option value="<!--[$user.uid]-->"><!--[$user.uname|pnvarprepfordisplay]--></option>
+                    <!--[/foreach]-->
                 </select>
             </span>
         </div>
 
-        <div id="extsource" class="<!--[ $configclass ]-->row">
-            <label for="pop3_active"><!--[ pnml name='_DZK_EXTERNALSOURCE' ]--></label>
-            <!--[ foreach item='extsource' from=$externalsourceoptions key='num' ]-->
+        <div id="extsource" class="<!--[$configclass]-->row">
+            <label for="pop3_active"><!--[gt text="External source"]--></label>
+            <!--[foreach item='extsource' from=$externalsourceoptions key='num']-->
             <div class="zk-formlist">
-                <input id="<!--[ $num ]-->_<!--[ $forum.forum_id ]-->" onchange="javascript:showextendedoptions(<!--[ $num ]-->, <!--[ $forum.forum_id ]-->)" type="radio" name="extsource" value="<!--[ $num ]-->" <!--[ $extsource.checked ]--> />
-                <label for="<!--[ $num ]-->_<!--[ $forum.forum_id ]-->"><!--[ $extsource.name ]--></label>&nbsp;<!--[ $extsource.ok  ]-->
+                <input id="<!--[$num]-->_<!--[$forum.forum_id]-->" onchange="javascript:showextendedoptions(<!--[$num]-->, <!--[$forum.forum_id]-->)" type="radio" name="extsource" value="<!--[$num]-->" <!--[$extsource.checked]--> />
+                <label for="<!--[$num]-->_<!--[$forum.forum_id]-->"><!--[$extsource.name]--></label>&nbsp;<!--[$extsource.ok]-->
             </div>
-            <!--[ /foreach ]-->
+            <!--[/foreach]-->
         </div>
     </fieldset>
 
-    <fieldset id="pnlogindata_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource == 0 ]-->style="display:none;"<!--[ /if ]-->>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pnuser"><!--[ pnml name='_DZK_PNUSER' ]--></label>
-            <input type="text" id="pnuser" name="pnuser" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnuser ]-->" />
+    <fieldset id="pnlogindata_<!--[$forum.forum_id]-->" <!--[if $forum.externalsource == 0]-->style="display:none;"<!--[/if]-->>
+        <div class="<!--[$configclass]-->row">
+            <label for="pnuser"><!--[gt text="Zikula username"]--></label>
+            <input type="text" id="pnuser" name="pnuser" maxlength="60" size="30"  value="<!--[$forum.pop3_pnuser]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pnpassword"><!--[ pnml name='_DZK_PNPASSWORD' ]--></label>
-            <input type="password" id="pnpassword" name="pnpassword" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="pnpassword"><!--[gt text="Zikula password"]--></label>
+            <input type="password" id="pnpassword" name="pnpassword" maxlength="60" size="30"  value="<!--[$forum.pop3_pnpassword]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pnpasswordconfirm"><!--[ pnml name='_DZK_PNPASSWORDCONFIRM' ]--></label>
-            <input type="password" id="pnpasswordconfirm" name="pnpasswordconfirm" maxlength="60" size="30"  value="<!--[ $forum.pop3_pnpassword ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="pnpasswordconfirm"><!--[gt text="Zikula password confirmation"]--></label>
+            <input type="password" id="pnpasswordconfirm" name="pnpasswordconfirm" maxlength="60" size="30"  value="<!--[$forum.pop3_pnpassword]-->" />
         </div>
     </fieldset>
 
-    <fieldset id="mail2forum_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource <> 1 ]-->style="display:none;"<!--[ /if ]-->>
-        <legend><!--[ pnml name='_DZK_MAIL2FORUM' ]--></legend>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_test"><!--[ pnml name='_DZK_POP3TEST' ]--></label>
+    <fieldset id="mail2forum_<!--[$forum.forum_id]-->" <!--[if $forum.externalsource <> 1]-->style="display:none;"<!--[/if]-->>
+        <legend><!--[gt text="Mail2Forum"]--></legend>
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_test"><!--[gt text="Perform Pop3 test after saving"]--></label>
             <input type="checkbox" id="pop3_test" name="pop3_test" value="1" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_server"><!--[ pnml name='_DZK_POP3SERVER' ]--></label>
-            <input type="text" id="pop3_server" name="pop3_server" maxlength="60" size="30" value="<!--[ $forum.pop3_server ]-->" /><br />
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_server"><!--[gt text="Pop3 Server"]--></label>
+            <input type="text" id="pop3_server" name="pop3_server" maxlength="60" size="30" value="<!--[$forum.pop3_server]-->" /><br />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_port"><!--[ pnml name='_DZK_POP3PORT' ]--></label>
-            <input type="text" id="pop3_port" name="pop3_port" maxlength="5" size="5" value="<!--[ $forum.pop3_port ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_port"><!--[gt text="Pop3 port"]--></label>
+            <input type="text" id="pop3_port" name="pop3_port" maxlength="5" size="5" value="<!--[$forum.pop3_port]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_login"><!--[ pnml name='_DZK_POP3LOGIN' ]--></label>
-            <input type="text" id="pop3_login" name="pop3_login" maxlength="60" size="30"  value="<!--[ $forum.pop3_login ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_login"><!--[gt text="Pop3 login"]--></label>
+            <input type="text" id="pop3_login" name="pop3_login" maxlength="60" size="30"  value="<!--[$forum.pop3_login]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_password"><!--[ pnml name='_DZK_POP3PASSWORD' ]--></label>
-            <input type="password" id="pop3_password" name="pop3_password" maxlength="60" size="30"  value="<!--[ $forum.pop3_password ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_password"><!--[gt text="Pop3 password"]--></label>
+            <input type="password" id="pop3_password" name="pop3_password" maxlength="60" size="30"  value="<!--[$forum.pop3_password]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_passwordconfirm"><!--[ pnml name='_DZK_POP3PASSWORDCONFIRM' ]--></label>
-            <input type="password" id="pop3_passwordconfirm" name="pop3_passwordconfirm" maxlength="60" size="30"  value="<!--[ $forum.pop3_password ]-->" />
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_passwordconfirm"><!--[gt text="Pop3 password confirmation"]--></label>
+            <input type="password" id="pop3_passwordconfirm" name="pop3_passwordconfirm" maxlength="60" size="30"  value="<!--[$forum.pop3_password]-->" />
         </div>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="pop3_matchstring"><!--[ pnml name='_DZK_POP3MATCHSTRING' ]--></label>
-            <input type="text" id="pop3_matchstring" name="pop3_matchstring" maxlength="255" size="30"  value="<!--[ $forum.pop3_matchstring ]-->" />
-            <p class="zk-formnote pn-sub"><!--[ pnml name='_DZK_POP3MATCHSTRINGHINT' ]--></p>
+        <div class="<!--[$configclass]-->row">
+            <label for="pop3_matchstring"><!--[gt text="Rule"]--></label>
+            <input type="text" id="pop3_matchstring" name="pop3_matchstring" maxlength="255" size="30"  value="<!--[$forum.pop3_matchstring]-->" />
+            <p class="zk-formnote pn-sub"><!--[gt text="The rule is a regular expression that the mails subject as to match to avoid spa posigns. An empty rule means no checks!"]--></p>
         </div>
     </fieldset>
 
-    <fieldset id="rss2forum_<!--[ $forum.forum_id ]-->" <!--[ if $forum.externalsource <> 2 ]-->style="display:none;"<!--[ /if ]-->>
-        <legend><!--[ pnml name='_DZK_RSS2FORUM' ]--></legend>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="rssfeed"><!--[ pnml name='_DZK_SELECTRSSFEED' ]--></label>
+    <fieldset id="rss2forum_<!--[$forum.forum_id]-->" <!--[if $forum.externalsource <> 2]-->style="display:none;"<!--[/if]-->>
+        <legend><!--[gt text="RSS2Forum"]--></legend>
+        <div class="<!--[$configclass]-->row">
+            <label for="rssfeed"><!--[gt text="Select RSS feed"]--></label>
             <select name="rssfeed" size="1">
-                <option value="0"><!--[ pnml name='_DZK_NONE' ]--></option>
-                <!--[ foreach item='feed from=$rssfeeds ]-->
-                <option value="<!--[ $feed.fid ]-->" <!--[ if $feed.fid == $forum.externalsourceurl ]-->selected="selected"<!--[ /if ]-->><!--[ $feed.feedname|pnvarprepfordisplay ]--> (<!--[ $feed.url ]-->)</option>
-                <!--[ /foreach ]-->
+                <option value="0"><!--[gt text="none"]--></option>
+                <!--[foreach item='feed from=$rssfeeds]-->
+                <option value="<!--[$feed.fid]-->" <!--[if $feed.fid == $forum.externalsourceurl]-->selected="selected"<!--[/if]-->><!--[$feed.feedname|pnvarprepfordisplay]--> (<!--[$feed.url]-->)</option>
+                <!--[/foreach]-->
             </select>
         </div>
     </fieldset>
 
-    <!--[ if $newforum eq true ]-->
+    <!--[if $newforum eq true]-->
     <input type="hidden" name="add" value="add" checked="checked" />
-    <!--[ else ]-->
+    <!--[else]-->
     <fieldset>
-        <legend><!--[ pnml name='_DELETE' ]--></legend>
-        <div class="<!--[ $configclass ]-->row">
-            <label for="delete_<!--[ $forum.forum_id ]-->"><!--[ pnml name='_DELETE' ]--></label>
-            <input type="checkbox" id="delete_<!--[ $forum.forum_id ]-->" name="delete" value="delete" />
+        <legend><!--[gt text="Delete"]--></legend>
+        <div class="<!--[$configclass]-->row">
+            <label for="delete_<!--[$forum.forum_id]-->"><!--[gt text="Delete"]--></label>
+            <input type="checkbox" id="delete_<!--[$forum.forum_id]-->" name="delete" value="delete" />
         </div>
     </fieldset>
-    <!--[ /if ]-->
+    <!--[/if]-->
 
-    <div class="<!--[ $configclass ]-->buttons">
-        <input type="hidden" name="authid" value="<!--[ insert name='generateauthkey' module='Dizkus' ]-->" />
-        <input type="hidden" name="forum_id" value="<!--[ $forum.forum_id ]-->" />
-        <input type="hidden" name="cat_id" value="<!--[ $forum.cat_id ]-->" />
-        <button class="dzk_img ok" onclick="javascript:storeforum(<!--[ $forum.forum_id ]-->); return false;" name="submit" type="submit"><!--[ pnml name='_DZK_PREFS_SAVE' ]--></button>
+    <div class="<!--[$configclass]-->buttons">
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <input type="hidden" name="forum_id" value="<!--[$forum.forum_id]-->" />
+        <input type="hidden" name="cat_id" value="<!--[$forum.cat_id]-->" />
+        <button class="dzk_img ok" onclick="javascript:storeforum(<!--[$forum.forum_id]-->); return false;" name="submit" type="submit"><!--[gt text="Save"]--></button>
     </div>
 
 </form>

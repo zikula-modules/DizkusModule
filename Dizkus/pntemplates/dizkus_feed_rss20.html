@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="<!--[ pnml name='_CHARSET' ]-->"?>
+<?xml version="1.0" encoding="<!--[gt text="ISO-8859-1"]-->"?>
 
 <!--
 Possible parameters for backforum.php
@@ -31,29 +31,29 @@ soon as possible!
 
 <rss version="2.0">
 <channel>
-    <title><!--[ $sitename|pnvarprepfordisplay ]--> - <!--[ $forum_name|pnvarprepfordisplay ]--></title>
-    <link><!--[ $forum_link|pnvarprepfordisplay ]--></link>
-    <description><!--[ $sitename|pnvarprepfordisplay ]--> - <!--[ $forum_name|pnvarprepfordisplay ]--></description>
-    <language><!--[ pnml name='_LOCALE' assign=lang ]--><!--[$lang|replace:"_":"-"|pnvarprepfordisplay]--></language>
+    <title><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></title>
+    <link><!--[$forum_link|pnvarprepfordisplay]--></link>
+    <description><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></description>
+    <language><!--[gt text="en_US"]--><!--[$lang|replace:"_":"-"|pnvarprepfordisplay]--></language>
     
-    <pubDate><!--[ $now|pndate_format:"%a, %d %b %Y %T %Z" ]--></pubDate>
+    <pubDate><!--[$now|pndate_format:"%a, %d %b %Y %T %Z"]--></pubDate>
     
-    <lastBuildDate><!--[ $lastbuilddate ]--></lastBuildDate>
+    <lastBuildDate><!--[$lastbuilddate]--></lastBuildDate>
     
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
-    <generator>Dizkus <!--[ $dizkusinfo.version]--></generator>
-    <webMaster><!--[ $adminmail|pnvarprepfordisplay ]--></webMaster>
+    <generator>Dizkus <!--[$dizkusinfo.version]--></generator>
+    <webMaster><!--[$adminmail|pnvarprepfordisplay]--></webMaster>
 
 
-    <!--[ foreach item=post from=$posts ]-->
+    <!--[foreach item=post from=$posts]-->
     <item>
-        <title><!--[ $post.topic_title|pnvarprepfordisplay ]--></title>
-        <link><!--[ $post.last_post_url|pnvarprepfordisplay ]--></link>
-        <description><!--[ $post.cat_title|pnvarprepfordisplay ]--> :: <!--[ $post.forum_name|pnvarprepfordisplay ]--></description>
-        <pubDate><!--[ $post.rsstime ]--></pubDate>
+        <title><!--[$post.topic_title|pnvarprepfordisplay]--></title>
+        <link><!--[$post.last_post_url|pnvarprepfordisplay]--></link>
+        <description><!--[$post.cat_title|pnvarprepfordisplay]--> :: <!--[$post.forum_name|pnvarprepfordisplay]--></description>
+        <pubDate><!--[$post.rsstime]--></pubDate>
         
     </item>
-    <!--[ /foreach ]-->
+    <!--[/foreach]-->
 
 </channel>
 </rss>

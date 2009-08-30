@@ -19,6 +19,8 @@
  */ 
 function smarty_function_adminlink($params, &$smarty) 
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (SecurityUtil::checkPermission(0, 'Dizkus::', "::", ACCESS_ADMIN)) { 
         if(empty($params['id']) || empty($params['type'])) {
             $smarty->trigger_error("adminlink: missing parameter(s)");
@@ -26,9 +28,9 @@ function smarty_function_adminlink($params, &$smarty)
         }
         
         if($params['type'] == 'category') {
-            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'category', array('cat_id'=>(int)$params['id']))) . '">[' . DataUtil::formatForDisplay(_DZK_ADMINCATEDIT) . ']</a>';
+            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'category', array('cat_id'=>(int)$params['id']))) . '">[' . DataUtil::formatForDisplay(__('Edit a Category Title', $dom)) . ']</a>';
         } elseif ($type=='forum') {
-            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'forum', array('forum_id'=>(int)$params['id']))) . '">['.DataUtil::formatForDisplay(_DZK_ADMINFORUMEDIT) . ']</a>';
+            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'forum', array('forum_id'=>(int)$params['id']))) . '">['.DataUtil::formatForDisplay(__('Edit a Forum', $dom)) . ']</a>';
         }
     }
     return;

@@ -22,8 +22,10 @@
  */
 function smarty_function_subscribeforum_button($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($params);
-	unset($params);
+	  unset($params);
 
     if(!isset($image_subscribe) || empty($image_subscribe)) {
         $image_subscribe = 'f_abo_on.gif';
@@ -42,19 +44,19 @@ function smarty_function_subscribeforum_button($params, &$smarty)
                                   'forum_id'=>$forum_id))==false) {
                 $imagedata = dzk_getimagepath($image_subscribe);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_DZK_SUBSCRIBE_FORUM);
+                    $show = DataUtil::formatForDisplay(__('Subscribe forum', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_SUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Subscribe forum', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_SUBSCRIBE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(__('Subscribe forum', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
                 $imagedata = dzk_getimagepath($image_unsubscribe);
                 if($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_FORUM);
+                    $show = DataUtil::formatForDisplay(__('Unsubscribe forum', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_FORUM) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Unsubscribe forum', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
-                $out = '<a title="' . DataUtil::formatForDisplay(_DZK_UNSUBSCRIBE_FORUM) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+                $out = '<a title="' . DataUtil::formatForDisplay(__('Unsubscribe forum', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'unsubscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             }
         }
     }

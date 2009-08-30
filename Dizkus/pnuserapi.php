@@ -21,6 +21,8 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_userapi_get_userdata_from_id($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $userid = $args['userid'];
 
     static $usersarray;
@@ -117,13 +119,13 @@ function Dizkus_userapi_get_userdata_from_id($args)
     if($makedummy == true) {
         // we create a dummy user, so we need to adjust some of the information
         // gathered so far
-        $userdata['pn_name']   = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
-        $userdata['pn_uname']  = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
+        $userdata['pn_name']   = DataUtil::formatForDisplay(__('**unknown user**', $dom));
+        $userdata['pn_uname']  = DataUtil::formatForDisplay(__('**unknown user**', $dom));
         $userdata['pn_email']  = '';
         $userdata['pn_femail'] = '';
         $userdata['pn_url']    = '';
-        $userdata['name']      = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
-        $userdata['uname']     = DataUtil::formatForDisplay(_DZK_UNKNOWNUSER);
+        $userdata['name']      = DataUtil::formatForDisplay(__('**unknown user**', $dom));
+        $userdata['uname']     = DataUtil::formatForDisplay(__('**unknown user**', $dom));
         $userdata['email']     = '';
         $userdata['femail']    = '';
         $userdata['url']       = '';
@@ -144,6 +146,8 @@ function Dizkus_userapi_get_userdata_from_id($args)
  */
 function Dizkus_userapi_boardstats($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $id   = isset($args['id']) ? $args['id'] : null;
     $type = isset($args['type']) ? $args['type'] : null;
    
@@ -217,7 +221,7 @@ function Dizkus_userapi_boardstats($args)
             return  $cache[$type];
             break;
         default:
-            return showforumerror(_MODARGSERROR . ' in Dizkus_userapi_boardstats()', __FILE__, __LINE__);
+            return showforumerror(__('wrong parameters in Dizkus_userapi_boardstats()'), __FILE__, __LINE__);
         }
     return $total;
 }
@@ -233,6 +237,8 @@ function Dizkus_userapi_boardstats($args)
  */
 function Dizkus_userapi_get_firstlast_post_in_topic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
         $pntable = pnDBGetTables();
         $option    = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
@@ -259,6 +265,8 @@ function Dizkus_userapi_get_firstlast_post_in_topic($args)
  */
 function Dizkus_userapi_get_last_post_in_forum($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!empty($args['forum_id']) && is_numeric($args['forum_id'])) {
         $pntable = pnDBGetTables();
         $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $pntable['dizkus_posts_column']['forum_id'].' = '.(int)DataUtil::formatForStore($args['forum_id']));
@@ -283,6 +291,8 @@ function Dizkus_userapi_get_last_post_in_forum($args)
  */
 function Dizkus_userapi_readcategorytree($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $last_visit = (isset($args['last_visit'])) ? $args['last_visit'] : 0;
 
     static $tree;
@@ -371,7 +381,7 @@ function Dizkus_userapi_readcategorytree($args)
                     }
 
                     $posted_unixtime= dzk_str2time($forum['post_time']); // strtotime ($forum['post_time']);
-                    $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+                    $posted_ml = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime($posted_unixtime));
                     if ($posted_unixtime) {
                         if ($forum['pn_uid']==1) {
                             $username = pnModGetVar('Users', 'anonymous');
@@ -379,7 +389,7 @@ function Dizkus_userapi_readcategorytree($args)
                             $username = $forum['pn_uname'];
                         }
 
-                        $last_post = sprintf(_DZK_LASTPOSTSTRING, $posted_ml, $username);
+                        $last_post = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $username), $dom));
                         $last_post = $last_post.' <a href="' . pnModURL('Dizkus','user','viewtopic', array('topic' =>$forum['topic_id'])). '">
                                                   <img src="modules/Dizkus/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                         // new in 2.0.2 - no more preformattd output
@@ -395,7 +405,7 @@ function Dizkus_userapi_readcategorytree($args)
                         $last_post_data['url_anchor'] = $last_post_data['url'] . '#pid' . $forum['forum_last_post_id'];
                     } else {
                         // no posts in forum
-                        $last_post = _DZK_NOPOSTS;
+                        $last_post = __('No Posts', $dom);
                         $last_post_data['name']       = '';
                         $last_post_data['subject']    = '';
                         $last_post_data['time']       = '';
@@ -409,7 +419,7 @@ function Dizkus_userapi_readcategorytree($args)
                 } else {
                     // there are no posts in this forum
                     $forum['new_posts']= false;
-                    $last_post = _DZK_NOPOSTS;
+                    $last_post = __('No Posts', $dom);
                 }
                 $forum['last_post'] = $last_post;
                 $forum['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
@@ -459,6 +469,8 @@ function Dizkus_userapi_readcategorytree($args)
  */
 function Dizkus_userapi_get_moderators($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -522,6 +534,8 @@ function Dizkus_userapi_get_moderators($args)
  */
 function Dizkus_userapi_setcookies()
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     /**
      * set last visit cookies and get last visit time
      * set LastVisit cookie, which always gets the current time and lasts one year
@@ -567,6 +581,8 @@ function Dizkus_userapi_setcookies()
  */
 function Dizkus_userapi_readforum($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -574,11 +590,11 @@ function Dizkus_userapi_readforum($args)
                           array('forum_id' => $forum_id,
                                 'permcheck' => 'nocheck' ));
     if($forum==false) {
-        return showforumerror(_DZK_FORUM_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error - The forum/topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     if(!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOSEE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', __('You have no permission to see this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -669,8 +685,8 @@ function Dizkus_userapi_readforum($args)
         $topic['total_posts'] = $topic['topic_replies'] + 1;
 
         $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
-        $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic['post_time_unix']));
-        $topic['last_post'] = sprintf(_DZK_LASTPOSTSTRING, DataUtil::formatForDisplay($posted_ml), DataUtil::formatForDisplay($topic['last_poster']));
+        $posted_ml = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime($topic['post_time_unix']));
+        $topic['last_post'] = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster']), $dom));
 
         // does this topic have enough postings to be hot?
         $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
@@ -696,7 +712,7 @@ function Dizkus_userapi_readforum($args)
                 $topic['last_page_start'] = 0;
             }
 
-            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . DataUtil::formatForDisplay(_DZK_GOTOPAGE) . '&nbsp;';
+            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . DataUtil::formatForDisplay(__('Goto page', $dom)) . '&nbsp;';
             $pagenr = 1;
             $skippages = 0;
             for($x = 0; $x < $topic['topic_replies'] + 1; $x += $posts_per_page) {
@@ -717,7 +733,7 @@ function Dizkus_userapi_readforum($args)
 
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ', ';
-                    $pagination .= '<a href="' . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(_DZK_PAGE) . ' ' . $pagenr . '">' . $pagenr . '</a>';
+                    $pagination .= '<a href="' . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(__('Page #', $dom)) . ' ' . $pagenr . '">' . $pagenr . '</a>';
                 }
 
                 $pagenr++;
@@ -768,6 +784,8 @@ function cmp_forumtopicsort($a, $b)
  */
 function Dizkus_userapi_readtopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
 //$time_start = microtime_float();
     extract($args);
     unset($args);
@@ -849,7 +867,7 @@ function Dizkus_userapi_readtopic($args)
         unset($topic['forum_pop3_active']);
         
         if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', __('You have no permission to read the content of this category or forum', $dom)), __FILE__, __LINE__);
         }
 
         $topic['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
@@ -964,7 +982,7 @@ function Dizkus_userapi_readtopic($args)
             // we now have the data and use them
             $post['poster_data'] = $userdata[$post['poster_id']];
             $post['posted_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
-            $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
+            $posted_ml = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime($post['posted_unixtime']));
             // we use br2nl here for backwards compatibility
             //$message = phpbb_br2nl($message);
             //$post['post_text'] = phpbb_br2nl($post['post_text']);
@@ -1018,7 +1036,7 @@ function Dizkus_userapi_readtopic($args)
         unset($userdata);
     } else {
         // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
     dzkCloseDB($result);
 /*
@@ -1044,6 +1062,8 @@ dzkdebug('time:', $time_used);
  */
 function Dizkus_userapi_preparereply($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -1086,7 +1106,7 @@ function Dizkus_userapi_preparereply($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if ($result->EOF) {
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -1139,11 +1159,11 @@ function Dizkus_userapi_preparereply($args)
     $reply['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
 
     if ($reply['topic_status'] == 1) {
-        return showforumerror(_DZK_NOPOSTLOCK, __FILE__, __LINE__);
+        return showforumerror(__('You cannot post a reply to this topic, it has been locked.', $dom), __FILE__, __LINE__);
     }
 
     if (!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
-        return showforumerror( _DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror( __('You have no permission to write into this category or forum', $dom), __FILE__, __LINE__);
     }
 
     // Topic review (show last 10)
@@ -1173,7 +1193,7 @@ function Dizkus_userapi_preparereply($args)
 
         // TODO extract unixtime directly from MySql
         $review['post_unixtime'] = dzk_str2time($review['post_time']); //strtotime ($review['post_time']);
-        $review['post_ml'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($review['post_unixtime']));
+        $review['post_ml'] = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime($review['post_unixtime']));
 
         $message = $review['post_text'];
         // we use br2nl here for backward compatibility
@@ -1209,15 +1229,17 @@ function Dizkus_userapi_preparereply($args)
  */
 function Dizkus_userapi_storereply($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $args['topic_id']));
 
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_DZK_NOAUTH_TOWRITE);
+        return showforumerror(__('You have no permission to write into this category or forum', $dom));
     }
 
     if (trim($args['message']) == '') {
-        return showforumerror(_DZK_EMPTYMSG, __FILE__, __LINE__);
+        return showforumerror(__('You must type a message to post. You cannot post an empty message. Please go back and try again.', $dom), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -1388,6 +1410,8 @@ function Dizkus_userapi_get_forum_favorites_status($args)
  */
 function Dizkus_userapi_preparenewtopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -1418,7 +1442,7 @@ function Dizkus_userapi_preparenewtopic($args)
     // need at least "comment" to add newtopic
     if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror(__('You have no permission to write into this category or forum', $dom), __FILE__, __LINE__);
     }
     $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
 
@@ -1461,6 +1485,8 @@ function Dizkus_userapi_preparenewtopic($args)
  */
 function Dizkus_userapi_storenewtopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -1468,13 +1494,13 @@ function Dizkus_userapi_storenewtopic($args)
 
     $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $forum_id));
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(_DZK_NOAUTH_TOWRITE, __FILE__, __LINE__);
+        return showforumerror(__('You have no permission to write into this category or forum', $dom), __FILE__, __LINE__);
     }
 
 
     if (trim($message) == '' || trim($subject) == '') {
         // either message or subject is empty
-        return showforumerror(_DZK_EMPTYMSG, __FILE__, __LINE__);
+        return showforumerror(__('You must type a message to post. You cannot post an empty message. Please go back and try again.', $dom), __FILE__, __LINE__);
     }
 
     /*
@@ -1581,6 +1607,8 @@ function Dizkus_userapi_storenewtopic($args)
  */
 function Dizkus_userapi_readpost($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $pntable = pnDBGetTables();
     $postscols = DBUtil::_getAllColumnsQualified('dizkus_posts', 'p');
 
@@ -1598,7 +1626,7 @@ function Dizkus_userapi_readpost($args)
 
     $result = DBUtil::executeSQL($sql);
     if ($result === false) {
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     $colarray   = DBUtil::getColumnsArray ('dizkus_posts');
@@ -1611,7 +1639,7 @@ function Dizkus_userapi_readpost($args)
     $objarray = DBUtil::marshallObjects ($result, $colarray);
     $post = $objarray[0];
     if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', __('You have no permission to read the content of this category or forum', $dom)), __FILE__, __LINE__);
     }
     
     $post['post_id']      = DataUtil::formatForDisplay($post['post_id']);
@@ -1726,6 +1754,8 @@ function Dizkus_userapi_is_first_post($args)
  */
 function Dizkus_userapi_updatepost($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -1751,7 +1781,7 @@ function Dizkus_userapi_updatepost($args)
 
     if ($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -1763,18 +1793,18 @@ function Dizkus_userapi_updatepost($args)
     if (!($pn_uid == $poster_id) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // user is not allowed to edit post
-        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     if (($topic_status == 1) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // topic is locked, user is not moderator
-        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     if (trim($message) == '') {
         // no message
-        return showforumerror( _DZK_EMPTYMSG, __FILE__, __LINE__);
+        return showforumerror( __('You must type a message to post. You cannot post an empty message. Please go back and try again.', $dom), __FILE__, __LINE__);
     }
 
     if (empty($delete)) {
@@ -1791,8 +1821,8 @@ function Dizkus_userapi_updatepost($args)
             } else {
                 $editname = pnModGetVar('Users', 'anonymous');
             }
-            $edit_date = ml_ftime(_DATETIMEBRIEF, GetUserTime(time()));
-            $message .= '<br /><br /><!-- editby --><br /><br /><em>' . _DZK_EDITBY . ' ' . $editname . ', ' . $edit_date . '</em><!-- end editby --> ';
+            $edit_date = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime(time()));
+            $message .= '<br /><br /><!-- editby --><br /><br /><em>' . __f('edited by %1$s on %2$s', array($editname, $edit_date), $dom) . '</em><!-- end editby --> ';
         }
 
         // add signature placeholder
@@ -2000,6 +2030,8 @@ function Dizkus_userapi_updatepost($args)
  */
 function Dizkus_userapi_get_viewip_data($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     list($dbconn, $pntable) = dzkOpenDB();
 
     $viewip = array();
@@ -2011,7 +2043,7 @@ function Dizkus_userapi_get_viewip_data($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if($result->EOF) {
         // TODO we have a valid user here, but he doesn't have posts
-        return showforumerror(_DZK_NOUSER_OR_POST, __FILE__, __LINE__);
+        return showforumerror(__('Error - No such user or post in the database.', $dom), __FILE__, __LINE__);
     } else {
         $row = $result->GetRowAssoc(false);
     }
@@ -2082,6 +2114,8 @@ function Dizkus_userapi_stickyunstickytopic($args)
  */
 function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $pntable = pnDBGetTables();
 
     // we know about the topic_id, let's find out the forum and catgeory name for permission checks
@@ -2094,7 +2128,7 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
 
     $res = DBUtil::executeSQL($sql);
     if ($res === false) {
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     $colarray[] = 'forum_id';
@@ -2113,6 +2147,8 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
  */
 function Dizkus_userapi_readuserforums($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $pntable = pnDBGetTables();
     $forumscols = DBUtil::_getAllColumnsQualified('dizkus_forums', 'f');
 
@@ -2132,7 +2168,7 @@ function Dizkus_userapi_readuserforums($args)
 
     $result = DBUtil::executeSQL($sql);
     if ($result === false) {
-        return showforumerror(_DZK_FORUM_NOEXIST, __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error - The forum/topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     $colarray     = DBUtil::getColumnsArray ('dizkus_forums');
@@ -2168,6 +2204,8 @@ function Dizkus_userapi_readuserforums($args)
  */
 function Dizkus_userapi_movetopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -2183,7 +2221,7 @@ function Dizkus_userapi_movetopic($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if ($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -2209,8 +2247,8 @@ function Dizkus_userapi_movetopic($args)
 
         if ($shadow == true) {
             // user wants to have a shadow topic
-            $message = sprintf(_DZK_SHADOWTOPIC_MESSAGE, pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)) );
-            $subject = '***' . DataUtil::formatForDisplay(_DZK_MOVED_SUBJECT) . ': ' . $topic_title;
+            $message = __f('The original posting has been moved <a title="moved" href="%s">here</a>.', pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)),$dom);
+            $subject = '***' . DataUtil::formatForDisplay(__('moved', $dom)) . ': ' . $topic_title;
 
             Dizkus_userapi_storenewtopic(array('subject'  => $subject,
                                                 'message'  => $message,
@@ -2233,9 +2271,11 @@ function Dizkus_userapi_movetopic($args)
  */
 function Dizkus_userapi_deletetopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('You have no permission to read the content of this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -2282,6 +2322,8 @@ function Dizkus_userapi_deletetopic($args)
  */
 function Dizkus_userapi_notify_by_email($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -2314,14 +2356,14 @@ function Dizkus_userapi_notify_by_email($args)
 
     if ($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(_DZK_TOPIC_NOEXIST, __FILE__, __LINE__);
+        return showforumerror(__('Error - The topic you selected does not exist. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
     dzkCloseDB($result);
 
     $topic_unixtime= dzk_str2time($myrow['topic_time']); //strtotime ($myrow['topic_time']);
-    $topic_time_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($topic_unixtime));
+    $topic_time_ml = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime($topic_unixtime));
 
     $poster_name = pnUserGetVar('uname',$poster_id);
 
@@ -2415,20 +2457,20 @@ function Dizkus_userapi_notify_by_email($args)
 
     $sitename = pnConfigGetVar('sitename');
 
-    $message = _DZK_NOTIFYBODY1 . ' '. $sitename . "\n"
+    $message = __f('Forums at %s', $sitename, $dom) . "\n"
             . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
-            . $poster_name . ' ' .DataUtil::formatForDisplay(_DZK_NOTIFYBODY2) . ' ' . $topic_time_ml . "\n"
+            . DataUtil::formatForDisplay(__f('%1$s wrote at %2$s', array($poster_name, $topic_time_ml), $dom)) . "\n"
             . "---------------------------------------------------------------------\n\n"
             . strip_tags($post_message) . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . _DZK_NOTIFYBODY3 . "\n"
+            . __('Reply to this message:', $dom) . "\n"
             . pnModURL('Dizkus', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id), null, null, true) . "\n\n"
-            . _DZK_NOTIFYBODY4 . "\n"
+            . __('Browse thread:', $dom) . "\n"
             . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true) . "\n\n"
-            . _DZK_NOTIFYBODY6 . "\n"
+            . __('Link for maintaining topic and forum subscriptions:', $dom) . "\n"
             . pnModURL('Dizkus', 'user', 'prefs', array(), null, null, true) . "\n"
             . "\n"
-            . _DZK_NOTIFYBODY5 . ' ' . pnGetBaseURL();
+            . __f('You are receiving this e-mail because you are subscribed to be notified of events in forums at %s', pnGetBaseURL(), $dom);
 
     if (count($recipients) > 0) {
         foreach ($recipients as $subscriber) {
@@ -2468,6 +2510,8 @@ function Dizkus_userapi_notify_by_email($args)
  */
 function Dizkus_userapi_get_topic_subscriptions($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -2475,7 +2519,7 @@ function Dizkus_userapi_get_topic_subscriptions($args)
 
     if (isset($user_id)) {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return showforumerror(_DZK_NOAUTH);
+            return showforumerror(__('No permission for this action', $dom));
         }
     } else {
         $user_id = pnUserGetVar('uid');
@@ -2558,6 +2602,8 @@ function Dizkus_userapi_get_topic_subscriptions($args)
  */
 function Dizkus_userapi_subscribe_topic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
@@ -2566,7 +2612,7 @@ function Dizkus_userapi_subscribe_topic($args)
 
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', __('You have no permission to read the content of this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
@@ -2588,6 +2634,8 @@ function Dizkus_userapi_subscribe_topic($args)
  */
 function Dizkus_userapi_unsubscribe_topic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (isset($args['user_id'])) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
@@ -2616,6 +2664,8 @@ function Dizkus_userapi_unsubscribe_topic($args)
  */
 function Dizkus_userapi_subscribe_forum($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     } else {
@@ -2625,7 +2675,7 @@ function Dizkus_userapi_subscribe_forum($args)
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $args['forum_id']));
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', __('You have no permission to read the content of this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_subscription_status($args) == false) {
@@ -2646,6 +2696,8 @@ function Dizkus_userapi_subscribe_forum($args)
  */
 function Dizkus_userapi_unsubscribe_forum($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (isset($args['user_id'])) {
         if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
@@ -2674,6 +2726,8 @@ function Dizkus_userapi_unsubscribe_forum($args)
  */
 function Dizkus_userapi_add_favorite_forum($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['user_id'])) {
         $args['user_id'] = (int)pnUserGetVar('uid');
     }
@@ -2682,7 +2736,7 @@ function Dizkus_userapi_add_favorite_forum($args)
                           array('forum_id' => $args['forum_id']));
 
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', _DZK_NOAUTH_TOREAD), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', __('You have no permission to read the content of this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_favorites_status($args) == false) {
@@ -2702,6 +2756,8 @@ function Dizkus_userapi_add_favorite_forum($args)
  */
 function Dizkus_userapi_remove_favorite_forum($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['user_id'])) {
         $args['user_id'] = (int)pnUserGetVar('uid');
     }
@@ -2724,6 +2780,8 @@ function Dizkus_userapi_remove_favorite_forum($args)
  */
 function Dizkus_userapi_emailtopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $sender_name = pnUserGetVar('uname');
     $sender_email = pnUserGetVar('email');
     if (!pnUserLoggedIn()) {
@@ -2756,6 +2814,8 @@ function Dizkus_userapi_emailtopic($args)
  */
 function Dizkus_userapi_get_latest_posts($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $pntable = pnDBGetTables();
 
     // init some arrays
@@ -2784,33 +2844,33 @@ function Dizkus_userapi_get_latest_posts($args)
     {
         case '2' : // today
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ";
-                   $text = _DZK_TODAY;
+                   $text = __('today', $dom);
                    break;
         case '3' : // yesterday
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ";
-                   $text = _DZK_YESTERDAY;
+                   $text = __('yesterday', $dom);
                    break;
         case '4' : // lastweek
                    $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) < 8 ";
-                   $text= _DZK_LASTWEEK;
+                   $text= __('last week', $dom);
                    break;
         case '5' : // last x hours
                    $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($args['nohours']) . " HOUR) ";
-                   $text = _DZK_LAST . ' ' . DataUtil::formatForDisplay($args['nohours']) . ' ' . _DZK_HOURS;
+                   $text = DataUtil::formatForDisplay(__f('last %s hours', $args['nohours'], $dom));
                    break;
         case '6' : // last visit
                    $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($args['last_visit']) . "' ";
-                   $text = _DZK_LASTVISIT . ' ' . ml_ftime(_DATETIMEBRIEF, $args['last_visit_unix']);
+                   $text = DataUtil::formatForDisplay(__f('last visit %s', ml_ftime('%b %d, %Y - %I:%M %p', $args['last_visit_unix']), $dom));
                    break;
         case '7' : // last x posts
                    $wheretime = "";
                    $limit = $amount-1;
-                   $text = _DZK_RECENT_POSTS . ' ' . $amount;
+                   $text = __f('recent topics: %s', $amount, $dom);
                    break;
         case '1' :
         default:   // last 24 hours
                    $wheretime = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ";
-                   $text  =_DZK_LAST24;
+                   $text  =__('last 24 hours', $dom);
                    break;
     }
 
@@ -2906,7 +2966,7 @@ function Dizkus_userapi_get_latest_posts($args)
         }
 
         $post['posted_unixtime'] = dzk_str2time($post['post_time']); // strtotime ($post['post_time']);
-        $post['post_time'] = ml_ftime(_DATETIMEBRIEF, GetUserTime($post['posted_unixtime']));
+        $post['post_time'] = ml_ftime(__('%b %d, %Y - %I:%M %p', $dom), GetUserTime($post['posted_unixtime']));
 
         $post['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
                                                      array('topic' => $post['topic_id'],
@@ -2962,6 +3022,8 @@ function Dizkus_userapi_usersync()
  */
 function Dizkus_userapi_splittopic($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -3061,8 +3123,10 @@ function Dizkus_userapi_splittopic($args)
  */
 function Dizkus_userapi_get_previous_or_next_topic_id($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['topic_id']) || !isset($args['view']) ) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     switch ($args['view']) {
@@ -3075,7 +3139,7 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
             $sort = 'ASC';
             break;
         default:
-            return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+            return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -3121,6 +3185,8 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
  */
 function Dizkus_userapi_getfavorites($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     static $tree;
 
     // if we have already gone through this once then don't do it again
@@ -3329,8 +3395,10 @@ function Dizkus_userapi_get_forum_category($args)
  */
 function Dizkus_userapi_get_page_from_topic_replies($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0 ) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     // get some enviroment
@@ -3357,6 +3425,8 @@ function Dizkus_userapi_get_page_from_topic_replies($args)
  */
 function Dizkus_userapi_mailcron($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -3440,7 +3510,7 @@ function Dizkus_userapi_mailcron($args)
                                         }
                                     }
                                     if (empty($subject)) {
-                                        $subject = DataUtil::formatForDisplay(_DZK_NOSUBJECT);
+                                        $subject = DataUtil::formatForDisplay(__('no subject', $dom));
                                     }
 
                                     // check if subject matches our matchstring
@@ -3529,8 +3599,10 @@ function Dizkus_userapi_mailcron($args)
  */
 function Dizkus_userapi_testpop3connection($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
@@ -3587,8 +3659,10 @@ function Dizkus_userapi_testpop3connection($args)
  */
 function Dizkus_userapi_get_topic_by_postmsgid($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['msgid']) || empty($args['msgid'])) {
-        return showforumerror(_MODSRGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     $topic_id = DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['msgid'], 'post_msgid');
@@ -3605,8 +3679,10 @@ function Dizkus_userapi_get_topic_by_postmsgid($args)
  */
 function Dizkus_userapi_get_topicid_by_postid($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['post_id']) || empty($args['post_id'])) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     $topic_id = DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['post_id'], 'post_id');
@@ -3622,6 +3698,8 @@ function Dizkus_userapi_get_topicid_by_postid($args)
  */
 function Dizkus_userapi_movepost($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args); // $post, $to_topic
     unset($args);
     // 1 . update topic_id, post_time in posts table
@@ -3699,12 +3777,14 @@ function Dizkus_userapi_movepost($args)
  */
 function Dizkus_userapi_get_last_topic_page($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     // get some enviroment
     $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
     $post_sort_order = pnModGetVar('Dizkus', 'post_sort_order');
 
     if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     if ($post_sort_order == 'ASC') {
@@ -3729,18 +3809,20 @@ function Dizkus_userapi_get_last_topic_page($args)
  */
 function Dizkus_userapi_jointopics($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     // check if from_topic exists. this function will return an error if not
     $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     // check if to_topic exists. this function will return an error if not
     $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', _DZK_NOAUTH_TOMODERATE), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -3927,6 +4009,8 @@ function Dizkus_userapi_jointopics($args)
  */
 function Dizkus_userapi_notify_moderator($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     extract($args);
     unset($args);
 
@@ -3943,7 +4027,7 @@ function Dizkus_userapi_notify_moderator($args)
         $email_from = pnConfigGetVar('adminmail');
     }
 
-    $subject .= DataUtil::formatForDisplay(_DZK_MODERATION_NOTICE) . ': ' . strip_tags($post['topic_rawsubject']);
+    $subject .= DataUtil::formatForDisplay(__('Moderation request', $dom)) . ': ' . strip_tags($post['topic_rawsubject']);
     $sitename = pnConfigGetVar('sitename');
 
     $recipients = array();
@@ -3998,16 +4082,16 @@ function Dizkus_userapi_notify_moderator($args)
                           array('topic_replies' => $post['topic_replies'],
                                 'start'         => $start));
 
-    $message = _DZK_NOTIFYMODBODY1 . ' ' . pnConfigGetVar('sitename') . "\n"
+    $message = __f('Request for moderation at %s', pnConfigGetVar('sitename'), $dom) . "\n"
             . $post['cat_title'] . '::' . $post['forum_name'] . '::' . $post['topic_rawsubject'] . "\n\n"
-            . _DZK_REPORTINGUSERNAME . ": $reporting_username \n"
-            . _DZK_NOTIFYMODBODY2 . ": \n"
+            . __f('Reporting user: %s', $reporting_username, $dom) . "\n"
+            . __('Comment:', $dom) . "\n"
             . $comment . " \n\n"
             . "---------------------------------------------------------------------\n"
             . strip_tags($post['post_text']) . " \n"
             . "---------------------------------------------------------------------\n\n"
-            . _DZK_NOTIFYMODBODY3 . ":\n"
-            . pnGetBaseURL() . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start)) . '#pid' . $post['post_id'] . "\n"
+            . __('Link to topic:', $dom) . "\n"
+            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start), null, 'pid'.$post['post_id'], true) . "\n"
             . "\n";
 
     if (count($recipients) > 0) {
@@ -4036,8 +4120,10 @@ function Dizkus_userapi_notify_moderator($args)
  */
 function Dizkus_userapi_get_topicid_by_reference($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!isset($args['reference']) || empty($args['reference'])) {
-        return showforumerror(_MODARGSERROR, __FILE__, __LINE__);
+        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
     }
 
     $topic_id = DBUtil::selectFieldByID('dizkus_topics', 'topic_id', $args['reference'], 'topic_reference');
@@ -4053,6 +4139,8 @@ function Dizkus_userapi_get_topicid_by_reference($args)
  */
 function Dizkus_userapi_insertrss($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     if (!$args['forum'] || !$args['items']) {
         return false;
     }
@@ -4088,7 +4176,7 @@ function Dizkus_userapi_insertrss($args)
             $subject  = $item->get_title();
 
             // Adding little display goodies - finishing with the url of the news...
-            $message  = $boldstart . _DZK_RSS_SUMMARY . ' :' . $boldend . "\n\n" . $item->get_description() . "\n\n" . $urlstart . $item->get_link() . $urlend . "\n\n";
+            $message  = $boldstart . __('Summary', $dom) . ' :' . $boldend . "\n\n" . $item->get_description() . "\n\n" . $urlstart . $item->get_link() . $urlend . "\n\n";
 
             // store message in forum
             $topic_id = pnModAPIFunc('Dizkus', 'user', 'storenewtopic',
@@ -4120,6 +4208,8 @@ function Dizkus_userapi_insertrss($args)
  */
 function Dizkus_userapi_get_forum_subscriptions($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $pntable = pnDBGetTables();
 
     if (isset($args['user_id'])) {
@@ -4159,6 +4249,8 @@ function Dizkus_userapi_get_forum_subscriptions($args)
  */
 function Dizkus_userapi_get_settings_ignorelist($args)
 {
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     // if Contactlist is not available there will be no ignore settings
     if (!pnModAvailable('ContactList')) {
         return false;

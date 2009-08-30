@@ -45,16 +45,15 @@ function Dizkus_centerblock_display($row)
     }
 
     //check for Permission
-	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_READ)){
-	    return;
-	}
+    if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_READ)){
+        return;
+    }
 
-    pnModLangLoad('Dizkus', 'common');
     // check if forum is turned off
     $disabled = dzk_available();
     if(!is_bool($disabled)) {
         $row['content'] = $disabled;
-	    return themesideblock($row);
+      return themesideblock($row);
     }
 
     // return immediately if no post exist
@@ -84,7 +83,7 @@ function Dizkus_centerblock_display($row)
     }
 
     $row['content'] = $pnr->fetch(trim($vars['cb_template']));
-	return themesideblock($row);
+    return themesideblock($row);
 }
 
 /**
@@ -92,12 +91,12 @@ function Dizkus_centerblock_display($row)
  */
 function Dizkus_centerblock_update($row)
 {
-	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
-	    return false;
-	}
-	
-	$cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
-	$cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
+    if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', "$row[title]::", ACCESS_ADMIN)) {
+        return false;
+    }
+    
+    $cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
+    $cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
 
     $row['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
     return($row);
@@ -109,13 +108,11 @@ function Dizkus_centerblock_update($row)
  */
 function Dizkus_centerblock_modify($row)
 {
-	if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_ADMIN)) {
-	    return false;
-	}
-
-    pnModLangLoad('Dizkus', 'common');
+    if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', $row['title'] . '::', ACCESS_ADMIN)) {
+        return false;
+    }
     
-	// Break out options from our content field
+    // Break out options from our content field
     $vars = pnBlockVarsFromContent($row['content']);
 
     if(!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) { $vars['cb_parameters'] = 'maxposts=5'; }
