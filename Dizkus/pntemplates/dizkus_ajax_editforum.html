@@ -42,7 +42,7 @@
                 <option value="0" selected="selected"><!--[gt text="no hooked module found"]--></option>
                 <!--[/foreach]-->
             </select>
-            <p class="zk-formnote pn-sub"><!--[gt text="Used for comment feature, all topics to submission in this module go into this forum. This list only contains the modules where the Dizkus hooks are activated for."]--></p>
+            <p class="z-formnote pn-sub"><!--[gt text="Used for comment feature, all topics to submission in this module go into this forum. This list only contains the modules where the Dizkus hooks are activated for."]--></p>
         </div>
 
         <div class="<!--[$configclass]-->row">
@@ -52,7 +52,7 @@
 
         <div class="<!--[$configclass]-->row">
             <label for="forum_mods"><!--[gt text="Moderator"]--></label>
-            <span id="forum_mods" class="zk-formnote">
+            <span id="forum_mods" class="z-formnote">
                 <strong><!--[gt text="current"]-->:</strong><br />
                 <!--[foreach item='mod' from=$moderators]-->
                 <!--[$mod.uname|pnvarprepfordisplay]-->&nbsp;<!--[if $mod.uid > 1000000]-->(<!--[gt text="Group"]-->)<!--[/if]-->&nbsp;(<input type="checkbox" name="rem_mods[]" value="<!--[$mod.uid]-->" />&nbsp;<!--[gt text="remove"]-->)<br />
@@ -75,7 +75,7 @@
         <div id="extsource" class="<!--[$configclass]-->row">
             <label for="pop3_active"><!--[gt text="External source"]--></label>
             <!--[foreach item='extsource' from=$externalsourceoptions key='num']-->
-            <div class="zk-formlist">
+            <div class="z-formlist">
                 <input id="<!--[$num]-->_<!--[$forum.forum_id]-->" onchange="javascript:showextendedoptions(<!--[$num]-->, <!--[$forum.forum_id]-->)" type="radio" name="extsource" value="<!--[$num]-->" <!--[$extsource.checked]--> />
                 <label for="<!--[$num]-->_<!--[$forum.forum_id]-->"><!--[$extsource.name]--></label>&nbsp;<!--[$extsource.ok]-->
             </div>
@@ -127,7 +127,7 @@
         <div class="<!--[$configclass]-->row">
             <label for="pop3_matchstring"><!--[gt text="Rule"]--></label>
             <input type="text" id="pop3_matchstring" name="pop3_matchstring" maxlength="255" size="30"  value="<!--[$forum.pop3_matchstring]-->" />
-            <p class="zk-formnote pn-sub"><!--[gt text="The rule is a regular expression that the mails subject as to match to avoid spa posigns. An empty rule means no checks!"]--></p>
+            <p class="z-formnote pn-sub"><!--[gt text="The rule is a regular expression that the mails subject as to match to avoid spa posigns. An empty rule means no checks!"]--></p>
         </div>
     </fieldset>
 

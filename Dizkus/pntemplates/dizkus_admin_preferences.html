@@ -63,13 +63,13 @@
         <!--[pnformlabel for="fulltextindex" text="Search forums with fulltext index" html=1]-->
         <!--[pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked]-->
     </div>
-    <div class="zk-formnote pn-informationmsg"><!--[gt text="<em>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the index fields have been created. The search result might by empty if the query string is present in too many postings. This is a \"feature\" of MySQL.</em><br /><a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL\">Fulltext search in MySQL</a>."]--></div>
+    <div class="z-formnote pn-informationmsg"><!--[gt text="<em>Searching the forums with fulltext index fields needs min. MySQL 4 or later and does not work with InnoDB databases. This flag will normally be set during installation when the index fields have been created. The search result might by empty if the query string is present in too many postings. This is a \"feature\" of MySQL.</em><br /><a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html" title="Fulltext search in MySQL\">Fulltext search in MySQL</a>."]--></div>
 
     <div class="<!--[$configclass]-->row">
         <!--[pnformlabel for="extendedsearch" text="Use extended fulltext search in internal search" html=1]-->
         <!--[pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked]-->
     </div>
-    <div class="zk-formnote pn-informationmsg"><!--[gt text="<i>The extended fulltext search enables parameters like \"+dizkus -skype\" for postings that contain \"dizkus\" but not \"skype\". Minimum requirement is MySQL 4.01.</i><br /><a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended fulltest search in MySQL\">Extended fulltest search in MySQL</a>."]--></div>
+    <div class="z-formnote pn-informationmsg"><!--[gt text="<i>The extended fulltext search enables parameters like \"+dizkus -skype\" for postings that contain \"dizkus\" but not \"skype\". Minimum requirement is MySQL 4.01.</i><br /><a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended fulltest search in MySQL\">Extended fulltest search in MySQL</a>."]--></div>
 
     <div class="<!--[$configclass]-->row">
         <!--[pnformlabel for="showtextinsearchresults" text='Show text in search results<br /><em>Turn this off in high volume sites to improve search performance or take care about constant cleaning of the search results table.</em>' html=1]-->
@@ -115,9 +115,9 @@
         <!--[if $contactlist_available eq true]-->
         <!--[pnformlabel for="ignorelist_handling" text='Handling of ignored users' html=1]-->
         <!--[pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling]-->
-        <div class="zk-formnote pn-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
+        <div class="z-formnote pn-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
         <!--[else]-->
-        <div class="zk-formnote pn-informationmsg"><!--[gt text="Handling of ignored users is not available, "]--><br />
+        <div class="z-formnote pn-informationmsg"><!--[gt text="Handling of ignored users is not available, "]--><br />
             <a href="http://code.zikula.org/contactlist/"><!--[gt text='%1$s has to be installed' tag1="Contactlist"]--></a>
         </div>
         <!--[/if]-->

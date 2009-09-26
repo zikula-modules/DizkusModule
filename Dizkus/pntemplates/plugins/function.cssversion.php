@@ -20,7 +20,7 @@ function smarty_function_cssversion($params, &$smarty)
 
     if (version_compare(PN_VERSION_NUM, '1.2.0-dev', '>=')) {
         // PageUtil::addVar('stylesheet', 'javascript/style.css');
-        $return = 'zk-form';
+        $return = 'z-form';
     } else {
         // get the type parameter so we can decide what template to use
         $type = FormUtil::getPassedValue('type', 'user', 'REQUEST');
