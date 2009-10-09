@@ -1,5 +1,5 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Personal settings per forum"]-->
+<!--[gt text="Personal settings per forum" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
@@ -10,7 +10,7 @@
     <div class="roundedbar dzk_rounded">
         <div class="inner">
 
-            <ul class="linklist pn-clearfix">
+            <ul class="linklist z-clearfix">
                 <li><!--[gt text="Recent post order in topic view"]-->
                     <br />
                     <span style="display: none;" id="sortorder_asc"><a class="dzk_img sortorderasclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[gt text="Change Post Order"]-->"><!--[gt text="Change Post Order"]--></a>&nbsp;(<!--[gt text="recent sort order"]-->: <!--[gt text="oldest submissions on top"]-->)</span>
@@ -41,7 +41,7 @@
                     </noscript>
                 </li>
             </ul>
-            <ul class="linklist pn-clearfix">
+            <ul class="linklist z-clearfix">
                 <li>
                     <!--[gt text="Manage topic subscriptions"]--><br />
                     <a class="dzk_img subscribetopiclink" href="<!--[pnmodurl modname='Dizkus' type=user func=topicsubscriptions]-->" title="<!--[gt text="Manage topic subscriptions"]-->"><!--[gt text="Manage topic subscriptions"]--></a>
@@ -49,7 +49,7 @@
             </ul>
 
             <!--[if $favorites_enabled eq 'yes']-->
-            <ul class="linklist pn-clearfix">
+            <ul class="linklist z-clearfix">
                 <li>
                     <!--[gt text="Favorites"]--><br />
                     <a class="dzk_img showallforumslink" href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showallforums]-->" title="<!--[gt text="Show all forums"]-->"><!--[gt text="Show all forums"]--></a>
@@ -60,7 +60,7 @@
             <!--[/if]-->
 
             <!--[if $signaturemanagement eq "yes"]-->
-            <ul class="linklist pn-clearfix">
+            <ul class="linklist z-clearfix">
                 <li>
                     <!--[gt text="Posting appearance"]--><br />
                     <a class="dzk_img subscribelink" href="<!--[pnmodurl modname=Dizkus type=user func=signaturemanagement]-->" title="<!--[gt text="Manage my signature"]-->"><!--[gt text="Manage my signature"]--></a>
@@ -69,7 +69,7 @@
             <!--[/if]-->
 
             <!--[if $ignorelist_handling ne "none" and $contactlist_available]-->
-            <ul class="linklist pn-clearfix">
+            <ul class="linklist z-clearfix">
                 <li>
                     <!--[gt text="Ignorelist configuration"]--><br />
                     <a class="dzk_img subscribelink" href="<!--[pnmodurl modname=Dizkus type=user func=ignorelistmanagement]-->" title="<!--[gt text="Manage my settings for my ignorelist"]-->"><!--[gt text="Manage my settings for my ignorelist"]--></a>

@@ -1,5 +1,5 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Latest Forum-Posts"]-->
+<!--[gt text="Latest Forum-Posts" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value="`$templatetitle` - `$text`"]-->
 
 <!--[include file='dizkus_user_header.html']-->
@@ -11,13 +11,13 @@
     <div class="roundedbar dzk_rounded">
         <div class="inner">
             <form class="dzk_form" method="post" action="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest]-->">
-                <ul class="linklist pn-clearfix">
+                <ul class="linklist z-clearfix">
                     <li><a class="dzk_img" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest selorder=3]-->"><!--[gt text="yesterday"]--></a></li>
                     <li><a class="dzk_img" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest selorder=2]-->"><!--[gt text="today"]--></a></li>
                     <li><a class="dzk_img" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest selorder=1]-->"><!--[gt text="last 24 hours"]--></a></li>
                     <li><a class="dzk_img"></a><button type="submit"><!--[gt text="last"]--></button> <input type="text" name="nohours" id="Dizkus_hours" size="3" value="<!--[$nohours]-->" maxlength="3" tabindex="0" /> <button type="submit"><!--[gt text="hours"]--></button></li>
                 </ul>
-                <ul class="linklist pn-clearfix">
+                <ul class="linklist z-clearfix">
                     <li><a class="dzk_img" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest selorder=4]-->"><!--[gt text="last week"]--></a></li>
                     <li><a class="dzk_img" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest selorder=4 unanswered=1]-->"><!--[gt text="last week, unanswered"]--></a></li>
                     <!--[if $last_visit_unix <> 0]-->

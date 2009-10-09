@@ -12,7 +12,7 @@ Template for single postings
 <div id="posting_<!--[$post.post_id]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[if $post.poster_data.online]-->poster_online<!--[/if]-->" >
     <div class="inner">
 
-        <div class="dzk_subcols pn-clearfix">
+        <div class="dzk_subcols z-clearfix">
             <div id="posting_<!--[$post.post_id]-->_userinfo" class="post_author dzk_colpost_left">
                 <!--[if $post.poster_data.pn_uid eq 1 OR $post.poster_data.pn_uid eq ""]-->
                 <div class="dzk_avatar">
@@ -64,7 +64,7 @@ Template for single postings
             <div class="postlink">
                 <!--[if !isset($preview) OR $preview neq true]-->
                 <div class="dzk_colpost_right">
-                    <ul id="postingoptions_<!--[$post.post_id]-->" class="javascriptpostingoptions hidden linklist pn-clearfix" style="float:right;">
+                    <ul id="postingoptions_<!--[$post.post_id]-->" class="javascriptpostingoptions hidden linklist z-clearfix" style="float:right;">
                         <!--[if $post.poster_data.moderate eq true]-->
                         <!--[if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)]-->
                         <li><a class="movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_move.gif" __alt="Move" ]--></a></li>
@@ -86,7 +86,7 @@ Template for single postings
                         <li><a title="<!--[gt text="Top"]-->" href="#top">&nbsp;<!--[pnimg modname='Dizkus' src="icon_up.gif" __alt="Top" ]--></a></li>
                     </ul>
                     <noscript>
-                        <ul class="nonjavascriptpostingoptions linklist pn-clearfix" style="float:right;">
+                        <ul class="nonjavascriptpostingoptions linklist z-clearfix" style="float:right;">
                             <!--[if $post.poster_data.moderate eq true]-->
                             <!--[if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)]-->
                             <li><a class="dzk_img movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$post.post_id]-->"><!--[gt text="Move"]--></a></li>

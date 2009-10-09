@@ -1,24 +1,22 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Posting appearance"]-->
+<!--[gt text="Posting appearance" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
-<!--[cssversion assign='configclass']-->
-<!--[* assign var="configclass" value="pn-form" *]-->
 
 <h2><!--[$templatetitle]--></h2>
 
-<!--[pnform cssClass=$configclass]-->
+<!--[pnform cssClass="z-form"]-->
 <!--[pnformvalidationsummary]-->
 <fieldset>
     <legend><!--[$templatetitle]--></legend>
-    <div class="<!--[$configclass]-->row">
+    <div class="z-formrow">
         <!--[pnformlabel for="signature" text="Manage my signature"]-->
         <!--[pnformtextinput id="signature" textMode="multiLine" rows="5" cols="40"]-->
     </div>
     <!--[* plainbbcode textfieldid=signature *]-->
     <!--[* bbsmile textfieldid=signature *]-->
 </fieldset>
-<div class="<!--[$configclass]-->buttons">
+<div class="z-formbuttons">
     <!--[pnformbutton commandName="update" text="Update" class="dzk_img ok"]-->
 </div>
 <!--[/pnform]-->

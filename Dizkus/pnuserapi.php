@@ -712,7 +712,7 @@ function Dizkus_userapi_readforum($args)
                 $topic['last_page_start'] = 0;
             }
 
-            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="pn-sub">(' . DataUtil::formatForDisplay(__('Goto page', $dom)) . '&nbsp;';
+            $pagination .= '&nbsp;&nbsp;&nbsp;<span class="z-sub">(' . DataUtil::formatForDisplay(__('Goto page', $dom)) . '&nbsp;';
             $pagenr = 1;
             $skippages = 0;
             for($x = 0; $x < $topic['topic_replies'] + 1; $x += $posts_per_page) {

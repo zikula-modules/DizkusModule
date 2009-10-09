@@ -1,9 +1,8 @@
 <!--[*  $Id$  *]-->
 <!--[gt text="Pop3 test results" assign=templatetitle]-->
 <!--[include file='dizkus_admin_header.html']-->
-<!--[cssversion assign='configclass']-->
 
-<form class="<!--[$configclass]-->" action="" method="post">
+<form class="z-form" action="" method="post">
     <input type="hidden" name="forum_id" value="<!--[$forum_id]-->" />
     <fieldset>
         <legend><!--[$templatetitle]--></legend>
@@ -11,7 +10,7 @@
         <p><!--[$message]--></p>
         <!--[/foreach]-->
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="z-formbuttons">
         <input type="submit" name="backtoforum" value="<!--[gt text="Back to forum admin"]-->" />
     </div>
 </form>

@@ -9,8 +9,8 @@
     <h3 class="footer_title"><!--[gt text="Legend"]--></h3>
     <ul id="ctheme-legenda">
         <!--[assign var='last_visit_unix' value=$last_visit_unix|pnfdate_format:'datetimebrief']-->
-        <li><!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit.'  __title="New posts since your last visit." ]--> : <!--[gt text="New posts since your last visit."]--> <span class="pn-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
-        <li><!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit.'  __title="No new posts since your last visit." ]--> : <!--[gt text="No new posts since your last visit."]--> <span class="pn-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
+        <li><!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit.'  __title="New posts since your last visit." ]--> : <!--[gt text="New posts since your last visit."]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
+        <li><!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit.'  __title="No new posts since your last visit." ]--> : <!--[gt text="No new posts since your last visit."]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
     </ul>
     <!--[/if]-->
 
@@ -28,7 +28,7 @@
     <!--[pnconfiggetvar name='secinactivemins' assign='mins']-->
 
     <h3 class="footer_title"><!--[gt text="Users online"]--></h3>
-    <ul id="ctheme_onlinelist" class="pn-clearfix">
+    <ul id="ctheme_onlinelist" class="z-clearfix">
         <!--[if $online.numusers > 0]-->
         <!--[foreach name='onlineusers' item='user' from=$online.unames]-->
         <li>
@@ -46,7 +46,7 @@
         </li>
         <!--[/if]-->
     </ul>
-    <p class="pn-sub"><!--[gt text='This list is based on the users active over the last %1$s minutes.' tag1=$mins]--></p>
+    <p class="z-sub"><!--[gt text='This list is based on the users active over the last %1$s minutes.' tag1=$mins]--></p>
 </div>
 
 <!--[/if]-->

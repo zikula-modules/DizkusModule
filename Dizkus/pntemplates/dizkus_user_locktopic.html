@@ -2,32 +2,31 @@
 <!--[capture assign=templatetitle]--><!--[if $mode eq "lock"]--><!--[gt text="Lock this topic"]--><!--[else]--><!--[gt text="Unlock this topic"]--><!--[/if]--><!--[/ capture]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
-<!--[cssversion assign='configclass']-->
 
 <h2><!--[$templatetitle]--></h2>
 
-<form class="<!--[$configclass]-->" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
+<form class="z-form" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
     <input type="hidden" name="mode" value="<!--[$mode]-->" />
     <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
     <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
     <!--[if $mode eq "lock"]-->
     <fieldset id="dzk_locktopic">
         <legend><!--[$templatetitle]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="z-formrow">
             <!--[gt text="When you press the lock button at the bottom of this form the topic you have selected will be <strong>locked</strong>. You may unlock it at a later time if you like."]-->
         </div>
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="z-formbuttons">
         <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Lock this topic"]-->"><!--[gt text="Lock this topic"]--></button>
     </div>
     <!--[else]-->
     <fieldset id="dzk_locktopic">
         <legend><!--[$templatetitle]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="z-formrow">
             <!--[gt text="When you press the unlock button at the bottom of this form the topic you have selected will be <strong>unlocked</strong>. You may lock it again at a later time if you like."]-->
         </div>
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="z-formbuttons">
         <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Unlock this topic"]-->"><!--[gt text="Unlock this topic"]--></button>
     </div>
     <!--[/if]-->

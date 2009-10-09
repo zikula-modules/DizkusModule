@@ -1,6 +1,5 @@
 <!--[*  $Id$  *]-->
 <!--[gt text="Manage subscriptions" assign=templatetitle]-->
-<!--[cssversion assign='configclass']-->
 <!--[include file='dizkus_admin_header.html']-->
 
 <form id="subscriptions" action="<!--[pnmodurl modname='Dizkus' type='admin' func='managesubscriptions']-->" method="post">
@@ -9,12 +8,12 @@
     </div>
 </form>
 
-<form class="<!--[$configclass]-->" id="managesubscriptions" action="<!--[pnmodurl modname='Dizkus' type='admin' func='managesubscriptions']-->" method="post">
+<form class="z-form" id="managesubscriptions" action="<!--[pnmodurl modname='Dizkus' type='admin' func='managesubscriptions']-->" method="post">
     <input type="hidden" name="pnuid" value="<!--[$pnuid]-->" />
     <!--[if $topicsubscriptions|@count <> 0]-->
     <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
     <h2><!--[gt text="Manage topic subscriptions"]--></h2>
-    <table class="pn-admintable">
+    <table class="z-admintable">
         <caption>(<label for="alltopic"><!--[gt text="Remove all topic subscriptions"]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />&nbsp;)</caption>
         <thead>
             <tr>
@@ -25,7 +24,7 @@
         </thead>
         <tbody>
             <!--[foreach item='subscription' from=$topicsubscriptions]-->
-            <tr class="<!--[cycle values='pn-odd,pn-even']-->">
+            <tr class="<!--[cycle values='z-odd,z-even']-->">
                 <td>
                     <a href="<!--[$subscription.last_post_url_anchor|pnvarprepfordisplay]-->" title="<!--[$subscription.forum_name]--> :: <!--[$subscription.topic_title]-->"><!--[$subscription.topic_title|pnvarprepfordisplay]--></a>
                 </td>
@@ -46,7 +45,7 @@
     <!--[if $forumsubscriptions|@count <> 0]-->
     <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
     <h2><!--[gt text="Manage forum subscriptions"]--></h2>
-    <table class="pn-admintable">
+    <table class="z-admintable">
         <caption>(<label for="allforum"><!--[gt text="Remove all forum subscriptions"]--></label>&nbsp;<input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />&nbsp;)</caption>
         <thead>
             <tr>
@@ -56,7 +55,7 @@
         </thead>
         <tbody>
             <!--[foreach item='subscription' from=$forumsubscriptions]-->
-            <tr class="<!--[cycle values='pn-odd,pn-even']-->">
+            <tr class="<!--[cycle values='z-odd,z-even']-->">
                 <td>
                     <a href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id]-->" title="<!--[$subscription.topic_title]--> :: <!--[$subscription.forum_name]-->"><!--[$subscription.forum_name|pnvarprepfordisplay]--></a>
                 </td>

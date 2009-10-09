@@ -1,26 +1,24 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Ignorelist configuration"]-->
+<!--[gt text="Ignorelist configuration" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
-<!--[cssversion assign='configclass']-->
-<!--[* assign var="configclass" value="pn-form" *]-->
 
 <h2><!--[$templatetitle]--></h2>
 
-<div class="pn-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
+<div class="z-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
 
-<!--[pnform cssClass=$configclass]-->
+<!--[pnform cssClass="z-form"]-->
 <!--[pnformvalidationsummary]-->
 <fieldset>
     <legend><!--[$templatetitle]--></legend>
-    <div class="<!--[$configclass]-->row">
+    <div class="z-formrow">
         <!--[pnformlabel for="ignorelist_myhandling" text="My individual handling of ignored users" html=1]-->
         <span>
             <!--[pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling]-->
         </span>
     </div>
 </fieldset>
-<div class="<!--[$configclass]-->buttons">
+<div class="z-formbuttons">
     <!--[pnformbutton commandName="update" text="Update" class="dzk_img ok"]-->
 </div>
 <!--[/pnform]-->

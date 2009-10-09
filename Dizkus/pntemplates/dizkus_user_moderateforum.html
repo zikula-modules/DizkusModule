@@ -1,8 +1,7 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Moderate"]-->
+<!--[gt text="Moderate" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
-<!--[cssversion assign='configclass']-->
 
 <h2><!--[$templatetitle]--></h2>
 
@@ -10,7 +9,7 @@
 <p class='ctheme-description'><!--[$forum.forum_desc|pnvarprephtmldisplay]--></p>
 <!--[/if]-->
 
-<form class="<!--[$configclass]-->" method="post" action="<!--[pnmodurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id]-->">
+<form class="z-form" method="post" action="<!--[pnmodurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id]-->">
 
     <!--[if $forum.topics]-->
     <!--[pnfpager total=$forum.forum_topics]-->
@@ -51,7 +50,7 @@
                             <!--[pnimg modname='Dizkus' src='icon_hottopic.gif' __alt='hot topic'  __title='hot topic' ]-->
                             <!--[/if]-->
                             <!--[$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name]-->
-                            <em class="pn-sub">(<!--[$topic.topic_views]--> <!--[gt text="Views"]-->)</em>
+                            <em class="z-sub">(<!--[$topic.topic_views]--> <!--[gt text="Views"]-->)</em>
                             <span><!--[gt text="Poster"]-->: <!--[$topic.pn_uname|dzkprofilelink]--></span>
                             <!--[pnfpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"]-->
                         </dt>
@@ -85,11 +84,11 @@
 
     <!--[/if]-->
 
-    <div class="pn-warningmsg"><!--[gt text="BEWARE: Dizkus will not ask you for any confirmation! Clicking on Submit will immediately start the selected action!"]--></div>
+    <div class="z-warningmsg"><!--[gt text="BEWARE: Dizkus will not ask you for any confirmation! Clicking on Submit will immediately start the selected action!"]--></div>
 
     <fieldset>
         <legend><!--[gt text="Moderators options"]--></legend>
-        <div class="<!--[$configclass]-->row">
+        <div class="z-formrow">
             <label for="mode"><!--[gt text="Actions"]-->:</label>
             <select name="mode" id="mode" size="1">
                 <option value="">&lt;&lt; <!--[gt text="select action"]--> &gt;&gt;</option>
@@ -102,7 +101,7 @@
                 <option value="join"><!--[gt text="Join topics"]--></option>
             </select>
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="z-formrow">
             <label for="moveto"><!--[gt text="Choose target forum for moving topics:"]-->:</label>
             <select name="moveto" id="moveto">
                 <option value=''>&lt;&lt; <!--[gt text="select target forum"]--> &gt;&gt;</option>
@@ -111,11 +110,11 @@
                 <!--[/foreach]-->
             </select>
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="z-formrow">
             <label for="createshadowtopic"><!--[gt text="Create shadow topic"]-->:</label>
             <input type="checkbox" name="createshadowtopic" id="createshadowtopic" value="1" />
         </div>
-        <div class="<!--[$configclass]-->row">
+        <div class="z-formrow">
             <label for="jointotopic"><!--[gt text="If you want to join topics, select the target topic here"]-->:</label>
             <span id="jointotopic">
                 <select name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
@@ -129,7 +128,7 @@
             </span>
         </div>
     </fieldset>
-    <div class="<!--[$configclass]-->buttons">
+    <div class="z-formbuttons">
         <!--[* FOR Creating shadow topic the authkey is needed *]-->
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <button class="dzk_img ok" name="submit" type="submit" value="submit" title="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>

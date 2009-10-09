@@ -1,12 +1,11 @@
 <!--[*  $Id$  *]-->
 <!--[gt text="Reorder forums" assign=templatetitle]-->
 <!--[pnimg src='icon_dbaccess.gif' assign='progressicon']-->
-<!--[cssversion assign='configclass']-->
 <!--[include file='dizkus_admin_header.html']-->
 
-<p class="pn-informationmsg"><!--[gt text="You can use drag &amp; drop to manipulate the forum tree as you like. When done, click on save to store your changes."]--></p>
+<p class="z-informationmsg"><!--[gt text="You can use drag &amp; drop to manipulate the forum tree as you like. When done, click on save to store your changes."]--></p>
 
-<div class="pn-clearfix" style="margin-top: 1em;">
+<div class="z-clearfix" style="margin-top: 1em;">
     <button onclick="javascript:addcategory();" class="dzk_img add dzk_float_left"><!--[gt text="Add a Category"]--></button>
     <button onclick="javascript:storetreeorder();" class="dzk_img ok dzk_float_right" type="submit"><!--[gt text="Save"]--></button>
 </div>
@@ -16,8 +15,8 @@
 <ul id="category">
     <!--[foreach item='category' from=$categorytree]-->
     <li id="category_<!--[$category.cat_id]-->" class="catline">
-        <div class="pn-clearfix">
-            <div class="dzk_handle pn-clearfix">
+        <div class="z-clearfix">
+            <div class="dzk_handle z-clearfix">
                 <div id="categorytitle_<!--[$category.cat_id]-->" style="float: left; width: 60%;">
                     <a title="<!--[gt text="Visit this category"]-->" href="<!--[pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id]-->"><!--[$category.cat_title]--></a> (<!--[$category.cat_id]-->)
                 </div>
@@ -36,7 +35,7 @@
         <ul id="cid_<!--[$category.cat_id]-->" class="dzk_treeforumlist" style="display: none;">
             <!--[foreach item='forum' from=$category.forums]-->
             <li id="forum_<!--[$forum.forum_id]-->" class="forumline">
-                <div class="dzk_handle pn-clearfix">
+                <div class="dzk_handle z-clearfix">
                     <div id="forumtitle_<!--[$forum.forum_id]-->" style="float: left; width: 60%;">
                         <a href="<!--[pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id]-->" title="<!--[$forum.forum_name|pnvarprepfordisplay]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a> (<!--[$forum.forum_id]-->)
                     </div>
@@ -50,11 +49,11 @@
                 <div id="editforum_<!--[$forum.forum_id]-->" style="display: none; margin: 0 1em;">&nbsp;</div>
             </li>
             <!--[/foreach]-->
-            <li id="emptycategory_<!--[$category.cat_id]-->" class="pn-informationmsg" style="<!--[if $category.forums|@count <> 0]-->display: none; <!--[/if]-->">
+            <li id="emptycategory_<!--[$category.cat_id]-->" class="z-informationmsg" style="<!--[if $category.forums|@count <> 0]-->display: none; <!--[/if]-->">
                 <!--[gt text="This category does not contain any forums yet"]-->
             </li>
             <li id="newforum_cat<!--[$category.cat_id]-->" class="forumline" style="display: none;">
-                <div class="dzk_handle pn-clearfix">
+                <div class="dzk_handle z-clearfix">
                     <div id="forumtitle_cat<!--[$category.cat_id]-->" style="float: left; width: 60%;">
                         <!--[gt text="-- add new forum --"]-->
                     </div>
@@ -73,8 +72,8 @@
     <!--[/foreach]-->
 
     <li style="display: none;" class="catline" id="newcategory">
-        <div class="pn-clearfix">
-            <div class="dzk_handle pn-clearfix">
+        <div class="z-clearfix">
+            <div class="dzk_handle z-clearfix">
                 <div id="newcategorytitle" style="float: left; width: 60%;">
                     <!--[gt text="-- add new category --"]-->
                 </div>
@@ -97,7 +96,7 @@
             </li>
 
             <li id="newforum" style="display: none; border: 1px solid black; margin: 2px; padding: 2px; background-color: <!--[$bgcolor3|default:'transparent']-->;">
-                <div style="height: 1.5em; padding: 2px; background-color: <!--[$bgcolor3|default:'transparent']-->;" class="dzk_handle pn-clearfix">
+                <div style="height: 1.5em; padding: 2px; background-color: <!--[$bgcolor3|default:'transparent']-->;" class="dzk_handle z-clearfix">
                     <div id="newforumtitle" style="float: left; width: 60%;">
                         <!--[gt text="-- add new forum --"]-->
                     </div>
@@ -117,7 +116,7 @@
 
 <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
 
-<div class="pn-clearfix" style="margin-top: 1em;">
+<div class="z-clearfix" style="margin-top: 1em;">
     <button onclick="javascript:addcategory();" class="dzk_img add dzk_float_left"><!--[gt text="Add a Category"]--></button>
     <button onclick="javascript:storetreeorder();" class="dzk_img ok dzk_float_right" type="submit"><!--[gt text="Save"]--></button>
 </div>
