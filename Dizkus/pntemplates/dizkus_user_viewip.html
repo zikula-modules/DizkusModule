@@ -12,7 +12,7 @@
         <dd><!--[$viewip.poster_host]--></dd>
         <dt><!--[gt text="Usernames of users that posted from this IP + post counts"]--></dt>
         <!--[foreach item=user from=$viewip.users]-->
-        <dd><!--[$user.pn_uname|dzkprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</dd>
+        <dd><!--[$user.pn_uname|userprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</dd>
         <!--[/foreach]-->
     </dl>
     <br />

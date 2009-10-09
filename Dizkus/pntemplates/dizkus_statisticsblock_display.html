@@ -32,7 +32,7 @@
         <!--[gt text="Replies"]-->
         <!--[/if]-->
         <br />
-        <!--[$lastpost.poster_name|dzkprofilelink]--><br /><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true]-->
+        <!--[$lastpost.poster_name|userprofilelink]--><br /><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true]-->
     </li>
     <!--[/foreach]-->
 </ul>
@@ -45,7 +45,7 @@
 <br />
 <ul class="dzk_posterlist">
     <!--[foreach item=topposter from=$topposters]-->
-    <li><!--[$topposter.user_name|dzkprofilelink]--><br />(<!--[$topposter.user_posts]--> <!--[gt text="Posts"]-->)</li>
+    <li><!--[$topposter.user_name|userprofilelink]--><br />(<!--[$topposter.user_posts]--> <!--[gt text="Posts"]-->)</li>
     <!--[/foreach]-->
 </ul>
 <!--[/if]-->

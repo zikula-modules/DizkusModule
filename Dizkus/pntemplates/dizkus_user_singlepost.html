@@ -25,7 +25,7 @@
                 </div>
                 <!--[else]-->
                 <div class="dzk_avatar">
-                    <strong><!--[$post.poster_data.pn_uname|dzkprofilelink]--></strong>
+                    <strong><!--[$post.poster_data.pn_uname|userprofilelink]--></strong>
                     <br />
                     <!--[assign var='defaultavatar' value="`$baseurl`modules/Dizkus/pnimages/gravatar_80.jpg"]-->
                     <!--[if isset($post.poster_data._YOURAVATAR) AND $post.poster_data._YOURAVATAR neq 'blank.gif' AND $post.poster_data._YOURAVATAR neq 'gravatar.gif']-->
@@ -51,7 +51,7 @@
                     <li><strong><!--[gt text="Posts"]-->: </strong><!--[$post.poster_data.user_posts]--></li>
                     <!--[if $pncore.logged_in eq true]-->
                     <li>
-                        <!--[$post.poster_data.pn_uname|dzkprofilelink:'':"`$baseurl`modules/Dizkus/pnimages/icon_post_profile.gif"]-->
+                        <!--[$post.poster_data.pn_uname|userprofilelink:'':"`$baseurl`modules/Dizkus/pnimages/icon_post_profile.gif"]-->
                         <!--[if $InterComOK]-->
                         <a href="<!--[pnmodurl modname="InterCom" type="user" func="newpm" uid=$post.poster_data.uid]-->"><!--[pnimg modname='Dizkus' src='icon_post_pn.gif' __alt='']--></a>
                         <!--[/if]-->

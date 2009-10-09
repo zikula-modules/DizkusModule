@@ -42,13 +42,13 @@
                 <br />
                 <em><!--[gt text="Moderated by"]-->:</em>
                 <!--[foreach name=moderators item=mod key=modid from=$forum.forum_mods]-->
-                <!--[if $modid lt 1000000]--><!--[$mod|dzkprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
+                <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
                 <!--[/foreach]-->
                 <!--[/if]-->
             </td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[$forum.forum_topics]--></td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[$forum.forum_posts]--></td>
-            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[if $forum.last_post_data.name <> '']--><!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']--><br /> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|dzkprofilelink]--><br /><a href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[pnimg modname='Dizkus' src=icon_latest_topic.gif]--></a><!--[else]--><!--[gt text="No Posts"]--><!--[/if]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[if $forum.last_post_data.name <> '']--><!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']--><br /> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br /><a href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[pnimg modname='Dizkus' src=icon_latest_topic.gif]--></a><!--[else]--><!--[gt text="No Posts"]--><!--[/if]--></td>
         </tr>
         <!--[foreachelse]-->
         <tr>
