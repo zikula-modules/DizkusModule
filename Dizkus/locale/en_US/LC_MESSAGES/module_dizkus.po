@@ -5,16 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Dizkus 3.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-30 20:15+0200\n"
-"PO-Revision-Date: 2009-10-12 19:53+0800\n"
+"PO-Revision-Date: 2009-10-12 21:29+0800\n"
 "Last-Translator: David Nelson <commerce@traduction.biz>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: English (US) <commerce@traduction.biz>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: backforum.php:54
 #, php-format
@@ -468,14 +471,14 @@ msgstr "Go to page %s: "
 #: pntemplates/dizkus_user_viewforum.html:132
 #: pntemplates/dizkus_user_moderateforum.html:46
 msgid "New posts since your last visit."
-msgstr "There are new posts since your last visit."
+msgstr "New posts since your last visit on"
 
 #: pntemplates/plugins/function.folderimage.php:42
 #: pntemplates/plugins/function.folderimage.php:64
 #: pntemplates/dizkus_user_main2.html:79
 #: pntemplates/dizkus_user_footer.html:13
 msgid "No new posts since your last visit."
-msgstr "There have been no new posts since your last visit."
+msgstr "No new posts since your last visit on"
 
 #: pntemplates/plugins/modifier.viewtopiclink.php:64
 msgid "go to topic"
@@ -841,7 +844,7 @@ msgstr "Remove a user's topic and forum subscriptions"
 #: pntemplates/dizkus_admin_main.html:2
 #: pntemplates/dizkus_user_header.html:47
 msgid "Start"
-msgstr "Forum index"
+msgstr "Forums index page"
 
 #: pntemplates/dizkus_admin_honoraryranks.html:10
 #: pntemplates/dizkus_admin_ranks.html:10
