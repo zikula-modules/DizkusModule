@@ -51,28 +51,18 @@ function smarty_modifier_pnfdate_format($string, $format='datebrief', $default_d
     if(empty($format)) {
         $format = 'datebrief';
     }
-    if(substr_count($format, '%') == 0) {
-        // format does not contain a % hence it is not a time format string but a name for a define
-        $format = '_' . strtoupper($format);
-        if(defined($format)) {
-            $format = constant($format);
-        } else {
-            // just a dumb default (datebrief + a red exclamation mark)
-            $format = _DATEBRIEF . '<span style="color: red;">!</span>';
-        }
-    }
 
     $tzoffset = 0;
-    if(isset($usetzoffset)) {
+    if (isset($usetzoffset)) {
         $useroffset = (pnUserLoggedIn()) ? (float)pnUserGetVar('_TIMEZONEOFFSET') : (float)pnUserGetVar('_TIMEZONEOFFSET', 1);
         $tzoffset = ($useroffset - (float)pnConfigGetVar('timezone_offset')) * 3600;
     }
 
-    if($string != '') {
-        return strftime($format, smarty_make_timestamp($string) + $tzoffset );
-    } elseif (isset($default_date) && $default_date != '') {
-        return strftime($format, smarty_make_timestamp($default_date) + $tzoffset );
-    } else {
+    $dateInput = '';
+    if ($string != '') $dateInput = smarty_make_timestamp($string) + $tzoffset;
+    elseif (isset($default_date) && $default_date != '') $dateInput = smarty_make_timestamp($default_date) + $tzoffset;
+    if ($dateInput == '') {
         return;
     }
+    return DateUtil::formatDatetime($dateInput, $format);
 }
