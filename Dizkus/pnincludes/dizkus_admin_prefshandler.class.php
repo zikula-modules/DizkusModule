@@ -20,13 +20,13 @@ class dizkus_admin_prefshandler
         $pnRender->add_core_data();
         
         
-        $pnRender->assign('post_sort_order_options', array(array('text' => __('Ascencing', $dom),  'value' => 'ASC'),
+        $pnRender->assign('post_sort_order_options', array(array('text' => __('Ascending', $dom),  'value' => 'ASC'),
                                                            array('text' => __('Descending', $dom), 'value' => 'DESC')));
-        $pnRender->assign('deletehook_options', array(array('text' => __('delete topic', $dom), 'value' => 'remove'),
-                                                      array('text' => __('close topic', $dom),   'value' => 'lock')));
-        $pnRender->assign('ignorelist_options', array(array('text' => __('strict', $dom), 'value' => 'strict'),
-                                                      array('text' => __('medium', $dom), 'value' => 'medium'),
-                                                      array('text' => __('none', $dom),   'value' => 'none')));
+        $pnRender->assign('deletehook_options', array(array('text' => __('Delete topic', $dom), 'value' => 'remove'),
+                                                      array('text' => __('Close topic', $dom),   'value' => 'lock')));
+        $pnRender->assign('ignorelist_options', array(array('text' => __('Strict', $dom), 'value' => 'strict'),
+                                                      array('text' => __('Medium', $dom), 'value' => 'medium'),
+                                                      array('text' => __('None', $dom),   'value' => 'none')));
     
         $modvars = pnModGetVar('Dizkus');
         $pnRender->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
@@ -116,7 +116,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'forum_disabled_info', $data['forum_disabled_info']);
             pnModSetVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
 
-            LogUtil::registerStatus(__('The configuration has been changed', $dom));
+            LogUtil::registerStatus(__('Done! Updated settings.', $dom));
 
         } elseif ($args['commandName'] == 'restore') {
             // checkboxes 
@@ -153,10 +153,10 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'default_lang',        'iso-8859-1');
             pnModSetVar('Dizkus', 'signature_start',     '');
             pnModSetVar('Dizkus', 'signature_end',       '');
-            pnModSetVar('Dizkus', 'forum_disabled_info', __('The forum is currently disabled for maintenance, please come back later.', $dom));
+            pnModSetVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently closed for maintenance. Please check again soon.', $dom));
             pnModSetVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/pnimages/ranks');
 
-            LogUtil::registerStatus(__('The configuration has been reset to the default values', $dom));
+            LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));
         }
         return $pnRender->pnFormRedirect(pnModURL('Dizkus','admin','preferences'));
     }

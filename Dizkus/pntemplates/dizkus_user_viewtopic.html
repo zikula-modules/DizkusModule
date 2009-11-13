@@ -8,44 +8,44 @@
         <div id="dzk_javascriptareatopic" class="hidden">
             <ul class="dzk_topicoptions linklist pn-clearfix">
                 <!--[if $topic.topic_id neq $topic.prev_topic_id]-->
-                <li><a class="dzk_img previoustopiclink" title="<!--[gt text="to previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
+                <li><a class="dzk_img previoustopiclink" title="<!--[gt text="Previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
                 <!--[/if]-->
 
                 <!--[if $topic.access_comment]-->
-                <li><a class="dzk_img newtopiclink" title="<!--[gt text="New topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id]-->"><!--[gt text="New topic"]--></a></li>
+                <li><a class="dzk_img newtopiclink" title="<!--[gt text="Start a new topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id]-->"><!--[gt text="New topic"]--></a></li>
                 <!--[/if]-->
 
                 <!--[if $pncore.logged_in]-->
-                <li><a class="dzk_img mailtolink" title="<!--[gt text="Send as email"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id]-->"><!--[gt text="Send as email"]--></a></li>
+                <li><a class="dzk_img mailtolink" title="<!--[gt text="Send the posts within this topic as an e-mail message to someone"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id]-->"><!--[gt text="Send as e-mail"]--></a></li>
                 <!--[/if]-->
 
                 <li><!--[printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id]--></li>
 
                 <!--[if $pncore.logged_in]-->
                 <li>
-                    <a id="subscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 1]-->hidden<!--[/if]--> subscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe topic"]-->"><!--[gt text="Subscribe topic"]--></a>
-                    <a id="unsubscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 0]-->hidden<!--[/if]--> unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe topic"]-->"><!--[gt text="Unsubscribe topic"]--></a>
+                    <a id="subscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 1]-->hidden<!--[/if]--> subscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to this topic"]-->"><!--[gt text="Subscribe to topic"]--></a>
+                    <a id="unsubscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 0]-->hidden<!--[/if]--> unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from this topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a>
                 </li>
                 <!--[/if]-->
                 <!--[if $topic.topic_id neq $topic.next_topic_id]-->
-                <li><a class="dzk_img nexttopiclink" title="<!--[gt text="to next topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id]-->">&nbsp;</a></li>
+                <li><a class="dzk_img nexttopiclink" title="<!--[gt text="Go to next topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id]-->">&nbsp;</a></li>
                 <!--[/if]-->
             </ul>
 
             <!--[if $topic.access_moderate eq 1]-->
             <ul class="dzk_topicoptions linklist pn-clearfix">
                 <li>
-                    <a id="locktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 1]-->hidden<!--[/if]--> locktopiclink" title="<!--[gt text="Lock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'lock');"><!--[gt text="Lock this topic"]--></a>
-                    <a id="unlocktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 0]-->hidden<!--[/if]--> unlocktopiclink" title="<!--[gt text="Unlock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'unlock');"><!--[gt text="Unlock this topic"]--></a>
+                    <a id="locktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 1]-->hidden<!--[/if]--> locktopiclink" title="<!--[gt text="Lock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'lock');"><!--[gt text="Lock topic"]--></a>
+                    <a id="unlocktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 0]-->hidden<!--[/if]--> unlocktopiclink" title="<!--[gt text="Unlock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'unlock');"><!--[gt text="Unlock topic"]--></a>
                 </li>
 
                 <li>
-                    <a class="dzk_img <!--[if $topic.sticky eq 1]-->hidden<!--[/if]--> stickytopiclink" id="stickytopicbutton" title="<!--[gt text="Mark this topic sticky"]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[$topic.topic_id]-->, 'sticky')"><!--[gt text="Mark this topic sticky"]--></a>
-                    <a class="dzk_img <!--[if $topic.sticky eq 0]-->hidden<!--[/if]--> unstickytopiclink" id="unstickytopicbutton" title="<!--[gt text="Unsticky topic"]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[$topic.topic_id]-->, 'unsticky')"><!--[gt text="Unsticky topic"]--></a>
+                    <a class="dzk_img <!--[if $topic.sticky eq 1]-->hidden<!--[/if]--> stickytopiclink" id="stickytopicbutton" title="<!--[gt text="Assign this topic 'sticky' status"]-->"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[$topic.topic_id]-->, 'sticky')"><!--[gt text="Assign 'sticky' status"]--></a>
+                    <a class="dzk_img <!--[if $topic.sticky eq 0]-->hidden<!--[/if]--> unstickytopiclink" id="unstickytopicbutton" title="<!--[gt text="Remove 'sticky' status from this topic"]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[$topic.topic_id]-->, 'unsticky')"><!--[gt text="Remove 'sticky' status"]--></a>
                 </li>
 
-                <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move this topic"]--></a></li>
-                <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete this topic"]--></a></li>
+                <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move topic"]--></a></li>
+                <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete topic"]--></a></li>
             </ul>
             <!--[/if]-->
         </div>
@@ -54,7 +54,7 @@
             <div id="dzk_nonjavascriptareatopic">
                 <ul class="dzk_topicoptions linklist pn-clearfix">
                     <!--[if $topic.topic_id neq $topic.prev_topic_id]-->
-                    <li><a class="dzk_img previoustopiclink" title="<!--[gt text="to previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
+                    <li><a class="dzk_img previoustopiclink" title="<!--[gt text="Previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
                     <!--[/if]-->
 
                     <!--[if $topic.access_comment]-->
@@ -62,21 +62,21 @@
                     <!--[/if]-->
 
                     <!--[if $pncore.logged_in]-->
-                    <li><a class="dzk_img mailtolink" title="<!--[gt text="Send as email"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id]-->"><!--[gt text="Send as email"]--></a></li>
+                    <li><a class="dzk_img mailtolink" title="<!--[gt text="Send as e-mail"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id]-->"><!--[gt text="Send as e-mail"]--></a></li>
                     <!--[/if]-->
 
                     <li><!--[printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id]--></li>
 
                     <!--[if $pncore.logged_in]-->
                     <!--[if $topic.is_subscribed == 0]-->
-                    <li><a class="dzk_img subscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Subscribe topic"]-->"><!--[gt text="Subscribe topic"]--></a></li>
+                    <li><a class="dzk_img subscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Subscribe to topic"]-->"><!--[gt text="Subscribe to topic"]--></a></li>
                     <!--[else]-->
-                    <li><a class="dzk_img unsubscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Subscribe topic"]-->"><!--[gt text="Subscribe topic"]--></a></li>
+                    <li><a class="dzk_img unsubscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Unsubscribe from topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a></li>
                     <!--[/if]-->
                     <!--[/if]-->
 
                     <!--[if $topic.topic_id neq $topic.next_topic_id]-->
-                    <li><a class="dzk_img nexttopiclink" title="<!--[gt text="to next topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id]-->">&nbsp;</a></li>
+                    <li><a class="dzk_img nexttopiclink" title="<!--[gt text="Next topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id]-->">&nbsp;</a></li>
                     <!--[/if]-->
                 </ul>
 
@@ -89,9 +89,9 @@
                     <!--[/if]-->
 
                     <!--[if $topic.sticky eq 0]-->
-                    <li><a class="dzk_img stickytopiclink" title="<!--[gt text="Mark this topic sticky"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=sticky topic=$topic.topic_id]-->"><!--[gt text="Mark this topic sticky"]--></a></li>
+                    <li><a class="dzk_img stickytopiclink" title="<!--[gt text="Assign this topic 'sticky' status"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=sticky topic=$topic.topic_id]-->"><!--[gt text="Assign this topic 'sticky' status"]--></a></li>
                     <!--[else]-->
-                    <li><a class="dzk_img unstickytopiclink" title="<!--[gt text="Unsticky topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=unsticky topic=$topic.topic_id]-->"><!--[gt text="Unsticky topic"]--></a></li>
+                    <li><a class="dzk_img unstickytopiclink" title="<!--[gt text="Remove 'sticky' status"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=unsticky topic=$topic.topic_id]-->"><!--[gt text="Remove 'sticky' status"]--></a></li>
                     <!--[/if]-->
                     <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move this topic"]--></a></li>
                     <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete this topic"]--></a></li>
@@ -140,7 +140,7 @@
                             <textarea class="dzk_textarea_<!--[pnusergetlang]--> dzk_texpand" id="message" name="message" rows="10" cols="60"></textarea>
                             <!--[if isset($hooks.MediaAttach)]--><!--[$hooks.MediaAttach]--><!--[/if]-->
                             <!--[if $pncore.Dizkus.striptags == 'yes']-->
-                            <p><!--[gt text="No HTML-tags allowed (only inside of [code][/code])"]--></p>
+                            <p><!--[gt text="No HTML tags allowed (except inside '[code][/code]' BBCode tags)"]--></p>
                             <!--[/if]-->
                             <div class="dzk_subcols pn-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
@@ -157,13 +157,13 @@
                                         </li>
                                         <!--[/if]-->
                                         <li id="quickreplybuttons" class="hidden">
-                                            <button id="btnCreateQuickReply" class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>
+                                            <button id="btnCreateQuickReply" class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
                                             <button class="dzk_img preview" onclick="previewQuickReply(); return false;" type="submit" title="<!--[gt text="Preview"]-->"><!--[gt text="Preview"]--></button>
                                             <button class="dzk_img cancel" onclick="clearQuickReply();" type="reset" title="<!--[gt text="Cancel"]-->"><!--[gt text="Cancel"]--></button>
                                         </li>
 
                                         <li id="nonajaxquickreplybuttons">
-                                            <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->" />
+                                            <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->" />
                                             <input class="dzk_img preview" type="submit" name="preview" value="<!--[gt text="Preview"]-->" />
                                             <input class="dzk_img cancel" type="submit" name="reset" value="Cancel" onclick="self.location.href='<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.topic_id]-->'" />
                                         </li>
@@ -193,7 +193,7 @@
 
 <!--[if $topic.forum_mods|@count > 0]-->
 <ul id="dzk_moderatorlist" class="linklist pn-clearfix">
-    <li><em><!--[gt text="Moderated by"]-->&nbsp;:&nbsp;</em></li>
+    <li><em><!--[gt text="Moderated by:"]-->&nbsp;</em></li>
     <!--[foreach name=moderators item=mod from=$topic.forum_mods]-->
     <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
     <!--[/foreach]-->
@@ -202,12 +202,12 @@
 
 <script type="text/javascript">
     // <![CDATA[
-    var storingReply = "<!--[gt text="... storing reply ..."]-->";
-    var preparingPreview = "<!--[gt text="... preparing preview ..."]-->";
-    var storingPost = "<!--[gt text="... storing post ..."]-->";
-    var deletingPost = "<!--[gt text="... deleting post ..."]-->";
-    var updatingPost = "<!--[gt text="... updating post ..."]-->";
-    var statusNotChanged = "<!--[gt text="not changed"]-->";
+    var storingReply = "<!--[gt text="Storing reply..."]-->";
+    var preparingPreview = "<!--[gt text="Preparing preview..."]-->";
+    var storingPost = "<!--[gt text="Storing post..."]-->";
+    var deletingPost = "<!--[gt text="Deleting post..."]-->";
+    var updatingPost = "<!--[gt text="Updating post..."]-->";
+    var statusNotChanged = "<!--[gt text="unchanged"]-->";
     var statusChanged = "<!--[gt text="changed"]-->";
 
     Event.observe(window, 'load', init_topicview);

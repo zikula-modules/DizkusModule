@@ -21,19 +21,19 @@
                 <input type="hidden" id="quote" name="quote" value="" />
                 <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
                 <fieldset>
-                    <legend class="post_header"><!--[gt text="New Topic in forum"]-->:&nbsp;<a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|pnvarprepfordisplay]-->"><!--[$newtopic.forum_name|pnvarprepfordisplay|pnmodcallhooks]--></a></legend>
+                    <legend class="post_header"><!--[gt text="New topic in forum"]-->:&nbsp;<a href="<!--[pnmodurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|pnvarprepfordisplay]-->"><!--[$newtopic.forum_name|pnvarprepfordisplay|pnmodcallhooks]--></a></legend>
                     <div class="post_text_wrap">
                         <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                         <div>
-                            <label for="subject"><!--[gt text="Subject"]-->:</label>
+                            <label for="subject"><!--[gt text="Subject line"]-->:</label>
                             <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[$newtopic.subject|pnvarprephtmldisplay]-->" />
                         </div>
                         <div>
-                            <br /><label for="message"><!--[gt text="Message Body"]-->:</label>
+                            <br /><label for="message"><!--[gt text="Message body"]--></label>
                             <textarea id="message" name="message" class="dzk_texpand"><!--[$newtopic.message]--></textarea>
                             <!--[if isset($hooks.MediaAttach)]--><!--[$hooks.MediaAttach]--><!--[/if]-->
                             <!--[if $pncore.Dizkus.striptags == 'yes']-->
-                            <p><!--[gt text="No HTML-tags allowed (only inside of [code][/code])"]--></p>
+                            <p><!--[gt text="No HTML tags allowed (except inside '[code][/code]' BBCode tag)"]--></p>
                             <!--[/if]-->
                         </div>
                         <div class="dzk_subcols z-clearfix">
@@ -51,8 +51,8 @@
                                     </li>
                                     <!--[/if]-->
                                     <li id="newtopicbuttons" style="display: none;">
-                                        <button id="btnCreateNewTopic" class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[gt text="Submit"]-->">
-                                            <!--[gt text="Submit"]-->
+                                        <button id="btnCreateNewTopic" class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="<!--[gt text="Save"]-->">
+                                            <!--[gt text="Save"]-->
                                         </button>
                                         <button class="dzk_img preview" onclick="previewnewtopic(); return false;" type="submit" title="<!--[gt text="Preview"]-->">
                                             <!--[gt text="Preview"]-->
@@ -62,7 +62,7 @@
                                         </button>
                                     </li>
                                     <li id="nonajaxnewtopicbuttons">
-                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->" />
+                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->" />
                                         <input class="dzk_img preview" type="submit" name="preview" value="<!--[gt text="Preview"]-->" />
                                         <input class="dzk_img cancel" type="submit" name="reset" value="<!--[gt text="Cancel"]-->" />
                                     </li>
@@ -87,9 +87,9 @@
 
 <script type="text/javascript">
     // <![CDATA[
-    var storingPost = '<!--[gt text="... storing post ..."]-->';
-    var preparingPreview = '<!--[gt text="... preparing preview ..."]-->';
-    var redirecting = '<!--[gt text="...now redirecting to the new topic..."]-->';
+    var storingPost = '<!--[gt text="Storing post..."]-->';
+    var preparingPreview = '<!--[gt text="Preparing preview..."]-->';
+    var redirecting = '<!--[gt text="Redirecting you to the new topic..."]-->';
 
     Element.show($('newtopicbuttons'));
     Element.remove($('nonajaxnewtopicbuttons'));

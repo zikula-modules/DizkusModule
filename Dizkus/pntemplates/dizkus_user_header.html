@@ -20,7 +20,7 @@
 <!--[* set the page title *]-->
 <!--[assign var='maintitle' value=$maintitle|default:'']-->
 <!--[if $func eq 'main']-->
-<!--[pnml assign='maintitle' name='Category overview']-->
+<!--[pnml assign='maintitle' name='Category list']-->
 <!--[elseif $func eq 'viewforum']-->
 <!--[assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name]-->
 <!--[elseif $func eq 'viewtopic']-->
@@ -44,7 +44,7 @@
             <!--[* start of breadcrumbs *]-->
             <ul class="linklist navlinks z-clearfix">
                 <li class="icon-home">
-                    <a class="dzk_img homelink" title="<!--[gt text="Start"]-->" href="<!--[pnmodurl modname='Dizkus']-->"><!--[gt text="Start"]--></a>
+                    <a class="dzk_img homelink" title="<!--[gt text="Forums index page"]-->" href="<!--[pnmodurl modname='Dizkus']-->"><!--[gt text="Forums index page"]--></a>
                 </li>
                 <!--[if $func eq 'main' AND $view_category neq -1]-->
                 <li>
@@ -52,15 +52,15 @@
                 </li>
                 <!--[elseif $func eq 'viewforum' OR $func eq 'moderateforum']-->
                 <li>
-                    <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="go to category"]-->: <!--[$forum.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]--></a>
+                    <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="Go to category"]-->: <!--[$forum.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[elseif $func eq 'viewtopic']-->
                 <li>
-                    <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="go to category"]-->: <!--[$topic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id]-->"><!--[$topic.cat_title|pnvarprepfordisplay]--></a>
+                    <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="Go to category"]-->: <!--[$topic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id]-->"><!--[$topic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[elseif $func eq 'newtopic']-->
                 <li>
-                    <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="go to category"]-->: <!--[$newtopic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id]-->"><!--[$newtopic.cat_title|pnvarprepfordisplay]--></a>
+                    <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="Go to category"]-->: <!--[$newtopic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id]-->"><!--[$newtopic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[/if]-->
                 <!--[if $func eq 'viewforum' OR $func eq 'moderateforum']-->
@@ -74,7 +74,7 @@
                 </li>
                 <!--[/if]-->
                 <!--[if $favorites]-->
-                <li>&nbsp;<em>(<!--[gt text="Favorites"]-->)</em></li>
+                <li>&nbsp;<em>(<!--[gt text="Favourites"]-->)</em></li>
                 <!--[/if]-->
             </ul>
             <!--[* end of breadcrumbs *]-->
@@ -84,17 +84,17 @@
                 <!--[if $favorites]-->
                 <li><a class="dzk_img showallforumslink" href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showallforums]-->" title="<!--[gt text="Show all forums"]-->"><!--[gt text="Show all forums"]--></a></li>
                 <!--[else]-->
-                <li><a class="dzk_img showfavoriteslink" href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showfavorites]-->" title="<!--[gt text="Show favorites"]-->"><!--[gt text="Show favorites"]--></a></li>
+                <li><a class="dzk_img showfavoriteslink" href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showfavorites]-->" title="<!--[gt text="Show your favourite forums only"]-->"><!--[gt text="Show favourite forums only"]--></a></li>
                 <!--[/if]-->
                 <!--[/if]-->
-                <li><a class="dzk_img latestpostslink" title="<!--[gt text="Latest posts"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest]-->"><!--[gt text="Latest posts"]--></a></li>
-                <li><a class="dzk_img searchlink" title="<!--[gt text="search Dizkus"]-->" href="<!--[pnmodurl modname='Search' type=user func=main]-->"><!--[gt text="Search"]--></a></li>
+                <li><a class="dzk_img latestpostslink" title="<!--[gt text="View latest posts"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewlatest]-->"><!--[gt text="Latest posts"]--></a></li>
+                <li><a class="dzk_img searchlink" title="<!--[gt text="Search the forums"]-->" href="<!--[pnmodurl modname='Search' type=user func=main]-->"><!--[gt text="Search"]--></a></li>
                 <!--[if $pncore.logged_in neq 1]-->
-                <li><a class="dzk_img loginlink" title="<!--[gt text="Login"]-->" href="<!--[pnmodurl modname="Users" type="user" func="loginscreen"]-->"><!--[gt text="Login"]--></a></li>
+                <li><a class="dzk_img loginlink" title="<!--[gt text="Log-in"]-->" href="<!--[pnmodurl modname="Users" type="user" func="loginscreen"]-->"><!--[gt text="Log-in"]--></a></li>
                 <li><a class="dzk_img registerlink" title="<!--[gt text="Register"]-->" href="<!--[pnmodurl modname="Users" type="user" func="register"]-->"><!--[gt text="Register"]--></a></li>
                 <!--[else]-->
                 <li><a class="dzk_img searchpostslink" title="<!--[gt text="View your posts"]-->" href="<!--[$pncore.user.uname|searchlink]-->"><!--[gt text="View your posts"]--></a></li>
-                <li><a class="dzk_img configurelink" title="<!--[gt text="Personal settings"]-->" href="<!--[pnmodurl type="user" modname="Dizkus" func="prefs"]-->"><!--[gt text="Personal settings"]--></a></li>
+                <li><a class="dzk_img configurelink" title="<!--[gt text="Configure your personal forum settings"]-->" href="<!--[pnmodurl type="user" modname="Dizkus" func="prefs"]-->"><!--[gt text="Forum settings"]--></a></li>
                 <!--[/if]-->
             </ul>
         </div>
@@ -103,17 +103,17 @@
 
     <!--[* print the subtitle *]-->
     <!--[if $func eq 'main' AND $view_category eq -1]-->
-    <h2><!--[gt text="Category overview"]--></h2>
+    <h2><!--[gt text="Forums index page"]--></h2>
     <!--[elseif $func eq 'main' AND $view_category neq -1]-->
     <h2><!--[$view_category_data.cat_title|pnvarprepfordisplay]--></h2>
     <!--[elseif $func eq 'viewforum']-->
     <h2><!--[$forum.forum_name|pnvarprepfordisplay]--></h2>
     <!--[elseif $func eq 'viewtopic']-->
     <h2>
-        <span class="editabletopicheader" id="topicsubject_<!--[$topic.topic_id]-->" <!--[if $topic.access_topicsubjectedit eq 1]-->title="<!--[gt text="Click to edit"]-->" onclick="javascript:topicsubjectedit(<!--[$topic.topic_id]-->)"<!--[/if]-->>
+        <span class="editabletopicheader" id="topicsubject_<!--[$topic.topic_id]-->" <!--[if $topic.access_topicsubjectedit eq 1]-->title="<!--[gt text="Click to edit"]-->" onclick="javascript:topicsubjectedit(<!--[$topic.topic_id]-->)"<!--[/if]-->
             <span id="topicsubject_<!--[$topic.topic_id]-->_content"><!--[$topic.topic_title|pnvarprepfordisplay]--></span>
         </span>
-        <a class="dzk_notextdecoration" title="<!--[gt text="Bottom"]-->" href="#bottom">&nbsp;<!--[pnimg modname='Dizkus' src="icon_bottom.gif" __alt="Top" ]--></a>
+        <a class="dzk_notextdecoration" title="<!--[gt text="Bottom"]-->" href="#bottom">&nbsp;<!--[pnimg modname='Dizkus' src="icon_bottom.gif" __alt="Bottom" ]--></a>
     </h2>
     <!--[elseif $maintitle neq '']-->
     <h2><!--[$maintitle|pnvarprepfordisplay]--></h2>

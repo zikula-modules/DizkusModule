@@ -11,8 +11,8 @@
 
             <dl>
                 <dt>
-                    <label for="searchfor"><!--[gt text="Search for"]-->:</label>
-                    <div class="z-formnote pn-informationmsg"><!--[gt text='The forum accepts searchstrings with a length between %1$s and %2$s chars only!' tag1=$pncore.Dizkus.minsearchlength tag2=$pncore.Dizkus.maxsearchlength]--></div>
+                    <label for="searchfor"><!--[gt text="Search for:"]--></label>
+                    <div class="z-formnote pn-informationmsg"><!--[gt text='Error! For forum searches, the search string must be between %1$s and %2$s characters in length.' tag1=$pncore.Dizkus.minsearchlength tag2=$pncore.Dizkus.maxsearchlength]--></div>
                 </dt>
                 <dd>
                     <input type="text" name="q" id="searchfor" size="20" maxlength="255" value="" tabindex="0" />
@@ -20,7 +20,7 @@
                 </dd>
 
                 <dt>
-                    <label for="searchbool"><!--[gt text="Connection"]-->:</label>
+                    <label for="searchbool"><!--[gt text="Connection:"]--></label>
                 </dt>
                 <dd>
                     <select name="bool" size="1" id="searchbool">
@@ -30,7 +30,7 @@
                 </dd>
 
                 <dt>
-                    <label for="searchforums"><!--[gt text="Category and forum"]-->:</label>
+                    <label for="searchforums"><!--[gt text="Category and forum:"]--></label>
                 </dt>
                 <dd>
                     <select name="Dizkus_forum[]" id="searchforums" size="5" multiple="multiple">
@@ -53,21 +53,21 @@
                 </dt>
                 <dd>
                     <select name="Dizkus_order[]" id="searchorder" size="1">
-                        <option value="1" selected="selected"><!--[gt text="by date"]--></option>
-                        <option value="2"><!--[gt text="by title"]--></option>
-                        <option value="3"><!--[gt text="by forum"]--></option>
+                        <option value="1" selected="selected"><!--[gt text="By date"]--></option>
+                        <option value="2"><!--[gt text="By title"]--></option>
+                        <option value="3"><!--[gt text="By forum"]--></option>
                         <!--[if $pncore.Dizkus.fulltextindex == 1]-->
-                        <option value="4"><!--[gt text="by score"]--></option>
+                        <option value="4"><!--[gt text="By score"]--></option>
                         <!--[/if]-->
                     </select>
                 </dd>
 
                 <dt>
-                    <label for="searchlimit"><!--[gt text="limit search to"]-->:</label>
+                    <label for="searchlimit"><!--[gt text="Limit search to"]-->:</label>
                 </dt>
                 <dd>
                     <select name="Dizkus_limit" id="searchlimit" size="1">
-                        <option value="0"><!--[gt text="no limits"]--></option>
+                        <option value="0"><!--[gt text="No limits"]--></option>
                         <option value="10" selected="selected">10</option>
                         <option value="20">20</option>
                         <option value="50">50</option>

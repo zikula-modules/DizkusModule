@@ -12,7 +12,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_<!--[$category.cat_id]-->" class="<!--[if $category.new_posts == true]-->newpostscategorylink<!--[else]-->categorylink<!--[/if]-->" title="<!--[gt text="go to category"]--> '<!--[$category.cat_title|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id]-->"><!--[$category.cat_title|pnvarprepfordisplay]--></a></span>
+                            <span><a id="categorylink_<!--[$category.cat_id]-->" class="<!--[if $category.new_posts == true]-->newpostscategorylink<!--[else]-->categorylink<!--[/if]-->" title="<!--[gt text="Go to category"]--> '<!--[$category.cat_title|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id]-->"><!--[$category.cat_title|pnvarprepfordisplay]--></a></span>
                         </dt>
                         <dd class="topics">
                             <span><!--[gt text="Topics"]--></span>
@@ -21,7 +21,7 @@
                             <span><!--[gt text="Posts"]--></span>
                         </dd>
                         <dd class="lastpost">
-                            <span><!--[gt text="Last Post"]--></span>
+                            <span><!--[gt text="Last post"]--></span>
                         </dd>
                     </dl>
                 </li>
@@ -32,7 +32,7 @@
                 <li class="row">
                     <dl class="icon">
                         <dt <!--[if $forum.new_posts == true]-->class='new-posts'<!--[else]-->class='no-new-posts'<!--[/if]--> >
-                            <a title="<!--[gt text="go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
+                            <a title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
                             <!--[if $forum.forum_desc neq '']--><!--[$forum.forum_desc|pnvarprephtmldisplay]--><br /><!--[/if]-->
                             <!--[if $forum.forum_mods|@count > 0]-->
                             <em><!--[gt text="Moderated by"]-->:</em>
@@ -47,8 +47,8 @@
                         <dd class="lastpost">
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
-                                <dfn><!--[gt text="Last Post"]--></dfn> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
-                                <!--[gt text="written on"]--> <!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
+                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="By"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
+                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
                                 <!--[if $forum.last_post_data.url_anchor neq '']-->
                                 <a class="latesttopicimage" href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay|truncate:70]-->'"><!--[$forum.last_post_data.subject|pnvarprepfordisplay|truncate:70]--></a>
                                 <!--[/if]-->
@@ -61,7 +61,7 @@
                 </li>
                 <!--[foreachelse]-->
                 <li class="row dzk_empty">
-                    <!--[gt text="No forums defined"]-->
+                    <!--[gt text="No forums currently created"]-->
                 </li>
                 <!--[/foreach]-->
             </ul>
@@ -89,7 +89,7 @@
                             <span><!--[gt text="Posts"]--></span>
                         </dd>
                         <dd class="lastpost">
-                            <span><!--[gt text="Last Post"]--></span>
+                            <span><!--[gt text="Last post"]--></span>
                         </dd>
                     </dl>
                 </li>
@@ -100,7 +100,7 @@
                 <li class="row">
                     <dl class="icon">
                         <dt <!--[if $forum.new_posts == true]-->class='new-posts'<!--[else]-->class='no-new-posts'<!--[/if]--> >
-                            <a title="<!--[gt text="go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
+                            <a title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
                             <!--[if $forum.forum_desc neq '']--><!--[$forum.forum_desc|pnvarprephtmldisplay]--><br /><!--[/if]-->
                             <!--[if !empty($forum.forum_mods)]--><!--[gt text="Moderated by"]-->: <!--[listforummods moderators=$forum.forum_mods]--><!--[else]-->&nbsp;<!--[/if]-->
                         </dt>
@@ -110,8 +110,8 @@
                         <dd class="lastpost">
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
-                                <dfn><!--[gt text="Last Post"]--></dfn> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
-                                <!--[gt text="written on"]--> <!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
+                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="By"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
+                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
                                 <!--[if $forum.last_post_data.url_anchor neq '']-->
                                 <a class="latesttopicimage" href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[$forum.last_post_data.subject|pnvarprepfordisplay]--></a>
                                 <!--[/if]-->
@@ -124,7 +124,7 @@
                 </li>
                 <!--[foreachelse]-->
                 <li class="row dzk_empty">
-                    <!--[gt text="No forums defined"]-->
+                    <!--[gt text="No forums created."]-->
                 </li>
                 <!--[/foreach]-->
             </ul>

@@ -31,7 +31,7 @@ class Dizkus_user_signaturemanagementHandler
             if (!$render->pnFormIsValid()) return false;
 
             pnUserSetVar('_SIGNATURE',$obj['signature']);
-            LogUtil::registerStatus(__('Signature updated', $dom));
+            LogUtil::registerStatus(__('Done! Updated signature.', $dom));
             
             return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
         }

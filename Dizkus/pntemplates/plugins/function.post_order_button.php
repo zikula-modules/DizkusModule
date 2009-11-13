@@ -49,19 +49,19 @@ function smarty_function_post_order_button($params, &$smarty)
         if ($post_order == 'ASC' ) {
             $imagedata = dzk_getimagepath($image_ascending);
             if($imagedata == false) {
-                $show = DataUtil::formatForDisplay(__('Display the newest post first', $dom));
+                $show = DataUtil::formatForDisplay(__('Display newest post first', $dom));
             } else {
-                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change Post Order', $dom)) .'" ' . $imagedata['size'] . ' />';
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change post order', $dom)) .'" ' . $imagedata['size'] . ' />';
             }
         } else {
             $imagedata = dzk_getimagepath($image_descending);
             if($imagedata == false) {
-                $show = DataUtil::formatForDisplay(__('Display the oldest post first', $dom));
+                $show = DataUtil::formatForDisplay(__('Display oldest post first', $dom));
             } else {
-                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change Post Order', $dom)) .'" ' . $imagedata['size'] . ' />';
+                $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change post order', $dom)) .'" ' . $imagedata['size'] . ' />';
             }
         }
-        $out = '<a title="' . DataUtil::formatForDisplay(__('Change Post Order', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
+        $out = '<a title="' . DataUtil::formatForDisplay(__('Change post order', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
     }
     return $out;
 }

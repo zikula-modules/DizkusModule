@@ -1,6 +1,6 @@
 <!--[*  $Id$  *]-->
 
-<h2><!--[gt text='Forums: %s hit' plural='Forum: %s hits' count=$total_hits]--></h2>
+<h2><!--[gt text='Forums: %s hit' plural='Forums: %s hits' count=$total_hits]--></h2>
 
 <div id="dizkus">
 
@@ -32,34 +32,34 @@
             <tr id="topic<!--[ $searchresult.topic_id ]-->_<!--[ $searchresult.post_id ]-->" class="topicrow">
                 <td headers="col_status">
                     <!--[ if $searchresult.sticky eq 1 ]-->
-                    <!--[ pnimg modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky" __title="Sticky"]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic" __title="Sticky topic (it will always stay at top of the topics list)"]-->
                     <!--[ /if ]-->
                     <!--[ if $searchresult.topic_status eq 1 ]-->
-                    <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" __alt="Topic is Locked. No new posts may be made in it" __title="Topic locked"]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" __alt="Locked topic" __title="This topic is locked. No new posts accepted"]-->
                     <!--[ /if ]-->
                     <!--[ if $searchresult.new_posts eq 1 ]-->
-                    <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit" __title="New posts since your last visit." ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit" __title="New messages have been posted under this topic since your last visit" ]-->
                     <!--[ else ]-->
-                    <!--[ pnimg modname='Dizkus' src="icon_folder.gif" __alt="normal topic" __title="normal topic" ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_folder.gif" __alt="Normal topic" __title="Normal topic" ]-->
                     <!--[ /if ]-->
                     <!--[ if $searchresult.hot_topic eq 1 ]-->
-                    <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" __alt="hot topic" __title="hot topic" ]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic" __title="Hot topic" ]-->
                     <!--[ /if ]-->
                 </td>
                 <td headers="col_topic">
                     <!--[ $searchresult.topic_id|viewtopiclink:$searchresult.topic_title:$searchresult.forum_name ]-->
                     <!--[ pnfpager objectid=$searchresult.topic_id total=$searchresult.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" ]-->
-                    <p><!--[gt text="found in"]-->: <a title="<!--[gt text='goto Forum']--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
+                    <p><!--[gt text="Found in:"]--> <a title="<!--[gt text='Go to forum']--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
                 </td>
                 <td headers="col_replies" align="center"><!--[ $searchresult.topic_replies ]--></td>
                 <td headers="col_poster" align="center"><!--[ $searchresult.topicstarter_name ]--></td>
                 <td headers="col_views" align="center"><!--[ $searchresult.topic_views ]--></td>
-                <td headers="col_date" align="center"><!--[ $searchresult.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->&nbsp;<a title="<!--[gt text='go to latest']-->" href="<!--[ $searchresult.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="go to latest" ]--></a></td>
+                <td headers="col_date" align="center"><!--[ $searchresult.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->&nbsp;<a title="<!--[gt text='View most-recent topic']-->" href="<!--[ $searchresult.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="Go to latest posts" ]--></a></td>
             </tr>
 
             <!--[ foreachelse ]-->
             <tr class="notopics">
-                <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" colspan="6" align="center"><!--[gt text='no topics']--></td>
+                <td headers="col_status col_topic col_replies col_poster col_views col_lastpost" colspan="6" align="center"><!--[gt text='No topics']--></td>
             </tr>
             <!--[ /foreach ]-->
         </tbody>
@@ -69,4 +69,3 @@
 
 <!--[ pager rowcount=$total_hits limit=$searchlimit separator=" " posvar=Dizkus_startnum txt_prev="<<" txt_next=">>" ]-->
 <br />
-

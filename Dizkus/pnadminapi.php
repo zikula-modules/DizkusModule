@@ -77,7 +77,7 @@ function Dizkus_adminapi_updatecategory($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action', $dom), __FILE__, __LINE__);
     }
     
     // copy all entries from $args to $obj that are found in the categories table
@@ -108,7 +108,7 @@ function Dizkus_adminapi_addcategory($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     if (isset($args['cat_title'])) {
@@ -131,7 +131,7 @@ function Dizkus_adminapi_deletecategory($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     if (isset($args['cat_id'])) {
@@ -149,7 +149,7 @@ function Dizkus_adminapi_deletecategory($args)
         $res = DBUtil::deleteObject($args, 'dizkus_categories', null, 'cat_id');
         return true;
     }
-    return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
+    return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
 }
 
 /**
@@ -180,7 +180,7 @@ function Dizkus_adminapi_readforums($args=array())
         ($permcheck <> ACCESS_MODERATE) &&
         ($permcheck <> ACCESS_ADMIN) &&
         ($permcheck <> 'NOCHECK')  ) {
-        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
     $where = '';
@@ -452,7 +452,7 @@ function Dizkus_adminapi_saverank($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
 	if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     foreach($args['ranks'] as $rankid => $rank) {
@@ -513,7 +513,7 @@ function Dizkus_adminapi_assignranksave($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     if(is_array($args['setrank'])) {
@@ -665,7 +665,7 @@ function Dizkus_adminapi_sync($args)
 
             break;
         default:
-            return showforumerror('wrong parameter in sync', __FILE__, __LINE__);
+            return showforumerror('Error! Bad parameter in synchronisation:', __FILE__, __LINE__);
     }
 
     return true;
@@ -703,7 +703,7 @@ function Dizkus_adminapi_addforum($args)
 
     if( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
         !SecurityUtil::checkPermission('Dizkus::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -712,7 +712,7 @@ function Dizkus_adminapi_addforum($args)
 
     $forum_name = strip_tags($forum_name);
     if(empty($forum_name)) {
-        return showforumerror(__('You did not fill in all required parts of the form.<br /> Did you assign at least one moderator? Please go back and correct the form', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! You did not enter all the information required in the form. Did you assign at least one moderator? Please go back and try again.', $dom), __FILE__, __LINE__);
     }
     if (!$desc) {
         $desc = '';
@@ -805,7 +805,7 @@ function Dizkus_adminapi_editforum($args)
     unset($args);
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -872,7 +872,7 @@ function Dizkus_adminapi_deleteforum($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('You have no permission to admin this module', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to administer this module.', $dom), __FILE__, __LINE__);
     }
 
     $whereforumid = 'WHERE forum_id=' . DataUtil::formatForStore($args['forum_id']);
@@ -931,7 +931,7 @@ function Dizkus_adminapi_storenewforumorder($args)
     unset($args);
 
     if( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
     if(!isset($forum_id) || empty($forum_id) || !is_numeric($forum_id)) {
@@ -974,14 +974,14 @@ function Dizkus_adminapi_getlinks()
 
     $links = array();
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'preferences'), 'text' => __('Configuration', $dom), 'title' => __('This link will allow you to set various forum-wide options.', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'reordertree'), 'text' => __('Manipulate forum tree', $dom), 'title' => __('Here you can reorder the categories and forums', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'syncforums'), 'text' => __('Sync forum/topic index', $dom), 'title' => __('This link will allow you to sync up the forum and topic indexes to fix any discrepancies that might exist', $dom));
-   
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 0)), 'text' => __('Edit user ranks', $dom), 'title' => __('This link will allow you to add/edit/delete different user rankings depending of the number of user posts.', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 1)), 'text' => __('Edit honorary ranks', $dom), 'title' => __('This link will allow you to create special ranks for special users.', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'assignranks'), 'text' => __('Assign honorary rank', $dom), 'title' => __('This link will allow you to assign honorary user rankings to users', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'managesubscriptions'), 'text' => __('Manage subscriptions', $dom), 'title' => __('Remove the users topic and forum subscriptions', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', ''), 'text' => __('Forums list', $dom), 'title' => __('Index page of forums currently configured on the site', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'reordertree'), 'text' => __('Edit forum tree', $dom), 'title' => __('Create, edit and delete forum categories and forums, and arrange the tree structure of forums and categories', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 0)), 'text' => __('Edit user ranks', $dom), 'title' => __('Create, edit and delete user ranks', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 1)), 'text' => __('Edit honorary ranks', $dom), 'title' => __('Create, edit and delete honorary ranks', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'assignranks'), 'text' => __('Assign honorary rank', $dom), 'title' => __('Assign honorary ranks to users', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'managesubscriptions'), 'text' => __('Manage subscriptions', $dom), 'title' => __('Find users\' topic and forum subscriptions, and delete them', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'syncforums'), 'text' => __('Synchronise data', $dom), 'title' => __('Synchronise Zikula and Dizkus user information, forum index, topics and posts counter', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'preferences'), 'text' => __('Settings', $dom), 'title' => __('Settings to configure various forum-wide options', $dom));
     }
     return $links;
 }

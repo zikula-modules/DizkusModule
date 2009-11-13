@@ -360,7 +360,7 @@ function addremovefavorite_response(originalRequest)
         $('addfavoritebutton_'  + result.forum_id).toggleClassName('hidden');
         $('removefavoritebutton_'  + result.forum_id).toggleClassName('hidden');
     } else {
-         alert('wrong result from add/remove favorite');
+         alert('Error! Erroneous result from favourite addition/removal.');
     }
 }
 
@@ -394,7 +394,7 @@ function subscribeunsubscribeforum_response(originalRequest)
         $('subscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');
         $('unsubscribeforumbutton_'  + result.forum_id).toggleClassName('hidden');
     } else {
-         alert('wrong result from subscribe/unsubscribe');
+         alert('Error! Erroneous result from subscription/unsubscription action.');
     }
 }
 
@@ -428,7 +428,7 @@ function subscribeunsubscribetopic_response(originalRequest)
         $('subscribetopicbutton').toggleClassName('hidden');
         $('unsubscribetopicbutton').toggleClassName('hidden');
     } else {
-         alert('wrong result from subscribe/unsubscribe');
+         alert('Error! Erroneous result from subscription/unsubscription action.');
     }
 }
 
@@ -496,7 +496,7 @@ function lockunlocktopic_response(originalRequest)
         $('locktopicbutton').toggleClassName('hidden');
         $('unlocktopicbutton').toggleClassName('hidden');
     } else {
-         alert('wrong result from lock/unlock');
+         alert('Error! Erroneous result from locking/unlocking action.');
     }
 }
 

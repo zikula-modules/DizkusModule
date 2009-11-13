@@ -23,7 +23,7 @@ function smarty_function_jumpbox($params, &$smarty)
 	  unset($params);
 
     if(!pnModAPILoad('Dizkus', 'admin')) {
-        $smarty->trigger_error("loading Dizkus adminapi failed");
+        $smarty->trigger_error("Error! Could not load Dizkus administration API.");
         return;
     }
 

@@ -3,7 +3,7 @@
 <!--[readtopforums maxforums=$maxforums]-->
 <!--[if $topforumscount > 0]-->
 <br />
-<strong><!--[$topforumscount]-->&nbsp;<!--[gt text="top active Forums:"]--></strong>
+<strong><!--[$topforumscount]-->&nbsp;<!--[gt text="Most-active forums:"]--></strong>
 <br />
 <ul class="dzk_forumlist">
     <!--[foreach item=topforum from=$topforums]-->
@@ -15,11 +15,11 @@
 </ul>
 <!--[/if]-->
 
-<!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, they are hidden per default *]-->
+<!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, they are hidden by default *]-->
 <!--[readlastposts maxposts=$maxposts forum_id=$forum_id]-->
 <!--[if $lastpostcount > 0]-->
 <br />
-<strong><!--[$lastpostcount]--> <!--[gt text="recent topics:"]--></strong>
+<strong><!--[$lastpostcount]--> <!--[gt text="Recent topics:"]--></strong>
 <br />
 <ul class="dzk_postlist">
     <!--[foreach item=lastpost from=$lastposts]-->
@@ -41,7 +41,7 @@
 <!--[readtopposters maxposters=$maxposters]-->
 <!--[if $toppostercount > 0]-->
 <br />
-<strong><!--[$toppostercount]--> <!--[gt text="top active Posters:"]--></strong>
+<strong><!--[$toppostercount]--> <!--[gt text="Most-active posters:"]--></strong>
 <br />
 <ul class="dzk_posterlist">
     <!--[foreach item=topposter from=$topposters]-->
@@ -52,7 +52,7 @@
 
 <!--[readstatistics]-->
 <br />
-<strong><!--[gt text="Total"]-->:</strong>
+<strong><!--[gt text="Total:"]--></strong>
 <br />
 <ul class="dzk_statslist">
     <li><!--[gt text="Categories"]-->: <!--[$total_categories]--></li>

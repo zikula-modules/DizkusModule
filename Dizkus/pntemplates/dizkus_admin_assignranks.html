@@ -2,7 +2,7 @@
 <!--[gt text="Assign honorary rank" assign=templatetitle]-->
 <!--[include file='dizkus_admin_header.html']-->
 
-<p class="z-informationmsg"><!--[gt text="This link will allow you to assign honorary user rankings to users"]--></p>
+<p class="z-informationmsg"><!--[gt text="In this page, you can select particular users and assign them honorary ranks."]--></p>
 <div class="rankuser-alphanav">
     <!--[if $allow_star eq true]-->
     [<!--[pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="*;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"]-->&nbsp;]
@@ -17,7 +17,7 @@
     <table class="z-admintable">
         <thead>
             <tr>
-                <th><!--[gt text="Username"]--></th>
+                <th><!--[gt text="User name"]--></th>
                 <th><!--[gt text="Rank"]--></th>
             </tr>
         </thead>
@@ -27,7 +27,7 @@
                 <td><!--[$user.uname|userprofilelink]--></td>
                 <td>
                     <select name="setrank[<!--[$user.uid]-->]">
-                        <option value="0" <!--[if $user.rank_id eq 0]-->selected="selected"<!--[/if]-->><!--[gt text="no rank"]--></option>
+                        <option value="0" <!--[if $user.rank_id eq 0]-->selected="selected"<!--[/if]-->><!--[gt text="No rank"]--></option>
                         <!--[foreach item=rank from=$ranks]-->
                         <option value="<!--[$rank.rank_id]-->" <!--[if $user.rank_id eq $rank.rank_id]-->selected="selected"<!--[/if]-->><!--[$rank.rank_title]--></option>
                         <!--[/foreach]-->
@@ -41,7 +41,7 @@
     <div class="z-formbuttons">
         <input type="hidden" name="lastletter" value="<!--[$letter|pnvarprepfordisplay]-->" />
         <input type="hidden" name="page" value="<!--[$page|pnvarprepfordisplay]-->" />
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->"><!--[gt text="Save"]--></button>
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
     </div>
 </form>
 

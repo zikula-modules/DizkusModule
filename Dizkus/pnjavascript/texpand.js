@@ -43,13 +43,13 @@ Texpand.prototype = {
     
     // Requirements
     if (this.element.tagName.toLowerCase() != 'textarea') {
-      throw (new Error('Texpand: can only be initialized with a <textarea> but got <' + this.element.tagName.toLowerCase() + '>'));
+      throw (new Error('Error! Texpand can only be initialised with a <textarea> but got <' + this.element.tagName.toLowerCase() + '>'));
     }
     if (typeof Prototype == 'undefined' || (parseFloat(Prototype.Version.split(".")[0] + "." + Prototype.Version.split(".")[1]) < 1.6)) {
-      throw (new Error('Texpand: requires Prototype 1.6.0+'));
+      throw (new Error('Error! Texpand requires Prototype 1.6.0+.'));
     }
     if (typeof Effect == 'undefined') {
-      throw (new Error('Textpand: requires Script.aculo.us, specifically Effects'));
+      throw (new Error('Error! Textpand requires Script.aculo.us (specifically: Effects).'));
     }
     
     // replace tabs with spaces.

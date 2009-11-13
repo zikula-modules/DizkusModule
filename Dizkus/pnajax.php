@@ -41,17 +41,17 @@ function Dizkus_ajax_reply()
 	$topic['start'] = 0;
 	$ignorelist_setting = pnModAPIFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
 	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
-		dzk_ajaxerror(__('Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.', $dom));
+		dzk_ajaxerror(__('Sorry! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.', $dom));
 	}
 
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-        dzk_ajaxerror(__('Illegal message size, max. 65535 chars', $dom));
+        dzk_ajaxerror(__('Error! Illegal message size. The maximum allowed size of a post is 65,535 characters.', $dom));
     }
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+           dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
 
         list($start,
@@ -131,7 +131,7 @@ function Dizkus_ajax_preparequote()
                                    'reply_start' => true));
         dzk_jsonizeoutput($post, false);
     }
-    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_preparequote()');
+    dzk_ajaxerror('Internal error! No post ID in \'Dizkus_ajax_preparequote()\'.');
 }
 
 /**
@@ -156,10 +156,10 @@ function Dizkus_ajax_readpost()
         if ($post['poster_data']['edit'] == true) {
             dzk_jsonizeoutput($post, false);
         } else {
-            dzk_ajaxerror(__('No permission for this action', $dom));
+            dzk_ajaxerror(__('Sorry! You do not have authorisation to perform this action.', $dom));
         }
     }
-    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_readpost()');
+    dzk_ajaxerror('Internal error! No post ID in \'Dizkus_ajax_readpost()\'.');
 }
 
 /**
@@ -192,10 +192,10 @@ function Dizkus_ajax_editpost()
             return array('data'    => $pnr->fetch('dizkus_ajax_editpost.html'),
                          'post_id' => $post['post_id']);
         } else {
-            dzk_ajaxerror(__('No permission for this action', $dom));
+            dzk_ajaxerror(__('Sorry! You do not have authorisation for this action.', $dom));
         }
     }
-    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_readrawtext()');
+    dzk_ajaxerror('Internal error! No post ID in \'Dizkus_ajax_readrawtext()\'.');
 }
 
 /**
@@ -220,13 +220,13 @@ function Dizkus_ajax_updatepost()
 
     if (!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-            dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+            dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
  
         $message = dzkstriptags(DataUtil::convertFromUTF8($message));
         // check for maximum message size
         if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-            dzk_ajaxerror(__('Illegal message size, max. 65535 chars', $dom));
+            dzk_ajaxerror(__('Error! Illegal message size. The maximum allowed size of a post is 65,535 characters.', $dom));
         }
 
         pnModAPIFunc('Dizkus', 'user', 'updatepost',
@@ -249,7 +249,7 @@ function Dizkus_ajax_updatepost()
 
         return $post;
     }
-    dzk_ajaxerror('internal error: no post id in Dizkus_ajax_updatepost()');
+    dzk_ajaxerror('Internal error! No post ID in \'Dizkus_ajax_updatepost()\'.');
 }
 
 /**
@@ -270,21 +270,21 @@ function Dizkus_ajax_lockunlocktopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+       //dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     if (empty($topic_id)) {
-        dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_lockunlocktopic()');
+        dzk_ajaxerror('Internal error! No topic ID in \'Dizkus_ajax_lockunlocktopic()\'.');
     }
     if (empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
-        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_lockunlocktopic()');
+        dzk_ajaxerror('Internal error! No mode or illegal mode parameter (' . DataUtil::formatForDisplay($mode) . ') in \'Dizkus_ajax_lockunlocktopic()\'.');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(__('You have no permission to moderate this category or forum', $dom));
+        return dzk_ajaxerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic',
@@ -314,21 +314,21 @@ function Dizkus_ajax_stickyunstickytopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-       //dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+       //dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     if (empty($topic_id)) {
-        dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_stickyunstickytopic()');
+        dzk_ajaxerror('Internal error! No topic ID in \'Dizkus_ajax_stickyunstickytopic()\'.');
     }
     if (empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
-        dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_stickyunstickytopic()');
+        dzk_ajaxerror('Internal error! No mode or illegal mode parameter (' . DataUtil::formatForDisplay($mode) . ') in \'Dizkus_ajax_stickyunstickytopic()\'.');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(__('You have no permission to moderate this category or forum', $dom));
+        return dzk_ajaxerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic',
@@ -356,18 +356,18 @@ function Dizkus_ajax_subscribeunsubscribetopic()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     if (empty($topic_id)) {
-        dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_subscribeunsubscribetopic()');
+        dzk_ajaxerror('Internal error! No topic ID in \'Dizkus_ajax_subscribeunsubscribetopic()\'.');
     }
 
     list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                             array('topic_id' => $topic_id));
 
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(__('You have no permission to read the content of this category or forum', $dom));
+        return dzk_ajaxerror(__('Sorry! You do not have authorisation to read the content of this forum or forum category.', $dom));
     }
 
     switch($mode) {
@@ -384,7 +384,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
             $newmode = 'unsubscribed';
             break;
         default:
-            dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribetopic()');
+            dzk_ajaxerror('Internal error! No mode or illegal mode parameter (' . DataUtil::formatForDisplay($mode) . ') in \'Dizkus_ajax_subscribeunsubscribetopic()\'.');
     }
 
     dzk_jsonizeoutput($newmode);
@@ -408,18 +408,18 @@ function Dizkus_ajax_subscribeunsubscribeforum()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     if (empty($forum_id)) {
-        dzk_ajaxerror('internal error: no forum id in Dizkus_ajax_subscribeunsubscribeforum()');
+        dzk_ajaxerror('Internal error! No forum ID in \'Dizkus_ajax_subscribeunsubscribeforum()\'.');
     }
 
     $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
 
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(__('You have no permission to read the content of this category or forum', $dom));
+        return dzk_ajaxerror(__('Sorry! You do not have authorisation to read the content of this forum or forum category.', $dom));
     }
 
     switch($mode) {
@@ -436,7 +436,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
             $newmode = 'unsubscribed';
             break;
         default:
-            dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribeforum()');
+            dzk_ajaxerror('Internal error! no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_subscribeunsubscribeforum()');
     }
 
     dzk_jsonizeoutput(array('newmode' => $newmode,
@@ -463,11 +463,11 @@ function Dizkus_ajax_addremovefavorite()
     $mode     = FormUtil::getPassedValue('mode', '');
 
     if (empty($forum_id)) {
-        dzk_ajaxerror('internal error: no forum id in Dizkus_ajax_addremovefavorite()');
+        dzk_ajaxerror('Internal error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.');
     }
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -476,7 +476,7 @@ function Dizkus_ajax_addremovefavorite()
                            array('forum_id' => $forum_id));
 
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(__('You have no permission to read the content of this category or forum', $dom));
+        return dzk_ajaxerror(__('Sorry! You do not have authorisation to read the content of this forum or forum category.', $dom));
     }
 
     switch($mode) {
@@ -491,7 +491,7 @@ function Dizkus_ajax_addremovefavorite()
             $newmode = 'removed';
             break;
         default:
-            dzk_ajaxerror('internal error: no or illegal mode (' . DataUtil::formatForDisplay($mode) . ') parameter in Dizkus_ajax_addremovefavorite()');
+            dzk_ajaxerror('Internal error! No mode or illegal mode parameter (' . DataUtil::formatForDisplay($mode) . ') in \'Dizkus_ajax_addremovefavorite()\'.');
     }
 
     dzk_jsonizeoutput(array('newmode' => $newmode,
@@ -529,10 +529,10 @@ function Dizkus_ajax_edittopicsubject()
             return array('data'     => $pnr->fetch('dizkus_ajax_edittopicsubject.html'),
                          'topic_id' => $topic_id);
         } else {
-            dzk_ajaxerror(__('No permission for this action', $dom));
+            dzk_ajaxerror(__('Sorry! You do not have authorisation for this action', $dom));
         }
     }
-    dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_readtopic()');
+    dzk_ajaxerror('Internal error! No topic ID in \'Dizkus_ajax_readtopic()\'.');
 }
 
 /**
@@ -554,17 +554,17 @@ function Dizkus_ajax_updatetopicsubject()
 
     if (!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+           dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
 
         list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-            dzk_ajaxerror(__('You have no permission to moderate this category or forum', $dom));
+            dzk_ajaxerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom));
         }
 
         $subject = trim(DataUtil::convertFromUTF8($subject));
         if (empty($subject)) {
-            dzk_ajaxerror(__('no subject', $dom));
+            dzk_ajaxerror(__('Error! No subject.', $dom));
         }
 
         $topic['topic_id']    = $topic_id;
@@ -580,7 +580,7 @@ function Dizkus_ajax_updatetopicsubject()
         return array('topic_title' => DataUtil::formatForDisplay($subject),
                      'topic_id'    => $topic_id);
     }
-    dzk_ajaxerror('internal error: no topic id in Dizkus_ajax_updatetopicsubject()');
+    dzk_ajaxerror('Internal error! No topic ID in \'Dizkus_ajax_updatetopicsubject()\'');
 }
 
 /**
@@ -598,11 +598,11 @@ function Dizkus_ajax_changesortorder()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!pnUserLoggedIn()) {
-       dzk_ajaxerror(__('This functionality is for registered users only', $dom));
+       dzk_ajaxerror(__('Sorry! This functionality is for registered users only.', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-       dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+       dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'change_user_post_order');
@@ -618,7 +618,7 @@ function Dizkus_ajax_newtopic()
 {
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-       dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+       dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     $dom = ZLanguage::getModuleDomain('Dizkus');
@@ -640,7 +640,7 @@ function Dizkus_ajax_newtopic()
                            array('forum_id' => $forum_id));
 
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return dzk_ajaxerror(__('You have no permission to write into this category or forum', $dom));
+        return dzk_ajaxerror(__('Sorry! You do not have authorisation to post in this forum or forum category.', $dom));
     }
 
     $preview          = ($preview == 1) ? true : false;
@@ -650,10 +650,10 @@ function Dizkus_ajax_newtopic()
     $message = dzkstriptags(DataUtil::convertFromUTF8($message));
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-        dzk_ajaxerror(__('Illegal message size, max. 65535 chars', $dom), true);
+        dzk_ajaxerror(__('Sorry! The message is too long. The maximum length is 65,535 characters.', $dom), true);
     }
     if (strlen($message) == 0) {
-        dzk_ajaxerror(__('You must type a message to post. You cannot post an empty message. Please go back and try again.', $dom), true);
+        dzk_ajaxerror(__('Error! You cannot post an empty message. Please go back and try again.', $dom), true);
     }
 
     $subject = DataUtil::convertFromUTF8($subject);
@@ -665,7 +665,7 @@ function Dizkus_ajax_newtopic()
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+           dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
 
         // store new topic
@@ -723,7 +723,7 @@ function Dizkus_ajax_newtopic()
     // need at least "comment" to add newtopic
     if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(__('You have no permission to write into this category or forum', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to post in this forum or forum category.', $dom), __FILE__, __LINE__);
     }
 
     $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));

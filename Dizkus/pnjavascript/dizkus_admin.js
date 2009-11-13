@@ -163,7 +163,7 @@ function storeforum_response(originalRequest)
             $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
             break;
         default:
-            dzk_showajaxerror('storeforum_response(): received illegal action type from server');   
+            dzk_showajaxerror('Error! \'storeforum_response()\' received illegal action type from server.');   
     }
 }
 
@@ -274,7 +274,7 @@ function storecategory_response(originalRequest, json)
             Element.remove('category_' + json.cat_id);
             break;
         default:
-            dzk_showajaxerror('unknown action received from server');
+            dzk_showajaxerror('Error! Unknown action received from server.');
     }
 }
 

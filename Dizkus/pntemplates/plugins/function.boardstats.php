@@ -29,7 +29,7 @@
 function smarty_function_boardstats($params, &$smarty) 
 {
     if(!pnModAPILoad('Dizkus', 'user')) {
-        $smarty->trigger_error("loading Dizkus userapi failed");
+        $smarty->trigger_error("Error! Could not load Dizkus user API.");
         return;
     } 
 

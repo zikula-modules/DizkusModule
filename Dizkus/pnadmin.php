@@ -62,19 +62,19 @@ function Dizkus_admin_syncforums()
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all users'));
-    $message = DataUtil::formatForDisplay(__('Zikula and Dizkus users synchronized', $dom)) . '<br />';
+    $message = DataUtil::formatForDisplay(__('Done! Synchronised Zikula and Dizkus users.', $dom)) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all forums'));
-    $message .= DataUtil::formatForDisplay(__('Forum index synced', $dom)) . '<br />';
+    $message .= DataUtil::formatForDisplay(__('Done! Synchronised forum index.', $dom)) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all topics'));
-    $message .= DataUtil::formatForDisplay(__('Topics synced', $dom)) . '<br />';
+    $message .= DataUtil::formatForDisplay(__('Done! Synchronised topics.', $dom)) . '<br />';
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all posts'));
-    $message .= DataUtil::formatForDisplay(__('Posts counter synced', $dom)) . '<br />';
+    $message .= DataUtil::formatForDisplay(__('Done! Synchronised posts counter.', $dom)) . '<br />';
 
     if ($silent != 1) {
         LogUtil::registerStatus($message);
@@ -270,13 +270,13 @@ function Dizkus_admin_reordertreesave()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
+        dzk_ajaxerror(__('Sorry! You have not been granted authorisation for this module.', $dom));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-//        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+//        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     $categoryarray = FormUtil::getPassedValue('category');
@@ -311,7 +311,7 @@ function Dizkus_admin_reordertreesave()
                                          array('forum_id' => $forum_id,
                                                'cat_id'   => $cat_id,
                                                'order'    => $forumorder)) == false) {
-                            dzk_ajaxerror('storenewforumorder(): cannot reorder forum ' . $forum_id . ' in category ' . $cat_id . ' (' . $forumorder . ')');
+                            dzk_ajaxerror('Error! \'storenewforumorder()\' cannot re-order the ' . $forum_id . ' forum in the ' . $cat_id . ' category (' . $forumorder . ').');
                         }
                     }
                 }
@@ -333,7 +333,7 @@ function Dizkus_admin_editforum($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
+        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
     }
 
     if (count($args) > 0) {
@@ -351,7 +351,7 @@ function Dizkus_admin_editforum($args=array())
         // create a new forum
         $new = true;
         $cat_id = FormUtil::getPassedValue('cat');
-        $forum = array('forum_name'       => __('-- add new forum --', $dom),
+        $forum = array('forum_name'       => __('-- Create new forum --', $dom),
                        'forum_id'         => time(), /* for new forums only! */
                        'forum_desc'       => '',
                        'forum_order'      => -1,
@@ -378,7 +378,7 @@ function Dizkus_admin_editforum($args=array())
 
     }
     $externalsourceoptions = array( 0 => array('checked'  => '',
-                                               'name'     => __('no external source', $dom),
+                                               'name'     => __('No external source', $dom),
                                                'ok'       => '',
                                                'extended' => false),   // none
                                     1 => array('checked'  => '',
@@ -387,7 +387,7 @@ function Dizkus_admin_editforum($args=array())
                                                'extended' => true),  // mail
                                     2 => array('checked'  => '',
                                                'name'     => __('RSS2Forum', $dom),
-                                               'ok'       => (pnModAvailable('Feeds') == true) ? '' : __('<span style="color: red;">Feeds module not available!</span>', $dom),
+                                               'ok'       => (pnModAvailable('Feeds') == true) ? '' : __('<span style="color: red;">Feeds module not available.</span>', $dom),
                                                'extended' => true)); // rss
 
     $externalsourceoptions[$forum['pop3_active']]['checked'] = ' checked="checked"';
@@ -395,7 +395,7 @@ function Dizkus_admin_editforum($args=array())
     $hooked_modules_raw = pnModAPIFunc('modules', 'admin', 'gethookedmodules',
                                        array('hookmodname' => 'Dizkus'));
 
-    $hooked_modules = array(array('name' => __('no hooked module found', $dom),
+    $hooked_modules = array(array('name' => __('No hooked module found.', $dom),
                                   'id'   => 0));
 
     $foundsel = false;
@@ -467,7 +467,7 @@ function Dizkus_admin_editcategory($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
+        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
     }
 
     if (!empty($args)) {
@@ -478,7 +478,7 @@ function Dizkus_admin_editcategory($args=array())
     }
     if ($cat_id == 'new') {
         $new = true;
-        $category = array('cat_title'    => __('-- add new category --', $dom),
+        $category = array('cat_title'    => __('-- Create new category --', $dom),
                           'cat_id'       => time(),
                           'forum_count'  => 0);
         // we add a new category
@@ -514,11 +514,11 @@ function Dizkus_admin_storecategory()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
+        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     $cat_id    = FormUtil::getPassedValue('cat_id');
@@ -534,7 +534,7 @@ function Dizkus_admin_storecategory()
         if (count($forums) > 0) {
             $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            dzk_ajaxerror('error: category "' . $category['cat_title'] . '" contains ' . count($forums) . ' forums!');
+            dzk_ajaxerror('Error! The \'' . $category['cat_title'] . '\' category contains ' . count($forums) . ' forums.');
         }
         $res = pnModAPIFunc('Dizkus', 'admin', 'deletecategory',
                             array('cat_id' => $cat_id));
@@ -545,7 +545,7 @@ function Dizkus_admin_storecategory()
                               true,
                               false); 
         } else {
-            dzk_ajaxerror('error deleting category ' . DataUtil::formatForDisplay($cat_id));
+            dzk_ajaxerror('Error! Could not delete the \'' . DataUtil::formatForDisplay($cat_id) . '\' category.');
         }
 
     } elseif (!empty($add)) {
@@ -582,7 +582,7 @@ function Dizkus_admin_storecategory()
                               true,
                               false); 
         } else {
-            dzk_ajaxerror('error updating cat_id ' . DataUtil::formatForDisplay($cat_id) . ' with title "' . DataUtil::formatForDisplay($cat_title) . '"');
+            dzk_ajaxerror('Error! Could not update \'cat_id\' ' . DataUtil::formatForDisplay($cat_id) . ' with title \'' . DataUtil::formatForDisplay($cat_title) . '\'.');
         }
     }
 }
@@ -597,11 +597,11 @@ function Dizkus_admin_storeforum()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('You have no permission to admin this module', $dom));
+        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Invalid \'authkey\':  this probably means that you pressed the \'Back\' button, or that the page \'authkey\' expired. Please refresh the page and try again.', $dom));
+        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -662,10 +662,10 @@ function Dizkus_admin_storeforum()
         }
 
         if ($pop3_password <> $pop3_passwordconfirm) {
-            dzk_ajaxerror(__('Passwords do not match, please go back and correct', $dom));
+            dzk_ajaxerror(__('Sorry! The two passwords you entered do not match. Please correct your entries and try again.', $dom));
         }
         if ($pnpassword <> $pnpasswordconfirm) {
-            dzk_ajaxerror(__('Passwords do not match, please go back and correct', $dom));
+            dzk_ajaxerror(__('Sorry! The two passwords you entered do not match. Please correct your entries and try again.', $dom));
         }
 
         if (!empty($add)) {

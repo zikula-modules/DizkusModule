@@ -19,13 +19,13 @@ function smarty_function_forumimage($params, &$smarty)
     $assign = (!empty($params['assign'])) ? $params['assign'] : 'forumimage';
     
     if (empty($params['name'])) {
-        $smarty->trigger_error("folderimage: missing parameter 'name'");
+        $smarty->trigger_error("Error! Missing 'name' parameter for folder image.");
         return false;
     }
 
     $img = pnModGetVar('Dizkus', $params['name'], null);
     if (is_null($img)) {
-        $smarty->trigger_error("folderimage: invalid value for parameter 'name'");
+        $smarty->trigger_error("Error! Invalid 'name' parameter value for folder image.");
         return false;
     }
     

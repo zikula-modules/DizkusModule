@@ -149,7 +149,7 @@ function smarty_function_pnfpager($params, &$smarty)
 
     }
 
-    $page_string = '<' . $tag . '>' . __f('go to page %s: ', $page_string, $dom) . '</' . $tag . '>';
+    $page_string = '<' . $tag . '>' . __f('Go to page %s: ', $page_string, $dom) . '</' . $tag . '>';
 
     return $page_string;
 }

@@ -213,7 +213,7 @@ function Dizkus_user_reply($args=array())
     $message = dzkstriptags($message);
     // check for maximum message size
     if ((strlen($message) +  strlen('[addsig]')) > 65535) {
-        LogUtil::registerStatus(__('Illegal message size, max. 65535 chars', $dom));
+        LogUtil::registerStatus(__('Error! Illegal message size. The maximum size of a post is 65,535 characters.', $dom));
         // switch to preview mode
         $preview = true;
     }
@@ -228,7 +228,7 @@ function Dizkus_user_reply($args=array())
         $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
         $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
         if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
-            LogUtil::registerError(__('Sorry - the user who started this topic is ignoring you and does not want that you are able to write replies into this topic. Please contact the topic starter for more details.', $dom));
+            LogUtil::registerError(__('Sorry! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.', $dom));
             return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
 
@@ -301,7 +301,7 @@ function Dizkus_user_newtopic($args=array())
     $message = dzkstriptags($message);
     // check for maximum message size
     if ((strlen($message) +  strlen('[addsig]')) > 65535) {
-        LogUtil::registerStatus(__('Illegal message size, max. 65535 chars', $dom));
+        LogUtil::registerStatus(__('Error! Illegal message size. The maximum size of a post is 65,535 characters.', $dom));
         // switch to preview mode
         $preview = true;
     }
@@ -385,7 +385,7 @@ function Dizkus_user_editpost($args=array())
 
     if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
        && ($post['poster_data']['pn_uid'] <> pnUserGetVar('uid')) ) {
-        return showforumerror(__('No permission for this action', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation for this action.', $dom), __FILE__, __LINE__);
     }
 
     $preview = (empty($preview)) ? false : true;
@@ -398,7 +398,7 @@ function Dizkus_user_editpost($args=array())
     $message = dzkstriptags($message);
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
-        LogUtil::registerStatus(__('Illegal message size, max. 65535 chars', $dom));
+        LogUtil::registerStatus(__('Error! Illegal message size. The maximum size of a post is 65,535 characters.', $dom));
         // switch to preview mode
         $preview = true;
     }
@@ -482,7 +482,7 @@ function Dizkus_user_topicadmin($args=array())
                                 'count'    => false));
 
     if ($topic['access_moderate'] <> true) {
-        return showforumerror(__('You have no permission to moderate this category or forum', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom), __FILE__, __LINE__);
     }
 
     $pnr = pnRender::getInstance('Dizkus', false, null, true);
@@ -536,10 +536,10 @@ function Dizkus_user_topicadmin($args=array())
             case 'move':
                 list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
                 if ($forum_id == $f_id) {
-                    return showforumerror(__('Error: Source forum must differ from target forum.', $dom), __FILE__, __LINE__);
+                    return showforumerror(__('Error! The source forum cannot be the same as the target forum.', $dom), __FILE__, __LINE__);
                 }
                 if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
                 }
                 pnModAPIFunc('Dizkus', 'user', 'movetopic',
                              array('topic_id' => $topic_id,
@@ -552,7 +552,7 @@ function Dizkus_user_topicadmin($args=array())
                 list($f_id, $c_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                   array('topic_id' => $topic_id));
                 if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
                 }
                 pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic',
                              array('topic_id' => $topic_id,
@@ -564,7 +564,7 @@ function Dizkus_user_topicadmin($args=array())
                 list($f_id, $c_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                   array('topic_id' => $topic_id));
                 if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
                 }
                 pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic',
                              array('topic_id' => $topic_id,
@@ -575,11 +575,11 @@ function Dizkus_user_topicadmin($args=array())
                 $to_topic_id = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
                 if (!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
                     // user wants to copy topic to itself
-                    return showforumerror(__('Error: Source topic must differ from target topic.', $dom), __FILE__, __LINE__);
+                    return showforumerror(__('Error! The source topic cannot be the same as the target topic.', $dom), __FILE__, __LINE__);
                 }
                 list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $to_topic_id));
                 if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+                    return showforumerror(getforumerror('auth_mod', $f_id, 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
                 }
                 pnModAPIFunc('Dizkus', 'user', 'jointopics',
                              array('from_topic_id' => $topic_id,
@@ -778,7 +778,7 @@ function Dizkus_user_emailtopic($args=array())
     $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
 
     if(!pnUserLoggedIn()) {
-        return showforumerror(__('Sorry, you need to be logged in to perform this action.'), __FILE__, __LINE__);
+        return showforumerror(__('Error! You need to be logged-in to perform this action.'), __FILE__, __LINE__);
     }
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
@@ -786,14 +786,14 @@ function Dizkus_user_emailtopic($args=array())
     if(!empty($submit)) {
         if (!pnVarValidate($sendto_email, 'email')) {
             // Empty e-mail is checked here too
-            $error_msg = DataUtil::formatForDisplay(__('You did not enter an e-mail address for the person to send the e-mail to, or you entered an invalid e-mail address.', $dom));
+            $error_msg = DataUtil::formatForDisplay(__('Error! Either you did not enter an e-mail address or the e-mail address was invalid.', $dom));
             $sendto_email = '';
             unset($submit);
         } else if ($message == '') {
-            $error_msg = DataUtil::formatForDisplay(__('You must enter a message.', $dom));
+            $error_msg = DataUtil::formatForDisplay(__('Error! You did not enter a message to send.', $dom));
             unset($submit);
         } else if ($emailsubject == '') {
-            $error_msg = DataUtil::formatForDisplay(__('You must enter a subject for this e-mail.', $dom));
+            $error_msg = DataUtil::formatForDisplay(__('Error! You did not enter a subject line for the e-mail message.', $dom));
             unset($submit);
         }
     }
@@ -817,7 +817,7 @@ function Dizkus_user_emailtopic($args=array())
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
         $pnr->assign('emailsubject', $emailsubject);
-        $pnr->assign('message', DataUtil::formatForDisplay(__('Hi! Check this link, I think it should be interesting to you', $dom)) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
+        $pnr->assign('message', DataUtil::formatForDisplay(__('Hello! I\'m sending you a link to a topic in the forums because I think it might interest you.', $dom)) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
         $pnr->assign( 'last_visit', $last_visit);
         $pnr->assign( 'last_visit_unix', $last_visit_unix);
         return $pnr->fetch('dizkus_user_emailtopic.html');
@@ -921,7 +921,7 @@ function Dizkus_user_splittopic($args=array())
 
     if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
     if(!empty($submit)) {
@@ -1060,7 +1060,7 @@ function Dizkus_user_movepost($args=array())
 
     if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $post['forum_id'], 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
     if (!empty($submit)) {
@@ -1114,7 +1114,7 @@ function Dizkus_user_jointopics($args=array())
 
     if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
     if(!$submit) {
@@ -1178,7 +1178,7 @@ function Dizkus_user_moderateforum($args=array())
 
     if(!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('You have no permission to moderate this category or forum', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
 
@@ -1210,7 +1210,7 @@ function Dizkus_user_moderateforum($args=array())
                     break;
                 case 'move':
                     if(empty($moveto)) {
-                        return showforumerror(__('No target forum for moving selected', $dom), __FILE__, __LINE__);
+                        return showforumerror(__('Error! You did not select a target forum for the move.', $dom), __FILE__, __LINE__);
                     }
                     foreach ($topic_ids as $topic_id) {
                         pnModAPIFunc('Dizkus', 'user', 'movetopic', array('topic_id' => $topic_id,
@@ -1232,7 +1232,7 @@ function Dizkus_user_moderateforum($args=array())
                     break;
                 case 'join':
                     if(empty($jointo)) {
-                        return showforumerror(__('No target topic for joining selected', $dom), __FILE__, __LINE__);
+                        return showforumerror(__('Error! You did not select a target topic for the join.', $dom), __FILE__, __LINE__);
                     }
                     if(in_array($jointo, $topic_ids)) {
                         // jointo, the target topic, is part of the topics to join

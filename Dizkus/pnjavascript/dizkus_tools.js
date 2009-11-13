@@ -29,7 +29,7 @@ function dejsonize(jsondata)
     try {
         result = eval('(' + jsondata + ')');
     } catch(error) {
-        alert('illegal JSON response: \n' + error + 'in\n' + jsondata);
+        alert('Error! Illegal JSON response: \n' + error + 'in\n' + jsondata);
     }
     return result;
 }

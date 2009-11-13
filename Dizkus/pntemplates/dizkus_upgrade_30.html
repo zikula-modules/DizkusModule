@@ -4,17 +4,17 @@
 <form action="<!--[pnmodurl modname=Dizkus type=init func="interactiveupgrade_to_3_0"]-->" method="post">
     <div>
         <div style="height: 3em; vertical-align: middle; width: 90%;">
-            <h1><!--[gt text="Dizkus Upgrade"]--></h1>
+            <h1><!--[gt text="Dizkus upgrade"]--></h1>
         </div>
         <h2>
-            <!--[gt text="old version"]-->: <!--[$oldversion]--><br />
-            <!--[gt text="next version"]-->: 3.0<br />
+            <!--[gt text="Old version"]-->: <!--[$oldversion]--><br />
+            <!--[gt text="New version"]-->: 3.0<br />
         </h2>
         <div style="border: 1px solid red; padding: 4px; margin: 10px; color: red;">
-            <h2><!--[gt text="Create a database dump before<br />performing this upgrade step!"]--></h2>
+            <h2><!--[gt text="Caution! Please back-up your database via a database dump before proceeding with the upgrade."]--></h2>
         </div>
-        <div><!--[gt text="This step will upgrade pnForum 2.7.1 to Dizkus 3.0 including all necessary database changes."]--></div>
+        <div><!--[gt text="This will upgrade your pnForum 2.7.1 forums to Dizkus 3.0, making all necessary database changes."]--></div>
         <input type="hidden" name="authkey" value="<!--[$authid]-->" />
-        <input type="submit" name="submit" value="<!--[gt text="Submit"]-->" />
+        <input type="submit" name="submit" value="<!--[gt text="Next"]-->" />
     </div>
 </form>

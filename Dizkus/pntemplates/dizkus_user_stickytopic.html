@@ -1,5 +1,5 @@
 <!--[*  $Id$  *]-->
-<!--[capture assign=templatetitle]--><!--[if $mode eq "sticky"]--><!--[gt text="Mark this topic sticky"]--><!--[else]--><!--[gt text="Unsticky topic"]--><!--[/if]--><!--[/ capture]-->
+<!--[capture assign=templatetitle]--><!--[if $mode eq "sticky"]--><!--[gt text="Assign this topic 'sticky' status"]--><!--[else]--><!--[gt text="Remove 'sticky' status"]--><!--[/if]--><!--[/ capture]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
@@ -11,23 +11,23 @@
     <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
     <!--[if $mode eq "sticky"]-->
     <fieldset id="dzk_stickytopic"  >
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[gt text="Status"]--></legend>
         <div class="z-formrow">
-            <!--[gt text="When you press the sticky button at the bottom of this form the topic you have selected will be made <strong>'sticky'</strong>. You may unstick it again at a later time if you like."]-->
+            <!--[gt text="When you click the 'Sticky' button at the bottom of this page, the topic you have selected will be assigned <strong>'sticky'</strong> status. You can change its status again at a later time if you so choose."]-->
         </div>
     </fieldset>
     <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Mark this topic sticky"]-->"><!--[gt text="Mark this topic sticky"]--></button>
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Assign this topic 'sticky' status"]-->"><!--[gt text="Assign this topic 'sticky' status"]--></button>
     </div>
     <!--[else]-->
     <fieldset id="dzk_stickytopic"  >
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[gt text="Status"]--></legend>
         <div class="z-formrow">
-            <!--[gt text="When you press the unstick button at the bottom of this form the topic you have selected will be <strong>'unsticky'</strong>. You may mark it sticky it again at a later time if you like."]-->
+            <!--[gt text="When you click the 'Unsticky' button at the bottom of this page, the topic you have selected will be set to <strong>\\'unsticky\\'</strong> status. You can change its status again at a later time if you so choose."]-->
         </div>
     </fieldset>
     <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Unsticky topic"]-->"><!--[gt text="Unsticky topic"]--></button>
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Remove 'sticky' status"]-->"><!--[gt text="Remove 'sticky' status"]--></button>
     </div>
     <!--[/if]-->
 </form>

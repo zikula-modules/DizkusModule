@@ -35,7 +35,7 @@ function Dizkus_hookapi_createbyitem($args)
     }
 
     if(!isset($args['objectid']) || empty($args['objectid'])) {
-        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
     // we have an objectid now, we combine this with the module id now for the
@@ -48,7 +48,7 @@ function Dizkus_hookapi_createbyitem($args)
                              array('reference' => $reference));
     if($topic_id == false) {
         $subject   = __('Automatically created topic', $dom);
-        $message   = __('Automatically created topic for discussion of submitted entries', $dom);
+        $message   = __('Done! Automatically created topic for discussion of submitted entries.', $dom);
         $pntopic   = 0;
         $authorid  = pnUserGetVar('uid');
 
@@ -89,7 +89,7 @@ function Dizkus_hookapi_updatebyitem($args)
     }
 
     if(!isset($args['objectid']) || empty($args['objectid'])) {
-        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
     // we have an objectid now, we combine this with the module id now for the
@@ -143,7 +143,7 @@ function Dizkus_hookapi_deletebyitem($args)
     }
 
     if(!isset($args['objectid']) || empty($args['objectid'])) {
-        return showforumerror(__('Error! Could not do what you wanted. Please check your input.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
     // we have an objectid now, we combine this with the module id now for the

@@ -3,17 +3,17 @@
 <!--[gt text="Edit honorary ranks" assign=templatetitle]-->
 <!--[include file='dizkus_admin_header.html']-->
 
-<p class="z-informationmsg"><!--[gt text="This link will allow you to create special ranks for special users."]--></p>
+<p class="z-informationmsg"><!--[gt text="In this page, you can create, delete and edit special honorary ranks awarded to particular users (site staff or project team members, for example). To create a new rank, simply type entries in the fields of the 'Create new rank' section and click on the 'Create honorary rank' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."]--></p>
 <form class="z-form" action="<!--[pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='1']-->" method="post">
     <fieldset>
-        <legend><!--[gt text="Add a new rank"]--></legend>
+        <legend><!--[gt text="Create new honorary rank"]--></legend>
         <input type="hidden" name="ranks[-1][rank_special]" value="1" />
         <div class="z-formrow">
-            <label for="rank_title"><!--[gt text="User rank"]--></label>
+            <label for="rank_title"><!--[gt text="Honorary rank name"]--></label>
             <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
         </div>
         <div class="z-formrow">
-            <label for="newrank_image"><!--[gt text="Image"]--></label>
+            <label for="newrank_image"><!--[gt text="Internal Dizkus image"]--></label>
             <div>
                 <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('<!--[$pncore.Dizkus.url_ranks_images]-->')">
                     <!--[foreach name='availableranks' item='rankimage' from=$rankimages]-->
@@ -24,12 +24,15 @@
             </div>
         </div>
         <div class="z-formrow">
-            <label for="rank_desc"><!--[gt text="Rank description (when starting with http:// the rank image will be linked to this page"]--></label>
+            <label for="rank_desc"><!--[gt text="External image"]--></label>
             <input id="rank_desc" type="text" name="ranks[-1][rank_desc]" value="" maxlength="255" size="60" />
+        </div>
+        <div class="z-formnote z-informationmsg">
+             <!--[gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."]-->
         </div>
     </fieldset>
     <div class="z-formbuttons">
-        <button class="dzk_img add" type="submit" name="submit" value="<!--[gt text="Add"]-->"><!--[gt text="Add"]--></button>
+        <button class="dzk_img add" type="submit" name="submit" value="<!--[gt text="Create honorary rank"]-->"><!--[gt text="Create honorary rank"]--></button>
     </div>
 </form>
 
@@ -37,10 +40,10 @@
     <table class="z-admintable">
         <thead>
             <tr>
-                <th><!--[gt text="User rank"]--></th>
+                <th><!--[gt text="Honorary rank"]--></th>
                 <th><!--[gt text="Image"]--></th>
-                <th><!--[gt text="Rank description"]--></th>
-                <th><!--[gt text="Delete this rank"]--></th>
+                <th><!--[gt text="Description"]--></th>
+                <th><!--[gt text="Delete rank"]--></th>
             </tr>
         </thead>
         <tbody>
@@ -65,7 +68,7 @@
         </tbody>
     </table>
     <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save rank changes"]-->"><!--[gt text="Save rank changes"]--></button>
     </div>
 </form>
 

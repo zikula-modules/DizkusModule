@@ -37,7 +37,7 @@ function Dizkus_accountapi_getall($args)
     if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
         pnModLangLoad('Dizkus', 'user'); 
         $items = array(array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
-                             'title'   => __('Forum', $dom),
+                             'title'   => __('Forum settings', $dom),
                              'icon'    => 'icon_forumprefs.gif'));
     }
 

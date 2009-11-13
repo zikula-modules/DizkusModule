@@ -51,10 +51,10 @@ if(!empty($feed)) {
 }
 
 if(isset($forum_id) && !is_numeric($forum_id)) {
-    die(DataUtil::formatForDisplay(__f('backforum.php: invalid forum id %s', $forum_id, $dom)));
+    die(DataUtil::formatForDisplay(__f('Error! Found an invalid forum ID %s in  \'backforum.php\'.', $forum_id, $dom)));
 }
 if(isset($cat_id) && !is_numeric($cat_id)) {
-    die(DataUtil::formatForDisplay(__f('backforum.php: invalid category id %s', $cat_id, $dom)));
+    die(DataUtil::formatForDisplay(__f('Error! Found an invalid category ID %s in \'backforum.php\'.', $cat_id, $dom)));
 }
 
 /**
@@ -68,7 +68,7 @@ $pnr = pnRender::getInstance('Dizkus', false);
 $templatefile = 'dizkus_feed_' . DataUtil::formatForOS($feed) . '.html';
 if(!$pnr->template_exists($templatefile)) {
     // silently stop working
-    die(DataUtil::formatForDisplay(__f('no template found for feed type %s', $feed, $dom)));
+    die(DataUtil::formatForDisplay(__f('Error! Could not find a template for a feed of \'%s\' type.', $feed, $dom)));
 }
 
 /**

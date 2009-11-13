@@ -1,20 +1,20 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Move this topic" assign=templatetitle]-->
+<!--[gt text="Move topic" assign=templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
 <h2><!--[$templatetitle]--></h2>
 
 <form class="z-form" action="<!--[pnmodurl modname='Dizkus' type='user' func='topicadmin']-->" method="post">
     <fieldset id="dzk_movetopic">
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[gt text="Move topic to another forum"]--></legend>
         <input type="hidden" name="mode" value="<!--[$mode]-->" />
         <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
 
-        <div class="z-informationmsg"><!--[gt text="When you press the move button at the bottom of this form the topic you have selected, and its related posts, will be <strong>moved</strong> to the forum you have selected. Note: You will only be able to move to a forum where you are moderator. Administrator is allowed to move any topic to any forum."]--></div>
+        <div class="z-informationmsg"><!--[gt text="Notice: You can only move a topic to a forum for which you have moderator status. An administrator can move any topic to any forum."]--></div>
 
 		<div class="z-formrow">
-            <label><!--[gt text="Forum"]--></label>
+            <label><!--[gt text="Target forum"]--></label>
             <select name="forum">
                 <!--[foreach item='forum' from=$forums]-->
                 <option value="<!--[$forum.forum_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]-->&nbsp;::&nbsp;<!--[$forum.forum_name|pnvarprepfordisplay]--></option>
@@ -27,20 +27,20 @@
         </div>
     </fieldset>
     <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Move this topic"]-->"><!--[gt text="Move this topic"]--></button>
+        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Move topic"]-->"><!--[gt text="Move topic"]--></button>
     </div>
 </form>
 
 <form class="z-form" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
     <fieldset id="dzk_jointopic">
-        <legend><!--[gt text="Join topics"]--></legend>
+        <legend><!--[gt text="Join topic with another topic"]--></legend>
         <input type="hidden" name="mode" value="join" />
         <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <div class="z-formrow">
-            <label for="to_topic_id"><!--[gt text="Target topic"]--></label>
+            <label for="to_topic_id"><!--[gt text="ID of target topic"]--></label>
             <span>
-                <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" /> (topic_id)
+                <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />
             </span>
         </div>
     </fieldset>

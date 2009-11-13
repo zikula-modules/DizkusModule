@@ -19,7 +19,7 @@
 function smarty_function_mediaattach_attachicon($params, &$smarty)
 {
     if (!isset($params['topics']) || !is_array($params['topics'])) {
-        $smarty->trigger_error("smarty_function_mediaattach_attachicon: missing parameter 'topics'");
+        $smarty->trigger_error("Error! In 'smarty_function_mediaattach_attachicon', the 'topics' parameter is missing.");
         return false;
     }
 

@@ -5,11 +5,11 @@
 <!--[if $pncore.logged_in eq true]-->
 <!--[if $pncore.Dizkus.favorites_enabled eq 'yes']-->
 <div class="optionrow" style="background-color: <!--[$bgcolor3]-->; border-color: <!--[$bgcolor2]-->;">
-    <strong><!--[gt text="Favorites"]-->:&nbsp;</strong>&nbsp;
+    <strong><!--[gt text="Favourites:"]-->&nbsp;</strong>&nbsp;
     <!--[if $favorites]-->
     <!--[pnimg modname='Dizkus' src="icon_removefavorite.gif]-->&nbsp;<a href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showallforums]-->" title="<!--[gt text="Show all forums"]-->"><!--[gt text="Show all forums"]--></a>
     <!--[else]-->
-    <!--[pnimg modname='Dizkus' src="icon_addfavorite.gif]-->&nbsp;<a href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showfavorites]-->" title="<!--[gt text="Show favorites"]-->"><!--[gt text="Show favorites"]--></a>
+    <!--[pnimg modname='Dizkus' src="icon_addfavorite.gif]-->&nbsp;<a href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showfavorites]-->" title="<!--[gt text="Show only your favorite forums"]-->"><!--[gt text="Show favorite forums only"]--></a>
     <!--[/if]-->
 </div>
 <!--[/if]-->
@@ -21,11 +21,11 @@
         <!--[foreach item=category from=$tree]-->
         <tr align="left" valign="top" style="background-color:<!--[$bgcolor3]-->;">
             <td colspan="2" style="border: 2px solid <!--[$bgcolor2]-->; background-color: <!--[$bgcolor3]-->; border-right: 0;">
-                <a title="<!--[gt text="go to category"]--> '<!--[$category.cat_title]-->'" href="<!--[pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id]-->"><strong><!--[$category.cat_title]--></strong></a>
+                <a title="<!--[gt text="Go to category"]--> '<!--[$category.cat_title]-->'" href="<!--[pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id]-->"><strong><!--[$category.cat_title]--></strong></a>
             </td>
             <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[$bgcolor2]-->; border-left: 0; border-right: 0;" width="10%" abbr="<!--[gt text="Topics"]-->"><!--[if $headersdone == 0]--><strong><!--[gt text="Topics"]--></strong><!--[/if]--></td>
             <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[$bgcolor2]-->; border-left: 0; border-right: 0;" width="10%" abbr="<!--[gt text="Posts"]-->"><!--[if $headersdone == 0]--><strong><!--[gt text="Posts"]--></strong><!--[/if]--></td>
-            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[$bgcolor2]-->; border-left: 0;" width="30%" abbr="<!--[gt text="Last Post"]-->"><!--[if $headersdone == 0]--><strong><!--[gt text="Last Post"]--></strong><!--[assign var="headersdone" value="1"]--><!--[/if]--></td>
+            <td style="text-align: center; vertical-align: middle; border: 2px solid <!--[$bgcolor2]-->; border-left: 0;" width="30%" abbr="<!--[gt text="Last post"]-->"><!--[if $headersdone == 0]--><strong><!--[gt text="Last post"]--></strong><!--[assign var="headersdone" value="1"]--><!--[/if]--></td>
         </tr>
         <tr align="left">
             <td  colspan="5" style="line-height: 1px;"></td>
@@ -37,7 +37,7 @@
                 &nbsp;
             </td>
             <td align="left" valign="middle" style="width:46%;">
-                <a class="dzk_img <!--[if $forum.new_posts == true]-->newpostsfolderlink<!--[else]-->folderlink<!--[/if]-->" title="<!--[gt text="go to forum"]--> '<!--[$forum.forum_name]-->'" href="<!--[pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id]-->"><strong><!--[$forum.forum_name]--></strong></a>
+                <a class="dzk_img <!--[if $forum.new_posts == true]-->newpostsfolderlink<!--[else]-->folderlink<!--[/if]-->" title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name]-->'" href="<!--[pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id]-->"><strong><!--[$forum.forum_name]--></strong></a>
                 <br /><!--[$forum.forum_desc]-->
                 <br />
                 <em><!--[gt text="Moderated by"]-->:</em>
@@ -48,12 +48,12 @@
             </td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[$forum.forum_topics]--></td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[$forum.forum_posts]--></td>
-            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[if $forum.last_post_data.name <> '']--><!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']--><br /> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br /><a href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[pnimg modname='Dizkus' src=icon_latest_topic.gif]--></a><!--[else]--><!--[gt text="No Posts"]--><!--[/if]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[if $forum.last_post_data.name <> '']--><!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']--><br /> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br /><a href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[pnimg modname='Dizkus' src=icon_latest_topic.gif]--></a><!--[else]--><!--[gt text="No posts"]--><!--[/if]--></td>
         </tr>
         <!--[foreachelse]-->
         <tr>
             <td colspan="5">
-                <strong><!--[gt text="No forums defined"]--></strong>
+                <strong><!--[gt text="No forums currently created"]--></strong>
             </td>
         </tr>
         <!--[/foreach]-->
@@ -65,9 +65,9 @@
         <tr>
             <td colspan="5">
                 <!--[if $pncore.Dizkus.favorites_enabled eq 'yes']-->
-                <!--[gt text="No favorites defined"]-->
+                <!--[gt text="You have not yet defined any favourite forums"]-->
                 <!--[else]-->
-                <!--[gt text="No Forums in defined"]-->
+                <!--[gt text="No forums currently created"]-->
                 <!--[/if]-->
             </td>
         </tr>
@@ -75,7 +75,7 @@
     </tbody>
 </table>
 <ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
-    <li><!--[pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit." ]--> = <!--[gt text="New posts since your last visit."]--> (<!--[$last_visit_unix|pnfdate_format:'datetimebrief']-->)</li>
-    <li><!--[pnimg modname='Dizkus' src="icon_folder.gif" __alt="No new posts since your last visit." ]--> = <!--[gt text="No new posts since your last visit."]--></li>
+    <li><!--[pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit." ]--> = <!--[gt text="New posts since your last visit on"]--> (<!--[$last_visit_unix|pnfdate_format:'datetimebrief']-->)</li>
+    <li><!--[pnimg modname='Dizkus' src="icon_folder.gif" __alt="No new posts since your last visit." ]--> = <!--[gt text="No new posts since your last visit on"]--></li>
 </ul>
 <!--[include file='dizkus_user_footer.html]-->

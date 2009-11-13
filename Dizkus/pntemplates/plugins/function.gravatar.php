@@ -38,7 +38,7 @@ function smarty_function_gravatar($params, &$smarty)
     unset($params);
 
     if (!isset($email)) {
-        $smarty->trigger_error('gravatar: attribute email required');
+        $smarty->trigger_error("Error! Missing 'email' attribute for gravatar.");
         return false;
     }
 

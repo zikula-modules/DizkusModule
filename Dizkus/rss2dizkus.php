@@ -10,7 +10,7 @@
  */
 
 //
-// store the absolut path to your Zikula folder here
+// store the absolute path to your Zikula folder here
 //
 chdir('/opt/webdev/htdocs');
 

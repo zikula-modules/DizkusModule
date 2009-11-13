@@ -126,7 +126,7 @@ function smarty_function_topicpager($params, &$smarty)
 
     }
 
-    $page_string = '<p>' . __f('go to page %s: ', $page_string, $dom) . '</p>';
+    $page_string = '<p>' . __f('Go to page %s: ', $page_string, $dom) . '</p>';
 
     return $page_string;
 

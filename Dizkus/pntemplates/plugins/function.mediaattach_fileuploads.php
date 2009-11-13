@@ -19,7 +19,7 @@
 function smarty_function_mediaattach_fileuploads($params, &$smarty)
 {
     if (!isset($params['objectid'])) {
-        $smarty->trigger_error("smarty_function_mediaattach_fileuploads: missing parameter 'objectid'");
+        $smarty->trigger_error("Error! In 'smarty_function_mediaattach_fileuploads', the 'objectid' parameter is missing.");
         return false;
     }
 

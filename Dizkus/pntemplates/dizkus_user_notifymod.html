@@ -1,21 +1,21 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Notify a moderator about a posting" assign=templatetitle]-->
+<!--[gt text="Notify moderator about a post" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
 <h2><!--[$templatetitle]--></h2>
-<div class="z-informationmsg"><!--[gt text="A moderator will be notified about the selected posting.<br />Important reasons are<br /><dl><dd>copryright violations</dd><dd>personal insults</dd><dd>etc.</dd></dl>but not<dl><dd>typos</dd><dd>different opinion about the topic</dd><dd>etc.</dd></dl><br /><br />Comment:"]--></div>
+<div class="z-informationmsg"><!--[gt text="Please explain briefly why you think the post needs attention from a moderator. Action will be taken for valid reasons, such as copyright violations, personal insults and postings that are offensive or that do not meet the applicable guidelines in some other respect. However, no action will be taken in the case of issues such as a difference of opinon on a topic, or other invalid reasons. After entering your explanation, please click the 'Save' button."]--></div>
 
 <form class="z-form linear" action="<!--[pnmodurl modname=Dizkus type=user func=report]-->" method="post">
     <fieldset id="dzk_notifymoderator">
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[gt text="Your comments"]--></legend>
         <input type="hidden" name="post" value="<!--[$post.post_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <div class="z-formrow">
             <textarea rows="6" cols="60" name="comment" class="dzk_texpand"></textarea>
         </div>
         <div class="z-formbuttons">
-            <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>
+            <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
         </div>
     </fieldset>
 </form>

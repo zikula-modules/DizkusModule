@@ -2,15 +2,15 @@
 
 <!--[include file='dizkus_user_header.html']-->
 
-<h2><!--[gt text="Users IP and Account information"]--></h2>
+<h2><!--[gt text="User IP and account information"]--></h2>
 
 <div class="pn-informationmsg">
     <dl>
-        <dt><!--[gt text="User IP"]-->:</dt>
+        <dt><!--[gt text="IP address"]-->:</dt>
         <dd><!--[$viewip.poster_ip]--></dd>
         <dt><!--[gt text="Host"]-->:</dt>
         <dd><!--[$viewip.poster_host]--></dd>
-        <dt><!--[gt text="Usernames of users that posted from this IP + post counts"]--></dt>
+        <dt><!--[gt text="User names of users who posted from this IP, plus post counts"]--></dt>
         <!--[foreach item=user from=$viewip.users]-->
         <dd><!--[$user.pn_uname|userprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</dd>
         <!--[/foreach]-->

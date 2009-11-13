@@ -19,5 +19,5 @@
  */
 function smarty_function_pnforumcolorcss($params, &$smarty)
 {
-    return '<!-- please remove the pnforumcolorcss plugin from your theme templates :-) -->';
+    return '<!-- Please remove the pnforumcolorcss plug-in from your theme templates -->';
 }

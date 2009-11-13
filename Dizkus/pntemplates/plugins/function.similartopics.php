@@ -53,7 +53,7 @@ function smarty_function_similartopics($params, &$smarty)
     unset($params);
 
     if(!isset($search) || empty($search)) {
-        $smarty->trigger_error('similartopics: attribute search required');
+        $smarty->trigger_error("Error! In 'similartopics', a search attribute is required.");
         return false;
     }
             

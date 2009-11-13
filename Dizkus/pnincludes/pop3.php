@@ -96,7 +96,7 @@ class pop3_class
 	Function OpenConnection()
 	{
 		if($this->hostname=="")
-			return($this->SetError("2 it was not specified a valid hostname"));
+			return($this->SetError("2 Invalid host name specified."));
 		if($this->debug)
 			$this->OutputDebug("Connecting to ".$this->hostname." ...");
 		if(($this->connection=@fsockopen($this->hostname,$this->port,$error))==0)
@@ -104,17 +104,17 @@ class pop3_class
 			switch($error)
 			{
 				case -3:
-					return($this->SetError("-3 socket could not be created"));
+					return($this->SetError("-3 Could not create socket."));
 				case -4:
-					return($this->SetError("-4 dns lookup on hostname \"$hostname\" failed"));
+					return($this->SetError("-4 DNS look-up on host name ''$hostname' failed."));
 				case -5:
-					return($this->SetError("-5 connection refused or timed out"));
+					return($this->SetError("-5 Connection refused or timed out."));
 				case -6:
-					return($this->SetError("-6 fdopen() call failed"));
+					return($this->SetError("-6 fdopen() call failed."));
 				case -7:
-					return($this->SetError("-7 setvbuf() call failed"));
+					return($this->SetError("-7 setvbuf() call failed."));
 				default:
-					return($this->SetError($error." could not connect to the host \"".$this->hostname."\""));
+					return($this->SetError($error." Could not connect to host \"".$this->hostname."\""));
 			}
 		}
 		return("");
@@ -138,7 +138,7 @@ class pop3_class
 	Function Open()
 	{
 		if($this->state!="DISCONNECTED")
-			return($this->SetError("1 a connection is already opened"));
+			return($this->SetError("1 There is already a session open."));
 		if(($error=$this->OpenConnection())!="")
 			return($error);
 		$this->greeting=$this->GetLine();
@@ -146,7 +146,7 @@ class pop3_class
 		|| $this->Tokenize($this->greeting," ")!="+OK")
 		{
 			$this->CloseConnection();
-			return($this->SetError("3 POP3 server greeting was not found"));
+			return($this->SetError("3 POP3 server greeting not found."));
 		}
 		$this->Tokenize("<");
 		$this->must_update=0;
@@ -160,17 +160,17 @@ class pop3_class
 	Function Close()
 	{
 		if($this->state=="DISCONNECTED")
-			return($this->SetError("no connection was opened"));
+			return($this->SetError("No session opened."));
 		if($this->must_update
 		|| $this->quit_handshake)
 		{
 			if($this->PutLine("QUIT")==0)
-				return($this->SetError("Could not send the QUIT command"));
+				return($this->SetError("Could not send QUIT command."));
 			$response=$this->GetLine();
 			if(GetType($response)!="string")
-				return($this->SetError("Could not get quit command response"));
+				return($this->SetError("Could not get quit command response."));
 			if($this->Tokenize($response," ")!="+OK")
-				return($this->SetError("Could not quit the connection: ".$this->Tokenize("\r\n")));
+				return($this->SetError("Could not exit session: ".$this->Tokenize("\r\n")));
 		}
 		$this->CloseConnection();
 		$this->state="DISCONNECTED";
@@ -183,24 +183,24 @@ class pop3_class
 	Function Login($user,$password,$apop=0)
 	{
 		if($this->state!="AUTHORIZATION")
-			return($this->SetError("connection is not in AUTHORIZATION state"));
+			return($this->SetError("Session is not in AUTHORIZATION state."));
 		if($apop)
 		{
 			if(!strcmp($this->greeting,""))
-				return($this->SetError("Server does not seem to support APOP authentication"));
+				return($this->SetError("Server does not seem to support APOP authentication."));
 			if($this->PutLine("APOP $user ".md5("<".$this->greeting.">".$password))==0)
-				return($this->SetError("Could not send the APOP command"));
+				return($this->SetError("Could not send APOP command."));
 			$response=$this->GetLine();
 			if(GetType($response)!="string")
-				return($this->SetError("Could not get APOP login command response"));
+				return($this->SetError("Could not get APOP log-in command response."));
 			if($this->Tokenize($response," ")!="+OK")
-				return($this->SetError("APOP login failed: ".$this->Tokenize("\r\n")));
+				return($this->SetError("APOP log-in failed: ".$this->Tokenize("\r\n")));
 		}
 		else
 		{
 			$authenticated=0;
 			if(strcmp($this->authentication_mechanism,"USER")
-			&& function_exists("class_exists")
+			&& function_exists("Class_exists.")
 			&& class_exists("sasl_client_class"))
 			{
 				if(strlen($this->authentication_mechanism))
@@ -209,17 +209,17 @@ class pop3_class
 				{
 					$mechanisms=array();
 					if($this->PutLine("CAPA")==0)
-						return($this->SetError("Could not send the CAPA command"));
+						return($this->SetError("Could not send CAPA command."));
 					$response=$this->GetLine();
 					if(GetType($response)!="string")
-						return($this->SetError("Could not get CAPA command response"));
+						return($this->SetError("Could not get CAPA command response."));
 					if(!strcmp($this->Tokenize($response," "),"+OK"))
 					{
 						for(;;)
 						{
 							$response=$this->GetLine();
 							if(GetType($response)!="string")
-								return($this->SetError("Could not retrieve the supported authentication methods"));
+								return($this->SetError("Could not retrieve supported authentication methods."));
 							switch($this->Tokenize($response," "))
 							{
 								case ".":
@@ -250,18 +250,18 @@ class pop3_class
 						break;
 					case SASL_NOMECH:
 						if(strlen($this->authentication_mechanism))
-							return($this->SetError("authenticated mechanism ".$this->authentication_mechanism." may not be used: ".$sasl->error));
+							return($this->SetError("Authentication mechanism ".$this->authentication_mechanism." cannot be used: ".$sasl->error));
 						break;
 					default:
-						return($this->SetError("Could not start the SASL authentication client: ".$sasl->error));
+						return($this->SetError("Could not start SASL authentication client: ".$sasl->error));
 				}
 				if(strlen($sasl->mechanism))
 				{
 					if($this->PutLine("AUTH ".$sasl->mechanism.(IsSet($message) ? " ".base64_encode($message) : ""))==0)
-						return("Could not send the AUTH command");
+						return("Could not send AUTH command.");
 					$response=$this->GetLine();
 					if(GetType($response)!="string")
-						return("Could not get AUTH command response");
+						return("Could not get AUTH command response.");
 					switch($this->Tokenize($response," "))
 					{
 						case "+OK":
@@ -284,10 +284,10 @@ class pop3_class
 						{
 							case SASL_CONTINUE:
 								if($this->PutLine(base64_encode($message))==0)
-									return("Could not send message authentication step message");
+									return("Could not send message authentication step message.");
 								$response=$this->GetLine();
 								if(GetType($response)!="string")
-									return("Could not get authentication step message response");
+									return("Could not get authentication step message response.");
 								switch($this->Tokenize($response," "))
 								{
 									case "+OK":
@@ -301,7 +301,7 @@ class pop3_class
 								}
 								break;
 							default:
-								return($this->SetError("Could not process the SASL authentication step: ".$sasl->error));
+								return($this->SetError("Could not process SASL authentication step: ".$sasl->error));
 						}
 					}
 				}
@@ -309,17 +309,17 @@ class pop3_class
 			if(!$authenticated)
 			{
 				if($this->PutLine("USER $user")==0)
-					return($this->SetError("Could not send the USER command"));
+					return($this->SetError("Could not send USER command."));
 				$response=$this->GetLine();
 				if(GetType($response)!="string")
-					return($this->SetError("Could not get user login entry response"));
+					return($this->SetError("Could not get user log-in entry response."));
 				if($this->Tokenize($response," ")!="+OK")
 					return($this->SetError("User error: ".$this->Tokenize("\r\n")));
 				if($this->PutLine("PASS $password")==0)
-					return($this->SetError("Could not send the PASS command"));
+					return($this->SetError("Could not send PASS command."));
 				$response=$this->GetLine();
 				if(GetType($response)!="string")
-					return($this->SetError("Could not get login password entry response"));
+					return($this->SetError("Could not get log-in password entry response."));
 				if($this->Tokenize($response," ")!="+OK")
 					return($this->SetError("Password error: ".$this->Tokenize("\r\n")));
 			}
@@ -334,14 +334,14 @@ class pop3_class
 	Function Statistics(&$messages,&$size)
 	{
 		if($this->state!="TRANSACTION")
-			return($this->SetError("connection is not in TRANSACTION state"));
+			return($this->SetError("Session is not in TRANSACTION state."));
 		if($this->PutLine("STAT")==0)
-			return($this->SetError("Could not send the STAT command"));
+			return($this->SetError("Could not send STAT command."));
 		$response=$this->GetLine();
 		if(GetType($response)!="string")
-			return($this->SetError("Could not get the statistics command response"));
+			return($this->SetError("Could not get statistics command response."));
 		if($this->Tokenize($response," ")!="+OK")
-			return($this->SetError("Could not get the statistics: ".$this->Tokenize("\r\n")));
+			return($this->SetError("Could not get statistics: ".$this->Tokenize("\r\n")));
 		$messages=$this->Tokenize(" ");
 		$size=$this->Tokenize(" ");
 		return("");
@@ -357,25 +357,25 @@ class pop3_class
 	Function ListMessages($message,$unique_id)
 	{
 		if($this->state!="TRANSACTION")
-			return($this->SetError("connection is not in TRANSACTION state"));
+			return($this->SetError("Session is not in TRANSACTION state."));
 		if($unique_id)
 			$list_command="UIDL";
 		else
 			$list_command="LIST";
 		if($this->PutLine("$list_command".($message ? " ".$message : ""))==0)
-			return($this->SetError("Could not send the $list_command command"));
+			return($this->SetError("Could not send $list_command command."));
 		$response=$this->GetLine();
 		if(GetType($response)!="string")
-			return($this->SetError("Could not get message list command response"));
+			return($this->SetError("Could not get message list command response."));
 		if($this->Tokenize($response," ")!="+OK")
-			return($this->SetError("Could not get the message listing: ".$this->Tokenize("\r\n")));
+			return($this->SetError("Could not get message listing: ".$this->Tokenize("\r\n")));
 		if($message=="")
 		{
 			for($messages=array();;)
 			{
 				$response=$this->GetLine();
 				if(GetType($response)!="string")
-					return($this->SetError("Could not get message list response"));
+					return($this->SetError("Could not get message list response."));
 				if($response==".")
 					break;
 				$message=intval($this->Tokenize($response," "));
@@ -403,7 +403,7 @@ class pop3_class
 	Function RetrieveMessage($message,&$headers,&$body,$lines)
 	{
 		if($this->state!="TRANSACTION")
-			return($this->SetError("connection is not in TRANSACTION state"));
+			return($this->SetError("Session is not in TRANSACTION state."));
 		if($lines<0)
 		{
 			$command="RETR";
@@ -415,17 +415,17 @@ class pop3_class
 			$arguments="$message $lines";
 		}
 		if($this->PutLine("$command $arguments")==0)
-			return($this->SetError("Could not send the $command command"));
+			return($this->SetError("Could not send $command command."));
 		$response=$this->GetLine();
 		if(GetType($response)!="string")
-			return($this->SetError("Could not get message retrieval command response"));
+			return($this->SetError("Could not get message retrieval command response."));
 		if($this->Tokenize($response," ")!="+OK")
-			return($this->SetError("Could not retrieve the message: ".$this->Tokenize("\r\n")));
+			return($this->SetError("Could not retrieve message: ".$this->Tokenize("\r\n")));
 		for($headers=$body=array(),$line=0;;)
 		{
 			$response=$this->GetLine();
 			if(GetType($response)!="string")
-				return($this->SetError("Could not retrieve the message"));
+				return($this->SetError("Could not retrieve message."));
 			switch($response)
 			{
 				case ".":
@@ -452,7 +452,7 @@ class pop3_class
 		{
 			$response=$this->GetLine();
 			if(GetType($response)!="string")
-				return($this->SetError("Could not retrieve the message"));
+				return($this->SetError("Could not retrieve message."));
 			switch($response)
 			{
 				case ".":
@@ -474,14 +474,14 @@ class pop3_class
 	Function DeleteMessage($message)
 	{
 		if($this->state!="TRANSACTION")
-			return($this->SetError("connection is not in TRANSACTION state"));
+			return($this->SetError("Session is not in TRANSACTION state."));
 		if($this->PutLine("DELE $message")==0)
-			return($this->SetError("Could not send the DELE command"));
+			return($this->SetError("Could not send DELE command."));
 		$response=$this->GetLine();
 		if(GetType($response)!="string")
-			return($this->SetError("Could not get message delete command response"));
+			return($this->SetError("Could not get message delete command response."));
 		if($this->Tokenize($response," ")!="+OK")
-			return($this->SetError("Could not delete the message: ".$this->Tokenize("\r\n")));
+			return($this->SetError("Could not delete message: ".$this->Tokenize("\r\n")));
 		$this->must_update=1;
 		return("");
 	}
@@ -493,12 +493,12 @@ class pop3_class
 	Function ResetDeletedMessages()
 	{
 		if($this->state!="TRANSACTION")
-			return($this->SetError("connection is not in TRANSACTION state"));
+			return($this->SetError("Session is not in TRANSACTION state."));
 		if($this->PutLine("RSET")==0)
-			return($this->SetError("Could not send the RSET command"));
+			return($this->SetError("Could not send RSET command."));
 		$response=$this->GetLine();
 		if(GetType($response)!="string")
-			return($this->SetError("Could not get reset deleted messages command response"));
+			return($this->SetError("Could not get reset deleted messages command response."));
 		if($this->Tokenize($response," ")!="+OK")
 			return($this->SetError("Could not reset deleted messages: ".$this->Tokenize("\r\n")));
 		$this->must_update=0;
@@ -513,14 +513,14 @@ class pop3_class
 	Function IssueNOOP()
 	{
 		if($this->state!="TRANSACTION")
-			return($this->SetError("connection is not in TRANSACTION state"));
+			return($this->SetError("Session is not in TRANSACTION state."));
 		if($this->PutLine("NOOP")==0)
-			return($this->SetError("Could not send the NOOP command"));
+			return($this->SetError("Could not send NOOP command."));
 		$response=$this->GetLine();
 		if(GetType($response)!="string")
-			return($this->SetError("Could not NOOP command response"));
+			return($this->SetError("Could not get NOOP command response."));
 		if($this->Tokenize($response," ")!="+OK")
-			return($this->SetError("Could not issue the NOOP command: ".$this->Tokenize("\r\n")));
+			return($this->SetError("Could not issue NOOP command: ".$this->Tokenize("\r\n")));
 		return("");
 	}
 };

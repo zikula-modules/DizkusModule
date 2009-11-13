@@ -31,7 +31,7 @@ function smarty_function_forumpager($params, &$smarty)
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $forum_id          = $params['forum_id'];
     if(empty($forum_id)) {
-		$smarty->trigger_error('forumpager: missing parameter forum_id');
+		$smarty->trigger_error("Error! Missing 'forum_id' parameter for forum pager.");
 	}
 	
     $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';
@@ -78,7 +78,7 @@ function smarty_function_forumpager($params, &$smarty)
             }                                                                                                                                                                      
                                                                                                                                                                            
             for($i = $total_pages - 2; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
-                $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>'  : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array('forum' => $forum_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';    
+                $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>'  : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array('forum' => $forum_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';
                 if( $i <  $total_pages ) {                                                                                                                                                                      
                     $page_string .= $separator;                                                                                                                                                  
                 }                                                                                                                                                                      
@@ -86,7 +86,7 @@ function smarty_function_forumpager($params, &$smarty)
         }                                                                                                                                                                      
     } else {                                                                                                                                                                      
         for($i = 1; $i < $total_pages + 1; $i++) {                                                                                                                                                                      
-            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array('forum' => $forum_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';     
+            $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', $func, array('forum' => $forum_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';
             if ( $i <  $total_pages ) {                                                                                                                                                                      
                 $page_string .= $separator;                                                                                                                                                  
             }                                                                                                                                                                      
@@ -130,7 +130,7 @@ function smarty_function_forumpager($params, &$smarty)
                                                                                                                                                                            
     }                                                                                                                                                                      
                                                                                                                                                                            
-    $page_string = '<p>' . __f('go to page %s: ',$page_string , $dom) . '</p>';                                                                                                                
+    $page_string = '<p>' . __f('Go to page %s: ',$page_string , $dom) . '</p>';
                                                                                                                                                                            
     return $page_string;                                                                                                                                                   
 

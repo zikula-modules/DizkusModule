@@ -18,12 +18,12 @@ function smarty_function_folderimage($params, &$smarty)
 	  unset($params);
 
     if(!pnModAPILoad('Dizkus', 'user')) {
-        $smarty->trigger_error("loading Dizkus userapi failed");
+        $smarty->trigger_error("Error! Could not load Dizkus user API.");
         return;
     } 
 
     if(empty($forum)) {
-        $smarty->trigger_error("folderimage: missing parameter 'forom'");
+        $smarty->trigger_error("Error! Missing 'forum' parameter for folder image.");
         return false;
     }
     $last_visit = SessionUtil::getVar('Dizkus_lastvisit');
@@ -51,7 +51,7 @@ function smarty_function_folderimage($params, &$smarty)
 							$username = $row['pn_uname'];
 						}
 
-					$last_post = __f('%1$s<br />by %2$s', array($posted_ml, $username), $dom);
+					$last_post = __f('%1$s<br />By %2$s', array($posted_ml, $username), $dom);
 					$last_post = $last_post." <a href=\"$baseurl&amp;action=viewtopic&amp;topic=".$row['topic_id']."\">"
 								."<img src=\"modules/$ModName/images/icon_latest_topic.gif\" alt=\"".$posted_ml." ".$username."\" height=\"9\" width=\"18\" /></a>";
 				} else {

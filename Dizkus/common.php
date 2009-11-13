@@ -115,7 +115,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
         return $default_msg;
     }else {
         // ouch, no custom message and no default.
-        return showforumerror('Error message not found', __FILE__, __LINE__);
+        return showforumerror('Error! Oh! Wow! An error occurred but there is no corresponding error message for it. You definitely hit the jackpot.', __FILE__, __LINE__);
     }
 }
 
@@ -178,9 +178,9 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
         $message .= "Database error message:\n" . $sql_error . "\n\n";
         $message .= "Link: " . pnGetCurrentURL() . "\n\n";
         $message .= "HTTP_USER_AGENT: " . pnServerGetVar('HTTP_USER_AGENT') . "\n";
-        $message .= "Username: " . pnUserGetVar('uname') . " (" . pnUserGetVar('uid') . ")\n";
-        $message .= "Email: " . pnUserGetVar('email') . "\n";
-        $message .= "error occured in " . $file . " at line " . $line . "\n";
+        $message .= "User name: " . pnUserGetVar('uname') . " (" . pnUserGetVar('uid') . ")\n";
+        $message .= "E-mail: " . pnUserGetVar('email') . "\n";
+        $message .= "Error occured in " . $file . " at line " . $line . "\n";
 
         $email_from = pnModGetVar('Dizkus', 'email_from');
         if ($email_from == '') {
@@ -188,7 +188,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
             $email_from = pnConfigGetVar('adminmail');
         }
         $email_to = pnConfigGetVar('adminmail');
-        $subject = 'sql error in your Dizkus';
+        $subject = 'SQL error occurred in Dizkus forums installation';
         $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
 
         $args = array( 'fromname'    => pnConfigGetVar('sitename'),
@@ -327,7 +327,7 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
         if($extendederror == true) {
-            return showforumsqlerror(__('Error, unable to connect to the database!', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+            return showforumsqlerror(__('Error! Could not connect to the database.', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
         } else {
             return false;
         }
@@ -366,7 +366,7 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     $result = $dbconn->AutoExecute($table, $record, $mode, $where);
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(__('Error, unable to connect to the database!', $dom), $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
+        return showforumsqlerror(__('Error! Could not connect to the database.', $dom), $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
@@ -404,7 +404,7 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     }
     $dbconn->debug = false;
     if($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(__('Error, unable to connect to the database!', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
+        return showforumsqlerror(__('Error! Could not connect to the database.', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
 }
@@ -789,7 +789,7 @@ if (!function_exists('array_csort')) {
  *
  * display an error during Ajax execution
  */
-function dzk_ajaxerror($error='unspecified ajax error', $createauthid = false)
+function dzk_ajaxerror($error='Error! An unspecified ajax error occurred.', $createauthid = false)
 {
     if (!empty($error)) {
         if ($createauthid == true) {

@@ -16,10 +16,10 @@ $dom = ZLanguage::getModuleDomain('Dizkus');
 
 $modversion['name']        = 'Dizkus';
 $modversion['oldnames']    = array('pnForum');
-$modversion['displayname'] = 'Dizkus';
+$modversion['displayname'] = 'Dizkus forums';
 $modversion['id']          = '62';
 $modversion['version']     = '3.1';
-$modversion['description'] = __('An integrated forum solution for Zikula', $dom);
+$modversion['description'] = __('Provides an integrated forum system for Zikula, that is simple to administer and use but that has an excellet feature set.', $dom);
 $modversion['credits']     = 'pndocs/credits.txt';
 $modversion['help']        = 'pndocs/install.txt';
 $modversion['changelog']   = 'pndocs/changelog.txt';

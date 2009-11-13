@@ -54,7 +54,7 @@ class Dizkus_user_ignorelistmanagementHandler
             // store attributes 
             DBUtil::updateObject($user, 'users', '', 'uid');
 
-            LogUtil::registerStatus(__('Ignorelist configuration updated', $dom));
+            LogUtil::registerStatus(__('Done! Updated \'ignore list\' settings.', $dom));
             
             return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
         }

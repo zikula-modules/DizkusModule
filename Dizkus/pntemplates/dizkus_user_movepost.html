@@ -6,15 +6,14 @@
 <h2><!--[$templatetitle]--></h2>
 <form class="z-form"  action="<!--[pnmodurl modname=Dizkus type=user func=movepost]-->" method="post">
     <fieldset id="dzk_movepost">
-        <legend><!--[$templatetitle]--></legend>
+        <legend><!--[gt text="Move post from one topic to another"]--></legend>
         <input type="hidden" name="post" value="<!--[$post.post_id]-->" />
         <input type="hidden" name="from_topic" value="<!--[$post.topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <div class="z-formrow">
-            <p class="z-formnote"><!--[gt text="Move a post from one topic to another"]--></p>
-            <label for="to_topic"><!--[gt text="Target topic"]--></label>
+            <label for="to_topic"><!--[gt text="ID of target topic"]--></label>
             <span>
-                <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" /> (topic_id)
+                <input type="text" id="to_topic" name="to_topic" value="" size="10" maxlength="20" />
             </span>
         </div>
     </fieldset>

@@ -2,15 +2,15 @@
 
 <form class="z-form" id="editcategoryform_<!--[$category.cat_id]-->" name="editcategoryform_<!--[$category.cat_id]-->" action="<!--[pnmodurl modname='Dizkus' type='admin' func='category']-->" method="post">
     <fieldset>
-        <legend><!--[gt text="Edit a Category Title"]--></legend>
+        <legend><!--[gt text="Edit category name"]--></legend>
         <input type="hidden" name="cat_id" value="<!--[$category.cat_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <div class="z-formrow">
-            <label for="cat_title"><!--[gt text="Category"]--></label>&nbsp;
+            <label for="cat_title"><!--[gt text="Forum category name"]--></label>&nbsp;
             <input type="text" id="cat_title" name="cat_title" value="<!--[$category.cat_title]-->" size="50" maxlength="100" />
         </div>
         <div class="z-formrow" id="deletecategory_<!--[$category.cat_id]-->"<!--[if $category.forum_count neq 0]--> style="visibility:hidden"<!--[/if]-->>
-            <label for="delete"><!--[gt text="Delete"]--></label>
+            <label for="delete"><!--[gt text="Delete category"]--></label>
             <input type="checkbox" name="delete" id="delete" value="delete" />
         </div>
         <!--[if $newcategory eq true]-->
@@ -18,7 +18,6 @@
         <!--[/if]-->
     </fieldset>
     <div class="z-formbuttons">
-        <button class="dzk_img ok" onclick="javascript:storecategory(<!--[$category.cat_id]-->); return false;" name="submit" type="submit"><!--[gt text="Save"]--></button>
+        <button class="dzk_img ok" onclick="javascript:storecategory(<!--[$category.cat_id]-->); return false;" name="submit" type="submit"><!--[gt text="Save category"]--></button>
     </div>
 </form>
-

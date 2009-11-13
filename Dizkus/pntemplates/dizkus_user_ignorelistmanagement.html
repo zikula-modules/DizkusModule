@@ -1,25 +1,25 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Ignorelist configuration" assign=templatetitle]-->
+<!--[gt text="'Ignore list' settings" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
 <h2><!--[$templatetitle]--></h2>
 
-<div class="z-informationmsg"><!--[gt text="Users that are ignored by a topic poster can not reply to this topic in level \"strict\". In medium, they can reply, but postings will generally not be shown to users who ignore the poster. Also email notifications will not be sent. With just a click in the posting, not shown postings will be shown."]--></div>
+<div class="z-informationmsg"><!--[gt text="Notice: Your 'ignore list' is a list of the users whose interactions you want to ignore in the site's forums. Below, in the 'Level of ostracism' list box, you can choose the degree of ostracism to apply. When 'Strict' level is active, users who you are ignoring will not be able to post messages under a topic that you started. When 'Medium' level is active, they can post messages but you will not be shown their postings. In addition, e-mail notifications will not be sent. If you want to read a posting that has been concealed due to the settings you have chosen, simply click on the posting. The available levels of ostracism depend on settings configured by the site administrator."]--></div>
 
 <!--[pnform cssClass="z-form"]-->
 <!--[pnformvalidationsummary]-->
 <fieldset>
-    <legend><!--[$templatetitle]--></legend>
+    <legend><!--[gt text="General settings"]--></legend>
     <div class="z-formrow">
-        <!--[pnformlabel for="ignorelist_myhandling" text="My individual handling of ignored users" html=1]-->
+        <!--[pnformlabel for="ignorelist_myhandling" text="Level of ostracism" html=1]-->
         <span>
             <!--[pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling]-->
         </span>
     </div>
 </fieldset>
 <div class="z-formbuttons">
-    <!--[pnformbutton commandName="update" text="Update" class="dzk_img ok"]-->
+    <!--[pnformbutton commandName="update" text="Save" class="dzk_img ok"]-->
 </div>
 <!--[/pnform]-->
 

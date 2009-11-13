@@ -66,10 +66,10 @@ function Dizkus_needleapi_pnforum($args)
                                 $title = DataUtil::formatForDisplay($title);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('no permission for forum id %s', $id, $dom) . '</em>';
+                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('Sorry! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('unknown forum id %s', $id, $dom) . '</em>';
+                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('Error! Forum ID %s is unknown.', $id, $dom) . '</em>';
                         }
                         break;
                     case 'T':
@@ -93,22 +93,22 @@ function Dizkus_needleapi_pnforum($args)
                                 $title = DataUtil::formatForDisplay($title);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('no permission for topic id %s', $id , $dom) . '</em>';
+                                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('Sorry! You do not have the necessary authorisation for topic ID %s.', $id , $dom) . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('unknown topic id %s', $id, $dom) .'</em>';
+                            $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__f('Error! Topic ID %s is unknown.', $id, $dom) .'</em>';
                         }
                         break;
                     default:
-                        $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__('unknown parameter at pos.1 (F or T)', $dom)) . '</em>';
+                        $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__('Error! Unknown parameter at pos.1 (F or T)', $dom)) . '</em>';
                 }
             } else {
-                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__('Dizkus is not available', $dom)) . '</em>';
+                $cache[$nid] = '<em>' . DataUtil::formatForDisplay(__('Error! Dizkus is not available.', $dom)) . '</em>';
             }    
         }
         $result = $cache[$nid];
     } else {
-        $result = '<em>' . DataUtil::formatForDisplay(__('no needle id', $dom)) . '</em>';
+        $result = '<em>' . DataUtil::formatForDisplay(__('Error! No needle ID.', $dom)) . '</em>';
     }
     return $result;
     
