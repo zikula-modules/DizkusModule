@@ -61,7 +61,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('Dizkus'));
     $baseDir = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
-    $lang = pnUserGetLang();
+    $lang = ZLanguage::getLanguageCode();
     $error_path = 'errors/' . $error_type;
     $prefix = 'dizkus_error_';
     $error_type = strtolower($error_type);
@@ -74,7 +74,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
-    $pnr = pnRender::getInstance('Dizkus', false);
+    $pnr = & pnRender::getInstance('Dizkus', false);
 
     // start with a fresh array
     $test_array = array();
@@ -127,16 +127,12 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
  */
 function showforumerror($error_text, $file='', $line=0, $httperror=null)
 {
-    // we need to load the languages
-    // available
-    pnModLangLoad('Dizkus');
-
     PageUtil::setVar('title', $error_text);
     if(SessionUtil::getVar('pn_ajax_call') == 'ajax') {
         dzk_ajaxerror($error_text);
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $pnr->assign( 'error_text', $error_text );
     
@@ -673,7 +669,7 @@ function dzk_getimagepath($image=null)
     $modname = pnModGetName();
 
     // language
-    $lang =  DataUtil::formatForOS(pnUserGetLang());
+    $lang =  DataUtil::formatForOS(ZLanguage::getLanguageCode());
 
     // theme directory
     $theme         = DataUtil::formatForOS(pnUserGetTheme());
@@ -824,7 +820,7 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
     if($createauthid == true) {
         $data['authid'] = SecurityUtil::generateAuthKey('Dizkus');
     }
-    $output = $json->encode(DataUtil::convertToUTF8($data));
+    $output = $json->encode($data);
 
     SessionUtil::delVar('pn_ajax_call');
     if ($ok == true) {
@@ -1018,7 +1014,7 @@ function dzk_available($deliverhtml = true)
 {
     if ((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if ($deliverhtml == true) {
-            $pnr = pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
+            $pnr = & pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
             return $pnr->fetch('dizkus_disabled.html');
         } else {
             return false;

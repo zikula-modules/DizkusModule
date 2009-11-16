@@ -1,18 +1,17 @@
 <!--[*  $Id$  *]-->
-
 <!--[pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css"]-->
 
 <!--[* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *]-->
 <!--[readlastposts maxposts=$maxposts forum_id=$forum_id]-->
 <!--[if $lastpostcount > 0]-->
 <p class="dzk_centerblockheader">
-    <strong><!--[$lastpostcount]-->&nbsp;<!--[gt text="Recent posts:"]--></strong>
+    <strong><!--[$lastpostcount]-->&nbsp;<!--[gt text="Recent posts:" domain="module_dizkus"]--></strong>
 </p>
 
-<table class="pn-datatable">
+<table class="z-datatable">
     <tbody>
         <!--[foreach item=lastpost from=$lastposts]-->
-        <tr>
+        <tr class="<!--[cycle values='z-odd,z-even']-->">
             <td><a href="<!--[pnmodurl modname=Dizkus type=user func=viewforum forum=$lastpost.forum_id]-->"><!--[$lastpost.forum_name]--></a></td>
             <td><a href="<!--[$lastpost.last_post_url_anchor]-->"><!--[$lastpost.topic_title]--></a></td>
             <td><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true]--></td>
@@ -23,8 +22,8 @@
 </table>
 
 <!--[else]-->
-<p style="text-align: center;"><!--[gt text="No posts"]--></p>
+<p class="z-center"><!--[gt text="No posts" domain="module_dizkus"]--></p>
 <!--[/if]-->
-<p style="text-align: center;">
-    <a style="font-size: 0.8em;" href="<!--[pnmodurl modname=Dizkus func=main]-->" title="<!--[gt text="Go to forum"]-->"><!--[gt text="Go to forum"]--></a>
+<p class="z-center">
+    <a style="font-size: 0.8em;" href="<!--[pnmodurl modname=Dizkus func=main]-->" title="<!--[gt text="Go to forum" domain="module_dizkus"]-->"><!--[gt text="Go to forum" domain="module_dizkus"]--></a>
 </p>

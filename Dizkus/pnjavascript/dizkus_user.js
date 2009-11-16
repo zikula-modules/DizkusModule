@@ -556,7 +556,8 @@ function quickEditInit(originalRequest)
     }
 
     $$('.dzk_texpand').each(function(el){
-      new Texpand(el, {autoShrink: false, shrinkOnBlur: false});
+      //new Texpand(el, {autoShrink: false, shrinkOnBlur: false});
+      new Texpand(el, {autoShrink: true, shrinkOnBlur:false, expandOnFocus: false, expandOnLoad: true });
     });
 
     Event.observe(postingtextID + '_edit',   'keyup', function(){quickEditchanged(result.post_id)}, false);

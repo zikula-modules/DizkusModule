@@ -12,9 +12,9 @@
         <!--[pnformlabel for="forum_enabled" text='Forums are accessible to visitors' html=1]-->
         <!--[pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked]-->
     </div>
-    <div class="z-formnote z-informationmsg">
+    <p class="z-formnote z-informationmsg">
         <!--[gt text="If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."]-->
-    </div>
+    </p>
     <div class="z-formrow">
         <!--[pnformlabel for="forum_disabled_info" text="Message displayed if forums are disabled" html=1]-->
         <!--[pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info]-->
@@ -58,32 +58,26 @@
     <div class="z-warningmsg">
         <!--[gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be. Database name: '%s'; type: '%s'; version: '%s'." tag1=$dbname tag2=$dbtype tag3=$dbversion]-->
     </div>
-
     <div class="z-formrow">
         <!--[pnformlabel for="fulltextindex" text="Enable full-text index field searching" html=1]-->
         <!--[pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked]-->
+        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."]--></p>
     </div>
-
-    <div class="z-formnote z-informationmsg"><!--[gt text="Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."]--></div>
-
     <div class="z-formrow">
         <!--[pnformlabel for="extendedsearch" text="Enable extended full-text search in internal search" html=1]-->
         <!--[pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked]-->
+        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."]--></p>
     </div>
-
-    <div class="z-formnote z-informationmsg"><!--[gt text="Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."]--></div>
-
     <div class="z-formrow">
         <!--[pnformlabel for="showtextinsearchresults" text='Show text in search results' html=1]-->
         <!--[pnformcheckbox id="showtextinsearchresults" checked=$showtextinsearchresults_checked]-->
+        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table."]--></p>
     </div>
-
-    <div class="z-formnote z-informationmsg"><!--[gt text="Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table."]--></div>
-
     <div class="z-formrow">
         <!--[pnformlabel for="minsearchlength" text="Minimum number of characters in search query string (1 minimum)" html=1]-->
         <!--[pnformintinput id="minsearchlength" text=$pncore.Dizkus.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50]-->
     </div>
+
     <div class="z-formrow">
         <!--[pnformlabel for="maxsearchlength" text="Maximum number of characters in search query string (50 maximum)" html=1]-->
         <!--[pnformintinput id="maxsearchlength" text=$pncore.Dizkus.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50]-->
@@ -120,10 +114,9 @@
         <!--[if $contactlist_available eq true]-->
         <!--[pnformlabel for="ignorelist_handling" text='Highest-allowed \'ignore list\' ostracism level' html=1]-->
         <!--[pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling]-->
-        <div class="z-formnote z-informationmsg"><!--[gt text="Notice: When 'Strict' level is available and has been chosen by an ignoring user, an ignored (ostracised) user cannot post messages under topics started by the ignoring user. When 'Medium' level is available and chosen by an ignoring user, an ignored user can reply but the postings will generally not be shown to the an ignoring user. Also, e-mail notifications of new postings by an ignored user will not be sent to the ignoring user. Postings concealed from an ignoring user will be shown when the ignoring user clicks on the posting."]--></div>
+        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: When 'Strict' level is available and has been chosen by an ignoring user, an ignored (ostracised) user cannot post messages under topics started by the ignoring user. When 'Medium' level is available and chosen by an ignoring user, an ignored user can reply but the postings will generally not be shown to the an ignoring user. Also, e-mail notifications of new postings by an ignored user will not be sent to the ignoring user. Postings concealed from an ignoring user will be shown when the ignoring user clicks on the posting."]--></p>
         <!--[else]-->
-        <div class="z-formnote z-informationmsg"><!--[gt text="Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."]-->
-        </div>
+        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."]--></p>
         <!--[/if]-->
     </div>
     <div class="z-formrow">
@@ -141,8 +134,8 @@
     <div class="z-formrow">
         <!--[pnformlabel for="striptags" text="Strip HTML tags from new posts"]-->
         <!--[pnformcheckbox id="striptags" checked=$striptags_checked]-->
+        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags."]--></p>
     </div>
-    <div class="z-formnote z-informationmsg"><!--[gt text="Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags."]--></div>
 
     <div class="z-formrow">
         <!--[pnformlabel for="timespanforchanges" text="Number of hours during which edits to posts are allowed (72 maximum)" html=1]-->

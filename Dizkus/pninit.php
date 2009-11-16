@@ -338,7 +338,7 @@ function Dizkus_init_interactiveupgrade($args)
             return pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('oldversion', $oldversion);
     $pnr->assign('authid', $authid);
     return $pnr->fetch($templatefile);
@@ -545,7 +545,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', 
     Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
     // get the language file
-    $lang = pnUserGetLang();
+    $lang = ZLanguage::getLanguageCode();
 
     // get the category path for which we're going to insert our place holder category
     $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules');

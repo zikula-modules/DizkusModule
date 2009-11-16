@@ -3,7 +3,7 @@
 <!--[pnpageaddvar name='javascript' value='javascript/ajax/pnajax.js']-->
 <!--[pnpageaddvar name='javascript' value='javascript/ajax/effects.js']-->
 <!--[pnpageaddvar name='javascript' value='javascript/ajax/behaviour.js']-->
-<!--[pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/texpand.js']-->
+<!--[pnpageaddvar name='javascript' value='javascript/helpers/texpand.js']-->
 <!--[pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/dizkus_tools.js']-->
 <!--[pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/dizkus_user.js']-->
 
@@ -20,13 +20,13 @@
 <!--[* set the page title *]-->
 <!--[assign var='maintitle' value=$maintitle|default:'']-->
 <!--[if $func eq 'main']-->
-<!--[pnml assign='maintitle' name='Category list']-->
+<!--[gt text='Category list' assign='maintitle']-->
 <!--[elseif $func eq 'viewforum']-->
 <!--[assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name]-->
 <!--[elseif $func eq 'viewtopic']-->
 <!--[assign var='maintitle' value=$topic.topic_title]-->
 <!--[elseif $func eq 'newtopic']-->
-<!--[pnml assign='maintitle' name='New Topic in forum']-->
+<!--[gt text='New Topic in forum' assign='maintitle']-->
 <!--[/if]-->
 <!--[if $maintitle neq '']-->
 <!--[pnpagesetvar name='title' value=$maintitle]-->

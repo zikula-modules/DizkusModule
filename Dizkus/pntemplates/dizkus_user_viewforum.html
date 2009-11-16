@@ -9,7 +9,7 @@
 <!--[if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in]-->
 <div class="roundedbar dzk_rounded">
     <div class="inner">
-        <ul id="dzk_javascriptareaforum" class="hidden linklist pn-clearfix">
+        <ul id="dzk_javascriptareaforum" class="hidden linklist z-clearfix">
             <!--[* Moderate *]-->
             <!--[if $forum.access_comment]-->
             <li><a class="dzk_img newtopiclink" title="<!--[gt text="Start a new topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id]-->"><!--[gt text="New topic"]--></a></li>
@@ -54,7 +54,7 @@
         </ul>
 
         <noscript>
-            <ul id="dzk_nonjavascriptareaforum" class="linklist pn-clearfix">
+            <ul id="dzk_nonjavascriptareaforum" class="linklist z-clearfix">
                 <!--[* Moderate *]-->
                 <!--[if $forum.access_comment]-->
                 <li><a class="dzk_img newtopiclink" title="<!--[gt text="Start a new topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id]-->"><!--[gt text="New topic"]--></a></li>
@@ -173,7 +173,7 @@
 </div>
 
 <!--[if $forum.forum_mods|@count > 0]-->
-<ul id="dzk_moderatorlist" class="linklist pn-clearfix">
+<ul id="dzk_moderatorlist" class="linklist z-clearfix">
     <li><em><!--[gt text="Moderated by"]-->&nbsp;:&nbsp;</em></li>
     <!--[foreach name=moderators item=mod key=modid from=$forum.forum_mods]-->
     <li>

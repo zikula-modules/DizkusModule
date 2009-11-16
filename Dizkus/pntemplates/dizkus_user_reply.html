@@ -15,7 +15,7 @@
 <div id="dzk_quickreply" class="forum_post post_bg2 dzk_rounded">
     <div class="inner">
 
-        <div class="dzk_subcols pn-clearfix">
+        <div class="dzk_subcols z-clearfix">
 
             <form id="post" class="dzk_form" action="<!--[pnmodurl modname='Dizkus' type=user func=reply]-->" method="post" enctype="multipart/form-data">
                 <fieldset>
@@ -27,14 +27,14 @@
 
                         <div>
                             <br /><label for="message"><!--[gt text="Message body"]--></label>:
-                            <textarea id="message" name="message" class="dzk_texpand"><!--[$reply.message]--></textarea>
+                            <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60"><!--[$reply.message]--></textarea>
                             <!--[if isset($hooks.MediaAttach)]--><!--[$hooks.MediaAttach]--><!--[/if]-->
                             <!--[if $pncore.Dizkus.striptags == 'yes']-->
                             <p><!--[gt text="No HTML tags allowed (except inside '[code][/code]' BBCode tags)"]--></p>
                             <!--[/if]-->
                         </div>
 
-                        <div class="dzk_subcols pn-clearfix">
+                        <div class="dzk_subcols z-clearfix">
                             <div id="replyoptions" class="dzk_col_left">
                                 <ul>
                                     <li><strong><!--[gt text="Options"]--></strong></li>

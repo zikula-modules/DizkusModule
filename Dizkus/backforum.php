@@ -60,7 +60,7 @@ if(isset($cat_id) && !is_numeric($cat_id)) {
 /**
  * create pnRender object
  */
-$pnr = pnRender::getInstance('Dizkus', false);
+$pnr = & pnRender::getInstance('Dizkus', false);
 
 /**
  * check if template for feed exists

@@ -33,8 +33,8 @@ function Dizkus_ajax_reply()
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    $message = dzkstriptags(DataUtil::convertFromUTF8($message));
-    $title   = dzkstriptags(DataUtil::convertFromUTF8($title));
+    $message = dzkstriptags($message);
+    $title   = dzkstriptags($title);
 
 	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
 	$topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
@@ -88,7 +88,7 @@ function Dizkus_ajax_reply()
         $post['post_text'] = $post['post_textdisplay'];
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('topic', $topic);
     $pnr->assign('post', $post);
     $pnr->assign('preview', $preview);
@@ -182,7 +182,7 @@ function Dizkus_ajax_editpost()
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if ($post['poster_data']['edit'] == true) {
-            $pnr = pnRender::getInstance('Dizkus', false, null, true);
+            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('post', $post);
             // simplify our live
             $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
@@ -223,7 +223,7 @@ function Dizkus_ajax_updatepost()
             dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
  
-        $message = dzkstriptags(DataUtil::convertFromUTF8($message));
+        $message = dzkstriptags($message);
         // check for maximum message size
         if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
             dzk_ajaxerror(__('Error! Illegal message size. The maximum allowed size of a post is 65,535 characters.', $dom));
@@ -231,7 +231,7 @@ function Dizkus_ajax_updatepost()
 
         pnModAPIFunc('Dizkus', 'user', 'updatepost',
                      array('post_id'          => $post_id,
-                           'subject'          => DataUtil::convertFromUTF8($subject),
+                           'subject'          => $subject,
                            'message'          => $message,
                            'delete'           => $delete,
                            'attach_signature' => ($attach_signature==1)));
@@ -521,7 +521,7 @@ function Dizkus_ajax_edittopicsubject()
                                    'complete' => false));
 
         if ($topic['access_topicsubjectedit'] == true) {
-            $pnr = pnRender::getInstance('Dizkus', false, null, true);
+            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('topic', $topic);
 
             SessionUtil::delVar('pn_ajax_call');
@@ -562,7 +562,7 @@ function Dizkus_ajax_updatetopicsubject()
             dzk_ajaxerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom));
         }
 
-        $subject = trim(DataUtil::convertFromUTF8($subject));
+        $subject = trim($subject);
         if (empty($subject)) {
             dzk_ajaxerror(__('Error! No subject.', $dom));
         }
@@ -647,7 +647,7 @@ function Dizkus_ajax_newtopic()
     //$attach_signature = ($attach_signature=='1') ? true : false;
     //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
-    $message = dzkstriptags(DataUtil::convertFromUTF8($message));
+    $message = dzkstriptags($message);
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
         dzk_ajaxerror(__('Sorry! The message is too long. The maximum length is 65,535 characters.', $dom), true);
@@ -656,12 +656,11 @@ function Dizkus_ajax_newtopic()
         dzk_ajaxerror(__('Error! You cannot post an empty message. Please go back and try again.', $dom), true);
     }
 
-    $subject = DataUtil::convertFromUTF8($subject);
     if (strlen($subject) == 0) {
         dzk_ajaxerror(__('no subject', $dom), true);
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -776,7 +775,7 @@ function Dizkus_ajax_forumusers()
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false);
+    $pnr = & pnRender::getInstance('Dizkus', false);
 
     if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
@@ -802,7 +801,7 @@ function Dizkus_ajax_newposts()
         pnShutDown();
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false);
+    $pnr = & pnRender::getInstance('Dizkus', false);
 
     if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
@@ -810,6 +809,6 @@ function Dizkus_ajax_newposts()
     }
 
     $out = $pnr->fetch('dizkus_ajax_newposts.html');
-    echo DataUtil::convertToUTF8($out);
+    echo $out;
     pnShutDown();
 }

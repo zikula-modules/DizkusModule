@@ -2,7 +2,7 @@
 <!--[*
 
 Rename this to dizkus_centerblock_display.html if you want to use it
-  
+
 *]-->
 
 <!--[pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css"]-->
@@ -13,16 +13,16 @@ Rename this to dizkus_centerblock_display.html if you want to use it
     <script type="text/javascript">
         // <![CDATA[
         new Ajax.PeriodicalUpdater(
-        		         'newposts', 
-          	             'index.php',
-        	             {
-        	                 method: 'get',
-        	                 parameters: 'module=Dizkus&type=ajax&func=newposts',
-        	                 frequency: 60
-        			     });
-        // ]]>  
+        'newposts',
+        'index.php',
+        {
+            method: 'get',
+            parameters: 'module=Dizkus&type=ajax&func=newposts',
+            frequency: 60
+        });
+        // ]]>
     </script>
-    <noscript>    
+    <noscript>
         <!--[include file="dizkus_ajax_newposts.html"]-->
     </noscript>
 </div>

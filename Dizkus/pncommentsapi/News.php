@@ -19,7 +19,7 @@ function Dizkus_commentsapi_News($args)
 {
     $news = pnModAPIFunc('News', 'user', 'get', array('objectid' => $args['objectid']));
     $link = pnGetBaseURL() . pnModURL('News', 'user', 'display', array('sid' => $args['objectid']));
-    $lang = pnUserGetLang();
+    $lang = ZLanguage::getLanguageCode();
 
     if(pnModIsHooked('bbcode', 'Dizkus')) {
         $notes = '[i]' . $news['notes'] . '[/i]';

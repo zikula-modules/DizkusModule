@@ -4,43 +4,46 @@
 <!--[pnpageaddvar name="javascript" value="modules/Dizkus/pnjavascript/dizkus_admin_ranks.js]-->
 
 <p class="z-informationmsg"><!--[gt text="In this page, you can create, delete and edit user ranks for that users acquire automatically after a certain number of posts in the forums. To create a new rank, simply type entries in the fields of the 'Create new user rank' section and click on the 'Create' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."]--></p>
+
 <form class="z-form" action="<!--[pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='0']-->" method="post">
-    <fieldset>
-        <legend><!--[gt text="Create new user rank"]--></legend>
+    <div>
         <input type="hidden" name="ranks[-1][rank_special]" value="0" />
-        <div class="z-formrow">
-            <label for="rank_title"><!--[gt text="User rank name"]--></label>
-            <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
-        </div>
-        <div class="z-formrow">
-            <label for="rank_min"><!--[gt text="Minimum number of posts"]--></label>
-            <input id="rank_min" type="text" name="ranks[-1][rank_min]" value="" maxlength="5" size="4" />
-        </div>
-        <div class="z-formrow">
-            <label for="rank_max"><!--[gt text="Maximum number of posts"]--></label>
-            <input id="rank_max" type="text" name="ranks[-1][rank_max]" value="" maxlength="5" size="4" />
-        </div>
-        <div class="z-formrow">
-            <label for="newrank_image"><!--[gt text="Internal Dizkus image"]--></label>
-            <div>
-                <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('<!--[$pncore.Dizkus.url_ranks_images]-->')">
-                    <!--[foreach name='availableranks' item='rankimage' from=$rankimages]-->
-                    <option value="<!--[$rankimage]-->" <!--[if $smarty.foreach.availableranks.first]-->selected="selected"<!--[capture assign=selectedimage"]--><!--[$rankimage]--><!--[/capture]--><!--[/if]-->><!--[$rankimage]--></option>
-                    <!--[/foreach]-->
-                </select>
-                <img id="newimage" src="<!--[$pncore.Dizkus.url_ranks_images]-->/<!--[$selectedimage]-->" alt="rankimage" />
+        <fieldset>
+            <legend><!--[gt text="Create new user rank"]--></legend>
+            <div class="z-formrow">
+                <label for="rank_title"><!--[gt text="User rank name"]--></label>
+                <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
             </div>
-        </div>
-        <div class="z-formrow">
-            <label for="rank_desc"><!--[gt text="External image"]--></label>
-            <input id="rank_desc" type="text" name="ranks[-1][rank_desc]" value="" maxlength="255" size="60" />
-        </div>
-        <div class="z-formnote z-informationmsg">
-             <!--[gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."]-->
-        </div>
-    </fieldset>
-    <div class="z-formbuttons">
-        <button class="dzk_img add" type="submit" name="submit" value="<!--[gt text="Create user rank"]-->"><!--[gt text="Create user rank"]--></button>
+            <div class="z-formrow">
+                <label for="rank_min"><!--[gt text="Minimum number of posts"]--></label>
+                <input id="rank_min" type="text" name="ranks[-1][rank_min]" value="" maxlength="5" size="4" />
+            </div>
+            <div class="z-formrow">
+                <label for="rank_max"><!--[gt text="Maximum number of posts"]--></label>
+                <input id="rank_max" type="text" name="ranks[-1][rank_max]" value="" maxlength="5" size="4" />
+            </div>
+            <div class="z-formrow">
+                <label for="newrank_image"><!--[gt text="Internal Dizkus image"]--></label>
+                <div>
+                    <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('<!--[$pncore.Dizkus.url_ranks_images]-->')">
+                        <!--[foreach name='availableranks' item='rankimage' from=$rankimages]-->
+                        <option value="<!--[$rankimage]-->" <!--[if $smarty.foreach.availableranks.first]-->selected="selected"<!--[capture assign=selectedimage"]--><!--[$rankimage]--><!--[/capture]--><!--[/if]-->><!--[$rankimage]--></option>
+                        <!--[/foreach]-->
+                    </select>
+                    <img id="newimage" src="<!--[$pncore.Dizkus.url_ranks_images]-->/<!--[$selectedimage]-->" alt="rankimage" />
+                </div>
+            </div>
+            <div class="z-formrow">
+                <label for="rank_desc"><!--[gt text="Description"]--></label>
+                <input id="rank_desc" type="text" name="ranks[-1][rank_desc]" value="" maxlength="255" size="60" />
+            </div>
+            <div class="z-formnote z-informationmsg">
+                <!--[gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."]-->
+            </div>
+            <div class="z-formbuttons">
+                <button class="dzk_img add" type="submit" name="submit" value="<!--[gt text="Create user rank"]-->"><!--[gt text="Create user rank"]--></button>
+            </div>
+        </fieldset>
     </div>
 </form>
 
@@ -73,6 +76,8 @@
                 <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_desc]" value="<!--[$rank.rank_desc]-->" maxlength="255" size="40" /></td>
                 <td><input type="checkbox" value="1" name="ranks[<!--[$rank.rank_id]-->][rank_delete]" /></td>
             </tr>
+            <!--[foreachelse]-->
+            <tr class="z-admintableempty"><td colspan="6"><!--[gt text='No items found.']--></td></tr>
             <!--[/foreach]-->
         </tbody>
     </table>

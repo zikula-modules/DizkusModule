@@ -974,7 +974,7 @@ function Dizkus_adminapi_getlinks()
 
     $links = array();
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', ''), 'text' => __('Forums list', $dom), 'title' => __('Index page of forums currently configured on the site', $dom));
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', ''), 'text' => __('Start', $dom), 'title' => __('Index page', $dom));
         $links[] = array('url' => pnModURL('Dizkus', 'admin', 'reordertree'), 'text' => __('Edit forum tree', $dom), 'title' => __('Create, edit and delete forum categories and forums, and arrange the tree structure of forums and categories', $dom));
         $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 0)), 'text' => __('Edit user ranks', $dom), 'title' => __('Create, edit and delete user ranks', $dom));
         $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 1)), 'text' => __('Edit honorary ranks', $dom), 'title' => __('Create, edit and delete honorary ranks', $dom));

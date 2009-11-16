@@ -9,70 +9,72 @@
 </form>
 
 <form class="z-form" id="managesubscriptions" action="<!--[pnmodurl modname='Dizkus' type='admin' func='managesubscriptions']-->" method="post">
-    <input type="hidden" name="pnuid" value="<!--[$pnuid]-->" />
-    <!--[if $topicsubscriptions|@count <> 0]-->
-    <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-    <h2><!--[gt text="Manage topic subscriptions"]--></h2>
-    <table class="z-admintable">
-        <caption>(<label for="alltopic"><!--[gt text="Remove all topic subscriptions"]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />&nbsp;)</caption>
-        <thead>
-            <tr>
-                <th><!--[gt text="Topic"]--></th>
-                <th><!--[gt text="Poster"]--></th>
-                <th><!--[gt text="Unsubscribe from topic"]--></th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--[foreach item='subscription' from=$topicsubscriptions]-->
-            <tr class="<!--[cycle values='z-odd,z-even']-->">
-                <td>
-                    <a href="<!--[$subscription.last_post_url_anchor|pnvarprepfordisplay]-->" title="<!--[$subscription.forum_name]--> :: <!--[$subscription.topic_title]-->"><!--[$subscription.topic_title|pnvarprepfordisplay]--></a>
-                </td>
-                <td>
-                    <!--[$subscription.poster_name|userprofilelink]-->
-                </td>
-                <td>
-                    <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="<!--[$subscription.topic_id]-->" />
-                </td>
-            </tr>
-            <!--[/foreach]-->
-        </tbody>
-    </table>
-    <!--[else]-->
-    <h3><!--[gt text="No topic subscriptions found."]--></h3>
-    <!--[/if]-->
+    <div>
+        <input type="hidden" name="pnuid" value="<!--[$pnuid]-->" />
+        <!--[if $topicsubscriptions|@count <> 0]-->
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <h2><!--[gt text="Manage topic subscriptions"]--></h2>
+        <table class="z-admintable">
+            <caption>(<label for="alltopic"><!--[gt text="Remove all topic subscriptions"]--></label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />&nbsp;)</caption>
+            <thead>
+                <tr>
+                    <th><!--[gt text="Topic"]--></th>
+                    <th><!--[gt text="Poster"]--></th>
+                    <th><!--[gt text="Unsubscribe from topic"]--></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--[foreach item='subscription' from=$topicsubscriptions]-->
+                <tr class="<!--[cycle values='z-odd,z-even']-->">
+                    <td>
+                        <a href="<!--[$subscription.last_post_url_anchor|pnvarprepfordisplay]-->" title="<!--[$subscription.forum_name]--> :: <!--[$subscription.topic_title]-->"><!--[$subscription.topic_title|pnvarprepfordisplay]--></a>
+                    </td>
+                    <td>
+                        <!--[$subscription.poster_name|userprofilelink]-->
+                    </td>
+                    <td>
+                        <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="<!--[$subscription.topic_id]-->" />
+                    </td>
+                </tr>
+                <!--[/foreach]-->
+            </tbody>
+        </table>
+        <!--[else]-->
+        <h3><!--[gt text="No topic subscriptions found."]--></h3>
+        <!--[/if]-->
 
-    <!--[if $forumsubscriptions|@count <> 0]-->
-    <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-    <h2><!--[gt text="Manage forum subscriptions"]--></h2>
-    <table class="z-admintable">
-        <caption>(<label for="allforum"><!--[gt text="Unsubscribe from all forum subscriptions"]--></label>&nbsp;<input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />&nbsp;)</caption>
-        <thead>
-            <tr>
-                <th><!--[gt text="Forum"]--></th>
-                <th><!--[gt text="Unsubscribe from forum"]--></th>
-            </tr>
-        </thead>
-        <tbody>
-            <!--[foreach item='subscription' from=$forumsubscriptions]-->
-            <tr class="<!--[cycle values='z-odd,z-even']-->">
-                <td>
-                    <a href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id]-->" title="<!--[$subscription.topic_title]--> :: <!--[$subscription.forum_name]-->"><!--[$subscription.forum_name|pnvarprepfordisplay]--></a>
-                </td>
-                <td>
-                    <input class="forum_checkbox" type="checkbox" onclick="CheckCheckAll('forum');" name="forum_id[]" value="<!--[$subscription.forum_id]-->" />
-                </td>
-            </tr>
-            <!--[/foreach]-->
-        </tbody>
-    </table>
+        <!--[if $forumsubscriptions|@count <> 0]-->
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <h2><!--[gt text="Manage forum subscriptions"]--></h2>
+        <table class="z-admintable">
+            <caption>(<label for="allforum"><!--[gt text="Unsubscribe from all forum subscriptions"]--></label>&nbsp;<input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />&nbsp;)</caption>
+            <thead>
+                <tr>
+                    <th><!--[gt text="Forum"]--></th>
+                    <th><!--[gt text="Unsubscribe from forum"]--></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--[foreach item='subscription' from=$forumsubscriptions]-->
+                <tr class="<!--[cycle values='z-odd,z-even']-->">
+                    <td>
+                        <a href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id]-->" title="<!--[$subscription.topic_title]--> :: <!--[$subscription.forum_name]-->"><!--[$subscription.forum_name|pnvarprepfordisplay]--></a>
+                    </td>
+                    <td>
+                        <input class="forum_checkbox" type="checkbox" onclick="CheckCheckAll('forum');" name="forum_id[]" value="<!--[$subscription.forum_id]-->" />
+                    </td>
+                </tr>
+                <!--[/foreach]-->
+            </tbody>
+        </table>
 
-    <!--[else]-->
-    <h3><!--[gt text="No forum subscriptions found."]--></h3>
-    <!--[/if]-->
+        <!--[else]-->
+        <h3><!--[gt text="No forum subscriptions found."]--></h3>
+        <!--[/if]-->
 
-    <div style="margin-top: 1em;">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
+        <div style="margin-top: 1em;">
+            <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
+        </div>
     </div>
 </form>
 

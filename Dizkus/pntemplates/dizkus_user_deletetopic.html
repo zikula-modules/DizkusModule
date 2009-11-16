@@ -2,22 +2,21 @@
 <!--[gt text="Delete this topic" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
-<!--[* cssversion assign=configclass <- David commented this out to eliminate an error message that was displaying *]-->
 
 <h2><!--[$templatetitle]--></h2>
-
+<div class="z-warningmsg"><!--[gt text="Do you really want to permanently delete this topic, together with all posts under this topic?"]--></div>
 <form class="z-form" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
-    <fieldset id="dzk_deletetopic">
-        <legend><!--[gt text="Confirmation prompt"]--></legend>
+    <div>
         <input type="hidden" name="mode" value="<!--[$mode]-->" />
         <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-        <div class="z-formrow">
-            <p><!--[gt text="Do you really want to permanently delete this topic, together with all posts under this topic?"]--></p>
-        </div>
-    </fieldset>
-    <div class="z-formbuttons">
-        <button class="dzk_img delete" type="submit" name="submit" value="<!--[gt text="Delete"]-->"><!--[gt text="Delete"]--></button>
+        <fieldset id="dzk_deletetopic">
+            <legend><!--[gt text="Confirmation prompt"]--></legend>
+            <div class="z-formbuttons">
+                <!--[pnbutton src=button_ok.gif set=icons/small __alt="Delete" __title="Delete"]-->
+                <a href="<!--[pnmodurl modname=Dizkus type=user func=view]-->"><!--[pnimg modname=core src=button_cancel.gif set=icons/small __alt="Cancel" __title="Cancel"]--></a>
+            </div>
+        </fieldset>
     </div>
 </form>
 <!--[include file='dizkus_user_footer.html']-->

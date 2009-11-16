@@ -1,51 +1,53 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Move topic" assign=templatetitle]-->
+<!--[gt text="Move or join topics" assign=templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
 <h2><!--[$templatetitle]--></h2>
 
 <form class="z-form" action="<!--[pnmodurl modname='Dizkus' type='user' func='topicadmin']-->" method="post">
-    <fieldset id="dzk_movetopic">
-        <legend><!--[gt text="Move topic to another forum"]--></legend>
+    <div>
         <input type="hidden" name="mode" value="<!--[$mode]-->" />
         <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-
-        <div class="z-informationmsg"><!--[gt text="Notice: You can only move a topic to a forum for which you have moderator status. An administrator can move any topic to any forum."]--></div>
-
-		<div class="z-formrow">
-            <label><!--[gt text="Target forum"]--></label>
-            <select name="forum">
-                <!--[foreach item='forum' from=$forums]-->
-                <option value="<!--[$forum.forum_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]-->&nbsp;::&nbsp;<!--[$forum.forum_name|pnvarprepfordisplay]--></option>
-                <!--[/foreach]-->
-            </select>
-        </div>
-        <div class="z-formrow">
-            <label for="createshadowtopic"><!--[gt text="Create shadow topic"]--></label>
-            <input type="checkbox" id="createshadowtopic" name="createshadowtopic" value="1" />
-        </div>
-    </fieldset>
-    <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Move topic"]-->"><!--[gt text="Move topic"]--></button>
+        <fieldset id="dzk_movetopic">
+            <legend><!--[gt text="Move topic to another forum"]--></legend>
+            <div class="z-formnote z-informationmsg"><!--[gt text="Notice: You can only move a topic to a forum for which you have moderator status. An administrator can move any topic to any forum."]--></div>
+            <div class="z-formrow">
+                <label><!--[gt text="Target forum"]--></label>
+                <select name="forum">
+                    <!--[foreach item='forum' from=$forums]-->
+                    <option value="<!--[$forum.forum_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]-->&nbsp;::&nbsp;<!--[$forum.forum_name|pnvarprepfordisplay]--></option>
+                    <!--[/foreach]-->
+                </select>
+            </div>
+            <div class="z-formrow">
+                <label for="createshadowtopic"><!--[gt text="Create shadow topic"]--></label>
+                <input type="checkbox" id="createshadowtopic" name="createshadowtopic" value="1" />
+            </div>
+            <div class="z-formbuttons">
+                <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Move topic"]-->"><!--[gt text="Move topic"]--></button>
+            </div>
+        </fieldset>
     </div>
 </form>
 
 <form class="z-form" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
-    <fieldset id="dzk_jointopic">
-        <legend><!--[gt text="Join topic with another topic"]--></legend>
+    <div>
         <input type="hidden" name="mode" value="join" />
         <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-        <div class="z-formrow">
-            <label for="to_topic_id"><!--[gt text="ID of target topic"]--></label>
-            <span>
-                <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />
-            </span>
-        </div>
-    </fieldset>
-    <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Join topics"]-->"><!--[gt text="Join topics"]--></button>
+        <fieldset id="dzk_jointopic">
+            <legend><!--[gt text="Join topic with another topic"]--></legend>
+            <div class="z-formrow">
+                <label for="to_topic_id"><!--[gt text="ID of target topic"]--></label>
+                <span>
+                    <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />
+                </span>
+            </div>
+            <div class="z-formbuttons">
+                <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Join topics"]-->"><!--[gt text="Join topics"]--></button>
+            </div>
+        </fieldset>
     </div>
 </form>
 

@@ -35,7 +35,6 @@ function Dizkus_accountapi_getall($args)
 
     // Create an array of links to return
     if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
-        pnModLangLoad('Dizkus', 'user'); 
         $items = array(array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
                              'title'   => __('Forum settings', $dom),
                              'icon'    => 'icon_forumprefs.gif'));

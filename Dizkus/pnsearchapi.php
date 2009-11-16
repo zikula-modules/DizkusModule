@@ -26,7 +26,7 @@ function Dizkus_searchapi_info()
 function Dizkus_searchapi_options($args)
 {
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
         $pnr->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
         return $pnr->fetch('dizkus_search.html');
@@ -55,7 +55,7 @@ function Dizkus_searchapi_internalsearchoptions($args)
 {
     // Create output object - this object will store all of our output so that
     // we can return it easily when required
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
     return $pnr->fetch('dizkus_user_search.html');
 }

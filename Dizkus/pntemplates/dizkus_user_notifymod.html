@@ -5,19 +5,21 @@
 
 <h2><!--[$templatetitle]--></h2>
 <div class="z-informationmsg"><!--[gt text="Please explain briefly why you think the post needs attention from a moderator. Action will be taken for valid reasons, such as copyright violations, personal insults and postings that are offensive or that do not meet the applicable guidelines in some other respect. However, no action will be taken in the case of issues such as a difference of opinon on a topic, or other invalid reasons. After entering your explanation, please click the 'Save' button."]--></div>
-
-<form class="z-form linear" action="<!--[pnmodurl modname=Dizkus type=user func=report]-->" method="post">
-    <fieldset id="dzk_notifymoderator">
-        <legend><!--[gt text="Your comments"]--></legend>
+<form class="z-form z-linear" action="<!--[pnmodurl modname=Dizkus type=user func=report]-->" method="post">
+    <div>
         <input type="hidden" name="post" value="<!--[$post.post_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-        <div class="z-formrow">
-            <textarea rows="6" cols="60" name="comment" class="dzk_texpand"></textarea>
-        </div>
-        <div class="z-formbuttons">
-            <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
-        </div>
-    </fieldset>
+        <fieldset id="dzk_notifymoderator">
+            <legend><!--[$templatetitle]--></legend>
+            <div class="z-formrow">
+                <label for="modcomment"><!--[gt text="Your comments"]--></label>
+                <textarea id="modcomment" rows="6" cols="60" name="comment" class="dzk_texpand"></textarea>
+            </div>
+            <div class="z-formbuttons">
+                <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
+            </div>
+        </fieldset>
+    </div>
 </form>
 
 <!--[include file='dizkus_user_footer.html']-->

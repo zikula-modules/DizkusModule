@@ -576,7 +576,7 @@ div#editpostoptions ul li {
     background: transparent;
     border: 1px outset #CCCCCC;
     margin: 1em 0.5em 0 0;
-    padding: 2px 0 2px 19px;
+    padding: 2px 0 2px 20px;
     cursor: pointer;
     line-height: 1em;
 }
@@ -591,36 +591,36 @@ div#editpostoptions ul li {
 #dizkus input.ok,
 #dizkus_admin button.ok,
 #dizkus_admin input.ok {
-    background: url(../pnimages/icon_ok.gif) no-repeat 0 50%;
+    background: url(../pnimages/icon_ok.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.cancel,
 #dizkus input.cancel,
 #dizkus_admin button.cancel,
 #dizkus_admin input.cancel {
-    background: url(../pnimages/icon_cancel.gif) no-repeat 0 50%;
+    background: url(../pnimages/icon_cancel.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.preview,
 #dizkus input.preview,
 #dizkus_admin button.preview,
 #dizkus_admin input.preview {
-    background: url(../pnimages/icon_preview.gif) no-repeat 0 50%;
+    background: url(../pnimages/icon_preview.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.delete,
 #dizkus_admin button.delete {
-    background: url(../pnimages/icon_delete.gif) no-repeat 0 50%;
+    background: url(../pnimages/icon_delete.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.add,
 #dizkus_admin button.add {
-    background: url(../pnimages/icon_add.gif) no-repeat 0 50%;
+    background: url(../pnimages/icon_add.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.search,
 #dizkus_admin button.search {
-    background: url(../pnimages/icon_search.gif) no-repeat 0 50%;
+    background: url(../pnimages/icon_search.gif) no-repeat 2px 50%;
 }
 
 /*******************************************************************************/
@@ -664,6 +664,7 @@ div#editpostoptions ul li {
     line-height: 1.4em;
     padding: 3px;
     width: 60%;
+    max-width: none;    
 }
 #dizkus #latestposts button {
     font-size:1em;
@@ -806,9 +807,4 @@ dl.icon {
     margin: 0.5em 0;
     padding: 0.4em;
     overflow: hidden;
-}
-#dzk_adminfooter {
-    margin: 1em 0;
-    font-size: 0.9em;
-    text-align: center;
 }

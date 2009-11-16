@@ -21,7 +21,7 @@ function Dizkus_admin_main()
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     return $pnr->fetch('dizkus_admin_main.html');
 }
 
@@ -102,7 +102,7 @@ function Dizkus_admin_ranks()
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                   array('ranktype' => $ranktype));
 
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('ranktype', $ranktype);
         $pnr->assign('rankimages', $rankimages);
@@ -201,7 +201,7 @@ function Dizkus_admin_assignranks()
 
         unset($users);
 
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('ranks', $ranks);
         $pnr->assign('rankimages', $rankimages);
         $pnr->assign('allusers', $allusers);
@@ -252,7 +252,7 @@ function Dizkus_admin_reordertree()
             }
         }
     }
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('categorytree', $categorytree);
     $pnr->assign('catids', $catids);
     $pnr->assign('forumids', $forumids);
@@ -424,7 +424,7 @@ function Dizkus_admin_editforum($args=array())
     $moderators = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
                                 array('forum_id' => $forum['forum_id']));
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('hooked_modules', $hooked_modules);
     $pnr->assign('rssfeeds', $rssfeeds);
     $pnr->assign('externalsourceoptions', $externalsourceoptions);
@@ -491,7 +491,7 @@ function Dizkus_admin_editcategory($args=array())
                                      'permcheck' => 'nocheck'));
         $category['forum_count'] = count($forums);
     }
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('category', $category );
     $pnr->assign('newcategory', $new);
     dzk_jsonizeoutput(array('data'     => $pnr->fetch('dizkus_ajax_editcategory.html'),
@@ -526,7 +526,6 @@ function Dizkus_admin_storecategory()
     $add       = FormUtil::getPassedValue('add');
     $delete    = FormUtil::getPassedValue('delete');
 
-    $cat_title = DataUtil::convertFromUTF8($cat_title);
     if (!empty($delete)) {
         $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                                array('cat_id'    => $cat_id,
@@ -555,7 +554,7 @@ function Dizkus_admin_storecategory()
         if (!is_bool($cat_id)) {
             $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            $pnr = pnRender::getInstance('Dizkus', false, null, true);
+            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('category', $category );
             $pnr->assign('newcategory', false);
             dzk_jsonizeoutput(array('cat_id'      => $cat_id,
@@ -630,17 +629,6 @@ function Dizkus_admin_storeforum()
     $delete    = FormUtil::getPassedValue('delete');
 
     $pntopic = (int)FormUtil::getpassedValue('pncategory', 0);
-
-    $forum_name           = DataUtil::convertFromUTF8($forum_name);           
-    $desc                 = DataUtil::convertFromUTF8($desc);                 
-    $pop3_server          = DataUtil::convertFromUTF8($pop3_server);          
-    $pop3_login           = DataUtil::convertFromUTF8($pop3_login);           
-    $pop3_password        = DataUtil::convertFromUTF8($pop3_password);        
-    $pop3_passwordconfirm = DataUtil::convertFromUTF8($pop3_passwordconfirm); 
-    $pop3_matchstring     = DataUtil::convertFromUTF8($pop3_matchstring);     
-    $pnuser               = DataUtil::convertFromUTF8($pnuser);               
-    $pnpassword           = DataUtil::convertFromUTF8($pnpassword);           
-    $pnpasswordconfirm    = DataUtil::convertFromUTF8($pnpasswordconfirm);    
 
     $pop3testresulthtml = '';
     if (!empty($delete)) {
@@ -744,7 +732,7 @@ function Dizkus_admin_storeforum()
             $pop3testresult = pnModAPIFunc('Dizkus', 'user', 'testpop3connection',
                                            array('forum_id' => $forum_id));
 
-            $pnr = pnRender::getInstance('Dizkus', false, null, true);
+            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('messages', $pop3testresult);
             $pnr->assign('forum_id', $forum_id);
             $pop3testresulthtml = $pnr->fetch('dizkus_admin_pop3test.html');
@@ -790,7 +778,7 @@ function Dizkus_admin_managesubscriptions()
 
     if (!$submit) {
         // submit is empty
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('pnusername', $pnusername);
         $pnr->assign('pnuid', $pnuid = pnUserGetIDFromName($pnusername));
         $pnr->assign('topicsubscriptions', $topicsubscriptions);

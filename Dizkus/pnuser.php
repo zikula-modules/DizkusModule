@@ -71,7 +71,7 @@ function Dizkus_user_main($args=array())
         }
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('favorites', $favorites);
     $pnr->assign('tree', $tree);
     $pnr->assign('view_category', $viewcat);
@@ -112,7 +112,7 @@ function Dizkus_user_viewforum($args=array())
                                 'last_visit'      => $last_visit,
                                 'last_visit_unix' => $last_visit_unix));
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign( 'forum', $forum);
     $pnr->assign( 'hot_threshold', pnModGetVar('Dizkus', 'hot_threshold'));
     $pnr->assign( 'last_visit', $last_visit);
@@ -168,7 +168,7 @@ function Dizkus_user_viewtopic($args=array())
                                 'last_visit' => $last_visit,
                                 'count'      => true));
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('topic', $topic);
     $pnr->assign('post_count', count($topic['posts']));
     $pnr->assign('last_visit', $last_visit);
@@ -257,7 +257,7 @@ function Dizkus_user_reply($args=array())
             $reply['message_display'] = nl2br($reply['message_display']);
         }
 
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('reply', $reply);
         $pnr->assign('preview', $preview);
         $pnr->assign('last_visit', $last_visit);
@@ -332,7 +332,7 @@ function Dizkus_user_newtopic($args=array())
                                        'subscribe_topic'  => $subscribe_topic));
 
         if (pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-            $pnr = pnRender::getInstance('Dizkus', false, null, true);
+            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('topic', pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
             return $pnr->fetch('dizkus_user_newtopicconfirmation.html');
 
@@ -343,7 +343,7 @@ function Dizkus_user_newtopic($args=array())
         }
     } else {
         // new topic
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('preview', $preview);
         $pnr->assign('newtopic', $newtopic);
         $pnr->assign('last_visit', $last_visit);
@@ -442,7 +442,7 @@ function Dizkus_user_editpost($args=array())
             list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array(nl2br($message)));
         }
 
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign( 'preview', $preview);
         $pnr->assign( 'post', $post);
         $pnr->assign( 'last_visit', $last_visit);
@@ -485,7 +485,7 @@ function Dizkus_user_topicadmin($args=array())
         return showforumerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom), __FILE__, __LINE__);
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('mode', $mode);
     $pnr->assign('topic_id', $topic_id);
 
@@ -677,7 +677,7 @@ function Dizkus_user_prefs($args=array())
             break;
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
-            $pnr = pnRender::getInstance('Dizkus', false, null, true);
+            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
             $pnr->assign('last_visit', $last_visit);
             $pnr->assign('favorites_enabled', pnModGetVar('Dizkus', 'favorites_enabled'));
             $pnr->assign('last_visit_unix', $last_visit_unix);
@@ -812,7 +812,7 @@ function Dizkus_user_emailtopic($args=array())
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id));
         $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('topic', $topic);
         $pnr->assign('error_msg', $error_msg);
         $pnr->assign('sendto_email', $sendto_email);
@@ -883,7 +883,7 @@ function Dizkus_user_viewlatest($args=array())
                                                                    'last_visit' => $last_visit,
                                                                    'last_visit_unix' => $last_visit_unix));
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
     $pnr->assign('posts', $posts);
     $pnr->assign('m2fposts', $m2fposts);
     $pnr->assign('rssposts', $rssposts);
@@ -937,7 +937,7 @@ function Dizkus_user_splittopic($args=array())
                                    array('topic' => $newtopic_id)));
 
     } else {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('post', $post);
         return $pnr->fetch('dizkus_user_splittopic.html');
     }
@@ -973,7 +973,7 @@ function Dizkus_user_print($args=array())
             return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
         }
     } else {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         if($post_id<>0) {
             $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                                  array('post_id' => $post_id));
@@ -1083,7 +1083,7 @@ function Dizkus_user_movepost($args=array())
                                    array('topic' => $to_topic,
                                          'start' => $start)) . '#pid' . $post['post_id']);
     } else {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('post', $post);
         return $pnr->fetch('dizkus_user_movepost.html');
     }
@@ -1118,7 +1118,7 @@ function Dizkus_user_jointopics($args=array())
     }
 
     if(!$submit) {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('post', $post);
         return $pnr->fetch('dizkus_user_jointopics.html');
     } else {
@@ -1184,7 +1184,7 @@ function Dizkus_user_moderateforum($args=array())
 
     // Submit isn't set'
     if(empty($submit)) {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('forum_id', $forum_id);
         $pnr->assign('mode',$mode);
         $pnr->assign('topic_ids', $topic_ids);
@@ -1308,7 +1308,7 @@ function Dizkus_user_report($args)
     }
     
     if(!$submit) {
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('post', $post);
         return $pnr->fetch('dizkus_user_notifymod.html');
     } else {   // submit is set
@@ -1353,7 +1353,7 @@ function Dizkus_user_topicsubscriptions($args)
 
     if(!$submit) {
         $subscriptions = pnModAPIFunc('Dizkus', 'user', 'get_topic_subscriptions');
-        $pnr = pnRender::getInstance('Dizkus', false, null, true);
+        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
         $pnr->assign('subscriptions', $subscriptions);
         return $pnr->fetch('dizkus_user_topicsubscriptions.html');
     } else {  // submit is set

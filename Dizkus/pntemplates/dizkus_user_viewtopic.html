@@ -6,7 +6,7 @@
 <div class="dzk_topicoptions roundedbar dzk_rounded">
     <div class="inner">
         <div id="dzk_javascriptareatopic" class="hidden">
-            <ul class="dzk_topicoptions linklist pn-clearfix">
+            <ul class="dzk_topicoptions linklist z-clearfix">
                 <!--[if $topic.topic_id neq $topic.prev_topic_id]-->
                 <li><a class="dzk_img previoustopiclink" title="<!--[gt text="Previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
                 <!--[/if]-->
@@ -33,7 +33,7 @@
             </ul>
 
             <!--[if $topic.access_moderate eq 1]-->
-            <ul class="dzk_topicoptions linklist pn-clearfix">
+            <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
                     <a id="locktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 1]-->hidden<!--[/if]--> locktopiclink" title="<!--[gt text="Lock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'lock');"><!--[gt text="Lock topic"]--></a>
                     <a id="unlocktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 0]-->hidden<!--[/if]--> unlocktopiclink" title="<!--[gt text="Unlock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'unlock');"><!--[gt text="Unlock topic"]--></a>
@@ -52,7 +52,7 @@
 
         <noscript>
             <div id="dzk_nonjavascriptareatopic">
-                <ul class="dzk_topicoptions linklist pn-clearfix">
+                <ul class="dzk_topicoptions linklist z-clearfix">
                     <!--[if $topic.topic_id neq $topic.prev_topic_id]-->
                     <li><a class="dzk_img previoustopiclink" title="<!--[gt text="Previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
                     <!--[/if]-->
@@ -81,7 +81,7 @@
                 </ul>
 
                 <!--[if $topic.access_moderate eq 1]-->
-                <ul class="dzk_topicoptions linklist pn-clearfix">
+                <ul class="dzk_topicoptions linklist z-clearfix">
                     <!--[if $topic.topic_status eq 0]-->
                     <li><a class="dzk_img locktopiclink" title="<!--[gt text="Lock this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id]-->"><!--[gt text="Lock this topic"]--></a></li>
                     <!--[else]-->
@@ -124,7 +124,7 @@
 <!--[if ($topic.topic_status neq 1) and ($topic.access_comment eq true)]-->
 <div id="dzk_quickreply" class="forum_post <!--[cycle values='post_bg1,post_bg2']--> dzk_rounded">
     <div class="inner">
-        <div class="dzk_subcols pn-clearfix">
+        <div class="dzk_subcols z-clearfix">
             <form id="quickreplyform" class="dzk_form" action="<!--[pnmodurl modname='Dizkus' type=user func=reply]-->" method="post" enctype="multipart/form-data">
                 <div>
                     <input type="hidden" id="forum" name="forum" value="<!--[$topic.forum_id]-->" />
@@ -142,7 +142,7 @@
                             <!--[if $pncore.Dizkus.striptags == 'yes']-->
                             <p><!--[gt text="No HTML tags allowed (except inside '[code][/code]' BBCode tags)"]--></p>
                             <!--[/if]-->
-                            <div class="dzk_subcols pn-clearfix">
+                            <div class="dzk_subcols z-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong><!--[gt text="Options"]--></strong></li>
@@ -192,7 +192,7 @@
 <!--[/if]-->
 
 <!--[if $topic.forum_mods|@count > 0]-->
-<ul id="dzk_moderatorlist" class="linklist pn-clearfix">
+<ul id="dzk_moderatorlist" class="linklist z-clearfix">
     <li><em><!--[gt text="Moderated by:"]-->&nbsp;</em></li>
     <!--[foreach name=moderators item=mod from=$topic.forum_mods]-->
     <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>

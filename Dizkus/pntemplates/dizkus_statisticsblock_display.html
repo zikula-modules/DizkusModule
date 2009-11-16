@@ -3,7 +3,7 @@
 <!--[readtopforums maxforums=$maxforums]-->
 <!--[if $topforumscount > 0]-->
 <br />
-<strong><!--[$topforumscount]-->&nbsp;<!--[gt text="Most-active forums:"]--></strong>
+<strong><!--[$topforumscount]-->&nbsp;<!--[gt text="Most-active forums:" domain="module_dizkus"]--></strong>
 <br />
 <ul class="dzk_forumlist">
     <!--[foreach item=topforum from=$topforums]-->
@@ -19,7 +19,7 @@
 <!--[readlastposts maxposts=$maxposts forum_id=$forum_id]-->
 <!--[if $lastpostcount > 0]-->
 <br />
-<strong><!--[$lastpostcount]--> <!--[gt text="Recent topics:"]--></strong>
+<strong><!--[$lastpostcount]--> <!--[gt text="Recent topics:" domain="module_dizkus"]--></strong>
 <br />
 <ul class="dzk_postlist">
     <!--[foreach item=lastpost from=$lastposts]-->
@@ -27,9 +27,9 @@
         <a href="<!--[$lastpost.last_post_url_anchor]-->" title="<!--[$lastpost.cat_title]--> :: <!--[$lastpost.forum_name]--> :: <!--[$lastpost.topic_title]-->"><!--[$lastpost.topic_title|dzkbbsmile|truncate:21]--></a><br />
         <!--[$lastpost.topic_replies]-->
         <!--[if $lastpost.topic_replies eq 1]-->
-        <!--[gt text="reply"]-->
+        <!--[gt text="reply" domain="module_dizkus"]-->
         <!--[else]-->
-        <!--[gt text="Replies"]-->
+        <!--[gt text="Replies" domain="module_dizkus"]-->
         <!--[/if]-->
         <br />
         <!--[$lastpost.poster_name|userprofilelink]--><br /><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true]-->
@@ -41,22 +41,22 @@
 <!--[readtopposters maxposters=$maxposters]-->
 <!--[if $toppostercount > 0]-->
 <br />
-<strong><!--[$toppostercount]--> <!--[gt text="Most-active posters:"]--></strong>
+<strong><!--[$toppostercount]--> <!--[gt text="Most-active posters:" domain="module_dizkus"]--></strong>
 <br />
 <ul class="dzk_posterlist">
     <!--[foreach item=topposter from=$topposters]-->
-    <li><!--[$topposter.user_name|userprofilelink]--><br />(<!--[$topposter.user_posts]--> <!--[gt text="Posts"]-->)</li>
+    <li><!--[$topposter.user_name|userprofilelink]--><br />(<!--[$topposter.user_posts]--> <!--[gt text="Posts" domain="module_dizkus"]-->)</li>
     <!--[/foreach]-->
 </ul>
 <!--[/if]-->
 
 <!--[readstatistics]-->
 <br />
-<strong><!--[gt text="Total:"]--></strong>
+<strong><!--[gt text="Total:" domain="module_dizkus"]--></strong>
 <br />
 <ul class="dzk_statslist">
-    <li><!--[gt text="Categories"]-->: <!--[$total_categories]--></li>
-    <li><!--[gt text="Forums"]-->: <!--[$total_forums]--></li>
-    <li><!--[gt text="Topics"]-->: <!--[$total_topics]--></li>
-    <li><!--[gt text="Posts"]-->: <!--[$total_posts]--></li>
+    <li><!--[gt text="Categories" domain="module_dizkus"]-->: <!--[$total_categories]--></li>
+    <li><!--[gt text="Forums" domain="module_dizkus"]-->: <!--[$total_forums]--></li>
+    <li><!--[gt text="Topics" domain="module_dizkus"]-->: <!--[$total_topics]--></li>
+    <li><!--[gt text="Posts" domain="module_dizkus"]-->: <!--[$total_posts]--></li>
 </ul>
