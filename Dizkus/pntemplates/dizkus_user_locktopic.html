@@ -1,35 +1,41 @@
 <!--[*  $Id$  *]-->
-<!--[capture assign=templatetitle]--><!--[if $mode eq "lock"]--><!--[gt text="Lock this topic"]--><!--[else]--><!--[gt text="Unlock this topic"]--><!--[/if]--><!--[/ capture]-->
+<!--[if $mode eq "lock"]-->
+<!--[gt text="Lock this topic" assign="templatetitle"]-->
+<!--[else]-->
+<!--[gt text="Unlock this topic" assign="templatetitle"]-->
+<!--[/if]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
 <h2><!--[$templatetitle]--></h2>
 
 <form class="z-form" action="<!--[pnmodurl modname=Dizkus type=user func=topicadmin]-->" method="post">
-    <input type="hidden" name="mode" value="<!--[$mode]-->" />
-    <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
-    <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-    <!--[if $mode eq "lock"]-->
-    <fieldset id="dzk_locktopic">
-        <legend><!--[$templatetitle]--></legend>
-        <div class="z-formrow">
-            <!--[gt text="When you press the 'Lock' button at the bottom of this page, the topic you have selected will be <strong>locked</strong>. You can unlock it at a later time if you so choose."]-->
+    <div>
+        <input type="hidden" name="mode" value="<!--[$mode]-->" />
+        <input type="hidden" name="topic" value="<!--[$topic_id]-->" />
+        <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+        <!--[if $mode eq "lock"]-->
+        <fieldset id="dzk_locktopic">
+            <legend><!--[gt text="Description"]--></legend>
+            <div class="z-formrow">
+                <!--[gt text="When you press the 'Lock' button at the bottom of this page, the topic you have selected will be <strong>locked</strong>. You can unlock it at a later time if you so choose."]-->
+            </div>
+        </fieldset>
+        <div class="z-formbuttons">
+            <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Lock this topic"]-->"><!--[gt text="Lock this topic"]--></button>
         </div>
-    </fieldset>
-    <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Lock this topic"]-->"><!--[gt text="Lock this topic"]--></button>
-    </div>
-    <!--[else]-->
-    <fieldset id="dzk_locktopic">
-        <legend><!--[$templatetitle]--></legend>
-        <div class="z-formrow">
-            <!--[gt text="When you press the 'Unlock' button at the bottom of this page, the topic you have selected will be <strong>unlocked</strong>. You can lock it again at a later time if you so choose."]-->
+        <!--[else]-->
+        <fieldset id="dzk_locktopic">
+            <legend><!--[gt text="Description"]--></legend>
+            <div class="z-formrow">
+                <!--[gt text="When you press the 'Unlock' button at the bottom of this page, the topic you have selected will be <strong>unlocked</strong>. You can lock it again at a later time if you so choose."]-->
+            </div>
+        </fieldset>
+        <div class="z-formbuttons">
+            <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Unlock this topic"]-->"><!--[gt text="Unlock this topic"]--></button>
         </div>
-    </fieldset>
-    <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Unlock this topic"]-->"><!--[gt text="Unlock this topic"]--></button>
+        <!--[/if]-->
     </div>
-    <!--[/if]-->
 </form>
 
 <!--[include file='dizkus_user_footer.html']-->

@@ -4,18 +4,21 @@
 
 <h2><!--[gt text="User IP and account information"]--></h2>
 
-<div class="z-informationmsg">
-    <dl>
-        <dt><!--[gt text="IP address"]-->:</dt>
-        <dd><!--[$viewip.poster_ip]--></dd>
-        <dt><!--[gt text="Host"]-->:</dt>
-        <dd><!--[$viewip.poster_host]--></dd>
-        <dt><!--[gt text="User names of users who posted from this IP, plus post counts"]--></dt>
+<div class="z-form">
+    <div class="z-formrow">
+        <strong class="z-label"><!--[gt text="IP address"]--></strong>
+        <span><!--[$viewip.poster_ip]--></span>
+    </div>
+    <div class="z-formrow">
+        <strong class="z-label"><!--[gt text="Host"]--></strong>
+        <span><!--[$viewip.poster_host]--></span>
+    </div>
+    <div class="z-formrow">
+        <strong class="z-label"><!--[gt text="User names of users who posted from this IP, plus post counts"]--></strong>
         <!--[foreach item=user from=$viewip.users]-->
-        <dd><!--[$user.pn_uname|userprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</dd>
+        <div class="z-formnote"><!--[$user.pn_uname|userprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</div>
         <!--[/foreach]-->
-    </dl>
-    <br />
+    </div>
 </div>
 
 <p class="gobacklink">

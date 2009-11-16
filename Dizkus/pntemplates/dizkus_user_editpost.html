@@ -17,59 +17,61 @@
         <div class="dzk_subcols z-clearfix">
 
             <form id="editpost" class="dzk_form" action="<!--[pnmodurl modname='Dizkus' type='user' func='editpost']-->" method="post" enctype="multipart/form-data">
-                <fieldset>
-                    <legend class="post_header"><!--[gt text="Edit post"]-->: <!--[$post.topic_subject|pnvarprepfordisplay]--></legend>
+                <div>
                     <input type="hidden" name="post" value="<!--[$post.post_id]-->" />
                     <input type="hidden" name="forum"  value="<!--[$post.forum_id]-->" />
                     <input type="hidden" name="topic"  value="<!--[$post.topic_id]-->" />
                     <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-                    <div class="post_text_wrap">
-                        <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
+                    <fieldset>
+                        <legend class="post_header"><!--[gt text="Edit post"]-->: <!--[$post.topic_subject|pnvarprepfordisplay]--></legend>
+                        <div class="post_text_wrap">
+                            <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
-                        <!--[if $post.moderate eq true OR $post.edit_subject eq true]-->
-                        <div>
-                            <label for="subject"><!--[gt text="Subject line"]--></label>:
-                            <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[$post.topic_subject|pnvarprephtmldisplay]-->" />
-                        </div>
-                        <!--[/if]-->
-                        <div>
-                            <br /><label for="message"><!--[gt text="Message body"]--></label>:
-                            <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60"><!--[$post.post_rawtext]--></textarea>
-                            <!--[if $pncore.Dizkus.striptags == 'yes']-->
-                            <p><!--[gt text="Notice: No HTML tags allowed (except inside '[code][/code]' BBCode tags)"]--></p>
+                            <!--[if $post.moderate eq true OR $post.edit_subject eq true]-->
+                            <div>
+                                <label for="subject"><!--[gt text="Subject line"]--></label>:
+                                <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[$post.topic_subject|pnvarprephtmldisplay]-->" />
+                            </div>
                             <!--[/if]-->
-                        </div>
-
-                        <div class="dzk_subcols z-clearfix">
-                            <div id="editpostoptions" class="dzk_col_left">
-                                <ul>
-                                    <!--[if $post.moderate eq true]-->
-                                    <li><strong><!--[gt text="Options"]--></strong></li>
-                                    <li>
-                                        <input type="checkbox" name="delete" id="delete" tabindex="0" value="1" />
-                                        <label for="delete">&nbsp;<!--[gt text="Delete this post"]--></label>
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="attach_signature" id="attach_signature" <!--[if $post.has_signature eq true]-->checked="checked"<!--[/if]--> value="1" />
-                                        <label for="attach_signature">&nbsp;<!--[gt text="Attach my signature"]--></label>
-                                    </li>
-                                    <!--[/if]-->
-                                    <li id="editpostbuttons">
-                                        <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->" />
-                                        <input class="dzk_img preview" type="submit" name="preview" value="<!--[gt text="Preview"]-->" />
-                                        <input class="dzk_img cancel" type="submit" name="reset" value="<!--[gt text="Cancel"]-->" onclick="self.location.href='<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.topic_id]-->'" />
-                                    </li>
-                                </ul>
-
+                            <div>
+                                <br /><label for="message"><!--[gt text="Message body"]--></label>:
+                                <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60"><!--[$post.post_rawtext]--></textarea>
+                                <!--[if $pncore.Dizkus.striptags == 'yes']-->
+                                <p><!--[gt text="Notice: No HTML tags allowed (except inside '[code][/code]' BBCode tags)"]--></p>
+                                <!--[/if]-->
                             </div>
-                            <div class="dzk_col_right">
-                                <!--[plainbbcode textfieldid=message]-->
-                                <!--[bbsmile textfieldid=message]-->
-                            </div>
-                        </div>
 
-                    </div>
-                </fieldset>
+                            <div class="dzk_subcols z-clearfix">
+                                <div id="editpostoptions" class="dzk_col_left">
+                                    <ul>
+                                        <!--[if $post.moderate eq true]-->
+                                        <li><strong><!--[gt text="Options"]--></strong></li>
+                                        <li>
+                                            <input type="checkbox" name="delete" id="delete" tabindex="0" value="1" />
+                                            <label for="delete">&nbsp;<!--[gt text="Delete this post"]--></label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="attach_signature" id="attach_signature" <!--[if $post.has_signature eq true]-->checked="checked"<!--[/if]--> value="1" />
+                                            <label for="attach_signature">&nbsp;<!--[gt text="Attach my signature"]--></label>
+                                        </li>
+                                        <!--[/if]-->
+                                        <li id="editpostbuttons">
+                                            <input class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Save"]-->" />
+                                            <input class="dzk_img preview" type="submit" name="preview" value="<!--[gt text="Preview"]-->" />
+                                            <input class="dzk_img cancel" type="submit" name="reset" value="<!--[gt text="Cancel"]-->" onclick="self.location.href='<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.topic_id]-->'" />
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="dzk_col_right">
+                                    <!--[plainbbcode textfieldid=message]-->
+                                    <!--[bbsmile textfieldid=message]-->
+                                </div>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
             </form>
         </div>
 
