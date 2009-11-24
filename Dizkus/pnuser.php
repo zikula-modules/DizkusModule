@@ -169,6 +169,7 @@ function Dizkus_user_viewtopic($args=array())
                                 'count'      => true));
 
     $pnr = & pnRender::getInstance('Dizkus', false, null, true);
+    $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
     $pnr->assign('topic', $topic);
     $pnr->assign('post_count', count($topic['posts']));
     $pnr->assign('last_visit', $last_visit);
@@ -258,6 +259,7 @@ function Dizkus_user_reply($args=array())
         }
 
         $pnr = & pnRender::getInstance('Dizkus', false, null, true);
+        $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $pnr->assign('reply', $reply);
         $pnr->assign('preview', $preview);
         $pnr->assign('last_visit', $last_visit);
@@ -344,6 +346,7 @@ function Dizkus_user_newtopic($args=array())
     } else {
         // new topic
         $pnr = & pnRender::getInstance('Dizkus', false, null, true);
+        $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $pnr->assign('preview', $preview);
         $pnr->assign('newtopic', $newtopic);
         $pnr->assign('last_visit', $last_visit);
@@ -443,10 +446,11 @@ function Dizkus_user_editpost($args=array())
         }
 
         $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign( 'preview', $preview);
-        $pnr->assign( 'post', $post);
-        $pnr->assign( 'last_visit', $last_visit);
-        $pnr->assign( 'last_visit_unix', $last_visit_unix);
+        $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+        $pnr->assign('preview', $preview);
+        $pnr->assign('post', $post);
+        $pnr->assign('last_visit', $last_visit);
+        $pnr->assign('last_visit_unix', $last_visit_unix);
         return $pnr->fetch('dizkus_user_editpost.html');
     }
 }
@@ -978,19 +982,21 @@ function Dizkus_user_print($args=array())
             $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                                  array('post_id' => $post_id));
             $pnr->assign('post', $post);
+            $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
             $output = $pnr->fetch('dizkus_user_printpost.html');
         } elseif($topic_id<>0) {
             $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                                  array('topic_id'  => $topic_id,
                                        'complete' => true,
                                        'count' => false ));
+            $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
             $pnr->assign('topic', $topic);
             $output = $pnr->fetch('dizkus_user_printtopic.html');
         } else {
             return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
         }
         $lang = pnConfigGetVar('backend_language');
-        echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
+        echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
         echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$lang\" xml:lang=\"$lang\">\n";
         echo "<head>\n";

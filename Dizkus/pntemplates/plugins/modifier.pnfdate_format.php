@@ -46,7 +46,7 @@ require_once $smarty->_get_plugin_filepath('shared','make_timestamp');
  * @return   string   the modified output
  * @uses     smarty_make_timestamp()
  */
-function smarty_modifier_pnfdate_format($string, $format='datebrief', $default_date=null, $usetzoffset=null)
+function smarty_modifier_pndate_format($string, $format='datebrief', $default_date=null, $usetzoffset=null)
 {
     if(empty($format)) {
         $format = 'datebrief';

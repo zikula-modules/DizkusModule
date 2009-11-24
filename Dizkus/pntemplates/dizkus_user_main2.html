@@ -48,7 +48,7 @@
             </td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[$forum.forum_topics]--></td>
             <td style="width:5%;text-align:center;" align="center" valign="middle"><!--[$forum.forum_posts]--></td>
-            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[if $forum.last_post_data.name <> '']--><!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']--><br /> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br /><a href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[pnimg modname='Dizkus' src=icon_latest_topic.gif]--></a><!--[else]--><!--[gt text="No posts"]--><!--[/if]--></td>
+            <td style="width:15%;text-align:center;" align="center" valign="middle"><!--[if $forum.last_post_data.name <> '']--><!--[$forum.last_post_data.unixtime|pndate_format:'datetimebrief']--><br /> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br /><a href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[pnimg modname='Dizkus' src=icon_latest_topic.gif]--></a><!--[else]--><!--[gt text="No posts"]--><!--[/if]--></td>
         </tr>
         <!--[foreachelse]-->
         <tr>
@@ -75,7 +75,7 @@
     </tbody>
 </table>
 <ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
-    <li><!--[pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit." ]--> = <!--[gt text="New posts since your last visit on"]--> (<!--[$last_visit_unix|pnfdate_format:'datetimebrief']-->)</li>
+    <li><!--[pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit." ]--> = <!--[gt text="New posts since your last visit on"]--> (<!--[$last_visit_unix|pndate_format:'datetimebrief']-->)</li>
     <li><!--[pnimg modname='Dizkus' src="icon_folder.gif" __alt="No new posts since your last visit." ]--> = <!--[gt text="No new posts since your last visit on"]--></li>
 </ul>
 <!--[include file='dizkus_user_footer.html]-->

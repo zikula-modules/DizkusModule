@@ -10,6 +10,9 @@ Dizkus Module changelog
 This version will not work in Zikula before 1.2.0!
 + more DBUtil
 + removed language defines in favour of gettext for Zikula 1.2.0. 
++ default charset is now utf-8
++ avatarpath - Users' modvar
++ replaced pnfdate_format with pndate_format
 
 ---------------------------------------------------------------------------------------------
 3.0 (fs,cv)
@@ -87,8 +90,8 @@ for more information see http://code.zikula.org/dizkus/query?status=closed&group
   Please use display logic to show the buttons, for more details see the
   recent templates.
 + added timezone support (credits go to Adrian Chapman for the idea). To use this in
-  your templates, use the new pnfdate_format modifier instead of pndate_format, e.g.:
-  <!--[ $lastpost.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->
+  your templates, use the new pndate_format modifier instead of pndate_format, e.g.:
+  <!--[ $lastpost.posted_unixtime|pndate_format:'datetimebrief':'':true ]-->
   The last parameter is activating the timezone support which adds the difference between
   the users timezone and the main timezone configured in your Zikula settings.
 + added option to disable forum

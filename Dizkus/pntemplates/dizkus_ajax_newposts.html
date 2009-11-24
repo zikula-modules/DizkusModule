@@ -6,7 +6,7 @@
 <dl>
     <dt><strong><!--[$lastpostcount]-->&nbsp;<!--[gt text="Recent posts:"]--></strong></dt>
     <!--[foreach item=lastpost from=$lastposts]-->
-    <dd><!--[$lastpost.posted_unixtime|pnfdate_format:'datetimebrief']--> <a href="<!--[$lastpost.last_post_url_anchor]-->"><!--[$lastpost.topic_title|truncate:42]--></a> (<!--[$lastpost.poster_name]-->)</dd>
+    <dd><!--[$lastpost.posted_unixtime|pndate_format:'datetimebrief']--> <a href="<!--[$lastpost.last_post_url_anchor]-->"><!--[$lastpost.topic_title|truncate:42]--></a> (<!--[$lastpost.poster_name]-->)</dd>
     <!--[/foreach]-->
 </dl>
 

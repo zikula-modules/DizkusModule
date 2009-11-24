@@ -48,7 +48,7 @@
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
                                 <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="By"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
-                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
+                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pndate_format:'datetimebrief']-->:
                                 <!--[if $forum.last_post_data.url_anchor neq '']-->
                                 <a class="latesttopicimage" href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay|truncate:70]-->'"><!--[$forum.last_post_data.subject|pnvarprepfordisplay|truncate:70]--></a>
                                 <!--[/if]-->
@@ -111,7 +111,7 @@
                             <!--[if isset($forum.last_post_data)]-->
                             <span>
                                 <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="By"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
-                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pnfdate_format:'datetimebrief']-->:
+                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pndate_format:'datetimebrief']-->:
                                 <!--[if $forum.last_post_data.url_anchor neq '']-->
                                 <a class="latesttopicimage" href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[$forum.last_post_data.subject|pnvarprepfordisplay]--></a>
                                 <!--[/if]-->

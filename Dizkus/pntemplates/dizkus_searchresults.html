@@ -54,7 +54,7 @@
                 <td headers="col_replies" align="center"><!--[ $searchresult.topic_replies ]--></td>
                 <td headers="col_poster" align="center"><!--[ $searchresult.topicstarter_name ]--></td>
                 <td headers="col_views" align="center"><!--[ $searchresult.topic_views ]--></td>
-                <td headers="col_date" align="center"><!--[ $searchresult.posted_unixtime|pnfdate_format:'datetimebrief':'':true ]-->&nbsp;<a title="<!--[gt text='View most-recent topic']-->" href="<!--[ $searchresult.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="Go to latest posts" ]--></a></td>
+                <td headers="col_date" align="center"><!--[ $searchresult.posted_unixtime|pndate_format:'datetimebrief':'':true ]-->&nbsp;<a title="<!--[gt text='View most-recent topic']-->" href="<!--[ $searchresult.last_post_url_anchor|pnvarprepfordisplay ]-->"><!--[ pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="Go to latest posts" ]--></a></td>
             </tr>
 
             <!--[ foreachelse ]-->

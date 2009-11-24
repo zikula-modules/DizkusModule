@@ -8,7 +8,7 @@
     <!--[if $func eq 'main' OR $func eq 'viewforum']-->
     <h3 class="footer_title"><!--[gt text="Key"]--></h3>
     <ul id="ctheme-legenda">
-        <!--[assign var='last_visit_unix' value=$last_visit_unix|pnfdate_format:'datetimebrief']-->
+        <!--[assign var='last_visit_unix' value=$last_visit_unix|pndate_format:'datetimebrief']-->
         <li><!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title="New posts since your last visit" ]--> : <!--[gt text="New posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
         <li><!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="No new posts since your last visit" ]--> : <!--[gt text="No new posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
     </ul>

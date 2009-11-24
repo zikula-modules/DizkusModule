@@ -166,7 +166,7 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'topics_per_page', 15);
     pnModSetVar('Dizkus', 'hot_threshold', 20);
     pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
-    pnModSetVar('Dizkus', 'default_lang', 'iso-8859-1');
+    pnModSetVar('Dizkus', 'default_lang', 'UTF-8');
     pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
     pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
     pnModSetVar('Dizkus', 'log_ip', 'no');

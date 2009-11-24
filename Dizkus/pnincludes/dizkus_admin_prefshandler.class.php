@@ -150,7 +150,7 @@ class dizkus_admin_prefshandler
 
             // strings
             pnModSetVar('Dizkus', 'email_from',          pnConfigGetVar('adminmail'));
-            pnModSetVar('Dizkus', 'default_lang',        'iso-8859-1');
+            pnModSetVar('Dizkus', 'default_lang',        'utf-8');
             pnModSetVar('Dizkus', 'signature_start',     '');
             pnModSetVar('Dizkus', 'signature_end',       '');
             pnModSetVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently closed for maintenance. Please check again soon.', $dom));
