@@ -2152,29 +2152,22 @@ function Dizkus_userapi_readuserforums($args)
     $pntable = pnDBGetTables();
     $forumscols = DBUtil::_getAllColumnsQualified('dizkus_forums', 'f');
 
+    $where = '';
     if (isset($args['forum_id'])) {
-        $where = 'WHERE f.forum_id=' . DataUtil::formatForStore($args['forum_id']) . ' ';
+        $where = 'WHERE tbl.forum_id=' . DataUtil::formatForStore($args['forum_id']) . ' ';
     } elseif (isset($args['cat_id'])) {
-        $where = 'WHERE c.cat_id=' . DataUtil::formatForStore($args['cat_id']) . ' ';
+        $where = 'WHERE a.cat_id=' . DataUtil::formatForStore($args['cat_id']) . ' ';
     }
 
-    $sql = 'SELECT ' . $forumscols . ',
-                       c.cat_title
-            FROM ' . $pntable['dizkus_forums'] . ' f
-            LEFT JOIN ' . $pntable['dizkus_categories'] . ' AS c
-            ON c.cat_id=f.cat_id ' .
-            $where . '
-            ORDER BY c.cat_order, f.forum_order';
+    $joinInfo = array();
+    $joinInfo[] = array('join_table'          =>  'dizkus_categories',
+                        'join_field'          =>  'cat_title',
+                        'object_field_name'   =>  'cat_title',
+                        'compare_field_table' =>  'cat_id',
+                        'compare_field_join'  =>  'cat_id');
 
-    $result = DBUtil::executeSQL($sql);
-    if ($result === false) {
-        return showforumerror(__('Sorry! Could not find the forum or topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
-    }
-
-    $colarray     = DBUtil::getColumnsArray ('dizkus_forums');
-    $colarray[] = 'cat_title';
-    $permFilter[]  = array ('realm'            =>  0,
-                            'component_left'   =>  'Dizkus',
+    $permFilter = array();
+    $permFilter[]  = array ('component_left'   =>  'Dizkus',
                             'component_middle' =>  '',
                             'component_right'  =>  '',
                             'instance_left'    =>  'cat_id',
@@ -2182,14 +2175,17 @@ function Dizkus_userapi_readuserforums($args)
                             'instance_right'   =>  '',
                             'level'            =>  ACCESS_READ);
 
-    $forums = DBUtil::marshallObjects ($result, $colarray);
-    if (empty($forums)) {
-        return $forums;
+    // retrieve the admin module object array
+    $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joinInfo, $where, 'forum_id', -1, -1, 'forum_id', $permFilter);
+
+    if ($forums === false) {
+        return showforumerror(__('Sorry! Could not find the forum or topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
-    
-    if (isset($args['forum_id'])) {
-        return $forums[0];
+
+    if (isset($args['forum_id']) && isset($forums[$args['forum_id']])) {
+        return $forums[$args['forum_id']];
     }
+
     return $forums;
 }
 

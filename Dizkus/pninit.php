@@ -150,9 +150,9 @@ function Dizkus_init()
         $topictitle   = DataUtil::formatForStore($pntable['dizkus_topics_column']['topic_title']);
         $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
         
-//        $posttexttable  = DataUtil::formatForStore($pntable['dizkus_posts_text']);
-//        $posttext       = DataUtil::formatForStore($pntable['dizkus_posts_text_column']['post_text']);
-//        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $posttexttable . ' ADD FULLTEXT ' . $posttext . ' (' . $posttext . ')');
+        $posttexttable  = DataUtil::formatForStore($pntable['dizkus_posts_text']);
+        $posttext       = DataUtil::formatForStore($pntable['dizkus_posts_text_column']['post_text']);
+        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $posttexttable . ' ADD FULLTEXT ' . $posttext . ' (' . $posttext . ')');
 
         if ($res1 == true && $res2 == true) {
             pnModSetVar('Dizkus', 'fulltextindex', 'yes');
@@ -296,7 +296,6 @@ function Dizkus_delete()
     // Deletion successful
     return true;
 }
-
 
 /**
  * interactiveupgrade
