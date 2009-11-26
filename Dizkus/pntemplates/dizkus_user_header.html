@@ -73,7 +73,7 @@
                     <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[$topic.forum_name|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id]-->"><!--[$topic.forum_name|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[/if]-->
-                <!--[if $favorites]-->
+                <!--[if $favorites|default:false]-->
                 <li>&nbsp;<em>(<!--[gt text="Favourites"]-->)</em></li>
                 <!--[/if]-->
             </ul>

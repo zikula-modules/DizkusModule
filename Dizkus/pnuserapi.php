@@ -3124,15 +3124,18 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
         return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
-    switch ($args['view']) {
+    switch ($args['view'])
+    {
         case 'previous':
             $math = '<';
             $sort = 'DESC';
             break;
+
         case 'next':
             $math = '>';
             $sort = 'ASC';
             break;
+
         default:
             return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
@@ -3141,10 +3144,10 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
 
     // integrate contactlist's ignorelist here
     $whereignorelist = '';
-    $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+    $ignorelist_setting = pnModAPIFunc('Dizkus', 'user', 'get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
     if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
         // get user's ignore list
-        $ignored_users = pnModAPIFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignored_users = pnModAPIFunc('ContactList', 'user', 'getallignorelist',array('uid' => pnUserGetVar('uid')));
         $ignored_uids = array();
         foreach ($ignored_users as $item) {
             $ignored_uids[]=(int)$item['iuid'];
@@ -3166,7 +3169,8 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
 
     $res = DBUtil::executeSQL($sql, -1, 1);
     $newtopic = DBUtil::marshallObjects($res, array('topic_id'));
-    return $newtopic[0]['topic_id'];
+
+    return isset($newtopic[0]['topic_id']) ? $newtopic[0]['topic_id'] : 0;
 }
 
 /**

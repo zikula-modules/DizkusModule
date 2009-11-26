@@ -128,7 +128,7 @@
     </div>
 </div>
 
-<!--[if $post.contactlist_ignored == 1]-->
+<!--[if $post.contactlist_ignored|default:0 == 1]-->
 <script type="text/javascript">
     // <![CDATA[
     $('posting_<!--[$post.post_id]-->').toggle();

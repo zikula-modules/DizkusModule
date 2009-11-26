@@ -7,7 +7,7 @@
     <div class="inner">
         <div id="dzk_javascriptareatopic" class="hidden">
             <ul class="dzk_topicoptions linklist z-clearfix">
-                <!--[if $topic.topic_id neq $topic.prev_topic_id]-->
+                <!--[if $topic.prev_topic_id and $topic.topic_id neq $topic.prev_topic_id]-->
                 <li><a class="dzk_img previoustopiclink" title="<!--[gt text="Previous topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id]-->">&nbsp;</a></li>
                 <!--[/if]-->
 
@@ -27,7 +27,7 @@
                     <a id="unsubscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 0]-->hidden<!--[/if]--> unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from this topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a>
                 </li>
                 <!--[/if]-->
-                <!--[if $topic.topic_id neq $topic.next_topic_id]-->
+                <!--[if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id]-->
                 <li><a class="dzk_img nexttopiclink" title="<!--[gt text="Go to next topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id]-->">&nbsp;</a></li>
                 <!--[/if]-->
             </ul>
