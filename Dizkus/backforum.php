@@ -29,11 +29,6 @@ $user     =      FormUtil::getPassedValue('user', '', 'GET');
 
 $dom = ZLanguage::getModuleDomain('Dizkus');
 
-/**
- * get the short urls extensions
- */
-// pnModURL already handles correct shorturls in Zikula 1.0
-
 // get the module info
 $dzkinfo = pnModGetInfo(pnModGetIdFromName('Dizkus'));
 $dzkname = $dzkinfo['displayname'];
@@ -41,7 +36,7 @@ $dzkname = $dzkinfo['displayname'];
 /**
  * check for feed, if not set, use rss091 as default
  */
-if(!empty($feed)) {
+if (!empty($feed)) {
     // feed is set, check counter
     $count = (empty($count)) ? 10 : (int)$count;
 } else {
@@ -50,23 +45,23 @@ if(!empty($feed)) {
     $count = 10;
 }
 
-if(isset($forum_id) && !is_numeric($forum_id)) {
+if (isset($forum_id) && !is_numeric($forum_id)) {
     die(DataUtil::formatForDisplay(__f('Error! Found an invalid forum ID %s in  \'backforum.php\'.', $forum_id, $dom)));
 }
-if(isset($cat_id) && !is_numeric($cat_id)) {
+if (isset($cat_id) && !is_numeric($cat_id)) {
     die(DataUtil::formatForDisplay(__f('Error! Found an invalid category ID %s in \'backforum.php\'.', $cat_id, $dom)));
 }
 
 /**
  * create pnRender object
  */
-$pnr = & pnRender::getInstance('Dizkus', false);
+$render = & pnRender::getInstance('Dizkus', false);
 
 /**
  * check if template for feed exists
  */
 $templatefile = 'dizkus_feed_' . DataUtil::formatForOS($feed) . '.html';
-if(!$pnr->template_exists($templatefile)) {
+if (!$render->template_exists($templatefile)) {
     // silently stop working
     die(DataUtil::formatForDisplay(__f('Error! Could not find a template for a feed of \'%s\' type.', $feed, $dom)));
 }
@@ -74,7 +69,7 @@ if(!$pnr->template_exists($templatefile)) {
 /**
  * get user id
  */
-if(!empty($user)) {
+if (!empty($user)) {
     $uid = pnUserGetIDFromName($user);
 }
 
@@ -91,23 +86,23 @@ $where = '';
 /**
  * check for forum_id
  */
-if(!empty($forum_id)) {
-    $forum = pnModAPIFunc('Dizkus', 'user', 'readuserforums',
-                          array('forum_id' => $forum_id));
-    if(count($forum) == 0) {
+if (!empty($forum_id)) {
+    $forum = pnModAPIFunc('Dizkus', 'user', 'readuserforums', array('forum_id' => $forum_id));
+    if (count($forum) == 0) {
         // not allowed to see forum
         pnShutDown();
     }
     $where = 'AND t.forum_id = ' . (int)DataUtil::formatForStore($forum_id) . ' ';
     $link = pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
     $forumname = $forum['forum_name'];
+
 } elseif (!empty($cat_id)) {
-    if(!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
         pnShutDown();
     }
     $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                              array('cat_id' => $cat_id));
-    if($category == false) {
+    if ($category == false) {
         pnShutDown();
     }
     $where = 'AND f.cat_id = ' . (int)DataUtil::formatForStore($cat_id) . ' ';
@@ -124,17 +119,15 @@ if(!empty($forum_id)) {
     $where = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
 }    
 
-$pnr->assign('forum_name', $forumname);
-$pnr->assign('forum_link', $link);
-$pnr->assign('sitename', pnConfigGetVar('sitename'));
-$pnr->assign('adminmail', pnConfigGetVar('adminmail'));
+$render->assign('forum_name', $forumname);
+$render->assign('forum_link', $link);
+$render->assign('sitename', pnConfigGetVar('sitename'));
+$render->assign('adminmail', pnConfigGetVar('adminmail'));
 
 /**
  * get database information
  */
-
 pnModDBInfoLoad('Dizkus');
-
 $pntable = pnDBGetTables();
 
 /**
@@ -172,25 +165,29 @@ $colarray[] = 'cat_title';
 $posts = DBUtil::marshallObjects($res, $colarray);
 
 $keys = array_keys($posts);
-foreach ($keys as $key) {
+foreach ($keys as $key)
+{
     $posts[$key]['time'] = $posts[$key]['post_time'];
     $posts[$key]['unixtime'] = strtotime ($posts[$key]['post_time']);
     $start = (int)((ceil(($posts[$key]['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
+
     $posts[$key]['post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
                                  array('topic' => $posts[$key]['topic_id'],
                                        'start' => $start), 
                                  null, null, true);
+
     $posts[$key]['last_post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
                                       array('topic' => $posts[$key]['topic_id'],
                                             'start' => $start), 
                                       null, "pid" . $posts[$key]['topic_last_post_id'], true);
+
     $posts[$key]['rsstime'] = strftime('%a, %d %b %Y %H:%M:%S %Z', $posts[$key]['post_unixtime']);
 }
 
-$pnr->assign('posts', $posts);
-$pnr->assign('now', time());
-$pnr->assign('lastbuilddate', strftime('%a, %d %b %Y %H:%M:%S %Z', time()));
-$pnr->assign('dizkusinfo', $dzkinfo);
+$render->assign('posts', $posts);
+$render->assign('now', time());
+$render->assign('lastbuilddate', strftime('%a, %d %b %Y %H:%M:%S %Z', time()));
+$render->assign('dizkusinfo', $dzkinfo);
 
 header("Content-Type: text/xml");
-$pnr->display($templatefile);
+$render->display($templatefile);

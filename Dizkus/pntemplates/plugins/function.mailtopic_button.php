@@ -26,15 +26,15 @@ function smarty_function_mailtopic_button($params, &$smarty)
 	  unset($params);
 
     // set a default value
-    if(!isset($image) || empty($image)) {
+    if (!isset($image) || empty($image)) {
         $image = 'sendto.gif';
     }
 
     Loader::includeOnce('modules/Dizkus/common.php');
     $out = '';
-    if(allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+    if (allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = dzk_getimagepath($image);
-        if($imagedata == false) {
+        if ($imagedata == false) {
             $show = DataUtil::formatForDisplay(__('Send as e-mail', $dom));
         } else {
             $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Send as e-mail', $dom)) .'" ' . $imagedata['size'] . ' />';

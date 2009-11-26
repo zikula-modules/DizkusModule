@@ -17,7 +17,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_statisticsblock_init()
 {
-    SecurityUtil::registerPermissionSchema('Dizkus_Statisticsblock::', 'Block title::');
+    SecurityUtil::registerPermissionSchema('Dizkus_Statisticsblock::', 'Block ID::');
 }
 
 /**
@@ -26,93 +26,103 @@ function Dizkus_statisticsblock_init()
  */
 function Dizkus_statisticsblock_info()
 {
-    return array( 'module' => 'Dizkus',
-                  'text_type' => 'Dizkus_statisticsblock',
-                  'text_type_long' => 'Dizkus Statistics',
-                  'allow_multiple' => true,
-                  'form_content' => false,
-                  'form_refresh' => false,
-                  'show_preview' => true);
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
+    return array('module' => 'Dizkus',
+                 'text_type' => __('Dizkus statistic', $dom),
+                 'text_type_long' => __('Dizkus Statistics Block', $dom),
+                 'allow_multiple' => true,
+                 'form_content' => false,
+                 'form_refresh' => false,
+                 'show_preview' => true);
 }
 
 /**
  * display the statisticsblock
  */
-function Dizkus_statisticsblock_display($row)
+function Dizkus_statisticsblock_display($blockinfo)
 {
-    if(!pnModAvailable('Dizkus')) {
+    if (!pnModAvailable('Dizkus')) {
         return;
     }
-    
+
     //check for Permission
-    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', $row['title'] . '::', ACCESS_READ)){ 
+    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$blockinfo[bid]::", ACCESS_READ)){ 
         return; 
     }
 
     // check if forum is turned off
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
-        $row['content'] = $disabled;
-      return themesideblock($row);
+    if (!is_bool($disabled)) {
+        $blockinfo['content'] = $disabled;
+        return themesideblock($blockinfo);
     }
 
-    // Break out options from our content field
-    $vars = pnBlockVarsFromContent($row['content']);
+    // break out options from our content field
+    $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // check if cb_template is set, if not, use the default centerblock template
-    if(empty($vars['sb_template'])) {
-        $vars['sb_template'] = "dizkus_statisticsblock_display.html";
+    if (empty($vars['sb_template'])) {
+        $vars['sb_template'] = 'dizkus_statisticsblock_display.html';
     }
-    if(empty($vars['sb_parameters'])) {
-        $vars['sb_parameters'] = "maxposts=5";
+    if (empty($vars['sb_parameters'])) {
+        $vars['sb_parameters'] = 'maxposts=5';
     }
 
-    $pnr = pnRender::getInstance('Dizkus', false, null, true);
+    // build the output
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
 
     $params = explode(',', $vars['sb_parameters']);
 
-    if(is_array($params) && count($params)>0) {
-        foreach($params as $param) {
-            $paramdata = explode("=", $param);
-            $pnr->assign(trim($paramdata[0]), trim($paramdata[1]));
+    if (is_array($params) && count($params) > 0) {
+        foreach ($params as $param)
+        {
+            $paramdata = explode('=', $param);
+            $render->assign(trim($paramdata[0]), trim($paramdata[1]));
         }
     }
-    $row['content'] = $pnr->fetch(trim($vars['sb_template']));
-    return themesideblock($row);
+
+    $blockinfo['content'] = $render->fetch(trim($vars['sb_template']));
+    return themesideblock($blockinfo);
 }
 
 /**
  * Update the block
  */
-function Dizkus_statisticsblock_update($row)
+function Dizkus_statisticsblock_update($blockinfo)
 {
-    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$row[title]::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$blockinfo[bid]::", ACCESS_ADMIN)) {
         return false;
     }
-    
+
     $sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
     $sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 
-    $row['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
-    return($row);
+    $blockinfo['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
+    return($blockinfo);
 }
 
 /**
  * Modify the block
  */
-function Dizkus_statisticsblock_modify($row)
+function Dizkus_statisticsblock_modify($blockinfo)
 {
-    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', $row['title'] . '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus_Statisticsblock::', "$blockinfo[bid]::", ACCESS_ADMIN)) {
         return false;
     }
 
     // Break out options from our content field
-    $vars = pnBlockVarsFromContent($row['content']);
+    $vars = pnBlockVarsFromContent($blockinfo['content']);
 
-    if(!isset($vars['sb_parameters']) || empty($vars['sb_parameters'])) { $vars['sb_parameters'] = 'maxposts=5'; }
-    if(!isset($vars['sb_template']) || empty($vars['sb_template']))   { $vars['sb_template']   = 'dizkus_statisticsblock_display.html'; }
+    if (!isset($vars['sb_parameters']) || empty($vars['sb_parameters'])) {
+        $vars['sb_parameters'] = 'maxposts=5';
+    }
+    if (!isset($vars['sb_template']) || empty($vars['sb_template'])) {
+        $vars['sb_template']   = 'dizkus_statisticsblock_display.html';
+    }
 
-    $pnRender = pnRender::getInstance('Dizkus', false, null, true);
-    $pnRender->assign('vars', $vars);
-    return $pnRender->fetch('dizkus_statisticsblock_config.html');
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('vars', $vars);
+
+    return $render->fetch('dizkus_statisticsblock_config.html');
 }

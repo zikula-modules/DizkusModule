@@ -18,45 +18,46 @@ chdir('/opt/webdev/htdocs');
 // try other rss feed (1.0, 2.0, Atom)... RSS mod could
 // return a different information (timestamp - array keys like title, etc.
 
+//
 // start Zikula
-/****************************************************************/
+//
 include 'includes/pnAPI.php';
 pnInit();
-/****************************************************************/
 
+//
 // Checking if RSS2Forum is enabled
-/****************************************************************/
+//
 if (!pnModGetVar('Dizkus', 'rss2f_enabled') == 'no') {
     return;
 }
 
+//
 // Checking Feeds module availability
-/****************************************************************/
+//
 if (!pnModAvailable('Feeds')) {
     return;
 }
-/****************************************************************/
 
+//
 // Getting All forums where RSS2DIZKUS is SET... this also loads modules/Dizkus/common.php
-/**************************************************************************/
+//
 $forums = pnModAPIFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 
 if (!$forums) {
     return;
 }
-/****************************************************************/
 
 $loggedin = false;
 $lastuser = '';
-foreach($forums as $forum) {
+foreach ($forums as $forum)
+{
+    if ($forum['externalsource'] == 2) {   // RSS
 
-    if($forum['externalsource'] == 2) {   // RSS
-
-        if($lastuser <> $forum['pnuser']) {
+        if ($lastuser <> $forum['pnuser']) {
             pnUserLogOut();
             $loggedin = false;
             // login the correct user
-            if(pnUserLogIn($forum['pnuser'], base64_decode($forum['pnpassword']), false)) {
+            if (pnUserLogIn($forum['pnuser'], base64_decode($forum['pnpassword']), false)) {
                 $lastuser = $forum['pnuser'];
                 $loggedin = true;
             } else {
@@ -67,7 +68,7 @@ foreach($forums as $forum) {
             $loggedin = true;
         }
 
-        if($loggedin == true) {
+        if ($loggedin == true) {
             $rss = pnModAPIFunc('Feeds', 'user', 'get', array('fid' => $forum['externalsourceurl']));
 
             if (!$rss) {
@@ -99,8 +100,8 @@ foreach($forums as $forum) {
             if (!$insert) {
                 // Do your debug
             }
-
             // Done
-        } // if loggedin
+        }
+        // endif loggedin
     }
 }

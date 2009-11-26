@@ -37,7 +37,7 @@ function smarty_function_readlastposts($params, &$smarty)
 
     // get number of posts in db
     $numposts = pnModAPIFunc('Dizkus', 'user', 'boardstats', array('type' => 'all'));
-    if($numposts==0) {
+    if ($numposts==0) {
         $smarty->assign('lastpostcount', 0);
         $smarty->assign('lastposts', array());
         return;
@@ -48,11 +48,11 @@ function smarty_function_readlastposts($params, &$smarty)
     list($dbconn, $pntable) = dzkOpenDB();
 
     $whereforum = "";
-    if(!empty($forum_id) && is_numeric($forum_id)) {
+    if (!empty($forum_id) && is_numeric($forum_id)) {
         // get the category id and check permissions
         $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $forum_id));
-        if(!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             $smarty->assign('lastpostcount', 0);
             $smarty->assign('lastposts', array());
             return;
@@ -62,7 +62,7 @@ function smarty_function_readlastposts($params, &$smarty)
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
         $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
-        if(!is_array($userforums) || count($userforums)==0) {
+        if (!is_array($userforums) || count($userforums)==0) {
             // error or user is not allowed to read any forum at all
             $smarty->assign('lastpostcount', 0);
             $smarty->assign('lastposts', array());
@@ -70,7 +70,7 @@ function smarty_function_readlastposts($params, &$smarty)
         }
         
         foreach($userforums as $userforum) {
-            if(strlen($whereforum)>0) {
+            if (strlen($whereforum)>0) {
                 $whereforum .= ', ';
             }
             $whereforum .= $userforum['forum_id'];
@@ -82,7 +82,7 @@ function smarty_function_readlastposts($params, &$smarty)
     // we only want to do this if $favorites is set and $whereforum is empty
     // and the user is logged in.
     // (Anonymous doesn't have favorites)
-    if(isset($favorites) && $favorites && empty($whereforum) && $loggedIn) {
+    if (isset($favorites) && $favorites && empty($whereforum) && $loggedIn) {
         // get the favorites
         $sql = 'SELECT fav.forum_id,
                        f.cat_id
@@ -93,7 +93,7 @@ function smarty_function_readlastposts($params, &$smarty)
         $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
         while (!$result->EOF) {
             list($forum_id, $cat_id) = $result->fields;
-            if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+            if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
                 $wherefavorites .= 'f.forum_id=' .  (int)DataUtil::formatForStore($forum_id) . ' OR ';
             }
             $result->MoveNext();
@@ -107,12 +107,12 @@ function smarty_function_readlastposts($params, &$smarty)
     $wherespecial = ' (f.forum_pop3_active = 0';
     // if show_m2f is set we show contents of m2f forums where.
     // forum_pop3_active is set to 1
-    if(isset($show_m2f) && $show_m2f==true) {
+    if (isset($show_m2f) && $show_m2f==true) {
         $wherespecial .= ' OR f.forum_pop3_active = 1';
     }
     // if show_rss is set we show contents of rss2f forums where.
     // forum_pop3_active is set to 2
-    if(isset($show_rss) && $show_rss==true) {
+    if (isset($show_rss) && $show_rss==true) {
         $wherespecial .= ' OR f.forum_pop3_active = 2';
     }
 
@@ -123,8 +123,8 @@ function smarty_function_readlastposts($params, &$smarty)
 
     // user_id set?
     $whereuser = "";
-    if(!empty($user_id)) {
-        if($user_id==-1 && $loggedIn) {
+    if (!empty($user_id)) {
+        if ($user_id==-1 && $loggedIn) {
             $whereuser = 'p.poster_id = ' . DataUtil::formatForStore($uid) . ' AND ';
         } else {
             $whereuser = 'p.poster_id = ' . DataUtil::formatForStore($user_id) . ' AND ';
@@ -167,7 +167,7 @@ function smarty_function_readlastposts($params, &$smarty)
     // we do this until we got the requested number of postings
     $result = dzkSelectLimit($dbconn, $sql, $postmax, 0, __FILE__, __LINE__);
 
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         $post_sort_order = pnModAPIFunc('Dizkus', 'user', 'get_user_post_order');
         $posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
         for (; !$result->EOF; $result->MoveNext()) {
@@ -195,7 +195,7 @@ function smarty_function_readlastposts($params, &$smarty)
             // backwards compatibility... :puke:
             $lastpost['title_tag'] = $lastpost['topic_title'];
 
-            if($post_sort_order == "ASC") {
+            if ($post_sort_order == "ASC") {
                 $start = ((ceil(($lastpost['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
             } else {
                 // latest topic is on top anyway...

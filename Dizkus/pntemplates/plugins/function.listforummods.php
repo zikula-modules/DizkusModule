@@ -13,7 +13,7 @@ function smarty_function_listforummods($params, &$smarty)
 
     $count = 0;
     $out = '';
-    if(isset($params['moderators']) && is_array($params['moderators'])) {
+    if (isset($params['moderators']) && is_array($params['moderators'])) {
         foreach($params['moderators'] as $mod_id => $mod_name) {
             if ($count > 0) {
 	            $out .= ', ';

@@ -88,20 +88,20 @@ function Dizkus_ajax_reply()
         $post['post_text'] = $post['post_textdisplay'];
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign('topic', $topic);
-    $pnr->assign('post', $post);
-    $pnr->assign('preview', $preview);
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('topic', $topic);
+    $render->assign('post', $post);
+    $render->assign('preview', $preview);
 
     //---- begin of MediaAttach integration ----
     if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
-        dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
+        dzk_jsonizeoutput(array('data'    => $render->fetch('dizkus_user_singlepost.html'),
                                 'post_id' => $post['post_id'],
                                 'uploadauthid' => pnSecGenAuthKey('MediaAttach')),
                           true);
 
     } else {
-        dzk_jsonizeoutput(array('data'    => $pnr->fetch('dizkus_user_singlepost.html'),
+        dzk_jsonizeoutput(array('data'    => $render->fetch('dizkus_user_singlepost.html'),
                                 'post_id' => $post['post_id']),
                           true);
     }
@@ -182,14 +182,14 @@ function Dizkus_ajax_editpost()
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                              array('post_id'     => $post_id));
         if ($post['poster_data']['edit'] == true) {
-            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-            $pnr->assign('post', $post);
+            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render->assign('post', $post);
             // simplify our live
-            $pnr->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
+            $render->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
 
             SessionUtil::delVar('pn_ajax_call');
 
-            return array('data'    => $pnr->fetch('dizkus_ajax_editpost.html'),
+            return array('data'    => $render->fetch('dizkus_ajax_editpost.html'),
                          'post_id' => $post['post_id']);
         } else {
             dzk_ajaxerror(__('Sorry! You do not have authorisation for this action.', $dom));
@@ -521,12 +521,12 @@ function Dizkus_ajax_edittopicsubject()
                                    'complete' => false));
 
         if ($topic['access_topicsubjectedit'] == true) {
-            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-            $pnr->assign('topic', $topic);
+            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render->assign('topic', $topic);
 
             SessionUtil::delVar('pn_ajax_call');
 
-            return array('data'     => $pnr->fetch('dizkus_ajax_edittopicsubject.html'),
+            return array('data'     => $render->fetch('dizkus_ajax_edittopicsubject.html'),
                          'topic_id' => $topic_id);
         } else {
             dzk_ajaxerror(__('Sorry! You do not have authorisation for this action', $dom));
@@ -660,7 +660,7 @@ function Dizkus_ajax_newtopic()
         dzk_ajaxerror(__('no subject', $dom), true);
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -680,8 +680,8 @@ function Dizkus_ajax_newtopic()
                                     'count'    => false));
 
         if (pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-            $pnr->assign('topic', $topic);
-            $confirmation = $pnr->fetch('dizkus_ajax_newtopicconfirmation.html');
+            $render->assign('topic', $topic);
+            $confirmation = $render->fetch('dizkus_ajax_newtopicconfirmation.html');
         } else {
             $confirmation = false;
         }
@@ -753,11 +753,11 @@ function Dizkus_ajax_newtopic()
         $newtopic['subscribe_topic']  = 0;
     }
 
-    $pnr->assign('newtopic', $newtopic);
+    $render->assign('newtopic', $newtopic);
 
     SessionUtil::delVar('pn_ajax_call');
 
-    return array('data'     => $pnr->fetch('dizkus_user_newtopicpreview.html'),
+    return array('data'     => $render->fetch('dizkus_user_newtopicpreview.html'),
                  'newtopic' => $newtopic);
 }
 
@@ -775,14 +775,14 @@ function Dizkus_ajax_forumusers()
        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false);
+    $render = & pnRender::getInstance('Dizkus', false);
 
     if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
-        $pnr->register_outputfilter('smarty_outputfilter_shorturls');
+        $render->register_outputfilter('smarty_outputfilter_shorturls');
     }
 
-    $pnr->display('dizkus_ajax_forumusers.html');
+    $render->display('dizkus_ajax_forumusers.html');
     pnShutDown();
 }
 
@@ -801,14 +801,14 @@ function Dizkus_ajax_newposts()
         pnShutDown();
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false);
+    $render = & pnRender::getInstance('Dizkus', false);
 
     if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
-        $pnr->register_outputfilter('smarty_outputfilter_shorturls');
+        $render->register_outputfilter('smarty_outputfilter_shorturls');
     }
 
-    $out = $pnr->fetch('dizkus_ajax_newposts.html');
+    $out = $render->fetch('dizkus_ajax_newposts.html');
     echo $out;
     pnShutDown();
 }

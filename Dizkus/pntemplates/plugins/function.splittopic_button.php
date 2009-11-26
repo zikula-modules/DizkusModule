@@ -26,13 +26,13 @@ function smarty_function_splittopic_button($params, &$smarty)
 	  unset($params);
 
     // set a default value
-    if(!isset($image) || empty($image)) {
+    if (!isset($image) || empty($image)) {
         $image = 'splitit.gif';
     }
 
     Loader::includeOnce('modules/Dizkus/common.php');
-    if(allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        if($imagedata == false) {
+    if (allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        if ($imagedata == false) {
             $show = DataUtil::formatForDisplay(__('Split topic', $dom));
         } else {
             $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Split topic', $dom)) .'" ' . $imagedata['size'] . ' />';

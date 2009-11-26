@@ -32,19 +32,19 @@ function smarty_function_postanchor($params, &$smarty)
     extract($params);
 	unset($params);
 
-    if(empty($post_id)) { return; }
-    if(empty($postings) || $postings==0) { return; }
-    if(empty($min)) {
+    if (empty($post_id)) { return; }
+    if (empty($postings) || $postings==0) { return; }
+    if (empty($min)) {
         $min = pnModGetVar('Dizkus', 'min_postings_for_anchor');
         $min = (!empty($min)) ? $min : 2;
     }
 
     $anchor = "";
-    if($postings >= $min) {
+    if ($postings >= $min) {
         $anchor = "#pid$post_id";
     }
 
-    if(!empty($assign)) {
+    if (!empty($assign)) {
         $smarty->assign($assign, $anchor);
         return;
     }

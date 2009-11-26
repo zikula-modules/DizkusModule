@@ -27,7 +27,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
 
     static $usersarray;
 
-    //if(isset($usersarray) && is_array($usersarray) && array_key_exists($userid, $usersarray)) {
+    //if (isset($usersarray) && is_array($usersarray) && array_key_exists($userid, $usersarray)) {
     if (is_array($usersarray) && isset($usersarray[$userid])) {
         return $usersarray[$userid];
     } else {
@@ -39,7 +39,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
     $makedummy = false;
     // get the core user data
     $userdata = pnUserGetVars($userid);
-    if($userdata==false) {
+    if ($userdata==false) {
         // create a dummy user basing on Anonymous
         // necessary for some socks :-)
         $userdata = pnUserGetVars(1);
@@ -90,7 +90,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
         //
         // user name and avatar
         //
-        if($userdata['pn_uid'] != 1) {
+        if ($userdata['pn_uid'] != 1) {
             // user is logged in, display some info
             $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
             $where = $pntable['session_info_column']['uid']." = '".$userdata['pn_uid']."'
@@ -116,7 +116,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
         }
     }
 
-    if($makedummy == true) {
+    if ($makedummy == true) {
         // we create a dummy user, so we need to adjust some of the information
         // gathered so far
         $userdata['pn_name']   = DataUtil::formatForDisplay(__('**unknown user**', $dom));
@@ -156,56 +156,56 @@ function Dizkus_userapi_boardstats($args)
     switch($type) {
         case 'all':
         case 'allposts':
-            if(!isset($cache[$type])){
+            if (!isset($cache[$type])){
                $cache[$type] = DBUtil::selectObjectCount('dizkus_posts');
             }
             
             return $cache[$type];
             break;
         case 'category':
-            if(!isset($cache[$type])){
+            if (!isset($cache[$type])){
                $cache[$type] = DBUtil::selectObjectCount('dizkus_categories');
             }
             
             return  $cache[$type];
             break;
         case 'forum':
-            if(!isset($cache[$type])){
+            if (!isset($cache[$type])){
                $cache[$type] = DBUtil::selectObjectCount('dizkus_forums');
             }
             
             return $cache[$type];
             break;
         case 'topic':
-            if(!isset($cache[$type][$id])){
+            if (!isset($cache[$type][$id])){
                $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
             }
             
             return  $cache[$type][$id];
             break;
         case 'forumposts':
-            if(!isset($cache[$type][$id])){
+            if (!isset($cache[$type][$id])){
                $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
             }
             
             return  $cache[$type][$id];
             break;
         case 'forumtopics':
-            if(!isset($cache[$type][$id])){
+            if (!isset($cache[$type][$id])){
                $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
             }
             
             return  $cache[$type][$id];
             break;
         case 'alltopics':
-            if(!isset($cache[$type])){
+            if (!isset($cache[$type])){
                $cache[$type] = DBUtil::selectObjectCount('dizkus_topics');
             }
             
             return  $cache[$type];
             break;
         case 'allmembers':
-            if(!isset($cache[$type])){
+            if (!isset($cache[$type])){
                $cache[$type] = DBUtil::selectObjectCount('dizkus_users');
             }
             
@@ -213,7 +213,7 @@ function Dizkus_userapi_boardstats($args)
             break;
         case 'lastmember':
         case 'lastuser':
-            if(!isset($cache[$type])){
+            if (!isset($cache[$type])){
                 $res = DBUtil::selectObjectArray('users', null, 'uid DESC', 1, 1);
                 $cache[$type] = $res[0]['uname'];
             }
@@ -433,7 +433,7 @@ function Dizkus_userapi_readcategorytree($args)
                 // is this forum in the favorite list?
                 $forum['is_favorite'] = 0;
                 if ($dizkusvars['favorites_enabled'] == 'yes') {
-                    if(Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                    if (Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                         $forum['is_favorite'] = 1;
                     }
                 }
@@ -589,18 +589,18 @@ function Dizkus_userapi_readforum($args)
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $forum_id,
                                 'permcheck' => 'nocheck' ));
-    if($forum==false) {
+    if ($forum==false) {
         return showforumerror(__('Error! Could not find the forum or topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
-    if(!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+    if (!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to view this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
 
     $posts_per_page     = pnModGetVar('Dizkus', 'posts_per_page');
-    if(empty($topics_per_page)) {
+    if (empty($topics_per_page)) {
         $topics_per_page    = pnModGetVar('Dizkus', 'topics_per_page');
     }
     $hot_threshold      = pnModGetVar('Dizkus', 'hot_threshold');
@@ -614,13 +614,13 @@ function Dizkus_userapi_readforum($args)
 
     // is the user subscribed to the forum?
     $forum['is_subscribed'] = 0;
-    if(Dizkus_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+    if (Dizkus_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
         $forum['is_subscribed'] = 1;
     }
 
     // is this forum in the favorite list?
     $forum['is_favorite'] = 0;
-    if(Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
+    if (Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum_id)) == true) {
         $forum['is_favorite'] = 1;
     }
 
@@ -877,11 +877,11 @@ function Dizkus_userapi_readtopic($args)
         $topic['access_comment']  = false;
         $topic['access_moderate'] = false;
         $topic['access_admin']    = false;
-        if($topic['access_read'] == true) {
+        if ($topic['access_read'] == true) {
             $topic['access_comment']  = $topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-            if($topic['access_comment'] == true) {
+            if ($topic['access_comment'] == true) {
                 $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-                if($topic['access_moderate'] == true) {
+                if ($topic['access_moderate'] == true) {
                     $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
                 }
             }
@@ -952,7 +952,7 @@ function Dizkus_userapi_readtopic($args)
 
         if ($complete == true) {
             $result2 = dzkExecuteSQL($dbconn, $sql2, __FILE__, __LINE__);
-        } elseif(isset($start)) {
+        } elseif (isset($start)) {
             // $start is given
             $result2 = dzkSelectLimit($dbconn, $sql2, $posts_per_page, $start, __FILE__, __LINE__);
         } else {
@@ -974,7 +974,7 @@ function Dizkus_userapi_readtopic($args)
             $post['topic_id'] = $topic_id;
 
             // check if array_key_exists() with poster _id in $userdata
-            //if(!array_key_exists($post['poster_id'], $userdata)) {
+            //if (!array_key_exists($post['poster_id'], $userdata)) {
             if (!isset($userdata[$post['poster_id']])) {
                 // not in array, load the data now...
                 $userdata[$post['poster_id']] = Dizkus_userapi_get_userdata_from_id(array('userid' => $post['poster_id']));
@@ -1132,7 +1132,7 @@ function Dizkus_userapi_preparereply($args)
 
     // anonymous user has uid=0, but needs pn_uid=1
     // also check subscription status here
-    if(!pnUserLoggedin()) {
+    if (!pnUserLoggedin()) {
         $pn_uid = 1;
         $reply['attach_signature'] = false;
         $reply['subscribe_topic'] = false;
@@ -1140,7 +1140,7 @@ function Dizkus_userapi_preparereply($args)
         $pn_uid = pnUserGetVar('uid');
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly
-        if($reply_start==true) {
+        if ($reply_start==true) {
             $reply['attach_signature'] = true;
             $reply['subscribe_topic'] = false;
             $is_subscribed = Dizkus_userapi_get_topic_subscription_status(array('userid'   => $pn_uid,
@@ -1274,7 +1274,7 @@ function Dizkus_userapi_storereply($args)
     } else {
         // some enviroment for logging ;)
         $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
-        if(empty($poster_ip)){
+        if (empty($poster_ip)){
             $poster_ip = pnServerGetVar('REMOTE_ADDR');
         }
     }
@@ -1302,7 +1302,7 @@ function Dizkus_userapi_storereply($args)
         DBUtil::incrementObjectFieldByID('dizkus_users', 'user_posts', $obj['poster_id'], 'user_id');
 
         // update subscription
-        if($args['subscribe_topic']==1) {
+        if ($args['subscribe_topic']==1) {
             // user wants to subscribe the topic
             Dizkus_userapi_subscribe_topic(array('topic_id' => $obj['topic_id']));
         } else {
@@ -1440,7 +1440,7 @@ function Dizkus_userapi_preparenewtopic($args)
     $newtopic['topic_unixtime'] = time();
 
     // need at least "comment" to add newtopic
-    if(!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
+    if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
         return showforumerror(__('Sorry! You do not have authorisation to post in this forum or forum category.', $dom), __FILE__, __LINE__);
     }
@@ -1453,8 +1453,8 @@ function Dizkus_userapi_preparenewtopic($args)
     list($newtopic['message_display']) = pnModCallHooks('item', 'transform', '', array($newtopic['message_display']));
     $newtopic['message_display'] = nl2br($newtopic['message_display']);
 
-    if(pnUserLoggedIn()) {
-        if($topic_start==true) {
+    if (pnUserLoggedIn()) {
+        if ($topic_start==true) {
             $newtopic['attach_signature'] = true;
             $newtopic['subscribe_topic']  = (pnModGetVar('Dizkus', 'autosubscribe')=='yes') ? true : false;
         } else {
@@ -1638,7 +1638,7 @@ function Dizkus_userapi_readpost($args)
 
     $objarray = DBUtil::marshallObjects ($result, $colarray);
     $post = $objarray[0];
-    if(!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
+    if (!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
         return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to read posts in this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
     
@@ -1665,7 +1665,7 @@ function Dizkus_userapi_readpost($args)
 
     $pn_uid = pnUserGetVar('uid');
     $post['moderate'] = false;
-    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+    if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         $post['moderate'] = true;
     }
 
@@ -1678,17 +1678,17 @@ function Dizkus_userapi_readpost($args)
         // user is allowed to moderate || own post
         $post['poster_data']['edit'] = true;
     }
-    if(allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
+    if (allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is allowed to reply
         $post['poster_data']['reply'] = true;
     }
 
-    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) &&
+    if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) &&
         pnModGetVar('Dizkus', 'log_ip') == 'yes') {
         // user is allowed to see ip
         $post['poster_data']['seeip'] = true;
     }
-    if(allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+    if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is allowed to moderate
         $post['poster_data']['moderate'] = true;
         $post['poster_data']['edit'] = true;
@@ -2041,7 +2041,7 @@ function Dizkus_userapi_get_viewip_data($args)
             WHERE p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."'
             AND u.pn_uid = p.poster_id";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    if($result->EOF) {
+    if ($result->EOF) {
         // TODO we have a valid user here, but he doesn't have posts
         return showforumerror(__('Error! Could not find a corresponding post in the database.', $dom), __FILE__, __LINE__);
     } else {
@@ -2152,7 +2152,7 @@ function Dizkus_userapi_readuserforums($args)
     $pntable = pnDBGetTables();
     $forumscols = DBUtil::_getAllColumnsQualified('dizkus_forums', 'f');
 
-    if(isset($args['forum_id'])) {
+    if (isset($args['forum_id'])) {
         $where = 'WHERE f.forum_id=' . DataUtil::formatForStore($args['forum_id']) . ' ';
     } elseif (isset($args['cat_id'])) {
         $where = 'WHERE c.cat_id=' . DataUtil::formatForStore($args['cat_id']) . ' ';
@@ -2187,7 +2187,7 @@ function Dizkus_userapi_readuserforums($args)
         return $forums;
     }
     
-    if(isset($args['forum_id'])) {
+    if (isset($args['forum_id'])) {
         return $forums[0];
     }
     return $forums;
@@ -2637,7 +2637,7 @@ function Dizkus_userapi_unsubscribe_topic($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (isset($args['user_id'])) {
-        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
@@ -2699,7 +2699,7 @@ function Dizkus_userapi_unsubscribe_forum($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (isset($args['user_id'])) {
-        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {
@@ -2990,9 +2990,8 @@ function Dizkus_userapi_get_latest_posts($args)
     return array($posts, $m2fposts, $rssposts, $text);
 }
 
-/*
+/**
  * helper function to extract forum_ids from forum array
- *
  */
 function _get_forum_ids($f)
 {
@@ -3256,9 +3255,8 @@ function Dizkus_userapi_getfavorites($args)
     return $tree;
 }
 
-/*
+/**
  * helper function
- *
  */
 function _get_favorites($f)
 {
@@ -4213,7 +4211,7 @@ function Dizkus_userapi_get_forum_subscriptions($args)
     $pntable = pnDBGetTables();
 
     if (isset($args['user_id'])) {
-        if(!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     } else {

@@ -44,28 +44,28 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!isset($topic_id)) {
+    if (!isset($topic_id)) {
         return '';
     }
 
-    if(isset($class) && !empty($class)) {
+    if (isset($class) && !empty($class)) {
         $class = 'class="' . DataUtil::formatForDisplay($class) . '"';
     }
 
     $args = array('topic' => (int)$topic_id);
-    if(isset($start)) {
+    if (isset($start)) {
         $args['start'] = (int)$start;
     }
 
     $url = pnModURL('Dizkus', 'user', 'viewtopic', $args);
-    if(isset($last_post_id)) {
+    if (isset($last_post_id)) {
         $url .= '#pid' . (int)$last_post_id;
     }
     $title = __('Go to topic', $dom);
-    if(isset($forum_name) && !empty($forum_name)) {
+    if (isset($forum_name) && !empty($forum_name)) {
         $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';
     }
-    if(isset($subject) && !empty($subject)) {
+    if (isset($subject) && !empty($subject)) {
         $subject = DataUtil::formatForDisplay($subject);
         $title .= ' ' . $subject;
     }

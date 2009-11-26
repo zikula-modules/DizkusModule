@@ -38,7 +38,7 @@ function smarty_function_readtopforums($params, &$smarty)
 
     $topforums = array();
     while (list($forum_id, $forum_name, $forum_topics, $forum_posts, $cat_title, $cat_id) = $result->FetchRow()) {
-        if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             $topforum = array();
             $topforum['forum_id'] = $forum_id;
             $topforum['forum_name'] = DataUtil::formatForDisplay($forum_name);

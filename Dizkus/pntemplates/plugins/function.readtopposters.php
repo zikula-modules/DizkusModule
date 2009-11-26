@@ -41,7 +41,7 @@ function smarty_function_readtopposters($params, &$smarty)
     }
 
     $topposters = array();
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             list($user_id, $user_posts) = $result->fields;
             $topposter = array();

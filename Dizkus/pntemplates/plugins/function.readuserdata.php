@@ -15,7 +15,7 @@ function smarty_function_readuserdata($params, &$smarty)
     extract($params); 
 	unset($params);
 
-    if(!pnModAPILoad('Dizkus', 'user')) {
+    if (!pnModAPILoad('Dizkus', 'user')) {
         $smarty->trigger_error("Error! Could not load Dizkus user API.");
         return;
     } 

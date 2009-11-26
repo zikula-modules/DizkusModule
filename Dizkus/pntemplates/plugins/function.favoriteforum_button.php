@@ -26,10 +26,10 @@ function smarty_function_favoriteforum_button($params, &$smarty)
     extract($params);
 	  unset($params);
 
-    if(!isset($image_addfavorite) || empty($image_addfavorite)) {
+    if (!isset($image_addfavorite) || empty($image_addfavorite)) {
         $image_addfavorite = 'add2favorites.gif';
     }
-    if(!isset($image_remfavorite) || empty($image_remfavorite)) {
+    if (!isset($image_remfavorite) || empty($image_remfavorite)) {
         $image_remfavorite = 'removefavorite.gif';
     }
 
@@ -37,12 +37,12 @@ function smarty_function_favoriteforum_button($params, &$smarty)
     if (pnUserLoggedIn() && (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') ) {
         Loader::includeOnce('modules/Dizkus/common.php');
         $userid = pnUserGetVar('uid');
-        if(allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            if(pnModAPIFunc('Dizkus', 'user', 'get_forum_favorites_status',
+        if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+            if (pnModAPIFunc('Dizkus', 'user', 'get_forum_favorites_status',
                             array('userid'=>$userid,
                                   'forum_id'=>$forum_id))==false) {
                 $imagedata = dzk_getimagepath($image_addfavorite);
-                if($imagedata == false) {
+                if ($imagedata == false) {
                     $show = DataUtil::formatForDisplay(__('Add to favourites', $dom));
                 } else {
                     $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Add to favorites', $dom)) .'" ' . $imagedata['size'] . ' />';
@@ -50,7 +50,7 @@ function smarty_function_favoriteforum_button($params, &$smarty)
                 $out = '<a title="' . DataUtil::formatForDisplay(__('Add to favourites', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'add_favorite_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
                 $imagedata = dzk_getimagepath($image_remfavorite);
-                if($imagedata == false) {
+                if ($imagedata == false) {
                     $show = DataUtil::formatForDisplay(__('Remove forum from favourites', $dom));
                 } else {
                     $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Remove forum from favourites', $dom)) .'" ' . $imagedata['size'] . ' />';

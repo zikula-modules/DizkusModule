@@ -9,12 +9,6 @@
  * @package Dizkus
  */
 
-/**
- * This function is called internally by the core whenever the module is
- * loaded.  It adds in the information
- */
-
-
 function Dizkus_pntables()
 {
     // Initialise table array
@@ -41,7 +35,6 @@ function Dizkus_pntables()
                                                      'user_id'   => 'I NOTNULL DEFAULT 0');
     $pntable['dizkus_forum_mods_column_idx'] = array ('forum_id'  => 'forum_id',
                                                       'user_id'   => 'user_id');
-
     
     //
     // forums

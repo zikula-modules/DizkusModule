@@ -71,17 +71,17 @@ function Dizkus_user_main($args=array())
         }
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign('favorites', $favorites);
-    $pnr->assign('tree', $tree);
-    $pnr->assign('view_category', $viewcat);
-    $pnr->assign('view_category_data', $view_category_data);
-    $pnr->assign('last_visit', $last_visit);
-    $pnr->assign('last_visit_unix', $last_visit_unix);
-    $pnr->assign('numposts', pnModAPIFunc('Dizkus', 'user', 'boardstats',
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('favorites', $favorites);
+    $render->assign('tree', $tree);
+    $render->assign('view_category', $viewcat);
+    $render->assign('view_category_data', $view_category_data);
+    $render->assign('last_visit', $last_visit);
+    $render->assign('last_visit_unix', $last_visit_unix);
+    $render->assign('numposts', pnModAPIFunc('Dizkus', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
-    return $pnr->fetch('dizkus_user_main.html');
+    return $render->fetch('dizkus_user_main.html');
 }
 
 /**
@@ -96,7 +96,7 @@ function Dizkus_user_viewforum($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -112,12 +112,12 @@ function Dizkus_user_viewforum($args=array())
                                 'last_visit'      => $last_visit,
                                 'last_visit_unix' => $last_visit_unix));
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign( 'forum', $forum);
-    $pnr->assign( 'hot_threshold', pnModGetVar('Dizkus', 'hot_threshold'));
-    $pnr->assign( 'last_visit', $last_visit);
-    $pnr->assign( 'last_visit_unix', $last_visit_unix);
-    return $pnr->fetch('dizkus_user_viewforum.html');
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign( 'forum', $forum);
+    $render->assign( 'hot_threshold', pnModGetVar('Dizkus', 'hot_threshold'));
+    $render->assign( 'last_visit', $last_visit);
+    $render->assign( 'last_visit_unix', $last_visit_unix);
+    return $render->fetch('dizkus_user_viewforum.html');
 }
 
 /**
@@ -168,13 +168,13 @@ function Dizkus_user_viewtopic($args=array())
                                 'last_visit' => $last_visit,
                                 'count'      => true));
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
-    $pnr->assign('topic', $topic);
-    $pnr->assign('post_count', count($topic['posts']));
-    $pnr->assign('last_visit', $last_visit);
-    $pnr->assign('last_visit_unix', $last_visit_unix);
-    return $pnr->fetch('dizkus_user_viewtopic.html');
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+    $render->assign('topic', $topic);
+    $render->assign('post_count', count($topic['posts']));
+    $render->assign('last_visit', $last_visit);
+    $render->assign('last_visit_unix', $last_visit_unix);
+    return $render->fetch('dizkus_user_viewtopic.html');
 
 }
 
@@ -258,13 +258,13 @@ function Dizkus_user_reply($args=array())
             $reply['message_display'] = nl2br($reply['message_display']);
         }
 
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
-        $pnr->assign('reply', $reply);
-        $pnr->assign('preview', $preview);
-        $pnr->assign('last_visit', $last_visit);
-        $pnr->assign('last_visit_unix', $last_visit_unix);
-        return $pnr->fetch('dizkus_user_reply.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+        $render->assign('reply', $reply);
+        $render->assign('preview', $preview);
+        $render->assign('last_visit', $last_visit);
+        $render->assign('last_visit_unix', $last_visit_unix);
+        return $render->fetch('dizkus_user_reply.html');
     }
 }
 
@@ -334,9 +334,9 @@ function Dizkus_user_newtopic($args=array())
                                        'subscribe_topic'  => $subscribe_topic));
 
         if (pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-            $pnr->assign('topic', pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
-            return $pnr->fetch('dizkus_user_newtopicconfirmation.html');
+            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render->assign('topic', pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
+            return $render->fetch('dizkus_user_newtopicconfirmation.html');
 
         } else {
             return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
@@ -345,13 +345,13 @@ function Dizkus_user_newtopic($args=array())
         }
     } else {
         // new topic
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
-        $pnr->assign('preview', $preview);
-        $pnr->assign('newtopic', $newtopic);
-        $pnr->assign('last_visit', $last_visit);
-        $pnr->assign('last_visit_unix', $last_visit_unix);
-        return $pnr->fetch('dizkus_user_newtopic.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+        $render->assign('preview', $preview);
+        $render->assign('newtopic', $newtopic);
+        $render->assign('last_visit', $last_visit);
+        $render->assign('last_visit_unix', $last_visit_unix);
+        return $render->fetch('dizkus_user_newtopic.html');
     }
 }
 
@@ -445,13 +445,13 @@ function Dizkus_user_editpost($args=array())
             list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', '', array(nl2br($message)));
         }
 
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
-        $pnr->assign('preview', $preview);
-        $pnr->assign('post', $post);
-        $pnr->assign('last_visit', $last_visit);
-        $pnr->assign('last_visit_unix', $last_visit_unix);
-        return $pnr->fetch('dizkus_user_editpost.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+        $render->assign('preview', $preview);
+        $render->assign('post', $post);
+        $render->assign('last_visit', $last_visit);
+        $render->assign('last_visit_unix', $last_visit_unix);
+        return $render->fetch('dizkus_user_editpost.html');
     }
 }
 
@@ -489,12 +489,13 @@ function Dizkus_user_topicadmin($args=array())
         return showforumerror(__('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom), __FILE__, __LINE__);
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign('mode', $mode);
-    $pnr->assign('topic_id', $topic_id);
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('mode', $mode);
+    $render->assign('topic_id', $topic_id);
 
     if (empty($submit)) {
-        switch($mode) {
+        switch($mode)
+        {
             case 'del':
             case 'delete':
                 $templatename = 'dizkus_user_deletetopic.html';
@@ -502,7 +503,7 @@ function Dizkus_user_topicadmin($args=array())
 
             case 'move':
             case 'join':
-                $pnr->assign('forums', pnModAPIFunc('Dizkus', 'user', 'readuserforums'));
+                $render->assign('forums', pnModAPIFunc('Dizkus', 'user', 'readuserforums'));
                 $templatename = 'dizkus_user_movetopic.html';
                 break;
 
@@ -517,14 +518,14 @@ function Dizkus_user_topicadmin($args=array())
                 break;
 
             case 'viewip':
-                $pnr->assign('viewip', pnModAPIFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
+                $render->assign('viewip', pnModAPIFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
                 $templatename = 'dizkus_user_viewip.html';
                 break;
 
             default:
                 return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
-        return $pnr->fetch($templatename);
+        return $render->fetch($templatename);
 
     } else { // submit is set
         if (!SecurityUtil::confirmAuthKey()) {
@@ -607,11 +608,11 @@ function Dizkus_user_prefs($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
         return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
 
@@ -651,7 +652,7 @@ function Dizkus_user_prefs($args=array())
             $params = array('forum' => $forum_id);
             break;
         case 'add_favorite_forum':
-            if(pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
+            if (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
                 $return_to = (!empty($return_to))? $return_to : 'viewforum';
                 pnModAPIFunc('Dizkus', 'user', 'add_favorite_forum',
                              array('forum_id' => $forum_id ));
@@ -659,7 +660,7 @@ function Dizkus_user_prefs($args=array())
             }
             break;
         case 'remove_favorite_forum':
-            if(pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
+            if (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
                 $return_to = (!empty($return_to))? $return_to : 'viewforum';
                 pnModAPIFunc('Dizkus', 'user', 'remove_favorite_forum',
                              array('forum_id' => $forum_id ));
@@ -673,7 +674,7 @@ function Dizkus_user_prefs($args=array())
             break;
         case 'showallforums':
         case 'showfavorites':
-            if(pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
+            if (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
                 $return_to = (!empty($return_to))? $return_to : 'main';
                 $favorites = pnModAPIFunc('Dizkus', 'user', 'change_favorite_status');
                 $params = array();
@@ -681,16 +682,16 @@ function Dizkus_user_prefs($args=array())
             break;
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
-            $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-            $pnr->assign('last_visit', $last_visit);
-            $pnr->assign('favorites_enabled', pnModGetVar('Dizkus', 'favorites_enabled'));
-            $pnr->assign('last_visit_unix', $last_visit_unix);
-            $pnr->assign('signaturemanagement', pnModGetVar('Dizkus','signaturemanagement'));
-            $pnr->assign('ignorelist_handling', pnModGetVar('Dizkus','ignorelist_handling'));
-            $pnr->assign('contactlist_available', pnModAvailable('ContactList'));
-            $pnr->assign('post_order', strtolower(pnModAPIFunc('Dizkus','user','get_user_post_order')));
-            $pnr->assign('tree', pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
-            return $pnr->fetch('dizkus_user_prefs.html');
+            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render->assign('last_visit', $last_visit);
+            $render->assign('favorites_enabled', pnModGetVar('Dizkus', 'favorites_enabled'));
+            $render->assign('last_visit_unix', $last_visit_unix);
+            $render->assign('signaturemanagement', pnModGetVar('Dizkus','signaturemanagement'));
+            $render->assign('ignorelist_handling', pnModGetVar('Dizkus','ignorelist_handling'));
+            $render->assign('contactlist_available', pnModAvailable('ContactList'));
+            $render->assign('post_order', strtolower(pnModAPIFunc('Dizkus','user','get_user_post_order')));
+            $render->assign('tree', pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
+            return $render->fetch('dizkus_user_prefs.html');
     }
     return pnRedirect(pnModURL('Dizkus', 'user', $return_to, $params));
 }
@@ -704,11 +705,11 @@ function Dizkus_user_signaturemanagement()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
         return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
     // Security check
@@ -734,11 +735,11 @@ function Dizkus_user_ignorelistmanagement()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
         return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
     // Security check
@@ -770,7 +771,7 @@ function Dizkus_user_emailtopic($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -781,13 +782,13 @@ function Dizkus_user_emailtopic($args=array())
     $sendto_email  = FormUtil::getPassedValue('sendto_email', (isset($args['sendto_email'])) ? $args['sendto_email'] : '', 'GETPOST');
     $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
 
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
         return showforumerror(__('Error! You need to be logged-in to perform this action.'), __FILE__, __LINE__);
     }
 
     list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
 
-    if(!empty($submit)) {
+    if (!empty($submit)) {
         if (!pnVarValidate($sendto_email, 'email')) {
             // Empty e-mail is checked here too
             $error_msg = DataUtil::formatForDisplay(__('Error! Either you did not enter an e-mail address or the e-mail address was invalid.', $dom));
@@ -802,7 +803,7 @@ function Dizkus_user_emailtopic($args=array())
         }
     }
 
-    if(!empty($submit)) {
+    if (!empty($submit)) {
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
@@ -816,15 +817,15 @@ function Dizkus_user_emailtopic($args=array())
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id));
         $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('topic', $topic);
-        $pnr->assign('error_msg', $error_msg);
-        $pnr->assign('sendto_email', $sendto_email);
-        $pnr->assign('emailsubject', $emailsubject);
-        $pnr->assign('message', DataUtil::formatForDisplay(__('Hello! I\'m sending you a link to a topic in the forums because I think it might interest you.', $dom)) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
-        $pnr->assign( 'last_visit', $last_visit);
-        $pnr->assign( 'last_visit_unix', $last_visit_unix);
-        return $pnr->fetch('dizkus_user_emailtopic.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('topic', $topic);
+        $render->assign('error_msg', $error_msg);
+        $render->assign('sendto_email', $sendto_email);
+        $render->assign('emailsubject', $emailsubject);
+        $render->assign('message', DataUtil::formatForDisplay(__('Hello! I\'m sending you a link to a topic in the forums because I think it might interest you.', $dom)) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
+        $render->assign( 'last_visit', $last_visit);
+        $render->assign( 'last_visit_unix', $last_visit_unix);
+        return $render->fetch('dizkus_user_emailtopic.html');
     }
 }
 
@@ -887,18 +888,18 @@ function Dizkus_user_viewlatest($args=array())
                                                                    'last_visit' => $last_visit,
                                                                    'last_visit_unix' => $last_visit_unix));
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign('posts', $posts);
-    $pnr->assign('m2fposts', $m2fposts);
-    $pnr->assign('rssposts', $rssposts);
-    $pnr->assign('text', $text);
-    $pnr->assign('nohours', $nohours);
-    $pnr->assign('last_visit', $last_visit);
-    $pnr->assign('last_visit_unix', $last_visit_unix);
-    $pnr->assign('numposts', pnModAPIFunc('Dizkus', 'user', 'boardstats',
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('posts', $posts);
+    $render->assign('m2fposts', $m2fposts);
+    $render->assign('rssposts', $rssposts);
+    $render->assign('text', $text);
+    $render->assign('nohours', $nohours);
+    $render->assign('last_visit', $last_visit);
+    $render->assign('last_visit_unix', $last_visit_unix);
+    $render->assign('numposts', pnModAPIFunc('Dizkus', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
-    return $pnr->fetch('dizkus_user_latestposts.html');
+    return $render->fetch('dizkus_user_latestposts.html');
 
 }
 
@@ -911,7 +912,7 @@ function Dizkus_user_splittopic($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -923,12 +924,12 @@ function Dizkus_user_splittopic($args=array())
     $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                          array('post_id' => $post_id));
 
-    if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+    if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
-    if(!empty($submit)) {
+    if (!empty($submit)) {
         // Confirm authorisation code
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
@@ -941,9 +942,9 @@ function Dizkus_user_splittopic($args=array())
                                    array('topic' => $newtopic_id)));
 
     } else {
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('post', $post);
-        return $pnr->fetch('dizkus_user_splittopic.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('post', $post);
+        return $render->fetch('dizkus_user_splittopic.html');
     }
 }
 
@@ -957,7 +958,7 @@ function Dizkus_user_print($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -965,33 +966,33 @@ function Dizkus_user_print($args=array())
     $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
     $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
 
-    if(useragent_is_bot() == true) {
-        if($post_id <> 0 ) {
+    if (useragent_is_bot() == true) {
+        if ($post_id <> 0 ) {
             $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_postid',
                                     array('post_id' => $post_id));
         }
-        if(($topic_id <> 0) && ($topic_id<>false)) {
+        if (($topic_id <> 0) && ($topic_id<>false)) {
             return Dizkus_user_viewtopic(array('topic' => $topic_id,
                                                 'start'   => 0));
         } else {
             return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
         }
     } else {
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        if($post_id<>0) {
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        if ($post_id<>0) {
             $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                                  array('post_id' => $post_id));
-            $pnr->assign('post', $post);
-            $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
-            $output = $pnr->fetch('dizkus_user_printpost.html');
-        } elseif($topic_id<>0) {
+            $render->assign('post', $post);
+            $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+            $output = $render->fetch('dizkus_user_printpost.html');
+        } elseif ($topic_id<>0) {
             $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                                  array('topic_id'  => $topic_id,
                                        'complete' => true,
                                        'count' => false ));
-            $pnr->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
-            $pnr->assign('topic', $topic);
-            $output = $pnr->fetch('dizkus_user_printtopic.html');
+            $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+            $render->assign('topic', $topic);
+            $output = $render->fetch('dizkus_user_printtopic.html');
         } else {
             return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
         }
@@ -1089,9 +1090,9 @@ function Dizkus_user_movepost($args=array())
                                    array('topic' => $to_topic,
                                          'start' => $start)) . '#pid' . $post['post_id']);
     } else {
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('post', $post);
-        return $pnr->fetch('dizkus_user_movepost.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('post', $post);
+        return $render->fetch('dizkus_user_movepost.html');
     }
 }
 
@@ -1106,7 +1107,7 @@ function Dizkus_user_jointopics($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -1118,15 +1119,15 @@ function Dizkus_user_jointopics($args=array())
 
     $post = pnModAPIFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
 
-    if(!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+    if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
-    if(!$submit) {
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('post', $post);
-        return $pnr->fetch('dizkus_user_jointopics.html');
+    if (!$submit) {
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('post', $post);
+        return $render->fetch('dizkus_user_jointopics.html');
     } else {
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
@@ -1157,7 +1158,7 @@ function Dizkus_user_moderateforum($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -1182,31 +1183,31 @@ function Dizkus_user_moderateforum($args=array())
                                 'last_visit'      => $last_visit,
                                 'last_visit_unix' => $last_visit_unix));
 
-    if(!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+    if (!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
         // user is not allowed to moderate this forum
         return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
     }
 
 
     // Submit isn't set'
-    if(empty($submit)) {
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('forum_id', $forum_id);
-        $pnr->assign('mode',$mode);
-        $pnr->assign('topic_ids', $topic_ids);
-        $pnr->assign('last_visit', $last_visit);
-        $pnr->assign('last_visit_unix', $last_visit_unix);
-        $pnr->assign('forum',$forum);
+    if (empty($submit)) {
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('forum_id', $forum_id);
+        $render->assign('mode',$mode);
+        $render->assign('topic_ids', $topic_ids);
+        $render->assign('last_visit', $last_visit);
+        $render->assign('last_visit_unix', $last_visit_unix);
+        $render->assign('forum',$forum);
         // For Movetopic
-        $pnr->assign('forums', pnModAPIFunc('Dizkus', 'user', 'readuserforums'));
-        return $pnr->fetch('dizkus_user_moderateforum.html');
+        $render->assign('forums', pnModAPIFunc('Dizkus', 'user', 'readuserforums'));
+        return $render->fetch('dizkus_user_moderateforum.html');
 
     } else {
         // submit is set
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
-        if(count($topic_ids)<>0) {
+        if (count($topic_ids)<>0) {
             switch($mode) {
                 case 'del':
                 case 'delete':
@@ -1215,7 +1216,7 @@ function Dizkus_user_moderateforum($args=array())
                     }
                     break;
                 case 'move':
-                    if(empty($moveto)) {
+                    if (empty($moveto)) {
                         return showforumerror(__('Error! You did not select a target forum for the move.', $dom), __FILE__, __LINE__);
                     }
                     foreach ($topic_ids as $topic_id) {
@@ -1237,10 +1238,10 @@ function Dizkus_user_moderateforum($args=array())
                     }
                     break;
                 case 'join':
-                    if(empty($jointo)) {
+                    if (empty($jointo)) {
                         return showforumerror(__('Error! You did not select a target topic for the join.', $dom), __FILE__, __LINE__);
                     }
-                    if(in_array($jointo, $topic_ids)) {
+                    if (in_array($jointo, $topic_ids)) {
                         // jointo, the target topic, is part of the topics to join
                         // we remove this to avoid a loop
                         $fliparray = array_flip($topic_ids);
@@ -1278,7 +1279,7 @@ function Dizkus_user_report($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
@@ -1301,8 +1302,8 @@ function Dizkus_user_report($args)
     // - remove html and compare with original comment
     // - use censor and compare with original comment
     // if only one of this comparisons fails -> trash it, it is spam.
-    if(!pnUserLoggedIn() && $authkeycheck == true ) {
-        if((strip_tags($comment) <> $comment) ||
+    if (!pnUserLoggedIn() && $authkeycheck == true ) {
+        if ((strip_tags($comment) <> $comment) ||
            (pnVarCensor($comment) <> $comment)) {
             // possibly spam, stop now
             // get the users ip address and store it in pnTemp/Dizkus_spammers.txt
@@ -1313,10 +1314,10 @@ function Dizkus_user_report($args)
         }
     }
     
-    if(!$submit) {
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('post', $post);
-        return $pnr->fetch('dizkus_user_notifymod.html');
+    if (!$submit) {
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('post', $post);
+        return $render->fetch('dizkus_user_notifymod.html');
     } else {   // submit is set
         if ($authkeycheck == false) {
             return LogUtil::registerAuthidError();
@@ -1345,11 +1346,11 @@ function Dizkus_user_topicsubscriptions($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $disabled = dzk_available();
-    if(!is_bool($disabled)) {
+    if (!is_bool($disabled)) {
         return $disabled;
     }
 
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
         return pnModFunc('Users', 'user', 'loginscreen', array('redirecttype' => 1));
     }
 
@@ -1357,16 +1358,16 @@ function Dizkus_user_topicsubscriptions($args)
     $topic_id = FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : null, 'GETPOST');
     $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
 
-    if(!$submit) {
+    if (!$submit) {
         $subscriptions = pnModAPIFunc('Dizkus', 'user', 'get_topic_subscriptions');
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('subscriptions', $subscriptions);
-        return $pnr->fetch('dizkus_user_topicsubscriptions.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('subscriptions', $subscriptions);
+        return $render->fetch('dizkus_user_topicsubscriptions.html');
     } else {  // submit is set
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
-        if(is_array($topic_id) && (count($topic_id) > 0)) {
+        if (is_array($topic_id) && (count($topic_id) > 0)) {
             for($i=0; $i<count($topic_id); $i++) {
                 pnModAPIFunc('Dizkus', 'user', 'unsubscribe_topic', array('topic_id' => $topic_id[$i]));
             }

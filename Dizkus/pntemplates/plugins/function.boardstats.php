@@ -28,7 +28,7 @@
  */
 function smarty_function_boardstats($params, &$smarty) 
 {
-    if(!pnModAPILoad('Dizkus', 'user')) {
+    if (!pnModAPILoad('Dizkus', 'user')) {
         $smarty->trigger_error("Error! Could not load Dizkus user API.");
         return;
     } 
@@ -39,7 +39,7 @@ function smarty_function_boardstats($params, &$smarty)
     $count = pnModAPIFunc('Dizkus', 'user', 'boardstats',
                           array('id'   => $id,
                                 'type' => $type));
-    if(!empty($params['assign'])) {
+    if (!empty($params['assign'])) {
         $smarty->assign($params['assign'], $count);
         return;
     }

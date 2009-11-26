@@ -24,7 +24,7 @@ function smarty_function_mediaattach_fileuploads($params, &$smarty)
     }
 
     $out = '';
-    if(pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
+    if (pnModAvailable('MediaAttach') && pnModIsHooked('MediaAttach', 'Dizkus')) {
         $out = pnModFunc('MediaAttach', 'user', 'showfilelist',
                          array('objectid' => $params['objectid']));
     }

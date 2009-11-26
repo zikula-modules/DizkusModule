@@ -11,19 +11,18 @@
 
 Loader::includeOnce('modules/Dizkus/common.php');
 
-/*
-* param: objectid
-*/
-
+/**
+ * param: objectid
+ */
 function Dizkus_commentsapi_News($args)
 {
     $news = pnModAPIFunc('News', 'user', 'get', array('objectid' => $args['objectid']));
-    $link = pnGetBaseURL() . pnModURL('News', 'user', 'display', array('sid' => $args['objectid']));
+    $link = pnModURL('News', 'user', 'display', array('sid' => $args['objectid']), null, null, true);
     $lang = ZLanguage::getLanguageCode();
 
-    if(pnModIsHooked('bbcode', 'Dizkus')) {
+    if (pnModIsHooked('bbcode', 'Dizkus')) {
         $notes = '[i]' . $news['notes'] . '[/i]';
-        $link = '[url]' .$link. '[/url]';
+        $link  = '[url]' .$link. '[/url]';
     }
 
     $topic = $news['__CATEGORIES__']['Main']['display_name'][$lang];

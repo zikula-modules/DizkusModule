@@ -11,54 +11,53 @@
 
 class dizkus_admin_prefshandler
 {
-
-    function initialize(&$pnRender)
+    function initialize(&$render)
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
 
-        $pnRender->caching = false;
-        $pnRender->add_core_data();
-        
-        
-        $pnRender->assign('post_sort_order_options', array(array('text' => __('Ascending', $dom),  'value' => 'ASC'),
-                                                           array('text' => __('Descending', $dom), 'value' => 'DESC')));
-        $pnRender->assign('deletehook_options', array(array('text' => __('Delete topic', $dom), 'value' => 'remove'),
+        $render->caching = false;
+        $render->add_core_data();
+
+        $render->assign('post_sort_order_options', array(array('text' => __('Ascending', $dom),  'value' => 'ASC'),
+                                                         array('text' => __('Descending', $dom), 'value' => 'DESC')));
+
+        $render->assign('deletehook_options', array(array('text' => __('Delete topic', $dom), 'value' => 'remove'),
                                                       array('text' => __('Close topic', $dom),   'value' => 'lock')));
-        $pnRender->assign('ignorelist_options', array(array('text' => __('Strict', $dom), 'value' => 'strict'),
+
+        $render->assign('ignorelist_options', array(array('text' => __('Strict', $dom), 'value' => 'strict'),
                                                       array('text' => __('Medium', $dom), 'value' => 'medium'),
                                                       array('text' => __('None', $dom),   'value' => 'none')));
-    
-        $modvars = pnModGetVar('Dizkus');
-        $pnRender->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
-        $pnRender->assign('slimforum_checked', $modvars['slimforum'] == 'yes' ? 1 : 0);
-        $pnRender->assign('autosubscribe_checked', isset($modvars['autosubscribe']) && $modvars['autosubscribe'] == 'yes' ? 1 : 0);
-        $pnRender->assign('m2f_enabled_checked', $modvars['m2f_enabled'] == 'yes' ? 1 : 0);
-        $pnRender->assign('rss2f_enabled_checked', $modvars['rss2f_enabled'] == 'yes' ? 1 : 0);
-        $pnRender->assign('favorites_enabled_checked', $modvars['favorites_enabled'] == 'yes' ? 1 : 0);
-        $pnRender->assign('hideusers_checked', $modvars['hideusers'] == 'yes' ? 1 : 0);
-        $pnRender->assign('signaturemanagement_checked', $modvars['signaturemanagement'] == 'yes' ? 1 : 0);
-        $pnRender->assign('removesignature_checked', $modvars['removesignature'] == 'yes' ? 1 : 0);
-        $pnRender->assign('ignorelist_handling', $modvars['ignorelist_handling'] == 'yes' ? 1 : 0);
-        $pnRender->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
-        $pnRender->assign('newtopicconfirmation_checked', isset($modvars['newtopicconfirmation']) && $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
-        $pnRender->assign('forum_enabled_checked', $modvars['forum_enabled'] == 'yes' ? 1 : 0);
-        $pnRender->assign('sendemailswithsqlerrors_checked', $modvars['sendemailswithsqlerrors'] == 'yes' ? 1 : 0);
-        $pnRender->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
-        $pnRender->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
-        $pnRender->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
 
-		$pnRender->assign('contactlist_available', pnModAvailable('ContactList'));
+        $modvars = pnModGetVar('Dizkus');
+        $render->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
+        $render->assign('slimforum_checked', $modvars['slimforum'] == 'yes' ? 1 : 0);
+        $render->assign('autosubscribe_checked', isset($modvars['autosubscribe']) && $modvars['autosubscribe'] == 'yes' ? 1 : 0);
+        $render->assign('m2f_enabled_checked', $modvars['m2f_enabled'] == 'yes' ? 1 : 0);
+        $render->assign('rss2f_enabled_checked', $modvars['rss2f_enabled'] == 'yes' ? 1 : 0);
+        $render->assign('favorites_enabled_checked', $modvars['favorites_enabled'] == 'yes' ? 1 : 0);
+        $render->assign('hideusers_checked', $modvars['hideusers'] == 'yes' ? 1 : 0);
+        $render->assign('signaturemanagement_checked', $modvars['signaturemanagement'] == 'yes' ? 1 : 0);
+        $render->assign('removesignature_checked', $modvars['removesignature'] == 'yes' ? 1 : 0);
+        $render->assign('ignorelist_handling', $modvars['ignorelist_handling'] == 'yes' ? 1 : 0);
+        $render->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
+        $render->assign('newtopicconfirmation_checked', isset($modvars['newtopicconfirmation']) && $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
+        $render->assign('forum_enabled_checked', $modvars['forum_enabled'] == 'yes' ? 1 : 0);
+        $render->assign('sendemailswithsqlerrors_checked', $modvars['sendemailswithsqlerrors'] == 'yes' ? 1 : 0);
+        $render->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
+        $render->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
+        $render->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
+
+		$render->assign('contactlist_available', pnModAvailable('ContactList'));
 
         $serverinfo = DBUtil::serverInfo();
-        $pnRender->assign('dbversion', $serverinfo['description']);
-        $pnRender->assign('dbtype', DBConnectionStack::getConnectionDBType());
-        $pnRender->assign('dbname', DBConnectionStack::getConnectionDBName());
+        $render->assign('dbversion', $serverinfo['description']);
+        $render->assign('dbtype', DBConnectionStack::getConnectionDBType());
+        $render->assign('dbname', DBConnectionStack::getConnectionDBName());
 
         return true;
     }
 
-
-    function handleCommand(&$pnRender, &$args)
+    function handleCommand(&$render, &$args)
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
 
@@ -68,8 +67,8 @@ class dizkus_admin_prefshandler
         }
 
         if ($args['commandName'] == 'submit') {
-            $ok = $pnRender->pnFormIsValid(); 
-            $data = $pnRender->pnFormGetValues();
+            $ok = $render->pnFormIsValid(); 
+            $data = $render->pnFormGetValues();
 
             if (!$ok) {
                 return false;
@@ -158,7 +157,7 @@ class dizkus_admin_prefshandler
 
             LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));
         }
-        return $pnRender->pnFormRedirect(pnModURL('Dizkus','admin','preferences'));
-    }
 
+        return $render->pnFormRedirect(pnModURL('Dizkus','admin','preferences'));
+    }
 }

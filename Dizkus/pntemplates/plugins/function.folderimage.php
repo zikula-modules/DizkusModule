@@ -17,12 +17,12 @@ function smarty_function_folderimage($params, &$smarty)
     extract($params); 
 	  unset($params);
 
-    if(!pnModAPILoad('Dizkus', 'user')) {
+    if (!pnModAPILoad('Dizkus', 'user')) {
         $smarty->trigger_error("Error! Could not load Dizkus user API.");
         return;
     } 
 
-    if(empty($forum)) {
+    if (empty($forum)) {
         $smarty->trigger_error("Error! Missing 'forum' parameter for folder image.");
         return false;
     }

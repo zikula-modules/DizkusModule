@@ -184,7 +184,7 @@ function Dizkus_adminapi_readforums($args=array())
     }
 
     $where = '';
-    if(isset($args['forum_id'])) {
+    if (isset($args['forum_id'])) {
         $where = "WHERE tbl.forum_id='". DataUtil::formatForStore($args['forum_id']) ."' ";
     } elseif (isset($args['cat_id'])) {
         $where = "WHERE tbl.cat_id='". DataUtil::formatForStore($args['cat_id']) ."' ";
@@ -267,7 +267,7 @@ function Dizkus_adminapi_readmoderators($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $mods = array();
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             $mod = array();
             list( $mod['uname'],
@@ -284,7 +284,7 @@ function Dizkus_adminapi_readmoderators($args)
 
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext()) {
             $mod = array();
             list( $mod['uname'],
@@ -318,7 +318,7 @@ function Dizkus_adminapi_readusers($args)
             WHERE n.pn_uid != 1 ";
 
     foreach($moderators as $mod) {
-        if($mod['uid']<=1000000) {
+        if ($mod['uid']<=1000000) {
             // mod uids > 1000000 are groups
             $sql .= "AND n.pn_uid != '".DataUtil::formatForStore($mod['uid'])."'";
         }
@@ -327,7 +327,7 @@ function Dizkus_adminapi_readusers($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $users = array();
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext())
         {
             $user = array();
@@ -360,13 +360,13 @@ function Dizkus_adminapi_readgroups($args)
     $where_flag = false;
     $group_flag = false;
     foreach($moderators as $mod) {
-        if($mod['uid']>1000000) {
+        if ($mod['uid']>1000000) {
             // mod uids > 1000000 are groups
-            if(!$where_flag) {
+            if (!$where_flag) {
                 $sql .= 'WHERE ';
                 $where_flag = true;
             }
-            if($group_flag) {
+            if ($group_flag) {
                 $sql .= ' AND ';
             }
             $sql .= "g.pn_gid != '".DataUtil::formatForStore((int)$mod['uid']-1000000)."' ";
@@ -377,7 +377,7 @@ function Dizkus_adminapi_readgroups($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $groups = array();
-    if($result->RecordCount()>0) {
+    if ($result->RecordCount()>0) {
         for (; !$result->EOF; $result->MoveNext())
         {
             $group = array();
@@ -416,14 +416,14 @@ function Dizkus_adminapi_readranks($args)
     $pntables = pnDBGetTables();
     $rcol = $pntables['dizkus_ranks_column'];
 
-    if($args['ranktype']==0) {
+    if ($args['ranktype']==0) {
         $orderby = 'ORDER BY ' . $rcol['rank_min'];
     } else {
         $orderby = 'ORDER BY ' . $rcol['rank_title'];
     }
     $ranks = DBUtil::selectObjectArray('dizkus_ranks', 'WHERE ' . $rcol['rank_special'] . '=' . DataUtil::formatForStore($args['ranktype']), $orderby);
 
-    if(is_array($ranks)) {
+    if (is_array($ranks)) {
         foreach($ranks as $cnt => $rank) {
         	$ranks[$cnt]['users'] = pnModAPIFunc('Dizkus', 'admin', 'readrankusers',
                                           array('rank_id' => $ranks[$cnt]['rank_id']));
@@ -456,11 +456,11 @@ function Dizkus_adminapi_saverank($args)
     }
 
     foreach($args['ranks'] as $rankid => $rank) {
-        if($rankid == '-1') {
+        if ($rankid == '-1') {
             $obj = DBUtil::insertObject($rank, 'dizkus_ranks', 'rank_id');
         } else {
             $rank['rank_id'] = $rankid;
-            if($rank['rank_delete'] == '1') {
+            if ($rank['rank_delete'] == '1') {
                 $res = DBUtil::deleteObject($rank, 'dizkus_ranks', null, 'rank_id');
             } else {
                 $res = DBUtil::updateObject($rank, 'dizkus_ranks', null, 'rank_id');
@@ -495,9 +495,8 @@ function Dizkus_adminapi_readrankusers($args)
     return $users;
 }
 
-/*
+/**
  * helper function
- *
  */
 function _get_rank_users($u)
 {
@@ -516,7 +515,7 @@ function Dizkus_adminapi_assignranksave($args)
         return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
-    if(is_array($args['setrank'])) {
+    if (is_array($args['setrank'])) {
         $ranksavearray = array();
         foreach($args['setrank'] as $user_id => $rank_id) {
             $ranksavearray[] = array('user_id' => $user_id, 'user_rank' => $rank_id);
@@ -701,7 +700,7 @@ function Dizkus_adminapi_addforum($args)
     extract($args);
     unset($args);
 
-    if( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
+    if ( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
         !SecurityUtil::checkPermission('Dizkus::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
         return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
@@ -711,7 +710,7 @@ function Dizkus_adminapi_addforum($args)
     $forumcolumn = $pntable['dizkus_forums_column'];
 
     $forum_name = strip_tags($forum_name);
-    if(empty($forum_name)) {
+    if (empty($forum_name)) {
         return showforumerror(__('Error! You did not enter all the information required in the form. Did you assign at least one moderator? Please go back and try again.', $dom), __FILE__, __LINE__);
     }
     if (!$desc) {
@@ -767,7 +766,7 @@ function Dizkus_adminapi_addforum($args)
     dzkCloseDB($result);
     $newforumid = $dbconn->PO_Insert_ID($pntable['dizkus_forums'], 'forum_id');
     $count = 0;
-    if(is_array($mods) && count($mods)>0) {
+    if (is_array($mods) && count($mods)>0) {
         while(list($mod_number, $mod) = each($mods)) {
             $mod_query = "INSERT INTO ".$pntable['dizkus_forum_mods']."
                                 (forum_id,
@@ -811,12 +810,12 @@ function Dizkus_adminapi_editforum($args)
     list($dbconn, $pntable) = dzkOpenDB();
 
     $pop3passwordupdate = "";
-    if(!empty($pop3_password)) {
+    if (!empty($pop3_password)) {
         // pop3_password is not empty - save it
         $pop3passwordupdate = "forum_pop3_password    ='".DataUtil::formatForStore($pop3_password)."',";
     }
     $pnpasswordupdate = "";
-    if(!empty($pop3_pnpassword)) {
+    if (!empty($pop3_pnpassword)) {
         // pop3_pnpassword is not empty - save it
         $pnpasswordupdate = "forum_pop3_pnpassword    ='".DataUtil::formatForStore($pop3_pnpassword)."',";
     }
@@ -840,7 +839,7 @@ function Dizkus_adminapi_editforum($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
 
-    if(isset($mods) && !empty($mods)) {
+    if (isset($mods) && !empty($mods)) {
         $recentmods = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
                                    array('forum_id' => $forum_id));
         foreach ($mods as $mod) {
@@ -849,7 +848,7 @@ function Dizkus_adminapi_editforum($args)
             dzkCloseDB($mods);
         }
     }
-    if(isset($rem_mods) && !empty($rem_mods)) {
+    if (isset($rem_mods) && !empty($rem_mods)) {
         foreach ($rem_mods as $mod) {
             $rem_query = "DELETE FROM ".$pntable['dizkus_forum_mods']."
                         WHERE forum_id = '".DataUtil::formatForStore($forum_id)."' AND user_id = '".DataUtil::formatForStore($mod)."'";
@@ -887,7 +886,7 @@ function Dizkus_adminapi_deleteforum($args)
 
     // topics
     $topics = DBUtil::selectObjectArray('dizkus_topics', $whereforumid);
-    if(is_array($topics) && count($topics) > 0) {        
+    if (is_array($topics) && count($topics) > 0) {        
         foreach($topics as $topic) {
             $res = DBUtil::deleteWhere('dizkus_topic_subscription', 'WHERE topic_id=' . DataUtil::formatForStore($topic['topic_id']));
         }
@@ -896,7 +895,7 @@ function Dizkus_adminapi_deleteforum($args)
 /*
     // posts
     $posts = DBUtil::selectObjectArray('dizkus_posts', $whereforumid);
-    if(is_array($posts) && count($posts) > 0) {
+    if (is_array($posts) && count($posts) > 0) {
         foreach($posts as $post) {
 //          $res = DBUtil::deleteWhere('dizkus_posts_text', 'WHERE post_id=' . DataUtil::formatForStore($post['post_id']));
         }
@@ -930,17 +929,17 @@ function Dizkus_adminapi_storenewforumorder($args)
     extract($args);
     unset($args);
 
-    if( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+    if ( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
-    if(!isset($forum_id) || empty($forum_id) || !is_numeric($forum_id)) {
+    if (!isset($forum_id) || empty($forum_id) || !is_numeric($forum_id)) {
         dzk_ajaxerror(_MODARGSERROR . ' (Dizkus_adminapi_storenewforumorder(), forumid=' . $forum_id);
     }
-    if(!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
+    if (!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
         dzk_ajaxerror(_MODARGSERROR . ' (Dizkus_adminapi_storenewforumorder(), cat_id=' . $cat_id);
     }
-    if(!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
+    if (!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
         dzk_ajaxerror(_MODARGSERROR . ' (Dizkus_adminapi_storenewforumorder(), order=' . $order);
     }
 
@@ -954,7 +953,7 @@ function Dizkus_adminapi_storenewforumorder($args)
                 " . $forumcolumn['cat_id'] . "='" . (int)DataUtil::formatForStore($cat_id) . "'
             WHERE " . $forumcolumn['forum_id'] . "='" . (int)DataUtil::formatForStore($forum_id) . "'";
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
-    if(is_bool($result) && $result==false) {
+    if (is_bool($result) && $result==false) {
         return false;
     }
     dzkCloseDB($result);

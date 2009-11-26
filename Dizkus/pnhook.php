@@ -21,7 +21,7 @@ function Dizkus_hook_showdiscussionlink($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!isset($args['objectid']) || empty($args['objectid']) ) {
+    if (!isset($args['objectid']) || empty($args['objectid']) ) {
         return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
@@ -29,15 +29,16 @@ function Dizkus_hook_showdiscussionlink($args)
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => pnModGetIDFromName(pnModGetName()) . '-' . $args['objectid']));
 
-    if($topic_id <> false) {
+    if ($topic_id <> false) {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id,
                                     'last_visit' => $last_visit,
                                     'count'      => false));
-        $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-        $pnr->assign('topic', $topic);
-        return $pnr->fetch('dizkus_hook_display.html');
+        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('topic', $topic);
+        return $render->fetch('dizkus_hook_display.html');
     }
+
     return;
 }

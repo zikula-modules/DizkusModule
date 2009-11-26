@@ -52,7 +52,7 @@ function smarty_function_similartopics($params, &$smarty)
     extract($params);
     unset($params);
 
-    if(!isset($search) || empty($search)) {
+    if (!isset($search) || empty($search)) {
         $smarty->trigger_error("Error! In 'similartopics', a search attribute is required.");
         return false;
     }
@@ -66,7 +66,7 @@ function smarty_function_similartopics($params, &$smarty)
     $vars['limit']     = $limit;
     $vars['startnum']  = 0;
 
-    if(pnModGetVar('Dizkus', 'fulltextindex')==1) {
+    if (pnModGetVar('Dizkus', 'fulltextindex')==1) {
         $funcname = 'fulltext';
         $vars['order'] = 4; // score
     } else {

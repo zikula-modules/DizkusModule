@@ -22,12 +22,12 @@ function smarty_function_adminlink($params, &$smarty)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (SecurityUtil::checkPermission(0, 'Dizkus::', "::", ACCESS_ADMIN)) { 
-        if(empty($params['id']) || empty($params['type'])) {
+        if (empty($params['id']) || empty($params['type'])) {
             $smarty->trigger_error("Error! Missing parameter(s) for admin link.");
             return;
         }
         
-        if($params['type'] == 'category') {
+        if ($params['type'] == 'category') {
             return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'category', array('cat_id'=>(int)$params['id']))) . '">[' . DataUtil::formatForDisplay(__('Edit category title', $dom)) . ']</a>';
         } elseif ($type=='forum') {
             return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'forum', array('forum_id'=>(int)$params['id']))) . '">['.DataUtil::formatForDisplay(__('Edit forum', $dom)) . ']</a>';

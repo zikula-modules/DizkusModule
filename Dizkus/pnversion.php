@@ -9,37 +9,37 @@
  * @link http://www.dizkus.com
  */
 
-/**
- * set modversion info
- */
 $dom = ZLanguage::getModuleDomain('Dizkus');
 
-$modversion['name']        = 'Dizkus';
-$modversion['oldnames']    = array('pnForum');
-$modversion['displayname'] = __('Dizkus forums', $dom);
-$modversion['id']          = '62';
-$modversion['version']     = '3.1';
-$modversion['description'] = __('Provides an integrated forum system for Zikula, that is simple to administer and use but that has an excellet feature set.', $dom);
-$modversion['credits']     = 'pndocs/credits.txt';
-$modversion['help']        = 'pndocs/install.txt';
-$modversion['changelog']   = 'pndocs/changelog.txt';
-$modversion['license']     = 'pndocs/license.txt';
-$modversion['official']    = 0;
-$modversion['author']      = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer';
-$modversion['contact']     = 'http://www.dizkus.com';
-$modversion['admin']       = 1;
-$modversion['user']        = 1;
+$modversion['name']           = 'Dizkus';
+$modversion['oldnames']       = array('pnForum');
+$modversion['displayname']    = __('Dizkus forums', $dom);
+$modversion['description']    = __('Provides an integrated forum system for Zikula, that is simple to administer and use but that has an excellent feature set.', $dom);
+//! module name that appears in URL
+$modversion['url']            = __('forums', $dom);
+$modversion['version']        = '3.1';
+
+$modversion['credits']        = 'pndocs/credits.txt';
+$modversion['help']           = 'pndocs/install.txt';
+$modversion['changelog']      = 'pndocs/changelog.txt';
+$modversion['license']        = 'pndocs/license.txt';
+$modversion['id']             = '62';
+$modversion['official']       = 0;
+$modversion['author']         = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer';
+$modversion['contact']        = 'http://www.dizkus.com';
+$modversion['admin']          = 1;
+$modversion['user']           = 1;
 $modversion['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
                                       'Dizkus::CreateForum' => 'CategoryID::');
 
-// Zikula 1.0 extension following: module depedencies
-$modversion['dependencies'] = array(
-                                    array('modname'    => 'bbcode', 
-                                          'minversion' => '2.0', 
-                                          'maxversion' => '', 
-                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
-                                    array('modname'    => 'bbsmile', 
-                                          'minversion' => '2.1', 
-                                          'maxversion' => '', 
-                                          'status'     => PNMODULE_DEPENDENCY_RECOMMENDED)
-                                   );
+// module depedencies
+$modversion['dependencies']   = array(
+                                      array('modname'    => 'bbcode', 
+                                            'minversion' => '2.0', 
+                                            'maxversion' => '', 
+                                            'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
+                                      array('modname'    => 'bbsmile', 
+                                            'minversion' => '2.1', 
+                                            'maxversion' => '', 
+                                            'status'     => PNMODULE_DEPENDENCY_RECOMMENDED)
+                                     );

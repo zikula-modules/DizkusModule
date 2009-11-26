@@ -17,10 +17,10 @@ function smarty_function_post_order_button($params, &$smarty)
     extract($params);
 	  unset($params);
 
-    if(!isset($image_ascending) || empty($image_ascending)) {
+    if (!isset($image_ascending) || empty($image_ascending)) {
         $image_ascending = 'postorderasc.gif';
     }
-    if(!isset($image_descending) || empty($image_descending)) {
+    if (!isset($image_descending) || empty($image_descending)) {
         $image_descending = 'postorderdesc.gif';
     }
 
@@ -40,7 +40,7 @@ function smarty_function_post_order_button($params, &$smarty)
         $return_to = 'viewtopic';
     } else {
         $topic_id = false;
-        if(!isset($return_to)) {
+        if (!isset($return_to)) {
             $return_to = 'main';
         }
     }
@@ -48,14 +48,14 @@ function smarty_function_post_order_button($params, &$smarty)
         $post_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
         if ($post_order == 'ASC' ) {
             $imagedata = dzk_getimagepath($image_ascending);
-            if($imagedata == false) {
+            if ($imagedata == false) {
                 $show = DataUtil::formatForDisplay(__('Display newest post first', $dom));
             } else {
                 $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change post order', $dom)) .'" ' . $imagedata['size'] . ' />';
             }
         } else {
             $imagedata = dzk_getimagepath($image_descending);
-            if($imagedata == false) {
+            if ($imagedata == false) {
                 $show = DataUtil::formatForDisplay(__('Display oldest post first', $dom));
             } else {
                 $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Change post order', $dom)) .'" ' . $imagedata['size'] . ' />';

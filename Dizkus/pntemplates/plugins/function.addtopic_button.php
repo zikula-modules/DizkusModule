@@ -22,15 +22,15 @@ function smarty_function_addtopic_button($params, &$smarty)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     // set a default value
-    if(!isset($params['image']) || empty($params['image'])) {
+    if (!isset($params['image']) || empty($params['image'])) {
         $params['image'] = 'post.gif';
     }
 
     Loader::includeOnce('modules/Dizkus/common.php');
     $out = "";
-    if(allowedtowritetocategoryandforum($params['cat_id'], $params['forum_id'])) {
+    if (allowedtowritetocategoryandforum($params['cat_id'], $params['forum_id'])) {
         $imagedata = dzk_getimagepath($params['image']);
-        if($imagedata == false) {
+        if ($imagedata == false) {
             $show = DataUtil::formatForDisplay(__('New topic', $dom));
         } else {
             $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('New topic', $dom)) .'" ' . $imagedata['size'] . ' />';

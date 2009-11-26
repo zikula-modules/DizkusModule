@@ -74,7 +74,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
-    $pnr = & pnRender::getInstance('Dizkus', false);
+    $render = & pnRender::getInstance('Dizkus', false);
 
     // start with a fresh array
     $test_array = array();
@@ -107,7 +107,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
         if (file_exists($baseDir . '/' . $test) && is_readable($baseDir . '/' . $test)) {
             // grab the first one we find.
             // that's why the order above is important
-            return $pnr->fetch($test);
+            return $render->fetch($test);
         }
     }
     // we couldn't find a custom message, fall back to the passed in default
@@ -128,25 +128,25 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
 function showforumerror($error_text, $file='', $line=0, $httperror=null)
 {
     PageUtil::setVar('title', $error_text);
-    if(SessionUtil::getVar('pn_ajax_call') == 'ajax') {
+    if (SessionUtil::getVar('pn_ajax_call') == 'ajax') {
         dzk_ajaxerror($error_text);
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign( 'adminmail', pnConfigGetVar('adminmail') );
-    $pnr->assign( 'error_text', $error_text );
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign( 'adminmail', pnConfigGetVar('adminmail') );
+    $render->assign( 'error_text', $error_text );
     
     // show http error if requested
-    if($httperror <> null) {
+    if ($httperror <> null) {
         header("HTTP/1.0 " . DataUtil::formatForDisplay($httperror));
     }
     
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        $pnr->assign( 'file', $file);
-        $pnr->assign( 'line', $line);
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        $render->assign( 'file', $file);
+        $render->assign( 'line', $line);
     }
-    $output = $pnr->fetch('dizkus_errorpage.html');
-    if(preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
+    $output = $render->fetch('dizkus_errorpage.html');
+    if (preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
         // __FILE__ ends with api.php or is common.php or pninit.php
         Loader::includeOnce('header.php');
         echo $output;
@@ -166,7 +166,7 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
  */
 function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file='', $line)
 {
-    if(!empty($sql) && pnModGetVar('Dizkus', 'sendemailswithsqlerrors') == 'yes') {
+    if (!empty($sql) && pnModGetVar('Dizkus', 'sendemailswithsqlerrors') == 'yes') {
         // Sending notify e-mail for error
         $message = "Error occured\n\n";
         $message .= "SQL statement:\n" . $sql . "\n\n";
@@ -196,7 +196,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
                        'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
         pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
     }
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
                                 code : $sql_errno <br />
@@ -212,28 +212,28 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
  */
 function dzkdebug($name='', $data, $die = false)
 {
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         $type = gettype($data);
         echo "\n<!-- begin debug of $name -->\n<div style=\"color: red;\">$name ($type";
-        if(is_array($data)||is_object($data)) {
+        if (is_array($data)||is_object($data)) {
             $size = count($data);
-            if($size>0) {
+            if ($size>0) {
                 echo ", size=$size entries):<pre>";
                 echo htmlspecialchars(print_r($data, true));
                 echo "</pre>:<br />";
             } else {
                 echo "):empty<br />";
             }
-        } else if(is_bool($data)) {
+        } else if (is_bool($data)) {
             echo ") ";
             echo ($data==true) ? "true<br />" : "false<br />";
-        } else if(is_string($data)) {
+        } else if (is_string($data)) {
             echo ", len=".strlen($data).") :$data:<br />";
         } else {
             echo ") :$data:<br />";
         }
         echo "</div><br />\n<!-- end debug of $name -->";
-        if($die==true) {
+        if ($die==true) {
             pnShutDown();
         }
     }
@@ -269,9 +269,9 @@ function dzkOpenDB($tablename='')
     $dbconn =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
 
-    if(!empty($tablename)) {
+    if (!empty($tablename)) {
         $columnname = $tablename . '_column';
-        if( !array_key_exists($tablename, $pntable) ||
+        if ( !array_key_exists($tablename, $pntable) ||
             !array_key_exists($columnname, $pntable) ) {return false; }
         // table exists, now get the dbconnection object
         return array($dbconn, &$pntable[$tablename], &$pntable[$columnname]);
@@ -290,7 +290,7 @@ function dzkOpenDB($tablename='')
  */
 function dzkCloseDB($resobj)
 {
-    if(is_object($resobj)) {
+    if (is_object($resobj)) {
         $resobj->Close();
     }
     return;
@@ -311,18 +311,18 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!is_object($dbconn) || !isset($sql) || empty($sql)) {
+    if (!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
         $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
     }
     $result =& $dbconn->Execute($sql);
     $dbconn->debug = false;
-    if($dbconn->ErrorNo() != 0) {
-        if($extendederror == true) {
+    if ($dbconn->ErrorNo() != 0) {
+        if ($extendederror == true) {
             return showforumsqlerror(__('Error! Could not connect to the database.', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
         } else {
             return false;
@@ -347,10 +347,10 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
+    if (!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
 //        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);
@@ -361,7 +361,7 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
 
     $result = $dbconn->AutoExecute($table, $record, $mode, $where);
     $dbconn->debug = false;
-    if($dbconn->ErrorNo() != 0) {
+    if ($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(__('Error! Could not connect to the database.', $dom), $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
@@ -384,22 +384,22 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
+    if (!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
 //        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
         $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);//dddd
     }
-    if( $start<>false && (is_numeric($start) && $start<>0 ) ){
+    if ( $start<>false && (is_numeric($start) && $start<>0 ) ){
         $result = $dbconn->SelectLimit($sql, $limit, $start);
     } else {
         $result = $dbconn->SelectLimit($sql, $limit);
     }
     $dbconn->debug = false;
-    if($dbconn->ErrorNo() != 0) {
+    if ($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(__('Error! Could not connect to the database.', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
     return $result;
@@ -411,9 +411,9 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
  *
  *@params $string the string to test
  *@returns boolean true or false
- *
  */
-if (!function_exists('Dizkus_is_serialized')) {
+if (!function_exists('Dizkus_is_serialized'))
+{
     function Dizkus_is_serialized( $string ) {
         return @unserialize($string) !== '';
     }
@@ -557,7 +557,7 @@ function cmp_catorder($a, $b)
 function Dizkus_replacesignature($text, $signature='')
 {
     $removesignature = pnModGetVar('Dizkus', 'removesignature');
-    if($removesignature == 'yes') {
+    if ($removesignature == 'yes') {
         $signature = '';
     }
     if (!empty($signature)){
@@ -577,7 +577,7 @@ function Dizkus_replacesignature($text, $signature='')
 function mailcronecho($text, $debug)
 {
     echo $text;
-    if($debug==true) {
+    if ($debug==true) {
         echo '<br />';
     }
     flush();
@@ -612,7 +612,8 @@ function dzkVarPrepHTMLDisplay($text)
  * used for debug purposes only
  *
  */
-if(!function_exists('microtime_float')) {
+if (!function_exists('microtime_float'))
+{
     function microtime_float()
     {
         list($usec, $sec) = explode(' ', microtime());
@@ -639,7 +640,7 @@ function useragent_is_bot()
                           'lycos');
     $useragent = pnServerGetVar('HTTP_USER_AGENT');
     for($cnt=0; $cnt < count($robotslist); $cnt++) {
-        if(strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
+        if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
             return true;
         }
     }
@@ -733,7 +734,7 @@ function dzk_getimagepath($image=null)
  */
 function dzkstriptags($text='')
 {
-    if(!empty($text) && (pnModGetVar('Dizkus', 'striptags') == 'yes')) {
+    if (!empty($text) && (pnModGetVar('Dizkus', 'striptags') == 'yes')) {
         // save code tags
         $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
         for($i=0; $i < $codecount; $i++) {
@@ -753,9 +754,9 @@ function dzkstriptags($text='')
 
 /**
  * array_csort implementation
- *
  */
-if (!function_exists('array_csort')) {
+if (!function_exists('array_csort'))
+{
     function array_csort()
     {  //coded by Ichier2003 found on php.net (watch out the eval).
        $args = func_get_args();
@@ -812,12 +813,12 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
 {
     Loader::includeOnce('modules/Dizkus/pnincludes/JSON.php');
     $json = new Services_JSON();
-    if(!is_array($args)) {
+    if (!is_array($args)) {
         $data = array('data' => $args);
     } else {
         $data = $args;
     }
-    if($createauthid == true) {
+    if ($createauthid == true) {
         $data['authid'] = SecurityUtil::generateAuthKey('Dizkus');
     }
     $output = $json->encode($data);
@@ -828,7 +829,7 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
     } else {
         header('HTTP/1.0 400 Bad Data');
     }
-    if($xjsonheader == false) {
+    if ($xjsonheader == false) {
         echo $output;
     } else {
         header('X-JSON:(' . $output . ')');
@@ -859,7 +860,7 @@ function dzk_blacklist()
 
 
     $fh = fopen($blacklistfile, 'a');
-    if($fh) {
+    if ($fh) {
         $ip = dzk_getip();
         $line = implode(',', array(strftime('%Y-%m-%d %H:%M'),
                                    $ip,
@@ -940,8 +941,7 @@ function dzk_getip()
  * as found on http://de3.php.net/manual/de/function.mktime.php
  * comment dated July 9th 2006, nicky
  *
- * THe only change is to set the default value for strPattern to the format we use in the database
- *
+ * The only change is to set the default value for strPattern to the format we use in the database
  */
 function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
 {
@@ -1014,8 +1014,8 @@ function dzk_available($deliverhtml = true)
 {
     if ((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if ($deliverhtml == true) {
-            $pnr = & pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
-            return $pnr->fetch('dizkus_disabled.html');
+            $render = & pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
+            return $render->fetch('dizkus_disabled.html');
         } else {
             return false;
         }

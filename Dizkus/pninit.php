@@ -22,7 +22,7 @@ function Dizkus_init()
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(version_compare(PN_VERSION_NUM, '1.2.0', '<')) {
+    if (version_compare(PN_VERSION_NUM, '1.2.0', '<')) {
         SessionUtil::setVar('errormsg', __('This version of Dizkus requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met.', $dom));
         return false;
     }
@@ -338,10 +338,10 @@ function Dizkus_init_interactiveupgrade($args)
             return pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
-    $pnr = & pnRender::getInstance('Dizkus', false, null, true);
-    $pnr->assign('oldversion', $oldversion);
-    $pnr->assign('authid', $authid);
-    return $pnr->fetch($templatefile);
+    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render->assign('oldversion', $oldversion);
+    $render->assign('authid', $authid);
+    return $render->fetch($templatefile);
 }
 
 /**
@@ -358,9 +358,9 @@ function Dizkus_init_interactiveupgrade_to_3_0()
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
 
-    if(!empty($submit)) {
+    if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_0();
-        if($result<>true) {
+        if ($result<>true) {
             return showforumerror(_('Error! Could not upgrade. The upgrade to Dizkus 3.0 failed.'), __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
@@ -413,7 +413,7 @@ function Dizkus_upgrade_to_3_0()
     $oldvars = pnModGetVar('pnForum');
     foreach ($oldvars as $varname => $oldvar) {
       // update path to rank images - simply replace pnForum with Dizkus
-      if($varname == 'url_ranks_images') {
+      if ($varname == 'url_ranks_images') {
           $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
       }
         pnModSetVar('Dizkus', $varname, $oldvar);
@@ -461,9 +461,9 @@ function Dizkus_init_interactiveupgrade_to_3_1()
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
 
-    if(!empty($submit)) {
+    if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_1();
-        if($result<>true) {
+        if ($result<>true) {
             return showforumerror(__('Error! Could not upgrade to Dizkus 3.1. The upgrade failed.', $dom), __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
@@ -471,10 +471,8 @@ function Dizkus_init_interactiveupgrade_to_3_1()
     return pnRedirect(pnModURL('Modules', 'admin', 'view'));
 }
 
-/*
- *
+/**
  * upgrade to 3.1
- *
  */
 function Dizkus_upgrade_to_3_1()
 {
@@ -530,10 +528,8 @@ function Dizkus_upgrade_to_3_1()
     return true;
 }
 
-/*
- *
+/**
  * create default categories
- *
  */
 function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', $languages)
 {
@@ -580,10 +576,8 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', 
     return true;
 }
 
-/*
- *
+/**
  * migrate old categories
- *
  */
 function _dizkus_migratecategories()
 {

@@ -44,7 +44,7 @@ function smarty_modifier_dzkbbsmile($string)
 {
 	$extrainfo = array($string);
 
-    if(pnModAvailable('bbsmile')) {
+    if (pnModAvailable('bbsmile')) {
         list($string) = pnModAPIFunc('bbsmile', 'user', 'transform', array('objectid' => '', 'extrainfo' => $extrainfo));
     }
     return $string;                      

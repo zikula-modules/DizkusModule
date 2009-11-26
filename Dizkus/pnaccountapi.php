@@ -18,26 +18,26 @@
 function Dizkus_accountapi_getall($args)
 {
     // the array that will hold the options
-    $items = null;
+    $items = array();
 
     // show link for users only
-    if(!pnUserLoggedIn()) {
+    if (!pnUserLoggedIn()) {
         // not logged in
         return $items;
     }
 
     $uname = (isset($args['uname'])) ? $args['uname'] : pnUserGetVar('uname');
     // does this user exist?
-    if(pnUserGetIDFromName($uname)==false) {
+    if (pnUserGetIDFromName($uname) == false) {
         // user does not exist
         return $items;
     }
 
     // Create an array of links to return
-    if(SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
-        $items = array(array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
-                             'title'   => __('Forum settings', $dom),
-                             'icon'    => 'icon_forumprefs.gif'));
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
+        $items['1'] = array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
+                            'title'   => __('Forum settings', $dom),
+                            'icon'    => 'icon_forumprefs.gif');
     }
 
     // Return the items

@@ -87,7 +87,7 @@ function smarty_function_dizkusonline($params, &$smarty)
             FROM     $pntable[session_info], $pntable[users]
             WHERE    $pntable[session_info].pn_lastused > '$activetime'
             $anonwhere
-            AND      IF($pntable[session_info].pn_uid='0','1',$pntable[session_info].pn_uid) = $pntable[users].pn_uid
+            AND      if ($pntable[session_info].pn_uid='0','1',$pntable[session_info].pn_uid) = $pntable[users].pn_uid
             GROUP BY $pntable[session_info].pn_ipaddr, $pntable[session_info].pn_uid";
 
     $res = DBUtil::executeSQL($sql);

@@ -24,17 +24,17 @@ function Dizkus_hookapi_createbyitem($args)
     extract($args);
     unset($args);
 
-    if(!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
+    if (!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
         $modname = pnModGetName();
     } else {
         $modname = $args['extrainfo']['module'];
     }
 
-    if(isset($args['extrainfo']['itemid']) && !empty($args['extrainfo']['itemid'])) {
+    if (isset($args['extrainfo']['itemid']) && !empty($args['extrainfo']['itemid'])) {
         $args['objectid'] = $args['extrainfo']['itemid'];
     }
 
-    if(!isset($args['objectid']) || empty($args['objectid'])) {
+    if (!isset($args['objectid']) || empty($args['objectid'])) {
         return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
@@ -46,14 +46,14 @@ function Dizkus_hookapi_createbyitem($args)
 
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => $reference));
-    if($topic_id == false) {
+    if ($topic_id == false) {
         $subject   = __('Automatically created topic', $dom);
         $message   = __('Done! Automatically created topic for discussion of submitted entries.', $dom);
         $pntopic   = 0;
         $authorid  = pnUserGetVar('uid');
 
         $functionfilename = DataUtil::formatForStore('modules/Dizkus/pncommentsapi/' . $modname . '.php');
-        if(file_exists($functionfilename) && is_readable($functionfilename)) {
+        if (file_exists($functionfilename) && is_readable($functionfilename)) {
             list($subject, $message, $pntopic, $authorid) = pnModAPIFunc('Dizkus', 'comments', $modname, array('objectid' => $args['objectid']));
         }
 
@@ -78,17 +78,17 @@ function Dizkus_hookapi_updatebyitem($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
+    if (!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
         $modname = pnModGetName();
     } else {
         $modname = $args['extrainfo']['module'];
     }
 
-    if(isset($args['extrainfo']['itemid']) && !empty($args['extrainfo']['itemid'])) {
+    if (isset($args['extrainfo']['itemid']) && !empty($args['extrainfo']['itemid'])) {
         $args['objectid'] = $args['extrainfo']['itemid'];
     }
 
-    if(!isset($args['objectid']) || empty($args['objectid'])) {
+    if (!isset($args['objectid']) || empty($args['objectid'])) {
         return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
@@ -100,7 +100,7 @@ function Dizkus_hookapi_updatebyitem($args)
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => $reference));
 
-    if($topic_id <> false) {
+    if ($topic_id <> false) {
         // found
         // get first post id
         $post_id = pnModAPIFunc('Dizkus', 'user', 'get_firstlast_post_in_topic',
@@ -108,9 +108,9 @@ function Dizkus_hookapi_updatebyitem($args)
                                       'first'    => true,
                                       'id_only'  => true));
 
-        if($post_id <> false) {
+        if ($post_id <> false) {
             $functionfilename = DataUtil::formatForStore('modules/Dizkus/pncommentsapi/' . $modname . '.php');
-            if(file_exists($functionfilename) && is_readable($functionfilename)) {
+            if (file_exists($functionfilename) && is_readable($functionfilename)) {
                 list($subject, $message, $pntopic, $authorid) = pnModAPIFunc('Dizkus', 'comments', $modname, array('objectid' => $args['objectid']));
             }
             pnModAPIFunc('Dizkus', 'user', 'updatepost',
@@ -132,17 +132,17 @@ function Dizkus_hookapi_deletebyitem($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    if(!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
+    if (!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
         $modname = pnModGetName();
     } else {
         $modname = $args['extrainfo']['module'];
     }
 
-    if(isset($args['extrainfo']['itemid']) && !empty($args['extrainfo']['itemid'])) {
+    if (isset($args['extrainfo']['itemid']) && !empty($args['extrainfo']['itemid'])) {
         $args['objectid'] = $args['extrainfo']['itemid'];
     }
 
-    if(!isset($args['objectid']) || empty($args['objectid'])) {
+    if (!isset($args['objectid']) || empty($args['objectid'])) {
         return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
@@ -154,8 +154,8 @@ function Dizkus_hookapi_deletebyitem($args)
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => $reference));
 
-    if($topic_id <> false) {
-        if(pnModGetVar('Dizkus', 'deletehookaction') == 'remove') {
+    if ($topic_id <> false) {
+        if (pnModGetVar('Dizkus', 'deletehookaction') == 'remove') {
             pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
         } else {
             pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode' => 'lock'));
