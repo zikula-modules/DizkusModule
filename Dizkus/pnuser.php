@@ -15,7 +15,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  * main
  * show all categories and forums a user may see
  *
- *@params 'viewcat' int only expand the category, all others shall be hidden / collapsed
+ * @params 'viewcat' int only expand the category, all others shall be hidden / collapsed
  */
 function Dizkus_user_main($args=array())
 {
@@ -88,8 +88,8 @@ function Dizkus_user_main($args=array())
  * viewforum
  * opens a forum and shows the last postings
  *
- *@params 'forum' int the forum id
- *@params 'start' int the posting to start with if on page 1+
+ * @params 'forum' int the forum id
+ * @params 'start' int the posting to start with if on page 1+
  */
 function Dizkus_user_viewforum($args=array())
 {
@@ -1150,7 +1150,7 @@ function Dizkus_user_jointopics($args=array())
  * moderateforum
  * simple moderation of multiple topics
  *
- *@params to be documented :-)
+ * @params to be documented :-)
  *
  */
 function Dizkus_user_moderateforum($args=array())
@@ -1270,8 +1270,8 @@ function Dizkus_user_moderateforum($args=array())
  * report
  * notify a moderator about a posting
  *
- *@params $post int post_id
- *@params $comment string comment of reporter
+ * @params $post int post_id
+ * @params $comment string comment of reporter
  *
  */
 function Dizkus_user_report($args)
@@ -1338,7 +1338,7 @@ function Dizkus_user_report($args)
  * topicsubscriptions
  * manage the users topic subscription
  *
- *@params
+ * @params
  *
  */
 function Dizkus_user_topicsubscriptions($args)

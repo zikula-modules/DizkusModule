@@ -4,7 +4,7 @@
  * listforummods plugin
  * lists a forum mods
  *
- *@param $params['moderators'] array with key=userid, value=username of moderators
+ * @param $params['moderators'] array with key=userid, value=username of moderators
  *
  */
 function smarty_function_listforummods($params, &$smarty)

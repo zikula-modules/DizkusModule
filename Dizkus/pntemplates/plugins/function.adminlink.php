@@ -14,8 +14,8 @@
  * adminlink plugin
  * adds a link to the configuration of a category or forum
  *
- *@params $params['type'] string, either 'category' or 'forum'
- *@params $params['id']   int     category or forum id, depending of $type
+ * @params $params['type'] string, either 'category' or 'forum'
+ * @params $params['id']   int     category or forum id, depending of $type
  */ 
 function smarty_function_adminlink($params, &$smarty) 
 {

@@ -13,10 +13,10 @@
  * splittopic_button plugin
  * adds the split topic button
  *
- *@params $params['cat_id'] int category id
- *@params $params['forum_id'] int forum id
- *@params $params['post_id'] int post id
- *@params $params['image']    string the image filename (without path)
+ * @params $params['cat_id'] int category id
+ * @params $params['forum_id'] int forum id
+ * @params $params['post_id'] int post id
+ * @params $params['image']    string the image filename (without path)
  */
 function smarty_function_splittopic_button($params, &$smarty)
 {

@@ -13,11 +13,11 @@
  * topicpager plugin
  * creates a topic pager
  *
- *@param $params['total'] int total number of posts in this topic
- *@param $params['topic_id'] int topic id
- *@param $params['start'] int start value, if -1 then show all pages as links (= no start page)
- *@param $params['separator'] string  text to show between the pages, default |
- *@param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
+ * @param $params['total'] int total number of posts in this topic
+ * @param $params['topic_id'] int topic id
+ * @param $params['start'] int start value, if -1 then show all pages as links (= no start page)
+ * @param $params['separator'] string  text to show between the pages, default |
+ * @param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
  *
  */
 function smarty_function_topicpager($params, &$smarty)

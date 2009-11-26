@@ -13,17 +13,17 @@
  * pnfpager plugin
  * creates a forum or a topic pager
  *
- *@param $params['objectid']     int the id of the obejct to page, maybe a topic or forum id. If not supplied, this will be taken from the url
- *@param $params['total']        int total number of topics in this forum
- *@param $params['separator']    string  text to show between the pages, default |
- *@param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
- *@param $params['linkall']      bool makes the recent page a link too, useful when linking to a topicpager in a forum view
+ * @param $params['objectid']     int the id of the obejct to page, maybe a topic or forum id. If not supplied, this will be taken from the url
+ * @param $params['total']        int total number of topics in this forum
+ * @param $params['separator']    string  text to show between the pages, default |
+ * @param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
+ * @param $params['linkall']      bool makes the recent page a link too, useful when linking to a topicpager in a forum view
  *                               default false
- *@param $params['force'         string force the pager to user this function for building the urls, also useful
+ * @param $params['force'         string force the pager to user this function for building the urls, also useful
  *                               for linking to a topic in a forum view
  *                               possible values: viewforum, viewtopic, moderateforum
  *                               default: taken from the func parameter in the url
- *@param $params['tag']          string if true, the pager output is using these surrounding tags
+ * @param $params['tag']          string if true, the pager output is using these surrounding tags
  *                               default paragraph
  *
  * This logic is taken from phpbb.

@@ -13,8 +13,8 @@
  * bbcode plugin
  * shows all available bbcode tags
  *
- *@params $params $images boolean if true then show images instead of text links
- *@params $params $textfieldid string id of the textfield to update
+ * @params $params $images boolean if true then show images instead of text links
+ * @params $params $textfieldid string id of the textfield to update
  */
 function smarty_function_plainbbcode($params, &$smarty)
 {

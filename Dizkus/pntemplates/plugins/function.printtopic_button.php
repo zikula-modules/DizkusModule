@@ -13,10 +13,10 @@
  * printtopic_button plugin
  * adds the print topic button
  *
- *@params $params['cat_id'] int category id
- *@params $params['forum_id'] int forum id
- *@params $params['topic_id'] int topic id
- *@params $params['image']    string the image filename (without path)
+ * @params $params['cat_id'] int category id
+ * @params $params['forum_id'] int forum id
+ * @params $params['topic_id'] int topic id
+ * @params $params['image']    string the image filename (without path)
  */
 function smarty_function_printtopic_button($params, &$smarty)
 {

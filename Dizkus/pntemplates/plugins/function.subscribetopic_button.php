@@ -13,11 +13,11 @@
  * subscribetopic_button plugin
  * adds the subscribe topic button
  *
- *@params $params['cat_id'] int category id
- *@params $params['forum_id'] int forum id
- *@params $params['topic_id'] int topic id
- *@params $params['image_subscribe']    string the image filename (without path)
- *@params $params['image_unsubscribe']    string the image filename (without path)
+ * @params $params['cat_id'] int category id
+ * @params $params['forum_id'] int forum id
+ * @params $params['topic_id'] int topic id
+ * @params $params['image_subscribe']    string the image filename (without path)
+ * @params $params['image_unsubscribe']    string the image filename (without path)
  */
 function smarty_function_subscribetopic_button($params, &$smarty)
 {

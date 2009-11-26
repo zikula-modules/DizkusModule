@@ -16,8 +16,8 @@ Loader::includeOnce('modules/Dizkus/common.php');
  * This function dynamically reads all fields of the <prefix>_users and <prefix>_dizkus_users
  * tables. When ever data fields are added there, they will be read too without any change here.
  *
- *@params $args{'userid'] int the users id (pn_uid)
- *@returns array of userdata information
+ * @params $args{'userid'] int the users id (pn_uid)
+ * @returns array of userdata information
  */
 function Dizkus_userapi_get_userdata_from_id($args)
 {
@@ -140,9 +140,9 @@ function Dizkus_userapi_get_userdata_from_id($args)
  * Returns the total number of posts in the whole system, a forum, or a topic
  * Also can return the number of users on the system.
  *
- *@params $args['id'] int the id, depends on 'type' parameter
- *@params $args['type'] string, defines the id parameter
- *@returns int (depending on type and id)
+ * @params $args['id'] int the id, depends on 'type' parameter
+ * @params $args['type'] string, defines the id parameter
+ * @returns int (depending on type and id)
  */
 function Dizkus_userapi_boardstats($args)
 {
@@ -230,10 +230,10 @@ function Dizkus_userapi_boardstats($args)
  * get_firstlast_post_in_topic
  * gets the first or last post in a topic, false if no posts
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['first']   boolean if true then get the first posting, otherwise the last
- *@params $args['id_only'] boolean if true, only return the id, not the complete post information
- *@returns array with post information or false or (int)id if id_only is true
+ * @params $args['topic_id'] int the topics id
+ * @params $args['first']   boolean if true then get the first posting, otherwise the last
+ * @params $args['id_only'] boolean if true, only return the id, not the complete post information
+ * @returns array with post information or false or (int)id if id_only is true
  */
 function Dizkus_userapi_get_firstlast_post_in_topic($args)
 {
@@ -259,9 +259,9 @@ function Dizkus_userapi_get_firstlast_post_in_topic($args)
  * get_last_post_in_forum
  * gets the last post in a forum, false if no posts
  *
- *@params $args['forum_id'] int the forums id
- *@params $args['id_only'] boolean if true, only return the id, not the complete post information
- *@returns array with post information of false
+ * @params $args['forum_id'] int the forums id
+ * @params $args['id_only'] boolean if true, only return the id, not the complete post information
+ * @returns array with post information of false
  */
 function Dizkus_userapi_get_last_post_in_forum($args)
 {
@@ -285,8 +285,8 @@ function Dizkus_userapi_get_last_post_in_forum($args)
  * readcategorytree
  * read all catgories and forums the recent user has access to
  *
- *@params $args['last_visit'] string the users last visit date as returned from setcookies() function
- *@returns array of categories with an array of forums in the catgories
+ * @params $args['last_visit'] string the users last visit date as returned from setcookies() function
+ * @returns array of categories with an array of forums in the catgories
  *
  */
 function Dizkus_userapi_readcategorytree($args)
@@ -464,8 +464,8 @@ function Dizkus_userapi_readcategorytree($args)
 /**
  * Returns an array of all the moderators of a forum
  *
- *@params $args['forum_id'] int the forums id
- *@returns array containing the pn_uid as index and the users name as value
+ * @params $args['forum_id'] int the forums id
+ * @returns array containing the pn_uid as index and the users name as value
  */
 function Dizkus_userapi_get_moderators($args)
 {
@@ -528,8 +528,8 @@ function Dizkus_userapi_get_moderators($args)
  * reads the cookie, updates it and returns the last visit date in readable (%Y-%m-%d %H:%M)
  * and unix time format
  *
- *@params none
- *@returns array of (readable last visits data, unix time last visit date)
+ * @params none
+ * @returns array of (readable last visits data, unix time last visit date)
  *
  */
 function Dizkus_userapi_setcookies()
@@ -572,12 +572,12 @@ function Dizkus_userapi_setcookies()
  * readforum
  * reads the forum information and the last posts_per_page topics incl. poster data
  *
- *@params $args['forum_id'] int the forums id
- *@params $args['start'] int number of topic to start with (if on page 1+)
- *@params $args['last_visit'] string users last visit date
- *@params $args['last_visit_unix'] string users last visit date as timestamp
- *@params $args['topics_per_page'] int number of topics to read, -1 = all topics
- *@returns very complex array, see <!--[ debug ]--> for more information
+ * @params $args['forum_id'] int the forums id
+ * @params $args['start'] int number of topic to start with (if on page 1+)
+ * @params $args['last_visit'] string users last visit date
+ * @params $args['last_visit_unix'] string users last visit date as timestamp
+ * @params $args['topics_per_page'] int number of topics to read, -1 = all topics
+ * @returns very complex array, see <!--[ debug ]--> for more information
  */
 function Dizkus_userapi_readforum($args)
 {
@@ -773,14 +773,14 @@ function cmp_forumtopicsort($a, $b)
  * readtopic
  * reads a topic with the last posts_per_page answers (incl the initial posting when on page #1)
  *
- *@params $args['topic_id'] it the topics id
- *@params $args['start'] int number of posting to start with (if on page 1+)
- *@params $args['complete'] bool if true, reads the complete thread and does not care about
+ * @params $args['topic_id'] it the topics id
+ * @params $args['start'] int number of posting to start with (if on page 1+)
+ * @params $args['complete'] bool if true, reads the complete thread and does not care about
  *                               the posts_per_page setting, ignores 'start'
- *@params $args['last_visit'] string the users last visit date
- *@params $args['count']      bool  true if we have raise the read counter, default false
- *@params $args['nohook']     bool  true if transform hooks should not modify post text
- *@returns very complex array, see <!--[ debug ]--> for more information
+ * @params $args['last_visit'] string the users last visit date
+ * @params $args['count']      bool  true if we have raise the read counter, default false
+ * @params $args['nohook']     bool  true if transform hooks should not modify post text
+ * @returns very complex array, see <!--[ debug ]--> for more information
  */
 function Dizkus_userapi_readtopic($args)
 {
@@ -1051,14 +1051,14 @@ dzkdebug('time:', $time_used);
  * preparereply
  * prepare a reply to a posting by reading the last ten postign in revers order for review
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['post_id'] int the post id to reply to
- *@params $args['quote'] bool if user wants to qupte or not
- *@params $args['last_visit'] string the users last visit data
- *@params $args['reply_start'] bool true if we start a new reply
- *@params $args['attach_signature'] int 1=attach signature, otherwise no
- *@params $args['subscribe_topic'] int =subscribe topic, otherwise no
- *@returns very complex array, see <!--[ debug ]--> for more information
+ * @params $args['topic_id'] int the topics id
+ * @params $args['post_id'] int the post id to reply to
+ * @params $args['quote'] bool if user wants to qupte or not
+ * @params $args['last_visit'] string the users last visit data
+ * @params $args['reply_start'] bool true if we start a new reply
+ * @params $args['attach_signature'] int 1=attach signature, otherwise no
+ * @params $args['subscribe_topic'] int =subscribe topic, otherwise no
+ * @returns very complex array, see <!--[ debug ]--> for more information
  */
 function Dizkus_userapi_preparereply($args)
 {
@@ -1219,13 +1219,13 @@ function Dizkus_userapi_preparereply($args)
  * storereply
  * store the users reply in the database
  *
- *@params $args['message'] string the text
- *@params $args['title'] string the posting title
- *@params $args['topic_id'] int the topics id
- *@params $args['forum_id'] int the forums id
- *@params $args['attach_signature'] int 1=yes, otherwise no
- *@params $args['subscribe_topic'] int 1=yes, otherwise no
- *@returns array(int, int) start parameter and new post_id
+ * @params $args['message'] string the text
+ * @params $args['title'] string the posting title
+ * @params $args['topic_id'] int the topics id
+ * @params $args['forum_id'] int the forums id
+ * @params $args['attach_signature'] int 1=yes, otherwise no
+ * @params $args['subscribe_topic'] int 1=yes, otherwise no
+ * @returns array(int, int) start parameter and new post_id
  */
 function Dizkus_userapi_storereply($args)
 {
@@ -1334,9 +1334,9 @@ function Dizkus_userapi_storereply($args)
 /**
  * get_topic_subscription_status
  *
- *@params $args['userid'] int the users pn_uid
- *@params $args['topic_id'] int the topic id
- *@returns bool true if the user is subscribed or false if not
+ * @params $args['userid'] int the users pn_uid
+ * @params $args['topic_id'] int the topic id
+ * @returns bool true if the user is subscribed or false if not
  */
 function Dizkus_userapi_get_topic_subscription_status($args)
 {
@@ -1352,9 +1352,9 @@ function Dizkus_userapi_get_topic_subscription_status($args)
 /**
  * get_forum_subscription_status
  *
- *@params $args['userid'] int the users pn_uid
- *@params $args['forum_id'] int the forums id
- *@returns bool true if the user is subscribed or false if not
+ * @params $args['userid'] int the users pn_uid
+ * @params $args['forum_id'] int the forums id
+ * @returns bool true if the user is subscribed or false if not
  */
 function Dizkus_userapi_get_forum_subscription_status($args)
 {
@@ -1376,9 +1376,9 @@ function Dizkus_userapi_get_forum_subscription_status($args)
 /**
  * get_forum_favorites_status
  *
- *@params $args['userid'] int the users pn_uid
- *@params $args['forum_id'] int the forums id
- *@returns bool true if the user is subscribed or false if not
+ * @params $args['userid'] int the users pn_uid
+ * @params $args['forum_id'] int the forums id
+ * @returns bool true if the user is subscribed or false if not
  */
 function Dizkus_userapi_get_forum_favorites_status($args)
 {
@@ -1400,13 +1400,13 @@ function Dizkus_userapi_get_forum_favorites_status($args)
 /**
  * preparenewtopic
  *
- *@params $args['message'] string the text (only set when preview is selected)
- *@params $args['subject'] string the subject (only set when preview is selected)
- *@params $args['forum_id'] int the forums id
- *@params $args['topic_start'] bool true if we start a new topic
- *@params $args['attach_signature'] int 1= attach signature, otherwise no
- *@params $args['subscribe_topic'] int 1= subscribe topic, otherwise no
- *@returns array with information....
+ * @params $args['message'] string the text (only set when preview is selected)
+ * @params $args['subject'] string the subject (only set when preview is selected)
+ * @params $args['forum_id'] int the forums id
+ * @params $args['topic_start'] bool true if we start a new topic
+ * @params $args['attach_signature'] int 1= attach signature, otherwise no
+ * @params $args['subscribe_topic'] int 1= subscribe topic, otherwise no
+ * @returns array with information....
  */
 function Dizkus_userapi_preparenewtopic($args)
 {
@@ -1472,16 +1472,16 @@ function Dizkus_userapi_preparenewtopic($args)
 /**
  * storenewtopic
  *
- *@params $args['subject'] string the subject
- *@params $args['message'] string the text
- *@params $args['forum_id'] int the forums id
- *@params $args['time'] string (optional) the time, only needed when creating a shadow
+ * @params $args['subject'] string the subject
+ * @params $args['message'] string the text
+ * @params $args['forum_id'] int the forums id
+ * @params $args['time'] string (optional) the time, only needed when creating a shadow
  *                             topic
- *@params $args['attach_signature'] int 1=yes, otherwise no
- *@params $args['subscribe_topic'] int 1=yes, otherwise no
- *@params $args['reference']  string for comments feature: <modname>-<objectid>
- *@params $args['post_as']    int used id under which this topic should be posted
- *@returns int the new topics id
+ * @params $args['attach_signature'] int 1=yes, otherwise no
+ * @params $args['subscribe_topic'] int 1=yes, otherwise no
+ * @params $args['reference']  string for comments feature: <modname>-<objectid>
+ * @params $args['post_as']    int used id under which this topic should be posted
+ * @returns int the new topics id
  */
 function Dizkus_userapi_storenewtopic($args)
 {
@@ -1602,8 +1602,8 @@ function Dizkus_userapi_storenewtopic($args)
  * readpost
  * reads a single posting
  *
- *@params $args['post_id'] int the postings id
- *@returns array with posting information...
+ * @params $args['post_id'] int the postings id
+ * @returns array with posting information...
  */
 function Dizkus_userapi_readpost($args)
 {
@@ -1726,9 +1726,9 @@ function Dizkus_userapi_readpost($args)
 /**
  * Check if this is the first post in a topic.
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['post_id'] int the postings id
- *@returns boolean
+ * @params $args['topic_id'] int the topics id
+ * @params $args['post_id'] int the postings id
+ * @returns boolean
  */
 function Dizkus_userapi_is_first_post($args)
 {
@@ -1745,12 +1745,12 @@ function Dizkus_userapi_is_first_post($args)
  * update post
  * updates a posting in the db after editing it
  *
- *@params $args['post_id'] int the postings id
- *@params $args['subject'] string the subject
- *@params $args['message'] string the text
- *@params $args['delete'] boolean true if the posting is to be deleted
- *@params $args['attach_signature'] boolean true if the addsig place holder has to be appended
- *@returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
+ * @params $args['post_id'] int the postings id
+ * @params $args['subject'] string the subject
+ * @params $args['message'] string the text
+ * @params $args['delete'] boolean true if the posting is to be deleted
+ * @params $args['attach_signature'] boolean true if the addsig place holder has to be appended
+ * @returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
  */
 function Dizkus_userapi_updatepost($args)
 {
@@ -2025,8 +2025,8 @@ function Dizkus_userapi_updatepost($args)
 /**
  * get_viewip_data
  *
- *@params $args['post_id] int the postings id
- *@returns array with informstion ...
+ * @params $args['post_id] int the postings id
+ * @returns array with informstion ...
  */
 function Dizkus_userapi_get_viewip_data($args)
 {
@@ -2074,9 +2074,9 @@ function Dizkus_userapi_get_viewip_data($args)
 /**
  * lockunlocktopic
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['mode']     string lock or unlock
- *@returns void
+ * @params $args['topic_id'] int the topics id
+ * @params $args['mode']     string lock or unlock
+ * @returns void
  */
 function Dizkus_userapi_lockunlocktopic($args)
 {
@@ -2091,9 +2091,9 @@ function Dizkus_userapi_lockunlocktopic($args)
 /**
  * stickyunstickytopic
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['mode']     string sticky or unsticky
- *@returns void
+ * @params $args['topic_id'] int the topics id
+ * @params $args['mode']     string sticky or unsticky
+ * @returns void
  */
 function Dizkus_userapi_stickyunstickytopic($args)
 {
@@ -2109,8 +2109,8 @@ function Dizkus_userapi_stickyunstickytopic($args)
  * get_forumid_and categoryid_from_topicid
  * used for permission checks
  *
- *@params $args['topic_id'] int the topics id
- *@returns array(forum_id, category_id)
+ * @params $args['topic_id'] int the topics id
+ * @returns array(forum_id, category_id)
  */
 function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
 {
@@ -2141,9 +2141,9 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
  * readuserforums
  * reads all forums the recent users is allowed to see
  *
- *@params $args['cat_id'] int a category id (optional, if set, only reads the forums in this category)
- *@params $args['forum_id'] int a forums id (optional, if set, only reads this category
- *@returns array of forums, maybe empty
+ * @params $args['cat_id'] int a category id (optional, if set, only reads the forums in this category)
+ * @params $args['forum_id'] int a forums id (optional, if set, only reads this category
+ * @returns array of forums, maybe empty
  */
 function Dizkus_userapi_readuserforums($args)
 {
@@ -2197,10 +2197,10 @@ function Dizkus_userapi_readuserforums($args)
  * movetopic
  * moves a topic to another forum
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['forum_id'] int the destination forums id
- *@params $args['shadow']   boolean true = create shadow topic
- *@returns void
+ * @params $args['topic_id'] int the topics id
+ * @params $args['forum_id'] int the destination forums id
+ * @params $args['shadow']   boolean true = create shadow topic
+ * @returns void
  */
 function Dizkus_userapi_movetopic($args)
 {
@@ -2266,8 +2266,8 @@ function Dizkus_userapi_movetopic($args)
 /**
  * deletetopic
  *
- *@params $args['topic_id'] int the topics id
- *@returns int the forums id for redirecting
+ * @params $args['topic_id'] int the topics id
+ * @returns int the forums id for redirecting
  */
 function Dizkus_userapi_deletetopic($args)
 {
@@ -2314,11 +2314,11 @@ function Dizkus_userapi_deletetopic($args)
 /**
  * Sending notify e-mail to users subscribed to the topic of the forum
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['poster_id'] int the users pn_uid
- *@params $args['post_message'] string the text
- *@params $args['type'] int, 0=new message, 2=reply
- *@returns void
+ * @params $args['topic_id'] int the topics id
+ * @params $args['poster_id'] int the users pn_uid
+ * @params $args['post_message'] string the text
+ * @params $args['type'] int, 0=new message, 2=reply
+ * @returns void
  */
 function Dizkus_userapi_notify_by_email($args)
 {
@@ -2504,9 +2504,9 @@ function Dizkus_userapi_notify_by_email($args)
 /**
  * get_topic_subscriptions
  *
- *@params none
- *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
- *@returns array with topic ids, may be empty
+ * @params none
+ * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ * @returns array with topic ids, may be empty
  */
 function Dizkus_userapi_get_topic_subscriptions($args)
 {
@@ -2596,9 +2596,9 @@ function Dizkus_userapi_get_topic_subscriptions($args)
 /**
  * subscribe_topic
  *
- *@params $args['topic_id'] int the topics id
- *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
- *@returns void
+ * @params $args['topic_id'] int the topics id
+ * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ * @returns void
  */
 function Dizkus_userapi_subscribe_topic($args)
 {
@@ -2627,10 +2627,10 @@ function Dizkus_userapi_subscribe_topic($args)
 /**
  * unsubscribe_topic
  *
- *@params $args['topic_id'] int the topics id, if not set we unsubscribe all topics
- *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
- *@params $args['silent'] bool true=no error message when not subscribed, simply return void (obsolete)
- *@returns void
+ * @params $args['topic_id'] int the topics id, if not set we unsubscribe all topics
+ * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ * @params $args['silent'] bool true=no error message when not subscribed, simply return void (obsolete)
+ * @returns void
  */
 function Dizkus_userapi_unsubscribe_topic($args)
 {
@@ -2658,9 +2658,9 @@ function Dizkus_userapi_unsubscribe_topic($args)
 /**
  * subscribe_forum
  *
- *@params $args['forum_id'] int the forums id
- *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
- *@returns void
+ * @params $args['forum_id'] int the forums id
+ * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ * @returns void
  */
 function Dizkus_userapi_subscribe_forum($args)
 {
@@ -2690,9 +2690,9 @@ function Dizkus_userapi_subscribe_forum($args)
 /**
  * unsubscribe_forum
  *
- *@params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
- *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
- *@returns void
+ * @params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
+ * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ * @returns void
  */
 function Dizkus_userapi_unsubscribe_forum($args)
 {
@@ -2720,9 +2720,9 @@ function Dizkus_userapi_unsubscribe_forum($args)
 /**
  * add_favorite_forum
  *
- *@params $args['forum_id'] int the forums id
- *@params $args['user_id'] int - Optional - the user id
- *@returns void
+ * @params $args['forum_id'] int the forums id
+ * @params $args['user_id'] int - Optional - the user id
+ * @returns void
  */
 function Dizkus_userapi_add_favorite_forum($args)
 {
@@ -2750,9 +2750,9 @@ function Dizkus_userapi_add_favorite_forum($args)
 /**
  * remove_favorite_forum
  *
- *@params $args['forum_id'] int the forums id
- *@params $args['user_id'] int - Optional - the user id
- *@returns void
+ * @params $args['forum_id'] int the forums id
+ * @params $args['user_id'] int - Optional - the user id
+ * @returns void
  */
 function Dizkus_userapi_remove_favorite_forum($args)
 {
@@ -2773,10 +2773,10 @@ function Dizkus_userapi_remove_favorite_forum($args)
 /**
  * emailtopic
  *
- *@params $args['sendto_email'] string the recipients email address
- *@params $args['message'] string the text
- *@params $args['subject'] string the subject
- *@returns void
+ * @params $args['sendto_email'] string the recipients email address
+ * @params $args['message'] string the text
+ * @params $args['subject'] string the subject
+ * @returns void
  */
 function Dizkus_userapi_emailtopic($args)
 {
@@ -2804,13 +2804,13 @@ function Dizkus_userapi_emailtopic($args)
 /**
  * get_latest_posts
  *
- *@params $args['selorder'] int 1-6, see below
- *@params $args['nohours'] int posting within these hours
- *@params $args['unanswered'] int 0 or 1(= postings with no answers)
- *@params $args['last_visit'] string the users last visit data
- *@params $args['last_visit_unix'] string the users last visit data as unix timestamp
- *@params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
- *@returns array (postings, mail2forumpostings, rsspostings, text_to_display)
+ * @params $args['selorder'] int 1-6, see below
+ * @params $args['nohours'] int posting within these hours
+ * @params $args['unanswered'] int 0 or 1(= postings with no answers)
+ * @params $args['last_visit'] string the users last visit data
+ * @params $args['last_visit_unix'] string the users last visit data as unix timestamp
+ * @params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
+ * @returns array (postings, mail2forumpostings, rsspostings, text_to_display)
  */
 function Dizkus_userapi_get_latest_posts($args)
 {
@@ -3002,8 +3002,8 @@ function _get_forum_ids($f)
  * usersync
  * stub function for syncing new pn users to Dizkus
  *
- *@params none
- *@returns void
+ * @params none
+ * @returns void
  */
 function Dizkus_userapi_usersync()
 {
@@ -3016,8 +3016,8 @@ function Dizkus_userapi_usersync()
 /**
  * splittopic
  *
- *@params $args['post'] array with posting data as returned from readpost()
- *@returns int id of the new topic
+ * @params $args['post'] array with posting data as returned from readpost()
+ * @returns int id of the new topic
  */
 function Dizkus_userapi_splittopic($args)
 {
@@ -3116,9 +3116,9 @@ function Dizkus_userapi_splittopic($args)
  * get_previous_or_next_topic_id
  * returns the next or previous topic_id in the same forum of a given topic_id
  *
- *@params $args['topic_id'] int the reference topic_id
- *@params $args['view']     string either "next" or "previous"
- *@returns int topic_id maybe the same as the reference id if no more topics exist in the selectd direction
+ * @params $args['topic_id'] int the reference topic_id
+ * @params $args['view']     string either "next" or "previous"
+ * @returns int topic_id maybe the same as the reference id if no more topics exist in the selectd direction
  */
 function Dizkus_userapi_get_previous_or_next_topic_id($args)
 {
@@ -3177,9 +3177,9 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
  * getfavorites
  * return the list of favorite forums for this user
  *
- *@params $args['user_id'] -Optional- the user id of the person who we want the favorites for
- *@params $args['last_visit'] timestamp date of last visit
- *@returns array of categories with an array of forums in the catgories
+ * @params $args['user_id'] -Optional- the user id of the person who we want the favorites for
+ * @params $args['last_visit'] timestamp date of last visit
+ * @returns array of categories with an array of forums in the catgories
  *
  */
 function Dizkus_userapi_getfavorites($args)
@@ -3266,8 +3266,8 @@ function _get_favorites($f)
  * get_favorite_status
  *
  * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
- *@params $args['user_id'] int the users id
- *@returns boolean
+ * @params $args['user_id'] int the users id
+ * @returns boolean
  *
  */
 function Dizkus_userapi_get_favorite_status($args)
@@ -3284,8 +3284,8 @@ function Dizkus_userapi_get_favorite_status($args)
  * change_favorite_status
  *
  * changes the flag in the users table that indicates the users last choice: show all forum (0) or favorites only (1)
- *@params $args['user_id'] int the users id
- *@returns 0 or 1
+ * @params $args['user_id'] int the users id
+ * @returns 0 or 1
  *
  */
 function Dizkus_userapi_change_favorite_status($args)
@@ -3306,9 +3306,9 @@ function Dizkus_userapi_change_favorite_status($args)
  * Either Newest First or Oldest First
  * Returns 'ASC' or 'DESC' on success, false on failure.
  *
- *@params user_id - The user id of the person who's order we
+ * @params user_id - The user id of the person who's order we
  *                  are trying to determine
- *@returns string on success, false on failure
+ * @returns string on success, false on failure
  */
 function Dizkus_userapi_get_user_post_order($args)
 {
@@ -3348,8 +3348,8 @@ function Dizkus_userapi_get_user_post_order($args)
  * change_user_post_order
  *
  * changes the flag in the users table that indicates the users preferred post order: Oldest First (0) or Newest First (1)
- *@params $args['user_id'] int the users id
- *@returns bool - true on success, false on failure
+ * @params $args['user_id'] int the users id
+ * @returns bool - true on success, false on failure
  *
  */
 function Dizkus_userapi_change_user_post_order($args)
@@ -3370,8 +3370,8 @@ function Dizkus_userapi_change_user_post_order($args)
  * get_forum_category
  * Determines the category that a forum belongs to.
  *
- *@params forum_id - The forum id to find the category of
- *@returns int on success, false on failure
+ * @params forum_id - The forum id to find the category of
+ * @returns int on success, false on failure
  */
 function Dizkus_userapi_get_forum_category($args)
 {
@@ -3388,8 +3388,8 @@ function Dizkus_userapi_get_forum_category($args)
  * Uses the number of topic_replies and the posts_per_page settings to determine the page
  * number of the last post in the thread. This is needed for easier navigation.
  *
- *@params $args['topic_replies'] int number of topic replies
- *@return int page number of last posting in the thread
+ * @params $args['topic_replies'] int number of topic replies
+ * @return int page number of last posting in the thread
  */
 function Dizkus_userapi_get_page_from_topic_replies($args)
 {
@@ -3416,10 +3416,10 @@ function Dizkus_userapi_get_page_from_topic_replies($args)
 /**
  * cron
  *
- *@params $args['forum'] array with forum information
- *@params $args['force'] boolean if true force connection no matter of active setting or interval
- *@params $args['debug'] boolean indicates debug mode on/off
- *@returns none
+ * @params $args['forum'] array with forum information
+ * @params $args['force'] boolean if true force connection no matter of active setting or interval
+ * @params $args['debug'] boolean indicates debug mode on/off
+ * @returns none
  */
 function Dizkus_userapi_mailcron($args)
 {
@@ -3591,8 +3591,8 @@ function Dizkus_userapi_mailcron($args)
 /**
  * testpop3connection
  *
- *@params $args['forum_id'] int the id of the forum to test the pop3 connection
- *@returns array of messages from pop3 connection test
+ * @params $args['forum_id'] int the id of the forum to test the pop3 connection
+ * @returns array of messages from pop3 connection test
  *
  */
 function Dizkus_userapi_testpop3connection($args)
@@ -3651,8 +3651,8 @@ function Dizkus_userapi_testpop3connection($args)
  * get_topic_by_postmsgid
  * gets a topic_id from the postings msgid
  *
- *@params $args['msgid'] string the msgid
- *@returns int topic_id or false if not found
+ * @params $args['msgid'] string the msgid
+ * @returns int topic_id or false if not found
  *
  */
 function Dizkus_userapi_get_topic_by_postmsgid($args)
@@ -3671,8 +3671,8 @@ function Dizkus_userapi_get_topic_by_postmsgid($args)
  * get_topicid_by_postid
  * gets a topic_id from the post_id
  *
- *@params $args['post_id'] string the post_id
- *@returns int topic_id or false if not found
+ * @params $args['post_id'] string the post_id
+ * @returns int topic_id or false if not found
  *
  */
 function Dizkus_userapi_get_topicid_by_postid($args)
@@ -3690,9 +3690,9 @@ function Dizkus_userapi_get_topicid_by_postid($args)
 /**
  * movepost
  *
- *@params $args['post'] array with posting data as returned from readpost()
- *@params $args['to_topic']
- *@returns int id of the new topic
+ * @params $args['post'] array with posting data as returned from readpost()
+ * @params $args['to_topic']
+ * @returns int id of the new topic
  */
 function Dizkus_userapi_movepost($args)
 {
@@ -3770,8 +3770,8 @@ function Dizkus_userapi_movepost($args)
  * returns the number of the last page of the topic if more than posts_per_page entries
  * eg. for use as the start parameter in urls
  *
- *@params $args['topic_id'] int the topic id
- *@returns int the page number
+ * @params $args['topic_id'] int the topic id
+ * @returns int the page number
  */
 function Dizkus_userapi_get_last_topic_page($args)
 {
@@ -3802,8 +3802,8 @@ function Dizkus_userapi_get_last_topic_page($args)
  * jointopics
  * joins two topics together
  *
- *@params $args['from_topic_id'] int this topic get integrated into to_topic
- *@params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
+ * @params $args['from_topic_id'] int this topic get integrated into to_topic
+ * @params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
  */
 function Dizkus_userapi_jointopics($args)
 {
@@ -4002,8 +4002,8 @@ function Dizkus_userapi_jointopics($args)
 /**
  * notify moderators
  *
- *@params $args['post'] array the post array
- *@returns void
+ * @params $args['post'] array the post array
+ * @returns void
  */
 function Dizkus_userapi_notify_moderator($args)
 {
@@ -4114,7 +4114,7 @@ function Dizkus_userapi_notify_moderator($args)
  * gets a topic reference as parameter and delivers the internal topic id
  * used for Dizkus as comment module
  *
- *@params $args['reference'] string the refernce
+ * @params $args['reference'] string the refernce
  */
 function Dizkus_userapi_get_topicid_by_reference($args)
 {
@@ -4131,9 +4131,9 @@ function Dizkus_userapi_get_topicid_by_reference($args)
 /**
  * insertrss
  *
- *@params $args['forum']    array with forum data
- *@params $args['items']    array with feed data as returned from Feeds module
- *@return boolean true or false
+ * @params $args['forum']    array with forum data
+ * @params $args['items']    array with feed data as returned from Feeds module
+ * @return boolean true or false
  */
 function Dizkus_userapi_insertrss($args)
 {
@@ -4200,9 +4200,9 @@ function Dizkus_userapi_insertrss($args)
 /**
  * get_forum_subscriptions
  *
- *@params none
- *@params $args['user_id'] int the users id (needs ACCESS_ADMIN)
- *@returns array with forum ids, may be empty
+ * @params none
+ * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+ * @returns array with forum ids, may be empty
  */
 function Dizkus_userapi_get_forum_subscriptions($args)
 {
@@ -4241,9 +4241,9 @@ function Dizkus_userapi_get_forum_subscriptions($args)
 /**
  * get_settings_ignorelist
  *
- *@params none
- *@params $args['uid']  int     the users id
- *@returns level for ignorelist handling as string
+ * @params none
+ * @params $args['uid']  int     the users id
+ * @returns level for ignorelist handling as string
  */
 function Dizkus_userapi_get_settings_ignorelist($args)
 {

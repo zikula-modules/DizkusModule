@@ -14,7 +14,7 @@
  * reads the top $maxposters users depending on their post count and assigns them in the
  * variable topposters and the number of them in toppostercount
  *
- *@params maxposters (int) number of users to read, default = 3
+ * @params maxposters (int) number of users to read, default = 3
  *
  */
 function smarty_function_readtopposters($params, &$smarty) 

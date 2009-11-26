@@ -13,11 +13,11 @@
  * favoriteforum_button plugin
  * adds the add to favorites forum button
  *
- *@params $params['forum_id'] int forum id
- *@params $params['return_to'] string url to return to after subscribing, necessary because
+ * @params $params['forum_id'] int forum id
+ * @params $params['return_to'] string url to return to after subscribing, necessary because
  *                                    the subscription page can be reached from several places
- *@params $params['image_addfavorite']    string the image filename (without path)
- *@params $params['image_remfavorite']    string the image filename (without path)
+ * @params $params['image_addfavorite']    string the image filename (without path)
+ * @params $params['image_remfavorite']    string the image filename (without path)
  */
 function smarty_function_favoriteforum_button($params, &$smarty)
 {

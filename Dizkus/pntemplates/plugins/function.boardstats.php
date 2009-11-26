@@ -14,9 +14,9 @@
  * boardstats plugin
  * reads some statistics by calling the Dizkus_userapi_boardstats() function
  *
- *@params $params['type']   string see below
- *@params $params['id']     int    id, depending on $type
- *@params $params['assign'] string (optional) assign the result instead of returning it
+ * @params $params['type']   string see below
+ * @params $params['id']     int    id, depending on $type
+ * @params $params['assign'] string (optional) assign the result instead of returning it
  *
  * Possible values of $type and $id and what they deliver
  * ------------------------------------------------------

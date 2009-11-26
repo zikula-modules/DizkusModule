@@ -15,8 +15,8 @@ Loader::includeOnce('modules/Dizkus/common.php');
  * readcatgories
  * read the categories from database, if cat_id is set, only this one will be read
  *
- *@params $args['cat_id'] int the category id to read (optional)
- *@returns array of category information
+ * @params $args['cat_id'] int the category id to read (optional)
+ * @returns array of category information
  *
  */
 function Dizkus_adminapi_readcategories($args)
@@ -69,8 +69,8 @@ function Dizkus_adminapi_readcategories($args)
  * updatecategory
  * update a category in database, either cat_title or cat_order
 
- *@params $args['cat_title'] string category title
- *@params $args['cat_id'] int category id
+ * @params $args['cat_title'] string category title
+ * @params $args['cat_id'] int category id
  */
 function Dizkus_adminapi_updatecategory($args)
 {
@@ -101,7 +101,7 @@ function Dizkus_adminapi_updatecategory($args)
  * addcategory
  * adds a new category
  *
- *@params $args['cat_title'] string the categories title
+ * @params $args['cat_title'] string the categories title
  */
 function Dizkus_adminapi_addcategory($args)
 {
@@ -123,7 +123,7 @@ function Dizkus_adminapi_addcategory($args)
  * delete a category
  * deletes a category from db including all forums and posts!
  *
- *@params $args['cat_id'] int the id of the category to delete
+ * @params $args['cat_id'] int the id of the category to delete
  *
  */
 function Dizkus_adminapi_deletecategory($args)
@@ -158,10 +158,10 @@ function Dizkus_adminapi_deletecategory($args)
  * default is ACCESS_READ. "nocheck" means, return the forums no matter if the user has sufficient
  * rights or not, in this case the calling function has to take care of it!!
  *
- *@params $args['forum_id'] int only read this forum (optional)
- *@params $args['cat_id'] int read the forums in this category only (optional)
- *@params $args['permcheck'] string either "nocheck", "see", "read", "write", "moderate" or "admin", default is "read" (optional)
- *@returns array of forums or
+ * @params $args['forum_id'] int only read this forum (optional)
+ * @params $args['cat_id'] int read the forums in this category only (optional)
+ * @params $args['permcheck'] string either "nocheck", "see", "read", "write", "moderate" or "admin", default is "read" (optional)
+ * @returns array of forums or
  *         one forum in case of forum_id set
  */
 function Dizkus_adminapi_readforums($args=array())
@@ -395,7 +395,7 @@ function Dizkus_adminapi_readgroups($args)
 
 /**
  * readranks
- *@params ranktype   
+ * @params ranktype   
  *
  */
 function Dizkus_adminapi_readranks($args)
@@ -444,7 +444,7 @@ function Dizkus_adminapi_readranks($args)
 
 /**
  * saverank
- *@params rank_special, rank_id, rank_min, rank_max, rank_image, rank_id
+ * @params rank_special, rank_id, rank_min, rank_max, rank_image, rank_id
  *
  */
 function Dizkus_adminapi_saverank($args)
@@ -674,23 +674,23 @@ function Dizkus_adminapi_sync($args)
  * addforum
  * Adds a new forum
  *
- *@params $args['forum_name'] string the forums name
- *@params $args['desc'] string the forum description
- *@params $args['cat_id'] int the category where the forum shall be added
- *@params $args['mods'] array of moderators
- *@params $args['forum_order'] int the forums order, optional
- *@params $args['pop3_active'] int pop3 active?
- *@params $args['pop3_server'] string server name
- *@params $args['pop3_port'] int pop3 port
- *@params $args['pop3_login'] string login
- *@params $args['pop3_password'] string password
- *@params $args['pop3_interval'] int poll interval
- *@params $args['pop3_matchstring'] string  reg exp
- *@params $args['pop3_pnuser'] string Zikula username
- *@params $args['pop3_pnpassword'] string Zikula password
- *@params $args['moduleref'] string reference module
- *@params $args['pntopic']   int PN topic id
- *@returns int the new forums id
+ * @params $args['forum_name'] string the forums name
+ * @params $args['desc'] string the forum description
+ * @params $args['cat_id'] int the category where the forum shall be added
+ * @params $args['mods'] array of moderators
+ * @params $args['forum_order'] int the forums order, optional
+ * @params $args['pop3_active'] int pop3 active?
+ * @params $args['pop3_server'] string server name
+ * @params $args['pop3_port'] int pop3 port
+ * @params $args['pop3_login'] string login
+ * @params $args['pop3_password'] string password
+ * @params $args['pop3_interval'] int poll interval
+ * @params $args['pop3_matchstring'] string  reg exp
+ * @params $args['pop3_pnuser'] string Zikula username
+ * @params $args['pop3_pnpassword'] string Zikula password
+ * @params $args['moduleref'] string reference module
+ * @params $args['pntopic']   int PN topic id
+ * @returns int the new forums id
  *
  */
 function Dizkus_adminapi_addforum($args)
@@ -863,7 +863,7 @@ function Dizkus_adminapi_editforum($args)
 /**
  * delete forum
  *
- *@params $args['forum_id']
+ * @params $args['forum_id']
  *
  */
 function Dizkus_adminapi_deleteforum($args)
@@ -917,9 +917,9 @@ function Dizkus_adminapi_get_pntopics()
 /**
  * store new forum order
  *
- *@params $args['forum_id'] int the forum id
- *@params $args['cat_id']   int the forums category id
- *@params $args['order']    int the forum order number in this category
+ * @params $args['forum_id'] int the forum id
+ * @params $args['cat_id']   int the forums category id
+ * @params $args['order']    int the forum order number in this category
  *
  */
 function Dizkus_adminapi_storenewforumorder($args)

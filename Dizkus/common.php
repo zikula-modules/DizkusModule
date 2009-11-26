@@ -252,15 +252,15 @@ function dzksqldebug($sql)
  * dzkOpenDB
  * creates a dbconnection object and returns it to the calling function
  *
- *@params $table (string) name of the table you want to access, optional
- *@return array consisting:
+ * @params $table (string) name of the table you want to access, optional
+ * @return array consisting:
  * if a tablename is given:
- *@returns object dbconn object for use to execute sql queries
- *@returns string fully qualified tablename
- *@returns array with field names
+ * @returns object dbconn object for use to execute sql queries
+ * @returns string fully qualified tablename
+ * @returns array with field names
  * if no tablename is given:
- *@returns object dbconn object for use to execute sql queries
- *@returns array  pntable array
+ * @returns object dbconn object for use to execute sql queries
+ * @returns array  pntable array
  *        or false on error
  */
 function dzkOpenDB($tablename='')
@@ -284,8 +284,8 @@ function dzkOpenDB($tablename='')
  * dzkCloseDB
  * closes an db connection opened with dzkOpenDB
  *
- *@params $resobj object as returned by $dbconn->Execute();
- *@returns nothing
+ * @params $resobj object as returned by $dbconn->Execute();
+ * @returns nothing
  *
  */
 function dzkCloseDB($resobj)
@@ -300,12 +300,12 @@ function dzkCloseDB($resobj)
  * dzkExecuteSQL
  * executes an sql command and returns the result, shows error if necessary
  *
- *@params $dbconn object db onnection object
- *@params $sql    string the sql ommand to execute
- *@params $debug  bool   true if debug should be activated, default is false
- *@params $file   string name of the calling file, important for error reporting
- *@params $line   int    line in the calling file, important for error reorting
- *@returns object the result of $dbconn->Execute($sql)
+ * @params $dbconn object db onnection object
+ * @params $sql    string the sql ommand to execute
+ * @params $debug  bool   true if debug should be activated, default is false
+ * @params $file   string name of the calling file, important for error reporting
+ * @params $line   int    line in the calling file, important for error reorting
+ * @returns object the result of $dbconn->Execute($sql)
  */
 function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=false, $extendederror=true)
 {
@@ -335,13 +335,13 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
  * dzkAutoExecuteSQL
  * executes an sql command and returns the result, shows error if necessary
  *
- *@params $dbconn object db onnection object
- *@params $record array of fieldname -> value to INSERT or UPDATE
- *@params $where  string WHERE clause for INSERT
- *@params $debug  bool   true if debug should be activated, default is false
- *@params $file   string name of the calling file, important for error reporting
- *@params $line   int    line in the calling file, important for error reorting
- *@returns boolean the result of $dbconn->AutoExecute()
+ * @params $dbconn object db onnection object
+ * @params $record array of fieldname -> value to INSERT or UPDATE
+ * @params $where  string WHERE clause for INSERT
+ * @params $debug  bool   true if debug should be activated, default is false
+ * @params $file   string name of the calling file, important for error reporting
+ * @params $line   int    line in the calling file, important for error reorting
+ * @returns boolean the result of $dbconn->AutoExecute()
  */
 function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FILE__, $line=__LINE__, $debug=false)
 {
@@ -371,14 +371,14 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
  * dzkSelectLimit
  * executes an sql command and returns a part of the result, shows error if necessary
  *
- *@params $dbconn object db onnection object
- *@params $sql    string the sql ommand to execute
- *@params $limit  int    max number of lines to read
- *@params $start  int    number of lines to start reading
- *@params $file   string name of the calling file, important for error reporting
- *@params $line   int    line in the calling file, important for error reorting
- *@params $debug  bool   true if debug should be activated, default is false
- *@returns object the result of $dbconn->Execute($sql)
+ * @params $dbconn object db onnection object
+ * @params $sql    string the sql ommand to execute
+ * @params $limit  int    max number of lines to read
+ * @params $start  int    number of lines to start reading
+ * @params $file   string name of the calling file, important for error reporting
+ * @params $line   int    line in the calling file, important for error reorting
+ * @params $debug  bool   true if debug should be activated, default is false
+ * @returns object the result of $dbconn->Execute($sql)
  */
 function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, $line=__LINE__, $debug=false)
 {
@@ -409,8 +409,8 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
  * is_serialized
  * checks if a string is a serialized array
  *
- *@params $string the string to test
- *@returns boolean true or false
+ * @params $string the string to test
+ * @returns boolean true or false
  */
 if (!function_exists('Dizkus_is_serialized'))
 {
@@ -652,8 +652,8 @@ function useragent_is_bot()
  *
  * gets an path for a image - this is a copy of the pnimg logic
  *
- *@params $image string the imagefile name
- *@returns an array of information for the imagefile:
+ * @params $image string the imagefile name
+ * @returns an array of information for the imagefile:
  *         ['path']   string the path to the imagefile
  *         ['size']   string 'width="xx" height="yy"' as delivered by getimagesize, may be empty
  * or false on error
@@ -729,8 +729,8 @@ function dzk_getimagepath($image=null)
  * dzkstriptags
  * strip all thml tags outside of [code][/code]
  *
- *@params  $text     string the text
- *@returns string    the sanitized text
+ * @params  $text     string the text
+ * @returns string    the sanitized text
  */
 function dzkstriptags($text='')
 {
@@ -1006,7 +1006,7 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
  * dzk_available
  * check if Dizkus is available
  *
- *@params deliverhtml     boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
+ * @params deliverhtml     boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
  *return html or boolean
  *
  */

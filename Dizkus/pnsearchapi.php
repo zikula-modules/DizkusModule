@@ -47,10 +47,9 @@ function Dizkus_searchapi_search_check(&$args)
     return true;
 }
 
-
 /**
  * Search form component
- **/
+ */
 function Dizkus_searchapi_internalsearchoptions($args)
 {
     // Create output object - this object will store all of our output so that
@@ -63,14 +62,13 @@ function Dizkus_searchapi_internalsearchoptions($args)
 /**
  * Search plugin main function
  *
- *@params q             string the text to search
- *@params searchtype    string 'AND', 'OR' or 'EXACT'
- *@params searchorder   string 'newest', 'oldest' or 'alphabetical' 
- *@params numlimit      int    limit for search, defaultsto 10
- *@params page          int    number of page t show
- *@params startnum      int    the first item to show
- *
- **/
+ * @params q             string the text to search
+ * @params searchtype    string 'AND', 'OR' or 'EXACT'
+ * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+ * @params numlimit      int    limit for search, defaultsto 10
+ * @params page          int    number of page t show
+ * @params startnum      int    the first item to show
+ */
 function Dizkus_searchapi_search($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
@@ -109,18 +107,18 @@ function Dizkus_searchapi_search($args)
  *
  * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL Dizkus_searchapi_search INSTEAD
  *
- *@private
+ * @private
  *
- *@params q             string the text to search
- *@params searchtype    string 'AND', 'OR' or 'EXACT'
- *@params searchorder   string 'newest', 'oldest' or 'alphabetical' 
- *@params numlimit      int    limit for search, defaultsto 10
- *@params page          int    number of page t show
- *@params startnum      int    the first item to show
+ * @params q             string the text to search
+ * @params searchtype    string 'AND', 'OR' or 'EXACT'
+ * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+ * @params numlimit      int    limit for search, defaultsto 10
+ * @params page          int    number of page t show
+ * @params startnum      int    the first item to show
  * from Dizkus:
- *@params searchwhere   string 'posts' or 'author'
- *@params forums        array of forums to dearch
- *@returns true or false
+ * @params searchwhere   string 'posts' or 'author'
+ * @params forums        array of forums to dearch
+ * @returns true or false
  */
 function Dizkus_searchapi_nonfulltext($args)
 {
@@ -214,18 +212,18 @@ function Dizkus_searchapi_nonfulltext($args)
  *
  * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL Dizkus_searchapi_search INSTEAD
  *
- *@private
+ * @private
  *
- *@params q             string the text to search
- *@params searchtype    string 'AND', 'OR' or 'EXACT'
- *@params searchorder   string 'newest', 'oldest' or 'alphabetical' 
- *@params numlimit      int    limit for search, defaultsto 10
- *@params page          int    number of page t show
- *@params startnum      int    the first item to show
+ * @params q             string the text to search
+ * @params searchtype    string 'AND', 'OR' or 'EXACT'
+ * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+ * @params numlimit      int    limit for search, defaultsto 10
+ * @params page          int    number of page t show
+ * @params startnum      int    the first item to show
  * from Dizkus:
- *@params searchwhere   string 'posts' or 'author'
- *@params forums        array of forums to dearch
- *@returns true or false
+ * @params searchwhere   string 'posts' or 'author'
+ * @params forums        array of forums to dearch
+ * @returns true or false
  */
 function Dizkus_searchapi_fulltext($args)
 {

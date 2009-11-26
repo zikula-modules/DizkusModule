@@ -4,11 +4,11 @@
  * post_order_button plugin
  * adds the post_order button
  *
- *@params $params['topic_id'] int forum id
- *@params $params['return_to'] string url to return to after subscribing, necessary because
+ * @params $params['topic_id'] int forum id
+ * @params $params['return_to'] string url to return to after subscribing, necessary because
  *                                    the subscription page can be reached from several places
- *@params $params['image_ascending']    string the image filename (without path)
- *@params $params['image_descending']    string the image filename (without path)
+ * @params $params['image_ascending']    string the image filename (without path)
+ * @params $params['image_descending']    string the image filename (without path)
  */
 function smarty_function_post_order_button($params, &$smarty)
 {

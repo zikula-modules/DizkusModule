@@ -15,7 +15,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  * showdiscussionlink
  * displayhook function
  *
- *@params $objectid string the id of the item to be discussed in the forum
+ * @params $objectid string the id of the item to be discussed in the forum
  */
 function Dizkus_hook_showdiscussionlink($args)
 {

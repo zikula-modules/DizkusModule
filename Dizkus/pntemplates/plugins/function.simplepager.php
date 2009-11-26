@@ -13,10 +13,10 @@
  * simplepager
  * A simple copy of the pnHTML pager :-)
  *
- *@params $params['startnum'] int
- *@params $params['total'] int
- *@params $params['urltemplate'] string
- *@params $params['perpage'] int
+ * @params $params['startnum'] int
+ * @params $params['total'] int
+ * @params $params['urltemplate'] string
+ * @params $params['perpage'] int
  */
 function smarty_function_simplepager($params, &$smarty) 
 {

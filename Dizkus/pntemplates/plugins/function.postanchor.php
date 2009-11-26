@@ -13,11 +13,11 @@
  * postanchor plugin
  * adds an anchor to the url to directly jump to a special posting inside a thread
  *
- *@params $params['postings']  int number of postings in this thread
- *@params $params['min']       int minimum number of postings needed before adding an anchor
+ * @params $params['postings']  int number of postings in this thread
+ * @params $params['min']       int minimum number of postings needed before adding an anchor
  *                                 default = 2
- *@params $params['post_id']   int post id
- *@params $params['assign']    string(optional) if set, thr result is assigned to this
+ * @params $params['post_id']   int post id
+ * @params $params['assign']    string(optional) if set, thr result is assigned to this
  *                                              variable and not returned
  *
  *

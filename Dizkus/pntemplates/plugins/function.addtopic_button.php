@@ -13,9 +13,9 @@
  * addtopic_button
  * shows a button "new topic" depending in the lang files
  *
- *@params $params['cat_id'] int category id
- *@params $params['forum_id'] int forum id
- *@params $params['image']    string the image filename (without path)
+ * @params $params['cat_id'] int category id
+ * @params $params['forum_id'] int forum id
+ * @params $params['image']    string the image filename (without path)
  */
 function smarty_function_addtopic_button($params, &$smarty)
 {

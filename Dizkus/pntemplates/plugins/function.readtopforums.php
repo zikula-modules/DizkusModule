@@ -5,7 +5,7 @@
  * reads the last $maxforums forums and assign them in a
  * variable topforums and the number of them in topforumscount
  *
- *@params maxforums (int) number of forums to read, default = 5
+ * @params maxforums (int) number of forums to read, default = 5
  *
  */
 function smarty_function_readtopforums($params, &$smarty) 

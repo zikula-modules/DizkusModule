@@ -14,13 +14,13 @@
  * reads the last $maxposts postings of forum $forum_id and assign them in a
  * variable lastposts and the number of them in lastpostcount
  *
- *@params maxposts (int) number of posts to read, default = 5
- *@params forum_id (int) forum_id, if not set, all forums
- *@params user_id  (int) -1 = last postings of current user, otherwise its treated as an user_id
- *@params canread (bool) if set, only the forums that we have read access to [** flag is no longer supported, this is the default settings for now **]
- *@params favorites (bool) if set, only the favorite forums
- *@params show_m2f (bool) if set show postings from mail2forum forums
- *@params show_rss (bool) if set show postings from rss2forum forums
+ * @params maxposts (int) number of posts to read, default = 5
+ * @params forum_id (int) forum_id, if not set, all forums
+ * @params user_id  (int) -1 = last postings of current user, otherwise its treated as an user_id
+ * @params canread (bool) if set, only the forums that we have read access to [** flag is no longer supported, this is the default settings for now **]
+ * @params favorites (bool) if set, only the favorite forums
+ * @params show_m2f (bool) if set show postings from mail2forum forums
+ * @params show_rss (bool) if set show postings from rss2forum forums
  *
  */
 function smarty_function_readlastposts($params, &$smarty)

@@ -13,7 +13,7 @@
  * bbsmile plugin
  * shows all available smilies
  *
- *@params textfieldid
+ * @params textfieldid
  */
 function smarty_function_bbsmile($params, &$smarty)
 {
