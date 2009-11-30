@@ -17,7 +17,6 @@
                 <div class="dzk_avatar">
                     <strong><!--[$newtopic.poster_data.pn_uname|userprofilelink]--></strong>
                     <br />
-                    <!--[assign var='defaultavatar' value="`$baseurl`modules/Dizkus/pnimages/gravatar_80.jpg"]-->
                     <!--[if isset($newtopic.poster_data._YOURAVATAR) AND $newtopic.poster_data._YOURAVATAR neq 'blank.gif' AND $newtopic.poster_data._YOURAVATAR neq 'gravatar.gif']-->
                     <!--[assign var='defaultavatar' value="`$baseurl``$avatarpath`/`$newtopic.poster_data._YOURAVATAR`"|default:$defaultavatar]-->
                     <img src="<!--[gravatar email=$newtopic.poster_data.pn_email size=80 default=$defaultavatar]-->" alt="<!--[$newtopic.poster_data.pn_uname]-->'s Avatar" />
