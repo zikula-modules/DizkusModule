@@ -7,16 +7,10 @@
 
             <div class="dzk_subcols z-clearfix">
                 <div id="posting_<!--[$post.post_id]-->_userinfo" class="post_author dzk_colpost_left">
-                    <!--[if $post.poster_data.pn_uid eq 1 OR $post.poster_data.pn_uid eq ""]-->
-                    <div class="dzk_avatar">
-                        <strong><!--[$post.poster_data.pn_uname]--></strong>
-                        <br />
-                        <img src="<!--[$baseurl]-->modules/Dizkus/pnimages/gravatar_80.jpg" alt="empty gravatar" />
-                    </div>
-                    <!--[else]-->
                     <div class="dzk_avatar">
                         <strong><!--[$post.poster_data.pn_uname|userprofilelink]--></strong>
                         <br />
+                        <!--[assign var='defaultavatar' value="`$baseurl``$avatarpath`/blank.gif"]-->
                         <!--[if isset($post.poster_data._YOURAVATAR) AND $post.poster_data._YOURAVATAR neq 'blank.gif' AND $post.poster_data._YOURAVATAR neq 'gravatar.gif']-->
                         <!--[assign var='defaultavatar' value="`$baseurl``$avatarpath`/`$post.poster_data._YOURAVATAR`"|default:$defaultavatar]-->
                         <img src="<!--[gravatar email=$post.poster_data.pn_email size=80 default=$defaultavatar]-->" alt="<!--[$post.poster_data.pn_uname]-->'s Avatar" />
@@ -39,7 +33,6 @@
                         <!--[if $pncore.logged_in eq true]-->
                         <!--[/if]-->
                     </ul>
-                    <!--[/if]-->
                 </div>
 
                 <div class="postbody dzk_colpost_right">
