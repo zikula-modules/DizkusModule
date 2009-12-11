@@ -283,6 +283,10 @@ function Dizkus_user_newtopic($args=array())
 
     // get the input
     $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    if ($forum_id == null) {
+        return LogUtil::registerError(_('Error: missing forum id'), null, pnModURL('Dizkus','user', 'main'));
+    }
+    
     $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
     $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
     $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
