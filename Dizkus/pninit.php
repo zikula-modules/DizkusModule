@@ -396,7 +396,7 @@ function Dizkus_upgrade_to_3_0()
         $success  = ($result==2);
         if (!$success) {
             $dberrmsg = $dbconn->ErrorNo().' - '.$dbconn->ErrorMSg();
-            LogUtil::registerError (__('Error! Could not rename table \'%1$s\' to \'%2$s\': %3$s.', array($tablename, $$newtable, $dberrmsg), $dom));
+            LogUtil::registerError (__('Error! Could not rename table \'%1$s\' to \'%2$s\': %3$s.', array($oldtable, $$newtable, $dberrmsg), $dom));
         }
     }
 
