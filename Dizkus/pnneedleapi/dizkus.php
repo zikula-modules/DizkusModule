@@ -34,7 +34,8 @@ function Dizkus_needleapi_pnforum($args)
         if (!isset($cache[$nid])) {
             // not in cache array
             // set the default
-            $cache[$nid] = $result;
+            $cache[$nid] = '';
+
             if (pnModAvailable('Dizkus'))
             {
                 // nid is like F_## or T_##
@@ -49,7 +50,7 @@ function Dizkus_needleapi_pnforum($args)
                 $dbconn =& pnDBGetConn(true);
                 $pntable =& pnDBGetTables();
 
-                switch($type)
+                switch ($type)
                 {
                     case 'F':
                         $tblforums = $pntable['dizkus_forums'];

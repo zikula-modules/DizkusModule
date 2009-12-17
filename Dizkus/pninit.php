@@ -26,7 +26,8 @@ function Dizkus_init()
         SessionUtil::setVar('errormsg', __('This version of Dizkus requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met.', $dom));
         return false;
     }
-    
+
+    // TODO move this to a loop
     // creating categories table
     if (!DBUtil::createTable('dizkus_categories')) {
         return false;
@@ -80,7 +81,7 @@ function Dizkus_init()
         return false;
     }
 
-  // creating topic_subscription table (new in 1.7.5)
+    // creating topic_subscription table (new in 1.7.5)
     if (!DBUtil::createTable('dizkus_topic_subscription')) {
         Dizkus_delete();
         return false;
@@ -315,31 +316,36 @@ function Dizkus_init_interactiveupgrade($args)
     extract($args);
     unset($args);
 
-    global $modversion;
     Loader::includeOnce('modules/Dizkus/pnversion.php');
     
     $authid = SecurityUtil::generateAuthKey('Modules');
-    switch($oldversion) {
+    switch ($oldversion)
+    {
         case '2.7.1':
             $templatefile = 'dizkus_upgrade_30.html';
             break;
+
         case '3.0':
             $templatefile = 'dizkus_upgrade_31.html';
             break;
+
         default:
             // no interactive upgrade for version < 2.7
             // or latest step reached
+            // FIXME pnRender API call instead?
             $smarty =& new Smarty;
-            $smarty->compile_dir = pnConfigGetVar('temp') . '/pnRender_compiled';
-            $smarty->cache_dir = pnConfigGetVar('temp') . '/pnRender_cache';
+            $smarty->compile_dir  = pnConfigGetVar('temp') . '/pnRender_compiled';
+            $smarty->cache_dir    = pnConfigGetVar('temp') . '/pnRender_cache';
             $smarty->use_sub_dirs = false;
             $smarty->clear_compiled_tpl();
             return pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('oldversion', $oldversion);
     $render->assign('authid', $authid);
+
     return $render->fetch($templatefile);
 }
 
@@ -352,7 +358,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Sorry! You do not have authorisation to administer this module.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to administer this module.', $dom), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -364,6 +370,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
     }
+
     return pnRedirect(pnModURL('Modules', 'admin', 'view'));
 }
 
@@ -387,10 +394,12 @@ function Dizkus_upgrade_to_3_0()
                     'pnforum_users'              => 'dizkus_users',
                     'pnforum_topic_subscription' => 'dizkus_topic_subscription',
                     'pnforum_forum_favorites'    => 'dizkus_forum_favorites');
+
     $dbconn = DBConnectionStack::getConnection();
     $dict   = NewDataDictionary($dbconn);
     $prefix = pnConfigGetVar('prefix');
-    foreach($tables as $oldtable => $newtable) {
+    foreach($tables as $oldtable => $newtable)
+    {
         $sqlarray = $dict->RenameTableSQL($prefix.'_'.$oldtable, $prefix.'_'.$newtable);
         $result   = $dict->ExecuteSQLArray($sqlarray);
         $success  = ($result==2);
@@ -408,29 +417,30 @@ function Dizkus_upgrade_to_3_0()
     pnModDelVar('Dizkus', 'posticon');
     pnModDelVar('Dizkus', 'firstnew_image');
 
-
     $oldvars = pnModGetVar('pnForum');
-    foreach ($oldvars as $varname => $oldvar) {
-      // update path to rank images - simply replace pnForum with Dizkus
-      if ($varname == 'url_ranks_images') {
-          $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
-      }
+    foreach ($oldvars as $varname => $oldvar)
+    {
+        // update path to rank images - simply replace pnForum with Dizkus
+        if ($varname == 'url_ranks_images') {
+            $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
+        }
         pnModSetVar('Dizkus', $varname, $oldvar);
     }
     pnModDelVar('pnForum');
 
     // update hooks
-    $pntables = pnDBGetTables();
+    $pntables    = &pnDBGetTables();
     $hookstable  = $pntables['hooks'];
     $hookscolumn = $pntables['hooks_column'];
+
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['smodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['smodule'] . '=\'pnForum\'';
-    $res   = DBUtil::executeSQL ($sql);
+    $res = DBUtil::executeSQL ($sql);
     if ($res === false) {
         return LogUtil::registerError(__('Error! Could not upgrade the source module for hooks (\'smodule\').'));
     }
 
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['tmodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['tmodule'] . '=\'pnForum\'';
-    $res   = DBUtil::executeSQL ($sql);
+    $res = DBUtil::executeSQL ($sql);
     if ($res === false) {
         return LogUtil::registerError(__('Error! Could not upgrade the target module for hooks (\'tmodule\').'));
     }
@@ -448,7 +458,6 @@ function Dizkus_upgrade_to_3_0()
 
 /**
  * interactiveupgrade_to_3_1
- *
  */
 function Dizkus_init_interactiveupgrade_to_3_1()
 {
@@ -467,6 +476,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
     }
+
     return pnRedirect(pnModURL('Modules', 'admin', 'view'));
 }
 
@@ -482,8 +492,8 @@ function Dizkus_upgrade_to_3_1()
 
     $pntable = pnDBGetTables();
 
-    $poststable  = $pntable['dizkus_posts'];
-    $postscolumn = $pntable['dizkus_posts_column'];
+    $poststable      = $pntable['dizkus_posts'];
+    $postscolumn     = $pntable['dizkus_posts_column'];
     $poststexttable  = $pntable['dizkus_posts_text'];
     $poststextcolumn = $pntable['dizkus_posts_text_column'];
 
@@ -508,12 +518,11 @@ function Dizkus_upgrade_to_3_1()
                 SELECT pt.' . $poststextcolumn['post_text'] . ' 
                 FROM ' . $poststexttable . ' AS pt 
                 WHERE pt.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')';
-               
-            
+
     if (DBUtil::executeSQL($sql) != true) {
         LogUtil::registerError (__('Error! Could not upgrade the \'%s\' table.', 'dizkus_posts', $dom));
     }
-    
+
     // _dizkus_migratecategories();
 
     // drop old tables
@@ -523,14 +532,14 @@ function Dizkus_upgrade_to_3_1()
     // DBUtil::dropTable('dizkus_categories');
     // DBUtil::dropTable('dizkus_forums');
     // DBUtil::dropTable('dizkus_posts_text');
-    
+
     return true;
 }
 
 /**
  * create default categories
  */
-function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', $languages)
+function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
@@ -560,6 +569,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus', 
         $cat->insert();
         $cat->update();
     }
+
     // get the category path for which we are going to insert our upgraded Dizkus categories and forums
     $rootcat = CategoryUtil::getCategoryByPath($regpath);
     if ($rootcat) {
@@ -605,7 +615,8 @@ function _dizkus_migratecategories()
 
     // migrate our old categories
     //$categorymap = array();
-    foreach ($tree as $oldcategory) {
+    foreach ($tree as $oldcategory)
+    {
         // increment max forum id
         $maxforumid++;
         $cat = new PNCategory();
@@ -642,18 +653,23 @@ function _dizkus_migratecategories()
         $cat->update();
 
         $newcatid = $cat->getDataField('id');
+
         // forums in this category
-        foreach ($oldcategory['forums'] as $forum) {
+        foreach ($oldcategory['forums'] as $forum)
+        {
             $fcat = new PNCategory();
             $fcat->setDataField('parent_id', $newcatid);
             $fcat->setDataField('name', $forum['forum_name']);
+
             $fnamelangarray = array();
             $fdesclangarray = array();
-            foreach ($langs as $lang) {
+            foreach ($langs as $lang)
+            {
                 // for now all fields get the same value
                 $fnamelangarray[$lang] = $forum['forum_name'];
                 $fdesclangarray[$lang] = $forum['forum_desc'];
             }
+
             $fcat->setDataField('display_name', $fnamelangarray);
             $fcat->setDataField('display_desc', $fdesclangarray);
             if (!$fcat->validate('admin')) {

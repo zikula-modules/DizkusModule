@@ -14,8 +14,9 @@ function smarty_function_folderimage($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($params); 
-	  unset($params);
+	unset($params);
 
     if (!pnModAPILoad('Dizkus', 'user')) {
         $smarty->trigger_error("Error! Could not load Dizkus user API.");
@@ -26,6 +27,7 @@ function smarty_function_folderimage($params, &$smarty)
         $smarty->trigger_error("Error! Missing 'forum' parameter for folder image.");
         return false;
     }
+
     $last_visit = SessionUtil::getVar('Dizkus_lastvisit');
     $folder_image = pnModGetVar('Dizkus', 'folder_image');
     $newposts_image = pnModGetVar('Dizkus', 'newposts_image');
@@ -43,7 +45,7 @@ function smarty_function_folderimage($params, &$smarty)
 						}
 
 					$posted_unixtime= strtotime ($row['post_time']);
-					$posted_ml = ml_ftime('%b %d, %Y - %I:%M %p', GetUserTime($posted_unixtime));
+					$posted_ml = DateUtil::formatDatetime($posted_unixtime, '%b %d, %Y - %I:%M %p');
 					if ($posted_unixtime) {
 						if ($row['pn_uid']==1) {
 							$username = pnModGetVar('Users', 'anonymous');
@@ -64,7 +66,7 @@ function smarty_function_folderimage($params, &$smarty)
 				$fldr_alt = __('No new posts since your last visit.', $dom);
 				$last_post = __('No Posts', $dom);
 			}
-    
+
     return pnModAPIFunc('Dizkus', 'admin', 'boardstats',
                         array('id'   => $id,
                               'type' => $type));

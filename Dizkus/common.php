@@ -57,17 +57,15 @@
  */
 function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
-    $modinfo = pnModGetInfo(pnModGetIDFromName('Dizkus'));
-    $baseDir = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
-    $lang = ZLanguage::getLanguageCode();
+    $modinfo    = pnModGetInfo(pnModGetIDFromName('Dizkus'));
+    $baseDir    = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
+    $lang       = ZLanguage::getLanguageCode();
     $error_path = 'errors/' . $error_type;
-    $prefix = 'dizkus_error_';
+    $prefix     = 'dizkus_error_';
     $error_type = strtolower($error_type);
 
     // create the specific filename
-    $specific_error_file = $prefix . $error_name;
+    $specific_error_file  = $prefix . $error_name;
     $specific_error_file .= ($error_id) ? ('_' . $error_id) : '';
     $specific_error_file .= '.html';
 
@@ -110,10 +108,11 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
             return $render->fetch($test);
         }
     }
+
     // we couldn't find a custom message, fall back to the passed in default
     if ($default_msg) {
         return $default_msg;
-    }else {
+    } else {
         // ouch, no custom message and no default.
         return showforumerror('Error! Oh! Wow! An error occurred but there is no corresponding error message for it. You definitely hit the jackpot.', __FILE__, __LINE__);
     }
@@ -133,26 +132,30 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
     }
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign( 'adminmail', pnConfigGetVar('adminmail') );
     $render->assign( 'error_text', $error_text );
-    
+
     // show http error if requested
     if ($httperror <> null) {
         header("HTTP/1.0 " . DataUtil::formatForDisplay($httperror));
     }
-    
+
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         $render->assign( 'file', $file);
         $render->assign( 'line', $line);
     }
+
     $output = $render->fetch('dizkus_errorpage.html');
-    if (preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file)<>0) {
+
+    if (preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file) <> 0) {
         // __FILE__ ends with api.php or is common.php or pninit.php
         Loader::includeOnce('header.php');
         echo $output;
         Loader::includeOnce('footer.php');
         exit;
     }
+
     return $output;
 
 }
@@ -196,6 +199,7 @@ function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file=''
                        'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
         pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
     }
+
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return showforumerror( "$msg <br />
                                 sql  : $sql <br />
@@ -266,12 +270,12 @@ function dzksqldebug($sql)
 function dzkOpenDB($tablename='')
 {
     pnModDBInfoLoad('Dizkus');
-    $dbconn =& pnDBGetConn(true);
+    $dbconn  =& pnDBGetConn(true);
     $pntable =& pnDBGetTables();
 
     if (!empty($tablename)) {
         $columnname = $tablename . '_column';
-        if ( !array_key_exists($tablename, $pntable) ||
+        if (!array_key_exists($tablename, $pntable) ||
             !array_key_exists($columnname, $pntable) ) {return false; }
         // table exists, now get the dbconnection object
         return array($dbconn, &$pntable[$tablename], &$pntable[$columnname]);
@@ -314,11 +318,13 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     if (!is_object($dbconn) || !isset($sql) || empty($sql)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
+
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-        $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
+        $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true : false);
     }
+
     $result =& $dbconn->Execute($sql);
     $dbconn->debug = false;
     if ($dbconn->ErrorNo() != 0) {
@@ -328,6 +334,7 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
             return false;
         }
     }
+
     return $result;
 }
 
@@ -350,20 +357,22 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     if (!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
+
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-//        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);
         $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);
     }
 
     $mode = (empty($where)) ? 'INSERT': 'UPDATE';
 
     $result = $dbconn->AutoExecute($table, $record, $mode, $where);
+
     $dbconn->debug = false;
     if ($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(__('Error! Could not connect to the database.', $dom), $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
     }
+
     return $result;
 }
 
@@ -387,21 +396,24 @@ function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, 
     if (!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
         return showforumerror(_MODARGSERROR, $file, $line);
     }
+
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         // only admins shall see the debug output
         $dbconn->debug = $debug;
-//        $dbconn->debug = (($GLOBALS['pndebug']['debug_sql'] == 1) ? true:false);//dddd
         $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);//dddd
     }
-    if ( $start<>false && (is_numeric($start) && $start<>0 ) ){
+
+    if ( $start<>false && (is_numeric($start) && $start <> 0 ) ){
         $result = $dbconn->SelectLimit($sql, $limit, $start);
     } else {
         $result = $dbconn->SelectLimit($sql, $limit);
     }
+
     $dbconn->debug = false;
     if ($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(__('Error! Could not connect to the database.', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
+
     return $result;
 }
 
@@ -456,25 +468,29 @@ function Dizkus_bbdecode($message)
     // Undo lists (unordered/ordered)
 
     // unordered list code..
+    $matches    = array();
     $matchCount = preg_match_all("#<!-- BBCode ulist Start --><UL>(.*?)</UL><!-- BBCode ulist End -->#s", $message, $matches);
 
-    for ($i = 0; $i < $matchCount; $i++) {
-      $currMatchTextBefore = preg_quote($matches[1][$i]);
-      $currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
+    for ($i = 0; $i < $matchCount; $i++)
+    {
+        $currMatchTextBefore = preg_quote($matches[1][$i]);
+        $currMatchTextAfter  = preg_replace("#<LI>#s", "[*]", $matches[1][$i]);
 
-      $message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
+        $message = preg_replace("#<!-- BBCode ulist Start --><UL>$currMatchTextBefore</UL><!-- BBCode ulist End -->#s", "[list]" . $currMatchTextAfter . "[/list]", $message);
     }
 
     // ordered list code..
     $matchCount = preg_match_all("#<!-- BBCode olist Start --><OL TYPE=([A1])>(.*?)</OL><!-- BBCode olist End -->#si", $message, $matches);
 
-    for ($i = 0; $i < $matchCount; $i++) {
-      $currMatchTextBefore = preg_quote($matches[2][$i]);
-      $currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
+    for ($i = 0; $i < $matchCount; $i++)
+    {
+        $currMatchTextBefore = preg_quote($matches[2][$i]);
+        $currMatchTextAfter = preg_replace("#<LI>#s", "[*]", $matches[2][$i]);
 
-      $message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
+        $message = preg_replace("#<!-- BBCode olist Start --><OL TYPE=([A1])>$currMatchTextBefore</OL><!-- BBCode olist End -->#si", "[list=\\1]" . $currMatchTextAfter . "[/list]", $message);
     }
-    return($message);
+
+    return ($message);
 }
 
 /**
@@ -485,7 +501,6 @@ function Dizkus_bbdecode($message)
  *
  * obsolete function - we have pn_bbclick
  */
-
 function Dizkus_undo_make_clickable($text)
 {
     $text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
@@ -560,6 +575,7 @@ function Dizkus_replacesignature($text, $signature='')
     if ($removesignature == 'yes') {
         $signature = '';
     }
+
     if (!empty($signature)){
         $sigstart = stripslashes(pnModGetVar('Dizkus', 'signature_start'));
         $sigend   = stripslashes(pnModGetVar('Dizkus', 'signature_end'));
@@ -567,12 +583,12 @@ function Dizkus_replacesignature($text, $signature='')
     } else {
         $text = eregi_replace("\[addsig]$", '', $text);
     }
+
     return $text;
 }
 
 /**
  * mailcronecho
- *
  */
 function mailcronecho($text, $debug)
 {
@@ -587,13 +603,12 @@ function mailcronecho($text, $debug)
 /**
  * dzkVarPrepHTMLDisplay
  * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML()
- *
  */
 function dzkVarPrepHTMLDisplay($text)
 {
     // remove code tags
     $codecount1 = preg_match_all("/\[code(.*)\](.*)\[\/code\]/si", $text, $codes1);
-    for($i=0; $i < $codecount1; $i++) {
+    for ($i=0; $i < $codecount1; $i++) {
         $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
     }
     
@@ -604,13 +619,13 @@ function dzkVarPrepHTMLDisplay($text)
     for ($i = 0; $i < $codecount1; $i++) {
         $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
     }
+
     return $text;
 }
 
 /**
  * microtime_float
  * used for debug purposes only
- *
  */
 if (!function_exists('microtime_float'))
 {
@@ -626,7 +641,6 @@ if (!function_exists('microtime_float'))
  * check if the useragent is a bot (blacklisted)
  *
  * returns bool
- *
  */
 function useragent_is_bot()
 {
@@ -639,7 +653,7 @@ function useragent_is_bot()
                           'jeeves',
                           'lycos');
     $useragent = pnServerGetVar('HTTP_USER_AGENT');
-    for($cnt=0; $cnt < count($robotslist); $cnt++) {
+    for ($cnt=0; $cnt < count($robotslist); $cnt++) {
         if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
             return true;
         }
@@ -675,6 +689,7 @@ function dzk_getimagepath($image=null)
     // theme directory
     $theme         = DataUtil::formatForOS(pnUserGetTheme());
     $osmodname     = DataUtil::formatForOS($modname);
+    // FIXME THIS IS DEPRECATED
     $cWhereIsPerso = WHERE_IS_PERSO;
     if (!(empty($cWhereIsPerso))) {
         $themelangpath = $cWhereIsPerso . "themes/$theme/templates/modules/$osmodname/images/$lang";
@@ -737,7 +752,8 @@ function dzkstriptags($text='')
     if (!empty($text) && (pnModGetVar('Dizkus', 'striptags') == 'yes')) {
         // save code tags
         $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
-        for($i=0; $i < $codecount; $i++) {
+
+        for ($i=0; $i < $codecount; $i++) {
             $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
         }
 
@@ -749,6 +765,7 @@ function dzkstriptags($text='')
             $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
         }
     }
+
     return $text;
 }
 
@@ -811,6 +828,7 @@ function dzk_ajaxerror($error='Error! An unspecified ajax error occurred.', $cre
  */
 function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $ok = true)
 {
+    // FIXME use the core
     Loader::includeOnce('modules/Dizkus/pnincludes/JSON.php');
     $json = new Services_JSON();
     if (!is_array($args)) {
@@ -841,7 +859,6 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
 
 /**
  * sorting user lists by ['uname']
- *
  */
 function cmp_userorder($a, $b)
 {
@@ -851,13 +868,11 @@ function cmp_userorder($a, $b)
 /**
  * dzk_blacklist()
  * blacklist the users ip address if considered a spammer
- *
  */
 function dzk_blacklist()
 {
     $pntemp = pnConfigGetVar('temp');
     $blacklistfile = $pntemp . '/Dizkus_spammer.txt';
-
 
     $fh = fopen($blacklistfile, 'a');
     if ($fh) {
@@ -872,6 +887,7 @@ function dzk_blacklist()
         fwrite($fh, DataUtil::formatForStore($line) . "\n");                           
         fclose($fh);
     }
+
     return;
 }
 
@@ -918,11 +934,13 @@ function dzk_getip()
    if (dzk_validip(pnServerGetVar("HTTP_CLIENT_IP"))) {
        return pnServerGetVar("HTTP_CLIENT_IP");
    }
-   foreach (explode(",",pnServerGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
+
+   foreach (explode(',', pnServerGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
        if (dzk_validip(trim($ip))) {
            return $ip;
        }
    }
+
    if (dzk_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
        return pnServerGetVar("HTTP_X_FORWARDED");
    } elseif (dzk_validip(pnServerGetVar("HTTP_FORWARDED_FOR"))) {
@@ -955,6 +973,7 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
        'i', // minutes
        's'  // seconds
    );
+
    // transform the characters array to a string
    $strCharacters = implode('', $arrCharacters);
 
@@ -998,6 +1017,7 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
 
    // generates the timestamp
    $intTime = mktime($arrTime['H'], $arrTime['i'], $arrTime['s'], $arrTime['m'], $arrTime['d'], $arrTime['Y']);
+
    // returns the timestamp
    return $intTime;
 }
@@ -1008,7 +1028,6 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
  *
  * @params deliverhtml     boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
  *return html or boolean
- *
  */
 function dzk_available($deliverhtml = true)
 {
@@ -1020,6 +1039,7 @@ function dzk_available($deliverhtml = true)
             return false;
         }
     }
+
     return true;
 }
 
@@ -1027,12 +1047,15 @@ function dzk_available($deliverhtml = true)
  * dzk is an image
  * check if a filename is an image or not
  */
-function dzk_isimagefile($filepath) {
+function dzk_isimagefile($filepath)
+{
     if (function_exists('getimagesize') && @getimagesize($filepath) <> false) {
         return true;
     }
+
     if (preg_match('/^(.*)\.(gif|jpg|jpeg|png)/si', $filepath)) {
         return true;
     }
+
     return false;
 }

@@ -26,5 +26,6 @@ function smarty_function_plainbbcode($params, &$smarty)
 	        $out = pnModFunc('bbcode', 'user', 'bbcodes', $params);
 	    }
     }
+
 	return $out;
 }

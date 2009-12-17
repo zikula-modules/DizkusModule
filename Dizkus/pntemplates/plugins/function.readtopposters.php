@@ -19,10 +19,12 @@
  */
 function smarty_function_readtopposters($params, &$smarty) 
 {
+    // TODO deprecate the use of extract
     extract($params); 
 	unset($params);
 
     Loader::includeOnce('modules/Dizkus/common.php');
+
     // get some enviroment
     list($dbconn, $pntable) = dzkOpenDB();
 
@@ -52,7 +54,9 @@ function smarty_function_readtopposters($params, &$smarty)
         }
     }
     dzkCloseDB($result);
+
     $smarty->assign('toppostercount', count($topposters));
     $smarty->assign('topposters', $topposters);
+
     return;
 }

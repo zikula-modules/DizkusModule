@@ -13,7 +13,6 @@ Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * init
- *
  */
 function Dizkus_statisticsblock_init()
 {
@@ -22,19 +21,18 @@ function Dizkus_statisticsblock_init()
 
 /**
  * info
- *
  */
 function Dizkus_statisticsblock_info()
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    return array('module' => 'Dizkus',
-                 'text_type' => __('Dizkus statistic', $dom),
+    return array('module'         => 'Dizkus',
+                 'text_type'      => __('Dizkus statistic', $dom),
                  'text_type_long' => __('Dizkus Statistics Block', $dom),
                  'allow_multiple' => true,
-                 'form_content' => false,
-                 'form_refresh' => false,
-                 'show_preview' => true);
+                 'form_content'   => false,
+                 'form_refresh'   => false,
+                 'show_preview'   => true);
 }
 
 /**
@@ -83,6 +81,7 @@ function Dizkus_statisticsblock_display($blockinfo)
     }
 
     $blockinfo['content'] = $render->fetch(trim($vars['sb_template']));
+
     return themesideblock($blockinfo);
 }
 
@@ -98,7 +97,8 @@ function Dizkus_statisticsblock_update($blockinfo)
     $sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
     $sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 
-    $blockinfo['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters' ));
+    $blockinfo['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters'));
+
     return($blockinfo);
 }
 
@@ -122,6 +122,7 @@ function Dizkus_statisticsblock_modify($blockinfo)
     }
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('vars', $vars);
 
     return $render->fetch('dizkus_statisticsblock_config.html');

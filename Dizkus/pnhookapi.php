@@ -21,6 +21,7 @@ function Dizkus_hookapi_createbyitem($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
@@ -43,9 +44,9 @@ function Dizkus_hookapi_createbyitem($args)
     $modid = pnModGetIDFromName($modname);
     $reference =  $modid . '-' . $args['objectid'];
 
-
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => $reference));
+
     if ($topic_id == false) {
         $subject   = __('Automatically created topic', $dom);
         $message   = __('Done! Automatically created topic for discussion of submitted entries.', $dom);
@@ -72,7 +73,6 @@ function Dizkus_hookapi_createbyitem($args)
 /**
  * updatebyitem
  * updatehook function
- *
  */
 function Dizkus_hookapi_updatebyitem($args)
 {
@@ -120,13 +120,13 @@ function Dizkus_hookapi_updatebyitem($args)
         }
 
     }
+
     return $args['extrainfo'];
 }
 
 /**
  * deletebyitem
  * deletehook function (closes a topic or removes it depending on the setting)
- *
  */
 function Dizkus_hookapi_deletebyitem($args)
 {

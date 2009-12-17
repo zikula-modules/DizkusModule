@@ -22,8 +22,10 @@ function smarty_function_simplepager($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($params);
     unset($params);
+
     // Quick check to ensure that we have work to do
     if (empty($perpage)) {
         $perpage = 10;
@@ -75,6 +77,7 @@ function smarty_function_simplepager($params, &$smarty)
         } 
         $pagenum++; 
     } 
+
     if (($curnum >= $perpage + 1) && ($startnum < $curnum - $perpage)) {
         $temp = $curnum - $perpage;
         $url = preg_replace('/%%/', $curnum - $perpage, $urltemplate);
@@ -82,5 +85,6 @@ function smarty_function_simplepager($params, &$smarty)
     } else {
         $compoutput .= ">>";
     }
+
     return $compoutput;
 }

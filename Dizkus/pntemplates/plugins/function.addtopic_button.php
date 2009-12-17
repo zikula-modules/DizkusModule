@@ -27,6 +27,7 @@ function smarty_function_addtopic_button($params, &$smarty)
     }
 
     Loader::includeOnce('modules/Dizkus/common.php');
+
     $out = "";
     if (allowedtowritetocategoryandforum($params['cat_id'], $params['forum_id'])) {
         $imagedata = dzk_getimagepath($params['image']);
@@ -37,5 +38,6 @@ function smarty_function_addtopic_button($params, &$smarty)
         }
         $out = '<a title="' . DataUtil::formatForDisplay(__('New topic', $dom)) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'newtopic', array('forum'=> $params['forum_id']))) . '">' . $show . '</a>';
 	}
+
     return $out;
 }

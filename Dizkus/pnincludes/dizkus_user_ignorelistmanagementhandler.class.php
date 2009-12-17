@@ -20,14 +20,14 @@ class Dizkus_user_ignorelistmanagementHandler
         $ignorelist_options = array();
         switch ($ignorelist_handling)
         {
-          case 'strict':
-              $ignorelist_options[] = array('text' => __('strict', $dom), 'value' => 'strict');
+            case 'strict':
+                $ignorelist_options[] = array('text' => __('strict', $dom), 'value' => 'strict');
 
-          case 'medium':
-              $ignorelist_options[] = array('text' => __('medium', $dom), 'value' => 'medium');
+            case 'medium':
+                $ignorelist_options[] = array('text' => __('medium', $dom), 'value' => 'medium');
 
-          default:
-              $ignorelist_options[] = array('text' => __('none', $dom), 'value' => 'none');
+            default:
+                $ignorelist_options[] = array('text' => __('none', $dom), 'value' => 'none');
         }
 
         // get user's configuration
@@ -40,7 +40,7 @@ class Dizkus_user_ignorelistmanagementHandler
         return true;
     }
 
-    function handleCommand(&$render, &$args)
+    function handleCommand(&$render, $args)
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
 

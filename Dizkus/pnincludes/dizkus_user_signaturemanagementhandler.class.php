@@ -20,7 +20,7 @@ class Dizkus_user_signaturemanagementHandler
         return true;
     }
 
-    function handleCommand(&$render, &$args)
+    function handleCommand(&$render, $args)
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
 

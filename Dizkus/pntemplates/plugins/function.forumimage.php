@@ -9,10 +9,10 @@
  * @package Dizkus
  */
 
-
 // type, id
 function smarty_function_forumimage($params, &$smarty) 
 {
+    // TODO deprecate the use of extract
     extract($params); 
 	unset($params);
 
@@ -34,5 +34,4 @@ function smarty_function_forumimage($params, &$smarty)
     $smarty->assign($assign, array('name'   => $img,
                                    'width'  => $img_attr[0],
                                    'height' => $img_attr[1]));
-                                   
 }

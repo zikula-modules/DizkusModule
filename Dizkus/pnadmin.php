@@ -17,11 +17,12 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_admin_main()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
+
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     return $render->fetch('dizkus_admin_main.html');
 }
 
@@ -31,8 +32,6 @@ function Dizkus_admin_main()
  */
 function Dizkus_admin_preferences()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -49,7 +48,6 @@ function Dizkus_admin_preferences()
 
 /**
  * syncforums
- *
  */
 function Dizkus_admin_syncforums()
 {
@@ -60,24 +58,30 @@ function Dizkus_admin_syncforums()
     }
     $silent = FormUtil::getPassedValue('silent', 0);
 
+    $messages = array();
+
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all users'));
-    $message = DataUtil::formatForDisplay(__('Done! Synchronised Zikula and Dizkus users.', $dom)) . '<br />';
+
+    $messages[] = DataUtil::formatForDisplay(__('Done! Synchronised Zikula and Dizkus users.', $dom));
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all forums'));
-    $message .= DataUtil::formatForDisplay(__('Done! Synchronised forum index.', $dom)) . '<br />';
+
+    $messages[] = DataUtil::formatForDisplay(__('Done! Synchronised forum index.', $dom));
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all topics'));
-    $message .= DataUtil::formatForDisplay(__('Done! Synchronised topics.', $dom)) . '<br />';
+
+    $messages[] = DataUtil::formatForDisplay(__('Done! Synchronised topics.', $dom));
 
     pnModAPIFunc('Dizkus', 'admin', 'sync',
                  array('type' => 'all posts'));
-    $message .= DataUtil::formatForDisplay(__('Done! Synchronised posts counter.', $dom)) . '<br />';
+
+    $messages[] = DataUtil::formatForDisplay(__('Done! Synchronised posts counter.', $dom));
 
     if ($silent != 1) {
-        LogUtil::registerStatus($message);
+        LogUtil::registerStatus($messages);
     }
 
     return pnRedirect(pnModURL('Dizkus', 'admin', 'main'));
@@ -85,7 +89,6 @@ function Dizkus_admin_syncforums()
 
 /**
  * ranks
- *
  */
 function Dizkus_admin_ranks()
 {
@@ -103,9 +106,11 @@ function Dizkus_admin_ranks()
                                                   array('ranktype' => $ranktype));
 
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('ranks', $ranks);
         $render->assign('ranktype', $ranktype);
         $render->assign('rankimages', $rankimages);
+
         if ($ranktype == 0) {
             return $render->fetch('dizkus_admin_ranks.html');
         } else {
@@ -115,17 +120,15 @@ function Dizkus_admin_ranks()
         $ranks = FormUtil::getPassedValue('ranks');
         pnModAPIFunc('Dizkus', 'admin', 'saverank', array('ranks' => $ranks));
     }
+
     return pnRedirect(pnModURL('Dizkus','admin', 'ranks', array('ranktype' => $ranktype)));
 }
 
 /**
  * ranks
- *
  */
 function Dizkus_admin_assignranks()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -152,7 +155,6 @@ function Dizkus_admin_assignranks()
     $letter = strtolower($letter);
 
     if (!$submit) {
-
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                  array('ranktype' => 1));
 
@@ -170,7 +172,8 @@ function Dizkus_admin_assignranks()
         }
 
         $allusers = array();
-        foreach ($users as $user) {
+        foreach ($users as $user)
+        {
             if ($user['uid'] == 1)  continue;
 
             $alias = '';
@@ -202,6 +205,7 @@ function Dizkus_admin_assignranks()
         unset($users);
 
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('ranks', $ranks);
         $render->assign('rankimages', $rankimages);
         $render->assign('allusers', $allusers);
@@ -210,6 +214,7 @@ function Dizkus_admin_assignranks()
         $render->assign('perpage', $perpage);
         $render->assign('usercount', $usercount);
         $render->assign('allow_star', ($usercount < 1000));
+
         return $render->fetch('dizkus_admin_assignranks.html');
 
     } else {
@@ -233,9 +238,7 @@ function Dizkus_admin_assignranks()
  */
 function Dizkus_admin_reordertree()
 {
-     $dom = ZLanguage::getModuleDomain('Dizkus');
-
-   if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -252,10 +255,13 @@ function Dizkus_admin_reordertree()
             }
         }
     }
+
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('categorytree', $categorytree);
     $render->assign('catids', $catids);
     $render->assign('forumids', $forumids);
+
     return $render->fetch('dizkus_admin_reordertree.html');
 }
 
@@ -263,7 +269,6 @@ function Dizkus_admin_reordertree()
  * reordertreesave
  *
  * AJAX result function
- *
  */
 function Dizkus_admin_reordertreesave()
 {
@@ -276,7 +281,7 @@ function Dizkus_admin_reordertreesave()
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-//        dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
+        //dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     $categoryarray = FormUtil::getPassedValue('category');
@@ -284,7 +289,8 @@ function Dizkus_admin_reordertreesave()
     // category, we need to remove this
     // not used any longer: array_pop($categoryarray);
     if (is_array($categoryarray) && count($categoryarray) > 0) {
-        foreach ($categoryarray as $catorder => $cat_id) {
+        foreach ($categoryarray as $catorder => $cat_id)
+        {
             // array key = catorder starts with 0, but we need 1, so we increase the order
             // value
             $catorder++;
@@ -318,15 +324,14 @@ function Dizkus_admin_reordertreesave()
             }
         }
     }
-    dzk_jsonizeoutput('', true, true);
 
+    dzk_jsonizeoutput('', true, true);
 }
 
 /**
  * editforum
  *
  * AJAX function
- *
  */
 function Dizkus_admin_editforum($args=array())
 {
@@ -337,6 +342,7 @@ function Dizkus_admin_editforum($args=array())
     }
 
     if (count($args) > 0) {
+        // TODO deprecate the use of extract
         extract($args);
         // forum_id, returnhtml
     } else {
@@ -377,6 +383,7 @@ function Dizkus_admin_editforum($args=array())
                                     'permcheck' => ACCESS_ADMIN));
 
     }
+
     $externalsourceoptions = array( 0 => array('checked'  => '',
                                                'name'     => __('No external source', $dom),
                                                'ok'       => '',
@@ -399,7 +406,8 @@ function Dizkus_admin_editforum($args=array())
                                   'id'   => 0));
 
     $foundsel = false;
-    foreach ($hooked_modules_raw as $hookmod => $dummy) {
+    foreach ($hooked_modules_raw as $hookmod => $dummy)
+    {
         $hookmodid = pnModGetIDFromName($hookmod);
         $sel = false;
         if ($forum['forum_moduleref'] == $hookmodid) {
@@ -425,6 +433,7 @@ function Dizkus_admin_editforum($args=array())
                                 array('forum_id' => $forum['forum_id']));
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('hooked_modules', $hooked_modules);
     $render->assign('rssfeeds', $rssfeeds);
     $render->assign('externalsourceoptions', $externalsourceoptions);
@@ -447,7 +456,9 @@ function Dizkus_admin_editforum($args=array())
                                         array('moderators' => $moderators)));
     $render->assign('forum', $forum);
     $render->assign('newforum', $new);
+
     $html = $render->fetch('dizkus_ajax_editforum.html');
+
     if (!isset($returnhtml)) {
         dzk_jsonizeoutput(array('forum_id' => $forum['forum_id'],
                                 'cat_id'   => $forum['cat_id'],
@@ -455,12 +466,12 @@ function Dizkus_admin_editforum($args=array())
                                 'data'     => $html),
                           false);
     }
+
     return $html;
 }
 
 /**
  * editcategory
- *
  */
 function Dizkus_admin_editcategory($args=array())
 {
@@ -471,6 +482,7 @@ function Dizkus_admin_editcategory($args=array())
     }
 
     if (!empty($args)) {
+        // TODO deprecate the use of extract
         extract($args);
         $cat_id = $cat;
     } else {
@@ -491,9 +503,12 @@ function Dizkus_admin_editcategory($args=array())
                                      'permcheck' => 'nocheck'));
         $category['forum_count'] = count($forums);
     }
+
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('category', $category );
     $render->assign('newcategory', $new);
+
     dzk_jsonizeoutput(array('data'     => $render->fetch('dizkus_ajax_editcategory.html'),
                             'cat_id'   => $category['cat_id'],
                             'new'      => $new),
@@ -505,7 +520,6 @@ function Dizkus_admin_editcategory($args=array())
  * storecategory
  *
  * AJAX function
- *
  */
 function Dizkus_admin_storecategory()
 {
@@ -605,30 +619,30 @@ function Dizkus_admin_storeforum()
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
 
-    $forum_name    = FormUtil::getPassedValue('forum_name');
-    $forum_id    = FormUtil::getPassedValue('forum_id');
-    $cat_id    = FormUtil::getPassedValue('cat_id');
-    $desc    = FormUtil::getPassedValue('desc');
-    $mods    = FormUtil::getPassedValue('mods');
-    $rem_mods    = FormUtil::getPassedValue('rem_mods');
-    $extsource    = FormUtil::getPassedValue('extsource');
-    $rssfeed    = FormUtil::getPassedValue('rssfeed');
-    $pop3_server    = FormUtil::getPassedValue('pop3_server');
-    $pop3_port    = FormUtil::getPassedValue('pop3_port');
-    $pop3_login    = FormUtil::getPassedValue('pop3_login');
-    $pop3_password    = FormUtil::getPassedValue('pop3_password');
-    $pop3_passwordconfirm    = FormUtil::getPassedValue('pop3_passwordconfirm');
-    $pop3_interval    = FormUtil::getPassedValue('pop3_interval');
-    $pop3_matchstring    = FormUtil::getPassedValue('pop3_matchstring');
-    $pnuser    = FormUtil::getPassedValue('pnuser');
-    $pnpassword    = FormUtil::getPassedValue('pnpassword');
+    $forum_name           = FormUtil::getPassedValue('forum_name');
+    $forum_id             = FormUtil::getPassedValue('forum_id');
+    $cat_id               = FormUtil::getPassedValue('cat_id');
+    $desc                 = FormUtil::getPassedValue('desc');
+    $mods                 = FormUtil::getPassedValue('mods');
+    $rem_mods             = FormUtil::getPassedValue('rem_mods');
+    $extsource            = FormUtil::getPassedValue('extsource');
+    $rssfeed              = FormUtil::getPassedValue('rssfeed');
+    $pop3_server          = FormUtil::getPassedValue('pop3_server');
+    $pop3_port            = FormUtil::getPassedValue('pop3_port');
+    $pop3_login           = FormUtil::getPassedValue('pop3_login');
+    $pop3_password        = FormUtil::getPassedValue('pop3_password');
+    $pop3_passwordconfirm = FormUtil::getPassedValue('pop3_passwordconfirm');
+    $pop3_interval        = FormUtil::getPassedValue('pop3_interval');
+    $pop3_matchstring     = FormUtil::getPassedValue('pop3_matchstring');
+    $pnuser               = FormUtil::getPassedValue('pnuser');
+    $pnpassword           = FormUtil::getPassedValue('pnpassword');
     $pnpasswordconfirm    = FormUtil::getPassedValue('pnpasswordconfirm');
-    $moduleref    = FormUtil::getPassedValue('moduleref');
-    $pop3_test    = FormUtil::getPassedValue('pop3_test');
-    $add    = FormUtil::getPassedValue('add');
-    $delete    = FormUtil::getPassedValue('delete');
+    $moduleref            = FormUtil::getPassedValue('moduleref');
+    $pop3_test            = FormUtil::getPassedValue('pop3_test');
+    $add                  = FormUtil::getPassedValue('add');
+    $delete               = FormUtil::getPassedValue('delete');
 
-    $pntopic = (int)FormUtil::getpassedValue('pncategory', 0);
+    $pntopic              = (int)FormUtil::getpassedValue('pncategory', 0);
 
     $pop3testresulthtml = '';
     if (!empty($delete)) {
@@ -728,13 +742,15 @@ function Dizkus_admin_storeforum()
                               array('forum_id'  => $forum_id,
                                     'permcheck' => 'nocheck'));
 
-        if ($pop3_test==1) {
+        if ($pop3_test == 1) {
             $pop3testresult = pnModAPIFunc('Dizkus', 'user', 'testpop3connection',
                                            array('forum_id' => $forum_id));
 
             $render = & pnRender::getInstance('Dizkus', false, null, true);
+
             $render->assign('messages', $pop3testresult);
             $render->assign('forum_id', $forum_id);
+
             $pop3testresulthtml = $render->fetch('dizkus_admin_pop3test.html');
         }
     } 
@@ -755,9 +771,7 @@ function Dizkus_admin_storeforum()
  */
 function Dizkus_admin_managesubscriptions()
 {
-     $dom = ZLanguage::getModuleDomain('Dizkus');
-
-   if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -779,18 +793,21 @@ function Dizkus_admin_managesubscriptions()
     if (!$submit) {
         // submit is empty
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('pnusername', $pnusername);
         $render->assign('pnuid', $pnuid = pnUserGetIDFromName($pnusername));
         $render->assign('topicsubscriptions', $topicsubscriptions);
         $render->assign('forumsubscriptions', $forumsubscriptions);
 
         return $render->fetch('dizkus_admin_managesubscriptions.html');
+
     } else {  // submit not empty
         $pnuid      = FormUtil::getPassedValue('pnuid');
         $allforums  = FormUtil::getPassedValue('allforum');
         $forum_ids  = FormUtil::getPassedValue('forum_id');
         $alltopics  = FormUtil::getPassedValue('alltopic');
         $topic_ids  = FormUtil::getPassedValue('topic_id');
+
         if ($allforums == '1') {
             pnModAPIFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $pnuid));
         } elseif (count($forum_ids) > 0) {
@@ -807,5 +824,6 @@ function Dizkus_admin_managesubscriptions()
             }
         }
     }
+
     return pnRedirect(pnModURL('Dizkus', 'admin', 'managesubscriptions', array('pnusername' => pnUserGetVar('uname', $pnuid))));
 }

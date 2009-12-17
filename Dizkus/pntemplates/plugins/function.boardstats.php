@@ -28,20 +28,17 @@
  */
 function smarty_function_boardstats($params, &$smarty) 
 {
-    if (!pnModAPILoad('Dizkus', 'user')) {
-        $smarty->trigger_error("Error! Could not load Dizkus user API.");
-        return;
-    } 
-
-    $type = (!empty($params['type'])) ? $params['type'] : "all";
-    $id   = (!empty($params['id'])) ? $params['id'] : "0";
+    $type = (!empty($params['type'])) ? $params['type'] : 'all';
+    $id   = (!empty($params['id'])) ? $params['id'] : '0';
     
     $count = pnModAPIFunc('Dizkus', 'user', 'boardstats',
                           array('id'   => $id,
                                 'type' => $type));
+
     if (!empty($params['assign'])) {
         $smarty->assign($params['assign'], $count);
         return;
     }
+
     return $count;
 }

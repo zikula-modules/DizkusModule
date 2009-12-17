@@ -23,8 +23,9 @@ function smarty_function_favoriteforum_button($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($params);
-	  unset($params);
+	unset($params);
 
     if (!isset($image_addfavorite) || empty($image_addfavorite)) {
         $image_addfavorite = 'add2favorites.gif';
@@ -39,8 +40,8 @@ function smarty_function_favoriteforum_button($params, &$smarty)
         $userid = pnUserGetVar('uid');
         if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if (pnModAPIFunc('Dizkus', 'user', 'get_forum_favorites_status',
-                            array('userid'=>$userid,
-                                  'forum_id'=>$forum_id))==false) {
+                            array('userid'   => $userid,
+                                  'forum_id' => $forum_id)) == false) {
                 $imagedata = dzk_getimagepath($image_addfavorite);
                 if ($imagedata == false) {
                     $show = DataUtil::formatForDisplay(__('Add to favourites', $dom));
@@ -59,5 +60,6 @@ function smarty_function_favoriteforum_button($params, &$smarty)
             }
         }
     }
+
     return $out;
 }

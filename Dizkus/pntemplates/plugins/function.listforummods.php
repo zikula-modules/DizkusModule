@@ -26,5 +26,6 @@ function smarty_function_listforummods($params, &$smarty)
 	        $count++;
         }
     }
+
     return $out;
 }

@@ -52,6 +52,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
 
 function smarty_function_dizkusonline($params, &$smarty)
 {
+    // TODO deprecate the use of extract
     extract($params);
     unset($params);
 
@@ -139,6 +140,6 @@ function smarty_function_dizkusonline($params, &$smarty)
     } else {
         $smarty->assign($dizkusonline);
     }
-    return;
 
+    return;
 }

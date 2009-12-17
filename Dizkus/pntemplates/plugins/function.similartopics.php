@@ -49,6 +49,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
 
 function smarty_function_similartopics($params, &$smarty)
 {
+    // TODO deprecate the use of extract
     extract($params);
     unset($params);
 
@@ -73,11 +74,9 @@ function smarty_function_similartopics($params, &$smarty)
         $funcname = 'nonfulltext';
         $vars['order'] = 2; // title
     }
-    list($searchresults,
-         $total_hits) =  pnModAPIFunc('Dizkus', 'search', $funcname, $vars);
+    list($searchresults, $total_hits) = pnModAPIFunc('Dizkus', 'search', $funcname, $vars);
 
     $assign = (isset($assign)) ? $assign : 'similartopics';
     $smarty->assign($assign, $searchresults);
     return;
-
 }

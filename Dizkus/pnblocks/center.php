@@ -13,7 +13,6 @@ Loader::includeOnce('modules/Dizkus/common.php');
 
 /**
  * init
- *
  */
 function Dizkus_centerblock_init()
 {
@@ -22,19 +21,18 @@ function Dizkus_centerblock_init()
 
 /**
  * info
- *
  */
 function Dizkus_centerblock_info()
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    return array('module' => 'Dizkus',
-                 'text_type' => __('Dizkus recent', $dom),
+    return array('module'         => 'Dizkus',
+                 'text_type'      => __('Dizkus recent', $dom),
                  'text_type_long' => __('Dizkus recent posts', $dom),
                  'allow_multiple' => true,
-                 'form_content' => false,
-                 'form_refresh' => false,
-                 'show_preview' => true);
+                 'form_content'   => false,
+                 'form_refresh'   => false,
+                 'show_preview'   => true);
 }
 
 /**
@@ -86,6 +84,7 @@ function Dizkus_centerblock_display($blockinfo)
     }
 
     $blockinfo['content'] = $render->fetch(trim($vars['cb_template']));
+
     return themesideblock($blockinfo);
 }
 
@@ -101,7 +100,8 @@ function Dizkus_centerblock_update($blockinfo)
     $cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
     $cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
 
-    $blockinfo['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters' ));
+    $blockinfo['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters'));
+
     return($blockinfo);
 }
 

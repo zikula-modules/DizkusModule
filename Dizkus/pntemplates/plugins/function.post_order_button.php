@@ -14,8 +14,9 @@ function smarty_function_post_order_button($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($params);
-	  unset($params);
+	unset($params);
 
     if (!isset($image_ascending) || empty($image_ascending)) {
         $image_ascending = 'postorderasc.gif';
@@ -44,6 +45,7 @@ function smarty_function_post_order_button($params, &$smarty)
             $return_to = 'main';
         }
     }
+
     if (pnUserLoggedIn()) {
         $post_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
         if ($post_order == 'ASC' ) {
@@ -63,5 +65,6 @@ function smarty_function_post_order_button($params, &$smarty)
         }
         $out = '<a title="' . DataUtil::formatForDisplay(__('Change post order', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'change_post_order', 'topic'=>$topic_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
     }
+
     return $out;
 }

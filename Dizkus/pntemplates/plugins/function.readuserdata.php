@@ -12,6 +12,7 @@
 // uid (optional), assign
 function smarty_function_readuserdata($params, &$smarty) 
 {
+    // TODO deprecate the use of extract
     extract($params); 
 	unset($params);
 
@@ -20,9 +21,9 @@ function smarty_function_readuserdata($params, &$smarty)
         return;
     } 
 
-    $uid = (empty($uid)) ? pnUserGetVar('uid') : $uid;
+    $uid    = (empty($uid)) ? pnUserGetVar('uid') : $uid;
     $assign = (empty($assign)) ? "userdata" : $assign;
-    
+
     $smarty->assign($assign, pnModAPIFunc('Dizkus', 'user', 'get_userdata_from_id',
                                          array('userid'   => $uid)));
     return;

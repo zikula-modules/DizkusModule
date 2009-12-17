@@ -33,5 +33,6 @@ function smarty_function_printtopic_button($params, &$smarty)
         }
         return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'print', array('topic'=>$topic_id))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
     }
+
     return '';
 }

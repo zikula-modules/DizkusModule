@@ -26,6 +26,8 @@ function Dizkus_accountapi_getall($args)
         return $items;
     }
 
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
     $uname = (isset($args['uname'])) ? $args['uname'] : pnUserGetVar('uname');
     // does this user exist?
     if (pnUserGetIDFromName($uname) == false) {

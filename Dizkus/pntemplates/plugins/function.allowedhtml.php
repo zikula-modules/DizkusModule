@@ -16,10 +16,13 @@
  */
 function smarty_function_allowedhtml($params, &$smarty) 
 {
-    $out = "<br />".DataUtil::formatForDisplay(_ALLOWEDHTML)."<br />";
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
+    $out = "<br />".__('Allowed HTML:', $dom)."<br />";
     $AllowableHTML = pnConfigGetVar('AllowableHTML');
     while (list($key, $access, ) = each($AllowableHTML)) {
     	if ($access > 0) $out .= " &lt;".$key."&gt;";
     }
+
     return $out;
 }

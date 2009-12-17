@@ -29,6 +29,7 @@ $modversion['author']         = 'Andreas Krapohl, Frank Schummertz, Carsten Volm
 $modversion['contact']        = 'http://www.dizkus.com';
 $modversion['admin']          = 1;
 $modversion['user']           = 1;
+
 $modversion['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
                                       'Dizkus::CreateForum' => 'CategoryID::');
 

@@ -22,8 +22,9 @@ function smarty_function_mailtopic_button($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
+    // TODO deprecate the use of extract
     extract($params);
-	  unset($params);
+	unset($params);
 
     // set a default value
     if (!isset($image) || empty($image)) {
@@ -31,6 +32,7 @@ function smarty_function_mailtopic_button($params, &$smarty)
     }
 
     Loader::includeOnce('modules/Dizkus/common.php');
+
     $out = '';
     if (allowedtowritetocategoryandforum($cat_id, $forum_id)) {
         $imagedata = dzk_getimagepath($image);
@@ -41,5 +43,6 @@ function smarty_function_mailtopic_button($params, &$smarty)
         }
 	    $out = '<a title="' . DataUtil::formatForDisplay(__('Send as e-mail', $dom)) . '" href="'. DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'emailtopic', array('topic' => $topic_id))) . '">' . $show . '</a>';
 	}
+
     return $out;
 }

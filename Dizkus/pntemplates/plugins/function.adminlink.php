@@ -29,9 +29,10 @@ function smarty_function_adminlink($params, &$smarty)
         
         if ($params['type'] == 'category') {
             return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'category', array('cat_id'=>(int)$params['id']))) . '">[' . DataUtil::formatForDisplay(__('Edit category title', $dom)) . ']</a>';
-        } elseif ($type=='forum') {
-            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'forum', array('forum_id'=>(int)$params['id']))) . '">['.DataUtil::formatForDisplay(__('Edit forum', $dom)) . ']</a>';
+        } elseif ($params['type'] == 'forum') {
+            return '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'admin', 'forum', array('forum_id' => (int)$params['id']))) . '">['.DataUtil::formatForDisplay(__('Edit forum', $dom)) . ']</a>';
         }
     }
+
     return;
 }

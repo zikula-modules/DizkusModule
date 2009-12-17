@@ -25,20 +25,23 @@ function Dizkus_hook_showdiscussionlink($args)
         return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
-
     $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_reference',
                              array('reference' => pnModGetIDFromName(pnModGetName()) . '-' . $args['objectid']));
 
     if ($topic_id <> false) {
         list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
+
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id,
                                     'last_visit' => $last_visit,
                                     'count'      => false));
+
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('topic', $topic);
+
         return $render->fetch('dizkus_hook_display.html');
     }
 
-    return;
+    return false;
 }

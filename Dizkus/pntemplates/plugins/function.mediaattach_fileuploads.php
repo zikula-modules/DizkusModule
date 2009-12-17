@@ -28,5 +28,6 @@ function smarty_function_mediaattach_fileuploads($params, &$smarty)
         $out = pnModFunc('MediaAttach', 'user', 'showfilelist',
                          array('objectid' => $params['objectid']));
     }
+
     return $out;
 }

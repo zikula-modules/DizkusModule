@@ -50,6 +50,7 @@ function smarty_function_readtopforums($params, &$smarty)
         }
     }
     dzkCloseDB($result);
+
     $smarty->assign('topforumscount', count($topforums));
     $smarty->assign('topforums', $topforums);
     return;

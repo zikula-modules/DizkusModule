@@ -59,10 +59,15 @@ function smarty_modifier_pndate_format($string, $format='datebrief', $default_da
     }
 
     $dateInput = '';
-    if ($string != '') $dateInput = smarty_make_timestamp($string) + $tzoffset;
-    elseif (isset($default_date) && $default_date != '') $dateInput = smarty_make_timestamp($default_date) + $tzoffset;
+    if ($string != '') {
+        $dateInput = smarty_make_timestamp($string) + $tzoffset;
+    } elseif (isset($default_date) && $default_date != '') {
+        $dateInput = smarty_make_timestamp($default_date) + $tzoffset;
+    }
+
     if ($dateInput == '') {
         return;
     }
+
     return DateUtil::formatDatetime($dateInput, $format);
 }

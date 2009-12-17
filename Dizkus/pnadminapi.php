@@ -21,8 +21,6 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_adminapi_readcategories($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $pntables = pnDBGetTables();
     $catcolumn = $pntables['dizkus_categories_column'];
 
@@ -94,6 +92,7 @@ function Dizkus_adminapi_updatecategory($args)
         $obj = DBUtil::updateObject($obj, 'dizkus_categories', null, 'cat_id');
         return true;
     }
+
     return false;
 }
 
@@ -116,6 +115,7 @@ function Dizkus_adminapi_addcategory($args)
         $obj = DBUtil::insertObject($args, 'dizkus_categories', 'cat_id');
         return $obj['cat_id'];
     }
+
     return false;
 }
 
@@ -146,9 +146,9 @@ function Dizkus_adminapi_deletecategory($args)
             }  //foreach forum
         }
         // now we can delete the category
-        $res = DBUtil::deleteObject($args, 'dizkus_categories', null, 'cat_id');
-        return true;
+        return DBUtil::deleteObject($args, 'dizkus_categories', null, 'cat_id');
     }
+
     return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
 }
 
@@ -168,10 +168,6 @@ function Dizkus_adminapi_readforums($args=array())
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    $pntable = &pnDBGetTables();
-    $forumcolumn = $pntable['dizkus_forums_column'];
-    $catcolumn   = $pntable['dizkus_categories_column'];
-
     $permcheck = (isset($args['permcheck'])) ? strtoupper($args['permcheck']): ACCESS_READ;
     if (!empty($permcheck) &&
         ($permcheck <> ACCESS_OVERVIEW) &&
@@ -185,11 +181,11 @@ function Dizkus_adminapi_readforums($args=array())
 
     $where = '';
     if (isset($args['forum_id'])) {
-        $where = "WHERE tbl.forum_id='". DataUtil::formatForStore($args['forum_id']) ."' ";
+        $where = "WHERE tbl.forum_id='". (int)DataUtil::formatForStore($args['forum_id']) ."' ";
     } elseif (isset($args['cat_id'])) {
-        $where = "WHERE tbl.cat_id='". DataUtil::formatForStore($args['cat_id']) ."' ";
+        $where = "WHERE tbl.cat_id='". (int)DataUtil::formatForStore($args['cat_id']) ."' ";
     }
-    
+
     if ($permcheck <> 'NOCHECK') {
         $permfilter[] = array('realm' => 0,
                               'component_left'   =>  'Dizkus',
@@ -208,6 +204,7 @@ function Dizkus_adminapi_readforums($args=array())
                          'object_field_name'  =>  array('cat_title', 'cat_id'),
                          'compare_field_table'=>  'cat_id',
                          'compare_field_join' =>  'cat_id');
+
     $orderby = 'a.cat_order, tbl.forum_order, tbl.forum_name';
 
     $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joininfo, $where, $orderby, -1, -1, '', $permfilter);
@@ -243,6 +240,7 @@ function Dizkus_adminapi_readforums($args=array())
             return $forums[0];
         }
     }
+
     return $forums;
 }
 
@@ -252,8 +250,7 @@ function Dizkus_adminapi_readforums($args=array())
  */
 function Dizkus_adminapi_readmoderators($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
@@ -304,8 +301,7 @@ function Dizkus_adminapi_readmoderators($args)
  */
 function Dizkus_adminapi_readusers($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
@@ -337,6 +333,7 @@ function Dizkus_adminapi_readusers($args)
         }
     }
     dzkCloseDB($result);
+
     return $users;
 }
 
@@ -346,8 +343,7 @@ function Dizkus_adminapi_readusers($args)
  */
 function Dizkus_adminapi_readgroups($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
@@ -359,8 +355,9 @@ function Dizkus_adminapi_readgroups($args)
 
     $where_flag = false;
     $group_flag = false;
-    foreach($moderators as $mod) {
-        if ($mod['uid']>1000000) {
+    foreach ($moderators as $mod)
+    {
+        if ($mod['uid'] > 1000000) {
             // mod uids > 1000000 are groups
             if (!$where_flag) {
                 $sql .= 'WHERE ';
@@ -374,10 +371,11 @@ function Dizkus_adminapi_readgroups($args)
         }
     }
     $sql .= "ORDER BY g.pn_name";
+
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     $groups = array();
-    if ($result->RecordCount()>0) {
+    if ($result->RecordCount() > 0) {
         for (; !$result->EOF; $result->MoveNext())
         {
             $group = array();
@@ -400,8 +398,6 @@ function Dizkus_adminapi_readgroups($args)
  */
 function Dizkus_adminapi_readranks($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     // read images
     $path     = pnModGetVar('Dizkus', 'url_ranks_images');
     $handle   = opendir($path);
@@ -424,7 +420,7 @@ function Dizkus_adminapi_readranks($args)
     $ranks = DBUtil::selectObjectArray('dizkus_ranks', 'WHERE ' . $rcol['rank_special'] . '=' . DataUtil::formatForStore($args['ranktype']), $orderby);
 
     if (is_array($ranks)) {
-        foreach($ranks as $cnt => $rank) {
+        foreach ($ranks as $cnt => $rank) {
         	$ranks[$cnt]['users'] = pnModAPIFunc('Dizkus', 'admin', 'readrankusers',
                                           array('rank_id' => $ranks[$cnt]['rank_id']));
         }
@@ -445,7 +441,6 @@ function Dizkus_adminapi_readranks($args)
 /**
  * saverank
  * @params rank_special, rank_id, rank_min, rank_max, rank_image, rank_id
- *
  */
 function Dizkus_adminapi_saverank($args)
 {
@@ -455,9 +450,10 @@ function Dizkus_adminapi_saverank($args)
         return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
 
-    foreach($args['ranks'] as $rankid => $rank) {
+    foreach ($args['ranks'] as $rankid => $rank)
+    {
         if ($rankid == '-1') {
-            $obj = DBUtil::insertObject($rank, 'dizkus_ranks', 'rank_id');
+            $res = DBUtil::insertObject($rank, 'dizkus_ranks', 'rank_id');
         } else {
             $rank['rank_id'] = $rankid;
             if ($rank['rank_delete'] == '1') {
@@ -467,7 +463,8 @@ function Dizkus_adminapi_saverank($args)
             }
         }
     }
-    return;
+
+    return $res;
 }
 
 /**
@@ -476,8 +473,6 @@ function Dizkus_adminapi_saverank($args)
  */
 function Dizkus_adminapi_readrankusers($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $pntable = pnDBGetTables();
 
     $sql = 'SELECT  u.user_id
@@ -488,9 +483,9 @@ function Dizkus_adminapi_readrankusers($args)
               AND r.rank_special=1
               AND u.user_id <>""';
 
-    $res = DBUtil::executeSQL($sql);
+    $res      = DBUtil::executeSQL($sql);
     $objarray = DBUtil::marshallObjects($res, array('user_id'));
-    $users = array_map('_get_rank_users', $objarray);
+    $users    = array_map('_get_rank_users', $objarray);
 
     return $users;
 }
@@ -522,7 +517,8 @@ function Dizkus_adminapi_assignranksave($args)
         }
         DBUtil::updateObjectArray($ranksavearray, 'dizkus_users', 'user_id');
     }
-    return;
+
+    return true;
 }
 
 /**
@@ -533,8 +529,6 @@ function Dizkus_adminapi_assignranksave($args)
  */
 function Dizkus_adminapi_sync($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     list($dbconn, $pntable) = dzkOpenDB();
 
     switch ($args['type'])
@@ -660,7 +654,8 @@ function Dizkus_adminapi_sync($args)
                     LEFT JOIN ' . $pntable['dizkus_users'] . '
                     ON user_id = pn_uid
                     WHERE user_id IS NULL';
-            $res = DBUtil::executeSQL($sql);
+
+            DBUtil::executeSQL($sql);
 
             break;
         default:
@@ -697,10 +692,11 @@ function Dizkus_adminapi_addforum($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
-    if ( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
         !SecurityUtil::checkPermission('Dizkus::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
         return showforumerror(__('Sorry! You do not have authorisation to perform this action.', $dom), __FILE__, __LINE__);
     }
@@ -713,6 +709,7 @@ function Dizkus_adminapi_addforum($args)
     if (empty($forum_name)) {
         return showforumerror(__('Error! You did not enter all the information required in the form. Did you assign at least one moderator? Please go back and try again.', $dom), __FILE__, __LINE__);
     }
+
     if (!$desc) {
         $desc = '';
     }
@@ -720,12 +717,15 @@ function Dizkus_adminapi_addforum($args)
     //$desc = DataUtil::formatForStore($desc);
     //$forum_name = DataUtil::formatForStore($forum_name);
     //$cat_id = DataUtil::formatForStore($cat_id);
+
     $sql = "SELECT max(forum_order) AS highest
             FROM " . $forumtable . "
             WHERE " . $forumcolumn['cat_id'] ."= '" . DataUtil::formatForStore($cat_id) . "'";
+
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     list($highest) = $result->fields;
     dzkCloseDB($result);
+
     $highest++;
     $forum_id = $dbconn->GenID($pntable['dizkus_forums']);
     $sql = "INSERT INTO " . $forumtable . "
@@ -777,6 +777,7 @@ function Dizkus_adminapi_addforum($args)
             dzkCloseDB($mod_res);
         }
     }
+
     if (isset($forum_order) && is_numeric($forum_order)) {
         pnModAPIFunc('Dizkus', 'admin', 'reorderforumssave',
                 array('cat_id'      => $cat_id,
@@ -800,6 +801,7 @@ function Dizkus_adminapi_editforum($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
@@ -836,6 +838,7 @@ function Dizkus_adminapi_editforum($args)
             forum_moduleref        =".DataUtil::formatForStore($moduleref).",
             forum_pntopic          =".DataUtil::formatForStore($pntopic)."
             WHERE forum_id=".DataUtil::formatForStore($forum_id)."";
+
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     dzkCloseDB($result);
 
@@ -848,10 +851,11 @@ function Dizkus_adminapi_editforum($args)
             dzkCloseDB($mods);
         }
     }
+
     if (isset($rem_mods) && !empty($rem_mods)) {
         foreach ($rem_mods as $mod) {
             $rem_query = "DELETE FROM ".$pntable['dizkus_forum_mods']."
-                        WHERE forum_id = '".DataUtil::formatForStore($forum_id)."' AND user_id = '".DataUtil::formatForStore($mod)."'";
+                          WHERE forum_id = '".DataUtil::formatForStore($forum_id)."' AND user_id = '".DataUtil::formatForStore($mod)."'";
             $rem = dzkExecuteSQL($dbconn, $rem_query, __FILE__, __LINE__);
             dzkCloseDB($rem);
         }
@@ -875,6 +879,7 @@ function Dizkus_adminapi_deleteforum($args)
     }
 
     $whereforumid = 'WHERE forum_id=' . DataUtil::formatForStore($args['forum_id']);
+
     // delete forum
     $res = DBUtil::deleteObject($args, 'dizkus_forums', null, 'forum_id');
     
@@ -901,13 +906,11 @@ function Dizkus_adminapi_deleteforum($args)
         }
     }
 */
-    $res = DBUtil::deleteWhere('dizkus_posts', $whereforumid);
-    return;
+    return DBUtil::deleteWhere('dizkus_posts', $whereforumid);
 }
 
 /**
  * get_pntopics
- *
  */
 function Dizkus_adminapi_get_pntopics()
 {
@@ -926,6 +929,7 @@ function Dizkus_adminapi_storenewforumorder($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($args);
     unset($args);
 
@@ -952,13 +956,14 @@ function Dizkus_adminapi_storenewforumorder($args)
             SET " . $forumcolumn['forum_order'] ."='" . (int)DataUtil::formatForStore($order) . "',
                 " . $forumcolumn['cat_id'] . "='" . (int)DataUtil::formatForStore($cat_id) . "'
             WHERE " . $forumcolumn['forum_id'] . "='" . (int)DataUtil::formatForStore($forum_id) . "'";
+
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
-    if (is_bool($result) && $result==false) {
+    if ($result === false) {
         return false;
     }
     dzkCloseDB($result);
-    return true;
 
+    return true;
 }
 
 /**
@@ -972,15 +977,40 @@ function Dizkus_adminapi_getlinks()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     $links = array();
-    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', ''), 'text' => __('Start', $dom), 'title' => __('Index page', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'reordertree'), 'text' => __('Edit forum tree', $dom), 'title' => __('Create, edit and delete forum categories and forums, and arrange the tree structure of forums and categories', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 0)), 'text' => __('Edit user ranks', $dom), 'title' => __('Create, edit and delete user ranks', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 1)), 'text' => __('Edit honorary ranks', $dom), 'title' => __('Create, edit and delete honorary ranks', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'assignranks'), 'text' => __('Assign honorary rank', $dom), 'title' => __('Assign honorary ranks to users', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'managesubscriptions'), 'text' => __('Manage subscriptions', $dom), 'title' => __('Find users\' topic and forum subscriptions, and delete them', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'syncforums'), 'text' => __('Synchronise data', $dom), 'title' => __('Synchronise Zikula and Dizkus user information, forum index, topics and posts counter', $dom));
-        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'preferences'), 'text' => __('Settings', $dom), 'title' => __('Settings to configure various forum-wide options', $dom));
+    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN))
+    {
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', ''),
+                         'text' => __('Start', $dom),
+                         'title' => __('Index page', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'reordertree'),
+                         'text' => __('Edit forum tree', $dom),
+                         'title' => __('Create, edit and delete forum categories and forums, and arrange the tree structure of forums and categories', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
+                         'text' => __('Edit user ranks', $dom),
+                         'title' => __('Create, edit and delete user ranks', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'ranks', array('ranktype' => 1)),
+                         'text' => __('Edit honorary ranks', $dom),
+                         'title' => __('Create, edit and delete honorary ranks', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'assignranks'),
+                         'text' => __('Assign honorary rank', $dom),
+                         'title' => __('Assign honorary ranks to users', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'managesubscriptions'),
+                         'text' => __('Manage subscriptions', $dom),
+                         'title' => __('Find users\' topic and forum subscriptions, and delete them', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'syncforums'),
+                         'text' => __('Synchronise data', $dom),
+                         'title' => __('Synchronise Zikula and Dizkus user information, forum index, topics and posts counter', $dom));
+
+        $links[] = array('url' => pnModURL('Dizkus', 'admin', 'preferences'),
+                         'text' => __('Settings', $dom),
+                         'title' => __('Settings to configure various forum-wide options', $dom));
     }
+
     return $links;
 }

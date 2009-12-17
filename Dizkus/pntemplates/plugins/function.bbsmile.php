@@ -22,5 +22,6 @@ function smarty_function_bbsmile($params, &$smarty)
 	    $out = pnModFunc('bbsmile', 'user', 'bbsmiles',
 	                     array('textfieldid' => $params['textfieldid']));
 	}
+
 	return $out;
 }

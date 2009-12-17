@@ -24,8 +24,9 @@ function smarty_function_subscribeforum_button($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
+    // TODO deprecate the use of extract
     extract($params);
-	  unset($params);
+	unset($params);
 
     if (!isset($image_subscribe) || empty($image_subscribe)) {
         $image_subscribe = 'f_abo_on.gif';
@@ -38,6 +39,7 @@ function smarty_function_subscribeforum_button($params, &$smarty)
     $out = '';
     if (pnUserLoggedIn()) {
         Loader::includeOnce('modules/Dizkus/common.php');
+
         if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             if (pnModAPIFunc('Dizkus', 'user', 'get_forum_subscription_status',
                             array('userid'=>$userid,
@@ -60,5 +62,6 @@ function smarty_function_subscribeforum_button($params, &$smarty)
             }
         }
     }
+
     return $out;
 }

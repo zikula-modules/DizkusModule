@@ -81,7 +81,7 @@ function smarty_function_topicpager($params, &$smarty)
             }
         }
     } else {
-        for($i = 1; $i < $total_pages + 1; $i++) {
+        for ($i = 1; $i < $total_pages + 1; $i++) {
             $page_string .= ( $i == $on_page ) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id, 'start' => ( $i - 1 ) * $per_page ))) . '">' . $i . '</a>';
             if ( $i <  $total_pages ) {
                 $page_string .= $separator;
@@ -129,5 +129,4 @@ function smarty_function_topicpager($params, &$smarty)
     $page_string = '<p>' . __f('Go to page %s: ', $page_string, $dom) . '</p>';
 
     return $page_string;
-
 }

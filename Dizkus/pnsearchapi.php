@@ -55,7 +55,9 @@ function Dizkus_searchapi_internalsearchoptions($args)
     // Create output object - this object will store all of our output so that
     // we can return it easily when required
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
+
     return $render->fetch('dizkus_user_search.html');
 }
 

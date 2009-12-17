@@ -27,12 +27,10 @@ function smarty_function_mediaattach_attachicon($params, &$smarty)
     foreach($params['topics'] as $topic) {
         $outTopics[$topic['topic_id']] = (pnModAPIFunc('MediaAttach', 'user', 'countuploads', array('moduleFilter' => 'Dizkus', 'objectidFilter' => $topic['topic_id'])) > 0);
     }
-//die(print_r($outTopics));
+
     if (isset($params['assign'])) {
         $smarty->assign($params['assign'], $outTopics);
-    }
-    else {
+    } else {
         return $outTopics;
     }
-
 }

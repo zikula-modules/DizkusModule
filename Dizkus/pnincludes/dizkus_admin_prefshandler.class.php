@@ -57,7 +57,7 @@ class dizkus_admin_prefshandler
         return true;
     }
 
-    function handleCommand(&$render, &$args)
+    function handleCommand(&$render, $args)
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
 
@@ -67,7 +67,7 @@ class dizkus_admin_prefshandler
         }
 
         if ($args['commandName'] == 'submit') {
-            $ok = $render->pnFormIsValid(); 
+            $ok   = $render->pnFormIsValid(); 
             $data = $render->pnFormGetValues();
 
             if (!$ok) {

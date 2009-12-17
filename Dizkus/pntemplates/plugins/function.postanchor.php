@@ -29,11 +29,12 @@
  */
 function smarty_function_postanchor($params, &$smarty)
 {
+    // TODO deprecate the use of extract
     extract($params);
 	unset($params);
 
     if (empty($post_id)) { return; }
-    if (empty($postings) || $postings==0) { return; }
+    if (empty($postings) || $postings == 0) { return; }
     if (empty($min)) {
         $min = pnModGetVar('Dizkus', 'min_postings_for_anchor');
         $min = (!empty($min)) ? $min : 2;
@@ -48,5 +49,6 @@ function smarty_function_postanchor($params, &$smarty)
         $smarty->assign($assign, $anchor);
         return;
     }
+
     return $anchor;
 }

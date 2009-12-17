@@ -19,8 +19,6 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_user_main($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -72,6 +70,7 @@ function Dizkus_user_main($args=array())
     }
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('favorites', $favorites);
     $render->assign('tree', $tree);
     $render->assign('view_category', $viewcat);
@@ -81,6 +80,7 @@ function Dizkus_user_main($args=array())
     $render->assign('numposts', pnModAPIFunc('Dizkus', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
+
     return $render->fetch('dizkus_user_main.html');
 }
 
@@ -93,8 +93,6 @@ function Dizkus_user_main($args=array())
  */
 function Dizkus_user_viewforum($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -113,10 +111,12 @@ function Dizkus_user_viewforum($args=array())
                                 'last_visit_unix' => $last_visit_unix));
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
-    $render->assign( 'forum', $forum);
-    $render->assign( 'hot_threshold', pnModGetVar('Dizkus', 'hot_threshold'));
-    $render->assign( 'last_visit', $last_visit);
-    $render->assign( 'last_visit_unix', $last_visit_unix);
+
+    $render->assign('forum', $forum);
+    $render->assign('hot_threshold', pnModGetVar('Dizkus', 'hot_threshold'));
+    $render->assign('last_visit', $last_visit);
+    $render->assign('last_visit_unix', $last_visit_unix);
+
     return $render->fetch('dizkus_user_viewforum.html');
 }
 
@@ -126,8 +126,6 @@ function Dizkus_user_viewforum($args=array())
  */
 function Dizkus_user_viewtopic($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -174,8 +172,8 @@ function Dizkus_user_viewtopic($args=array())
     $render->assign('post_count', count($topic['posts']));
     $render->assign('last_visit', $last_visit);
     $render->assign('last_visit_unix', $last_visit_unix);
-    return $render->fetch('dizkus_user_viewtopic.html');
 
+    return $render->fetch('dizkus_user_viewtopic.html');
 }
 
 /**
@@ -209,7 +207,7 @@ function Dizkus_user_reply($args=array())
     }
 
     $preview = (empty($preview)) ? false : true;
-    $submit = (empty($submit)) ? false : true;
+    $submit  = (empty($submit))  ? false : true;
 
     $message = dzkstriptags($message);
     // check for maximum message size
@@ -264,6 +262,7 @@ function Dizkus_user_reply($args=array())
         $render->assign('preview', $preview);
         $render->assign('last_visit', $last_visit);
         $render->assign('last_visit_unix', $last_visit_unix);
+
         return $render->fetch('dizkus_user_reply.html');
     }
 }
@@ -284,16 +283,16 @@ function Dizkus_user_newtopic($args=array())
     // get the input
     $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
     if ($forum_id == null) {
-        return LogUtil::registerError(_('Error: missing forum id'), null, pnModURL('Dizkus','user', 'main'));
+        return LogUtil::registerError(_('Missing forum id.'), null, pnModURL('Dizkus','user', 'main'));
     }
     
     $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
     $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
     $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
     $subscribe_topic = (int)FormUtil::getPassedValue('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0, 'GETPOST');
-    $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
-    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
+    $preview  = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
+    $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $cancel   = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
 
     $preview = (empty($preview)) ? false : true;
     $cancel  = (empty($cancel))  ? false : true;
@@ -339,7 +338,9 @@ function Dizkus_user_newtopic($args=array())
 
         if (pnModGetVar('Dizkus', 'newtopicconfirmation') == 'yes') {
             $render = & pnRender::getInstance('Dizkus', false, null, true);
+
             $render->assign('topic', pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
+
             return $render->fetch('dizkus_user_newtopicconfirmation.html');
 
         } else {
@@ -350,11 +351,13 @@ function Dizkus_user_newtopic($args=array())
     } else {
         // new topic
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $render->assign('preview', $preview);
         $render->assign('newtopic', $newtopic);
         $render->assign('last_visit', $last_visit);
         $render->assign('last_visit_unix', $last_visit_unix);
+
         return $render->fetch('dizkus_user_newtopic.html');
     }
 }
@@ -450,11 +453,13 @@ function Dizkus_user_editpost($args=array())
         }
 
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $render->assign('preview', $preview);
         $render->assign('post', $post);
         $render->assign('last_visit', $last_visit);
         $render->assign('last_visit_unix', $last_visit_unix);
+
         return $render->fetch('dizkus_user_editpost.html');
     }
 }
@@ -476,15 +481,16 @@ function Dizkus_user_topicadmin($args=array())
     $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
     $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
     $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-    $mode   = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
-    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    $shadow = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
-    $shadow = (empty($shadow)) ? false : true;
+    $mode     = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
+    $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $shadow   = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
+    $shadow   = (empty($shadow)) ? false : true;
 
     if (empty($topic_id) && !empty($post_id)) {
         $topic_id = pnModAPIFunc('Dizkus', 'user', 'get_topicid_by_postid',
                                  array('post_id' => $post_id));
     }
+
     $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                           array('topic_id' => $topic_id,
                                 'count'    => false));
@@ -498,7 +504,7 @@ function Dizkus_user_topicadmin($args=array())
     $render->assign('topic_id', $topic_id);
 
     if (empty($submit)) {
-        switch($mode)
+        switch ($mode)
         {
             case 'del':
             case 'delete':
@@ -535,7 +541,9 @@ function Dizkus_user_topicadmin($args=array())
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
-        switch($mode) {
+
+        switch ($mode)
+        {
             case 'del':
             case 'delete':
                 $forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
@@ -599,6 +607,7 @@ function Dizkus_user_topicadmin($args=array())
 
             default:
         }
+
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
     }
 }
@@ -609,8 +618,6 @@ function Dizkus_user_topicadmin($args=array())
  */
 function Dizkus_user_prefs($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -621,40 +628,45 @@ function Dizkus_user_prefs($args=array())
     }
 
     // get the input
-    $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-    $act = FormUtil::getPassedValue('act', (isset($args['act'])) ? $args['act'] : '', 'GETPOST');
+    $topic_id  = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+    $act       = FormUtil::getPassedValue('act', (isset($args['act'])) ? $args['act'] : '', 'GETPOST');
     $return_to = FormUtil::getPassedValue('return_to', (isset($args['return_to'])) ? $args['return_to'] : '', 'GETPOST');
-    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-    $user_id = (int)FormUtil::getPassedValue('user', (isset($args['user'])) ? $args['user'] : null, 'GETPOST');
+    $forum_id  = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $user_id   = (int)FormUtil::getPassedValue('user', (isset($args['user'])) ? $args['user'] : null, 'GETPOST');
 
     // user_id will only be used if we have admin permissions otherwise the
     // user can edit his prefs only but not others users prefs
 
-    switch($act) {
+    switch ($act)
+    {
         case 'subscribe_topic':
             $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('Dizkus', 'user', 'subscribe_topic',
                          array('topic_id' => $topic_id ));
             $params = array('topic' => $topic_id);
             break;
+
         case 'unsubscribe_topic':
             $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('Dizkus', 'user', 'unsubscribe_topic',
                          array('topic_id' => $topic_id ));
             $params = array('topic' => $topic_id);
             break;
+
         case 'subscribe_forum':
             $return_to = (!empty($return_to))? $return_to : 'viewforum';
             pnModAPIFunc('Dizkus', 'user', 'subscribe_forum',
                          array('forum_id' => $forum_id ));
             $params = array('forum' => $forum_id);
             break;
+
         case 'unsubscribe_forum':
             $return_to = (!empty($return_to))? $return_to : 'viewforum';
             pnModAPIFunc('Dizkus', 'user', 'unsubscribe_forum',
                          array('forum_id' => $forum_id ));
             $params = array('forum' => $forum_id);
             break;
+
         case 'add_favorite_forum':
             if (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
                 $return_to = (!empty($return_to))? $return_to : 'viewforum';
@@ -663,6 +675,7 @@ function Dizkus_user_prefs($args=array())
                 $params = array('forum' => $forum_id);
             }
             break;
+
         case 'remove_favorite_forum':
             if (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
                 $return_to = (!empty($return_to))? $return_to : 'viewforum';
@@ -671,11 +684,13 @@ function Dizkus_user_prefs($args=array())
                 $params = array('forum' => $forum_id);
             }
             break;
+
         case 'change_post_order':
             $return_to = (!empty($return_to))? $return_to : 'viewtopic';
             pnModAPIFunc('Dizkus', 'user', 'change_user_post_order');
             $params = array('topic' => $topic_id);
             break;
+
         case 'showallforums':
         case 'showfavorites':
             if (pnModGetVar('Dizkus', 'favorites_enabled')=='yes') {
@@ -684,9 +699,12 @@ function Dizkus_user_prefs($args=array())
                 $params = array();
             }
             break;
+
         default:
             list($last_visit, $last_visit_unix) = pnModAPIFunc('Dizkus', 'user', 'setcookies');
+
             $render = & pnRender::getInstance('Dizkus', false, null, true);
+
             $render->assign('last_visit', $last_visit);
             $render->assign('favorites_enabled', pnModGetVar('Dizkus', 'favorites_enabled'));
             $render->assign('last_visit_unix', $last_visit_unix);
@@ -695,8 +713,10 @@ function Dizkus_user_prefs($args=array())
             $render->assign('contactlist_available', pnModAvailable('ContactList'));
             $render->assign('post_order', strtolower(pnModAPIFunc('Dizkus','user','get_user_post_order')));
             $render->assign('tree', pnModAPIFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
+
             return $render->fetch('dizkus_user_prefs.html');
     }
+
     return pnRedirect(pnModURL('Dizkus', 'user', $return_to, $params));
 }
 
@@ -706,8 +726,6 @@ function Dizkus_user_prefs($args=array())
  */
 function Dizkus_user_signaturemanagement()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -720,12 +738,13 @@ function Dizkus_user_signaturemanagement()
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(pnModGetVar('Dizkus','signaturemanagement') == 'yes'))) {
         return LogUtil::registerPermissionError();
     }
-    
+
     // Include handler class
     Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_user_signaturemanagementhandler.class.php');
-    
+
     // Create output and assign data
     $render = FormUtil::newpnForm('Dizkus');
+
     // Return the output
     return $render->pnFormExecute('dizkus_user_signaturemanagement.html', new dizkus_user_signaturemanagementHandler());
 }
@@ -757,18 +776,19 @@ function Dizkus_user_ignorelistmanagement()
 	  	LogUtil::registerError(__('No ignorelist configuration possible', $dom));
 	  	return pnRedirect(pnModURL('Dizkus', 'user', 'prefs'));
 	}
+
     // Include handler class
     Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_user_ignorelistmanagementhandler.class.php');
-    
+
     // Create output and assign data
     $render = FormUtil::newpnForm('Dizkus');
+
     // Return the output
     return $render->pnFormExecute('dizkus_user_ignorelistmanagement.html', new dizkus_user_ignorelistmanagementHandler());
 }
 
 /**
  * emailtopic
- *
  */
 function Dizkus_user_emailtopic($args=array())
 {
@@ -820,8 +840,11 @@ function Dizkus_user_emailtopic($args=array())
     } else {
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id));
+
         $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
+
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('topic', $topic);
         $render->assign('error_msg', $error_msg);
         $render->assign('sendto_email', $sendto_email);
@@ -829,18 +852,16 @@ function Dizkus_user_emailtopic($args=array())
         $render->assign('message', DataUtil::formatForDisplay(__('Hello! I\'m sending you a link to a topic in the forums because I think it might interest you.', $dom)) ."\n\n" . pnModURL('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
         $render->assign( 'last_visit', $last_visit);
         $render->assign( 'last_visit_unix', $last_visit_unix);
+
         return $render->fetch('dizkus_user_emailtopic.html');
     }
 }
 
 /**
  * latest
- *
  */
 function Dizkus_user_viewlatest($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -893,6 +914,7 @@ function Dizkus_user_viewlatest($args=array())
                                                                    'last_visit_unix' => $last_visit_unix));
 
     $render = & pnRender::getInstance('Dizkus', false, null, true);
+
     $render->assign('posts', $posts);
     $render->assign('m2fposts', $m2fposts);
     $render->assign('rssposts', $rssposts);
@@ -903,8 +925,8 @@ function Dizkus_user_viewlatest($args=array())
     $render->assign('numposts', pnModAPIFunc('Dizkus', 'user', 'boardstats',
                                             array('id'   => '0',
                                                   'type' => 'all' )));
-    return $render->fetch('dizkus_user_latestposts.html');
 
+    return $render->fetch('dizkus_user_latestposts.html');
 }
 
 /**
@@ -940,14 +962,18 @@ function Dizkus_user_splittopic($args=array())
         }
         // submit is set, we split the topic now
         $post['topic_subject'] = $newsubject;
+
         $newtopic_id = pnModAPIFunc('Dizkus', 'user', 'splittopic',
                                    array('post' => $post));
+
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
                                    array('topic' => $newtopic_id)));
 
     } else {
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('post', $post);
+
         return $render->fetch('dizkus_user_splittopic.html');
     }
 }
@@ -959,8 +985,6 @@ function Dizkus_user_splittopic($args=array())
  */
 function Dizkus_user_print($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -983,23 +1007,30 @@ function Dizkus_user_print($args=array())
         }
     } else {
         $render = & pnRender::getInstance('Dizkus', false, null, true);
-        if ($post_id<>0) {
+
+        if ($post_id <> 0) {
             $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                                  array('post_id' => $post_id));
+
             $render->assign('post', $post);
             $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
+
             $output = $render->fetch('dizkus_user_printpost.html');
-        } elseif ($topic_id<>0) {
+        } elseif ($topic_id <> 0) {
             $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                                  array('topic_id'  => $topic_id,
                                        'complete' => true,
                                        'count' => false ));
+
             $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
             $render->assign('topic', $topic);
+
             $output = $render->fetch('dizkus_user_printtopic.html');
         } else {
             return pnRedirect(pnModURL('Dizkus', 'user', 'main'));
         }
+
+        // FIXME backend_language is deprecated?
         $lang = pnConfigGetVar('backend_language');
         echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -1011,10 +1042,10 @@ function Dizkus_user_print($args=array())
         echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('Dizkus', 'default_lang') ."\" />\n";
 
         global $additional_header;
-        if (is_array($additional_header))
-        {
-          foreach ($additional_header as $header)
-            echo "$header\n";
+        if (is_array($additional_header)) {
+            foreach ($additional_header as $header) {
+                echo "$header\n";
+            }
         }
         echo "</head>\n";
         echo "<body class=\"printbody\">\n";
@@ -1028,18 +1059,16 @@ function Dizkus_user_print($args=array())
 /**
  * search
  * internal search function
- *
  */
 function Dizkus_user_search($args=array())
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
     }
 
     $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+
     if (!$submit) {
         return pnModAPIFunc('Dizkus', 'search', 'internalsearchoptions');
     } else {
@@ -1051,7 +1080,6 @@ function Dizkus_user_search($args=array())
  * movepost
  * Move a single post to another thread
  * added by by el_cuervo -- dev-postnuke.com
- *
  */
 function Dizkus_user_movepost($args=array())
 {
@@ -1085,6 +1113,7 @@ function Dizkus_user_movepost($args=array())
                                                                     'count' => false));
         $post['new_topic'] = $to_topic;
         $post['old_topic'] = $topic['topic_id'];
+
         $start = pnModAPIFunc('Dizkus', 'user', 'movepost', array('post'     => $post,
                                                                   'to_topic' => $to_topic));
 
@@ -1095,7 +1124,9 @@ function Dizkus_user_movepost($args=array())
                                          'start' => $start)) . '#pid' . $post['post_id']);
     } else {
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('post', $post);
+
         return $render->fetch('dizkus_user_movepost.html');
     }
 }
@@ -1130,8 +1161,11 @@ function Dizkus_user_jointopics($args=array())
 
     if (!$submit) {
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('post', $post);
+
         return $render->fetch('dizkus_user_jointopics.html');
+
     } else {
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
@@ -1146,6 +1180,7 @@ function Dizkus_user_jointopics($args=array())
         //$post['old_topic'] = $old_topic;
         $res = pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic' => $from_topic,
                                                                    'to_topic'   => $to_topic));
+
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $res)));
     }
 }
@@ -1167,14 +1202,14 @@ function Dizkus_user_moderateforum($args=array())
     }
 
     // get the input
-    $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-    $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
-    $mode   = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
-    $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+    $forum_id  = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
+    $start     = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
+    $mode      = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
+    $submit    = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
     $topic_ids = FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : array(), 'GETPOST');
-    $shadow = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
-    $moveto = (int)FormUtil::getPassedValue('moveto', (isset($args['moveto'])) ? $args['moveto'] : null, 'GETPOST');
-    $jointo = (int)FormUtil::getPassedValue('jointo', (isset($args['jointo'])) ? $args['jointo'] : null, 'GETPOST');
+    $shadow    = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
+    $moveto    = (int)FormUtil::getPassedValue('moveto', (isset($args['moveto'])) ? $args['moveto'] : null, 'GETPOST');
+    $jointo    = (int)FormUtil::getPassedValue('jointo', (isset($args['jointo'])) ? $args['jointo'] : null, 'GETPOST');
 
     $shadow = (empty($shadow)) ? false : true;
 
@@ -1196,6 +1231,7 @@ function Dizkus_user_moderateforum($args=array())
     // Submit isn't set'
     if (empty($submit)) {
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('forum_id', $forum_id);
         $render->assign('mode',$mode);
         $render->assign('topic_ids', $topic_ids);
@@ -1204,6 +1240,7 @@ function Dizkus_user_moderateforum($args=array())
         $render->assign('forum',$forum);
         // For Movetopic
         $render->assign('forums', pnModAPIFunc('Dizkus', 'user', 'readuserforums'));
+
         return $render->fetch('dizkus_user_moderateforum.html');
 
     } else {
@@ -1211,36 +1248,42 @@ function Dizkus_user_moderateforum($args=array())
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
-        if (count($topic_ids)<>0) {
-            switch($mode) {
+        if (count($topic_ids) <> 0) {
+            switch ($mode)
+            {
                 case 'del':
                 case 'delete':
-                    foreach($topic_ids as $topic_id) {
-                        $forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id'=>$topic_id));
+                    foreach ($topic_ids as $topic_id) {
+                        $forum_id = pnModAPIFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
                     }
                     break;
+
                 case 'move':
                     if (empty($moveto)) {
                         return showforumerror(__('Error! You did not select a target forum for the move.', $dom), __FILE__, __LINE__);
                     }
                     foreach ($topic_ids as $topic_id) {
-                        pnModAPIFunc('Dizkus', 'user', 'movetopic', array('topic_id' => $topic_id,
-                                                                           'forum_id' => $moveto,
-                                                                           'shadow'   => $shadow ));
+                        pnModAPIFunc('Dizkus', 'user', 'movetopic',
+                                     array('topic_id' => $topic_id,
+                                           'forum_id' => $moveto,
+                                           'shadow'   => $shadow ));
                     }
                     break;
+
                 case 'lock':
                 case 'unlock':
-                    foreach($topic_ids as $topic_id) {
+                    foreach ($topic_ids as $topic_id) {
                         pnModAPIFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                     }
                     break;
+
                 case 'sticky':
                 case 'unsticky':
-                    foreach($topic_ids as $topic_id) {
+                    foreach ($topic_ids as $topic_id) {
                         pnModAPIFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id'=> $topic_id, 'mode'=>$mode));
                     }
                     break;
+
                 case 'join':
                     if (empty($jointo)) {
                         return showforumerror(__('Error! You did not select a target topic for the join.', $dom), __FILE__, __LINE__);
@@ -1252,13 +1295,15 @@ function Dizkus_user_moderateforum($args=array())
                         unset($fliparray[$jointo]);
                         $topic_ids = array_flip($fliparray);
                     }
-                    foreach($topic_ids as $from_topic_id) {
+                    foreach ($topic_ids as $from_topic_id) {
                         pnModAPIFunc('Dizkus', 'user', 'jointopics', array('from_topic_id' => $from_topic_id,
                                                                             'to_topic_id'   => $jointo));
                     }
                     break;
+
                 default:
             }
+
             // Refresh Forum Info
             $forum = pnModAPIFunc('Dizkus', 'user', 'readforum',
                               array('forum_id'        => $forum_id,
@@ -1267,6 +1312,7 @@ function Dizkus_user_moderateforum($args=array())
                                     'last_visit_unix' => $last_visit_unix));
         }
     }
+
     return pnRedirect(pnModURL('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
 }
 
@@ -1276,12 +1322,9 @@ function Dizkus_user_moderateforum($args=array())
  *
  * @params $post int post_id
  * @params $comment string comment of reporter
- *
  */
 function Dizkus_user_report($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -1295,7 +1338,6 @@ function Dizkus_user_report($args)
     $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
                          array('post_id' => $post_id));
 
-    
     if (SecurityUtil::confirmAuthKey()) {
         $authkeycheck = true;
     } else {
@@ -1317,38 +1359,39 @@ function Dizkus_user_report($args)
             pnShutDown();
         }
     }
-    
+
     if (!$submit) {
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('post', $post);
+
         return $render->fetch('dizkus_user_notifymod.html');
-    } else {   // submit is set
+
+    } else {
+        // submit is set
         if ($authkeycheck == false) {
             return LogUtil::registerAuthidError();
         }
+
         pnModAPIFunc('Dizkus', 'user', 'notify_moderator',
                      array('post'    => $post,
                            'comment' => $comment));
+
         $start = pnModAPIFunc('Dizkus', 'user', 'get_page_from_topic_replies',
                               array('topic_replies' => $post['topic_replies']));
+
         return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
                                    array('topic' => $post['topic_id'],
                                          'start' => $start)));
     }
-
 }
 
 /**
  * topicsubscriptions
  * manage the users topic subscription
- *
- * @params
- *
  */
 function Dizkus_user_topicsubscriptions($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     $disabled = dzk_available();
     if (!is_bool($disabled)) {
         return $disabled;
@@ -1365,17 +1408,23 @@ function Dizkus_user_topicsubscriptions($args)
     if (!$submit) {
         $subscriptions = pnModAPIFunc('Dizkus', 'user', 'get_topic_subscriptions');
         $render = & pnRender::getInstance('Dizkus', false, null, true);
+
         $render->assign('subscriptions', $subscriptions);
+
         return $render->fetch('dizkus_user_topicsubscriptions.html');
-    } else {  // submit is set
+
+    } else {
+        // submit is set
         if (!SecurityUtil::confirmAuthKey()) {
             return LogUtil::registerAuthidError();
         }
+
         if (is_array($topic_id) && (count($topic_id) > 0)) {
-            for($i=0; $i<count($topic_id); $i++) {
+            for ($i = 0; $i < count($topic_id); $i++) {
                 pnModAPIFunc('Dizkus', 'user', 'unsubscribe_topic', array('topic_id' => $topic_id[$i]));
             }
         }
+
         return pnRedirect(pnModURL('Dizkus', 'user', 'topicsubscriptions'));
     }
 }

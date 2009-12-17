@@ -25,6 +25,7 @@
  */
 function smarty_function_readlastposts($params, &$smarty)
 {
+    // TODO deprecate the use of extract
     extract($params);
     unset($params);
 
@@ -219,7 +220,7 @@ function smarty_function_readlastposts($params, &$smarty)
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text']));
 
             $posted_unixtime= strtotime ($lastpost['topic_time']);
-            $posted_ml = ml_ftime(_DATETIMEBRIEF, GetUserTime($posted_unixtime));
+            $posted_ml = DateUtil::formatDatetime($posted_unixtime, 'datetimebrief');
             $lastpost['posted_time'] =$posted_ml;
             $lastpost['posted_unixtime'] = $posted_unixtime;
 

@@ -24,17 +24,17 @@ function smarty_function_forumpager($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    $total             = $params['total'];
-    $per_page          = pnModGetVar('Dizkus', 'topics_per_page');
-    $start             = FormUtil::getPassedValue('start', 1, 'GETPOST');
+    $total    = $params['total'];
+    $per_page = pnModGetVar('Dizkus', 'topics_per_page');
+    $start    = FormUtil::getPassedValue('start', 1, 'GETPOST');
 
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
-    $forum_id          = $params['forum_id'];
+    $forum_id     = $params['forum_id'];
     if (empty($forum_id)) {
 		$smarty->trigger_error("Error! Missing 'forum_id' parameter for forum pager.");
 	}
 	
-    $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';
+    $separator = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';
 
     // check if we are in view or moderate mode
     $func = FormUtil::getPassedValue('func', 'viewforum', 'GETPOST');
@@ -129,9 +129,8 @@ function smarty_function_forumpager($params, &$smarty)
         }
                                                                                                                                                                            
     }                                                                                                                                                                      
-                                                                                                                                                                           
-    $page_string = '<p>' . __f('Go to page %s: ',$page_string , $dom) . '</p>';
-                                                                                                                                                                           
-    return $page_string;                                                                                                                                                   
 
+    $page_string = '<p>' . __f('Go to page %s: ',$page_string , $dom) . '</p>';
+
+    return $page_string;                                                                                                                                                   
 }

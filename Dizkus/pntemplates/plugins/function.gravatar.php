@@ -34,6 +34,7 @@
  */
 function smarty_function_gravatar($params, &$smarty)
 {
+    // TODO deprecate the use of extract
     extract($params);
     unset($params);
 

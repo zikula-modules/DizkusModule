@@ -37,18 +37,21 @@ function smarty_function_pnfpager($params, &$smarty)
 
     // check if we are in view or moderate mode
     $func = isset($params['force']) ? $params['force'] : FormUtil::getPassedValue('func');
-    switch($func) {
+    switch ($func)
+    {
         case 'viewforum':
         case 'moderateforum':
             $per_page = pnModGetVar('Dizkus', 'topics_per_page');
             $objectname = 'forum';
             $objectid = isset($params['objectid']) ? $params['objectid'] : FormUtil::getPassedValue('forum');
             break;
+
         case 'viewtopic':
             $per_page = pnModGetVar('Dizkus', 'posts_per_page');
             $objectname = 'topic';
             $objectid = isset($params['objectid']) ? $params['objectid'] : FormUtil::getPassedValue('topic');
             break;
+
         default:
             // silently stop....
             return '';
