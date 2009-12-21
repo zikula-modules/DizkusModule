@@ -21,13 +21,13 @@ class Dizkus_user_ignorelistmanagementHandler
         switch ($ignorelist_handling)
         {
             case 'strict':
-                $ignorelist_options[] = array('text' => __('strict', $dom), 'value' => 'strict');
+                $ignorelist_options[] = array('text' => __('Strict', $dom), 'value' => 'strict');
 
             case 'medium':
-                $ignorelist_options[] = array('text' => __('medium', $dom), 'value' => 'medium');
+                $ignorelist_options[] = array('text' => __('Medium', $dom), 'value' => 'medium');
 
             default:
-                $ignorelist_options[] = array('text' => __('none', $dom), 'value' => 'none');
+                $ignorelist_options[] = array('text' => __('None', $dom), 'value' => 'none');
         }
 
         // get user's configuration
@@ -64,7 +64,7 @@ class Dizkus_user_ignorelistmanagementHandler
             // store attributes 
             DBUtil::updateObject($user, 'users', '', 'uid');
 
-            LogUtil::registerStatus(__('Done! Updated \'ignore list\' settings.', $dom));
+            LogUtil::registerStatus(__('Done! Updated the \'Ignore list\' settings.', $dom));
 
             return $render->pnFormRedirect(pnModURL('Dizkus','user','prefs'));
         }

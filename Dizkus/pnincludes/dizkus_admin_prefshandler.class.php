@@ -115,7 +115,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'forum_disabled_info', $data['forum_disabled_info']);
             pnModSetVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
 
-            LogUtil::registerStatus(__('Done! Updated settings.', $dom));
+            LogUtil::registerStatus(__('Done! Updated configuration.', $dom));
 
         } elseif ($args['commandName'] == 'restore') {
             // checkboxes 
@@ -152,7 +152,7 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'default_lang',        'utf-8');
             pnModSetVar('Dizkus', 'signature_start',     '');
             pnModSetVar('Dizkus', 'signature_end',       '');
-            pnModSetVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently closed for maintenance. Please check again soon.', $dom));
+            pnModSetVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom));
             pnModSetVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/pnimages/ranks');
 
             LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));
