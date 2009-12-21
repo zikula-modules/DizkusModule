@@ -28,30 +28,29 @@ If you have to do this kind of debugging, do not forget to switch it off as
 soon as possible!
 
 -->
-
 <rss version="2.0">
 <channel>
     <title><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></title>
     <link><!--[$forum_link|pnvarprepfordisplay]--></link>
     <description><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></description>
-    <language><!--[gt text="en_US"]--><!--[$lang|replace:"_":"-"|pnvarprepfordisplay]--></language>
+    <language><!--[$current_language]--></language>
     
-    <pubDate><!--[$now|pndate_format:"%a, %d %b %Y %T %Z"]--></pubDate>
+    <pubDate><!--[$current_date]--></pubDate>
     
-    <lastBuildDate><!--[$lastbuilddate]--></lastBuildDate>
+    <lastBuildDate><!--[$current_date]--></lastBuildDate>
     
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
     <generator>Dizkus <!--[$dizkusinfo.version]--></generator>
-    <webMaster><!--[$adminmail|pnvarprepfordisplay]--></webMaster>
+    <webMaster><!--[$adminmail|pnvarprepfordisplay]--> (<!--[$adminmail|pnvarprepfordisplay]-->)</webMaster>
 
 
     <!--[foreach item=post from=$posts]-->
     <item>
         <title><!--[$post.topic_title|pnvarprepfordisplay]--></title>
         <link><!--[$post.last_post_url|pnvarprepfordisplay]--></link>
+        <guid><!--[$post.last_post_url|pnvarprepfordisplay]--></guid>
         <description><!--[$post.cat_title|pnvarprepfordisplay]--> :: <!--[$post.forum_name|pnvarprepfordisplay]--></description>
         <pubDate><!--[$post.rsstime]--></pubDate>
-        
     </item>
     <!--[/foreach]-->
 

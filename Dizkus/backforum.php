@@ -55,7 +55,7 @@ if (isset($cat_id) && !is_numeric($cat_id)) {
 /**
  * create pnRender object
  */
-$render = & pnRender::getInstance('Dizkus', false);
+$render = pnRender::getInstance('Dizkus', false);
 
 /**
  * check if template for feed exists
@@ -77,7 +77,7 @@ if (!empty($user)) {
  * set some defaults
  */
 // form the url
-$link = pnModURL('Dizkus', 'user', 'main', null, null, null, true);
+$link = pnModURL('Dizkus', 'user', 'main', array(), null, null, true);
 
 $forumname = DataUtil::formatForDisplay($dzkname);
 // default where clause => no where clause
@@ -123,6 +123,8 @@ $render->assign('forum_name', $forumname);
 $render->assign('forum_link', $link);
 $render->assign('sitename', pnConfigGetVar('sitename'));
 $render->assign('adminmail', pnConfigGetVar('adminmail'));
+$render->assign('current_date', date(DATE_RSS));
+$render->assign('current_language', ZLanguage::getLocale());
 
 /**
  * get database information
@@ -181,12 +183,11 @@ foreach ($keys as $key)
                                             'start' => $start), 
                                       null, "pid" . $posts[$key]['topic_last_post_id'], true);
 
-    $posts[$key]['rsstime'] = strftime('%a, %d %b %Y %H:%M:%S %Z', $posts[$key]['post_unixtime']);
+    //$posts[$key]['rsstime'] = strftime('%a, %d %b %Y %H:%M:%S %Z', $posts[$key]['post_unixtime']);
+    $posts[$key]['rsstime'] = date(DATE_RSS, $posts[$key]['unixtime']);
 }
 
 $render->assign('posts', $posts);
-$render->assign('now', time());
-$render->assign('lastbuilddate', strftime('%a, %d %b %Y %H:%M:%S %Z', time()));
 $render->assign('dizkusinfo', $dzkinfo);
 
 header("Content-Type: text/xml");
