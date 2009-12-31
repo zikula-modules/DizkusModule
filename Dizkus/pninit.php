@@ -506,7 +506,6 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropColumn('dizkus_topics', 'poll_id');
     DBUtil::dropColumn('dizkus_forums', 'forum_access');
     DBUtil::dropColumn('dizkus_forums', 'forum_type');
-    DBUtil::dropColumn('dizkus_ranks', 'rank_style');
     DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
     
     $sql = 'UPDATE ' . $poststable . ' AS p  
