@@ -386,9 +386,10 @@ div#editpostoptions ul li {
     width: 43%;
 }
 #dizkus dl.icon dt.no-new-posts {
-    background: url('../pnimages/folder.gif') no-repeat 5px 50%;
-    font-weight: normal;
-    width: 43%;
+    background:transparent url(../pnimages/folder.gif) no-repeat scroll 5px 50%;
+    font-weight:normal;
+    min-height:26px;
+    width:43%;
 }
 #dizkus dl.icon dt.ctheme-topic-title a,
 #dizkus dl.icon dt.new-posts a,
@@ -575,7 +576,8 @@ div#editpostoptions ul li {
     font-size:1em;
     background: transparent;
     border: 1px outset #CCCCCC;
-    margin: 1em 0.5em 0 0;
+    /*margin: 1em 0.5em 0 0;*/
+    margin: 0 0.5em;
     padding: 2px 0 2px 20px;
     cursor: pointer;
     line-height: 1em;

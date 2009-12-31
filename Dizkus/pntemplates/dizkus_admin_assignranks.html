@@ -4,7 +4,7 @@
 
 <p class="z-informationmsg"><!--[gt text="In this page, you can select particular users and assign them honorary ranks."]--></p>
 
-<div class="rankuser-alphanav">
+<div class="rankuser-alphanav z-center">
     <!--[if $allow_star eq true]-->
     [<!--[pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="*;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"]-->&nbsp;]
     <!--[else]-->
@@ -12,7 +12,7 @@
     <!--[/if]-->
 </div>
 
-<!--[pager rowcount=$usercount limit=$perpage posvar="page" display="page" maxpages="20" template="pagercss.html"]-->
+<!--[pager rowcount=$usercount limit=$perpage posvar="page" display="page" maxpages="20" template="pageritems.html" class="z-center"]-->
 
 <form class="z-form" action="<!--[pnmodurl modname=Dizkus type=admin func=assignranks]-->" method="post">
     <table class="z-admintable">
