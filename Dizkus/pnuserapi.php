@@ -1559,7 +1559,7 @@ function Dizkus_userapi_storenewtopic($args)
         $poster_ip = '127.0.0.1';
     }
 
-    $time = (isset($time)) ? $time : DateUtil::getDatetime();
+    $time = (isset($time)) ? $time : DateUtil::getDatetime('', '%Y-%m-%d %H:%M');
 
     // create topic
     $obj['topic_title']     = DataUtil::formatForStore($subject);
@@ -3055,7 +3055,7 @@ function Dizkus_userapi_splittopic($args)
     list($old_last_post_id, $old_replies) = $result->fields;
     dzkCloseDB($result);
 
-    $time = DateUtil::getDatetime();
+    $time = DateUtil::getDatetime('', '%Y-%m-%d %H:%M');
 
     //  insert values into topics-table
     $topic_id = $dbconn->GenID($pntable['dizkus_topics']);
