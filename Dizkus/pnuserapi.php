@@ -3323,7 +3323,7 @@ function Dizkus_userapi_change_favorite_status($args)
 
     $recentstatus = Dizkus_userapi_get_favorite_status(array('user_id' => $args['user_id']));
     $args['user_favorites'] = ($recentstatus==true) ? 0 : 1;
-    DBUtil::updateObject($args, 'dizkus_users', 'user_id');
+    DBUtil::updateObject($args, 'dizkus_users', '', 'user_id');
 
     return (bool)$args['user_favorites'];
 }
@@ -3393,7 +3393,7 @@ function Dizkus_userapi_change_user_post_order($args)
     $post_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
     $args['user_post_order'] = ($post_order == 'DESC') ? 0 : 1;
 
-    return DBUtil::updateObject($args, 'dizkus_users', 'user_id');
+    return DBUtil::updateObject($args, 'dizkus_users', '', 'user_id');
 }
 
 /**
