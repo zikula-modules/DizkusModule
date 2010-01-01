@@ -235,7 +235,7 @@ function Dizkus_userapi_boardstats($args)
             break;
 
         default:
-            return showforumerror(__("Error! Bad parameters in '%s'.", 'userapi.boardstats', $dom), __FILE__, __LINE__);
+            return showforumerror(__("Error! Wrong parameters in 'Dizkus_userapi_boardstats()'.", $dom), __FILE__, __LINE__);
     }
 }
 
@@ -400,7 +400,7 @@ function Dizkus_userapi_readcategorytree($args)
                             $username = $forum['pn_uname'];
                         }
 
-                        $last_post = DataUtil::formatForDisplay(__f('%1$s<br />By %2$s', array($posted_ml, $username), $dom));
+                        $last_post = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $username), $dom));
                         $last_post = $last_post.' <a href="' . pnModURL('Dizkus','user','viewtopic', array('topic' =>$forum['topic_id'])). '">
                                                   <img src="modules/Dizkus/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                         // new in 2.0.2 - no more preformattd output
@@ -602,11 +602,11 @@ function Dizkus_userapi_readforum($args)
                           array('forum_id' => $forum_id,
                                 'permcheck' => 'nocheck' ));
     if ($forum == false) {
-        return showforumerror(__('Error! Could not find the forum or topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error! The forum or topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     if (!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to view this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to view this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -704,7 +704,7 @@ function Dizkus_userapi_readforum($args)
 
         $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
         $posted_ml = DateUtil::formatDatetime($topic['post_time_unix'], __('%b %d, %Y - %I:%M %p', $dom));
-        $topic['last_post'] = DataUtil::formatForDisplay(__f('%1$s<br />By %2$s', array($posted_ml, $topic['last_poster']), $dom));
+        $topic['last_post'] = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster']), $dom));
 
         // does this topic have enough postings to be hot?
         $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
@@ -750,7 +750,7 @@ function Dizkus_userapi_readforum($args)
 
                 if ($skippages != 1 || $lastpage) {
                     if ($x!=0) $pagination .= ', ';
-                    $pagination .= '<a href="' . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(__('Page', $dom)) . ' ' . $pagenr . '">' . $pagenr . '</a>';
+                    $pagination .= '<a href="' . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay(__('Page #', $dom)) . ' ' . $pagenr . '">' . $pagenr . '</a>';
                 }
 
                 $pagenr++;
@@ -885,7 +885,7 @@ function Dizkus_userapi_readtopic($args)
         unset($topic['forum_pop3_active']);
 
         if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to read this forum or forum category.', $dom)), __FILE__, __LINE__);
+            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
         }
 
         $topic['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
@@ -1054,7 +1054,7 @@ function Dizkus_userapi_readtopic($args)
         unset($userdata);
     } else {
         // no results - topic does not exist
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
     dzkCloseDB($result);
 /*
@@ -1125,7 +1125,7 @@ function Dizkus_userapi_preparereply($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
     if ($result->EOF) {
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -1178,11 +1178,11 @@ function Dizkus_userapi_preparereply($args)
     $reply['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid'=>$pn_uid));
 
     if ($reply['topic_status'] == 1) {
-        return showforumerror(__('Sorry! You cannot post a reply to this topic because it has been locked.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You cannot post a message under this topic. It has been locked.', $dom), __FILE__, __LINE__);
     }
 
     if (!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
-        return showforumerror( __('Sorry! You do not have authorisation to post in this forum or forum category.', $dom), __FILE__, __LINE__);
+        return showforumerror( __('Sorry! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
     }
 
     // Topic review (show last 10)
@@ -1255,11 +1255,11 @@ function Dizkus_userapi_storereply($args)
                                             array('topic_id' => $args['topic_id']));
 
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(__('Sorry! You do not have authorisation to post in this forum or forum category.', $dom));
+        return showforumerror(__('Sorry! You do not have authorisation to post in this category or forum.', $dom));
     }
 
     if (trim($args['message']) == '') {
-        return showforumerror(__('Error! You cannot post a blank message. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! You tried to post a blank message. Please go back and try again.', $dom), __FILE__, __LINE__);
     }
 
     /*
@@ -1462,7 +1462,7 @@ function Dizkus_userapi_preparenewtopic($args)
     // need at least "comment" to add newtopic
     if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(__('Sorry! You do not have authorisation to post in this forum or forum category.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
     }
 
     $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
@@ -1514,12 +1514,12 @@ function Dizkus_userapi_storenewtopic($args)
 
     $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $forum_id));
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(__('Sorry! You do not have authorisation to post in this forum or forum category.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Sorry! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
     }
 
     if (trim($message) == '' || trim($subject) == '') {
         // either message or subject is empty
-        return showforumerror(__('Error! You cannot post a blank message. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! You tried to post a blank message. Please go back and try again.', $dom), __FILE__, __LINE__);
     }
 
     /*
@@ -1645,7 +1645,7 @@ function Dizkus_userapi_readpost($args)
 
     $result = DBUtil::executeSQL($sql);
     if ($result === false) {
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     $colarray   = DBUtil::getColumnsArray ('dizkus_posts');
@@ -1658,7 +1658,7 @@ function Dizkus_userapi_readpost($args)
     $objarray = DBUtil::marshallObjects ($result, $colarray);
     $post = $objarray[0];
     if (!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to read posts in this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
     
     $post['post_id']      = DataUtil::formatForDisplay($post['post_id']);
@@ -1803,7 +1803,7 @@ function Dizkus_userapi_updatepost($args)
 
     if ($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -1815,18 +1815,18 @@ function Dizkus_userapi_updatepost($args)
     if (!($pn_uid == $poster_id) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // user is not allowed to edit post
-        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (($topic_status == 1) &&
         !allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
         // topic is locked, user is not moderator
-        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod',$forum_id, 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (trim($message) == '') {
         // no message
-        return showforumerror( __('Error! You cannot post a blank message. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror( __('Error! You tried to post a blank message. Please go back and try again.', $dom), __FILE__, __LINE__);
     }
 
     if (empty($delete)) {
@@ -2068,7 +2068,7 @@ function Dizkus_userapi_get_viewip_data($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if ($result->EOF) {
         // TODO we have a valid user here, but he doesn't have posts
-        return showforumerror(__('Error! Could not find a corresponding post in the database.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! No such user or post was found in the database.', $dom), __FILE__, __LINE__);
     } else {
         $row = $result->GetRowAssoc(false);
     }
@@ -2156,7 +2156,7 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
 
     $res = DBUtil::executeSQL($sql);
     if ($res === false) {
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     $colarray[] = 'forum_id';
@@ -2204,7 +2204,7 @@ function Dizkus_userapi_readuserforums($args)
     $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joinInfo, $where, 'forum_id', -1, -1, 'forum_id', $permFilter);
 
     if ($forums === false) {
-        return showforumerror(__('Sorry! Could not find the forum or topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
+        return showforumerror(__('Error! The forum or topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
     if (isset($args['forum_id']) && isset($forums[$args['forum_id']])) {
@@ -2243,7 +2243,7 @@ function Dizkus_userapi_movetopic($args)
     $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
     if ($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -2271,8 +2271,8 @@ function Dizkus_userapi_movetopic($args)
 
         if ($shadow == true) {
             // user wants to have a shadow topic
-            $message = __f('The original post has been <a title="moved" href="%s">moved to here</a>.', pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)),$dom);
-            $subject = '***' . DataUtil::formatForDisplay(__('moved', $dom)) . ': ' . $topic_title;
+            $message = __f('The original posting has been moved <a title=\"moved\" href=\"%s\">here</a>.', pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)),$dom);
+            $subject = '***' . DataUtil::formatForDisplay(__('The original posting has been moved to here.', $dom)) . ': ' . $topic_title;
 
             Dizkus_userapi_storenewtopic(array('subject'  => $subject,
                                                 'message'  => $message,
@@ -2299,7 +2299,7 @@ function Dizkus_userapi_deletetopic($args)
 
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('Sorry! You do not have authorisation to read posts in this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -2381,7 +2381,7 @@ function Dizkus_userapi_notify_by_email($args)
 
     if ($result->EOF) {
         // no results - topic does not exist
-        return showforumerror(__('Sorry! Could not find the topic you selected. Please go back and try again.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__);
     } else {
         $myrow = $result->GetRowAssoc(false);
     }
@@ -2491,18 +2491,18 @@ function Dizkus_userapi_notify_by_email($args)
     // TODO Move this to a multilang template?
     $message = __f('Forums on %s', $sitename, $dom) . "\n"
             . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
-            . DataUtil::formatForDisplay(__f('%1$s posted at %2$s', array($poster_name, $topic_time_ml), $dom)) . "\n"
+            . DataUtil::formatForDisplay(__f('%1$s wrote at %2$s', array($poster_name, $topic_time_ml), $dom)) . "\n"
             . "---------------------------------------------------------------------\n\n"
             . strip_tags($post_message) . "\n"
             . "---------------------------------------------------------------------\n\n"
-            . __('Reply to message:', $dom) . "\n"
+            . __('Reply to this message:', $dom) . "\n"
             . pnModURL('Dizkus', 'user', 'reply', array('topic' => $topic_id, 'forum' => $forum_id), null, null, true) . "\n\n"
             . __('Browse thread:', $dom) . "\n"
             . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true) . "\n\n"
-            . __('Forum and topic subscription settings:', $dom) . "\n"
+            . __('FMaintain topic and forum subscriptions:', $dom) . "\n"
             . pnModURL('Dizkus', 'user', 'prefs', array(), null, null, true) . "\n"
             . "\n"
-            . __f('Hello! This message is to notify you about a posting in the forums on %s.', pnGetBaseURL(), $dom);
+            . __f('You are receiving this e-mail message because you are subscribed to be notified of events in the forums on %s.', pnGetBaseURL(), $dom);
 
     if (count($recipients) > 0) {
         foreach ($recipients as $subscriber) {
@@ -2552,7 +2552,7 @@ function Dizkus_userapi_get_topic_subscriptions($args)
 
     if (isset($user_id)) {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return showforumerror(__('Sorry! You do not have authorisation for this action.', $dom));
+            return showforumerror(__('Error! No permission for this action.', $dom));
         }
     } else {
         $user_id = pnUserGetVar('uid');
@@ -2645,7 +2645,7 @@ function Dizkus_userapi_subscribe_topic($args)
 
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', __('Sorry! You do not have authorisation to read posts in this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
@@ -2705,7 +2705,7 @@ function Dizkus_userapi_subscribe_forum($args)
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $args['forum_id']));
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to read posts in this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_subscription_status($args) == false) {
@@ -2763,7 +2763,7 @@ function Dizkus_userapi_add_favorite_forum($args)
                           array('forum_id' => $args['forum_id']));
 
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to read posts in this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_favorites_status($args) == false) {
@@ -3538,7 +3538,7 @@ function Dizkus_userapi_mailcron($args)
                                         }
                                     }
                                     if (empty($subject)) {
-                                        $subject = DataUtil::formatForDisplay(__('No subject line.', $dom));
+                                        $subject = DataUtil::formatForDisplay(__('Error! The post has no subject line.', $dom));
                                     }
 
                                     // check if subject matches our matchstring
@@ -3844,14 +3844,14 @@ function Dizkus_userapi_jointopics($args)
     $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     // check if to_topic exists. this function will return an error if not
     $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this forum or forum category.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     list($dbconn, $pntable) = dzkOpenDB();
@@ -4123,7 +4123,7 @@ function Dizkus_userapi_notify_moderator($args)
                                 'start'         => $start));
 
     // FIXME Move this to a translatable template?
-    $message = __f('Request for moderation in forums on %s', pnConfigGetVar('sitename'), $dom) . "\n"
+    $message = __f('Request for moderation on %s', pnConfigGetVar('sitename'), $dom) . "\n"
             . $post['cat_title'] . '::' . $post['forum_name'] . '::' . $post['topic_rawsubject'] . "\n\n"
             . __f('Reporting user: %s', $reporting_username, $dom) . "\n"
             . __('Comment:', $dom) . "\n"
