@@ -36,7 +36,7 @@ function smarty_function_jumpbox($params, &$smarty)
         $out ='<form action="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum')) . '" class="dzk_form dzk_float_right" method="get">
                <label for="dizkus_forum"><strong>' . DataUtil::formatForDisplay(__('Forum', $dom)) . ': </strong></label>
                <select name="forum" id="dizkus_forum" onchange="location.href=this.options[this.selectedIndex].value">
-	             <option value="'.DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'main')).'">' . DataUtil::formatForDisplay(__('- select forum -', $dom)) . '</option>';
+	             <option value="'.DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'main')).'">' . DataUtil::formatForDisplay(__('- Choose forum -', $dom)) . '</option>';
 
         foreach($forums as $forum) {
             if (allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {

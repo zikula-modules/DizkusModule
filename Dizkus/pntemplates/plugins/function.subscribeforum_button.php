@@ -46,9 +46,9 @@ function smarty_function_subscribeforum_button($params, &$smarty)
                                   'forum_id'=>$forum_id))==false) {
                 $imagedata = dzk_getimagepath($image_subscribe);
                 if ($imagedata == false) {
-                    $show = DataUtil::formatForDisplay(__('Subscribe forum', $dom));
+                    $show = DataUtil::formatForDisplay(__('Subscribe to forum', $dom));
                 } else {
-                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Subscribe forum', $dom)) .'" ' . $imagedata['size'] . ' />';
+                    $show = '<img src="' . $imagedata['path'] . '" alt="' . DataUtil::formatForDisplay(__('Subscribe to forum', $dom)) .'" ' . $imagedata['size'] . ' />';
                 }
                 $out = '<a title="' . DataUtil::formatForDisplay(__('Subscribe to forum', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'prefs', array('act'=>'subscribe_forum', 'forum'=>$forum_id, 'return_to'=>$return_to))) . '">' . $show . '</a>';
             } else {
