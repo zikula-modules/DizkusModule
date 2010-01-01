@@ -23,7 +23,7 @@ function Dizkus_init()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (version_compare(PN_VERSION_NUM, '1.2.0', '<')) {
-        SessionUtil::setVar('errormsg', __('This version of Dizkus requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met.', $dom));
+        SessionUtil::setVar('errormsg', __('Error! This version of the Dizkus module requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met.', $dom));
         return false;
     }
 
@@ -103,7 +103,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'createbyitem')) {
-        return LogUtil::registerError(__f('Error! Could not create \'%s\' hook.', 'create'), $dom);
+        return LogUtil::registerError(__f('Error! Could not create %s hook.', 'create'), $dom);
     }
 
     //
@@ -115,7 +115,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'updatebyitem')) {
-        return LogUtil::registerError(__f('Error! Could not create \'%s\' hook.', 'update'), $dom);
+        return LogUtil::registerError(__f('Error! Could not create %s hook.', 'update'), $dom);
     }
 
     //
@@ -127,7 +127,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'deletebyitem')) {
-        return LogUtil::registerError(__f('Error! Could not create \'%s\' hook.', 'delete'), $dom);
+        return LogUtil::registerError(__f('Error! Could not create %s hook.', 'delete'), $dom);
     }
 
     //
@@ -139,7 +139,7 @@ function Dizkus_init()
                            'Dizkus',
                            'hook',
                            'showdiscussionlink')) {
-        return LogUtil::registerError(__f('Error! Could not create \'%s\' hook.', 'display'), $dom);
+        return LogUtil::registerError(__f('Error! Could not create %s hook.', 'display'), $dom);
     }
     
     // create FULLTEXT index 
@@ -267,28 +267,28 @@ function Dizkus_delete()
     // createhook
     //
     if (!pnModUnRegisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
-        return LogUtil::registerError(__f('Error! Could not delete \'%s\' hook.', 'create'), $dom);        
+        return LogUtil::registerError(__f('Error! Could not delete %s hook.', 'create'), $dom);        
     }
 
     //
     // updatehook
     //
     if (!pnModUnRegisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
-        return LogUtil::registerError(__f('Error! Could not delete \'%s\' hook.', 'update'), $dom);        
+        return LogUtil::registerError(__f('Error! Could not delete %s hook.', 'update'), $dom);        
     }
 
     //
     // deletehook
     //
     if (!pnModUnRegisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
-        return LogUtil::registerError(__f('Error! Could not delete \'%s\' hook.', 'delete'), $dom);        
+        return LogUtil::registerError(__f('Error! Could not delete %s hook.', 'delete'), $dom);        
     }
 
     //
     // displayhook
     //
     if (!pnModUnRegisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
-        return LogUtil::registerError(__f('Error! Could not delete \'%s\' hook.', 'display'), $dom);        
+        return LogUtil::registerError(__f('Error! Could not delete %s hook.', 'display'), $dom);        
     }
 
     // remove module vars
@@ -308,7 +308,7 @@ function Dizkus_init_interactiveupgrade($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Sorry! You do not have authorisation to administer this module.', $dom), __FILE__, __LINE__);
+      return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
     }
 
     $oldversion = FormUtil::getPassedValue('oldversion', 0, 'GETPOST');
@@ -358,7 +358,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('Sorry! You do not have authorisation to administer this module.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -366,7 +366,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
     if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_0();
         if ($result<>true) {
-            return showforumerror(_('Error! Could not upgrade. The upgrade to Dizkus 3.0 failed.'), __FILE__, __LINE__);
+            return showforumerror(_('Error! The upgrade to Dizkus 3.0 failed.'), __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
     }
@@ -405,7 +405,7 @@ function Dizkus_upgrade_to_3_0()
         $success  = ($result==2);
         if (!$success) {
             $dberrmsg = $dbconn->ErrorNo().' - '.$dbconn->ErrorMSg();
-            LogUtil::registerError (__('Error! Could not rename table \'%1$s\' to \'%2$s\': %3$s.', array($oldtable, $$newtable, $dberrmsg), $dom));
+            LogUtil::registerError (__("Error! The renaming of table '%1$s' to '%2$s' failed: %3$s.", array($oldtable, $$newtable, $dberrmsg), $dom));
         }
     }
 
@@ -436,13 +436,13 @@ function Dizkus_upgrade_to_3_0()
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['smodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['smodule'] . '=\'pnForum\'';
     $res = DBUtil::executeSQL ($sql);
     if ($res === false) {
-        return LogUtil::registerError(__('Error! Could not upgrade the source module for hooks (\'smodule\').'));
+        return LogUtil::registerError(__("Error! A problem was encountered while upgrading the source module for hooks ('smodule')."));
     }
 
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['tmodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['tmodule'] . '=\'pnForum\'';
     $res = DBUtil::executeSQL ($sql);
     if ($res === false) {
-        return LogUtil::registerError(__('Error! Could not upgrade the target module for hooks (\'tmodule\').'));
+        return LogUtil::registerError(__("Error! A problem was encountered while upgrading the target module for hooks ('tmodule')."));
     }
 
     // introduce new module variable
@@ -464,7 +464,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Sorry! You do not have authorisation to administer this module.', $dom), __FILE__, __LINE__);
+      return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -472,7 +472,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
     if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_1();
         if ($result<>true) {
-            return showforumerror(__('Error! Could not upgrade to Dizkus 3.1. The upgrade failed.', $dom), __FILE__, __LINE__);
+            return showforumerror(__('Error! Could not upgrade to Dizkus 3.1.', $dom), __FILE__, __LINE__);
         }
         return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
     }
@@ -519,7 +519,7 @@ function Dizkus_upgrade_to_3_1()
                 WHERE pt.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')';
 
     if (DBUtil::executeSQL($sql) != true) {
-        LogUtil::registerError (__('Error! Could not upgrade the \'%s\' table.', 'dizkus_posts', $dom));
+        LogUtil::registerError (__("Error! Could not upgrade the table '%s'.", 'dizkus_posts', $dom));
     }
 
     // _dizkus_migratecategories();
@@ -560,7 +560,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
         $cat->setDataField('parent_id', $rootcat['id']);
         $cat->setDataField('name', 'Dizkus');
         $cat->setDataField('display_name', array($lang => 'Dizkus forums')); 
-        $cat->setDataField('display_desc', array($lang => __('Provides an integrated forum system for Zikula, that is simple to administer and use but that has an excellent feature set.', $dom))); 
+        $cat->setDataField('display_desc', array($lang => __('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.', $dom))); 
         $cat->setDataField('__ATTRIBUTES__', array('can_contain_posts' => false));
         if (!$cat->validate('admin')) {
             die('error 1');
