@@ -6,16 +6,16 @@
 <div style="margin-bottom: 1em;">
     <!--[formutil_getpassedvalue name='func' default='main' assign='func']-->
     <!--[if $func eq 'main' OR $func eq 'viewforum']-->
-    <h3 class="footer_title"><!--[gt text="Overview"]--></h3>
+    <h3 class="footer_title"><!--[gt text="Key"]--></h3>
     <ul id="ctheme-legenda">
         <!--[assign var='last_visit_unix' value=$last_visit_unix|pndate_format:'datetimebrief']-->
         <li><!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title="New posts since your last visit" ]--> : <!--[gt text="New posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
-        <li><!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="No new posts since your last visit" ]--> : <!--[gt text="No new posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
+        <li><!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="New posts since your last visit" ]--> : <!--[gt text="No new posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
     </ul>
     <!--[/if]-->
 
     <!--[if $func eq 'main']-->
-    <h3 class="footer_title"><!--[gt text="Total count"]--></h3>
+    <h3 class="footer_title"><!--[gt text="Total"]--></h3>
     <!--[if $numposts]-->
     <ul>
         <li><a title="<!--[gt text="RSS"]-->" href="backforum.php"><!--[pnimg modname='Dizkus' src='icon_rss.gif' __alt='RSS'  __title="RSS" ]--></a>&nbsp;&nbsp;&nbsp;<!--[gt text="Total messages:"]--> <!--[$numposts]--></li>

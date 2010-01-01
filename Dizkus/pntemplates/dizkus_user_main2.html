@@ -53,7 +53,7 @@
         <!--[foreachelse]-->
         <tr>
             <td colspan="5">
-                <strong><!--[gt text="No forums currently created"]--></strong>
+                <strong><!--[gt text="No forums created"]--></strong>
             </td>
         </tr>
         <!--[/foreach]-->
@@ -67,7 +67,7 @@
                 <!--[if $pncore.Dizkus.favorites_enabled eq 'yes']-->
                 <!--[gt text="You have not yet defined any favourite forums"]-->
                 <!--[else]-->
-                <!--[gt text="No forums currently created"]-->
+                <!--[gt text="No forums created"]-->
                 <!--[/if]-->
             </td>
         </tr>
@@ -75,7 +75,7 @@
     </tbody>
 </table>
 <ul style="padding: 0; margin: 1em 0 1em 0; list-style-type: none;">
-    <li><!--[pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit." ]--> = <!--[gt text="New posts since your last visit on"]--> (<!--[$last_visit_unix|pndate_format:'datetimebrief']-->)</li>
-    <li><!--[pnimg modname='Dizkus' src="icon_folder.gif" __alt="No new posts since your last visit." ]--> = <!--[gt text="No new posts since your last visit on"]--></li>
+    <li><!--[pnimg modname='Dizkus' src="icon_redfolder.gif" __alt="New posts since your last visit." ]--> = <!--[gt text="New posts since your last visit on"]--> <!--[$last_visit_unix]--></li>
+    <li><!--[pnimg modname='Dizkus' src="icon_folder.gif" __alt="No new posts since your last visit." ]--> = <!--[gt text="No new posts since your last visit on"]--> <!--[$last_visit_unix]--></li>
 </ul>
 <!--[include file='dizkus_user_footer.html]-->

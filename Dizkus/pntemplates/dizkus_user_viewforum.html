@@ -126,7 +126,7 @@
                             <!--[pnimg modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topcis list)' ]-->
                             <!--[/if]-->
                             <!--[if $topic.topic_status eq 1]-->
-                            <!--[pnimg modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='Topic is locked. No new posts accepted' ]-->
+                            <!--[pnimg modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' ]-->
                             <!--[/if]-->
                             <!--[if $topic.new_posts eq 1]-->
                             <!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' ]-->
@@ -147,7 +147,7 @@
                         <dd class="views"><!--[$topic.topic_views]--><dfn><!--[gt text="Views"]--></dfn></dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="By"]--> <!--[$topic.last_poster|userprofilelink]--><br />
+                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="by"]--> <!--[$topic.last_poster|userprofilelink]--><br />
                                 <!--[$topic.post_time_unix|pndate_format:'datetimebrief']-->
                                 <a title="<!--[gt text="View latest post"]-->" href="<!--[$topic.last_post_url_anchor|pnvarprepfordisplay]-->"><!--[pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest posts" ]--></a>
                             </span>
@@ -165,7 +165,7 @@
 
     <div class="forumbg dzk_message dzk_rounded">
         <div class="inner">
-            <strong><!--[gt text="No topics currently posted"]--></strong>
+            <strong><!--[gt text="There are no topics in this forum."]--></strong>
         </div>
     </div>
 

@@ -15,13 +15,13 @@
 
         <!--[if $newforum neq true]-->
         <div class="z-formrow">
-            <label for="forum_info"><!--[gt text="Statistics"]--></label>
+            <label for="forum_info"><!--[gt text="Forum Information"]--></label>
             <span id="forum_info">
                 <!--[boardstats type='forumtopics' id=$forum.forum_id assign=topiccount]-->
                 <!--[boardstats type='forumposts' id=$forum.forum_id assign=postcount]-->
                 <a title="<!--[gt text="Visit this forum"]-->" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum forum=$forum.forum_id]-->">
-                    <!--[$topiccount]-->&nbsp;<!--[if $topiccount eq 1]--><!--[gt text="topic"]--><!--[else]--><!--[gt text="topics"]--><!--[/if]-->&nbsp;/&nbsp;
-                    <!--[$postcount]-->&nbsp;<!--[if $postcount eq 1]--><!--[gt text="post"]--><!--[else]--><!--[gt text="posts"]--><!--[/if]-->
+                    <!--[$topiccount]-->&nbsp;<!--[if $topiccount eq 1]--><!--[gt text="Topic"]--><!--[else]--><!--[gt text="Topics"]--><!--[/if]-->&nbsp;/&nbsp;
+                    <!--[$postcount]-->&nbsp;<!--[if $postcount eq 1]--><!--[gt text="Post"]--><!--[else]--><!--[gt text="Posts"]--><!--[/if]-->
                 </a>
             </span>
         </div>
@@ -41,11 +41,11 @@
                 <option value="0" selected="selected"><!--[gt text="No hooked module found."]--></option>
                 <!--[/foreach]-->
             </select>
-            <p class="z-formnote z-sub"><!--[gt text="Notice: This is used for the comments feature. All submissions within this module will be posted within this forum. The list only includes modules for which Dizkus has been activated as a hooked module."]--></p>
+            <p class="z-formnote z-sub"><!--[gt text="Notice: This is used for the comments feature. All submissions within this module will be posted within this forum. The list only includes modules for which Dizkus has been activated as a hook."]--></p>
         </div>
 
         <div class="z-formrow">
-            <label for="pncategory"><!--[gt text="Category"]--></label>
+            <label for="pncategory"><!--[gt text="Select category"]--></label>
             <!--[$categoryselector]-->
         </div>
 
@@ -147,7 +147,7 @@
     <input type="hidden" name="add" value="add" checked="checked" />
     <!--[else]-->
     <fieldset>
-        <legend><!--[gt text="Delete forum"]--></legend>
+        <legend><!--[gt text="Delete"]--></legend>
         <div class="z-formrow">
             <label for="delete_<!--[$forum.forum_id]-->"><!--[gt text="Delete"]--></label>
             <input type="checkbox" id="delete_<!--[$forum.forum_id]-->" name="delete" value="delete" />
@@ -159,7 +159,7 @@
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <input type="hidden" name="forum_id" value="<!--[$forum.forum_id]-->" />
         <input type="hidden" name="cat_id" value="<!--[$forum.cat_id]-->" />
-        <button class="dzk_img ok" onclick="javascript:storeforum(<!--[$forum.forum_id]-->); return false;" name="submit" type="submit"><!--[gt text="Save forum changes"]--></button>
+        <button class="dzk_img ok" onclick="javascript:storeforum(<!--[$forum.forum_id]-->); return false;" name="submit" type="submit"><!--[gt text="Save"]--></button>
     </div>
 
 </form>

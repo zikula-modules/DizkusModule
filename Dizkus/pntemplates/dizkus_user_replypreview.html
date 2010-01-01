@@ -50,8 +50,8 @@
                     <ul id="postingoptions_<!--[$reply.post_id]-->" class="javascriptpostingoptions hidden linklist z-clearfix" style="float:right;">
                         <!--[if $reply.poster_data.moderate eq true]-->
                         <!--[if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)]-->
-                        <li><a class="movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$reply.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_move.gif" __alt="Move" ]--></a></li>
-                        <li><a class="splittopiclink" title="<!--[gt text="Split topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=splittopic post=$reply.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_split.gif" __alt="Split" ]--></a></li>
+                        <li><a class="movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$reply.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_move.gif" __alt="Move post" ]--></a></li>
+                        <li><a class="splittopiclink" title="<!--[gt text="Split topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=splittopic post=$reply.post_id]-->"><!--[pnimg modname='Dizkus' src="icon_post_split.gif" __alt="Split topic" ]--></a></li>
                         <!--[/if]-->
                         <!--[/if]-->
 
@@ -65,15 +65,15 @@
                         <!--[elseif isset($topic)]-->
                         <li><!--[pnimg modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked" ]--></li>
                         <!--[/if]-->
-                        <li><a class="notifymoderatorlink" href="<!--[pnmodurl modname='Dizkus' type=user func=report post=$reply.post_id]-->" title="<!--[gt text="Notify moderator about this post"]-->"><!--[pnimg modname='Dizkus' src="icon_topic_mod.gif" __alt="Notify moderator" ]--></a></li>
-                        <li><a title="<!--[gt text="Top"]-->" href="#top">&nbsp;<!--[pnimg modname='Dizkus' src="icon_up.gif" __alt="Go to page top" ]--></a></li>
+                        <li><a class="notifymoderatorlink" href="<!--[pnmodurl modname='Dizkus' type=user func=report post=$reply.post_id]-->" title="<!--[gt text="Notify moderator about this posting"]-->"><!--[pnimg modname='Dizkus' src="icon_topic_mod.gif" __alt="Notify moderator" ]--></a></li>
+                        <li><a title="<!--[gt text="Top"]-->" href="#top">&nbsp;<!--[pnimg modname='Dizkus' src="icon_up.gif" __alt="Top" ]--></a></li>
                     </ul>
                     <noscript>
                         <ul class="nonjavascriptpostingoptions linklist z-clearfix" style="float:right;">
                             <!--[if $reply.poster_data.moderate eq true]-->
                             <!--[if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)]-->
-                            <li><a class="dzk_img movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$reply.post_id]-->"><!--[gt text="Move"]--></a></li>
-                            <li><a class="dzk_img splittopiclink" title="<!--[gt text="Split topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=splittopic post=$reply.post_id]-->"><!--[gt text="Split"]--></a></li>
+                            <li><a class="dzk_img movepostlink" title="<!--[gt text="Move post"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=movepost post=$reply.post_id]-->"><!--[gt text="Move post"]--></a></li>
+                            <li><a class="dzk_img splittopiclink" title="<!--[gt text="Split topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=splittopic post=$reply.post_id]-->"><!--[gt text="Split topic"]--></a></li>
                             <!--[/if]-->
                             <!--[/if]-->
 
@@ -87,7 +87,7 @@
                             <!--[elseif isset($topic)]-->
                             <!--[pnimg modname='Dizkus' src=icon_post_close.gif __alt="Topic locked" ]-->
                             <!--[/if]-->
-                            <li><a class="dzk_img notifymoderatorlink" href="<!--[pnmodurl modname='Dizkus' type=user func=report post=$reply.post_id]-->" title="<!--[gt text="Notify moderator about this post"]-->"><!--[gt text="Notify moderator"]--></a></li>
+                            <li><a class="dzk_img notifymoderatorlink" href="<!--[pnmodurl modname='Dizkus' type=user func=report post=$reply.post_id]-->" title="<!--[gt text="Notify moderator about this posting"]-->"><!--[gt text="Notify moderator"]--></a></li>
                         </ul>
                     </noscript>
                 </div>
