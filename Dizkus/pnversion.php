@@ -14,7 +14,7 @@ $dom = ZLanguage::getModuleDomain('Dizkus');
 $modversion['name']           = 'Dizkus';
 $modversion['oldnames']       = array('pnForum');
 $modversion['displayname']    = __('Dizkus forums', $dom);
-$modversion['description']    = __('Provides an integrated forum system for Zikula, that is simple to administer and use but that has an excellent feature set.', $dom);
+$modversion['description']    = __('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.', $dom);
 //! module name that appears in URL
 $modversion['url']            = __('forums', $dom);
 $modversion['version']        = '3.1';
