@@ -19,7 +19,7 @@ function Dizkus_ajax_reply()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id         = FormUtil::getPassedValue('topic');
@@ -35,13 +35,13 @@ function Dizkus_ajax_reply()
     $message = dzkstriptags($message);
     $title   = dzkstriptags($title);
 
-	// ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-	$topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
-	$topic['start'] = 0;
-	$ignorelist_setting = pnModAPIFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
-	if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
-		dzk_ajaxerror(__('Sorry! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.', $dom));
-	}
+    // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
+    $topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
+    $topic['start'] = 0;
+    $ignorelist_setting = pnModAPIFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
+    if (pnModAvailable('ContactList') && ($ignorelist_setting == 'strict') && (pnModAPIFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
+        dzk_ajaxerror(__('Sorry! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.', $dom));
+    }
 
     // check for maximum message size
     if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
@@ -139,7 +139,7 @@ function Dizkus_ajax_readpost()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
@@ -167,7 +167,7 @@ function Dizkus_ajax_editpost()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post');
@@ -205,7 +205,7 @@ function Dizkus_ajax_updatepost()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $post_id = FormUtil::getPassedValue('post', '');
@@ -260,7 +260,7 @@ function Dizkus_ajax_lockunlocktopic()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
@@ -304,7 +304,7 @@ function Dizkus_ajax_stickyunstickytopic()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
@@ -346,7 +346,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
@@ -401,7 +401,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $forum_id = FormUtil::getPassedValue('forum', '');
@@ -457,7 +457,7 @@ function Dizkus_ajax_addremovefavorite()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     if (pnModGetVar('Dizkus', 'favorites_enabled') == 'no') {
@@ -552,7 +552,7 @@ function Dizkus_ajax_updatetopicsubject()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $topic_id = FormUtil::getPassedValue('topic', '');
@@ -601,7 +601,7 @@ function Dizkus_ajax_changesortorder()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -634,7 +634,7 @@ function Dizkus_ajax_newtopic()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     SessionUtil::setVar('pn_ajax_call', 'ajax');
@@ -780,7 +780,7 @@ function Dizkus_ajax_newtopic()
 function Dizkus_ajax_forumusers()
 {
     if (dzk_available(false) == false) {
-       dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
+        dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
     $render = & pnRender::getInstance('Dizkus', false);
