@@ -71,7 +71,7 @@ function Dizkus_needleapi_pnforum($args)
                                 $cache[$nid] = '<em>' . __f('Sorry! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . __f('Error! Forum ID %s is unknown.', $id, $dom) . '</em>';
+                            $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id, $dom) . '</em>';
                         }
                         break;
 
@@ -99,15 +99,15 @@ function Dizkus_needleapi_pnforum($args)
                                 $cache[$nid] = '<em>' . __f('Sorry! You do not have the necessary authorisation for topic ID %s.', $id , $dom) . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . __f('Error! Topic ID %s is unknown.', $id, $dom) .'</em>';
+                            $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id, $dom) .'</em>';
                         }
                         break;
 
                     default:
-                        $cache[$nid] = '<em>' . __('Error! Unknown parameter at pos.1 (F or T)', $dom) . '</em>';
+                        $cache[$nid] = '<em>' . __("Error! Unknown parameter at position #1 ('F' or 'T').", $dom) . '</em>';
                 }
             } else {
-                $cache[$nid] = '<em>' . __('Error! Dizkus is not available.', $dom) . '</em>';
+                $cache[$nid] = '<em>' . __('Error! The Dizkus module is not available.', $dom) . '</em>';
             }    
         }
         $result = $cache[$nid];

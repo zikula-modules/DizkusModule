@@ -85,7 +85,7 @@ function Dizkus_searchapi_search($args)
     $minlen = pnModGetVar('Dizkus', 'minsearchlength', 3);
     $maxlen = pnModGetVar('Dizkus', 'maxsearchlength', 30);
     if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
-        return LogUtil::registerStatus(__f('Notice: For forum searches, the search query string must be between %1$s and %2$s characters long.', array($minlen, $maxlen), $dom));
+        return LogUtil::registerStatus(__f('Error! For forum searches, the search string must be between %1$s and %2$s characters in length.', array($minlen, $maxlen), $dom));
     }
     if (!is_array($args['forums']) || count($args['forums']) == 0) {
         // set default
@@ -325,7 +325,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $havingm
     $result = DBUtil::executeSQL($query);
 
     if (!$result) {
-        return LogUtil::registerError(__('Error! Could not load data.', $dom));
+        return LogUtil::registerError(__('Error! Could not load items.', $dom));
     }
 
     $sessionId = session_id();
@@ -354,7 +354,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $havingm
                . '\'' . DataUtil::formatForStore($sessionId) . '\')';
         $insertResult = DBUtil::executeSQL($sql);
         if (!$insertResult) {
-            return LogUtil::registerError(__('Error! Could not load data.', $dom));
+            return LogUtil::registerError(__('Error! Could not load items.', $dom));
         }
     }
 
