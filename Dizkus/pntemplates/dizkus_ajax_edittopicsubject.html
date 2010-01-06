@@ -4,7 +4,7 @@
     <form id="topicsubject_<!--[$topic.topic_id]-->_form" class="dzk_form" action="javascript:void(0);">
         <div>
             <input type="text" style="width: 50%;" id="topicsubject_<!--[$topic.topic_id]-->_edit" name="topicsubject<!--[$topic.topic_id]-->_edit" value="<!--[$topic.topic_title|pnvarprepfordisplay]-->" />
-            <button class="dzk_img ok" type="submit" style="id="topicsubject_<!--[$topic.topic_id]-->_save"   onclick="javascript:topicsubjecteditsave(<!--[$topic.topic_id]-->); return false"><!--[gt text="Save"]--></button>
+            <button class="dzk_img ok" type="submit" style="id="topicsubject_<!--[$topic.topic_id]-->_save"   onclick="javascript:topicsubjecteditsave(<!--[$topic.topic_id]-->); return false"><!--[gt text="Submit"]--></button>
             <button class="dzk_img cancel" type="reset"  style="id="topicsubject_<!--[$topic.topic_id]-->_cancel" onclick="javascript:topicsubjecteditcancel(<!--[$topic.topic_id]-->);"><!--[gt text="Cancel"]--></button>
             <input type="hidden" id="topicsubject_<!--[$topic.topic_id]-->_authid" name="topicsubject_<!--[$topic.topic_id]-->_authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         </div>

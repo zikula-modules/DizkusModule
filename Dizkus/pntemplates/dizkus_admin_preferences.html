@@ -56,7 +56,7 @@
 <fieldset>
     <legend><!--[gt text="Advanced settings"]--></legend>
     <div class="z-warningmsg">
-        <!--[gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be. Database name: '%s'; type: '%s'; version: '%s'." tag1=$dbname tag2=$dbtype tag3=$dbversion]-->
+        <!--[gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be. <br /><br />Database name: '%s'; type: '%s'; version: '%s'." tag1=$dbname tag2=$dbtype tag3=$dbversion]-->
     </div>
     <div class="z-formrow">
         <!--[pnformlabel for="fulltextindex" text="Enable full-text index field searching" html=1]-->
@@ -114,7 +114,7 @@
         <!--[if $contactlist_available eq true]-->
         <!--[pnformlabel for="ignorelist_handling" text='Highest-allowed \'ignore list\' ostracism level' html=1]-->
         <!--[pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling]-->
-        <p class="z-formnote z-informationmsg"><!--[gt text="Notice: When 'Strict' level is available and has been chosen by an ignoring user, an ignored (ostracised) user cannot post messages under topics started by the ignoring user. When 'Medium' level is available and chosen by an ignoring user, an ignored user can reply but the postings will generally not be shown to the an ignoring user. Also, e-mail notifications of new postings by an ignored user will not be sent to the ignoring user. Postings concealed from an ignoring user will be shown when the ignoring user clicks on the posting."]--></p>
+        <p class="z-formnote z-informationmsg"><!--[gt text="Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."]--></p>
         <!--[else]-->
         <p class="z-formnote z-informationmsg"><!--[gt text="Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."]--></p>
         <!--[/if]-->
