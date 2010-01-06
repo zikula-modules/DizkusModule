@@ -39,7 +39,7 @@
                             <!--[pnimg modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' ]-->
                             <!--[/if]-->
                             <!--[if $topic.topic_status eq 1]-->
-                            <!--[pnimg modname='Dizkus' src='icon_post_close.gif' __alt='Topic is Locked. No new posts accepted'  __title='Topic locked' ]-->
+                            <!--[pnimg modname='Dizkus' src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' ]-->
                             <!--[/if]-->
                             <!--[if $topic.new_posts eq 1]-->
                             <!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' ]-->
@@ -84,7 +84,7 @@
 
     <!--[/if]-->
 
-    <div class="z-warningmsg"><!--[gt text="Warning! You will not be prompted for confirmation. Clicking on 'Save' will immediately execute the chosen action."]--></div>
+    <div class="z-warningmsg"><!--[gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."]--></div>
 
     <fieldset>
         <legend><!--[gt text="Moderators options"]--></legend>
@@ -92,7 +92,7 @@
             <label for="mode"><!--[gt text="Actions"]-->:</label>
             <select name="mode" id="mode" size="1">
                 <option value="">&lt;&lt; <!--[gt text="Choose action"]--> &gt;&gt;</option>
-                <option value="sticky"><!--[gt text="Assign selected topics 'sticky' status"]--></option>
+                <option value="sticky"><!--[gt text="Give selected topics 'sticky' status"]--></option>
                 <option value="unsticky"><!--[gt text="Remove 'sticky' status from selected topics"]--></option>
                 <option value="lock"><!--[gt text="Lock selected topics"]--></option>
                 <option value="unlock"><!--[gt text="Open selected topics"]--></option>
@@ -131,7 +131,7 @@
     <div class="z-formbuttons">
         <!--[* FOR Creating shadow topic the authkey is needed *]-->
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
-        <button class="dzk_img ok" name="submit" type="submit" value="submit" title="<!--[gt text="Save"]-->"><!--[gt text="Save"]--></button>
+        <button class="dzk_img ok" name="submit" type="submit" value="submit" title="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>
         <button class="dzk_img cancel" name="reset" type="reset" value="reset" title="<!--[gt text="Cancel"]-->"><!--[gt text="Cancel"]--></button>
     </div>
 </form>

@@ -10,10 +10,10 @@
         <input type="hidden" name="post" value="<!--[$post.post_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <fieldset id="dzk_splittopic">
-            <legend><!--[gt text="Split topic before selected post"]--></legend>
+            <legend><!--[gt text="Notice: This will split the topic before the selected posting."]--></legend>
             <div class="z-formrow">
-                <label for="newsubject"><!--[gt text="Subject line for new topic"]--></label>
-                <input type="text" id="newsubject" name="newsubject" value="<!--[gt text="Split:"]--> <!--[$post.topic_subject]-->" size="40" maxlength="100" />
+                <label for="newsubject"><!--[gt text="Subject for new topic"]--></label>
+                <input type="text" id="newsubject" name="newsubject" value="<!--[gt text="Split"]-->: <!--[$post.topic_subject]-->" size="40" maxlength="100" />
             </div>
         </fieldset>
         <div class="z-formbuttons">
