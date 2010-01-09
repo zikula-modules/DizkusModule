@@ -21,39 +21,33 @@ function smarty_function_readtopposters($params, &$smarty)
 {
     // TODO deprecate the use of extract
     extract($params); 
-	unset($params);
-
-    Loader::includeOnce('modules/Dizkus/common.php');
-
-    // get some enviroment
-    list($dbconn, $pntable) = dzkOpenDB();
+	  unset($params);
 
     $postermax = (!empty($maxposters)) ? $maxposters : 3;
 
+    $pntable = pnDBGetTables();
     $sql = "SELECT user_id,user_posts
           FROM ".$pntable['dizkus_users']." 
           WHERE user_id <> 1
           AND user_posts > 0
           ORDER BY user_posts DESC";
 
-    $result = dzkSelectLimit($dbconn, $sql, $postermax, false, __FILE__, __LINE__);
-    $result_postermax = $result->PO_RecordCount();
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('user_id', 'user_posts');
+    $result    = DBUtil::marshallObjects($res, $colarray);
+
+    $result_postermax = count($result);
     if ($result_postermax <= $postermax) {
       $postermax = $result_postermax;
     }
 
     $topposters = array();
-    if ($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            list($user_id, $user_posts) = $result->fields;
-            $topposter = array();
-            $topposter['user_id'] = $user_id;
-            $topposter['user_name'] = DataUtil::formatForDisplay(pnUserGetVar('uname', $user_id));
-            $topposter['user_posts'] = $user_posts;
+    if (is_array($result) && !empty($result)) {
+        foreach ($result as $topposter) {
+            $topposter['user_name'] = DataUtil::formatForDisplay(pnUserGetVar('uname', $topposter['user_id']));
             array_push($topposters, $topposter);
         }
     }
-    dzkCloseDB($result);
 
     $smarty->assign('toppostercount', count($topposters));
     $smarty->assign('topposters', $topposters);

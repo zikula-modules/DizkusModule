@@ -46,9 +46,9 @@ function smarty_function_readlastposts($params, &$smarty)
 
     Loader::includeOnce('modules/Dizkus/common.php');
     // get some enviroment
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
-    $whereforum = "";
+    $whereforum = '';
     if (!empty($forum_id) && is_numeric($forum_id)) {
         // get the category id and check permissions
         $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
@@ -59,7 +59,7 @@ function smarty_function_readlastposts($params, &$smarty)
             return;
         }
         $whereforum = 't.forum_id = ' . DataUtil::formatForStore($forum_id) . ' AND ';
-    } else {
+    } else if (!isset($favorites)) {
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
         $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
@@ -91,18 +91,25 @@ function smarty_function_readlastposts($params, &$smarty)
                 LEFT JOIN ' . $pntable['dizkus_forums'] . ' f
                 ON f.forum_id = fav.forum_id
                 WHERE fav.user_id = ' . DataUtil::formatForStore($uid);
-        $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-        while (!$result->EOF) {
-            list($forum_id, $cat_id) = $result->fields;
-            if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-                $wherefavorites .= 'f.forum_id=' .  (int)DataUtil::formatForStore($forum_id) . ' OR ';
+        
+        $res       = DBUtil::executeSQL($sql);
+        $colarray  = array('forum_id', 'cat_id');
+        $result    = DBUtil::marshallObjects($res, $colarray);
+        if (is_array($result) && !empty($result)) {
+            foreach ($result as $resline) {
+                // append 'OR' if $wherefavorites is not empty
+                if (!empty($wherefavorites)) {
+                    $wherefavorites .= ' OR ';
+                }
+                if (allowedtoreadcategoryandforum($resline['cat_id'], $resline['forum_id'])) {
+                    $wherefavorites .= 'f.forum_id=' .  (int)DataUtil::formatForStore($resline['forum_id']); // . ' OR ';
+                }
             }
-            $result->MoveNext();
         }
+
         if (!empty($wherefavorites)) {
-            $wherefavorites = '(' . rtrim($wherefavorites, 'OR ') . ') AND';
+            $wherefavorites = '(' . $wherefavorites . ') AND';
         }
-        dzkCloseDB($result);
     }
 
     $wherespecial = ' (f.forum_pop3_active = 0';
@@ -131,7 +138,7 @@ function smarty_function_readlastposts($params, &$smarty)
             $whereuser = 'p.poster_id = ' . DataUtil::formatForStore($user_id) . ' AND ';
         }
     }
-
+       
     $sql = 'SELECT t.topic_id,
                    t.topic_title,
                    t.topic_poster,
@@ -166,29 +173,15 @@ function smarty_function_readlastposts($params, &$smarty)
     // if the user wants to see the last x postings we read 5 * x because
     // we might get to forums he is not allowed to see
     // we do this until we got the requested number of postings
-    $result = dzkSelectLimit($dbconn, $sql, $postmax, 0, __FILE__, __LINE__);
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('topic_id', 'topic_title', 'topic_poster', 'topic_replies', 'topic_time', 'topic_last_post_id', 'sticky', 'topic_status',
+                      'topic_views', 'forum_id', 'forum_name', 'cat_title', 'cat_id', 'poster_id', 'post_id', 'post_text');
+    $result    = DBUtil::marshallObjects($res, $colarray);
 
-    if ($result->RecordCount()>0) {
+    if (is_array($result) && !empty($result)) {
         $post_sort_order = pnModAPIFunc('Dizkus', 'user', 'get_user_post_order');
         $posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
-        for (; !$result->EOF; $result->MoveNext()) {
-            list($lastpost['topic_id'],
-                 $lastpost['topic_title'],
-                 $lastpost['topic_poster'],
-                 $lastpost['topic_replies'],
-                 $lastpost['topic_time'],
-                 $lastpost['topic_last_post_id'],
-                 $lastpost['sticky'],
-                 $lastpost['topic_status'],
-                 $lastpost['topic_views'],
-                 $lastpost['forum_id'],
-                 $lastpost['forum_name'],
-                 $lastpost['cat_title'],
-                 $lastpost['cat_id'],
-                 $lastpost['poster_id'],
-                 $lastpost['post_id'],
-                 $lastpost['post_text']) = $result->fields;
-
+        foreach ($result as $lastpost) {
             $lastpost['topic_title'] = DataUtil::formatforDisplay($lastpost['topic_title']);
             $lastpost['forum_name']  = DataUtil::formatforDisplay($lastpost['forum_name']);
             $lastpost['cat_title']   = DataUtil::formatforDisplay($lastpost['cat_title']);
@@ -236,7 +229,6 @@ function smarty_function_readlastposts($params, &$smarty)
         }
     }
 
-    dzkCloseDB($result);
     $smarty->assign('lastpostcount', count($lastposts));
     $smarty->assign('lastposts', $lastposts);
     return;
