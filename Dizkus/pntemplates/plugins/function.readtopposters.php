@@ -32,7 +32,7 @@ function smarty_function_readtopposters($params, &$smarty)
           AND user_posts > 0
           ORDER BY user_posts DESC";
 
-    $res = DBUtil::executeSQL($sql);
+    $res = DBUtil::executeSQL($sql, $postermax);
     $colarray = array('user_id', 'user_posts');
     $result    = DBUtil::marshallObjects($res, $colarray);
 

@@ -27,7 +27,7 @@ function smarty_function_readtopforums($params, &$smarty)
           WHERE f.cat_id = c.cat_id
           ORDER BY forum_posts DESC";
 
-    $res = DBUtil::executeSQL($sql);
+    $res = DBUtil::executeSQL($sql, $forummax);
     $colarray = array('forum_id', 'forum_name', 'forum_topics', 'forum_posts', 'cat_title', 'cat_id');
     $result    = DBUtil::marshallObjects($res, $colarray);
 

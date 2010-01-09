@@ -173,7 +173,7 @@ function smarty_function_readlastposts($params, &$smarty)
     // if the user wants to see the last x postings we read 5 * x because
     // we might get to forums he is not allowed to see
     // we do this until we got the requested number of postings
-    $res = DBUtil::executeSQL($sql);
+    $res = DBUtil::executeSQL($sql, $postmax);
     $colarray = array('topic_id', 'topic_title', 'topic_poster', 'topic_replies', 'topic_time', 'topic_last_post_id', 'sticky', 'topic_status',
                       'topic_views', 'forum_id', 'forum_name', 'cat_title', 'cat_id', 'poster_id', 'post_id', 'post_text');
     $result    = DBUtil::marshallObjects($res, $colarray);
