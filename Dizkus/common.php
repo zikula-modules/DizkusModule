@@ -316,7 +316,7 @@ function dzkExecuteSQL(&$dbconn, $sql, $file=__FILE__, $line=__LINE__, $debug=fa
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!is_object($dbconn) || !isset($sql) || empty($sql)) {
-        return showforumerror(_MODARGSERROR, $file, $line);
+        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
@@ -355,7 +355,7 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!is_object($dbconn) || !isset($table) || empty($table) || !isset($record) || !is_array($record) || empty($record)) {
-        return showforumerror(_MODARGSERROR, $file, $line);
+        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
     }
 
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
@@ -371,47 +371,6 @@ function dzkAutoExecuteSQL(&$dbconn, $table=null, $record, $where='', $file=__FI
     $dbconn->debug = false;
     if ($dbconn->ErrorNo() != 0) {
         return showforumsqlerror(__('Error! Could not connect to the database.', $dom), $dbconn->sql, $dbconn->ErrorNo(), $dbconn->ErrorMsg(), $file, $line);
-    }
-
-    return $result;
-}
-
-/**
- * dzkSelectLimit
- * executes an sql command and returns a part of the result, shows error if necessary
- *
- * @params $dbconn object db onnection object
- * @params $sql    string the sql ommand to execute
- * @params $limit  int    max number of lines to read
- * @params $start  int    number of lines to start reading
- * @params $file   string name of the calling file, important for error reporting
- * @params $line   int    line in the calling file, important for error reorting
- * @params $debug  bool   true if debug should be activated, default is false
- * @returns object the result of $dbconn->Execute($sql)
- */
-function dzkSelectLimit(&$dbconn, $sql, $limit=0, $start=false, $file=__FILE__, $line=__LINE__, $debug=false)
-{
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
-    if (!is_object($dbconn) || !isset($sql) || empty($sql) || ($limit==0) ) {
-        return showforumerror(_MODARGSERROR, $file, $line);
-    }
-
-    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        // only admins shall see the debug output
-        $dbconn->debug = $debug;
-        $dbconn->debug = (($GLOBALS['PNConfig']['Debug']['sql_adodb'] == 1) ? true:false);//dddd
-    }
-
-    if ( $start<>false && (is_numeric($start) && $start <> 0 ) ){
-        $result = $dbconn->SelectLimit($sql, $limit, $start);
-    } else {
-        $result = $dbconn->SelectLimit($sql, $limit);
-    }
-
-    $dbconn->debug = false;
-    if ($dbconn->ErrorNo() != 0) {
-        return showforumsqlerror(__('Error! Could not connect to the database.', $dom),$sql,$dbconn->ErrorNo(),$dbconn->ErrorMsg(), $file, $line);
     }
 
     return $result;

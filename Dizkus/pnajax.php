@@ -226,6 +226,10 @@ function Dizkus_ajax_updatepost()
         if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
             dzk_ajaxerror(__('Sorry! The message is too long. The maximum length is 65,535 characters.', $dom));
         }
+        
+        // read the original posting to get the forum id we might need later if the topic has been erased
+        $orig_post = pnModAPIFunc('Dizkus', 'user', 'readpost',
+                                  array('post_id'     => $post_id));
 
         pnModAPIFunc('Dizkus', 'user', 'updatepost',
                      array('post_id'          => $post_id,
@@ -239,8 +243,20 @@ function Dizkus_ajax_updatepost()
                                  array('post_id'     => $post_id));
             $post['action'] = 'updated';
         } else {
-            $post = array('action'  => 'deleted',
-                          'post_id' => $post_id);
+            // try to read topic
+            $topic = false;
+            if (is_array($orig_post) && !empty($orig_post['topic_id'])) {
+                $topic = DBUtil::selectObject('dizkus_topics', 'topic_id='.DataUtil::formatForStore($orig_post['topic_id']));
+            }
+            if (!is_array($topic)) {
+                // topic has been deleted
+                $post = array('action'   => 'topic_deleted',
+                              'redirect' => pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $orig_post['forum_id']), null, null, true),
+                              'post_id'  => $post_id);
+            } else {
+                $post = array('action'  => 'deleted',
+                              'post_id' => $post_id);
+            }
         }
 
         SessionUtil::delVar('pn_ajax_call');

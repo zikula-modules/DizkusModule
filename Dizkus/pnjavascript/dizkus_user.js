@@ -645,7 +645,9 @@ function quickEditsave_response(originalRequest)
     }
 
     var result = dejsonize(originalRequest.responseText);
-
+console.log(result.action);
+console.log(result.redirect);
+console.log(result.post_id);
     var postingtextID = 'postingtext_' + result.post_id;
     var postingobjID = 'posting_' + result.post_id;
     var postinguserID = postingobjID + '_userinfo';
@@ -653,15 +655,18 @@ function quickEditsave_response(originalRequest)
 
     $(postingtextID + '_editor').remove();
 
+    editstatus = false;
     if(result.action == 'deleted') {
         $(postingobjID).remove();
+    } else if (result.action == 'topic_deleted') {
+        window.setTimeout("dzk_redirect('" + result.redirect + "');", 500);
+        return;
     } else {
         $(postingtextID).update(result.post_text).show();
         $(postinguserID).show();
     }
-    editstatus = false;
 
-    // hide quickreply
+    //  hide quickreply
     if($('dzk_quickreply')) {
         Effect.toggle($('dzk_quickreply'), comboeffect, comboparams);
     }

@@ -507,7 +507,8 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropColumn('dizkus_forums', 'forum_access');
     DBUtil::dropColumn('dizkus_forums', 'forum_type');
     DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
-    
+
+    // move all posting text from post_text to posts table and remove the post_text table - never knew why this has been split
     $sql = 'UPDATE ' . $poststable . ' AS p  
             SET p.' . $postscolumn['post_text'] . '= ( 
                 SELECT pt1.' . $poststextcolumn['post_text'] . ' 
@@ -521,6 +522,8 @@ function Dizkus_upgrade_to_3_1()
     if (DBUtil::executeSQL($sql) != true) {
         LogUtil::registerError (__("Error! Could not upgrade the table '%s'.", 'dizkus_posts', $dom));
     }
+
+    DBUtil::dropTable('post_text');
 
     // _dizkus_migratecategories();
 
@@ -614,8 +617,7 @@ function _dizkus_migratecategories()
 
     // migrate our old categories
     //$categorymap = array();
-    foreach ($tree as $oldcategory)
-    {
+    foreach ($tree as $oldcategory) {
         // increment max forum id
         $maxforumid++;
         $cat = new PNCategory();
@@ -654,16 +656,14 @@ function _dizkus_migratecategories()
         $newcatid = $cat->getDataField('id');
 
         // forums in this category
-        foreach ($oldcategory['forums'] as $forum)
-        {
+        foreach ($oldcategory['forums'] as $forum) {
             $fcat = new PNCategory();
             $fcat->setDataField('parent_id', $newcatid);
             $fcat->setDataField('name', $forum['forum_name']);
 
             $fnamelangarray = array();
             $fdesclangarray = array();
-            foreach ($langs as $lang)
-            {
+            foreach ($langs as $lang) {
                 // for now all fields get the same value
                 $fnamelangarray[$lang] = $forum['forum_name'];
                 $fdesclangarray[$lang] = $forum['forum_desc'];

@@ -115,6 +115,7 @@ function Dizkus_hookapi_updatebyitem($args)
             }
             pnModAPIFunc('Dizkus', 'user', 'updatepost',
                          array('post_id'  => $post_id,
+                               'topic_id' => $topic_id,
                                'subject'  => $subject,
                                'message'  => $message));
         }

@@ -425,6 +425,7 @@ function Dizkus_user_editpost($args=array())
         // store the new topic
         $redirect = pnModAPIFunc('Dizkus', 'user', 'updatepost',
                                  array('post_id'          => $post_id,
+                                       'topic_id'         => $topid_id,
                                        'delete'           => $delete,
                                        'subject'          => $subject,
                                        'message'          => $message,
