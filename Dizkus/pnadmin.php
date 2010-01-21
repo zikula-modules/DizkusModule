@@ -289,8 +289,7 @@ function Dizkus_admin_reordertreesave()
     // category, we need to remove this
     // not used any longer: array_pop($categoryarray);
     if (is_array($categoryarray) && count($categoryarray) > 0) {
-        foreach ($categoryarray as $catorder => $cat_id)
-        {
+        foreach ($categoryarray as $catorder => $cat_id) {
             // array key = catorder starts with 0, but we need 1, so we increase the order
             // value
             $catorder++;
@@ -306,19 +305,16 @@ function Dizkus_admin_reordertreesave()
             // do not remove them
             array_pop($forumsincategoryarray);
             array_pop($forumsincategoryarray);
-
             if (is_array($forumsincategoryarray) && count($forumsincategoryarray) > 0) {
                 foreach ($forumsincategoryarray as $forumorder => $forum_id) {
                     if (!empty($forum_id) && is_numeric($forum_id)) {
                         // array key start with 0, but we need 1, so we increase the order
                         // value
                         $forumorder++;
-                        if (pnModAPIFunc('Dizkus', 'admin', 'storenewforumorder',
-                                         array('forum_id' => $forum_id,
-                                               'cat_id'   => $cat_id,
-                                               'order'    => $forumorder)) == false) {
-                            dzk_ajaxerror('Error! \'storenewforumorder()\' cannot re-order the ' . $forum_id . ' forum in the ' . $cat_id . ' category (' . $forumorder . ').');
-                        }
+                        $newforum = array('forum_id'    => $forum_id,
+                                          'cat_id'      => $cat_id,
+                                          'forum_order' => $forumorder);
+                        DBUtil::updateObject($newforum, 'dizkus_forums', null, 'forum_id');
                     }
                 }
             }
@@ -676,21 +672,21 @@ function Dizkus_admin_storeforum()
             $pop3_password = base64_encode($pop3_password);
             $pnpassword = base64_encode($pnpassword);
             $forum_id = pnModAPIFunc('Dizkus', 'admin', 'addforum',
-                                     array('forum_name'       => $forum_name,
-                                           'cat_id'           => $cat_id,
-                                           'desc'             => $desc,
-                                           'mods'             => $mods,
-                                           'pop3_active'      => $extsource,
-                                           'pop3_server'      => $pop3_server,
-                                           'pop3_port'        => $pop3_port,
-                                           'pop3_login'       => $pop3_login,
-                                           'pop3_password'    => $pop3_password,
-                                           'pop3_interval'    => $pop3_interval,
-                                           'pop3_pnuser'      => $pnuser,
-                                           'pop3_pnpassword'  => $pnpassword,
-                                           'pop3_matchstring' => $pop3_matchstring,
-                                           'moduleref'        => $moduleref,
-                                           'pntopic'          => $pntopic));
+                                     array('forum_name'             => $forum_name,
+                                           'cat_id'                 => $cat_id,
+                                           'forum_desc'             => $desc,
+                                           'mods'                   => $mods,
+                                           'forum_pop3_active'      => $extsource,
+                                           'forum_pop3_server'      => $pop3_server,
+                                           'forum_pop3_port'        => $pop3_port,
+                                           'forum_pop3_login'       => $pop3_login,
+                                           'forum_pop3_password'    => $pop3_password,
+                                           'forum_pop3_interval'    => $pop3_interval,
+                                           'forum_pop3_pnuser'      => $pnuser,
+                                           'forum_pop3_pnpassword'  => $pnpassword,
+                                           'forum_pop3_matchstring' => $pop3_matchstring,
+                                           'forum_moduleref'        => $moduleref,
+                                           'forum_pntopic'          => $pntopic));
         } else {
             $action = 'update';
             $old_id = '';
@@ -714,23 +710,23 @@ function Dizkus_admin_storeforum()
             }
 
             pnModAPIFunc('Dizkus', 'admin', 'editforum',
-                         array('forum_name'       => $forum_name,
-                               'forum_id'         => $forum_id,
-                               'cat_id'           => $cat_id,
-                               'desc'             => $desc,
-                               'mods'             => $mods,
-                               'rem_mods'         => $rem_mods,
-                               'pop3_active'      => $extsource,
-                               'pop3_server'      => $pop3_server,
-                               'pop3_port'        => $pop3_port,
-                               'pop3_login'       => $pop3_login,
-                               'pop3_password'    => $pop3_password,
-                               'pop3_interval'    => $pop3_interval,
-                               'pop3_pnuser'      => $pnuser,
-                               'pop3_pnpassword'  => $pnpassword,
-                               'pop3_matchstring' => $pop3_matchstring,
-                               'moduleref'        => $moduleref,
-                               'pntopic'          => $pntopic));
+                         array('forum_name'             => $forum_name,
+                               'forum_id'               => $forum_id,
+                               'cat_id'                 => $cat_id,
+                               'forum_desc'             => $desc,
+                               'mods'                   => $mods,
+                               'rem_mods'               => $rem_mods,
+                               'forum_pop3_active'      => $extsource,
+                               'forum_pop3_server'      => $pop3_server,
+                               'forum_pop3_port'        => $pop3_port,
+                               'forum_pop3_login'       => $pop3_login,
+                               'forum_pop3_password'    => $pop3_password,
+                               'forum_pop3_interval'    => $pop3_interval,
+                               'forum_pop3_pnuser'      => $pnuser,
+                               'forum_pop3_pnpassword'  => $pnpassword,
+                               'forum_pop3_matchstring' => $pop3_matchstring,
+                               'forum_moduleref'        => $moduleref,
+                               'forum_pntopic'          => $pntopic));
         }
         $editforumhtml = Dizkus_admin_editforum(array('forum_id'   => $forum_id,
                                                        'returnhtml' => true));

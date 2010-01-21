@@ -300,63 +300,46 @@ function Dizkus_searchapi_fulltext($args)
 function start_search($wherematch='', $selectmatch='', $whereforums='', $havingmatch='', $args=array())
 {
     pnModDBInfoLoad('Search');
-    $pntable      = pnDBGetTables();
-    $searchtable  = $pntable['search_result'];
-    $searchcolumn = $pntable['search_result_column'];
+    $pntable = pnDBGetTables();
 
     if (!empty($havingmatch)) {
         $havingmatch = "HAVING $havingmatch";
     }
 
-    $query = "SELECT DISTINCT
+    $sql = 'SELECT DISTINCT
               t.topic_title,
               t.topic_id,
               p.post_text,
               p.post_time
               $selectmatch
-              FROM ".$pntable['dizkus_posts']." AS p,
-                   ".$pntable['dizkus_topics']." AS t
-              WHERE $wherematch
+              FROM '.$pntable['dizkus_posts'].' AS p,
+                   '.$pntable['dizkus_topics'].' AS t
+              WHERE '.$wherematch.'
               AND p.topic_id=t.topic_id
-              AND $whereforums
+              AND '.$whereforums.'
               GROUP BY t.topic_id
-              $havingmatch";
+              '.$havingmatch;
 
-    $result = DBUtil::executeSQL($query);
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('topic_title', 'topic_id', 'post_text', 'post_time');
+    $result    = DBUtil::marshallObjects($res, $colarray);
 
-    if (!$result) {
-        return LogUtil::registerError(__('Error! Could not load items.', $dom));
-    }
-
-    $sessionId = session_id();
-
-    $insertSql = 'INSERT INTO ' . $searchtable . ' ('
-                . $searchcolumn['title'] . ','
-                . $searchcolumn['text'] . ','
-                . $searchcolumn['extra'] . ','
-                . $searchcolumn['module'] . ','
-                . $searchcolumn['created'] . ','
-                . $searchcolumn['session']
-                . ') VALUES ';
-
-    // Process the result set and insert into search result table
-    $showtextinsearchresults = pnModGetVar('Dizkus', 'showtextinsearchresults', 'no');
-    for (; !$result->EOF; $result->MoveNext()) {
-        $topic = $result->GetRowAssoc(2);
-
-        $topictext = ($showtextinsearchresults == 'yes') ? DataUtil::formatForStore(str_replace('[addsig]', '', $topic['post_text'])) : '';
-        $sql = $insertSql . '('
-               . '\'' . DataUtil::formatForStore($topic['topic_title']) . '\', '
-               . '\'' . $topictext . '\', '
-               . '\'' . DataUtil::formatForStore(serialize(array('searchwhere' => $args['searchwhere'], /*'searchfor' => $args['q'], */'topic_id' => $topic['topic_id']))) . '\', '
-               . '\'Dizkus\', '
-               . '\'' . DataUtil::formatForStore($topic['post_time']) . '\', '
-               . '\'' . DataUtil::formatForStore($sessionId) . '\')';
-        $insertResult = DBUtil::executeSQL($sql);
-        if (!$insertResult) {
-            return LogUtil::registerError(__('Error! Could not load items.', $dom));
+    if (is_array($result) && !empty($result)) {
+        // Process the result set and insert into search result table
+        $showtextinsearchresults = pnModGetVar('Dizkus', 'showtextinsearchresults', 'no');
+        $sessionid = session_id();
+        
+        foreach($result as $resline) {
+            $topictext = ($showtextinsearchresults == 'yes') ? DataUtil::formatForStore(str_replace('[addsig]', '', $resline['post_text'])) : '';
+            $searchresult[] = array('title'   => $resline['topic_title'],
+                                    'text'    => $topictext,
+                                    'extra'   => serialize(array('searchwhere' => $args['searchwhere'], 'searchfor' => $args['q'], 'topic_id' => $resline['topic_id'])),
+                                    'module'  => 'Dizkus',
+                                    'created' => $resline['post_time'],
+                                    'session' => $sessionid);
         }
+        DBUtil::insertObjectArray($searchresult, 'search_result');
     }
-
+            
     return true;
 }

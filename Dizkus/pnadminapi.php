@@ -250,62 +250,37 @@ function Dizkus_adminapi_readforums($args=array())
  */
 function Dizkus_adminapi_readmoderators($args)
 {
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
+    $pntable = pnDBGetTables();
 
-    list($dbconn, $pntable) = dzkOpenDB();
+    $sql = 'SELECT u.pn_uname, u.pn_uid
+            FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
+            WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND u.pn_uid = f.user_id
+            AND f.user_id<1000000';
 
-    $sql = "SELECT u.pn_uname, u.pn_uid
-            FROM ".$pntable['users']." u, ".$pntable['dizkus_forum_mods']." f
-            WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND u.pn_uid = f.user_id
-            AND f.user_id<1000000";
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('uname', 'uid');
+    $result1    = DBUtil::marshallObjects($res, $colarray);
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
+    $sql = 'SELECT g.pn_name, g.pn_gid
+            FROM '.$pntable['groups'].' g, '.$pntable['dizkus_forum_mods'].' f
+            WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND g.pn_gid = f.user_id-1000000
+            AND f.user_id>1000000';
 
-    $mods = array();
-    if ($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $mod = array();
-            list( $mod['uname'],
-                  $mod['uid'] ) = $result->fields;
-            array_push($mods, $mod);
-        }
-    }
-    dzkCloseDB($result);
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('uname', 'uid');
+    $result2  = DBUtil::marshallObjects($res, $colarray);
 
-    $sql = "SELECT g.pn_name, g.pn_gid
-            FROM ".$pntable['groups']." g, ".$pntable['dizkus_forum_mods']." f
-            WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
-            AND f.user_id>1000000";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    if ($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext()) {
-            $mod = array();
-            list( $mod['uname'],
-                  $mod['uid'] ) = $result->fields;
-            $mod['uid'] = $mod['uid'] + 1000000;
-            array_unshift($mods, $mod);
-        }
-    }
-    dzkCloseDB($result);
-
+    $mods = array_merge($result1, $result2);
     return $mods;
 }
 
 /**
  * readusers
- *
+ *$moderators
  */
 function Dizkus_adminapi_readusers($args)
 {
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
+    $pntable = pnDBGetTables();
 
     $sql = "SELECT n.pn_uid, n.pn_uname
             FROM ".$pntable['users']." AS n
@@ -313,50 +288,36 @@ function Dizkus_adminapi_readusers($args)
             ON u.user_id=n.pn_uid
             WHERE n.pn_uid != 1 ";
 
-    foreach($moderators as $mod) {
+    foreach($args['moderators'] as $mod) {
         if ($mod['uid']<=1000000) {
             // mod uids > 1000000 are groups
             $sql .= "AND n.pn_uid != '".DataUtil::formatForStore($mod['uid'])."'";
         }
     }
     $sql .= "ORDER BY pn_uname";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
 
-    $users = array();
-    if ($result->RecordCount()>0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
-            $user = array();
-            list( $user['uid'],
-                  $user['uname'] ) = $result->fields;
-            array_push( $users, $user );
-        }
-    }
-    dzkCloseDB($result);
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('uid', 'uname');
+    $users    = DBUtil::marshallObjects($res, $colarray);
 
     return $users;
 }
 
 /**
  * readgroups
- *
+ *$moderators
  */
 function Dizkus_adminapi_readgroups($args)
 {
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
+    $pntable = pnDBGetTables();
+    
     // read groups
-    $sql = "SELECT g.pn_gid, g.pn_name
+    $sql = "SELECT g.pn_gid+1000000, g.pn_name
             FROM ".$pntable['groups']." AS g ";
 
     $where_flag = false;
     $group_flag = false;
-    foreach ($moderators as $mod)
-    {
+    foreach ($args['moderators'] as $mod) {
         if ($mod['uid'] > 1000000) {
             // mod uids > 1000000 are groups
             if (!$where_flag) {
@@ -372,20 +333,9 @@ function Dizkus_adminapi_readgroups($args)
     }
     $sql .= "ORDER BY g.pn_name";
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-    $groups = array();
-    if ($result->RecordCount() > 0) {
-        for (; !$result->EOF; $result->MoveNext())
-        {
-            $group = array();
-            list( $group['gid'],
-                  $group['name'] ) = $result->fields;
-            $group['gid'] = $group['gid'] + 1000000;
-            array_push( $groups, $group );
-        }
-    }
-    dzkCloseDB($result);
+    $res = DBUtil::executeSQL($sql);
+    $colarray = array('gid', 'name');
+    $groups    = DBUtil::marshallObjects($res, $colarray);
 
     return $groups;
 
@@ -529,79 +479,24 @@ function Dizkus_adminapi_assignranksave($args)
  */
 function Dizkus_adminapi_sync($args)
 {
-    list($dbconn, $pntable) = dzkOpenDB();
-
+    $pntable = pnDBGetTables();
     switch ($args['type'])
     {
         case 'forum':
-            $sql = "SELECT max(post_id) AS last_post
-                    FROM ".$pntable['dizkus_posts']."
-                    WHERE forum_id = '".(int)DataUtil::formatForStore($args['id'])."'";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            $result_lastpost = $dbconn->Affected_Rows();
+            $f['forum_id']           = $args['id'];
+            $f['forum_last_post_id'] = DBUtil::selectFieldMax('dizkus_posts', 'post_id', 'MAX', 'forum_id='.DataUtil::formatForStore($args['id']));
+            $f['forum_posts']        = DBUtil::selectObjectCount('dizkus_posts', 'forum_id='.DataUtil::formatForStore($args['id']));
+            $f['forum_topics']       = DBUtil::selectObjectCount('dizkus_topics', 'forum_id='.DataUtil::formatForStore($args['id']));
 
-            if ($result_lastpost != 0) {
-                list($last_post) = $result->FetchRow();
-            } else {
-                $last_post = 0;
-            }
-            dzkCloseDB($result);
-
-            $sql = "SELECT count(post_id) AS total
-                    FROM ".$pntable['dizkus_posts']."
-                    WHERE forum_id = '".(int)DataUtil::formatForStore($args['id'])."'";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            $row = $result->GetRowAssoc(false);
-            dzkCloseDB($result);
-            $total_posts = $row['total'];
-
-            $sql = "SELECT count(topic_id) AS total
-                    FROM ".$pntable['dizkus_topics']."
-                    WHERE forum_id = ".(int)DataUtil::formatForStore($args['id'])."";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            $row = $result->GetRowAssoc(false);
-            dzkCloseDB($result);
-            $total_topics = $row['total'];
-
-            $sql = "UPDATE ".$pntable['dizkus_forums']."
-                    SET forum_last_post_id = '".(int)DataUtil::formatForStore($last_post)."',
-                        forum_posts = '".(int)DataUtil::formatForStore($total_posts)."',
-                        forum_topics = '".DataUtil::formatForStore($total_topics)."'
-                    WHERE forum_id = '".(int)DataUtil::formatForStore($args['id'])."'";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            dzkCloseDB($result);
+            DBUtil::updateObject($f, 'dizkus_forums');
             break;
-
         case 'topic':
-            $sql = "SELECT max(post_id) AS last_post
-                    FROM ".$pntable['dizkus_posts']."
-                    WHERE topic_id = '".(int)DataUtil::formatForStore($args['id'])."'";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            $result_lastpost = $dbconn->Affected_Rows();
+            $t['topic_id']           = $args['id'];
+            $t['topic_last_post_id'] = DBUtil::selectFieldMax('dizkus_posts', 'post_id', 'MAX', 'topic_id='.DataUtil::formatForStore($args['id']));
+            $t['topic_replies']      = DBUtil::selectObjectCount('dizkus_posts', 'topic_id='.DataUtil::formatForStore($args['id'])) -1;
 
-            if ($result_lastpost != 0) {
-                list($last_post) = $result->FetchRow();
-            } else {
-                $last_post = 0;
-            }
-            dzkCloseDB($result);
-
-            $sql = "SELECT count(post_id) AS total
-                    FROM ".$pntable['dizkus_posts']."
-                    WHERE topic_id = '".(int)DataUtil::formatForStore($args['id'])."'";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            //$row = $result->GetRowAssoc(false);
-            list($total_posts) = $result->FetchRow(); // $row['total'];
-            dzkCloseDB($result);
-
-            $total_posts -= 1;
-            $sql = "UPDATE ".$pntable['dizkus_topics']."
-                    SET topic_replies = '".(int)DataUtil::formatForStore($total_posts)."', topic_last_post_id = '".(int)DataUtil::formatForStore($last_post)."'
-                    WHERE topic_id = '".(int)DataUtil::formatForStore($args['id'])."'";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-            dzkCloseDB($result);
+            DBUtil::updateObject($t, 'dizkus_topics');
             break;
-
         case 'all forums':
             $forums = Dizkus_adminapi_readforums();
             foreach ($forums as $forum) {
@@ -610,17 +505,10 @@ function Dizkus_adminapi_sync($args)
             break;
 
         case 'all topics':
-            $sql = "SELECT topic_id
-                    FROM ".$pntable['dizkus_topics'];
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-            if ($result->RecordCount() > 0) {
-                for (; !$result->EOF; $result->MoveNext()) {
-                    list($topic_id) = $result->fields;
-                    Dizkus_adminapi_sync(array('id' => $topic_id, 'type' => 'topic'));
-                }
+            $topics = DBUtil::selectObjectArray('dizkus_topics');
+            foreach ($topics as $topic) {
+                Dizkus_adminapi_sync(array('id' => $topic['topic_id'], 'type' => 'topic'));
             }
-            dzkCloseDB($result);
             break;
 
         case 'all posts':
@@ -628,21 +516,13 @@ function Dizkus_adminapi_sync($args)
                            count(poster_id) as total_posts
                     FROM ".$pntable['dizkus_posts']."
                     GROUP BY poster_id";
-            $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-
-            if ($result->RecordCount() > 0) {
-                for (; !$result->EOF; $result->MoveNext()) {
-                    list($poster_id, 
-                         $total_posts) = $result->fields;
-
-                    $sub_sql = "UPDATE ".$pntable['dizkus_users']."
-                                SET user_posts = '".(int)DataUtil::formatForStore($total_posts)."'
-                                WHERE user_id = '".(int)DataUtil::formatForStore($poster_id)."'";
-                    $result2 = dzkExecuteSQL($dbconn, $sub_sql, __FILE__, __LINE__);
-                    dzkCloseDB($result2);
-                }
+            $res = DBUtil::executeSQL($sql, -1, $postmax);
+            $colarray = array('user_id', 'user_posts');
+            $result    = DBUtil::marshallObjects($res, $colarray);
+            // can this be done in SQL without reading with PHP and writing with PHP? I do not care about MySQL 5 only solutions
+            if (is_array($result) && !empty($result)) {
+                 DBUtil::updateObjectArray($result, 'dizkus_users', 'user_id');
             }
-            dzkCloseDB($result);
             break;
 
         case 'all users':
@@ -692,105 +572,56 @@ function Dizkus_adminapi_addforum($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
+    $mods = $args['mods'];
+    unset($args['mods']);
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
-        !SecurityUtil::checkPermission('Dizkus::CreateForum', $cat_id . "::", ACCESS_EDIT) ) {
+        !SecurityUtil::checkPermission('Dizkus::CreateForum', $args['cat_id'] . "::", ACCESS_EDIT) ) {
         return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-    $forumtable  = $pntable['dizkus_forums'];
-    $forumcolumn = $pntable['dizkus_forums_column'];
+    $pntable = pnDBGetTables();
 
-    $forum_name = strip_tags($forum_name);
-    if (empty($forum_name)) {
+    $args['forum_name'] = strip_tags($args['forum_name']);
+    if (empty($args['forum_name'])) {
         return showforumerror(__('Error! You did not enter all the required information in the form. Did you assign at least one moderator? Please correct your entries and try again.', $dom), __FILE__, __LINE__);
     }
 
-    if (!$desc) {
-        $desc = '';
+    if (!$args['forum_desc']) {
+        $args['forum_desc'] = '';
     }
-    $desc = nl2br($desc); // to be fixed ASAP
+    $args['forum_desc'] = nl2br($args['forum_desc']); // to be fixed ASAP
     //$desc = DataUtil::formatForStore($desc);
     //$forum_name = DataUtil::formatForStore($forum_name);
     //$cat_id = DataUtil::formatForStore($cat_id);
 
-    $sql = "SELECT max(forum_order) AS highest
-            FROM " . $forumtable . "
-            WHERE " . $forumcolumn['cat_id'] ."= '" . DataUtil::formatForStore($cat_id) . "'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    list($highest) = $result->fields;
-    dzkCloseDB($result);
-
+    $highest = DBUtil::selectFieldMax('dizkus_forums', 'forum_order', 'MAX', 'cat_id='.DataUtil::formatForStore($args['cat_id']));
     $highest++;
-    $forum_id = $dbconn->GenID($pntable['dizkus_forums']);
-    $sql = "INSERT INTO " . $forumtable . "
-                (" . $forumcolumn['forum_id'] . ",
-                 " . $forumcolumn['forum_name'] . ",
-                 " . $forumcolumn['forum_desc'] . ",
-                 " . $forumcolumn['cat_id'] . ",
-                 " . $forumcolumn['forum_order'] . ",
-                 " . $forumcolumn['forum_pop3_active'] . ",
-                 " . $forumcolumn['forum_pop3_server'] . ",
-                 " . $forumcolumn['forum_pop3_port'] . ",
-                 " . $forumcolumn['forum_pop3_login'] . ",
-                 " . $forumcolumn['forum_pop3_password'] . ",
-                 " . $forumcolumn['forum_pop3_interval'] . ",
-                 " . $forumcolumn['forum_pop3_matchstring'] . ",
-                 " . $forumcolumn['forum_pop3_pnuser'] . ",
-                 " . $forumcolumn['forum_pop3_pnpassword'] . ",
-                 " . $forumcolumn['forum_moduleref'] . ",
-                 " . $forumcolumn['forum_pntopic'] . ")
-            VALUES ('".DataUtil::formatForStore($forum_id)."',
-                    '".DataUtil::formatForStore($forum_name)."',
-                    '".DataUtil::formatForStore($desc)."',
-                    '".DataUtil::formatForStore($cat_id)."',
-                    '".DataUtil::formatForStore($highest)."',
-                    '".(int)DataUtil::formatForStore($pop3_active)."',
-                    '".DataUtil::formatForStore($pop3_server)."',
-                    '".(int)DataUtil::formatForStore($pop3_port)."',
-                    '".DataUtil::formatForStore($pop3_login)."',
-                    '".DataUtil::formatForStore($pop3_password)."',
-                    '".(int)DataUtil::formatForStore($pop3_interval)."',
-                    '".DataUtil::formatForStore($pop3_matchstring)."',
-                    '".DataUtil::formatForStore($pop3_pnuser)."',
-                    '".DataUtil::formatForStore($pop3_pnpassword)."',
-                    '".DataUtil::formatForStore($moduleref)."',
-                    '".DataUtil::formatForStore($pntopic)."')";
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-//dzk_ajaxerror($dbconn->ErrorMsg());
-    dzkCloseDB($result);
-    $newforumid = $dbconn->PO_Insert_ID($pntable['dizkus_forums'], 'forum_id');
+    
+    $newforum = DBUtil::insertObject($args, 'dizkus_forums', 'forum_id');
+
     $count = 0;
     if (is_array($mods) && count($mods)>0) {
-        while(list($mod_number, $mod) = each($mods)) {
-            $mod_query = "INSERT INTO ".$pntable['dizkus_forum_mods']."
-                                (forum_id,
-                                user_id)
-                            VALUES ('".DataUtil::formatForStore($newforumid)."',
-                                    '".DataUtil::formatForStore($mod)."')";
-            $mod_res = dzkExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
-            dzkCloseDB($mod_res);
+        foreach($mods as $mod) {
+            $newmod = array('forum_id' => $newforum['forum_id'],
+                            'user_id'  => $mod[0]);
+            $newmod = DBUtil::insertObject($newmod, 'dizkus_forum_mods'); // todo: add index field to forum_mods table!!!!
         }
     }
 
-    if (isset($forum_order) && is_numeric($forum_order)) {
+    if (isset($args['forum_order']) && is_numeric($args['forum_order'])) {
         pnModAPIFunc('Dizkus', 'admin', 'reorderforumssave',
-                array('cat_id'      => $cat_id,
-                    'forum_id'    => $newforumid,
-                    'neworder'    => $forum_order,
-                    'oldorder'    => $highest));
+                     array('cat_id'    => $args['cat_id'],
+                           'forum_id'  => $newforum['forum_id'],
+                           'neworder'  => $args['forum_order'],
+                           'oldorder'  => $highest));
     }
 
     // Let any hooks know that we have created a new item.
-    pnModCallHooks('item', 'create', $newforumid, array('module' => 'Dizkus',
-                                                        'forum_id' => $newforumid));
+    pnModCallHooks('item', 'create', $newforum['forum_id'], array('module' => 'Dizkus',
+                                                                  'forum_id' => $newforum['forum_id']));
 
-    return $newforumid;
+    return $newforum['forum_id'];
 }
 
 /**
@@ -802,62 +633,40 @@ function Dizkus_adminapi_editforum($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
+    $mods = $args['mods'];
+    $rem_mods = $args['rem_mods'];
+    unset($args['mods']);
+    unset($args['rem_mods']);
 
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
         return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
     }
 
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $pop3passwordupdate = "";
-    if (!empty($pop3_password)) {
-        // pop3_password is not empty - save it
-        $pop3passwordupdate = "forum_pop3_password    ='".DataUtil::formatForStore($pop3_password)."',";
-    }
-    $pnpasswordupdate = "";
-    if (!empty($pop3_pnpassword)) {
-        // pop3_pnpassword is not empty - save it
-        $pnpasswordupdate = "forum_pop3_pnpassword    ='".DataUtil::formatForStore($pop3_pnpassword)."',";
+    if (empty($args['forum_pop3_password'])) {
+        // pop3_password is empty - do not save it
+        unset($args['forum_pop3_password']);
     }
 
-    $sql = "UPDATE ".$pntable['dizkus_forums']."
-            SET forum_name='".DataUtil::formatForStore(strip_tags($forum_name))."',
-            forum_desc='".DataUtil::formatForStore($desc)."',
-            cat_id=" . (int)DataUtil::formatForStore($cat_id) . ",
-            forum_pop3_active      =".(int)DataUtil::formatForStore($pop3_active).",
-            forum_pop3_server      ='".DataUtil::formatForStore($pop3_server)."',
-            forum_pop3_port        =".(int)DataUtil::formatForStore($pop3_port).",
-            forum_pop3_login       ='".DataUtil::formatForStore($pop3_login)."',
-            $pop3passwordupdate
-            forum_pop3_interval    =".(int)DataUtil::formatForStore($pop3_interval).",
-            forum_pop3_pnuser      ='".DataUtil::formatForStore($pop3_pnuser)."',
-            $pnpasswordupdate
-            forum_pop3_matchstring ='".DataUtil::formatForStore($pop3_matchstring)."',
-            forum_moduleref        =".DataUtil::formatForStore($moduleref).",
-            forum_pntopic          =".DataUtil::formatForStore($pntopic)."
-            WHERE forum_id=".DataUtil::formatForStore($forum_id)."";
+    if (empty($args['forum_pop3_pnpassword'])) {
+        // pop3_pnpassword is empty - do not save it
+        unset($args['forum_pop3_pnpassword']);
+    }
 
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__);
-    dzkCloseDB($result);
-
+    DBUtil::updateObject($args, 'dizkus_forums', null, 'forum_id');
+    
     if (isset($mods) && !empty($mods)) {
         $recentmods = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
-                                   array('forum_id' => $forum_id));
+                                   array('forum_id' => $args['forum_id']));
         foreach ($mods as $mod) {
-            $mod_query = "INSERT INTO ".$pntable['dizkus_forum_mods']." (forum_id, user_id) VALUES ('".DataUtil::formatForStore($forum_id)."', '".DataUtil::formatForStore($mod)."')";
-            $mods = dzkExecuteSQL($dbconn, $mod_query, __FILE__, __LINE__);
-            dzkCloseDB($mods);
+            $newmod = array('forum_id' => $args['forum_id'],
+                            'user_id'  => $mod);
+            DBUtil::insertObject($newmod, 'dizkus_forum_mods');     
         }
     }
 
     if (isset($rem_mods) && !empty($rem_mods)) {
         foreach ($rem_mods as $mod) {
-            $rem_query = "DELETE FROM ".$pntable['dizkus_forum_mods']."
-                          WHERE forum_id = '".DataUtil::formatForStore($forum_id)."' AND user_id = '".DataUtil::formatForStore($mod)."'";
-            $rem = dzkExecuteSQL($dbconn, $rem_query, __FILE__, __LINE__);
-            dzkCloseDB($rem);
+            DBUtil::deleteWhere('dizkus_forum_mods', 'forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND user_id = '.DataUtil::formatForStore($mod));
         }
     }
 
@@ -915,55 +724,6 @@ function Dizkus_adminapi_deleteforum($args)
 function Dizkus_adminapi_get_pntopics()
 {
     return false;
-}
-
-/**
- * store new forum order
- *
- * @params $args['forum_id'] int the forum id
- * @params $args['cat_id']   int the forums category id
- * @params $args['order']    int the forum order number in this category
- *
- */
-function Dizkus_adminapi_storenewforumorder($args)
-{
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
-
-    if ( !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
-    }
-
-    if (!isset($forum_id) || empty($forum_id) || !is_numeric($forum_id)) {
-        dzk_ajaxerror(_MODARGSERROR . ' (Dizkus_adminapi_storenewforumorder(), forumid=' . $forum_id);
-    }
-    if (!isset($cat_id) || empty($cat_id) || !is_numeric($cat_id)) {
-        dzk_ajaxerror(_MODARGSERROR . ' (Dizkus_adminapi_storenewforumorder(), cat_id=' . $cat_id);
-    }
-    if (!isset($order) || empty($order) || !is_numeric($order) || ($order<1)) {
-        dzk_ajaxerror(_MODARGSERROR . ' (Dizkus_adminapi_storenewforumorder(), order=' . $order);
-    }
-
-    list($dbconn, $pntable) = dzkOpenDB();
-
-    $forumtable   = $pntable['dizkus_forums'];
-    $forumcolumn  = &$pntable['dizkus_forums_column'];
-
-    $sql = "UPDATE " . $forumtable. "
-            SET " . $forumcolumn['forum_order'] ."='" . (int)DataUtil::formatForStore($order) . "',
-                " . $forumcolumn['cat_id'] . "='" . (int)DataUtil::formatForStore($cat_id) . "'
-            WHERE " . $forumcolumn['forum_id'] . "='" . (int)DataUtil::formatForStore($forum_id) . "'";
-
-    $result = dzkExecuteSQL($dbconn, $sql, __FILE__, __LINE__, false, false);
-    if ($result === false) {
-        return false;
-    }
-    dzkCloseDB($result);
-
-    return true;
 }
 
 /**

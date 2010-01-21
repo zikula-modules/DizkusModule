@@ -352,10 +352,8 @@ function Dizkus_userapi_readcategorytree($args)
     $posts_per_page = pnModGetVar('Dizkus', 'posts_per_page');
 
     $tree = array();
-    //while (!$result->EOF)
     if (is_array($result) && !empty($result)) {
         foreach ($result as $row) {
-            //$row   = $result->GetRowAssoc(false);
             $cat   = array();
             $forum = array();
             $cat['last_post'] = array(); // get the last post in this category, this is an array
@@ -947,22 +945,16 @@ function Dizkus_userapi_readtopic($args)
         $topic['posts'] = array();
 
         // read posts
-        $sql2 = 'SELECT post_id,
-                        poster_id,
-                        post_time,
-                        post_text
-                FROM '.$pntable['dizkus_posts'].'
-                WHERE topic_id = '.(int)DataUtil::formatForStore($topic['topic_id']).'
-                ORDER BY post_id '.DataUtil::formatForStore($post_sort_order);
-
+        $where = 'WHERE topic_id = '.(int)DataUtil::formatForStore($topic['topic_id']);
+        $orderby = 'ORDER BY post_id '.DataUtil::formatForStore($post_sort_order);
         if ($complete == true) {
-            $res2 = DBUtil::executeSQL($sql2);
+            //$res2 = DBUtil::executeSQL($sql2);
+            $result2 = DBUtil::selectObjectArray('dizkus_posts', $where, $orderby);
         } else {
-            $res2 = DBUtil::executeSQL($sql2, $start, $posts_per_page);
+            //$res2 = DBUtil::executeSQL($sql2, $start, $posts_per_page);
+            $result2 = DBUtil::selectObjectArray('dizkus_posts', $where, $orderby, $start, $posts_per_page);
         }
-        $colarray = array('post_id', 'poster_id', 'post_time', 'post_text');
-        $result2  = DBUtil::marshallObjects($res2, $colarray);
-
+        
         // performance patch:
         // we store all userdata read for the single postings in the $userdata
         // array for later use. If user A is referenced more than once in the
@@ -1980,8 +1972,7 @@ function Dizkus_userapi_get_forumid_and_categoryid_from_topicid($args)
         return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
 
-    $colarray[] = 'forum_id';
-    $colarray[] = 'cat_id';
+    $colarray = array('forum_id', 'cat_id');
     $objarray = DBUtil::marshallObjects ($res, $colarray);
     return array_values($objarray[0]); // forum_id, cat_id
 }
