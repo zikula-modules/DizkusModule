@@ -10,10 +10,7 @@
  */
 function smarty_function_readtopforums($params, &$smarty) 
 {
-    extract($params); 
-	  unset($params);
-
-    $forummax = (!empty($maxforums)) ? $maxforums : 5;
+    $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
     
     $pntable = pnDBGetTables();
     $sql = "SELECT f.forum_id, 

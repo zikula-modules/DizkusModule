@@ -19,11 +19,7 @@
  */
 function smarty_function_readtopposters($params, &$smarty) 
 {
-    // TODO deprecate the use of extract
-    extract($params); 
-	  unset($params);
-
-    $postermax = (!empty($maxposters)) ? $maxposters : 3;
+    $postermax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
 
     $pntable = pnDBGetTables();
     $sql = "SELECT user_id,user_posts

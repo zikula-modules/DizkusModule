@@ -34,25 +34,21 @@
  */
 function smarty_function_gravatar($params, &$smarty)
 {
-    // TODO deprecate the use of extract
-    extract($params);
-    unset($params);
-
-    if (!isset($email)) {
+    if (!isset($params['email'])) {
         $smarty->trigger_error("Error! Missing 'email' attribute for gravatar.");
         return false;
     }
 
-	if (!isset($rating)) $rating = false;
+	if (!isset($params['rating'])) $params['rating'] = false;
     //if (!isset($size)) $size = false;
-    if (!isset($size)) $size = 80;
-	if (!isset($default)) $default = false;
+    if (!isset($params['size'])) $params['size'] = 80;
+	if (!isset($params['default'])) $params['default'] = false;
 
-	$gravatarURL = 'http://www.gravatar.com/avatar.php?gravatar_id=' . md5($email);
+	$gravatarURL = 'http://www.gravatar.com/avatar.php?gravatar_id=' . md5($params['email']);
 
-	if ($rating && $rating != '') $gravatarURL .= "&rating=".$rating;
-	if ($size && $size != '') $gravatarURL .="&size=".$size;
-	if ($default && $default != '') $gravatarURL .= "&default=".urlencode($default);
+	if ($params['rating'] && $params['rating'] != '') $gravatarURL .= "&rating=".$params['rating'];
+	if ($params['size'] && $params['size'] != '') $gravatarURL .="&size=".$params['size'];
+	if ($params['default'] && $params['default'] != '') $gravatarURL .= "&default=".urlencode($params['default']);
 
 	return DataUtil::formatForDisplay($gravatarURL);
 }
