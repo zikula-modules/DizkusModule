@@ -403,7 +403,7 @@ function Dizkus_userapi_readcategorytree($args)
                             }
         
                             $last_post = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $username), $dom));
-                            $last_post = $last_post.' <a href="' . pnModURL('Dizkus','user','viewtopic', array('topic' =>$forum['topic_id'])). '">
+                            $last_post = $last_post.' <a href="' . pnModURL('Dizkus','user','viewtopic', array('topic' => $forum['topic_id'])). '">
                                                       <img src="modules/Dizkus/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                             // new in 2.0.2 - no more preformattd output
                             $last_post_data['name']     = $username;
@@ -794,7 +794,6 @@ function cmp_forumtopicsort($a, $b)
  * @params $args['start'] int number of posting to start with (if on page 1+)
  * @params $args['complete'] bool if true, reads the complete thread and does not care about
  *                               the posts_per_page setting, ignores 'start'
- * @params $args['last_visit'] string the users last visit date
  * @params $args['count']      bool  true if we have raise the read counter, default false
  * @params $args['nohook']     bool  true if transform hooks should not modify post text
  * @returns very complex array, see <!--[ debug ]--> for more information
@@ -803,21 +802,16 @@ function Dizkus_userapi_readtopic($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    //$time_start = microtime_float();
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
-
     $dizkusvars      = pnModGetVar('Dizkus');
     $posts_per_page  = $dizkusvars['posts_per_page'];
     $topics_per_page = $dizkusvars['topics_per_page'];
 
     $post_sort_order = pnModAPIFunc('Dizkus','user','get_user_post_order');
 
-    $complete = (isset($complete)) ? $complete : false;
-    $count    = (isset($count)) ? $count : false;
-    $start    = (isset($start)) ? $start : -1;
-    $hooks    = (isset($nohook) && $nohook == false) ? false : true;
+    $complete = (isset($args['complete'])) ? $args['complete'] : false;
+    $count    = (isset($args['count'])) ? $args['count'] : false;
+    $start    = (isset($args['start'])) ? $args['start'] : -1;
+    $hooks    = (isset($args['nohook']) && $args['nohook'] == false) ? false : true;
 
     $currentuserid = pnUserGetVar('uid');
     $now = time();
@@ -841,7 +835,7 @@ function Dizkus_userapi_readtopic($args)
             FROM  '.$pntable['dizkus_topics'].' t
             LEFT JOIN '.$pntable['dizkus_forums'].' f ON f.forum_id = t.forum_id
             LEFT JOIN '.$pntable['dizkus_categories'].' AS c ON c.cat_id = f.cat_id
-            WHERE t.topic_id = '.(int)DataUtil::formatForStore($topic_id);
+            WHERE t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']);
 
     $res = DBUtil::executeSQL($sql);
     $colarray = array('topic_title', 'topic_poster', 'topic_status', 'forum_id', 'sticky', 'topic_time', 'topic_replies',
@@ -862,7 +856,7 @@ function Dizkus_userapi_readtopic($args)
 
     if (is_array($result) && !empty($result)) {
         $topic = $result[0];
-        $topic['topic_id'] = $topic_id;
+        $topic['topic_id'] = $args['topic_id'];
         $topic['start'] = $start;
         $topic['topic_unixtime'] = dzk_str2time($topic['topic_time']); //strtotime ($topic['topic_time']);
         $topic['post_sort_order'] = $post_sort_order;
@@ -922,12 +916,12 @@ function Dizkus_userapi_readtopic($args)
          * update topic counter
          */
         if ($count == true) {
-            DBUtil::incrementObjectFieldByID('dizkus_topics', 'topic_views', $topic_id, 'topic_id');
+            DBUtil::incrementObjectFieldByID('dizkus_topics', 'topic_views', $topic['topic_id'], 'topic_id');
         }
         /**
          * more then one page in this topic?
          */
-        $topic['total_posts'] = Dizkus_userapi_boardstats(array('id' => $topic_id, 'type' => 'topic'));
+        $topic['total_posts'] = Dizkus_userapi_boardstats(array('id' => $topic['topic_id'], 'type' => 'topic'));
 
         if ($topic['total_posts'] > $posts_per_page) {
             $times = 0;
@@ -966,7 +960,7 @@ function Dizkus_userapi_readtopic($args)
 
         if (is_array($result2) && !empty($result2)){
             foreach ($result2 as $post) {
-                $post['topic_id'] = $topic_id;
+                $post['topic_id'] = $topic['topic_id'];
             
                 // check if array_key_exists() with poster _id in $userdata
                 //if (!array_key_exists($post['poster_id'], $userdata)) {
@@ -1031,11 +1025,7 @@ function Dizkus_userapi_readtopic($args)
         // no results - topic does not exist
         return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__, '404 Not Found');
     }
-/*
-$time_end = microtime_float();
-$time_used = $time_end - $time_start;
-dzkdebug('time:', $time_used);
-*/
+
     return $topic;
 }
 
@@ -3652,15 +3642,11 @@ function Dizkus_userapi_notify_moderator($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
-
     setlocale (LC_TIME, pnConfigGetVar('locale'));
     $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
 
     $mods = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
-                         array('forum_id' => $post['forum_id']));
+                         array('forum_id' => $args['post']['forum_id']));
 
     // generate the mailheader
     $email_from = pnModGetVar('Dizkus', 'email_from');
@@ -3669,7 +3655,7 @@ function Dizkus_userapi_notify_moderator($args)
         $email_from = pnConfigGetVar('adminmail');
     }
 
-    $subject .= DataUtil::formatForDisplay(__('Moderation request', $dom)) . ': ' . strip_tags($post['topic_rawsubject']);
+    $subject .= DataUtil::formatForDisplay(__('Moderation request', $dom)) . ': ' . strip_tags($args['post']['topic_rawsubject']);
     $sitename = pnConfigGetVar('sitename');
 
     $recipients = array();
@@ -3722,33 +3708,32 @@ function Dizkus_userapi_notify_moderator($args)
     $reporting_username = pnUserGetVar('uname');
 
     $start = pnModAPIFunc('Dizkus', 'user', 'get_page_from_topic_replies',
-                          array('topic_replies' => $post['topic_replies'],
+                          array('topic_replies' => $args['post']['topic_replies'],
                                 'start'         => $start));
 
     // FIXME Move this to a translatable template?
     $message = __f('Request for moderation on %s', pnConfigGetVar('sitename'), $dom) . "\n"
-            . $post['cat_title'] . '::' . $post['forum_name'] . '::' . $post['topic_rawsubject'] . "\n\n"
+            . $args['post']['cat_title'] . '::' . $args['post']['forum_name'] . '::' . $args['post']['topic_rawsubject'] . "\n\n"
             . __f('Reporting user: %s', $reporting_username, $dom) . "\n"
             . __('Comment:', $dom) . "\n"
             . $comment . " \n\n"
             . "---------------------------------------------------------------------\n"
-            . strip_tags($post['post_text']) . " \n"
+            . strip_tags($args['post']['post_text']) . " \n"
             . "---------------------------------------------------------------------\n\n"
-            . __('Link to topic:', $dom) . "\n"
-            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => $start), null, 'pid'.$post['post_id'], true) . "\n"
+            . __('Link to topic: %s', DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid'.$args['post']['post_id'], true)), $dom) . "\n"
             . "\n";
 
     if (count($recipients) > 0) {
         foreach($recipients as $recipient) {
-            $args = array( 'fromname'    => $sitename,
-                           'fromaddress' => $email_from,
-                           'toname'      => $recipient['uname'],
-                           'toaddress'   => $recipient['email'],
-                           'subject'     => $subject,
-                           'body'        => $message,
-                           'headers'     => array('X-UserID: ' . $reporting_userid,
-                                                  'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
-            pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
+            pnModAPIFunc('Mailer', 'user', 'sendmessage',
+                          array( 'fromname'    => $sitename,
+                                 'fromaddress' => $email_from,
+                                 'toname'      => $recipient['uname'],
+                                 'toaddress'   => $recipient['email'],
+                                 'subject'     => $subject,
+                                 'body'        => $message,
+                                 'headers'     => array('X-UserID: ' . $reporting_userid,
+                                                        'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
         }
     }
 

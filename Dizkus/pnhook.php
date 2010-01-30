@@ -33,7 +33,6 @@ function Dizkus_hook_showdiscussionlink($args)
 
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id'   => $topic_id,
-                                    'last_visit' => $last_visit,
                                     'count'      => false));
 
         $render = & pnRender::getInstance('Dizkus', false, null, true);

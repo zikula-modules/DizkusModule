@@ -21,7 +21,7 @@ function Dizkus_admin_main()
         return LogUtil::registerPermissionError();
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     return $render->fetch('dizkus_admin_main.html');
 }
@@ -105,7 +105,7 @@ function Dizkus_admin_ranks()
         list($rankimages, $ranks) = pnModAPIFunc('Dizkus', 'admin', 'readranks',
                                                   array('ranktype' => $ranktype));
 
-        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render = pnRender::getInstance('Dizkus', false, null, true);
 
         $render->assign('ranks', $ranks);
         $render->assign('ranktype', $ranktype);
@@ -204,7 +204,7 @@ function Dizkus_admin_assignranks()
 
         unset($users);
 
-        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render = pnRender::getInstance('Dizkus', false, null, true);
 
         $render->assign('ranks', $ranks);
         $render->assign('rankimages', $rankimages);
@@ -256,7 +256,7 @@ function Dizkus_admin_reordertree()
         }
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     $render->assign('categorytree', $categorytree);
     $render->assign('catids', $catids);
@@ -428,7 +428,7 @@ function Dizkus_admin_editforum($args=array())
     $moderators = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
                                 array('forum_id' => $forum['forum_id']));
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     $render->assign('hooked_modules', $hooked_modules);
     $render->assign('rssfeeds', $rssfeeds);
@@ -500,7 +500,7 @@ function Dizkus_admin_editcategory($args=array())
         $category['forum_count'] = count($forums);
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     $render->assign('category', $category );
     $render->assign('newcategory', $new);
@@ -564,7 +564,7 @@ function Dizkus_admin_storecategory()
         if (!is_bool($cat_id)) {
             $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
                                      array( 'cat_id' => $cat_id ));
-            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render = pnRender::getInstance('Dizkus', false, null, true);
             $render->assign('category', $category );
             $render->assign('newcategory', false);
             dzk_jsonizeoutput(array('cat_id'      => $cat_id,
@@ -742,7 +742,7 @@ function Dizkus_admin_storeforum()
             $pop3testresult = pnModAPIFunc('Dizkus', 'user', 'testpop3connection',
                                            array('forum_id' => $forum_id));
 
-            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render = pnRender::getInstance('Dizkus', false, null, true);
 
             $render->assign('messages', $pop3testresult);
             $render->assign('forum_id', $forum_id);
@@ -788,7 +788,7 @@ function Dizkus_admin_managesubscriptions()
 
     if (!$submit) {
         // submit is empty
-        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render = pnRender::getInstance('Dizkus', false, null, true);
 
         $render->assign('pnusername', $pnusername);
         $render->assign('pnuid', $pnuid = pnUserGetIDFromName($pnusername));

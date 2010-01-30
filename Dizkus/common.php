@@ -131,10 +131,10 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
         dzk_ajaxerror($error_text);
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
-    $render->assign( 'adminmail', pnConfigGetVar('adminmail') );
-    $render->assign( 'error_text', $error_text );
+    $render->assign('adminmail', pnConfigGetVar('adminmail') );
+    $render->assign('error_text', $error_text );
 
     // show http error if requested
     if ($httperror <> null) {
@@ -142,8 +142,8 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
     }
 
     if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        $render->assign( 'file', $file);
-        $render->assign( 'line', $line);
+        $render->assign('file', $file);
+        $render->assign('line', $line);
     }
 
     $output = $render->fetch('dizkus_errorpage.html');
@@ -158,56 +158,6 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
 
     return $output;
 
-}
-
-/**
- * showforumsqlerror
- * if $sql is not empty then we show message and mail notififcation to site admin
- * if it is empty, then it is not an Error, but just warning and we just show message to a user.
- * No mail is generated
- * If current user is admin, then onscreen message also include additional debug information
- */
-function showforumsqlerror($msg, $sql='', $sql_errno='', $sql_error='', $file='', $line)
-{
-    if (!empty($sql) && pnModGetVar('Dizkus', 'sendemailswithsqlerrors') == 'yes') {
-        // Sending notify e-mail for error
-        $message = "Error occured\n\n";
-        $message .= "SQL statement:\n" . $sql . "\n\n";
-        $message .= "Database error number:\n" . $sql_errno . "\n\n";
-        $message .= "Database error message:\n" . $sql_error . "\n\n";
-        $message .= "Link: " . pnGetCurrentURL() . "\n\n";
-        $message .= "HTTP_USER_AGENT: " . pnServerGetVar('HTTP_USER_AGENT') . "\n";
-        $message .= "User name: " . pnUserGetVar('uname') . " (" . pnUserGetVar('uid') . ")\n";
-        $message .= "E-mail: " . pnUserGetVar('email') . "\n";
-        $message .= "Error occured in " . $file . " at line " . $line . "\n";
-
-        $email_from = pnModGetVar('Dizkus', 'email_from');
-        if ($email_from == '') {
-            // nothing in forumwide-settings, use PN adminmail
-            $email_from = pnConfigGetVar('adminmail');
-        }
-        $email_to = pnConfigGetVar('adminmail');
-        $subject = 'SQL error occurred in Dizkus forums installation';
-        $modinfo = pnModGetInfo(pnModGetIDFromName(pnModGetName()));
-
-        $args = array( 'fromname'    => pnConfigGetVar('sitename'),
-                       'fromaddress' => $email_from,
-                       'toname'      => $email_to,
-                       'toaddress'   => $email_to,
-                       'subject'     => $subject,
-                       'body'        => $message,
-                       'headers'     => array('X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version']));
-        pnModAPIFunc('Mailer', 'user', 'sendmessage', $args);
-    }
-
-    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        return showforumerror( "$msg <br />
-                                sql  : $sql <br />
-                                code : $sql_errno <br />
-                                msg  : $sql_error <br />", $file, $line );
-    } else {
-        return showforumerror( $msg, $file, $line );
-    }
 }
 
 /**

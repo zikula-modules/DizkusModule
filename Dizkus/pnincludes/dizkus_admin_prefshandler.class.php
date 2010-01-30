@@ -42,7 +42,6 @@ class dizkus_admin_prefshandler
         $render->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
         $render->assign('newtopicconfirmation_checked', isset($modvars['newtopicconfirmation']) && $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
         $render->assign('forum_enabled_checked', $modvars['forum_enabled'] == 'yes' ? 1 : 0);
-        $render->assign('sendemailswithsqlerrors_checked', $modvars['sendemailswithsqlerrors'] == 'yes' ? 1 : 0);
         $render->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
         $render->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
         $render->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
@@ -87,7 +86,6 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'striptags',               $data['striptags'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'newtopicconfirmation',    $data['newtopicconf'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'forum_enabled',           $data['forum_enabled'] == 1 ? 'yes' : 'no');
-            pnModSetVar('Dizkus', 'sendemailswithsqlerrors', $data['sendemailswithsqlerrors'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'fulltextindex',           $data['fulltextindex'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'extendedsearch',          $data['extendedsearch'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');

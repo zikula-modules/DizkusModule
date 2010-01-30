@@ -525,6 +525,8 @@ function Dizkus_upgrade_to_3_1()
 
     DBUtil::dropTable('post_text');
 
+    pnModDelVar('Dizkus', 'sendemailswithsqlerrors');
+    
     // _dizkus_migratecategories();
 
     // drop old tables
