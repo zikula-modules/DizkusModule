@@ -102,7 +102,12 @@
                         <dt <!--[if $forum.new_posts == true]-->class='new-posts'<!--[else]-->class='no-new-posts'<!--[/if]--> >
                             <a title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
                             <!--[if $forum.forum_desc neq '']--><!--[$forum.forum_desc|pnvarprephtmldisplay]--><br /><!--[/if]-->
-                            <!--[if !empty($forum.forum_mods)]--><!--[gt text="Moderated by"]-->: <!--[listforummods moderators=$forum.forum_mods]--><!--[else]-->&nbsp;<!--[/if]-->
+                            <!--[if !empty($forum.forum_mods)]-->
+                            <!--[gt text="Moderated by"]-->*:
+                            <!--[foreach name=moderators item=mod key=modid from=$forum.forum_mods]-->
+                            <!--[$mod]--><!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
+                            <!--[/foreach]-->
+                            <!--[/if]-->
                         </dt>
 
                         <dd class="topics"><!--[$forum.forum_topics|pnvarprephtmldisplay]--> <dfn><!--[gt text="Topics"]--></dfn></dd>
