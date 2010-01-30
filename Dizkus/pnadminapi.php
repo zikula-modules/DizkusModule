@@ -488,14 +488,14 @@ function Dizkus_adminapi_sync($args)
             $f['forum_posts']        = DBUtil::selectObjectCount('dizkus_posts', 'forum_id='.DataUtil::formatForStore($args['id']));
             $f['forum_topics']       = DBUtil::selectObjectCount('dizkus_topics', 'forum_id='.DataUtil::formatForStore($args['id']));
 
-            DBUtil::updateObject($f, 'dizkus_forums');
+            DBUtil::updateObject($f, 'dizkus_forums', null, 'forum_id');
             break;
         case 'topic':
             $t['topic_id']           = $args['id'];
             $t['topic_last_post_id'] = DBUtil::selectFieldMax('dizkus_posts', 'post_id', 'MAX', 'topic_id='.DataUtil::formatForStore($args['id']));
             $t['topic_replies']      = DBUtil::selectObjectCount('dizkus_posts', 'topic_id='.DataUtil::formatForStore($args['id'])) -1;
 
-            DBUtil::updateObject($t, 'dizkus_topics');
+            DBUtil::updateObject($t, 'dizkus_topics', null, 'topic_id');
             break;
         case 'all forums':
             $forums = Dizkus_adminapi_readforums();
@@ -516,9 +516,9 @@ function Dizkus_adminapi_sync($args)
                            count(poster_id) as total_posts
                     FROM ".$pntable['dizkus_posts']."
                     GROUP BY poster_id";
-            $res = DBUtil::executeSQL($sql, -1, $postmax);
+            $res = DBUtil::executeSQL($sql);
             $colarray = array('user_id', 'user_posts');
-            $result    = DBUtil::marshallObjects($res, $colarray);
+            $result   = DBUtil::marshallObjects($res, $colarray);
             // can this be done in SQL without reading with PHP and writing with PHP? I do not care about MySQL 5 only solutions
             if (is_array($result) && !empty($result)) {
                  DBUtil::updateObjectArray($result, 'dizkus_users', 'user_id');
