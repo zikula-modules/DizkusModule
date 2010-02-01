@@ -30,7 +30,7 @@ function loadforum(forumid)
 {
     dzk_toggleprogressimage(false, forumid);
     //if(Element.visible('editforum_' + forumid) == false) {
-    var pars = "module=Dizkus&type=admin&func=editforum&forum=" + forumid;
+    var pars = "module=Dizkus&type=admin&func=editforum&forum_id=" + forumid;
     var myAjax = new Ajax.Request(
         document.location.pnbaseURL+'ajax.php',
         {
@@ -281,7 +281,7 @@ function storecategory_response(originalRequest, json)
 function addforum(catid)
 {
     dzk_toggleprogressimage(true, catid);
-    var pars = "module=Dizkus&type=admin&func=editforum&forum=-1&cat=" + catid;
+    var pars = "module=Dizkus&type=admin&func=editforum&forum_id=-1&cat=" + catid;
     var myAjax = new Ajax.Request(
         document.location.pnbaseURL+'ajax.php', 
         {

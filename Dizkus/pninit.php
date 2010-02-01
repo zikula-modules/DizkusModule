@@ -313,9 +313,6 @@ function Dizkus_init_interactiveupgrade($args)
 
     $oldversion = FormUtil::getPassedValue('oldversion', 0, 'GETPOST');
     
-    extract($args);
-    unset($args);
-
     Loader::includeOnce('modules/Dizkus/pnversion.php');
     
     $authid = SecurityUtil::generateAuthKey('Modules');

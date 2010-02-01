@@ -337,13 +337,8 @@ function Dizkus_admin_editforum($args=array())
         dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
     }
 
-    if (count($args) > 0) {
-        // TODO deprecate the use of extract
-        extract($args);
-        // forum_id, returnhtml
-    } else {
-        $forum_id = (int)FormUtil::getPassedValue('forum', null, 'GETPOST');
-    }
+    $forum_id   = FormUtil::getPassedValue('forum_id', (isset($args['forum_id'])) ? $args['forum_id'] : null, 'GETPOST');
+    $returnhtml = FormUtil::getPassedValue('returnhtml', (isset($args['returnhtml'])) ? $args['returnhtml'] : null, 'GETPOST');
 
     if (!isset($forum_id)) {
         dzk_ajaxerror(_MODARGSERROR . ': forum_id ' . DataUtil::formatForDisplay($forum_id) . ' in Dizkus_admin_editforum()');
@@ -477,13 +472,8 @@ function Dizkus_admin_editcategory($args=array())
         dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
     }
 
-    if (!empty($args)) {
-        // TODO deprecate the use of extract
-        extract($args);
-        $cat_id = $cat;
-    } else {
-        $cat_id = FormUtil::getPassedValue('cat');
-    }
+    $cat_id   = FormUtil::getPassedValue('cat', (isset($args['cat'])) ? $args['cat'] : '', 'GETPOST');
+
     if ($cat_id == 'new') {
         $new = true;
         $category = array('cat_title'    => __('-- Create new category --', $dom),
@@ -729,7 +719,7 @@ function Dizkus_admin_storeforum()
                                'forum_pntopic'          => $pntopic));
         }
         $editforumhtml = Dizkus_admin_editforum(array('forum_id'   => $forum_id,
-                                                       'returnhtml' => true));
+                                                      'returnhtml' => true));
 
         $forumtitle = '<a href="' . pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)) .'">' . $forum_name . '</a> (' . $forum_id . ')';
 

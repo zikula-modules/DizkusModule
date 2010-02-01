@@ -21,10 +21,6 @@ function Dizkus_hookapi_createbyitem($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
-    // TODO deprecate the use of extract
-    extract($args);
-    unset($args);
-
     if (!isset($args['extrainfo']['module']) || empty($args['extrainfo']['module'])) {
         $modname = pnModGetName();
     } else {
