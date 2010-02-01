@@ -18,8 +18,6 @@
  */
 function smarty_function_plainbbcode($params, &$smarty)
 {
-    extract($params);
-
     $out = "";
     if (isset($params['textfieldid']) && !empty($params['textfieldid'])) {
 	    if (pnModAvailable('bbcode') && pnModIsHooked('bbcode', 'Dizkus')) {

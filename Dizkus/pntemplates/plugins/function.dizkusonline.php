@@ -52,18 +52,14 @@ Loader::includeOnce('modules/Dizkus/common.php');
 
 function smarty_function_dizkusonline($params, &$smarty)
 {
-    // TODO deprecate the use of extract
-    extract($params);
-    unset($params);
-
-    if (!isset($category_id)) {
-        $category_id = (isset($smarty->_tpl_vars['viewcat']) && $smarty->_tpl_vars['viewcat'] != -1) ? $smarty->_tpl_vars['viewcat'] : ''; 
+    if (!isset($params['category_id'])) {
+        $params['category_id'] = (isset($smarty->_tpl_vars['viewcat']) && $smarty->_tpl_vars['viewcat'] != -1) ? $smarty->_tpl_vars['viewcat'] : ''; 
     }
-    if (!isset($forum_id)) {
-        $forum_id = isset($smarty->_tpl_vars['forum']) ? $smarty->_tpl_vars['forum'] : ''; 
+    if (!isset($params['forum_id'])) {
+        $params['forum_id'] = isset($smarty->_tpl_vars['forum']) ? $smarty->_tpl_vars['forum'] : ''; 
     }
 
-    $checkgroups = (isset($checkgroups)) ? true : false;
+    $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
 
     $pntable = pnDBGetTables();
 
@@ -97,7 +93,7 @@ function smarty_function_dizkusonline($params, &$smarty)
         $total = count($onlineusers);
         foreach ($onlineusers as $onlineuser) {
             if ($onlineuser['uid'] != 0) {
-                $onlineuser['admin'] = (isset($moderators[$onlineuser['uid']]) && $moderators[$onlineuser['uid']] == $onlineuser['uname']) || allowedtoadmincategoryandforum($category_id, $forum_id, $onlineuser['uid']);
+                $onlineuser['admin'] = (isset($moderators[$onlineuser['uid']]) && $moderators[$onlineuser['uid']] == $onlineuser['uname']) || allowedtoadmincategoryandforum($params['category_id'], $params['forum_id'], $onlineuser['uid']);
                 $unames[$onlineuser['uid']] = $onlineuser;
                 $numusers++;
             } else {
@@ -106,7 +102,7 @@ function smarty_function_dizkusonline($params, &$smarty)
         }
     }
 
-    if ($checkgroups == true) {
+    if ($params['checkgroups'] == true) {
         foreach ($unames as $user) {
             if ($user['admin'] == false) {
                 $groups = pnModAPIFunc('Groups', 'user', 'getusergroups', array('uid' => $user['uid']));
@@ -135,8 +131,8 @@ function smarty_function_dizkusonline($params, &$smarty)
     $dizkusonline['total']     = $total;
     $dizkusonline['unames']    = $unames;
 
-    if (isset($assign)) {
-        $smarty->assign($assign, $dizkusonline);
+    if (isset($params['assign'])) {
+        $smarty->assign($params['assign'], $dizkusonline);
     } else {
         $smarty->assign($dizkusonline);
     }
