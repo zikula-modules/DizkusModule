@@ -68,7 +68,7 @@ function Dizkus_statisticsblock_display($blockinfo)
     }
 
     // build the output
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     $params = explode(',', $vars['sb_parameters']);
 
@@ -121,7 +121,7 @@ function Dizkus_statisticsblock_modify($blockinfo)
         $vars['sb_template']   = 'dizkus_statisticsblock_display.html';
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     $render->assign('vars', $vars);
 

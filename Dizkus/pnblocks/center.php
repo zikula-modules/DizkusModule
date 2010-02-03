@@ -64,7 +64,7 @@ function Dizkus_centerblock_display($blockinfo)
     // Break out options from our content field
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     // check if cb_template is set, if not, use the default centerblock template
     if (empty($vars['cb_template'])) {
@@ -124,7 +124,7 @@ function Dizkus_centerblock_modify($blockinfo)
         $vars['cb_template']   = 'dizkus_centerblock_display.html';
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
     $render->assign('vars', $vars);
 
     return $render->fetch('dizkus_centerblock_config.html');

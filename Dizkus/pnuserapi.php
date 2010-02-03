@@ -45,7 +45,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
         $makedummy = true;
     }
 
-    $pntable = &pnDBGetTables();
+    $pntable = pnDBGetTables();
 
     $dizkus_userdata = DBUtil::selectObjectByID('dizkus_users', $userid, 'user_id');
     

@@ -35,7 +35,7 @@ function Dizkus_hook_showdiscussionlink($args)
                               array('topic_id'   => $topic_id,
                                     'count'      => false));
 
-        $render = & pnRender::getInstance('Dizkus', false, null, true);
+        $render = pnRender::getInstance('Dizkus', false, null, true);
 
         $render->assign('topic', $topic);
 

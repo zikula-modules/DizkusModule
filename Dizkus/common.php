@@ -72,7 +72,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
-    $render = & pnRender::getInstance('Dizkus', false);
+    $render = pnRender::getInstance('Dizkus', false);
 
     // start with a fresh array
     $test_array = array();
@@ -809,7 +809,7 @@ function dzk_available($deliverhtml = true)
 {
     if ((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if ($deliverhtml == true) {
-            $render = & pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
+            $render = pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
             return $render->fetch('dizkus_disabled.html');
         } else {
             return false;

@@ -87,7 +87,7 @@ function Dizkus_ajax_reply()
         $post['post_text'] = $post['post_textdisplay'];
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
     $render->assign('topic', $topic);
     $render->assign('post', $post);
     $render->assign('preview', $preview);
@@ -179,7 +179,7 @@ function Dizkus_ajax_editpost()
                              array('post_id'     => $post_id));
 
         if ($post['poster_data']['edit'] == true) {
-            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render = pnRender::getInstance('Dizkus', false, null, true);
 
             $render->assign('post', $post);
             // simplify our live
@@ -545,7 +545,7 @@ function Dizkus_ajax_edittopicsubject()
                                    'complete' => false));
 
         if ($topic['access_topicsubjectedit'] == true) {
-            $render = & pnRender::getInstance('Dizkus', false, null, true);
+            $render = pnRender::getInstance('Dizkus', false, null, true);
             $render->assign('topic', $topic);
 
             SessionUtil::delVar('pn_ajax_call');
@@ -686,7 +686,7 @@ function Dizkus_ajax_newtopic()
         dzk_ajaxerror(__('Error! The post has no subject line.', $dom), true);
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -799,7 +799,7 @@ function Dizkus_ajax_forumusers()
         dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    $render = & pnRender::getInstance('Dizkus', false);
+    $render = pnRender::getInstance('Dizkus', false);
 
     if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
@@ -823,7 +823,7 @@ function Dizkus_ajax_newposts()
         pnShutDown();
     }
 
-    $render = & pnRender::getInstance('Dizkus', false);
+    $render = pnRender::getInstance('Dizkus', false);
 
     if (pnConfigGetVar('shorturls')) {
         Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
