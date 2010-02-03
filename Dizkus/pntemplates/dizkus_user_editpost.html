@@ -29,12 +29,12 @@
 
                             <!--[if $post.moderate eq true OR $post.edit_subject eq true]-->
                             <div>
-                                <label for="subject"><!--[gt text="Subject line"]--></label>
+                                <label for="subject"><!--[gt text="Subject line"]--></label><br />
                                 <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[$post.topic_subject|pnvarprephtmldisplay]-->" />
                             </div>
                             <!--[/if]-->
                             <div>
-                                <br /><label for="message"><!--[gt text="Message body"]--></label>:
+                                <label for="message"><!--[gt text="Message body"]--></label><br />
                                 <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60"><!--[$post.post_rawtext]--></textarea>
                                 <!--[if $pncore.Dizkus.striptags == 'yes']-->
                                 <p><!--[gt text="Notice: No HTML tags allowed (except inside [code][/code] tags)"]--></p>

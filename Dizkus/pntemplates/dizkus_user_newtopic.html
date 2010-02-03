@@ -26,11 +26,11 @@
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                             <div>
-                                <label for="subject"><!--[gt text="Subject line"]--></label>
+                                <label for="subject"><!--[gt text="Subject line"]--></label><br />
                                 <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="<!--[$newtopic.subject|pnvarprephtmldisplay]-->" />
                             </div>
                             <div>
-                                <br /><label for="message"><!--[gt text="Message body"]--></label>
+                                <label for="message"><!--[gt text="Message body"]--></label><br />
                                 <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60"><!--[$newtopic.message]--></textarea>
                                 <!--[if isset($hooks.MediaAttach)]--><!--[$hooks.MediaAttach]--><!--[/if]-->
                                 <!--[if $pncore.Dizkus.striptags == 'yes']-->

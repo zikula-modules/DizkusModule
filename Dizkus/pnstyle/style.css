@@ -29,15 +29,15 @@
 }
 #dizkus .hidden,
 #dizkus_admin .hidden {
-    display:none ! important;
+    display:none !important;
 }
 #dizkus .visible,
 #dizkus_admin .visible {
-    visibility: visible ! important;
+    visibility: visible !important;
 }
 #dizkus .invisible,
 #dizkus_admin .invisible {
-    visibility: hidden ! important;
+    visibility: hidden !important;
 }
 .dzk_handle {
     cursor: move;
@@ -573,20 +573,19 @@ div#editpostoptions ul li {
 #dizkus input.dzk_img,
 #dizkus_admin button.dzk_img,
 #dizkus_admin input.dzk_img {
+    background:none;
+    border:1px outset #CCCCCC;
+    cursor:pointer;
     font-size:1em;
-    background: transparent;
-    border: 1px outset #CCCCCC;
-    /*margin: 1em 0.5em 0 0;*/
-    margin: 0 0.5em;
-    padding: 2px 0 2px 20px;
-    cursor: pointer;
-    line-height: 1em;
+    line-height:1em;
+    margin:0 10px 0 0;
+    padding:3px 5px 3px 20px;
 }
 
 #dizkus a.dzk_img,
 #dizkus_admin a.dzk_img {
-    margin: 0 0.5em;
-    padding: 2px 0 2px 20px;
+    margin:0 10px 0 0;
+    padding:3px 5px 3px 20px;
 }
 
 #dizkus button.ok,
@@ -661,12 +660,14 @@ div#editpostoptions ul li {
 }
 #dizkus .dzk_form input#subject,
 #dizkus .dzk_form textarea {
-    font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+    display:block;
+    font-family:"Lucida Grande",Verdana,Helvetica,Arial,sans-serif;
     font-size:1em;
-    line-height: 1.4em;
-    padding: 3px;
-    width: 60%;
-    max-width: none;
+    line-height:1.4em;
+    max-width:none;
+    padding:3px;
+    position:relative;
+    width:60%;
 }
 #dizkus #latestposts button {
     font-size:1em;
