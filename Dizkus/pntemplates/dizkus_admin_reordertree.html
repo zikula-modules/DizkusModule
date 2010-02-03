@@ -1,4 +1,5 @@
 <!--[*  $Id$  *]-->
+<!--[pnpageaddvar name="javascript" value="javascript/ajax/pnajax.js"]-->
 <!--[gt text="Edit forum tree" assign=templatetitle]-->
 <!--[pnimg src='icon_dbaccess.gif' assign='progressicon']-->
 <!--[include file='dizkus_admin_header.html']-->
@@ -6,15 +7,15 @@
 <p class="z-informationmsg"><!--[gt text="Notice: You can use drag and drop to arrange the order of forums and categories within the forum tree. Your changes will be saved when you click on the 'Save tree order' button."]--></p>
 
 <div class="z-clearfix" style="margin-top: 1em;">
-    <button onclick="javascript:addcategory();" class="dzk_img add dzk_float_left"><!--[gt text="Create new category"]--></button>
-    <button onclick="javascript:storetreeorder();" class="dzk_img ok dzk_float_right" type="submit"><!--[gt text="Save tree order"]--></button>
+    <button onclick="javascript:addcategory();" class="dzk_img add z-floatleft"><!--[gt text="Create new category"]--></button>
+    <button onclick="javascript:storetreeorder();" class="dzk_img ok z-floatright" type="submit"><!--[gt text="Save tree order"]--></button>
 </div>
 
 <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
 <ul id="category">
     <!--[foreach item='category' from=$categorytree]-->
-    <li id="category_<!--[$category.cat_id]-->" class="catline">
+    <li id="category_<!--[$category.cat_id]-->" class="catline <!--[cycle values='z-odd,z-even']-->">
         <div class="z-clearfix">
             <div class="dzk_handle z-clearfix">
                 <div id="categorytitle_<!--[$category.cat_id]-->" style="float: left; width: 60%;">
@@ -117,8 +118,8 @@
 <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
 
 <div class="z-clearfix" style="margin-top: 1em;">
-    <button onclick="javascript:addcategory();" class="dzk_img add dzk_float_left"><!--[gt text="Create new category"]--></button>
-    <button onclick="javascript:storetreeorder();" class="dzk_img ok dzk_float_right" type="submit"><!--[gt text="Save tree order"]--></button>
+    <button onclick="javascript:addcategory();" class="dzk_img add z-floatleft"><!--[gt text="Create new category"]--></button>
+    <button onclick="javascript:storetreeorder();" class="dzk_img ok z-floatright" type="submit"><!--[gt text="Save tree order"]--></button>
 </div>
 
 <script type="text/javascript">

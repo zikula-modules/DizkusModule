@@ -42,12 +42,6 @@
 .dzk_handle {
     cursor: move;
 }
-.dzk_float_left {
-    float:left;
-}
-.dzk_float_right {
-    float:right;
-}
 #dizkus dl,
 #dizkus dt,
 #dizkus dd,
@@ -549,8 +543,10 @@ div#editpostoptions ul li {
 #dizkus #dzk_quickreply .post_header,
 #dizkus #dzk_newtopic .post_header,
 #dizkus .ajaxeditpoststatusbox {
-    font-size: 110%;
-    padding: 5px 0px;
+    display:block;
+    font-size:110%;
+    font-weight:bold;
+    padding:5px 0;
 }
 #dizkus #dzk_quickreply .post_text_wrap textarea,
 #dizkus #dzk_newtopic .post_text_wrap textarea,
@@ -561,7 +557,7 @@ div#editpostoptions ul li {
 }
 #dizkus #quickreplybuttons,
 #dizkus #newtopicbuttons {
-    margin: 1em 0.5em;
+    margin: 1em 0;
 }
 #dizkus .bbcode p {
     margin: 0;
@@ -578,16 +574,17 @@ div#editpostoptions ul li {
     cursor:pointer;
     font-size:1em;
     line-height:1em;
-    margin:0 10px 0 0;
     padding:3px 5px 3px 20px;
 }
 
 #dizkus a.dzk_img,
 #dizkus_admin a.dzk_img {
-    margin:0 10px 0 0;
     padding:3px 5px 3px 20px;
 }
-
+#dizkus .dzk_buttonmargin .dzk_img,
+#dizkus_admin .dzk_buttonmargin .dzk_img {
+    margin:0 5px 0 0;
+}
 #dizkus button.ok,
 #dizkus input.ok,
 #dizkus_admin button.ok,
