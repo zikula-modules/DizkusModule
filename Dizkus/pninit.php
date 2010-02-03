@@ -311,10 +311,10 @@ function Dizkus_init_interactiveupgrade($args)
       return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
     }
 
-    $oldversion = FormUtil::getPassedValue('oldversion', 0, 'GETPOST');
-    
+    $oldversion = FormUtil::getPassedValue('oldversion', isset($args['oldversion']) ? $args['oldversion'] : 0, 'GETPOST');
+
     Loader::includeOnce('modules/Dizkus/pnversion.php');
-    
+
     $authid = SecurityUtil::generateAuthKey('Modules');
     switch ($oldversion)
     {
@@ -338,7 +338,7 @@ function Dizkus_init_interactiveupgrade($args)
             return pnRedirect(pnModURL('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
-    $render = & pnRender::getInstance('Dizkus', false, null, true);
+    $render = pnRender::getInstance('Dizkus', false, null, true);
 
     $render->assign('oldversion', $oldversion);
     $render->assign('authid', $authid);
@@ -411,8 +411,8 @@ function Dizkus_upgrade_to_3_0()
     DBUtil::changeTable('dizkus_posts');
 
     // remove obsolete module vars
-    pnModDelVar('Dizkus', 'posticon');
-    pnModDelVar('Dizkus', 'firstnew_image');
+    pnModDelVar('pnForum', 'posticon');
+    pnModDelVar('pnForum', 'firstnew_image');
 
     $oldvars = pnModGetVar('pnForum');
     foreach ($oldvars as $varname => $oldvar)
@@ -426,7 +426,7 @@ function Dizkus_upgrade_to_3_0()
     pnModDelVar('pnForum');
 
     // update hooks
-    $pntables    = &pnDBGetTables();
+    $pntables    = pnDBGetTables();
     $hookstable  = $pntables['hooks'];
     $hookscolumn = $pntables['hooks_column'];
 
@@ -505,6 +505,12 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropColumn('dizkus_forums', 'forum_type');
     DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
 
+    // add some missing index fields, all named 'id'
+    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_users'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_favorites'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+
     // move all posting text from post_text to posts table and remove the post_text table - never knew why this has been split
     $sql = 'UPDATE ' . $poststable . ' AS p  
             SET p.' . $postscolumn['post_text'] . '= ( 
@@ -520,7 +526,8 @@ function Dizkus_upgrade_to_3_1()
         LogUtil::registerError (__("Error! Could not upgrade the table '%s'.", 'dizkus_posts', $dom));
     }
 
-    DBUtil::dropTable('post_text');
+    // remove obsolete table
+    DBUtil::dropTable('dizkus_posts_text');
 
     pnModDelVar('Dizkus', 'sendemailswithsqlerrors');
     
@@ -538,7 +545,7 @@ function Dizkus_upgrade_to_3_1()
 }
 
 /**
- * create default categories
+ * create default categories - unfinished code, do not use
  */
 function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
 {
@@ -587,7 +594,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
 }
 
 /**
- * migrate old categories
+ * migrate old categories - unfinished code, do not use
  */
 function _dizkus_migratecategories()
 {

@@ -7,12 +7,16 @@ Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
 3.1 (fs,cv)
 ---------------------------------------------------------------------------------------------
-This version will not work in Zikula before 1.2.0!
-+ more DBUtil
-+ removed language defines in favour of gettext for Zikula 1.2.0. 
+This version will not work in Zikula before 1.2.0+, preferred version 1.2.1
++ finalized DBUtil
++ removed language defines in favour of gettext for Zikula 1.2.0+. 
 + default charset is now utf-8
 + avatarpath - Users' modvar
 + replaced pnfdate_format with pndate_format
++ removed some previously deprecated plugins
++ code cleanup
++ removed posts_text table
++ added some index fields to certain tables to improve performance 
 
 ---------------------------------------------------------------------------------------------
 3.0 (fs,cv)
