@@ -103,9 +103,9 @@
                             <a title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
                             <!--[if $forum.forum_desc neq '']--><!--[$forum.forum_desc|pnvarprephtmldisplay]--><br /><!--[/if]-->
                             <!--[if !empty($forum.forum_mods)]-->
-                            <!--[gt text="Moderated by"]-->*:
+                            <em><!--[gt text="Moderated by"]-->:</em>
                             <!--[foreach name=moderators item=mod key=modid from=$forum.forum_mods]-->
-                            <!--[$mod]--><!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
+                            <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
                             <!--[/foreach]-->
                             <!--[/if]-->
                         </dt>
