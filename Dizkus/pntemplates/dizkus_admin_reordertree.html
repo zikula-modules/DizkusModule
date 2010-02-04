@@ -1,5 +1,4 @@
 <!--[*  $Id$  *]-->
-<!--[pnpageaddvar name="javascript" value="javascript/ajax/pnajax.js"]-->
 <!--[gt text="Edit forum tree" assign=templatetitle]-->
 <!--[pnimg src='icon_dbaccess.gif' assign='progressicon']-->
 <!--[include file='dizkus_admin_header.html']-->
@@ -15,7 +14,7 @@
 
 <ul id="category">
     <!--[foreach item='category' from=$categorytree]-->
-    <li id="category_<!--[$category.cat_id]-->" class="catline <!--[cycle values='z-odd,z-even']-->">
+    <li id="category_<!--[$category.cat_id]-->" class="catline">
         <div class="z-clearfix">
             <div class="dzk_handle z-clearfix">
                 <div id="categorytitle_<!--[$category.cat_id]-->" style="float: left; width: 60%;">

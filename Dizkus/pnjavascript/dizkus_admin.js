@@ -499,8 +499,6 @@ function storetreeorder_response(originalRequest, json)
     }
 
     updateAuthid(json.authid);
-
-    pnrecolor('category', 'categoryheader');
 }
 
 
