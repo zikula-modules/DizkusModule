@@ -146,14 +146,14 @@ function Dizkus_init()
     if (strtolower($GLOBALS['PNConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
         // FULLTEXT does not work an innodb - by design
         // for now we assume that it works with all other table types, if not, please open a ticket
-        $pntable      = pnDBGetTables();
-        $topicstable  = DataUtil::formatForStore($pntable['dizkus_topics']);
-        $topictitle   = DataUtil::formatForStore($pntable['dizkus_topics_column']['topic_title']);
+        $ztables      = pnDBGetTables();
+        $topicstable  = DataUtil::formatForStore($ztables['dizkus_topics']);
+        $topictitle   = DataUtil::formatForStore($ztables['dizkus_topics_column']['topic_title']);
         $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
         
-        $posttexttable  = DataUtil::formatForStore($pntable['dizkus_posts_text']);
-        $posttext       = DataUtil::formatForStore($pntable['dizkus_posts_text_column']['post_text']);
-        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $posttexttable . ' ADD FULLTEXT ' . $posttext . ' (' . $posttext . ')');
+        $poststable = DataUtil::formatForStore($ztables['dizkus_posts']);
+        $poststext  = DataUtil::formatForStore($ztables['dizkus_posts_column']['post_text']);
+        $res2 = DBUtil::executeSQL('ALTER TABLE ' . $poststable . ' ADD FULLTEXT ' . $poststext . ' (' . $poststext . ')');
 
         if ($res1 == true && $res2 == true) {
             pnModSetVar('Dizkus', 'fulltextindex', 'yes');
@@ -197,7 +197,6 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'signaturemanagement', 'no');
     pnModSetVar('Dizkus', 'signature_start', '');
     pnModSetVar('Dizkus', 'signature_end', '');
-    pnModSetVar('Dizkus', 'sendemailswithsqlerrors', 'no');
     pnModSetVar('Dizkus', 'showtextinsearchresults', 'yes');
     pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
     pnModSetVar('Dizkus', 'minsearchlength', 3);
@@ -505,11 +504,19 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropColumn('dizkus_forums', 'forum_type');
     DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
 
-    // add some missing index fields, all named 'id'
-    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_users'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_favorites'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    // add some missing index fields, all named 'id' if not existing
+    if (!_id_exists($pntable['dizkus_users'])) {
+        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_users'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    }
+    if (!_id_exists($pntable['dizkus_topic_subscription'])) {
+        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    }
+    if (!_id_exists($pntable['dizkus_forum_favorites'])) {
+        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_favorites'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    }
+    if (!_id_exists($pntable['dizkus_forum_mods'])) {
+        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    }
 
     // move all posting text from post_text to posts table and remove the post_text table - never knew why this has been split
     $sql = 'UPDATE ' . $poststable . ' AS p  
@@ -704,4 +711,29 @@ function _dizkus_migratecategories()
     }
 
     return true;
+}
+
+/**
+ * utility function: check if id column exists
+ *
+ */
+function _id_exists($tablename)
+{
+    $res = DBUtil::executeSQL('SHOW COLUMNS FROM '. $tablename);
+    $id_exists = false;
+    foreach($res as $resline) {
+        //(array) 0:
+        //   1. (string) 0 = id
+        //   2. (string) 1 = int(11)
+        //   3. (string) 2 = NO
+        //   4. (string) 3 = PRI
+        //   5. (NULL) 4 = (none)
+        //   6. (string) 5 = auto_increment
+        if($resline[0] == 'id' || $resline[3] == 'PRI' || $resline[5] == 'auto_increment') {
+            // found id
+            $id_exists = true;
+            break;
+        }
+    }
+    return $id_exists;
 }
