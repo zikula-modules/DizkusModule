@@ -337,8 +337,8 @@ function Dizkus_admin_editforum($args=array())
         dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
     }
 
-    $forum_id   = FormUtil::getPassedValue('forum_id', (isset($args['forum_id'])) ? $args['forum_id'] : null, 'GETPOST');
-    $returnhtml = FormUtil::getPassedValue('returnhtml', (isset($args['returnhtml'])) ? $args['returnhtml'] : null, 'GETPOST');
+    $forum_id   = isset($args['forum_id']) ? $args['forum_id'] : FormUtil::getPassedValue('forum_id', null, 'GETPOST');
+    $returnhtml = isset($args['returnhtml']) ? $args['returnhtml'] : FormUtil::getPassedValue('returnhtml', null, 'GETPOST');
 
     if (!isset($forum_id)) {
         dzk_ajaxerror(_MODARGSERROR . ': forum_id ' . DataUtil::formatForDisplay($forum_id) . ' in Dizkus_admin_editforum()');
@@ -366,12 +366,16 @@ function Dizkus_admin_editforum($args=array())
                        'forum_moduleref'  => '',
                        'forum_pntopic'    => 0,
                        'externalsource'   => 0);
+        $moderators = array();
     } else {
         // we are editing
         $new = false;
         $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                               array('forum_id'  => $forum_id,
                                     'permcheck' => ACCESS_ADMIN));
+        $moderators = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
+                                    array('forum_id' => $forum['forum_id']));
+
 
     }
 
@@ -397,8 +401,7 @@ function Dizkus_admin_editforum($args=array())
                                   'id'   => 0));
 
     $foundsel = false;
-    foreach ($hooked_modules_raw as $hookmod => $dummy)
-    {
+    foreach ($hooked_modules_raw as $hookmod => $dummy) {
         $hookmodid = pnModGetIDFromName($hookmod);
         $sel = false;
         if ($forum['forum_moduleref'] == $hookmodid) {
@@ -419,9 +422,6 @@ function Dizkus_admin_editforum($args=array())
     if (pnModAvailable('Feeds')) {
         $rssfeeds = pnModAPIFunc('Feeds', 'user', 'getall');
     }
-
-    $moderators = pnModAPIFunc('Dizkus', 'admin', 'readmoderators',
-                                array('forum_id' => $forum['forum_id']));
 
     $render = pnRender::getInstance('Dizkus', false, null, true);
 
