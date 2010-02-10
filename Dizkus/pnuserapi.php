@@ -492,7 +492,7 @@ function Dizkus_userapi_get_moderators($args)
     if (!empty($forum_id)) {
         $sql = 'SELECT u.pn_uname, u.pn_uid
                 FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
-                WHERE f.forum_id = \''.DataUtil::formatForStore($forum_id).'\' AND u.pn_uid = f.user_id
+                WHERE f.forum_id = '.DataUtil::formatForStore($forum_id).' AND u.pn_uid = f.user_id
                 AND f.user_id < 1000000';
     } else {
         $sql = 'SELECT u.pn_uname, u.pn_uid
@@ -559,12 +559,22 @@ function Dizkus_userapi_setcookies()
         $path .= '/';
     }
 
-    setcookie('phpBBLastVisit', time(), time()+31536000, $path);
+    setcookie('DizkusLastVisit', time(), time()+31536000, $path);
 
-    if (!isset($_COOKIE['phpBBLastVisitTemp'])){
-        $temptime = isset($_COOKIE['phpBBLastVisit']) ? $_COOKIE['phpBBLastVisit'] : '';
+    if (!isset($_COOKIE['DizkusLastVisitTemp'])){
+        $temptime = isset($_COOKIE['DizkusLastVisit']) ? $_COOKIE['DizkusLastVisit'] : '';
     } else {
-        $temptime = $_COOKIE['phpBBLastVisitTemp'];
+        $temptime = $_COOKIE['DizkusLastVisitTemp'];
+    }
+
+    if (empty($temptime)) {
+        // check for old Cookies
+        // TO-DO: remove this code in 3.2 or a bit later
+        if (!isset($_COOKIE['phpBBLastVisitTemp'])){
+            $temptime = isset($_COOKIE['phpBBLastVisit']) ? $_COOKIE['phpBBLastVisit'] : '';
+        } else {
+            $temptime = $_COOKIE['phpBBLastVisitTemp'];
+        }
     }
 
     if (empty($temptime)) {
@@ -572,7 +582,7 @@ function Dizkus_userapi_setcookies()
     }
 
     // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-    setcookie('phpBBLastVisitTemp', $temptime, time()+1800, $path);
+    setcookie('DizkusLastVisitTemp', $temptime, time()+1800, $path);
 
     // set vars for all scripts
     $last_visit = DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M');
@@ -2239,25 +2249,25 @@ function Dizkus_userapi_notify_by_email($args)
         }
     }
 
-    $sitename = pnConfigGetVar('sitename');
-
-    // TODO Move this to a multilang template?
-    $message = __f('Forums on %s', $sitename, $dom) . "\n"
-            . $category_name . ' :: ' . $forum_name . ' :: '. $topic_subject . "\n\n"
-            . DataUtil::formatForDisplay(__f('%1$s wrote at %2$s', array($poster_name, $topic_time_ml), $dom)) . "\n"
-            . "---------------------------------------------------------------------\n\n"
-            . strip_tags($args['post_message']) . "\n"
-            . "---------------------------------------------------------------------\n\n"
-            . __('Reply to this message:', $dom) . "\n"
-            . pnModURL('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true) . "\n\n"
-            . __('Browse thread:', $dom) . "\n"
-            . pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true) . "\n\n"
-            . __('FMaintain topic and forum subscriptions:', $dom) . "\n"
-            . pnModURL('Dizkus', 'user', 'prefs', array(), null, null, true) . "\n"
-            . "\n"
-            . __f('You are receiving this e-mail message because you are subscribed to be notified of events in the forums on %s.', pnGetBaseURL(), $dom);
-
     if (count($recipients) > 0) {
+        $sitename = pnConfigGetVar('sitename');
+    
+        $render = pnRender::getInstance('Dizkus', false, null, true);
+        $render->assign('sitename', $sitename);
+        $render->assign('category_name', $category_name);
+        $render->assign('forum_name', $forum_name);
+        $render->assign('topic_subject', $topic_subject);
+        $render->assign('poster_name', $poster_name);
+        $render->assign('topic_time_ml', $topic_time_ml);
+        $render->assign('post_message', $args['post_message']);
+        $render->assign('topic_id', $args['topic_id']);
+        $render->assign('forum_id', $forum_id);
+        $render->assign('reply_url', pnModURL('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
+        $render->assign('topic_url', pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
+        $render->assign('subscription_url', pnModURL('Dizkus', 'user', 'prefs', array(), null, null, true));
+        $render->assign('base_url', pnGetBaseURL());
+        $message = $render->fetch('dizkus_mail_notifyuser.txt');
+      
         foreach ($recipients as $subscriber) {
             // integrate contactlist's ignorelist here
             $ignorelist_setting = pnModAPIFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));

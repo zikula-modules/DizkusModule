@@ -1,0 +1,14 @@
+<!--[* $Id$ *]-->
+<!--[ gt text="Forums on %s", tag1=$sitename]-->
+<!--[$category_name]--> :: <!--[$forum_name]--> :: <!--[$topic_subject]-->
+
+<!--[ gt text='%1$s wrote at %2$s' tag1=$poster_name tag2=$topic_time_ml]-->
+---------------------------------------------------------------------
+<!--[$post_message|strip_tags]-->
+---------------------------------------------------------------------
+<!--[ gt text="Reply to this message: %s" tag1=$reply_url]-->
+<!--[ gt text="Browse thread: %s \n\n" tag1=$topic_url]-->
+<!--[ gt text="Maintain topic and forum subscriptions: %s" tag1=$subscription_url]-->
+
+<!--[ gt text="You are receiving this e-mail message because you are subscribed to be notified of events in the forums on %s." tag1=$base_url ]-->
+
