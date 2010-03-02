@@ -1260,14 +1260,14 @@ function Dizkus_userapi_storereply($args)
         }
     }
 
-    // Prep for DB
-    $obj['post_time']  = DataUtil::formatForStore(date('Y-m-d H:i'));
-    $obj['topic_id']   = DataUtil::formatForStore($args['topic_id']);
-    $obj['forum_id']   = (int)DataUtil::formatForStore($forum_id);
-    $obj['post_text']  = DataUtil::formatForStore($args['message']);
-    $obj['poster_id']  = DataUtil::formatForStore($pn_uid);
-    $obj['poster_ip']  = DataUtil::formatForStore($poster_ip);
-    $obj['post_title'] = DataUtil::formatForStore($args['post_title']);
+    // Prep for DB is done by DBUtil
+    $obj['post_time']  = date('Y-m-d H:i');
+    $obj['topic_id']   = $args['topic_id'];
+    $obj['forum_id']   = $forum_id;
+    $obj['post_text']  = $args['message'];
+    $obj['poster_id']  = $pn_uid;
+    $obj['poster_ip']  = $poster_ip;
+    $obj['post_title'] = $args['post_title'];
 
     DBUtil::insertObject($obj, 'dizkus_posts', 'post_id');
 
@@ -1516,21 +1516,21 @@ function Dizkus_userapi_storenewtopic($args)
     $time = (isset($args['time'])) ? $args['time'] : DateUtil::getDatetime('', '%Y-%m-%d %H:%M');
 
     // create topic
-    $obj['topic_title']     = DataUtil::formatForStore($args['subject']);
-    $obj['topic_poster']    = DataUtil::formatForStore($pn_uid);
-    $obj['forum_id']        = DataUtil::formatForStore($args['forum_id']);
-    $obj['topic_time']      = DataUtil::formatForStore($time);
-    $obj['topic_reference'] = (isset($args['reference'])) ? DataUtil::formatForStore($args['reference']) : '';
+    $obj['topic_title']     = $args['subject'];
+    $obj['topic_poster']    = $pn_uid;
+    $obj['forum_id']        = $args['forum_id'];
+    $obj['topic_time']      = $time;
+    $obj['topic_reference'] = (isset($args['reference'])) ? $args['reference'] : '';
     DBUtil::insertObject($obj, 'dizkus_topics', 'topic_id');
 
     // create posting
-    $pobj['topic_id']   = DataUtil::formatForStore($obj['topic_id']);
+    $pobj['topic_id']   = $obj['topic_id'];
     $pobj['forum_id']   = $obj['forum_id'];
     $pobj['poster_id']  = $obj['topic_poster'];
     $pobj['post_time']  = $obj['topic_time'];
-    $pobj['poster_ip']  = DataUtil::formatForStore($poster_ip);
-    $pobj['post_msgid'] = (isset($msgid)) ? DataUtil::formatForStore($msgid) : '';
-    $pobj['post_text']  = DataUtil::formatForStore($args['message']);
+    $pobj['poster_ip']  = $poster_ip;
+    $pobj['post_msgid'] = (isset($msgid)) ? $msgid : '';
+    $pobj['post_text']  = $args['message'];
     $pobj['post_title'] = $obj['topic_title'];
     DBUtil::insertObject($pobj, 'dizkus_posts', 'post_id');
 
@@ -1787,14 +1787,14 @@ function Dizkus_userapi_updatepost($args)
             $args['message'] .= '[addsig]';
         }
 
-        $updatepost = array('post_id'   => DataUtil::formatForStore($args['post_id']),
-                            'post_text' => DataUtil::formatForStore($args['message']));
+        $updatepost = array('post_id'   => $args['post_id'],
+                            'post_text' => $args['message']);
         DBUtil::updateObject($updatepost, 'dizkus_posts', null, 'post_id');
 
         if (trim($args['subject']) != '') {
             //  topic has a new subject
-            $updatetopic = array('topic_id'    => (int)DataUtil::formatForStore($args['topic_id']),
-                                 'topic_title' =>      DataUtil::formatForStore($args['subject']));
+            $updatetopic = array('topic_id'    => $args['topic_id'],
+                                 'topic_title' => $args['subject']);
             DBUtil::updateObject($updatetopic, 'dizkus_topics', null, 'topic_id');
         }
 
@@ -2031,10 +2031,10 @@ function Dizkus_userapi_movetopic($args)
 
     if ($topic['forum_id'] <> $args['forum_id']) {
         // set new forum id
-        $newtopic['forum_id'] = (int)DataUtil::formatForStore($args['forum_id']);
+        $newtopic['forum_id'] = $args['forum_id'];
         DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
 
-        $newpost['forum_id'] = (int)DataUtil::formatForStore($args['forum_id']);
+        $newpost['forum_id'] = $args['forum_id'];
         DBUtil::updateObject($newpost, 'dizkus_posts', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'post_id');
 
         if ($args['shadow'] == true) {
@@ -2790,10 +2790,10 @@ function Dizkus_userapi_splittopic($args)
     $oldtopic = DBUtil::selectObjectByID('dizkus_topics', $post['topic_id'],'topic_id');
 
     //  insert values into topics-table
-    $newtopic = array('topic_title'  => DataUtil::formatForStore($post['topic_subject']),
-                      'topic_poster' => DataUtil::formatForStore($post['poster_data']['pn_uid']),
-                      'forum_id'     => DataUtil::formatForStore($post['forum_id']),
-                      'topic_time'   => DataUtil::formatForStore(DateUtil::getDatetime('', '%Y-%m-%d %H:%M')));
+    $newtopic = array('topic_title'  => $post['topic_subject'],
+                      'topic_poster' => $post['poster_data']['pn_uid'],
+                      'forum_id'     => $post['forum_id'],
+                      'topic_time'   => DateUtil::getDatetime('', '%Y-%m-%d %H:%M'));
     $newtopic = DBUtil::insertObject($newtopic, 'dizkus_topics', 'topic_id');
 
     // increment topics count by 1
@@ -2808,7 +2808,7 @@ function Dizkus_userapi_splittopic($args)
     // update the topic_id in the postings
     // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
     // post_id > $post['post_id']
-    $updateposts = array('topic_id' => DataUtil::formatForStore($newtopic['topic_id']));
+    $updateposts = array('topic_id' => $newtopic['topic_id']);
     $where = 'WHERE post_id >= '.(int)DataUtil::formatForStore($post['post_id']).'
               AND topic_id = '.$post['topic_id'];
     DBUtil::updateObject($updateposts, 'dizkus_posts', $where, 'post_id');
@@ -2820,13 +2820,13 @@ function Dizkus_userapi_splittopic($args)
 
     // update the new topic
     $newtopic['topic_replies']      = (int)$posts_to_move - 1;
-    $newtopic['topic_last_post_id'] = DataUtil::formatForStore($oldtopic['topic_last_post_id']);
+    $newtopic['topic_last_post_id'] = $oldtopic['topic_last_post_id'];
     DBUtil::updateObject($newtopic, 'dizkus_topics', null, 'topic_id');
 
     // update the old topic
-    $oldtopic['topic_replies']      = (int)DataUtil::formatForStore($oldtopic['topic_replies'] - $posts_to_move);
-    $oldtopic['topic_last_post_id'] = DataUtil::formatForStore($lastpost['post_id']);
-    $oldtopic['topic_time']         = DataUtil::formatForStore($lastpost['post_time']);
+    $oldtopic['topic_replies']      = $oldtopic['topic_replies'] - $posts_to_move;
+    $oldtopic['topic_last_post_id'] = $lastpost['post_id'];
+    $oldtopic['topic_time']         = $lastpost['post_time'];
     DBUtil::updateObject($oldtopic, 'dizkus_topics', null, 'topic_id');
 
     return $newtopic['topic_id'];
@@ -3306,8 +3306,8 @@ function Dizkus_userapi_mailcron($args)
         }
 
         // store the timestamp of the last connection to the database
-        $fobj['forum_pop3_lastconnect'] = DataUtil::formatForStore(time());
-        $fobj['forum_id']               = DataUtil::formatForStore($forum['forum_id']);
+        $fobj['forum_pop3_lastconnect'] = time();
+        $fobj['forum_id']               = $forum['forum_id'];
         DBUtil::updateObject($fobj, 'dizkus_forums', '', 'forum_id');
     }
 
