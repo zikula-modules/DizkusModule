@@ -50,13 +50,7 @@ function Dizkus_init()
         Dizkus_delete();
         return false;
     }
-/*
-    // creating posts text table
-//  if (!DBUtil::createTable('dizkus_posts_text')) {
-        Dizkus_delete();
-        return false;
-    }
-*/
+
     // creating subscription table
     if (!DBUtil::createTable('dizkus_subscription')) {
         Dizkus_delete();
@@ -505,17 +499,28 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
 
     // add some missing index fields, all named 'id' if not existing
-    if (!_id_exists($pntable['dizkus_users'])) {
-        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_users'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    
+    // due to a bug in 3.0 no primary key has been added to the dizkus_users table upon creation, we will add this now 
+    $res = DBUtil::executeSQL('SHOW COLUMNS FROM '. $pntable['dizkus_users']);
+    $id_exists = false;
+    foreach($res as $resline) {
+        //(array) 0:
+        //   1. (string) 0 = id
+        //   2. (string) 1 = int(11)
+        //   3. (string) 2 = NO
+        //   4. (string) 3 = PRI
+        //   5. (NULL) 4 = (none)
+        //   6. (string) 5 = auto_increment
+        if($resline[0] == 'user_id' && $resline[3] == 'PRI') {
+            // found id
+            $id_exists = true;
+            break;
+        }
     }
-    if (!_id_exists($pntable['dizkus_topic_subscription'])) {
-        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-    }
-    if (!_id_exists($pntable['dizkus_forum_favorites'])) {
-        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_favorites'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-    }
-    if (!_id_exists($pntable['dizkus_forum_mods'])) {
-        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    if (!$id_exists) {
+        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_users'] .' ADD PRIMARY KEY(user_id)');
     }
 
     // move all posting text from post_text to posts table and remove the post_text table - never knew why this has been split
@@ -546,7 +551,6 @@ function Dizkus_upgrade_to_3_1()
     //
     // DBUtil::dropTable('dizkus_categories');
     // DBUtil::dropTable('dizkus_forums');
-    // DBUtil::dropTable('dizkus_posts_text');
 
     return true;
 }
@@ -711,29 +715,4 @@ function _dizkus_migratecategories()
     }
 
     return true;
-}
-
-/**
- * utility function: check if id column exists
- *
- */
-function _id_exists($tablename)
-{
-    $res = DBUtil::executeSQL('SHOW COLUMNS FROM '. $tablename);
-    $id_exists = false;
-    foreach($res as $resline) {
-        //(array) 0:
-        //   1. (string) 0 = id
-        //   2. (string) 1 = int(11)
-        //   3. (string) 2 = NO
-        //   4. (string) 3 = PRI
-        //   5. (NULL) 4 = (none)
-        //   6. (string) 5 = auto_increment
-        if($resline[0] == 'id' || $resline[3] == 'PRI' || $resline[5] == 'auto_increment') {
-            // found id
-            $id_exists = true;
-            break;
-        }
-    }
-    return $id_exists;
 }

@@ -193,16 +193,14 @@ function Dizkus_pntables()
     // users
     //
     $pntable['dizkus_users'] = DBUtil::getLimitedTablename('dizkus_users');
-    $pntable['dizkus_users_column'] = array('id'              => 'id',
-                                            'user_id'         => 'user_id',
+    $pntable['dizkus_users_column'] = array('user_id'         => 'user_id',
                                             'user_posts'      => 'user_posts',
                                             'user_rank'       => 'user_rank',
                                             'user_level'      => 'user_level',
                                             'user_lastvisit'  => 'user_lastvisit',
                                             'user_favorites'  => 'user_favorites',
                                             'user_post_order' => 'user_post_order');
-    $pntable['dizkus_users_column_def'] = array('id'              => 'I AUTO PRIMARY',
-                                                'user_id'         => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_users_column_def'] = array('user_id'         => 'I PRIMARY',
                                                 'user_posts'      => 'I UNSIGNED NOTNULL DEFAULT 0',
                                                 'user_rank'       => 'I UNSIGNED NOTNULL DEFAULT 0',
                                                 'user_level'      => 'I UNSIGNED NOTNULL DEFAULT 1',
@@ -229,11 +227,9 @@ function Dizkus_pntables()
     // favorites
     //
     $pntable['dizkus_forum_favorites'] = DBUtil::getLimitedTablename('dizkus_forum_favorites');
-    $pntable['dizkus_forum_favorites_column'] = array('id'       => 'id',
-                                                      'forum_id' => 'forum_id',
+    $pntable['dizkus_forum_favorites_column'] = array('forum_id' => 'forum_id',
                                                       'user_id'  => 'user_id');
-    $pntable['dizkus_forum_favorites_column_def'] = array('id'        => 'I AUTO PRIMARY',
-                                                          'forum_id'  => 'I NOTNULL DEFAULT 0',
+    $pntable['dizkus_forum_favorites_column_def'] = array('forum_id'  => 'I NOTNULL DEFAULT 0',
                                                           'user_id'   => 'I NOTNULL DEFAULT 0');
     $pntable['dizkus_forum_favorites_column_idx'] = array('forum_id' => 'forum_id',
                                                           'user_id'  => 'user_id');
