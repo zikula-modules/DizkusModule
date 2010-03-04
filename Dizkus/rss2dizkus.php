@@ -12,7 +12,7 @@
 //
 // store the absolute path to your Zikula folder here
 //
-chdir('/opt/webdev/htdocs');
+chdir('/opt/webdev/htdocs/z121');
 
 // NOTE : This will work with the Zikula backend... I did not
 // try other rss feed (1.0, 2.0, Atom)... RSS mod could
@@ -78,7 +78,7 @@ foreach ($forums as $forum)
 
             // Get the feed...
             $dump = pnModAPIFunc('Feeds', 'user', 'getfeed', array('fid' => $rss['fid'],
-                                                                 'url' => $rss['url']));
+                                                                   'url' => $rss['url']));
 
             if (!$dump) {
                 // Buzz off, this feed doesn't exists
@@ -90,7 +90,7 @@ foreach ($forums as $forum)
             // Finally decided that since it was working with the link, the link was good enough
             // Change it to your liking. It probably won't work on other type of feed.
             // Important information is in the $dump->items
-            $items = $dump->get_items(); // array_csort($dump->items, 'link', SORT_ASC);
+            $items = $dump['feed']->get_items(); // array_csort($dump->items, 'link', SORT_ASC);
 
             // See the function below...
             $insert = pnModAPIFunc('Dizkus', 'user', 'insertrss',
