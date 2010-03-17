@@ -6,15 +6,202 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Zikula component\n"
+"Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-07 17:23+0100\n"
+"POT-Creation-Date: 2010-03-17 10:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: pnadmin.php:66
+msgid "Done! Synchronized Zikula users and Dizkus users."
+msgstr ""
+
+#: pnadmin.php:71
+msgid "Done! Synchronized forum index."
+msgstr ""
+
+#: pnadmin.php:76
+msgid "Done! Synchronized topics."
+msgstr ""
+
+#: pnadmin.php:81
+msgid "Done! Synchronized posts counter."
+msgstr ""
+
+#: pnadmin.php:278 pnadmin.php:337 pnadmin.php:472 pnadmin.php:517
+#: pnadmin.php:599
+msgid "Sorry! You do not have authorisation to administer this module."
+msgstr ""
+
+#: pnadmin.php:351 pntemplates/dizkus_admin_reordertree.html:58
+#: pntemplates/dizkus_admin_reordertree.html:101
+msgid "-- Create new forum --"
+msgstr ""
+
+#: pnadmin.php:383
+msgid "No external source"
+msgstr ""
+
+#: pnadmin.php:387 pntemplates/dizkus_ajax_editforum.html:102
+msgid "Mail2Forum"
+msgstr ""
+
+#: pnadmin.php:391 pntemplates/dizkus_ajax_editforum.html:135
+msgid "RSS2Forum"
+msgstr ""
+
+#: pnadmin.php:392
+msgid "<span style=\"color: red;\">'Feeds' module is not available.</span>"
+msgstr ""
+
+#: pnadmin.php:400 pntemplates/dizkus_ajax_editforum.html:42
+msgid "No hooked module found."
+msgstr ""
+
+#: pnadmin.php:479 pntemplates/dizkus_admin_reordertree.html:78
+msgid "-- Create new category --"
+msgstr ""
+
+#: pnadmin.php:521 pnadmin.php:603 pnajax.php:53 pnajax.php:221 pnajax.php:581
+#: pnajax.php:630
+msgid ""
+"Sorry! Invalid authorisation key ('authkey'). This is probably either "
+"because you pressed the 'Back' button to return to a page which does not "
+"allow that, or else because the page's authorisation key expired due to "
+"prolonged inactivity. Please try again."
+msgstr ""
+
+#: pnadmin.php:653 pnadmin.php:656
+msgid ""
+"Sorry! The two passwords you entered do not match. Please correct your "
+"entries and try again."
+msgstr ""
+
+#: pnajax.php:43 pnuser.php:229
+msgid ""
+"Sorry! The user who started this topic is ignoring you, and does not want "
+"you to be able to write posts under this topic. Please contact the topic "
+"originator for more information."
+msgstr ""
+
+#: pnajax.php:48 pnajax.php:227 pnajax.php:679 pnuser.php:214 pnuser.php:308
+#: pnuser.php:410
+msgid ""
+"Sorry! The message is too long. The maximum length is 65,535 characters."
+msgstr ""
+
+#: pnajax.php:155
+msgid "Sorry! You do not have authorisation to perform this action."
+msgstr ""
+
+#: pnajax.php:193
+msgid "Sorry! You do not have authorisation for this action."
+msgstr ""
+
+#: pnajax.php:302 pnajax.php:346 pnajax.php:586 pnuserapi.php:1767
+#: pnuserapi.php:3542 pnuserapi.php:3549 pnuser.php:499 pnuser.php:559
+#: pnuser.php:572 pnuser.php:584 pnuser.php:599 pnuser.php:955 pnuser.php:1102
+#: pnuser.php:1159 pnuser.php:1227
+msgid ""
+"Sorry! You do not have authorisation to moderate this category or forum."
+msgstr ""
+
+#: pnajax.php:385 pnajax.php:440 pnajax.php:500 pnuserapi.php:879
+#: pnuserapi.php:1616 pnuserapi.php:2070 pnuserapi.php:2391 pnuserapi.php:2451
+#: pnuserapi.php:2509
+msgid ""
+"Sorry! You do not have authorisation to read the content in this category or "
+"forum."
+msgstr ""
+
+#: pnajax.php:480
+msgid "Error! Favourites have been disabled."
+msgstr ""
+
+#: pnajax.php:556
+msgid "Sorry! You do not have authorisation for this action"
+msgstr ""
+
+#: pnajax.php:591 pnajax.php:686 pnuserapi.php:3237
+msgid "Error! The post has no subject line."
+msgstr ""
+
+#: pnajax.php:626
+msgid "Sorry! This feature is for registered users only."
+msgstr ""
+
+#: pnajax.php:669 pnajax.php:751 pnuserapi.php:1149 pnuserapi.php:1221
+#: pnuserapi.php:1423 pnuserapi.php:1471
+msgid "Sorry! You do not have authorisation to post in this category or forum."
+msgstr ""
+
+#: pnajax.php:682 pnuserapi.php:1225 pnuserapi.php:1476 pnuserapi.php:1761
+msgid "Error! You tried to post a blank message. Please go back and try again."
+msgstr ""
+
+#: pnajax.php:693
+msgid ""
+"Sorry! Invalid authorisation key ('authkey'). This is probably either "
+"because you pressed the 'Back' button to return to a page which does not "
+"allow that, or else because the page's authorisation key expired due to "
+"prolonged inactivity. Please refresh the page and try again."
+msgstr ""
+
+#: pnversion.php:16
+msgid "Dizkus forums"
+msgstr ""
+
+#: pnversion.php:17 pninit.php:583
+msgid ""
+"An integrated forum solution for Zikula which is simple to administer and "
+"use but that has an excellent feature set."
+msgstr ""
+
+#. ! module name that appears in URL
+#: pnversion.php:19
+msgid "forums"
+msgstr ""
+
+#: pntemplates/plugins/function.pnfpager.php:155
+#: pntemplates/plugins/function.topicpager.php:129
+#: pntemplates/plugins/function.forumpager.php:133
+#, php-format
+msgid "Go to page %s: "
+msgstr ""
+
+#: pntemplates/plugins/function.adminlink.php:31
+#: pntemplates/dizkus_ajax_editcategory.html:6
+msgid "Edit category title"
+msgstr ""
+
+#: pntemplates/plugins/function.adminlink.php:33
+#: pntemplates/dizkus_ajax_editforum.html:9
+msgid "Edit forum"
+msgstr ""
+
+#: pntemplates/plugins/function.printtopic_button.php:28
+#: pntemplates/plugins/function.printtopic_button.php:30
+msgid "Print topic"
+msgstr ""
+
+#: pntemplates/plugins/function.allowedhtml.php:21
+msgid "Allowed HTML:"
+msgstr ""
+
+#: pntemplates/plugins/modifier.viewtopiclink.php:65
+msgid "Go to topic"
+msgstr ""
+
+#: pnsearchapi.php:88 pntemplates/dizkus_user_search.html:15
+#, php-format
+msgid ""
+"Error! For forum searches, the search string must be between %1$s and %2$s "
+"characters in length."
+msgstr ""
 
 #: pnuserapi.php:125 pnuserapi.php:126 pnuserapi.php:130 pnuserapi.php:131
 msgid "**unknown user**"
@@ -24,214 +211,151 @@ msgstr ""
 msgid "Error! Wrong parameters in 'Dizkus_userapi_boardstats()'."
 msgstr ""
 
-#: pnuserapi.php:395 pnuserapi.php:706 pnuserapi.php:1216 pnuserapi.php:1846
-#: pnuserapi.php:2391 pnuserapi.php:2886 pnuserapi.php:2987
+#: pnuserapi.php:397 pnuserapi.php:713 pnuserapi.php:1180 pnuserapi.php:1781
+#: pnuserapi.php:2162 pnuserapi.php:2629 pnuserapi.php:2730
 msgid "%b %d, %Y - %I:%M %p"
 msgstr ""
 
-#: pnuserapi.php:403 pnuserapi.php:707
-#: pntemplates/plugins/function.folderimage.php:56
+#: pnuserapi.php:405 pnuserapi.php:714
 #, php-format
 msgid "%1$s<br />by %2$s"
 msgstr ""
 
-#: pnuserapi.php:419 pnuserapi.php:433
-#: pntemplates/plugins/function.folderimage.php:61
-#: pntemplates/plugins/function.folderimage.php:67
+#: pnuserapi.php:421 pnuserapi.php:435
 #: pntemplates/dizkus_ajax_newposts.html:14
+#: pntemplates/dizkus_user_main2.html:52
+#: pntemplates/dizkus_centerblock_display.html:25
 #: pntemplates/dizkus_user_latestposts.html:75
 #: pntemplates/dizkus_user_latestposts.html:129
 #: pntemplates/dizkus_user_latestposts.html:184
-#: pntemplates/dizkus_user_main2.html:51
-#: pntemplates/dizkus_centerblock_display.html:25
 msgid "No posts"
 msgstr ""
 
-#: pnuserapi.php:605 pnuserapi.php:2207
+#: pnuserapi.php:612 pnuserapi.php:2004
 msgid ""
 "Error! The forum or topic you selected was not found. Please go back and try "
 "again."
 msgstr ""
 
-#: pnuserapi.php:609
+#: pnuserapi.php:616
 msgid "Sorry! You do not have authorisation to view this category or forum."
 msgstr ""
 
-#: pnuserapi.php:733
+#: pnuserapi.php:740
 msgid "Go to page"
 msgstr ""
 
-#: pnuserapi.php:753
+#: pnuserapi.php:760
 msgid "Page #"
 msgstr ""
 
-#: pnuserapi.php:888 pnuserapi.php:1661 pnuserapi.php:2302 pnuserapi.php:2648
-#: pnuserapi.php:2708 pnuserapi.php:2766 pnajax.php:369 pnajax.php:424
-#: pnajax.php:484
-msgid ""
-"Sorry! You do not have authorisation to read the content in this category or "
-"forum."
-msgstr ""
-
-#: pnuserapi.php:1057 pnuserapi.php:1128 pnuserapi.php:1648 pnuserapi.php:1806
-#: pnuserapi.php:2159 pnuserapi.php:2246 pnuserapi.php:2384
+#: pnuserapi.php:1032 pnuserapi.php:1097 pnuserapi.php:1603 pnuserapi.php:1756
+#: pnuserapi.php:1957 pnuserapi.php:2158
 msgid ""
 "Error! The topic you selected was not found. Please go back and try again."
 msgstr ""
 
-#: pnuserapi.php:1181
+#: pnuserapi.php:1145
 msgid "Sorry! You cannot post a message under this topic. It has been locked."
 msgstr ""
 
-#: pnuserapi.php:1185 pnuserapi.php:1258 pnuserapi.php:1465 pnuserapi.php:1517
-#: pnajax.php:653 pnajax.php:735
-msgid "Sorry! You do not have authorisation to post in this category or forum."
-msgstr ""
-
-#: pnuserapi.php:1262 pnuserapi.php:1522 pnuserapi.php:1829 pnajax.php:666
-msgid "Error! You tried to post a blank message. Please go back and try again."
-msgstr ""
-
-#: pnuserapi.php:1818 pnuserapi.php:1824 pnuserapi.php:3847 pnuserapi.php:3854
-#: pnajax.php:286 pnajax.php:330 pnajax.php:570 pnuser.php:499 pnuser.php:559
-#: pnuser.php:572 pnuser.php:584 pnuser.php:599 pnuser.php:955 pnuser.php:1102
-#: pnuser.php:1159 pnuser.php:1227
-msgid ""
-"Sorry! You do not have authorisation to moderate this category or forum."
-msgstr ""
-
-#: pnuserapi.php:1847
+#: pnuserapi.php:1782
 #, php-format
 msgid "Edited by %1$s on %2$s."
 msgstr ""
 
-#: pnuserapi.php:2071
-msgid "Error! No such user or post was found in the database."
-msgstr ""
-
-#: pnuserapi.php:2274
+#: pnuserapi.php:2042
 #, php-format
 msgid ""
-"The original posting has been moved <a title=\\\"moved\\\" href=\\\"%s\\"
-"\">here</a>."
+"The original posting has been moved <a title=\"moved\" href=\"%s\">here</a>."
 msgstr ""
 
-#: pnuserapi.php:2275
-msgid "The original posting has been moved to here."
-msgstr ""
-
-#: pnuserapi.php:2492
+#: pnuserapi.php:2043
 #, php-format
-msgid "Forums on %s"
+msgid "*** The original posting '%s' has been moved"
 msgstr ""
 
-#: pnuserapi.php:2494
-#, php-format
-msgid "%1$s wrote at %2$s"
-msgstr ""
-
-#: pnuserapi.php:2498
-msgid "Reply to this message:"
-msgstr ""
-
-#: pnuserapi.php:2500
-msgid "Browse thread:"
-msgstr ""
-
-#: pnuserapi.php:2502
-msgid "FMaintain topic and forum subscriptions:"
-msgstr ""
-
-#: pnuserapi.php:2505
-#, php-format
-msgid ""
-"You are receiving this e-mail message because you are subscribed to be "
-"notified of events in the forums on %s."
-msgstr ""
-
-#: pnuserapi.php:2555 pnadminapi.php:78 pnadminapi.php:110 pnadminapi.php:134
-#: pnadminapi.php:450 pnadminapi.php:510 pnadminapi.php:701 pnadminapi.php:809
-#: pnadminapi.php:878 pnadminapi.php:937 pninit.php:311 pninit.php:361
-#: pninit.php:467 pnuser.php:398
+#: pnuserapi.php:2315 pnuser.php:397 pnadminapi.php:78 pnadminapi.php:110
+#: pnadminapi.php:134 pnadminapi.php:400 pnadminapi.php:460 pnadminapi.php:580
+#: pnadminapi.php:642 pnadminapi.php:687 pninit.php:304 pninit.php:351
+#: pninit.php:457
 msgid "Error! No permission for this action."
 msgstr ""
 
-#: pnuserapi.php:2870 pntemplates/dizkus_user_latestposts.html:16
+#: pnuserapi.php:2613 pntemplates/dizkus_user_latestposts.html:16
 msgid "Today"
 msgstr ""
 
-#: pnuserapi.php:2874 pntemplates/dizkus_user_latestposts.html:15
+#: pnuserapi.php:2617 pntemplates/dizkus_user_latestposts.html:15
 msgid "Yesterday"
 msgstr ""
 
-#: pnuserapi.php:2878 pntemplates/dizkus_user_latestposts.html:21
+#: pnuserapi.php:2621 pntemplates/dizkus_user_latestposts.html:21
 msgid "Last week"
 msgstr ""
 
-#: pnuserapi.php:2882
+#: pnuserapi.php:2625
 #, php-format
 msgid "Last %s hours"
 msgstr ""
 
-#: pnuserapi.php:2886
+#: pnuserapi.php:2629
 #, php-format
 msgid "Last visit: %s"
 msgstr ""
 
-#: pnuserapi.php:2891 pntemplates/dizkus_user_latestposts.html:17
+#: pnuserapi.php:2634 pntemplates/dizkus_user_latestposts.html:17
 msgid "Last 24 hours"
 msgstr ""
 
-#: pnuserapi.php:3149 pnuserapi.php:3165 pnuserapi.php:3428 pnuserapi.php:3633
-#: pnuserapi.php:3692 pnuserapi.php:3711 pnuserapi.php:3816 pnuserapi.php:4167
+#: pnuserapi.php:2848 pnuserapi.php:2864 pnuserapi.php:3127 pnuserapi.php:3329
+#: pnuserapi.php:3388 pnuserapi.php:3407 pnuserapi.php:3511 pnuserapi.php:3747
 msgid ""
 "Error! The action you wanted to perform was not successful for some reason, "
 "maybe because of a problem with your input. Please check and try again."
 msgstr ""
 
-#: pnuserapi.php:3541 pnajax.php:575 pnajax.php:670
-msgid "Error! The post has no subject line."
-msgstr ""
-
-#: pnuserapi.php:4069
+#: pnuserapi.php:3650
 msgid "Moderation request"
 msgstr ""
 
-#: pnuserapi.php:4126
+#: pnuserapi.php:3707
 #, php-format
 msgid "Request for moderation on %s"
 msgstr ""
 
-#: pnuserapi.php:4128
+#: pnuserapi.php:3709
 #, php-format
 msgid "Reporting user: %s"
 msgstr ""
 
-#: pnuserapi.php:4129
+#: pnuserapi.php:3710
 msgid "Comment:"
 msgstr ""
 
-#: pnuserapi.php:4134
-msgid "Link to topic:"
+#: pnuserapi.php:3715
+#, php-format
+msgid "Link to topic: %s"
 msgstr ""
 
-#: pnuserapi.php:4222
+#: pnuserapi.php:3802
 msgid "Summary"
 msgstr ""
 
-#: backforum.php:49
-#, php-format
-msgid "Error! In 'backforum.php', an invalid forum ID %s was encountered."
+#: pnblocks/statistics.php:30
+msgid "Dizkus statistic"
 msgstr ""
 
-#: backforum.php:52
-#, php-format
-msgid "Error! In 'backforum.php', an invalid category ID %s was encountered."
+#: pnblocks/statistics.php:31
+msgid "Dizkus Statistics Block"
 msgstr ""
 
-#: backforum.php:66
-#, php-format
-msgid "Error! Could not find a template for an %s-type feed."
+#: pnblocks/center.php:30
+msgid "Dizkus recent"
+msgstr ""
+
+#: pnblocks/center.php:31
+msgid "Dizkus recent posts"
 msgstr ""
 
 #: pnneedleapi/dizkus.php:71
@@ -266,172 +390,25 @@ msgstr ""
 msgid "Error! No needle ID."
 msgstr ""
 
-#: common.php:332 common.php:373 common.php:414
-msgid "Error! Could not connect to the database."
+#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:24
+#: pnincludes/dizkus_admin_prefshandler.class.php:27
+msgid "Strict"
 msgstr ""
 
-#: pnblocks/statistics.php:30
-msgid "Dizkus statistic"
+#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:27
+#: pnincludes/dizkus_admin_prefshandler.class.php:28
+msgid "Medium"
 msgstr ""
 
-#: pnblocks/statistics.php:31
-msgid "Dizkus Statistics Block"
+#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:30
+#: pnincludes/dizkus_admin_prefshandler.class.php:29
+#: pntemplates/dizkus_ajax_editforum.html:64
+#: pntemplates/dizkus_ajax_editforum.html:139
+msgid "None"
 msgstr ""
 
-#: pnblocks/center.php:30
-msgid "Dizkus recent"
-msgstr ""
-
-#: pnblocks/center.php:31
-msgid "Dizkus recent posts"
-msgstr ""
-
-#: pnversion.php:16
-msgid "Dizkus forums"
-msgstr ""
-
-#: pnversion.php:17 pninit.php:563
-msgid ""
-"An integrated forum solution for Zikula which is simple to administer and "
-"use but that has an excellent feature set."
-msgstr ""
-
-#. ! module name that appears in URL
-#: pnversion.php:19
-msgid "forums"
-msgstr ""
-
-#: pnadminapi.php:152 pnadminapi.php:179 pnhook.php:25 pnhookapi.php:39
-#: pnhookapi.php:92 pnhookapi.php:146
-msgid ""
-"Error! The action you wanted to perform was not successful for some reason, "
-"maybe because of a problem with what you input. Please check and try again."
-msgstr ""
-
-#: pnadminapi.php:710
-msgid ""
-"Error! You did not enter all the required information in the form. Did you "
-"assign at least one moderator? Please correct your entries and try again."
-msgstr ""
-
-#: pnadminapi.php:983
-msgid "Start"
-msgstr ""
-
-#: pnadminapi.php:984
-msgid "Index page"
-msgstr ""
-
-#: pnadminapi.php:987 pntemplates/dizkus_admin_reordertree.html:2
-msgid "Edit forum tree"
-msgstr ""
-
-#: pnadminapi.php:988
-msgid "Create, delete, edit and re-order categories and forums"
-msgstr ""
-
-#: pnadminapi.php:991 pntemplates/dizkus_admin_ranks.html:2
-msgid "Edit user ranks"
-msgstr ""
-
-#: pnadminapi.php:992
-msgid ""
-"Create, edit and delete user rankings acquired through the number of a "
-"user's posts"
-msgstr ""
-
-#: pnadminapi.php:995 pntemplates/dizkus_admin_honoraryranks.html:3
-msgid "Edit honorary ranks"
-msgstr ""
-
-#: pnadminapi.php:996
-msgid "Create, delete and edit special ranks for particular users"
-msgstr ""
-
-#: pnadminapi.php:999 pntemplates/dizkus_admin_assignranks.html:2
-msgid "Assign honorary rank"
-msgstr ""
-
-#: pnadminapi.php:1000
-msgid "Assign honorary user ranks to users"
-msgstr ""
-
-#: pnadminapi.php:1003 pntemplates/dizkus_admin_managesubscriptions.html:2
-msgid "Manage subscriptions"
-msgstr ""
-
-#: pnadminapi.php:1004
-msgid "Remove a user's topic and forum subscriptions"
-msgstr ""
-
-#: pnadminapi.php:1007
-msgid "Synchronize forum/topic index"
-msgstr ""
-
-#: pnadminapi.php:1008
-msgid ""
-"Synchronize forum and topic indexes to fix any discrepancies that might exist"
-msgstr ""
-
-#: pnadminapi.php:1011 pntemplates/dizkus_user_prefs.html:8
-#: pntemplates/dizkus_user_signaturemanagement.html:11
-#: pntemplates/dizkus_admin_preferences.html:2
-#: pntemplates/dizkus_admin_header.html:16
-msgid "Settings"
-msgstr ""
-
-#: pnadminapi.php:1012
-msgid "Edit general forum-wide settings"
-msgstr ""
-
-#: pnajax.php:43 pnuser.php:230
-msgid ""
-"Sorry! The user who started this topic is ignoring you, and does not want "
-"you to be able to write posts under this topic. Please contact the topic "
-"originator for more information."
-msgstr ""
-
-#: pnajax.php:48 pnajax.php:227 pnajax.php:663 pnuser.php:215 pnuser.php:309
-#: pnuser.php:411
-msgid ""
-"Sorry! The message is too long. The maximum length is 65,535 characters."
-msgstr ""
-
-#: pnajax.php:53 pnajax.php:221 pnajax.php:565 pnajax.php:614 pnadmin.php:535
-#: pnadmin.php:617
-msgid ""
-"Sorry! Invalid authorisation key ('authkey'). This is probably either "
-"because you pressed the 'Back' button to return to a page which does not "
-"allow that, or else because the page's authorisation key expired due to "
-"prolonged inactivity. Please try again."
-msgstr ""
-
-#: pnajax.php:155
-msgid "Sorry! You do not have authorisation to perform this action."
-msgstr ""
-
-#: pnajax.php:193
-msgid "Sorry! You do not have authorisation for this action."
-msgstr ""
-
-#: pnajax.php:464
-msgid "Error! Favourites have been disabled."
-msgstr ""
-
-#: pnajax.php:540
-msgid "Sorry! You do not have authorisation for this action"
-msgstr ""
-
-#: pnajax.php:610
-msgid "Sorry! This feature is for registered users only."
-msgstr ""
-
-#: pnajax.php:677
-msgid ""
-"Sorry! Invalid authorisation key ('authkey'). This is probably either "
-"because you pressed the 'Back' button to return to a page which does not "
-"allow that, or else because the page's authorisation key expired due to "
-"prolonged inactivity. Please refresh the page and try again."
+#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:67
+msgid "Done! Updated the 'Ignore list' settings."
 msgstr ""
 
 #: pnincludes/dizkus_admin_prefshandler.class.php:21
@@ -452,276 +429,24 @@ msgstr ""
 msgid "Close topic"
 msgstr ""
 
-#: pnincludes/dizkus_admin_prefshandler.class.php:27
-#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:24
-msgid "Strict"
-msgstr ""
-
-#: pnincludes/dizkus_admin_prefshandler.class.php:28
-#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:27
-msgid "Medium"
-msgstr ""
-
-#: pnincludes/dizkus_admin_prefshandler.class.php:29
-#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:30
-#: pntemplates/dizkus_ajax_editforum.html:63
-#: pntemplates/dizkus_ajax_editforum.html:138
-msgid "None"
-msgstr ""
-
-#: pnincludes/dizkus_admin_prefshandler.class.php:118
+#: pnincludes/dizkus_admin_prefshandler.class.php:116
 msgid "Done! Updated configuration."
 msgstr ""
 
-#: pnincludes/dizkus_admin_prefshandler.class.php:155 pninit.php:193
+#: pnincludes/dizkus_admin_prefshandler.class.php:153 pninit.php:187
 msgid ""
 "Sorry! The forums are currently off-line for maintenance. Please try later."
 msgstr ""
 
-#: pnincludes/dizkus_admin_prefshandler.class.php:158
+#: pnincludes/dizkus_admin_prefshandler.class.php:156
 msgid "Done! Reset configuration to default values."
-msgstr ""
-
-#: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:67
-msgid "Done! Updated the 'Ignore list' settings."
 msgstr ""
 
 #: pnincludes/dizkus_user_signaturemanagementhandler.class.php:40
 msgid "Done! Signature has been updated."
 msgstr ""
 
-#: pnsearchapi.php:88 pntemplates/dizkus_user_search.html:15
-#, php-format
-msgid ""
-"Error! For forum searches, the search string must be between %1$s and %2$s "
-"characters in length."
-msgstr ""
-
-#: pnsearchapi.php:328 pnsearchapi.php:357
-msgid "Error! Could not load items."
-msgstr ""
-
-#: pnhookapi.php:51
-msgid "Automatically-created topic"
-msgstr ""
-
-#: pnhookapi.php:52
-msgid "Automatically-created topic for discussion of submitted entries"
-msgstr ""
-
-#: pntemplates/plugins/function.folderimage.php:40
-#: pntemplates/plugins/function.folderimage.php:44
-#: pntemplates/plugins/function.folderimage.php:66
-#: pntemplates/dizkus_searchresults.html:41
-#: pntemplates/dizkus_user_searchresults.html:41
-#: pntemplates/dizkus_user_viewforum.html:132
-#: pntemplates/dizkus_user_footer.html:12
-#: pntemplates/dizkus_user_footer.html:13
-#: pntemplates/dizkus_user_moderateforum.html:45
-msgid "New posts since your last visit"
-msgstr ""
-
-#: pntemplates/plugins/function.forumpager.php:133
-#: pntemplates/plugins/function.pnfpager.php:155
-#: pntemplates/plugins/function.topicpager.php:129
-#, php-format
-msgid "Go to page %s: "
-msgstr ""
-
-#: pntemplates/plugins/function.allowedhtml.php:21
-msgid "Allowed HTML:"
-msgstr ""
-
-#: pntemplates/plugins/function.splittopic_button.php:38
-#: pntemplates/plugins/function.splittopic_button.php:40
-#: pntemplates/plugins/function.splittopic_button.php:42
-#: pntemplates/dizkus_user_editpostpreview.html:63
-#: pntemplates/dizkus_user_editpostpreview.html:85
-#: pntemplates/dizkus_user_splittopic.html:2
-#: pntemplates/dizkus_user_splittopic.html:20
-#: pntemplates/dizkus_user_singlepost.html:76
-#: pntemplates/dizkus_user_singlepost.html:98
-#: pntemplates/dizkus_user_replypreview.html:54
-#: pntemplates/dizkus_user_replypreview.html:76
-msgid "Split topic"
-msgstr ""
-
-#: pntemplates/plugins/function.addtopic_button.php:35
-#: pntemplates/plugins/function.addtopic_button.php:37
-#: pntemplates/plugins/function.addtopic_button.php:39
-#: pntemplates/dizkus_user_viewforum.html:15
-#: pntemplates/dizkus_user_viewforum.html:60
-#: pntemplates/dizkus_user_viewtopic.html:15
-#: pntemplates/dizkus_user_viewtopic.html:61
-msgid "New topic"
-msgstr ""
-
-#: pntemplates/plugins/function.printtopic_button.php:32
-#: pntemplates/plugins/function.printtopic_button.php:34
-msgid "Print topic"
-msgstr ""
-
-#: pntemplates/plugins/function.simplepager.php:70
-#: pntemplates/plugins/function.simplepager.php:84
-#, php-format
-msgid "Page %s"
-msgstr ""
-
-#: pntemplates/plugins/function.subscribetopic_button.php:48
-#: pntemplates/plugins/function.subscribetopic_button.php:50
-#: pntemplates/plugins/function.subscribetopic_button.php:52
-#: pntemplates/dizkus_user_viewtopic.html:26
-#: pntemplates/dizkus_user_viewtopic.html:72
-msgid "Subscribe to topic"
-msgstr ""
-
-#: pntemplates/plugins/function.subscribetopic_button.php:56
-#: pntemplates/plugins/function.subscribetopic_button.php:58
-#: pntemplates/plugins/function.subscribetopic_button.php:60
-#: pntemplates/dizkus_admin_managesubscriptions.html:23
-#: pntemplates/dizkus_user_viewtopic.html:27
-#: pntemplates/dizkus_user_viewtopic.html:74
-#: pntemplates/dizkus_user_topicsubscriptions.html:20
-msgid "Unsubscribe from topic"
-msgstr ""
-
-#: pntemplates/plugins/function.jumpbox.php:37 pnaccountapi.php:41
-#: pntemplates/dizkus_user_latestposts.html:62
-#: pntemplates/dizkus_user_latestposts.html:116
-#: pntemplates/dizkus_user_latestposts.html:171
-#: pntemplates/dizkus_admin_managesubscriptions.html:53
-#: pntemplates/dizkus_ajax_editforum.html:12
-#: pntemplates/dizkus_user_topicsubscriptions.html:33
-msgid "Forum"
-msgstr ""
-
-#: pntemplates/plugins/function.jumpbox.php:39
-msgid "- Choose forum -"
-msgstr ""
-
-#: pntemplates/plugins/modifier.viewtopiclink.php:65
-msgid "Go to topic"
-msgstr ""
-
-#: pntemplates/plugins/function.post_order_button.php:54
-msgid "Display newest post first"
-msgstr ""
-
-#: pntemplates/plugins/function.post_order_button.php:56
-#: pntemplates/plugins/function.post_order_button.php:63
-#: pntemplates/plugins/function.post_order_button.php:66
-#: pntemplates/dizkus_user_prefs.html:16 pntemplates/dizkus_user_prefs.html:17
-#: pntemplates/dizkus_user_prefs.html:36 pntemplates/dizkus_user_prefs.html:38
-msgid "Change post order"
-msgstr ""
-
-#: pntemplates/plugins/function.post_order_button.php:61
-msgid "Display oldest post first"
-msgstr ""
-
-#: pntemplates/plugins/function.subscribeforum_button.php:49
-#: pntemplates/plugins/function.subscribeforum_button.php:51
-#: pntemplates/plugins/function.subscribeforum_button.php:53
-#: pntemplates/dizkus_user_prefs.html:113
-#: pntemplates/dizkus_user_prefs.html:128
-#: pntemplates/dizkus_user_viewforum.html:20
-#: pntemplates/dizkus_user_viewforum.html:69
-msgid "Subscribe to forum"
-msgstr ""
-
-#: pntemplates/plugins/function.subscribeforum_button.php:57
-#: pntemplates/plugins/function.subscribeforum_button.php:59
-#: pntemplates/plugins/function.subscribeforum_button.php:61
-#: pntemplates/dizkus_user_prefs.html:114
-#: pntemplates/dizkus_user_prefs.html:130
-#: pntemplates/dizkus_user_viewforum.html:21
-#: pntemplates/dizkus_user_viewforum.html:71
-#: pntemplates/dizkus_admin_managesubscriptions.html:54
-msgid "Unsubscribe from forum"
-msgstr ""
-
-#: pntemplates/plugins/function.favoriteforum_button.php:47
-#: pntemplates/plugins/function.favoriteforum_button.php:49
-#: pntemplates/plugins/function.favoriteforum_button.php:51
-#: pntemplates/dizkus_user_prefs.html:137
-#: pntemplates/dizkus_user_prefs.html:152
-msgid "Add to favourites"
-msgstr ""
-
-#: pntemplates/plugins/function.favoriteforum_button.php:55
-#: pntemplates/plugins/function.favoriteforum_button.php:57
-#: pntemplates/plugins/function.favoriteforum_button.php:59
-#: pntemplates/dizkus_user_viewforum.html:36
-#: pntemplates/dizkus_user_viewforum.html:77
-msgid "Remove forum from favourites"
-msgstr ""
-
-#: pntemplates/plugins/function.adminlink.php:31
-#: pntemplates/dizkus_ajax_editcategory.html:5
-msgid "Edit category title"
-msgstr ""
-
-#: pntemplates/plugins/function.adminlink.php:33
-#: pntemplates/dizkus_ajax_editforum.html:8
-msgid "Edit forum"
-msgstr ""
-
-#: pntemplates/plugins/function.listforummods.php:22
-#: pntemplates/dizkus_user_editpostpreview.html:8
-msgid "Profile"
-msgstr ""
-
-#: pntemplates/plugins/function.mailtopic_button.php:40
-#: pntemplates/plugins/function.mailtopic_button.php:42
-#: pntemplates/plugins/function.mailtopic_button.php:44
-#: pntemplates/dizkus_user_emailtopic.html:2
-#: pntemplates/dizkus_user_viewtopic.html:19
-#: pntemplates/dizkus_user_viewtopic.html:65
-msgid "Send as e-mail"
-msgstr ""
-
-#: pninit.php:26
-msgid ""
-"Error! This version of the Dizkus module requires Zikula 1.2.0 or later. "
-"Installation has been stopped because this requirement is not met."
-msgstr ""
-
-#: pninit.php:106 pninit.php:118 pninit.php:130 pninit.php:142
-#, php-format
-msgid "Error! Could not create %s hook."
-msgstr ""
-
-#: pninit.php:270 pninit.php:277 pninit.php:284 pninit.php:291
-#, php-format
-msgid "Error! Could not delete %s hook."
-msgstr ""
-
-#: pninit.php:369
-msgid "Error! The upgrade to Dizkus 3.0 failed."
-msgstr ""
-
-#: pninit.php:439
-msgid ""
-"Error! A problem was encountered while upgrading the source module for hooks "
-"('smodule')."
-msgstr ""
-
-#: pninit.php:445
-msgid ""
-"Error! A problem was encountered while upgrading the target module for hooks "
-"('tmodule')."
-msgstr ""
-
-#: pninit.php:475
-msgid "Error! Could not upgrade to Dizkus 3.1."
-msgstr ""
-
-#: pninit.php:522
-#, php-format
-msgid "Error! Could not upgrade the table '%s'."
-msgstr ""
-
-#: pnuser.php:286
+#: pnuser.php:285
 msgid "Missing forum id."
 msgstr ""
 
@@ -767,593 +492,588 @@ msgstr ""
 msgid "Error! You did not select a target topic to join."
 msgstr ""
 
-#: pnadmin.php:66
-msgid "Done! Synchronized Zikula users and Dizkus users."
-msgstr ""
-
-#: pnadmin.php:71
-msgid "Done! Synchronized forum index."
-msgstr ""
-
-#: pnadmin.php:76
-msgid "Done! Synchronized topics."
-msgstr ""
-
-#: pnadmin.php:81
-msgid "Done! Synchronized posts counter."
-msgstr ""
-
-#: pnadmin.php:278 pnadmin.php:341 pnadmin.php:481 pnadmin.php:531
-#: pnadmin.php:613
-msgid "Sorry! You do not have authorisation to administer this module."
-msgstr ""
-
-#: pnadmin.php:360 pntemplates/dizkus_admin_reordertree.html:58
-#: pntemplates/dizkus_admin_reordertree.html:101
-msgid "-- Create new forum --"
-msgstr ""
-
-#: pnadmin.php:388
-msgid "No external source"
-msgstr ""
-
-#: pnadmin.php:392 pntemplates/dizkus_ajax_editforum.html:101
-msgid "Mail2Forum"
-msgstr ""
-
-#: pnadmin.php:396 pntemplates/dizkus_ajax_editforum.html:134
-msgid "RSS2Forum"
-msgstr ""
-
-#: pnadmin.php:397
-msgid "<span style=\"color: red;\">'Feeds' module is not available.</span>"
-msgstr ""
-
-#: pnadmin.php:405 pntemplates/dizkus_ajax_editforum.html:41
-msgid "No hooked module found."
-msgstr ""
-
-#: pnadmin.php:493 pntemplates/dizkus_admin_reordertree.html:78
-msgid "-- Create new category --"
-msgstr ""
-
-#: pnadmin.php:667 pnadmin.php:670
+#: pnhookapi.php:35 pnhookapi.php:88 pnhookapi.php:143 pnhook.php:25
+#: pnadminapi.php:152 pnadminapi.php:179
 msgid ""
-"Sorry! The two passwords you entered do not match. Please correct your "
-"entries and try again."
+"Error! The action you wanted to perform was not successful for some reason, "
+"maybe because of a problem with what you input. Please check and try again."
 msgstr ""
 
-#: pntemplates/dizkus_ajax_editcategory.html:9
-#: pntemplates/dizkus_user_prefs.html:91
-msgid "Category"
+#: pnhookapi.php:47
+msgid "Automatically-created topic"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_editcategory.html:13
-#: pntemplates/dizkus_ajax_editforum.html:150
-#: pntemplates/dizkus_ajax_editforum.html:152
-msgid "Delete"
+#: pnhookapi.php:48
+msgid "Automatically-created topic for discussion of submitted entries"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_editcategory.html:21
-#: pntemplates/dizkus_user_newtopic.html:55
-#: pntemplates/dizkus_user_newtopic.html:56
-#: pntemplates/dizkus_user_newtopic.html:66
-#: pntemplates/dizkus_user_emailtopic.html:30
-#: pntemplates/dizkus_user_editpost.html:59
-#: pntemplates/dizkus_ajax_edittopicsubject.html:7
-#: pntemplates/dizkus_admin_managesubscriptions.html:76
-#: pntemplates/dizkus_user_viewtopic.html:160
-#: pntemplates/dizkus_user_viewtopic.html:166
-#: pntemplates/dizkus_admin_ranks.html:85
-#: pntemplates/dizkus_admin_honoraryranks.html:75
-#: pntemplates/dizkus_ajax_editpost.html:16
-#: pntemplates/dizkus_user_topicsubscriptions.html:63
-#: pntemplates/dizkus_user_notifymod.html:19
-#: pntemplates/dizkus_user_moderateforum.html:134
-#: pntemplates/dizkus_user_reply.html:53
-#: pntemplates/dizkus_admin_assignranks.html:45
-msgid "Submit"
+#: pnaccountapi.php:41 pntemplates/dizkus_user_topicsubscriptions.html:33
+#: pntemplates/dizkus_ajax_editforum.html:13
+#: pntemplates/dizkus_user_latestposts.html:62
+#: pntemplates/dizkus_user_latestposts.html:116
+#: pntemplates/dizkus_user_latestposts.html:171
+#: pntemplates/dizkus_admin_managesubscriptions.html:53
+msgid "Forum"
 msgstr ""
 
-#: pntemplates/dizkus_user_locktopic.html:3
-#: pntemplates/dizkus_user_locktopic.html:25
-#: pntemplates/dizkus_user_viewtopic.html:38
-#: pntemplates/dizkus_user_viewtopic.html:86
-msgid "Lock this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_locktopic.html:5
-#: pntemplates/dizkus_user_locktopic.html:35
-#: pntemplates/dizkus_user_viewtopic.html:39
-#: pntemplates/dizkus_user_viewtopic.html:88
-msgid "Unlock this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_locktopic.html:19
-#: pntemplates/dizkus_user_locktopic.html:29
-#: pntemplates/dizkus_user_stickytopic.html:19
-#: pntemplates/dizkus_user_stickytopic.html:29
-#: pntemplates/dizkus_admin_ranks.html:37
-#: pntemplates/dizkus_admin_ranks.html:58
-#: pntemplates/dizkus_admin_honoraryranks.html:28
-#: pntemplates/dizkus_admin_honoraryranks.html:47
-#: pntemplates/dizkus_ajax_editforum.html:31
-msgid "Description"
-msgstr ""
-
-#: pntemplates/dizkus_user_locktopic.html:21
+#: pnadminapi.php:587
 msgid ""
-"When you press the 'Lock' button at the bottom of this page, the topic you "
-"have selected will be <strong>locked</strong>. You can unlock it at a later "
-"time if you so choose."
+"Error! You did not enter all the required information in the form. Did you "
+"assign at least one moderator? Please correct your entries and try again."
 msgstr ""
 
-#: pntemplates/dizkus_user_locktopic.html:31
+#: pnadminapi.php:743
+msgid "Start"
+msgstr ""
+
+#: pnadminapi.php:744
+msgid "Index page"
+msgstr ""
+
+#: pnadminapi.php:747 pntemplates/dizkus_admin_reordertree.html:2
+msgid "Edit forum tree"
+msgstr ""
+
+#: pnadminapi.php:748
+msgid "Create, delete, edit and re-order categories and forums"
+msgstr ""
+
+#: pnadminapi.php:751 pntemplates/dizkus_admin_ranks.html:2
+msgid "Edit user ranks"
+msgstr ""
+
+#: pnadminapi.php:752
 msgid ""
-"When you press the 'Unlock' button at the bottom of this page, the topic you "
-"have selected will be <strong>unlocked</strong>. You can lock it again at a "
-"later time if you so choose."
+"Create, edit and delete user rankings acquired through the number of a "
+"user's posts"
 msgstr ""
 
-#: pntemplates/dizkus_errorpage.html:5
-msgid "Error! The following problem occurred"
+#: pnadminapi.php:755 pntemplates/dizkus_admin_honoraryranks.html:3
+msgid "Edit honorary ranks"
 msgstr ""
 
-#: pntemplates/dizkus_errorpage.html:12
-msgid "Send bug report to site administrator"
+#: pnadminapi.php:756
+msgid "Create, delete and edit special ranks for particular users"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:33
-#: pntemplates/dizkus_user_printtopic.html:29
-#: pntemplates/dizkus_user_printpost.html:26
-#: pntemplates/dizkus_user_newtopicpreview.html:26
-#: pntemplates/dizkus_user_singlepost.html:38
-#: pntemplates/dizkus_user_replypreview.html:24
-#: pntemplates/dizkus_admin_assignranks.html:22
-msgid "Rank"
+#: pnadminapi.php:759 pntemplates/dizkus_admin_assignranks.html:2
+msgid "Assign honorary rank"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:35
-#: pntemplates/dizkus_user_printtopic.html:31
-#: pntemplates/dizkus_user_printpost.html:28
-#: pntemplates/dizkus_user_newtopicpreview.html:28
-#: pntemplates/dizkus_user_singlepost.html:40
-#: pntemplates/dizkus_user_replypreview.html:26
-msgid "Registered"
+#: pnadminapi.php:760
+msgid "Assign honorary user ranks to users"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:37
-#: pntemplates/dizkus_user_printtopic.html:33
-#: pntemplates/dizkus_user_latestposts.html:24
-#: pntemplates/dizkus_user_printpost.html:30
-#: pntemplates/dizkus_user_singlepost.html:42
-#: pntemplates/dizkus_user_replypreview.html:28
-msgid "Last visit"
+#: pnadminapi.php:763 pntemplates/dizkus_admin_managesubscriptions.html:2
+msgid "Manage subscriptions"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:39
-#: pntemplates/dizkus_user_printtopic.html:35
-#: pntemplates/dizkus_user_printpost.html:32
-#: pntemplates/dizkus_user_main.html:21 pntemplates/dizkus_user_main.html:46
-#: pntemplates/dizkus_user_main.html:89 pntemplates/dizkus_user_main.html:109
-#: pntemplates/dizkus_user_main2.html:27
+#: pnadminapi.php:764
+msgid "Remove a user's topic and forum subscriptions"
+msgstr ""
+
+#: pnadminapi.php:767
+msgid "Synchronize forum/topic index"
+msgstr ""
+
+#: pnadminapi.php:768
+msgid ""
+"Synchronize forum and topic indexes to fix any discrepancies that might exist"
+msgstr ""
+
+#: pnadminapi.php:771 pntemplates/dizkus_user_prefs.html:8
+#: pntemplates/dizkus_admin_header.html:16
+#: pntemplates/dizkus_user_signaturemanagement.html:11
+#: pntemplates/dizkus_admin_preferences.html:2
+msgid "Settings"
+msgstr ""
+
+#: pnadminapi.php:772
+msgid "Edit general forum-wide settings"
+msgstr ""
+
+#: pninit.php:26
+msgid ""
+"Error! This version of the Dizkus module requires Zikula 1.2.0 or later. "
+"Installation has been stopped because this requirement is not met."
+msgstr ""
+
+#: pninit.php:100 pninit.php:112 pninit.php:124 pninit.php:136
+#, php-format
+msgid "Error! Could not create %s hook."
+msgstr ""
+
+#: pninit.php:263 pninit.php:270 pninit.php:277 pninit.php:284
+#, php-format
+msgid "Error! Could not delete %s hook."
+msgstr ""
+
+#: pninit.php:359
+msgid "Error! The upgrade to Dizkus 3.0 failed."
+msgstr ""
+
+#: pninit.php:429
+msgid ""
+"Error! A problem was encountered while upgrading the source module for hooks "
+"('smodule')."
+msgstr ""
+
+#: pninit.php:435
+msgid ""
+"Error! A problem was encountered while upgrading the target module for hooks "
+"('tmodule')."
+msgstr ""
+
+#: pninit.php:465
+msgid "Error! Could not upgrade to Dizkus 3.1."
+msgstr ""
+
+#: pninit.php:538
+#, php-format
+msgid "Error! Could not upgrade the table '%s'."
+msgstr ""
+
+#: backforum.php:49
+#, php-format
+msgid "Error! In 'backforum.php', an invalid forum ID %s was encountered."
+msgstr ""
+
+#: backforum.php:52
+#, php-format
+msgid "Error! In 'backforum.php', an invalid category ID %s was encountered."
+msgstr ""
+
+#: backforum.php:66
+#, php-format
+msgid "Error! Could not find a template for an %s-type feed."
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:5
+#: pntemplates/dizkus_user_searchresults.html:7
+#: pntemplates/dizkus_searchresults.html:7
+msgid "Search results for"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:5
+#: pntemplates/dizkus_user_search.html:75
+msgid "hits"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:19
+#: pntemplates/dizkus_ajax_editpost.html:5
+#: pntemplates/dizkus_searchresults.html:19
+msgid "Status"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:20
+#: pntemplates/dizkus_user_topicsubscriptions.html:18
 #: pntemplates/dizkus_ajax_editforum.html:24
-#: pntemplates/dizkus_user_newtopicpreview.html:29
-#: pntemplates/dizkus_user_singlepost.html:44
-#: pntemplates/dizkus_user_viewip.html:19
-#: pntemplates/dizkus_user_replypreview.html:30
-#: pntemplates/dizkus_statisticsblock_display.html:48
-#: pntemplates/dizkus_statisticsblock_display.html:61
-msgid "Posts"
+#: pntemplates/dizkus_user_moderateforum.html:23
+#: pntemplates/dizkus_searchresults.html:20
+#: pntemplates/dizkus_user_viewforum.html:100
+#: pntemplates/dizkus_user_latestposts.html:40
+#: pntemplates/dizkus_user_latestposts.html:94
+#: pntemplates/dizkus_user_latestposts.html:149
+#: pntemplates/dizkus_admin_managesubscriptions.html:21
+msgid "Topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:46
-#: pntemplates/dizkus_user_printtopic.html:43
-#: pntemplates/dizkus_user_printpost.html:40
-#: pntemplates/dizkus_user_singlepost.html:61
-#: pntemplates/dizkus_user_replypreview.html:37
-msgid "Link to this post"
+#: pntemplates/dizkus_user_searchresults.html:21
+#: pntemplates/dizkus_user_moderateforum.html:24
+#: pntemplates/dizkus_user_moderateforum.html:57
+#: pntemplates/dizkus_searchresults.html:21
+#: pntemplates/dizkus_user_viewforum.html:101
+#: pntemplates/dizkus_user_viewforum.html:146
+#: pntemplates/dizkus_user_latestposts.html:41
+#: pntemplates/dizkus_user_latestposts.html:64
+#: pntemplates/dizkus_user_latestposts.html:95
+#: pntemplates/dizkus_user_latestposts.html:118
+#: pntemplates/dizkus_user_latestposts.html:150
+#: pntemplates/dizkus_user_latestposts.html:173
+#: pntemplates/dizkus_statisticsblock_display.html:32
+msgid "Replies"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:47
+#: pntemplates/dizkus_user_searchresults.html:22
+#: pntemplates/dizkus_user_moderateforum.html:54
+#: pntemplates/dizkus_searchresults.html:22
+#: pntemplates/dizkus_user_viewforum.html:143
+#: pntemplates/dizkus_admin_managesubscriptions.html:22
+msgid "Poster"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:23
+#: pntemplates/dizkus_user_moderateforum.html:53
+#: pntemplates/dizkus_searchresults.html:23
+#: pntemplates/dizkus_user_viewforum.html:102
+#: pntemplates/dizkus_user_viewforum.html:147
+msgid "Views"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:24
+#: pntemplates/dizkus_searchresults.html:24
+msgid "Date"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:35
+#: pntemplates/dizkus_user_moderateforum.html:39
+#: pntemplates/dizkus_searchresults.html:35
+#: pntemplates/dizkus_user_viewforum.html:126
+#: pntemplates/dizkus_user_latestposts.html:53
+#: pntemplates/dizkus_user_latestposts.html:107
+#: pntemplates/dizkus_user_latestposts.html:162
+msgid "Sticky topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:35
+#: pntemplates/dizkus_user_moderateforum.html:39
+#: pntemplates/dizkus_user_latestposts.html:53
+#: pntemplates/dizkus_user_latestposts.html:107
+#: pntemplates/dizkus_user_latestposts.html:162
+msgid "Topic is sticky (it will always stay at the top of the topics list)"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:38
+#: pntemplates/dizkus_searchresults.html:38
+#: pntemplates/dizkus_user_viewforum.html:129
+msgid "Locked topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:38
+#: pntemplates/dizkus_searchresults.html:38
+#: pntemplates/dizkus_user_viewforum.html:129
+#: pntemplates/dizkus_user_latestposts.html:56
+#: pntemplates/dizkus_user_latestposts.html:110
+#: pntemplates/dizkus_user_latestposts.html:165
+msgid "This topic is locked. No more posts accepted."
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:41
+#: pntemplates/dizkus_user_moderateforum.html:45
+#: pntemplates/dizkus_searchresults.html:41
+#: pntemplates/dizkus_user_viewforum.html:132
+#: pntemplates/dizkus_user_footer.html:10
+#: pntemplates/dizkus_user_footer.html:11
+msgid "New posts since your last visit"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:43
+#: pntemplates/dizkus_user_moderateforum.html:47
+#: pntemplates/dizkus_searchresults.html:43
+#: pntemplates/dizkus_user_viewforum.html:134
+msgid "Normal topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:46
+#: pntemplates/dizkus_user_moderateforum.html:50
+#: pntemplates/dizkus_searchresults.html:46
+#: pntemplates/dizkus_user_viewforum.html:137
+#: pntemplates/dizkus_user_latestposts.html:59
+#: pntemplates/dizkus_user_latestposts.html:113
+#: pntemplates/dizkus_user_latestposts.html:168
+msgid "Hot topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:52
+msgid "found in"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:52
+#: pntemplates/dizkus_user_main.html:35 pntemplates/dizkus_user_main.html:103
+#: pntemplates/dizkus_user_main2.html:40
+#: pntemplates/dizkus_centerblock_display.html:28
+msgid "Go to forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:57
+#: pntemplates/dizkus_user_viewforum.html:152
+#: pntemplates/dizkus_user_header.html:89
+msgid "View latest posts"
+msgstr ""
+
+#: pntemplates/dizkus_user_searchresults.html:62
+#: pntemplates/dizkus_user_moderateforum.html:81
+#: pntemplates/dizkus_user_viewforum.html:168
+msgid "There are no topics in this forum."
+msgstr ""
+
+#: pntemplates/dizkus_user_topicsubscriptions.html:2
+#: pntemplates/dizkus_user_prefs.html:46 pntemplates/dizkus_user_prefs.html:47
+#: pntemplates/dizkus_admin_managesubscriptions.html:16
+msgid "Manage topic subscriptions"
+msgstr ""
+
+#: pntemplates/dizkus_user_topicsubscriptions.html:19
+#: pntemplates/dizkus_user_topicsubscriptions.html:37
+#: pntemplates/dizkus_user_newtopicpreview.html:36
+#: pntemplates/dizkus_user_printpost.html:41
+#: pntemplates/dizkus_user_replypreview.html:38
 #: pntemplates/dizkus_user_printtopic.html:44
+#: pntemplates/dizkus_user_singlepost.html:62
+#: pntemplates/dizkus_user_editpostpreview.html:47
 #: pntemplates/dizkus_user_latestposts.html:42
 #: pntemplates/dizkus_user_latestposts.html:67
 #: pntemplates/dizkus_user_latestposts.html:96
 #: pntemplates/dizkus_user_latestposts.html:121
 #: pntemplates/dizkus_user_latestposts.html:151
 #: pntemplates/dizkus_user_latestposts.html:176
-#: pntemplates/dizkus_user_printpost.html:41
-#: pntemplates/dizkus_user_newtopicpreview.html:36
-#: pntemplates/dizkus_user_singlepost.html:62
-#: pntemplates/dizkus_user_topicsubscriptions.html:19
-#: pntemplates/dizkus_user_topicsubscriptions.html:37
-#: pntemplates/dizkus_user_replypreview.html:38
 msgid "Posted"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:62
-#: pntemplates/dizkus_user_editpostpreview.html:84
-#: pntemplates/dizkus_user_movepost.html:2
-#: pntemplates/dizkus_user_movepost.html:22
-#: pntemplates/dizkus_user_singlepost.html:75
-#: pntemplates/dizkus_user_singlepost.html:97
-#: pntemplates/dizkus_user_replypreview.html:53
-#: pntemplates/dizkus_user_replypreview.html:75
-msgid "Move post"
+#: pntemplates/dizkus_user_topicsubscriptions.html:20
+#: pntemplates/dizkus_user_viewtopic.html:27
+#: pntemplates/dizkus_user_viewtopic.html:74
+#: pntemplates/dizkus_admin_managesubscriptions.html:23
+msgid "Unsubscribe from topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:69
-#: pntemplates/dizkus_user_editpostpreview.html:91
-#: pntemplates/dizkus_user_singlepost.html:82
-#: pntemplates/dizkus_user_singlepost.html:104
-#: pntemplates/dizkus_user_replypreview.html:60
-#: pntemplates/dizkus_user_replypreview.html:82
-msgid "Quote"
+#: pntemplates/dizkus_user_topicsubscriptions.html:26
+#: pntemplates/dizkus_admin_managesubscriptions.html:18
+msgid "Remove all topic subscriptions"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:72
-#: pntemplates/dizkus_user_editpostpreview.html:94
-#: pntemplates/dizkus_user_singlepost.html:85
-#: pntemplates/dizkus_user_singlepost.html:107
-#: pntemplates/dizkus_user_replypreview.html:63
-#: pntemplates/dizkus_user_replypreview.html:85
-msgid "Edit/delete"
+#: pntemplates/dizkus_user_topicsubscriptions.html:37
+#: pntemplates/dizkus_user_main.html:50 pntemplates/dizkus_user_main.html:118
+#: pntemplates/dizkus_user_main2.html:52
+#: pntemplates/dizkus_user_moderateforum.html:60
+#: pntemplates/dizkus_user_viewforum.html:150
+#: pntemplates/dizkus_user_latestposts.html:67
+#: pntemplates/dizkus_user_latestposts.html:121
+#: pntemplates/dizkus_user_latestposts.html:176
+msgid "by"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:72
-#: pntemplates/dizkus_user_editpostpreview.html:94
-#: pntemplates/dizkus_user_singlepost.html:85
-#: pntemplates/dizkus_user_singlepost.html:107
-#: pntemplates/dizkus_user_replypreview.html:63
-#: pntemplates/dizkus_user_replypreview.html:85
-msgid "Edit"
+#: pntemplates/dizkus_user_topicsubscriptions.html:56
+#: pntemplates/dizkus_admin_managesubscriptions.html:43
+msgid "No topic subscriptions found."
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:75
-#: pntemplates/dizkus_user_editpostpreview.html:97
-#: pntemplates/dizkus_user_latestposts.html:56
-#: pntemplates/dizkus_user_latestposts.html:110
-#: pntemplates/dizkus_user_latestposts.html:165
-#: pntemplates/dizkus_user_singlepost.html:88
-#: pntemplates/dizkus_user_singlepost.html:110
-#: pntemplates/dizkus_user_replypreview.html:66
-#: pntemplates/dizkus_user_replypreview.html:88
-#: pntemplates/dizkus_user_moderateforum.html:42
-msgid "Topic locked"
+#: pntemplates/dizkus_user_topicsubscriptions.html:63
+#: pntemplates/dizkus_user_viewtopic.html:160
+#: pntemplates/dizkus_user_viewtopic.html:166
+#: pntemplates/dizkus_ajax_edittopicsubject.html:7
+#: pntemplates/dizkus_user_editpost.html:59
+#: pntemplates/dizkus_user_emailtopic.html:30
+#: pntemplates/dizkus_ajax_editpost.html:16
+#: pntemplates/dizkus_user_notifymod.html:19
+#: pntemplates/dizkus_user_moderateforum.html:134
+#: pntemplates/dizkus_admin_honoraryranks.html:75
+#: pntemplates/dizkus_user_reply.html:53
+#: pntemplates/dizkus_ajax_editcategory.html:22
+#: pntemplates/dizkus_user_newtopic.html:55
+#: pntemplates/dizkus_user_newtopic.html:56
+#: pntemplates/dizkus_user_newtopic.html:66
+#: pntemplates/dizkus_admin_assignranks.html:45
+#: pntemplates/dizkus_admin_ranks.html:85
+#: pntemplates/dizkus_admin_managesubscriptions.html:76
+msgid "Submit"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:77
-#: pntemplates/dizkus_user_editpostpreview.html:99
-#: pntemplates/dizkus_user_singlepost.html:90
-#: pntemplates/dizkus_user_singlepost.html:112
-#: pntemplates/dizkus_user_notifymod.html:2
-#: pntemplates/dizkus_user_replypreview.html:68
-#: pntemplates/dizkus_user_replypreview.html:90
-msgid "Notify moderator about this posting"
+#: pntemplates/dizkus_user_viewtopic.html:11
+#: pntemplates/dizkus_user_viewtopic.html:57
+msgid "Previous topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:77
-#: pntemplates/dizkus_user_editpostpreview.html:99
-#: pntemplates/dizkus_user_singlepost.html:90
-#: pntemplates/dizkus_user_singlepost.html:112
-#: pntemplates/dizkus_user_replypreview.html:68
-#: pntemplates/dizkus_user_replypreview.html:90
-msgid "Notify moderator"
+#: pntemplates/dizkus_user_viewtopic.html:15
+#: pntemplates/dizkus_user_viewtopic.html:61
+msgid "Create a new topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpostpreview.html:78
-#: pntemplates/dizkus_user_singlepost.html:91
-#: pntemplates/dizkus_user_replypreview.html:69
-msgid "Top"
+#: pntemplates/dizkus_user_viewtopic.html:15
+#: pntemplates/dizkus_user_viewtopic.html:61
+#: pntemplates/dizkus_user_viewforum.html:15
+#: pntemplates/dizkus_user_viewforum.html:60
+msgid "New topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:2 pntemplates/dizkus_user_prefs.html:83
-msgid "Personal settings for each forum"
+#: pntemplates/dizkus_user_viewtopic.html:19
+#: pntemplates/dizkus_user_viewtopic.html:65
+msgid "Send the posts within this topic as an e-mail message to someone"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:14
-msgid "Recent posts order in topic view"
+#: pntemplates/dizkus_user_viewtopic.html:19
+#: pntemplates/dizkus_user_viewtopic.html:65
+#: pntemplates/dizkus_user_emailtopic.html:2
+msgid "Send as e-mail"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:16 pntemplates/dizkus_user_prefs.html:17
-#: pntemplates/dizkus_user_prefs.html:36 pntemplates/dizkus_user_prefs.html:38
-msgid "Recent posts sort order"
+#: pntemplates/dizkus_user_viewtopic.html:26
+#: pntemplates/dizkus_user_viewtopic.html:72
+msgid "Subscribe to this topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:16 pntemplates/dizkus_user_prefs.html:36
-msgid "Oldest submissions at top"
+#: pntemplates/dizkus_user_viewtopic.html:26
+#: pntemplates/dizkus_user_viewtopic.html:72
+msgid "Subscribe to topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:17 pntemplates/dizkus_user_prefs.html:38
-msgid "Newest submissions at top"
+#: pntemplates/dizkus_user_viewtopic.html:27
+#: pntemplates/dizkus_user_viewtopic.html:74
+msgid "Unsubscribe from this topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:46 pntemplates/dizkus_user_prefs.html:47
-#: pntemplates/dizkus_admin_managesubscriptions.html:16
-#: pntemplates/dizkus_user_topicsubscriptions.html:2
-msgid "Manage topic subscriptions"
+#: pntemplates/dizkus_user_viewtopic.html:31
+#: pntemplates/dizkus_user_viewtopic.html:79
+msgid "Next topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:54 pntemplates/dizkus_user_prefs.html:94
-#: pntemplates/dizkus_user_header.html:77
-msgid "Favourites"
+#: pntemplates/dizkus_user_viewtopic.html:38
+#: pntemplates/dizkus_user_viewtopic.html:86
+#: pntemplates/dizkus_user_locktopic.html:3
+#: pntemplates/dizkus_user_locktopic.html:25
+msgid "Lock this topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:55
-#: pntemplates/dizkus_user_header.html:85
-#: pntemplates/dizkus_user_main2.html:10
-msgid "Show all forums"
+#: pntemplates/dizkus_user_viewtopic.html:38
+#: pntemplates/dizkus_user_viewtopic.html:86
+msgid "Lock topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:57
-msgid "Show only forums flagged as your favourites"
+#: pntemplates/dizkus_user_viewtopic.html:39
+#: pntemplates/dizkus_user_viewtopic.html:88
+#: pntemplates/dizkus_user_locktopic.html:5
+#: pntemplates/dizkus_user_locktopic.html:35
+msgid "Unlock this topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:57
-msgid "Show favourites only"
+#: pntemplates/dizkus_user_viewtopic.html:39
+#: pntemplates/dizkus_user_viewtopic.html:88
+msgid "Unlock topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:65
-#: pntemplates/dizkus_user_signaturemanagement.html:2
-msgid "Posting display settings"
+#: pntemplates/dizkus_user_viewtopic.html:43
+#: pntemplates/dizkus_user_viewtopic.html:92
+#: pntemplates/dizkus_user_stickytopic.html:3
+#: pntemplates/dizkus_user_stickytopic.html:25
+msgid "Give this topic 'sticky' status"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:66
-msgid "Manage your signature"
+#: pntemplates/dizkus_user_viewtopic.html:44
+#: pntemplates/dizkus_user_viewtopic.html:94
+#: pntemplates/dizkus_user_stickytopic.html:5
+#: pntemplates/dizkus_user_stickytopic.html:35
+msgid "Remove 'sticky' status"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:74
-#: pntemplates/dizkus_user_ignorelistmanagement.html:2
-msgid "'Ignore list' settings"
+#: pntemplates/dizkus_user_viewtopic.html:47
+#: pntemplates/dizkus_user_viewtopic.html:96
+msgid "Move this topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:75
-msgid "Manage settings for the list of users that you are ignoring"
+#: pntemplates/dizkus_user_viewtopic.html:47
+#: pntemplates/dizkus_user_viewtopic.html:96
+#: pntemplates/dizkus_user_movetopic.html:29
+msgid "Move topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:75
-msgid "Manage settings for your ignore list"
+#: pntemplates/dizkus_user_viewtopic.html:48
+#: pntemplates/dizkus_user_viewtopic.html:97
+#: pntemplates/dizkus_user_deletetopic.html:2
+#: pntemplates/dizkus_user_deletetopic.html:16
+msgid "Delete this topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:91
-#: pntemplates/dizkus_user_latestposts.html:32
-#: pntemplates/dizkus_user_main2.html:18
-#: pntemplates/dizkus_statisticsblock_display.html:59
-msgid "Forums"
+#: pntemplates/dizkus_user_viewtopic.html:135
+msgid "Quick reply"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:92
-msgid "Subscription"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:113
-#: pntemplates/dizkus_user_prefs.html:128
-msgid "Click to subscribe to forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:114
-#: pntemplates/dizkus_user_prefs.html:130
-msgid "Click to unsubscribe from forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:137
-msgid "Click to add this forum to to favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:138
-#: pntemplates/dizkus_user_prefs.html:154
-msgid "Click to remove this forum from your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:138
-#: pntemplates/dizkus_user_prefs.html:154
-msgid "Remove from favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:152
-msgid "Click to add this forum to your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_newtopic.html:25
-msgid "New topic in forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_newtopic.html:29
-#: pntemplates/dizkus_user_emailtopic.html:21
-#: pntemplates/dizkus_user_editpost.html:32
-msgid "Subject line"
-msgstr ""
-
-#: pntemplates/dizkus_user_newtopic.html:33
-#: pntemplates/dizkus_user_emailtopic.html:25
-#: pntemplates/dizkus_user_editpost.html:37
-#: pntemplates/dizkus_user_reply.html:30
-msgid "Message body"
-msgstr ""
-
-#: pntemplates/dizkus_user_newtopic.html:37
 #: pntemplates/dizkus_user_viewtopic.html:143
 #: pntemplates/dizkus_user_reply.html:34
+#: pntemplates/dizkus_user_newtopic.html:37
 msgid "No HTML tags allowed (except inside [code][/code] tags)"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:43
-#: pntemplates/dizkus_user_editpost.html:48
 #: pntemplates/dizkus_user_viewtopic.html:148
+#: pntemplates/dizkus_user_editpost.html:48
 #: pntemplates/dizkus_user_reply.html:41
+#: pntemplates/dizkus_user_newtopic.html:43
 msgid "Options"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:47
-#: pntemplates/dizkus_user_editpost.html:55
 #: pntemplates/dizkus_user_viewtopic.html:152
+#: pntemplates/dizkus_user_editpost.html:55
 #: pntemplates/dizkus_ajax_editpost.html:11
 #: pntemplates/dizkus_user_reply.html:45
+#: pntemplates/dizkus_user_newtopic.html:47
 msgid "Attach my signature"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:51
 #: pntemplates/dizkus_user_viewtopic.html:156
 #: pntemplates/dizkus_user_reply.html:49
+#: pntemplates/dizkus_user_newtopic.html:51
 msgid "Notify me when a reply is posted"
 msgstr ""
 
+#: pntemplates/dizkus_user_viewtopic.html:161
+#: pntemplates/dizkus_user_viewtopic.html:167
+#: pntemplates/dizkus_user_editpost.html:60
+#: pntemplates/dizkus_user_reply.html:54
 #: pntemplates/dizkus_user_newtopic.html:58
 #: pntemplates/dizkus_user_newtopic.html:59
 #: pntemplates/dizkus_user_newtopic.html:67
-#: pntemplates/dizkus_user_editpost.html:60
-#: pntemplates/dizkus_user_viewtopic.html:161
-#: pntemplates/dizkus_user_viewtopic.html:167
-#: pntemplates/dizkus_user_reply.html:54
 msgid "Preview"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:61
-#: pntemplates/dizkus_user_newtopic.html:62
-#: pntemplates/dizkus_user_newtopic.html:68
+#: pntemplates/dizkus_user_viewtopic.html:162
+#: pntemplates/dizkus_user_viewtopic.html:168
 #: pntemplates/dizkus_admin_reordertree.html:63
 #: pntemplates/dizkus_admin_reordertree.html:86
 #: pntemplates/dizkus_admin_reordertree.html:106
-#: pntemplates/dizkus_user_editpost.html:61
 #: pntemplates/dizkus_ajax_edittopicsubject.html:8
-#: pntemplates/dizkus_user_viewtopic.html:162
-#: pntemplates/dizkus_user_viewtopic.html:168
+#: pntemplates/dizkus_user_editpost.html:61
 #: pntemplates/dizkus_ajax_editpost.html:17
 #: pntemplates/dizkus_user_deletetopic.html:17
 #: pntemplates/dizkus_user_moderateforum.html:135
 #: pntemplates/dizkus_user_reply.html:55
+#: pntemplates/dizkus_user_newtopic.html:61
+#: pntemplates/dizkus_user_newtopic.html:62
+#: pntemplates/dizkus_user_newtopic.html:68
 msgid "Cancel"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:91
-#: pntemplates/dizkus_user_viewtopic.html:207
-msgid "Storing post..."
+#: pntemplates/dizkus_user_viewtopic.html:196
+msgid "Moderated by:"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:92
+#: pntemplates/dizkus_user_viewtopic.html:205
+msgid "Storing reply..."
+msgstr ""
+
 #: pntemplates/dizkus_user_viewtopic.html:206
+#: pntemplates/dizkus_user_newtopic.html:92
 msgid "Preparing preview..."
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:93
-msgid "Redirecting you to the new topic..."
+#: pntemplates/dizkus_user_viewtopic.html:207
+#: pntemplates/dizkus_user_newtopic.html:91
+msgid "Storing post..."
 msgstr ""
 
-#: pntemplates/dizkus_ajax_forumusers.html:6
-#: pntemplates/dizkus_user_footer.html:30
-msgid "Users on-line"
+#: pntemplates/dizkus_user_viewtopic.html:208
+msgid "Deleting post..."
 msgstr ""
 
-#: pntemplates/dizkus_ajax_forumusers.html:17
-#: pntemplates/dizkus_user_footer.html:39
-msgid "and"
+#: pntemplates/dizkus_user_viewtopic.html:209
+msgid "Updating post..."
 msgstr ""
 
-#: pntemplates/dizkus_ajax_forumusers.html:23
-#: pntemplates/dizkus_user_footer.html:45
-msgid "anonymous guests"
+#: pntemplates/dizkus_user_viewtopic.html:210
+msgid "Unchanged"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_forumusers.html:23
-#: pntemplates/dizkus_user_footer.html:45
-msgid "anonymous guest"
+#: pntemplates/dizkus_user_viewtopic.html:211
+msgid "Changed"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_forumusers.html:29
-#: pntemplates/dizkus_user_footer.html:49
-#, php-format
-msgid "This list is based on users active over the last %1$s minutes."
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:23
-msgid "Category list"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:29
-msgid "New Topic in forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:47
-#: pntemplates/dizkus_user_header.html:106
-msgid "Forums index page"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:51
-#: pntemplates/dizkus_user_header.html:55
-#: pntemplates/dizkus_user_header.html:59
-#: pntemplates/dizkus_user_header.html:63
-#: pntemplates/dizkus_user_header.html:68
-#: pntemplates/dizkus_user_header.html:73 pntemplates/dizkus_search.html:20
-msgid "&nbsp;::&nbsp;"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:55
-#: pntemplates/dizkus_user_header.html:59
-#: pntemplates/dizkus_user_header.html:63 pntemplates/dizkus_user_main.html:15
-#: pntemplates/dizkus_user_main2.html:24
-msgid "Go to category"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:87
-msgid "Show your favourite forums only"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:87
-msgid "Show favourite forums only"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:90
-#: pntemplates/dizkus_user_searchresults.html:57
-#: pntemplates/dizkus_user_viewforum.html:152
-msgid "View latest posts"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:90
-msgid "Latest posts"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:91 pntemplates/dizkus_search.html:6
-msgid "Search forums"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:91
-#: pntemplates/dizkus_user_search.html:5
-#: pntemplates/dizkus_user_search.html:19
-msgid "Search"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:93
-msgid "Log-in"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:94
-msgid "Register"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:96
-msgid "View your posts"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:97
-msgid "Configure your personal forum settings"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:97
-msgid "Personal settings"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:113
-msgid "Click to edit"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:116
-msgid "Bottom"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer_with_ajax.html:26
-#: pntemplates/dizkus_admin_footer.html:3
-msgid "Powered by "
+#: pntemplates/dizkus_user_splittopic.html:2
+#: pntemplates/dizkus_user_splittopic.html:20
+#: pntemplates/dizkus_user_replypreview.html:54
+#: pntemplates/dizkus_user_replypreview.html:76
+#: pntemplates/dizkus_user_singlepost.html:76
+#: pntemplates/dizkus_user_singlepost.html:98
+#: pntemplates/dizkus_user_editpostpreview.html:63
+#: pntemplates/dizkus_user_editpostpreview.html:85
+msgid "Split topic"
 msgstr ""
 
 #: pntemplates/dizkus_user_splittopic.html:13
@@ -1368,294 +1088,86 @@ msgstr ""
 msgid "Split"
 msgstr ""
 
+#: pntemplates/dizkus_user_newtopicpreview.html:26
+#: pntemplates/dizkus_user_printpost.html:26
+#: pntemplates/dizkus_user_replypreview.html:24
+#: pntemplates/dizkus_user_printtopic.html:29
+#: pntemplates/dizkus_user_singlepost.html:38
+#: pntemplates/dizkus_user_editpostpreview.html:33
+#: pntemplates/dizkus_admin_assignranks.html:22
+msgid "Rank"
+msgstr ""
+
+#: pntemplates/dizkus_user_newtopicpreview.html:28
+#: pntemplates/dizkus_user_printpost.html:28
+#: pntemplates/dizkus_user_replypreview.html:26
+#: pntemplates/dizkus_user_printtopic.html:31
+#: pntemplates/dizkus_user_singlepost.html:40
+#: pntemplates/dizkus_user_editpostpreview.html:35
+msgid "Registered"
+msgstr ""
+
+#: pntemplates/dizkus_user_newtopicpreview.html:29
+#: pntemplates/dizkus_user_printpost.html:32
+#: pntemplates/dizkus_user_replypreview.html:30
+#: pntemplates/dizkus_user_viewip.html:19 pntemplates/dizkus_user_main.html:21
+#: pntemplates/dizkus_user_main.html:46 pntemplates/dizkus_user_main.html:89
+#: pntemplates/dizkus_user_main.html:114
+#: pntemplates/dizkus_user_printtopic.html:35
+#: pntemplates/dizkus_ajax_editforum.html:25
+#: pntemplates/dizkus_user_main2.html:27
+#: pntemplates/dizkus_user_editpostpreview.html:39
+#: pntemplates/dizkus_statisticsblock_display.html:48
+#: pntemplates/dizkus_statisticsblock_display.html:61
+msgid "Posts"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:6 pntemplates/dizkus_user_header.html:90
+msgid "Search forums"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:7
+#, php-format
+msgid ""
+"Notice: For forum searches, your search query must be between %1$s and %2$s "
+"characters long."
+msgstr ""
+
+#: pntemplates/dizkus_search.html:14
+msgid "Category and forum:"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:18 pntemplates/dizkus_user_search.html:37
+msgid "All forums"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:20 pntemplates/dizkus_user_header.html:50
+#: pntemplates/dizkus_user_header.html:54
+#: pntemplates/dizkus_user_header.html:58
+#: pntemplates/dizkus_user_header.html:62
+#: pntemplates/dizkus_user_header.html:67
+#: pntemplates/dizkus_user_header.html:72
+msgid "&nbsp;::&nbsp;"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:26
+msgid "Search in"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:30
+msgid "Postings"
+msgstr ""
+
+#: pntemplates/dizkus_search.html:31 pntemplates/dizkus_user_search.html:45
+msgid "Author"
+msgstr ""
+
 #: pntemplates/dizkus_admin_pop3test.html:2
 msgid "POP3 test results"
 msgstr ""
 
 #: pntemplates/dizkus_admin_pop3test.html:14
 msgid "Back to forum administration"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:2
-msgid "Move or join topics"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:14
-msgid "Move topic to another forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:15
-msgid ""
-"When you press the 'Move' button at the bottom of this form, the topic you "
-"have selected (and all its related posts) will be <strong>moved</strong> to "
-"the forum you have selected. Note: You will only be able to move the topic "
-"to a forum for which you are moderator. An administrator is allowed to move "
-"any topic to any forum."
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:17
-msgid "Target forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:25
-#: pntemplates/dizkus_user_moderateforum.html:114
-msgid "Create shadow topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:29
-#: pntemplates/dizkus_user_viewtopic.html:47
-#: pntemplates/dizkus_user_viewtopic.html:96
-msgid "Move topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:41
-msgid "Join topic with another topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:43
-#: pntemplates/dizkus_user_movepost.html:15
-msgid "ID of target topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_movetopic.html:49
-#: pntemplates/dizkus_user_moderateforum.html:101
-msgid "Join topics"
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:9
-#: pntemplates/dizkus_user_ignorelistmanagement.html:13
-msgid "General settings"
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:16
-msgid ""
-"If the 'Forums are accessible to visitors' setting is deactivated then only "
-"administrators will have access to the forums. You can temporarily "
-"deactivate this setting to take the forums off-line when you need to perform "
-"maintenance."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:57
-msgid "Advanced settings"
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:59
-#, php-format
-msgid ""
-"Caution! Inappropriate settings here can lead to unwanted side effects. You "
-"are recommended not to alter the settings below unless you fully understand "
-"what the results will be. <br /><br />Database name: '%s'; type: '%s'; "
-"version: '%s'."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:64
-msgid ""
-"Notice: For searches with full-text index fields, you need MySQL 4 or later; "
-"the feature does not work with InnoDB databases. This flag will normally be "
-"set during installation, when the index fields have been created. Search "
-"results may be empty if the query string is present in too many postings. "
-"This is a feature of MySQL. For more information, see <a href=\"http://dev."
-"mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in "
-"MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:69
-msgid ""
-"Notice: Extended full-text searching enables queries like '+Dizkus -Skype' "
-"to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or "
-"later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/"
-"fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-"
-"text search in MySQL'</a> in the MySQL documentation."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:74
-msgid ""
-"Notice: Deactivate the 'Show text in search results' setting for high-volume "
-"sites if you need to improve search performance, or if you need to be "
-"attentive to constant cleaning of the search results table."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:88
-msgid "User-related settings"
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:117
-#: pntemplates/dizkus_user_ignorelistmanagement.html:8
-msgid ""
-"Users who are being ignored by a topic poster cannot post messages under "
-"this topic when 'strict' level is active. When 'medium' level is active, "
-"they can reply but their postings will generally not be shown to users who "
-"are ignoring the poster. Also, e-mail notifications will not be sent. "
-"Concealed postings will be shown when you click on the posting."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:119
-msgid ""
-"Notice: 'Ignore list' support is not currently available. The <a href="
-"\"http://code.zikula.org/contactlist/\">ContactList</a> module must be "
-"installed for this feature to be operative."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:129
-msgid "Security settings"
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:137
-msgid ""
-"Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect "
-"the content of '[code][/code]' BBCode tags."
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:144
-#: pntemplates/dizkus_user_latestposts.html:18
-msgid "hours"
-msgstr ""
-
-#: pntemplates/dizkus_admin_preferences.html:150
-msgid "Other settings"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:3
-#, php-format
-msgid "Forums: %s hit"
-msgid_plural "Forums: %s hits"
-msgstr[0] ""
-msgstr[1] ""
-
-#: pntemplates/dizkus_searchresults.html:7
-#: pntemplates/dizkus_user_searchresults.html:5
-#: pntemplates/dizkus_user_searchresults.html:7
-msgid "Search results for"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:19
-#: pntemplates/dizkus_user_searchresults.html:19
-#: pntemplates/dizkus_ajax_editpost.html:5
-msgid "Status"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:20
-#: pntemplates/dizkus_user_searchresults.html:20
-#: pntemplates/dizkus_user_viewforum.html:100
-#: pntemplates/dizkus_user_latestposts.html:40
-#: pntemplates/dizkus_user_latestposts.html:94
-#: pntemplates/dizkus_user_latestposts.html:149
-#: pntemplates/dizkus_admin_managesubscriptions.html:21
-#: pntemplates/dizkus_ajax_editforum.html:23
-#: pntemplates/dizkus_user_topicsubscriptions.html:18
-#: pntemplates/dizkus_user_moderateforum.html:23
-msgid "Topic"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:21
-#: pntemplates/dizkus_user_searchresults.html:21
-#: pntemplates/dizkus_user_viewforum.html:101
-#: pntemplates/dizkus_user_viewforum.html:146
-#: pntemplates/dizkus_user_latestposts.html:41
-#: pntemplates/dizkus_user_latestposts.html:64
-#: pntemplates/dizkus_user_latestposts.html:95
-#: pntemplates/dizkus_user_latestposts.html:118
-#: pntemplates/dizkus_user_latestposts.html:150
-#: pntemplates/dizkus_user_latestposts.html:173
-#: pntemplates/dizkus_user_moderateforum.html:24
-#: pntemplates/dizkus_user_moderateforum.html:57
-#: pntemplates/dizkus_statisticsblock_display.html:32
-msgid "Replies"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:22
-#: pntemplates/dizkus_user_searchresults.html:22
-#: pntemplates/dizkus_user_viewforum.html:143
-#: pntemplates/dizkus_admin_managesubscriptions.html:22
-#: pntemplates/dizkus_user_moderateforum.html:54
-msgid "Poster"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:23
-#: pntemplates/dizkus_user_searchresults.html:23
-#: pntemplates/dizkus_user_viewforum.html:102
-#: pntemplates/dizkus_user_viewforum.html:147
-#: pntemplates/dizkus_user_moderateforum.html:53
-msgid "Views"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:24
-#: pntemplates/dizkus_user_searchresults.html:24
-msgid "Date"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:35
-#: pntemplates/dizkus_user_searchresults.html:35
-#: pntemplates/dizkus_user_viewforum.html:126
-#: pntemplates/dizkus_user_latestposts.html:53
-#: pntemplates/dizkus_user_latestposts.html:107
-#: pntemplates/dizkus_user_latestposts.html:162
-#: pntemplates/dizkus_user_moderateforum.html:39
-msgid "Sticky topic"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:35
-msgid "Sticky topic (it will always stay at top of the topics list)"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:38
-#: pntemplates/dizkus_user_searchresults.html:38
-#: pntemplates/dizkus_user_viewforum.html:129
-msgid "Locked topic"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:38
-#: pntemplates/dizkus_user_searchresults.html:38
-#: pntemplates/dizkus_user_viewforum.html:129
-#: pntemplates/dizkus_user_latestposts.html:56
-#: pntemplates/dizkus_user_latestposts.html:110
-#: pntemplates/dizkus_user_latestposts.html:165
-msgid "This topic is locked. No more posts accepted."
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:41
-msgid "New messages have been posted under this topic since your last visit"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:43
-#: pntemplates/dizkus_user_searchresults.html:43
-#: pntemplates/dizkus_user_viewforum.html:134
-#: pntemplates/dizkus_user_moderateforum.html:47
-msgid "Normal topic"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:46
-#: pntemplates/dizkus_user_searchresults.html:46
-#: pntemplates/dizkus_user_viewforum.html:137
-#: pntemplates/dizkus_user_latestposts.html:59
-#: pntemplates/dizkus_user_latestposts.html:113
-#: pntemplates/dizkus_user_latestposts.html:168
-#: pntemplates/dizkus_user_moderateforum.html:50
-msgid "Hot topic"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:52
-msgid "found in:"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:52
-msgid "go to forum"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:57
-msgid "View most-recent posting"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:62
-msgid "No topics"
-msgstr ""
-
-#: pntemplates/dizkus_user_movepost.html:13
-msgid "Move post from one topic to another"
-msgstr ""
-
-#: pntemplates/dizkus_user_emailtopic.html:17
-msgid "Sent to"
 msgstr ""
 
 #: pntemplates/dizkus_admin_reordertree.html:6
@@ -1705,7 +1217,7 @@ msgstr ""
 
 #: pntemplates/dizkus_admin_reordertree.html:29
 #: pntemplates/dizkus_admin_reordertree.html:85
-#: pntemplates/dizkus_ajax_editforum.html:6
+#: pntemplates/dizkus_ajax_editforum.html:7
 msgid "Create forum"
 msgstr ""
 
@@ -1742,203 +1254,109 @@ msgstr ""
 msgid "Storing new sort order..."
 msgstr ""
 
-#: pntemplates/dizkus_ajax_newtopicconfirmation.html:4
-#: pntemplates/dizkus_user_newtopicconfirmation.html:6
-msgid "Thanks for your submission."
+#: pntemplates/dizkus_user_printpost.html:30
+#: pntemplates/dizkus_user_replypreview.html:28
+#: pntemplates/dizkus_user_printtopic.html:33
+#: pntemplates/dizkus_user_singlepost.html:42
+#: pntemplates/dizkus_user_editpostpreview.html:37
+#: pntemplates/dizkus_user_latestposts.html:24
+msgid "Last visit"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_newtopicconfirmation.html:6
-msgid ""
-"Click here to go the new topic, or wait a few seconds until you are "
-"redirected"
+#: pntemplates/dizkus_user_printpost.html:40
+#: pntemplates/dizkus_user_replypreview.html:37
+#: pntemplates/dizkus_user_printtopic.html:43
+#: pntemplates/dizkus_user_singlepost.html:61
+#: pntemplates/dizkus_user_editpostpreview.html:46
+msgid "Link to this post"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_newtopicconfirmation.html:7
-#: pntemplates/dizkus_user_newtopicconfirmation.html:9
-msgid "Click here to go back to the forum"
+#: pntemplates/dizkus_user_replypreview.html:53
+#: pntemplates/dizkus_user_replypreview.html:75
+#: pntemplates/dizkus_user_singlepost.html:75
+#: pntemplates/dizkus_user_singlepost.html:97
+#: pntemplates/dizkus_user_editpostpreview.html:62
+#: pntemplates/dizkus_user_editpostpreview.html:84
+#: pntemplates/dizkus_user_movepost.html:2
+#: pntemplates/dizkus_user_movepost.html:22
+msgid "Move post"
 msgstr ""
 
-#: pntemplates/dizkus_admin_main.html:2
-msgid "Dizkus Administration"
+#: pntemplates/dizkus_user_replypreview.html:60
+#: pntemplates/dizkus_user_replypreview.html:82
+#: pntemplates/dizkus_user_singlepost.html:82
+#: pntemplates/dizkus_user_singlepost.html:104
+#: pntemplates/dizkus_user_editpostpreview.html:69
+#: pntemplates/dizkus_user_editpostpreview.html:91
+msgid "Quote"
 msgstr ""
 
-#: pntemplates/dizkus_centerblock_display2.html:10
-#: pntemplates/dizkus_ajax_newposts.html:7
-#: pntemplates/dizkus_centerblock_display.html:8
-msgid "Recent postings:"
+#: pntemplates/dizkus_user_replypreview.html:63
+#: pntemplates/dizkus_user_replypreview.html:85
+#: pntemplates/dizkus_user_singlepost.html:85
+#: pntemplates/dizkus_user_singlepost.html:107
+#: pntemplates/dizkus_user_editpostpreview.html:72
+#: pntemplates/dizkus_user_editpostpreview.html:94
+msgid "Edit/delete"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopicconfirmation.html:8
-msgid "Click here to go the new topic"
+#: pntemplates/dizkus_user_replypreview.html:63
+#: pntemplates/dizkus_user_replypreview.html:85
+#: pntemplates/dizkus_user_singlepost.html:85
+#: pntemplates/dizkus_user_singlepost.html:107
+#: pntemplates/dizkus_user_editpostpreview.html:72
+#: pntemplates/dizkus_user_editpostpreview.html:94
+msgid "Edit"
 msgstr ""
 
-#: pntemplates/dizkus_user_searchresults.html:5
-#: pntemplates/dizkus_user_search.html:75
-msgid "hits"
+#: pntemplates/dizkus_user_replypreview.html:66
+#: pntemplates/dizkus_user_replypreview.html:88
+#: pntemplates/dizkus_user_singlepost.html:88
+#: pntemplates/dizkus_user_singlepost.html:110
+#: pntemplates/dizkus_user_moderateforum.html:42
+#: pntemplates/dizkus_user_editpostpreview.html:75
+#: pntemplates/dizkus_user_editpostpreview.html:97
+#: pntemplates/dizkus_user_latestposts.html:56
+#: pntemplates/dizkus_user_latestposts.html:110
+#: pntemplates/dizkus_user_latestposts.html:165
+msgid "Topic locked"
 msgstr ""
 
-#: pntemplates/dizkus_user_searchresults.html:35
-#: pntemplates/dizkus_user_latestposts.html:53
-#: pntemplates/dizkus_user_latestposts.html:107
-#: pntemplates/dizkus_user_latestposts.html:162
-#: pntemplates/dizkus_user_moderateforum.html:39
-msgid "Topic is sticky (it will always stay at the top of the topics list)"
+#: pntemplates/dizkus_user_replypreview.html:68
+#: pntemplates/dizkus_user_replypreview.html:90
+#: pntemplates/dizkus_user_singlepost.html:90
+#: pntemplates/dizkus_user_singlepost.html:112
+#: pntemplates/dizkus_user_notifymod.html:2
+#: pntemplates/dizkus_user_editpostpreview.html:77
+#: pntemplates/dizkus_user_editpostpreview.html:99
+msgid "Notify moderator about this posting"
 msgstr ""
 
-#: pntemplates/dizkus_user_searchresults.html:52
-msgid "found in"
+#: pntemplates/dizkus_user_replypreview.html:68
+#: pntemplates/dizkus_user_replypreview.html:90
+#: pntemplates/dizkus_user_singlepost.html:90
+#: pntemplates/dizkus_user_singlepost.html:112
+#: pntemplates/dizkus_user_editpostpreview.html:77
+#: pntemplates/dizkus_user_editpostpreview.html:99
+msgid "Notify moderator"
 msgstr ""
 
-#: pntemplates/dizkus_user_searchresults.html:52
-#: pntemplates/dizkus_user_main.html:35 pntemplates/dizkus_user_main.html:103
-#: pntemplates/dizkus_user_main2.html:40
-#: pntemplates/dizkus_centerblock_display.html:28
-msgid "Go to forum"
+#: pntemplates/dizkus_user_replypreview.html:69
+#: pntemplates/dizkus_user_singlepost.html:91
+#: pntemplates/dizkus_user_editpostpreview.html:78
+msgid "Top"
 msgstr ""
 
-#: pntemplates/dizkus_user_searchresults.html:62
-#: pntemplates/dizkus_user_viewforum.html:168
-#: pntemplates/dizkus_user_moderateforum.html:81
-msgid "There are no topics in this forum."
-msgstr ""
-
-#: pntemplates/dizkus_init_interactiveupgrade.html:4
-#: pntemplates/dizkus_upgrade_31.html:3 pntemplates/dizkus_upgrade_30.html:8
-msgid "Dizkus upgrade"
-msgstr ""
-
-#: pntemplates/dizkus_init_interactiveupgrade.html:6
-#: pntemplates/dizkus_upgrade_31.html:14 pntemplates/dizkus_upgrade_30.html:12
-msgid "New version"
-msgstr ""
-
-#: pntemplates/dizkus_user_editpost.html:2
-#: pntemplates/dizkus_user_editpost.html:26
-msgid "Edit post"
-msgstr ""
-
-#: pntemplates/dizkus_user_editpost.html:40
-msgid "Notice: No HTML tags allowed (except inside [code][/code] tags)"
-msgstr ""
-
-#: pntemplates/dizkus_user_editpost.html:51
-#: pntemplates/dizkus_ajax_editpost.html:13
-msgid "Delete this post"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:15
-#: pntemplates/dizkus_user_viewforum.html:60
-msgid "Start a new topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:20
-msgid "Subscribe to this forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:21
-msgid "Unsubscribe from this forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:35
-#: pntemplates/dizkus_user_viewforum.html:75
-msgid "Add this forum to your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:35
-#: pntemplates/dizkus_user_viewforum.html:75
-msgid "Add forum to favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:36
-#: pntemplates/dizkus_user_viewforum.html:77
-msgid "Remove this forum from your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:52
-#: pntemplates/dizkus_user_viewforum.html:64
-#: pntemplates/dizkus_user_moderateforum.html:2
-msgid "Moderate"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:103
-#: pntemplates/dizkus_user_viewforum.html:150
-#: pntemplates/dizkus_user_main.html:24 pntemplates/dizkus_user_main.html:50
-#: pntemplates/dizkus_user_main.html:92 pntemplates/dizkus_user_main.html:113
-#: pntemplates/dizkus_user_main2.html:28
-#: pntemplates/dizkus_user_moderateforum.html:25
-#: pntemplates/dizkus_user_moderateforum.html:60
-msgid "Last post"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:126
-msgid "Topic is sticky (it will always stay at the top of the topcis list)"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:140
-msgid "Attachments"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:140
-msgid "File attachments"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:150
-#: pntemplates/dizkus_user_latestposts.html:67
-#: pntemplates/dizkus_user_latestposts.html:121
-#: pntemplates/dizkus_user_latestposts.html:176
-#: pntemplates/dizkus_user_main.html:50 pntemplates/dizkus_user_main.html:113
-#: pntemplates/dizkus_user_main2.html:51
-#: pntemplates/dizkus_user_topicsubscriptions.html:37
-#: pntemplates/dizkus_user_moderateforum.html:60
-msgid "by"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:152
-#: pntemplates/dizkus_user_main.html:53 pntemplates/dizkus_user_main.html:116
-#: pntemplates/dizkus_user_main2.html:51
-#: pntemplates/dizkus_user_moderateforum.html:62
-msgid "View latest post"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:177
-#: pntemplates/dizkus_user_main.html:38 pntemplates/dizkus_user_main.html:105
-#: pntemplates/dizkus_user_main2.html:43
-msgid "Moderated by"
-msgstr ""
-
-#: pntemplates/dizkus_user_latestposts.html:2
-#: pntemplates/dizkus_user_latestposts.html:9
-msgid "Latest forum posts"
-msgstr ""
-
-#: pntemplates/dizkus_user_latestposts.html:18
-msgid "Last"
-msgstr ""
-
-#: pntemplates/dizkus_user_latestposts.html:22
-msgid "Last week, unanswered"
-msgstr ""
-
-#: pntemplates/dizkus_user_latestposts.html:85
-msgid "RSS feeds"
-msgstr ""
-
-#: pntemplates/dizkus_user_latestposts.html:140
-msgid "Mailing lists"
-msgstr ""
-
-#: pntemplates/dizkus_user_stickytopic.html:3
-#: pntemplates/dizkus_user_stickytopic.html:25
-#: pntemplates/dizkus_user_viewtopic.html:43
-#: pntemplates/dizkus_user_viewtopic.html:92
-msgid "Give this topic 'sticky' status"
-msgstr ""
-
-#: pntemplates/dizkus_user_stickytopic.html:5
-#: pntemplates/dizkus_user_stickytopic.html:35
-#: pntemplates/dizkus_user_viewtopic.html:44
-#: pntemplates/dizkus_user_viewtopic.html:94
-msgid "Remove 'sticky' status"
+#: pntemplates/dizkus_user_stickytopic.html:19
+#: pntemplates/dizkus_user_stickytopic.html:29
+#: pntemplates/dizkus_user_locktopic.html:19
+#: pntemplates/dizkus_user_locktopic.html:29
+#: pntemplates/dizkus_ajax_editforum.html:32
+#: pntemplates/dizkus_admin_honoraryranks.html:28
+#: pntemplates/dizkus_admin_honoraryranks.html:47
+#: pntemplates/dizkus_admin_ranks.html:37
+#: pntemplates/dizkus_admin_ranks.html:58
+msgid "Description"
 msgstr ""
 
 #: pntemplates/dizkus_user_stickytopic.html:21
@@ -1955,515 +1373,197 @@ msgid ""
 "change its status again at a later time if you so choose."
 msgstr ""
 
-#: pntemplates/dizkus_search.html:7
-#, php-format
+#: pntemplates/dizkus_user_prefs.html:2 pntemplates/dizkus_user_prefs.html:83
+msgid "Personal settings for each forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:14
+msgid "Recent posts order in topic view"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:16 pntemplates/dizkus_user_prefs.html:17
+#: pntemplates/dizkus_user_prefs.html:36 pntemplates/dizkus_user_prefs.html:38
+msgid "Change post order"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:16 pntemplates/dizkus_user_prefs.html:17
+#: pntemplates/dizkus_user_prefs.html:36 pntemplates/dizkus_user_prefs.html:38
+msgid "Recent posts sort order"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:16 pntemplates/dizkus_user_prefs.html:36
+msgid "Oldest submissions at top"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:17 pntemplates/dizkus_user_prefs.html:38
+msgid "Newest submissions at top"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:54 pntemplates/dizkus_user_prefs.html:94
+#: pntemplates/dizkus_user_header.html:76
+msgid "Favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:55 pntemplates/dizkus_user_main2.html:10
+#: pntemplates/dizkus_user_header.html:84
+msgid "Show all forums"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:57
+msgid "Show only forums flagged as your favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:57
+msgid "Show favourites only"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:65
+#: pntemplates/dizkus_user_signaturemanagement.html:2
+msgid "Posting display settings"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:66
+msgid "Manage your signature"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:74
+#: pntemplates/dizkus_user_ignorelistmanagement.html:2
+msgid "'Ignore list' settings"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:75
+msgid "Manage settings for the list of users that you are ignoring"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:75
+msgid "Manage settings for your ignore list"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:91
+#: pntemplates/dizkus_ajax_editcategory.html:10
+msgid "Category"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:91 pntemplates/dizkus_user_main2.html:18
+#: pntemplates/dizkus_user_latestposts.html:32
+#: pntemplates/dizkus_statisticsblock_display.html:59
+msgid "Forums"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:92
+msgid "Subscription"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:113
+#: pntemplates/dizkus_user_prefs.html:128
+msgid "Click to subscribe to forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:113
+#: pntemplates/dizkus_user_prefs.html:128
+#: pntemplates/dizkus_user_viewforum.html:20
+#: pntemplates/dizkus_user_viewforum.html:69
+msgid "Subscribe to forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:114
+#: pntemplates/dizkus_user_prefs.html:130
+msgid "Click to unsubscribe from forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:114
+#: pntemplates/dizkus_user_prefs.html:130
+#: pntemplates/dizkus_user_viewforum.html:21
+#: pntemplates/dizkus_user_viewforum.html:71
+#: pntemplates/dizkus_admin_managesubscriptions.html:54
+msgid "Unsubscribe from forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:137
+msgid "Click to add this forum to to favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:137
+#: pntemplates/dizkus_user_prefs.html:152
+msgid "Add to favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:138
+#: pntemplates/dizkus_user_prefs.html:154
+msgid "Click to remove this forum from your favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:138
+#: pntemplates/dizkus_user_prefs.html:154
+msgid "Remove from favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:152
+msgid "Click to add this forum to your favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_ignorelistmanagement.html:8
+#: pntemplates/dizkus_admin_preferences.html:113
 msgid ""
-"Notice: For forum searches, your search query must be between %1$s and %2$s "
-"characters long."
+"Users who are being ignored by a topic poster cannot post messages under "
+"this topic when 'strict' level is active. When 'medium' level is active, "
+"they can reply but their postings will generally not be shown to users who "
+"are ignoring the poster. Also, e-mail notifications will not be sent. "
+"Concealed postings will be shown when you click on the posting."
 msgstr ""
 
-#: pntemplates/dizkus_search.html:14
-msgid "Category and forum:"
+#: pntemplates/dizkus_user_ignorelistmanagement.html:13
+#: pntemplates/dizkus_admin_preferences.html:9
+msgid "General settings"
 msgstr ""
 
-#: pntemplates/dizkus_search.html:18 pntemplates/dizkus_user_search.html:37
-msgid "All forums"
+#: pntemplates/dizkus_ajax_newtopicconfirmation.html:4
+#: pntemplates/dizkus_user_newtopicconfirmation.html:6
+msgid "Thanks for your submission."
 msgstr ""
 
-#: pntemplates/dizkus_search.html:26
-msgid "Search in"
-msgstr ""
-
-#: pntemplates/dizkus_search.html:30
-msgid "Postings"
-msgstr ""
-
-#: pntemplates/dizkus_search.html:31 pntemplates/dizkus_user_search.html:45
-msgid "Author"
-msgstr ""
-
-#: pntemplates/dizkus_user_main.html:18 pntemplates/dizkus_user_main.html:45
-#: pntemplates/dizkus_user_main.html:86 pntemplates/dizkus_user_main.html:108
-#: pntemplates/dizkus_user_main2.html:26
-#: pntemplates/dizkus_ajax_editforum.html:23
-#: pntemplates/dizkus_statisticsblock_display.html:60
-msgid "Topics"
-msgstr ""
-
-#: pntemplates/dizkus_user_main.html:51 pntemplates/dizkus_user_main.html:114
-msgid "Written on"
-msgstr ""
-
-#: pntemplates/dizkus_user_main.html:64 pntemplates/dizkus_user_main2.html:56
-#: pntemplates/dizkus_user_main2.html:70
-msgid "No forums created"
-msgstr ""
-
-#: pntemplates/dizkus_user_main.html:127
-msgid "No forums created."
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:8
-msgid "Favourites:"
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:12
-msgid "Show only your favorite forums"
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:12
-msgid "Show favorite forums only"
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:68
-msgid "You have not yet defined any favourite forums"
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:78
-msgid "New posts since your last visit."
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:78
-#: pntemplates/dizkus_user_footer.html:12
-msgid "New posts since your last visit on"
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:79
-msgid "No new posts since your last visit."
-msgstr ""
-
-#: pntemplates/dizkus_user_main2.html:79
-#: pntemplates/dizkus_user_footer.html:13
-msgid "No new posts since your last visit on"
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:7
-#: pntemplates/dizkus_ajax_editforum.html:87
-#: pntemplates/dizkus_admin_assignranks.html:21
-msgid "User name"
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:7
-msgid "Show users' subscriptions"
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:18
-#: pntemplates/dizkus_user_topicsubscriptions.html:26
-msgid "Remove all topic subscriptions"
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:43
-#: pntemplates/dizkus_user_topicsubscriptions.html:56
-msgid "No topic subscriptions found."
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:48
-msgid "Manage forum subscriptions"
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:50
-msgid "Remove all forum subscriptions"
-msgstr ""
-
-#: pntemplates/dizkus_admin_managesubscriptions.html:72
-msgid "No forum subscriptions found."
-msgstr ""
-
-#: pntemplates/dizkus_upgrade_31.html:4 pntemplates/dizkus_upgrade_30.html:4
-#: pntemplates/dizkus_upgrade_30.html:15
+#: pntemplates/dizkus_ajax_newtopicconfirmation.html:6
 msgid ""
-"Caution! Please back-up your database via a database dump before proceeding "
-"with the upgrade."
+"Click here to go the new topic, or wait a few seconds until you are "
+"redirected"
 msgstr ""
 
-#: pntemplates/dizkus_upgrade_31.html:8
-msgid "Upgrade info"
+#: pntemplates/dizkus_ajax_newtopicconfirmation.html:7
+#: pntemplates/dizkus_user_newtopicconfirmation.html:9
+msgid "Click here to go back to the forum"
 msgstr ""
 
-#: pntemplates/dizkus_upgrade_31.html:10 pntemplates/dizkus_upgrade_30.html:11
-msgid "Old version"
+#: pntemplates/dizkus_user_editpost.html:2
+#: pntemplates/dizkus_user_editpost.html:26
+msgid "Edit post"
 msgstr ""
 
-#: pntemplates/dizkus_upgrade_31.html:20 pntemplates/dizkus_upgrade_30.html:19
-msgid "Next"
+#: pntemplates/dizkus_user_editpost.html:32
+#: pntemplates/dizkus_user_emailtopic.html:21
+#: pntemplates/dizkus_user_newtopic.html:29
+msgid "Subject line"
 msgstr ""
 
-#: pntemplates/dizkus_admin_header.html:11
-msgid "Forum Administration"
+#: pntemplates/dizkus_user_editpost.html:37
+#: pntemplates/dizkus_user_emailtopic.html:25
+#: pntemplates/dizkus_user_reply.html:30
+#: pntemplates/dizkus_user_newtopic.html:33
+msgid "Message body"
 msgstr ""
 
-#: pntemplates/dizkus_admin_header.html:22
-msgid ""
-"Warning! The Dizkus admin panel needs JavaScript enabled. Some parts of the "
-"admin panel will not function without it."
+#: pntemplates/dizkus_user_editpost.html:40
+msgid "Notice: No HTML tags allowed (except inside [code][/code] tags)"
 msgstr ""
 
-#: pntemplates/dizkus_user_viewtopic.html:11
-#: pntemplates/dizkus_user_viewtopic.html:57
-msgid "Previous topic"
+#: pntemplates/dizkus_user_editpost.html:51
+#: pntemplates/dizkus_ajax_editpost.html:13
+msgid "Delete this post"
 msgstr ""
 
-#: pntemplates/dizkus_user_viewtopic.html:15
-#: pntemplates/dizkus_user_viewtopic.html:61
-msgid "Create a new topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:19
-#: pntemplates/dizkus_user_viewtopic.html:65
-msgid "Send the posts within this topic as an e-mail message to someone"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:26
-#: pntemplates/dizkus_user_viewtopic.html:72
-msgid "Subscribe to this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:27
-#: pntemplates/dizkus_user_viewtopic.html:74
-msgid "Unsubscribe from this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:31
-#: pntemplates/dizkus_user_viewtopic.html:79
-msgid "Next topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:38
-#: pntemplates/dizkus_user_viewtopic.html:86
-msgid "Lock topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:39
-#: pntemplates/dizkus_user_viewtopic.html:88
-msgid "Unlock topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:47
-#: pntemplates/dizkus_user_viewtopic.html:96
-msgid "Move this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:48
-#: pntemplates/dizkus_user_viewtopic.html:97
-#: pntemplates/dizkus_user_deletetopic.html:2
-#: pntemplates/dizkus_user_deletetopic.html:16
-msgid "Delete this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:135
-msgid "Quick reply"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:196
-msgid "Moderated by:"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:205
-msgid "Storing reply..."
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:208
-msgid "Deleting post..."
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:209
-msgid "Updating post..."
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:210
-msgid "Unchanged"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:211
-msgid "Changed"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:6
-msgid ""
-"In this page, you can create, delete and edit user ranks for that users "
-"acquire automatically after a certain number of posts in the forums. To "
-"create a new rank, simply type entries in the fields of the 'Create new user "
-"rank' section and click on the 'Create' button. To edit a rank, edit the "
-"fields of a rank in the ranks list, and then click on 'Save rank changes'. "
-"To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the "
-"desired rank, and then click on the 'Save rank changes' button."
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:12
-#: pntemplates/dizkus_admin_honoraryranks.html:11
-msgid "Create new rank"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:14
-msgid "User rank name"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:18
-#: pntemplates/dizkus_admin_ranks.html:55
-msgid "Minimum number of posts"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:22
-#: pntemplates/dizkus_admin_ranks.html:56
-msgid "Maximum number of posts"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:26
-#: pntemplates/dizkus_admin_honoraryranks.html:17
-msgid "Internal Dizkus image"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:41
-#: pntemplates/dizkus_admin_honoraryranks.html:32
-msgid ""
-"Notice: For the rank image, you can either choose one of the standardly-"
-"supplied Dizkus rank images, or you can use an external image of your "
-"choice. To use an internal Dizkus image, select the desired image from the "
-"'Internal Dizkus image' dropdown list. If you want to use an external image, "
-"enter the path to the image within the file system in the 'External image' "
-"box. Alternatively, you can use an image that can be found on the Internet: "
-"if your entry in the 'External image' box starts with 'http://' then the "
-"graphic will fetched from the link entered."
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:44
-#: pntemplates/dizkus_admin_honoraryranks.html:35
-msgid "Create"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:54
-msgid "User rank"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:57
-#: pntemplates/dizkus_admin_honoraryranks.html:46
-msgid "Image"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:59
-#: pntemplates/dizkus_admin_honoraryranks.html:48
-msgid "Delete rank"
-msgstr ""
-
-#: pntemplates/dizkus_admin_ranks.html:80
-#: pntemplates/dizkus_admin_honoraryranks.html:70
-msgid "No items found."
-msgstr ""
-
-#: pntemplates/dizkus_admin_honoraryranks.html:6
-msgid ""
-"In this page, you can create, delete and edit special honorary ranks awarded "
-"to particular users (site staff or project team members, for example). To "
-"create a new rank, simply type entries in the fields of the 'Create new "
-"rank' section and click on the 'Create honorary rank' button. To edit a "
-"rank, edit the fields of a rank in the ranks list, and then click on 'Save "
-"rank changes'. To remove a rank, put a checkmark in the 'Delete rank' "
-"checkbox beside the desired rank, and then click on the 'Save rank changes' "
-"button."
-msgstr ""
-
-#: pntemplates/dizkus_admin_honoraryranks.html:13
-#: pntemplates/dizkus_admin_honoraryranks.html:45
-msgid "Honorary rank name"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editpost.html:5
-msgid "unchanged"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:18
-msgid "Forum Information"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:22
-msgid "Visit this forum"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:24
-msgid "Post"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:36
-msgid "Hooked module"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:44
-msgid ""
-"Notice: This is used for the comments feature. All submissions within this "
-"module will be posted within this forum. The list only includes modules for "
-"which Dizkus has been activated as a hook."
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:48
-msgid "Select category"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:53
-msgid "Moderation"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:55
-msgid "Current moderator(s):"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:57
-#: pntemplates/dizkus_ajax_editforum.html:65
-msgid "Group"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:57
-msgid "Remove"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:59
-msgid "No moderator appointed"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:61
-msgid "Add new moderator:"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:75
-msgid "External source"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:91
-msgid "Password"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:95
-msgid "Password (repeat for verification)"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:103
-msgid "Perform POP3 test after saving"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:107
-msgid "POP3 server"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:111
-msgid "POP3 port"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:115
-msgid "POP3 log-in name"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:119
-msgid "POP3 password"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:123
-msgid "POP3 password (repeat for verification)"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:127
-msgid "Rule"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:129
-msgid ""
-"Notice: This rule is a regular expression applied to posts incoming via e-"
-"mail, in order to prevent spam postings. If there is no rule here then no "
-"checks will be performed."
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:136
-msgid "Select RSS feed"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:162
-msgid "Save"
-msgstr ""
-
-#: pntemplates/dizkus_user_singlepost.html:10
-msgid "Show hidden postings of ignored user"
-msgstr ""
-
-#: pntemplates/dizkus_user_singlepost.html:11
-msgid "Click here"
-msgstr ""
-
-#: pntemplates/dizkus_user_singlepost.html:49
-msgid "Send a private message"
-msgstr ""
-
-#: pntemplates/dizkus_user_singlepost.html:52
-msgid "View IP address"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewip.html:5
-msgid "User IP and account information"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewip.html:9
-msgid "IP address"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewip.html:13
-msgid "Host"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewip.html:17
-msgid "User names of users who posted from this IP, plus post counts"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewip.html:25
-msgid "Back to the topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_deletetopic.html:7
-msgid ""
-"Do you really want to permanently delete this topic and all posts under this "
-"topic?"
-msgstr ""
-
-#: pntemplates/dizkus_user_deletetopic.html:14
-msgid "Confirmation prompt"
-msgstr ""
-
-#: pntemplates/dizkus_hook_display.html:4
-msgid "Discuss this submission in the forums"
-msgstr ""
-
-#: pntemplates/dizkus_user_notifymod.html:7
-msgid ""
-"A moderator will be notified about the selected posting.<br />Valid reasons "
-"are:<br /><dl><dd>copyright violations;</dd><dd>personal insults;</"
-"dd><dd>etc.</dd></dl>The following are not valid reasons for moderation:"
-"<dl><dd>typos</dd><dd>difference of opinion on the topic;</dd><dd>etc.</dd></"
-"dl>"
-msgstr ""
-
-#: pntemplates/dizkus_user_notifymod.html:15
-msgid "Your comment"
-msgstr ""
-
-#: pntemplates/dizkus_disabled.html:4
-msgid "Forum information"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer.html:9
-msgid "Key"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer.html:13
-msgid "No new posts since your last visit"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer.html:18
-#: pntemplates/dizkus_statisticsblock_display.html:55
-msgid "Total"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer.html:21
-msgid "RSS"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer.html:21
-msgid "Total messages:"
+#: pntemplates/dizkus_user_search.html:5
+#: pntemplates/dizkus_user_search.html:19
+#: pntemplates/dizkus_user_header.html:90
+msgid "Search"
 msgstr ""
 
 #: pntemplates/dizkus_user_search.html:14
@@ -2514,20 +1614,382 @@ msgstr ""
 msgid "No limits"
 msgstr ""
 
-#: pntemplates/dizkus_centerblock_config.html:5
-#: pntemplates/dizkus_statisticsblock_config.html:5
-msgid "Name of template file"
+#: pntemplates/dizkus_user_viewip.html:5
+msgid "User IP and account information"
 msgstr ""
 
-#: pntemplates/dizkus_centerblock_config.html:13
-#: pntemplates/dizkus_statisticsblock_config.html:13
-msgid "Parameters"
+#: pntemplates/dizkus_user_viewip.html:9
+msgid "IP address"
 msgstr ""
 
-#: pntemplates/dizkus_centerblock_config.html:17
-#: pntemplates/dizkus_statisticsblock_config.html:17
+#: pntemplates/dizkus_user_viewip.html:13
+msgid "Host"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewip.html:17
+msgid "User names of users who posted from this IP, plus post counts"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewip.html:25
+msgid "Back to the topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:15 pntemplates/dizkus_user_main2.html:24
+#: pntemplates/dizkus_user_header.html:54
+#: pntemplates/dizkus_user_header.html:58
+#: pntemplates/dizkus_user_header.html:62
+msgid "Go to category"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:18 pntemplates/dizkus_user_main.html:45
+#: pntemplates/dizkus_user_main.html:86 pntemplates/dizkus_user_main.html:113
+#: pntemplates/dizkus_ajax_editforum.html:24
+#: pntemplates/dizkus_user_main2.html:26
+#: pntemplates/dizkus_statisticsblock_display.html:60
+msgid "Topics"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:24 pntemplates/dizkus_user_main.html:50
+#: pntemplates/dizkus_user_main.html:92 pntemplates/dizkus_user_main.html:118
+#: pntemplates/dizkus_user_main2.html:28
+#: pntemplates/dizkus_user_moderateforum.html:25
+#: pntemplates/dizkus_user_moderateforum.html:60
+#: pntemplates/dizkus_user_viewforum.html:103
+#: pntemplates/dizkus_user_viewforum.html:150
+msgid "Last post"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:38 pntemplates/dizkus_user_main.html:106
+#: pntemplates/dizkus_user_main2.html:44
+#: pntemplates/dizkus_user_viewforum.html:177
+msgid "Moderated by"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:51 pntemplates/dizkus_user_main.html:119
+msgid "Written on"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:53 pntemplates/dizkus_user_main.html:121
+#: pntemplates/dizkus_user_main2.html:52
+#: pntemplates/dizkus_user_moderateforum.html:62
+#: pntemplates/dizkus_user_viewforum.html:152
+msgid "View latest post"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:64 pntemplates/dizkus_user_main2.html:57
+#: pntemplates/dizkus_user_main2.html:71
+msgid "No forums created"
+msgstr ""
+
+#: pntemplates/dizkus_user_main.html:132
+msgid "No forums created."
+msgstr ""
+
+#: pntemplates/dizkus_ajax_forumusers.html:6
+#: pntemplates/dizkus_user_footer.html:28
+msgid "Users on-line"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_forumusers.html:17
+msgid "and"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_forumusers.html:23
+msgid "anonymous guests"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_forumusers.html:23
+msgid "anonymous guest"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_forumusers.html:29
+#: pntemplates/dizkus_user_footer.html:48
+#, php-format
+msgid "This list is based on users active over the last %1$s minutes."
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_31.html:3
+#: pntemplates/dizkus_init_interactiveupgrade.html:4
+#: pntemplates/dizkus_upgrade_30.html:8
+msgid "Dizkus upgrade"
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_31.html:4
 msgid ""
-"Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'."
+"Caution! This upgrade step will do some serious changes to your Dizkus "
+"tables! Please back-up your database via a database dump before proceeding "
+"with the upgrade."
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_31.html:8
+msgid "Upgrade info"
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_31.html:10 pntemplates/dizkus_upgrade_30.html:11
+msgid "Old version"
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_31.html:14
+#: pntemplates/dizkus_init_interactiveupgrade.html:6
+#: pntemplates/dizkus_upgrade_30.html:12
+msgid "New version"
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_31.html:20 pntemplates/dizkus_upgrade_30.html:19
+msgid "Next"
+msgstr ""
+
+#: pntemplates/dizkus_user_emailtopic.html:17
+msgid "Sent to"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editpost.html:5
+msgid "unchanged"
+msgstr ""
+
+#: pntemplates/dizkus_user_singlepost.html:10
+msgid "Show hidden postings of ignored user"
+msgstr ""
+
+#: pntemplates/dizkus_user_singlepost.html:11
+msgid "Click here"
+msgstr ""
+
+#: pntemplates/dizkus_user_singlepost.html:44
+msgid "Posts:"
+msgstr ""
+
+#: pntemplates/dizkus_user_singlepost.html:49
+msgid "Send a private message"
+msgstr ""
+
+#: pntemplates/dizkus_user_singlepost.html:52
+msgid "View IP address"
+msgstr ""
+
+#: pntemplates/dizkus_user_locktopic.html:21
+msgid ""
+"When you press the 'Lock' button at the bottom of this page, the topic you "
+"have selected will be <strong>locked</strong>. You can unlock it at a later "
+"time if you so choose."
+msgstr ""
+
+#: pntemplates/dizkus_user_locktopic.html:31
+msgid ""
+"When you press the 'Unlock' button at the bottom of this page, the topic you "
+"have selected will be <strong>unlocked</strong>. You can lock it again at a "
+"later time if you so choose."
+msgstr ""
+
+#: pntemplates/dizkus_user_footer_with_ajax.html:26
+#: pntemplates/dizkus_admin_footer.html:3
+msgid "Powered by "
+msgstr ""
+
+#: pntemplates/dizkus_disabled.html:4
+msgid "Forum information"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:19
+msgid "Forum Information"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:23
+msgid "Visit this forum"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:25
+msgid "Post"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:37
+msgid "Hooked module"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:45
+msgid ""
+"Notice: This is used for the comments feature. All submissions within this "
+"module will be posted within this forum. The list only includes modules for "
+"which Dizkus has been activated as a hook."
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:54
+msgid "Moderation"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:56
+msgid "Current moderator(s):"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:58
+#: pntemplates/dizkus_ajax_editforum.html:66
+msgid "Group"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:58
+msgid "Remove"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:60
+msgid "No moderator appointed"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:62
+msgid "Add new moderator:"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:76
+msgid "External source"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:88
+#: pntemplates/dizkus_admin_assignranks.html:21
+#: pntemplates/dizkus_admin_managesubscriptions.html:7
+msgid "User name"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:92
+msgid "Password"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:96
+msgid "Password (repeat for verification)"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:104
+msgid "Perform POP3 test after saving"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:108
+msgid "POP3 server"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:112
+msgid "POP3 port"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:116
+msgid "POP3 log-in name"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:120
+msgid "POP3 password"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:124
+msgid "POP3 password (repeat for verification)"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:128
+msgid "Rule"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:130
+msgid ""
+"Notice: This rule is a regular expression applied to posts incoming via e-"
+"mail, in order to prevent spam postings. If there is no rule here then no "
+"checks will be performed."
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:137
+msgid "Select RSS feed"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:151
+#: pntemplates/dizkus_ajax_editforum.html:153
+#: pntemplates/dizkus_ajax_editcategory.html:14
+msgid "Delete"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_editforum.html:163
+msgid "Save"
+msgstr ""
+
+#: pntemplates/dizkus_user_deletetopic.html:7
+msgid ""
+"Do you really want to permanently delete this topic and all posts under this "
+"topic?"
+msgstr ""
+
+#: pntemplates/dizkus_user_deletetopic.html:14
+msgid "Confirmation prompt"
+msgstr ""
+
+#: pntemplates/dizkus_admin_header.html:11
+msgid "Forum Administration"
+msgstr ""
+
+#: pntemplates/dizkus_admin_header.html:22
+msgid ""
+"Warning! The Dizkus admin panel needs JavaScript enabled. Some parts of the "
+"admin panel will not function without it."
+msgstr ""
+
+#: pntemplates/dizkus_errorpage.html:5
+msgid "Error! The following problem occurred"
+msgstr ""
+
+#: pntemplates/dizkus_errorpage.html:12
+msgid "Send bug report to site administrator"
+msgstr ""
+
+#: pntemplates/dizkus_ajax_newposts.html:7
+#: pntemplates/dizkus_centerblock_display.html:8
+#: pntemplates/dizkus_centerblock_display2.html:10
+msgid "Recent postings:"
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:8
+msgid "Favourites:"
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:12
+msgid "Show only your favorite forums"
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:12
+msgid "Show favorite forums only"
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:69
+msgid "You have not yet defined any favourite forums"
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:79
+msgid "New posts since your last visit."
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:79
+#: pntemplates/dizkus_user_footer.html:10
+msgid "New posts since your last visit on"
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:80
+msgid "No new posts since your last visit."
+msgstr ""
+
+#: pntemplates/dizkus_user_main2.html:80
+#: pntemplates/dizkus_user_footer.html:11
+msgid "No new posts since your last visit on"
+msgstr ""
+
+#: pntemplates/dizkus_user_notifymod.html:7
+msgid ""
+"A moderator will be notified about the selected posting.<br />Valid reasons "
+"are:<br /><dl><dd>copyright violations;</dd><dd>personal insults;</"
+"dd><dd>etc.</dd></dl>The following are not valid reasons for moderation:"
+"<dl><dd>typos</dd><dd>difference of opinion on the topic;</dd><dd>etc.</dd></"
+"dl>"
+msgstr ""
+
+#: pntemplates/dizkus_user_notifymod.html:15
+msgid "Your comment"
+msgstr ""
+
+#: pntemplates/dizkus_user_moderateforum.html:2
+#: pntemplates/dizkus_user_viewforum.html:52
+#: pntemplates/dizkus_user_viewforum.html:64
+msgid "Moderate"
 msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:26
@@ -2580,12 +2042,22 @@ msgstr ""
 msgid "Move selected topics"
 msgstr ""
 
+#: pntemplates/dizkus_user_moderateforum.html:101
+#: pntemplates/dizkus_user_movetopic.html:49
+msgid "Join topics"
+msgstr ""
+
 #: pntemplates/dizkus_user_moderateforum.html:105
 msgid "Choose target forum to move topic(s) to:"
 msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:107
 msgid "Select target forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_moderateforum.html:114
+#: pntemplates/dizkus_user_movetopic.html:25
+msgid "Create shadow topic"
 msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:118
@@ -2602,6 +2074,431 @@ msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:126
 msgid "Target topic"
+msgstr ""
+
+#: pntemplates/dizkus_admin_main.html:2
+msgid "Dizkus Administration"
+msgstr ""
+
+#: pntemplates/dizkus_user_editpostpreview.html:8
+msgid "Profile"
+msgstr ""
+
+#: pntemplates/dizkus_searchresults.html:3
+#, php-format
+msgid "Forums: %s hit"
+msgid_plural "Forums: %s hits"
+msgstr[0] ""
+msgstr[1] ""
+
+#: pntemplates/dizkus_searchresults.html:35
+msgid "Sticky topic (it will always stay at top of the topics list)"
+msgstr ""
+
+#: pntemplates/dizkus_searchresults.html:41
+msgid "New messages have been posted under this topic since your last visit"
+msgstr ""
+
+#: pntemplates/dizkus_searchresults.html:52
+msgid "found in:"
+msgstr ""
+
+#: pntemplates/dizkus_searchresults.html:52
+msgid "go to forum"
+msgstr ""
+
+#: pntemplates/dizkus_searchresults.html:57
+msgid "View most-recent posting"
+msgstr ""
+
+#: pntemplates/dizkus_searchresults.html:62
+msgid "No topics"
+msgstr ""
+
+#: pntemplates/dizkus_mail_notifyuser.txt:2
+#, php-format
+msgid "Forums on %s"
+msgstr ""
+
+#: pntemplates/dizkus_mail_notifyuser.txt:5
+#, php-format
+msgid "%1$s wrote at %2$s"
+msgstr ""
+
+#: pntemplates/dizkus_mail_notifyuser.txt:9
+#, php-format
+msgid "Reply to this message: %s"
+msgstr ""
+
+#: pntemplates/dizkus_mail_notifyuser.txt:10
+#, php-format
+msgid ""
+"Browse thread: %s \n"
+"\n"
+msgstr ""
+
+#: pntemplates/dizkus_mail_notifyuser.txt:11
+#, php-format
+msgid "Maintain topic and forum subscriptions: %s"
+msgstr ""
+
+#: pntemplates/dizkus_mail_notifyuser.txt:13
+#, php-format
+msgid ""
+"You are receiving this e-mail message because you are subscribed to be "
+"notified of events in the forums on %s."
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_30.html:4 pntemplates/dizkus_upgrade_30.html:15
+msgid ""
+"Caution! Please back-up your database via a database dump before proceeding "
+"with the upgrade."
+msgstr ""
+
+#: pntemplates/dizkus_upgrade_30.html:17
+msgid ""
+"This will upgrade your pnForum 2.7.1 forums to Dizkus 3.0, making all "
+"necessary database changes."
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:6
+msgid ""
+"In this page, you can create, delete and edit special honorary ranks awarded "
+"to particular users (site staff or project team members, for example). To "
+"create a new rank, simply type entries in the fields of the 'Create new "
+"rank' section and click on the 'Create honorary rank' button. To edit a "
+"rank, edit the fields of a rank in the ranks list, and then click on 'Save "
+"rank changes'. To remove a rank, put a checkmark in the 'Delete rank' "
+"checkbox beside the desired rank, and then click on the 'Save rank changes' "
+"button."
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:11
+#: pntemplates/dizkus_admin_ranks.html:12
+msgid "Create new rank"
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:13
+#: pntemplates/dizkus_admin_honoraryranks.html:45
+msgid "Honorary rank name"
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:17
+#: pntemplates/dizkus_admin_ranks.html:26
+msgid "Internal Dizkus image"
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:32
+#: pntemplates/dizkus_admin_ranks.html:41
+msgid ""
+"Notice: For the rank image, you can either choose one of the standardly-"
+"supplied Dizkus rank images, or you can use an external image of your "
+"choice. To use an internal Dizkus image, select the desired image from the "
+"'Internal Dizkus image' dropdown list. If you want to use an external image, "
+"enter the path to the image within the file system in the 'External image' "
+"box. Alternatively, you can use an image that can be found on the Internet: "
+"if your entry in the 'External image' box starts with 'http://' then the "
+"graphic will fetched from the link entered."
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:35
+#: pntemplates/dizkus_admin_ranks.html:44
+msgid "Create"
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:46
+#: pntemplates/dizkus_admin_ranks.html:57
+msgid "Image"
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:48
+#: pntemplates/dizkus_admin_ranks.html:59
+msgid "Delete rank"
+msgstr ""
+
+#: pntemplates/dizkus_admin_honoraryranks.html:70
+#: pntemplates/dizkus_admin_ranks.html:80
+msgid "No items found."
+msgstr ""
+
+#: pntemplates/dizkus_statisticsblock_config.html:5
+#: pntemplates/dizkus_centerblock_config.html:5
+msgid "Name of template file"
+msgstr ""
+
+#: pntemplates/dizkus_statisticsblock_config.html:13
+#: pntemplates/dizkus_centerblock_config.html:13
+msgid "Parameters"
+msgstr ""
+
+#: pntemplates/dizkus_statisticsblock_config.html:17
+#: pntemplates/dizkus_centerblock_config.html:17
+msgid ""
+"Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'."
+msgstr ""
+
+#: pntemplates/dizkus_user_movepost.html:13
+msgid "Move post from one topic to another"
+msgstr ""
+
+#: pntemplates/dizkus_user_movepost.html:15
+#: pntemplates/dizkus_user_movetopic.html:43
+msgid "ID of target topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:15
+#: pntemplates/dizkus_user_viewforum.html:60
+msgid "Start a new topic"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:20
+msgid "Subscribe to this forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:21
+msgid "Unsubscribe from this forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:35
+#: pntemplates/dizkus_user_viewforum.html:75
+msgid "Add this forum to your favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:35
+#: pntemplates/dizkus_user_viewforum.html:75
+msgid "Add forum to favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:36
+#: pntemplates/dizkus_user_viewforum.html:77
+msgid "Remove this forum from your favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:36
+#: pntemplates/dizkus_user_viewforum.html:77
+msgid "Remove forum from favourites"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:126
+msgid "Topic is sticky (it will always stay at the top of the topcis list)"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:140
+msgid "Attachments"
+msgstr ""
+
+#: pntemplates/dizkus_user_viewforum.html:140
+msgid "File attachments"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:7
+msgid "Key"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:11
+msgid "No new posts since your last visit"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:16
+#: pntemplates/dizkus_statisticsblock_display.html:55
+msgid "Total"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:19
+msgid "RSS"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:19
+msgid "Total messages:"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:38
+msgid "0 users"
+msgstr ""
+
+#: pntemplates/dizkus_user_footer.html:44
+#, php-format
+msgid "and %1$s anonymous guest"
+msgid_plural "and %1$s anonymous guests"
+msgstr[0] ""
+msgstr[1] ""
+
+#: pntemplates/dizkus_user_reply.html:2 pntemplates/dizkus_user_reply.html:25
+msgid "Reply to"
+msgstr ""
+
+#: pntemplates/dizkus_user_latestposts.html:2
+#: pntemplates/dizkus_user_latestposts.html:9
+msgid "Latest forum posts"
+msgstr ""
+
+#: pntemplates/dizkus_user_latestposts.html:18
+msgid "Last"
+msgstr ""
+
+#: pntemplates/dizkus_user_latestposts.html:18
+#: pntemplates/dizkus_admin_preferences.html:140
+msgid "hours"
+msgstr ""
+
+#: pntemplates/dizkus_user_latestposts.html:22
+msgid "Last week, unanswered"
+msgstr ""
+
+#: pntemplates/dizkus_user_latestposts.html:85
+msgid "RSS feeds"
+msgstr ""
+
+#: pntemplates/dizkus_user_latestposts.html:140
+msgid "Mailing lists"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:22
+msgid "Category list"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:28
+msgid "New Topic in forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:46
+#: pntemplates/dizkus_user_header.html:105
+msgid "Forums index page"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:86
+msgid "Show your favourite forums only"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:86
+msgid "Show favourite forums only"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:89
+msgid "Latest posts"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:92
+msgid "Log-in"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:93
+msgid "Register"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:95
+msgid "View your posts"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:96
+msgid "Configure your personal forum settings"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:96
+msgid "Personal settings"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:112
+msgid "Click to edit"
+msgstr ""
+
+#: pntemplates/dizkus_user_header.html:115
+msgid "Bottom"
+msgstr ""
+
+#: pntemplates/dizkus_hook_display.html:4
+msgid "Discuss this submission in the forums"
+msgstr ""
+
+#: pntemplates/dizkus_user_newtopic.html:25
+msgid "New topic in forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_newtopic.html:93
+msgid "Redirecting you to the new topic..."
+msgstr ""
+
+#: pntemplates/dizkus_user_newtopicconfirmation.html:8
+msgid "Click here to go the new topic"
+msgstr ""
+
+#: pntemplates/dizkus_admin_assignranks.html:5
+msgid ""
+"In this page, you can select particular users and assign them honorary ranks."
+msgstr ""
+
+#: pntemplates/dizkus_admin_assignranks.html:31
+msgid "No rank"
+msgstr ""
+
+#: pntemplates/dizkus_user_movetopic.html:2
+msgid "Move or join topics"
+msgstr ""
+
+#: pntemplates/dizkus_user_movetopic.html:14
+msgid "Move topic to another forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_movetopic.html:15
+msgid ""
+"When you press the 'Move' button at the bottom of this form, the topic you "
+"have selected (and all its related posts) will be <strong>moved</strong> to "
+"the forum you have selected. Note: You will only be able to move the topic "
+"to a forum for which you are moderator. An administrator is allowed to move "
+"any topic to any forum."
+msgstr ""
+
+#: pntemplates/dizkus_user_movetopic.html:17
+msgid "Target forum"
+msgstr ""
+
+#: pntemplates/dizkus_user_movetopic.html:41
+msgid "Join topic with another topic"
+msgstr ""
+
+#: pntemplates/dizkus_admin_ranks.html:6
+msgid ""
+"In this page, you can create, delete and edit user ranks for that users "
+"acquire automatically after a certain number of posts in the forums. To "
+"create a new rank, simply type entries in the fields of the 'Create new user "
+"rank' section and click on the 'Create' button. To edit a rank, edit the "
+"fields of a rank in the ranks list, and then click on 'Save rank changes'. "
+"To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the "
+"desired rank, and then click on the 'Save rank changes' button."
+msgstr ""
+
+#: pntemplates/dizkus_admin_ranks.html:14
+msgid "User rank name"
+msgstr ""
+
+#: pntemplates/dizkus_admin_ranks.html:18
+#: pntemplates/dizkus_admin_ranks.html:55
+msgid "Minimum number of posts"
+msgstr ""
+
+#: pntemplates/dizkus_admin_ranks.html:22
+#: pntemplates/dizkus_admin_ranks.html:56
+msgid "Maximum number of posts"
+msgstr ""
+
+#: pntemplates/dizkus_admin_ranks.html:54
+msgid "User rank"
+msgstr ""
+
+#: pntemplates/dizkus_admin_managesubscriptions.html:7
+msgid "Show users' subscriptions"
+msgstr ""
+
+#: pntemplates/dizkus_admin_managesubscriptions.html:48
+msgid "Manage forum subscriptions"
+msgstr ""
+
+#: pntemplates/dizkus_admin_managesubscriptions.html:50
+msgid "Remove all forum subscriptions"
+msgstr ""
+
+#: pntemplates/dizkus_admin_managesubscriptions.html:72
+msgid "No forum subscriptions found."
 msgstr ""
 
 #: pntemplates/dizkus_statisticsblock_display.html:6
@@ -2624,21 +2521,75 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: pntemplates/dizkus_user_reply.html:2 pntemplates/dizkus_user_reply.html:25
-msgid "Reply to"
-msgstr ""
-
-#: pntemplates/dizkus_admin_assignranks.html:5
+#: pntemplates/dizkus_admin_preferences.html:16
 msgid ""
-"In this page, you can select particular users and assign them honorary ranks."
+"If the 'Forums are accessible to visitors' setting is deactivated then only "
+"administrators will have access to the forums. You can temporarily "
+"deactivate this setting to take the forums off-line when you need to perform "
+"maintenance."
 msgstr ""
 
-#: pntemplates/dizkus_admin_assignranks.html:31
-msgid "No rank"
+#: pntemplates/dizkus_admin_preferences.html:53
+msgid "Advanced settings"
 msgstr ""
 
-#: pntemplates/dizkus_upgrade_30.html:17
+#: pntemplates/dizkus_admin_preferences.html:55
+#, php-format
 msgid ""
-"This will upgrade your pnForum 2.7.1 forums to Dizkus 3.0, making all "
-"necessary database changes."
+"Caution! Inappropriate settings here can lead to unwanted side effects. You "
+"are recommended not to alter the settings below unless you fully understand "
+"what the results will be. <br /><br />Database name: '%s'; type: '%s'; "
+"version: '%s'."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:60
+msgid ""
+"Notice: For searches with full-text index fields, you need MySQL 4 or later; "
+"the feature does not work with InnoDB databases. This flag will normally be "
+"set during installation, when the index fields have been created. Search "
+"results may be empty if the query string is present in too many postings. "
+"This is a feature of MySQL. For more information, see <a href=\"http://dev."
+"mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in "
+"MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:65
+msgid ""
+"Notice: Extended full-text searching enables queries like '+Dizkus -Skype' "
+"to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or "
+"later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/"
+"fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-"
+"text search in MySQL'</a> in the MySQL documentation."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:70
+msgid ""
+"Notice: Deactivate the 'Show text in search results' setting for high-volume "
+"sites if you need to improve search performance, or if you need to be "
+"attentive to constant cleaning of the search results table."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:84
+msgid "User-related settings"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:115
+msgid ""
+"Notice: 'Ignore list' support is not currently available. The <a href="
+"\"http://code.zikula.org/contactlist/\">ContactList</a> module must be "
+"installed for this feature to be operative."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:125
+msgid "Security settings"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:133
+msgid ""
+"Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect "
+"the content of '[code][/code]' BBCode tags."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:146
+msgid "Other settings"
 msgstr ""
