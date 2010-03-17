@@ -166,7 +166,6 @@ function Dizkus_user_viewtopic($args=array())
                                 'count'      => true));
 
     $render = pnRender::getInstance('Dizkus', false, null, true);
-    $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
     $render->assign('topic', $topic);
     $render->assign('post_count', count($topic['posts']));
     $render->assign('last_visit', $last_visit);
@@ -256,7 +255,6 @@ function Dizkus_user_reply($args=array())
         }
 
         $render = pnRender::getInstance('Dizkus', false, null, true);
-        $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $render->assign('reply', $reply);
         $render->assign('preview', $preview);
         $render->assign('last_visit', $last_visit);
@@ -350,8 +348,6 @@ function Dizkus_user_newtopic($args=array())
     } else {
         // new topic
         $render = pnRender::getInstance('Dizkus', false, null, true);
-
-        $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $render->assign('preview', $preview);
         $render->assign('newtopic', $newtopic);
         $render->assign('last_visit', $last_visit);
@@ -454,7 +450,6 @@ function Dizkus_user_editpost($args=array())
 
         $render = pnRender::getInstance('Dizkus', false, null, true);
 
-        $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
         $render->assign('preview', $preview);
         $render->assign('post', $post);
         $render->assign('last_visit', $last_visit);
@@ -1013,7 +1008,6 @@ function Dizkus_user_print($args=array())
                                  array('post_id' => $post_id));
 
             $render->assign('post', $post);
-            $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
 
             $output = $render->fetch('dizkus_user_printpost.html');
         } elseif ($topic_id <> 0) {
@@ -1022,7 +1016,6 @@ function Dizkus_user_print($args=array())
                                        'complete' => true,
                                        'count' => false ));
 
-            $render->assign('avatarpath', pnModGetVar('Users', 'avatarpath'));
             $render->assign('topic', $topic);
 
             $output = $render->fetch('dizkus_user_printtopic.html');

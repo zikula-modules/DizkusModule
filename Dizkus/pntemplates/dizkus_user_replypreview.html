@@ -8,11 +8,7 @@
                 <div class="dzk_avatar">
                     <strong><!--[$reply.poster_data.pn_uname|userprofilelink]--></strong>
                     <br />
-                    <!--[assign var='defaultavatar' value="`$baseurl``$avatarpath`/blank.gif"]-->
-                    <!--[if isset($reply.poster_data._YOURAVATAR) AND $reply.poster_data._YOURAVATAR neq 'blank.gif' AND $reply.poster_data._YOURAVATAR neq 'gravatar.gif']-->
-                    <!--[assign var='defaultavatar' value="`$baseurl``$avatarpath`/`$reply.poster_data._YOURAVATAR`"|default:$defaultavatar]-->
-                    <img src="<!--[gravatar email=$reply.poster_data.pn_email size=80 default=$defaultavatar]-->" alt="<!--[$reply.poster_data.pn_uname]-->'s Avatar" />
-                    <!--[/if]-->
+                    <img src="<!--[useravatar uid=$reply.poster_data.uid]-->" alt="<!--[$reply.poster_data.pn_uname]-->'s Avatar" />
                     <!--[if isset($reply.poster_data.rank_image) && isset($reply.poster_data.rank)]-->
                     <br />
                     <img class="userinforankimage" src="<!--[$baseurl]--><!--[$reply.poster_data.rank_image]-->" alt="<!--[$reply.poster_data.rank]-->" <!--[$reply.poster_data.rank_image_image_attr.3]--> />

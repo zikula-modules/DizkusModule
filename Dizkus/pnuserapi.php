@@ -90,7 +90,7 @@ function Dizkus_userapi_get_userdata_from_id($args)
         }
         
         //
-        // user name and avatar
+        // user name
         //
         if ($userdata['pn_uid'] != 1) {
             // user is logged in, display some info
@@ -100,18 +100,6 @@ function Dizkus_userapi_get_userdata_from_id($args)
 
             $sessioninfo =  DBUtil::selectObject('session_info', $where);         
             $userdata['online'] = ($sessioninfo['uid'] == $userdata['pn_uid']) ? true : false; 
-
-           // avatar
-            if ($userdata['__ATTRIBUTES__']['avatar']){
-                $avatarfilename = pnUserGetVar('Users', 'avatarpath', 'images/avatar') . '/' . DataUtil::formatForOS($userdata['__ATTRIBUTES__']['avatar']);
-                $avatardata = function_exists('getimagesize') ? @getimagesize($avatarfilename) : false;
-                if ($avatardata <> false) {
-                    $userdata['pn_user_avatar'] = $avatarfilename;
-                    $userdata['pn_user_avatar_attr'] = $avatardata;
-                } else {
-                    $userdata['pn_user_avatar'] = '';
-                }
-            }
 
         } else {
             // user is anonymous

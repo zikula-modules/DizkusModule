@@ -107,6 +107,18 @@
         <!--[pnformcheckbox id="removesignature" checked=$removesignature_checked]-->
     </div>
     <div class="z-formrow">
+        <!--[pnformlabel for="usegravatars" text='Use gravatars instead of local avatars']-->
+        <!--[pnformcheckbox id="usegravatars" checked=$usegravatars_checked]-->
+    </div>
+    <div class="z-formrow">
+        <!--[pnformlabel for="defaultgravatar" text="Default avatar image" html=1]-->
+        <!--[pnformtextinput id="defaultgravatar" text=$pncore.Dizkus.defaultgravatar size="150" maxLength="250"]-->
+    </div>
+    <div class="z-formrow">
+        <!--[pnformlabel for="newtopicconf" text='Display confirmation when a new topic has been created']-->
+        <!--[pnformcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked]-->
+    </div>
+    <div class="z-formrow">
         <!--[if $contactlist_available eq true]-->
         <!--[pnformlabel for="ignorelist_handling" text='Highest-allowed \'ignore list\' ostracism level' html=1]-->
         <!--[pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling]-->
@@ -114,10 +126,6 @@
         <!--[else]-->
         <p class="z-formnote z-informationmsg"><!--[gt text="Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."]--></p>
         <!--[/if]-->
-    </div>
-    <div class="z-formrow">
-        <!--[pnformlabel for="newtopicconf" text='Display confirmation when a new topic has been created']-->
-        <!--[pnformcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked]-->
     </div>
 </fieldset>
 
