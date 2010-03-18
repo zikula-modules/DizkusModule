@@ -34,7 +34,7 @@ $dzkinfo = pnModGetInfo(pnModGetIdFromName('Dizkus'));
 $dzkname = $dzkinfo['displayname'];
 
 /**
- * check for feed, if not set, use rss091 as default
+ * check for feed, if not set, use rss20 as default
  */
 if (!empty($feed)) {
     // feed is set, check counter
