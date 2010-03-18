@@ -99,9 +99,9 @@
     }
     $('newtopicform').action = '';
 
-    var btnCreateNewTopic = $('btnCreateNewTopic');
-    btnCreateNewTopic.observe('click', createnewtopic, false);
-    btnCreateNewTopic.observe('keypress', createnewtopic, false);
+    //var btnCreateNewTopic = $('btnCreateNewTopic');
+    Event.observe('btnCreateNewTopic', 'click', createnewtopic);
+    Event.observe('btnCreateNewTopic', 'keypress', createnewtopic);
 
     // ]]>
 </script>
