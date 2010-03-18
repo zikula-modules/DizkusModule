@@ -5,7 +5,9 @@
 
 <h2><!--[$templatetitle]--></h2>
 
-<div class="z-informationmsg"><!--[gt text="Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."]--></div>
+<p class="z-informationmsg">
+    <!--[gt text="Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."]-->
+</p>
 
 <!--[pnform cssClass="z-form"]-->
 <!--[pnformvalidationsummary]-->
@@ -13,9 +15,7 @@
     <legend><!--[gt text="General settings"]--></legend>
     <div class="z-formrow">
         <!--[pnformlabel for="ignorelist_myhandling" text="Level of ostracism" html=1]-->
-        <span>
-            <!--[pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling]-->
-        </span>
+        <!--[pnformdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling]-->
     </div>
 </fieldset>
 <div class="z-formbuttons">

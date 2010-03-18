@@ -127,10 +127,6 @@ div#editpostoptions ul li {
 
 /* elements */
 
-#dizkus p {
-    margin:0 0 1.5em;
-    padding:0;
-}
 #dizkus img {
     border: none;
     vertical-align: middle;
@@ -142,9 +138,6 @@ div#editpostoptions ul li {
     margin: 5px 0;
     display: block;
     clear: both;
-}
-#dizkus p.right {
-    text-align: right;
 }
 
 /* Rounded Corners */
@@ -560,7 +553,8 @@ div#editpostoptions ul li {
     margin: 1em 0;
 }
 #dizkus .bbcode p {
-    margin: 0;
+    margin: 2px 0;
+    padding: 2px 0;
 }
 
 /* buttons */

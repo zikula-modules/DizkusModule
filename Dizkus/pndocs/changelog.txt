@@ -9,14 +9,17 @@ Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
 This version will not work in Zikula before 1.2.0+, preferred version 1.2.1
 + finalized DBUtil
++ removed posts_text table
++ code cleanup
 + removed language defines in favour of gettext for Zikula 1.2.0+. 
 + default charset is now utf-8
-+ avatarpath - Users' modvar
 + replaced pnfdate_format with pndate_format
-+ removed some previously deprecated plugins
-+ code cleanup
-+ removed posts_text table
 + added some index fields to certain tables to improve performance 
++ added #205    admin settings for choosing the avatar type
++ fixed #204    removed usage of behaviour.js
++ fixed #154    changed feed import
++ removed some previously deprecated plugins (e.g. pnfdate_format, pnforumcolorcss, gravatar)
+* unused plugins: adminlink, allowedhtml (can be removed in the near future)
 
 ---------------------------------------------------------------------------------------------
 3.0 (fs,cv)

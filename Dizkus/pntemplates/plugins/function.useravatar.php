@@ -1,9 +1,21 @@
 <?php
 /**
-* @param        array       $params      All attributes passed to this function from the template
-* @param        object      &$smarty     Reference to the Smarty object
-* @return       string      the url to display the users avatar
-*/
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link http://www.dizkus.com
+ * @version $Id$
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
+
+/**
+ * useravatar plugin
+ * retrieves the avatar url
+ *
+ * @param $params['uid'] int user-id
+ *
+ */
 function smarty_function_useravatar($params, &$smarty)
 {
     if (!isset($params['uid'])) {
