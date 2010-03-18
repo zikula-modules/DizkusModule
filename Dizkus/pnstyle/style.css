@@ -463,11 +463,6 @@ div#editpostoptions ul li {
 #dizkus .post_bg2 {
     background-color: #EAEAEA;
 }
-#dizkus .poster_online {
-    background-image: url('../pnimages/en/icon_user_online.gif');
-    background-position: top right;
-    background-repeat: no-repeat;
-}
 #dizkus .forum_post .post_author {
     border-right: 1px solid white;
     font-size:0.9em;

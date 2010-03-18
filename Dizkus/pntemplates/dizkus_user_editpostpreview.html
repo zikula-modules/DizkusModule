@@ -1,15 +1,9 @@
-<!--[*
-
-$Id$
-
-Template for single postings
-
-*]-->
-<!--[pnimg modname='Dizkus' src='icon_post_pm.gif' assign=profile __alt='Profile' ]-->
+<!--[* $Id$ *]-->
+<!--[assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/pnimages/`$pncore.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"]--> 
 
 <h2><!--[$post.topic_subject|pnvarprepfordisplay]--></h2>
 
-<div id="posting_<!--[$post.post_id]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']--> <!--[if $post.poster_data.online]-->poster_online<!--[/if]-->" >
+<div id="posting_<!--[$post.post_id]-->" class="forum_post dzk_rounded <!--[cycle values='post_bg1,post_bg2']-->" <!--[if $post.poster_data.online]--><!--[$onlinestyle]--><!--[/if]-->>
     <div class="inner">
 
         <div class="dzk_subcols z-clearfix">
