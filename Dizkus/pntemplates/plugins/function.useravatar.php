@@ -31,21 +31,20 @@ function smarty_function_useravatar($params, &$smarty)
 
     if (isset($avatar) && !empty($avatar) && $avatar != 'blank.gif' && $avatar !='gravatar.gif') {
         $useravatar = pnGetBaseURL() . $avatarpath . '/' . $avatar;
-    } else {
-        $useravatar = pnGetBaseURL() . $defaultgravatar;
-    }
 
-    if ($usegravatars == "yes") {
-        if (!isset($params['rating'])) $params['rating'] = false;
-        if (!isset($params['size'])) $params['size'] = 80;
+        if ($usegravatars == "yes") {
+            if (!isset($params['rating'])) $params['rating'] = false;
+            if (!isset($params['size'])) $params['size'] = 80;
 
-        $avatarURL = 'http://www.gravatar.com/avatar.php?gravatar_id=' . md5($email);
-        if ($params['rating'] && $params['rating'] != '') $avatarURL .= "&rating=".$params['rating'];
-        if ($params['size'] && $params['size'] != '') $avatarURL .="&size=".$params['size'];
-        $avatarURL .= "&default=".urlencode($useravatar);
-        
+            $avatarURL = 'http://www.gravatar.com/avatar.php?gravatar_id=' . md5($email);
+            if (isset($params['rating']) && !empty($params['rating'])) $avatarURL .= "&rating=".$params['rating'];
+            if (isset($params['size']) && !empty($params['size'])) $avatarURL .="&size=".$params['size'];
+            $avatarURL .= "&default=".urlencode($useravatar);
+        } else {
+            $avatarURL = $useravatar;
+        }
     } else {
-        $avatarURL = $useravatar;
+        $avatarURL = pnGetBaseURL() . $defaultgravatar;
     }
 
     return DataUtil::formatForDisplay($avatarURL);
