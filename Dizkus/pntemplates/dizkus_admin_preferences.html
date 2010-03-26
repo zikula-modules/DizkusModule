@@ -107,17 +107,13 @@
         <!--[pnformcheckbox id="removesignature" checked=$removesignature_checked]-->
     </div>
     <div class="z-formrow">
-        <!--[pnformlabel for="usegravatars" text='Use gravatars instead of local avatars']-->
-        <!--[pnformcheckbox id="usegravatars" checked=$usegravatars_checked]-->
+        <!--[pnformlabel for="allowgravatars" text='Allow globally recognized avatars']-->
+        <!--[pnformcheckbox id="allowgravatars" checked=$allowgravatars_checked]-->
     </div>
     <div class="z-formrow">
-        <!--[pnformlabel for="defaultgravatar" text="Default avatar image" html=1]-->
-        <!--[pnformtextinput id="defaultgravatar" text=$pncore.Dizkus.defaultgravatar size="150" maxLength="250"]-->
-        <p class="z-formnote z-informationmsg">
-            <!--[gt text="Examples:"]--><br />
-            <span>modules/Dizkus/pnimages/gravatar_80.jpg</span><br />
-            <span>images/avatar/blank.gif</span><br />
-        </p>
+        <!--[pnformlabel for="gravatarimage" text="Default gravatar image" html=1]-->
+        <!--[pnformtextinput id="gravatarimage" text=$pncore.Dizkus.gravatarimage size="150" maxLength="250"]-->
+        <em class="z-sub z-formnote"><!--[gt text="Examples: gravatar.gif"]--></em>
     </div>
     <div class="z-formrow">
         <!--[pnformlabel for="newtopicconf" text='Display confirmation when a new topic has been created']-->

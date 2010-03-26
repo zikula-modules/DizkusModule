@@ -196,8 +196,8 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'minsearchlength', 3);
     pnModSetVar('Dizkus', 'maxsearchlength', 30);
     // 3.1
-    pnModSetVar('Dizkus', 'usegravatars', 'yes');
-    pnModSetVar('Dizkus', 'defaultgravatar', 'modules/Dizkus/pnimages/gravatar_80.jpg');
+    pnModSetVar('Dizkus', 'allowgravatars', 1);
+    pnModSetVar('Dizkus', 'gravatarimage', 'gravatar.gif');
 
     // Initialisation successful
     return true;
@@ -556,8 +556,8 @@ function Dizkus_upgrade_to_3_1()
     // DBUtil::dropTable('dizkus_forums');
 
     // introduce new module variable
-    pnModSetVar('Dizkus', 'usegravatars', 'yes');
-    pnModSetVar('Dizkus', 'defaultgravatar', 'modules/Dizkus/pnimages/gravatar_80.jpg');
+    pnModSetVar('Dizkus', 'allowgravatars', 1);
+    pnModSetVar('Dizkus', 'gravatarimage', 'gravatar.gif');
 
     return true;
 }
