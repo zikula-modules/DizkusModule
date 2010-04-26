@@ -1738,7 +1738,8 @@ function Dizkus_userapi_updatepost($args)
               AND (f.forum_id = p.forum_id)";
     $res = DBUtil::executeSQL($sql);
     $colarray = array('poster_id', 'forum_id', 'topic_status', 'cat_id');
-    $row    = DBUtil::marshallObjects($res, $colarray);
+    $result = DBUtil::marshallObjects($res, $colarray);
+    $row = $result[0];
 
     if (!is_array($row)) {
         return showforumerror(__('Error! The topic you selected was not found. Please go back and try again.', $dom), __FILE__, __LINE__);
