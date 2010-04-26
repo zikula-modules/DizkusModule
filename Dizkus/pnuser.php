@@ -1032,7 +1032,7 @@ function Dizkus_user_print($args=array())
         echo "<title>" . DataUtil::formatForDisplay($topic['topic_title']) . "</title>\n";
         echo "<link rel=\"stylesheet\" href=\"" . pnGetBaseURL() . "modules/Dizkus/pnstyle/style.css\" type=\"text/css\" />\n";
         echo "<link rel=\"stylesheet\" href=\"" . pnGetBaseURL() . "themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";        
-        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". pnModGetVar('Dizkus', 'default_lang') ."\" />\n";
+        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 
         global $additional_header;
         if (is_array($additional_header)) {

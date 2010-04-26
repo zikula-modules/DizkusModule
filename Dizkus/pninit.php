@@ -161,7 +161,6 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'topics_per_page', 15);
     pnModSetVar('Dizkus', 'hot_threshold', 20);
     pnModSetVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
-    pnModSetVar('Dizkus', 'default_lang', 'UTF-8');
     pnModSetVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
     pnModSetVar('Dizkus', 'post_sort_order', 'ASC');
     pnModSetVar('Dizkus', 'log_ip', 'no');
@@ -544,7 +543,9 @@ function Dizkus_upgrade_to_3_1()
     // remove obsolete table
     DBUtil::dropTable('dizkus_posts_text');
 
+    // remove obsolete module variables
     pnModDelVar('Dizkus', 'sendemailswithsqlerrors');
+    pnModDelVar('Dizkus', 'default_lang');
     
     // _dizkus_migratecategories();
 

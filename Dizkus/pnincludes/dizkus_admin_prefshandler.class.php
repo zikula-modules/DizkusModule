@@ -109,7 +109,6 @@ class dizkus_admin_prefshandler
 
             // strings
             pnModSetVar('Dizkus', 'email_from',          $data['email_from']);
-            pnModSetVar('Dizkus', 'default_lang',        $data['default_lang']);
             pnModSetVar('Dizkus', 'signature_start',     $data['signature_start']);
             pnModSetVar('Dizkus', 'signature_end',       $data['signature_end']);
             pnModSetVar('Dizkus', 'forum_disabled_info', $data['forum_disabled_info']);
@@ -151,7 +150,6 @@ class dizkus_admin_prefshandler
 
             // strings
             pnModSetVar('Dizkus', 'email_from',          pnConfigGetVar('adminmail'));
-            pnModSetVar('Dizkus', 'default_lang',        'UTF-8');
             pnModSetVar('Dizkus', 'signature_start',     '');
             pnModSetVar('Dizkus', 'signature_end',       '');
             pnModSetVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom));
