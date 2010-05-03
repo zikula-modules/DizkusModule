@@ -311,7 +311,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $havingm
               t.topic_id,
               p.post_text,
               p.post_time
-              $selectmatch
+              '.$selectmatch.'
               FROM '.$pntable['dizkus_posts'].' AS p,
                    '.$pntable['dizkus_topics'].' AS t
               WHERE '.$wherematch.'
