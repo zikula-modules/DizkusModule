@@ -581,8 +581,10 @@ function Dizkus_ajax_updatetopicsubject()
             dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
         }
 
+        $topicposter = DBUtil::selectFieldById('dizkus_topics', 'topic_poster', $topic_id, 'topic_id');
+
         list($forum_id, $cat_id) = pnModAPIFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id) && pnUserGetVar('uid') <> $topicposter) {
             dzk_ajaxerror(__('Sorry! You do not have authorisation to moderate this category or forum.', $dom));
         }
 
