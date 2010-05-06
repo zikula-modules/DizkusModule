@@ -1828,6 +1828,7 @@ function Dizkus_userapi_updatepost($args)
                 $newlastpost = end($posts);
                 $topic['topic_replies']--;
                 $topic['topic_last_post_id'] = $newlastpost['post_id'];
+                $topic['topic_time']         = $newlastpost['post_time'];
                 $forum['forum_posts']--;
                 // get the forums last posting id - may be from another topic and may have changed - does not need to
                 $forum['forum_last_post_id'] = DBUtil::selectFieldMax('dizkus_posts', 'post_id', 'MAX', 'forum_id='.DataUtil::formatForStore($forum['forum_id']).' AND post_id<>'.DataUtil::formatForStore($args['post_id']));
