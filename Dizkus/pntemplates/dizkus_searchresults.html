@@ -48,7 +48,7 @@
                 </td>
                 <td headers="col_topic">
                     <!--[ $searchresult.topic_id|viewtopiclink:$searchresult.topic_title:$searchresult.forum_name ]-->
-                    <!--[ pnfpager objectid=$searchresult.topic_id total=$searchresult.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" ]-->
+                    <!--[ dzkpager objectid=$searchresult.topic_id total=$searchresult.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" ]-->
                     <p><!--[gt text="found in:"]-->: <a title="<!--[gt text='go to forum']--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
                 </td>
                 <td headers="col_replies" align="center"><!--[ $searchresult.topic_replies ]--></td>

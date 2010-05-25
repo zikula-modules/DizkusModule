@@ -12,7 +12,7 @@
 <form class="z-form" method="post" action="<!--[pnmodurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id]-->">
 
     <!--[if $forum.topics]-->
-    <!--[pnfpager total=$forum.forum_topics]-->
+    <!--[dzkpager total=$forum.forum_topics]-->
 
     <div class="forumbg dzk_rounded">
         <div class="inner">
@@ -52,7 +52,7 @@
                             <!--[$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name]-->
                             <em class="z-sub">(<!--[$topic.topic_views]--> <!--[gt text="Views"]-->)</em>
                             <span><!--[gt text="Poster"]-->: <!--[$topic.pn_uname|userprofilelink]--></span>
-                            <!--[pnfpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"]-->
+                            <!--[dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"]-->
                         </dt>
                         <dd class="posts"><!--[$topic.topic_replies]--><dfn><!--[gt text="Replies"]--></dfn></dd>
                         <dd class="lastpost">
@@ -72,7 +72,7 @@
 
         </div>
     </div>
-    <!--[pnfpager total=$forum.forum_topics]-->
+    <!--[dzkpager total=$forum.forum_topics]-->
 
     <!--[else]-->
 

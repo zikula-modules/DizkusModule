@@ -10,7 +10,7 @@
  */
 
 /**
- * pnfpager plugin
+ * dzkpager plugin
  * creates a forum or a topic pager
  *
  * @param $params['objectid']     int the id of the obejct to page, maybe a topic or forum id. If not supplied, this will be taken from the url
@@ -29,7 +29,7 @@
  * This logic is taken from phpbb.
  *
  */
-function smarty_function_pnfpager($params, &$smarty)
+function smarty_function_dzkpager($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
