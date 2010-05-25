@@ -820,6 +820,8 @@ function Dizkus_user_emailtopic($args=array())
             $error_msg = DataUtil::formatForDisplay(__('Error! You must enter a subject line for the e-mail message.', $dom));
             unset($submit);
         }
+    } else {
+        $error_msg = null;
     }
 
     if (!empty($submit)) {

@@ -16,7 +16,7 @@ Loader::includeOnce('modules/Dizkus/common.php');
  * @param $args['nid'] needle id
  * @return array()
  */
-function Dizkus_needleapi_pnforum($args)
+function Dizkus_needleapi_dizkus($args)
 {
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
@@ -36,9 +36,8 @@ function Dizkus_needleapi_pnforum($args)
             // set the default
             $cache[$nid] = '';
 
-            if (pnModAvailable('Dizkus'))
-            {
-                // nid is like F_## or T_##
+            if (pnModAvailable('Dizkus')) {
+                // nid is like F-## or T-##
                 $temp = explode('-', $nid);
                 $type = '';
                 if (is_array($temp) && count($temp)==2) {
@@ -47,25 +46,22 @@ function Dizkus_needleapi_pnforum($args)
                 }
 
                 pnModDBInfoLoad('Dizkus');
-                $dbconn =& pnDBGetConn(true);
-                $pntable =& pnDBGetTables();
+                $pntable = pnDBGetTables();
 
-                switch ($type)
-                {
+                switch ($type) {
                     case 'F':
-                        $tblforums = $pntable['dizkus_forums'];
-                        $colforums = $pntable['dizkus_forums_column'];
+                        $sql = 'SELECT forum_name,
+                                       cat_id
+                                FROM   ' . $pntable['dizkus_forums'] . '
+                                WHERE  forum_id=' . (int)DataUtil::formatForStore($id);
+                        $res = DBUtil::executeSQL($sql);
+                        $colarray = array('forum_name', 'cat_id');
+                        $result    = DBUtil::marshallObjects($res, $colarray);
                         
-                        $sql = 'SELECT ' . $colforums['forum_name'] . ',
-                                       ' . $colforums['cat_id'] . '
-                                FROM   ' . $tblforums . '
-                                WHERE  ' . $colforums['forum_id'] . '=' . (int)DataUtil::formatForStore($id);
-                        $res = $dbconn->Execute($sql);
-                        if ($dbconn->ErrorNo()==0 && !$res->EOF) {
-                            list($title, $cat_id) = $res->fields;
-                            if (allowedtoreadcategoryandforum($cat_id, $id)) {
+                        if (is_array($result) && !empty($result)) {
+                            if (allowedtoreadcategoryandforum($result[0]['cat_id'], $id)) {
                                 $url   = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $id)));
-                                $title = DataUtil::formatForDisplay($title);
+                                $title = DataUtil::formatForDisplay($result[0]['forum_name']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
                                 $cache[$nid] = '<em>' . __f('Sorry! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
@@ -76,24 +72,21 @@ function Dizkus_needleapi_pnforum($args)
                         break;
 
                     case 'T':
-                        $tbltopics = $pntable['dizkus_topics'];
-                        $coltopics = $pntable['dizkus_topics_column'];
-                        $tblforums = $pntable['dizkus_forums'];
-                        $colforums = $pntable['dizkus_forums_column'];
+                        $sql = 'SELECT    t.topic_title,
+                                          t.forum_id,
+                                          f.cat_id 
+                                FROM      ' . $pntable['dizkus_topics'] . ' as t
+                                LEFT JOIN ' . $pntable['dizkus_forums'] . ' as f
+                                ON        f.forum_id=t.forum_id
+                                WHERE     t.topic_id=' . DataUtil::formatForStore($id);
+                        $res = DBUtil::executeSQL($sql);
+                        $colarray = array('topic_title', 'forum_id', 'cat_id');
+                        $result    = DBUtil::marshallObjects($res, $colarray);
                         
-                        $sql = 'SELECT    ' . $coltopics['topic_title'] . ',
-                                          ' . $coltopics['forum_id'] . ',
-                                          ' . $colforums['cat_id'] . ' 
-                                FROM      ' . $tbltopics . '
-                                LEFT JOIN ' . $tblforums . '
-                                ON        ' . $colforums['forum_id'] . '=' . $coltopics['forum_id'] . '
-                                WHERE     ' . $coltopics['topic_id'] . '=' . DataUtil::formatForStore($id);
-                        $res = $dbconn->Execute($sql);
-                        if ($dbconn->ErrorNo()==0 && !$result->EOF) {
-                            list($title, $forum_id, $cat_id) = $res->fields;
-                            if (allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+                        if (is_array($result) && !empty($result)) {
+                            if (allowedtoreadcategoryandforum($result[0]['cat_id'], $result[0]['forum_id'])) {
                                 $url   = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
-                                $title = DataUtil::formatForDisplay($title);
+                                $title = DataUtil::formatForDisplay($result[0]['topic_title']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
                                 $cache[$nid] = '<em>' . __f('Sorry! You do not have the necessary authorisation for topic ID %s.', $id , $dom) . '</em>';

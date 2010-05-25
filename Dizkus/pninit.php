@@ -325,7 +325,7 @@ function Dizkus_init_interactiveupgrade($args)
             // no interactive upgrade for version < 2.7
             // or latest step reached
             // FIXME pnRender API call instead?
-            $smarty =& new Smarty;
+            $smarty = new Smarty;
             $smarty->compile_dir  = pnConfigGetVar('temp') . '/pnRender_compiled';
             $smarty->cache_dir    = pnConfigGetVar('temp') . '/pnRender_cache';
             $smarty->use_sub_dirs = false;

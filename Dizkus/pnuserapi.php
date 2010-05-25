@@ -1255,7 +1255,7 @@ function Dizkus_userapi_storereply($args)
     $obj['post_text']  = $args['message'];
     $obj['poster_id']  = $pn_uid;
     $obj['poster_ip']  = $poster_ip;
-    $obj['post_title'] = $args['post_title'];
+    $obj['post_title'] = $args['title'];
 
     DBUtil::insertObject($obj, 'dizkus_posts', 'post_id');
 
@@ -1610,7 +1610,7 @@ function Dizkus_userapi_readpost($args)
     $post['has_signature']= (substr($message, -8, 8)=='[addsig]');
     $post['post_rawtext'] = Dizkus_replacesignature($message, '');
     $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
-    $post['post_rawtext'] = eregi_replace('<br />', '', $post['post_rawtext']);
+    $post['post_rawtext'] = str_replace('<br />', '', $post['post_rawtext']);
 
     $post['topic_id']     = DataUtil::formatForDisplay($post['topic_id']);
     $post['topic_rawsubject']= strip_tags($post['topic_title']);
@@ -1663,21 +1663,6 @@ function Dizkus_userapi_readpost($args)
     // call hooks for $message_display ($message remains untouched for the textarea)
     list($post['post_textdisplay']) = pnModCallHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
     $post['post_textdisplay'] = dzkVarPrepHTMLDisplay($post['post_textdisplay']);
-/*
-    //$message = DataUtil::formatForDisplay($message);
-    //  remove [addsig]
-    $message = eregi_replace("\[addsig]$", '', $message);
-    //  remove <!-- editby -->
-    $message = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $message);
-    //  convert <br /> to \n (since nl2br only inserts additional <br /> we just need to remove them
-    //$message = eregi_replace('<br />', '', $message);
-    $message = phpbb_br2nl($message);
-    //  convert bbcode (just for backwards compatibility)
-    $message = Dizkus_bbdecode($message);
-    //  convert autolinks (just for backwards compatibility)
-    $message = Dizkus_undo_make_clickable($message);
-    $post['post_text'] = $message;
-*/
     $post['post_text'] = $post['post_textdisplay'];
 
     // allow to edit the subject if first post
@@ -2323,7 +2308,7 @@ function Dizkus_userapi_get_topic_subscriptions($args)
                  '.$pntable['dizkus_topics'].' AS t,
                  '.$pntable['users'].' AS u,
                  '.$pntable['dizkus_forums'].' AS f
-            WHERE (ts.user_id='.(int)DataUtil::formatForStore($user_id).'
+            WHERE (ts.user_id='.(int)DataUtil::formatForStore($args['user_id']).'
               AND t.topic_id=ts.topic_id
               AND u.pn_uid=ts.user_id
               AND f.forum_id=t.forum_id)
@@ -2688,8 +2673,7 @@ function Dizkus_userapi_get_latest_posts($args)
     $colarray[] = 'poster_id';
     $postarray  = DBUtil::marshallObjects ($res, $colarray);
 
-    foreach ($postarray as $post)
-    {
+    foreach ($postarray as $post) {
         $post = DataUtil::formatForDisplay($post);
 
         // does this topic have enough postings to be hot?
@@ -2698,9 +2682,9 @@ function Dizkus_userapi_get_latest_posts($args)
         // get correct page for latest entry
         if ($post_sort_order == 'ASC') {
             $hc_dlink_times = 0;
-            if (($topic_replies + 1 - $posts_per_page) >= 0) {
+            if (($post['topic_replies'] + 1 - $posts_per_page) >= 0) {
                 $hc_dlink_times = 0;
-                for ($x = 0; $x < $topic_replies + 1 - $posts_per_page; $x += $posts_per_page) {
+                for ($x = 0; $x < $post['topic_replies'] + 1 - $posts_per_page; $x += $posts_per_page) {
                     $hc_dlink_times++;
                 }
             }
