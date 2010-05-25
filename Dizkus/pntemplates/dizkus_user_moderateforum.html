@@ -12,6 +12,7 @@
 <form class="z-form" method="post" action="<!--[pnmodurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id]-->">
 
     <!--[if $forum.topics]-->
+    <p><a href="<!--[pnmodurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id]-->"><!--[gt text="Go back to normal forum view"]--></a></p>
     <!--[dzkpager total=$forum.forum_topics]-->
 
     <div class="forumbg dzk_rounded">
@@ -72,6 +73,7 @@
 
         </div>
     </div>
+    <p><a href="<!--[pnmodurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id]-->"><!--[gt text="Go back to normal forum view"]--></a></p>
     <!--[dzkpager total=$forum.forum_topics]-->
 
     <!--[else]-->
