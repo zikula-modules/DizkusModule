@@ -546,35 +546,6 @@ function dzkstriptags($text='')
 }
 
 /**
- * array_csort implementation
- */
-if (!function_exists('array_csort'))
-{
-    function array_csort()
-    {  //coded by Ichier2003 found on php.net (watch out the eval).
-       $args = func_get_args();
-       $marray = array_shift($args);
-
-       $msortline = "return(array_multisort(";
-       foreach ($args as $arg) {
-           $i++;
-           if (is_string($arg)) {
-               foreach ($marray as $row) {
-                   $sortarr[$i][] = $row[$arg];
-               }
-           } else {
-               $sortarr[$i] = $arg;
-           }
-           $msortline .= "\$sortarr[".$i."],";
-       }
-       $msortline .= "\$marray));";
-
-       eval($msortline);
-       return $marray;
-    }
-}
-
-/**
  * dzk_ajaxerror
  *
  * display an error during Ajax execution

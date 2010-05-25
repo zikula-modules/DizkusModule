@@ -90,7 +90,7 @@ foreach ($forums as $forum)
             // Finally decided that since it was working with the link, the link was good enough
             // Change it to your liking. It probably won't work on other type of feed.
             // Important information is in the $dump->items
-            $items = $dump['feed']->get_items(); // array_csort($dump->items, 'link', SORT_ASC);
+            $items = $dump['feed']->get_items();
 
             // See the function below...
             $insert = pnModAPIFunc('Dizkus', 'user', 'insertrss',
