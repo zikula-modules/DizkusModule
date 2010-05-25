@@ -575,9 +575,6 @@ function dzk_ajaxerror($error='Error! An unspecified ajax error occurred.', $cre
  */
 function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $ok = true)
 {
-    // FIXME use the core
-    Loader::includeOnce('modules/Dizkus/pnincludes/JSON.php');
-    $json = new Services_JSON();
     if (!is_array($args)) {
         $data = array('data' => $args);
     } else {
@@ -586,7 +583,7 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
     if ($createauthid == true) {
         $data['authid'] = SecurityUtil::generateAuthKey('Dizkus');
     }
-    $output = $json->encode($data);
+    $output = json_encode($data);
 
     SessionUtil::delVar('zk_ajax_call');
     if ($ok == true) {

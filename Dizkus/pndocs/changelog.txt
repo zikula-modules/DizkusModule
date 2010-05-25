@@ -7,7 +7,9 @@ Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
 3.1 (fs,cv)
 ---------------------------------------------------------------------------------------------
-This version will not work in Zikula before 1.2.0+, preferred version 1.2.1
+This version will not work in Zikula before 1.2.0+, preferred version 1.2.1 or later
+Minimum PHP version 5.2.0!
++ lots of internal improvements like E_ALL fixes and replacing of deprecated PHP functions
 + finalized DBUtil
 + removed posts_text table
 + code cleanup
