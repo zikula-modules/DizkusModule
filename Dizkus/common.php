@@ -355,9 +355,9 @@ function Dizkus_replacesignature($text, $signature='')
     if (!empty($signature)){
         $sigstart = stripslashes(pnModGetVar('Dizkus', 'signature_start'));
         $sigend   = stripslashes(pnModGetVar('Dizkus', 'signature_end'));
-        $text = eregi_replace("\[addsig]$", "\n\n" . $sigstart . $signature . $sigend, $text);
+        $text = preg_replace("/\[addsig]$/", "\n\n" . $sigstart . $signature . $sigend, $text);
     } else {
-        $text = eregi_replace("\[addsig]$", '', $text);
+        $text = preg_replace("/\[addsig]$/", '', $text);
     }
 
     return $text;

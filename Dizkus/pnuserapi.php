@@ -3155,7 +3155,7 @@ function Dizkus_userapi_mailcron($args)
     if ( (($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time()-($forum['pop3_interval']*60)) ) || ($force == true) ) {
         mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
         // get new mails for this forum
-        $pop3 =& new pop3_class;
+        $pop3 = new pop3_class;
         $pop3->hostname = $forum['pop3_server'];
         $pop3->port     = $forum['pop3_port'];
         $error = '';
