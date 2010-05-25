@@ -30,7 +30,7 @@ function Dizkus_ajax_reply()
     $preview          = FormUtil::getPassedValue('preview', 0);
     $preview          = ($preview == '1') ? true : false;
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     $message = dzkstriptags($message);
     $title   = dzkstriptags($title);
@@ -118,7 +118,7 @@ function Dizkus_ajax_preparequote()
 
     $post_id = FormUtil::getPassedValue('post');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!empty($post_id)) {
         $post = pnModAPIFunc('Dizkus', 'user', 'preparereply',
@@ -144,7 +144,7 @@ function Dizkus_ajax_readpost()
 
     $post_id = FormUtil::getPassedValue('post');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!empty($post_id)) {
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
@@ -172,7 +172,7 @@ function Dizkus_ajax_editpost()
 
     $post_id = FormUtil::getPassedValue('post');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!empty($post_id)) {
         $post = pnModAPIFunc('Dizkus', 'user', 'readpost',
@@ -185,7 +185,7 @@ function Dizkus_ajax_editpost()
             // simplify our live
             $render->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
 
-            SessionUtil::delVar('pn_ajax_call');
+            SessionUtil::delVar('zk_ajax_call');
 
             return array('data'    => $render->fetch('dizkus_ajax_editpost.html'),
                          'post_id' => $post['post_id']);
@@ -214,7 +214,7 @@ function Dizkus_ajax_updatepost()
     $delete  = FormUtil::getPassedValue('delete');
     $attach_signature = FormUtil::getPassedValue('attach_signature');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -259,7 +259,7 @@ function Dizkus_ajax_updatepost()
             }
         }
 
-        SessionUtil::delVar('pn_ajax_call');
+        SessionUtil::delVar('zk_ajax_call');
 
         return $post;
     }
@@ -282,7 +282,7 @@ function Dizkus_ajax_lockunlocktopic()
     $topic_id = FormUtil::getPassedValue('topic', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
         // dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
@@ -326,7 +326,7 @@ function Dizkus_ajax_stickyunstickytopic()
     $topic_id = FormUtil::getPassedValue('topic', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
         //dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
@@ -368,7 +368,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
     $topic_id = FormUtil::getPassedValue('topic', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
         dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
@@ -423,7 +423,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
     $forum_id = FormUtil::getPassedValue('forum', '');
     $mode     = FormUtil::getPassedValue('mode', '');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
         // dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
@@ -491,7 +491,7 @@ function Dizkus_ajax_addremovefavorite()
         dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
     }
 */
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     $cat_id = pnModAPIFunc('Dizkus', 'user', 'get_forum_category',
                            array('forum_id' => $forum_id));
@@ -536,7 +536,7 @@ function Dizkus_ajax_edittopicsubject()
 
     $topic_id = FormUtil::getPassedValue('topic', '');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!empty($topic_id)) {
         $topic = pnModAPIFunc('Dizkus', 'user', 'readtopic',
@@ -548,7 +548,7 @@ function Dizkus_ajax_edittopicsubject()
             $render = pnRender::getInstance('Dizkus', false, null, true);
             $render->assign('topic', $topic);
 
-            SessionUtil::delVar('pn_ajax_call');
+            SessionUtil::delVar('zk_ajax_call');
 
             return array('data'     => $render->fetch('dizkus_ajax_edittopicsubject.html'),
                          'topic_id' => $topic_id);
@@ -574,7 +574,7 @@ function Dizkus_ajax_updatetopicsubject()
     $topic_id = FormUtil::getPassedValue('topic', '');
     $subject  = FormUtil::getPassedValue('subject', '');
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
@@ -601,7 +601,7 @@ function Dizkus_ajax_updatetopicsubject()
         pnModCallHooks('item', 'update', $topic_id, array('module'   => 'Dizkus',
                                                           'topic_id' => $topic_id));
 
-        SessionUtil::delVar('pn_ajax_call');
+        SessionUtil::delVar('zk_ajax_call');
 
         return array('topic_title' => DataUtil::formatForDisplay($subject),
                      'topic_id'    => $topic_id);
@@ -622,7 +622,7 @@ function Dizkus_ajax_changesortorder()
         dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!pnUserLoggedIn()) {
        dzk_ajaxerror(__('Sorry! This feature is for registered users only.', $dom));
@@ -655,7 +655,7 @@ function Dizkus_ajax_newtopic()
         dzk_ajaxerror(strip_tags(pnModGetVar('Dizkus', 'forum_disabled_info')));
     }
 
-    SessionUtil::setVar('pn_ajax_call', 'ajax');
+    SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     $forum_id         = FormUtil::getPassedValue('forum');
     $message          = FormUtil::getPassedValue('message', '');
@@ -783,7 +783,7 @@ function Dizkus_ajax_newtopic()
 
     $render->assign('newtopic', $newtopic);
 
-    SessionUtil::delVar('pn_ajax_call');
+    SessionUtil::delVar('zk_ajax_call');
 
     return array('data'     => $render->fetch('dizkus_user_newtopicpreview.html'),
                  'newtopic' => $newtopic);

@@ -127,7 +127,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
 function showforumerror($error_text, $file='', $line=0, $httperror=null)
 {
     PageUtil::setVar('title', $error_text);
-    if (SessionUtil::getVar('pn_ajax_call') == 'ajax') {
+    if (SessionUtil::getVar('zk_ajax_call') == 'ajax') {
         dzk_ajaxerror($error_text);
     }
 
@@ -585,7 +585,7 @@ function dzk_ajaxerror($error='Error! An unspecified ajax error occurred.', $cre
         if ($createauthid == true) {
             dzk_jsonizeoutput($error, $createauthid, false, false);
         } else {    
-            SessionUtil::delVar('pn_ajax_call');
+            SessionUtil::delVar('zk_ajax_call');
             header('HTTP/1.0 400 Bad Data');
             echo DataUtil::formatForDisplay($error);
             pnShutDown();
@@ -617,7 +617,7 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
     }
     $output = $json->encode($data);
 
-    SessionUtil::delVar('pn_ajax_call');
+    SessionUtil::delVar('zk_ajax_call');
     if ($ok == true) {
         header('HTTP/1.0 200 OK');
     } else {

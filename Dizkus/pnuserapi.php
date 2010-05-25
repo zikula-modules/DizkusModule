@@ -1789,7 +1789,7 @@ function Dizkus_userapi_updatepost($args)
 
         // Let any hooks know that we have updated an item.
         //pnModCallHooks('item', 'update', $post_id, array('module' => 'Dizkus'));
-        pnModCallHooks('item', 'update', $args['topic_id'], array('module'  => 'Dizkus',
+        pnModCallHooks('item', 'update', $args['post_id'], array('module'  => 'Dizkus',
                                                                   'post_id' => $args['post_id']));
 
         // update done, return now
@@ -1852,9 +1852,10 @@ function Dizkus_userapi_updatepost($args)
         // update topic
         DBUtil::updateObject($topic, 'dizkus_topics', null, 'topic_id');
 
-        return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
-                        array('topic' => $topic['topic_id'])));
-
+        if(SessionUtil::getVar('zk_ajax_call', '')  <> 'ajax') {
+            return pnRedirect(pnModURL('Dizkus', 'user', 'viewtopic',
+                              array('topic' => $topic['topic_id'])));
+        }
     }
 
     // we should not get here, but who knows...

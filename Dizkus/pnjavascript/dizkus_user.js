@@ -645,9 +645,6 @@ function quickEditsave_response(originalRequest)
     }
 
     var result = dejsonize(originalRequest.responseText);
-console.log(result.action);
-console.log(result.redirect);
-console.log(result.post_id);
     var postingtextID = 'postingtext_' + result.post_id;
     var postingobjID = 'posting_' + result.post_id;
     var postinguserID = postingobjID + '_userinfo';
