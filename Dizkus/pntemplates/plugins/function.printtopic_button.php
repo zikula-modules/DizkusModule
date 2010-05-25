@@ -23,7 +23,7 @@ function smarty_function_printtopic_button($params, &$smarty)
 
     Loader::includeOnce('modules/Dizkus/common.php');
     if (allowedtoreadcategoryandforum($params['cat_id'], $params['forum_id'])) {
-        $themeinfo = pnThemeGetInfo('Printer');
+        $themeinfo = ThemeUtil::getInfo('Printer');
         if ($themeinfo['active']) {
             return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
         }
