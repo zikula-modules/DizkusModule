@@ -52,7 +52,7 @@
                             <!--[/if]-->
                             <!--[$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name]-->
                             <em class="z-sub">(<!--[$topic.topic_views]--> <!--[gt text="Views"]-->)</em>
-                            <span><!--[gt text="Poster"]-->: <!--[$topic.pn_uname|userprofilelink]--></span>
+                            <span><!--[gt text="Poster"]-->: <!--[$topic.topic_poster|userprofilelink]--></span>
                             <!--[dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"]-->
                         </dt>
                         <dd class="posts"><!--[$topic.topic_replies]--><dfn><!--[gt text="Replies"]--></dfn></dd>
