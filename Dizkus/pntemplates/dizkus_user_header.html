@@ -20,9 +20,9 @@
 <!--[assign var='maintitle' value=$maintitle|default:'']-->
 <!--[if $func eq 'main']-->
 <!--[gt text='Category list' assign='maintitle']-->
-<!--[elseif $func eq 'viewforum']-->
+<!--[elseif $func eq 'viewforum' AND isset($forum)]-->
 <!--[assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name]-->
-<!--[elseif $func eq 'viewtopic']-->
+<!--[elseif $func eq 'viewtopic' AND isset($topic)]-->
 <!--[assign var='maintitle' value=$topic.topic_title]-->
 <!--[elseif $func eq 'newtopic']-->
 <!--[gt text='New topic in forum' assign='maintitle']-->
@@ -49,11 +49,11 @@
                 <li>
                     <!--[gt text="&nbsp;::&nbsp;"]--><!--[$view_category_data.cat_title|pnvarprepfordisplay]-->
                 </li>
-                <!--[elseif $func eq 'viewforum' OR $func eq 'moderateforum']-->
+                <!--[elseif ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)]-->
                 <li>
                     <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="Go to category"]-->: <!--[$forum.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]--></a>
                 </li>
-                <!--[elseif $func eq 'viewtopic']-->
+                <!--[elseif $func eq 'viewtopic' AND isset($topic)]-->
                 <li>
                     <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="Go to category"]-->: <!--[$topic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id]-->"><!--[$topic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
@@ -62,12 +62,12 @@
                     <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[gt text="Go to category"]-->: <!--[$newtopic.cat_title|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id]-->"><!--[$newtopic.cat_title|pnvarprepfordisplay]--></a>
                 </li>
                 <!--[/if]-->
-                <!--[if $func eq 'viewforum' OR $func eq 'moderateforum']-->
+                <!--[if ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)]-->
                 <li>
                     <!--[gt text="&nbsp;::&nbsp;"]--><!--[$forum.forum_name|pnvarprepfordisplay]-->
                 </li>
                 <!--[/if]-->
-                <!--[if $func eq 'viewtopic']-->
+                <!--[if $func eq 'viewtopic' AND isset($topic)]-->
                 <li>
                     <!--[gt text="&nbsp;::&nbsp;"]--><a title="<!--[$topic.forum_name|pnvarprepfordisplay]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id]-->"><!--[$topic.forum_name|pnvarprepfordisplay]--></a>
                 </li>
@@ -105,9 +105,9 @@
     <h2><!--[gt text="Forums index page"]--></h2>
     <!--[elseif $func eq 'main' AND $view_category neq -1]-->
     <h2><!--[$view_category_data.cat_title|pnvarprepfordisplay]--></h2>
-    <!--[elseif $func eq 'viewforum']-->
+    <!--[elseif $func eq 'viewforum' AND isset($forum)]-->
     <h2><!--[$forum.forum_name|pnvarprepfordisplay]--></h2>
-    <!--[elseif $func eq 'viewtopic']-->
+    <!--[elseif $func eq 'viewtopic' AND isset($topic)]-->
     <h2>
         <span class="editabletopicheader" id="topicsubject_<!--[$topic.topic_id]-->" <!--[if $topic.access_topicsubjectedit eq 1]-->title="<!--[gt text="Click to edit"]-->" onclick="javascript:topicsubjectedit(<!--[$topic.topic_id]-->)"<!--[/if]-->>
             <span id="topicsubject_<!--[$topic.topic_id]-->_content"><!--[$topic.topic_title|pnvarprepfordisplay]--></span>
