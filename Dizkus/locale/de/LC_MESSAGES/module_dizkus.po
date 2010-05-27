@@ -637,7 +637,7 @@ msgstr ""
 #: pnadminapi.php:751
 #: pntemplates/dizkus_admin_ranks.html:2
 msgid "Edit user ranks"
-msgstr ""
+msgstr "Benutzerränge bearbeiten"
 
 #: pnadminapi.php:752
 msgid "Create, edit and delete user rankings acquired through the number of a user's posts"
@@ -646,7 +646,7 @@ msgstr ""
 #: pnadminapi.php:755
 #: pntemplates/dizkus_admin_honoraryranks.html:3
 msgid "Edit honorary ranks"
-msgstr ""
+msgstr "Ehrenränge bearbeiten"
 
 #: pnadminapi.php:756
 msgid "Create, delete and edit special ranks for particular users"
@@ -655,7 +655,7 @@ msgstr ""
 #: pnadminapi.php:759
 #: pntemplates/dizkus_admin_assignranks.html:2
 msgid "Assign honorary rank"
-msgstr ""
+msgstr "Ehrenränge zuweisen"
 
 #: pnadminapi.php:760
 msgid "Assign honorary user ranks to users"
@@ -664,7 +664,7 @@ msgstr ""
 #: pnadminapi.php:763
 #: pntemplates/dizkus_admin_managesubscriptions.html:2
 msgid "Manage subscriptions"
-msgstr ""
+msgstr "Abos verwalten"
 
 #: pnadminapi.php:764
 msgid "Remove a user's topic and forum subscriptions"
@@ -2009,73 +2009,73 @@ msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:94
 msgid "Actions"
-msgstr ""
+msgstr "Aktionen"
 
 #: pntemplates/dizkus_user_moderateforum.html:96
 msgid "Choose action"
-msgstr ""
+msgstr "Aktion auswählen"
 
 #: pntemplates/dizkus_user_moderateforum.html:97
 msgid "Give selected topics 'sticky' status"
-msgstr ""
+msgstr "Markierung bei ausgewählte Themen setzen"
 
 #: pntemplates/dizkus_user_moderateforum.html:98
 msgid "Remove 'sticky' status from selected topics"
-msgstr ""
+msgstr "Markierung bei ausgewählte Themen aufheben"
 
 #: pntemplates/dizkus_user_moderateforum.html:99
 msgid "Lock selected topics"
-msgstr ""
+msgstr "Markierte Themen schliessen"
 
 #: pntemplates/dizkus_user_moderateforum.html:100
 msgid "Open selected topics"
-msgstr ""
+msgstr "Markierte Themen eröffnen"
 
 #: pntemplates/dizkus_user_moderateforum.html:101
 msgid "Delete selected topics"
-msgstr ""
+msgstr "Markierte Themen löschen"
 
 #: pntemplates/dizkus_user_moderateforum.html:102
 msgid "Move selected topics"
-msgstr ""
+msgstr "Markierte Themen verschieben"
 
 #: pntemplates/dizkus_user_moderateforum.html:103
 #: pntemplates/dizkus_user_movetopic.html:49
 msgid "Join topics"
-msgstr ""
+msgstr "Themen zusammenfassen"
 
 #: pntemplates/dizkus_user_moderateforum.html:107
 msgid "Choose target forum to move topic(s) to:"
-msgstr ""
+msgstr "Zielforum zum Verschieben der Beiträge auswählen:"
 
 #: pntemplates/dizkus_user_moderateforum.html:109
 msgid "Select target forum"
-msgstr ""
+msgstr "Zielforum auswählen"
 
 #: pntemplates/dizkus_user_moderateforum.html:116
 #: pntemplates/dizkus_user_movetopic.html:25
 msgid "Create shadow topic"
-msgstr ""
+msgstr "Verweis im alten Forum erstellen"
 
 #: pntemplates/dizkus_user_moderateforum.html:120
 msgid "To join topics, select the target topic here"
-msgstr ""
+msgstr "Zum Zusammenfassen von Themen, bitte hier das Zielthema auswählen"
 
 #: pntemplates/dizkus_user_moderateforum.html:123
 msgid "Choose target topic"
-msgstr ""
+msgstr "Zielthema auswählen"
 
 #: pntemplates/dizkus_user_moderateforum.html:128
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #: pntemplates/dizkus_user_moderateforum.html:128
 msgid "Target topic"
-msgstr ""
+msgstr "Zielthema"
 
 #: pntemplates/dizkus_admin_main.html:2
 msgid "Dizkus Administration"
-msgstr ""
+msgstr "Dizkus Administration"
 
 #: pntemplates/dizkus_searchresults.html:3
 #, php-format
@@ -2090,33 +2090,33 @@ msgstr ""
 
 #: pntemplates/dizkus_searchresults.html:41
 msgid "New messages have been posted under this topic since your last visit"
-msgstr ""
+msgstr "Seit dem letzten Besuch sind neue Beiträge in diesem Thema verfasst worden"
 
 #: pntemplates/dizkus_searchresults.html:52
 msgid "found in:"
-msgstr ""
+msgstr "gefunden in:"
 
 #: pntemplates/dizkus_searchresults.html:52
 msgid "go to forum"
-msgstr ""
+msgstr "Gehe zum Forum"
 
 #: pntemplates/dizkus_searchresults.html:57
 msgid "View most-recent posting"
-msgstr ""
+msgstr "Aktuellsten Beitrag anzeigen"
 
 #: pntemplates/dizkus_searchresults.html:62
 msgid "No topics"
-msgstr ""
+msgstr "Keine Themen"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:2
 #, php-format
 msgid "Forums on %s"
-msgstr ""
+msgstr "Forum unter %s"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:5
 #, php-format
 msgid "%1$s wrote at %2$s"
-msgstr ""
+msgstr "%1$s schrieb am %2$s"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:9
 #, php-format
@@ -2124,16 +2124,18 @@ msgid ""
 "Browse thread: %s \n"
 "\n"
 msgstr ""
+"Thema durchsuchen: %s \n"
+"\n"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:10
 #, php-format
 msgid "Reply to this message: %s"
-msgstr ""
+msgstr "Auf diese Nachricht antworten: %s"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:11
 #, php-format
 msgid "Maintain topic and forum subscriptions: %s"
-msgstr ""
+msgstr "Themen- und Forenabos verwalten: %s"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:13
 #, php-format
@@ -2143,11 +2145,11 @@ msgstr ""
 #: pntemplates/dizkus_upgrade_30.html:4
 #: pntemplates/dizkus_upgrade_30.html:15
 msgid "Caution! Please back-up your database via a database dump before proceeding with the upgrade."
-msgstr ""
+msgstr "Achtung! Bitte vor dem Fortfahren unbedingt die Datenbanken sichern."
 
 #: pntemplates/dizkus_upgrade_30.html:17
 msgid "This will upgrade your pnForum 2.7.1 forums to Dizkus 3.0, making all necessary database changes."
-msgstr ""
+msgstr "Hiermit wird eine Aktualisierung von pnForum 2.7.1 auf Dizkus 3.0 inkl. aller notwendigen Datenbankanpassungen durchgeführt."
 
 #: pntemplates/dizkus_admin_honoraryranks.html:6
 msgid "In this page, you can create, delete and edit special honorary ranks awarded to particular users (site staff or project team members, for example). To create a new rank, simply type entries in the fields of the 'Create new rank' section and click on the 'Create honorary rank' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."
@@ -2156,17 +2158,17 @@ msgstr ""
 #: pntemplates/dizkus_admin_honoraryranks.html:11
 #: pntemplates/dizkus_admin_ranks.html:12
 msgid "Create new rank"
-msgstr ""
+msgstr "Rang anlegen"
 
 #: pntemplates/dizkus_admin_honoraryranks.html:13
 #: pntemplates/dizkus_admin_honoraryranks.html:45
 msgid "Honorary rank name"
-msgstr ""
+msgstr "Name des Ehrenrangs"
 
 #: pntemplates/dizkus_admin_honoraryranks.html:17
 #: pntemplates/dizkus_admin_ranks.html:26
 msgid "Internal Dizkus image"
-msgstr ""
+msgstr "Internes Dizkus-Bild"
 
 #: pntemplates/dizkus_admin_honoraryranks.html:32
 #: pntemplates/dizkus_admin_ranks.html:41
@@ -2191,64 +2193,64 @@ msgstr "Rang löschen"
 #: pntemplates/dizkus_admin_honoraryranks.html:70
 #: pntemplates/dizkus_admin_ranks.html:80
 msgid "No items found."
-msgstr ""
+msgstr "Keine Einträge gefunden."
 
 #: pntemplates/dizkus_statisticsblock_config.html:5
 #: pntemplates/dizkus_centerblock_config.html:5
 msgid "Name of template file"
-msgstr ""
+msgstr "Name der Templatedatei"
 
 #: pntemplates/dizkus_statisticsblock_config.html:13
 #: pntemplates/dizkus_centerblock_config.html:13
 msgid "Parameters"
-msgstr ""
+msgstr "Parameter"
 
 #: pntemplates/dizkus_statisticsblock_config.html:17
 #: pntemplates/dizkus_centerblock_config.html:17
 msgid "Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'."
-msgstr ""
+msgstr "Hinweis: Kommagetrennte Liste. Beispiel: 'maxposts=5,forum_id=27'."
 
 #: pntemplates/dizkus_user_movepost.html:13
 msgid "Move post from one topic to another"
-msgstr ""
+msgstr "Beitrag von diesem Thema in ein anderes Thema verschieben"
 
 #: pntemplates/dizkus_user_movepost.html:15
 #: pntemplates/dizkus_user_movetopic.html:43
 msgid "ID of target topic"
-msgstr ""
+msgstr "ID des Zielthemas"
 
 #: pntemplates/dizkus_user_viewforum.html:15
 #: pntemplates/dizkus_user_viewforum.html:60
 msgid "Start a new topic"
-msgstr ""
+msgstr "Neues Thema anlegen"
 
 #: pntemplates/dizkus_user_viewforum.html:20
 msgid "Subscribe to this forum"
-msgstr ""
+msgstr "Forum abonnieren"
 
 #: pntemplates/dizkus_user_viewforum.html:21
 msgid "Unsubscribe from this forum"
-msgstr ""
+msgstr "Forenabo abmelden"
 
 #: pntemplates/dizkus_user_viewforum.html:35
 #: pntemplates/dizkus_user_viewforum.html:75
 msgid "Add this forum to your favourites"
-msgstr ""
+msgstr "Dieses Forum zu den Favoriten hinzufügen"
 
 #: pntemplates/dizkus_user_viewforum.html:35
 #: pntemplates/dizkus_user_viewforum.html:75
 msgid "Add forum to favourites"
-msgstr ""
+msgstr "Forum zu den Favoriten hinzufügen"
 
 #: pntemplates/dizkus_user_viewforum.html:36
 #: pntemplates/dizkus_user_viewforum.html:77
 msgid "Remove this forum from your favourites"
-msgstr ""
+msgstr "Dieses Forum als Favorit entfernen"
 
 #: pntemplates/dizkus_user_viewforum.html:36
 #: pntemplates/dizkus_user_viewforum.html:77
 msgid "Remove forum from favourites"
-msgstr ""
+msgstr "Forum als Favorit entfernen"
 
 #: pntemplates/dizkus_user_viewforum.html:126
 msgid "Topic is sticky (it will always stay at the top of the topcis list)"
@@ -2269,16 +2271,16 @@ msgstr "Schlüssel"
 #: pntemplates/dizkus_user_footer.html:12
 #, php-format
 msgid "New posts since your last visit on %s"
-msgstr ""
+msgstr "Neue Beiträge seit dem letzten Besuch am %s"
 
 #: pntemplates/dizkus_user_footer.html:15
 msgid "No new posts since your last visit"
-msgstr ""
+msgstr "Keine neuen Beiträge seit dem letzten Besuch"
 
 #: pntemplates/dizkus_user_footer.html:17
 #, php-format
 msgid "No new posts since your last visit on %s"
-msgstr ""
+msgstr "Keine neuen Beiträge seit dem letzten Besuch am %s"
 
 #: pntemplates/dizkus_user_footer.html:23
 #: pntemplates/dizkus_statisticsblock_display.html:55
@@ -2318,20 +2320,20 @@ msgstr "Antwort auf"
 #: pntemplates/dizkus_user_latestposts.html:2
 #: pntemplates/dizkus_user_latestposts.html:9
 msgid "Latest forum posts"
-msgstr ""
+msgstr "Aktuelle Beiträge"
 
 #: pntemplates/dizkus_user_latestposts.html:18
 msgid "Last"
-msgstr ""
+msgstr "Letzte"
 
 #: pntemplates/dizkus_user_latestposts.html:18
 #: pntemplates/dizkus_admin_preferences.html:145
 msgid "hours"
-msgstr ""
+msgstr "Stunden"
 
 #: pntemplates/dizkus_user_latestposts.html:22
 msgid "Last week, unanswered"
-msgstr ""
+msgstr "Letzte Woche, unbeantwortet"
 
 #: pntemplates/dizkus_user_latestposts.html:85
 msgid "RSS feeds"
@@ -2400,19 +2402,19 @@ msgstr ""
 
 #: pntemplates/dizkus_user_newtopic.html:25
 msgid "New topic in forum"
-msgstr ""
+msgstr "Neues Thema im Forum"
 
 #: pntemplates/dizkus_user_newtopic.html:93
 msgid "Redirecting you to the new topic..."
-msgstr ""
+msgstr "Weiterleitung zum neuen Thema wird durchgeführt..."
 
 #: pntemplates/dizkus_user_newtopicconfirmation.html:8
 msgid "Click here to go the new topic"
-msgstr ""
+msgstr "Hier klicken, um zum neuen Thema zu gelangen"
 
 #: pntemplates/dizkus_admin_assignranks.html:5
 msgid "In this page, you can select particular users and assign them honorary ranks."
-msgstr ""
+msgstr "Auf dieser Seite können bestimmte Benutzer ausgewählt und Ehrenränge zugewiesen werden."
 
 #: pntemplates/dizkus_admin_assignranks.html:31
 msgid "No rank"
@@ -2420,11 +2422,11 @@ msgstr "Kein Rang"
 
 #: pntemplates/dizkus_user_movetopic.html:2
 msgid "Move or join topics"
-msgstr ""
+msgstr "Themen zusammenfassen oder verschieben"
 
 #: pntemplates/dizkus_user_movetopic.html:14
 msgid "Move topic to another forum"
-msgstr ""
+msgstr "Thema zu anderem Forum verschieben"
 
 #: pntemplates/dizkus_user_movetopic.html:15
 msgid "When you press the 'Move' button at the bottom of this form, the topic you have selected (and all its related posts) will be <strong>moved</strong> to the forum you have selected. Note: You will only be able to move the topic to a forum for which you are moderator. An administrator is allowed to move any topic to any forum."
@@ -2432,11 +2434,11 @@ msgstr ""
 
 #: pntemplates/dizkus_user_movetopic.html:17
 msgid "Target forum"
-msgstr ""
+msgstr "Zielforum"
 
 #: pntemplates/dizkus_user_movetopic.html:41
 msgid "Join topic with another topic"
-msgstr ""
+msgstr "Thema mit anderem Thema zusammenfassen"
 
 #: pntemplates/dizkus_admin_ranks.html:6
 msgid "In this page, you can create, delete and edit user ranks for that users acquire automatically after a certain number of posts in the forums. To create a new rank, simply type entries in the fields of the 'Create new user rank' section and click on the 'Create' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."
@@ -2444,45 +2446,45 @@ msgstr ""
 
 #: pntemplates/dizkus_admin_ranks.html:14
 msgid "User rank name"
-msgstr ""
+msgstr "Name des Benutzerrangs"
 
 #: pntemplates/dizkus_admin_ranks.html:18
 #: pntemplates/dizkus_admin_ranks.html:55
 msgid "Minimum number of posts"
-msgstr ""
+msgstr "Mindesanzahl an Beiträgen"
 
 #: pntemplates/dizkus_admin_ranks.html:22
 #: pntemplates/dizkus_admin_ranks.html:56
 msgid "Maximum number of posts"
-msgstr ""
+msgstr "Höchstanzahl an Beiträgen"
 
 #: pntemplates/dizkus_admin_ranks.html:54
 msgid "User rank"
-msgstr ""
+msgstr "Benutzerrang"
 
 #: pntemplates/dizkus_admin_managesubscriptions.html:7
 msgid "Show users' subscriptions"
-msgstr ""
+msgstr "Benutzerabos anzeigen"
 
 #: pntemplates/dizkus_admin_managesubscriptions.html:48
 msgid "Manage forum subscriptions"
-msgstr ""
+msgstr "Forenabos verwalten"
 
 #: pntemplates/dizkus_admin_managesubscriptions.html:50
 msgid "Remove all forum subscriptions"
-msgstr ""
+msgstr "Alle Forenabos entfernen"
 
 #: pntemplates/dizkus_admin_managesubscriptions.html:72
 msgid "No forum subscriptions found."
-msgstr ""
+msgstr "Keine Forenabos gefunden."
 
 #: pntemplates/dizkus_statisticsblock_display.html:6
 msgid "Most-active forums"
-msgstr ""
+msgstr "Aktivste Foren"
 
 #: pntemplates/dizkus_statisticsblock_display.html:22
 msgid "Recent topics"
-msgstr ""
+msgstr "Neueste Themen"
 
 #: pntemplates/dizkus_statisticsblock_display.html:30
 msgid "reply"
@@ -2490,7 +2492,7 @@ msgstr ""
 
 #: pntemplates/dizkus_statisticsblock_display.html:44
 msgid "Most-active posters"
-msgstr ""
+msgstr "Aktivste Verfasser"
 
 #: pntemplates/dizkus_statisticsblock_display.html:58
 msgid "Categories"

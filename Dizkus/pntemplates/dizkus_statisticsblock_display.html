@@ -25,12 +25,7 @@
     <!--[foreach item=lastpost from=$lastposts]-->
     <li>
         <a href="<!--[$lastpost.last_post_url_anchor]-->" title="<!--[$lastpost.cat_title]--> :: <!--[$lastpost.forum_name]--> :: <!--[$lastpost.topic_title]-->"><!--[$lastpost.topic_title|dzkbbsmile|truncate:21]--></a><br />
-        <!--[$lastpost.topic_replies]-->
-        <!--[if $lastpost.topic_replies eq 1]-->
-        <!--[gt text="reply" domain="module_dizkus"]-->
-        <!--[else]-->
-        <!--[gt text="Replies" domain="module_dizkus"]-->
-        <!--[/if]-->
+        <!--[gt text="%s reply" plural="%s replies" tag1=$lastpost.topic_replies count=$lastpost.topic_replies domain="module_dizkus"]-->
         <br />
         <!--[$lastpost.poster_name|userprofilelink]--><br /><!--[$lastpost.posted_unixtime|pndate_format:'datetimebrief':'':true]-->
     </li>

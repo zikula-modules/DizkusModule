@@ -32,7 +32,7 @@
             <tr id="topic<!--[ $searchresult.topic_id ]-->_<!--[ $searchresult.post_id ]-->" class="topicrow">
                 <td headers="col_status">
                     <!--[ if $searchresult.sticky eq 1 ]-->
-                    <!--[ pnimg modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic" __title="Sticky topic (it will always stay at top of the topics list)"]-->
+                    <!--[ pnimg modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic" __title="Topic is sticky (it will always stay at the top of the topics list)"]-->
                     <!--[ /if ]-->
                     <!--[ if $searchresult.topic_status eq 1 ]-->
                     <!--[ pnimg modname='Dizkus' src="icon_post_close.gif" __alt="Locked topic" __title="This topic is locked. No more posts accepted."]-->
@@ -49,7 +49,7 @@
                 <td headers="col_topic">
                     <!--[ $searchresult.topic_id|viewtopiclink:$searchresult.topic_title:$searchresult.forum_name ]-->
                     <!--[ dzkpager objectid=$searchresult.topic_id total=$searchresult.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" ]-->
-                    <p><!--[gt text="found in:"]-->: <a title="<!--[gt text='go to forum']--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
+                    <p><!--[gt text="found in"]-->: <a title="<!--[gt text='Go to forum']--> <!--[ $searchresult.cat_title|pnvarprepfordisplay ]-->::<!--[ $searchresult.forum_name|pnvarprepfordisplay ]-->" href="<!--[ pnmodurl modname=Dizkus type=user func=viewforum forum=$searchresult.forum_id]-->"><!--[ $searchresult.forum_name|pnvarprepfordisplay ]--></a></p>
                 </td>
                 <td headers="col_replies" align="center"><!--[ $searchresult.topic_replies ]--></td>
                 <td headers="col_poster" align="center"><!--[ $searchresult.topicstarter_name ]--></td>
