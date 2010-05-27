@@ -14,19 +14,20 @@
 
 /**
  * Smarty function to display the avatar of a user
+ * (Part of the Core with Zikula 1.3 and higher)
  *
  * Example
- * <!--[useravatar uid="2"]-->
+ * <!--[dzkuseravatar uid="2"]-->
  *
  * @param        object      &$smarty     Reference to the Smarty object
  * @param        integer     $uid         user-id
  * @return       string      a formatted string containing the avatar image
  */
 
-function smarty_function_useravatar($params, &$smarty)
+function smarty_function_dzkuseravatar($params, &$smarty)
 {
     if (!isset($params['uid'])) {
-        $smarty->trigger_error("Error! Missing 'uid' attribute for useravatar.");
+        $smarty->trigger_error("Error! Missing 'uid' attribute for dzkuseravatar.");
         return false;
     }
 
