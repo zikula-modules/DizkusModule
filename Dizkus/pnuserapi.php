@@ -382,7 +382,7 @@ function Dizkus_userapi_readcategorytree($args)
                         }
         
                         $posted_unixtime= dzk_str2time($forum['post_time']); // strtotime ($forum['post_time']);
-                        $posted_ml = DateUtil::formatDatetime($posted_unixtime, __('%b %d, %Y - %I:%M %p', $dom));
+                        $posted_ml = DateUtil::formatDatetime($posted_unixtime, 'datetimebrief');
                         if ($posted_unixtime) {
                             if ($forum['pn_uid']==1) {
                                 $username = pnModGetVar('Users', 'anonymous');
@@ -601,7 +601,7 @@ function Dizkus_userapi_readforum($args)
     }
 
     if (!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to view this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', __('Error! You do not have authorisation to view this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -698,7 +698,7 @@ function Dizkus_userapi_readforum($args)
             $topic['total_posts'] = $topic['topic_replies'] + 1;
         
             $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
-            $posted_ml = DateUtil::formatDatetime($topic['post_time_unix'], __('%b %d, %Y - %I:%M %p', $dom));
+            $posted_ml = DateUtil::formatDatetime($topic['post_time_unix'], 'datetimebrief');
             $topic['last_post'] = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster']), $dom));
         
             // does this topic have enough postings to be hot?
@@ -864,7 +864,7 @@ function Dizkus_userapi_readtopic($args)
         unset($topic['forum_pop3_active']);
 
         if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
+            return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', __('Error! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
         }
 
         $topic['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
@@ -1130,11 +1130,11 @@ function Dizkus_userapi_preparereply($args)
     $reply['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $pn_uid));
 
     if ($reply['topic_status'] == 1) {
-        return showforumerror(__('Sorry! You cannot post a message under this topic. It has been locked.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! You cannot post a message under this topic. It has been locked.', $dom), __FILE__, __LINE__);
     }
 
     if (!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
-        return showforumerror( __('Sorry! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
+        return showforumerror( __('Error! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
     }
 
     // Topic review (show last 10)
@@ -1165,7 +1165,7 @@ function Dizkus_userapi_preparereply($args)
         
             // TODO extract unixtime directly from MySql
             $review['post_unixtime'] = dzk_str2time($review['post_time']); //strtotime ($review['post_time']);
-            $review['post_ml'] = DateUtil::formatDatetime($review['post_unixtime'], __('%b %d, %Y - %I:%M %p', $dom));
+            $review['post_ml'] = DateUtil::formatDatetime($review['post_unixtime'], 'datetimebrief');
         
             $message = $review['post_text'];
             // we use br2nl here for backward compatibility
@@ -1206,7 +1206,7 @@ function Dizkus_userapi_storereply($args)
                                             array('topic_id' => $args['topic_id']));
 
     if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(__('Sorry! You do not have authorisation to post in this category or forum.', $dom));
+        return showforumerror(__('Error! You do not have authorisation to post in this category or forum.', $dom));
     }
 
     if (trim($args['message']) == '') {
@@ -1408,7 +1408,7 @@ function Dizkus_userapi_preparenewtopic($args)
     // need at least "comment" to add newtopic
     if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
         // user is not allowed to post
-        return showforumerror(__('Sorry! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
     }
 
     $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
@@ -1456,7 +1456,7 @@ function Dizkus_userapi_storenewtopic($args)
 
     $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $args['forum_id']));
     if (!allowedtowritetocategoryandforum($cat_id, $args['forum_id'])) {
-        return showforumerror(__('Sorry! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! You do not have authorisation to post in this category or forum.', $dom), __FILE__, __LINE__);
     }
 
     if (trim($args['message']) == '' || trim($args['subject']) == '') {
@@ -1601,7 +1601,7 @@ function Dizkus_userapi_readpost($args)
     $objarray = DBUtil::marshallObjects ($result, $colarray);
     $post = $objarray[0];
     if (!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', __('Error! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
     
     $post['post_id']      = DataUtil::formatForDisplay($post['post_id']);
@@ -1738,7 +1738,7 @@ function Dizkus_userapi_updatepost($args)
     if ((($row['poster_id'] != pnUserGetVar('uid')) || ($row['topic_status'] == 1)) &&
         !allowedtomoderatecategoryandforum($row['cat_id'], $row['forum_id'])) {
         // user is not allowed to edit post
-        return showforumerror(getforumerror('auth_mod', $row['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $row['forum_id'], 'forum', __('Error! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
 
@@ -1752,7 +1752,7 @@ function Dizkus_userapi_updatepost($args)
             $args['message'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $args['message']);
             // who is editing?
             $edit_name  = pnUserLoggedIn() ? pnUserGetVar('uname') : pnModGetVar('Users', 'anonymous');
-            $edit_date = DateUtil::formatDatetime('', __('%b %d, %Y - %I:%M %p', $dom));
+            $edit_date = DateUtil::formatDatetime('', 'datetimebrief');
             $args['message'] .= '<br /><br /><!-- editby --><br /><br /><em>' . __f('Edited by %1$s on %2$s.', array($edit_name, $edit_date), $dom) . '</em><!-- end editby --> ';
         }
 
@@ -2043,7 +2043,7 @@ function Dizkus_userapi_deletetopic($args)
 
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', __('Error! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -2135,7 +2135,7 @@ function Dizkus_userapi_notify_by_email($args)
     }
 
     $topic_unixtime= dzk_str2time($myrow[0]['topic_time']); //strtotime ($myrow['topic_time']);
-    $topic_time_ml = DateUtil::formatDatetime($topic_unixtime, __('%b %d, %Y - %I:%M %p', $dom));
+    $topic_time_ml = DateUtil::formatDatetime($topic_unixtime, 'datetimebrief');
 
     $poster_name = pnUserGetVar('uname',$args['poster_id']);
 
@@ -2364,7 +2364,7 @@ function Dizkus_userapi_subscribe_topic($args)
 
     list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
     if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum_id, 'forum', __('Error! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
@@ -2424,7 +2424,7 @@ function Dizkus_userapi_subscribe_forum($args)
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
                           array('forum_id' => $args['forum_id']));
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', __('Error! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_subscription_status($args) == false) {
@@ -2482,7 +2482,7 @@ function Dizkus_userapi_add_favorite_forum($args)
                           array('forum_id' => $args['forum_id']));
 
     if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', __('Sorry! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', __('Error! You do not have authorisation to read the content in this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     if (Dizkus_userapi_get_forum_favorites_status($args) == false) {
@@ -2602,7 +2602,7 @@ function Dizkus_userapi_get_latest_posts($args)
                    break;
         case '6' : // last visit
                    $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($args['last_visit']) . "' ";
-                   $text = DataUtil::formatForDisplay(__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], __('%b %d, %Y - %I:%M %p', $dom)), $dom));
+                   $text = DataUtil::formatForDisplay(__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief'), $dom));
                    break;
         case '1' :
         default:   // last 24 hours
@@ -2702,7 +2702,7 @@ function Dizkus_userapi_get_latest_posts($args)
         }
 
         $post['posted_unixtime'] = dzk_str2time($post['post_time']); // strtotime ($post['post_time']);
-        $post['post_time'] = DateUtil::formatDatetime($post['posted_unixtime'], __('%b %d, %Y - %I:%M %p', $dom));
+        $post['post_time'] = DateUtil::formatDatetime($post['posted_unixtime'], 'datetimebrief');
 
         $post['last_post_url'] = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic',
                                                      array('topic' => $post['topic_id'],
@@ -2820,7 +2820,7 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!isset($args['topic_id']) || !isset($args['view']) ) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     switch ($args['view'])
@@ -2836,7 +2836,7 @@ function Dizkus_userapi_get_previous_or_next_topic_id($args)
             break;
 
         default:
-            return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+            return LogUtil::registerArgsError();
     }
 
     $pntable = pnDBGetTables();
@@ -3099,7 +3099,7 @@ function Dizkus_userapi_get_page_from_topic_replies($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0 ) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     // get some enviroment
@@ -3301,7 +3301,7 @@ function Dizkus_userapi_testpop3connection($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     $forum = pnModAPIFunc('Dizkus', 'admin', 'readforums',
@@ -3360,7 +3360,7 @@ function Dizkus_userapi_get_topic_by_postmsgid($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!isset($args['msgid']) || empty($args['msgid'])) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['msgid'], 'post_msgid');
@@ -3379,7 +3379,7 @@ function Dizkus_userapi_get_topicid_by_postid($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!isset($args['post_id']) || empty($args['post_id'])) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['post_id'], 'post_id');
@@ -3483,14 +3483,14 @@ function Dizkus_userapi_get_last_topic_page($args)
     $post_sort_order = pnModGetVar('Dizkus', 'post_sort_order');
 
     if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     if ($post_sort_order == 'ASC') {
         $num_postings = DBUtil::selectFieldByID('dizkus_topics', 'topic_replies', $args['topic_id'], 'topic_id');
         // add 1 for the initial posting as we deal with the replies here
         $num_postings++;
-        $last_page = floor($num_postings / $posts_per_page);                                                                                                                             
+        $last_page = floor($num_postings / $posts_per_page);
     } else {
         // DESC = latest topic is on top = page 0 anyway...
         $last_page = 0;
@@ -3514,14 +3514,14 @@ function Dizkus_userapi_jointopics($args)
     $from_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', __('Error! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     // check if to_topic exists. this function will return an error if not
     $to_topic = pnModAPIFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
     if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
         // user is not allowed to moderate this forum
-        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', __('Sorry! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
+        return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', __('Error! You do not have authorisation to moderate this category or forum.', $dom)), __FILE__, __LINE__);
     }
 
     $pntable = pnDBGetTables();
@@ -3719,7 +3719,7 @@ function Dizkus_userapi_get_topicid_by_reference($args)
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!isset($args['reference']) || empty($args['reference'])) {
-        return showforumerror(__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with your input. Please check and try again.', $dom), __FILE__, __LINE__);
+        return LogUtil::registerArgsError();
     }
 
     $topic_id = DBUtil::selectFieldByID('dizkus_topics', 'topic_id', $args['reference'], 'topic_reference');

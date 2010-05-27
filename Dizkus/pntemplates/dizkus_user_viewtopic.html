@@ -23,8 +23,8 @@
 
                 <!--[if $pncore.logged_in]-->
                 <li>
-                    <a id="subscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 1]-->hidden<!--[/if]--> subscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to this topic"]-->"><!--[gt text="Subscribe to topic"]--></a>
-                    <a id="unsubscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 0]-->hidden<!--[/if]--> unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from this topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a>
+                    <a id="subscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 1]-->hidden<!--[/if]--> subscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to topic"]-->"><!--[gt text="Subscribe to topic"]--></a>
+                    <a id="unsubscribetopicbutton" class="dzk_img <!--[if $topic.is_subscribed eq 0]-->hidden<!--[/if]--> unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic(<!--[$topic.topic_id]-->,'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a>
                 </li>
                 <!--[/if]-->
                 <!--[if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id]-->
@@ -35,8 +35,8 @@
             <!--[if $topic.access_moderate eq 1]-->
             <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
-                    <a id="locktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 1]-->hidden<!--[/if]--> locktopiclink" title="<!--[gt text="Lock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'lock');"><!--[gt text="Lock topic"]--></a>
-                    <a id="unlocktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 0]-->hidden<!--[/if]--> unlocktopiclink" title="<!--[gt text="Unlock this topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'unlock');"><!--[gt text="Unlock topic"]--></a>
+                    <a id="locktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 1]-->hidden<!--[/if]--> locktopiclink" title="<!--[gt text="Lock topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'lock');"><!--[gt text="Lock topic"]--></a>
+                    <a id="unlocktopicbutton" class="dzk_img <!--[if $topic.topic_status eq 0]-->hidden<!--[/if]--> unlocktopiclink" title="<!--[gt text="Unlock topic"]-->" href="javascript:void(0);" onclick="javascript:lockunlocktopic(<!--[$topic.topic_id]-->, 'unlock');"><!--[gt text="Unlock topic"]--></a>
                 </li>
 
                 <li>
@@ -44,8 +44,8 @@
                     <a class="dzk_img <!--[if $topic.sticky eq 0]-->hidden<!--[/if]--> unstickytopiclink" id="unstickytopicbutton" title="<!--[gt text="Remove 'sticky' status"]-->" href="javascript:void(0);" onclick="javascript:stickyunstickytopic(<!--[$topic.topic_id]-->, 'unsticky')"><!--[gt text="Remove 'sticky' status"]--></a>
                 </li>
 
-                <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move topic"]--></a></li>
-                <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete topic"]--></a></li>
+                <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move topic"]--></a></li>
+                <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete topic"]--></a></li>
             </ul>
             <!--[/if]-->
         </div>
@@ -69,9 +69,9 @@
 
                     <!--[if $pncore.logged_in]-->
                     <!--[if $topic.is_subscribed == 0]-->
-                    <li><a class="dzk_img subscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Subscribe to this topic"]-->"><!--[gt text="Subscribe to topic"]--></a></li>
+                    <li><a class="dzk_img subscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Subscribe to topic"]-->"><!--[gt text="Subscribe to topic"]--></a></li>
                     <!--[else]-->
-                    <li><a class="dzk_img unsubscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Unsubscribe from this topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a></li>
+                    <li><a class="dzk_img unsubscribetopiclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id]-->" title="<!--[gt text="Unsubscribe from topic"]-->"><!--[gt text="Unsubscribe from topic"]--></a></li>
                     <!--[/if]-->
                     <!--[/if]-->
 
@@ -83,9 +83,9 @@
                 <!--[if $topic.access_moderate eq 1]-->
                 <ul class="dzk_topicoptions linklist z-clearfix">
                     <!--[if $topic.topic_status eq 0]-->
-                    <li><a class="dzk_img locktopiclink" title="<!--[gt text="Lock this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id]-->"><!--[gt text="Lock topic"]--></a></li>
+                    <li><a class="dzk_img locktopiclink" title="<!--[gt text="Lock topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id]-->"><!--[gt text="Lock topic"]--></a></li>
                     <!--[else]-->
-                    <li><a class="dzk_img unlocktopiclink" title="<!--[gt text="Unlock this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=unlock topic=$topic.topic_id]-->"><!--[gt text="Unlock topic"]--></a></li>
+                    <li><a class="dzk_img unlocktopiclink" title="<!--[gt text="Unlock topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=unlock topic=$topic.topic_id]-->"><!--[gt text="Unlock topic"]--></a></li>
                     <!--[/if]-->
 
                     <!--[if $topic.sticky eq 0]-->
@@ -93,8 +93,8 @@
                     <!--[else]-->
                     <li><a class="dzk_img unstickytopiclink" title="<!--[gt text="Remove 'sticky' status"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=unsticky topic=$topic.topic_id]-->"><!--[gt text="Remove 'sticky' status"]--></a></li>
                     <!--[/if]-->
-                    <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move topic"]--></a></li>
-                    <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete this topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete topic"]--></a></li>
+                    <li><a class="dzk_img movetopiclink" title="<!--[gt text="Move topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id]-->"><!--[gt text="Move topic"]--></a></li>
+                    <li><a class="dzk_img deletetopiclink" title="<!--[gt text="Delete topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id]-->"><!--[gt text="Delete topic"]--></a></li>
                 </ul>
                 <!--[/if]-->
             </div>

@@ -6,19 +6,25 @@
     <!--[if $func eq 'main' OR $func eq 'viewforum']-->
     <h3 class="footer_title"><!--[gt text="Key"]--></h3>
     <ul id="ctheme-legenda">
-        <!--[assign var='last_visit_unix' value=$last_visit_unix|pndate_format:'datetimebrief']-->
-        <li><!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title="New posts since your last visit" ]--> : <!--[gt text="New posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
-        <li><!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="New posts since your last visit" ]--> : <!--[gt text="No new posts since your last visit on"]--> <span class="z-sub"><!--[$last_visit_unix]-->&nbsp;</span></li>
+        <li>
+            <!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title="New posts since your last visit" ]-->
+            <!--[gt text="New posts since your last visit on %s" tag1=$last_visit_unix|pndate_format:'datetimebrief']-->
+        </li>
+        <li>
+            <!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="New posts since your last visit" ]-->
+            <!--[gt text="No new posts since your last visit on %s" tag1=$last_visit_unix|pndate_format:'datetimebrief']-->
+        </li>
     </ul>
     <!--[/if]-->
 
-    <!--[if $func eq 'main']-->
+    <!--[if $func eq 'main' && $numposts]-->
     <h3 class="footer_title"><!--[gt text="Total"]--></h3>
-    <!--[if $numposts]-->
     <ul>
-        <li><a title="<!--[gt text="RSS"]-->" href="backforum.php"><!--[pnimg modname='Dizkus' src='icon_rss.gif' __alt='RSS'  __title="RSS" ]--></a>&nbsp;&nbsp;&nbsp;<!--[gt text="Total messages:"]--> <!--[$numposts]--></li>
+        <li>
+            <a title="<!--[gt text="RSS"]-->" href="backforum.php"><!--[pnimg modname='Dizkus' src='icon_rss.gif' __alt='RSS'  __title="RSS" ]--></a>
+            <!--[gt text="Total posts: %s" tag1=$numposts]-->
+        </li>
     </ul>
-    <!--[/if]-->
     <!--[/if]-->
 
     <!--[dizkusonline assign='online']-->
@@ -45,7 +51,7 @@
         </li>
         <!--[/if]-->
     </ul>
-    <p class="z-sub"><!--[gt text='This list is based on users active over the last %1$s minutes.' tag1=$mins]--></p>
+    <p class="z-sub"><!--[gt text='This list is based on users active over the last %s minutes.' tag1=$mins]--></p>
 </div>
 
 <!--[/if]-->

@@ -275,13 +275,13 @@ function Dizkus_admin_reordertreesave()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
+        dzk_ajaxerror(__('Error! You do not have authorisation to administer this module.', $dom));
     }
 
     SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-        //dzk_ajaxerror(__('Sorry! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
+        //dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     $categoryarray = FormUtil::getPassedValue('category');
@@ -334,7 +334,7 @@ function Dizkus_admin_editforum($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
+        dzk_ajaxerror(__('Error! You do not have authorisation to administer this module.', $dom));
     }
 
     $forum_id   = isset($args['forum_id']) ? $args['forum_id'] : FormUtil::getPassedValue('forum_id', null, 'GETPOST');
@@ -469,7 +469,7 @@ function Dizkus_admin_editcategory($args=array())
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
+        dzk_ajaxerror(__('Error! You do not have authorisation to administer this module.', $dom));
     }
 
     $cat_id   = FormUtil::getPassedValue('cat', (isset($args['cat'])) ? $args['cat'] : '', 'GETPOST');
@@ -514,11 +514,11 @@ function Dizkus_admin_storecategory()
     SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
+        dzk_ajaxerror(__('Error! You do not have authorisation to administer this module.', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__("Sorry! Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please try again.", $dom));
+        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     $cat_id    = FormUtil::getPassedValue('cat_id');
@@ -596,11 +596,11 @@ function Dizkus_admin_storeforum()
     $dom = ZLanguage::getModuleDomain('Dizkus');
 
     if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        dzk_ajaxerror(__('Sorry! You do not have authorisation to administer this module.', $dom));
+        dzk_ajaxerror(__('Error! You do not have authorisation to administer this module.', $dom));
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__("Sorry! Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please try again.", $dom));
+        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -650,10 +650,10 @@ function Dizkus_admin_storeforum()
         }
 
         if ($pop3_password <> $pop3_passwordconfirm) {
-            dzk_ajaxerror(__('Sorry! The two passwords you entered do not match. Please correct your entries and try again.', $dom));
+            dzk_ajaxerror(__('Error! The two passwords you entered do not match. Please correct your entries and try again.', $dom));
         }
         if ($pnpassword <> $pnpasswordconfirm) {
-            dzk_ajaxerror(__('Sorry! The two passwords you entered do not match. Please correct your entries and try again.', $dom));
+            dzk_ajaxerror(__('Error! The two passwords you entered do not match. Please correct your entries and try again.', $dom));
         }
 
         if (!empty($add)) {

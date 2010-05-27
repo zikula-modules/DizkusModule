@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-27 11:46+0000\n"
+"POT-Creation-Date: 2010-05-27 15:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 
 #: pnadmin.php:278 pnadmin.php:337 pnadmin.php:472 pnadmin.php:517
 #: pnadmin.php:599
-msgid "Sorry! You do not have authorisation to administer this module."
+msgid "Error! You do not have authorisation to administer this module."
 msgstr ""
 
 #: pnadmin.php:351 pntemplates/dizkus_admin_reordertree.html:58
@@ -66,89 +66,159 @@ msgstr ""
 msgid "-- Create new category --"
 msgstr ""
 
-#: pnadmin.php:521 pnadmin.php:603 pnajax.php:53 pnajax.php:221 pnajax.php:581
-#: pnajax.php:632
+#: pnadmin.php:521 pnadmin.php:603 pnajax.php:697
 msgid ""
-"Sorry! Invalid authorisation key ('authkey'). This is probably either "
+"Error! Invalid authorisation key ('authkey'). This is probably either "
 "because you pressed the 'Back' button to return to a page which does not "
 "allow that, or else because the page's authorisation key expired due to "
-"prolonged inactivity. Please try again."
+"prolonged inactivity. Please refresh the page and try again."
 msgstr ""
 
 #: pnadmin.php:653 pnadmin.php:656
 msgid ""
-"Sorry! The two passwords you entered do not match. Please correct your "
+"Error! The two passwords you entered do not match. Please correct your "
 "entries and try again."
 msgstr ""
 
 #: pnajax.php:43 pnuser.php:228
 msgid ""
-"Sorry! The user who started this topic is ignoring you, and does not want "
+"Error! The user who started this topic is ignoring you, and does not want "
 "you to be able to write posts under this topic. Please contact the topic "
 "originator for more information."
 msgstr ""
 
-#: pnajax.php:48 pnajax.php:227 pnajax.php:681 pnuser.php:213 pnuser.php:306
+#: pnajax.php:48 pnajax.php:229 pnajax.php:683 pnuser.php:213 pnuser.php:306
 #: pnuser.php:406
 msgid ""
-"Sorry! The message is too long. The maximum length is 65,535 characters."
+"Error! The message is too long. The maximum length is 65,535 characters."
 msgstr ""
 
-#: pnajax.php:155
-msgid "Sorry! You do not have authorisation to perform this action."
+#: pnajax.php:53 pnajax.php:223 pnajax.php:583 pnajax.php:634
+msgid ""
+"Error! Invalid authorisation key ('authkey'). This is probably either "
+"because you pressed the 'Back' button to return to a page which does not "
+"allow that, or else because the page's authorisation key expired due to "
+"prolonged inactivity. Please try again."
 msgstr ""
 
-#: pnajax.php:193
-msgid "Sorry! You do not have authorisation for this action."
+#: pnajax.php:133
+msgid "Error! No post ID in 'Dizkus_ajax_preparequote()'."
 msgstr ""
 
-#: pnajax.php:302 pnajax.php:346 pnajax.php:588 pnuserapi.php:1741
+#: pnajax.php:157 pnajax.php:195 pnajax.php:558
+msgid "Error! You do not have authorisation to perform this action."
+msgstr ""
+
+#: pnajax.php:161
+msgid "Error! No post ID in 'Dizkus_ajax_readpost()'."
+msgstr ""
+
+#: pnajax.php:199
+msgid "Error! No post ID in 'Dizkus_ajax_readrawtext()'."
+msgstr ""
+
+#: pnajax.php:269
+msgid "Error! No post ID in 'Dizkus_ajax_updatepost()'."
+msgstr ""
+
+#: pnajax.php:294
+msgid "Error! No topic ID in 'Dizkus_ajax_lockunlocktopic()'."
+msgstr ""
+
+#: pnajax.php:297
+#, php-format
+msgid ""
+"Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_lockunlocktopic"
+"()'."
+msgstr ""
+
+#: pnajax.php:304 pnajax.php:348 pnajax.php:590 pnuserapi.php:1741
 #: pnuserapi.php:3517 pnuserapi.php:3524 pnuser.php:494 pnuser.php:554
 #: pnuser.php:567 pnuser.php:579 pnuser.php:594 pnuser.php:952 pnuser.php:1097
 #: pnuser.php:1154 pnuser.php:1222
 msgid ""
-"Sorry! You do not have authorisation to moderate this category or forum."
+"Error! You do not have authorisation to moderate this category or forum."
 msgstr ""
 
-#: pnajax.php:385 pnajax.php:440 pnajax.php:500 pnuserapi.php:867
+#: pnajax.php:338
+msgid "Error! No topic ID in 'Dizkus_ajax_stickyunstickytopic()'."
+msgstr ""
+
+#: pnajax.php:341
+#, php-format
+msgid ""
+"Error! No mode or illegal mode parameter (%s) in "
+"'Dizkus_ajax_stickyunstickytopic()'."
+msgstr ""
+
+#: pnajax.php:380
+msgid "Error! No topic ID in 'Dizkus_ajax_subscribeunsubscribetopic()'."
+msgstr ""
+
+#: pnajax.php:387 pnajax.php:442 pnajax.php:502 pnuserapi.php:867
 #: pnuserapi.php:1604 pnuserapi.php:2046 pnuserapi.php:2367 pnuserapi.php:2427
 #: pnuserapi.php:2485
 msgid ""
-"Sorry! You do not have authorisation to read the content in this category or "
+"Error! You do not have authorisation to read the content in this category or "
 "forum."
 msgstr ""
 
-#: pnajax.php:480
+#: pnajax.php:407
+#, php-format
+msgid ""
+"Error! No mode or illegal mode parameter (%s) in "
+"'Dizkus_ajax_subscribeunsubscribetopic()'."
+msgstr ""
+
+#: pnajax.php:435
+msgid "Error! No forum ID in 'Dizkus_ajax_subscribeunsubscribeforum()'."
+msgstr ""
+
+#: pnajax.php:462
+#, php-format
+msgid ""
+"Error! No or illegal mode (%s) parameter in "
+"Dizkus_ajax_subscribeunsubscribeforum()"
+msgstr ""
+
+#: pnajax.php:482
 msgid "Error! Favourites have been disabled."
 msgstr ""
 
-#: pnajax.php:556
-msgid "Sorry! You do not have authorisation for this action"
+#: pnajax.php:489
+msgid "Error! No forum ID in 'Dizkus_ajax_addremovefavorite()'."
 msgstr ""
 
-#: pnajax.php:593 pnajax.php:688 pnuserapi.php:3212
+#: pnajax.php:520
+#, php-format
+msgid ""
+"Error! No mode or illegal mode parameter (%s) in "
+"'Dizkus_ajax_addremovefavorite()'."
+msgstr ""
+
+#: pnajax.php:562
+msgid "Error! No topic ID in 'Dizkus_ajax_readtopic()'."
+msgstr ""
+
+#: pnajax.php:595 pnajax.php:690 pnuserapi.php:3212
 msgid "Error! The post has no subject line."
 msgstr ""
 
-#: pnajax.php:628
-msgid "Sorry! This feature is for registered users only."
+#: pnajax.php:612
+msgid "Error! No topic ID in 'Dizkus_ajax_updatetopicsubject()'"
 msgstr ""
 
-#: pnajax.php:671 pnajax.php:753 pnuserapi.php:1137 pnuserapi.php:1209
+#: pnajax.php:630
+msgid "Error! This feature is for registered users only."
+msgstr ""
+
+#: pnajax.php:673 pnajax.php:755 pnuserapi.php:1137 pnuserapi.php:1209
 #: pnuserapi.php:1411 pnuserapi.php:1459
-msgid "Sorry! You do not have authorisation to post in this category or forum."
+msgid "Error! You do not have authorisation to post in this category or forum."
 msgstr ""
 
-#: pnajax.php:684 pnuserapi.php:1213 pnuserapi.php:1464 pnuserapi.php:1735
+#: pnajax.php:686 pnuserapi.php:1213 pnuserapi.php:1464 pnuserapi.php:1735
 msgid "Error! You tried to post a blank message. Please go back and try again."
-msgstr ""
-
-#: pnajax.php:695
-msgid ""
-"Sorry! Invalid authorisation key ('authkey'). This is probably either "
-"because you pressed the 'Back' button to return to a page which does not "
-"allow that, or else because the page's authorisation key expired due to "
-"prolonged inactivity. Please refresh the page and try again."
 msgstr ""
 
 #: pnversion.php:16
@@ -215,11 +285,6 @@ msgstr ""
 msgid "Error! Wrong parameters in 'Dizkus_userapi_boardstats()'."
 msgstr ""
 
-#: pnuserapi.php:385 pnuserapi.php:701 pnuserapi.php:1168 pnuserapi.php:1755
-#: pnuserapi.php:2138 pnuserapi.php:2605 pnuserapi.php:2705
-msgid "%b %d, %Y - %I:%M %p"
-msgstr ""
-
 #: pnuserapi.php:393 pnuserapi.php:702
 #, php-format
 msgid "%1$s<br />by %2$s"
@@ -241,7 +306,7 @@ msgid ""
 msgstr ""
 
 #: pnuserapi.php:604
-msgid "Sorry! You do not have authorisation to view this category or forum."
+msgid "Error! You do not have authorisation to view this category or forum."
 msgstr ""
 
 #: pnuserapi.php:728
@@ -259,7 +324,7 @@ msgid ""
 msgstr ""
 
 #: pnuserapi.php:1133
-msgid "Sorry! You cannot post a message under this topic. It has been locked."
+msgid "Error! You cannot post a message under this topic. It has been locked."
 msgstr ""
 
 #: pnuserapi.php:1756
@@ -311,13 +376,6 @@ msgstr ""
 msgid "Last 24 hours"
 msgstr ""
 
-#: pnuserapi.php:2823 pnuserapi.php:2839 pnuserapi.php:3102 pnuserapi.php:3304
-#: pnuserapi.php:3363 pnuserapi.php:3382 pnuserapi.php:3486 pnuserapi.php:3722
-msgid ""
-"Error! The action you wanted to perform was not successful for some reason, "
-"maybe because of a problem with your input. Please check and try again."
-msgstr ""
-
 #: pnuserapi.php:3625
 msgid "Moderation request"
 msgstr ""
@@ -363,7 +421,7 @@ msgstr ""
 
 #: pnneedleapi/dizkus.php:67
 #, php-format
-msgid "Sorry! You do not have the necessary authorisation for forum ID %s."
+msgid "Error! You do not have the necessary authorisation for forum ID %s."
 msgstr ""
 
 #: pnneedleapi/dizkus.php:70
@@ -373,7 +431,7 @@ msgstr ""
 
 #: pnneedleapi/dizkus.php:92
 #, php-format
-msgid "Sorry! You do not have the necessary authorisation for topic ID %s."
+msgid "Error! You do not have the necessary authorisation for topic ID %s."
 msgstr ""
 
 #: pnneedleapi/dizkus.php:95
@@ -450,7 +508,7 @@ msgid "Done! Signature has been updated."
 msgstr ""
 
 #: pnuser.php:283
-msgid "Missing forum id."
+msgid "Error! Missing forum id."
 msgstr ""
 
 #: pnuser.php:551
@@ -659,7 +717,7 @@ msgstr ""
 
 #: pntemplates/dizkus_user_searchresults.html:5
 #: pntemplates/dizkus_user_search.html:75
-msgid "hits"
+msgid "Hits"
 msgstr ""
 
 #: pntemplates/dizkus_user_searchresults.html:19
@@ -756,7 +814,7 @@ msgstr ""
 #: pntemplates/dizkus_searchresults.html:41
 #: pntemplates/dizkus_user_viewforum.html:132
 #: pntemplates/dizkus_user_footer.html:10
-#: pntemplates/dizkus_user_footer.html:11
+#: pntemplates/dizkus_user_footer.html:15
 msgid "New posts since your last visit"
 msgstr ""
 
@@ -899,17 +957,7 @@ msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:26
 #: pntemplates/dizkus_user_viewtopic.html:72
-msgid "Subscribe to this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:26
-#: pntemplates/dizkus_user_viewtopic.html:72
 msgid "Subscribe to topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:27
-#: pntemplates/dizkus_user_viewtopic.html:74
-msgid "Unsubscribe from this topic"
 msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:31
@@ -921,11 +969,6 @@ msgstr ""
 #: pntemplates/dizkus_user_viewtopic.html:86
 #: pntemplates/dizkus_user_locktopic.html:3
 #: pntemplates/dizkus_user_locktopic.html:5
-msgid "Lock this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:38
-#: pntemplates/dizkus_user_viewtopic.html:86
 msgid "Lock topic"
 msgstr ""
 
@@ -933,11 +976,6 @@ msgstr ""
 #: pntemplates/dizkus_user_viewtopic.html:88
 #: pntemplates/dizkus_user_locktopic.html:7
 #: pntemplates/dizkus_user_locktopic.html:9
-msgid "Unlock this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:39
-#: pntemplates/dizkus_user_viewtopic.html:88
 msgid "Unlock topic"
 msgstr ""
 
@@ -957,20 +995,8 @@ msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:47
 #: pntemplates/dizkus_user_viewtopic.html:96
-msgid "Move this topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:47
-#: pntemplates/dizkus_user_viewtopic.html:96
 #: pntemplates/dizkus_user_movetopic.html:29
 msgid "Move topic"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewtopic.html:48
-#: pntemplates/dizkus_user_viewtopic.html:97
-#: pntemplates/dizkus_user_deletetopic.html:2
-#: pntemplates/dizkus_user_deletetopic.html:16
-msgid "Delete this topic"
 msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:135
@@ -978,6 +1004,7 @@ msgid "Quick reply"
 msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:143
+#: pntemplates/dizkus_user_editpost.html:40
 #: pntemplates/dizkus_user_reply.html:34
 #: pntemplates/dizkus_user_newtopic.html:37
 msgid "No HTML tags allowed (except inside [code][/code] tags)"
@@ -1058,6 +1085,7 @@ msgid "Updating post..."
 msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:210
+#: pntemplates/dizkus_ajax_editpost.html:5
 msgid "Unchanged"
 msgstr ""
 
@@ -1408,10 +1436,6 @@ msgid "Show all forums"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:57
-msgid "Show only forums flagged as your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:57
 msgid "Show favourites only"
 msgstr ""
 
@@ -1549,13 +1573,9 @@ msgstr ""
 msgid "Message body"
 msgstr ""
 
-#: pntemplates/dizkus_user_editpost.html:40
-msgid "Notice: No HTML tags allowed (except inside [code][/code] tags)"
-msgstr ""
-
 #: pntemplates/dizkus_user_editpost.html:51
 #: pntemplates/dizkus_ajax_editpost.html:13
-msgid "Delete this post"
+msgid "Delete post"
 msgstr ""
 
 #: pntemplates/dizkus_user_search.html:5
@@ -1669,16 +1689,12 @@ msgstr ""
 msgid "View latest post"
 msgstr ""
 
-#: pntemplates/dizkus_user_main.html:64
-msgid "No forums created"
-msgstr ""
-
-#: pntemplates/dizkus_user_main.html:132
+#: pntemplates/dizkus_user_main.html:64 pntemplates/dizkus_user_main.html:132
 msgid "No forums created."
 msgstr ""
 
 #: pntemplates/dizkus_ajax_forumusers.html:6
-#: pntemplates/dizkus_user_footer.html:28
+#: pntemplates/dizkus_user_footer.html:37
 msgid "Users on-line"
 msgstr ""
 
@@ -1695,7 +1711,6 @@ msgid "anonymous guest"
 msgstr ""
 
 #: pntemplates/dizkus_ajax_forumusers.html:29
-#: pntemplates/dizkus_user_footer.html:48
 #, php-format
 msgid "This list is based on users active over the last %1$s minutes."
 msgstr ""
@@ -1735,10 +1750,6 @@ msgstr ""
 msgid "Sent to"
 msgstr ""
 
-#: pntemplates/dizkus_ajax_editpost.html:5
-msgid "unchanged"
-msgstr ""
-
 #: pntemplates/dizkus_user_singlepost.html:11
 msgid "Show hidden postings of ignored user"
 msgstr ""
@@ -1775,9 +1786,6 @@ msgid "Powered by "
 msgstr ""
 
 #: pntemplates/dizkus_disabled.html:4
-msgid "Forum information"
-msgstr ""
-
 #: pntemplates/dizkus_ajax_editforum.html:19
 msgid "Forum Information"
 msgstr ""
@@ -1899,6 +1907,11 @@ msgstr ""
 
 #: pntemplates/dizkus_ajax_editforum.html:163
 msgid "Save"
+msgstr ""
+
+#: pntemplates/dizkus_user_deletetopic.html:2
+#: pntemplates/dizkus_user_deletetopic.html:16
+msgid "Delete this topic"
 msgstr ""
 
 #: pntemplates/dizkus_user_deletetopic.html:7
@@ -2044,8 +2057,8 @@ msgstr ""
 
 #: pntemplates/dizkus_searchresults.html:3
 #, php-format
-msgid "Forums: %s hit"
-msgid_plural "Forums: %s hits"
+msgid "Forums: %s Hit"
+msgid_plural "Forums: %s Hits"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2245,10 +2258,6 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
-#: pntemplates/dizkus_user_viewforum.html:140
-msgid "File attachments"
-msgstr ""
-
 #: pntemplates/dizkus_user_viewforum.html:150
 msgid "By"
 msgstr ""
@@ -2257,41 +2266,49 @@ msgstr ""
 msgid "Key"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:10
-msgid "New posts since your last visit on"
+#: pntemplates/dizkus_user_footer.html:12
+#, php-format
+msgid "New posts since your last visit on %s"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:11
+#: pntemplates/dizkus_user_footer.html:15
 msgid "No new posts since your last visit"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:11
-msgid "No new posts since your last visit on"
+#: pntemplates/dizkus_user_footer.html:17
+#, php-format
+msgid "No new posts since your last visit on %s"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:16
+#: pntemplates/dizkus_user_footer.html:23
 #: pntemplates/dizkus_statisticsblock_display.html:55
 msgid "Total"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:19
+#: pntemplates/dizkus_user_footer.html:26
 msgid "RSS"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:19
-msgid "Total messages:"
+#: pntemplates/dizkus_user_footer.html:28
+#, php-format
+msgid "Total posts: %s"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:38
+#: pntemplates/dizkus_user_footer.html:47
 msgid "0 users"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:44
+#: pntemplates/dizkus_user_footer.html:53
 #, php-format
 msgid "and %1$s anonymous guest"
 msgid_plural "and %1$s anonymous guests"
 msgstr[0] ""
 msgstr[1] ""
+
+#: pntemplates/dizkus_user_footer.html:57
+#, php-format
+msgid "This list is based on users active over the last %s minutes."
+msgstr ""
 
 #: pntemplates/dizkus_user_reply.html:2 pntemplates/dizkus_user_reply.html:25
 msgid "Reply to"

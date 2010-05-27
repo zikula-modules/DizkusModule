@@ -64,7 +64,7 @@ function Dizkus_needleapi_dizkus($args)
                                 $title = DataUtil::formatForDisplay($result[0]['forum_name']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . __f('Sorry! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
+                                $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
                             }
                         } else {
                             $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id, $dom) . '</em>';
@@ -89,7 +89,7 @@ function Dizkus_needleapi_dizkus($args)
                                 $title = DataUtil::formatForDisplay($result[0]['topic_title']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . __f('Sorry! You do not have the necessary authorisation for topic ID %s.', $id , $dom) . '</em>';
+                                $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for topic ID %s.', $id , $dom) . '</em>';
                             }
                         } else {
                             $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id, $dom) .'</em>';
