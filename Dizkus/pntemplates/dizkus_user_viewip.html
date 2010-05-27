@@ -16,7 +16,7 @@
     <div class="z-formrow">
         <strong class="z-label"><!--[gt text="User names of users who posted from this IP, plus post counts"]--></strong>
         <!--[foreach item=user from=$viewip.users]-->
-        <div class="z-formnote"><!--[$user.uid|userprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</div>
+        <div class="z-formnote"><!--[$user.uname|userprofilelink]-->&nbsp;(<!--[$user.postcount]--> <!--[gt text="Posts"]-->)</div>
         <!--[/foreach]-->
     </div>
 </div>

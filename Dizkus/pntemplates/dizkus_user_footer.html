@@ -30,7 +30,7 @@
         <!--[if $online.numusers > 0]-->
         <!--[foreach name='onlineusers' item='user' from=$online.unames]-->
         <li>
-            <!--[if $user.admin == '1']--><!--[$user.uid|userprofilelink:'pnfadminuser']--><!--[else]--><!--[$user.uid|userprofilelink:'pnfnoadminuser']--><!--[/if]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
+            <!--[if $user.admin == '1']--><!--[$user.uname|userprofilelink:'pnfadminuser']--><!--[else]--><!--[$user.uname|userprofilelink:'pnfnoadminuser']--><!--[/if]--><!--[if !$smarty.foreach.onlineusers.last]-->, <!--[/if]-->
         </li>
         <!--[/foreach]-->
         <!--[else]-->
