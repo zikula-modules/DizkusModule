@@ -17,7 +17,7 @@
                 <label><!--[gt text="Target forum"]--></label>
                 <select name="forum">
                     <!--[foreach item='forum' from=$forums]-->
-                    <option value="<!--[$forum.forum_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]-->&nbsp;::&nbsp;<!--[$forum.forum_name|pnvarprepfordisplay]--></option>
+                    <option value="<!--[$forum.forum_id]-->"><!--[$forum.cat_title|pnvarprepfordisplay]--><!--[gt text="&nbsp;::&nbsp;"]--><!--[$forum.forum_name|pnvarprepfordisplay]--></option>
                     <!--[/foreach]-->
                 </select>
             </div>

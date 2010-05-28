@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-28 10:32+0000\n"
+"POT-Creation-Date: 2010-05-28 13:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,8 @@ msgstr ""
 msgid "-- Create new category --"
 msgstr ""
 
-#: pnadmin.php:521 pnadmin.php:603 pnajax.php:697
+#: pnadmin.php:521 pnadmin.php:603 pnajax.php:53 pnajax.php:223 pnajax.php:583
+#: pnajax.php:634 pnajax.php:697
 msgid ""
 "Error! Invalid authorisation key ('authkey'). This is probably either "
 "because you pressed the 'Back' button to return to a page which does not "
@@ -91,14 +92,6 @@ msgstr ""
 #: pnuser.php:406
 msgid ""
 "Error! The message is too long. The maximum length is 65,535 characters."
-msgstr ""
-
-#: pnajax.php:53 pnajax.php:223 pnajax.php:583 pnajax.php:634
-msgid ""
-"Error! Invalid authorisation key ('authkey'). This is probably either "
-"because you pressed the 'Back' button to return to a page which does not "
-"allow that, or else because the page's authorisation key expired due to "
-"prolonged inactivity. Please try again."
 msgstr ""
 
 #: pnajax.php:133
@@ -644,7 +637,6 @@ msgstr ""
 
 #: pnadminapi.php:771 pntemplates/dizkus_user_prefs.html:8
 #: pntemplates/dizkus_admin_header.html:16
-#: pntemplates/dizkus_user_signaturemanagement.html:11
 #: pntemplates/dizkus_admin_preferences.html:2
 msgid "Settings"
 msgstr ""
@@ -1063,7 +1055,9 @@ msgid "Cancel"
 msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:196
-msgid "Moderated by:"
+#: pntemplates/dizkus_user_main.html:38 pntemplates/dizkus_user_main.html:106
+#: pntemplates/dizkus_user_viewforum.html:177
+msgid "Moderated by"
 msgstr ""
 
 #: pntemplates/dizkus_user_viewtopic.html:205
@@ -1153,6 +1147,7 @@ msgstr ""
 #: pntemplates/dizkus_user_singlepost.html:41
 #: pntemplates/dizkus_ajax_editforum.html:25
 #: pntemplates/dizkus_user_editpostpreview.html:29
+#: pntemplates/dizkus_user_footer.html:7
 #: pntemplates/dizkus_statisticsblock_display.html:43
 #: pntemplates/dizkus_statisticsblock_display.html:56
 msgid "Posts"
@@ -1177,12 +1172,15 @@ msgstr ""
 msgid "All forums"
 msgstr ""
 
-#: pntemplates/dizkus_search.html:20 pntemplates/dizkus_user_header.html:50
+#: pntemplates/dizkus_search.html:20
+#: pntemplates/dizkus_user_moderateforum.html:111
+#: pntemplates/dizkus_user_header.html:50
 #: pntemplates/dizkus_user_header.html:54
 #: pntemplates/dizkus_user_header.html:58
 #: pntemplates/dizkus_user_header.html:62
 #: pntemplates/dizkus_user_header.html:67
 #: pntemplates/dizkus_user_header.html:72
+#: pntemplates/dizkus_user_movetopic.html:20
 msgid "&nbsp;::&nbsp;"
 msgstr ""
 
@@ -1313,7 +1311,7 @@ msgstr ""
 #: pntemplates/dizkus_user_singlepost.html:94
 #: pntemplates/dizkus_user_editpostpreview.html:52
 #: pntemplates/dizkus_user_editpostpreview.html:74
-#: pntemplates/dizkus_user_movepost.html:2
+#: pntemplates/dizkus_user_movepost.html:13
 #: pntemplates/dizkus_user_movepost.html:22
 msgid "Move post"
 msgstr ""
@@ -1403,8 +1401,8 @@ msgstr ""
 msgid "Confirmation prompt"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:2 pntemplates/dizkus_user_prefs.html:83
-msgid "Personal settings for each forum"
+#: pntemplates/dizkus_user_prefs.html:2 pntemplates/dizkus_user_header.html:96
+msgid "Personal settings"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:14
@@ -1444,11 +1442,12 @@ msgid "Show favourites only"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:65
-#: pntemplates/dizkus_user_signaturemanagement.html:2
+#: pntemplates/dizkus_user_signaturemanagement.html:11
 msgid "Posting display settings"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:66
+#: pntemplates/dizkus_user_signaturemanagement.html:2
 msgid "Manage your signature"
 msgstr ""
 
@@ -1463,6 +1462,10 @@ msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:75
 msgid "Manage settings for your ignore list"
+msgstr ""
+
+#: pntemplates/dizkus_user_prefs.html:83
+msgid "Personal settings for each forum"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:91
@@ -1482,19 +1485,9 @@ msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:113
 #: pntemplates/dizkus_user_prefs.html:128
-msgid "Click to subscribe to forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:113
-#: pntemplates/dizkus_user_prefs.html:128
 #: pntemplates/dizkus_user_viewforum.html:20
 #: pntemplates/dizkus_user_viewforum.html:69
 msgid "Subscribe to forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:114
-#: pntemplates/dizkus_user_prefs.html:130
-msgid "Click to unsubscribe from forum"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:114
@@ -1507,22 +1500,16 @@ msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:137
 #: pntemplates/dizkus_user_prefs.html:152
-msgid "Click to add this forum to your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:137
-#: pntemplates/dizkus_user_prefs.html:152
-msgid "Add to favourites"
+#: pntemplates/dizkus_user_viewforum.html:35
+#: pntemplates/dizkus_user_viewforum.html:75
+msgid "Add forum to favourites"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:138
 #: pntemplates/dizkus_user_prefs.html:154
-msgid "Click to remove this forum from your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:138
-#: pntemplates/dizkus_user_prefs.html:154
-msgid "Remove from favourites"
+#: pntemplates/dizkus_user_viewforum.html:36
+#: pntemplates/dizkus_user_viewforum.html:77
+msgid "Remove forum from favourites"
 msgstr ""
 
 #: pntemplates/dizkus_user_ignorelistmanagement.html:9
@@ -1682,11 +1669,6 @@ msgstr ""
 #: pntemplates/dizkus_user_viewforum.html:103
 #: pntemplates/dizkus_user_viewforum.html:150
 msgid "Last post"
-msgstr ""
-
-#: pntemplates/dizkus_user_main.html:38 pntemplates/dizkus_user_main.html:106
-#: pntemplates/dizkus_user_viewforum.html:177
-msgid "Moderated by"
 msgstr ""
 
 #: pntemplates/dizkus_user_main.html:51 pntemplates/dizkus_user_main.html:119
@@ -2028,7 +2010,7 @@ msgid "Join topics"
 msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:107
-msgid "Choose target forum to move topic(s) to:"
+msgid "Choose target forum to move topic(s) to"
 msgstr ""
 
 #: pntemplates/dizkus_user_moderateforum.html:109
@@ -2201,7 +2183,7 @@ msgid ""
 "Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'."
 msgstr ""
 
-#: pntemplates/dizkus_user_movepost.html:13
+#: pntemplates/dizkus_user_movepost.html:2
 msgid "Move post from one topic to another"
 msgstr ""
 
@@ -2215,44 +2197,12 @@ msgstr ""
 msgid "Start a new topic"
 msgstr ""
 
-#: pntemplates/dizkus_user_viewforum.html:20
-msgid "Subscribe to this forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:21
-msgid "Unsubscribe from this forum"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:35
-#: pntemplates/dizkus_user_viewforum.html:75
-msgid "Add this forum to your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:35
-#: pntemplates/dizkus_user_viewforum.html:75
-msgid "Add forum to favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:36
-#: pntemplates/dizkus_user_viewforum.html:77
-msgid "Remove this forum from your favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_viewforum.html:36
-#: pntemplates/dizkus_user_viewforum.html:77
-msgid "Remove forum from favourites"
-msgstr ""
-
 #: pntemplates/dizkus_user_viewforum.html:140
 msgid "Attachments"
 msgstr ""
 
 #: pntemplates/dizkus_user_viewforum.html:150
 msgid "By"
-msgstr ""
-
-#: pntemplates/dizkus_user_footer.html:7
-msgid "Key"
 msgstr ""
 
 #: pntemplates/dizkus_user_footer.html:11
@@ -2359,10 +2309,6 @@ msgstr ""
 msgid "View your posts"
 msgstr ""
 
-#: pntemplates/dizkus_user_header.html:96
-msgid "Personal settings"
-msgstr ""
-
 #: pntemplates/dizkus_user_header.html:112
 msgid "Click to edit"
 msgstr ""
@@ -2467,7 +2413,7 @@ msgid "No forum subscriptions found."
 msgstr ""
 
 #: pntemplates/dizkus_user_signaturemanagement.html:13
-msgid "Manage my signature"
+msgid "Signature"
 msgstr ""
 
 #: pntemplates/dizkus_statisticsblock_display.html:6
@@ -2518,11 +2464,11 @@ msgid "'Hot topic' threshold"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:31
-msgid "Posts per page in topic index (default: 20)"
+msgid "Posts per page in topic index (default:20)"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:35
-msgid "Topics per page in forum index (default: 15)"
+msgid "Topics per page in forum index (default:15)"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:39
@@ -2667,7 +2613,7 @@ msgid ""
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:142
-msgid "Number of hours during which edits to posts are allowed (72 maximum)"
+msgid "Number of hours during which edits to posts are allowed (Maximum:72)"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:151

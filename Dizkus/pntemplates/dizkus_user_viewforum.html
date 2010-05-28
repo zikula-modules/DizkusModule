@@ -17,8 +17,8 @@
 
             <!--[if $pncore.logged_in]-->
             <li>
-                <a class="dzk_img hidden subscribelink" id="subscribeforumbutton_<!--[$forum.forum_id]-->" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to this forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
-                <a class="dzk_img hidden unsubscribelink" id="unsubscribeforumbutton_<!--[$forum.forum_id]-->" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from this forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
+                <a class="dzk_img hidden subscribelink" id="subscribeforumbutton_<!--[$forum.forum_id]-->" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
+                <a class="dzk_img hidden unsubscribelink" id="unsubscribeforumbutton_<!--[$forum.forum_id]-->" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
                 <script type="text/javascript">
                     // <![CDATA[
                     var is_favorite = <!--[$forum.is_subscribed]-->;
@@ -32,8 +32,8 @@
             </li>
             <!--[if $pncore.Dizkus.favorites_enabled eq "yes"]-->
             <li>
-                <a class="dzk_img hidden addfavoritelink" id="addfavoritebutton_<!--[$forum.forum_id]-->"  onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'add');"    href="javascript:void(0);" title="<!--[gt text="Add this forum to your favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
-                <a class="dzk_img hidden removefavoritelink" id="removefavoritebutton_<!--[$forum.forum_id]-->" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'remove');" href="javascript:void(0);" title="<!--[gt text="Remove this forum from your favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
+                <a class="dzk_img hidden addfavoritelink" id="addfavoritebutton_<!--[$forum.forum_id]-->"  onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'add');"    href="javascript:void(0);" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
+                <a class="dzk_img hidden removefavoritelink" id="removefavoritebutton_<!--[$forum.forum_id]-->" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'remove');" href="javascript:void(0);" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
                 <script type="text/javascript">
                     // <![CDATA[
                     var is_favorite = <!--[$forum.is_favorite]-->;
@@ -72,9 +72,9 @@
                 <!--[/if]-->
                 <!--[if $pncore.Dizkus.favorites_enabled eq "yes"]-->
                 <!--[if $forum.is_favorite eq 0]-->
-                <li><a class="dzk_img addfavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Add this forum to your favourites"]-->"><!--[gt text="Add forum to favourites"]--></a></li>
+                <li><a class="dzk_img addfavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a></li>
                 <!--[else]-->
-                <li><a class="dzk_img removefavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Remove this forum from your favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a></li>
+                <li><a class="dzk_img removefavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a></li>
                 <!--[/if]-->
                 <!--[/if]-->
                 <!--[/if]-->
@@ -174,7 +174,7 @@
 
 <!--[if $forum.forum_mods|@count > 0]-->
 <ul id="dzk_moderatorlist" class="linklist z-clearfix">
-    <li><em><!--[gt text="Moderated by"]-->&nbsp;:&nbsp;</em></li>
+    <li><em><!--[gt text="Moderated by"]-->:</em></li>
     <!--[foreach name=moderators item=mod key=modid from=$forum.forum_mods]-->
     <li>
         <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]-->

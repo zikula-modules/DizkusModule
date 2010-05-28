@@ -50,7 +50,7 @@ function Dizkus_ajax_reply()
 
     if ($preview == false) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+           dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
 
         list($start,
@@ -220,7 +220,7 @@ function Dizkus_ajax_updatepost()
 
     if (!empty($post_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-           dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+           dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
  
         $message = dzkstriptags($message);
@@ -287,7 +287,7 @@ function Dizkus_ajax_lockunlocktopic()
     SessionUtil::setVar('zk_ajax_call', 'ajax');
 
     if (!SecurityUtil::confirmAuthKey()) {
-        // dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+        // dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     if (empty($topic_id)) {
@@ -373,7 +373,7 @@ function Dizkus_ajax_subscribeunsubscribetopic()
     SessionUtil::setVar('zk_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     if (empty($topic_id)) {
@@ -428,7 +428,7 @@ function Dizkus_ajax_subscribeunsubscribeforum()
     SessionUtil::setVar('zk_ajax_call', 'ajax');
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        // dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+        // dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     if (empty($forum_id)) {
@@ -490,7 +490,7 @@ function Dizkus_ajax_addremovefavorite()
     }
 /*
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 */
     SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -580,7 +580,7 @@ function Dizkus_ajax_updatetopicsubject()
 
     if (!empty($topic_id)) {
         if (!SecurityUtil::confirmAuthKey()) {
-            dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+            dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
         }
 
         $topicposter = DBUtil::selectFieldById('dizkus_topics', 'topic_poster', $topic_id, 'topic_id');
@@ -631,7 +631,7 @@ function Dizkus_ajax_changesortorder()
     }
 
     if (!SecurityUtil::confirmAuthKey()) {
-        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please try again.', $dom));
+        dzk_ajaxerror(__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.', $dom));
     }
 
     pnModAPIFunc('Dizkus', 'user', 'change_user_post_order');

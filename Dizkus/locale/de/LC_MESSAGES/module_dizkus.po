@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dizkus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-28 10:32+0000\n"
+"POT-Creation-Date: 2010-05-28 13:32+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Carsten Volmer <carsten@zikula.org>\n"
 "Language-Team: Carsten Volmer <carsten@zikula.org>\n"
@@ -74,19 +74,23 @@ msgstr "-- Neue Kategorie  --"
 
 #: pnadmin.php:521
 #: pnadmin.php:603
+#: pnajax.php:53
+#: pnajax.php:223
+#: pnajax.php:583
+#: pnajax.php:634
 #: pnajax.php:697
 msgid "Error! Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please refresh the page and try again."
-msgstr ""
+msgstr "Fehler! Ungültiger Authentifizierungsschlüssel ('AuthKey'): Möglichweise wurde der 'Zurück' Button im Browser benutzt, gesicherte Formulare in mehreren Browser-Tabs gespeichert oder der 'AuthKey' ist abgelaufen. Bitte die Seite neu laden und es erneut versuchen."
 
 #: pnadmin.php:653
 #: pnadmin.php:656
 msgid "Error! The two passwords you entered do not match. Please correct your entries and try again."
-msgstr ""
+msgstr "Fehler! Die beiden angegebenen Kennwörter stimmen nicht überein. Bitte überprüfen und erneut versuchen."
 
 #: pnajax.php:43
 #: pnuser.php:228
 msgid "Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information."
-msgstr ""
+msgstr "Fehler! Der ursprüngliche Verfasser des Thema ignoriert den aktuellen Benutzer und wünscht hierzu keine Beiträge in zu diesem Thema. Für weitere Informationen bitte den Verfasser kontaktieren."
 
 #: pnajax.php:48
 #: pnajax.php:229
@@ -95,18 +99,11 @@ msgstr ""
 #: pnuser.php:306
 #: pnuser.php:406
 msgid "Error! The message is too long. The maximum length is 65,535 characters."
-msgstr ""
-
-#: pnajax.php:53
-#: pnajax.php:223
-#: pnajax.php:583
-#: pnajax.php:634
-msgid "Error! Invalid authorisation key ('authkey'). This is probably either because you pressed the 'Back' button to return to a page which does not allow that, or else because the page's authorisation key expired due to prolonged inactivity. Please try again."
-msgstr ""
+msgstr "Fehler! Die Mitteilung ist zu lang. Die maximale Länge liegt bei 65.535 Zeichen."
 
 #: pnajax.php:133
 msgid "Error! No post ID in 'Dizkus_ajax_preparequote()'."
-msgstr ""
+msgstr "Error! No post ID in 'Dizkus_ajax_preparequote()'."
 
 #: pnajax.php:157
 #: pnajax.php:195
@@ -128,12 +125,12 @@ msgstr "Error! No post ID in 'Dizkus_ajax_updatepost()'."
 
 #: pnajax.php:294
 msgid "Error! No topic ID in 'Dizkus_ajax_lockunlocktopic()'."
-msgstr ""
+msgstr "Error! No topic ID in 'Dizkus_ajax_lockunlocktopic()'."
 
 #: pnajax.php:297
 #, php-format
 msgid "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_lockunlocktopic()'."
-msgstr ""
+msgstr "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_lockunlocktopic()'."
 
 #: pnajax.php:304
 #: pnajax.php:348
@@ -155,16 +152,16 @@ msgstr "Fehler! Es liegt keine Moderationsberechtigung auf die Kategorie bzw. da
 
 #: pnajax.php:338
 msgid "Error! No topic ID in 'Dizkus_ajax_stickyunstickytopic()'."
-msgstr ""
+msgstr "Error! No topic ID in 'Dizkus_ajax_stickyunstickytopic()'."
 
 #: pnajax.php:341
 #, php-format
 msgid "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_stickyunstickytopic()'."
-msgstr ""
+msgstr "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_stickyunstickytopic()'."
 
 #: pnajax.php:380
 msgid "Error! No topic ID in 'Dizkus_ajax_subscribeunsubscribetopic()'."
-msgstr ""
+msgstr "Error! No topic ID in 'Dizkus_ajax_subscribeunsubscribetopic()'."
 
 #: pnajax.php:387
 #: pnajax.php:442
@@ -181,24 +178,24 @@ msgstr "Fehler! Es liegt keine Leseberechtigung auf die Kategorie bzw. das Forum
 #: pnajax.php:407
 #, php-format
 msgid "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_subscribeunsubscribetopic()'."
-msgstr ""
+msgstr "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_subscribeunsubscribetopic()'."
 
 #: pnajax.php:435
 msgid "Error! No forum ID in 'Dizkus_ajax_subscribeunsubscribeforum()'."
-msgstr ""
+msgstr "Error! No forum ID in 'Dizkus_ajax_subscribeunsubscribeforum()'."
 
 #: pnajax.php:462
 #, php-format
 msgid "Error! No or illegal mode (%s) parameter in Dizkus_ajax_subscribeunsubscribeforum()"
-msgstr ""
+msgstr "Error! No or illegal mode (%s) parameter in Dizkus_ajax_subscribeunsubscribeforum()"
 
 #: pnajax.php:482
 msgid "Error! Favourites have been disabled."
-msgstr ""
+msgstr "Fehler! Die Favoritenfunktion wurde deaktiviert."
 
 #: pnajax.php:489
 msgid "Error! No forum ID in 'Dizkus_ajax_addremovefavorite()'."
-msgstr ""
+msgstr "Error! No forum ID in 'Dizkus_ajax_addremovefavorite()'."
 
 #: pnajax.php:520
 #, php-format
@@ -207,21 +204,21 @@ msgstr "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_addremovef
 
 #: pnajax.php:562
 msgid "Error! No topic ID in 'Dizkus_ajax_readtopic()'."
-msgstr ""
+msgstr "Error! No topic ID in 'Dizkus_ajax_readtopic()'."
 
 #: pnajax.php:595
 #: pnajax.php:690
 #: pnuserapi.php:3212
 msgid "Error! The post has no subject line."
-msgstr ""
+msgstr "Fehler! Für diesen Beitrag wurde kein Betreff eingegeben."
 
 #: pnajax.php:612
 msgid "Error! No topic ID in 'Dizkus_ajax_updatetopicsubject()'"
-msgstr ""
+msgstr "Error! No topic ID in 'Dizkus_ajax_updatetopicsubject()'"
 
 #: pnajax.php:630
 msgid "Error! This feature is for registered users only."
-msgstr ""
+msgstr "Fehler! Dieses Feature steht nur registrierten Benutzern zur Verfügung."
 
 #: pnajax.php:673
 #: pnajax.php:755
@@ -237,7 +234,7 @@ msgstr "Fehler! Es liegt kein Schreibberechtigung auf die Kategorie bzw. das For
 #: pnuserapi.php:1464
 #: pnuserapi.php:1735
 msgid "Error! You tried to post a blank message. Please go back and try again."
-msgstr ""
+msgstr "Fehler! Es wurde versucht leere Mitteilung abzusenden. Bitte zurückkehren und erneut versuchen."
 
 #: pnversion.php:16
 msgid "Dizkus forums"
@@ -291,7 +288,7 @@ msgstr "Gehe zum Thema"
 #: pntemplates/dizkus_user_search.html:15
 #, php-format
 msgid "Error! For forum searches, the search string must be between %1$s and %2$s characters in length."
-msgstr ""
+msgstr "Fehler! Für die Forensuche muss der Suchbegriff zwischen %1$s und %2$s Zeichen lang sein."
 
 #: pnuserapi.php:113
 #: pnuserapi.php:114
@@ -323,7 +320,7 @@ msgstr "Keine Beiträge"
 #: pnuserapi.php:600
 #: pnuserapi.php:1980
 msgid "Error! The forum or topic you selected was not found. Please go back and try again."
-msgstr ""
+msgstr "Fehler! Das ausgewählte Forum bzw. der ausgewählte Beitrag wurde nicht gefunden. Bitte zurückkehren und erneut versuchen."
 
 #: pnuserapi.php:604
 msgid "Error! You do not have authorisation to view this category or forum."
@@ -344,11 +341,11 @@ msgstr "Seite #"
 #: pnuserapi.php:1933
 #: pnuserapi.php:2134
 msgid "Error! The topic you selected was not found. Please go back and try again."
-msgstr ""
+msgstr "Fehler! Das ausgewählte Thema wurde nicht gefunden. Bitte zurückkehren und erneut versuchen."
 
 #: pnuserapi.php:1133
 msgid "Error! You cannot post a message under this topic. It has been locked."
-msgstr ""
+msgstr "Fehler! Für dieses Thema sind keine neuen Beiträge möglich, da das Thema bereits abgeschlossen wurde."
 
 #: pnuserapi.php:1756
 #, php-format
@@ -462,7 +459,7 @@ msgstr "Fehler! Die notwendige Autorisierung für den Zugriff auf das Forum mit 
 #: pnneedleapi/dizkus.php:70
 #, php-format
 msgid "Error! The forum ID %s is unknown."
-msgstr ""
+msgstr "Fehler! Die Forum-ID %s ist nicht bekannt."
 
 #: pnneedleapi/dizkus.php:92
 #, php-format
@@ -472,19 +469,19 @@ msgstr "Fehler! Die notwendige Autorisierung für den Zugriff auf den Beitrag mi
 #: pnneedleapi/dizkus.php:95
 #, php-format
 msgid "Error! The topic ID %s is unknown."
-msgstr ""
+msgstr "Fehler! Die Themen-ID %s ist nicht bekannt."
 
 #: pnneedleapi/dizkus.php:100
 msgid "Error! Unknown parameter at position #1 ('F' or 'T')."
-msgstr ""
+msgstr "Fehler! Ungültiger Parameter an der ersten Position ('F' oder 'T')."
 
 #: pnneedleapi/dizkus.php:103
 msgid "Error! The Dizkus module is not available."
-msgstr ""
+msgstr "Fehler! Das Forenmodul 'Dizkus' ist nicht verfügbar."
 
 #: pnneedleapi/dizkus.php:108
 msgid "Error! No needle ID."
-msgstr ""
+msgstr "Fehler! Keine Needle-ID."
 
 #: pnincludes/dizkus_user_ignorelistmanagementhandler.class.php:24
 #: pnincludes/dizkus_admin_prefshandler.class.php:27
@@ -548,11 +545,11 @@ msgstr "Fehler! Forum-ID fehlt."
 
 #: pnuser.php:551
 msgid "Error! The original forum cannot be the same as the target forum."
-msgstr ""
+msgstr "Fehler! Das Ausgangsforum darf nicht identisch mit dem Zielforum sein."
 
 #: pnuser.php:590
 msgid "Error! The original topic cannot be the same as the target topic."
-msgstr ""
+msgstr "Fehler! Der Originalbeitrag darf nicht identisch mit dem Zielbeitrag sein."
 
 #: pnuser.php:771
 msgid "No 'ignore list' configuration is currently possible."
@@ -560,19 +557,19 @@ msgstr "Die Konfiguration der Ignorierliste ist momentan nicht möglich."
 
 #: pnuser.php:805
 msgid "Error! You need to be logged-in to perform this action."
-msgstr ""
+msgstr "Fehler! Für diesen Vorgang muss eine Anmeldung vorhanden sein."
 
 #: pnuser.php:813
 msgid "Error! Either you did not enter an e-mail address for the recipient, or the e-mail address you entered was invalid."
-msgstr ""
+msgstr "Fehler! Entweder wurde keine E-Mailadresse für den Empfänger angegeben oder die verwendete E-Mailadresse ist ungültig."
 
 #: pnuser.php:817
 msgid "Error! You must enter a message."
-msgstr ""
+msgstr "Fehler! Bitte einen Mitteilungstext eingeben."
 
 #: pnuser.php:820
 msgid "Error! You must enter a subject line for the e-mail message."
-msgstr ""
+msgstr "Fehler! Für die E-Mail muss die Betreffzeile angegeben sein."
 
 #: pnuser.php:849
 msgid "Hello! Please visit this link. I think it will be of interest to you."
@@ -580,11 +577,11 @@ msgstr "Hallo! Folgender Forenbeitrag könnte eventuell von Interesse sein."
 
 #: pnuser.php:1258
 msgid "Error! You did not select a target forum for the move."
-msgstr ""
+msgstr "Fehler! Es wurde kein Zielforum zum Verschieben angegeben."
 
 #: pnuser.php:1284
 msgid "Error! You did not select a target topic to join."
-msgstr ""
+msgstr "Fehler! Es wurde kein Zielforum zum Zusammenfassen angegeben."
 
 #: pnhookapi.php:35
 #: pnhookapi.php:88
@@ -593,7 +590,7 @@ msgstr ""
 #: pnadminapi.php:152
 #: pnadminapi.php:179
 msgid "Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again."
-msgstr ""
+msgstr "Fehler! Die gewünschte Aktion war aus einem unbekannten Grund nicht erfolgreich. Möglichweise aufgrund fehlerhafter Eingaben. Bitte überprüfen und erneut versuchen."
 
 #: pnhookapi.php:47
 msgid "Automatically-created topic"
@@ -615,7 +612,7 @@ msgstr "Forum"
 
 #: pnadminapi.php:587
 msgid "Error! You did not enter all the required information in the form. Did you assign at least one moderator? Please correct your entries and try again."
-msgstr ""
+msgstr "Fehler! Es wurden nicht alle erforderlichen Informationen in diesem Formular angegeben. Wurde mindestens ein Moderator zugewiesen? Bitte überprüfen und erneut versuchen."
 
 #: pnadminapi.php:743
 msgid "Start"
@@ -681,7 +678,6 @@ msgstr "Synchronisation von Foren und Beiträgen, um etwaige Unstimmigkeiten beh
 #: pnadminapi.php:771
 #: pntemplates/dizkus_user_prefs.html:8
 #: pntemplates/dizkus_admin_header.html:16
-#: pntemplates/dizkus_user_signaturemanagement.html:11
 #: pntemplates/dizkus_admin_preferences.html:2
 msgid "Settings"
 msgstr "Konfiguration"
@@ -716,35 +712,35 @@ msgstr "Fehler! Die Aktualisierung auf Dizkus 3.0 ist fehlgeschlagen."
 
 #: pninit.php:431
 msgid "Error! A problem was encountered while upgrading the source module for hooks ('smodule')."
-msgstr ""
+msgstr "Error! A problem was encountered while upgrading the source module for hooks ('smodule')."
 
 #: pninit.php:437
 msgid "Error! A problem was encountered while upgrading the target module for hooks ('tmodule')."
-msgstr ""
+msgstr "Error! A problem was encountered while upgrading the target module for hooks ('tmodule')."
 
 #: pninit.php:467
 msgid "Error! Could not upgrade to Dizkus 3.1."
-msgstr ""
+msgstr "Fehler! Das Upgrade auf Dizkus 3.1 konnte nicht durchgeführt werden."
 
 #: pninit.php:540
 #, php-format
 msgid "Error! Could not upgrade the table '%s'."
-msgstr ""
+msgstr "Fehler! Die Aktualisierung der Datenbanktabelle '%s' konnte nicht durchgeführt werden."
 
 #: backforum.php:49
 #, php-format
 msgid "Error! In 'backforum.php', an invalid forum ID %s was encountered."
-msgstr ""
+msgstr "Fehler! In der Datei 'backforum.php' wurde eine ungültige Forum-ID %s festgestellt."
 
 #: backforum.php:52
 #, php-format
 msgid "Error! In 'backforum.php', an invalid category ID %s was encountered."
-msgstr ""
+msgstr "Fehler! In der Datei 'backforum.php' wurde eine ungültige Kategorie-ID %s festgestellt."
 
 #: backforum.php:66
 #, php-format
 msgid "Error! Could not find a template for an %s-type feed."
-msgstr ""
+msgstr "Fehler! Es konnte kein Template für den Feed-Typ %s gefunden werden."
 
 #: pntemplates/dizkus_user_searchresults.html:5
 #: pntemplates/dizkus_user_searchresults.html:7
@@ -890,7 +886,7 @@ msgstr "Gehe zum Forum"
 #: pntemplates/dizkus_user_viewforum.html:152
 #: pntemplates/dizkus_user_header.html:89
 msgid "View latest posts"
-msgstr "Aktuelle Beiträge anzeigen"
+msgstr "Aktuellste Beiträge anzeigen"
 
 #: pntemplates/dizkus_user_searchresults.html:62
 #: pntemplates/dizkus_user_moderateforum.html:83
@@ -1103,8 +1099,11 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: pntemplates/dizkus_user_viewtopic.html:196
-msgid "Moderated by:"
-msgstr "Moderiert von:"
+#: pntemplates/dizkus_user_main.html:38
+#: pntemplates/dizkus_user_main.html:106
+#: pntemplates/dizkus_user_viewforum.html:177
+msgid "Moderated by"
+msgstr "Moderiert von"
 
 #: pntemplates/dizkus_user_viewtopic.html:205
 msgid "Storing reply..."
@@ -1195,6 +1194,7 @@ msgstr "Registriert"
 #: pntemplates/dizkus_user_singlepost.html:41
 #: pntemplates/dizkus_ajax_editforum.html:25
 #: pntemplates/dizkus_user_editpostpreview.html:29
+#: pntemplates/dizkus_user_footer.html:7
 #: pntemplates/dizkus_statisticsblock_display.html:43
 #: pntemplates/dizkus_statisticsblock_display.html:56
 msgid "Posts"
@@ -1220,12 +1220,14 @@ msgid "All forums"
 msgstr "Alle Foren"
 
 #: pntemplates/dizkus_search.html:20
+#: pntemplates/dizkus_user_moderateforum.html:111
 #: pntemplates/dizkus_user_header.html:50
 #: pntemplates/dizkus_user_header.html:54
 #: pntemplates/dizkus_user_header.html:58
 #: pntemplates/dizkus_user_header.html:62
 #: pntemplates/dizkus_user_header.html:67
 #: pntemplates/dizkus_user_header.html:72
+#: pntemplates/dizkus_user_movetopic.html:20
 msgid "&nbsp;::&nbsp;"
 msgstr "&nbsp;::&nbsp;"
 
@@ -1354,7 +1356,7 @@ msgstr "Link zu diesem Beitrag"
 #: pntemplates/dizkus_user_singlepost.html:94
 #: pntemplates/dizkus_user_editpostpreview.html:52
 #: pntemplates/dizkus_user_editpostpreview.html:74
-#: pntemplates/dizkus_user_movepost.html:2
+#: pntemplates/dizkus_user_movepost.html:13
 #: pntemplates/dizkus_user_movepost.html:22
 msgid "Move post"
 msgstr "Beitrag verschieben"
@@ -1439,9 +1441,9 @@ msgid "Confirmation prompt"
 msgstr "Sicherheitsabfrage"
 
 #: pntemplates/dizkus_user_prefs.html:2
-#: pntemplates/dizkus_user_prefs.html:83
-msgid "Personal settings for each forum"
-msgstr "Persönliche Einstellungen für jedes Forum"
+#: pntemplates/dizkus_user_header.html:96
+msgid "Personal settings"
+msgstr "Persönliche Einstellungen"
 
 #: pntemplates/dizkus_user_prefs.html:14
 msgid "Recent posts order in topic view"
@@ -1487,13 +1489,14 @@ msgid "Show favourites only"
 msgstr "Nur Favoriten anzeigen"
 
 #: pntemplates/dizkus_user_prefs.html:65
-#: pntemplates/dizkus_user_signaturemanagement.html:2
+#: pntemplates/dizkus_user_signaturemanagement.html:11
 msgid "Posting display settings"
 msgstr "Konfiguration Beitragsanzeige"
 
 #: pntemplates/dizkus_user_prefs.html:66
+#: pntemplates/dizkus_user_signaturemanagement.html:2
 msgid "Manage your signature"
-msgstr "Eigene Signatur verwalten"
+msgstr "Signatur verwalten"
 
 #: pntemplates/dizkus_user_prefs.html:74
 #: pntemplates/dizkus_user_ignorelistmanagement.html:2
@@ -1507,6 +1510,10 @@ msgstr "Konfiguration der Verhaltensweise für die ignorierten Benutzer"
 #: pntemplates/dizkus_user_prefs.html:75
 msgid "Manage settings for your ignore list"
 msgstr "Konfiguration der Ignorierliste verwalten"
+
+#: pntemplates/dizkus_user_prefs.html:83
+msgid "Personal settings for each forum"
+msgstr "Persönliche Einstellungen für jedes Forum"
 
 #: pntemplates/dizkus_user_prefs.html:91
 #: pntemplates/dizkus_ajax_editcategory.html:10
@@ -1525,20 +1532,10 @@ msgstr "Abo"
 
 #: pntemplates/dizkus_user_prefs.html:113
 #: pntemplates/dizkus_user_prefs.html:128
-msgid "Click to subscribe to forum"
-msgstr "Hier klicken, um Forum zu abonnieren"
-
-#: pntemplates/dizkus_user_prefs.html:113
-#: pntemplates/dizkus_user_prefs.html:128
 #: pntemplates/dizkus_user_viewforum.html:20
 #: pntemplates/dizkus_user_viewforum.html:69
 msgid "Subscribe to forum"
 msgstr "Forum abonnieren"
-
-#: pntemplates/dizkus_user_prefs.html:114
-#: pntemplates/dizkus_user_prefs.html:130
-msgid "Click to unsubscribe from forum"
-msgstr "Hier klicken, um Forenabo abzumelden"
 
 #: pntemplates/dizkus_user_prefs.html:114
 #: pntemplates/dizkus_user_prefs.html:130
@@ -1550,23 +1547,17 @@ msgstr "Forenabo abmelden"
 
 #: pntemplates/dizkus_user_prefs.html:137
 #: pntemplates/dizkus_user_prefs.html:152
-msgid "Click to add this forum to your favourites"
-msgstr "Hier klicken, um Forum als Favorit hinzuzufügen"
-
-#: pntemplates/dizkus_user_prefs.html:137
-#: pntemplates/dizkus_user_prefs.html:152
-msgid "Add to favourites"
-msgstr "Als Favorit hinzufügen"
+#: pntemplates/dizkus_user_viewforum.html:35
+#: pntemplates/dizkus_user_viewforum.html:75
+msgid "Add forum to favourites"
+msgstr "Forum zu den Favoriten hinzufügen"
 
 #: pntemplates/dizkus_user_prefs.html:138
 #: pntemplates/dizkus_user_prefs.html:154
-msgid "Click to remove this forum from your favourites"
-msgstr "Hier klicken, um als Favorit zu entfernen"
-
-#: pntemplates/dizkus_user_prefs.html:138
-#: pntemplates/dizkus_user_prefs.html:154
-msgid "Remove from favourites"
-msgstr "Als Favorit entfernen"
+#: pntemplates/dizkus_user_viewforum.html:36
+#: pntemplates/dizkus_user_viewforum.html:77
+msgid "Remove forum from favourites"
+msgstr "Forum als Favorit entfernen"
 
 #: pntemplates/dizkus_user_ignorelistmanagement.html:9
 #: pntemplates/dizkus_admin_preferences.html:122
@@ -1618,7 +1609,7 @@ msgstr "Betreff"
 #: pntemplates/dizkus_user_reply.html:30
 #: pntemplates/dizkus_user_newtopic.html:33
 msgid "Message body"
-msgstr "Inhalt"
+msgstr "Mitteilung"
 
 #: pntemplates/dizkus_user_editpost.html:51
 #: pntemplates/dizkus_ajax_editpost.html:13
@@ -1725,12 +1716,6 @@ msgstr "Themen"
 msgid "Last post"
 msgstr "Letzter Beitrag"
 
-#: pntemplates/dizkus_user_main.html:38
-#: pntemplates/dizkus_user_main.html:106
-#: pntemplates/dizkus_user_viewforum.html:177
-msgid "Moderated by"
-msgstr "Moderiert von"
-
 #: pntemplates/dizkus_user_main.html:51
 #: pntemplates/dizkus_user_main.html:119
 msgid "Written on"
@@ -1741,7 +1726,7 @@ msgstr "Geschrieben am"
 #: pntemplates/dizkus_user_moderateforum.html:63
 #: pntemplates/dizkus_user_viewforum.html:152
 msgid "View latest post"
-msgstr "Zeige neuesten Beitrag"
+msgstr "Letzten Beitrag anzeigen"
 
 #: pntemplates/dizkus_user_main.html:64
 #: pntemplates/dizkus_user_main.html:132
@@ -1814,7 +1799,7 @@ msgstr "Hier klicken"
 
 #: pntemplates/dizkus_user_singlepost.html:46
 msgid "Send a private message"
-msgstr "Private Mitteilung senden"
+msgstr "Private Nachricht senden"
 
 #: pntemplates/dizkus_user_singlepost.html:49
 msgid "View IP address"
@@ -2050,8 +2035,8 @@ msgid "Join topics"
 msgstr "Themen zusammenfassen"
 
 #: pntemplates/dizkus_user_moderateforum.html:107
-msgid "Choose target forum to move topic(s) to:"
-msgstr "Zielforum zum Verschieben der Beiträge auswählen:"
+msgid "Choose target forum to move topic(s) to"
+msgstr "Zielforum zum Verschieben der Beiträge auswählen"
 
 #: pntemplates/dizkus_user_moderateforum.html:109
 msgid "Select target forum"
@@ -2064,7 +2049,7 @@ msgstr "Verweis im alten Forum erstellen"
 
 #: pntemplates/dizkus_user_moderateforum.html:120
 msgid "To join topics, select the target topic here"
-msgstr "Zum Zusammenfassen von Themen, bitte hier das Zielthema auswählen"
+msgstr "Zielthema zum Zusammenfassen von Themen auswählen"
 
 #: pntemplates/dizkus_user_moderateforum.html:123
 msgid "Choose target topic"
@@ -2123,7 +2108,7 @@ msgstr ""
 #: pntemplates/dizkus_mail_notifyuser.txt:10
 #, php-format
 msgid "Reply to this message: %s"
-msgstr "Auf diese Nachricht antworten: %s"
+msgstr "Auf diese Mitteilung antworten: %s"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:11
 #, php-format
@@ -2203,7 +2188,7 @@ msgstr "Parameter"
 msgid "Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'."
 msgstr "Hinweis: Kommagetrennte Liste. Beispiel: 'maxposts=5,forum_id=27'."
 
-#: pntemplates/dizkus_user_movepost.html:13
+#: pntemplates/dizkus_user_movepost.html:2
 msgid "Move post from one topic to another"
 msgstr "Beitrag von diesem Thema in ein anderes Thema verschieben"
 
@@ -2217,34 +2202,6 @@ msgstr "ID des Zielthemas"
 msgid "Start a new topic"
 msgstr "Neues Thema anlegen"
 
-#: pntemplates/dizkus_user_viewforum.html:20
-msgid "Subscribe to this forum"
-msgstr "Forum abonnieren"
-
-#: pntemplates/dizkus_user_viewforum.html:21
-msgid "Unsubscribe from this forum"
-msgstr "Forenabo abmelden"
-
-#: pntemplates/dizkus_user_viewforum.html:35
-#: pntemplates/dizkus_user_viewforum.html:75
-msgid "Add this forum to your favourites"
-msgstr "Dieses Forum zu den Favoriten hinzufügen"
-
-#: pntemplates/dizkus_user_viewforum.html:35
-#: pntemplates/dizkus_user_viewforum.html:75
-msgid "Add forum to favourites"
-msgstr "Forum zu den Favoriten hinzufügen"
-
-#: pntemplates/dizkus_user_viewforum.html:36
-#: pntemplates/dizkus_user_viewforum.html:77
-msgid "Remove this forum from your favourites"
-msgstr "Dieses Forum als Favorit entfernen"
-
-#: pntemplates/dizkus_user_viewforum.html:36
-#: pntemplates/dizkus_user_viewforum.html:77
-msgid "Remove forum from favourites"
-msgstr "Forum als Favorit entfernen"
-
 #: pntemplates/dizkus_user_viewforum.html:140
 msgid "Attachments"
 msgstr "Anhänge"
@@ -2252,10 +2209,6 @@ msgstr "Anhänge"
 #: pntemplates/dizkus_user_viewforum.html:150
 msgid "By"
 msgstr "Von"
-
-#: pntemplates/dizkus_user_footer.html:7
-msgid "Key"
-msgstr "Schlüssel"
 
 #: pntemplates/dizkus_user_footer.html:11
 #, php-format
@@ -2309,7 +2262,7 @@ msgstr "Antwort auf"
 #: pntemplates/dizkus_user_latestposts.html:2
 #: pntemplates/dizkus_user_latestposts.html:9
 msgid "Latest forum posts"
-msgstr "Aktuelle Beiträge"
+msgstr "Aktuellste Beiträge im Forum"
 
 #: pntemplates/dizkus_user_latestposts.html:18
 msgid "Last"
@@ -2361,10 +2314,6 @@ msgstr "Registrieren"
 #: pntemplates/dizkus_user_header.html:95
 msgid "View your posts"
 msgstr "Eigene Beiträge"
-
-#: pntemplates/dizkus_user_header.html:96
-msgid "Personal settings"
-msgstr "Persönliche Einstellungen"
 
 #: pntemplates/dizkus_user_header.html:112
 msgid "Click to edit"
@@ -2457,8 +2406,8 @@ msgid "No forum subscriptions found."
 msgstr "Keine Forenabos gefunden."
 
 #: pntemplates/dizkus_user_signaturemanagement.html:13
-msgid "Manage my signature"
-msgstr "Eigene Signatur verwalten"
+msgid "Signature"
+msgstr "Signatur"
 
 #: pntemplates/dizkus_statisticsblock_display.html:6
 msgid "Most-active forums"
@@ -2489,27 +2438,27 @@ msgstr "Forenzugriff für Besucher deaktivieren"
 
 #: pntemplates/dizkus_admin_preferences.html:16
 msgid "If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."
-msgstr "Falls der Forenzugriff für Besucher deaktiviert wurde, so haben nur Administratoren die Möglichkeit das Forum zu nutzen. Das Forum kann vorübergehend deaktiviert werden, wenn beispielsweise Wartungsarbeiten durchgeführt werden müssen."
+msgstr "Falls der Forenzugriff für Besucher deaktiviert wurde, so haben nur Administratoren die Möglichkeit das Forum zu benutzen. Das Forum kann vorübergehend deaktiviert werden, wenn beispielsweise Wartungsarbeiten durchgeführt werden müssen."
 
 #: pntemplates/dizkus_admin_preferences.html:19
 msgid "Message displayed if forums are disabled"
-msgstr "Hinweistext an die Besucher, wenn Forum deaktiviert wurde"
+msgstr "Hinweistext, wenn Forum deaktiviert ist"
 
 #: pntemplates/dizkus_admin_preferences.html:23
 msgid "Sender address for e-mail messages from forums"
-msgstr "Absenderadresse für Mailbenachrichtigungen des Forums"
+msgstr "Absenderadresse für Mailbenachrichtigungen"
 
 #: pntemplates/dizkus_admin_preferences.html:27
 msgid "'Hot topic' threshold"
 msgstr "Beitragsanzahl für 'Hot Topic'"
 
 #: pntemplates/dizkus_admin_preferences.html:31
-msgid "Posts per page in topic index (default: 20)"
-msgstr "Beiträge pro Seite in der Themenübersicht (Standard: 20)"
+msgid "Posts per page in topic index (default:20)"
+msgstr "Beiträge pro Seite in der Themenübersicht (Standard:20)"
 
 #: pntemplates/dizkus_admin_preferences.html:35
-msgid "Topics per page in forum index (default: 15)"
-msgstr "Themen pro Seite in der Forenübersicht (Standard: 15)"
+msgid "Topics per page in forum index (default:15)"
+msgstr "Themen pro Seite in der Forenübersicht (Standard:15)"
 
 #: pntemplates/dizkus_admin_preferences.html:39
 msgid "Hide users in forum admin interface"
@@ -2517,7 +2466,7 @@ msgstr "Benutzer in der Forenadministration verstecken"
 
 #: pntemplates/dizkus_admin_preferences.html:43
 msgid "Path to rank images"
-msgstr "Pfad zu den Grafiken für die Ränge"
+msgstr "Grafikpfad für die Ränge"
 
 #: pntemplates/dizkus_admin_preferences.html:49
 msgid "Advanced settings"
@@ -2590,11 +2539,11 @@ msgstr "Benutzersignatur aus den Beiträgen entfernen"
 
 #: pntemplates/dizkus_admin_preferences.html:106
 msgid "Allow globally recognized avatars"
-msgstr "Nutzung von globalen Avataren (=Gravatar) erlauben"
+msgstr "Nutzung von Gravataren erlauben"
 
 #: pntemplates/dizkus_admin_preferences.html:110
 msgid "Default gravatar image"
-msgstr "Standardgrafik für Gravatare"
+msgstr "Gravatar-Standardgrafik"
 
 #: pntemplates/dizkus_admin_preferences.html:112
 msgid "Example: gravatar.gif"
@@ -2629,8 +2578,8 @@ msgid "Notice: Setting 'Strip HTML tags from new posts' to enabled does not affe
 msgstr "Alle HTML Tags aus neuen Postings entfernen. Der Inhalt innerhalb von [code][/code] bleibt erhalten."
 
 #: pntemplates/dizkus_admin_preferences.html:142
-msgid "Number of hours during which edits to posts are allowed (72 maximum)"
-msgstr "Anzahl der Stunden, in denen die Beiträge verändert werden dürfen (Maximum 72)"
+msgid "Number of hours during which edits to posts are allowed (Maximum:72)"
+msgstr "Anzahl der Stunden, in denen die Beiträge verändert werden dürfen (Maximum:72)"
 
 #: pntemplates/dizkus_admin_preferences.html:151
 msgid "Other settings"
@@ -2650,7 +2599,7 @@ msgstr "RSS2Forum aktivieren"
 
 #: pntemplates/dizkus_admin_preferences.html:166
 msgid "Enable favourites"
-msgstr "Favoritenauswahl aktivieren"
+msgstr "Favoritenfunktion aktivieren"
 
 #: pntemplates/dizkus_admin_preferences.html:170
 msgid "Action to be performed when 'delete' hook is called"

@@ -1,5 +1,5 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Move post" assign=templatetitle]-->
+<!--[gt text="Move post from one topic to another" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
@@ -10,7 +10,7 @@
         <input type="hidden" name="from_topic" value="<!--[$post.topic_id]-->" />
         <input type="hidden" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
         <fieldset id="dzk_movepost">
-            <legend><!--[gt text="Move post from one topic to another"]--></legend>
+            <legend><!--[gt text="Move post"]--></legend>
             <div class="z-formrow">
                 <label for="to_topic"><!--[gt text="ID of target topic"]--></label>
                 <span>

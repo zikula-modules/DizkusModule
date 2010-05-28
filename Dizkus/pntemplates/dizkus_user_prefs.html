@@ -1,5 +1,5 @@
 <!--[*  $Id$  *]-->
-<!--[gt text="Personal settings for each forum" assign=templatetitle]-->
+<!--[gt text="Personal settings" assign=templatetitle]-->
 <!--[pnpagesetvar name=title value=$templatetitle]-->
 <!--[include file='dizkus_user_header.html']-->
 
@@ -110,8 +110,8 @@
                             <span><!--[$forum.forum_desc|pnvarprephtmldisplay]--></span>
                         </dt>
                         <dd class="favorites">
-                            <a id="subscribeforumbutton_<!--[$forum.forum_id]-->"   class="hidden subscribelink" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'subscribe');" href="javascript:void(0);" title="<!--[gt text="Click to subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
-                            <a id="unsubscribeforumbutton_<!--[$forum.forum_id]-->" class="hidden unsubscribelink" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Click to unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
+                            <a id="subscribeforumbutton_<!--[$forum.forum_id]-->"   class="hidden subscribelink" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
+                            <a id="unsubscribeforumbutton_<!--[$forum.forum_id]-->" class="hidden unsubscribelink" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
                             <script type="text/javascript">
                                 // <![CDATA[
                                 var is_subscribed = <!--[$forum.is_subscribed]-->;
@@ -125,17 +125,17 @@
                             <noscript>
                                 <div>
                                     <!--[if $forum.is_subscribed == 0]-->
-                                    <a class="subscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Click to subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
+                                    <a class="subscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
                                     <!--[else]-->
-                                    <a class="unsubscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Click to unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
+                                    <a class="unsubscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
                                     <!--[/if]-->
                                 </div>
                             </noscript>
                         </dd>
                         <!--[if $favorites_enabled eq 'yes']-->
                         <dd class="favorites">
-                            <a id="addfavoritebutton_<!--[$forum.forum_id]-->"	class="hidden addfavoritelink" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'add');"	href="javascript:void(0);" title="<!--[gt text="Click to add this forum to your favourites"]-->"><!--[gt text="Add to favourites"]--></a>
-                            <a id="removefavoritebutton_<!--[$forum.forum_id]-->" class="hidden removefavoritelink" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'remove');" href="javascript:void(0);" title="<!--[gt text="Click to remove this forum from your favourites"]-->"><!--[gt text="Remove from favourites"]--></a>
+                            <a id="addfavoritebutton_<!--[$forum.forum_id]-->"	class="hidden addfavoritelink" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'add');"	href="javascript:void(0);" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
+                            <a id="removefavoritebutton_<!--[$forum.forum_id]-->" class="hidden removefavoritelink" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'remove');" href="javascript:void(0);" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
                             <script type="text/javascript">
                                 // <![CDATA[
                                 var is_favorite = <!--[$forum.is_favorite]-->;
@@ -149,9 +149,9 @@
                             <noscript>
                                 <div>
                                     <!--[if $forum.is_favorite eq 0]-->
-                                    <a class="addfavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Click to add this forum to your favourites"]-->"><!--[gt text="Add to favourites"]--></a>
+                                    <a class="addfavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
                                     <!--[else]-->
-                                    <a class="removefavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Click to remove this forum from your favourites"]-->"><!--[gt text="Remove from favourites"]--></a>
+                                    <a class="removefavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
                                     <!--[/if]-->
                                 </div>
                             </noscript>

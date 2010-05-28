@@ -91,7 +91,7 @@
     <fieldset>
         <legend><!--[gt text="Moderators options"]--></legend>
         <div class="z-formrow">
-            <label for="mode"><!--[gt text="Actions"]-->:</label>
+            <label for="mode"><!--[gt text="Actions"]--></label>
             <select name="mode" id="mode" size="1">
                 <option value="">&lt;&lt; <!--[gt text="Choose action"]--> &gt;&gt;</option>
                 <option value="sticky"><!--[gt text="Give selected topics 'sticky' status"]--></option>
@@ -104,20 +104,20 @@
             </select>
         </div>
         <div class="z-formrow">
-            <label for="moveto"><!--[gt text="Choose target forum to move topic(s) to:"]-->:</label>
+            <label for="moveto"><!--[gt text="Choose target forum to move topic(s) to"]--></label>
             <select name="moveto" id="moveto">
                 <option value=''>&lt;&lt; <!--[gt text="Select target forum"]--> &gt;&gt;</option>
                 <!--[foreach item=singleforum from=$forums]-->
-                <option value="<!--[$singleforum.forum_id]-->"><!--[$singleforum.cat_title]-->&nbsp;::&nbsp;<!--[$singleforum.forum_name]--></option>
+                <option value="<!--[$singleforum.forum_id]-->"><!--[$singleforum.cat_title]--><!--[gt text="&nbsp;::&nbsp;"]--><!--[$singleforum.forum_name]--></option>
                 <!--[/foreach]-->
             </select>
         </div>
         <div class="z-formrow">
-            <label for="createshadowtopic"><!--[gt text="Create shadow topic"]-->:</label>
+            <label for="createshadowtopic"><!--[gt text="Create shadow topic"]--></label>
             <input type="checkbox" name="createshadowtopic" id="createshadowtopic" value="1" />
         </div>
         <div class="z-formrow">
-            <label for="jointotopic"><!--[gt text="To join topics, select the target topic here"]-->:</label>
+            <label for="jointotopic"><!--[gt text="To join topics, select the target topic here"]--></label>
             <span id="jointotopic">
                 <select name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
                     <option value=''>&lt;&lt; <!--[gt text="Choose target topic"]--> &gt;&gt;</option>

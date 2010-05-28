@@ -193,7 +193,7 @@
 
 <!--[if $topic.forum_mods|@count > 0]-->
 <ul id="dzk_moderatorlist" class="linklist z-clearfix">
-    <li><em><!--[gt text="Moderated by:"]-->&nbsp;</em></li>
+    <li><em><!--[gt text="Moderated by"]-->:</em></li>
     <!--[foreach name=moderators item=mod from=$topic.forum_mods]-->
     <li><!--[$mod|userprofilelink]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]--></li>
     <!--[/foreach]-->
