@@ -596,7 +596,7 @@ function Dizkus_ajax_updatetopicsubject()
         }
 
         $topic['topic_id']    = $topic_id;
-        $topic['topic_title'] = DataUtil::formatForStore($subject);
+        $topic['topic_title'] = $subject;
         $res = DBUtil::updateObject($topic, 'dizkus_topics', '', 'topic_id');
 
         // Let any hooks know that we have updated an item.
