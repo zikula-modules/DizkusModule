@@ -38,7 +38,7 @@ function Dizkus_searchapi_options($args)
  * Do last minute access checking and assign URL to items
  *
  * Access checking is ignored since access check has
- * already been done. But we do add a URL to the found user
+ * already been done. But we do add a URL to the topic found
  */
 function Dizkus_searchapi_search_check(&$args)
 {
@@ -252,21 +252,28 @@ function Dizkus_searchapi_fulltext($args)
                 $wherematch  =  "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
                 $selectmatch = ", MATCH p.post_text AGAINST ('$q') as textscore, MATCH t.topic_title AGAINST ('$q') as subjectscore \n";
             } else {
-                $selectmatch = array();
+                /* $selectmatch = array();
                 $wherematch  = array();
                 $havingmatch = array();
-                $words = array_filter(explode(' ', $args['q']));
-                $q = array();
-                foreach ($words as $word)
-                {
-                    $word = trim(DataUtil::formatForStore($word));
-                    // get post_text and match up topics/posts
-                    $q[] = $searchtype == 'OR' ? "($word)" : $word;
+                */
+                if (pnModGetVar('Dizkus', 'extendedsearch', 'no') == 'no') {
+                    $words = array_filter(explode(' ', $args['q']));
+                    $q = array();
+                    foreach ($words as $word) {
+                        $word = trim(DataUtil::formatForStore($word));
+                        // get post_text and match up topics/posts
+                        $q[] = $searchtype == 'OR' ? "($word)" : $word;
+                    }
+                    $q = implode(' ', $q);
+                    $selectmatch = ", MATCH p.post_text AGAINST ('$q') as textscore, MATCH t.topic_title AGAINST ('$q') as subjectscore \n";
+                    $wherematch  = "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
+                    $havingmatch = "(textscore > 0.2 OR subjectscore > 0.2)";
+                } else {
+                    $q = DataUtil::formatForStore($args['q']);
+                    $selectmatch = ", MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) as textscore, MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE) as subjectscore \n";
+                    $wherematch  = "(MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) OR MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE)) \n";
+                    $havingmatch = "(textscore > 0.2 OR subjectscore > 0.2)";
                 }
-                $q = implode(' ', $q);
-                $selectmatch = ", MATCH p.post_text AGAINST ('$q') as textscore, MATCH t.topic_title AGAINST ('$q') as subjectscore \n";
-                $wherematch  = "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
-                $havingmatch = "(textscore > 0.2 OR subjectscore > 0.2)";
             }
     }
 
@@ -333,7 +340,7 @@ function start_search($wherematch='', $selectmatch='', $whereforums='', $havingm
             $topictext = ($showtextinsearchresults == 'yes') ? DataUtil::formatForStore(str_replace('[addsig]', '', $resline['post_text'])) : '';
             $searchresult[] = array('title'   => $resline['topic_title'],
                                     'text'    => $topictext,
-                                    'extra'   => serialize(array('searchwhere' => $args['searchwhere'], 'searchfor' => $args['q'], 'topic_id' => $resline['topic_id'])),
+                                    'extra'   => serialize(array('topic_id' => $resline['topic_id'])),
                                     'module'  => 'Dizkus',
                                     'created' => $resline['post_time'],
                                     'session' => $sessionid);
