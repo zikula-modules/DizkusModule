@@ -886,7 +886,7 @@ msgstr "Gehe zum Forum"
 #: pntemplates/dizkus_user_viewforum.html:152
 #: pntemplates/dizkus_user_header.html:89
 msgid "View latest posts"
-msgstr "Aktuellste Beiträge anzeigen"
+msgstr "Aktuellste Beiträge"
 
 #: pntemplates/dizkus_user_searchresults.html:62
 #: pntemplates/dizkus_user_moderateforum.html:83
@@ -1203,7 +1203,7 @@ msgstr "Beiträge"
 #: pntemplates/dizkus_search.html:6
 #: pntemplates/dizkus_user_header.html:90
 msgid "Search forums"
-msgstr "Foren durchsuchen"
+msgstr "Forensuche"
 
 #: pntemplates/dizkus_search.html:7
 #, php-format
