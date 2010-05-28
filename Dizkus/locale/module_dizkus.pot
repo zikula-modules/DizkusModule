@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-27 15:10+0000\n"
+"POT-Creation-Date: 2010-05-28 10:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -751,7 +751,6 @@ msgstr ""
 #: pntemplates/dizkus_user_latestposts.html:118
 #: pntemplates/dizkus_user_latestposts.html:150
 #: pntemplates/dizkus_user_latestposts.html:173
-#: pntemplates/dizkus_statisticsblock_display.html:32
 msgid "Replies"
 msgstr ""
 
@@ -788,6 +787,8 @@ msgstr ""
 
 #: pntemplates/dizkus_user_searchresults.html:35
 #: pntemplates/dizkus_user_moderateforum.html:40
+#: pntemplates/dizkus_searchresults.html:35
+#: pntemplates/dizkus_user_viewforum.html:126
 #: pntemplates/dizkus_user_latestposts.html:53
 #: pntemplates/dizkus_user_latestposts.html:107
 #: pntemplates/dizkus_user_latestposts.html:162
@@ -814,7 +815,7 @@ msgstr ""
 #: pntemplates/dizkus_searchresults.html:41
 #: pntemplates/dizkus_user_viewforum.html:132
 #: pntemplates/dizkus_user_footer.html:10
-#: pntemplates/dizkus_user_footer.html:15
+#: pntemplates/dizkus_user_footer.html:14
 msgid "New posts since your last visit"
 msgstr ""
 
@@ -836,11 +837,13 @@ msgid "Hot topic"
 msgstr ""
 
 #: pntemplates/dizkus_user_searchresults.html:52
+#: pntemplates/dizkus_searchresults.html:52
 msgid "found in"
 msgstr ""
 
 #: pntemplates/dizkus_user_searchresults.html:52
 #: pntemplates/dizkus_user_main.html:35 pntemplates/dizkus_user_main.html:103
+#: pntemplates/dizkus_searchresults.html:52
 #: pntemplates/dizkus_centerblock_display.html:28
 msgid "Go to forum"
 msgstr ""
@@ -921,9 +924,10 @@ msgstr ""
 #: pntemplates/dizkus_user_newtopic.html:55
 #: pntemplates/dizkus_user_newtopic.html:56
 #: pntemplates/dizkus_user_newtopic.html:66
-#: pntemplates/dizkus_admin_assignranks.html:45
+#: pntemplates/dizkus_admin_assignranks.html:47
 #: pntemplates/dizkus_admin_ranks.html:85
 #: pntemplates/dizkus_admin_managesubscriptions.html:76
+#: pntemplates/dizkus_user_signaturemanagement.html:18
 msgid "Submit"
 msgstr ""
 
@@ -1149,8 +1153,8 @@ msgstr ""
 #: pntemplates/dizkus_user_singlepost.html:41
 #: pntemplates/dizkus_ajax_editforum.html:25
 #: pntemplates/dizkus_user_editpostpreview.html:29
-#: pntemplates/dizkus_statisticsblock_display.html:48
-#: pntemplates/dizkus_statisticsblock_display.html:61
+#: pntemplates/dizkus_statisticsblock_display.html:43
+#: pntemplates/dizkus_statisticsblock_display.html:56
 msgid "Posts"
 msgstr ""
 
@@ -1468,7 +1472,7 @@ msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:91
 #: pntemplates/dizkus_user_latestposts.html:32
-#: pntemplates/dizkus_statisticsblock_display.html:59
+#: pntemplates/dizkus_statisticsblock_display.html:54
 msgid "Forums"
 msgstr ""
 
@@ -1502,7 +1506,8 @@ msgid "Unsubscribe from forum"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:137
-msgid "Click to add this forum to to favourites"
+#: pntemplates/dizkus_user_prefs.html:152
+msgid "Click to add this forum to your favourites"
 msgstr ""
 
 #: pntemplates/dizkus_user_prefs.html:137
@@ -1520,10 +1525,6 @@ msgstr ""
 msgid "Remove from favourites"
 msgstr ""
 
-#: pntemplates/dizkus_user_prefs.html:152
-msgid "Click to add this forum to your favourites"
-msgstr ""
-
 #: pntemplates/dizkus_user_ignorelistmanagement.html:9
 #: pntemplates/dizkus_admin_preferences.html:122
 msgid ""
@@ -1537,6 +1538,16 @@ msgstr ""
 #: pntemplates/dizkus_user_ignorelistmanagement.html:15
 #: pntemplates/dizkus_admin_preferences.html:9
 msgid "General settings"
+msgstr ""
+
+#: pntemplates/dizkus_user_ignorelistmanagement.html:17
+msgid "Level of ostracism"
+msgstr ""
+
+#: pntemplates/dizkus_user_ignorelistmanagement.html:22
+#: pntemplates/dizkus_ajax_editforum.html:163
+#: pntemplates/dizkus_admin_preferences.html:176
+msgid "Save"
 msgstr ""
 
 #: pntemplates/dizkus_ajax_newtopicconfirmation.html:4
@@ -1580,7 +1591,6 @@ msgstr ""
 
 #: pntemplates/dizkus_user_search.html:5
 #: pntemplates/dizkus_user_search.html:19
-#: pntemplates/dizkus_user_header.html:90
 msgid "Search"
 msgstr ""
 
@@ -1661,7 +1671,7 @@ msgstr ""
 #: pntemplates/dizkus_user_main.html:18 pntemplates/dizkus_user_main.html:45
 #: pntemplates/dizkus_user_main.html:86 pntemplates/dizkus_user_main.html:113
 #: pntemplates/dizkus_ajax_editforum.html:24
-#: pntemplates/dizkus_statisticsblock_display.html:60
+#: pntemplates/dizkus_statisticsblock_display.html:55
 msgid "Topics"
 msgstr ""
 
@@ -1694,7 +1704,7 @@ msgid "No forums created."
 msgstr ""
 
 #: pntemplates/dizkus_ajax_forumusers.html:6
-#: pntemplates/dizkus_user_footer.html:37
+#: pntemplates/dizkus_user_footer.html:34
 msgid "Users on-line"
 msgstr ""
 
@@ -1781,7 +1791,6 @@ msgid ""
 msgstr ""
 
 #: pntemplates/dizkus_user_footer_with_ajax.html:26
-#: pntemplates/dizkus_admin_footer.html:3
 msgid "Powered by "
 msgstr ""
 
@@ -1903,10 +1912,6 @@ msgstr ""
 #: pntemplates/dizkus_ajax_editforum.html:153
 #: pntemplates/dizkus_ajax_editcategory.html:14
 msgid "Delete"
-msgstr ""
-
-#: pntemplates/dizkus_ajax_editforum.html:163
-msgid "Save"
 msgstr ""
 
 #: pntemplates/dizkus_user_deletetopic.html:2
@@ -2062,20 +2067,8 @@ msgid_plural "Forums: %s Hits"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pntemplates/dizkus_searchresults.html:35
-msgid "Sticky topic (it will always stay at top of the topics list)"
-msgstr ""
-
 #: pntemplates/dizkus_searchresults.html:41
 msgid "New messages have been posted under this topic since your last visit"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:52
-msgid "found in:"
-msgstr ""
-
-#: pntemplates/dizkus_searchresults.html:52
-msgid "go to forum"
 msgstr ""
 
 #: pntemplates/dizkus_searchresults.html:57
@@ -2250,10 +2243,6 @@ msgstr ""
 msgid "Remove forum from favourites"
 msgstr ""
 
-#: pntemplates/dizkus_user_viewforum.html:126
-msgid "Topic is sticky (it will always stay at the top of the topcis list)"
-msgstr ""
-
 #: pntemplates/dizkus_user_viewforum.html:140
 msgid "Attachments"
 msgstr ""
@@ -2266,46 +2255,46 @@ msgstr ""
 msgid "Key"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:12
+#: pntemplates/dizkus_user_footer.html:11
 #, php-format
 msgid "New posts since your last visit on %s"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:15
+#: pntemplates/dizkus_user_footer.html:14
 msgid "No new posts since your last visit"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:17
+#: pntemplates/dizkus_user_footer.html:15
 #, php-format
 msgid "No new posts since your last visit on %s"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:23
-#: pntemplates/dizkus_statisticsblock_display.html:55
+#: pntemplates/dizkus_user_footer.html:21
+#: pntemplates/dizkus_statisticsblock_display.html:50
 msgid "Total"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:26
+#: pntemplates/dizkus_user_footer.html:24
 msgid "RSS"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:28
+#: pntemplates/dizkus_user_footer.html:25
 #, php-format
 msgid "Total posts: %s"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:47
+#: pntemplates/dizkus_user_footer.html:44
 msgid "0 users"
 msgstr ""
 
-#: pntemplates/dizkus_user_footer.html:53
+#: pntemplates/dizkus_user_footer.html:50
 #, php-format
 msgid "and %1$s anonymous guest"
 msgid_plural "and %1$s anonymous guests"
 msgstr[0] ""
 msgstr[1] ""
 
-#: pntemplates/dizkus_user_footer.html:57
+#: pntemplates/dizkus_user_footer.html:54
 #, php-format
 msgid "This list is based on users active over the last %s minutes."
 msgstr ""
@@ -2345,7 +2334,8 @@ msgid "Category list"
 msgstr ""
 
 #: pntemplates/dizkus_user_header.html:28
-msgid "New Topic in forum"
+#: pntemplates/dizkus_user_newtopic.html:25
+msgid "New topic in forum"
 msgstr ""
 
 #: pntemplates/dizkus_user_header.html:46
@@ -2354,15 +2344,7 @@ msgid "Forums index page"
 msgstr ""
 
 #: pntemplates/dizkus_user_header.html:86
-msgid "Show your favourite forums only"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:86
 msgid "Show favourite forums only"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:89
-msgid "Latest posts"
 msgstr ""
 
 #: pntemplates/dizkus_user_header.html:92
@@ -2375,10 +2357,6 @@ msgstr ""
 
 #: pntemplates/dizkus_user_header.html:95
 msgid "View your posts"
-msgstr ""
-
-#: pntemplates/dizkus_user_header.html:96
-msgid "Configure your personal forum settings"
 msgstr ""
 
 #: pntemplates/dizkus_user_header.html:96
@@ -2397,10 +2375,6 @@ msgstr ""
 msgid "Discuss this submission in the forums"
 msgstr ""
 
-#: pntemplates/dizkus_user_newtopic.html:25
-msgid "New topic in forum"
-msgstr ""
-
 #: pntemplates/dizkus_user_newtopic.html:93
 msgid "Redirecting you to the new topic..."
 msgstr ""
@@ -2416,6 +2390,10 @@ msgstr ""
 
 #: pntemplates/dizkus_admin_assignranks.html:31
 msgid "No rank"
+msgstr ""
+
+#: pntemplates/dizkus_admin_assignranks.html:39
+msgid "No asssigned ranks found"
 msgstr ""
 
 #: pntemplates/dizkus_user_movetopic.html:2
@@ -2488,6 +2466,10 @@ msgstr ""
 msgid "No forum subscriptions found."
 msgstr ""
 
+#: pntemplates/dizkus_user_signaturemanagement.html:13
+msgid "Manage my signature"
+msgstr ""
+
 #: pntemplates/dizkus_statisticsblock_display.html:6
 msgid "Most-active forums"
 msgstr ""
@@ -2496,16 +2478,23 @@ msgstr ""
 msgid "Recent topics"
 msgstr ""
 
-#: pntemplates/dizkus_statisticsblock_display.html:30
-msgid "reply"
-msgstr ""
+#: pntemplates/dizkus_statisticsblock_display.html:28
+#, php-format
+msgid "%s reply"
+msgid_plural "%s replies"
+msgstr[0] ""
+msgstr[1] ""
 
-#: pntemplates/dizkus_statisticsblock_display.html:44
+#: pntemplates/dizkus_statisticsblock_display.html:39
 msgid "Most-active posters"
 msgstr ""
 
-#: pntemplates/dizkus_statisticsblock_display.html:58
+#: pntemplates/dizkus_statisticsblock_display.html:53
 msgid "Categories"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:12
+msgid "Forums are accessible to visitors"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:16
@@ -2514,6 +2503,34 @@ msgid ""
 "administrators will have access to the forums. You can temporarily "
 "deactivate this setting to take the forums off-line when you need to perform "
 "maintenance."
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:19
+msgid "Message displayed if forums are disabled"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:23
+msgid "Sender address for e-mail messages from forums"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:27
+msgid "'Hot topic' threshold"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:31
+msgid "Posts per page in topic index (default: 20)"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:35
+msgid "Topics per page in forum index (default: 15)"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:39
+msgid "Hide users in forum admin interface"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:43
+msgid "Path to rank images"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:49
@@ -2529,6 +2546,10 @@ msgid ""
 "version: '%s'."
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:54
+msgid "Enable full-text index field searching"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:56
 msgid ""
 "Notice: For searches with full-text index fields, you need MySQL 4 or later; "
@@ -2540,6 +2561,10 @@ msgid ""
 "MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:59
+msgid "Enable extended full-text search in internal search"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:61
 msgid ""
 "Notice: Extended full-text searching enables queries like '+Dizkus -Skype' "
@@ -2549,6 +2574,10 @@ msgid ""
 "text search in MySQL'</a> in the MySQL documentation."
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:64
+msgid "Show text in search results"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:66
 msgid ""
 "Notice: Deactivate the 'Show text in search results' setting for high-volume "
@@ -2556,12 +2585,60 @@ msgid ""
 "attentive to constant cleaning of the search results table."
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:69
+msgid "Minimum number of characters in search query string (1 minimum)"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:74
+msgid "Maximum number of characters in search query string (50 maximum)"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:80
 msgid "User-related settings"
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:82
+msgid "Sort order for posts"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:86
+msgid "Beginning of signature"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:90
+msgid "End of signature"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:94
+msgid "Automatically subscribe users to new topics and posts"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:98
+msgid "Enable signature management via forum user settings"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:102
+msgid "Strip user signatures from posts"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:106
+msgid "Allow globally recognized avatars"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:110
+msgid "Default gravatar image"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:112
-msgid "Examples: gravatar.gif"
+msgid "Example: gravatar.gif"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:115
+msgid "Display confirmation when a new topic has been created"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:120
+msgid "Highest-allowed 'ignore list' ostracism level"
 msgstr ""
 
 #: pntemplates/dizkus_admin_preferences.html:124
@@ -2575,12 +2652,48 @@ msgstr ""
 msgid "Security settings"
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:132
+msgid "Log IP addresses"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:136
+msgid "Strip HTML tags from new posts"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:138
 msgid ""
 "Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect "
 "the content of '[code][/code]' BBCode tags."
 msgstr ""
 
+#: pntemplates/dizkus_admin_preferences.html:142
+msgid "Number of hours during which edits to posts are allowed (72 maximum)"
+msgstr ""
+
 #: pntemplates/dizkus_admin_preferences.html:151
 msgid "Other settings"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:154
+msgid "Hide category view when there is only one category"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:158
+msgid "Enable Mail2Forum"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:162
+msgid "Enable RSS2Forum"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:166
+msgid "Enable favourites"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:170
+msgid "Action to be performed when 'delete' hook is called"
+msgstr ""
+
+#: pntemplates/dizkus_admin_preferences.html:177
+msgid "Restore defaults"
 msgstr ""

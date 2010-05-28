@@ -293,7 +293,7 @@ New Features
 - ip-logging can be turned off (due to privacy issues in germany)
 
 IMPORTANT NOTE:
-- since bbcode and smile functions are moved to hooks you'll need the pn_bbcode and pn_bbsmile hooks from http://www.dizkus.com or http://snowbankih.tzo.com
+- since bbcode and smile functions are moved to hooks you'll need the pn_bbcode and pn_bbsmile hooks from http://code.zikula.org/dizkus or http://snowbankih.tzo.com
 - with pn_bbclick you can convert url- and mail-adresses to links automatically - might be usefull, too ;)
 - BBCODES AND SMILIES ARE NOT SHOWN WHEN pn_bbcode and pn_bbsmile ARE NOT INSTALLED & ACTIVE!
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dizkus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-27 15:10+0000\n"
+"POT-Creation-Date: 2010-05-28 10:32+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Carsten Volmer <carsten@zikula.org>\n"
 "Language-Team: Carsten Volmer <carsten@zikula.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: pnadmin.php:66
 msgid "Done! Synchronized Zikula users and Dizkus users."
-msgstr "Erledig! Die Zikula Benutzer und Dizkus Benutzer wurden erfolgreich synchronisiert."
+msgstr "Erledig! Die Benutzer von Zikula und Dizkus wurden erfolgreich synchronisiert."
 
 #: pnadmin.php:71
 msgid "Done! Synchronized forum index."
@@ -28,7 +28,7 @@ msgstr "Erledigt! Der Themenindex wurde erfolgreich synchronisiert."
 
 #: pnadmin.php:81
 msgid "Done! Synchronized posts counter."
-msgstr "Erledigt! Der Beitragszählter wurde erfolgreich synchronisiert."
+msgstr "Erledigt! Der Beitragszähler wurde erfolgreich synchronisiert."
 
 #: pnadmin.php:278
 #: pnadmin.php:337
@@ -70,7 +70,7 @@ msgstr "Keine zugeordneten Hooks gefunden."
 #: pnadmin.php:479
 #: pntemplates/dizkus_admin_reordertree.html:78
 msgid "-- Create new category --"
-msgstr "-- Neue Kategorie anlegen --"
+msgstr "-- Neue Kategorie  --"
 
 #: pnadmin.php:521
 #: pnadmin.php:603
@@ -358,7 +358,7 @@ msgstr "Bearbeitet von %1$s am %2$s."
 #: pnuserapi.php:2018
 #, php-format
 msgid "The original posting has been moved <a title=\"moved\" href=\"%s\">here</a>."
-msgstr ""
+msgstr "Der Originalbeitrag wurde nach <a title=\"moved\" href=\"%s\">hierhin</a> verschoben."
 
 #: pnuserapi.php:2019
 #, php-format
@@ -532,7 +532,7 @@ msgstr "Erledigt! Modulkonfiguration wurde aktualisiert."
 #: pnincludes/dizkus_admin_prefshandler.class.php:155
 #: pninit.php:186
 msgid "Sorry! The forums are currently off-line for maintenance. Please try later."
-msgstr ""
+msgstr "Entschuldigung! Die Foren sind wegen Wartungsarbeiten vorübergehend deaktiviert. Bitte später noch einmal versuchen."
 
 #: pnincludes/dizkus_admin_prefshandler.class.php:159
 msgid "Done! Reset configuration to default values."
@@ -556,7 +556,7 @@ msgstr ""
 
 #: pnuser.php:771
 msgid "No 'ignore list' configuration is currently possible."
-msgstr ""
+msgstr "Die Konfiguration der Ignorierliste ist momentan nicht möglich."
 
 #: pnuser.php:805
 msgid "Error! You need to be logged-in to perform this action."
@@ -576,7 +576,7 @@ msgstr ""
 
 #: pnuser.php:849
 msgid "Hello! Please visit this link. I think it will be of interest to you."
-msgstr ""
+msgstr "Hallo! Folgender Forenbeitrag könnte eventuell von Interesse sein."
 
 #: pnuser.php:1258
 msgid "Error! You did not select a target forum for the move."
@@ -597,11 +597,11 @@ msgstr ""
 
 #: pnhookapi.php:47
 msgid "Automatically-created topic"
-msgstr ""
+msgstr "Automatisch erstelltes Thema"
 
 #: pnhookapi.php:48
 msgid "Automatically-created topic for discussion of submitted entries"
-msgstr ""
+msgstr "Automatisch erstelltes Thema zur Diskussion von beliebigen Beiträgen"
 
 #: pnaccountapi.php:41
 #: pntemplates/dizkus_user_topicsubscriptions.html:33
@@ -628,11 +628,11 @@ msgstr "Übersicht"
 #: pnadminapi.php:747
 #: pntemplates/dizkus_admin_reordertree.html:2
 msgid "Edit forum tree"
-msgstr "Forenbau bearbeiten"
+msgstr "Forenbaum bearbeiten"
 
 #: pnadminapi.php:748
 msgid "Create, delete, edit and re-order categories and forums"
-msgstr ""
+msgstr "Hier lässt sich die Sortierung der Kategorien und Foren ändern"
 
 #: pnadminapi.php:751
 #: pntemplates/dizkus_admin_ranks.html:2
@@ -641,7 +641,7 @@ msgstr "Benutzerränge bearbeiten"
 
 #: pnadminapi.php:752
 msgid "Create, edit and delete user rankings acquired through the number of a user's posts"
-msgstr ""
+msgstr "Bearbeitung von Benutzerrängen, die aufgrund der Beitragsanzahl zugewiesen werden"
 
 #: pnadminapi.php:755
 #: pntemplates/dizkus_admin_honoraryranks.html:3
@@ -650,7 +650,7 @@ msgstr "Ehrenränge bearbeiten"
 
 #: pnadminapi.php:756
 msgid "Create, delete and edit special ranks for particular users"
-msgstr ""
+msgstr "Ehrenränge können bestimmten Benutzern individuell zugeordnet werden"
 
 #: pnadminapi.php:759
 #: pntemplates/dizkus_admin_assignranks.html:2
@@ -659,7 +659,7 @@ msgstr "Ehrenränge zuweisen"
 
 #: pnadminapi.php:760
 msgid "Assign honorary user ranks to users"
-msgstr ""
+msgstr "Zuweisung eines Ehrenranges an Benutzer"
 
 #: pnadminapi.php:763
 #: pntemplates/dizkus_admin_managesubscriptions.html:2
@@ -668,15 +668,15 @@ msgstr "Abos verwalten"
 
 #: pnadminapi.php:764
 msgid "Remove a user's topic and forum subscriptions"
-msgstr ""
+msgstr "Themen- und Forenabo eines Benutzers entfernen"
 
 #: pnadminapi.php:767
 msgid "Synchronize forum/topic index"
-msgstr ""
+msgstr "Foren und Beiträge synchronisieren"
 
 #: pnadminapi.php:768
 msgid "Synchronize forum and topic indexes to fix any discrepancies that might exist"
-msgstr ""
+msgstr "Synchronisation von Foren und Beiträgen, um etwaige Unstimmigkeiten beheben zu können"
 
 #: pnadminapi.php:771
 #: pntemplates/dizkus_user_prefs.html:8
@@ -688,7 +688,7 @@ msgstr "Konfiguration"
 
 #: pnadminapi.php:772
 msgid "Edit general forum-wide settings"
-msgstr ""
+msgstr "Allgemeine Forumkonfiguration bearbeiten"
 
 #: pninit.php:26
 msgid "Error! This version of the Dizkus module requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met."
@@ -788,7 +788,6 @@ msgstr "Thema"
 #: pntemplates/dizkus_user_latestposts.html:118
 #: pntemplates/dizkus_user_latestposts.html:150
 #: pntemplates/dizkus_user_latestposts.html:173
-#: pntemplates/dizkus_statisticsblock_display.html:32
 msgid "Replies"
 msgstr "Antworten"
 
@@ -825,6 +824,8 @@ msgstr "Thema markieren"
 
 #: pntemplates/dizkus_user_searchresults.html:35
 #: pntemplates/dizkus_user_moderateforum.html:40
+#: pntemplates/dizkus_searchresults.html:35
+#: pntemplates/dizkus_user_viewforum.html:126
 #: pntemplates/dizkus_user_latestposts.html:53
 #: pntemplates/dizkus_user_latestposts.html:107
 #: pntemplates/dizkus_user_latestposts.html:162
@@ -851,7 +852,7 @@ msgstr "Das Thema ist abgeschlossen  Es sind keine neuen Beiträge möglich."
 #: pntemplates/dizkus_searchresults.html:41
 #: pntemplates/dizkus_user_viewforum.html:132
 #: pntemplates/dizkus_user_footer.html:10
-#: pntemplates/dizkus_user_footer.html:15
+#: pntemplates/dizkus_user_footer.html:14
 msgid "New posts since your last visit"
 msgstr "Keine neuen Beiträge seit dem letzten Besuch"
 
@@ -870,15 +871,17 @@ msgstr "Normales Thema"
 #: pntemplates/dizkus_user_latestposts.html:113
 #: pntemplates/dizkus_user_latestposts.html:168
 msgid "Hot topic"
-msgstr "Thema mit vielen Beiträgen"
+msgstr "Hot Topic"
 
 #: pntemplates/dizkus_user_searchresults.html:52
+#: pntemplates/dizkus_searchresults.html:52
 msgid "found in"
 msgstr "gefunden in"
 
 #: pntemplates/dizkus_user_searchresults.html:52
 #: pntemplates/dizkus_user_main.html:35
 #: pntemplates/dizkus_user_main.html:103
+#: pntemplates/dizkus_searchresults.html:52
 #: pntemplates/dizkus_centerblock_display.html:28
 msgid "Go to forum"
 msgstr "Gehe zum Forum"
@@ -961,9 +964,10 @@ msgstr "Keine Themenabos gefunden."
 #: pntemplates/dizkus_user_newtopic.html:55
 #: pntemplates/dizkus_user_newtopic.html:56
 #: pntemplates/dizkus_user_newtopic.html:66
-#: pntemplates/dizkus_admin_assignranks.html:45
+#: pntemplates/dizkus_admin_assignranks.html:47
 #: pntemplates/dizkus_admin_ranks.html:85
 #: pntemplates/dizkus_admin_managesubscriptions.html:76
+#: pntemplates/dizkus_user_signaturemanagement.html:18
 msgid "Submit"
 msgstr "Absenden"
 
@@ -1146,7 +1150,7 @@ msgstr "Thema aufteilen"
 
 #: pntemplates/dizkus_user_splittopic.html:7
 msgid "Notice: This will split the topic before the selected posting."
-msgstr ""
+msgstr "Hinweis: Dieser Vorgang wird das Thema vor dem ausgewählten Beitrag aufteilen."
 
 #: pntemplates/dizkus_user_splittopic.html:13
 msgid "Subject for new topic"
@@ -1191,8 +1195,8 @@ msgstr "Registriert"
 #: pntemplates/dizkus_user_singlepost.html:41
 #: pntemplates/dizkus_ajax_editforum.html:25
 #: pntemplates/dizkus_user_editpostpreview.html:29
-#: pntemplates/dizkus_statisticsblock_display.html:48
-#: pntemplates/dizkus_statisticsblock_display.html:61
+#: pntemplates/dizkus_statisticsblock_display.html:43
+#: pntemplates/dizkus_statisticsblock_display.html:56
 msgid "Posts"
 msgstr "Beiträge"
 
@@ -1253,7 +1257,7 @@ msgstr "Hinweis: Hier können Foren und Kategorien mit der Maus per Drag & Drop 
 #: pntemplates/dizkus_admin_reordertree.html:9
 #: pntemplates/dizkus_admin_reordertree.html:120
 msgid "Create new category"
-msgstr "Neue Kategorie anlegen"
+msgstr "Kategorie anlegen"
 
 #: pntemplates/dizkus_admin_reordertree.html:10
 #: pntemplates/dizkus_admin_reordertree.html:121
@@ -1485,7 +1489,7 @@ msgstr "Nur Favoriten anzeigen"
 #: pntemplates/dizkus_user_prefs.html:65
 #: pntemplates/dizkus_user_signaturemanagement.html:2
 msgid "Posting display settings"
-msgstr ""
+msgstr "Konfiguration Beitragsanzeige"
 
 #: pntemplates/dizkus_user_prefs.html:66
 msgid "Manage your signature"
@@ -1494,15 +1498,15 @@ msgstr "Eigene Signatur verwalten"
 #: pntemplates/dizkus_user_prefs.html:74
 #: pntemplates/dizkus_user_ignorelistmanagement.html:2
 msgid "'Ignore list' settings"
-msgstr ""
+msgstr "Konfiguration Ignorierliste"
 
 #: pntemplates/dizkus_user_prefs.html:75
 msgid "Manage settings for the list of users that you are ignoring"
-msgstr ""
+msgstr "Konfiguration der Verhaltensweise für die ignorierten Benutzer"
 
 #: pntemplates/dizkus_user_prefs.html:75
 msgid "Manage settings for your ignore list"
-msgstr ""
+msgstr "Konfiguration der Ignorierliste verwalten"
 
 #: pntemplates/dizkus_user_prefs.html:91
 #: pntemplates/dizkus_ajax_editcategory.html:10
@@ -1511,30 +1515,30 @@ msgstr "Kategorie"
 
 #: pntemplates/dizkus_user_prefs.html:91
 #: pntemplates/dizkus_user_latestposts.html:32
-#: pntemplates/dizkus_statisticsblock_display.html:59
+#: pntemplates/dizkus_statisticsblock_display.html:54
 msgid "Forums"
 msgstr "Foren"
 
 #: pntemplates/dizkus_user_prefs.html:92
 msgid "Subscription"
-msgstr ""
+msgstr "Abo"
 
 #: pntemplates/dizkus_user_prefs.html:113
 #: pntemplates/dizkus_user_prefs.html:128
 msgid "Click to subscribe to forum"
-msgstr ""
+msgstr "Hier klicken, um Forum zu abonnieren"
 
 #: pntemplates/dizkus_user_prefs.html:113
 #: pntemplates/dizkus_user_prefs.html:128
 #: pntemplates/dizkus_user_viewforum.html:20
 #: pntemplates/dizkus_user_viewforum.html:69
 msgid "Subscribe to forum"
-msgstr ""
+msgstr "Forum abonnieren"
 
 #: pntemplates/dizkus_user_prefs.html:114
 #: pntemplates/dizkus_user_prefs.html:130
 msgid "Click to unsubscribe from forum"
-msgstr ""
+msgstr "Hier klicken, um Forenabo abzumelden"
 
 #: pntemplates/dizkus_user_prefs.html:114
 #: pntemplates/dizkus_user_prefs.html:130
@@ -1542,49 +1546,56 @@ msgstr ""
 #: pntemplates/dizkus_user_viewforum.html:71
 #: pntemplates/dizkus_admin_managesubscriptions.html:54
 msgid "Unsubscribe from forum"
-msgstr ""
+msgstr "Forenabo abmelden"
 
 #: pntemplates/dizkus_user_prefs.html:137
-msgid "Click to add this forum to to favourites"
-msgstr ""
+#: pntemplates/dizkus_user_prefs.html:152
+msgid "Click to add this forum to your favourites"
+msgstr "Hier klicken, um Forum als Favorit hinzuzufügen"
 
 #: pntemplates/dizkus_user_prefs.html:137
 #: pntemplates/dizkus_user_prefs.html:152
 msgid "Add to favourites"
-msgstr ""
+msgstr "Als Favorit hinzufügen"
 
 #: pntemplates/dizkus_user_prefs.html:138
 #: pntemplates/dizkus_user_prefs.html:154
 msgid "Click to remove this forum from your favourites"
-msgstr ""
+msgstr "Hier klicken, um als Favorit zu entfernen"
 
 #: pntemplates/dizkus_user_prefs.html:138
 #: pntemplates/dizkus_user_prefs.html:154
 msgid "Remove from favourites"
-msgstr ""
-
-#: pntemplates/dizkus_user_prefs.html:152
-msgid "Click to add this forum to your favourites"
-msgstr ""
+msgstr "Als Favorit entfernen"
 
 #: pntemplates/dizkus_user_ignorelistmanagement.html:9
 #: pntemplates/dizkus_admin_preferences.html:122
 msgid "Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."
-msgstr ""
+msgstr "Benutzer, welche von einem anderen Benutzer  ignoriert werden, können im 'strengen' Level nicht auf neu erstellte Themen des Benutzers antworten. Im Level 'medium' ist das Antworten möglich, jedoch werden Beiträge ignorierter Benutzer generell nicht angezeigt und es erfolgt keine E-Mail-Benachrichtigung. Ein Einblenden der Postings per Klick ist möglich."
 
 #: pntemplates/dizkus_user_ignorelistmanagement.html:15
 #: pntemplates/dizkus_admin_preferences.html:9
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
+#: pntemplates/dizkus_user_ignorelistmanagement.html:17
+msgid "Level of ostracism"
+msgstr "Ignorierstufe"
+
+#: pntemplates/dizkus_user_ignorelistmanagement.html:22
+#: pntemplates/dizkus_ajax_editforum.html:163
+#: pntemplates/dizkus_admin_preferences.html:176
+msgid "Save"
+msgstr "Speichern"
+
 #: pntemplates/dizkus_ajax_newtopicconfirmation.html:4
 #: pntemplates/dizkus_user_newtopicconfirmation.html:6
 msgid "Thanks for your submission."
-msgstr ""
+msgstr "Vielen Dank für diesen Beitrag."
 
 #: pntemplates/dizkus_ajax_newtopicconfirmation.html:6
 msgid "Click here to go the new topic, or wait a few seconds until you are redirected"
-msgstr ""
+msgstr "Hier klicken, um zum neuen Beitrag zu gehen oder ein paar Sekunden auf die Weiterleitung warten."
 
 #: pntemplates/dizkus_ajax_newtopicconfirmation.html:7
 #: pntemplates/dizkus_user_newtopicconfirmation.html:9
@@ -1616,7 +1627,6 @@ msgstr "Beitrag löschen"
 
 #: pntemplates/dizkus_user_search.html:5
 #: pntemplates/dizkus_user_search.html:19
-#: pntemplates/dizkus_user_header.html:90
 msgid "Search"
 msgstr "Suchen"
 
@@ -1682,7 +1692,7 @@ msgstr "Host"
 
 #: pntemplates/dizkus_user_viewip.html:17
 msgid "User names of users who posted from this IP, plus post counts"
-msgstr ""
+msgstr "Benutzer, die unter der gleichen IP-Adresse Beiträge erstellt haben (inkl. Gesamtanzahl)."
 
 #: pntemplates/dizkus_user_viewip.html:25
 msgid "Back to the topic"
@@ -1700,7 +1710,7 @@ msgstr "Gehe zu Kategorie"
 #: pntemplates/dizkus_user_main.html:86
 #: pntemplates/dizkus_user_main.html:113
 #: pntemplates/dizkus_ajax_editforum.html:24
-#: pntemplates/dizkus_statisticsblock_display.html:60
+#: pntemplates/dizkus_statisticsblock_display.html:55
 msgid "Topics"
 msgstr "Themen"
 
@@ -1739,7 +1749,7 @@ msgid "No forums created."
 msgstr "Keine Foren erstellt."
 
 #: pntemplates/dizkus_ajax_forumusers.html:6
-#: pntemplates/dizkus_user_footer.html:37
+#: pntemplates/dizkus_user_footer.html:34
 msgid "Users on-line"
 msgstr "Benutzer online"
 
@@ -1819,14 +1829,13 @@ msgid "When you press the 'Unlock' button at the bottom of this page, the topic 
 msgstr "<strong>Thema eröffnen</strong> eröffnet diesen Beitrag. Dieser kann aber jederzeit wieder abgeschlossen werden."
 
 #: pntemplates/dizkus_user_footer_with_ajax.html:26
-#: pntemplates/dizkus_admin_footer.html:3
 msgid "Powered by "
 msgstr "Powered by "
 
 #: pntemplates/dizkus_disabled.html:4
 #: pntemplates/dizkus_ajax_editforum.html:19
 msgid "Forum Information"
-msgstr "Forum information"
+msgstr "Foruminformation"
 
 #: pntemplates/dizkus_ajax_editforum.html:23
 msgid "Visit this forum"
@@ -1846,7 +1855,7 @@ msgstr "Beschreibung"
 
 #: pntemplates/dizkus_ajax_editforum.html:37
 msgid "Hooked module"
-msgstr "Zugeordnete Modulhooks"
+msgstr "Modulhooks"
 
 #: pntemplates/dizkus_ajax_editforum.html:45
 msgid "Notice: This is used for the comments feature. All submissions within this module will be posted within this forum. The list only includes modules for which Dizkus has been activated as a hook."
@@ -1937,10 +1946,6 @@ msgstr "RSS Feed auswählen"
 msgid "Delete"
 msgstr "Löschen"
 
-#: pntemplates/dizkus_ajax_editforum.html:163
-msgid "Save"
-msgstr "Speichern"
-
 #: pntemplates/dizkus_user_deletetopic.html:2
 #: pntemplates/dizkus_user_deletetopic.html:16
 msgid "Delete this topic"
@@ -1952,7 +1957,7 @@ msgstr "Soll dieses Thema einschließlich aller zugeordneten Beiträge wirklich 
 
 #: pntemplates/dizkus_admin_header.html:11
 msgid "Forum Administration"
-msgstr "Forum Administration"
+msgstr "Forenadministration"
 
 #: pntemplates/dizkus_admin_header.html:22
 msgid "Warning! The Dizkus admin panel needs JavaScript enabled. Some parts of the admin panel will not function without it."
@@ -2001,11 +2006,11 @@ msgstr "Dieses Thema ist abgeschlossen. Es sind keine neuen Beiträge möglich."
 
 #: pntemplates/dizkus_user_moderateforum.html:89
 msgid "Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."
-msgstr ""
+msgstr "Warnung! Es findet keine zusätzliche Sicherheitsabfrage statt. Nach dem Absenden wird diese Aktion unmittelbar ausgeführt."
 
 #: pntemplates/dizkus_user_moderateforum.html:92
 msgid "Moderators options"
-msgstr ""
+msgstr "Moderationsoptionen"
 
 #: pntemplates/dizkus_user_moderateforum.html:94
 msgid "Actions"
@@ -2084,21 +2089,9 @@ msgid_plural "Forums: %s Hits"
 msgstr[0] "Foren: %s Treffer"
 msgstr[1] "Foren: %s Treffer"
 
-#: pntemplates/dizkus_searchresults.html:35
-msgid "Sticky topic (it will always stay at top of the topics list)"
-msgstr ""
-
 #: pntemplates/dizkus_searchresults.html:41
 msgid "New messages have been posted under this topic since your last visit"
 msgstr "Seit dem letzten Besuch sind neue Beiträge in diesem Thema verfasst worden"
-
-#: pntemplates/dizkus_searchresults.html:52
-msgid "found in:"
-msgstr "gefunden in:"
-
-#: pntemplates/dizkus_searchresults.html:52
-msgid "go to forum"
-msgstr "Gehe zum Forum"
 
 #: pntemplates/dizkus_searchresults.html:57
 msgid "View most-recent posting"
@@ -2140,7 +2133,7 @@ msgstr "Themen- und Forenabos verwalten: %s"
 #: pntemplates/dizkus_mail_notifyuser.txt:13
 #, php-format
 msgid "You are receiving this e-mail message because you are subscribed to be notified of events in the forums on %s."
-msgstr ""
+msgstr "Diese Mail wurde zugestellt, weil für neue Ereignisse im Forum auf %s ein Themen- oder Beitragsabonnement aktiviert wurde."
 
 #: pntemplates/dizkus_upgrade_30.html:4
 #: pntemplates/dizkus_upgrade_30.html:15
@@ -2153,7 +2146,7 @@ msgstr "Hiermit wird eine Aktualisierung von pnForum 2.7.1 auf Dizkus 3.0 inkl. 
 
 #: pntemplates/dizkus_admin_honoraryranks.html:6
 msgid "In this page, you can create, delete and edit special honorary ranks awarded to particular users (site staff or project team members, for example). To create a new rank, simply type entries in the fields of the 'Create new rank' section and click on the 'Create honorary rank' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."
-msgstr ""
+msgstr "Auf dieser Seite können Ehrenränge erstellt, gelöscht oder bearbeitet werden. Diese Ehrenränge müssen einem Benutzer gezielt zugewiesen werden. Es findet keine automatisierte Zuweisung über die Beitragsanzahl, wie bei den Benutzerrängen statt. Ein Ehrenrang kann ganz einfach erstellt werden, indem im Bereich \"Rang anlegen\" die notwendigen Felder gefüllt werden und die Eingaben mit \"Erstellen\" gespeichert werden. Die vorhandenen Ränge können direkt in der Liste verändert werden und mit \"Absenden\" gesichert werden. Über die Checkbox \"Rang löschen\" in der rechten Spalte wird die ausgewählte Zeile nach dem Speichern entfernt."
 
 #: pntemplates/dizkus_admin_honoraryranks.html:11
 #: pntemplates/dizkus_admin_ranks.html:12
@@ -2168,12 +2161,12 @@ msgstr "Name des Ehrenrangs"
 #: pntemplates/dizkus_admin_honoraryranks.html:17
 #: pntemplates/dizkus_admin_ranks.html:26
 msgid "Internal Dizkus image"
-msgstr "Internes Dizkus-Bild"
+msgstr "Dizkus-interne Grafik"
 
 #: pntemplates/dizkus_admin_honoraryranks.html:32
 #: pntemplates/dizkus_admin_ranks.html:41
 msgid "Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."
-msgstr ""
+msgstr "Hinweis: Bei den Grafiken für die Ränge können entweder die standardmäßig mitgelieferten Dizkus-Rangzeichen genutzt werden oder man verwendet externe Grafiken. Die Dizkus-internen Grafiken kann man in der Dropdown-Liste auswählen. Die Integration von externen Grafiken wird über das Feld \"Beschreibung\" umgesetzt. Gibt man dort den externen Pfad beginnend mit \"http://\" an, so wird diese Grafik eingebettet."
 
 #: pntemplates/dizkus_admin_honoraryranks.html:35
 #: pntemplates/dizkus_admin_ranks.html:44
@@ -2183,7 +2176,7 @@ msgstr "Erstellen"
 #: pntemplates/dizkus_admin_honoraryranks.html:46
 #: pntemplates/dizkus_admin_ranks.html:57
 msgid "Image"
-msgstr "Bild"
+msgstr "Grafik"
 
 #: pntemplates/dizkus_admin_honoraryranks.html:48
 #: pntemplates/dizkus_admin_ranks.html:59
@@ -2252,10 +2245,6 @@ msgstr "Dieses Forum als Favorit entfernen"
 msgid "Remove forum from favourites"
 msgstr "Forum als Favorit entfernen"
 
-#: pntemplates/dizkus_user_viewforum.html:126
-msgid "Topic is sticky (it will always stay at the top of the topcis list)"
-msgstr ""
-
 #: pntemplates/dizkus_user_viewforum.html:140
 msgid "Attachments"
 msgstr "Anhänge"
@@ -2268,46 +2257,46 @@ msgstr "Von"
 msgid "Key"
 msgstr "Schlüssel"
 
-#: pntemplates/dizkus_user_footer.html:12
+#: pntemplates/dizkus_user_footer.html:11
 #, php-format
 msgid "New posts since your last visit on %s"
 msgstr "Neue Beiträge seit dem letzten Besuch am %s"
 
-#: pntemplates/dizkus_user_footer.html:15
+#: pntemplates/dizkus_user_footer.html:14
 msgid "No new posts since your last visit"
 msgstr "Keine neuen Beiträge seit dem letzten Besuch"
 
-#: pntemplates/dizkus_user_footer.html:17
+#: pntemplates/dizkus_user_footer.html:15
 #, php-format
 msgid "No new posts since your last visit on %s"
 msgstr "Keine neuen Beiträge seit dem letzten Besuch am %s"
 
-#: pntemplates/dizkus_user_footer.html:23
-#: pntemplates/dizkus_statisticsblock_display.html:55
+#: pntemplates/dizkus_user_footer.html:21
+#: pntemplates/dizkus_statisticsblock_display.html:50
 msgid "Total"
 msgstr "Gesamt"
 
-#: pntemplates/dizkus_user_footer.html:26
+#: pntemplates/dizkus_user_footer.html:24
 msgid "RSS"
 msgstr "RSS"
 
-#: pntemplates/dizkus_user_footer.html:28
+#: pntemplates/dizkus_user_footer.html:25
 #, php-format
 msgid "Total posts: %s"
 msgstr "Gesamte Beiträge: %s"
 
-#: pntemplates/dizkus_user_footer.html:47
+#: pntemplates/dizkus_user_footer.html:44
 msgid "0 users"
 msgstr "0 Benutzer"
 
-#: pntemplates/dizkus_user_footer.html:53
+#: pntemplates/dizkus_user_footer.html:50
 #, php-format
 msgid "and %1$s anonymous guest"
 msgid_plural "and %1$s anonymous guests"
 msgstr[0] "und %1$s Gast"
 msgstr[1] "und %1$s Gäste"
 
-#: pntemplates/dizkus_user_footer.html:57
+#: pntemplates/dizkus_user_footer.html:54
 #, php-format
 msgid "This list is based on users active over the last %s minutes."
 msgstr "Diese Angaben basieren auf den Useraktivitäten der letzten %s Minuten."
@@ -2348,7 +2337,8 @@ msgid "Category list"
 msgstr "Kategorieliste"
 
 #: pntemplates/dizkus_user_header.html:28
-msgid "New Topic in forum"
+#: pntemplates/dizkus_user_newtopic.html:25
+msgid "New topic in forum"
 msgstr "Neues Thema im Forum"
 
 #: pntemplates/dizkus_user_header.html:46
@@ -2357,16 +2347,8 @@ msgid "Forums index page"
 msgstr "Forenübersicht"
 
 #: pntemplates/dizkus_user_header.html:86
-msgid "Show your favourite forums only"
-msgstr "Nur Favoriten anzeigen"
-
-#: pntemplates/dizkus_user_header.html:86
 msgid "Show favourite forums only"
 msgstr "Nur Favoriten anzeigen"
-
-#: pntemplates/dizkus_user_header.html:89
-msgid "Latest posts"
-msgstr "Neueste Beiträge"
 
 #: pntemplates/dizkus_user_header.html:92
 msgid "Log-in"
@@ -2379,10 +2361,6 @@ msgstr "Registrieren"
 #: pntemplates/dizkus_user_header.html:95
 msgid "View your posts"
 msgstr "Eigene Beiträge"
-
-#: pntemplates/dizkus_user_header.html:96
-msgid "Configure your personal forum settings"
-msgstr "Persönliche Einstellungen"
 
 #: pntemplates/dizkus_user_header.html:96
 msgid "Personal settings"
@@ -2398,11 +2376,7 @@ msgstr "Unten"
 
 #: pntemplates/dizkus_hook_display.html:4
 msgid "Discuss this submission in the forums"
-msgstr ""
-
-#: pntemplates/dizkus_user_newtopic.html:25
-msgid "New topic in forum"
-msgstr "Neues Thema im Forum"
+msgstr "Beiträge in diesen Foren diskutieren"
 
 #: pntemplates/dizkus_user_newtopic.html:93
 msgid "Redirecting you to the new topic..."
@@ -2420,6 +2394,10 @@ msgstr "Auf dieser Seite können bestimmte Benutzer ausgewählt und Ehrenränge 
 msgid "No rank"
 msgstr "Kein Rang"
 
+#: pntemplates/dizkus_admin_assignranks.html:39
+msgid "No asssigned ranks found"
+msgstr "Keine zugeordneten Ränge gefunden"
+
 #: pntemplates/dizkus_user_movetopic.html:2
 msgid "Move or join topics"
 msgstr "Themen zusammenfassen oder verschieben"
@@ -2430,7 +2408,7 @@ msgstr "Thema zu anderem Forum verschieben"
 
 #: pntemplates/dizkus_user_movetopic.html:15
 msgid "When you press the 'Move' button at the bottom of this form, the topic you have selected (and all its related posts) will be <strong>moved</strong> to the forum you have selected. Note: You will only be able to move the topic to a forum for which you are moderator. An administrator is allowed to move any topic to any forum."
-msgstr ""
+msgstr "Nach dem Drücken der Schaltfläche 'Verschieben' in diesem Formular wird das Thema inkl. aller Beiträge in das ausgewählte Forum <strong>verschoben</strong>. Hinweis: Es kann nur in ein Forum verschoben werden, indem für den aktiven Benutzer auch mindestens Moderationsrechte vorhanden sind. Ein Administrator kann natürlich in jedes Zielforum verschieben."
 
 #: pntemplates/dizkus_user_movetopic.html:17
 msgid "Target forum"
@@ -2442,7 +2420,7 @@ msgstr "Thema mit anderem Thema zusammenfassen"
 
 #: pntemplates/dizkus_admin_ranks.html:6
 msgid "In this page, you can create, delete and edit user ranks for that users acquire automatically after a certain number of posts in the forums. To create a new rank, simply type entries in the fields of the 'Create new user rank' section and click on the 'Create' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."
-msgstr ""
+msgstr "Auf dieser Seite können Benutzerränge erstellt, gelöscht oder bearbeitet werden. Diese Ränge erwerben die Benutzer automatisch nach einer bestimmten Anzahl von Beiträgen im Forum. Ein Rang kann ganz einfach erstellt werden, indem im Bereich \"Rang anlegen\" die notwendigen Felder gefüllt werden und die Eingaben mit \"Erstellen\" gespeichert werden. Die vorhandenen Ränge können direkt in der Liste verändert werden und mit \"Absenden\" gesichert werden. Über die Checkbox \"Rang löschen\" in der rechten Spalte wird die ausgewählte Zeile nach dem Speichern entfernt."
 
 #: pntemplates/dizkus_admin_ranks.html:14
 msgid "User rank name"
@@ -2478,6 +2456,10 @@ msgstr "Alle Forenabos entfernen"
 msgid "No forum subscriptions found."
 msgstr "Keine Forenabos gefunden."
 
+#: pntemplates/dizkus_user_signaturemanagement.html:13
+msgid "Manage my signature"
+msgstr "Eigene Signatur verwalten"
+
 #: pntemplates/dizkus_statisticsblock_display.html:6
 msgid "Most-active forums"
 msgstr "Aktivste Foren"
@@ -2486,87 +2468,195 @@ msgstr "Aktivste Foren"
 msgid "Recent topics"
 msgstr "Neueste Themen"
 
-#: pntemplates/dizkus_statisticsblock_display.html:30
-msgid "reply"
-msgstr ""
+#: pntemplates/dizkus_statisticsblock_display.html:28
+#, php-format
+msgid "%s reply"
+msgid_plural "%s replies"
+msgstr[0] "%s Antwort"
+msgstr[1] "%s Antworten"
 
-#: pntemplates/dizkus_statisticsblock_display.html:44
+#: pntemplates/dizkus_statisticsblock_display.html:39
 msgid "Most-active posters"
 msgstr "Aktivste Verfasser"
 
-#: pntemplates/dizkus_statisticsblock_display.html:58
+#: pntemplates/dizkus_statisticsblock_display.html:53
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
+
+#: pntemplates/dizkus_admin_preferences.html:12
+msgid "Forums are accessible to visitors"
+msgstr "Forenzugriff für Besucher deaktivieren"
 
 #: pntemplates/dizkus_admin_preferences.html:16
 msgid "If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."
-msgstr ""
+msgstr "Falls der Forenzugriff für Besucher deaktiviert wurde, so haben nur Administratoren die Möglichkeit das Forum zu nutzen. Das Forum kann vorübergehend deaktiviert werden, wenn beispielsweise Wartungsarbeiten durchgeführt werden müssen."
+
+#: pntemplates/dizkus_admin_preferences.html:19
+msgid "Message displayed if forums are disabled"
+msgstr "Hinweistext an die Besucher, wenn Forum deaktiviert wurde"
+
+#: pntemplates/dizkus_admin_preferences.html:23
+msgid "Sender address for e-mail messages from forums"
+msgstr "Absenderadresse für Mailbenachrichtigungen des Forums"
+
+#: pntemplates/dizkus_admin_preferences.html:27
+msgid "'Hot topic' threshold"
+msgstr "Beitragsanzahl für 'Hot Topic'"
+
+#: pntemplates/dizkus_admin_preferences.html:31
+msgid "Posts per page in topic index (default: 20)"
+msgstr "Beiträge pro Seite in der Themenübersicht (Standard: 20)"
+
+#: pntemplates/dizkus_admin_preferences.html:35
+msgid "Topics per page in forum index (default: 15)"
+msgstr "Themen pro Seite in der Forenübersicht (Standard: 15)"
+
+#: pntemplates/dizkus_admin_preferences.html:39
+msgid "Hide users in forum admin interface"
+msgstr "Benutzer in der Forenadministration verstecken"
+
+#: pntemplates/dizkus_admin_preferences.html:43
+msgid "Path to rank images"
+msgstr "Pfad zu den Grafiken für die Ränge"
 
 #: pntemplates/dizkus_admin_preferences.html:49
 msgid "Advanced settings"
-msgstr ""
+msgstr "Fortgeschrittene Einstellungen"
 
 #: pntemplates/dizkus_admin_preferences.html:51
 #, php-format
 msgid "Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be. <br /><br />Database name: '%s'; type: '%s'; version: '%s'."
-msgstr ""
+msgstr "Achtung! Vorsicht! Bei fehlerhaften Einstellungen können unerwartete Nebeneffekte auftreten. Benutzung auf eigene Gefahr! <br /><br />Datenbankname: '%s'; Typ: '%s'; Version: '%s'."
+
+#: pntemplates/dizkus_admin_preferences.html:54
+msgid "Enable full-text index field searching"
+msgstr "Forumsuche mit Volltextindex aktivieren"
 
 #: pntemplates/dizkus_admin_preferences.html:56
 msgid "Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."
 msgstr "Hinweis: Die Forensuche mit Volltextindexfeldern benötigt MySQL 4 oder höher und funktioniert nicht mit InnoDB Datenbanken. Dieses Flag wird üblicherweise bei der Installation gesetzt, wenn die entsprechenden Indexfelder angelegt werden. Es könnte sein, das eine Volltextsuche zu einem leeren Ergebnis führt, obwohl der Suchbegriff vorhanden ist. Weitere Informationen in der MySQL Dokumentation unter <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Volltextsuche in MySQL\">Volltextsuche in MySQL</a>."
 
+#: pntemplates/dizkus_admin_preferences.html:59
+msgid "Enable extended full-text search in internal search"
+msgstr "Erweiterte Volltextsuche in interner Suche aktivieren"
+
 #: pntemplates/dizkus_admin_preferences.html:61
 msgid "Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."
 msgstr "Hinweis: Die erweiterte Volltextsuche erlaubt z.B. Suchparameter in der Form \"+Dizkus -Skype\" für Beiträge, in denen der Begriff 'Dizkus', aber nicht der Begriff 'Skype' vorkommt. Voraussetzung dazu ist mind. MySQL 4.01. Weitere Informationen in der MySQL Dokumentation unter <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Erweiterte Volltextsuche in MySQL\">Erweiterte Volltextsuche in MySQL</a>."
 
+#: pntemplates/dizkus_admin_preferences.html:64
+msgid "Show text in search results"
+msgstr "Text in den Suchergebnissen anzeigen"
+
 #: pntemplates/dizkus_admin_preferences.html:66
 msgid "Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table."
-msgstr ""
+msgstr "Hinweis: Auf sehr aktiven Seiten sollte man keine Textausgabe in den Suchergebnissen aktivieren, um die Suchgeschwindigkeit zu erhöhen. Und man sollte dafür Sorge tragen, das die Suchergebnistabelle regelmäßig bereinigt wird."
+
+#: pntemplates/dizkus_admin_preferences.html:69
+msgid "Minimum number of characters in search query string (1 minimum)"
+msgstr "Minimale Länge des Suchstrings (>=1 Zeichen)"
+
+#: pntemplates/dizkus_admin_preferences.html:74
+msgid "Maximum number of characters in search query string (50 maximum)"
+msgstr "Maximale Länge des Suchstrings (<=50 Zeichen)"
 
 #: pntemplates/dizkus_admin_preferences.html:80
 msgid "User-related settings"
-msgstr ""
+msgstr "Benutzerspezifische Einstellungen"
+
+#: pntemplates/dizkus_admin_preferences.html:82
+msgid "Sort order for posts"
+msgstr "Sortierreihenfolge der Beiträge"
+
+#: pntemplates/dizkus_admin_preferences.html:86
+msgid "Beginning of signature"
+msgstr "Signaturanfang"
+
+#: pntemplates/dizkus_admin_preferences.html:90
+msgid "End of signature"
+msgstr "Signaturende"
+
+#: pntemplates/dizkus_admin_preferences.html:94
+msgid "Automatically subscribe users to new topics and posts"
+msgstr "Neue Themen und Beiträge unmittelbar nach der Erstellung abonnieren"
+
+#: pntemplates/dizkus_admin_preferences.html:98
+msgid "Enable signature management via forum user settings"
+msgstr "Signaturverwaltung in den persönlichen Einstellungen aktivieren"
+
+#: pntemplates/dizkus_admin_preferences.html:102
+msgid "Strip user signatures from posts"
+msgstr "Benutzersignatur aus den Beiträgen entfernen"
+
+#: pntemplates/dizkus_admin_preferences.html:106
+msgid "Allow globally recognized avatars"
+msgstr "Nutzung von globalen Avataren (=Gravatar) erlauben"
+
+#: pntemplates/dizkus_admin_preferences.html:110
+msgid "Default gravatar image"
+msgstr "Standardgrafik für Gravatare"
 
 #: pntemplates/dizkus_admin_preferences.html:112
-msgid "Examples: gravatar.gif"
+msgid "Example: gravatar.gif"
 msgstr "Beispiel: gravatar.gif"
+
+#: pntemplates/dizkus_admin_preferences.html:115
+msgid "Display confirmation when a new topic has been created"
+msgstr "Bestätigung für neue Beiträge anzeigen"
+
+#: pntemplates/dizkus_admin_preferences.html:120
+msgid "Highest-allowed 'ignore list' ostracism level"
+msgstr "Höchstmögliche Ignorierstufe"
 
 #: pntemplates/dizkus_admin_preferences.html:124
 msgid "Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."
-msgstr ""
+msgstr "Hinweis: Die Unterstützung von Ignorierlisten ist momentan nicht verfügbar. Hierzu wird das Modul <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> vorausgesetzt."
 
 #: pntemplates/dizkus_admin_preferences.html:130
 msgid "Security settings"
 msgstr "Sicherheitseinstellungen"
 
+#: pntemplates/dizkus_admin_preferences.html:132
+msgid "Log IP addresses"
+msgstr "IP Adresse aufzeichnen"
+
+#: pntemplates/dizkus_admin_preferences.html:136
+msgid "Strip HTML tags from new posts"
+msgstr "HTML Tags bei neuen Beiträge entfernen"
+
 #: pntemplates/dizkus_admin_preferences.html:138
 msgid "Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags."
 msgstr "Alle HTML Tags aus neuen Postings entfernen. Der Inhalt innerhalb von [code][/code] bleibt erhalten."
+
+#: pntemplates/dizkus_admin_preferences.html:142
+msgid "Number of hours during which edits to posts are allowed (72 maximum)"
+msgstr "Anzahl der Stunden, in denen die Beiträge verändert werden dürfen (Maximum 72)"
 
 #: pntemplates/dizkus_admin_preferences.html:151
 msgid "Other settings"
 msgstr "Weitere Einstellungen"
 
-#~ msgid "Error! You do not have authorisation for this action."
-#~ msgstr ""
-#~ "Fehler! Es liegt keine Berechtigung für die Durchführung dieser Aktion "
-#~ "vor."
-#~ msgid "Error! You do not have authorisation for this action"
-#~ msgstr ""
-#~ "Fehler! Es liegt keine Berechtigung für die Durchführung dieser Aktion "
-#~ "vor."
-#~ msgid "Subscribe to this topic"
-#~ msgstr "Thema abonnieren"
-#~ msgid "Unsubscribe from this topic"
-#~ msgstr "Themenabo abmelden"
-#~ msgid "Lock this topic"
-#~ msgstr "Thema abschliessen"
-#~ msgid "Unlock this topic"
-#~ msgstr "Theme eröffnen"
-#~ msgid "Move this topic"
-#~ msgstr "Thema verschieben"
-#~ msgid "Show only forums flagged as your favourites"
-#~ msgstr "Nur Favoriten anzeigen"
-#~ msgid "unchanged"
-#~ msgstr "Unverändert"
+#: pntemplates/dizkus_admin_preferences.html:154
+msgid "Hide category view when there is only one category"
+msgstr "Kategorisierung der Foren bei nur einer Kategorie deaktivieren"
+
+#: pntemplates/dizkus_admin_preferences.html:158
+msgid "Enable Mail2Forum"
+msgstr "Mail2Forum aktivieren"
+
+#: pntemplates/dizkus_admin_preferences.html:162
+msgid "Enable RSS2Forum"
+msgstr "RSS2Forum aktivieren"
+
+#: pntemplates/dizkus_admin_preferences.html:166
+msgid "Enable favourites"
+msgstr "Favoritenauswahl aktivieren"
+
+#: pntemplates/dizkus_admin_preferences.html:170
+msgid "Action to be performed when 'delete' hook is called"
+msgstr "Ausführende Aktion, wenn der Delete-Hook aufgerufen wird"
+
+#: pntemplates/dizkus_admin_preferences.html:177
+msgid "Restore defaults"
+msgstr "Standard wiederherstellen"
 

@@ -6,7 +6,7 @@
  * @copyright 2003 by Andreas Krapohl, 2004 by Frank Schummertz
  * @package Dizkus
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
- * @link http://www.dizkus.com
+ * @link http://code.zikula.org/dizkus
  */
 
 $dom = ZLanguage::getModuleDomain('Dizkus');
@@ -26,7 +26,7 @@ $modversion['license']        = 'pndocs/license.txt';
 $modversion['id']             = '62';
 $modversion['official']       = 0;
 $modversion['author']         = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer';
-$modversion['contact']        = 'http://www.dizkus.com';
+$modversion['contact']        = 'http://code.zikula.org/dizkus';
 $modversion['admin']          = 1;
 $modversion['user']           = 1;
 
