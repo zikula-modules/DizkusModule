@@ -2434,7 +2434,7 @@ msgstr "Kategorien"
 
 #: pntemplates/dizkus_admin_preferences.html:12
 msgid "Forums are accessible to visitors"
-msgstr "Forenzugriff für Besucher deaktivieren"
+msgstr "Forum ist für Besucher verfügbar"
 
 #: pntemplates/dizkus_admin_preferences.html:16
 msgid "If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."
