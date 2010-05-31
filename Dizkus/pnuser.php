@@ -1052,26 +1052,6 @@ function Dizkus_user_print($args=array())
 }
 
 /**
- * search
- * internal search function
- */
-function Dizkus_user_search($args=array())
-{
-    $disabled = dzk_available();
-    if (!is_bool($disabled)) {
-        return $disabled;
-    }
-
-    $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-
-    if (!$submit) {
-        return pnModAPIFunc('Dizkus', 'search', 'internalsearchoptions');
-    } else {
-        return pnModAPIFunc('Dizkus', 'search', 'search');
-    }
-}
-
-/**
  * movepost
  * Move a single post to another thread
  * added by by el_cuervo -- dev-postnuke.com
