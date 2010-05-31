@@ -36,10 +36,11 @@ function Dizkus_accountapi_getall($args)
     }
 
     // Create an array of links to return
-    if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
-        $items['1'] = array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
-                            'title'   => __('Forum', $dom),
-                            'icon'    => 'icon_forumprefs.gif');
+    $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
+    if (count($userforums) <> 0) {
+        $items[] = array('url'     => pnModURL('Dizkus', 'user', 'prefs'),
+                         'title'   => __('Forum', $dom),
+                         'icon'    => 'icon_forumprefs.gif');
     }
 
     // Return the items
