@@ -19,6 +19,7 @@ Minimum PHP version 5.2.0!
 + added some index fields to certain tables to improve performance 
 + added #205    admin settings for choosing the avatar type
 + fixed #204    removed usage of behaviour.js
++ fixed #192    no link in profile overview if permission for all useres are "none"
 + fixed #154    changed feed import
 + removed some previously deprecated plugins (e.g. pnfdate_format, pnforumcolorcss, gravatar)
 * unused plugins: adminlink, allowedhtml (can be removed in the near future)
