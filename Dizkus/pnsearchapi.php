@@ -38,27 +38,12 @@ function Dizkus_searchapi_options($args)
  * Do last minute access checking and assign URL to items
  *
  * Access checking is ignored since access check has
- * already been done. But we do add a URL to the topic found
+ * already been done. But we add a link to the topic found
  */
 function Dizkus_searchapi_search_check(&$args)
 {
-    $extra = unserialize($args['datarow']['extra']);
-    $args['datarow']['url'] = pnModUrl('Dizkus', 'user', 'viewtopic', array('topic' => $extra['topic_id']));
+    $args['datarow']['url'] = $args['datarow']['extra'];
     return true;
-}
-
-/**
- * Search form component
- */
-function Dizkus_searchapi_internalsearchoptions($args)
-{
-    // Create output object - this object will store all of our output so that
-    // we can return it easily when required
-    $render = pnRender::getInstance('Dizkus', false, null, true);
-
-    $render->assign('forums', pnModAPIFunc('Dizkus', 'admin', 'readforums'));
-
-    return $render->fetch('dizkus_user_search.html');
 }
 
 /**
@@ -67,9 +52,6 @@ function Dizkus_searchapi_internalsearchoptions($args)
  * @params q             string the text to search
  * @params searchtype    string 'AND', 'OR' or 'EXACT'
  * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
- * @params numlimit      int    limit for search, defaultsto 10
- * @params page          int    number of page t show
- * @params startnum      int    the first item to show
  */
 function Dizkus_searchapi_search($args)
 {
@@ -155,16 +137,15 @@ function Dizkus_searchapi_nonfulltext($args)
                 $q = DataUtil::formatForStore($args['q']);
                 $wherematch .= "(p.post_text LIKE '%$q%' OR t.topic_title LIKE '%$q%') \n";
             } else {
-                $wherematch = array();
-                $words = array_filter(explode(' ', $args['q']));
-                foreach ($words as $word)
-                {
+                $wherematcharray = array();
+                $words = explode(' ', $args['q']);
+                foreach ($words as $word) {
                     $word = DataUtil::formatForStore($word);
                     // get post_text and match up forums/topics/posts
                     //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                    $wherematch[] = "(p.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                    $wherematcharray[] = "(p.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
                 }
-                $wherematch = implode(($searchtype == 'OR' ? ' OR ' : ' AND '), $wherematch);
+                $wherematch = implode(($searchtype == 'OR' ? ' OR ' : ' AND '), $wherematcharray);
             }
     }
 
@@ -187,8 +168,8 @@ function Dizkus_searchapi_nonfulltext($args)
         $whereforums = 'p.forum_id IN(' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
     }
 
-    // sorting not necessary, this is done when reading the serch_result table
-    return start_search($wherematch, '', $whereforums, '', $args);
+    start_search($wherematch, $whereforums);
+    return true;
 }
 
 /**
@@ -203,12 +184,9 @@ function Dizkus_searchapi_nonfulltext($args)
  * @params q             string the text to search
  * @params searchtype    string 'AND', 'OR' or 'EXACT'
  * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
- * @params numlimit      int    limit for search, defaultsto 10
- * @params page          int    number of page t show
- * @params startnum      int    the first item to show
  * from Dizkus:
  * @params searchwhere   string 'posts' or 'author'
- * @params forums        array of forums to dearch
+ * @params forums        array of forums to search
  * @returns true or false
  */
 function Dizkus_searchapi_fulltext($args)
@@ -227,13 +205,8 @@ function Dizkus_searchapi_fulltext($args)
 
     // partial sql stored in $wherematch
     $wherematch = '';
-    // selectmatch contains almost the same as wherematch without the last AND and
-    // will be used in the SELECT part like ... selectmatch as score
-    // to enable ordering the results by score
-    $selectmatch = '';
-    $havingmatch = '';
-    switch ($args['searchwhere'])
-    {
+
+    switch ($args['searchwhere']) {
         case 'author':
             // we search by author only
             $searchauthor = pnUserGetIDFromName($args['q']);
@@ -250,29 +223,23 @@ function Dizkus_searchapi_fulltext($args)
             if ($searchtype == 'EXACT') {
                 $q = DataUtil::formatForStore($args['q']);
                 $wherematch  =  "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
-                $selectmatch = ", MATCH p.post_text AGAINST ('$q') as textscore, MATCH t.topic_title AGAINST ('$q') as subjectscore \n";
             } else {
-                /* $selectmatch = array();
-                $wherematch  = array();
-                $havingmatch = array();
-                */
-                if (pnModGetVar('Dizkus', 'extendedsearch', 'no') == 'no') {
-                    $words = array_filter(explode(' ', $args['q']));
-                    $q = array();
-                    foreach ($words as $word) {
-                        $word = trim(DataUtil::formatForStore($word));
-                        // get post_text and match up topics/posts
-                        $q[] = $searchtype == 'OR' ? "($word)" : $word;
-                    }
-                    $q = implode(' ', $q);
-                    $selectmatch = ", MATCH p.post_text AGAINST ('$q') as textscore, MATCH t.topic_title AGAINST ('$q') as subjectscore \n";
-                    $wherematch  = "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
-                    $havingmatch = "(textscore > 0.2 OR subjectscore > 0.2)";
-                } else {
+                $plusminuscount = preg_match('/[\+\-]/', $args['q']);
+                if ((pnModGetVar('Dizkus', 'extendedsearch', 'no') == 'yes') && ($plusminuscount > 0)) {
+                    // seems to be an extended search
                     $q = DataUtil::formatForStore($args['q']);
-                    $selectmatch = ", MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) as textscore, MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE) as subjectscore \n";
                     $wherematch  = "(MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) OR MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE)) \n";
-                    $havingmatch = "(textscore > 0.2 OR subjectscore > 0.2)";
+                } else {
+                    $wherematcharray = array();
+                    $words = explode(' ', $args['q']);
+                    foreach ($words as $word) {
+                        $word = DataUtil::formatForStore($word);
+                        // get post_text and match up forums/topics/posts
+                        //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                        $wherematcharray[] .= "(MATCH p.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
+                        //$wherematcharray[] = "(p.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                    }
+                    $wherematch = implode(($searchtype == 'OR' ? ' OR ' : ' AND '), $wherematcharray);
                 }
             }
     }
@@ -300,53 +267,40 @@ function Dizkus_searchapi_fulltext($args)
         $whereforums .= 'p.forum_id IN (' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
     }
 
-    // sorting not necessary, this is done when reading the serch_result table
-    return start_search($wherematch, $selectmatch, $whereforums, $havingmatch, $args);
+
+    start_search($wherematch, $whereforums);
+    return true;
 }
 
-function start_search($wherematch='', $selectmatch='', $whereforums='', $havingmatch='', $args=array())
+function start_search($wherematch, $whereforums)
 {
     pnModDBInfoLoad('Search');
-    $pntable = pnDBGetTables();
+    $ztable = pnDBGetTables();
 
-    if (!empty($havingmatch)) {
-        $havingmatch = "HAVING $havingmatch";
-    }
-
-    $sql = 'SELECT DISTINCT
+    $topicurl = pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => '%%%'));
+    $sessionid = DataUtil::formatForStore(session_id());
+    $now = time();
+    $showtextinsearchresults = pnModGetVar('Dizkus', 'showtextinsearchresults', 'no');
+    $textsql = ($showtextinsearchresults == 'yes') ? 'REPLACE(p.post_text, \'[addsig]\', \'\') as text' : '\'\'';
+        
+    $sql = 'INSERT INTO ' . $ztable['search_result'] . '
+            (sres_title, sres_text, sres_module, sres_extra, sres_created, sres_found, sres_sesid)
+            SELECT
               t.topic_title,
-              t.topic_id,
-              p.post_text,
-              p.post_time
-              '.$selectmatch.'
-              FROM '.$pntable['dizkus_posts'].' AS p,
-                   '.$pntable['dizkus_topics'].' AS t
+              '.$textsql.',
+              \'Dizkus\',
+              REPLACE (\''.$topicurl.'\', \'%%%\', t.topic_id) as extra,
+              p.post_time,
+              NOW(),
+              \''.$sessionid.'\'
+              FROM '.$ztable['dizkus_posts'].' AS p,
+                   '.$ztable['dizkus_topics'].' AS t
               WHERE '.$wherematch.'
               AND p.topic_id=t.topic_id
               AND '.$whereforums.'
-              GROUP BY t.topic_id
-              '.$havingmatch;
+              GROUP BY p.topic_id';
 
     $res = DBUtil::executeSQL($sql);
-    $colarray = array('topic_title', 'topic_id', 'post_text', 'post_time');
-    $result    = DBUtil::marshallObjects($res, $colarray);
-
-    if (is_array($result) && !empty($result)) {
-        // Process the result set and insert into search result table
-        $showtextinsearchresults = pnModGetVar('Dizkus', 'showtextinsearchresults', 'no');
-        $sessionid = session_id();
-        
-        foreach($result as $resline) {
-            $topictext = ($showtextinsearchresults == 'yes') ? DataUtil::formatForStore(str_replace('[addsig]', '', $resline['post_text'])) : '';
-            $searchresult[] = array('title'   => $resline['topic_title'],
-                                    'text'    => $topictext,
-                                    'extra'   => serialize(array('topic_id' => $resline['topic_id'])),
-                                    'module'  => 'Dizkus',
-                                    'created' => $resline['post_time'],
-                                    'session' => $sessionid);
-        }
-        DBUtil::insertObjectArray($searchresult, 'search_result');
-    }
-            
+    
     return true;
 }
