@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dizkus\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-28 13:32+0000\n"
+"POT-Creation-Date: 2010-06-01 08:11+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Carsten Volmer <carsten@zikula.org>\n"
 "Language-Team: Carsten Volmer <carsten@zikula.org>\n"
@@ -144,9 +144,9 @@ msgstr "Error! No mode or illegal mode parameter (%s) in 'Dizkus_ajax_lockunlock
 #: pnuser.php:579
 #: pnuser.php:594
 #: pnuser.php:952
-#: pnuser.php:1097
-#: pnuser.php:1154
-#: pnuser.php:1222
+#: pnuser.php:1077
+#: pnuser.php:1134
+#: pnuser.php:1202
 msgid "Error! You do not have authorisation to moderate this category or forum."
 msgstr "Fehler! Es liegt keine Moderationsberechtigung auf die Kategorie bzw. das Forum vor."
 
@@ -284,8 +284,7 @@ msgstr "Erlaubtes HTML:"
 msgid "Go to topic"
 msgstr "Gehe zum Thema"
 
-#: pnsearchapi.php:88
-#: pntemplates/dizkus_user_search.html:15
+#: pnsearchapi.php:70
 #, php-format
 msgid "Error! For forum searches, the search string must be between %1$s and %2$s characters in length."
 msgstr "Fehler! Für die Forensuche muss der Suchbegriff zwischen %1$s und %2$s Zeichen lang sein."
@@ -575,11 +574,11 @@ msgstr "Fehler! Für die E-Mail muss die Betreffzeile angegeben sein."
 msgid "Hello! Please visit this link. I think it will be of interest to you."
 msgstr "Hallo! Folgender Forenbeitrag könnte eventuell von Interesse sein."
 
-#: pnuser.php:1258
+#: pnuser.php:1238
 msgid "Error! You did not select a target forum for the move."
 msgstr "Fehler! Es wurde kein Zielforum zum Verschieben angegeben."
 
-#: pnuser.php:1284
+#: pnuser.php:1264
 msgid "Error! You did not select a target topic to join."
 msgstr "Fehler! Es wurde kein Zielforum zum Zusammenfassen angegeben."
 
@@ -600,7 +599,7 @@ msgstr "Automatisch erstelltes Thema"
 msgid "Automatically-created topic for discussion of submitted entries"
 msgstr "Automatisch erstelltes Thema zur Diskussion von beliebigen Beiträgen"
 
-#: pnaccountapi.php:41
+#: pnaccountapi.php:42
 #: pntemplates/dizkus_user_topicsubscriptions.html:33
 #: pntemplates/dizkus_ajax_editforum.html:13
 #: pntemplates/dizkus_user_latestposts.html:62
@@ -742,28 +741,16 @@ msgstr "Fehler! In der Datei 'backforum.php' wurde eine ungültige Kategorie-ID 
 msgid "Error! Could not find a template for an %s-type feed."
 msgstr "Fehler! Es konnte kein Template für den Feed-Typ %s gefunden werden."
 
-#: pntemplates/dizkus_user_searchresults.html:5
-#: pntemplates/dizkus_user_searchresults.html:7
-#: pntemplates/dizkus_searchresults.html:7
-msgid "Search results for"
-msgstr "Suchergebnisse für"
+#: pntemplates/dizkus_user_topicsubscriptions.html:2
+#: pntemplates/dizkus_user_prefs.html:46
+#: pntemplates/dizkus_user_prefs.html:47
+#: pntemplates/dizkus_admin_managesubscriptions.html:16
+msgid "Manage topic subscriptions"
+msgstr "Themeabos verwalten"
 
-#: pntemplates/dizkus_user_searchresults.html:5
-#: pntemplates/dizkus_user_search.html:75
-msgid "Hits"
-msgstr "Treffer"
-
-#: pntemplates/dizkus_user_searchresults.html:19
-#: pntemplates/dizkus_ajax_editpost.html:5
-#: pntemplates/dizkus_searchresults.html:19
-msgid "Status"
-msgstr "Status"
-
-#: pntemplates/dizkus_user_searchresults.html:20
 #: pntemplates/dizkus_user_topicsubscriptions.html:18
 #: pntemplates/dizkus_ajax_editforum.html:24
 #: pntemplates/dizkus_user_moderateforum.html:24
-#: pntemplates/dizkus_searchresults.html:20
 #: pntemplates/dizkus_user_viewforum.html:100
 #: pntemplates/dizkus_user_latestposts.html:40
 #: pntemplates/dizkus_user_latestposts.html:94
@@ -771,135 +758,6 @@ msgstr "Status"
 #: pntemplates/dizkus_admin_managesubscriptions.html:21
 msgid "Topic"
 msgstr "Thema"
-
-#: pntemplates/dizkus_user_searchresults.html:21
-#: pntemplates/dizkus_user_moderateforum.html:25
-#: pntemplates/dizkus_user_moderateforum.html:58
-#: pntemplates/dizkus_searchresults.html:21
-#: pntemplates/dizkus_user_viewforum.html:101
-#: pntemplates/dizkus_user_viewforum.html:146
-#: pntemplates/dizkus_user_latestposts.html:41
-#: pntemplates/dizkus_user_latestposts.html:64
-#: pntemplates/dizkus_user_latestposts.html:95
-#: pntemplates/dizkus_user_latestposts.html:118
-#: pntemplates/dizkus_user_latestposts.html:150
-#: pntemplates/dizkus_user_latestposts.html:173
-msgid "Replies"
-msgstr "Antworten"
-
-#: pntemplates/dizkus_user_searchresults.html:22
-#: pntemplates/dizkus_user_moderateforum.html:55
-#: pntemplates/dizkus_searchresults.html:22
-#: pntemplates/dizkus_user_viewforum.html:143
-#: pntemplates/dizkus_admin_managesubscriptions.html:22
-msgid "Poster"
-msgstr "Verfasser"
-
-#: pntemplates/dizkus_user_searchresults.html:23
-#: pntemplates/dizkus_user_moderateforum.html:54
-#: pntemplates/dizkus_searchresults.html:23
-#: pntemplates/dizkus_user_viewforum.html:102
-#: pntemplates/dizkus_user_viewforum.html:147
-msgid "Views"
-msgstr "Aufrufe"
-
-#: pntemplates/dizkus_user_searchresults.html:24
-#: pntemplates/dizkus_searchresults.html:24
-msgid "Date"
-msgstr "Datum"
-
-#: pntemplates/dizkus_user_searchresults.html:35
-#: pntemplates/dizkus_user_moderateforum.html:40
-#: pntemplates/dizkus_searchresults.html:35
-#: pntemplates/dizkus_user_viewforum.html:126
-#: pntemplates/dizkus_user_latestposts.html:53
-#: pntemplates/dizkus_user_latestposts.html:107
-#: pntemplates/dizkus_user_latestposts.html:162
-msgid "Sticky topic"
-msgstr "Thema markieren"
-
-#: pntemplates/dizkus_user_searchresults.html:35
-#: pntemplates/dizkus_user_moderateforum.html:40
-#: pntemplates/dizkus_searchresults.html:35
-#: pntemplates/dizkus_user_viewforum.html:126
-#: pntemplates/dizkus_user_latestposts.html:53
-#: pntemplates/dizkus_user_latestposts.html:107
-#: pntemplates/dizkus_user_latestposts.html:162
-msgid "Topic is sticky (it will always stay at the top of the topics list)"
-msgstr "Markiertes Thema (Wird oben in der Themenliste festgesetzt)"
-
-#: pntemplates/dizkus_user_searchresults.html:38
-#: pntemplates/dizkus_searchresults.html:38
-#: pntemplates/dizkus_user_viewforum.html:129
-msgid "Locked topic"
-msgstr "Geschlossenes Thema"
-
-#: pntemplates/dizkus_user_searchresults.html:38
-#: pntemplates/dizkus_searchresults.html:38
-#: pntemplates/dizkus_user_viewforum.html:129
-#: pntemplates/dizkus_user_latestposts.html:56
-#: pntemplates/dizkus_user_latestposts.html:110
-#: pntemplates/dizkus_user_latestposts.html:165
-msgid "This topic is locked. No more posts accepted."
-msgstr "Das Thema ist abgeschlossen  Es sind keine neuen Beiträge möglich."
-
-#: pntemplates/dizkus_user_searchresults.html:41
-#: pntemplates/dizkus_user_moderateforum.html:46
-#: pntemplates/dizkus_searchresults.html:41
-#: pntemplates/dizkus_user_viewforum.html:132
-#: pntemplates/dizkus_user_footer.html:10
-#: pntemplates/dizkus_user_footer.html:14
-msgid "New posts since your last visit"
-msgstr "Keine neuen Beiträge seit dem letzten Besuch"
-
-#: pntemplates/dizkus_user_searchresults.html:43
-#: pntemplates/dizkus_user_moderateforum.html:48
-#: pntemplates/dizkus_searchresults.html:43
-#: pntemplates/dizkus_user_viewforum.html:134
-msgid "Normal topic"
-msgstr "Normales Thema"
-
-#: pntemplates/dizkus_user_searchresults.html:46
-#: pntemplates/dizkus_user_moderateforum.html:51
-#: pntemplates/dizkus_searchresults.html:46
-#: pntemplates/dizkus_user_viewforum.html:137
-#: pntemplates/dizkus_user_latestposts.html:59
-#: pntemplates/dizkus_user_latestposts.html:113
-#: pntemplates/dizkus_user_latestposts.html:168
-msgid "Hot topic"
-msgstr "Hot Topic"
-
-#: pntemplates/dizkus_user_searchresults.html:52
-#: pntemplates/dizkus_searchresults.html:52
-msgid "found in"
-msgstr "gefunden in"
-
-#: pntemplates/dizkus_user_searchresults.html:52
-#: pntemplates/dizkus_user_main.html:35
-#: pntemplates/dizkus_user_main.html:103
-#: pntemplates/dizkus_searchresults.html:52
-#: pntemplates/dizkus_centerblock_display.html:28
-msgid "Go to forum"
-msgstr "Gehe zum Forum"
-
-#: pntemplates/dizkus_user_searchresults.html:57
-#: pntemplates/dizkus_user_viewforum.html:152
-#: pntemplates/dizkus_user_header.html:89
-msgid "View latest posts"
-msgstr "Aktuellste Beiträge"
-
-#: pntemplates/dizkus_user_searchresults.html:62
-#: pntemplates/dizkus_user_moderateforum.html:83
-#: pntemplates/dizkus_user_viewforum.html:168
-msgid "There are no topics in this forum."
-msgstr "Keine neuen Themen in diesem Forum."
-
-#: pntemplates/dizkus_user_topicsubscriptions.html:2
-#: pntemplates/dizkus_user_prefs.html:46
-#: pntemplates/dizkus_user_prefs.html:47
-#: pntemplates/dizkus_admin_managesubscriptions.html:16
-msgid "Manage topic subscriptions"
-msgstr "Themeabos verwalten"
 
 #: pntemplates/dizkus_user_topicsubscriptions.html:19
 #: pntemplates/dizkus_user_topicsubscriptions.html:37
@@ -1215,7 +1073,6 @@ msgid "Category and forum:"
 msgstr "Kategorie und Forum:"
 
 #: pntemplates/dizkus_search.html:18
-#: pntemplates/dizkus_user_search.html:37
 msgid "All forums"
 msgstr "Alle Foren"
 
@@ -1240,7 +1097,6 @@ msgid "Postings"
 msgstr "Beiträge"
 
 #: pntemplates/dizkus_search.html:31
-#: pntemplates/dizkus_user_search.html:45
 msgid "Author"
 msgstr "Verfasser"
 
@@ -1616,59 +1472,6 @@ msgstr "Mitteilung"
 msgid "Delete post"
 msgstr "Beitrag löschen"
 
-#: pntemplates/dizkus_user_search.html:5
-#: pntemplates/dizkus_user_search.html:19
-msgid "Search"
-msgstr "Suchen"
-
-#: pntemplates/dizkus_user_search.html:14
-msgid "Search for"
-msgstr "Suchen nach"
-
-#: pntemplates/dizkus_user_search.html:23
-msgid "Connection"
-msgstr "Verbindung"
-
-#: pntemplates/dizkus_user_search.html:27
-msgid "all words [AND]"
-msgstr "alle Wörter [AND]"
-
-#: pntemplates/dizkus_user_search.html:28
-msgid "single words [OR]"
-msgstr "einzelne Wörter [OR]"
-
-#: pntemplates/dizkus_user_search.html:33
-msgid "Category and forum"
-msgstr "Kategorie und Forum"
-
-#: pntemplates/dizkus_user_search.html:52
-msgid "Order"
-msgstr "Reihenfolge"
-
-#: pntemplates/dizkus_user_search.html:56
-msgid "By date"
-msgstr "Nach Datum"
-
-#: pntemplates/dizkus_user_search.html:57
-msgid "By title"
-msgstr "Nach Titel"
-
-#: pntemplates/dizkus_user_search.html:58
-msgid "By forum"
-msgstr "nach Forum"
-
-#: pntemplates/dizkus_user_search.html:60
-msgid "By score"
-msgstr "Nach Relevanz"
-
-#: pntemplates/dizkus_user_search.html:66
-msgid "Limit search to"
-msgstr "Suche beschränken auf"
-
-#: pntemplates/dizkus_user_search.html:70
-msgid "No limits"
-msgstr "Unbeschränkt"
-
 #: pntemplates/dizkus_user_viewip.html:5
 msgid "User IP and account information"
 msgstr "IP und Benutzerkonto-Informationen"
@@ -1715,6 +1518,12 @@ msgstr "Themen"
 #: pntemplates/dizkus_user_viewforum.html:150
 msgid "Last post"
 msgstr "Letzter Beitrag"
+
+#: pntemplates/dizkus_user_main.html:35
+#: pntemplates/dizkus_user_main.html:103
+#: pntemplates/dizkus_centerblock_display.html:28
+msgid "Go to forum"
+msgstr "Gehe zum Forum"
 
 #: pntemplates/dizkus_user_main.html:51
 #: pntemplates/dizkus_user_main.html:119
@@ -1788,6 +1597,10 @@ msgstr "Weiter"
 #: pntemplates/dizkus_user_emailtopic.html:17
 msgid "Sent to"
 msgstr "Senden an"
+
+#: pntemplates/dizkus_ajax_editpost.html:5
+msgid "Status"
+msgstr "Status"
 
 #: pntemplates/dizkus_user_singlepost.html:11
 msgid "Show hidden postings of ignored user"
@@ -1981,13 +1794,79 @@ msgstr "Moderieren"
 msgid "Go back to normal forum view"
 msgstr "Zurück zur normalen Forenansicht"
 
+#: pntemplates/dizkus_user_moderateforum.html:25
+#: pntemplates/dizkus_user_moderateforum.html:58
+#: pntemplates/dizkus_user_viewforum.html:101
+#: pntemplates/dizkus_user_viewforum.html:146
+#: pntemplates/dizkus_user_latestposts.html:41
+#: pntemplates/dizkus_user_latestposts.html:64
+#: pntemplates/dizkus_user_latestposts.html:95
+#: pntemplates/dizkus_user_latestposts.html:118
+#: pntemplates/dizkus_user_latestposts.html:150
+#: pntemplates/dizkus_user_latestposts.html:173
+msgid "Replies"
+msgstr "Antworten"
+
 #: pntemplates/dizkus_user_moderateforum.html:27
 msgid "Selection"
 msgstr "Auswahl"
 
+#: pntemplates/dizkus_user_moderateforum.html:40
+#: pntemplates/dizkus_user_viewforum.html:126
+#: pntemplates/dizkus_user_latestposts.html:53
+#: pntemplates/dizkus_user_latestposts.html:107
+#: pntemplates/dizkus_user_latestposts.html:162
+msgid "Sticky topic"
+msgstr "Thema markieren"
+
+#: pntemplates/dizkus_user_moderateforum.html:40
+#: pntemplates/dizkus_user_viewforum.html:126
+#: pntemplates/dizkus_user_latestposts.html:53
+#: pntemplates/dizkus_user_latestposts.html:107
+#: pntemplates/dizkus_user_latestposts.html:162
+msgid "Topic is sticky (it will always stay at the top of the topics list)"
+msgstr "Markiertes Thema (Wird oben in der Themenliste festgesetzt)"
+
 #: pntemplates/dizkus_user_moderateforum.html:43
 msgid "This topic is locked. No more posts accepted"
 msgstr "Dieses Thema ist abgeschlossen. Es sind keine neuen Beiträge möglich."
+
+#: pntemplates/dizkus_user_moderateforum.html:46
+#: pntemplates/dizkus_user_viewforum.html:132
+#: pntemplates/dizkus_user_footer.html:10
+#: pntemplates/dizkus_user_footer.html:14
+msgid "New posts since your last visit"
+msgstr "Keine neuen Beiträge seit dem letzten Besuch"
+
+#: pntemplates/dizkus_user_moderateforum.html:48
+#: pntemplates/dizkus_user_viewforum.html:134
+msgid "Normal topic"
+msgstr "Normales Thema"
+
+#: pntemplates/dizkus_user_moderateforum.html:51
+#: pntemplates/dizkus_user_viewforum.html:137
+#: pntemplates/dizkus_user_latestposts.html:59
+#: pntemplates/dizkus_user_latestposts.html:113
+#: pntemplates/dizkus_user_latestposts.html:168
+msgid "Hot topic"
+msgstr "Hot Topic"
+
+#: pntemplates/dizkus_user_moderateforum.html:54
+#: pntemplates/dizkus_user_viewforum.html:102
+#: pntemplates/dizkus_user_viewforum.html:147
+msgid "Views"
+msgstr "Aufrufe"
+
+#: pntemplates/dizkus_user_moderateforum.html:55
+#: pntemplates/dizkus_user_viewforum.html:143
+#: pntemplates/dizkus_admin_managesubscriptions.html:22
+msgid "Poster"
+msgstr "Verfasser"
+
+#: pntemplates/dizkus_user_moderateforum.html:83
+#: pntemplates/dizkus_user_viewforum.html:168
+msgid "There are no topics in this forum."
+msgstr "Keine neuen Themen in diesem Forum."
 
 #: pntemplates/dizkus_user_moderateforum.html:89
 msgid "Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."
@@ -2066,25 +1945,6 @@ msgstr "Zielthema"
 #: pntemplates/dizkus_admin_main.html:2
 msgid "Dizkus Administration"
 msgstr "Dizkus Administration"
-
-#: pntemplates/dizkus_searchresults.html:3
-#, php-format
-msgid "Forums: %s Hit"
-msgid_plural "Forums: %s Hits"
-msgstr[0] "Foren: %s Treffer"
-msgstr[1] "Foren: %s Treffer"
-
-#: pntemplates/dizkus_searchresults.html:41
-msgid "New messages have been posted under this topic since your last visit"
-msgstr "Seit dem letzten Besuch sind neue Beiträge in diesem Thema verfasst worden"
-
-#: pntemplates/dizkus_searchresults.html:57
-msgid "View most-recent posting"
-msgstr "Aktuellsten Beitrag anzeigen"
-
-#: pntemplates/dizkus_searchresults.html:62
-msgid "No topics"
-msgstr "Keine Themen"
 
 #: pntemplates/dizkus_mail_notifyuser.txt:2
 #, php-format
@@ -2202,6 +2062,17 @@ msgstr "ID des Zielthemas"
 msgid "Start a new topic"
 msgstr "Neues Thema anlegen"
 
+#: pntemplates/dizkus_user_viewforum.html:129
+msgid "Locked topic"
+msgstr "Geschlossenes Thema"
+
+#: pntemplates/dizkus_user_viewforum.html:129
+#: pntemplates/dizkus_user_latestposts.html:56
+#: pntemplates/dizkus_user_latestposts.html:110
+#: pntemplates/dizkus_user_latestposts.html:165
+msgid "This topic is locked. No more posts accepted."
+msgstr "Das Thema ist abgeschlossen  Es sind keine neuen Beiträge möglich."
+
 #: pntemplates/dizkus_user_viewforum.html:140
 msgid "Attachments"
 msgstr "Anhänge"
@@ -2209,6 +2080,11 @@ msgstr "Anhänge"
 #: pntemplates/dizkus_user_viewforum.html:150
 msgid "By"
 msgstr "Von"
+
+#: pntemplates/dizkus_user_viewforum.html:152
+#: pntemplates/dizkus_user_header.html:89
+msgid "View latest posts"
+msgstr "Aktuellste Beiträge"
 
 #: pntemplates/dizkus_user_footer.html:11
 #, php-format
