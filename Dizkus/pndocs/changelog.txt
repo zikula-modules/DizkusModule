@@ -7,21 +7,34 @@ Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
 3.1 (fs,cv)
 ---------------------------------------------------------------------------------------------
-This version will not work in Zikula before 1.2.0+, preferred version 1.2.1 or later
+This version will not work in Zikula before 1.2.1+, preferred version 1.2.3 or later
 Minimum PHP version 5.2.0!
 + lots of internal improvements like E_ALL fixes and replacing of deprecated PHP functions
 + finalized DBUtil
-+ removed posts_text table
++ removed posts_text table, review db structure #87
 + code cleanup
 + removed language defines in favour of gettext for Zikula 1.2.0+. 
 + default charset is now utf-8
 + replaced pnfdate_format with pndate_format
 + added some index fields to certain tables to improve performance 
-+ added #205    admin settings for choosing the avatar type
-+ fixed #204    removed usage of behaviour.js
-+ fixed #192    no link in profile overview if permission for all useres are "none"
++ added #205    admin settings for choosing the avatar type (better gravatar support)
++ added #33     Extend honorary ranks
++ added #152    hide useless userdata for anonymous users
++ fixed #153    changed onkeypress behaviour
 + fixed #154    changed feed import
-+ removed some previously deprecated plugins (e.g. pnfdate_format, pnforumcolorcss, gravatar)
++ fixed #156    Dizkus timezone issues
++ fixed #162    RSS pubDate format
++ fixed #163    improved rss output
++ fixed #190    refactoring search function / added extended search 
++ fixed #192    no link in profile overview if permission for all useres are "none"
++ fixed #200    accented characters makes text truncated
++ fixed #204    removed usage of behaviour.js
++ fixed #206    search wasn't working
++ fixed #208    Table "xyz_dizkus_topics" not updated after deleting a post
++ fixed #209    Could not change the topic of my posting
++ fixed #216    duplicate quotation marks
+
+* removed some previously deprecated plugins (e.g. pnfdate_format, pnforumcolorcss, gravatar)
 * unused plugins: adminlink, allowedhtml (can be removed in the near future)
 
 ---------------------------------------------------------------------------------------------
