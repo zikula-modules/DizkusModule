@@ -1,7 +1,4 @@
-/*
- * $Id$
- *
- */
+// Copyright Zikula Foundation 2009 - license GNU/LGPLv2.1 (or at your option, any later version).
 
 function getcheckboxvalue(id)
 {

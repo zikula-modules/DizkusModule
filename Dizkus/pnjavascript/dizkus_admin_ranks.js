@@ -1,8 +1,4 @@
-/**
- *
- * $Id:	dizkus_admin_ranks.js 929 2008-10-25 16:14:11Z Landseer	$
- *
- */
+// Copyright Zikula Foundation 2009 - license GNU/LGPLv2.1 (or at your option, any later version).
 
 function ShowRankImage(num,	path) 
 {
