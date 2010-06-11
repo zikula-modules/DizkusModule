@@ -194,9 +194,6 @@ function Dizkus_init()
     pnModSetVar('Dizkus', 'ignorelist_handling', 'medium');
     pnModSetVar('Dizkus', 'minsearchlength', 3);
     pnModSetVar('Dizkus', 'maxsearchlength', 30);
-    // 3.1
-    pnModSetVar('Dizkus', 'allowgravatars', 1);
-    pnModSetVar('Dizkus', 'gravatarimage', 'gravatar.gif');
 
     // Initialisation successful
     return true;
@@ -372,7 +369,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
  */
 function Dizkus_upgrade_to_3_0()
 {        
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
+    $dom = ZLanguage::getModuleDomain('Dizkus');
 
     // rename the old pnForum tablenames to Dizkus tablenames
     $tables = array('pnforum_categories'         => 'dizkus_categories',
@@ -477,7 +474,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
  */
 function Dizkus_upgrade_to_3_1()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
+    $dom = ZLanguage::getModuleDomain('Dizkus');
 
     // merge posts and posts_text table
     pnModDBInfoLoad('Dizkus');
@@ -562,6 +559,44 @@ function Dizkus_upgrade_to_3_1()
 
     return true;
 }
+
+
+/**
+ * interactiveupgrade_to_3_2
+ */
+function Dizkus_init_interactiveupgrade_to_3_2()
+{
+    $dom = ZLanguage::getModuleDomain('Dizkus');
+
+    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+      return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
+    }
+
+    $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
+
+    if (!empty($submit)) {
+        $result = Dizkus_upgrade_to_3_2();
+        if ($result<>true) {
+            return showforumerror(__('Error! Could not upgrade to Dizkus 3.2.', $dom), __FILE__, __LINE__);
+        }
+        return pnRedirect(pnModURL('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.2' )));
+    }
+
+    return pnRedirect(pnModURL('Modules', 'admin', 'view'));
+}
+
+
+/**
+ * upgrade to 3.2
+ */
+function Dizkus_upgrade_to_3_2()
+{
+    pnModDelVar('Dizkus', 'allowgravatars');
+    pnModDelVar('Dizkus', 'gravatarimage');
+
+    return true;
+}
+
 
 /**
  * create default categories - unfinished code, do not use

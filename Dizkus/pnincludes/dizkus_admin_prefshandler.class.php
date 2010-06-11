@@ -38,7 +38,6 @@ class dizkus_admin_prefshandler
         $render->assign('hideusers_checked', $modvars['hideusers'] == 'yes' ? 1 : 0);
         $render->assign('signaturemanagement_checked', $modvars['signaturemanagement'] == 'yes' ? 1 : 0);
         $render->assign('removesignature_checked', $modvars['removesignature'] == 'yes' ? 1 : 0);
-        $render->assign('allowgravatars_checked', $modvars['allowgravatars']);
         $render->assign('ignorelist_handling', $modvars['ignorelist_handling'] == 'yes' ? 1 : 0);
         $render->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
         $render->assign('newtopicconfirmation_checked', isset($modvars['newtopicconfirmation']) && $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
@@ -84,7 +83,6 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'hideusers',               $data['hideusers'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'signaturemanagement',     $data['signaturemanagement'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'removesignature',         $data['removesignature'] == 1 ? 'yes' : 'no');
-            pnModSetVar('Dizkus', 'allowgravatars',          $data['allowgravatars']);
             pnModSetVar('Dizkus', 'striptags',               $data['striptags'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'newtopicconfirmation',    $data['newtopicconf'] == 1 ? 'yes' : 'no');
             pnModSetVar('Dizkus', 'forum_enabled',           $data['forum_enabled'] == 1 ? 'yes' : 'no');
@@ -113,7 +111,6 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'signature_end',       $data['signature_end']);
             pnModSetVar('Dizkus', 'forum_disabled_info', $data['forum_disabled_info']);
             pnModSetVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
-            pnModSetVar('Dizkus', 'gravatarimage',       $data['gravatarimage']);
 
             LogUtil::registerStatus(__('Done! Updated configuration.', $dom));
 
@@ -128,7 +125,6 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'hideusers',               'no');
             pnModSetVar('Dizkus', 'signaturemanagement',     'no');
             pnModSetVar('Dizkus', 'removesignature',         'no');
-            pnModSetVar('Dizkus', 'allowgravatars',          1);
             pnModSetVar('Dizkus', 'striptags',               'no');
             pnModSetVar('Dizkus', 'newtopicconfirmation',    'no');
             pnModSetVar('Dizkus', 'forum_enabled',           'yes');
@@ -154,7 +150,6 @@ class dizkus_admin_prefshandler
             pnModSetVar('Dizkus', 'signature_end',       '');
             pnModSetVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom));
             pnModSetVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/pnimages/ranks');
-            pnModSetVar('Dizkus', 'gravatarimage',       'gravatar.gif');
 
             LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));
         }
