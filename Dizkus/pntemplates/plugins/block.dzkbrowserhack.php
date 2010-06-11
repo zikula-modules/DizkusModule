@@ -17,8 +17,8 @@
  * (Part of the Core with Zikula 1.3 and higher)
  *
  * <samp>
- * <!--[dzkbrowserhack condition="if lte IE 7"]-->something goes here<!--[/browserhack]-->
- * <!--[dzkbrowserhack condition="if lte IE 7" assign="var"]-->something goes here<!--[/browserhack]-->
+ * {dzkbrowserhack condition="if lte IE 7"}something goes here{/browserhack}
+ * {dzkbrowserhack condition="if lte IE 7" assign="var"}something goes here{/browserhack}
  * </samp>
  *
  * @param array $params    Array with keys 'condition' whatever goes in the browserhack,
@@ -36,7 +36,7 @@ function smarty_block_dzkbrowserhack($params, $content, &$render)
         }
 
         $condition = $params['condition'];
-        $output = "<!--[$condition]>$content<![endif]-->";
+        $output = "{$condition]>$content<![endif}";
         if (isset($params['assign'])) {
             $render->assign($params['assign'], $output);
         } else {

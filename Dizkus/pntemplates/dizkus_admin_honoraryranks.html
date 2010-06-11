@@ -1,79 +1,79 @@
-<!--[*  $Id$  *]-->
-<!--[pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/dizkus_admin_ranks.js']-->
-<!--[gt text="Edit honorary ranks" assign=templatetitle]-->
-<!--[include file='dizkus_admin_header.html']-->
+{*  $Id$  *}
+{pnpageaddvar name='javascript' value='modules/Dizkus/pnjavascript/dizkus_admin_ranks.js'}
+{gt text="Edit honorary ranks" assign=templatetitle}
+{include file='dizkus_admin_header.html'}
 
-<p class="z-informationmsg"><!--[gt text="In this page, you can create, delete and edit special honorary ranks awarded to particular users (site staff or project team members, for example). To create a new rank, simply type entries in the fields of the 'Create new rank' section and click on the 'Create honorary rank' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."]--></p>
-<form class="z-form" action="<!--[pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='1']-->" method="post">
+<p class="z-informationmsg">{gt text="In this page, you can create, delete and edit special honorary ranks awarded to particular users (site staff or project team members, for example). To create a new rank, simply type entries in the fields of the 'Create new rank' section and click on the 'Create honorary rank' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."}</p>
+<form class="z-form" action="{pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='1'}" method="post">
     <div>
         <input type="hidden" name="ranks[-1][rank_special]" value="1" />
         <fieldset>
-            <legend><!--[gt text="Create new rank"]--></legend>
+            <legend>{gt text="Create new rank"}</legend>
             <div class="z-formrow">
-                <label for="rank_title"><!--[gt text="Honorary rank name"]--></label>
+                <label for="rank_title">{gt text="Honorary rank name"}</label>
                 <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
             </div>
             <div class="z-formrow">
-                <label for="newrank_image"><!--[gt text="Internal Dizkus image"]--></label>
+                <label for="newrank_image">{gt text="Internal Dizkus image"}</label>
                 <div>
-                    <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('<!--[$pncore.Dizkus.url_ranks_images]-->')">
-                        <!--[foreach name='availableranks' item='rankimage' from=$rankimages]-->
-                        <option value="<!--[$rankimage]-->" <!--[if $smarty.foreach.availableranks.first]-->selected="selected"<!--[capture assign=selectedimage"]--><!--[$rankimage]--><!--[/capture]--><!--[/if]-->><!--[$rankimage]--></option>
-                        <!--[/foreach]-->
+                    <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('{$pncore.Dizkus.url_ranks_images}')">
+                        {foreach name='availableranks' item='rankimage' from=$rankimages}
+                        <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign=selectedimage"}{$rankimage}{/capture}{/if}>{$rankimage}</option>
+                        {/foreach}
                     </select>
-                    <img id="newimage" src="<!--[$pncore.Dizkus.url_ranks_images]-->/<!--[$selectedimage]-->" alt="rankimage" />
+                    <img id="newimage" src="{$pncore.Dizkus.url_ranks_images}/{$selectedimage}" alt="rankimage" />
                 </div>
             </div>
             <div class="z-formrow">
-                <label for="rank_desc"><!--[gt text="Description"]--></label>
+                <label for="rank_desc">{gt text="Description"}</label>
                 <input id="rank_desc" type="text" name="ranks[-1][rank_desc]" value="" maxlength="255" size="60" />
             </div>
             <p class="z-formnote z-informationmsg">
-                <!--[gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."]-->
+                {gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."}
             </p>
             <div class="z-formbuttons">
-                <button class="dzk_img add" type="submit" name="submit" value="<!--[gt text="Create"]-->"><!--[gt text="Create"]--></button>
+                <button class="dzk_img add" type="submit" name="submit" value="{gt text="Create"}">{gt text="Create"}</button>
             </div>
         </fieldset>
     </div>
 </form>
 
-<form class="z-form" action="<!--[pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='1']-->" method="post">
+<form class="z-form" action="{pnmodurl modname='Dizkus' type='admin' func='ranks' ranktype='1'}" method="post">
     <table class="z-admintable">
         <thead>
             <tr>
-                <th><!--[gt text="Honorary rank name"]--></th>
-                <th><!--[gt text="Image"]--></th>
-                <th><!--[gt text="Description"]--></th>
-                <th><!--[gt text="Delete rank"]--></th>
+                <th>{gt text="Honorary rank name"}</th>
+                <th>{gt text="Image"}</th>
+                <th>{gt text="Description"}</th>
+                <th>{gt text="Delete rank"}</th>
             </tr>
         </thead>
         <tbody>
-            <!--[foreach key=num item=rank from=$ranks]-->
-            <tr class="<!--[cycle values='z-odd,z-even']-->">
+            {foreach key=num item=rank from=$ranks}
+            <tr class="{cycle values='z-odd,z-even'}">
                 <td>
-                    <input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_title]" value="<!--[$rank.rank_title|pnvarprepfordisplay]-->" maxlength="50" size="20" />
+                    <input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|pnvarprepfordisplay}" maxlength="50" size="20" />
                 </td>
                 <td>
-                    <select name="ranks[<!--[$rank.rank_id]-->][rank_image]" id="rank_image<!--[$num]-->" onchange="ShowRankImage(<!--[$num]-->, '<!--[$pncore.Dizkus.url_ranks_images]-->')">
-                        <!--[foreach item='rankimage' from=$rankimages]-->
-                        <option value="<!--[$rankimage]-->" <!--[if $rankimage eq $rank.rank_image]-->selected="selected"<!--[/if]-->><!--[$rankimage]--></option>
-                        <!--[/foreach]-->
-                    </select><img id="image<!--[$num]-->" src="<!--[$pncore.Dizkus.url_ranks_images]-->/<!--[$rank.rank_image]-->" alt="rankimage" />
+                    <select name="ranks[{$rank.rank_id}][rank_image]" id="rank_image{$num}" onchange="ShowRankImage({$num}, '{$pncore.Dizkus.url_ranks_images}')">
+                        {foreach item='rankimage' from=$rankimages}
+                        <option value="{$rankimage}" {if $rankimage eq $rank.rank_image}selected="selected"{/if}>{$rankimage}</option>
+                        {/foreach}
+                    </select><img id="image{$num}" src="{$pncore.Dizkus.url_ranks_images}/{$rank.rank_image}" alt="rankimage" />
                 </td>
-                <td><input type="text" name="ranks[<!--[$rank.rank_id]-->][rank_desc]" value="<!--[$rank.rank_desc]-->" maxlength="255" size="40" /></td>
+                <td><input type="text" name="ranks[{$rank.rank_id}][rank_desc]" value="{$rank.rank_desc}" maxlength="255" size="40" /></td>
                 <td>
-                    <input type="checkbox" value="1" name="ranks[<!--[$rank.rank_id]-->][rank_delete]" />
+                    <input type="checkbox" value="1" name="ranks[{$rank.rank_id}][rank_delete]" />
                 </td>
             </tr>
-            <!--[foreachelse]-->
-            <tr class="z-admintableempty"><td colspan="4"><!--[gt text='No items found.']--></td></tr>
-            <!--[/foreach]-->
+            {foreachelse}
+            <tr class="z-admintableempty"><td colspan="4">{gt text='No items found.'}</td></tr>
+            {/foreach}
         </tbody>
     </table>
     <div class="z-formbuttons">
-        <button class="dzk_img ok" type="submit" name="submit" value="<!--[gt text="Submit"]-->"><!--[gt text="Submit"]--></button>
+        <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}">{gt text="Submit"}</button>
     </div>
 </form>
 
-<!--[include file='dizkus_admin_footer.html']-->
+{include file='dizkus_admin_footer.html'}

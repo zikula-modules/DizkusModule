@@ -38,7 +38,7 @@
  *   - checkgroups:  If set, checks if the users found are in the moderator groups (perforance issue!) default is no group check
  *
  * Example
- *   <!--[dizkusonline assign="islogged"]-->
+ *   {dizkusonline assign="islogged"}
  *
  *
  * @author       Frank Chestnut

@@ -587,7 +587,7 @@ function Dizkus_userapi_setcookies()
  * @params $args['last_visit'] string users last visit date
  * @params $args['last_visit_unix'] string users last visit date as timestamp
  * @params $args['topics_per_page'] int number of topics to read, -1 = all topics
- * @returns very complex array, see <!--[ debug ]--> for more information
+ * @returns very complex array, see { debug } for more information
  */
 function Dizkus_userapi_readforum($args)
 {
@@ -790,7 +790,7 @@ function cmp_forumtopicsort($a, $b)
  *                               the posts_per_page setting, ignores 'start'
  * @params $args['count']      bool  true if we have raise the read counter, default false
  * @params $args['nohook']     bool  true if transform hooks should not modify post text
- * @returns very complex array, see <!--[ debug ]--> for more information
+ * @returns very complex array, see { debug } for more information
  */
 function Dizkus_userapi_readtopic($args)
 {
@@ -1034,7 +1034,7 @@ function Dizkus_userapi_readtopic($args)
  * @params $args['reply_start'] bool true if we start a new reply
  * @params $args['attach_signature'] int 1=attach signature, otherwise no
  * @params $args['subscribe_topic'] int =subscribe topic, otherwise no
- * @returns very complex array, see <!--[ debug ]--> for more information
+ * @returns very complex array, see { debug } for more information
  */
 function Dizkus_userapi_preparereply($args)
 {

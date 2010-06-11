@@ -31,7 +31,7 @@
 
  * Example
  * 
- *   <!--[$MyVar|dzkpnbbsmile]-->
+ *   {$MyVar|dzkpnbbsmile}
  * 
  * 
  * @author       Frank Schummertz

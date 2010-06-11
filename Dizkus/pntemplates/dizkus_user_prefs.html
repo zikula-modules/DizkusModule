@@ -1,28 +1,28 @@
-<!--[*  $Id$  *]-->
-<!--[gt text="Personal settings" assign=templatetitle]-->
-<!--[pnpagesetvar name=title value=$templatetitle]-->
-<!--[include file='dizkus_user_header.html']-->
+{*  $Id$  *}
+{gt text="Personal settings" assign=templatetitle}
+{pnpagesetvar name=title value=$templatetitle}
+{include file='dizkus_user_header.html'}
 
 <div id="dzk_userprefs">
 
-    <h2><!--[gt text="Settings"]--></h2>
+    <h2>{gt text="Settings"}</h2>
 
     <div class="roundedbar dzk_rounded">
         <div class="inner">
 
             <ul class="linklist z-clearfix">
-                <li><!--[gt text="Recent posts order in topic view"]-->
+                <li>{gt text="Recent posts order in topic view"}
                     <br />
-                    <span style="display: none;" id="sortorder_asc"><a class="dzk_img sortorderasclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[gt text="Change post order"]-->"><!--[gt text="Change post order"]--></a>&nbsp;(<!--[gt text="Recent posts sort order"]-->: <!--[gt text="Oldest submissions at top"]-->)</span>
-                    <span style="display: none;" id="sortorder_desc"><a class="dzk_img sortorderdesclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="<!--[gt text="Change post order"]-->"><!--[gt text="Change post order"]--></a>&nbsp;(<!--[gt text="Recent posts sort order"]-->: <!--[gt text="Newest submissions at top"]-->)</span>
+                    <span style="display: none;" id="sortorder_asc"><a class="dzk_img sortorderasclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})</span>
+                    <span style="display: none;" id="sortorder_desc"><a class="dzk_img sortorderdesclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})</span>
                     <form action="javascript:void(0);" method="post">
                         <div>
-                            <input type="hidden" id="authid" name="authid" value="<!--[insert name='generateauthkey' module='Dizkus']-->" />
+                            <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                         </div>
                     </form>
                     <script type="text/javascript">
                         // <![CDATA[
-                        var post_order = '<!--[$post_order]-->';
+                        var post_order = '{$post_order}';
                         if(post_order == 'asc') {
                             Element.toggle('sortorder_asc');
                         } else {
@@ -32,55 +32,55 @@
                     </script>
                     <noscript>
                         <div>
-                            <!--[if $post_order == 'asc']-->
-                            <a class="dzk_img sortorderasclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"]-->" title="<!--[gt text="Change post order"]-->"><!--[gt text="Change post order"]--></a>&nbsp;(<!--[gt text="Recent posts sort order"]-->: <!--[gt text="Oldest submissions at top"]-->)
-                            <!--[else]-->
-                            <a class="dzk_img sortorderdesclink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"]-->" title="<!--[gt text="Change post order"]-->"><!--[gt text="Change post order"]--></a>&nbsp;(<!--[gt text="Recent posts sort order"]-->: <!--[gt text="Newest submissions at top"]-->)
-                            <!--[/if]-->
+                            {if $post_order == 'asc'}
+                            <a class="dzk_img sortorderasclink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})
+                            {else}
+                            <a class="dzk_img sortorderdesclink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})
+                            {/if}
                         </div>
                     </noscript>
                 </li>
             </ul>
             <ul class="linklist z-clearfix">
                 <li>
-                    <!--[gt text="Manage topic subscriptions"]--><br />
-                    <a class="dzk_img subscribetopiclink" href="<!--[pnmodurl modname='Dizkus' type=user func=topicsubscriptions]-->" title="<!--[gt text="Manage topic subscriptions"]-->"><!--[gt text="Manage topic subscriptions"]--></a>
+                    {gt text="Manage topic subscriptions"}<br />
+                    <a class="dzk_img subscribetopiclink" href="{pnmodurl modname='Dizkus' type=user func=topicsubscriptions}" title="{gt text="Manage topic subscriptions"}">{gt text="Manage topic subscriptions"}</a>
                 </li>
             </ul>
 
-            <!--[if $favorites_enabled eq 'yes']-->
+            {if $favorites_enabled eq 'yes'}
             <ul class="linklist z-clearfix">
                 <li>
-                    <!--[gt text="Favourites"]--><br />
-                    <a class="dzk_img showallforumslink" href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showallforums]-->" title="<!--[gt text="Show all forums"]-->"><!--[gt text="Show all forums"]--></a>
+                    {gt text="Favourites"}<br />
+                    <a class="dzk_img showallforumslink" href="{pnmodurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
                     <br />
-                    <a class="dzk_img showfavoriteslink" href="<!--[pnmodurl modname=Dizkus type=user func=prefs act=showfavorites]-->" title="<!--[gt text="Show favourites only"]-->"><!--[gt text="Show favourites only"]--></a>
+                    <a class="dzk_img showfavoriteslink" href="{pnmodurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
                 </li>
             </ul>
-            <!--[/if]-->
+            {/if}
 
-            <!--[if $signaturemanagement eq "yes"]-->
+            {if $signaturemanagement eq "yes"}
             <ul class="linklist z-clearfix">
                 <li>
-                    <!--[gt text="Posting display settings"]--><br />
-                    <a class="dzk_img subscribelink" href="<!--[pnmodurl modname=Dizkus type=user func=signaturemanagement]-->" title="<!--[gt text="Manage your signature"]-->"><!--[gt text="Manage your signature"]--></a>
+                    {gt text="Posting display settings"}<br />
+                    <a class="dzk_img subscribelink" href="{pnmodurl modname=Dizkus type=user func=signaturemanagement}" title="{gt text="Manage your signature"}">{gt text="Manage your signature"}</a>
                 </li>
             </ul>
-            <!--[/if]-->
+            {/if}
 
-            <!--[if $ignorelist_handling ne "none" and $contactlist_available]-->
+            {if $ignorelist_handling ne "none" and $contactlist_available}
             <ul class="linklist z-clearfix">
                 <li>
-                    <!--[gt text="'Ignore list' settings"]--><br />
-                    <a class="dzk_img subscribelink" href="<!--[pnmodurl modname=Dizkus type=user func=ignorelistmanagement]-->" title="<!--[gt text="Manage settings for the list of users that you are ignoring"]-->"><!--[gt text="Manage settings for your ignore list"]--></a>
+                    {gt text="'Ignore list' settings"}<br />
+                    <a class="dzk_img subscribelink" href="{pnmodurl modname=Dizkus type=user func=ignorelistmanagement}" title="{gt text="Manage settings for the list of users that you are ignoring"}">{gt text="Manage settings for your ignore list"}</a>
                 </li>
             </ul>
-            <!--[/if]-->
+            {/if}
 
         </div>
     </div>
 
-    <h2><!--[gt text="Personal settings for each forum"]--></h2>
+    <h2>{gt text="Personal settings for each forum"}</h2>
     <div class="forumbg dzk_rounded">
 
         <div class="inner">
@@ -88,79 +88,79 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt><span><!--[gt text="Category"]--> / <!--[gt text="Forums"]--></span></dt>
-                        <dd class="favorites"><span><!--[gt text="Subscription"]--></span></dd>
-                        <!--[if $favorites_enabled eq 'yes']-->
-                        <dd class="favorites"><span><!--[gt text="Favourites"]--></span></dd>
-                        <!--[/if]-->
+                        <dt><span>{gt text="Category"} / {gt text="Forums"}</span></dt>
+                        <dd class="favorites"><span>{gt text="Subscription"}</span></dd>
+                        {if $favorites_enabled eq 'yes'}
+                        <dd class="favorites"><span>{gt text="Favourites"}</span></dd>
+                        {/if}
                     </dl>
                 </li>
             </ul>
 
             <ul class="topiclist forums">
-                <!--[foreach item=category from=$tree]-->
+                {foreach item=category from=$tree}
                 <li class="row categorytitle">
-                    <a href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id]-->"><strong><!--[$category.cat_title|pnvarprepfordisplay]--></strong></a>
+                    <a href="{pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}"><strong>{$category.cat_title|pnvarprepfordisplay}</strong></a>
                 </li>
-                <!--[foreach item=forum from=$category.forums]-->
+                {foreach item=forum from=$category.forums}
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
-                            <a href="<!--[pnmodurl modname='Dizkus' type=user func=viewforum forum=$forum.forum_id]-->"><strong><!--[$forum.forum_name|pnvarprepfordisplay]--></strong></a>
-                            <span><!--[$forum.forum_desc|pnvarprephtmldisplay]--></span>
+                            <a href="{pnmodurl modname='Dizkus' type=user func=viewforum forum=$forum.forum_id}"><strong>{$forum.forum_name|pnvarprepfordisplay}</strong></a>
+                            <span>{$forum.forum_desc|pnvarprephtmldisplay}</span>
                         </dt>
                         <dd class="favorites">
-                            <a id="subscribeforumbutton_<!--[$forum.forum_id]-->"   class="hidden subscribelink" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
-                            <a id="unsubscribeforumbutton_<!--[$forum.forum_id]-->" class="hidden unsubscribelink" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
+                            <a id="subscribeforumbutton_{$forum.forum_id}"   class="hidden subscribelink" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'subscribe');" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                            <a id="unsubscribeforumbutton_{$forum.forum_id}" class="hidden unsubscribelink" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'unsubscribe');" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                             <script type="text/javascript">
                                 // <![CDATA[
-                                var is_subscribed = <!--[$forum.is_subscribed]-->;
+                                var is_subscribed = {$forum.is_subscribed};
                                 if(is_subscribed == 0) {
-                                    $('subscribeforumbutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                                    $('subscribeforumbutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                                 } else {
-                                    $('unsubscribeforumbutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                                    $('unsubscribeforumbutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                                 }
                                 // ]]>
                             </script>
                             <noscript>
                                 <div>
-                                    <!--[if $forum.is_subscribed == 0]-->
-                                    <a class="subscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
-                                    <!--[else]-->
-                                    <a class="unsubscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
-                                    <!--[/if]-->
+                                    {if $forum.is_subscribed == 0}
+                                    <a class="subscribelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                                    {else}
+                                    <a class="unsubscribelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
+                                    {/if}
                                 </div>
                             </noscript>
                         </dd>
-                        <!--[if $favorites_enabled eq 'yes']-->
+                        {if $favorites_enabled eq 'yes'}
                         <dd class="favorites">
-                            <a id="addfavoritebutton_<!--[$forum.forum_id]-->"	class="hidden addfavoritelink" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'add');"	href="javascript:void(0);" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
-                            <a id="removefavoritebutton_<!--[$forum.forum_id]-->" class="hidden removefavoritelink" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'remove');" href="javascript:void(0);" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
+                            <a id="addfavoritebutton_{$forum.forum_id}"	class="hidden addfavoritelink" onclick="javascript:addremovefavorite({$forum.forum_id}, 'add');"	href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                            <a id="removefavoritebutton_{$forum.forum_id}" class="hidden removefavoritelink" onclick="javascript:addremovefavorite({$forum.forum_id}, 'remove');" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                             <script type="text/javascript">
                                 // <![CDATA[
-                                var is_favorite = <!--[$forum.is_favorite]-->;
+                                var is_favorite = {$forum.is_favorite};
                                 if(is_favorite == 0) {
-                                    $('addfavoritebutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                                    $('addfavoritebutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                                 } else {
-                                    $('removefavoritebutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                                    $('removefavoritebutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                                 }
                                 // ]]>
                             </script>
                             <noscript>
                                 <div>
-                                    <!--[if $forum.is_favorite eq 0]-->
-                                    <a class="addfavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
-                                    <!--[else]-->
-                                    <a class="removefavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs]-->" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
-                                    <!--[/if]-->
+                                    {if $forum.is_favorite eq 0}
+                                    <a class="addfavoritelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                                    {else}
+                                    <a class="removefavoritelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                                    {/if}
                                 </div>
                             </noscript>
                         </dd>
-                        <!--[/if]-->
+                        {/if}
                     </dl>
                 </li>
-                <!--[/foreach]-->
-                <!--[/foreach]-->
+                {/foreach}
+                {/foreach}
             </ul>
 
         </div>
@@ -168,5 +168,5 @@
 
 </div>
 
-<!--[* end of the Dizkus container *]-->
+{* end of the Dizkus container *}
 </div>

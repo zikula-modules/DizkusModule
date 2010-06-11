@@ -1,95 +1,95 @@
-<!--[* $Id$ *]-->
+{* $Id$ *}
 
-<!--[include file='dizkus_user_header.html']-->
+{include file='dizkus_user_header.html'}
 
-<!--[if $forum.forum_desc <> '']-->
-<p class='ctheme-description'><!--[$forum.forum_desc|pnvarprephtmldisplay]--></p>
-<!--[/if]-->
+{if $forum.forum_desc <> ''}
+<p class='ctheme-description'>{$forum.forum_desc|pnvarprephtmldisplay}</p>
+{/if}
 
-<!--[if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in]-->
+{if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in}
 <div class="roundedbar dzk_rounded">
     <div class="inner">
         <ul id="dzk_javascriptareaforum" class="hidden linklist z-clearfix">
-            <!--[* Moderate *]-->
-            <!--[if $forum.access_comment]-->
-            <li><a class="dzk_img newtopiclink" title="<!--[gt text="Start a new topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id]-->"><!--[gt text="New topic"]--></a></li>
-            <!--[/if]-->
+            {* Moderate *}
+            {if $forum.access_comment}
+            <li><a class="dzk_img newtopiclink" title="{gt text="Start a new topic"}" href="{pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+            {/if}
 
-            <!--[if $pncore.logged_in]-->
+            {if $pncore.logged_in}
             <li>
-                <a class="dzk_img hidden subscribelink" id="subscribeforumbutton_<!--[$forum.forum_id]-->" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'subscribe');" href="javascript:void(0);" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a>
-                <a class="dzk_img hidden unsubscribelink" id="unsubscribeforumbutton_<!--[$forum.forum_id]-->" onclick="javascript:subscribeunsubscribeforum(<!--[$forum.forum_id]-->, 'unsubscribe');" href="javascript:void(0);" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a>
+                <a class="dzk_img hidden subscribelink" id="subscribeforumbutton_{$forum.forum_id}" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'subscribe');" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                <a class="dzk_img hidden unsubscribelink" id="unsubscribeforumbutton_{$forum.forum_id}" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'unsubscribe');" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                 <script type="text/javascript">
                     // <![CDATA[
-                    var is_favorite = <!--[$forum.is_subscribed]-->;
+                    var is_favorite = {$forum.is_subscribed};
                     if(is_favorite == 0) {
-                        $('subscribeforumbutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                        $('subscribeforumbutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                     } else {
-                        $('unsubscribeforumbutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                        $('unsubscribeforumbutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                     }
                     // ]]>
                 </script>
             </li>
-            <!--[if $pncore.Dizkus.favorites_enabled eq "yes"]-->
+            {if $pncore.Dizkus.favorites_enabled eq "yes"}
             <li>
-                <a class="dzk_img hidden addfavoritelink" id="addfavoritebutton_<!--[$forum.forum_id]-->"  onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'add');"    href="javascript:void(0);" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a>
-                <a class="dzk_img hidden removefavoritelink" id="removefavoritebutton_<!--[$forum.forum_id]-->" onclick="javascript:addremovefavorite(<!--[$forum.forum_id]-->, 'remove');" href="javascript:void(0);" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a>
+                <a class="dzk_img hidden addfavoritelink" id="addfavoritebutton_{$forum.forum_id}"  onclick="javascript:addremovefavorite({$forum.forum_id}, 'add');"    href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                <a class="dzk_img hidden removefavoritelink" id="removefavoritebutton_{$forum.forum_id}" onclick="javascript:addremovefavorite({$forum.forum_id}, 'remove');" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                 <script type="text/javascript">
                     // <![CDATA[
-                    var is_favorite = <!--[$forum.is_favorite]-->;
+                    var is_favorite = {$forum.is_favorite};
                     if(is_favorite == 0) {
-                        $('addfavoritebutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                        $('addfavoritebutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                     } else {
-                        $('removefavoritebutton_'  + <!--[$forum.forum_id]-->).toggleClassName('hidden');
+                        $('removefavoritebutton_'  + {$forum.forum_id}).toggleClassName('hidden');
                     }
                     // ]]>
                 </script>
             </li>
-            <!--[/if]-->
-            <!--[/if]-->
+            {/if}
+            {/if}
 
-            <!--[if $forum.access_moderate eq true]-->
-            <li><a class="dzk_img moderatelink" title="<!--[gt text="Moderate"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id]-->"><!--[gt text="Moderate"]--></a></li>
-            <!--[/if]-->
+            {if $forum.access_moderate eq true}
+            <li><a class="dzk_img moderatelink" title="{gt text="Moderate"}" href="{pnmodurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
+            {/if}
         </ul>
 
         <noscript>
             <ul id="dzk_nonjavascriptareaforum" class="linklist z-clearfix">
-                <!--[* Moderate *]-->
-                <!--[if $forum.access_comment]-->
-                <li><a class="dzk_img newtopiclink" title="<!--[gt text="Start a new topic"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id]-->"><!--[gt text="New topic"]--></a></li>
-                <!--[/if]-->
+                {* Moderate *}
+                {if $forum.access_comment}
+                <li><a class="dzk_img newtopiclink" title="{gt text="Start a new topic"}" href="{pnmodurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                {/if}
 
-                <!--[if $forum.access_moderate eq true]-->
-                <li><a class="dzk_img moderatelink" title="<!--[gt text="Moderate"]-->" href="<!--[pnmodurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id]-->"><!--[gt text="Moderate"]--></a></li>
-                <!--[/if]-->
+                {if $forum.access_moderate eq true}
+                <li><a class="dzk_img moderatelink" title="{gt text="Moderate"}" href="{pnmodurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
+                {/if}
 
-                <!--[if $pncore.logged_in]-->
-                <!--[if $forum.is_subscribed eq 0]-->
-                <li><a class="dzk_img subscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Subscribe to forum"]-->"><!--[gt text="Subscribe to forum"]--></a></li>
-                <!--[else]-->
-                <li><a class="dzk_img unsubscribelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Unsubscribe from forum"]-->"><!--[gt text="Unsubscribe from forum"]--></a></li>
-                <!--[/if]-->
-                <!--[if $pncore.Dizkus.favorites_enabled eq "yes"]-->
-                <!--[if $forum.is_favorite eq 0]-->
-                <li><a class="dzk_img addfavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Add forum to favourites"]-->"><!--[gt text="Add forum to favourites"]--></a></li>
-                <!--[else]-->
-                <li><a class="dzk_img removefavoritelink" href="<!--[pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id]-->" title="<!--[gt text="Remove forum from favourites"]-->"><!--[gt text="Remove forum from favourites"]--></a></li>
-                <!--[/if]-->
-                <!--[/if]-->
-                <!--[/if]-->
+                {if $pncore.logged_in}
+                {if $forum.is_subscribed eq 0}
+                <li><a class="dzk_img subscribelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id}" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a></li>
+                {else}
+                <li><a class="dzk_img unsubscribelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a></li>
+                {/if}
+                {if $pncore.Dizkus.favorites_enabled eq "yes"}
+                {if $forum.is_favorite eq 0}
+                <li><a class="dzk_img addfavoritelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a></li>
+                {else}
+                <li><a class="dzk_img removefavoritelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id}" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a></li>
+                {/if}
+                {/if}
+                {/if}
             </ul>
         </noscript>
     </div>
 </div>
-<!--[/if]-->
+{/if}
 
 
 <div>
-    <!--[if $forum.topics]-->
+    {if $forum.topics}
 
-    <!--[dzkpager total=$forum.forum_topics]-->
-    <!--[mediaattach_attachicon topics=$forum.topics assign='uploadtopicids']-->
+    {dzkpager total=$forum.forum_topics}
+    {mediaattach_attachicon topics=$forum.topics assign='uploadtopicids'}
 
     <div class="forumbg dzk_rounded">
         <div class="inner">
@@ -97,94 +97,94 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt><span><!--[gt text="Topic"]--></span></dt>
-                        <dd class="posts"><span><!--[gt text="Replies"]--></span></dd>
-                        <dd class="views"><span><!--[gt text="Views"]--></span></dd>
-                        <dd class="lastpost"><span><!--[gt text="Last post"]--></span></dd>
+                        <dt><span>{gt text="Topic"}</span></dt>
+                        <dd class="posts"><span>{gt text="Replies"}</span></dd>
+                        <dd class="views"><span>{gt text="Views"}</span></dd>
+                        <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
                     </dl>
                 </li>
             </ul>
 
             <ul class="topiclist forums">
 
-                <!--[assign var='fstarted' value='0']-->
-                <!--[assign var='topicstarted'  value='0']-->
+                {assign var='fstarted' value='0'}
+                {assign var='topicstarted'  value='0'}
 
-                <!--[foreach item=topic from=$forum.topics]-->
+                {foreach item=topic from=$forum.topics}
 
-                <!--[assign var='showattachment' value='0']-->
-                <!--[foreach item='hasuploads' key='topicid' from=$uploadtopicids]-->
-                <!--[if $topicid eq $topic.topic_id && $hasuploads eq 1]-->
-                <!--[assign var='showattachment' value='1']-->
-                <!--[/if]-->
-                <!--[/foreach]-->
+                {assign var='showattachment' value='0'}
+                {foreach item='hasuploads' key='topicid' from=$uploadtopicids}
+                {if $topicid eq $topic.topic_id && $hasuploads eq 1}
+                {assign var='showattachment' value='1'}
+                {/if}
+                {/foreach}
 
                 <li class="row">
-                    <dl class="icon <!--[if $topic.sticky eq 1]-->dzk_sticky<!--[/if]-->">
+                    <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
                         <dt class='ctheme-topic-title'>
-                            <!--[if $topic.sticky eq 1]-->
-                            <!--[pnimg modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' ]-->
-                            <!--[/if]-->
-                            <!--[if $topic.topic_status eq 1]-->
-                            <!--[pnimg modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' ]-->
-                            <!--[/if]-->
-                            <!--[if $topic.new_posts eq 1]-->
-                            <!--[pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' ]-->
-                            <!--[else]-->
-                            <!--[pnimg modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' ]-->
-                            <!--[/if]-->
-                            <!--[if $topic.hot_topic eq 1]-->
-                            <!--[pnimg modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' ]-->
-                            <!--[/if]-->
-                            <!--[if $showattachment eq 1]-->
-                            <!--[pnimg modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' ]-->
-                            <!--[/if]-->
-                            <!--[$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name]-->
-                            <span><!--[gt text="Poster"]-->: <!--[$topic.pn_uname|userprofilelink]--></span>
-                            <!--[dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"]-->
+                            {if $topic.sticky eq 1}
+                            {pnimg modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
+                            {/if}
+                            {if $topic.topic_status eq 1}
+                            {pnimg modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' }
+                            {/if}
+                            {if $topic.new_posts eq 1}
+                            {pnimg modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
+                            {else}
+                            {pnimg modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
+                            {/if}
+                            {if $topic.hot_topic eq 1}
+                            {pnimg modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
+                            {/if}
+                            {if $showattachment eq 1}
+                            {pnimg modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' }
+                            {/if}
+                            {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name}
+                            <span>{gt text="Poster"}: {$topic.pn_uname|userprofilelink}</span>
+                            {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                         </dt>
-                        <dd class="posts"><!--[$topic.topic_replies]--><dfn><!--[gt text="Replies"]--></dfn></dd>
-                        <dd class="views"><!--[$topic.topic_views]--><dfn><!--[gt text="Views"]--></dfn></dd>
+                        <dd class="posts">{$topic.topic_replies}<dfn>{gt text="Replies"}</dfn></dd>
+                        <dd class="views">{$topic.topic_views}<dfn>{gt text="Views"}</dfn></dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="By"]--> <!--[$topic.last_poster|userprofilelink]--><br />
-                                <!--[$topic.post_time_unix|pndate_format:'datetimebrief']-->
-                                <a title="<!--[gt text="View latest post"]-->" href="<!--[$topic.last_post_url_anchor|pnvarprepfordisplay]-->"><!--[pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest posts" ]--></a>
+                                <dfn>{gt text="Last post"}</dfn> {gt text="By"} {$topic.last_poster|userprofilelink}<br />
+                                {$topic.post_time_unix|pndate_format:'datetimebrief'}
+                                <a title="{gt text="View latest post"}" href="{$topic.last_post_url_anchor|pnvarprepfordisplay}">{pnimg modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest posts" }</a>
                             </span>
                         </dd>
                     </dl>
                 </li>
-                <!--[/foreach]-->
+                {/foreach}
 
             </ul>
         </div>
     </div>
-    <!--[dzkpager total=$forum.forum_topics]-->
+    {dzkpager total=$forum.forum_topics}
 
-    <!--[else]-->
+    {else}
 
     <div class="forumbg dzk_message dzk_rounded">
         <div class="inner">
-            <strong><!--[gt text="There are no topics in this forum."]--></strong>
+            <strong>{gt text="There are no topics in this forum."}</strong>
         </div>
     </div>
 
-    <!--[/if]-->
+    {/if}
 </div>
 
-<!--[if $forum.forum_mods|@count > 0]-->
+{if $forum.forum_mods|@count > 0}
 <ul id="dzk_moderatorlist" class="linklist z-clearfix">
-    <li><em><!--[gt text="Moderated by"]-->:</em></li>
-    <!--[foreach name=moderators item=mod key=modid from=$forum.forum_mods]-->
+    <li><em>{gt text="Moderated by"}:</em></li>
+    {foreach name=moderators item=mod key=modid from=$forum.forum_mods}
     <li>
-        <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]-->
-        <!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
+        {if $modid lt 1000000}{$mod|userprofilelink}{else}{$mod|pnvarprepfordisplay}{/if}
+        {if !$smarty.foreach.moderators.last}, {/if}
     </li>
-    <!--[/foreach]-->
+    {/foreach}
 </ul>
-<!--[/if]-->
+{/if}
 
-<!--[if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in]-->
+{if $forum.access_moderate eq true or $forum.access_comment or $pncore.logged_in}
 <script type="text/javascript">
     // <![CDATA[
 
@@ -196,6 +196,6 @@
     }
     // ]]>
 </script>
-<!--[/if]-->
+{/if}
 
-<!--[include file='dizkus_user_footer.html']-->
+{include file='dizkus_user_footer.html'}

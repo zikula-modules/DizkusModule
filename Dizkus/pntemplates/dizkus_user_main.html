@@ -1,77 +1,77 @@
-<!--[* $Id$ *]-->
+{* $Id$ *}
 
-<!--[include file='dizkus_user_header.html']-->
+{include file='dizkus_user_header.html'}
 
-<!--[if $view_category == -1]-->
+{if $view_category == -1}
 
 <div id="dzk_maincategorylist">
-    <!--[foreach item='category' from=$tree]-->
+    {foreach item='category' from=$tree}
     <div class="forabg dzk_rounded">
         <div class="inner">
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_<!--[$category.cat_id]-->" class="<!--[if $category.new_posts == true]-->newpostscategorylink<!--[else]-->categorylink<!--[/if]-->" title="<!--[gt text="Go to category"]--> '<!--[$category.cat_title|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id]-->"><!--[$category.cat_title|pnvarprepfordisplay]--></a></span>
+                            <span><a id="categorylink_{$category.cat_id}" class="{if $category.new_posts == true}newpostscategorylink{else}categorylink{/if}" title="{gt text="Go to category"} '{$category.cat_title|pnvarprepfordisplay}'" href="{pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}">{$category.cat_title|pnvarprepfordisplay}</a></span>
                         </dt>
                         <dd class="topics">
-                            <span><!--[gt text="Topics"]--></span>
+                            <span>{gt text="Topics"}</span>
                         </dd>
                         <dd class="posts">
-                            <span><!--[gt text="Posts"]--></span>
+                            <span>{gt text="Posts"}</span>
                         </dd>
                         <dd class="lastpost">
-                            <span><!--[gt text="Last post"]--></span>
+                            <span>{gt text="Last post"}</span>
                         </dd>
                     </dl>
                 </li>
             </ul>
 
             <ul class="topiclist forums">
-                <!--[foreach item='forum' from=$category.forums]-->
+                {foreach item='forum' from=$category.forums}
                 <li class="row">
                     <dl class="icon">
-                        <dt <!--[if $forum.new_posts == true]-->class='new-posts'<!--[else]-->class='no-new-posts'<!--[/if]--> >
-                            <a title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
-                            <!--[if $forum.forum_desc neq '']--><!--[$forum.forum_desc|pnvarprephtmldisplay]--><br /><!--[/if]-->
-                            <!--[if !empty($forum.forum_mods)]-->
-                            <em><!--[gt text="Moderated by"]-->:</em>
-                            <!--[foreach name='moderators' item='mod' key='modid' from=$forum.forum_mods]-->
-                            <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
-                            <!--[/foreach]-->
-                            <!--[/if]-->
+                        <dt {if $forum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if} >
+                            <a title="{gt text="Go to forum"} '{$forum.forum_name|pnvarprepfordisplay}'" href="{pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.forum_name|pnvarprepfordisplay}</a><br />
+                            {if $forum.forum_desc neq ''}{$forum.forum_desc|pnvarprephtmldisplay}<br />{/if}
+                            {if !empty($forum.forum_mods)}
+                            <em>{gt text="Moderated by"}:</em>
+                            {foreach name='moderators' item='mod' key='modid' from=$forum.forum_mods}
+                            {if $modid lt 1000000}{$mod|userprofilelink}{else}{$mod|pnvarprepfordisplay}{/if}{if !$smarty.foreach.moderators.last}, {/if}
+                            {/foreach}
+                            {/if}
                         </dt>
 
-                        <dd class="topics"><!--[$forum.forum_topics|pnvarprephtmldisplay]--> <dfn><!--[gt text="Topics"]--></dfn></dd>
-                        <dd class="posts"><!--[$forum.forum_posts|pnvarprephtmldisplay]--> <dfn><!--[gt text="Posts"]--></dfn></dd>
+                        <dd class="topics">{$forum.forum_topics|pnvarprephtmldisplay} <dfn>{gt text="Topics"}</dfn></dd>
+                        <dd class="posts">{$forum.forum_posts|pnvarprephtmldisplay} <dfn>{gt text="Posts"}</dfn></dd>
                         <dd class="lastpost">
-                            <!--[if isset($forum.last_post_data)]-->
+                            {if isset($forum.last_post_data)}
                             <span>
-                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
-                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pndate_format:'datetimebrief']-->:
-                                <!--[if $forum.last_post_data.url_anchor neq '']-->
-                                <a class="latesttopicimage" href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay|truncate:70]-->'"><!--[$forum.last_post_data.subject|pnvarprepfordisplay|truncate:70]--></a>
-                                <!--[/if]-->
+                                <dfn>{gt text="Last post"}</dfn> {gt text="by"} {$forum.last_post_data.name|userprofilelink}<br />
+                                {gt text="Written on"} {$forum.last_post_data.unixtime|pndate_format:'datetimebrief'}:
+                                {if $forum.last_post_data.url_anchor neq ''}
+                                <a class="latesttopicimage" href="{$forum.last_post_data.url_anchor|pnvarprepfordisplay}" title="{gt text="View latest post"} '{$forum.last_post_data.subject|pnvarprephtmldisplay|truncate:70}'">{$forum.last_post_data.subject|pnvarprepfordisplay|truncate:70}</a>
+                                {/if}
                             </span>
-                            <!--[else]-->
-                            <span><!--[$forum.last_post]--></span>
-                            <!--[/if]-->
+                            {else}
+                            <span>{$forum.last_post}</span>
+                            {/if}
                         </dd>
                     </dl>
                 </li>
-                <!--[foreachelse]-->
+                {foreachelse}
                 <li class="row dzk_empty">
-                    <!--[gt text="No forums created."]-->
+                    {gt text="No forums created."}
                 </li>
-                <!--[/foreach]-->
+                {/foreach}
             </ul>
 
         </div>
     </div>
-    <!--[/foreach]-->
+    {/foreach}
 </div>
 
-<!--[else]-->
+{else}
 
 <div id="dzk_categorylist">
     <div class="forabg dzk_rounded">
@@ -80,64 +80,64 @@
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><!--[$view_category_data.cat_title|pnvarprepfordisplay]--></span>
+                            <span>{$view_category_data.cat_title|pnvarprepfordisplay}</span>
                         </dt>
                         <dd class="topics">
-                            <span><!--[gt text="Topics"]--></span>
+                            <span>{gt text="Topics"}</span>
                         </dd>
                         <dd class="posts">
-                            <span><!--[gt text="Posts"]--></span>
+                            <span>{gt text="Posts"}</span>
                         </dd>
                         <dd class="lastpost">
-                            <span><!--[gt text="Last post"]--></span>
+                            <span>{gt text="Last post"}</span>
                         </dd>
                     </dl>
                 </li>
             </ul>
 
             <ul class="topiclist forums">
-                <!--[foreach item='forum' from=$view_category_data.forums]-->
+                {foreach item='forum' from=$view_category_data.forums}
                 <li class="row">
                     <dl class="icon">
-                        <dt <!--[if $forum.new_posts == true]-->class='new-posts'<!--[else]-->class='no-new-posts'<!--[/if]--> >
-                            <a title="<!--[gt text="Go to forum"]--> '<!--[$forum.forum_name|pnvarprepfordisplay]-->'" href="<!--[pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id]-->"><!--[$forum.forum_name|pnvarprepfordisplay]--></a><br />
-                            <!--[if $forum.forum_desc neq '']--><!--[$forum.forum_desc|pnvarprephtmldisplay]--><br /><!--[/if]-->
-                            <!--[if !empty($forum.forum_mods)]-->
-                            <em><!--[gt text="Moderated by"]-->:</em>
-                            <!--[foreach name='moderators' item='mod' key='modid' from=$forum.forum_mods]-->
-                            <!--[if $modid lt 1000000]--><!--[$mod|userprofilelink]--><!--[else]--><!--[$mod|pnvarprepfordisplay]--><!--[/if]--><!--[if !$smarty.foreach.moderators.last]-->, <!--[/if]-->
-                            <!--[/foreach]-->
-                            <!--[/if]-->
+                        <dt {if $forum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if} >
+                            <a title="{gt text="Go to forum"} '{$forum.forum_name|pnvarprepfordisplay}'" href="{pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.forum_name|pnvarprepfordisplay}</a><br />
+                            {if $forum.forum_desc neq ''}{$forum.forum_desc|pnvarprephtmldisplay}<br />{/if}
+                            {if !empty($forum.forum_mods)}
+                            <em>{gt text="Moderated by"}:</em>
+                            {foreach name='moderators' item='mod' key='modid' from=$forum.forum_mods}
+                            {if $modid lt 1000000}{$mod|userprofilelink}{else}{$mod|pnvarprepfordisplay}{/if}{if !$smarty.foreach.moderators.last}, {/if}
+                            {/foreach}
+                            {/if}
                         </dt>
 
-                        <dd class="topics"><!--[$forum.forum_topics|pnvarprephtmldisplay]--> <dfn><!--[gt text="Topics"]--></dfn></dd>
-                        <dd class="posts"><!--[$forum.forum_posts|pnvarprephtmldisplay]--> <dfn><!--[gt text="Posts"]--></dfn></dd>
+                        <dd class="topics">{$forum.forum_topics|pnvarprephtmldisplay} <dfn>{gt text="Topics"}</dfn></dd>
+                        <dd class="posts">{$forum.forum_posts|pnvarprephtmldisplay} <dfn>{gt text="Posts"}</dfn></dd>
                         <dd class="lastpost">
-                            <!--[if isset($forum.last_post_data)]-->
+                            {if isset($forum.last_post_data)}
                             <span>
-                                <dfn><!--[gt text="Last post"]--></dfn> <!--[gt text="by"]--> <!--[$forum.last_post_data.name|userprofilelink]--><br />
-                                <!--[gt text="Written on"]--> <!--[$forum.last_post_data.unixtime|pndate_format:'datetimebrief']-->:
-                                <!--[if $forum.last_post_data.url_anchor neq '']-->
-                                <a class="latesttopicimage" href="<!--[$forum.last_post_data.url_anchor|pnvarprepfordisplay]-->" title="<!--[gt text="View latest post"]--> '<!--[$forum.last_post_data.subject|pnvarprephtmldisplay]-->'"><!--[$forum.last_post_data.subject|pnvarprepfordisplay]--></a>
-                                <!--[/if]-->
+                                <dfn>{gt text="Last post"}</dfn> {gt text="by"} {$forum.last_post_data.name|userprofilelink}<br />
+                                {gt text="Written on"} {$forum.last_post_data.unixtime|pndate_format:'datetimebrief'}:
+                                {if $forum.last_post_data.url_anchor neq ''}
+                                <a class="latesttopicimage" href="{$forum.last_post_data.url_anchor|pnvarprepfordisplay}" title="{gt text="View latest post"} '{$forum.last_post_data.subject|pnvarprephtmldisplay}'">{$forum.last_post_data.subject|pnvarprepfordisplay}</a>
+                                {/if}
                             </span>
-                            <!--[else]-->
-                            <span><!--[$forum.last_post]--></span>
-                            <!--[/if]-->
+                            {else}
+                            <span>{$forum.last_post}</span>
+                            {/if}
                         </dd>
                     </dl>
                 </li>
-                <!--[foreachelse]-->
+                {foreachelse}
                 <li class="row dzk_empty">
-                    <!--[gt text="No forums created."]-->
+                    {gt text="No forums created."}
                 </li>
-                <!--[/foreach]-->
+                {/foreach}
             </ul>
 
         </div>
     </div>
 </div>
 
-<!--[/if]-->
+{/if}
 
-<!--[include file='dizkus_user_footer.html']-->
+{include file='dizkus_user_footer.html'}

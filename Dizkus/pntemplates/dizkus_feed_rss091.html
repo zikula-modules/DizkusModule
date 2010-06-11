@@ -33,18 +33,18 @@ soon as possible!
 
 <rss version="0.91">
 <channel>
-<title><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></title>
-<link><!--[$forum_link|pnvarprepfordisplay]--></link>
-<description><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></description>
-<webMaster><!--[$adminmail|pnvarprepfordisplay]--></webMaster>
+<title>{$sitename|pnvarprepfordisplay} - {$forum_name|pnvarprepfordisplay}</title>
+<link>{$forum_link|pnvarprepfordisplay}</link>
+<description>{$sitename|pnvarprepfordisplay} - {$forum_name|pnvarprepfordisplay}</description>
+<webMaster>{$adminmail|pnvarprepfordisplay}</webMaster>
 
-<!--[foreach item=post from=$posts]-->
+{foreach item=post from=$posts}
     <item>
-    <title><!--[$post.topic_title|pnvarprepfordisplay]--></title>
-    <link><!--[$post.last_post_url|pnvarprepfordisplay]--></link>
-    <description><!--[$post.cat_title|pnvarprepfordisplay]--> :: <!--[$post.forum_name|pnvarprepfordisplay]--></description>
+    <title>{$post.topic_title|pnvarprepfordisplay}</title>
+    <link>{$post.last_post_url|pnvarprepfordisplay}</link>
+    <description>{$post.cat_title|pnvarprepfordisplay} :: {$post.forum_name|pnvarprepfordisplay}</description>
     </item>
-<!--[/foreach]-->
+{/foreach}
 
 </channel>
 </rss>

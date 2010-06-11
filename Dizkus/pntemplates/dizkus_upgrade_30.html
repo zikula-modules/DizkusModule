@@ -1,21 +1,21 @@
-<!--[*  $Id$  *]-->
-<!--[admincategorymenu xhtml=1]-->
+{*  $Id$  *}
+{admincategorymenu xhtml=1}
 
-<p class="z-warningmsg"><!--[gt text="Caution! Please back-up your database via a database dump before proceeding with the upgrade." domain="module_dizkus"]--></p>
-<form action="<!--[pnmodurl modname=Dizkus type=init func="interactiveupgrade_to_3_0"]-->" method="post">
+<p class="z-warningmsg">{gt text="Caution! Please back-up your database via a database dump before proceeding with the upgrade." domain="module_dizkus"}</p>
+<form action="{pnmodurl modname=Dizkus type=init func="interactiveupgrade_to_3_0"}" method="post">
     <div>
         <div style="height: 3em; vertical-align: middle; width: 90%;">
-            <h1><!--[gt text="Dizkus upgrade" domain="module_dizkus"]--></h1>
+            <h1>{gt text="Dizkus upgrade" domain="module_dizkus"}</h1>
         </div>
         <h2>
-            <!--[gt text="Old version" domain="module_dizkus"]-->: <!--[$oldversion]--><br />
-            <!--[gt text="New version" domain="module_dizkus"]-->: 3.0<br />
+            {gt text="Old version" domain="module_dizkus"}: {$oldversion}<br />
+            {gt text="New version" domain="module_dizkus"}: 3.0<br />
         </h2>
         <div style="border: 1px solid red; padding: 4px; margin: 10px; color: red;">
-            <h2><!--[gt text="Caution! Please back-up your database via a database dump before proceeding with the upgrade." domain="module_dizkus"]--></h2>
+            <h2>{gt text="Caution! Please back-up your database via a database dump before proceeding with the upgrade." domain="module_dizkus"}</h2>
         </div>
-        <div><!--[gt text="This will upgrade your pnForum 2.7.1 forums to Dizkus 3.0, making all necessary database changes." domain="module_dizkus"]--></div>
-        <input type="hidden" name="authkey" value="<!--[$authid]-->" />
-        <input type="submit" name="submit" value="<!--[gt text="Next" domain="module_dizkus"]-->" />
+        <div>{gt text="This will upgrade your pnForum 2.7.1 forums to Dizkus 3.0, making all necessary database changes." domain="module_dizkus"}</div>
+        <input type="hidden" name="authkey" value="{$authid}" />
+        <input type="submit" name="submit" value="{gt text="Next" domain="module_dizkus"}" />
     </div>
 </form>

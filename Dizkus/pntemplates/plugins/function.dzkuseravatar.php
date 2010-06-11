@@ -17,7 +17,7 @@
  * (Part of the Core with Zikula 1.3 and higher)
  *
  * Example
- * <!--[dzkuseravatar uid="2"]-->
+ * {dzkuseravatar uid="2"}
  *
  * @param        object      &$smarty     Reference to the Smarty object
  * @param        integer     $uid         user-id

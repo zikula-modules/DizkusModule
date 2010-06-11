@@ -31,7 +31,7 @@
 
  * Example
  *
- *   <!--[$topic_id|viewtopiclink]-->
+ *   {$topic_id|viewtopiclink}
  *
  *
  * @author       Frank Schummertz

@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="<!--[charset]-->"?>
+<?xml version="1.0" encoding="{charset}"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-        <title><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></title>
-        <link><!--[$forum_link|pnvarprepfordisplay]--></link>
-        <description><!--[$sitename|pnvarprepfordisplay]--> - <!--[$forum_name|pnvarprepfordisplay]--></description>
-        <language><!--[$current_language]--></language>
-        <pubDate><!--[$current_date]--></pubDate>
-        <lastBuildDate><!--[$current_date]--></lastBuildDate>
+        <title>{$sitename|pnvarprepfordisplay} - {$forum_name|pnvarprepfordisplay}</title>
+        <link>{$forum_link|pnvarprepfordisplay}</link>
+        <description>{$sitename|pnvarprepfordisplay} - {$forum_name|pnvarprepfordisplay}</description>
+        <language>{$current_language}</language>
+        <pubDate>{$current_date}</pubDate>
+        <lastBuildDate>{$current_date}</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
-        <generator>Dizkus <!--[$dizkusinfo.version]--></generator>
-        <webMaster><!--[$adminmail|pnvarprepfordisplay]--> (<!--[$adminmail|pnvarprepfordisplay]-->)</webMaster>
-        <!--[foreach item=post from=$posts]-->
+        <generator>Dizkus {$dizkusinfo.version}</generator>
+        <webMaster>{$adminmail|pnvarprepfordisplay} ({$adminmail|pnvarprepfordisplay})</webMaster>
+        {foreach item=post from=$posts}
         <item>
-            <title><!--[$post.topic_title|pnvarprepfordisplay]--></title>
-            <link><!--[$post.last_post_url|pnvarprepfordisplay]--></link>
-            <guid><!--[$post.last_post_url|pnvarprepfordisplay]--></guid>
-            <description><!--[$post.cat_title|pnvarprepfordisplay]--> :: <!--[$post.forum_name|pnvarprepfordisplay]--></description>
-            <pubDate><!--[$post.rsstime]--></pubDate>
-            <category><!--[$post.cat_title|pnvarprepfordisplay]--> :: <!--[$post.forum_name|pnvarprepfordisplay]--></category>
+            <title>{$post.topic_title|pnvarprepfordisplay}</title>
+            <link>{$post.last_post_url|pnvarprepfordisplay}</link>
+            <guid>{$post.last_post_url|pnvarprepfordisplay}</guid>
+            <description>{$post.cat_title|pnvarprepfordisplay} :: {$post.forum_name|pnvarprepfordisplay}</description>
+            <pubDate>{$post.rsstime}</pubDate>
+            <category>{$post.cat_title|pnvarprepfordisplay} :: {$post.forum_name|pnvarprepfordisplay}</category>
         </item>
-        <!--[/foreach]-->
+        {/foreach}
     </channel>
 </rss>

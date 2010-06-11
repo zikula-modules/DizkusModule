@@ -31,7 +31,7 @@
 
  * Example
  *
- *   <!--[$pncore.user.uname|searchlink]-->
+ *   {$pncore.user.uname|searchlink}
  *
  *
  * @author       Frank Schummertz
