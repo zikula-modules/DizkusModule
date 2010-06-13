@@ -11,7 +11,7 @@
 
 include_once 'modules/Dizkus/common.php';
 
-class Dizkus:Api_Hook extends Zikula_Api {
+class Dizkus_Api_Hook extends Zikula_Api {
     
     /**
      * createbyitem

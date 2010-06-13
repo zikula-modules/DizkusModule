@@ -328,7 +328,7 @@ function Dizkus_init_interactiveupgrade($args)
             $smarty->cache_dir    = pnConfigGetVar('temp') . '/pnRender_cache';
             $smarty->use_sub_dirs = false;
             $smarty->clear_compiled_tpl();
-            return System:redirect(ModUtil::url('Modules', 'admin', 'upgrade', array('authid' => $authid )));
+            return System::redirect(ModUtil::url('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
     $render = pnRender::getInstance('Dizkus', false, null, true);
@@ -358,10 +358,10 @@ function Dizkus_init_interactiveupgrade_to_3_0()
         if ($result<>true) {
             return showforumerror(_('Error! The upgrade to Dizkus 3.0 failed.'), __FILE__, __LINE__);
         }
-        return System:redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
+        return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
     }
 
-    return System:redirect(ModUtil::url('Modules', 'admin', 'view'));
+    return System::redirect(ModUtil::url('Modules', 'admin', 'view'));
 }
 
 /**
@@ -464,10 +464,10 @@ function Dizkus_init_interactiveupgrade_to_3_1()
         if ($result<>true) {
             return showforumerror(__('Error! Could not upgrade to Dizkus 3.1.', $dom), __FILE__, __LINE__);
         }
-        return System:redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
+        return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
     }
 
-    return System:redirect(ModUtil::url('Modules', 'admin', 'view'));
+    return System::redirect(ModUtil::url('Modules', 'admin', 'view'));
 }
 
 /**

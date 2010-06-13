@@ -471,7 +471,7 @@ function storetreeorder()
 {
     if(treeorderstatus == false) {
         showdizkusinfo(storingnewsortorder);
-        treeorderstatus = true
+        treeorderstatus = true;
         var pars = 'module=Dizkus&type=admin&func=reordertreesave&' + Sortable.serialize('category');
         for(var j=0; j < containments.length; j++) {
             pars = pars + '&' + Sortable.serialize(containments[j]);
@@ -647,7 +647,7 @@ function showextendedoptions(extsource, forumid)
             Element.show('pnlogindata_' + forumid);
             Element.hide('mail2forum_' + forumid);
             Element.show('rss2forum_' + forumid);
-            break
+            break;
         default:
             Element.hide('pnlogindata_' + forumid);
             Element.hide('mail2forum_' + forumid);
