@@ -13,13 +13,13 @@
 /**
  * initialize the Zikula environment
  */
-include 'includes/pnAPI.php';
+include 'includes/System.php';
 System::init();
 
 /**
  * load Dizkus specific support functions
  */
-Loader::includeOnce('modules/Dizkus/common.php');
+include_once 'modules/Dizkus/common.php';
 
 $forum_id =      FormUtil::getPassedValue('forum_id', null, 'GET');
 $cat_id   =      FormUtil::getPassedValue('cat_id', null, 'GET');
@@ -51,7 +51,7 @@ if (isset($cat_id) && !is_numeric($cat_id)) {
 }
 
 /**
- * create pnRender object
+ * create Renderer object
  */
 $render = Renderer::getInstance('Dizkus', false);
 

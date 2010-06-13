@@ -729,13 +729,13 @@ class Dizkus_User extends Zikula_Controller {
         }
     
         // Include handler class
-        Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_user_signaturemanagementhandler.class.php');
+        include_once 'modules/Dizkus/includes/dizkus_user_signaturemanagementhandler.class.php';
     
         // Create output and assign data
-        $render = FormUtil::newpnForm('Dizkus');
+        $render = FormUtil::newForm('Dizkus');
     
         // Return the output
-        return $render->pnFormExecute('dizkus_user_signaturemanagement.html', new dizkus_user_signaturemanagementHandler());
+        return $render->execute('dizkus_user_signaturemanagement.html', new dizkus_user_signaturemanagementHandler());
     }
     
     /**
@@ -765,13 +765,13 @@ class Dizkus_User extends Zikula_Controller {
     	}
     
         // Include handler class
-        Loader::requireOnce('modules/Dizkus/pnincludes/dizkus_user_ignorelistmanagementhandler.class.php');
+        include_once 'modules/Dizkus/includes/dizkus_user_ignorelistmanagementhandler.class.php';
     
         // Create output and assign data
-        $render = FormUtil::newpnForm('Dizkus');
+        $render = FormUtil::newForm('Dizkus');
     
         // Return the output
-        return $render->pnFormExecute('dizkus_user_ignorelistmanagement.html', new dizkus_user_ignorelistmanagementHandler());
+        return $render->execute('dizkus_user_ignorelistmanagement.html', new dizkus_user_ignorelistmanagementHandler());
     }
     
     /**
@@ -1020,7 +1020,7 @@ class Dizkus_User extends Zikula_Controller {
             echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$lang\" xml:lang=\"$lang\">\n";
             echo "<head>\n";
             echo "<title>" . DataUtil::formatForDisplay($topic['topic_title']) . "</title>\n";
-            echo "<link rel=\"stylesheet\" href=\"" . System::getBaseUrl() . "modules/Dizkus/pnstyle/style.css\" type=\"text/css\" />\n";
+            echo "<link rel=\"stylesheet\" href=\"" . System::getBaseUrl() . "modules/Dizkus/style/style.css\" type=\"text/css\" />\n";
             echo "<link rel=\"stylesheet\" href=\"" . System::getBaseUrl() . "themes/" . UserUtil::getTheme() . "/style/style.css\" type=\"text/css\" />\n";        
             echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
     
@@ -1308,7 +1308,7 @@ class Dizkus_User extends Zikula_Controller {
         if (!UserUtil::isLoggedIn() && $authkeycheck == true ) {
             if (strip_tags($comment) <> $comment) {
                 // possibly spam, stop now
-                // get the users ip address and store it in pnTemp/Dizkus_spammers.txt
+                // get the users ip address and store it in zTemp/Dizkus_spammers.txt
                 dzk_blacklist();
                 // set 403 header and stop
                 header('HTTP/1.0 403 Forbidden');

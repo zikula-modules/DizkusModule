@@ -67,8 +67,8 @@ class dizkus_admin_prefshandler
         }
 
         if ($args['commandName'] == 'submit') {
-            $ok   = $render->pnFormIsValid(); 
-            $data = $render->pnFormGetValues();
+            $ok   = $render->isValid(); 
+            $data = $render->getValues();
 
             if (!$ok) {
                 return false;
@@ -159,6 +159,6 @@ class dizkus_admin_prefshandler
             LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));
         }
 
-        return $render->pnFormRedirect(ModUtil::url('Dizkus','admin','preferences'));
+        return $render->redirect(ModUtil::url('Dizkus','admin','preferences'));
     }
 }

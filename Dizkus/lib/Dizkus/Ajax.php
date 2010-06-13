@@ -780,7 +780,7 @@ class Dizkus_Ajax extends Zikula_Controller {
         $render = Renderer::getInstance('Dizkus', false);
     
         if (System::getVar('shorturls')) {
-            Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
+            include_once('lib/render/plugins/outputfilter.shorturls.php');
             $render->register_outputfilter('smarty_outputfilter_shorturls');
         }
     
@@ -804,7 +804,7 @@ class Dizkus_Ajax extends Zikula_Controller {
         $render = Renderer::getInstance('Dizkus', false);
     
         if (System::getVar('shorturls')) {
-            Loader::includeOnce('system/Theme/plugins/outputfilter.shorturls.php');
+            include_once 'lib/render/plugins/outputfilter.shorturls.php';
             $render->register_outputfilter('smarty_outputfilter_shorturls');
         }
     

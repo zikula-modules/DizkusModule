@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-Loader::includeOnce('modules/Dizkus/common.php');
+include_once 'modules/Dizkus/common.php';
 
 /**
  * Dizkus needle

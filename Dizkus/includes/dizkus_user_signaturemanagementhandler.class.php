@@ -30,16 +30,16 @@ class Dizkus_user_signaturemanagementHandler
                 return LogUtil::registerPermissionError();
             }
 
-            // get the pnForm data and do a validation check
-            $obj = $render->pnFormGetValues();          
-            if (!$render->pnFormIsValid()) {
+            // get the Form data and do a validation check
+            $obj = $render->getValues();          
+            if (!$render->isValid()) {
                 return false;
             }
 
             UserUtil::setVar('_SIGNATURE',$obj['signature']);
             LogUtil::registerStatus(__('Done! Signature has been updated.', $dom));
 
-            return $render->pnFormRedirect(ModUtil::url('Dizkus','user','prefs'));
+            return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
         }
 
         return true;

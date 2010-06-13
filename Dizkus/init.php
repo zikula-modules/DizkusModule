@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-Loader::includeOnce('modules/Dizkus/common.php');
+include_once 'modules/Dizkus/common.php';
 
 /**
  *  Initialize a new install of the Dizkus module
@@ -306,7 +306,7 @@ function Dizkus_init_interactiveupgrade($args)
 
     $oldversion = FormUtil::getPassedValue('oldversion', isset($args['oldversion']) ? $args['oldversion'] : 0, 'GETPOST');
 
-    Loader::includeOnce('modules/Dizkus/version.php');
+    include_once 'modules/Dizkus/version.php';
 
     $authid = SecurityUtil::generateAuthKey('Modules');
     switch ($oldversion)

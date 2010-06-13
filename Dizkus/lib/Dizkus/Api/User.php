@@ -388,7 +388,7 @@ class Dizkus_Api_User extends Zikula_Api {
             
                                 $last_post = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $username), $dom));
                                 $last_post = $last_post.' <a href="' . ModUtil::url('Dizkus','user','viewtopic', array('topic' => $forum['topic_id'])). '">
-                                                          <img src="modules/Dizkus/pnimages/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
+                                                          <img src="modules/Dizkus/images/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                                 // new in 2.0.2 - no more preformattd output
                                 $last_post_data['name']     = $username;
                                 $last_post_data['subject']  = $topic_title;
@@ -1089,7 +1089,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $reply['message'] = '';
         }
     
-        // anonymous user has uid=0, but needs pn_uid=1
+        // anonymous user has uid=0, but needs uid=1
         // also check subscription status here
         if (!UserUtil::isLoggedIn()) {
             $pn_uid = 1;
@@ -1160,7 +1160,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $message = phpbb_br2nl($message);
                 // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
             
-                // We do this _before_ pn_bbencode(), otherwise we'd kill the bbcode's html.
+                // We do this _before_ bbencode(), otherwise we'd kill the bbcode's html.
                 $message = Dizkus_replacesignature($message, $review['poster_data']['_SIGNATURE']);
             
                 // call hooks for $message
@@ -1208,7 +1208,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $posted_message = stripslashes($args['message']);
     
         // signature is always on, except anonymous user
-        // anonymous user has uid=0, but needs pn_uid=1
+        // anonymous user has uid=0, but needs uid=1
         $islogged = UserUtil::isLoggedIn();
         if ($islogged) {
             if ($args['attach_signature'] == 1) {
@@ -1228,9 +1228,9 @@ class Dizkus_Api_User extends Zikula_Api {
             $poster_ip = '127.0.0.1';
         } else {
             // some enviroment for logging ;)
-            $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
+            $poster_ip = System::serverGetVar('HTTP_X_FORWARDED_FOR');
             if (empty($poster_ip)){
-                $poster_ip = pnServerGetVar('REMOTE_ADDR');
+                $poster_ip = System::serverGetVar('REMOTE_ADDR');
             }
         }
     
@@ -1473,10 +1473,10 @@ class Dizkus_Api_User extends Zikula_Api {
         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $pn_uid, 'type' => 'user'));
     
         // some enviroment for logging ;)
-        if (pnServerGetVar('HTTP_X_FORWARDED_FOR')){
-            $poster_ip = pnServerGetVar('HTTP_X_FORWARDED_FOR');
+        if (System::serverGetVar('HTTP_X_FORWARDED_FOR')){
+            $poster_ip = System::serverGetVar('HTTP_X_FORWARDED_FOR');
         } else {
-            $poster_ip = pnServerGetVar('REMOTE_ADDR');
+            $poster_ip = System::serverGetVar('REMOTE_ADDR');
         }
         // for privavy issues ip logging can be deactivated
         if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
@@ -2691,7 +2691,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
     /**
      * usersync
-     * stub function for syncing new pn users to Dizkus
+     * stub function for syncing new users to Dizkus
      *
      * @params none
      * @returns api call result
@@ -3083,7 +3083,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $force = (isset($args['force'])) ? (boolean)$args['force'] : false;
         $forum = $args['forum'];
     
-        Loader::includeOnce('modules/Dizkus/pnincludes/pop3.php');
+        Loader::includeOnce('modules/Dizkus/includes/pop3.php');
         if ( (($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time()-($forum['pop3_interval']*60)) ) || ($force == true) ) {
             mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
             // get new mails for this forum
@@ -3252,7 +3252,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                               array('forum_id' => $args['forum_id']));
-        Loader::includeOnce('modules/Dizkus/pnincludes/pop3.php');
+        Loader::includeOnce('modules/Dizkus/includes/pop3.php');
     
         $pop3 = new pop3_class;
         $pop3->hostname = $forum['pop3_server'];

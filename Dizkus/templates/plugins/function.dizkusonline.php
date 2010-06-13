@@ -48,7 +48,7 @@
  * @return       array
  */
 
-Loader::includeOnce('modules/Dizkus/common.php');
+include_once 'modules/Dizkus/common.php';
 
 function smarty_function_dizkusonline($params, &$smarty)
 {

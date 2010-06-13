@@ -30,7 +30,7 @@
  * the type folder: Dizkus/templates/errors/TYPE and placing the
  * type files in that directory.
  *
- * Language specific files should be placed in a language directory below the type directory.  The language directories follow the same naming convention as the pnlang subfolders.
+ * Language specific files should be placed in a language directory below the type directory.  The language directories follow the same naming convention as the lang subfolders.
  *
  * The default language files do not need to be placed in a language specific folder.  They can be placed directly in the 'errors/TYPE' folder.
  *
@@ -150,9 +150,9 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
 
     if (preg_match("/(api\.php|common\.php|init\.php)$/i", $file) <> 0) {
         // __FILE__ ends with api.php or is common.php or init.php
-        Loader::includeOnce('header.php');
+        include_once 'header.php';
         echo $output;
-        Loader::includeOnce('footer.php');
+        include_once 'footer.php';
         exit;
     }
 

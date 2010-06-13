@@ -50,9 +50,9 @@ class Dizkus_user_ignorelistmanagementHandler
                 return LogUtil::registerPermissionError();
             }
 
-            // get the pnForm data and do a validation check
-            $obj = $render->pnFormGetValues();          
-            if (!$render->pnFormIsValid()) {
+            // get the Form data and do a validation check
+            $obj = $render->getValues();          
+            if (!$render->isValid()) {
                 return false;
             }
 
@@ -66,7 +66,7 @@ class Dizkus_user_ignorelistmanagementHandler
 
             LogUtil::registerStatus(__('Done! Updated the \'Ignore list\' settings.', $dom));
 
-            return $render->pnFormRedirect(ModUtil::url('Dizkus','user','prefs'));
+            return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
         }
 
         return true;
