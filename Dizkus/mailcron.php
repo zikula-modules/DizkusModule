@@ -17,7 +17,7 @@ chdir('/opt/webdev/htdocs');
 //
 // no changes necessary beyond this point!
 //
-include 'includes/System.php';
+include 'lib/System.php';
 System::init();
 
 $debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');

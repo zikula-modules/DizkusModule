@@ -20,8 +20,8 @@ include_once 'modules/Dizkus/common.php';
  */
 function Dizkus_init()
 {
-    if (version_compare(PN_VERSION_NUM, '1.2.0', '<')) {
-        SessionUtil::setVar('errormsg', __('Error! This version of the Dizkus module requires Zikula 1.2.0 or later. Installation has been stopped because this requirement is not met.'));
+    if (version_compare(PN_VERSION_NUM, '1.3.0', '<')) {
+        SessionUtil::setVar('errormsg', __('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
         return false;
     }
 
@@ -211,7 +211,6 @@ function Dizkus_delete()
 {
     $tables = DBUtil::metaTables(true, true, '%dizkus%');
     $ztables = System::dbGetTables();
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     if (in_array($ztables['dizkus_categories'], $tables)) {
         if (!DBUtil::dropTable('dizkus_categories')) {
@@ -298,10 +297,8 @@ function Dizkus_delete()
  */
 function Dizkus_init_interactiveupgrade($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
-
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
+      return showforumerror(__('Error! No permission for this action.'), __FILE__, __LINE__);
     }
 
     $oldversion = FormUtil::getPassedValue('oldversion', isset($args['oldversion']) ? $args['oldversion'] : 0, 'GETPOST');
@@ -346,10 +343,8 @@ function Dizkus_init_interactiveupgrade($args)
  */
 function Dizkus_init_interactiveupgrade_to_3_0()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
-
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
+        return showforumerror(__('Error! No permission for this action.'), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -371,8 +366,6 @@ function Dizkus_init_interactiveupgrade_to_3_0()
  */
 function Dizkus_upgrade_to_3_0()
 {        
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
-
     // rename the old pnForum tablenames to Dizkus tablenames
     $tables = array('pnforum_categories'         => 'dizkus_categories',
                     'pnforum_forum_mods'         => 'dizkus_forum_mods',
@@ -396,7 +389,7 @@ function Dizkus_upgrade_to_3_0()
         $success  = ($result==2);
         if (!$success) {
             $dberrmsg = $dbconn->ErrorNo().' - '.$dbconn->ErrorMSg();
-            LogUtil::registerError (__("Error! The renaming of table '%1$s' to '%2$s' failed: %3$s.", array($oldtable, $$newtable, $dberrmsg), $dom));
+            LogUtil::registerError (__("Error! The renaming of table '%1$s' to '%2$s' failed: %3$s.", array($oldtable, $$newtable, $dberrmsg)));
         }
     }
 
@@ -452,10 +445,8 @@ function Dizkus_upgrade_to_3_0()
  */
 function Dizkus_init_interactiveupgrade_to_3_1()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
-
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Error! No permission for this action.', $dom), __FILE__, __LINE__);
+      return showforumerror(__('Error! No permission for this action.'), __FILE__, __LINE__);
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -463,7 +454,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
     if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_1();
         if ($result<>true) {
-            return showforumerror(__('Error! Could not upgrade to Dizkus 3.1.', $dom), __FILE__, __LINE__);
+            return showforumerror(__('Error! Could not upgrade to Dizkus 3.1.'), __FILE__, __LINE__);
         }
         return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
     }
@@ -476,8 +467,6 @@ function Dizkus_init_interactiveupgrade_to_3_1()
  */
 function Dizkus_upgrade_to_3_1()
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
-
     // merge posts and posts_text table
     ModUtil::dbInfoLoad('Dizkus');
 
@@ -536,7 +525,7 @@ function Dizkus_upgrade_to_3_1()
                 WHERE pt.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')';
 
     if (DBUtil::executeSQL($sql) != true) {
-        LogUtil::registerError (__("Error! Could not upgrade the table '%s'.", 'dizkus_posts', $dom));
+        LogUtil::registerError (__("Error! Could not upgrade the table '%s'.", 'dizkus_posts'));
     }
 
     // remove obsolete table
@@ -567,8 +556,6 @@ function Dizkus_upgrade_to_3_1()
  */
 function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');    
-
     // load necessary classes
     Loader::loadClass('CategoryUtil');
     Loader::loadClassFromModule('Categories', 'Category');
@@ -587,7 +574,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
         $cat->setDataField('parent_id', $rootcat['id']);
         $cat->setDataField('name', 'Dizkus');
         $cat->setDataField('display_name', array($lang => 'Dizkus forums')); 
-        $cat->setDataField('display_desc', array($lang => __('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.', $dom))); 
+        $cat->setDataField('display_desc', array($lang => __('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.'))); 
         $cat->setDataField('__ATTRIBUTES__', array('can_contain_posts' => false));
         if (!$cat->validate('admin')) {
             die('error 1');

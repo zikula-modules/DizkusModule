@@ -13,7 +13,7 @@
 /**
  * initialize the Zikula environment
  */
-include 'includes/System.php';
+include 'lib/System.php';
 System::init();
 
 /**
