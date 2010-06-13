@@ -57,7 +57,7 @@
  */
 function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
 {
-    $modinfo    = pnModGetInfo(pnModGetIDFromName('Dizkus'));
+    $modinfo    = ModUtil::getInfo(ModUtil::getIDFromName('Dizkus'));
     $baseDir    = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
     $lang       = ZLanguage::getLanguageCode();
     $error_path = 'errors/' . $error_type;
@@ -87,7 +87,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // if this is a forum check then we need to check the categories too
     // in case the forum specific ones don't exist
     if (($error_type == 'forum') && (is_numeric($error_id))) {
-        $cat_id = pnModAPIFunc('Dizkus','user','get_forum_category', array('forum_id'=>$error_id));
+        $cat_id = ModUtil::apiFunc('Dizkus','user','get_forum_category', array('forum_id'=>$error_id));
         if ($cat_id) {
             // specific category and specific language
             array_push($test_array, 'errors/category/' . $lang . '/' . $prefix . $error_name . '_' . $cat_id . '.html');
@@ -347,14 +347,14 @@ function cmp_catorder($a, $b)
  */
 function Dizkus_replacesignature($text, $signature='')
 {
-    $removesignature = pnModGetVar('Dizkus', 'removesignature');
+    $removesignature = ModUtil::getVar('Dizkus', 'removesignature');
     if ($removesignature == 'yes') {
         $signature = '';
     }
 
     if (!empty($signature)){
-        $sigstart = stripslashes(pnModGetVar('Dizkus', 'signature_start'));
-        $sigend   = stripslashes(pnModGetVar('Dizkus', 'signature_end'));
+        $sigstart = stripslashes(ModUtil::getVar('Dizkus', 'signature_start'));
+        $sigend   = stripslashes(ModUtil::getVar('Dizkus', 'signature_end'));
         $text = preg_replace("/\[addsig]$/", "\n\n" . $sigstart . $signature . $sigend, $text);
     } else {
         $text = preg_replace("/\[addsig]$/", '', $text);
@@ -457,7 +457,7 @@ function dzk_getimagepath($image=null)
     $result = array();
 
     // module
-    $modname = pnModGetName();
+    $modname = ModUtil::getName();
 
     // language
     $lang =  DataUtil::formatForOS(ZLanguage::getLanguageCode());
@@ -477,7 +477,7 @@ function dzk_getimagepath($image=null)
         $corethemepath = "themes/$theme/images";
     }
     // module directory
-    $modinfo       = pnModGetInfo(pnModGetIDFromName($modname));
+    $modinfo       = ModUtil::getInfo(ModUtil::getIDFromName($modname));
     $osmoddir      = DataUtil::formatForOS($modinfo['directory']);
     $modlangpath   = "modules/$osmoddir/pnimages/$lang";
     $modpath       = "modules/$osmoddir/pnimages";
@@ -525,7 +525,7 @@ function dzk_getimagepath($image=null)
  */
 function dzkstriptags($text='')
 {
-    if (!empty($text) && (pnModGetVar('Dizkus', 'striptags') == 'yes')) {
+    if (!empty($text) && (ModUtil::getVar('Dizkus', 'striptags') == 'yes')) {
         // save code tags
         $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
 
@@ -775,7 +775,7 @@ function dzk_str2time($strStr, $strPattern = 'Y-m-d H:i')
  */
 function dzk_available($deliverhtml = true)
 {
-    if ((pnModGetVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+    if ((ModUtil::getVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if ($deliverhtml == true) {
             $render = pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
             return $render->fetch('dizkus_disabled.html');

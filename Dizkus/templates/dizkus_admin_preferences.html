@@ -1,0 +1,183 @@
+{*  $Id$  *}
+{gt text="Settings" assign=templatetitle}
+{include file='dizkus_admin_header.html'}
+
+{pnform cssClass="z-form"}
+{pnformvalidationsummary}
+
+<fieldset>
+    <legend>{gt text="General settings"}</legend>
+
+    <div class="z-formrow">
+        {pnformlabel for="forum_enabled" __text='Forums are accessible to visitors'}
+        {pnformcheckbox id="forum_enabled" checked=$forum_enabled_checked}
+    </div>
+    <p class="z-formnote z-informationmsg">
+        {gt text="If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."}
+    </p>
+    <div class="z-formrow">
+        {pnformlabel for="forum_disabled_info" __text="Message displayed if forums are disabled"}
+        {pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.forum_disabled_info}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="email_from" __text="Sender address for e-mail messages from forums"}
+        {pnformtextinput id="email_from" text=$pncore.Dizkus.email_from size="30" maxLength="100"}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="hot_threshold" __text="'Hot topic' threshold"}
+        {pnformintinput id="hot_threshold" text=$pncore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="posts_per_page" __text="Posts per page in topic index (default:20)"}
+        {pnformintinput id="posts_per_page" text=$pncore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="topics_per_page" __text="Topics per page in forum index (default:15)"}
+        {pnformintinput id="topics_per_page" text=$pncore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="hideusers" __text="Hide users in forum admin interface"}
+        {pnformcheckbox id="hideusers" checked=$hideusers_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="url_ranks_images" __text="Path to rank images"}
+        {pnformtextinput id="url_ranks_images" text=$pncore.Dizkus.url_ranks_images size="30" maxLength="100"}
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>{gt text="Advanced settings"}</legend>
+    <div class="z-warningmsg">
+        {gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be. <br /><br />Database name: '%s'; type: '%s'; version: '%s'." tag1=$dbname tag2=$dbtype tag3=$dbversion}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="fulltextindex" __text="Enable full-text index field searching"}
+        {pnformcheckbox id="fulltextindex" checked=$fulltextindex_checked}
+        <p class="z-formnote z-informationmsg">{gt text="Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="extendedsearch" __text="Enable extended full-text search in internal search"}
+        {pnformcheckbox id="extendedsearch" checked=$extendedsearch_checked}
+        <p class="z-formnote z-informationmsg">{gt text="Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="showtextinsearchresults" __text="Show text in search results"}
+        {pnformcheckbox id="showtextinsearchresults" checked=$showtextinsearchresults_checked}
+        <p class="z-formnote z-informationmsg">{gt text="Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table."}</p>
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="minsearchlength" __text="Minimum number of characters in search query string (1 minimum)"}
+        {pnformintinput id="minsearchlength" text=$pncore.Dizkus.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
+    </div>
+
+    <div class="z-formrow">
+        {pnformlabel for="maxsearchlength" __text="Maximum number of characters in search query string (50 maximum)"}
+        {pnformintinput id="maxsearchlength" text=$pncore.Dizkus.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>{gt text="User-related settings"}</legend>
+    <div class="z-formrow">
+        {pnformlabel for="post_sort_order" __text="Sort order for posts"}
+        {pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$pncore.Dizkus.post_sort_order}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="signature_start" __text="Beginning of signature"}
+        {pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_start|default:''}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="signature_end" __text="End of signature"}
+        {pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$pncore.Dizkus.signature_end|default:''}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="autosubscribe" __text="Automatically subscribe users to new topics and posts"}
+        {pnformcheckbox id="autosubscribe" checked=$autosubscribe_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="signaturemanagement" __text="Enable signature management via forum user settings"}
+        {pnformcheckbox id="signaturemanagement" checked=$signaturemanagement_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="removesignature" __text="Strip user signatures from posts"}
+        {pnformcheckbox id="removesignature" checked=$removesignature_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="allowgravatars" __text="Allow globally recognized avatars"}
+        {pnformcheckbox id="allowgravatars" checked=$allowgravatars_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="gravatarimage" __text="Default gravatar image"}
+        {pnformtextinput id="gravatarimage" text=$pncore.Dizkus.gravatarimage size="150" maxLength="250"}
+        <em class="z-sub z-formnote">{gt text="Example: gravatar.gif"}</em>
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="newtopicconf" __text="Display confirmation when a new topic has been created"}
+        {pnformcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked}
+    </div>
+    <div class="z-formrow">
+        {if $contactlist_available eq true}
+        {pnformlabel for="ignorelist_handling" __text="Highest-allowed 'ignore list' ostracism level"}
+        {pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$pncore.Dizkus.ignorelist_handling}
+        <p class="z-formnote z-informationmsg">{gt text="Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."}</p>
+        {else}
+        <p class="z-formnote z-informationmsg">{gt text="Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."}</p>
+        {/if}
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>{gt text="Security settings"}</legend>
+    <div class="z-formrow">
+        {pnformlabel for="log_ip" __text="Log IP addresses"}
+        {pnformcheckbox id="log_ip" checked=$log_ip_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="striptags" __text="Strip HTML tags from new posts"}
+        {pnformcheckbox id="striptags" checked=$striptags_checked}
+        <p class="z-formnote z-informationmsg">{gt text="Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags."}</p>
+    </div>
+
+    <div class="z-formrow">
+        {pnformlabel for="timespanforchanges" __text="Number of hours during which edits to posts are allowed (Maximum:72)"}
+        <span>
+            {pnformintinput id="timespanforchanges" text=$pncore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72}
+            {gt text="hours"}
+        </span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>{gt text="Other settings"}</legend>
+
+    <div class="z-formrow">
+        {pnformlabel for="slimforum" __text="Hide category view when there is only one category"}
+        {pnformcheckbox id="slimforum" checked=$slimforum_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="m2f_enabled" __text="Enable Mail2Forum"}
+        {pnformcheckbox id="m2f_enabled" checked=$m2f_enabled_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="rss2f_enabled" __text="Enable RSS2Forum"}
+        {pnformcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="favorites_enabled" __text="Enable favourites"}
+        {pnformcheckbox id="favorites_enabled" checked=$favorites_enabled_checked}
+    </div>
+    <div class="z-formrow">
+        {pnformlabel for="deletehookaction" __text="Action to be performed when 'delete' hook is called"}
+        {pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$pncore.Dizkus.deletehookaction}
+    </div>
+</fieldset>
+
+<div class="z-formbuttons">
+    {pnformbutton id="submit" commandName="submit" __text="Save" class="dzk_img ok"}
+    {pnformbutton id="restore" commandName="restore" __text="Restore defaults" class="dzk_img cancel"}
+</div>
+
+{/pnform}
+
+
+{include file='dizkus_admin_footer.html'}

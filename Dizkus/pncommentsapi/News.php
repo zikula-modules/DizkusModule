@@ -16,11 +16,11 @@ Loader::includeOnce('modules/Dizkus/common.php');
  */
 function Dizkus_commentsapi_News($args)
 {
-    $news = pnModAPIFunc('News', 'user', 'get', array('objectid' => $args['objectid']));
-    $link = pnModURL('News', 'user', 'display', array('sid' => $args['objectid']), null, null, true);
+    $news = ModUtil::apiFunc('News', 'user', 'get', array('objectid' => $args['objectid']));
+    $link = ModUtil::url('News', 'user', 'display', array('sid' => $args['objectid']), null, null, true);
     $lang = ZLanguage::getLanguageCode();
 
-    if (pnModIsHooked('bbcode', 'Dizkus')) {
+    if (ModUtil::isHooked('bbcode', 'Dizkus')) {
         $notes = '[i]' . $news['notes'] . '[/i]';
         $link  = '[url]' .$link. '[/url]';
     }

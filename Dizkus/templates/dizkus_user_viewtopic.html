@@ -1,0 +1,242 @@
+{*  $Id$  *}
+{pnmodcallhooks hookobject='item' hookaction='display' hookid=$topic.topic_id implode=false}
+
+{include file='dizkus_user_header.html'}
+
+<div class="dzk_topicoptions roundedbar dzk_rounded">
+    <div class="inner">
+        <div id="dzk_javascriptareatopic" class="hidden">
+            <ul class="dzk_topicoptions linklist z-clearfix">
+                {if $topic.prev_topic_id and $topic.topic_id neq $topic.prev_topic_id}
+                <li><a class="dzk_img previoustopiclink" title="{gt text="Previous topic"}" href="{pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
+                {/if}
+
+                {if $topic.access_comment}
+                <li><a class="dzk_img newtopiclink" title="{gt text="Create a new topic"}" href="{pnmodurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
+                {/if}
+
+                {if $pncore.logged_in}
+                <li><a class="dzk_img mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
+                {/if}
+
+                <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
+
+                {if $pncore.logged_in}
+                <li>
+                    <a id="subscribetopicbutton" class="dzk_img {if $topic.is_subscribed eq 1}hidden{/if} subscribetopiclink" onclick="javascript:subscribeunsubscribetopic({$topic.topic_id},'subscribe');" href="javascript:void(0);" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a>
+                    <a id="unsubscribetopicbutton" class="dzk_img {if $topic.is_subscribed eq 0}hidden{/if} unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic({$topic.topic_id},'unsubscribe');" href="javascript:void(0);" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a>
+                </li>
+                {/if}
+                {if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
+                <li><a class="dzk_img nexttopiclink" title="{gt text="Next topic"}" href="{pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">&nbsp;</a></li>
+                {/if}
+            </ul>
+
+            {if $topic.access_moderate eq 1}
+            <ul class="dzk_topicoptions linklist z-clearfix">
+                <li>
+                    <a id="locktopicbutton" class="dzk_img {if $topic.topic_status eq 1}hidden{/if} locktopiclink" title="{gt text="Lock topic"}" href="javascript:void(0);" onclick="javascript:lockunlocktopic({$topic.topic_id}, 'lock');">{gt text="Lock topic"}</a>
+                    <a id="unlocktopicbutton" class="dzk_img {if $topic.topic_status eq 0}hidden{/if} unlocktopiclink" title="{gt text="Unlock topic"}" href="javascript:void(0);" onclick="javascript:lockunlocktopic({$topic.topic_id}, 'unlock');">{gt text="Unlock topic"}</a>
+                </li>
+
+                <li>
+                    <a class="dzk_img {if $topic.sticky eq 1}hidden{/if} stickytopiclink" id="stickytopicbutton" title="{gt text="Give this topic 'sticky' status"}"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic({$topic.topic_id}, 'sticky')">{gt text="Give this topic 'sticky' status"}</a>
+                    <a class="dzk_img {if $topic.sticky eq 0}hidden{/if} unstickytopiclink" id="unstickytopicbutton" title="{gt text="Remove 'sticky' status"}" href="javascript:void(0);" onclick="javascript:stickyunstickytopic({$topic.topic_id}, 'unsticky')">{gt text="Remove 'sticky' status"}</a>
+                </li>
+
+                <li><a class="dzk_img movetopiclink" title="{gt text="Move topic"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                <li><a class="dzk_img deletetopiclink" title="{gt text="Delete topic"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+            </ul>
+            {/if}
+        </div>
+
+        <noscript>
+            <div id="dzk_nonjavascriptareatopic">
+                <ul class="dzk_topicoptions linklist z-clearfix">
+                    {if $topic.topic_id neq $topic.prev_topic_id}
+                    <li><a class="dzk_img previoustopiclink" title="{gt text="Previous topic"}" href="{pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
+                    {/if}
+
+                    {if $topic.access_comment}
+                    <li><a class="dzk_img newtopiclink" title="{gt text="Create a new topic"}" href="{pnmodurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
+                    {/if}
+
+                    {if $pncore.logged_in}
+                    <li><a class="dzk_img mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{pnmodurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
+                    {/if}
+
+                    <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
+
+                    {if $pncore.logged_in}
+                    {if $topic.is_subscribed == 0}
+                    <li><a class="dzk_img subscribetopiclink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id}" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a></li>
+                    {else}
+                    <li><a class="dzk_img unsubscribetopiclink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id}" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a></li>
+                    {/if}
+                    {/if}
+
+                    {if $topic.topic_id neq $topic.next_topic_id}
+                    <li><a class="dzk_img nexttopiclink" title="{gt text="Next topic"}" href="{pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">&nbsp;</a></li>
+                    {/if}
+                </ul>
+
+                {if $topic.access_moderate eq 1}
+                <ul class="dzk_topicoptions linklist z-clearfix">
+                    {if $topic.topic_status eq 0}
+                    <li><a class="dzk_img locktopiclink" title="{gt text="Lock topic"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id}">{gt text="Lock topic"}</a></li>
+                    {else}
+                    <li><a class="dzk_img unlocktopiclink" title="{gt text="Unlock topic"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=unlock topic=$topic.topic_id}">{gt text="Unlock topic"}</a></li>
+                    {/if}
+
+                    {if $topic.sticky eq 0}
+                    <li><a class="dzk_img stickytopiclink" title="{gt text="Give this topic 'sticky' status"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=sticky topic=$topic.topic_id}">{gt text="Give this topic 'sticky' status"}</a></li>
+                    {else}
+                    <li><a class="dzk_img unstickytopiclink" title="{gt text="Remove 'sticky' status"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=unsticky topic=$topic.topic_id}">{gt text="Remove 'sticky' status"}</a></li>
+                    {/if}
+                    <li><a class="dzk_img movetopiclink" title="{gt text="Move topic"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                    <li><a class="dzk_img deletetopiclink" title="{gt text="Delete topic"}" href="{pnmodurl modname='Dizkus' type=user func=topicadmin mode=delete topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+                </ul>
+                {/if}
+            </div>
+        </noscript>
+
+    </div>
+</div>
+
+{dzkpager total=$topic.total_posts}
+
+<div id="dzk_postinglist">
+    <ul>
+        {counter start=0 print=false assign='post_counter'}
+        {foreach key='num' item='post' from=$topic.posts}
+        {counter}
+        <li class="post_{$post.post_id}">
+            {include file='dizkus_user_singlepost.html'}
+        </li>
+        {/foreach}
+        <li id="quickreplyposting" class="hidden">&nbsp;</li>
+        <li id="quickreplypreview" class="hidden">&nbsp;</li>
+    </ul>
+</div>
+
+{dzkpager total=$topic.total_posts}
+
+{if ($topic.topic_status neq 1) and ($topic.access_comment eq true)}
+<div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded">
+    <div class="inner">
+        <div class="dzk_subcols z-clearfix">
+            <form id="quickreplyform" class="dzk_form" action="{pnmodurl modname='Dizkus' type=user func=reply}" method="post" enctype="multipart/form-data">
+                <div>
+                    <input type="hidden" id="forum" name="forum" value="{$topic.forum_id}" />
+                    <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
+                    <input type="hidden" id="quote" name="quote" value="" />
+                    <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
+                    <div class="post_header">
+                        <label for="message" class="quickreply_title" style="display:block;">{gt text="Quick reply"}</label>
+                    </div>
+                    <div class="post_text_wrap">
+                        <div class="post_text">
+                            <div id="dizkusinformation"></div>
+                            <textarea class="dzk_textarea_{pnusergetlang} dzk_texpand" id="message" name="message" rows="10" cols="60"></textarea>
+                            {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
+                            {if $pncore.Dizkus.striptags == 'yes'}
+                            <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                            {/if}
+                            <div class="dzk_subcols z-clearfix">
+                                <div id="quickreplyoptions" class="dzk_col_left">
+                                    <ul>
+                                        <li><strong>{gt text="Options"}</strong></li>
+                                        {if $pncore.logged_in}
+                                        <li>
+                                            <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                            <label for="attach_signature">{gt text="Attach my signature"}</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $topic.is_subscribed eq true}checked="checked"{/if} value="1" />
+                                            <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
+                                        </li>
+                                        {/if}
+                                        <li id="quickreplybuttons" class="dzk_buttonmargin hidden">
+                                            <button id="btnCreateQuickReply" class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="{gt text="Submit"}">{gt text="Submit"}</button>
+                                            <button class="dzk_img preview" onclick="previewQuickReply(); return false;" type="submit" title="{gt text="Preview"}">{gt text="Preview"}</button>
+                                            <button class="dzk_img cancel" onclick="clearQuickReply();" type="reset" title="{gt text="Cancel"}">{gt text="Cancel"}</button>
+                                        </li>
+
+                                        <li id="nonajaxquickreplybuttons" class="dzk_buttonmargin">
+                                            <input class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input class="dzk_img preview" type="submit" name="preview" value="{gt text="Preview"}" />
+                                            <input class="dzk_img cancel" type="submit" name="reset" value="{gt text="Cancel"}" onclick="self.location.href='{pnmodurl modname='Dizkus' type=user func=viewtopic topic=$topic.topic_id}'" />
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="dzk_col_right">
+                                    {plainbbcode textfieldid='message'}
+                                    {bbsmile textfieldid='message'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post_footer"></div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{mediaattach_fileuploads objectid=$topic.topic_id}
+<div id="dzk_displayhooks">
+    {if isset($hooks.Ratings)}{$hooks.Ratings}{/if}
+</div>
+
+{/if}
+
+{if $topic.forum_mods|@count > 0}
+<ul id="dzk_moderatorlist" class="linklist z-clearfix">
+    <li><em>{gt text="Moderated by"}:</em></li>
+    {foreach name=moderators item=mod from=$topic.forum_mods}
+    <li>{$mod|userprofilelink}{if !$smarty.foreach.moderators.last}, {/if}</li>
+    {/foreach}
+</ul>
+{/if}
+
+<script type="text/javascript">
+    // <![CDATA[
+    var storingReply = "{gt text='Storing reply...' domain='module_dizkus'}";
+    var preparingPreview = "{gt text='Preparing preview...' domain='module_dizkus'}";
+    var storingPost = "{gt text='Storing post...' domain='module_dizkus'}";
+    var deletingPost = "{gt text='Deleting post...' domain='module_dizkus'}";
+    var updatingPost = "{gt text='Updating post...' domain='module_dizkus'}";
+    var statusNotChanged = "{gt text='Unchanged' domain='module_dizkus'}";
+    var statusChanged = "{gt text='Changed' domain='module_dizkus'}";
+
+    Event.observe(window, 'load', init_topicview);
+    function init_topicview()
+    {
+        $('dzk_javascriptareatopic').removeClassName('hidden');
+        if($('dzk_quickreply')) {
+            $('quickreplybuttons').removeClassName('hidden');
+            $('nonajaxquickreplybuttons').addClassName('hidden');
+            $('quickreplyform').action = '';
+        }
+        $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
+
+        if($('subscribetopicbutton') && $('unsubscribetopicbutton')) {
+            var is_subscribed = 0;
+            if(is_subscribed == 0) {
+                Element.show('subscribetopicbutton');
+            } else {
+                Element.show('unsubscribetopicbutton');
+            }
+        }
+    }
+
+    {if ($topic.topic_status neq 1) and ($topic.access_comment eq true)}
+    //var btnCreateQuickReply = $('btnCreateQuickReply');
+    Event.observe('btnCreateQuickReply', 'click', createQuickReply);
+    {/if}
+
+    // ]]>
+</script>
+
+{include file='dizkus_user_footer.html'}

@@ -27,10 +27,8 @@ $count    = (int)FormUtil::getPassedValue('count', 10, 'GET');
 $feed     =      FormUtil::getPassedValue('feed', 'rss20', 'GET');
 $user     =      FormUtil::getPassedValue('user', '', 'GET');
 
-$dom = ZLanguage::getModuleDomain('Dizkus');
-
 // get the module info
-$dzkinfo = pnModGetInfo(pnModGetIdFromName('Dizkus'));
+$dzkinfo = ModUtil::getInfo(pnModGetIdFromName('Dizkus'));
 $dzkname = $dzkinfo['displayname'];
 
 /**
@@ -46,10 +44,10 @@ if (!empty($feed)) {
 }
 
 if (isset($forum_id) && !is_numeric($forum_id)) {
-    die(DataUtil::formatForDisplay(__f('Error! In \'backforum.php\', an invalid forum ID %s was encountered.', $forum_id, $dom)));
+    die(DataUtil::formatForDisplay(__f('Error! In \'backforum.php\', an invalid forum ID %s was encountered.', $forum_id)));
 }
 if (isset($cat_id) && !is_numeric($cat_id)) {
-    die(DataUtil::formatForDisplay(__f('Error! In \'backforum.php\', an invalid category ID %s was encountered.', $cat_id, $dom)));
+    die(DataUtil::formatForDisplay(__f('Error! In \'backforum.php\', an invalid category ID %s was encountered.', $cat_id)));
 }
 
 /**
@@ -63,7 +61,7 @@ $render = pnRender::getInstance('Dizkus', false);
 $templatefile = 'dizkus_feed_' . DataUtil::formatForOS($feed) . '.html';
 if (!$render->template_exists($templatefile)) {
     // silently stop working
-    die(DataUtil::formatForDisplay(__f('Error! Could not find a template for an %s-type feed.', $feed, $dom)));
+    die(DataUtil::formatForDisplay(__f('Error! Could not find a template for an %s-type feed.', $feed)));
 }
 
 /**
@@ -77,7 +75,7 @@ if (!empty($user)) {
  * set some defaults
  */
 // form the url
-$link = pnModURL('Dizkus', 'user', 'main', array(), null, null, true);
+$link = ModUtil::url('Dizkus', 'user', 'main', array(), null, null, true);
 
 $forumname = DataUtil::formatForDisplay($dzkname);
 // default where clause => no where clause
@@ -87,32 +85,32 @@ $where = '';
  * check for forum_id
  */
 if (!empty($forum_id)) {
-    $forum = pnModAPIFunc('Dizkus', 'user', 'readuserforums', array('forum_id' => $forum_id));
+    $forum = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums', array('forum_id' => $forum_id));
     if (count($forum) == 0) {
         // not allowed to see forum
         pnShutDown();
     }
     $where = 'AND t.forum_id = ' . (int)DataUtil::formatForStore($forum_id) . ' ';
-    $link = pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
+    $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
     $forumname = $forum['forum_name'];
 
 } elseif (!empty($cat_id)) {
     if (!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
         pnShutDown();
     }
-    $category = pnModAPIFunc('Dizkus', 'admin', 'readcategories',
+    $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
                              array('cat_id' => $cat_id));
     if ($category == false) {
         pnShutDown();
     }
     $where = 'AND f.cat_id = ' . (int)DataUtil::formatForStore($cat_id) . ' ';
-    $link = pnModURL('Dizkus', 'user', 'main', array('viewcat' => $cat_id), null, null, true);
+    $link = ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id), null, null, true);
     $forumname = $category['cat_title'];
 
 } elseif (isset($uid) && ($uid<>false)) {
     $where = 'AND p.poster_id=' . $uid . ' ';
 } else {
-    $userforums = pnModAPIFunc('Dizkus', 'user', 'readuserforums');
+    $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
     // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
     $allowedforums = array_map('_get_forum_ids', $userforums);
@@ -153,7 +151,7 @@ $sql = 'SELECT '.$topicscols.',
         ORDER BY p.post_time DESC
         LIMIT ' . DataUtil::formatForStore($count);
 
-$posts_per_page  = pnModGetVar('Dizkus', 'posts_per_page');
+$posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
 
 $res = DBUtil::executeSQL($sql);
 
@@ -173,12 +171,12 @@ foreach ($keys as $key)
     $posts[$key]['unixtime'] = strtotime ($posts[$key]['post_time']);
     $start = (int)((ceil(($posts[$key]['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
 
-    $posts[$key]['post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
+    $posts[$key]['post_url'] = ModUtil::url('Dizkus', 'user', 'viewtopic',
                                  array('topic' => $posts[$key]['topic_id'],
                                        'start' => $start), 
                                  null, null, true);
 
-    $posts[$key]['last_post_url'] = pnModURL('Dizkus', 'user', 'viewtopic',
+    $posts[$key]['last_post_url'] = ModUtil::url('Dizkus', 'user', 'viewtopic',
                                       array('topic' => $posts[$key]['topic_id'],
                                             'start' => $start), 
                                       null, "pid" . $posts[$key]['topic_last_post_id'], true);

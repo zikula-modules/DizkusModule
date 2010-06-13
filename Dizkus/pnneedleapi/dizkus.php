@@ -36,7 +36,7 @@ function Dizkus_needleapi_dizkus($args)
             // set the default
             $cache[$nid] = '';
 
-            if (pnModAvailable('Dizkus')) {
+            if (ModUtil::isAvailable('Dizkus')) {
                 // nid is like F-## or T-##
                 $temp = explode('-', $nid);
                 $type = '';
@@ -60,7 +60,7 @@ function Dizkus_needleapi_dizkus($args)
                         
                         if (is_array($result) && !empty($result)) {
                             if (allowedtoreadcategoryandforum($result[0]['cat_id'], $id)) {
-                                $url   = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewforum', array('forum' => $id)));
+                                $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id)));
                                 $title = DataUtil::formatForDisplay($result[0]['forum_name']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
@@ -85,7 +85,7 @@ function Dizkus_needleapi_dizkus($args)
                         
                         if (is_array($result) && !empty($result)) {
                             if (allowedtoreadcategoryandforum($result[0]['cat_id'], $result[0]['forum_id'])) {
-                                $url   = DataUtil::formatForDisplay(pnModURL('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
+                                $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
                                 $title = DataUtil::formatForDisplay($result[0]['topic_title']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {

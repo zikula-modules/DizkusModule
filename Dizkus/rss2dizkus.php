@@ -27,21 +27,21 @@ pnInit();
 //
 // Checking if RSS2Forum is enabled
 //
-if (!pnModGetVar('Dizkus', 'rss2f_enabled') == 'no') {
+if (!ModUtil::getVar('Dizkus', 'rss2f_enabled') == 'no') {
     return;
 }
 
 //
 // Checking Feeds module availability
 //
-if (!pnModAvailable('Feeds')) {
+if (!ModUtil::isAvailable('Feeds')) {
     return;
 }
 
 //
 // Getting All forums where RSS2DIZKUS is SET... this also loads modules/Dizkus/common.php
 //
-$forums = pnModAPIFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
+$forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 
 if (!$forums) {
     return;
@@ -69,7 +69,7 @@ foreach ($forums as $forum)
         }
 
         if ($loggedin == true) {
-            $rss = pnModAPIFunc('Feeds', 'user', 'get', array('fid' => $forum['externalsourceurl']));
+            $rss = ModUtil::apiFunc('Feeds', 'user', 'get', array('fid' => $forum['externalsourceurl']));
 
             if (!$rss) {
                 // Buzz off, this feed doesn't exists
@@ -77,7 +77,7 @@ foreach ($forums as $forum)
             }
 
             // Get the feed...
-            $dump = pnModAPIFunc('Feeds', 'user', 'getfeed', array('fid' => $rss['fid'],
+            $dump = ModUtil::apiFunc('Feeds', 'user', 'getfeed', array('fid' => $rss['fid'],
                                                                    'url' => $rss['url']));
 
             if (!$dump) {
@@ -93,7 +93,7 @@ foreach ($forums as $forum)
             $items = $dump['feed']->get_items();
 
             // See the function below...
-            $insert = pnModAPIFunc('Dizkus', 'user', 'insertrss',
+            $insert = ModUtil::apiFunc('Dizkus', 'user', 'insertrss',
                                    array('items' => $items,
                                          'forum' => $forum));
 

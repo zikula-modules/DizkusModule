@@ -23,14 +23,14 @@ pnInit();
 $debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');
 $debug = ($debug==1) ? true : false;
 
-$forums = pnModAPIFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
+$forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 if (is_array($forums) && count($forums) > 0)
 {
     echo count($forums) . " forums read<br />";
     foreach($forums as $forum)
     {
         if ($forum['externalsource'] == 1) {    // Mail
-            pnModAPIFunc('Dizkus', 'user', 'mailcron',
+            ModUtil::apiFunc('Dizkus', 'user', 'mailcron',
                          array('forum' => $forum,
                                'debug' => $debug));
         }
