@@ -2,13 +2,13 @@
 {gt text="Manage subscriptions" assign=templatetitle}
 {include file='dizkus_admin_header.html'}
 
-<form class="z-form" id="subscriptions" action="{pnmodurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
+<form class="z-form" id="subscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
     <fieldset>
         <label for="pnusername">{gt text="User name"}</label>&nbsp;<input type="text" name="pnusername" id="pnusername" value="{$pnusername}" />&nbsp;<button class="dzk_img search" type="submit" name="submit">{gt text="Show users' subscriptions"}</button>
     </fieldset>
 </form>
 
-<form class="z-form" id="managesubscriptions" action="{pnmodurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
+<form class="z-form" id="managesubscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
     <div>
         <input type="hidden" name="pnuid" value="{$pnuid}" />
         {if $topicsubscriptions|@count <> 0}
@@ -58,7 +58,7 @@
                 {foreach item='subscription' from=$forumsubscriptions}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
-                        <a href="{pnmodurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.topic_title} :: {$subscription.forum_name}">{$subscription.forum_name|pnvarprepfordisplay}</a>
+                        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.topic_title} :: {$subscription.forum_name}">{$subscription.forum_name|pnvarprepfordisplay}</a>
                     </td>
                     <td>
                         <input class="forum_checkbox" type="checkbox" onclick="CheckCheckAll('forum');" name="forum_id[]" value="{$subscription.forum_id}" />

@@ -17,10 +17,10 @@ $modversion['description']    = __('An integrated forum solution for Zikula whic
 $modversion['url']            = __('forums');
 $modversion['version']        = '3.2';
 
-$modversion['credits']        = 'pndocs/credits.txt';
-$modversion['help']           = 'pndocs/install.txt';
-$modversion['changelog']      = 'pndocs/changelog.txt';
-$modversion['license']        = 'pndocs/license.txt';
+$modversion['credits']        = 'docs/credits.txt';
+$modversion['help']           = 'docs/install.txt';
+$modversion['changelog']      = 'docs/changelog.txt';
+$modversion['license']        = 'docs/license.txt';
 $modversion['id']             = '62';
 $modversion['official']       = 0;
 $modversion['author']         = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer';

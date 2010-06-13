@@ -57,7 +57,7 @@ function Dizkus_statisticsblock_display($blockinfo)
     }
 
     // break out options from our content field
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     // check if cb_template is set, if not, use the default centerblock template
     if (empty($vars['sb_template'])) {
@@ -68,7 +68,7 @@ function Dizkus_statisticsblock_display($blockinfo)
     }
 
     // build the output
-    $render = pnRender::getInstance('Dizkus', false, null, true);
+    $render = Renderer::getInstance('Dizkus', false, null, true);
 
     $params = explode(',', $vars['sb_parameters']);
 
@@ -97,7 +97,7 @@ function Dizkus_statisticsblock_update($blockinfo)
     $sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
     $sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 
-    $blockinfo['content'] = pnBlockVarsToContent(compact('sb_template', 'sb_parameters'));
+    $blockinfo['content'] = BlockUtil::varsToContent(compact('sb_template', 'sb_parameters'));
 
     return($blockinfo);
 }
@@ -112,7 +112,7 @@ function Dizkus_statisticsblock_modify($blockinfo)
     }
 
     // Break out options from our content field
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     if (!isset($vars['sb_parameters']) || empty($vars['sb_parameters'])) {
         $vars['sb_parameters'] = 'maxposts=5';
@@ -121,7 +121,7 @@ function Dizkus_statisticsblock_modify($blockinfo)
         $vars['sb_template']   = 'dizkus_statisticsblock_display.html';
     }
 
-    $render = pnRender::getInstance('Dizkus', false, null, true);
+    $render = Renderer::getInstance('Dizkus', false, null, true);
 
     $render->assign('vars', $vars);
 

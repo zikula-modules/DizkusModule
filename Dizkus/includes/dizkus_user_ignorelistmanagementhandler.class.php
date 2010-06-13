@@ -36,7 +36,7 @@ class Dizkus_user_ignorelistmanagementHandler
 
         // assign data
         $render->assign('ignorelist_options',    $ignorelist_options);
-        $render->assign('ignorelist_myhandling', ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid'))));
+        $render->assign('ignorelist_myhandling', ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid'))));
         return true;
     }
 
@@ -57,8 +57,8 @@ class Dizkus_user_ignorelistmanagementHandler
             }
 
             // update user's attributes
-            $uid = pnUserGetVar('uid'); 
-            $user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false);        $obj['uid'] = pnUserGetVar('uid');
+            $uid = UserUtil::getVar('uid'); 
+            $user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false);        $obj['uid'] = UserUtil::getVar('uid');
             $user['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling']; 
 
             // store attributes 

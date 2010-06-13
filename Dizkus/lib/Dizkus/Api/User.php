@@ -37,15 +37,15 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $makedummy = false;
         // get the core user data
-        $userdata = pnUserGetVars($userid);
+        $userdata = UserUtil::getVars($userid);
         if ($userdata == false) {
             // create a dummy user basing on Anonymous
             // necessary for some socks :-)
-            $userdata  = pnUserGetVars(1);
+            $userdata  = UserUtil::getVars(1);
             $makedummy = true;
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $dizkus_userdata = DBUtil::selectObjectByID('dizkus_users', $userid, 'user_id');
         
@@ -73,8 +73,8 @@ class Dizkus_Api_User extends Zikula_Api {
                 $rank = DBUtil::selectObjectByID('dizkus_ranks', $userdata['user_rank'], 'rank_id');
     
             } elseif ($userdata['user_posts'] != 0) {
-                $where =        $pntable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
-                          AND '.$pntable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
+                $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
+                          AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
     
                 $rank = DBUtil::selectObject('dizkus_ranks', $where);
             }
@@ -94,8 +94,8 @@ class Dizkus_Api_User extends Zikula_Api {
             //
             if ($userdata['pn_uid'] != 1) {
                 // user is logged in, display some info
-                $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
-                $where = $pntable['session_info_column']['uid']." = '".$userdata['pn_uid']."'
+                $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
+                $where = $ztable['session_info_column']['uid']." = '".$userdata['pn_uid']."'
                           AND pn_lastused > '".DataUtil::formatForStore($activetime)."'";
     
                 $sessioninfo =  DBUtil::selectObject('session_info', $where);         
@@ -237,9 +237,9 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_firstlast_post_in_topic($args)
     {
         if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
-            $pntable = pnDBGetTables();
+            $ztable = System::dbGetTables();
             $option  = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
-            $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $pntable['dizkus_posts_column']['topic_id'].' = '.(int)$args['topic_id']);
+            $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $ztable['dizkus_posts_column']['topic_id'].' = '.(int)$args['topic_id']);
     
             if ($post_id <> false) {
                 if (isset($args['id_only']) && $args['id_only'] == true) {
@@ -263,8 +263,8 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_last_post_in_forum($args)
     {
         if (!empty($args['forum_id']) && is_numeric($args['forum_id'])) {
-            $pntable = pnDBGetTables();
-            $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $pntable['dizkus_posts_column']['forum_id'].' = '.(int)$args['forum_id']);
+            $ztable = System::dbGetTables();
+            $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $ztable['dizkus_posts_column']['forum_id'].' = '.(int)$args['forum_id']);
     
             if (isset($args['id_only']) && $args['id_only'] == true) {
                 return $post_id;
@@ -297,12 +297,12 @@ class Dizkus_Api_User extends Zikula_Api {
             return $tree;
         }
     
-        $pntable = pnDBGetTables();
-        $cattable    = $pntable['dizkus_categories'];
-        $forumstable = $pntable['dizkus_forums'];
-        $poststable  = $pntable['dizkus_posts'];
-        $topicstable = $pntable['dizkus_topics'];
-        $userstable  = $pntable['users'];
+        $ztable = System::dbGetTables();
+        $cattable    = $ztable['dizkus_categories'];
+        $forumstable = $ztable['dizkus_forums'];
+        $poststable  = $ztable['dizkus_posts'];
+        $topicstable = $ztable['dizkus_topics'];
+        $userstable  = $ztable['users'];
     
         $sql = 'SELECT ' . $cattable . '.cat_id AS cat_id,
                        ' . $cattable . '.cat_title AS cat_title,
@@ -423,14 +423,14 @@ class Dizkus_Api_User extends Zikula_Api {
             
                         // is the user subscribed to the forum?
                         $forum['is_subscribed'] = 0;
-                        if (Dizkus_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                        if (Dizkus_userapi_get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                             $forum['is_subscribed'] = 1;
                         }
             
                         // is this forum in the favorite list?
                         $forum['is_favorite'] = 0;
                         if ($dizkusvars['favorites_enabled'] == 'yes') {
-                            if (Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                            if (Dizkus_userapi_get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                                 $forum['is_favorite'] = 1;
                             }
                         }
@@ -469,16 +469,16 @@ class Dizkus_Api_User extends Zikula_Api {
     {
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         if (!empty($forum_id)) {
             $sql = 'SELECT u.pn_uname, u.pn_uid
-                    FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
+                    FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
                     WHERE f.forum_id = '.DataUtil::formatForStore($forum_id).' AND u.pn_uid = f.user_id
                     AND f.user_id < 1000000';
         } else {
             $sql = 'SELECT u.pn_uname, u.pn_uid
-                    FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
+                    FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
                     WHERE u.pn_uid = f.user_id
                     AND f.user_id < 1000000
                     GROUP BY f.user_id';
@@ -496,12 +496,12 @@ class Dizkus_Api_User extends Zikula_Api {
     
         if (!empty($forum_id)) {
             $sql = 'SELECT g.pn_name, g.pn_gid
-                    FROM '.$pntable['groups'].' g, '.$pntable['dizkus_forum_mods']." f
+                    FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods']." f
                     WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.pn_gid = f.user_id-1000000
                     AND f.user_id > 1000000";
         } else {
             $sql = 'SELECT g.pn_name, g.pn_gid
-                    FROM '.$pntable['groups'].' g, '.$pntable['dizkus_forum_mods'].' f
+                    FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods'].' f
                     WHERE g.pn_gid = f.user_id-1000000
                     AND f.user_id > 1000000
                     GROUP BY f.user_id';
@@ -534,7 +534,7 @@ class Dizkus_Api_User extends Zikula_Api {
          * set last visit cookies and get last visit time
          * set LastVisit cookie, which always gets the current time and lasts one year
          */
-        $path = pnGetBaseURI();
+        $path = System::getBaseUri();
         if (empty($path)) {
             $path = '/';
         } elseif (substr($path, -1, 1) != '/') {
@@ -596,7 +596,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', $this->__('Error! You do not have authorisation to view this category or forum.')), __FILE__, __LINE__);
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
         if (empty($args['topics_per_page'])) {
@@ -613,13 +613,13 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // is the user subscribed to the forum?
         $forum['is_subscribed'] = 0;
-        if (Dizkus_userapi_get_forum_subscription_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+        if (Dizkus_userapi_get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
             $forum['is_subscribed'] = 1;
         }
     
         // is this forum in the favorite list?
         $forum['is_favorite'] = 0;
-        if (Dizkus_userapi_get_forum_favorites_status(array('userid' => pnUserGetVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+        if (Dizkus_userapi_get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
             $forum['is_favorite'] = 1;
         }
     
@@ -634,10 +634,10 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // integrate contactlist's ignorelist here
         $whereignorelist = '';
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid')));
         if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
             // get user's ignore list
-            $ignored_users = ModUtil::apiFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+            $ignored_users = ModUtil::apiFunc('ContactList','user','getallignorelist',array('uid' => UserUtil::getVar('uid')));
             $ignored_uids = array();
             foreach ($ignored_users as $item) {
                 $ignored_uids[]=(int)$item['iuid'];
@@ -659,10 +659,10 @@ class Dizkus_Api_User extends Zikula_Api {
                        u2.pn_uname as last_poster,
                        p.post_time,
                        t.topic_poster
-                FROM ' . $pntable['dizkus_topics'] . ' AS t
-                LEFT JOIN ' . $pntable['users'] . ' AS u ON t.topic_poster = u.pn_uid
-                LEFT JOIN ' . $pntable['dizkus_posts'] . ' AS p ON t.topic_last_post_id = p.post_id
-                LEFT JOIN ' . $pntable['users'] . ' AS u2 ON p.poster_id = u2.pn_uid
+                FROM ' . $ztable['dizkus_topics'] . ' AS t
+                LEFT JOIN ' . $ztable['users'] . ' AS u ON t.topic_poster = u.pn_uid
+                LEFT JOIN ' . $ztable['dizkus_posts'] . ' AS p ON t.topic_last_post_id = p.post_id
+                LEFT JOIN ' . $ztable['users'] . ' AS u2 ON p.poster_id = u2.pn_uid
                 WHERE t.forum_id = ' .(int)DataUtil::formatForStore($forum['forum_id']) . '
                 ' . $whereignorelist . '
                 ORDER BY t.sticky DESC, p.post_time DESC';
@@ -797,12 +797,12 @@ class Dizkus_Api_User extends Zikula_Api {
         $start    = (isset($args['start'])) ? $args['start'] : -1;
         $hooks    = (isset($args['nohook']) && $args['nohook'] == false) ? false : true;
     
-        $currentuserid = pnUserGetVar('uid');
+        $currentuserid = UserUtil::getVar('uid');
         $now = time();
         $timespanforchanges = !empty($dizkusvars['timespanforchanges']) ? $dizkusvars['timespanforchanges'] : 24;
         $timespansecs = $timespanforchanges * 60 * 60;
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $sql = 'SELECT t.topic_title,
                        t.topic_poster,
@@ -816,9 +816,9 @@ class Dizkus_Api_User extends Zikula_Api {
                        f.cat_id,
                        f.forum_pop3_active,
                        c.cat_title
-                FROM  '.$pntable['dizkus_topics'].' t
-                LEFT JOIN '.$pntable['dizkus_forums'].' f ON f.forum_id = t.forum_id
-                LEFT JOIN '.$pntable['dizkus_categories'].' AS c ON c.cat_id = f.cat_id
+                FROM  '.$ztable['dizkus_topics'].' t
+                LEFT JOIN '.$ztable['dizkus_forums'].' f ON f.forum_id = t.forum_id
+                LEFT JOIN '.$ztable['dizkus_categories'].' AS c ON c.cat_id = f.cat_id
                 WHERE t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']);
     
         $res = DBUtil::executeSQL($sql);
@@ -828,10 +828,10 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // integrate contactlist's ignorelist here (part 1/2)
         $ignored_uids = array();
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid')));
         if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
             // get user's ignore list
-            $ignored_users = ModUtil::apiFunc('ContactList','user','getallignorelist',array('uid' => pnUserGetVar('uid')));
+            $ignored_users = ModUtil::apiFunc('ContactList','user','getallignorelist',array('uid' => UserUtil::getVar('uid')));
             $ignored_uids = array();
             foreach ($ignored_users as $item) {
                 $ignored_uids[] = (int)$item['iuid'];
@@ -880,7 +880,7 @@ class Dizkus_Api_User extends Zikula_Api {
             } else {
                 // check if user is the topic starter and give him the permission to
                 // update the subject
-                $topic['access_topicsubjectedit'] = (pnUserGetVar('uid') == $topic['topic_poster']);
+                $topic['access_topicsubjectedit'] = (UserUtil::getVar('uid') == $topic['topic_poster']);
             }
     
             // get the next and previous topic_id's for the next / prev button
@@ -1028,7 +1028,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function preparereply($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $reply = array();
     
@@ -1043,10 +1043,10 @@ class Dizkus_Api_User extends Zikula_Api {
                            p.post_text,
                            p.post_time,
                            u.pn_uname
-                    FROM '.$pntable['dizkus_forums'].' AS f,
-                         '.$pntable['dizkus_topics'].' AS t,
-                         '.$pntable['dizkus_posts'].' AS p,
-                         '.$pntable['users'].' AS u
+                    FROM '.$ztable['dizkus_forums'].' AS f,
+                         '.$ztable['dizkus_topics'].' AS t,
+                         '.$ztable['dizkus_posts'].' AS p,
+                         '.$ztable['users'].' AS u
                     WHERE (p.post_id = '.(int)DataUtil::formatForStore($args['post_id']).')
                     AND (t.forum_id = f.forum_id)
                     AND (p.topic_id = t.topic_id)
@@ -1060,8 +1060,8 @@ class Dizkus_Api_User extends Zikula_Api {
                            t.topic_id,
                            t.topic_title,
                            t.topic_status
-                    FROM '.$pntable['dizkus_forums'].' AS f,
-                         '.$pntable['dizkus_topics'].' AS t
+                    FROM '.$ztable['dizkus_forums'].' AS f,
+                         '.$ztable['dizkus_topics'].' AS t
                     WHERE (t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']).')
                     AND (t.forum_id = f.forum_id)';
             $colarray = array('forum_id', 'cat_id', 'topic_id', 'topic_title', 'topic_status');
@@ -1091,12 +1091,12 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // anonymous user has uid=0, but needs pn_uid=1
         // also check subscription status here
-        if (!pnUserLoggedin()) {
+        if (!UserUtil::isLoggedIn()) {
             $pn_uid = 1;
             $reply['attach_signature'] = false;
             $reply['subscribe_topic'] = false;
         } else {
-            $pn_uid = pnUserGetVar('uid');
+            $pn_uid = UserUtil::getVar('uid');
             // get the users topic_subscription status to show it in the quick repliy checkbox
             // correctly
             if ($args['reply_start']==true) {
@@ -1131,8 +1131,8 @@ class Dizkus_Api_User extends Zikula_Api {
                        p.post_time,
                        p.post_text,
                        t.topic_title
-                FROM '.$pntable['dizkus_posts'].' p
-                LEFT JOIN '.$pntable['dizkus_topics'].' t ON t.topic_id=p.topic_id
+                FROM '.$ztable['dizkus_posts'].' p
+                LEFT JOIN '.$ztable['dizkus_topics'].' t ON t.topic_id=p.topic_id
                 WHERE p.topic_id = ' . (int)DataUtil::formatForStore($reply['topic_id']) . ' 
                 ORDER BY p.post_id DESC';
     
@@ -1143,7 +1143,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $reply['topic_review'] = array();
         if (is_array($result) && !empty($result)) {
             foreach ($result as $review) {
-                $review['user_name'] = pnUserGetVar('uname', $review['poster_id']);
+                $review['user_name'] = UserUtil::getVar('uname', $review['poster_id']);
                 if ($review['user_name'] == '') {
                     // user deleted from the db?
                     $review['poster_id'] = 1;
@@ -1214,7 +1214,7 @@ class Dizkus_Api_User extends Zikula_Api {
             if ($args['attach_signature'] == 1) {
                 $args['message'] .= '[addsig]';
             }
-            $pn_uid = pnUserGetVar('uid');
+            $pn_uid = UserUtil::getVar('uid');
         } else {
             $pn_uid = 1;
         }
@@ -1295,8 +1295,8 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_topic_subscription_status($args)
     {
-        $pntables = pnDBGetTables();
-        $tsubcolumn = $pntables['dizkus_topic_subscription_column'];
+        $ztables = System::dbGetTables();
+        $tsubcolumn = $ztables['dizkus_topic_subscription_column'];
     
         $where = ' WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
                  ' AND '   . $tsubcolumn['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
@@ -1317,8 +1317,8 @@ class Dizkus_Api_User extends Zikula_Api {
         static $cache = array();
     
         if (!isset($cache[$args['userid']])) {
-            $pntables = pnDBGetTables();
-            $subcolumn = $pntables['dizkus_subscription_column'];
+            $ztables = System::dbGetTables();
+            $subcolumn = $ztables['dizkus_subscription_column'];
     
             $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
             $cache[$args['userid']] = DBUtil::selectFieldMaxArray ('dizkus_subscription', 'msg_id', 'COUNT', $where, 'forum_id');
@@ -1341,8 +1341,8 @@ class Dizkus_Api_User extends Zikula_Api {
         static $cache = array();
     
         if (!isset($cache[$args['userid']])){
-            $pntables = pnDBGetTables();
-            $subcolumn = $pntables['dizkus_subscription_column'];
+            $ztables = System::dbGetTables();
+            $subcolumn = $ztables['dizkus_subscription_column'];
     
             $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
             $cache[$args['userid']] = DBUtil::selectFieldMaxArray ('dizkus_forum_favorites', 'forum_id', 'COUNT', $where, 'forum_id');
@@ -1366,7 +1366,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function preparenewtopic($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $newtopic = array();
         $newtopic['forum_id'] = $args['forum_id'];
@@ -1375,8 +1375,8 @@ class Dizkus_Api_User extends Zikula_Api {
         $sql = "SELECT f.forum_name,
                        c.cat_id,
                        c.cat_title
-                FROM ".$pntable['dizkus_forums']." AS f,
-                    ".$pntable['dizkus_categories']." AS c
+                FROM ".$ztable['dizkus_forums']." AS f,
+                    ".$ztable['dizkus_categories']." AS c
                 WHERE (forum_id = '".(int)DataUtil::formatForStore($args['forum_id'])."'
                 AND f.cat_id=c.cat_id)";
         $res = DBUtil::executeSQL($sql);
@@ -1395,7 +1395,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return showforumerror($this->__('Error! You do not have authorisation to post in this category or forum.'), __FILE__, __LINE__);
         }
     
-        $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => pnUserGetVar('uid')));
+        $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => UserUtil::getVar('uid')));
     
         $newtopic['subject'] = $args['subject'];
         $newtopic['message'] = $args['message'];
@@ -1458,11 +1458,11 @@ class Dizkus_Api_User extends Zikula_Api {
         if (isset($args['post_as']) && !empty($args['post_as']) && is_numeric($args['post_as'])) {
             $pn_uid = $args['post_as'];
         } else {
-            if (pnUserLoggedin()) {
+            if (UserUtil::isLoggedIn()) {
                 if ($args['attach_signature'] == 1) {
                     $args['message'] .= '[addsig]';
                 }
-                $pn_uid = pnUserGetVar('uid');
+                $pn_uid = UserUtil::getVar('uid');
             } else  {
                 $pn_uid = 1;
             }
@@ -1513,7 +1513,7 @@ class Dizkus_Api_User extends Zikula_Api {
             ModUtil::callHooks('item', 'create', $obj['topic_id'], array('module' => 'Dizkus'));
         }
     
-        if (pnUserLoggedin()) {
+        if (UserUtil::isLoggedIn()) {
             // user logged in we have to update users-table
             DBUtil::incrementObjectFieldByID('dizkus_users', 'user_posts', $obj['topic_poster'], 'user_id');
     
@@ -1551,7 +1551,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function readpost($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
         $postscols = DBUtil::_getAllColumnsQualified('dizkus_posts', 'p');
     
         $sql = 'SELECT '. $postscols .',
@@ -1560,10 +1560,10 @@ class Dizkus_Api_User extends Zikula_Api {
                           f.forum_name,
                           c.cat_title,
                           c.cat_id
-                FROM '.$pntable['dizkus_posts'].' p
-                LEFT JOIN '.$pntable['dizkus_topics'].' t ON t.topic_id = p.topic_id
-                LEFT JOIN '.$pntable['dizkus_forums'].' f ON f.forum_id = t.forum_id
-                LEFT JOIN '.$pntable['dizkus_categories'].' c ON c.cat_id = f.cat_id
+                FROM '.$ztable['dizkus_posts'].' p
+                LEFT JOIN '.$ztable['dizkus_topics'].' t ON t.topic_id = p.topic_id
+                LEFT JOIN '.$ztable['dizkus_forums'].' f ON f.forum_id = t.forum_id
+                LEFT JOIN '.$ztable['dizkus_categories'].' c ON c.cat_id = f.cat_id
                 WHERE p.post_id = '.(int)DataUtil::formatForStore($args['post_id']);
     
         $result = DBUtil::executeSQL($sql);
@@ -1606,7 +1606,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $post['post_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
         $post['posted_unixtime'] = $post['post_unixtime'];
     
-        $pn_uid = pnUserGetVar('uid');
+        $pn_uid = UserUtil::getVar('uid');
         $post['moderate'] = false;
         if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
             $post['moderate'] = true;
@@ -1687,15 +1687,15 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['topic_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $args['post_id']));
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $sql = "SELECT p.poster_id,
                        p.forum_id,
                        t.topic_status,
                        f.cat_id
-                FROM  ".$pntable['dizkus_posts']." as p,
-                      ".$pntable['dizkus_topics']." as t,
-                      ".$pntable['dizkus_forums']." as f
+                FROM  ".$ztable['dizkus_posts']." as p,
+                      ".$ztable['dizkus_topics']." as t,
+                      ".$ztable['dizkus_forums']." as f
                 WHERE (p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."')
                   AND (t.topic_id = p.topic_id)
                   AND (f.forum_id = p.forum_id)";
@@ -1713,7 +1713,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return showforumerror( $this->__('Error! You tried to post a blank message. Please go back and try again.'), __FILE__, __LINE__);
         }
     
-        if ((($row['poster_id'] != pnUserGetVar('uid')) || ($row['topic_status'] == 1)) &&
+        if ((($row['poster_id'] != UserUtil::getVar('uid')) || ($row['topic_status'] == 1)) &&
             !allowedtomoderatecategoryandforum($row['cat_id'], $row['forum_id'])) {
             // user is not allowed to edit post
             return showforumerror(getforumerror('auth_mod', $row['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
@@ -1729,7 +1729,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 // escaped HTML code in them. We want to fix this up right here:
                 $args['message'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $args['message']);
                 // who is editing?
-                $edit_name  = UserUtil::isLoggedIn() ? pnUserGetVar('uname') : ModUtil::getVar('Users', 'anonymous');
+                $edit_name  = UserUtil::isLoggedIn() ? UserUtil::getVar('uname') : ModUtil::getVar('Users', 'anonymous');
                 $edit_date = DateUtil::formatDatetime('', 'datetimebrief');
                 $args['message'] .= '<br /><br /><!-- editby --><br /><br /><em>' . $this->__f('Edited by %1$s on %2$s.', array($edit_name, $edit_date), $dom) . '</em><!-- end editby --> ';
             }
@@ -1833,13 +1833,13 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_viewip_data($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $viewip['poster_ip'] = DBUtil::selectField('dizkus_posts', 'poster_ip', 'post_id='.DataUtil::formatForStore($args['post_id']));
         $viewip['poster_host'] = gethostbyaddr($viewip['poster_ip']);
     
         $sql = "SELECT pn_uid, pn_uname, count(*) AS postcount
-                FROM ".$pntable['dizkus_posts']." p, ".$pntable['users']." u
+                FROM ".$ztable['dizkus_posts']." p, ".$ztable['users']." u
                 WHERE poster_ip='".DataUtil::formatForStore($viewip['poster_ip'])."' && p.poster_id = u.pn_uid
                 GROUP BY pn_uid";
         $res       = DBUtil::executeSQL($sql);
@@ -1892,14 +1892,14 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_forumid_and_categoryid_from_topicid($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // we know about the topic_id, let's find out the forum and catgeory name for permission checks
         $sql = "SELECT f.forum_id,
                        c.cat_id
-                FROM  ".$pntable['dizkus_topics']." t
-                LEFT JOIN ".$pntable['dizkus_forums']." f ON f.forum_id = t.forum_id
-                LEFT JOIN ".$pntable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
+                FROM  ".$ztable['dizkus_topics']." t
+                LEFT JOIN ".$ztable['dizkus_forums']." f ON f.forum_id = t.forum_id
+                LEFT JOIN ".$ztable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
                 WHERE t.topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
     
         $res = DBUtil::executeSQL($sql);
@@ -1970,7 +1970,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function movetopic($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // get the old forum id and old post date
         $topic = DBUtil::selectObjectById('dizkus_topics', $args['topic_id'], 'topic_id');
@@ -2014,13 +2014,13 @@ class Dizkus_Api_User extends Zikula_Api {
             return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // Update the users's post count, this might be slow on big topics but it makes other parts of the
         // forum faster so we win out in the long run.
         
         // step #1: get all post ids and posters ids
-        $where = $pntable['dizkus_posts_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
+        $where = $ztable['dizkus_posts_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
         $postsarray = DBUtil::selectObjectArray('dizkus_posts', $where);
     
         // step #2 go through the posting array and decrement the posting counter
@@ -2037,7 +2037,7 @@ class Dizkus_Api_User extends Zikula_Api {
         DBUtil::deleteObjectByID('dizkus_topics', $args['topic_id'], 'topic_id');
     
         // remove topic subscriptions
-        $where = $pntable['dizkus_topic_subscription_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
+        $where = $ztable['dizkus_topic_subscription_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
         DBUtil::deleteWhere('dizkus_topic_subscription', $where);
     
         // get forum info for adjustments
@@ -2066,16 +2066,16 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function notify_by_email($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
-        setlocale (LC_TIME, pnConfigGetVar('locale'));
+        setlocale (LC_TIME, System::getVar('locale'));
         $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
     
         // generate the mailheader info
         $email_from = ModUtil::getVar('Dizkus', 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use PN adminmail
-            $email_from = pnConfigGetVar('adminmail');
+            $email_from = System::getVar('adminmail');
         }
     
         // normal notification
@@ -2086,9 +2086,9 @@ class Dizkus_Api_User extends Zikula_Api {
                        c.cat_title,
                        f.forum_name,
                        f.forum_id
-                FROM  '.$pntable['dizkus_topics'].' t
-                LEFT JOIN '.$pntable['dizkus_forums'].' f ON t.forum_id = f.forum_id
-                LEFT JOIN '.$pntable['dizkus_categories'].' c ON f.cat_id = c.cat_id
+                FROM  '.$ztable['dizkus_topics'].' t
+                LEFT JOIN '.$ztable['dizkus_forums'].' f ON t.forum_id = f.forum_id
+                LEFT JOIN '.$ztable['dizkus_categories'].' c ON f.cat_id = c.cat_id
                 WHERE t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']);
     
         $res = DBUtil::executeSQL($sql);
@@ -2103,7 +2103,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $topic_unixtime= dzk_str2time($myrow[0]['topic_time']); //strtotime ($myrow['topic_time']);
         $topic_time_ml = DateUtil::formatDatetime($topic_unixtime, 'datetimebrief');
     
-        $poster_name = pnUserGetVar('uname',$args['poster_id']);
+        $poster_name = UserUtil::getVar('uname',$args['poster_id']);
     
         $forum_id      = DataUtil::formatForDisplay($myrow[0]['forum_id']);
         $forum_name    = DataUtil::formatForDisplay($myrow[0]['forum_name']);
@@ -2114,7 +2114,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
     
         // we do not want to notify the sender = the recent user
-        $thisuser = pnUserGetVar('uid');
+        $thisuser = UserUtil::getVar('uid');
         // anonymous does not have uid, so we need a sql to exclude real users
         $fs_wherenotuser = '';
         $ts_wherenotuser = '';
@@ -2126,9 +2126,9 @@ class Dizkus_Api_User extends Zikula_Api {
         //  get list of forum subscribers with non-empty emails
         $sql = 'SELECT DISTINCT fs.user_id,
                                 c.cat_id
-                FROM ' . $pntable['dizkus_subscription'] . ' as fs,
-                     ' . $pntable['dizkus_forums'] . ' as f,
-                     ' . $pntable['dizkus_categories'] . ' as c
+                FROM ' . $ztable['dizkus_subscription'] . ' as fs,
+                     ' . $ztable['dizkus_forums'] . ' as f,
+                     ' . $ztable['dizkus_categories'] . ' as c
                 WHERE fs.forum_id='.DataUtil::formatForStore($forum_id).'
                   ' . $fs_wherenotuser . '
                   AND f.forum_id = fs.forum_id
@@ -2145,11 +2145,11 @@ class Dizkus_Api_User extends Zikula_Api {
             foreach ($result as $resline) {
                 // check permissions
                 if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'].':'.$forum_id.':', ACCESS_READ, $resline['uid'])) {
-                    $emailaddress = pnUserGetVar('email', $resline['uid']);
+                    $emailaddress = UserUtil::getVar('email', $resline['uid']);
                     if (empty($emailaddress)) {
                         continue;
                     }
-                    $email['name']    = pnUserGetVar('uname', $resline['uid']);
+                    $email['name']    = UserUtil::getVar('uname', $resline['uid']);
                     $email['address'] = $emailaddress;
                     $email['uid']     = $resline['uid'];
                     $recipients[$email['name']] = $email;
@@ -2161,10 +2161,10 @@ class Dizkus_Api_User extends Zikula_Api {
         $sql = 'SELECT DISTINCT ts.user_id,
                                 c.cat_id,
                                 f.forum_id
-                FROM ' . $pntable['dizkus_topic_subscription'] . ' as ts,
-                     ' . $pntable['dizkus_forums'] . ' as f,
-                     ' . $pntable['dizkus_categories'] . ' as c,
-                     ' . $pntable['dizkus_topics'] . ' as t
+                FROM ' . $ztable['dizkus_topic_subscription'] . ' as ts,
+                     ' . $ztable['dizkus_forums'] . ' as f,
+                     ' . $ztable['dizkus_categories'] . ' as c,
+                     ' . $ztable['dizkus_topics'] . ' as t
                 WHERE ts.topic_id='.DataUtil::formatForStore($args['topic_id']).'
                   ' . $ts_wherenotuser . '
                   AND t.topic_id = ts.topic_id
@@ -2179,11 +2179,11 @@ class Dizkus_Api_User extends Zikula_Api {
             foreach ($result as $resline) {
                 // check permissions
                 if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'] . ':' . $resline['forum_id'] . ':', ACCESS_READ, $resline['uid'])) {
-                    $emailaddress = pnUserGetVar('email', $resline['uid']);
+                    $emailaddress = UserUtil::getVar('email', $resline['uid']);
                     if (empty($emailaddress)) {
                         continue;
                     }
-                    $email['name']    = pnUserGetVar('uname', $resline['uid']);
+                    $email['name']    = UserUtil::getVar('uname', $resline['uid']);
                     $email['address'] = $emailaddress;
                     $email['uid']     = $resline['uid'];
                     $recipients[$email['name']] = $email;
@@ -2192,9 +2192,9 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         if (count($recipients) > 0) {
-            $sitename = pnConfigGetVar('sitename');
+            $sitename = System::getVar('sitename');
         
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
             $render->assign('sitename', $sitename);
             $render->assign('category_name', $category_name);
             $render->assign('forum_name', $forum_name);
@@ -2207,7 +2207,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $render->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
             $render->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
             $render->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
-            $render->assign('base_url', pnGetBaseURL());
+            $render->assign('base_url', System::getBaseUrl());
             $message = $render->fetch('dizkus_mail_notifyuser.txt');
           
             foreach ($recipients as $subscriber) {
@@ -2215,7 +2215,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
                 if (ModUtil::isAvailable('ContactList') && 
                     (in_array($ignorelist_setting, array('medium', 'strict'))) && 
-                    ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => pnUserGetVar('uid')))) {
+                    ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => UserUtil::getVar('uid')))) {
                     $send = false;
                 } else {
                     $send = true;
@@ -2248,14 +2248,14 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_topic_subscriptions($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         if (isset($args['user_id'])) {
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
                 return showforumerror($this->__('Error! No permission for this action.'));
             }
         } else {
-            $args['user_id'] = pnUserGetVar('uid');
+            $args['user_id'] = UserUtil::getVar('uid');
         }
     
         // read the topic ids
@@ -2268,10 +2268,10 @@ class Dizkus_Api_User extends Zikula_Api {
                        u.pn_uname,
                        f.forum_id,
                        f.forum_name
-                FROM '.$pntable['dizkus_topic_subscription'].' AS ts,
-                     '.$pntable['dizkus_topics'].' AS t,
-                     '.$pntable['users'].' AS u,
-                     '.$pntable['dizkus_forums'].' AS f
+                FROM '.$ztable['dizkus_topic_subscription'].' AS ts,
+                     '.$ztable['dizkus_topics'].' AS t,
+                     '.$ztable['users'].' AS u,
+                     '.$ztable['dizkus_forums'].' AS f
                 WHERE (ts.user_id='.(int)DataUtil::formatForStore($args['user_id']).'
                   AND t.topic_id=ts.topic_id
                   AND u.pn_uid=ts.user_id
@@ -2321,7 +2321,7 @@ class Dizkus_Api_User extends Zikula_Api {
         if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         } else {
-            $args['user_id'] = pnUserGetVar('uid');
+            $args['user_id'] = UserUtil::getVar('uid');
         }
     
         list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
@@ -2353,14 +2353,14 @@ class Dizkus_Api_User extends Zikula_Api {
                 return LogUtil::registerPermissionError();
             }
         } else {
-            $args['user_id'] = pnUserGetVar('uid');
+            $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
-        $where = 'WHERE ' . $pntable['dizkus_topic_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
+        $where = 'WHERE ' . $ztable['dizkus_topic_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
         if (!empty($args['topic_id'])) {
-            $where .= ' AND ' . $pntable['dizkus_topic_subscription_column']['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
+            $where .= ' AND ' . $ztable['dizkus_topic_subscription_column']['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
         }
     
         return DBUtil::deleteWhere('dizkus_topic_subscription', $where);
@@ -2378,7 +2378,7 @@ class Dizkus_Api_User extends Zikula_Api {
         if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         } else {
-            $args['user_id'] = pnUserGetVar('uid');
+            $args['user_id'] = UserUtil::getVar('uid');
         }
     
         $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
@@ -2410,14 +2410,14 @@ class Dizkus_Api_User extends Zikula_Api {
                 return LogUtil::registerPermissionError();
             }
         } else {
-            $args['user_id'] = pnUserGetVar('uid');
+            $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
-        $where = $pntable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
+        $where = $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
         if (!empty($args['forum_id'])) {
-            $where .= ' AND ' . $pntable['dizkus_subscription_column']['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
+            $where .= ' AND ' . $ztable['dizkus_subscription_column']['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
         }
     
         return DBUtil::deleteWhere('dizkus_subscription', $where);
@@ -2433,7 +2433,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function add_favorite_forum($args)
     {
         if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)pnUserGetVar('uid');
+            $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
         $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
@@ -2462,7 +2462,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function remove_favorite_forum($args)
     {
         if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)pnUserGetVar('uid');
+            $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
         // remove from favorites - no need to check the favorite status, we delete it anyway
@@ -2482,8 +2482,8 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function emailtopic($args)
     {
-        $sender_name = pnUserGetVar('uname');
-        $sender_email = pnUserGetVar('email');
+        $sender_name = UserUtil::getVar('uname');
+        $sender_email = UserUtil::getVar('email');
         if (!UserUtil::isLoggedIn()) {
             $sender_name = ModUtil::getVar('Users', 'anonymous');
             $sender_email = ModUtil::getVar('Dizkus', 'email_from');
@@ -2513,7 +2513,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_latest_posts($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // init some arrays
         $posts = array();
@@ -2581,10 +2581,10 @@ class Dizkus_Api_User extends Zikula_Api {
         // integrate contactlist's ignorelist here
         $whereignorelist = '';
         if ((isset($dizkusvars['ignorelist_options']) && $dizkusvars['ignorelist_options'] <> 'none') && ModUtil::isAvailable('ContactList')) {
-            $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => pnUserGetVar('uid')));
+            $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => UserUtil::getVar('uid')));
             if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
                 // get user's ignore list
-                $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist', array('uid' => pnUserGetVar('uid')));
+                $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist', array('uid' => UserUtil::getVar('uid')));
                 $ignored_uids = array();
                 foreach ($ignored_users as $item) {
                     $ignored_uids[] = (int)$item['iuid'];
@@ -2604,10 +2604,10 @@ class Dizkus_Api_User extends Zikula_Api {
                           c.cat_title,
                           p.post_time,
                           p.poster_id
-                     FROM '.$pntable['dizkus_topics'].' AS t,
-                          '.$pntable['dizkus_forums'].' AS f,
-                          '.$pntable['dizkus_categories'].' AS c,
-                          '.$pntable['dizkus_posts'].' AS p
+                     FROM '.$ztable['dizkus_topics'].' AS t,
+                          '.$ztable['dizkus_forums'].' AS f,
+                          '.$ztable['dizkus_categories'].' AS c,
+                          '.$ztable['dizkus_posts'].' AS p
                     WHERE f.forum_id = t.forum_id
                       AND c.cat_id = f.cat_id
                       AND p.post_id = t.topic_last_post_id
@@ -2652,7 +2652,7 @@ class Dizkus_Api_User extends Zikula_Api {
             if ($post['poster_id'] == 1) {
                 $post['poster_name'] = ModUtil::getVar('Users', 'anonymous');
             } else {
-                $post['poster_name'] = pnUserGetVar('uname', $post['poster_id']);
+                $post['poster_name'] = UserUtil::getVar('uname', $post['poster_id']);
             }
     
             $post['posted_unixtime'] = dzk_str2time($post['post_time']); // strtotime ($post['post_time']);
@@ -2711,7 +2711,7 @@ class Dizkus_Api_User extends Zikula_Api {
     {
         $post = $args['post'];
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // before we do anything we will read the topic_last_post_id because we will need
         // this one later (it will become the topic_last_post_id of the new thread)
@@ -2791,14 +2791,14 @@ class Dizkus_Api_User extends Zikula_Api {
                 return LogUtil::registerArgsError();
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // integrate contactlist's ignorelist here
         $whereignorelist = '';
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist',array('uid' => pnUserGetVar('uid')));
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist',array('uid' => UserUtil::getVar('uid')));
         if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
             // get user's ignore list
-            $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist',array('uid' => pnUserGetVar('uid')));
+            $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist',array('uid' => UserUtil::getVar('uid')));
             $ignored_uids = array();
             foreach ($ignored_users as $item) {
                 $ignored_uids[]=(int)$item['iuid'];
@@ -2809,8 +2809,8 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         $sql = 'SELECT t1.topic_id
-                FROM '.$pntable['dizkus_topics'].' AS t1,
-                     '.$pntable['dizkus_topics'].' AS t2
+                FROM '.$ztable['dizkus_topics'].' AS t1,
+                     '.$ztable['dizkus_topics'].' AS t2
                 WHERE t2.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']).'
                   AND t1.topic_time '.$math.' t2.topic_time
                   AND t1.forum_id = t2.forum_id
@@ -2854,11 +2854,11 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)pnUserGetVar('uid');
+            $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
-        $pntable = pnDBGetTables();
-        $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $pntable['dizkus_forum_favorites_column']['user_id'] - '=' . (int)DataUtil::formatForStore($args['user_id']));
+        $ztable = System::dbGetTables();
+        $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $ztable['dizkus_forum_favorites_column']['user_id'] - '=' . (int)DataUtil::formatForStore($args['user_id']));
         $favorites = array_map('_get_favorites', $objarray);
     
         // categoryCount is needed since the categories aren't stored as numerical
@@ -2925,7 +2925,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_favorite_status($args)
     {
         if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)pnUserGetVar('uid');
+            $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
         $obj = DBUtil::selectObjectByID('dizkus_users', $args['user_id'], 'user_id', null, null, null, false);
@@ -2944,7 +2944,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function change_favorite_status($args)
     {
         if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)pnUserGetVar('uid');
+            $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
         $recentstatus = Dizkus_userapi_get_favorite_status(array('user_id' => $args['user_id']));
@@ -2983,7 +2983,7 @@ class Dizkus_Api_User extends Zikula_Api {
             // the user is logged in then lets use their id.  If not
             // then return th default order.
             if ($loggedIn) {
-                $args['user_id'] = pnUserGetVar('uid');
+                $args['user_id'] = UserUtil::getVar('uid');
             } else {
                 return ModUtil::getVar('Dizkus', 'post_sort_order');
             }
@@ -3013,7 +3013,7 @@ class Dizkus_Api_User extends Zikula_Api {
         // if we didn't get a user_id and the user isn't logged in then
         // return false because there is no database entry to update
         if (!isset($args['user_id']) && UserUtil::isLoggedIn()) {
-            $args['user_id'] = (int)pnUserGetVar('uid');
+            $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
         $post_order = ModUtil::apiFunc('Dizkus','user','get_user_post_order');
@@ -3105,18 +3105,18 @@ class Dizkus_Api_User extends Zikula_Api {
                         $result = $pop3->ListMessages('', 1);
                         if (is_array($result) && count($result) > 0) {
                             // logout the currentuser
-                            mailcronecho("Logging out '" . pnUserGetVar('uname') . "'.\n", $args['debug']);
-                            pnUserLogOut();
+                            mailcronecho("Logging out '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
+                            UserUtil::logOut();
                             // login the correct user
-                            if (pnUserLogIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
-                                mailcronecho('Done! User ' . pnUserGetVar('uname') . ' successfully logged in.', $args['debug']);
+                            if (UserUtil::logIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
+                                mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' successfully logged in.', $args['debug']);
                                 if (!allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-                                    mailcronecho("Error! Insufficient permissions for " . pnUserGetVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
-                                    pnUserLogOut();
-                                    mailcronecho('Done! User ' . pnUserGetVar('uname') . ' logged out.', $args['debug']);
+                                    mailcronecho("Error! Insufficient permissions for " . UserUtil::getVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
+                                    UserUtil::logOut();
+                                    mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' logged out.', $args['debug']);
                                     return false;
                                 }
-                                mailcronecho("Adding new posts as user '" . pnUserGetVar('uname') . "'.\n", $args['debug']);
+                                mailcronecho("Adding new posts as user '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
                                 // .cycle through the message list
                                 for ($cnt = 1; $cnt <= count($result); $cnt++) {
                                     if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
@@ -3208,7 +3208,7 @@ class Dizkus_Api_User extends Zikula_Api {
                                     }
                                 }
                                 // logout the mail2forum user
-                                if (pnUserLogOut()) {
+                                if (UserUtil::logOut()) {
                                     mailcronecho('Done! User ' . $forum['pop3_pnuser'] . ' logged out.', $args['debug']);
                                 }
                             } else {
@@ -3348,10 +3348,10 @@ class Dizkus_Api_User extends Zikula_Api {
         // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
         // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // 1 . update topic_id in posts table
-        $sql = 'UPDATE '.$pntable['dizkus_posts'].'
+        $sql = 'UPDATE '.$ztable['dizkus_posts'].'
                 SET topic_id='.(int)DataUtil::formatForStore($to_topic).'
                 WHERE post_id = '.(int)DataUtil::formatForStore($post['post_id']);
     
@@ -3362,7 +3362,7 @@ class Dizkus_Api_User extends Zikula_Api {
         // 3 . update topic_last_post_id in dizkus_topics
         // get the new topic_last_post_id of to_topic
         $sql = 'SELECT post_id, post_time
-                FROM '.$pntable['dizkus_posts'].'
+                FROM '.$ztable['dizkus_posts'].'
                 WHERE topic_id = '.(int)DataUtil::formatForStore($to_topic).'
                 ORDER BY post_time DESC';
     
@@ -3372,7 +3372,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $to_last_post_id = $result[0]['post_id'];
         $to_post_time    = $result[0]['post_time'];
     
-        $sql = 'UPDATE '.$pntable['dizkus_topics'].'
+        $sql = 'UPDATE '.$ztable['dizkus_topics'].'
                 SET topic_replies = topic_replies + 1,
                     topic_last_post_id='.(int)DataUtil::formatForStore($to_last_post_id).',
                     topic_time=\''.DataUtil::formatForStore($to_post_time).'\'
@@ -3386,7 +3386,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // get the new topic_last_post_id of the old topic
         $sql = 'SELECT post_id, post_time
-                FROM '.$pntable['dizkus_posts'].'
+                FROM '.$ztable['dizkus_posts'].'
                 WHERE topic_id = '.(int)DataUtil::formatForStore($post['topic_id']).'
                 ORDER BY post_time DESC';
     
@@ -3397,7 +3397,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $old_post_time    = $result[0]['post_time'];
     
         // update
-        $sql = 'UPDATE '.$pntable['dizkus_topics'].'
+        $sql = 'UPDATE '.$ztable['dizkus_topics'].'
                 SET topic_replies = topic_replies - 1,
                     topic_last_post_id='.(int)DataUtil::formatForStore($old_last_post_id).',
                     topic_time=\''.DataUtil::formatForStore($old_post_time).'\'
@@ -3462,7 +3462,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
         
         // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
         // and from_topic['forum_id'] to to_topic['forum_id']
@@ -3521,14 +3521,14 @@ class Dizkus_Api_User extends Zikula_Api {
             // calculate posting count difference
             $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies']+1);
             // decrement from_topic's forum post_count
-            $sql = "UPDATE ".$pntable['dizkus_forums']."
+            $sql = "UPDATE ".$ztable['dizkus_forums']."
                     SET forum_posts = forum_posts - $post_count_difference,
                         forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post_id) . "'
                     WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
             DBUtil::executeSQL($sql);
     
             // increment o_topic's forum post_count
-            $sql = "UPDATE ".$pntable['dizkus_forums']."
+            $sql = "UPDATE ".$ztable['dizkus_forums']."
                     SET forum_posts = forum_posts + $post_count_difference,
                         forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post_id) . "'
                     WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
@@ -3545,7 +3545,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function notify_moderator($args)
     {
-        setlocale (LC_TIME, pnConfigGetVar('locale'));
+        setlocale (LC_TIME, System::getVar('locale'));
         $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
     
         $mods = ModUtil::apiFunc('Dizkus', 'admin', 'readmoderators',
@@ -3555,11 +3555,11 @@ class Dizkus_Api_User extends Zikula_Api {
         $email_from = ModUtil::getVar('Dizkus', 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use PN adminmail
-            $email_from = pnConfigGetVar('adminmail');
+            $email_from = System::getVar('adminmail');
         }
     
         $subject .= DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']['topic_rawsubject']);
-        $sitename = pnConfigGetVar('sitename');
+        $sitename = System::getVar('sitename');
     
         $recipients = array();
         // check if list is empty - then do nothing
@@ -3573,8 +3573,8 @@ class Dizkus_Api_User extends Zikula_Api {
                     if ($group <> false) {
                         foreach($group['members'] as $gm_uid)
                         {
-                            $mod_email = pnUserGetVar('email', $gm_uid);
-                            $mod_uname = pnUserGetVar('uname', $gm_uid);
+                            $mod_email = UserUtil::getVar('email', $gm_uid);
+                            $mod_uname = UserUtil::getVar('uname', $gm_uid);
                             if (!empty($mod_email)) {
                                 array_push($recipients, array('uname' => $mod_uname,
                                                               'email' => $mod_email));
@@ -3587,7 +3587,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     }
     
                 } else {
-                    $mod_email = pnUserGetVar('email', $mod['uid']);
+                    $mod_email = UserUtil::getVar('email', $mod['uid']);
                     //uname is alread stored in $mod['uname']
                     if (!empty($mod_email)) {
                         array_push($recipients, array('uname' => $mod['uname'],
@@ -3603,19 +3603,19 @@ class Dizkus_Api_User extends Zikula_Api {
         // always inform the admin. he might be a moderator to so we check the
         // admin_is_mod flag now
         if ($admin_is_mod == false) {
-            array_push($recipients, array('uname' => pnConfigGetVar('sitename'),
+            array_push($recipients, array('uname' => System::getVar('sitename'),
                                           'email' => $email_from));
         }
     
-        $reporting_userid   = pnUserGetVar('uid');
-        $reporting_username = pnUserGetVar('uname');
+        $reporting_userid   = UserUtil::getVar('uid');
+        $reporting_username = UserUtil::getVar('uname');
     
         $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies',
                               array('topic_replies' => $args['post']['topic_replies'],
                                     'start'         => $start));
     
         // FIXME Move this to a translatable template?
-        $message = $this->__f('Request for moderation on %s', pnConfigGetVar('sitename'), $dom) . "\n"
+        $message = $this->__f('Request for moderation on %s', System::getVar('sitename'), $dom) . "\n"
                 . $args['post']['cat_title'] . '::' . $args['post']['forum_name'] . '::' . $args['post']['topic_rawsubject'] . "\n\n"
                 . $this->__f('Reporting user: %s', $reporting_username, $dom) . "\n"
                 . $this->__('Comment:') . "\n"
@@ -3743,23 +3743,23 @@ class Dizkus_Api_User extends Zikula_Api {
                 return LogUtil::registerPermissionError();
             }
         } else {
-            $args['user_id'] = pnUserGetVar('uid');
+            $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         // read the topic ids
-        $sql = 'SELECT f.' . $pntable['dizkus_forums_column']['forum_id'] . ',
-                       f.' . $pntable['dizkus_forums_column']['forum_name'] . ',
-                       c.' . $pntable['dizkus_categories_column']['cat_id'] . ',
-                       c.' . $pntable['dizkus_categories_column']['cat_title'] . '
-                FROM ' . $pntable['dizkus_subscription'] . ' AS fs,
-                     ' . $pntable['dizkus_forums'] . ' AS f,
-                     ' . $pntable['dizkus_categories'] . ' AS c 
-                WHERE fs.' . $pntable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . '
-                  AND f.' . $pntable['dizkus_forums_column']['forum_id'] . '=fs.' . $pntable['dizkus_subscription_column']['forum_id'] . '
-                  AND c.' . $pntable['dizkus_categories_column']['cat_id'] . '=f.' . $pntable['dizkus_forums_column']['cat_id']. '
-                ORDER BY c.' . $pntable['dizkus_categories_column']['cat_order'] . ', f.' . $pntable['dizkus_forums_column']['forum_order'];
+        $sql = 'SELECT f.' . $ztable['dizkus_forums_column']['forum_id'] . ',
+                       f.' . $ztable['dizkus_forums_column']['forum_name'] . ',
+                       c.' . $ztable['dizkus_categories_column']['cat_id'] . ',
+                       c.' . $ztable['dizkus_categories_column']['cat_title'] . '
+                FROM ' . $ztable['dizkus_subscription'] . ' AS fs,
+                     ' . $ztable['dizkus_forums'] . ' AS f,
+                     ' . $ztable['dizkus_categories'] . ' AS c 
+                WHERE fs.' . $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . '
+                  AND f.' . $ztable['dizkus_forums_column']['forum_id'] . '=fs.' . $ztable['dizkus_subscription_column']['forum_id'] . '
+                  AND c.' . $ztable['dizkus_categories_column']['cat_id'] . '=f.' . $ztable['dizkus_forums_column']['cat_id']. '
+                ORDER BY c.' . $ztable['dizkus_categories_column']['cat_order'] . ', f.' . $ztable['dizkus_forums_column']['forum_order'];
     
         $res           = DBUtil::executeSQL($sql);
         $colarray      = array('forum_id', 'forum_name', 'cat_id', 'cat_title');
@@ -3788,7 +3788,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return false;
         }
     
-        $attr = pnUserGetVar('__ATTRIBUTES__', $uid);
+        $attr = UserUtil::getVar('__ATTRIBUTES__', $uid);
         $ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
         $default = ModUtil::getVar('Dizkus','ignorelist_handling');
         if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != ''))

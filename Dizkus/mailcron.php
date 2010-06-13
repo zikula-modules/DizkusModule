@@ -17,8 +17,8 @@ chdir('/opt/webdev/htdocs');
 //
 // no changes necessary beyond this point!
 //
-include "includes/pnAPI.php";
-pnInit();
+include 'includes/System.php';
+System::init();
 
 $debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');
 $debug = ($debug==1) ? true : false;

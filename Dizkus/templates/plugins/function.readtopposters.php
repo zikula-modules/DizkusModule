@@ -21,9 +21,9 @@ function smarty_function_readtopposters($params, &$smarty)
 {
     $postermax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
 
-    $pntable = pnDBGetTables();
+    $ztable = System::dbGetTables();
     $sql = "SELECT user_id,user_posts
-          FROM ".$pntable['dizkus_users']." 
+          FROM ".$ztable['dizkus_users']." 
           WHERE user_id <> 1
           AND user_posts > 0
           ORDER BY user_posts DESC";
@@ -40,7 +40,7 @@ function smarty_function_readtopposters($params, &$smarty)
     $topposters = array();
     if (is_array($result) && !empty($result)) {
         foreach ($result as $topposter) {
-            $topposter['user_name'] = DataUtil::formatForDisplay(pnUserGetVar('uname', $topposter['user_id']));
+            $topposter['user_name'] = DataUtil::formatForDisplay(UserUtil::getVar('uname', $topposter['user_id']));
             array_push($topposters, $topposter);
         }
     }

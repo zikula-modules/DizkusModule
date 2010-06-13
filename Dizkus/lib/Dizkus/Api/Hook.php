@@ -47,7 +47,7 @@ class Dizkus_Api_Hook extends Zikula_Api {
             $subject   = $this->__('Automatically-created topic');
             $message   = $this->__('Automatically-created topic for discussion of submitted entries');
             $pntopic   = 0;
-            $authorid  = pnUserGetVar('uid');
+            $authorid  = UserUtil::getVar('uid');
     
             $functionfilename = DataUtil::formatForStore('modules/Dizkus/pncommentsapi/' . $modname . '.php');
             if (file_exists($functionfilename) && is_readable($functionfilename)) {

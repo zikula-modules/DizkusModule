@@ -28,7 +28,7 @@ class Dizkus_Api_Search extends Zikula_Api {
     public function options($args)
     {
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
             $render->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
             $render->assign('forums', ModUtil::apiFunc('Dizkus', 'admin', 'readforums'));
             return $render->fetch('dizkus_search.html');
@@ -122,7 +122,7 @@ class Dizkus_Api_Search extends Zikula_Api {
         {
             case 'author':
                 // searchfor is empty, we search by author only (done later on)
-                $searchauthor = pnUserGetIDFromName($args['q']);
+                $searchauthor = UserUtil::getIDFromName($args['q']);
                 if ($searchauthor > 0) {
                     $wherematch = " p.poster_id='" . DataUtil::formatForStore($searchauthor) . "'";
                 } else {
@@ -209,7 +209,7 @@ class Dizkus_Api_Search extends Zikula_Api {
         switch ($args['searchwhere']) {
             case 'author':
                 // we search by author only
-                $searchauthor = pnUserGetIDFromName($args['q']);
+                $searchauthor = UserUtil::getIDFromName($args['q']);
                 if ($searchauthor > 0) {
                     $wherematch = " p.poster_id='" . DataUtil::formatForStore($searchauthor) . "'";
                 } else {
@@ -274,8 +274,8 @@ class Dizkus_Api_Search extends Zikula_Api {
     
     function start_search($wherematch, $whereforums)
     {
-        pnModDBInfoLoad('Search');
-        $ztable = pnDBGetTables();
+        ModUtil::dbInfoLoad('Search');
+        $ztable = System::dbGetTables();
     
         $topicurl = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => '%%%'));
         $sessionid = DataUtil::formatForStore(session_id());

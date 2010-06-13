@@ -4,7 +4,7 @@
 {include file='dizkus_user_header.html'}
 
 <h2>{$templatetitle}</h2>
-<form class="z-form"  action="{pnmodurl modname=Dizkus type=user func=movepost}" method="post">
+<form class="z-form"  action="{modurl modname=Dizkus type=user func=movepost}" method="post">
     <div>
         <input type="hidden" name="post" value="{$post.post_id}" />
         <input type="hidden" name="from_topic" value="{$post.topic_id}" />

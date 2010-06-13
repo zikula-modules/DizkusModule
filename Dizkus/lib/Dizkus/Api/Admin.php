@@ -23,8 +23,8 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readcategories($args)
     {
-        $pntables = pnDBGetTables();
-        $catcolumn = $pntables['dizkus_categories_column'];
+        $ztables = System::dbGetTables();
+        $catcolumn = $ztables['dizkus_categories_column'];
     
         $where = '';
         if (isset($args['cat_id'])) {
@@ -80,10 +80,10 @@ class Dizkus_Api_Admin extends Zikula_Api {
         
         // copy all entries from $args to $obj that are found in the categories table
         // this prevents possible SQL errors if non existing keys are passed to this function
-        $pntables = pnDBGetTables();
+        $ztables = System::dbGetTables();
         $obj = array();
         foreach ($args as $key => $arg) {
-            if (array_key_exists($key, $pntables['dizkus_categories_column'])) {
+            if (array_key_exists($key, $ztables['dizkus_categories_column'])) {
                 $obj[$key] = $arg;
             }
         }
@@ -244,10 +244,10 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readmoderators($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $sql = 'SELECT u.pn_uname, u.pn_uid
-                FROM '.$pntable['users'].' u, '.$pntable['dizkus_forum_mods'].' f
+                FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
                 WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND u.pn_uid = f.user_id
                 AND f.user_id<1000000';
     
@@ -256,7 +256,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
         $result1    = DBUtil::marshallObjects($res, $colarray);
     
         $sql = 'SELECT g.pn_name, g.pn_gid
-                FROM '.$pntable['groups'].' g, '.$pntable['dizkus_forum_mods'].' f
+                FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods'].' f
                 WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND g.pn_gid = f.user_id-1000000
                 AND f.user_id>1000000';
     
@@ -274,11 +274,11 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readusers($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $sql = "SELECT n.pn_uid, n.pn_uname
-                FROM ".$pntable['users']." AS n
-                left JOIN ".$pntable['dizkus_users']." AS u
+                FROM ".$ztable['users']." AS n
+                left JOIN ".$ztable['dizkus_users']." AS u
                 ON u.user_id=n.pn_uid
                 WHERE n.pn_uid != 1 ";
     
@@ -303,11 +303,11 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readgroups($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
         
         // read groups
         $sql = "SELECT g.pn_gid+1000000, g.pn_name
-                FROM ".$pntable['groups']." AS g ";
+                FROM ".$ztable['groups']." AS g ";
     
         $where_flag = false;
         $group_flag = false;
@@ -353,8 +353,8 @@ class Dizkus_Api_Admin extends Zikula_Api {
         }
         asort($filelist);
     
-        $pntables = pnDBGetTables();
-        $rcol = $pntables['dizkus_ranks_column'];
+        $ztables = System::dbGetTables();
+        $rcol = $ztables['dizkus_ranks_column'];
     
         if ($args['ranktype']==0) {
             $orderby = 'ORDER BY ' . $rcol['rank_min'];
@@ -415,11 +415,11 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readrankusers($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $sql = 'SELECT  u.user_id
-                FROM ' . $pntable['dizkus_ranks'] . ' as r,
-                     ' . $pntable['dizkus_users'].' as u
+                FROM ' . $ztable['dizkus_ranks'] . ' as r,
+                     ' . $ztable['dizkus_users'].' as u
                 WHERE r.rank_id=' . DataUtil::formatForStore($args['rank_id']) . '
                   AND u.user_rank=r.rank_id
                   AND r.rank_special=1
@@ -469,7 +469,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function sync($args)
     {
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
         switch ($args['type'])
         {
             case 'forum':
@@ -504,7 +504,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
             case 'all posts':
                 $sql = "SELECT poster_id,
                                count(poster_id) as total_posts
-                        FROM ".$pntable['dizkus_posts']."
+                        FROM ".$ztable['dizkus_posts']."
                         GROUP BY poster_id";
                 $res = DBUtil::executeSQL($sql);
                 $colarray = array('user_id', 'user_posts');
@@ -518,10 +518,10 @@ class Dizkus_Api_Admin extends Zikula_Api {
             case 'all users':
             case 'user': 
                 // copy new users to dizkus_users table
-                $sql = 'INSERT INTO ' . $pntable['dizkus_users'] . ' (user_id)
+                $sql = 'INSERT INTO ' . $ztable['dizkus_users'] . ' (user_id)
                         SELECT pn_uid
-                        FROM ' . $pntable['users'] . '
-                        LEFT JOIN ' . $pntable['dizkus_users'] . '
+                        FROM ' . $ztable['users'] . '
+                        LEFT JOIN ' . $ztable['dizkus_users'] . '
                         ON user_id = pn_uid
                         WHERE user_id IS NULL';
     
@@ -568,7 +568,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
             return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
         }
     
-        $pntable = pnDBGetTables();
+        $ztable = System::dbGetTables();
     
         $args['forum_name'] = strip_tags($args['forum_name']);
         if (empty($args['forum_name'])) {

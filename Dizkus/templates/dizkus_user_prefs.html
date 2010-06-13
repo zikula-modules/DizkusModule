@@ -33,9 +33,9 @@
                     <noscript>
                         <div>
                             {if $post_order == 'asc'}
-                            <a class="dzk_img sortorderasclink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})
+                            <a class="dzk_img sortorderasclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})
                             {else}
-                            <a class="dzk_img sortorderdesclink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})
+                            <a class="dzk_img sortorderdesclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})
                             {/if}
                         </div>
                     </noscript>
@@ -44,7 +44,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Manage topic subscriptions"}<br />
-                    <a class="dzk_img subscribetopiclink" href="{pnmodurl modname='Dizkus' type=user func=topicsubscriptions}" title="{gt text="Manage topic subscriptions"}">{gt text="Manage topic subscriptions"}</a>
+                    <a class="dzk_img subscribetopiclink" href="{modurl modname='Dizkus' type=user func=topicsubscriptions}" title="{gt text="Manage topic subscriptions"}">{gt text="Manage topic subscriptions"}</a>
                 </li>
             </ul>
 
@@ -52,9 +52,9 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Favourites"}<br />
-                    <a class="dzk_img showallforumslink" href="{pnmodurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
+                    <a class="dzk_img showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
                     <br />
-                    <a class="dzk_img showfavoriteslink" href="{pnmodurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
+                    <a class="dzk_img showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
                 </li>
             </ul>
             {/if}
@@ -63,7 +63,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Posting display settings"}<br />
-                    <a class="dzk_img subscribelink" href="{pnmodurl modname=Dizkus type=user func=signaturemanagement}" title="{gt text="Manage your signature"}">{gt text="Manage your signature"}</a>
+                    <a class="dzk_img subscribelink" href="{modurl modname=Dizkus type=user func=signaturemanagement}" title="{gt text="Manage your signature"}">{gt text="Manage your signature"}</a>
                 </li>
             </ul>
             {/if}
@@ -72,7 +72,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="'Ignore list' settings"}<br />
-                    <a class="dzk_img subscribelink" href="{pnmodurl modname=Dizkus type=user func=ignorelistmanagement}" title="{gt text="Manage settings for the list of users that you are ignoring"}">{gt text="Manage settings for your ignore list"}</a>
+                    <a class="dzk_img subscribelink" href="{modurl modname=Dizkus type=user func=ignorelistmanagement}" title="{gt text="Manage settings for the list of users that you are ignoring"}">{gt text="Manage settings for your ignore list"}</a>
                 </li>
             </ul>
             {/if}
@@ -100,13 +100,13 @@
             <ul class="topiclist forums">
                 {foreach item=category from=$tree}
                 <li class="row categorytitle">
-                    <a href="{pnmodurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}"><strong>{$category.cat_title|pnvarprepfordisplay}</strong></a>
+                    <a href="{modurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}"><strong>{$category.cat_title|pnvarprepfordisplay}</strong></a>
                 </li>
                 {foreach item=forum from=$category.forums}
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
-                            <a href="{pnmodurl modname='Dizkus' type=user func=viewforum forum=$forum.forum_id}"><strong>{$forum.forum_name|pnvarprepfordisplay}</strong></a>
+                            <a href="{modurl modname='Dizkus' type=user func=viewforum forum=$forum.forum_id}"><strong>{$forum.forum_name|pnvarprepfordisplay}</strong></a>
                             <span>{$forum.forum_desc|pnvarprephtmldisplay}</span>
                         </dt>
                         <dd class="favorites">
@@ -125,9 +125,9 @@
                             <noscript>
                                 <div>
                                     {if $forum.is_subscribed == 0}
-                                    <a class="subscribelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                                    <a class="subscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
                                     {else}
-                                    <a class="unsubscribelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
+                                    <a class="unsubscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                                     {/if}
                                 </div>
                             </noscript>
@@ -149,9 +149,9 @@
                             <noscript>
                                 <div>
                                     {if $forum.is_favorite eq 0}
-                                    <a class="addfavoritelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                                    <a class="addfavoritelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
                                     {else}
-                                    <a class="removefavoritelink" href="{pnmodurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                                    <a class="removefavoritelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id return_to=prefs}" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                                     {/if}
                                 </div>
                             </noscript>

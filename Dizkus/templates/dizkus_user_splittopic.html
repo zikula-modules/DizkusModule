@@ -5,7 +5,7 @@
 
 <h2>{$templatetitle}</h2>
 <p class="z-informationmsg">{gt text="Notice: This will split the topic before the selected posting."}</p>
-<form class="z-form" action="{pnmodurl modname=Dizkus type=user func=splittopic}" method="post">
+<form class="z-form" action="{modurl modname=Dizkus type=user func=splittopic}" method="post">
     <div>
         <input type="hidden" name="post" value="{$post.post_id}" />
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />

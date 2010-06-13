@@ -61,12 +61,12 @@ function smarty_function_dizkusonline($params, &$smarty)
 
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
 
-    $pntable = pnDBGetTables();
+    $ztable = System::dbGetTables();
 
-    $sessioninfocolumn = $pntable['session_info_column'];
-    $sessioninfotable  = $pntable['session_info'];
+    $sessioninfocolumn = $ztable['session_info_column'];
+    $sessioninfotable  = $ztable['session_info'];
 
-    $activetime = DateUtil::getDateTime(time() - (pnConfigGetVar('secinactivemins') * 60));
+    $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
 
     // set some defaults
     $numguests = 0;
@@ -75,17 +75,17 @@ function smarty_function_dizkusonline($params, &$smarty)
 
     $moderators = ModUtil::apiFunc('Dizkus', 'user', 'get_moderators', array());
 
-    if (pnConfigGetVar('anonymoussessions')) {
-        $anonwhere = "AND $pntable[session_info].pn_uid >= '0'";
+    if (System::getVar('anonymoussessions')) {
+        $anonwhere = "AND $ztable[session_info].pn_uid >= '0'";
     } else {
-        $anonwhere = "AND $pntable[session_info].pn_uid > '0'";
+        $anonwhere = "AND $ztable[session_info].pn_uid > '0'";
     }
-    $sql = "SELECT   $pntable[session_info].pn_uid, $pntable[users].pn_uname
-            FROM     $pntable[session_info], $pntable[users]
-            WHERE    $pntable[session_info].pn_lastused > '$activetime'
+    $sql = "SELECT   $ztable[session_info].pn_uid, $ztable[users].pn_uname
+            FROM     $ztable[session_info], $ztable[users]
+            WHERE    $ztable[session_info].pn_lastused > '$activetime'
             $anonwhere
-            AND      if ($pntable[session_info].pn_uid='0','1',$pntable[session_info].pn_uid) = $pntable[users].pn_uid
-            GROUP BY $pntable[session_info].pn_ipaddr, $pntable[session_info].pn_uid";
+            AND      if ($ztable[session_info].pn_uid='0','1',$ztable[session_info].pn_uid) = $ztable[users].pn_uid
+            GROUP BY $ztable[session_info].pn_ipaddr, $ztable[session_info].pn_uid";
 
     $res = DBUtil::executeSQL($sql);
     $onlineusers = DBUtil::marshallObjects($res, array('uid', 'uname'));

@@ -18,7 +18,7 @@
         <div class="z-clearfix">
             <div class="dzk_handle z-clearfix">
                 <div id="categorytitle_{$category.cat_id}" style="float: left; width: 60%;">
-                    <a title="{gt text="Visit this forum category"}" href="{pnmodurl modname=Dizkus type=user func=main viewcat=$category.cat_id}">{$category.cat_title}</a> ({$category.cat_id})
+                    <a title="{gt text="Visit this forum category"}" href="{modurl modname=Dizkus type=user func=main viewcat=$category.cat_id}">{$category.cat_title}</a> ({$category.cat_id})
                 </div>
                 <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
                     <button id="loadcategory_{$category.cat_id}" title="{gt text="Load category data"}" onclick="javascript:loadcategory({$category.cat_id});">{pnimg modname='Dizkus' src="icon_show.gif" __alt="Load category data" }</button>
@@ -37,7 +37,7 @@
             <li id="forum_{$forum.forum_id}" class="forumline">
                 <div class="dzk_handle z-clearfix">
                     <div id="forumtitle_{$forum.forum_id}" style="float: left; width: 60%;">
-                        <a href="{pnmodurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|pnvarprepfordisplay}">{$forum.forum_name|pnvarprepfordisplay}</a> ({$forum.forum_id})
+                        <a href="{modurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|pnvarprepfordisplay}">{$forum.forum_name|pnvarprepfordisplay}</a> ({$forum.forum_id})
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
                         <button id="loadforum_{$forum.forum_id}"  title="{gt text="Load forum data"}" onclick="javascript:loadforum({$forum.forum_id});">{pnimg modname='Dizkus' src="icon_show.gif" __alt="Load forum data" }</button>

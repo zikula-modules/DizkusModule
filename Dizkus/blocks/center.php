@@ -62,9 +62,9 @@ function Dizkus_centerblock_display($blockinfo)
     }
 
     // Break out options from our content field
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
-    $render = pnRender::getInstance('Dizkus', false, null, true);
+    $render = Renderer::getInstance('Dizkus', false, null, true);
 
     // check if cb_template is set, if not, use the default centerblock template
     if (empty($vars['cb_template'])) {
@@ -100,7 +100,7 @@ function Dizkus_centerblock_update($blockinfo)
     $cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
     $cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
 
-    $blockinfo['content'] = pnBlockVarsToContent(compact('cb_template', 'cb_parameters'));
+    $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
 
     return($blockinfo);
 }
@@ -115,7 +115,7 @@ function Dizkus_centerblock_modify($blockinfo)
     }
     
     // Break out options from our content field
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     if (!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) {
         $vars['cb_parameters'] = 'maxposts=5';
@@ -124,7 +124,7 @@ function Dizkus_centerblock_modify($blockinfo)
         $vars['cb_template']   = 'dizkus_centerblock_display.html';
     }
 
-    $render = pnRender::getInstance('Dizkus', false, null, true);
+    $render = Renderer::getInstance('Dizkus', false, null, true);
     $render->assign('vars', $vars);
 
     return $render->fetch('dizkus_centerblock_config.html');

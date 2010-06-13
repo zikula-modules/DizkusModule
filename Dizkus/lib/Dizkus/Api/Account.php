@@ -28,9 +28,9 @@ class Dizkus_Api_Account extends Zikula_Api {
             return $items;
         }
     
-        $uname = (isset($args['uname'])) ? $args['uname'] : pnUserGetVar('uname');
+        $uname = (isset($args['uname'])) ? $args['uname'] : UserUtil::getVar('uname');
         // does this user exist?
-        if (pnUserGetIDFromName($uname) == false) {
+        if (UserUtil::getIDFromName($uname) == false) {
             // user does not exist
             return $items;
         }

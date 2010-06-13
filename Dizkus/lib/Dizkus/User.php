@@ -39,7 +39,7 @@ class Dizkus_User extends Zikula_Controller {
         }
         if ($loggedIn && $favorites) {
             $tree = ModUtil::apiFunc('Dizkus', 'user', 'getFavorites',
-                                 array('user_id'    => (int)pnUserGetVar('uid'),
+                                 array('user_id'    => (int)UserUtil::getVar('uid'),
                                        'last_visit' => $last_visit ));
         } else {
             $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree',
@@ -71,7 +71,7 @@ class Dizkus_User extends Zikula_Controller {
             }
         }
     
-        $render = pnRender::getInstance('Dizkus', false, null, true);
+        $render = Renderer::getInstance('Dizkus', false, null, true);
     
         $render->assign('favorites', $favorites);
         $render->assign('tree', $tree);
@@ -112,7 +112,7 @@ class Dizkus_User extends Zikula_Controller {
                                     'last_visit'      => $last_visit,
                                     'last_visit_unix' => $last_visit_unix));
     
-        $render = pnRender::getInstance('Dizkus', false, null, true);
+        $render = Renderer::getInstance('Dizkus', false, null, true);
     
         $render->assign('forum', $forum);
         $render->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
@@ -167,7 +167,7 @@ class Dizkus_User extends Zikula_Controller {
                                     'start'      => $start,
                                     'count'      => true));
     
-        $render = pnRender::getInstance('Dizkus', false, null, true);
+        $render = Renderer::getInstance('Dizkus', false, null, true);
         $render->assign('topic', $topic);
         $render->assign('post_count', count($topic['posts']));
         $render->assign('last_visit', $last_visit);
@@ -224,7 +224,7 @@ class Dizkus_User extends Zikula_Controller {
             // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
             $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
             $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
-            if (ModUtil::isAvailable('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => pnUserGetVar('uid'))))) {
+            if (ModUtil::isAvailable('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
                 LogUtil::registerError($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'));
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
@@ -254,7 +254,7 @@ class Dizkus_User extends Zikula_Controller {
                 $reply['message_display'] = nl2br($reply['message_display']);
             }
     
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
             $render->assign('reply', $reply);
             $render->assign('preview', $preview);
             $render->assign('last_visit', $last_visit);
@@ -332,7 +332,7 @@ class Dizkus_User extends Zikula_Controller {
                                            'subscribe_topic'  => $subscribe_topic));
     
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-                $render = pnRender::getInstance('Dizkus', false, null, true);
+                $render = Renderer::getInstance('Dizkus', false, null, true);
     
                 $render->assign('topic', ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
     
@@ -345,7 +345,7 @@ class Dizkus_User extends Zikula_Controller {
             }
         } else {
             // new topic
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
             $render->assign('preview', $preview);
             $render->assign('newtopic', $newtopic);
             $render->assign('last_visit', $last_visit);
@@ -385,7 +385,7 @@ class Dizkus_User extends Zikula_Controller {
                              array('post_id' => $post_id));
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
-           && ($post['poster_data']['pn_uid'] <> pnUserGetVar('uid')) ) {
+           && ($post['poster_data']['pn_uid'] <> UserUtil::getVar('uid')) ) {
             return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
         }
     
@@ -444,7 +444,7 @@ class Dizkus_User extends Zikula_Controller {
                 list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', '', array(nl2br($message)));
             }
     
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('preview', $preview);
             $render->assign('post', $post);
@@ -488,7 +488,7 @@ class Dizkus_User extends Zikula_Controller {
             return showforumerror($this->__('Error! You do not have authorisation to moderate this category or forum.'), __FILE__, __LINE__);
         }
     
-        $render = pnRender::getInstance('Dizkus', false, null, true);
+        $render = Renderer::getInstance('Dizkus', false, null, true);
         $render->assign('mode', $mode);
         $render->assign('topic_id', $topic_id);
     
@@ -692,7 +692,7 @@ class Dizkus_User extends Zikula_Controller {
             default:
                 list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
     
-                $render = pnRender::getInstance('Dizkus', false, null, true);
+                $render = Renderer::getInstance('Dizkus', false, null, true);
     
                 $render->assign('last_visit', $last_visit);
                 $render->assign('favorites_enabled', ModUtil::getVar('Dizkus', 'favorites_enabled'));
@@ -798,7 +798,7 @@ class Dizkus_User extends Zikula_Controller {
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
     
         if (!empty($submit)) {
-            if (!pnVarValidate($sendto_email, 'email')) {
+            if (!System::varValidate($sendto_email, 'email')) {
                 // Empty e-mail is checked here too
                 $error_msg = DataUtil::formatForDisplay($this->__('Error! Either you did not enter an e-mail address for the recipient, or the e-mail address you entered was invalid.'));
                 $sendto_email = '';
@@ -830,7 +830,7 @@ class Dizkus_User extends Zikula_Controller {
     
             $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
     
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('topic', $topic);
             $render->assign('error_msg', $error_msg);
@@ -900,7 +900,7 @@ class Dizkus_User extends Zikula_Controller {
                                                                        'last_visit' => $last_visit,
                                                                        'last_visit_unix' => $last_visit_unix));
     
-        $render = pnRender::getInstance('Dizkus', false, null, true);
+        $render = Renderer::getInstance('Dizkus', false, null, true);
     
         $render->assign('posts', $posts);
         $render->assign('m2fposts', $m2fposts);
@@ -955,7 +955,7 @@ class Dizkus_User extends Zikula_Controller {
                                        array('topic' => $newtopic_id)));
     
         } else {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('post', $post);
     
@@ -991,7 +991,7 @@ class Dizkus_User extends Zikula_Controller {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
             }
         } else {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             if ($post_id <> 0) {
                 $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
@@ -1014,14 +1014,14 @@ class Dizkus_User extends Zikula_Controller {
             }
     
             // FIXME backend_language is deprecated?
-            $lang = pnConfigGetVar('backend_language');
+            $lang = System::getVar('backend_language');
             echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
             echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
             echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$lang\" xml:lang=\"$lang\">\n";
             echo "<head>\n";
             echo "<title>" . DataUtil::formatForDisplay($topic['topic_title']) . "</title>\n";
-            echo "<link rel=\"stylesheet\" href=\"" . pnGetBaseURL() . "modules/Dizkus/pnstyle/style.css\" type=\"text/css\" />\n";
-            echo "<link rel=\"stylesheet\" href=\"" . pnGetBaseURL() . "themes/" . pnUserGetTheme() . "/style/style.css\" type=\"text/css\" />\n";        
+            echo "<link rel=\"stylesheet\" href=\"" . System::getBaseUrl() . "modules/Dizkus/pnstyle/style.css\" type=\"text/css\" />\n";
+            echo "<link rel=\"stylesheet\" href=\"" . System::getBaseUrl() . "themes/" . UserUtil::getTheme() . "/style/style.css\" type=\"text/css\" />\n";        
             echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
     
             global $additional_header;
@@ -1035,7 +1035,7 @@ class Dizkus_User extends Zikula_Controller {
             echo $output;
             echo "</body>\n";
             echo "</html>\n";
-            pnShutDown();
+            System::shutDown();
         }
     }
     
@@ -1084,7 +1084,7 @@ class Dizkus_User extends Zikula_Controller {
                                        array('topic' => $to_topic,
                                              'start' => $start)) . '#pid' . $post['post_id']);
         } else {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('post', $post);
     
@@ -1119,7 +1119,7 @@ class Dizkus_User extends Zikula_Controller {
         }
     
         if (!$submit) {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('post', $post);
     
@@ -1187,7 +1187,7 @@ class Dizkus_User extends Zikula_Controller {
     
         // Submit isn't set'
         if (empty($submit)) {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('forum_id', $forum_id);
             $render->assign('mode',$mode);
@@ -1306,19 +1306,18 @@ class Dizkus_User extends Zikula_Controller {
         // - use censor and compare with original comment
         // if only one of this comparisons fails -> trash it, it is spam.
         if (!UserUtil::isLoggedIn() && $authkeycheck == true ) {
-            if ((strip_tags($comment) <> $comment) ||
-               (pnVarCensor($comment) <> $comment)) {
+            if (strip_tags($comment) <> $comment) {
                 // possibly spam, stop now
                 // get the users ip address and store it in pnTemp/Dizkus_spammers.txt
                 dzk_blacklist();
                 // set 403 header and stop
                 header('HTTP/1.0 403 Forbidden');
-                pnShutDown();
+                System::shutDown();
             }
         }
     
         if (!$submit) {
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('post', $post);
     
@@ -1364,7 +1363,7 @@ class Dizkus_User extends Zikula_Controller {
     
         if (!$submit) {
             $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
-            $render = pnRender::getInstance('Dizkus', false, null, true);
+            $render = Renderer::getInstance('Dizkus', false, null, true);
     
             $render->assign('subscriptions', $subscriptions);
     

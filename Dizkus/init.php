@@ -138,7 +138,7 @@ function Dizkus_init()
     if (strtolower($GLOBALS['PNConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
         // FULLTEXT does not work an innodb - by design
         // for now we assume that it works with all other table types, if not, please open a ticket
-        $ztables      = pnDBGetTables();
+        $ztables      = System::dbGetTables();
         $topicstable  = DataUtil::formatForStore($ztables['dizkus_topics']);
         $topictitle   = DataUtil::formatForStore($ztables['dizkus_topics_column']['topic_title']);
         $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
@@ -158,8 +158,8 @@ function Dizkus_init()
     ModUtil::setVar('Dizkus', 'posts_per_page', 15);
     ModUtil::setVar('Dizkus', 'topics_per_page', 15);
     ModUtil::setVar('Dizkus', 'hot_threshold', 20);
-    ModUtil::setVar('Dizkus', 'email_from', pnConfigGetVar('adminmail'));
-    ModUtil::setVar('Dizkus', 'url_ranks_images', "modules/Dizkus/pnimages/ranks");
+    ModUtil::setVar('Dizkus', 'email_from', System::getVar('adminmail'));
+    ModUtil::setVar('Dizkus', 'url_ranks_images', "modules/Dizkus/images/ranks");
     ModUtil::setVar('Dizkus', 'post_sort_order', 'ASC');
     ModUtil::setVar('Dizkus', 'log_ip', 'no');
     ModUtil::setVar('Dizkus', 'slimforum', 'no');
@@ -210,7 +210,7 @@ function Dizkus_init()
 function Dizkus_delete()
 {
     $tables = DBUtil::metaTables(true, true, '%dizkus%');
-    $ztables = pnDBGetTables();
+    $ztables = System::dbGetTables();
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     if (in_array($ztables['dizkus_categories'], $tables)) {
@@ -285,7 +285,7 @@ function Dizkus_delete()
     }
 
     // remove module vars
-    pnModDelVar('Dizkus');
+    ModUtil::delVar('Dizkus');
 
     // Deletion successful
     return true;
@@ -306,7 +306,7 @@ function Dizkus_init_interactiveupgrade($args)
 
     $oldversion = FormUtil::getPassedValue('oldversion', isset($args['oldversion']) ? $args['oldversion'] : 0, 'GETPOST');
 
-    Loader::includeOnce('modules/Dizkus/pnversion.php');
+    Loader::includeOnce('modules/Dizkus/version.php');
 
     $authid = SecurityUtil::generateAuthKey('Modules');
     switch ($oldversion)
@@ -319,19 +319,20 @@ function Dizkus_init_interactiveupgrade($args)
             $templatefile = 'dizkus_upgrade_31.html';
             break;
 
+        case '3.1':
+            // remove pn from images/rank folder
+            ModUtil::setVar('Dizkus', 'url_ranks_images', "modules/Dizkus/images/ranks");
+            
         default:
             // no interactive upgrade for version < 2.7
             // or latest step reached
-            // FIXME pnRender API call instead?
-            $smarty = new Smarty;
-            $smarty->compile_dir  = pnConfigGetVar('temp') . '/pnRender_compiled';
-            $smarty->cache_dir    = pnConfigGetVar('temp') . '/pnRender_cache';
-            $smarty->use_sub_dirs = false;
-            $smarty->clear_compiled_tpl();
+            $render = Renderer::getInstance
+            $render->clear_compiled();
+            $render->clear_cache();
             return System::redirect(ModUtil::url('Modules', 'admin', 'upgrade', array('authid' => $authid )));
     }
 
-    $render = pnRender::getInstance('Dizkus', false, null, true);
+    $render = Renderer::getInstance('Dizkus', false, null, true);
 
     $render->assign('oldversion', $oldversion);
     $render->assign('authid', $authid);
@@ -387,7 +388,7 @@ function Dizkus_upgrade_to_3_0()
 
     $dbconn = DBConnectionStack::getConnection();
     $dict   = NewDataDictionary($dbconn);
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
     foreach($tables as $oldtable => $newtable)
     {
         $sqlarray = $dict->RenameTableSQL($prefix.'_'.$oldtable, $prefix.'_'.$newtable);
@@ -404,8 +405,8 @@ function Dizkus_upgrade_to_3_0()
     DBUtil::changeTable('dizkus_posts');
 
     // remove obsolete module vars
-    pnModDelVar('pnForum', 'posticon');
-    pnModDelVar('pnForum', 'firstnew_image');
+    ModUtil::delVar('pnForum', 'posticon');
+    ModUtil::delVar('pnForum', 'firstnew_image');
 
     $oldvars = ModUtil::getVar('pnForum');
     foreach ($oldvars as $varname => $oldvar)
@@ -416,12 +417,12 @@ function Dizkus_upgrade_to_3_0()
         }
         ModUtil::setVar('Dizkus', $varname, $oldvar);
     }
-    pnModDelVar('pnForum');
+    ModUtil::delVar('pnForum');
 
     // update hooks
-    $pntables    = pnDBGetTables();
-    $hookstable  = $pntables['hooks'];
-    $hookscolumn = $pntables['hooks_column'];
+    $ztables    = System::dbGetTables();
+    $hookstable  = $ztables['hooks'];
+    $hookscolumn = $ztables['hooks_column'];
 
     $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['smodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['smodule'] . '=\'pnForum\'';
     $res = DBUtil::executeSQL ($sql);
@@ -478,14 +479,14 @@ function Dizkus_upgrade_to_3_1()
     $dom = ZLanguage::getModuleDomain('Dizkus');    
 
     // merge posts and posts_text table
-    pnModDBInfoLoad('Dizkus');
+    ModUtil::dbInfoLoad('Dizkus');
 
-    $pntable = pnDBGetTables();
+    $ztable = System::dbGetTables();
 
-    $poststable      = $pntable['dizkus_posts'];
-    $postscolumn     = $pntable['dizkus_posts_column'];
-    $poststexttable  = $pntable['dizkus_posts_text'];
-    $poststextcolumn = $pntable['dizkus_posts_text_column'];
+    $poststable      = $ztable['dizkus_posts'];
+    $postscolumn     = $ztable['dizkus_posts_column'];
+    $poststexttable  = $ztable['dizkus_posts_text'];
+    $poststextcolumn = $ztable['dizkus_posts_text_column'];
 
     // change table structures
     DBUtil::changeTable('dizkus_posts');
@@ -499,11 +500,11 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
 
     // add some missing index fields, all named 'id' if not existing
-    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-    DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $ztable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
+    DBUtil::executeSQL('ALTER TABLE '. $ztable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
     
     // due to a bug in 3.0 no primary key has been added to the dizkus_users table upon creation, we will add this now 
-    $res = DBUtil::executeSQL('SHOW COLUMNS FROM '. $pntable['dizkus_users']);
+    $res = DBUtil::executeSQL('SHOW COLUMNS FROM '. $ztable['dizkus_users']);
     $id_exists = false;
     foreach($res as $resline) {
         //(array) 0:
@@ -520,7 +521,7 @@ function Dizkus_upgrade_to_3_1()
         }
     }
     if (!$id_exists) {
-        DBUtil::executeSQL('ALTER TABLE '. $pntable['dizkus_users'] .' ADD PRIMARY KEY(user_id)');
+        DBUtil::executeSQL('ALTER TABLE '. $ztable['dizkus_users'] .' ADD PRIMARY KEY(user_id)');
     }
 
     // move all posting text from post_text to posts table and remove the post_text table - never knew why this has been split
@@ -542,8 +543,8 @@ function Dizkus_upgrade_to_3_1()
     DBUtil::dropTable('dizkus_posts_text');
 
     // remove obsolete module variables
-    pnModDelVar('Dizkus', 'sendemailswithsqlerrors');
-    pnModDelVar('Dizkus', 'default_lang');
+    ModUtil::delVar('Dizkus', 'sendemailswithsqlerrors');
+    ModUtil::delVar('Dizkus', 'default_lang');
     
     // _dizkus_migratecategories();
 
@@ -616,7 +617,7 @@ function _dizkus_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
 function _dizkus_migratecategories()
 {
     // force loading of user api file
-    pnModAPILoad('Dizkus', 'user', true);
+    // pn_ModAPILoad('Dizkus', 'user', true);
     
     // pull all data from the old tables
     $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');

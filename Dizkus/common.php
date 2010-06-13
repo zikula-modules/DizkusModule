@@ -19,7 +19,7 @@
  * @param default_msg string The message to display if a custom page can't be found
  * Example: getforumerror('auth_read', '2', 'category', 'you are not allowed to read this category');
  *          This would look for the file:
- *          Dizkus/pntemplates/errors/category/LANG/dizkus_error_auth_read_2.html
+ *          Dizkus/templates/errors/category/LANG/dizkus_error_auth_read_2.html
  *          which would be the error message for someone who didn't have read
  *          access to the category with cat_id = 2;
  * The default is to look for a forum error, and if the forum doesn't have
@@ -27,7 +27,7 @@
  *
  * This is not limited strictly to forum and category errors though.  It can
  * easily be expanded in the future to accomodate any type by simply creating
- * the type folder: Dizkus/pntemplates/errors/TYPE and placing the
+ * the type folder: Dizkus/templates/errors/TYPE and placing the
  * type files in that directory.
  *
  * Language specific files should be placed in a language directory below the type directory.  The language directories follow the same naming convention as the pnlang subfolders.
@@ -58,7 +58,7 @@
 function getforumerror($error_name, $error_id=false, $error_type='forum', $default_msg=false)
 {
     $modinfo    = ModUtil::getInfo(ModUtil::getIDFromName('Dizkus'));
-    $baseDir    = realpath('modules/' . $modinfo['directory'] . '/pntemplates');
+    $baseDir    = realpath('modules/' . $modinfo['directory'] . '/templates');
     $lang       = ZLanguage::getLanguageCode();
     $error_path = 'errors/' . $error_type;
     $prefix     = 'dizkus_error_';
@@ -72,7 +72,7 @@ function getforumerror($error_name, $error_id=false, $error_type='forum', $defau
     // create the generic filename
     $generic_error_file = $prefix . $error_name . '.html';
 
-    $render = pnRender::getInstance('Dizkus', false);
+    $render = Renderer::getInstance('Dizkus', false);
 
     // start with a fresh array
     $test_array = array();
@@ -131,9 +131,9 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
         dzk_ajaxerror($error_text);
     }
 
-    $render = pnRender::getInstance('Dizkus', false, null, true);
+    $render = Renderer::getInstance('Dizkus', false, null, true);
 
-    $render->assign('adminmail', pnConfigGetVar('adminmail') );
+    $render->assign('adminmail', System::getVar('adminmail') );
     $render->assign('error_text', $error_text );
 
     // show http error if requested
@@ -148,8 +148,8 @@ function showforumerror($error_text, $file='', $line=0, $httperror=null)
 
     $output = $render->fetch('dizkus_errorpage.html');
 
-    if (preg_match("/(api\.php|common\.php|pninit\.php)$/i", $file) <> 0) {
-        // __FILE__ ends with api.php or is common.php or pninit.php
+    if (preg_match("/(api\.php|common\.php|init\.php)$/i", $file) <> 0) {
+        // __FILE__ ends with api.php or is common.php or init.php
         Loader::includeOnce('header.php');
         echo $output;
         Loader::includeOnce('footer.php');
@@ -188,7 +188,7 @@ function dzkdebug($name='', $data, $die = false)
         }
         echo "</div><br />\n<!-- end debug of $name -->";
         if ($die==true) {
-            pnShutDown();
+            System::shutDown();
         }
     }
 }
@@ -208,7 +208,7 @@ if (!function_exists('Dizkus_is_serialized'))
 }
 
 /**
- * pn_bbdecode/pn_bbencode functions:
+ * bbdecode/bbencode functions:
  * Rewritten - Nathan Codding - Aug 24, 2000
  * Using Perl-Compatible regexps now. Won't kill special chars
  * outside of a [code]...[/code] block now, and all BBCode tags
@@ -216,7 +216,7 @@ if (!function_exists('Dizkus_is_serialized'))
  * Note: the "i" matching switch is used, so BBCode tags are
  * case-insensitive.
  *
- * obsolete function - we have pn_bbcode
+ * obsolete function - we have bbcode
  *
  */
 function Dizkus_bbdecode($message)
@@ -275,7 +275,7 @@ function Dizkus_bbdecode($message)
  * - Does not distinguish between "www.xxxx.yyyy" and "http://aaaa.bbbb" type URLs.
  *
  *
- * obsolete function - we have pn_bbclick
+ * obsolete function - we have bbclick
  */
 function Dizkus_undo_make_clickable($text)
 {
@@ -428,7 +428,7 @@ function useragent_is_bot()
                           'msnbot',
                           'jeeves',
                           'lycos');
-    $useragent = pnServerGetVar('HTTP_USER_AGENT');
+    $useragent = System::serverGetVar('HTTP_USER_AGENT');
     for ($cnt=0; $cnt < count($robotslist); $cnt++) {
         if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
             return true;
@@ -440,7 +440,7 @@ function useragent_is_bot()
 /**
  * dzk_getimagepath
  *
- * gets an path for a image - this is a copy of the pnimg logic
+ * gets an path for a image - this is a copy of the img logic
  *
  * @params $image string the imagefile name
  * @returns an array of information for the imagefile:
@@ -463,7 +463,7 @@ function dzk_getimagepath($image=null)
     $lang =  DataUtil::formatForOS(ZLanguage::getLanguageCode());
 
     // theme directory
-    $theme         = DataUtil::formatForOS(pnUserGetTheme());
+    $theme         = DataUtil::formatForOS(UserUtil::getTheme());
     $osmodname     = DataUtil::formatForOS($modname);
     // FIXME THIS IS DEPRECATED
     $cWhereIsPerso = WHERE_IS_PERSO;
@@ -479,10 +479,10 @@ function dzk_getimagepath($image=null)
     // module directory
     $modinfo       = ModUtil::getInfo(ModUtil::getIDFromName($modname));
     $osmoddir      = DataUtil::formatForOS($modinfo['directory']);
-    $modlangpath   = "modules/$osmoddir/pnimages/$lang";
-    $modpath       = "modules/$osmoddir/pnimages";
-    $syslangpath   = "system/$osmoddir/pnimages/$lang";
-    $syspath       = "system/$osmoddir/pnimages";
+    $modlangpath   = "modules/$osmoddir/images/$lang";
+    $modpath       = "modules/$osmoddir/images";
+    $syslangpath   = "system/$osmoddir/images/$lang";
+    $syspath       = "system/$osmoddir/images";
 
     $ossrc = DataUtil::formatForOS($image);
 
@@ -559,7 +559,7 @@ function dzk_ajaxerror($error='Error! An unspecified ajax error occurred.', $cre
             SessionUtil::delVar('zk_ajax_call');
             header('HTTP/1.0 400 Bad Data');
             echo DataUtil::formatForDisplay($error);
-            pnShutDown();
+            System::shutDown();
         }
     }
 }
@@ -597,7 +597,7 @@ function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $
         header('X-JSON:(' . $output . ')');
         echo $output;
     }
-    pnShutDown();
+    System::shutDown();
 
 }
 
@@ -615,19 +615,19 @@ function cmp_userorder($a, $b)
  */
 function dzk_blacklist()
 {
-    $pntemp = pnConfigGetVar('temp');
-    $blacklistfile = $pntemp . '/Dizkus_spammer.txt';
+    $ztemp = System::getVar('temp');
+    $blacklistfile = $ztemp . '/Dizkus_spammer.txt';
 
     $fh = fopen($blacklistfile, 'a');
     if ($fh) {
         $ip = dzk_getip();
         $line = implode(',', array(strftime('%Y-%m-%d %H:%M'),
                                    $ip,
-                                   pnServerGetVar('REQUEST_METHOD'),
-                                   pnServerGetVar('REQUEST_URI'),
-                                   pnServerGetVar('SERVER_PROTOCOL'),
-                                   pnServerGetVar('HTTP_REFERRER'),
-                                   pnServerGetVar('HTTP_USER_AGENT')));
+                                   System::serverGetVar('REQUEST_METHOD'),
+                                   System::serverGetVar('REQUEST_URI'),
+                                   System::serverGetVar('SERVER_PROTOCOL'),
+                                   System::serverGetVar('HTTP_REFERRER'),
+                                   System::serverGetVar('HTTP_USER_AGENT')));
         fwrite($fh, DataUtil::formatForStore($line) . "\n");                           
         fclose($fh);
     }
@@ -668,33 +668,33 @@ function dzk_validip($ip)
 
 /**
  * get the users ip address
- * changes: replaced references to $_SERVER with pnServerGetVar()
+ * changes: replaced references to $_SERVER with System::serverGetVar()
  * original code taken form spidertrap
  * @author       Thomas Zeithaml <info@spider-trap.de>
  * @copyright    (c) 2005-2006 Spider-Trap Team
  */
 function dzk_getip()
 {
-   if (dzk_validip(pnServerGetVar("HTTP_CLIENT_IP"))) {
-       return pnServerGetVar("HTTP_CLIENT_IP");
+   if (dzk_validip(System::serverGetVar("HTTP_CLIENT_IP"))) {
+       return System::serverGetVar("HTTP_CLIENT_IP");
    }
 
-   foreach (explode(',', pnServerGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
+   foreach (explode(',', System::serverGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
        if (dzk_validip(trim($ip))) {
            return $ip;
        }
    }
 
-   if (dzk_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
-       return pnServerGetVar("HTTP_X_FORWARDED");
-   } elseif (dzk_validip(pnServerGetVar("HTTP_FORWARDED_FOR"))) {
-       return pnServerGetVar("HTTP_FORWARDED_FOR");
-   } elseif (dzk_validip(pnServerGetVar("HTTP_FORWARDED"))) {
-       return pnServerGetVar("HTTP_FORWARDED");
-   } elseif (dzk_validip(pnServerGetVar("HTTP_X_FORWARDED"))) {
-       return pnServerGetVar("HTTP_X_FORWARDED");
+   if (dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
+       return System::serverGetVar("HTTP_X_FORWARDED");
+   } elseif (dzk_validip(System::serverGetVar("HTTP_FORWARDED_FOR"))) {
+       return System::serverGetVar("HTTP_FORWARDED_FOR");
+   } elseif (dzk_validip(System::serverGetVar("HTTP_FORWARDED"))) {
+       return System::serverGetVar("HTTP_FORWARDED");
+   } elseif (dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
+       return System::serverGetVar("HTTP_X_FORWARDED");
    } else {
-       return pnServerGetVar("REMOTE_ADDR");
+       return System::serverGetVar("REMOTE_ADDR");
    }
 }
 
@@ -777,7 +777,7 @@ function dzk_available($deliverhtml = true)
 {
     if ((ModUtil::getVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if ($deliverhtml == true) {
-            $render = pnRender::getInstance('Dizkus', true, 'dizkus_disabled', true);
+            $render = Renderer::getInstance('Dizkus', true, 'dizkus_disabled', true);
             return $render->fetch('dizkus_disabled.html');
         } else {
             return false;

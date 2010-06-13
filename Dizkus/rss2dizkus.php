@@ -21,8 +21,8 @@ chdir('/opt/webdev/htdocs/z121');
 //
 // start Zikula
 //
-include 'includes/pnAPI.php';
-pnInit();
+include 'includes/System.php';
+System::init();
 
 //
 // Checking if RSS2Forum is enabled
@@ -54,10 +54,10 @@ foreach ($forums as $forum)
     if ($forum['externalsource'] == 2) {   // RSS
 
         if ($lastuser <> $forum['pnuser']) {
-            pnUserLogOut();
+            UserUtil::logOut();
             $loggedin = false;
             // login the correct user
-            if (pnUserLogIn($forum['pnuser'], base64_decode($forum['pnpassword']), false)) {
+            if (UserUtil::logIn($forum['pnuser'], base64_decode($forum['pnpassword']), false)) {
                 $lastuser = $forum['pnuser'];
                 $loggedin = true;
             } else {

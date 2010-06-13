@@ -12,15 +12,15 @@ function smarty_function_readtopforums($params, &$smarty)
 {
     $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
     
-    $pntable = pnDBGetTables();
+    $ztable = System::dbGetTables();
     $sql = "SELECT f.forum_id, 
                    f.forum_name, 
                    f.forum_topics, 
                    f.forum_posts, 
                    c.cat_title,
                    c.cat_id
-          FROM ".$pntable['dizkus_forums']." AS f, 
-               ".$pntable['dizkus_categories']." AS c
+          FROM ".$ztable['dizkus_forums']." AS f, 
+               ".$ztable['dizkus_categories']." AS c
           WHERE f.cat_id = c.cat_id
           ORDER BY forum_posts DESC";
 

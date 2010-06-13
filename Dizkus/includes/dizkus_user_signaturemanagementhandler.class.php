@@ -13,7 +13,7 @@ class Dizkus_user_signaturemanagementHandler
 {
     function initialize(&$render)
     {       
-        $render->assign('signature', pnUserGetVar('_SIGNATURE'));
+        $render->assign('signature', UserUtil::getVar('_SIGNATURE'));
         $render->caching = false;
         $render->add_core_data('PNConfig');
 
@@ -36,7 +36,7 @@ class Dizkus_user_signaturemanagementHandler
                 return false;
             }
 
-            pnUserSetVar('_SIGNATURE',$obj['signature']);
+            UserUtil::setVar('_SIGNATURE',$obj['signature']);
             LogUtil::registerStatus(__('Done! Signature has been updated.', $dom));
 
             return $render->pnFormRedirect(ModUtil::url('Dizkus','user','prefs'));

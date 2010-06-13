@@ -45,14 +45,14 @@ function Dizkus_needleapi_dizkus($args)
                     $id   = $temp[1];
                 }
 
-                pnModDBInfoLoad('Dizkus');
-                $pntable = pnDBGetTables();
+                ModUtil::dbInfoLoad('Dizkus');
+                $ztable = System::dbGetTables();
 
                 switch ($type) {
                     case 'F':
                         $sql = 'SELECT forum_name,
                                        cat_id
-                                FROM   ' . $pntable['dizkus_forums'] . '
+                                FROM   ' . $ztable['dizkus_forums'] . '
                                 WHERE  forum_id=' . (int)DataUtil::formatForStore($id);
                         $res = DBUtil::executeSQL($sql);
                         $colarray = array('forum_name', 'cat_id');
@@ -75,8 +75,8 @@ function Dizkus_needleapi_dizkus($args)
                         $sql = 'SELECT    t.topic_title,
                                           t.forum_id,
                                           f.cat_id 
-                                FROM      ' . $pntable['dizkus_topics'] . ' as t
-                                LEFT JOIN ' . $pntable['dizkus_forums'] . ' as f
+                                FROM      ' . $ztable['dizkus_topics'] . ' as t
+                                LEFT JOIN ' . $ztable['dizkus_forums'] . ' as f
                                 ON        f.forum_id=t.forum_id
                                 WHERE     t.topic_id=' . DataUtil::formatForStore($id);
                         $res = DBUtil::executeSQL($sql);

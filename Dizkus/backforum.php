@@ -14,7 +14,7 @@
  * initialize the Zikula environment
  */
 include 'includes/pnAPI.php';
-pnInit();
+System::init();
 
 /**
  * load Dizkus specific support functions
@@ -28,7 +28,7 @@ $feed     =      FormUtil::getPassedValue('feed', 'rss20', 'GET');
 $user     =      FormUtil::getPassedValue('user', '', 'GET');
 
 // get the module info
-$dzkinfo = ModUtil::getInfo(pnModGetIdFromName('Dizkus'));
+$dzkinfo = ModUtil::getInfo(ModUtil::getIdFromName('Dizkus'));
 $dzkname = $dzkinfo['displayname'];
 
 /**
@@ -53,7 +53,7 @@ if (isset($cat_id) && !is_numeric($cat_id)) {
 /**
  * create pnRender object
  */
-$render = pnRender::getInstance('Dizkus', false);
+$render = Renderer::getInstance('Dizkus', false);
 
 /**
  * check if template for feed exists
@@ -68,7 +68,7 @@ if (!$render->template_exists($templatefile)) {
  * get user id
  */
 if (!empty($user)) {
-    $uid = pnUserGetIDFromName($user);
+    $uid = UserUtil::getIDFromName($user);
 }
 
 /**
@@ -88,7 +88,7 @@ if (!empty($forum_id)) {
     $forum = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums', array('forum_id' => $forum_id));
     if (count($forum) == 0) {
         // not allowed to see forum
-        pnShutDown();
+        System::shutDown();
     }
     $where = 'AND t.forum_id = ' . (int)DataUtil::formatForStore($forum_id) . ' ';
     $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
@@ -96,12 +96,12 @@ if (!empty($forum_id)) {
 
 } elseif (!empty($cat_id)) {
     if (!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
-        pnShutDown();
+        System::shutDown();
     }
     $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
                              array('cat_id' => $cat_id));
     if ($category == false) {
-        pnShutDown();
+        System::shutDown();
     }
     $where = 'AND f.cat_id = ' . (int)DataUtil::formatForStore($cat_id) . ' ';
     $link = ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id), null, null, true);
@@ -119,16 +119,16 @@ if (!empty($forum_id)) {
 
 $render->assign('forum_name', $forumname);
 $render->assign('forum_link', $link);
-$render->assign('sitename', pnConfigGetVar('sitename'));
-$render->assign('adminmail', pnConfigGetVar('adminmail'));
+$render->assign('sitename', System::getVar('sitename'));
+$render->assign('adminmail', System::getVar('adminmail'));
 $render->assign('current_date', date(DATE_RSS));
 $render->assign('current_language', ZLanguage::getLocale());
 
 /**
  * get database information
  */
-pnModDBInfoLoad('Dizkus');
-$pntable = pnDBGetTables();
+ModUtil::dbInfoLoad('Dizkus');
+$ztable = System::dbGetTables();
 
 /**
  * SQL statement to fetch last 10 topics
@@ -140,10 +140,10 @@ $sql = 'SELECT '.$topicscols.',
                  p.post_time,
                  c.cat_id,
                  c.cat_title
-        FROM '.$pntable['dizkus_topics'].' as t,
-             '.$pntable['dizkus_forums'].' as f,
-             '.$pntable['dizkus_posts'].' as p,
-             '.$pntable['dizkus_categories'].' as c
+        FROM '.$ztable['dizkus_topics'].' as t,
+             '.$ztable['dizkus_forums'].' as f,
+             '.$ztable['dizkus_posts'].' as p,
+             '.$ztable['dizkus_categories'].' as c
         WHERE t.forum_id = f.forum_id AND
               t.topic_last_post_id = p.post_id AND
               f.cat_id = c.cat_id

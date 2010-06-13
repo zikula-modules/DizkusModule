@@ -4,7 +4,7 @@
 {include file='dizkus_user_header.html'}
 
 <h2>{$templatetitle}</h2>
-<form id="dzk_topicsubscriptions" action="{pnmodurl modname=Dizkus type=user func=topicsubscriptions}" method="post">
+<form id="dzk_topicsubscriptions" action="{modurl modname=Dizkus type=user func=topicsubscriptions}" method="post">
     <div>
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
 

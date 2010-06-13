@@ -149,11 +149,11 @@ class dizkus_admin_prefshandler
             ModUtil::setVar('Dizkus', 'maxsearchlength',    30);
 
             // strings
-            ModUtil::setVar('Dizkus', 'email_from',          pnConfigGetVar('adminmail'));
+            ModUtil::setVar('Dizkus', 'email_from',          System::getVar('adminmail'));
             ModUtil::setVar('Dizkus', 'signature_start',     '');
             ModUtil::setVar('Dizkus', 'signature_end',       '');
             ModUtil::setVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom));
-            ModUtil::setVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/pnimages/ranks');
+            ModUtil::setVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/images/ranks');
             ModUtil::setVar('Dizkus', 'gravatarimage',       'gravatar.gif');
 
             LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));

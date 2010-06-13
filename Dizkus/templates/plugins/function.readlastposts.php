@@ -30,7 +30,7 @@ function smarty_function_readlastposts($params, &$smarty)
     $maxposts = ($maxposts>100) ? 100 : $maxposts;
 
     $loggedIn = UserUtil::isLoggedIn();
-    $uid = ($loggedIn == true) ? pnUserGetVar('uid') : 1;
+    $uid = ($loggedIn == true) ? UserUtil::getVar('uid') : 1;
 
     // get number of posts in db
     $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('type' => 'all'));
@@ -42,7 +42,7 @@ function smarty_function_readlastposts($params, &$smarty)
 
     Loader::includeOnce('modules/Dizkus/common.php');
     // get some enviroment
-    $pntable = pnDBGetTables();
+    $ztable = System::dbGetTables();
 
     $whereforum = '';
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
@@ -83,8 +83,8 @@ function smarty_function_readlastposts($params, &$smarty)
         // get the favorites
         $sql = 'SELECT fav.forum_id,
                        f.cat_id
-                FROM ' . $pntable['dizkus_forum_favorites'] . ' fav
-                LEFT JOIN ' . $pntable['dizkus_forums'] . ' f
+                FROM ' . $ztable['dizkus_forum_favorites'] . ' fav
+                LEFT JOIN ' . $ztable['dizkus_forums'] . ' f
                 ON f.forum_id = fav.forum_id
                 WHERE fav.user_id = ' . DataUtil::formatForStore($uid);
         
@@ -151,10 +151,10 @@ function smarty_function_readlastposts($params, &$smarty)
                    p.poster_id,
                    p.post_id,
                    p.post_text
-        FROM ' . $pntable['dizkus_topics']     . ' as t,
-             ' . $pntable['dizkus_forums']     . ' as f,
-             ' . $pntable['dizkus_posts']      . ' as p,
-             ' . $pntable['dizkus_categories'] . ' as c
+        FROM ' . $ztable['dizkus_topics']     . ' as t,
+             ' . $ztable['dizkus_forums']     . ' as f,
+             ' . $ztable['dizkus_posts']      . ' as p,
+             ' . $ztable['dizkus_categories'] . ' as c
         WHERE ' . $whereforum .'
               ' . $whereuser . '
               ' . $wherefavorites . '
@@ -193,7 +193,7 @@ function smarty_function_readlastposts($params, &$smarty)
             }
 
             if ($lastpost['poster_id'] != 1) {
-                $user_name = pnUserGetVar('uname', $lastpost['poster_id']);
+                $user_name = UserUtil::getVar('uname', $lastpost['poster_id']);
                 if ($user_name == "") {
                     // user deleted from the db?
                     $user_name = ModUtil::getVar('Users', 'anonymous');
