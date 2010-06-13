@@ -326,7 +326,7 @@ function Dizkus_init_interactiveupgrade($args)
         default:
             // no interactive upgrade for version < 2.7
             // or latest step reached
-            $render = Renderer::getInstance
+            $render = Renderer::getInstance;
             $render->clear_compiled();
             $render->clear_cache();
             return System::redirect(ModUtil::url('Modules', 'admin', 'upgrade', array('authid' => $authid )));
