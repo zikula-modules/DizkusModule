@@ -618,7 +618,6 @@ class Dizkus_Api_Admin extends Zikula_Api {
     // $forum_id, $forum_name, $desc, $cat_id, $mods, $rem_mods)
     public function editforum($args)
     {
-        // TODO deprecate the use of extract
         $mods = $args['mods'];
         $rem_mods = $args['rem_mods'];
         unset($args['mods']);
