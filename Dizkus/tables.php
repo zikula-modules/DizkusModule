@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-function Dizkus_pntables()
+function Dizkus_tables()
 {
     // Initialise table array
     $ztable = array();

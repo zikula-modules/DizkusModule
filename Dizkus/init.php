@@ -21,8 +21,7 @@ include_once 'modules/Dizkus/common.php';
 function Dizkus_init()
 {
     if (version_compare(PN_VERSION_NUM, '1.3.0', '<')) {
-        SessionUtil::setVar('errormsg', __('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
-        return false;
+        return LogUtuil::errormessage(__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
     }
 
     // TODO move this to a loop
@@ -217,8 +216,11 @@ function Dizkus_delete()
             return false;
         }
     }
-    if (!DBUtil::dropTable('dizkus_forum_mods')) {
-        return false;
+
+    if (in_array($ztables['dizkus_forum_mods'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_forum_mods')) {
+            return false;
+        }
     }
 
     if (in_array($ztables['dizkus_forums'], $tables)) {
@@ -226,11 +228,17 @@ function Dizkus_delete()
             return false;
         }
     }
-    if (!DBUtil::dropTable('dizkus_forum_favorites')) {
-        return false;
+    
+    if (in_array($ztables['dizkus_forum_favorites'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_forum_favorites')) {
+            return false;
+        }
     }
-    if (!DBUtil::dropTable('dizkus_posts')) {
-        return false;
+    
+    if (in_array($ztables['dizkus_posts'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_posts')) {
+            return false;
+        }
     }
 
     if (in_array($ztables['dizkus_posts_text'], $tables)) {
@@ -238,20 +246,35 @@ function Dizkus_delete()
             return false;
         }
     }
-    if (!DBUtil::dropTable('dizkus_subscription')) {
-        return false;
+
+    if (in_array($ztables['dizkus_subscription'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_subscription')) {
+            return false;
+        }
     }
-    if (!DBUtil::dropTable('dizkus_ranks')) {
-        return false;
+    
+    if (in_array($ztables['dizkus_ranks'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_ranks')) {
+            return false;
+        }
     }
-    if (!DBUtil::dropTable('dizkus_topics')) {
-        return false;
+    
+    if (in_array($ztables['dizkus_topics'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_topics')) {
+            return false;
+        }
     }
-    if (!DBUtil::dropTable('dizkus_users')) {
-        return false;
+    
+    if (in_array($ztables['dizkus_users'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_users')) {
+            return false;
+        }
     }
-    if (!DBUtil::dropTable('dizkus_topic_subscription')) {
-        return false;
+    
+    if (in_array($ztables['dizkus_topic_subscription'], $tables)) {
+        if (!DBUtil::dropTable('dizkus_topic_subscription')) {
+            return false;
+        }
     }
 
     // remove the hooks
@@ -298,7 +321,7 @@ function Dizkus_delete()
 function Dizkus_init_interactiveupgrade($args)
 {
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Error! No permission for this action.'), __FILE__, __LINE__);
+      return LogUtil::registerError(__('Error! No permission for this action.'));
     }
 
     $oldversion = FormUtil::getPassedValue('oldversion', isset($args['oldversion']) ? $args['oldversion'] : 0, 'GETPOST');
@@ -344,7 +367,7 @@ function Dizkus_init_interactiveupgrade($args)
 function Dizkus_init_interactiveupgrade_to_3_0()
 {
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-        return showforumerror(__('Error! No permission for this action.'), __FILE__, __LINE__);
+        return LogUtil::registerError(__('Error! No permission for this action.'));
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -352,7 +375,7 @@ function Dizkus_init_interactiveupgrade_to_3_0()
     if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_0();
         if ($result<>true) {
-            return showforumerror(_('Error! The upgrade to Dizkus 3.0 failed.'), __FILE__, __LINE__);
+            return LogUtil::registerError(_('Error! The upgrade to Dizkus 3.0 failed.'));
         }
         return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
     }
@@ -446,7 +469,7 @@ function Dizkus_upgrade_to_3_0()
 function Dizkus_init_interactiveupgrade_to_3_1()
 {
     if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-      return showforumerror(__('Error! No permission for this action.'), __FILE__, __LINE__);
+        return LogUtil::registerError(__('Error! No permission for this action.'));
     }
 
     $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
@@ -454,7 +477,7 @@ function Dizkus_init_interactiveupgrade_to_3_1()
     if (!empty($submit)) {
         $result = Dizkus_upgrade_to_3_1();
         if ($result<>true) {
-            return showforumerror(__('Error! Could not upgrade to Dizkus 3.1.'), __FILE__, __LINE__);
+            return LogUtil::registerError(__('Error! Could not upgrade to Dizkus 3.1.'));
         }
         return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
     }
