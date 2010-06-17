@@ -40,7 +40,7 @@ function Dizkus_statisticsblock_info()
  */
 function Dizkus_statisticsblock_display($blockinfo)
 {
-    if (!ModUtil::isAvailable('Dizkus')) {
+    if (!ModUtil::available('Dizkus')) {
         return;
     }
 

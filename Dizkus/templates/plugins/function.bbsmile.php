@@ -18,7 +18,7 @@
 function smarty_function_bbsmile($params, &$smarty)
 {
     $out = "";
-	if (ModUtil::isAvailable('bbsmile') && ModUtil::isHooked('bbsmile', 'Dizkus')) {
+	if (ModUtil::available('bbsmile') && ModUtil::isHooked('bbsmile', 'Dizkus')) {
 	    $out = ModUtil::func('bbsmile', 'user', 'bbsmiles',
 	                     array('textfieldid' => $params['textfieldid']));
 	}

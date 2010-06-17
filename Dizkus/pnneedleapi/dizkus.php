@@ -36,7 +36,7 @@ function Dizkus_needleapi_dizkus($args)
             // set the default
             $cache[$nid] = '';
 
-            if (ModUtil::isAvailable('Dizkus')) {
+            if (ModUtil::available('Dizkus')) {
                 // nid is like F-## or T-##
                 $temp = explode('-', $nid);
                 $type = '';

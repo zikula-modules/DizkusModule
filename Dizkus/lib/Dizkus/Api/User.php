@@ -2213,7 +2213,7 @@ class Dizkus_Api_User extends Zikula_Api {
             foreach ($recipients as $subscriber) {
                 // integrate contactlist's ignorelist here
                 $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
-                if (ModUtil::isAvailable('ContactList') && 
+                if (ModUtil::available('ContactList') && 
                     (in_array($ignorelist_setting, array('medium', 'strict'))) && 
                     ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => UserUtil::getVar('uid')))) {
                     $send = false;
@@ -2580,7 +2580,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // integrate contactlist's ignorelist here
         $whereignorelist = '';
-        if ((isset($dizkusvars['ignorelist_options']) && $dizkusvars['ignorelist_options'] <> 'none') && ModUtil::isAvailable('ContactList')) {
+        if ((isset($dizkusvars['ignorelist_options']) && $dizkusvars['ignorelist_options'] <> 'none') && ModUtil::available('ContactList')) {
             $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => UserUtil::getVar('uid')));
             if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
                 // get user's ignore list
@@ -3674,7 +3674,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return false;
         }
     
-        $bbcode = ModUtil::isAvailable('bbcode');
+        $bbcode = ModUtil::available('bbcode');
         $boldstart = '';
         $boldend   = '';
         $urlstart  = '';
@@ -3778,7 +3778,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_settings_ignorelist($args)
     {
         // if Contactlist is not available there will be no ignore settings
-        if (!ModUtil::isAvailable('ContactList')) {
+        if (!ModUtil::available('ContactList')) {
             return false;
         }
     

@@ -386,7 +386,7 @@ class Dizkus_Admin extends Zikula_Controller {
                                                    'extended' => true),  // mail
                                         2 => array('checked'  => '',
                                                    'name'     => $this->__('RSS2Forum', $dom),
-                                                   'ok'       => (ModUtil::isAvailable('Feeds') == true) ? '' : $this->__("<span style=\"color: red;\">'Feeds' module is not available.</span>", $dom),
+                                                   'ok'       => (ModUtil::available('Feeds') == true) ? '' : $this->__("<span style=\"color: red;\">'Feeds' module is not available.</span>", $dom),
                                                    'extended' => true)); // rss
     
         $externalsourceoptions[$forum['pop3_active']]['checked'] = ' checked="checked"';
@@ -416,7 +416,7 @@ class Dizkus_Admin extends Zikula_Controller {
     
         // read all RSS feeds
         $rssfeeds = array();
-        if (ModUtil::isAvailable('Feeds')) {
+        if (ModUtil::available('Feeds')) {
             $rssfeeds = ModUtil::apiFunc('Feeds', 'user', 'getall');
         }
     

@@ -224,7 +224,7 @@ class Dizkus_User extends Zikula_Controller {
             // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
             $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
             $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
-            if (ModUtil::isAvailable('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
+            if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
                 return LogUtil::registerError($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'), null, ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
     
@@ -699,7 +699,7 @@ class Dizkus_User extends Zikula_Controller {
                 $render->assign('last_visit_unix', $last_visit_unix);
                 $render->assign('signaturemanagement', ModUtil::getVar('Dizkus','signaturemanagement'));
                 $render->assign('ignorelist_handling', ModUtil::getVar('Dizkus','ignorelist_handling'));
-                $render->assign('contactlist_available', ModUtil::isAvailable('ContactList'));
+                $render->assign('contactlist_available', ModUtil::available('ContactList'));
                 $render->assign('post_order', strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order')));
                 $render->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
     
@@ -759,7 +759,7 @@ class Dizkus_User extends Zikula_Controller {
     
     	// check for Contactlist module and admin settings
     	$ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
-    	if (!ModUtil::isAvailable('ContactList') || ($ignorelist_handling == 'none')) {
+    	if (!ModUtil::available('ContactList') || ($ignorelist_handling == 'none')) {
     	  	return LogUtil::registerError($this->__("No 'ignore list' configuration is currently possible."), null, ModUtil::url('Dizkus', 'user', 'prefs'));
     	}
     

@@ -39,7 +39,7 @@ class Dizkus_Ajax extends Zikula_Controller {
         $topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
         $topic['start'] = 0;
         $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
-        if (ModUtil::isAvailable('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
+        if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
             dzk_ajaxerror($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'));
         }
     
@@ -93,7 +93,7 @@ class Dizkus_Ajax extends Zikula_Controller {
         $render->assign('preview', $preview);
     
         //---- begin of MediaAttach integration ----
-        if (ModUtil::isAvailable('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
+        if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
             dzk_jsonizeoutput(array('data'    => $render->fetch('dizkus_user_singlepost.html'),
                                     'post_id' => $post['post_id'],
                                     'uploadauthid' => SecurityUtil::generateAuthKey('MediaAttach')),
@@ -691,7 +691,7 @@ class Dizkus_Ajax extends Zikula_Controller {
             }
     
             // --- MediaAttach check ---
-            if (ModUtil::isAvailable('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
+            if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
                 dzk_jsonizeoutput(array('topic'        => $topic,
                                         'confirmation' => $confirmation,
                                         'redirect'     => ModUtil::url('Dizkus', 'user', 'viewtopic',

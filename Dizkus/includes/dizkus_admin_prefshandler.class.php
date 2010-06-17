@@ -47,7 +47,7 @@ class dizkus_admin_prefshandler
         $render->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
         $render->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
 
-		$render->assign('contactlist_available', ModUtil::isAvailable('ContactList'));
+		$render->assign('contactlist_available', ModUtil::available('ContactList'));
 
         $serverinfo = DBUtil::serverInfo();
         $render->assign('dbversion', $serverinfo['description']);
@@ -95,7 +95,7 @@ class dizkus_admin_prefshandler
             // dropdowns
             ModUtil::setVar('Dizkus', 'post_sort_order',     $data['post_sort_order']);
             ModUtil::setVar('Dizkus', 'deletehookaction',    $data['deletehookaction']);
-            if (ModUtil::isAvailable('ContactList')) {
+            if (ModUtil::available('ContactList')) {
                 ModUtil::setVar('Dizkus', 'ignorelist_handling', $data['ignorelist_handling']);
             }
 

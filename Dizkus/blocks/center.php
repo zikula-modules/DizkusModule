@@ -40,7 +40,7 @@ function Dizkus_centerblock_info()
  */
 function Dizkus_centerblock_display($blockinfo)
 {
-    if (!ModUtil::isAvailable('Dizkus')) {
+    if (!ModUtil::available('Dizkus')) {
         return;
     }
 

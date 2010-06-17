@@ -34,7 +34,7 @@ if (!ModUtil::getVar('Dizkus', 'rss2f_enabled') == 'no') {
 //
 // Checking Feeds module availability
 //
-if (!ModUtil::isAvailable('Feeds')) {
+if (!ModUtil::available('Feeds')) {
     return;
 }
 

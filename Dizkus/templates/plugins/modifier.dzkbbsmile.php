@@ -44,7 +44,7 @@ function smarty_modifier_dzkbbsmile($string)
 {
 	$extrainfo = array($string);
 
-    if (ModUtil::isAvailable('bbsmile')) {
+    if (ModUtil::available('bbsmile')) {
         list($string) = ModUtil::apiFunc('bbsmile', 'user', 'transform', array('objectid' => '', 'extrainfo' => $extrainfo));
     }
 
