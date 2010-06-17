@@ -221,7 +221,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 break;
     
             default:
-                return LogUtil::registerError($this->__("Error! Wrong parameters in 'Dizkus_userapi_boardstats()'."), null, ModUtil::url('Dizkus', 'user', 'main'));
+                return LogUtil::registerError($this->__("Error! Wrong parameters in boardstats()."), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     }
     
@@ -245,7 +245,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 if (isset($args['id_only']) && $args['id_only'] == true) {
                     return $post_id;
                 }
-                return Dizkus_userapi_readpost(array('post_id' => $post_id));
+                return $this->readpost(array('post_id' => $post_id));
             }
         }
     
@@ -270,7 +270,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 return $post_id;
             }
     
-            return Dizkus_userapi_readpost(array('post_id' => $post_id));
+            return $this->readpost(array('post_id' => $post_id));
         }
     
         return false;
@@ -419,18 +419,18 @@ class Dizkus_Api_User extends Zikula_Api {
                             $last_post = $this->__('No posts');
                         }
                         $forum['last_post']  = $last_post;
-                        $forum['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
+                        $forum['forum_mods'] = $this->get_moderators(array('forum_id' => $forum['forum_id']));
             
                         // is the user subscribed to the forum?
                         $forum['is_subscribed'] = 0;
-                        if (Dizkus_userapi_get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                        if ($this->get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                             $forum['is_subscribed'] = 1;
                         }
             
                         // is this forum in the favorite list?
                         $forum['is_favorite'] = 0;
                         if ($dizkusvars['favorites_enabled'] == 'yes') {
-                            if (Dizkus_userapi_get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                            if ($this->get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                                 $forum['is_favorite'] = 1;
                             }
                         }
@@ -606,20 +606,20 @@ class Dizkus_Api_User extends Zikula_Api {
         $post_sort_order = ModUtil::apiFunc('Dizkus','user','get_user_post_order');
     
         // read moderators
-        $forum['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $forum['forum_id']));
+        $forum['forum_mods'] = $this->get_moderators(array('forum_id' => $forum['forum_id']));
         $forum['last_visit'] = $args['last_visit'];
     
         $forum['topic_start'] = (!empty ($args['start'])) ? $args['start'] : 0;
     
         // is the user subscribed to the forum?
         $forum['is_subscribed'] = 0;
-        if (Dizkus_userapi_get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+        if ($this->get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
             $forum['is_subscribed'] = 1;
         }
     
         // is this forum in the favorite list?
         $forum['is_favorite'] = 0;
-        if (Dizkus_userapi_get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+        if ($this->get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
             $forum['is_favorite'] = 1;
         }
     
@@ -857,7 +857,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 return LogUtil::registerPermissionError();
             }
     
-            $topic['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
+            $topic['forum_mods'] = $this->get_moderators(array('forum_id' => $topic['forum_id']));
     
             $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
             $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
@@ -884,12 +884,12 @@ class Dizkus_Api_User extends Zikula_Api {
             }
     
             // get the next and previous topic_id's for the next / prev button
-            $topic['next_topic_id'] = Dizkus_userapi_get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'next'));
-            $topic['prev_topic_id'] = Dizkus_userapi_get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
+            $topic['next_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'next'));
+            $topic['prev_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
     
             // get the users topic_subscription status to show it in the quick repliy checkbox
             // correctly
-            if (Dizkus_userapi_get_topic_subscription_status(array('userid'   => $currentuserid,
+            if ($this->get_topic_subscription_status(array('userid'   => $currentuserid,
                                                                    'topic_id' => $topic['topic_id'])) == true) {
                 $topic['is_subscribed'] = 1;
             } else {
@@ -905,7 +905,7 @@ class Dizkus_Api_User extends Zikula_Api {
             /**
              * more then one page in this topic?
              */
-            $topic['total_posts'] = Dizkus_userapi_boardstats(array('id' => $topic['topic_id'], 'type' => 'topic'));
+            $topic['total_posts'] = $this->boardstats(array('id' => $topic['topic_id'], 'type' => 'topic'));
     
             if ($topic['total_posts'] > $posts_per_page) {
                 $times = 0;
@@ -950,7 +950,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     //if (!array_key_exists($post['poster_id'], $userdata)) {
                     if (!isset($userdata[$post['poster_id']])) {
                         // not in array, load the data now...
-                        $userdata[$post['poster_id']] = Dizkus_userapi_get_userdata_from_id(array('userid' => $post['poster_id']));
+                        $userdata[$post['poster_id']] = $this->get_userdata_from_id(array('userid' => $post['poster_id']));
                     }
                     // we now have the data and use them
                     $post['poster_data'] = $userdata[$post['poster_id']];
@@ -1102,7 +1102,7 @@ class Dizkus_Api_User extends Zikula_Api {
             if ($args['reply_start']==true) {
                 $reply['attach_signature'] = true;
                 $reply['subscribe_topic'] = false;
-                $is_subscribed = Dizkus_userapi_get_topic_subscription_status(array('userid'   => $pn_uid,
+                $is_subscribed = $this->get_topic_subscription_status(array('userid'   => $pn_uid,
                                                                                     'topic_id' => $reply['topic_id']));
     
                 if ($is_subscribed == true || ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') {
@@ -1115,7 +1115,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $reply['subscribe_topic'] = $args['subscribe_topic'];
             }
         }
-        $reply['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $pn_uid));
+        $reply['poster_data'] = $this->get_userdata_from_id(array('userid' => $pn_uid));
     
         if ($reply['topic_status'] == 1) {
             return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
@@ -1149,7 +1149,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     $review['poster_id'] = 1;
                 }
             
-                $review['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $review['poster_id']));
+                $review['poster_data'] = $this->get_userdata_from_id(array('userid' => $review['poster_id']));
             
                 // TODO extract unixtime directly from MySql
                 $review['post_unixtime'] = dzk_str2time($review['post_time']); //strtotime ($review['post_time']);
@@ -1259,10 +1259,10 @@ class Dizkus_Api_User extends Zikula_Api {
             // update subscription
             if ($args['subscribe_topic']==1) {
                 // user wants to subscribe the topic
-                Dizkus_userapi_subscribe_topic(array('topic_id' => $obj['topic_id']));
+                $this->subscribe_topic(array('topic_id' => $obj['topic_id']));
             } else {
                 // user wants not to subscribe the topic
-                Dizkus_userapi_unsubscribe_topic(array('topic_id' => $obj['topic_id'],
+                $this->unsubscribe_topic(array('topic_id' => $obj['topic_id'],
                                                        'silent'   => true));
             }
         }
@@ -1274,14 +1274,14 @@ class Dizkus_Api_User extends Zikula_Api {
         DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_posts', $obj['forum_id'], 'forum_id');
     
         // get the last topic page
-        $start = Dizkus_userapi_get_last_topic_page(array('topic_id' => $obj['topic_id']));
+        $start = $this->get_last_topic_page(array('topic_id' => $obj['topic_id']));
     
         // Let any hooks know that we have created a new item.
         //ModUtil::callHooks('item', 'create', $this_post, array('module' => 'Dizkus'));
         ModUtil::callHooks('item', 'update', $obj['topic_id'], array('module' => 'Dizkus',
                                                           'post_id' => $obj['post_id']));
     
-        Dizkus_userapi_notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['poster_id'], 'post_message' => $posted_message, 'type' => '2'));
+        $this->notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['poster_id'], 'post_message' => $posted_message, 'type' => '2'));
     
         return array($start, $obj['post_id']);
     }
@@ -1395,7 +1395,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => UserUtil::getVar('uid')));
+        $newtopic['poster_data'] = $this->get_userdata_from_id(array('userid' => UserUtil::getVar('uid')));
     
         $newtopic['subject'] = $args['subject'];
         $newtopic['message'] = $args['message'];
@@ -1436,7 +1436,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function storenewtopic($args)
     {
-        $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $args['forum_id']));
+        $cat_id = $this->get_forum_category(array('forum_id' => $args['forum_id']));
         if (!allowedtowritetocategoryandforum($cat_id, $args['forum_id'])) {
             return LogUtil::registerPermissionError();
         }
@@ -1520,7 +1520,7 @@ class Dizkus_Api_User extends Zikula_Api {
             // update subscription
             if ($args['subscribe_topic'] == 1) {
                 // user wants to subscribe the new topic
-                Dizkus_userapi_subscribe_topic(array('topic_id' => $topic_id));
+                $this->subscribe_topic(array('topic_id' => $topic_id));
             }
         }
     
@@ -1532,7 +1532,7 @@ class Dizkus_Api_User extends Zikula_Api {
         DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_topics', $obj['forum_id'], 'forum_id');
     
         // notify for newtopic
-        Dizkus_userapi_notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['topic_poster'], 'post_message' => $posted_message, 'type' => '0'));
+        $this->notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['topic_poster'], 'post_message' => $posted_message, 'type' => '0'));
     
         // delete temporary session var
         SessionUtil::delVar('topic_started');
@@ -1600,7 +1600,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $post['forum_name']   = DataUtil::formatForDisplay($post['forum_name']);
         $post['cat_title']    = DataUtil::formatForDisplay($post['cat_title']);
         $post['cat_id']       = DataUtil::formatForDisplay($post['cat_id']);
-        $post['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $post['poster_id']));
+        $post['poster_data'] = $this->get_userdata_from_id(array('userid' => $post['poster_id']));
     
         // create unix timestamp
         $post['post_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
@@ -1646,7 +1646,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $post['post_text'] = $post['post_textdisplay'];
     
         // allow to edit the subject if first post
-        $post['first_post'] = Dizkus_userapi_is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post['post_id']));
+        $post['first_post'] = $this->is_first_post(array('topic_id' => $post['topic_id'], 'post_id' => $post['post_id']));
     
         return $post;
     }
@@ -1988,7 +1988,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])),$dom);
                 $subject = __f("*** The original posting '%s' has been moved", $topic['topic_title'], $dom);
     
-                Dizkus_userapi_storenewtopic(array('subject'  => $subject,
+                $this->storenewtopic(array('subject'  => $subject,
                                                     'message'  => $message,
                                                     'forum_id' => $topic['forum_id'],
                                                     'time'     => $topic['topic_time'],
@@ -2009,7 +2009,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function deletetopic($args)
     {
-        list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
@@ -2324,12 +2324,12 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
         if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
     
-        if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
+        if ($this->get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
             // add user only if not already subscribed to the topic
             $sobj['topic_id'] = $args['topic_id'];
             $sobj['user_id'] =  $args['user_id'];
@@ -2387,7 +2387,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        if (Dizkus_userapi_get_forum_subscription_status($args) == false) {
+        if ($this->get_forum_subscription_status($args) == false) {
             // add user only if not already subscribed to the forum
             // we can use the args parameter as-is
             DBUtil::insertObject($args, 'dizkus_subscription');
@@ -2443,7 +2443,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        if (Dizkus_userapi_get_forum_favorites_status($args) == false) {
+        if ($this->get_forum_favorites_status($args) == false) {
             // add user only if not already a favorite
             // we can use the args parameter as-is
             DBUtil::insertObject($args, 'dizkus_forum_favorites');
@@ -2947,7 +2947,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
-        $recentstatus = Dizkus_userapi_get_favorite_status(array('user_id' => $args['user_id']));
+        $recentstatus = $this->get_favorite_status(array('user_id' => $args['user_id']));
         $args['user_favorites'] = ($recentstatus==true) ? 0 : 1;
         DBUtil::updateObject($args, 'dizkus_users', '', 'user_id');
     
@@ -3405,7 +3405,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         DBUtil::executeSQL($sql);
     
-        return Dizkus_userapi_get_last_topic_page(array('topic_id' => $post['topic_id']));
+        return $this->get_last_topic_page(array('topic_id' => $post['topic_id']));
     }
     
     /**

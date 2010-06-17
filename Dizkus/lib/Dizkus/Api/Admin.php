@@ -132,7 +132,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     
         if (isset($args['cat_id'])) {
             // read all the forums in this category
-            $forums = Dizkus_adminapi_readforums(array('cat_id' => $args['cat_id']));
+            $forums = $this->readforums(array('cat_id' => $args['cat_id']));
             if (is_array($forums) && count($forums)>0) {
                 foreach ($forums as $forum) {
                     // remove all forums in this category
@@ -488,16 +488,16 @@ class Dizkus_Api_Admin extends Zikula_Api {
                 DBUtil::updateObject($t, 'dizkus_topics', null, 'topic_id');
                 break;
             case 'all forums':
-                $forums = Dizkus_adminapi_readforums();
+                $forums = $this->readforums();
                 foreach ($forums as $forum) {
-                    Dizkus_adminapi_sync(array('id' => $forum['forum_id'], 'type' => 'forum'));
+                    $this->sync(array('id' => $forum['forum_id'], 'type' => 'forum'));
                 }
                 break;
     
             case 'all topics':
                 $topics = DBUtil::selectObjectArray('dizkus_topics');
                 foreach ($topics as $topic) {
-                    Dizkus_adminapi_sync(array('id' => $topic['topic_id'], 'type' => 'topic'));
+                    $this->sync(array('id' => $topic['topic_id'], 'type' => 'topic'));
                 }
                 break;
     

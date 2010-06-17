@@ -168,7 +168,7 @@ class Dizkus_Api_Search extends Zikula_Api {
             $whereforums = 'p.forum_id IN(' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
     
-        start_search($wherematch, $whereforums);
+        $this->start_search($wherematch, $whereforums);
         return true;
     }
     
@@ -268,7 +268,7 @@ class Dizkus_Api_Search extends Zikula_Api {
         }
     
     
-        start_search($wherematch, $whereforums);
+        $this->start_search($wherematch, $whereforums);
         return true;
     }
     

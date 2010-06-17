@@ -984,7 +984,7 @@ class Dizkus_User extends Zikula_Controller {
                                         array('post_id' => $post_id));
             }
             if (($topic_id <> 0) && ($topic_id<>false)) {
-                return Dizkus_user_viewtopic(array('topic' => $topic_id,
+                return $this->viewtopic(array('topic' => $topic_id,
                                                     'start'   => 0));
             } else {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));

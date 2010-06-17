@@ -712,7 +712,7 @@ class Dizkus_Admin extends Zikula_Controller {
                                    'forum_moduleref'        => $moduleref,
                                    'forum_pntopic'          => $pntopic));
             }
-            $editforumhtml = Dizkus_admin_editforum(array('forum_id'   => $forum_id,
+            $editforumhtml = $this->editforum(array('forum_id'   => $forum_id,
                                                           'returnhtml' => true));
     
             $forumtitle = '<a href="' . ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)) .'">' . $forum_name . '</a> (' . $forum_id . ')';
