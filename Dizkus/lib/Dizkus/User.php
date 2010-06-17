@@ -225,8 +225,7 @@ class Dizkus_User extends Zikula_Controller {
             $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
             $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
             if (ModUtil::isAvailable('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
-                LogUtil::registerError($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'));
-                return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
+                return LogUtil::registerError($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'), null, ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
     
             list($start,
@@ -278,7 +277,7 @@ class Dizkus_User extends Zikula_Controller {
         // get the input
         $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
         if ($forum_id == null) {
-            return LogUtil::registerError(_('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
+            return LogUtil::registerError($this->_('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
         }
         
         $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
@@ -386,7 +385,7 @@ class Dizkus_User extends Zikula_Controller {
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
            && ($post['poster_data']['pn_uid'] <> UserUtil::getVar('uid')) ) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $preview = (empty($preview)) ? false : true;
@@ -485,7 +484,7 @@ class Dizkus_User extends Zikula_Controller {
                                     'count'    => false));
     
         if ($topic['access_moderate'] <> true) {
-            return showforumerror($this->__('Error! You do not have authorisation to moderate this category or forum.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $render = Renderer::getInstance('Dizkus', false, null, true);
@@ -542,10 +541,10 @@ class Dizkus_User extends Zikula_Controller {
                 case 'move':
                     list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
                     if ($forum_id == $f_id) {
-                        return showforumerror($this->__('Error! The original forum cannot be the same as the target forum.'), __FILE__, __LINE__);
+                        return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'), __FILE__, __LINE__);
                     }
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                        return showforumerror(getforumerror('auth_mod', $f_id, 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+                        return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'movetopic',
                                  array('topic_id' => $topic_id,
@@ -558,7 +557,7 @@ class Dizkus_User extends Zikula_Controller {
                     list($f_id, $c_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                       array('topic_id' => $topic_id));
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                        return showforumerror(getforumerror('auth_mod', $f_id, 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+                        return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'lockunlocktopic',
                                  array('topic_id' => $topic_id,
@@ -570,7 +569,7 @@ class Dizkus_User extends Zikula_Controller {
                     list($f_id, $c_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                       array('topic_id' => $topic_id));
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                        return showforumerror(getforumerror('auth_mod', $f_id, 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+                        return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'stickyunstickytopic',
                                  array('topic_id' => $topic_id,
@@ -579,13 +578,14 @@ class Dizkus_User extends Zikula_Controller {
     
                 case 'join':
                     $to_topic_id = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
-                    if (!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
-                        // user wants to copy topic to itself
-                        return showforumerror($this->__('Error! The original topic cannot be the same as the target topic.'), __FILE__, __LINE__);
-                    }
                     list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $to_topic_id));
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                        return showforumerror(getforumerror('auth_mod', $f_id, 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+                        return LogUtil::registerPermissionError();
+                    }
+
+                    if (!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
+                        // user wants to copy topic to itself
+                        return LogUtil::registerError($this->__('Error! The original topic cannot be the same as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $f_id)));
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'jointopics',
                                  array('from_topic_id' => $topic_id,
@@ -760,8 +760,7 @@ class Dizkus_User extends Zikula_Controller {
     	// check for Contactlist module and admin settings
     	$ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
     	if (!ModUtil::isAvailable('ContactList') || ($ignorelist_handling == 'none')) {
-    	  	LogUtil::registerError(__("No 'ignore list' configuration is currently possible.", $dom));
-    	  	return System::redirect(ModUtil::url('Dizkus', 'user', 'prefs'));
+    	  	return LogUtil::registerError($this->__("No 'ignore list' configuration is currently possible."), null, ModUtil::url('Dizkus', 'user', 'prefs'));
     	}
     
         // Include handler class
@@ -792,7 +791,7 @@ class Dizkus_User extends Zikula_Controller {
         $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
     
         if (!UserUtil::isLoggedIn()) {
-            return showforumerror($this->__('Error! You need to be logged-in to perform this action.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! You need to be logged-in to perform this action.'), null, ModUtil::url('Users', 'user', 'login'));
         }
     
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
@@ -937,7 +936,7 @@ class Dizkus_User extends Zikula_Controller {
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
             // user is not allowed to moderate this forum
-            return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (!empty($submit)) {
@@ -1060,7 +1059,7 @@ class Dizkus_User extends Zikula_Controller {
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
             // user is not allowed to moderate this forum
-            return showforumerror(getforumerror('auth_mod', $post['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (!empty($submit)) {
@@ -1115,7 +1114,7 @@ class Dizkus_User extends Zikula_Controller {
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
             // user is not allowed to moderate this forum
-            return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (!$submit) {
@@ -1181,7 +1180,7 @@ class Dizkus_User extends Zikula_Controller {
     
         if (!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
             // user is not allowed to moderate this forum
-            return showforumerror(getforumerror('auth_mod',$post['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
     
@@ -1217,7 +1216,7 @@ class Dizkus_User extends Zikula_Controller {
     
                     case 'move':
                         if (empty($moveto)) {
-                            return showforumerror($this->__('Error! You did not select a target forum for the move.'), __FILE__, __LINE__);
+                            return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
                         }
                         foreach ($topic_ids as $topic_id) {
                             ModUtil::apiFunc('Dizkus', 'user', 'movetopic',
@@ -1243,7 +1242,7 @@ class Dizkus_User extends Zikula_Controller {
     
                     case 'join':
                         if (empty($jointo)) {
-                            return showforumerror($this->__('Error! You did not select a target topic to join.'), __FILE__, __LINE__);
+                            return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
                         }
                         if (in_array($jointo, $topic_ids)) {
                             // jointo, the target topic, is part of the topics to join

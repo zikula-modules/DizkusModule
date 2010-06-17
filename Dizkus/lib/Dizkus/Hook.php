@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 class Dizkus_Hook extends Zikula_Controller {
     
     /**
@@ -22,7 +20,7 @@ class Dizkus_Hook extends Zikula_Controller {
     public function showdiscussionlink($args)
     {
         if (!isset($args['objectid']) || empty($args['objectid']) ) {
-            return showforumerror($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference',

@@ -75,7 +75,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function updatecategory($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
         
         // copy all entries from $args to $obj that are found in the categories table
@@ -105,7 +105,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function addcategory($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (isset($args['cat_title'])) {
@@ -127,7 +127,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function deletecategory($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (isset($args['cat_id'])) {
@@ -145,7 +145,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
             return DBUtil::deleteObject($args, 'dizkus_categories', null, 'cat_id');
         }
     
-        return showforumerror($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), __FILE__, __LINE__);
+        return LogUtil::registerError($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'));
     }
     
     /**
@@ -170,7 +170,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
             ($permcheck <> ACCESS_MODERATE) &&
             ($permcheck <> ACCESS_ADMIN) &&
             ($permcheck <> 'NOCHECK')  ) {
-            return showforumerror($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'));
         }
     
         $where = '';
@@ -389,7 +389,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function saverank($args)
     {
     	if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         foreach ($args['ranks'] as $rankid => $rank)
@@ -447,7 +447,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function assignranksave($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (is_array($args['setrank'])) {
@@ -529,7 +529,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     
                 break;
             default:
-                return showforumerror('Error! Bad parameter in synchronisation:', __FILE__, __LINE__);
+                return LogUtil::registerError('Error! Bad parameter in synchronisation:', null, ModUtil::url('Dizkus', 'admin', 'main'));
         }
     
         return true;
@@ -565,14 +565,14 @@ class Dizkus_Api_Admin extends Zikula_Api {
     
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN) &&
             !SecurityUtil::checkPermission('Dizkus::CreateForum', $args['cat_id'] . "::", ACCESS_EDIT) ) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $ztable = System::dbGetTables();
     
         $args['forum_name'] = strip_tags($args['forum_name']);
         if (empty($args['forum_name'])) {
-            return showforumerror($this->__('Error! You did not enter all the required information in the form. Did you assign at least one moderator? Please correct your entries and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! You did not enter all the required information in the form. Did you assign at least one moderator? Please correct your entries and try again.'));
         }
     
         if (!$args['forum_desc']) {
@@ -625,7 +625,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
         unset($args['rem_mods']);
     
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (empty($args['forum_pop3_password'])) {
@@ -668,7 +668,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function deleteforum($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return showforumerror($this->__('Error! No permission for this action.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $whereforumid = 'WHERE forum_id=' . DataUtil::formatForStore($args['forum_id']);

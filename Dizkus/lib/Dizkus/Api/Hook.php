@@ -32,7 +32,7 @@ class Dizkus_Api_Hook extends Zikula_Api {
         }
     
         if (!isset($args['objectid']) || empty($args['objectid'])) {
-            return showforumerror($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerArgsError();
         }
     
         // we have an objectid now, we combine this with the module id now for the
@@ -83,7 +83,7 @@ class Dizkus_Api_Hook extends Zikula_Api {
         }
     
         if (!isset($args['objectid']) || empty($args['objectid'])) {
-            return showforumerror($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerArgsError();
         }
     
         // we have an objectid now, we combine this with the module id now for the
@@ -136,7 +136,7 @@ class Dizkus_Api_Hook extends Zikula_Api {
         }
     
         if (!isset($args['objectid']) || empty($args['objectid'])) {
-            return showforumerror($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerArgsError();
         }
     
         // we have an objectid now, we combine this with the module id now for the

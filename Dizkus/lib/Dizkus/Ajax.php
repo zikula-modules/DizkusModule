@@ -726,7 +726,7 @@ class Dizkus_Ajax extends Zikula_Controller {
         // need at least "comment" to add newtopic
         if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
             // user is not allowed to post
-            return showforumerror($this->__('Error! You do not have authorisation to post in this category or forum.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => UserUtil::getVar('uid')));

@@ -221,7 +221,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 break;
     
             default:
-                return showforumerror(__("Error! Wrong parameters in 'Dizkus_userapi_boardstats()'.", $dom), __FILE__, __LINE__);
+                return LogUtil::registerError($this->__("Error! Wrong parameters in 'Dizkus_userapi_boardstats()'."), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     }
     
@@ -589,11 +589,11 @@ class Dizkus_Api_User extends Zikula_Api {
                               array('forum_id' => $args['forum_id'],
                                     'permcheck' => 'nocheck' ));
         if ($forum == false) {
-            return showforumerror($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__, '404 Not Found');
+            return LogUtil::registerError($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         if (!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-            return showforumerror(getforumerror('auth_overview',$forum['forum_id'], 'forum', $this->__('Error! You do not have authorisation to view this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $ztable = System::dbGetTables();
@@ -854,7 +854,7 @@ class Dizkus_Api_User extends Zikula_Api {
             unset($topic['forum_pop3_active']);
     
             if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-                return showforumerror(getforumerror('auth_read',$topic['forum_id'], 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
+                return LogUtil::registerPermissionError();
             }
     
             $topic['forum_mods'] = Dizkus_userapi_get_moderators(array('forum_id' => $topic['forum_id']));
@@ -1007,7 +1007,7 @@ class Dizkus_Api_User extends Zikula_Api {
             unset($userdata);
         } else {
             // no results - topic does not exist
-            return showforumerror($this->__('Error! The topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__, '404 Not Found');
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         return $topic;
@@ -1070,7 +1070,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $result = DBUtil::marshallObjects($res, $colarray);
     
         if (!is_array($result) || empty($result)) {
-            return showforumerror($this->__('Error! The topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         } else {
             $reply = $result[0];
         }
@@ -1118,11 +1118,11 @@ class Dizkus_Api_User extends Zikula_Api {
         $reply['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => $pn_uid));
     
         if ($reply['topic_status'] == 1) {
-            return showforumerror($this->__('Error! You cannot post a message under this topic. It has been locked.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         if (!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
-            return showforumerror( $this->__('Error! You do not have authorisation to post in this category or forum.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         // Topic review (show last 10)
@@ -1192,11 +1192,11 @@ class Dizkus_Api_User extends Zikula_Api {
                                                 array('topic_id' => $args['topic_id']));
     
         if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
-            return showforumerror($this->__('Error! You do not have authorisation to post in this category or forum.'));
+            return LogUtil::registerPermissionError();
         }
     
         if (trim($args['message']) == '') {
-            return showforumerror($this->__('Error! You tried to post a blank message. Please go back and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! You tried to post a blank message. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         /*
@@ -1392,7 +1392,7 @@ class Dizkus_Api_User extends Zikula_Api {
         // need at least "comment" to add newtopic
         if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
             // user is not allowed to post
-            return showforumerror($this->__('Error! You do not have authorisation to post in this category or forum.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $newtopic['poster_data'] = Dizkus_userapi_get_userdata_from_id(array('userid' => UserUtil::getVar('uid')));
@@ -1438,12 +1438,12 @@ class Dizkus_Api_User extends Zikula_Api {
     {
         $cat_id = Dizkus_userapi_get_forum_category(array('forum_id' => $args['forum_id']));
         if (!allowedtowritetocategoryandforum($cat_id, $args['forum_id'])) {
-            return showforumerror($this->__('Error! You do not have authorisation to post in this category or forum.'), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (trim($args['message']) == '' || trim($args['subject']) == '') {
             // either message or subject is empty
-            return showforumerror($this->__('Error! You tried to post a blank message. Please go back and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! You tried to post a blank message. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         /*
@@ -1568,7 +1568,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $result = DBUtil::executeSQL($sql);
         if ($result === false) {
-            return showforumerror($this->__('Error! The topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__, '404 Not Found');
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         $colarray   = DBUtil::getColumnsArray ('dizkus_posts');
@@ -1581,7 +1581,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $objarray = DBUtil::marshallObjects ($result, $colarray);
         $post = $objarray[0];
         if (!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
-            return showforumerror(getforumerror('auth_read',$post['forum_id'], 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
         
         $post['post_id']      = DataUtil::formatForDisplay($post['post_id']);
@@ -1705,18 +1705,18 @@ class Dizkus_Api_User extends Zikula_Api {
         $row = $result[0];
     
         if (!is_array($row)) {
-            return showforumerror($this->__('Error! The topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         if (trim($args['message']) == '') {
             // no message
-            return showforumerror( $this->__('Error! You tried to post a blank message. Please go back and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! You tried to post a blank message. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         if ((($row['poster_id'] != UserUtil::getVar('uid')) || ($row['topic_status'] == 1)) &&
             !allowedtomoderatecategoryandforum($row['cat_id'], $row['forum_id'])) {
             // user is not allowed to edit post
-            return showforumerror(getforumerror('auth_mod', $row['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
     
@@ -1904,7 +1904,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $res = DBUtil::executeSQL($sql);
         if ($res === false) {
-            return showforumerror($this->__('Error! The topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__, '404 Not Found');
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         $colarray = array('forum_id', 'cat_id');
@@ -1949,7 +1949,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joinInfo, $where, 'forum_id', -1, -1, 'forum_id', $permFilter);
     
         if ($forums === false) {
-            return showforumerror($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__, '404 Not Found');
+            return LogUtil::registerError($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         if (isset($args['forum_id']) && isset($forums[$args['forum_id']])) {
@@ -2011,7 +2011,7 @@ class Dizkus_Api_User extends Zikula_Api {
     {
         list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
-            return showforumerror(getforumerror('auth_mod', $forum_id, 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $ztable = System::dbGetTables();
@@ -2097,7 +2097,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         if (!is_array($myrow)) {
             // no results - topic does not exist
-            return showforumerror($this->__('Error! The topic you selected was not found. Please go back and try again.'), __FILE__, __LINE__);
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
         $topic_unixtime= dzk_str2time($myrow[0]['topic_time']); //strtotime ($myrow['topic_time']);
@@ -2252,7 +2252,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         if (isset($args['user_id'])) {
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-                return showforumerror($this->__('Error! No permission for this action.'));
+                return LogUtil::registerPermissionError();
             }
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
@@ -2326,7 +2326,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         list($forum_id, $cat_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
         if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            return showforumerror(getforumerror('auth_read', $forum_id, 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (Dizkus_userapi_get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
@@ -2384,7 +2384,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                               array('forum_id' => $args['forum_id']));
         if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-            return showforumerror(getforumerror('auth_read',$forum['forum_id'], 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (Dizkus_userapi_get_forum_subscription_status($args) == false) {
@@ -2440,7 +2440,7 @@ class Dizkus_Api_User extends Zikula_Api {
                               array('forum_id' => $args['forum_id']));
     
         if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
-            return showforumerror(getforumerror('auth_read', $forum['forum_id'], 'forum', $this->__('Error! You do not have authorisation to read the content in this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         if (Dizkus_userapi_get_forum_favorites_status($args) == false) {
@@ -3452,14 +3452,14 @@ class Dizkus_Api_User extends Zikula_Api {
         $from_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
         if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
             // user is not allowed to moderate this forum
-            return showforumerror(getforumerror('auth_mod', $from_topic['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         // check if to_topic exists. this function will return an error if not
         $to_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
         if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
             // user is not allowed to moderate this forum
-            return showforumerror(getforumerror('auth_mod', $to_topic['forum_id'], 'forum', $this->__('Error! You do not have authorisation to moderate this category or forum.')), __FILE__, __LINE__);
+            return LogUtil::registerPermissionError();
         }
     
         $ztable = System::dbGetTables();
