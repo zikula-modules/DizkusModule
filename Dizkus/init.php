@@ -21,7 +21,7 @@ include_once 'modules/Dizkus/common.php';
 function Dizkus_init()
 {
     if (version_compare(PN_VERSION_NUM, '1.3.0', '<')) {
-        return LogUtuil::errormessage(__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
+        return LogUtil::errormessage(__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
     }
 
     // TODO move this to a loop
