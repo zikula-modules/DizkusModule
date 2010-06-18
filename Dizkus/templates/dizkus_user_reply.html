@@ -45,7 +45,7 @@
                                             <label for="attach_signature">{gt text="Attach my signature"}</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $topic.is_subscribed eq true}checked="checked"{/if} value="1" />
+                                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $reply.subscribe_topic eq true}checked="checked"{/if} value="1" />
                                             <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
                                         </li>
                                         {/if}
