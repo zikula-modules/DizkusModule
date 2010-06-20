@@ -22,7 +22,7 @@
                     </form>
                     <script type="text/javascript">
                         // <![CDATA[
-                        var post_order = '{$post_order}';
+                        var post_order = '{{$post_order}}';
                         if(post_order == 'asc') {
                             Element.toggle('sortorder_asc');
                         } else {
@@ -114,11 +114,11 @@
                             <a id="unsubscribeforumbutton_{$forum.forum_id}" class="hidden unsubscribelink" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'unsubscribe');" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                             <script type="text/javascript">
                                 // <![CDATA[
-                                var is_subscribed = {$forum.is_subscribed};
+                                var is_subscribed = {{$forum.is_subscribed}};
                                 if(is_subscribed == 0) {
-                                    $('subscribeforumbutton_'  + {$forum.forum_id}).toggleClassName('hidden');
+                                    $('subscribeforumbutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
                                 } else {
-                                    $('unsubscribeforumbutton_'  + {$forum.forum_id}).toggleClassName('hidden');
+                                    $('unsubscribeforumbutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
                                 }
                                 // ]]>
                             </script>
@@ -138,11 +138,11 @@
                             <a id="removefavoritebutton_{$forum.forum_id}" class="hidden removefavoritelink" onclick="javascript:addremovefavorite({$forum.forum_id}, 'remove');" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                             <script type="text/javascript">
                                 // <![CDATA[
-                                var is_favorite = {$forum.is_favorite};
+                                var is_favorite = {{$forum.is_favorite}};
                                 if(is_favorite == 0) {
-                                    $('addfavoritebutton_'  + {$forum.forum_id}).toggleClassName('hidden');
+                                    $('addfavoritebutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
                                 } else {
-                                    $('removefavoritebutton_'  + {$forum.forum_id}).toggleClassName('hidden');
+                                    $('removefavoritebutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
                                 }
                                 // ]]>
                             </script>

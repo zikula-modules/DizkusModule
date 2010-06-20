@@ -120,7 +120,7 @@
 {if $post.contactlist_ignored|default:0 == 1}
 <script type="text/javascript">
     // <![CDATA[
-    $('posting_{$post.post_id}').toggle();
+    $('posting_{{$post.post_id}}').toggle();
     // ]]>
 </script>
 {/if}
