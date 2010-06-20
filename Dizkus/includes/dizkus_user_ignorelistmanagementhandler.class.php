@@ -32,7 +32,7 @@ class Dizkus_user_ignorelistmanagementHandler
 
         // get user's configuration
         $render->caching = false;
-        $render->add_core_data('PNConfig');
+        $render->add_core_data(CONFIG_MODULE);
 
         // assign data
         $render->assign('ignorelist_options',    $ignorelist_options);
