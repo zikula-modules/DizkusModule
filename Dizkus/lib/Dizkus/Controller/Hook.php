@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Hook extends Zikula_Controller {
+class Dizkus_Controller_Hook extends Zikula_Controller {
     
     /**
      * showdiscussionlink

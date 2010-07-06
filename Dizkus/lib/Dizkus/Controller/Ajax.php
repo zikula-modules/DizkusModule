@@ -11,7 +11,7 @@
 
 include_once 'modules/Dizkus/common.php';
 
-class Dizkus_Ajax extends Zikula_Controller {
+class Dizkus_Controller_Ajax extends Zikula_Controller {
     
     /**
      * reply

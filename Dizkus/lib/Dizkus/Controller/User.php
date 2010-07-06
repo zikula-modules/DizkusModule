@@ -11,7 +11,7 @@
 
 include_once 'modules/Dizkus/common.php';
 
-class Dizkus_User extends Zikula_Controller {
+class Dizkus_Controller_User extends Zikula_Controller {
     
     /**
      * main

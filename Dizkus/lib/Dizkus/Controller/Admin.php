@@ -11,7 +11,7 @@
 
 include_once 'modules/Dizkus/common.php';
 
-class Dizkus_Admin extends Zikula_Controller {
+class Dizkus_Controller_Admin extends Zikula_Controller {
      
     /**
      * the main administration function
