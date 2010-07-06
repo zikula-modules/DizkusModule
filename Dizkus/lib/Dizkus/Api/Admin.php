@@ -23,7 +23,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readcategories($args)
     {
-        $ztables = System::dbGetTables();
+        $ztables = DBUtil::getTables();
         $catcolumn = $ztables['dizkus_categories_column'];
     
         $where = '';
@@ -80,7 +80,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
         
         // copy all entries from $args to $obj that are found in the categories table
         // this prevents possible SQL errors if non existing keys are passed to this function
-        $ztables = System::dbGetTables();
+        $ztables = DBUtil::getTables();
         $obj = array();
         foreach ($args as $key => $arg) {
             if (array_key_exists($key, $ztables['dizkus_categories_column'])) {
@@ -244,7 +244,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readmoderators($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $sql = 'SELECT u.pn_uname, u.pn_uid
                 FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
@@ -274,7 +274,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readusers($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $sql = "SELECT n.pn_uid, n.pn_uname
                 FROM ".$ztable['users']." AS n
@@ -303,7 +303,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readgroups($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
         
         // read groups
         $sql = "SELECT g.pn_gid+1000000, g.pn_name
@@ -353,7 +353,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
         }
         asort($filelist);
     
-        $ztables = System::dbGetTables();
+        $ztables = DBUtil::getTables();
         $rcol = $ztables['dizkus_ranks_column'];
     
         if ($args['ranktype']==0) {
@@ -415,7 +415,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function readrankusers($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $sql = 'SELECT  u.user_id
                 FROM ' . $ztable['dizkus_ranks'] . ' as r,
@@ -469,7 +469,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
      */
     public function sync($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
         switch ($args['type'])
         {
             case 'forum':
@@ -568,7 +568,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $args['forum_name'] = strip_tags($args['forum_name']);
         if (empty($args['forum_name'])) {

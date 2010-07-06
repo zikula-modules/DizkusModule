@@ -13,7 +13,7 @@ function smarty_function_readtopforums($params, &$smarty)
     $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
     
     ModUtil::dbInfoLoad('Dizkus');
-    $ztable = System::dbGetTables();
+    $ztable = DBUtil::getTables();
     $sql = "SELECT f.forum_id, 
                    f.forum_name, 
                    f.forum_topics, 

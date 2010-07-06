@@ -128,7 +128,7 @@ $render->assign('current_language', ZLanguage::getLocale());
  * get database information
  */
 ModUtil::dbInfoLoad('Dizkus');
-$ztable = System::dbGetTables();
+$ztable = DBUtil::getTables();
 
 /**
  * SQL statement to fetch last 10 topics

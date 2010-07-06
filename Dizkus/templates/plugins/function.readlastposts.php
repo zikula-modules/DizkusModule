@@ -42,7 +42,7 @@ function smarty_function_readlastposts($params, &$smarty)
 
     include_once 'modules/Dizkus/common.php';
     // get some enviroment
-    $ztable = System::dbGetTables();
+    $ztable = DBUtil::getTables();
 
     $whereforum = '';
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {

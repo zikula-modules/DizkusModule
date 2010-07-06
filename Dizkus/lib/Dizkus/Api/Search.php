@@ -275,7 +275,7 @@ class Dizkus_Api_Search extends Zikula_Api {
     function start_search($wherematch, $whereforums)
     {
         ModUtil::dbInfoLoad('Search');
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $topicurl = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => '%%%'));
         $sessionid = DataUtil::formatForStore(session_id());

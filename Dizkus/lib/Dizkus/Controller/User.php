@@ -71,19 +71,18 @@ class Dizkus_Controller_User extends Zikula_Controller {
             }
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-        $render->assign('favorites', $favorites);
-        $render->assign('tree', $tree);
-        $render->assign('view_category', $viewcat);
-        $render->assign('view_category_data', $view_category_data);
-        $render->assign('last_visit', $last_visit);
-        $render->assign('last_visit_unix', $last_visit_unix);
-        $render->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
+        $this->view->add_core_data();
+        $this->view->assign('favorites', $favorites);
+        $this->view->assign('tree', $tree);
+        $this->view->assign('view_category', $viewcat);
+        $this->view->assign('view_category_data', $view_category_data);
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
                                                 array('id'   => '0',
                                                       'type' => 'all' )));
     
-        return $render->fetch('dizkus_user_main.html');
+        return $this->view->fetch('dizkus_user_main.html');
     }
     
     /**
@@ -112,14 +111,13 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                     'last_visit'      => $last_visit,
                                     'last_visit_unix' => $last_visit_unix));
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
+        $this->view->add_core_data();
+        $this->view->assign('forum', $forum);
+        $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
     
-        $render->assign('forum', $forum);
-        $render->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
-        $render->assign('last_visit', $last_visit);
-        $render->assign('last_visit_unix', $last_visit_unix);
-    
-        return $render->fetch('dizkus_user_viewforum.html');
+        return $this->view->fetch('dizkus_user_viewforum.html');
     }
     
     /**
@@ -167,13 +165,13 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                     'start'      => $start,
                                     'count'      => true));
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-        $render->assign('topic', $topic);
-        $render->assign('post_count', count($topic['posts']));
-        $render->assign('last_visit', $last_visit);
-        $render->assign('last_visit_unix', $last_visit_unix);
+        $this->view->add_core_data();
+        $this->view->assign('topic', $topic);
+        $this->view->assign('post_count', count($topic['posts']));
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
     
-        return $render->fetch('dizkus_user_viewtopic.html');
+        return $this->view->fetch('dizkus_user_viewtopic.html');
     }
     
     /**
@@ -252,14 +250,14 @@ class Dizkus_Controller_User extends Zikula_Controller {
                 list($reply['message_display']) = ModUtil::callHooks('item', 'transform', '', array($message));
                 $reply['message_display'] = nl2br($reply['message_display']);
             }
+
+            $this->view->add_core_data();
+            $this->view->assign('reply', $reply);
+            $this->view->assign('preview', $preview);
+            $this->view->assign('last_visit', $last_visit);
+            $this->view->assign('last_visit_unix', $last_visit_unix);
     
-            $render = Renderer::getInstance('Dizkus', false, null, true);
-            $render->assign('reply', $reply);
-            $render->assign('preview', $preview);
-            $render->assign('last_visit', $last_visit);
-            $render->assign('last_visit_unix', $last_visit_unix);
-    
-            return $render->fetch('dizkus_user_reply.html');
+            return $this->view->fetch('dizkus_user_reply.html');
         }
     }
     
@@ -331,11 +329,11 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                            'subscribe_topic'  => $subscribe_topic));
     
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-                $render = Renderer::getInstance('Dizkus', false, null, true);
+                $this->view->add_core_data();
+                
+                $this->view->assign('topic', ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
     
-                $render->assign('topic', ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
-    
-                return $render->fetch('dizkus_user_newtopicconfirmation.html');
+                return $this->view->fetch('dizkus_user_newtopicconfirmation.html');
     
             } else {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
@@ -344,13 +342,13 @@ class Dizkus_Controller_User extends Zikula_Controller {
             }
         } else {
             // new topic
-            $render = Renderer::getInstance('Dizkus', false, null, true);
-            $render->assign('preview', $preview);
-            $render->assign('newtopic', $newtopic);
-            $render->assign('last_visit', $last_visit);
-            $render->assign('last_visit_unix', $last_visit_unix);
+            $this->view->add_core_data();
+            $this->view->assign('preview', $preview);
+            $this->view->assign('newtopic', $newtopic);
+            $this->view->assign('last_visit', $last_visit);
+            $this->view->assign('last_visit_unix', $last_visit_unix);
     
-            return $render->fetch('dizkus_user_newtopic.html');
+            return $this->view->fetch('dizkus_user_newtopic.html');
         }
     }
     
@@ -443,14 +441,13 @@ class Dizkus_Controller_User extends Zikula_Controller {
                 list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', '', array(nl2br($message)));
             }
     
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('preview', $preview);
+            $this->view->assign('post', $post);
+            $this->view->assign('last_visit', $last_visit);
+            $this->view->assign('last_visit_unix', $last_visit_unix);
     
-            $render->assign('preview', $preview);
-            $render->assign('post', $post);
-            $render->assign('last_visit', $last_visit);
-            $render->assign('last_visit_unix', $last_visit_unix);
-    
-            return $render->fetch('dizkus_user_editpost.html');
+            return $this->view->fetch('dizkus_user_editpost.html');
         }
     }
     
@@ -487,9 +484,9 @@ class Dizkus_Controller_User extends Zikula_Controller {
             return LogUtil::registerPermissionError();
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-        $render->assign('mode', $mode);
-        $render->assign('topic_id', $topic_id);
+        $this->view->add_core_data();
+        $this->view->assign('mode', $mode);
+        $this->view->assign('topic_id', $topic_id);
     
         if (empty($submit)) {
             switch ($mode)
@@ -501,7 +498,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
                 case 'move':
                 case 'join':
-                    $render->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
+                    $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
                     $templatename = 'dizkus_user_movetopic.html';
                     break;
     
@@ -516,14 +513,14 @@ class Dizkus_Controller_User extends Zikula_Controller {
                     break;
     
                 case 'viewip':
-                    $render->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
+                    $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
                     $templatename = 'dizkus_user_viewip.html';
                     break;
     
                 default:
                     return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
-            return $render->fetch($templatename);
+            return $this->view->fetch($templatename);
     
         } else { // submit is set
             if (!SecurityUtil::confirmAuthKey()) {
@@ -692,18 +689,17 @@ class Dizkus_Controller_User extends Zikula_Controller {
             default:
                 list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
     
-                $render = Renderer::getInstance('Dizkus', false, null, true);
+                $this->view->add_core_data();
+                $this->view->assign('last_visit', $last_visit);
+                $this->view->assign('favorites_enabled', ModUtil::getVar('Dizkus', 'favorites_enabled'));
+                $this->view->assign('last_visit_unix', $last_visit_unix);
+                $this->view->assign('signaturemanagement', ModUtil::getVar('Dizkus','signaturemanagement'));
+                $this->view->assign('ignorelist_handling', ModUtil::getVar('Dizkus','ignorelist_handling'));
+                $this->view->assign('contactlist_available', ModUtil::available('ContactList'));
+                $this->view->assign('post_order', strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order')));
+                $this->view->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
     
-                $render->assign('last_visit', $last_visit);
-                $render->assign('favorites_enabled', ModUtil::getVar('Dizkus', 'favorites_enabled'));
-                $render->assign('last_visit_unix', $last_visit_unix);
-                $render->assign('signaturemanagement', ModUtil::getVar('Dizkus','signaturemanagement'));
-                $render->assign('ignorelist_handling', ModUtil::getVar('Dizkus','ignorelist_handling'));
-                $render->assign('contactlist_available', ModUtil::available('ContactList'));
-                $render->assign('post_order', strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order')));
-                $render->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
-    
-                return $render->fetch('dizkus_user_prefs.html');
+                return $this->view->fetch('dizkus_user_prefs.html');
         }
     
         return System::redirect(ModUtil::url('Dizkus', 'user', $return_to, $params));
@@ -829,17 +825,16 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
             $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
     
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('topic', $topic);
+            $this->view->assign('error_msg', $error_msg);
+            $this->view->assign('sendto_email', $sendto_email);
+            $this->view->assign('emailsubject', $emailsubject);
+            $this->view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) ."\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
+            $this->view->assign( 'last_visit', $last_visit);
+            $this->view->assign( 'last_visit_unix', $last_visit_unix);
     
-            $render->assign('topic', $topic);
-            $render->assign('error_msg', $error_msg);
-            $render->assign('sendto_email', $sendto_email);
-            $render->assign('emailsubject', $emailsubject);
-            $render->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) ."\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
-            $render->assign( 'last_visit', $last_visit);
-            $render->assign( 'last_visit_unix', $last_visit_unix);
-    
-            return $render->fetch('dizkus_user_emailtopic.html');
+            return $this->view->fetch('dizkus_user_emailtopic.html');
         }
     }
     
@@ -899,20 +894,19 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                                                        'last_visit' => $last_visit,
                                                                        'last_visit_unix' => $last_visit_unix));
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-        $render->assign('posts', $posts);
-        $render->assign('m2fposts', $m2fposts);
-        $render->assign('rssposts', $rssposts);
-        $render->assign('text', $text);
-        $render->assign('nohours', $nohours);
-        $render->assign('last_visit', $last_visit);
-        $render->assign('last_visit_unix', $last_visit_unix);
-        $render->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
+        $this->view->add_core_data();
+        $this->view->assign('posts', $posts);
+        $this->view->assign('m2fposts', $m2fposts);
+        $this->view->assign('rssposts', $rssposts);
+        $this->view->assign('text', $text);
+        $this->view->assign('nohours', $nohours);
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
                                                 array('id'   => '0',
                                                       'type' => 'all' )));
     
-        return $render->fetch('dizkus_user_latestposts.html');
+        return $this->view->fetch('dizkus_user_latestposts.html');
     }
     
     /**
@@ -954,11 +948,10 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                        array('topic' => $newtopic_id)));
     
         } else {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('post', $post);
     
-            $render->assign('post', $post);
-    
-            return $render->fetch('dizkus_user_splittopic.html');
+            return $this->view->fetch('dizkus_user_splittopic.html');
         }
     }
     
@@ -990,24 +983,23 @@ class Dizkus_Controller_User extends Zikula_Controller {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
             }
         } else {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
-    
+            $this->view->add_core_data();
             if ($post_id <> 0) {
                 $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                                      array('post_id' => $post_id));
     
-                $render->assign('post', $post);
+                $this->view->assign('post', $post);
     
-                $output = $render->fetch('dizkus_user_printpost.html');
+                $output = $this->view->fetch('dizkus_user_printpost.html');
             } elseif ($topic_id <> 0) {
                 $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
                                      array('topic_id'  => $topic_id,
                                            'complete' => true,
                                            'count' => false ));
     
-                $render->assign('topic', $topic);
+                $this->view->assign('topic', $topic);
     
-                $output = $render->fetch('dizkus_user_printtopic.html');
+                $output = $this->view->fetch('dizkus_user_printtopic.html');
             } else {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
             }
@@ -1083,11 +1075,10 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                        array('topic' => $to_topic,
                                              'start' => $start)) . '#pid' . $post['post_id']);
         } else {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('post', $post);
     
-            $render->assign('post', $post);
-    
-            return $render->fetch('dizkus_user_movepost.html');
+            return $this->view->fetch('dizkus_user_movepost.html');
         }
     }
     
@@ -1118,11 +1109,10 @@ class Dizkus_Controller_User extends Zikula_Controller {
         }
     
         if (!$submit) {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('post', $post);
     
-            $render->assign('post', $post);
-    
-            return $render->fetch('dizkus_user_jointopics.html');
+            return $this->view->fetch('dizkus_user_jointopics.html');
     
         } else {
             if (!SecurityUtil::confirmAuthKey()) {
@@ -1186,18 +1176,17 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
         // Submit isn't set'
         if (empty($submit)) {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-            $render->assign('forum_id', $forum_id);
-            $render->assign('mode',$mode);
-            $render->assign('topic_ids', $topic_ids);
-            $render->assign('last_visit', $last_visit);
-            $render->assign('last_visit_unix', $last_visit_unix);
-            $render->assign('forum',$forum);
+            $this->view->add_core_data();
+            $this->view->assign('forum_id', $forum_id);
+            $this->view->assign('mode',$mode);
+            $this->view->assign('topic_ids', $topic_ids);
+            $this->view->assign('last_visit', $last_visit);
+            $this->view->assign('last_visit_unix', $last_visit_unix);
+            $this->view->assign('forum',$forum);
             // For Movetopic
-            $render->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
+            $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
     
-            return $render->fetch('dizkus_user_moderateforum.html');
+            return $this->view->fetch('dizkus_user_moderateforum.html');
     
         } else {
             // submit is set
@@ -1316,11 +1305,11 @@ class Dizkus_Controller_User extends Zikula_Controller {
         }
     
         if (!$submit) {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+                
+            $this->view->assign('post', $post);
     
-            $render->assign('post', $post);
-    
-            return $render->fetch('dizkus_user_notifymod.html');
+            return $this->view->fetch('dizkus_user_notifymod.html');
     
         } else {
             // submit is set
@@ -1362,11 +1351,10 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
         if (!$submit) {
             $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('subscriptions', $subscriptions);
     
-            $render->assign('subscriptions', $subscriptions);
-    
-            return $render->fetch('dizkus_user_topicsubscriptions.html');
+            return $this->view->fetch('dizkus_user_topicsubscriptions.html');
     
         } else {
             // submit is set

@@ -61,7 +61,7 @@ function smarty_function_dizkusonline($params, &$smarty)
 
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
 
-    $ztable = System::dbGetTables();
+    $ztable = DBUtil::getTables();
 
     $sessioninfocolumn = $ztable['session_info_column'];
     $sessioninfotable  = $ztable['session_info'];

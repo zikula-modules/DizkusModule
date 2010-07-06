@@ -87,20 +87,20 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             $post['post_text'] = $post['post_textdisplay'];
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-        $render->assign('topic', $topic);
-        $render->assign('post', $post);
-        $render->assign('preview', $preview);
+        $this->view->add_core_data();
+        $this->view->assign('topic', $topic);
+        $this->view->assign('post', $post);
+        $this->view->assign('preview', $preview);
     
         //---- begin of MediaAttach integration ----
         if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
-            dzk_jsonizeoutput(array('data'    => $render->fetch('dizkus_user_singlepost.html'),
+            dzk_jsonizeoutput(array('data'    => $this->view->fetch('dizkus_user_singlepost.html'),
                                     'post_id' => $post['post_id'],
                                     'uploadauthid' => SecurityUtil::generateAuthKey('MediaAttach')),
                               true);
     
         } else {
-            dzk_jsonizeoutput(array('data'    => $render->fetch('dizkus_user_singlepost.html'),
+            dzk_jsonizeoutput(array('data'    => $this->view->fetch('dizkus_user_singlepost.html'),
                                     'post_id' => $post['post_id']),
                               true);
         }
@@ -175,15 +175,15 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                                  array('post_id'     => $post_id));
     
             if ($post['poster_data']['edit'] == true) {
-                $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-                $render->assign('post', $post);
+                $this->view->add_core_data();
+                
+                $this->view->assign('post', $post);
                 // simplify our live
-                $render->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
+                $this->view->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
     
                 SessionUtil::delVar('zk_ajax_call');
     
-                return array('data'    => $render->fetch('dizkus_ajax_editpost.html'),
+                return array('data'    => $this->view->fetch('dizkus_ajax_editpost.html'),
                              'post_id' => $post['post_id']);
             } else {
                 dzk_ajaxerror($this->__('Error! You do not have authorisation to perform this action.'));
@@ -527,12 +527,12 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                                        'complete' => false));
     
             if ($topic['access_topicsubjectedit'] == true) {
-                $render = Renderer::getInstance('Dizkus', false, null, true);
-                $render->assign('topic', $topic);
+                $this->view->add_core_data();
+                $this->view->assign('topic', $topic);
     
                 SessionUtil::delVar('zk_ajax_call');
     
-                return array('data'     => $render->fetch('dizkus_ajax_edittopicsubject.html'),
+                return array('data'     => $this->view->fetch('dizkus_ajax_edittopicsubject.html'),
                              'topic_id' => $topic_id);
             } else {
                 dzk_ajaxerror($this->__('Error! You do not have authorisation to perform this action.'));
@@ -664,8 +664,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             dzk_ajaxerror($this->__('Error! The post has no subject line.'), true);
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-    
+        $this->view->add_core_data();
         if ($preview == false) {
             if (!SecurityUtil::confirmAuthKey()) {
                dzk_ajaxerror($this->__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.'));
@@ -684,8 +683,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                                         'count'    => false));
     
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-                $render->assign('topic', $topic);
-                $confirmation = $render->fetch('dizkus_ajax_newtopicconfirmation.html');
+                $this->view->assign('topic', $topic);
+                $confirmation = $this->view->fetch('dizkus_ajax_newtopicconfirmation.html');
             } else {
                 $confirmation = false;
             }
@@ -757,11 +756,11 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             $newtopic['subscribe_topic']  = 0;
         }
     
-        $render->assign('newtopic', $newtopic);
+        $this->view->assign('newtopic', $newtopic);
     
         SessionUtil::delVar('zk_ajax_call');
     
-        return array('data'     => $render->fetch('dizkus_user_newtopicpreview.html'),
+        return array('data'     => $this->view->fetch('dizkus_user_newtopicpreview.html'),
                      'newtopic' => $newtopic);
     }
     
@@ -777,14 +776,13 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             dzk_ajaxerror(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')));
         }
     
-        $render = Renderer::getInstance('Dizkus', false);
-    
+        $this->view->add_core_data();
         if (System::getVar('shorturls')) {
             include_once('lib/render/plugins/outputfilter.shorturls.php');
-            $render->register_outputfilter('smarty_outputfilter_shorturls');
+            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
         }
     
-        $render->display('dizkus_ajax_forumusers.html');
+        $this->view->display('dizkus_ajax_forumusers.html');
         System::shutDown();
     }
     
@@ -801,14 +799,13 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             System::shutDown();
         }
     
-        $render = Renderer::getInstance('Dizkus', false);
-    
+        $this->view->add_core_data();
         if (System::getVar('shorturls')) {
             include_once 'lib/render/plugins/outputfilter.shorturls.php';
-            $render->register_outputfilter('smarty_outputfilter_shorturls');
+            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
         }
     
-        $out = $render->fetch('dizkus_ajax_newposts.html');
+        $out = $this->view->fetch('dizkus_ajax_newposts.html');
         echo $out;
         System::shutDown();
     }

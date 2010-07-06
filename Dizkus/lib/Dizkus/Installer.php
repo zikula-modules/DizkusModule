@@ -212,7 +212,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	public function uninstall()
 	{
 	    $tables = DBUtil::metaTables(true, true, '%dizkus%');
-	    $ztables = System::dbGetTables();
+	    $ztables = DBUtil::getTables();
 	
 	    if (in_array($ztables['dizkus_categories'], $tables)) {
 	        if (!DBUtil::dropTable('dizkus_categories')) {
@@ -447,7 +447,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	    ModUtil::delVar('pnForum');
 	
 	    // update hooks
-	    $ztables    = System::dbGetTables();
+	    $ztables    = DBUtil::getTables();
 	    $hookstable  = $ztables['hooks'];
 	    $hookscolumn = $ztables['hooks_column'];
 	
@@ -504,7 +504,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	    // merge posts and posts_text table
 	    ModUtil::dbInfoLoad('Dizkus');
 	
-	    $ztable = System::dbGetTables();
+	    $ztable = DBUtil::getTables();
 	
 	    $poststable      = $ztable['dizkus_posts'];
 	    $postscolumn     = $ztable['dizkus_posts_column'];

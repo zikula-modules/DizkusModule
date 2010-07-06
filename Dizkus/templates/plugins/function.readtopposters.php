@@ -21,7 +21,7 @@ function smarty_function_readtopposters($params, &$smarty)
 {
     $postermax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
 
-    $ztable = System::dbGetTables();
+    $ztable = DBUtil::getTables();
     $sql = "SELECT user_id,user_posts
           FROM ".$ztable['dizkus_users']." 
           WHERE user_id <> 1

@@ -46,7 +46,7 @@ function Dizkus_needleapi_dizkus($args)
                 }
 
                 ModUtil::dbInfoLoad('Dizkus');
-                $ztable = System::dbGetTables();
+                $ztable = DBUtil::getTables();
 
                 switch ($type) {
                     case 'F':

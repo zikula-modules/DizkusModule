@@ -23,9 +23,9 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             return LogUtil::registerPermissionError();
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-        return $render->fetch('dizkus_admin_main.html');
+        $this->view->add_core_data();
+        //$this->view->setCaching(false);
+        return $this->view->fetch('dizkus_admin_main.html');
     }
     
     /**
@@ -104,16 +104,15 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
                                                       array('ranktype' => $ranktype));
     
-            $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-            $render->assign('ranks', $ranks);
-            $render->assign('ranktype', $ranktype);
-            $render->assign('rankimages', $rankimages);
+            $this->view->add_core_data();
+            $this->view->assign('ranks', $ranks);
+            $this->view->assign('ranktype', $ranktype);
+            $this->view->assign('rankimages', $rankimages);
     
             if ($ranktype == 0) {
-                return $render->fetch('dizkus_admin_ranks.html');
+                return $this->view->fetch('dizkus_admin_ranks.html');
             } else {
-                return $render->fetch('dizkus_admin_honoraryranks.html');
+                return $this->view->fetch('dizkus_admin_honoraryranks.html');
             }
         } else {
             $ranks = FormUtil::getPassedValue('ranks');
@@ -157,7 +156,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
                                                      array('ranktype' => 1));
     
-            $tables = System::dbGetTables();
+            $tables = DBUtil::getTables();
     
             $userscol  = $tables['users_column'];
             $where     = 'LEFT('.$userscol['uname'].',1) LIKE \''.DataUtil::formatForStore($letter).'%\'';
@@ -203,18 +202,17 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
     
             unset($users);
     
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('ranks', $ranks);
+            $this->view->assign('rankimages', $rankimages);
+            $this->view->assign('allusers', $allusers);
+            $this->view->assign('letter', $letter);
+            $this->view->assign('page', $page);
+            $this->view->assign('perpage', $perpage);
+            $this->view->assign('usercount', $usercount);
+            $this->view->assign('allow_star', ($usercount < 1000));
     
-            $render->assign('ranks', $ranks);
-            $render->assign('rankimages', $rankimages);
-            $render->assign('allusers', $allusers);
-            $render->assign('letter', $letter);
-            $render->assign('page', $page);
-            $render->assign('perpage', $perpage);
-            $render->assign('usercount', $usercount);
-            $render->assign('allow_star', ($usercount < 1000));
-    
-            return $render->fetch('dizkus_admin_assignranks.html');
+            return $this->view->fetch('dizkus_admin_assignranks.html');
     
         } else {
             // avoid some vars in the url of the pager
@@ -255,13 +253,12 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             }
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
+        $this->view->add_core_data();
+        $this->view->assign('categorytree', $categorytree);
+        $this->view->assign('catids', $catids);
+        $this->view->assign('forumids', $forumids);
     
-        $render->assign('categorytree', $categorytree);
-        $render->assign('catids', $catids);
-        $render->assign('forumids', $forumids);
-    
-        return $render->fetch('dizkus_admin_reordertree.html');
+        return $this->view->fetch('dizkus_admin_reordertree.html');
     }
     
     /**
@@ -420,18 +417,16 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             $rssfeeds = ModUtil::apiFunc('Feeds', 'user', 'getall');
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
-    
-        $render->assign('hooked_modules', $hooked_modules);
-        $render->assign('rssfeeds', $rssfeeds);
-        $render->assign('externalsourceoptions', $externalsourceoptions);
+        $this->view->assign('hooked_modules', $hooked_modules);
+        $this->view->assign('rssfeeds', $rssfeeds);
+        $this->view->assign('externalsourceoptions', $externalsourceoptions);
     
         Loader::loadClass('CategoryUtil');
         $cats        = CategoryUtil::getSubCategories (1, true, true, true, true, true);
         $catselector = CategoryUtil::getSelector_Categories($cats, 'id', $forum['forum_pntopic'], 'pncategory');
-        $render->assign('categoryselector', $catselector);
+        $this->view->assign('categoryselector', $catselector);
     
-        $render->assign('moderators', $moderators);
+        $this->view->assign('moderators', $moderators);
         $hideusers = ModUtil::getVar('Dizkus', 'hideusers');
         if ($hideusers == 'no') {
             $users = ModUtil::apiFunc('Dizkus', 'admin', 'readusers',
@@ -439,13 +434,13 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
         } else {
             $users = array();
         }
-        $render->assign('users', $users);
-        $render->assign('groups', ModUtil::apiFunc('Dizkus', 'admin', 'readgroups',
+        $this->view->assign('users', $users);
+        $this->view->assign('groups', ModUtil::apiFunc('Dizkus', 'admin', 'readgroups',
                                             array('moderators' => $moderators)));
-        $render->assign('forum', $forum);
-        $render->assign('newforum', $new);
+        $this->view->assign('forum', $forum);
+        $this->view->assign('newforum', $new);
     
-        $html = $render->fetch('dizkus_ajax_editforum.html');
+        $html = $this->view->fetch('dizkus_ajax_editforum.html');
     
         if (!isset($returnhtml)) {
             dzk_jsonizeoutput(array('forum_id' => $forum['forum_id'],
@@ -486,12 +481,10 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             $category['forum_count'] = count($forums);
         }
     
-        $render = Renderer::getInstance('Dizkus', false, null, true);
+        $this->view->assign('category', $category );
+        $this->view->assign('newcategory', $new);
     
-        $render->assign('category', $category );
-        $render->assign('newcategory', $new);
-    
-        dzk_jsonizeoutput(array('data'     => $render->fetch('dizkus_ajax_editcategory.html'),
+        dzk_jsonizeoutput(array('data'     => $this->view->fetch('dizkus_ajax_editcategory.html'),
                                 'cat_id'   => $category['cat_id'],
                                 'new'      => $new),
                           false,
@@ -549,14 +542,13 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             if (!is_bool($cat_id)) {
                 $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
                                          array( 'cat_id' => $cat_id ));
-                $render = Renderer::getInstance('Dizkus', false, null, true);
-                $render->assign('category', $category );
-                $render->assign('newcategory', false);
+                $this->view->assign('category', $category );
+                $this->view->assign('newcategory', false);
                 dzk_jsonizeoutput(array('cat_id'      => $cat_id,
                                         'old_id'      => $original_catid,
                                         'cat_title'   => $cat_title,
                                         'action'      => 'add',
-                                        'edithtml'    => $render->fetch('dizkus_ajax_editcategory.html'),
+                                        'edithtml'    => $this->view->fetch('dizkus_ajax_editcategory.html'),
                                         'cat_linkurl' => ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id))),
                                   true,
                                   false); 
@@ -726,12 +718,10 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
                 $pop3testresult = ModUtil::apiFunc('Dizkus', 'user', 'testpop3connection',
                                                array('forum_id' => $forum_id));
     
-                $render = Renderer::getInstance('Dizkus', false, null, true);
+                $this->view->assign('messages', $pop3testresult);
+                $this->view->assign('forum_id', $forum_id);
     
-                $render->assign('messages', $pop3testresult);
-                $render->assign('forum_id', $forum_id);
-    
-                $pop3testresulthtml = $render->fetch('dizkus_admin_pop3test.html');
+                $pop3testresulthtml = $this->view->fetch('dizkus_admin_pop3test.html');
             }
         } 
     
@@ -772,14 +762,12 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
     
         if (!$submit) {
             // submit is empty
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->assign('pnusername', $pnusername);
+            $this->view->assign('pnuid', $pnuid = UserUtil::getIDFromName($pnusername));
+            $this->view->assign('topicsubscriptions', $topicsubscriptions);
+            $this->view->assign('forumsubscriptions', $forumsubscriptions);
     
-            $render->assign('pnusername', $pnusername);
-            $render->assign('pnuid', $pnuid = UserUtil::getIDFromName($pnusername));
-            $render->assign('topicsubscriptions', $topicsubscriptions);
-            $render->assign('forumsubscriptions', $forumsubscriptions);
-    
-            return $render->fetch('dizkus_admin_managesubscriptions.html');
+            return $this->view->fetch('dizkus_admin_managesubscriptions.html');
     
         } else {  // submit not empty
             $pnuid      = FormUtil::getPassedValue('pnuid');

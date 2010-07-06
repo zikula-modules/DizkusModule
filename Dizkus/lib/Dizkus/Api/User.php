@@ -45,7 +45,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $makedummy = true;
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $dizkus_userdata = DBUtil::selectObjectByID('dizkus_users', $userid, 'user_id');
         
@@ -237,7 +237,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_firstlast_post_in_topic($args)
     {
         if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
-            $ztable = System::dbGetTables();
+            $ztable = DBUtil::getTables();
             $option  = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
             $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $ztable['dizkus_posts_column']['topic_id'].' = '.(int)$args['topic_id']);
     
@@ -263,7 +263,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_last_post_in_forum($args)
     {
         if (!empty($args['forum_id']) && is_numeric($args['forum_id'])) {
-            $ztable = System::dbGetTables();
+            $ztable = DBUtil::getTables();
             $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $ztable['dizkus_posts_column']['forum_id'].' = '.(int)$args['forum_id']);
     
             if (isset($args['id_only']) && $args['id_only'] == true) {
@@ -297,7 +297,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return $tree;
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
         $cattable    = $ztable['dizkus_categories'];
         $forumstable = $ztable['dizkus_forums'];
         $poststable  = $ztable['dizkus_posts'];
@@ -469,7 +469,7 @@ class Dizkus_Api_User extends Zikula_Api {
     {
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         if (!empty($forum_id)) {
             $sql = 'SELECT u.pn_uname, u.pn_uid
@@ -596,7 +596,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
         if (empty($args['topics_per_page'])) {
@@ -802,7 +802,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $timespanforchanges = !empty($dizkusvars['timespanforchanges']) ? $dizkusvars['timespanforchanges'] : 24;
         $timespansecs = $timespanforchanges * 60 * 60;
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $sql = 'SELECT t.topic_title,
                        t.topic_poster,
@@ -1028,7 +1028,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function preparereply($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $reply = array();
     
@@ -1295,7 +1295,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_topic_subscription_status($args)
     {
-        $ztables = System::dbGetTables();
+        $ztables = DBUtil::getTables();
         $tsubcolumn = $ztables['dizkus_topic_subscription_column'];
     
         $where = ' WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
@@ -1317,7 +1317,7 @@ class Dizkus_Api_User extends Zikula_Api {
         static $cache = array();
     
         if (!isset($cache[$args['userid']])) {
-            $ztables = System::dbGetTables();
+            $ztables = DBUtil::getTables();
             $subcolumn = $ztables['dizkus_subscription_column'];
     
             $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
@@ -1341,7 +1341,7 @@ class Dizkus_Api_User extends Zikula_Api {
         static $cache = array();
     
         if (!isset($cache[$args['userid']])){
-            $ztables = System::dbGetTables();
+            $ztables = DBUtil::getTables();
             $subcolumn = $ztables['dizkus_subscription_column'];
     
             $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
@@ -1366,7 +1366,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function preparenewtopic($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $newtopic = array();
         $newtopic['forum_id'] = $args['forum_id'];
@@ -1551,7 +1551,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function readpost($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
         $postscols = DBUtil::_getAllColumnsQualified('dizkus_posts', 'p');
     
         $sql = 'SELECT '. $postscols .',
@@ -1687,7 +1687,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['topic_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $args['post_id']));
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $sql = "SELECT p.poster_id,
                        p.forum_id,
@@ -1833,7 +1833,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_viewip_data($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $viewip['poster_ip'] = DBUtil::selectField('dizkus_posts', 'poster_ip', 'post_id='.DataUtil::formatForStore($args['post_id']));
         $viewip['poster_host'] = gethostbyaddr($viewip['poster_ip']);
@@ -1892,7 +1892,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_forumid_and_categoryid_from_topicid($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // we know about the topic_id, let's find out the forum and catgeory name for permission checks
         $sql = "SELECT f.forum_id,
@@ -1970,7 +1970,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function movetopic($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // get the old forum id and old post date
         $topic = DBUtil::selectObjectById('dizkus_topics', $args['topic_id'], 'topic_id');
@@ -2014,7 +2014,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // Update the users's post count, this might be slow on big topics but it makes other parts of the
         // forum faster so we win out in the long run.
@@ -2066,7 +2066,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function notify_by_email($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         setlocale (LC_TIME, System::getVar('locale'));
         $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
@@ -2248,7 +2248,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_topic_subscriptions($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         if (isset($args['user_id'])) {
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
@@ -2356,7 +2356,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $where = 'WHERE ' . $ztable['dizkus_topic_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
         if (!empty($args['topic_id'])) {
@@ -2413,7 +2413,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         $where = $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
         if (!empty($args['forum_id'])) {
@@ -2513,7 +2513,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_latest_posts($args)
     {
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // init some arrays
         $posts = array();
@@ -2711,7 +2711,7 @@ class Dizkus_Api_User extends Zikula_Api {
     {
         $post = $args['post'];
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // before we do anything we will read the topic_last_post_id because we will need
         // this one later (it will become the topic_last_post_id of the new thread)
@@ -2791,7 +2791,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 return LogUtil::registerArgsError();
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // integrate contactlist's ignorelist here
         $whereignorelist = '';
@@ -2857,7 +2857,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
         $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $ztable['dizkus_forum_favorites_column']['user_id'] - '=' . (int)DataUtil::formatForStore($args['user_id']));
         $favorites = array_map('_get_favorites', $objarray);
     
@@ -3348,7 +3348,7 @@ class Dizkus_Api_User extends Zikula_Api {
         // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
         // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // 1 . update topic_id in posts table
         $sql = 'UPDATE '.$ztable['dizkus_posts'].'
@@ -3462,7 +3462,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return LogUtil::registerPermissionError();
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
         
         // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
         // and from_topic['forum_id'] to to_topic['forum_id']
@@ -3746,7 +3746,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        $ztable = System::dbGetTables();
+        $ztable = DBUtil::getTables();
     
         // read the topic ids
         $sql = 'SELECT f.' . $ztable['dizkus_forums_column']['forum_id'] . ',

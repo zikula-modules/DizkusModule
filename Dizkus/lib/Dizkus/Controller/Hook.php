@@ -33,11 +33,10 @@ class Dizkus_Controller_Hook extends Zikula_Controller {
                                   array('topic_id'   => $topic_id,
                                         'count'      => false));
     
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $this->view->add_core_data();
+            $this->view->assign('topic', $topic);
     
-            $render->assign('topic', $topic);
-    
-            return $render->fetch('dizkus_hook_display.html');
+            return $this->view->fetch('dizkus_hook_display.html');
         }
     
         return false;
