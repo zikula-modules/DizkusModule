@@ -33,7 +33,7 @@
                                 <label for="message">{gt text="Message body"}</label><br />
                                 <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60">{$newtopic.message}</textarea>
                                 {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
-                                {if $zcoreDizkus.striptags == 'yes'}
+                                {if $zcore.Dizkus.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
                             </div>
@@ -41,7 +41,7 @@
                                 <div id="newtopicoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong>{gt text="Options"}</strong></li>
-                                        {if $$zcoreogged_in}
+                                        {if $zcore.logged_in}
                                         <li>
                                             <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
                                             <label for="attach_signature">{gt text="Attach my signature"}</label>

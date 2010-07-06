@@ -1,6 +1,6 @@
 {* $Id$ *}
 {pnpagesetvar name=title value=$topic.topic_title}
-{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images$zcorelanguage`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
+{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$zcore.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
 
 <div id="dizkus">
 
@@ -30,7 +30,7 @@
                         <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.user_lastvisit|pndate_format:'datebrief'}</li>
                         {/if}
                         <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.user_posts}</li>
-                        {if $$zcoreogged_in eq true}
+                        {if $zcore.logged_in eq true}
                         {/if}
                     </ul>
                 </div>

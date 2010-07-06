@@ -17,23 +17,23 @@
     </p>
     <div class="z-formrow">
         {pnformlabel for="forum_disabled_info" __text="Message displayed if forums are disabled"}
-        {pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$zcoreDizkus.forum_disabled_info}
+        {pnformtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$zcore.Dizkus.forum_disabled_info}
     </div>
     <div class="z-formrow">
         {pnformlabel for="email_from" __text="Sender address for e-mail messages from forums"}
-        {pnformtextinput id="email_from" text=$$zcoreizkus.email_from size="30" maxLength="100"}
+        {pnformtextinput id="email_from" text=$zcore.Dizkus.email_from size="30" maxLength="100"}
     </div>
     <div class="z-formrow">
         {pnformlabel for="hot_threshold" __text="'Hot topic' threshold"}
-        {pnformintinput id="hot_threshold" text=$z$zcorezkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999}
+        {pnformintinput id="hot_threshold" text=$zcore.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999}
     </div>
     <div class="z-formrow">
         {pnformlabel for="posts_per_page" __text="Posts per page in topic index (default:20)"}
-        {pnformintinput id="posts_per_page" text=$zc$zcorekus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999}
+        {pnformintinput id="posts_per_page" text=$zcore.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999}
     </div>
     <div class="z-formrow">
         {pnformlabel for="topics_per_page" __text="Topics per page in forum index (default:15)"}
-        {pnformintinput id="topics_per_page" text=$zco$zcoreus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999}
+        {pnformintinput id="topics_per_page" text=$zcore.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999}
     </div>
     <div class="z-formrow">
         {pnformlabel for="hideusers" __text="Hide users in forum admin interface"}
@@ -41,7 +41,7 @@
     </div>
     <div class="z-formrow">
         {pnformlabel for="url_ranks_images" __text="Path to rank images"}
-        {pnformtextinput id="url_ranks_images" text=$zcor$zcores.url_ranks_images size="30" maxLength="100"}
+        {pnformtextinput id="url_ranks_images" text=$zcore.Dizkus.url_ranks_images size="30" maxLength="100"}
     </div>
 </fieldset>
 
@@ -67,12 +67,12 @@
     </div>
     <div class="z-formrow">
         {pnformlabel for="minsearchlength" __text="Minimum number of characters in search query string (1 minimum)"}
-        {pnformintinput id="minsearchlength" text=$zcore$zcore.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
+        {pnformintinput id="minsearchlength" text=$zcore.Dizkus.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
     </div>
 
     <div class="z-formrow">
         {pnformlabel for="maxsearchlength" __text="Maximum number of characters in search query string (50 maximum)"}
-        {pnformintinput id="maxsearchlength" text=$zcore.$zcoremaxsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
+        {pnformintinput id="maxsearchlength" text=$zcore.Dizkus.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
     </div>
 </fieldset>
 
@@ -80,15 +80,15 @@
     <legend>{gt text="User-related settings"}</legend>
     <div class="z-formrow">
         {pnformlabel for="post_sort_order" __text="Sort order for posts"}
-        {pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$zcore.D$zcoreost_sort_order}
+        {pnformdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$zcore.Dizkus.post_sort_order}
     </div>
     <div class="z-formrow">
         {pnformlabel for="signature_start" __text="Beginning of signature"}
-        {pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$zcore.Di$zcoregnature_start|default:''}
+        {pnformtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$zcore.Dizkis.signature_start|default:''}
     </div>
     <div class="z-formrow">
         {pnformlabel for="signature_end" __text="End of signature"}
-        {pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$zcore.Diz$zcorenature_end|default:''}
+        {pnformtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$zcore.Dizkus.signature_end|default:''}
     </div>
     <div class="z-formrow">
         {pnformlabel for="autosubscribe" __text="Automatically subscribe users to new topics and posts"}
@@ -108,7 +108,7 @@
     </div>
     <div class="z-formrow">
         {pnformlabel for="gravatarimage" __text="Default gravatar image"}
-        {pnformtextinput id="gravatarimage" text=$zcore.Dizk$zcoreatarimage size="150" maxLength="250"}
+        {pnformtextinput id="gravatarimage" text=$zcore.Dizkus.gravatarimage size="150" maxLength="250"}
         <em class="z-sub z-formnote">{gt text="Example: gravatar.gif"}</em>
     </div>
     <div class="z-formrow">
@@ -118,7 +118,7 @@
     <div class="z-formrow">
         {if $contactlist_available eq true}
         {pnformlabel for="ignorelist_handling" __text="Highest-allowed 'ignore list' ostracism level"}
-        {pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$zcore.Dizku$zcoreelist_handling}
+        {pnformdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$zcore.Dizkus.ignorelist_handling}
         <p class="z-formnote z-informationmsg">{gt text="Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."}</p>
         {else}
         <p class="z-formnote z-informationmsg">{gt text="Notice: 'Ignore list' support is not currently available. The <a href=\"http://code.zikula.org/contactlist/\">ContactList</a> module must be installed for this feature to be operative."}</p>
@@ -141,7 +141,7 @@
     <div class="z-formrow">
         {pnformlabel for="timespanforchanges" __text="Number of hours during which edits to posts are allowed (Maximum:72)"}
         <span>
-            {pnformintinput id="timespanforchanges" text=$zcore.Dizkus$zcoreanforchanges size="3" maxLength="3" minValue=1 maxValue=72}
+            {pnformintinput id="timespanforchanges" text=$zcore.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72}
             {gt text="hours"}
         </span>
     </div>
@@ -168,7 +168,7 @@
     </div>
     <div class="z-formrow">
         {pnformlabel for="deletehookaction" __text="Action to be performed when 'delete' hook is called"}
-        {pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$zcore.Dizkus.$zcoreookaction}
+        {pnformdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$zcore.Dizkus.deletehookaction}
     </div>
 </fieldset>
 
