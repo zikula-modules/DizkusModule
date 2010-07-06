@@ -24,7 +24,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
-        //$this->view->setCaching(false);
+        $this->view->setCaching(false);
         return $this->view->fetch('dizkus_admin_main.html');
     }
     
@@ -105,6 +105,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
                                                       array('ranktype' => $ranktype));
     
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('ranks', $ranks);
             $this->view->assign('ranktype', $ranktype);
             $this->view->assign('rankimages', $rankimages);
@@ -203,6 +204,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
             unset($users);
     
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('ranks', $ranks);
             $this->view->assign('rankimages', $rankimages);
             $this->view->assign('allusers', $allusers);
@@ -254,6 +256,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('categorytree', $categorytree);
         $this->view->assign('catids', $catids);
         $this->view->assign('forumids', $forumids);

@@ -88,6 +88,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('topic', $topic);
         $this->view->assign('post', $post);
         $this->view->assign('preview', $preview);
@@ -176,6 +177,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     
             if ($post['poster_data']['edit'] == true) {
                 $this->view->add_core_data();
+                $this->view->setCaching(false);
                 
                 $this->view->assign('post', $post);
                 // simplify our live
@@ -528,6 +530,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     
             if ($topic['access_topicsubjectedit'] == true) {
                 $this->view->add_core_data();
+                $this->view->setCaching(false);
                 $this->view->assign('topic', $topic);
     
                 SessionUtil::delVar('zk_ajax_call');
@@ -665,6 +668,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         if ($preview == false) {
             if (!SecurityUtil::confirmAuthKey()) {
                dzk_ajaxerror($this->__('Error! Invalid authorisation key (\'authkey\'). This is probably either because you pressed the \'Back\' button to return to a page which does not allow that, or else because the page\'s authorisation key expired due to prolonged inactivity. Please refresh the page and try again.'));
@@ -777,6 +781,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         if (System::getVar('shorturls')) {
             include_once('lib/render/plugins/outputfilter.shorturls.php');
             $this->view->register_outputfilter('smarty_outputfilter_shorturls');
@@ -800,6 +805,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         if (System::getVar('shorturls')) {
             include_once 'lib/render/plugins/outputfilter.shorturls.php';
             $this->view->register_outputfilter('smarty_outputfilter_shorturls');

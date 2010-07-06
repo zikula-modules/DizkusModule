@@ -34,6 +34,7 @@ class Dizkus_Controller_Hook extends Zikula_Controller {
                                         'count'      => false));
     
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('topic', $topic);
     
             return $this->view->fetch('dizkus_hook_display.html');
