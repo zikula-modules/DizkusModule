@@ -72,6 +72,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('favorites', $favorites);
         $this->view->assign('tree', $tree);
         $this->view->assign('view_category', $viewcat);
@@ -112,6 +113,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                     'last_visit_unix' => $last_visit_unix));
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('forum', $forum);
         $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
         $this->view->assign('last_visit', $last_visit);
@@ -166,6 +168,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                     'count'      => true));
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('topic', $topic);
         $this->view->assign('post_count', count($topic['posts']));
         $this->view->assign('last_visit', $last_visit);
@@ -252,6 +255,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
             }
 
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('reply', $reply);
             $this->view->assign('preview', $preview);
             $this->view->assign('last_visit', $last_visit);
@@ -330,6 +334,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
                 $this->view->add_core_data();
+                $this->view->setCaching(false);
                 
                 $this->view->assign('topic', ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
     
@@ -343,6 +348,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
         } else {
             // new topic
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('preview', $preview);
             $this->view->assign('newtopic', $newtopic);
             $this->view->assign('last_visit', $last_visit);
@@ -442,6 +448,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
             }
     
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('preview', $preview);
             $this->view->assign('post', $post);
             $this->view->assign('last_visit', $last_visit);
@@ -485,6 +492,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
         }
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('mode', $mode);
         $this->view->assign('topic_id', $topic_id);
     
@@ -690,6 +698,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
                 list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
     
                 $this->view->add_core_data();
+                $this->view->setCaching(false);
                 $this->view->assign('last_visit', $last_visit);
                 $this->view->assign('favorites_enabled', ModUtil::getVar('Dizkus', 'favorites_enabled'));
                 $this->view->assign('last_visit_unix', $last_visit_unix);
@@ -826,6 +835,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
             $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
     
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('topic', $topic);
             $this->view->assign('error_msg', $error_msg);
             $this->view->assign('sendto_email', $sendto_email);
@@ -895,6 +905,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                                                        'last_visit_unix' => $last_visit_unix));
     
         $this->view->add_core_data();
+        $this->view->setCaching(false);
         $this->view->assign('posts', $posts);
         $this->view->assign('m2fposts', $m2fposts);
         $this->view->assign('rssposts', $rssposts);
@@ -949,6 +960,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
         } else {
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('post', $post);
     
             return $this->view->fetch('dizkus_user_splittopic.html');
@@ -984,6 +996,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
             }
         } else {
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             if ($post_id <> 0) {
                 $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                                      array('post_id' => $post_id));
@@ -1076,6 +1089,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
                                              'start' => $start)) . '#pid' . $post['post_id']);
         } else {
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('post', $post);
     
             return $this->view->fetch('dizkus_user_movepost.html');
@@ -1110,6 +1124,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
         if (!$submit) {
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('post', $post);
     
             return $this->view->fetch('dizkus_user_jointopics.html');
@@ -1177,6 +1192,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
         // Submit isn't set'
         if (empty($submit)) {
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('forum_id', $forum_id);
             $this->view->assign('mode',$mode);
             $this->view->assign('topic_ids', $topic_ids);
@@ -1306,7 +1322,8 @@ class Dizkus_Controller_User extends Zikula_Controller {
     
         if (!$submit) {
             $this->view->add_core_data();
-                
+            $this->view->setCaching(false);
+            
             $this->view->assign('post', $post);
     
             return $this->view->fetch('dizkus_user_notifymod.html');
@@ -1352,6 +1369,7 @@ class Dizkus_Controller_User extends Zikula_Controller {
         if (!$submit) {
             $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
             $this->view->add_core_data();
+            $this->view->setCaching(false);
             $this->view->assign('subscriptions', $subscriptions);
     
             return $this->view->fetch('dizkus_user_topicsubscriptions.html');
