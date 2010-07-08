@@ -75,7 +75,7 @@ div#editpostoptions ul li {
     color: inherit;
 }
 #dizkus a.dzk_top {
-    background-image: url("../pnimages/icon_up.gif");
+    background-image: url("../images/icon_up.gif");
 }
 
 /* links */
@@ -151,7 +151,7 @@ div#editpostoptions ul li {
 
 #dizkus .dzk_navbar,
 #dizkus .roundedbar {
-    background: #f2f3f3 url('../pnimages/innerbox_bg.gif') repeat-x scroll 0 0;
+    background: #f2f3f3 url('../images/innerbox_bg.gif') repeat-x scroll 0 0;
     padding: 5px;
 }
 #dizkus .roundedbar {
@@ -162,7 +162,7 @@ div#editpostoptions ul li {
     margin-bottom: 4px;
     padding: 5px;
     clear: both;
-    background: #616161 url('../pnimages/forabg.gif') repeat-x scroll 0 0;
+    background: #616161 url('../images/forabg.gif') repeat-x scroll 0 0;
 }
 
 /* Horizontal List */
@@ -180,21 +180,21 @@ div#editpostoptions ul li {
     line-height: 2.2em;
 }
 #dizkus ul.linklist li .dzk_img {
-    background: url('../pnimages/arrow.png') no-repeat 1px 50%;
+    background: url('../images/arrow.png') no-repeat 1px 50%;
     margin-left: 10px;
     padding-left: 15px;
 }
 #dizkus ul.linklist li .homelink{
-    background: url("../pnimages/icon_home.gif") no-repeat 1px 1px;
+    background: url("../images/icon_home.gif") no-repeat 1px 1px;
     padding-left: 20px;
     margin-right:0;
 }
 #dizkus ul.linklist li .previoustopiclink{
-    background: url("../pnimages/arrow_left.gif") no-repeat 1px 50%;
+    background: url("../images/arrow_left.gif") no-repeat 1px 50%;
     padding-left: 10px;
 }
 #dizkus ul.linklist li .nexttopiclink{
-    background: url("../pnimages/arrow_right.gif") no-repeat 1px 50%;
+    background: url("../images/arrow_right.gif") no-repeat 1px 50%;
     padding-left: 10px;
 }
 #dizkus ul.linklist li.rightside,
@@ -227,7 +227,7 @@ div#editpostoptions ul li {
 }
 
 #dizkus a.latesttopicimage {
-    background: url(../pnimages/icon_topic_latest.gif) no-repeat 0 50%;
+    background: url(../images/icon_topic_latest.gif) no-repeat 0 50%;
     padding: 2px 0 2px 15px;
 }
 
@@ -368,12 +368,12 @@ div#editpostoptions ul li {
     text-indent:0;
 }
 #dizkus dl.icon dt.new-posts {
-    background: url('../pnimages/red_folder.gif') no-repeat 5px 50%;
+    background: url('../images/red_folder.gif') no-repeat 5px 50%;
     font-weight: normal;
     width: 43%;
 }
 #dizkus dl.icon dt.no-new-posts {
-    background:transparent url(../pnimages/folder.gif) no-repeat scroll 5px 50%;
+    background:transparent url(../images/folder.gif) no-repeat scroll 5px 50%;
     font-weight:normal;
     min-height:26px;
     width:43%;
@@ -526,7 +526,7 @@ div#editpostoptions ul li {
 }
 #dizkus #dzk_quickreply,
 #dizkus #dzk_newtopic {
-    background: #f2f3f3 url('../pnimages/innerbox_bg.gif') repeat-x scroll 0 0;
+    background: #f2f3f3 url('../images/innerbox_bg.gif') repeat-x scroll 0 0;
 }
 #dizkus #dzk_quickreply .post_header,
 #dizkus #dzk_newtopic .post_header,
@@ -578,36 +578,36 @@ div#editpostoptions ul li {
 #dizkus input.ok,
 #dizkus_admin button.ok,
 #dizkus_admin input.ok {
-    background: url(../pnimages/icon_ok.gif) no-repeat 2px 50%;
+    background: url(../images/icon_ok.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.cancel,
 #dizkus input.cancel,
 #dizkus_admin button.cancel,
 #dizkus_admin input.cancel {
-    background: url(../pnimages/icon_cancel.gif) no-repeat 2px 50%;
+    background: url(../images/icon_cancel.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.preview,
 #dizkus input.preview,
 #dizkus_admin button.preview,
 #dizkus_admin input.preview {
-    background: url(../pnimages/icon_preview.gif) no-repeat 2px 50%;
+    background: url(../images/icon_preview.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.delete,
 #dizkus_admin button.delete {
-    background: url(../pnimages/icon_delete.gif) no-repeat 2px 50%;
+    background: url(../images/icon_delete.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.add,
 #dizkus_admin button.add {
-    background: url(../pnimages/icon_add.gif) no-repeat 2px 50%;
+    background: url(../images/icon_add.gif) no-repeat 2px 50%;
 }
 
 #dizkus button.search,
 #dizkus_admin button.search {
-    background: url(../pnimages/icon_search.gif) no-repeat 2px 50%;
+    background: url(../images/icon_search.gif) no-repeat 2px 50%;
 }
 
 /*******************************************************************************/

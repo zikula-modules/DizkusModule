@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Send as e-mail" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 {if $error_msg neq ''}
@@ -23,7 +23,7 @@
             </div>
             <div class="z-formrow">
                 <label for="message">{gt text="Message body"}</label>
-                <textarea id="message" class="dzk_texpand" name="message" rows="10" cols="80">{$message|pnvarprepfordisplay}</textarea>
+                <textarea id="message" class="dzk_texpand" name="message" rows="10" cols="80">{$message|varprepfordisplay}</textarea>
             </div>
         </fieldset>
         <div class="z-formbuttons">

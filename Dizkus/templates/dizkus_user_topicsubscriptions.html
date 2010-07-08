@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Manage topic subscriptions" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 <h2>{$templatetitle}</h2>
@@ -29,13 +29,13 @@
                     <li class="row">
                         <dl class="icon">
                             <dt class='ctheme-topic-title'>
-                                <a href="{$subscription.last_post_url_anchor}" title="{$subscription.forum_name|pnvarprepfordisplay} :: {$subscription.topic_title|pnvarprepfordisplay}">{$subscription.topic_title|pnvarprepfordisplay}</a>
+                                <a href="{$subscription.last_post_url_anchor}" title="{$subscription.forum_name|varprepfordisplay} :: {$subscription.topic_title|varprepfordisplay}">{$subscription.topic_title|varprepfordisplay}</a>
                                 <span>{gt text="Forum"}: {$subscription.forum_name|truncate:70}</span>
                             </dt>
                             <dd class="favorites">
                                 <span>
                                     <dfn>{gt text="Posted"}</dfn> {gt text="by"} {$subscription.poster_name|userprofilelink}<br />
-                                    {$subscription.topic_time|pndate_format:'datetimebrief'}
+                                    {$subscription.topic_time|dateformat:'datetimebrief'}
                                 </span>
                             </dd>
                             <dd class="lastpost">

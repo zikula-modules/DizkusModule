@@ -10,12 +10,12 @@
  */
 
 /**
- * pnRender plugin
+ * Renderer plugin
  * 
- * This file is a plugin for pnRender, the Zikula implementation of Smarty
+ * This file is a plugin for Renderer, the Zikula implementation of Smarty
  *
  * @package      Xanthia_Templating_Environment
- * @subpackage   pnRender
+ * @subpackage   Renderer
  * @version      $Id$
  * @author       The Zikula development team
  * @link         http://www.zikula.org  The Zikula Home Page
@@ -25,13 +25,13 @@
 
  
 /**
- * Smarty modifier to apply the pn_bbsmile transform hooks
+ * Smarty modifier to apply the bbsmile transform hooks
  * 
  * Available parameters:
 
  * Example
  * 
- *   {$MyVar|dzkpnbbsmile}
+ *   {$MyVar|dzkbbsmile}
  * 
  * 
  * @author       Frank Schummertz

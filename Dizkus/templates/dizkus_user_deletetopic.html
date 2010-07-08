@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Delete this topic" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 <h2>{$templatetitle}</h2>
@@ -13,8 +13,8 @@
         <fieldset id="dzk_deletetopic">
             <legend>{gt text="Confirmation prompt"}</legend>
             <div class="z-formbuttons">
-                {pnbutton src=button_ok.gif set=icons/small type="submit" name="submit" value="delete" __alt="Delete this topic" __title="Delete this topic"}
-                <a href="{modurl modname=Dizkus type=user func=view}">{pnimg modname=core src=button_cancel.gif set=icons/small __alt="Cancel" __title="Cancel"}</a>
+                {button src=button_ok.gif set=icons/small type="submit" name="submit" value="delete" __alt="Delete this topic" __title="Delete this topic"}
+                <a href="{modurl modname=Dizkus type=user func=view}">{img modname=core src=button_cancel.gif set=icons/small __alt="Cancel" __title="Cancel"}</a>
             </div>
         </fieldset>
     </div>

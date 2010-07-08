@@ -1,10 +1,10 @@
 {* $Id$ *}
-{pnpageaddvar name='javascript' value='javascript/ajax/prototype.js'}
-{pnpageaddvar name='javascript' value='javascript/ajax/pnajax.js'}
-{pnpageaddvar name='javascript' value='javascript/ajax/effects.js'}
-{pnpageaddvar name='javascript' value='javascript/helpers/texpand.js'}
-{pnpageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
-{pnpageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
+{pageaddvar name='javascript' value='javascript/ajax/prototype.js'}
+{pageaddvar name='javascript' value='javascript/ajax/pnajax.js'}
+{pageaddvar name='javascript' value='javascript/ajax/effects.js'}
+{pageaddvar name='javascript' value='javascript/helpers/texpand.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
 
 {browserhack condition="if gt IE 6"}
 <script type="text/javascript" src="{$baseurl}modules/Dizkus/javascript/niftycube.js"></script>
@@ -28,7 +28,7 @@
 {gt text='New topic in forum' assign='maintitle'}
 {/if}
 {if $maintitle neq ''}
-{pnpagesetvar name='title' value=$maintitle}
+{pagesetvar name='title' value=$maintitle}
 {/if}
 
 {insert name='getstatusmsg'}
@@ -47,29 +47,29 @@
                 </li>
                 {if $func eq 'main' AND $view_category neq -1}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}{$view_category_data.cat_title|pnvarprepfordisplay}
+                    {gt text="&nbsp;::&nbsp;"}{$view_category_data.cat_title|varprepfordisplay}
                 </li>
                 {elseif ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$forum.cat_title|pnvarprepfordisplay}" href="{modurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id}">{$forum.cat_title|pnvarprepfordisplay}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$forum.cat_title|varprepfordisplay}" href="{modurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id}">{$forum.cat_title|varprepfordisplay}</a>
                 </li>
                 {elseif $func eq 'viewtopic' AND isset($topic)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$topic.cat_title|pnvarprepfordisplay}" href="{modurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id}">{$topic.cat_title|pnvarprepfordisplay}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$topic.cat_title|varprepfordisplay}" href="{modurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id}">{$topic.cat_title|varprepfordisplay}</a>
                 </li>
                 {elseif $func eq 'newtopic'}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$newtopic.cat_title|pnvarprepfordisplay}" href="{modurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id}">{$newtopic.cat_title|pnvarprepfordisplay}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$newtopic.cat_title|varprepfordisplay}" href="{modurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id}">{$newtopic.cat_title|varprepfordisplay}</a>
                 </li>
                 {/if}
                 {if ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}{$forum.forum_name|pnvarprepfordisplay}
+                    {gt text="&nbsp;::&nbsp;"}{$forum.forum_name|varprepfordisplay}
                 </li>
                 {/if}
                 {if $func eq 'viewtopic' AND isset($topic)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{$topic.forum_name|pnvarprepfordisplay}" href="{modurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id}">{$topic.forum_name|pnvarprepfordisplay}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a title="{$topic.forum_name|varprepfordisplay}" href="{modurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id}">{$topic.forum_name|varprepfordisplay}</a>
                 </li>
                 {/if}
                 {if $favorites|default:false}
@@ -79,7 +79,7 @@
             {* end of breadcrumbs *}
 
             <ul class="linklist z-clearfix" style="float:right;">
-                {if $zcore.logged_in eq 1 AND $func eq 'main' AND $z$zcorezkus.favorites_enabled eq 'yes'}
+                {if $zcore.logged_in eq 1 AND $func eq 'main' AND $zcore.Dizkus.favorites_enabled eq 'yes'}
                 {if $favorites}
                 <li><a class="dzk_img showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
                 {else}
@@ -104,16 +104,16 @@
     {if $func eq 'main' AND $view_category eq -1}
     <h2>{gt text="Forums index page"}</h2>
     {elseif $func eq 'main' AND $view_category neq -1}
-    <h2>{$view_category_data.cat_title|pnvarprepfordisplay}</h2>
+    <h2>{$view_category_data.cat_title|varprepfordisplay}</h2>
     {elseif $func eq 'viewforum' AND isset($forum)}
-    <h2>{$forum.forum_name|pnvarprepfordisplay}</h2>
+    <h2>{$forum.forum_name|varprepfordisplay}</h2>
     {elseif $func eq 'viewtopic' AND isset($topic)}
     <h2>
         <span class="editabletopicheader" id="topicsubject_{$topic.topic_id}" {if $topic.access_topicsubjectedit eq 1}title="{gt text="Click to edit"}" onclick="javascript:topicsubjectedit({$topic.topic_id})"{/if}>
-            <span id="topicsubject_{$topic.topic_id}_content">{$topic.topic_title|pnvarprepfordisplay}</span>
+            <span id="topicsubject_{$topic.topic_id}_content">{$topic.topic_title|varprepfordisplay}</span>
         </span>
-        <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{pnimg modname='Dizkus' src="icon_bottom.gif" __alt="Bottom" }</a>
+        <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom" }</a>
     </h2>
     {elseif $maintitle neq ''}
-    <h2>{$maintitle|pnvarprepfordisplay}</h2>
+    <h2>{$maintitle|varprepfordisplay}</h2>
     {/if}

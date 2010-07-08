@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Edit post" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 {modcallhooks hookobject='item' hookaction='display' hookid=$post.topic_id implode=false}
@@ -23,14 +23,14 @@
                     <input type="hidden" name="topic"  value="{$post.topic_id}" />
                     <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="Edit post"}: {$post.topic_subject|pnvarprepfordisplay}</legend>
+                        <legend class="post_header">{gt text="Edit post"}: {$post.topic_subject|varprepfordisplay}</legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
                             {if $post.moderate eq true OR $post.edit_subject eq true}
                             <div>
                                 <label for="subject">{gt text="Subject line"}</label><br />
-                                <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$post.topic_subject|pnvarprephtmldisplay}" />
+                                <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$post.topic_subject|varprephtmldisplay}" />
                             </div>
                             {/if}
                             <div>

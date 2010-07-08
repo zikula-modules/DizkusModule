@@ -1,7 +1,7 @@
 {*  $Id$  *}
 {gt text="Edit user ranks" assign=templatetitle}
 {include file='dizkus_admin_header.html'}
-{pnpageaddvar name="javascript" value="modules/Dizkus/javascript/dizkus_admin_ranks.js}
+{pageaddvar name="javascript" value="modules/Dizkus/javascript/dizkus_admin_ranks.js}
 
 <p class="z-informationmsg">{gt text="In this page, you can create, delete and edit user ranks for that users acquire automatically after a certain number of posts in the forums. To create a new rank, simply type entries in the fields of the 'Create new user rank' section and click on the 'Create' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."}</p>
 
@@ -62,7 +62,7 @@
         <tbody>
             {foreach key='num' item='rank' from=$ranks}
             <tr class="{cycle values=z-odd,z-even}">
-                <td><input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|pnvarprepfordisplay}" maxlength="50" size="20" /></td>
+                <td><input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|varprepfordisplay}" maxlength="50" size="20" /></td>
                 <td><input type="text" name="ranks[{$rank.rank_id}][rank_min]" value="{$rank.rank_min}" maxlength="5" size="4" /></td>
                 <td><input type="text" name="ranks[{$rank.rank_id}][rank_max]" value="{$rank.rank_max}" maxlength="5" size="4" /></td>
                 <td>

@@ -1,5 +1,5 @@
 {*  $Id$  *}
-{pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css"}
+{pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
 {readtopforums maxforums=$maxforums}
 {if $topforumscount > 0}
 <br />
@@ -27,7 +27,7 @@
         <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.forum_name} :: {$lastpost.topic_title}">{$lastpost.topic_title|dzkbbsmile|truncate:21}</a><br />
         {gt text="%s reply" plural="%s replies" tag1=$lastpost.topic_replies count=$lastpost.topic_replies domain="module_dizkus"}
         <br />
-        {$lastpost.poster_name|userprofilelink}<br />{$lastpost.posted_unixtime|pndate_format:'datetimebrief':'':true}
+        {$lastpost.poster_name|userprofilelink}<br />{$lastpost.posted_unixtime|dateformat:'datetimebrief':'':true}
     </li>
     {/foreach}
 </ul>

@@ -18,11 +18,11 @@
 
                 <ul>
                     {if isset($reply.poster_data.rank)}
-                    <li><strong>{gt text="Rank"}: </strong>{$reply.poster_data.rank|pnvarprepfordisplay}</li>
+                    <li><strong>{gt text="Rank"}: </strong>{$reply.poster_data.rank|varprepfordisplay}</li>
                     {/if}
-                    <li><strong>{gt text="Registered"}: </strong>{$reply.poster_data.pn_user_regdate|pndate_format:'datebrief'}</li>
+                    <li><strong>{gt text="Registered"}: </strong>{$reply.poster_data.pn_user_regdate|dateformat:'datebrief'}</li>
                     {if !$reply.poster_data.online}
-                    <li><strong>{gt text="Last visit"}: </strong>{$reply.poster_data.user_lastvisit|pndate_format:'datebrief'}</li>
+                    <li><strong>{gt text="Last visit"}: </strong>{$reply.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if}
                     <li><strong>{gt text="Posts"}: </strong>{$reply.poster_data.user_posts}</li>
                 </ul>
@@ -31,8 +31,8 @@
             <div class="postbody dzk_colpost_right">
 
                 <div class="postinfo">
-                    {if isset($topic)}<a class="dzk_img linktopostlink" style="margin-right: 5px;" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start}#pid{$reply.post_id}" title="{gt text="Link to this post"}">{pnimg modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
-                    <strong>{gt text="Posted"}:</strong>&nbsp;{$smarty.now|pndate_format:'datetimebrief'}
+                    {if isset($topic)}<a class="dzk_img linktopostlink" style="margin-right: 5px;" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start}#pid{$reply.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
+                    <strong>{gt text="Posted"}:</strong>&nbsp;{$smarty.now|dateformat:'datetimebrief'}
                 </div>
 
                 <div class="content" id="postingtext_{$reply.post_id}">
@@ -47,23 +47,23 @@
                     <ul id="postingoptions_{$reply.post_id}" class="javascriptpostingoptions hidden linklist z-clearfix" style="float:right;">
                         {if $reply.poster_data.moderate eq true}
                         {if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)}
-                        <li><a class="movepostlink" title="{gt text="Move post"}" href="{modurl modname='Dizkus' type=user func=movepost post=$reply.post_id}">{pnimg modname='Dizkus' src="icon_post_move.gif" __alt="Move post" }</a></li>
-                        <li><a class="splittopiclink" title="{gt text="Split topic"}" href="{modurl modname='Dizkus' type=user func=splittopic post=$reply.post_id}">{pnimg modname='Dizkus' src="icon_post_split.gif" __alt="Split topic" }</a></li>
+                        <li><a class="movepostlink" title="{gt text="Move post"}" href="{modurl modname='Dizkus' type=user func=movepost post=$reply.post_id}">{img modname='Dizkus' src="icon_post_move.gif" __alt="Move post" }</a></li>
+                        <li><a class="splittopiclink" title="{gt text="Split topic"}" href="{modurl modname='Dizkus' type=user func=splittopic post=$reply.post_id}">{img modname='Dizkus' src="icon_post_split.gif" __alt="Split topic" }</a></li>
                         {/if}
                         {/if}
 
                         {if isset($topic) AND $topic.topic_status neq 1}
                         {if $reply.poster_data.reply eq true}
-                        <li><a class="quotepostlink" id="quotebutton_{$reply.post_id}" onclick="javascript:createQuote({$reply.post_id});" title="{gt text="Quote"}" href="javascript:void(0);">{pnimg modname='Dizkus' src="icon_post_quote.gif" __alt="Quote" }</a></li>
+                        <li><a class="quotepostlink" id="quotebutton_{$reply.post_id}" onclick="javascript:createQuote({$reply.post_id});" title="{gt text="Quote"}" href="javascript:void(0);">{img modname='Dizkus' src="icon_post_quote.gif" __alt="Quote" }</a></li>
                         {/if}
                         {if $reply.poster_data.edit eq 1}
-                        <li><a class="editpostlink" id="editbutton_{$reply.post_id}" onclick="javascript:quickEdit({$reply.post_id});" title="{gt text="Edit/delete"}" href="javascript:void(0);">{pnimg modname='Dizkus' src="icon_post_edit.gif" __alt="Edit" }</a></li>
+                        <li><a class="editpostlink" id="editbutton_{$reply.post_id}" onclick="javascript:quickEdit({$reply.post_id});" title="{gt text="Edit/delete"}" href="javascript:void(0);">{img modname='Dizkus' src="icon_post_edit.gif" __alt="Edit" }</a></li>
                         {/if}
                         {elseif isset($topic)}
-                        <li>{pnimg modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked" }</li>
+                        <li>{img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked" }</li>
                         {/if}
-                        <li><a class="notifymoderatorlink" href="{modurl modname='Dizkus' type=user func=report post=$reply.post_id}" title="{gt text="Notify moderator about this posting"}">{pnimg modname='Dizkus' src="icon_topic_mod.gif" __alt="Notify moderator" }</a></li>
-                        <li><a title="{gt text="Top"}" href="#top">&nbsp;{pnimg modname='Dizkus' src="icon_up.gif" __alt="Top" }</a></li>
+                        <li><a class="notifymoderatorlink" href="{modurl modname='Dizkus' type=user func=report post=$reply.post_id}" title="{gt text="Notify moderator about this posting"}">{img modname='Dizkus' src="icon_topic_mod.gif" __alt="Notify moderator" }</a></li>
+                        <li><a title="{gt text="Top"}" href="#top">&nbsp;{img modname='Dizkus' src="icon_up.gif" __alt="Top" }</a></li>
                     </ul>
                     <noscript>
                         <ul class="nonjavascriptpostingoptions linklist z-clearfix" style="float:right;">
@@ -82,7 +82,7 @@
                             <li><a class="dzk_img editpostlink" title="{gt text="Edit/delete"}" href="{modurl modname='Dizkus' type=user func=editpost post=$reply.post_id}">{gt text="Edit"}</a></li>
                             {/if}
                             {elseif isset($topic)}
-                            {pnimg modname='Dizkus' src=icon_post_close.gif __alt="Topic locked" }
+                            {img modname='Dizkus' src=icon_post_close.gif __alt="Topic locked" }
                             {/if}
                             <li><a class="dzk_img notifymoderatorlink" href="{modurl modname='Dizkus' type=user func=report post=$reply.post_id}" title="{gt text="Notify moderator about this posting"}">{gt text="Notify moderator"}</a></li>
                         </ul>

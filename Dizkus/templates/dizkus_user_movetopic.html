@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Move or join topics" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 <h2>{$templatetitle}</h2>
@@ -17,7 +17,7 @@
                 <label>{gt text="Target forum"}</label>
                 <select name="forum">
                     {foreach item='forum' from=$forums}
-                    <option value="{$forum.forum_id}">{$forum.cat_title|pnvarprepfordisplay}{gt text="&nbsp;::&nbsp;"}{$forum.forum_name|pnvarprepfordisplay}</option>
+                    <option value="{$forum.forum_id}">{$forum.cat_title|varprepfordisplay}{gt text="&nbsp;::&nbsp;"}{$forum.forum_name|varprepfordisplay}</option>
                     {/foreach}
                 </select>
             </div>

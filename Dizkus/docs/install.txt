@@ -5,4 +5,4 @@ Manuals:
 english     http://code.zikula.org/dizkus
 german      http://code.zikula.org/community-german/wiki/Dizkus
 
-Copy /modules/Dizkus/pnimages/gravatar.gif to /images/avatar/ if the file doesn't exist in this directory.
+Copy /modules/Dizkus/images/gravatar.gif to /images/avatar/ if the file doesn't exist in this directory.

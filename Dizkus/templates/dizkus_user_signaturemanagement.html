@@ -1,22 +1,22 @@
 {*  $Id$  *}
 {gt text="Manage your signature" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 <h2>{$templatetitle}</h2>
 
-{pnform cssClass="z-form z-linear"}
-{pnformvalidationsummary}
+{form cssClass="z-form z-linear"}
+{formvalidationsummary}
 <fieldset>
     <legend>{gt text="Posting display settings"}</legend>
     <div class="z-formrow">
-        {pnformlabel for="signature" __text="Signature"}
-        {pnformtextinput id="signature" textMode="multiLine" rows="5" cols="40"}
+        {formlabel for="signature" __text="Signature"}
+        {formtextinput id="signature" textMode="multiLine" rows="5" cols="40"}
     </div>
 </fieldset>
 <div class="z-formbuttons">
-    {pnformbutton commandName="update" __text="Submit" class="dzk_img ok"}
+    {formbutton commandName="update" __text="Submit" class="dzk_img ok"}
 </div>
-{/pnform}
+{/form}
 
 {include file='dizkus_user_footer.html'}

@@ -232,7 +232,7 @@ Important changes:
 ---------------------------------------------------------------------------------------------
 - changed phpBB_14 to Dizkus (update from previous phpBB_14 during during module update)
 - fully API compliant now
-- using pnRender templates
+- using Renderer templates
 - fixed some SQL statements
 - refactored the code
 - simplified the blocks

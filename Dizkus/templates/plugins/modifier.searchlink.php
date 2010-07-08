@@ -10,12 +10,12 @@
  */
 
 /**
- * pnRender plugin
+ * Renderer plugin
  *
- * This file is a plugin for pnRender, the Zikula implementation of Smarty
+ * This file is a plugin for Renderer, the Zikula implementation of Smarty
  *
  * @package      Xanthia_Templating_Environment
- * @subpackage   pnRender
+ * @subpackage   Renderer
  * @version      $Id$
  * @author       The Zikula development team
  * @link         http://www.zikula.org  The Zikula Home Page
@@ -31,7 +31,7 @@
 
  * Example
  *
- *   {$pncore.user.uname|searchlink}
+ *   {$zcore.user.uname|searchlink}
  *
  *
  * @author       Frank Schummertz

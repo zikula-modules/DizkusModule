@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="{charset}"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-        <title>{$sitename|pnvarprepfordisplay} - {$forum_name|pnvarprepfordisplay}</title>
-        <link>{$forum_link|pnvarprepfordisplay}</link>
-        <description>{$sitename|pnvarprepfordisplay} - {$forum_name|pnvarprepfordisplay}</description>
+        <title>{$sitename|varprepfordisplay} - {$forum_name|varprepfordisplay}</title>
+        <link>{$forum_link|varprepfordisplay}</link>
+        <description>{$sitename|varprepfordisplay} - {$forum_name|varprepfordisplay}</description>
         <language>{$current_language}</language>
         <pubDate>{$current_date}</pubDate>
         <lastBuildDate>{$current_date}</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Dizkus {$dizkusinfo.version}</generator>
-        <webMaster>{$adminmail|pnvarprepfordisplay} ({$adminmail|pnvarprepfordisplay})</webMaster>
+        <webMaster>{$adminmail|varprepfordisplay} ({$adminmail|varprepfordisplay})</webMaster>
         {foreach item=post from=$posts}
         <item>
-            <title>{$post.topic_title|pnvarprepfordisplay}</title>
-            <link>{$post.last_post_url|pnvarprepfordisplay}</link>
-            <guid>{$post.last_post_url|pnvarprepfordisplay}</guid>
-            <description>{$post.cat_title|pnvarprepfordisplay} :: {$post.forum_name|pnvarprepfordisplay}</description>
+            <title>{$post.topic_title|varprepfordisplay}</title>
+            <link>{$post.last_post_url|varprepfordisplay}</link>
+            <guid>{$post.last_post_url|varprepfordisplay}</guid>
+            <description>{$post.cat_title|varprepfordisplay} :: {$post.forum_name|varprepfordisplay}</description>
             <pubDate>{$post.rsstime}</pubDate>
-            <category>{$post.cat_title|pnvarprepfordisplay} :: {$post.forum_name|pnvarprepfordisplay}</category>
+            <category>{$post.cat_title|varprepfordisplay} :: {$post.forum_name|varprepfordisplay}</category>
         </item>
         {/foreach}
     </channel>

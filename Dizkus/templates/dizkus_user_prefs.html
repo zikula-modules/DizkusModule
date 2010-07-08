@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Personal settings" assign=templatetitle}
-{pnpagesetvar name=title value=$templatetitle}
+{pagesetvar name=title value=$templatetitle}
 {include file='dizkus_user_header.html'}
 
 <div id="dzk_userprefs">
@@ -100,14 +100,14 @@
             <ul class="topiclist forums">
                 {foreach item=category from=$tree}
                 <li class="row categorytitle">
-                    <a href="{modurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}"><strong>{$category.cat_title|pnvarprepfordisplay}</strong></a>
+                    <a href="{modurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}"><strong>{$category.cat_title|varprepfordisplay}</strong></a>
                 </li>
                 {foreach item=forum from=$category.forums}
                 <li class="row">
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
-                            <a href="{modurl modname='Dizkus' type=user func=viewforum forum=$forum.forum_id}"><strong>{$forum.forum_name|pnvarprepfordisplay}</strong></a>
-                            <span>{$forum.forum_desc|pnvarprephtmldisplay}</span>
+                            <a href="{modurl modname='Dizkus' type=user func=viewforum forum=$forum.forum_id}"><strong>{$forum.forum_name|varprepfordisplay}</strong></a>
+                            <span>{$forum.forum_desc|varprephtmldisplay}</span>
                         </dt>
                         <dd class="favorites">
                             <a id="subscribeforumbutton_{$forum.forum_id}"   class="hidden subscribelink" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'subscribe');" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>

@@ -1,6 +1,6 @@
 {*  $Id$  *}
 {gt text="Edit forum tree" assign=templatetitle}
-{pnimg src='icon_dbaccess.gif' assign='progressicon'}
+{img src='icon_dbaccess.gif' assign='progressicon'}
 {include file='dizkus_admin_header.html'}
 
 <p class="z-informationmsg">{gt text="Notice: You can use drag and drop to arrange the order of forums and categories within the forum tree. Your changes will be saved when you click on the 'Save tree order' button."}</p>
@@ -21,12 +21,12 @@
                     <a title="{gt text="Visit this forum category"}" href="{modurl modname=Dizkus type=user func=main viewcat=$category.cat_id}">{$category.cat_title}</a> ({$category.cat_id})
                 </div>
                 <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                    <button id="loadcategory_{$category.cat_id}" title="{gt text="Load category data"}" onclick="javascript:loadcategory({$category.cat_id});">{pnimg modname='Dizkus' src="icon_show.gif" __alt="Load category data" }</button>
-                    <button id="hidecategory_{$category.cat_id}" style="display: none;" title="{gt text="Hide category"}">{pnimg modname='Dizkus' src="icon_hide.gif"}</button>
-                    <button id="showcategory_{$category.cat_id}" style="display: none;" title="{gt text="Show category"}">{pnimg modname='Dizkus' src="icon_show.gif"}</button>
-                    <button onclick="javascript:hideshowforumlist({$category.cat_id});" id="hideforumlist_{$category.cat_id}" style="display: none;" title="{gt text="Hide forums"}">{pnimg modname='Dizkus' src="icon_hideforums.gif"}</button>
-                    <button onclick="javascript:hideshowforumlist({$category.cat_id});" id="showforumlist_{$category.cat_id}" title="{gt text="Show forums"}">{pnimg modname='Dizkus' src="icon_showforums.gif"}</button>
-                    <button onclick="javascript:addforum({$category.cat_id});" id="addforum_{$category.cat_id}" title="{gt text="Create forum"}">{pnimg modname='Dizkus' src="icon_addforum.gif" __alt="Create forum" }</button>
+                    <button id="loadcategory_{$category.cat_id}" title="{gt text="Load category data"}" onclick="javascript:loadcategory({$category.cat_id});">{img modname='Dizkus' src="icon_show.gif" __alt="Load category data" }</button>
+                    <button id="hidecategory_{$category.cat_id}" style="display: none;" title="{gt text="Hide category"}">{img modname='Dizkus' src="icon_hide.gif"}</button>
+                    <button id="showcategory_{$category.cat_id}" style="display: none;" title="{gt text="Show category"}">{img modname='Dizkus' src="icon_show.gif"}</button>
+                    <button onclick="javascript:hideshowforumlist({$category.cat_id});" id="hideforumlist_{$category.cat_id}" style="display: none;" title="{gt text="Hide forums"}">{img modname='Dizkus' src="icon_hideforums.gif"}</button>
+                    <button onclick="javascript:hideshowforumlist({$category.cat_id});" id="showforumlist_{$category.cat_id}" title="{gt text="Show forums"}">{img modname='Dizkus' src="icon_showforums.gif"}</button>
+                    <button onclick="javascript:addforum({$category.cat_id});" id="addforum_{$category.cat_id}" title="{gt text="Create forum"}">{img modname='Dizkus' src="icon_addforum.gif" __alt="Create forum" }</button>
                     <img id="progresscategoryimage_{$category.cat_id}" style="visibility: hidden;" src="{$progressicon.src}" width="{$progressicon.width}" height="{$progressicon.height}" alt="{gt text="Working. Please wait..."}" />
                 </div>
             </div>
@@ -37,12 +37,12 @@
             <li id="forum_{$forum.forum_id}" class="forumline">
                 <div class="dzk_handle z-clearfix">
                     <div id="forumtitle_{$forum.forum_id}" style="float: left; width: 60%;">
-                        <a href="{modurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|pnvarprepfordisplay}">{$forum.forum_name|pnvarprepfordisplay}</a> ({$forum.forum_id})
+                        <a href="{modurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|varprepfordisplay}">{$forum.forum_name|varprepfordisplay}</a> ({$forum.forum_id})
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                        <button id="loadforum_{$forum.forum_id}"  title="{gt text="Load forum data"}" onclick="javascript:loadforum({$forum.forum_id});">{pnimg modname='Dizkus' src="icon_show.gif" __alt="Load forum data" }</button>
-                        <button id="hideforum_{$forum.forum_id}" style="display: none;" title="{gt text="Hide forum"}">{pnimg modname='Dizkus' src="icon_hide.gif"}</button>
-                        <button id="showforum_{$forum.forum_id}" style="display: none;" title="{gt text="Show forum"}">{pnimg modname='Dizkus' src="icon_show.gif"}</button>
+                        <button id="loadforum_{$forum.forum_id}"  title="{gt text="Load forum data"}" onclick="javascript:loadforum({$forum.forum_id});">{img modname='Dizkus' src="icon_show.gif" __alt="Load forum data" }</button>
+                        <button id="hideforum_{$forum.forum_id}" style="display: none;" title="{gt text="Hide forum"}">{img modname='Dizkus' src="icon_hide.gif"}</button>
+                        <button id="showforum_{$forum.forum_id}" style="display: none;" title="{gt text="Show forum"}">{img modname='Dizkus' src="icon_show.gif"}</button>
                         <img id="progressforumimage_{$forum.forum_id}" style="visibility: hidden;" src="{$progressicon.src}" width="{$progressicon.width}" height="{$progressicon.height}" alt="{gt text="Working. Please wait..."}" />
                     </div>
                 </div>
@@ -58,9 +58,9 @@
                         {gt text="-- Create new forum --"}
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                        <button id="hideforum_cat{$category.cat_id}" style="display: none;" title="{gt text="Hide forum"}">{pnimg modname='Dizkus' src="icon_hide.gif"}</button>
-                        <button id="showforum_cat{$category.cat_id}" style="display: none;" title="{gt text="Show forum"}">{pnimg modname='Dizkus' src="icon_show.gif"}</button>
-                        <button id="canceladdforum_cat{$category.cat_id}" title="{gt text="Cancel"}">{pnimg modname='Dizkus' src="icon_canceladdforum.gif" __alt="Cancel" }</button>
+                        <button id="hideforum_cat{$category.cat_id}" style="display: none;" title="{gt text="Hide forum"}">{img modname='Dizkus' src="icon_hide.gif"}</button>
+                        <button id="showforum_cat{$category.cat_id}" style="display: none;" title="{gt text="Show forum"}">{img modname='Dizkus' src="icon_show.gif"}</button>
+                        <button id="canceladdforum_cat{$category.cat_id}" title="{gt text="Cancel"}">{img modname='Dizkus' src="icon_canceladdforum.gif" __alt="Cancel" }</button>
                         <img id="progressforumimage_cat{$category.cat_id}" style="visibility: hidden;" src="{$progressicon.src}" width="{$progressicon.width}" height="{$progressicon.height}" alt="{gt text="Working. Please wait..."}" />
                     </div>
                 </div>
@@ -78,12 +78,12 @@
                     {gt text="-- Create new category --"}
                 </div>
                 <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                    <button id="newhidecategory"  style="display: none;" title="{gt text="Hide category"}">{pnimg modname='Dizkus' src="icon_hide.gif"}</button>
-                    <button id="newshowcategory"  style="display: none;" title="{gt text="Show category"}">{pnimg modname='Dizkus' src="icon_show.gif"}</button>
-                    <button id="newhideforumlist" style="display: none;" title="{gt text="Hide forums"}">{pnimg modname='Dizkus' src="icon_hideforums.gif"}</button>
-                    <button id="newshowforumlist" style="display: none;" title="{gt text="Show forums"}">{pnimg modname='Dizkus' src="icon_showforums.gif"}</button>
-                    <button id="newaddforum"      style="display: none;" title="{gt text="Create forum"}">{pnimg modname='Dizkus' src="icon_addforum.gif" __alt="Create forum" }</button>
-                    <button id="newcanceladdcategory" title="{gt text="Cancel"}">{pnimg modname='Dizkus' src="icon_cancel.gif" __alt="Cancel" }</button>
+                    <button id="newhidecategory"  style="display: none;" title="{gt text="Hide category"}">{img modname='Dizkus' src="icon_hide.gif"}</button>
+                    <button id="newshowcategory"  style="display: none;" title="{gt text="Show category"}">{img modname='Dizkus' src="icon_show.gif"}</button>
+                    <button id="newhideforumlist" style="display: none;" title="{gt text="Hide forums"}">{img modname='Dizkus' src="icon_hideforums.gif"}</button>
+                    <button id="newshowforumlist" style="display: none;" title="{gt text="Show forums"}">{img modname='Dizkus' src="icon_showforums.gif"}</button>
+                    <button id="newaddforum"      style="display: none;" title="{gt text="Create forum"}">{img modname='Dizkus' src="icon_addforum.gif" __alt="Create forum" }</button>
+                    <button id="newcanceladdcategory" title="{gt text="Cancel"}">{img modname='Dizkus' src="icon_cancel.gif" __alt="Cancel" }</button>
                     <img id="newprogresscategoryimage" style="visibility: hidden;" src="{$progressicon.src}" width="{$progressicon.width}" height="{$progressicon.height}" alt="{gt text="Working. Please wait..."}" />
                 </div>
             </div>
@@ -101,9 +101,9 @@
                         {gt text="-- Create new forum --"}
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                        <button id="newhideforum" style="display: none;" title="{gt text="Hide forum"}">{pnimg modname='Dizkus' src="icon_hide.gif"}</button>
-                        <button id="newshowforum" style="display: none;" title="{gt text="Show forum"}">{pnimg modname='Dizkus' src="icon_show.gif"}</button>
-                        <button id="newcanceladdforum" title="{gt text="Cancel"}">{pnimg modname='Dizkus' src="icon_canceladdforum.gif" __alt="Cancel" }</button>
+                        <button id="newhideforum" style="display: none;" title="{gt text="Hide forum"}">{img modname='Dizkus' src="icon_hide.gif"}</button>
+                        <button id="newshowforum" style="display: none;" title="{gt text="Show forum"}">{img modname='Dizkus' src="icon_show.gif"}</button>
+                        <button id="newcanceladdforum" title="{gt text="Cancel"}">{img modname='Dizkus' src="icon_canceladdforum.gif" __alt="Cancel" }</button>
                         <img id="newprogressforumimage" style="visibility: hidden;" src="{$progressicon.src}" width="{$progressicon.width}" height="{$progressicon.height}" alt="{gt text="Working. Please wait..."}" />
                     </div>
                 </div>

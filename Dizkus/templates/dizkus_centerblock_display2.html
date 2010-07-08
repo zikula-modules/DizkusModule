@@ -1,6 +1,6 @@
 {*  $Id$  *}
 
-{pnpageaddvar name="stylesheet" value="modules/Dizkus/pnstyle/style.css"}
+{pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
 
 {readlastposts forum_id=$forum_id maxposts=$maxposts}
 {if $lastpostcount > 0}
@@ -14,7 +14,7 @@
     <tr class="{cycle values='z-odd,z-even'}">
         <td><a href="{modurl modname=Dizkus type=user func=viewforum forum=$lastpost.forum_id}">{$lastpost.forum_name}</a></td>
         <td><a href="{$lastpost.last_post_url_anchor}">{$lastpost.topic_title}</a></td>
-        <td>{$lastpost.posted_unixtime|pndate_format:'datetimebrief':'':true}</td>
+        <td>{$lastpost.posted_unixtime|dateformat:'datetimebrief':'':true}</td>
         <td>{$lastpost.poster_name|userprofilelink}</td>
     </tr>
     {/foreach}
