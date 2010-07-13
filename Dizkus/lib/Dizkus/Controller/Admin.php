@@ -417,7 +417,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         $this->view->assign('externalsourceoptions', $externalsourceoptions);
     
         $cats        = CategoryUtil::getSubCategories (1, true, true, true, true, true);
-        $catselector = CategoryUtil::getSelector_Categories($cats, 'id', $forum['forum_pntopic'], 'Categories_DBObject_Category');
+        $catselector = CategoryUtil::getSelector_Categories($cats, 'id', $forum['forum_pntopic'], 'pncategory');
         $this->view->assign('categoryselector', $catselector);
     
         $this->view->assign('moderators', $moderators);
@@ -607,7 +607,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         $add                  = FormUtil::getPassedValue('add');
         $delete               = FormUtil::getPassedValue('delete');
     
-        $pntopic              = (int)FormUtil::getpassedValue('Categories_DBObject_Category', 0);
+        $pntopic              = (int)FormUtil::getpassedValue('pncategory', 0);
     
         $pop3testresulthtml = '';
         if (!empty($delete)) {
