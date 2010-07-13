@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 class Dizkus_Api_Admin extends Zikula_Api {
     
     /**

@@ -33,16 +33,16 @@ soon as possible!
 
 <rss version="0.91">
 <channel>
-<title>{$sitename|varprepfordisplay} - {$forum_name|varprepfordisplay}</title>
-<link>{$forum_link|varprepfordisplay}</link>
-<description>{$sitename|varprepfordisplay} - {$forum_name|varprepfordisplay}</description>
-<webMaster>{$adminmail|varprepfordisplay}</webMaster>
+<title>{$sitename|safetext} - {$forum_name|safetext}</title>
+<link>{$forum_link|safetext}</link>
+<description>{$sitename|safetext} - {$forum_name|safetext}</description>
+<webMaster>{$adminmail|safetext}</webMaster>
 
 {foreach item=post from=$posts}
     <item>
-    <title>{$post.topic_title|varprepfordisplay}</title>
-    <link>{$post.last_post_url|varprepfordisplay}</link>
-    <description>{$post.cat_title|varprepfordisplay} :: {$post.forum_name|varprepfordisplay}</description>
+    <title>{$post.topic_title|safetext}</title>
+    <link>{$post.last_post_url|safetext}</link>
+    <description>{$post.cat_title|safetext} :: {$post.forum_name|safetext}</description>
     </item>
 {/foreach}
 

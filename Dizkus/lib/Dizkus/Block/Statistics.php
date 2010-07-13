@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 class Dizkus_Block_Statistics extends Zikula_Block
 {
 	/**
@@ -53,7 +51,7 @@ class Dizkus_Block_Statistics extends Zikula_Block
 	    $disabled = dzk_available();
 	    if (!is_bool($disabled)) {
 	        $blockinfo['content'] = $disabled;
-	        return themesideblock($blockinfo);
+	        return BlockUtil::themesideblock($blockinfo);
 	    }
 	
 	    // break out options from our content field
@@ -68,7 +66,7 @@ class Dizkus_Block_Statistics extends Zikula_Block
 	    }
 	
 	    // build the output
-	    $render = Renderer::getInstance('Dizkus', false, null, true);
+	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
 	
 	    $params = explode(',', $vars['sb_parameters']);
 	
@@ -82,7 +80,7 @@ class Dizkus_Block_Statistics extends Zikula_Block
 	
 	    $blockinfo['content'] = $render->fetch(trim($vars['sb_template']));
 	
-	    return themesideblock($blockinfo);
+	    return BlockUtil::themesideblock($blockinfo);
 	}
 	
 	/**
@@ -121,7 +119,7 @@ class Dizkus_Block_Statistics extends Zikula_Block
 	        $vars['sb_template']   = 'dizkus_statisticsblock_display.html';
 	    }
 	
-	    $render = Renderer::getInstance('Dizkus', false, null, true);
+	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
 	
 	    $render->assign('vars', $vars);
 	

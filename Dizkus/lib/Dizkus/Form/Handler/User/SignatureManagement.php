@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_user_signaturemanagementHandler
+class Dizkus_Form_Handler_User_SignatureManagement
 {
     function initialize(&$render)
     {       

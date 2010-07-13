@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 class Dizkus_Api_Search extends Zikula_Api {
     
     /**
@@ -28,7 +26,7 @@ class Dizkus_Api_Search extends Zikula_Api {
     public function options($args)
     {
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $render = Zikula_View::getInstance('Dizkus', false, null, true);
             $render->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
             $render->assign('forums', ModUtil::apiFunc('Dizkus', 'admin', 'readforums'));
             return $render->fetch('dizkus_search.html');

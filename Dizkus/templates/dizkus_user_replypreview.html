@@ -18,7 +18,7 @@
 
                 <ul>
                     {if isset($reply.poster_data.rank)}
-                    <li><strong>{gt text="Rank"}: </strong>{$reply.poster_data.rank|varprepfordisplay}</li>
+                    <li><strong>{gt text="Rank"}: </strong>{$reply.poster_data.rank|safetext}</li>
                     {/if}
                     <li><strong>{gt text="Registered"}: </strong>{$reply.poster_data.pn_user_regdate|dateformat:'datebrief'}</li>
                     {if !$reply.poster_data.online}

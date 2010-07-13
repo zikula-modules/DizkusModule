@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class dizkus_admin_prefshandler
+class Dizkus_Form_Handler_Admin_Prefs
 {
     function initialize(&$render)
     {

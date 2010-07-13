@@ -27,7 +27,7 @@
                 {foreach item='subscription' from=$topicsubscriptions}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
-                        <a href="{$subscription.last_post_url_anchor|varprepfordisplay}" title="{$subscription.forum_name|varprepfordisplay} :: {$subscription.topic_title|varprepfordisplay}">{$subscription.topic_title|varprepfordisplay}</a>
+                        <a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.forum_name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>
                     </td>
                     <td>
                         {$subscription.poster_name|userprofilelink}
@@ -58,7 +58,7 @@
                 {foreach item='subscription' from=$forumsubscriptions}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
-                        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.topic_title} :: {$subscription.forum_name}">{$subscription.forum_name|varprepfordisplay}</a>
+                        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.topic_title} :: {$subscription.forum_name}">{$subscription.forum_name|safetext}</a>
                     </td>
                     <td>
                         <input class="forum_checkbox" type="checkbox" onclick="CheckCheckAll('forum');" name="forum_id[]" value="{$subscription.forum_id}" />

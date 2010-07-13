@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 class Dizkus_Api_User extends Zikula_Api {
 
     /**
@@ -2194,7 +2192,7 @@ class Dizkus_Api_User extends Zikula_Api {
         if (count($recipients) > 0) {
             $sitename = System::getVar('sitename');
         
-            $render = Renderer::getInstance('Dizkus', false, null, true);
+            $render = Zikula_View::getInstance('Dizkus', false, null, true);
             $render->assign('sitename', $sitename);
             $render->assign('category_name', $category_name);
             $render->assign('forum_name', $forum_name);
@@ -3083,7 +3081,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $force = (isset($args['force'])) ? (boolean)$args['force'] : false;
         $forum = $args['forum'];
     
-        Loader::includeOnce('modules/Dizkus/includes/pop3.php');
+        include_once 'modules/Dizkus/lib/vendor/pop3.php';
         if ( (($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time()-($forum['pop3_interval']*60)) ) || ($force == true) ) {
             mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
             // get new mails for this forum

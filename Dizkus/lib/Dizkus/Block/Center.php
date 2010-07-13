@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 class Dizkus_Block_Center extends Zikula_Block
 {
 	/**
@@ -53,7 +51,7 @@ class Dizkus_Block_Center extends Zikula_Block
 	    $disabled = dzk_available();
 	    if (!is_bool($disabled)) {
 	        $blockinfo['content'] = $disabled;
-	        return themesideblock($blockinfo);
+	        return BlockUtil::themesideblock($blockinfo);
 	    }
 	
 	    // return immediately if no post exist
@@ -64,7 +62,7 @@ class Dizkus_Block_Center extends Zikula_Block
 	    // Break out options from our content field
 	    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 	
-	    $render = Renderer::getInstance('Dizkus', false, null, true);
+	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
 	
 	    // check if cb_template is set, if not, use the default centerblock template
 	    if (empty($vars['cb_template'])) {
@@ -85,7 +83,7 @@ class Dizkus_Block_Center extends Zikula_Block
 	
 	    $blockinfo['content'] = $render->fetch(trim($vars['cb_template']));
 	
-	    return themesideblock($blockinfo);
+	    return BlockUtil::themesideblock($blockinfo);
 	}
 	
 	/**
@@ -124,7 +122,7 @@ class Dizkus_Block_Center extends Zikula_Block
 	        $vars['cb_template']   = 'dizkus_centerblock_display.html';
 	    }
 	
-	    $render = Renderer::getInstance('Dizkus', false, null, true);
+	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
 	    $render->assign('vars', $vars);
 	
 	    return $render->fetch('dizkus_centerblock_config.html');

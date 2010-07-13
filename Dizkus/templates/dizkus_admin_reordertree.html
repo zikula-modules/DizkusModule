@@ -37,7 +37,7 @@
             <li id="forum_{$forum.forum_id}" class="forumline">
                 <div class="dzk_handle z-clearfix">
                     <div id="forumtitle_{$forum.forum_id}" style="float: left; width: 60%;">
-                        <a href="{modurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|varprepfordisplay}">{$forum.forum_name|varprepfordisplay}</a> ({$forum.forum_id})
+                        <a href="{modurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|safetext}">{$forum.forum_name|safetext}</a> ({$forum.forum_id})
                     </div>
                     <div style="float: right; width: 30%; text-align: right; padding-right: 1em;">
                         <button id="loadforum_{$forum.forum_id}"  title="{gt text="Load forum data"}" onclick="javascript:loadforum({$forum.forum_id});">{img modname='Dizkus' src="icon_show.gif" __alt="Load forum data" }</button>

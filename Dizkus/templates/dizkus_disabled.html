@@ -3,7 +3,7 @@
 
 <h2>{gt text='Forum Information'}</h2>
 <div id="dzk_forumdisabled" class="z-warningmsg">
-    { $zcore.Dizkus.forum_disabled_info|varprephtmldisplay }
+    { $zcore.Dizkus.forum_disabled_info|safehtml }
 </div>
 
 { include file='dizkus_user_footer.html' }

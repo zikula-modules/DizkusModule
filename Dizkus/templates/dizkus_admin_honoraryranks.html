@@ -52,7 +52,7 @@
             {foreach key=num item=rank from=$ranks}
             <tr class="{cycle values='z-odd,z-even'}">
                 <td>
-                    <input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|varprepfordisplay}" maxlength="50" size="20" />
+                    <input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|safetext}" maxlength="50" size="20" />
                 </td>
                 <td>
                     <select name="ranks[{$rank.rank_id}][rank_image]" id="rank_image{$num}" onchange="ShowRankImage({$num}, '{$zcore.Dizkus.url_ranks_images}')">

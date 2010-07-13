@@ -22,12 +22,12 @@
                     <input type="hidden" id="quote" name="quote" value="" />
                     <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|varprepfordisplay}">{$newtopic.forum_name|varprepfordisplay|modcallhooks}</a></legend>
+                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|safetext}">{$newtopic.forum_name|safetext|modcallhooks}</a></legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                             <div>
                                 <label for="subject">{gt text="Subject line"}</label><br />
-                                <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$newtopic.subject|varprephtmldisplay}" />
+                                <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$newtopic.subject|safehtml}" />
                             </div>
                             <div>
                                 <label for="message">{gt text="Message body"}</label><br />

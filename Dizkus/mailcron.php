@@ -17,7 +17,8 @@ chdir('/opt/webdev/htdocs');
 //
 // no changes necessary beyond this point!
 //
-include 'lib/System.php';
+include 'lib/ZLoader.php';
+ZLoader::register();
 System::init();
 
 $debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');

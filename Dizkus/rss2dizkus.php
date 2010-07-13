@@ -21,7 +21,8 @@ chdir('/opt/webdev/htdocs/z121');
 //
 // start Zikula
 //
-include 'lib/System.php';
+include 'lib/ZLoader.php';
+ZLoader::register();
 System::init();
 
 //

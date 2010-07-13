@@ -17,7 +17,7 @@
                 <label>{gt text="Target forum"}</label>
                 <select name="forum">
                     {foreach item='forum' from=$forums}
-                    <option value="{$forum.forum_id}">{$forum.cat_title|varprepfordisplay}{gt text="&nbsp;::&nbsp;"}{$forum.forum_name|varprepfordisplay}</option>
+                    <option value="{$forum.forum_id}">{$forum.cat_title|safetext}{gt text="&nbsp;::&nbsp;"}{$forum.forum_name|safetext}</option>
                     {/foreach}
                 </select>
             </div>

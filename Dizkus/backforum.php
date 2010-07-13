@@ -13,7 +13,8 @@
 /**
  * initialize the Zikula environment
  */
-include 'lib/System.php';
+include 'lib/ZLoader.php';
+ZLoader::register();
 System::init();
 
 /**
@@ -53,7 +54,7 @@ if (isset($cat_id) && !is_numeric($cat_id)) {
 /**
  * create Renderer object
  */
-$render = Renderer::getInstance('Dizkus', false);
+$render = Zikula_View::getInstance('Dizkus', false);
 
 /**
  * check if template for feed exists

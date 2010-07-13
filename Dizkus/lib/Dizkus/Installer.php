@@ -9,9 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
-
 Class Dizkus_Installer extends Zikula_Installer
 {
 	/**
@@ -23,7 +20,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	 */
 	public function install()
 	{
-	    if (version_compare(System::VERSION_NUM, '1.3.0.dev', '<')) {
+	    if (version_compare(System::VERSION_NUM, '1.3.0-dev', '<')) {
 	        return LogUtil::registerError($this->__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
 	    }
 	
@@ -35,54 +32,54 @@ Class Dizkus_Installer extends Zikula_Installer
 	
 	    // creating forum_mods table
 	    if (!DBUtil::createTable('dizkus_forum_mods')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating forums table
 	    if (!DBUtil::createTable('dizkus_forums')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating posts table
 	    if (!DBUtil::createTable('dizkus_posts')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating subscription table
 	    if (!DBUtil::createTable('dizkus_subscription')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating ranks table
 	    if (!DBUtil::createTable('dizkus_ranks')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating topics table
 	    if (!DBUtil::createTable('dizkus_topics')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating users table
 	    if (!DBUtil::createTable('dizkus_users')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    // creating topic_subscription table (new in 1.7.5)
 	    if (!DBUtil::createTable('dizkus_topic_subscription')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
 	    if (!DBUtil::createTable('dizkus_forum_favorites')) {
-	        Dizkus_delete();
+	        $this->uninstall();
 	        return false;
 	    }
 	
@@ -315,286 +312,12 @@ Class Dizkus_Installer extends Zikula_Installer
 	    // Deletion successful
 	    return true;
 	}
-	
-/**
-     * upgrade
-     *
-     *
-     */
-	
-	//public function upgrade($oldversion)
-	//{
-	//}
-	
-	/**
-	 * interactiveupgrade
-	 *
-	 *
-	 */
-	public function interactiveupgrade($args)
-	{
-	    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-	      return LogUtil::registerError($this->__('Error! No permission for this action.'));
-	    }
-	
-	    $oldversion = FormUtil::getPassedValue('oldversion', isset($args['oldversion']) ? $args['oldversion'] : 0, 'GETPOST');
-	
-	    include_once 'modules/Dizkus/version.php';
-	
-	    $authid = SecurityUtil::generateAuthKey('Modules');
-	    switch ($oldversion)
-	    {
-	        case '2.7.1':
-	            $templatefile = 'dizkus_upgrade_30.html';
-	            break;
-	
-	        case '3.0':
-	            $templatefile = 'dizkus_upgrade_31.html';
-	            break;
-	
-	        case '3.1':
-	            // remove pn from images/rank folder
-	            $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
-	            
-	        default:
-	            // no interactive upgrade for version < 2.7
-	            // or latest step reached
-	            $render = Renderer::getInstance;
-	            $render->clear_compiled();
-	            $render->clear_cache();
-	            return System::redirect(ModUtil::url('Modules', 'admin', 'upgrade', array('authid' => $authid )));
-	    }
-	
-	    $render = Renderer::getInstance('Dizkus', false, null, true);
-	
-	    $render->assign('oldversion', $oldversion);
-	    $render->assign('authid', $authid);
-	
-	    return $render->fetch($templatefile);
-	}
-	
-	/**
-	 * interactiveupgrade_to_3_0
-	 *
-	 */
-	public function interactiveupgrade_to_3_0()
-	{
-	    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-	        return LogUtil::registerError($this->__('Error! No permission for this action.'));
-	    }
-	
-	    $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
-	
-	    if (!empty($submit)) {
-	        $result = $this->upgrade_to_3_0();
-	        if ($result<>true) {
-	            return LogUtil::registerError(_('Error! The upgrade to Dizkus 3.0 failed.'));
-	        }
-	        return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.0' )));
-	    }
-	
-	    return System::redirect(ModUtil::url('Modules', 'admin', 'view'));
-	}
-	
-	/**
-	 * upgrade to 3.0
-	 *
-	 */
-	public function upgrade_to_3_0()
-	{        
-	    // rename the old pnForum tablenames to Dizkus tablenames
-	    $tables = array('pnforum_categories'         => 'dizkus_categories',
-	                    'pnforum_forum_mods'         => 'dizkus_forum_mods',
-	                    'pnforum_forums'             => 'dizkus_forums',
-	                    'pnforum_posts'              => 'dizkus_posts',
-	                    'pnforum_posts_text'         => 'dizkus_posts_text',
-	                    'pnforum_ranks'              => 'dizkus_ranks',
-	                    'pnforum_subscription'       => 'dizkus_subscription',
-	                    'pnforum_topics'             => 'dizkus_topics',
-	                    'pnforum_users'              => 'dizkus_users',
-	                    'pnforum_topic_subscription' => 'dizkus_topic_subscription',
-	                    'pnforum_forum_favorites'    => 'dizkus_forum_favorites');
-	
-	    $dbconn = DBConnectionStack::getConnection();
-	    $dict   = NewDataDictionary($dbconn);
-	    $prefix = System::getVar('prefix');
-	    foreach($tables as $oldtable => $newtable) {
-	        $sqlarray = $dict->RenameTableSQL($prefix.'_'.$oldtable, $prefix.'_'.$newtable);
-	        $result   = $dict->ExecuteSQLArray($sqlarray);
-	        $success  = ($result==2);
-	        if (!$success) {
-	            $dberrmsg = $dbconn->ErrorNo().' - '.$dbconn->ErrorMSg();
-	            LogUtil::registerError ($this->__("Error! The renaming of table '%1$s' to '%2$s' failed: %3$s.", array($oldtable, $$newtable, $dberrmsg)));
-	        }
-	    }
-	
-	    // add some columns to the post table - with DBUtil this is a one-liner, you just have to
-	    // define the new columns in the pntables array, see pntables.php
-	    DBUtil::changeTable('dizkus_posts');
-	
-	    // remove obsolete module vars
-	    $this->delVar('pnForum', 'posticon');
-	    $this->delVar('pnForum', 'firstnew_image');
-	
-	    $oldvars = ModUtil::getVar('pnForum');
-	    foreach ($oldvars as $varname => $oldvar) {
-	        // update path to rank images - simply replace pnForum with Dizkus
-	        if ($varname == 'url_ranks_images') {
-	            $oldvar = str_replace('pnForum', 'Dizkus', $oldvar);
-	        }
-	        ModUtil::setVar('Dizkus', $varname, $oldvar);
-	    }
-	    ModUtil::delVar('pnForum');
-	
-	    // update hooks
-	    $ztables    = DBUtil::getTables();
-	    $hookstable  = $ztables['hooks'];
-	    $hookscolumn = $ztables['hooks_column'];
-	
-	    $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['smodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['smodule'] . '=\'pnForum\'';
-	    $res = DBUtil::executeSQL ($sql);
-	    if ($res === false) {
-	        return LogUtil::registerError($this->__("Error! A problem was encountered while upgrading the source module for hooks ('smodule')."));
-	    }
-	
-	    $sql = 'UPDATE ' . $hookstable . ' SET ' . $hookscolumn['tmodule'] . '=\'Dizkus\' WHERE ' . $hookscolumn['tmodule'] . '=\'pnForum\'';
-	    $res = DBUtil::executeSQL ($sql);
-	    if ($res === false) {
-	        return LogUtil::registerError($this->__("Error! A problem was encountered while upgrading the target module for hooks ('tmodule')."));
-	    }
-	
-	    // introduce new module variable
-	    $this->setVar('signaturemanagement', 'no'); 
-	    $this->setVar('sendemailswithsqlerrors', 'no');
-	    $this->setVar('showtextinsearchresults', 'no');
-	    $this->setVar('minsearchlength', 3);
-	    $this->setVar('maxsearchlength', 30);
-	
-	    $this->setVar('ignorelist_handling', 'medium');
-	    return true;
-	}
-	
-	/**
-	 * interactiveupgrade_to_3_1
-	 */
-	public function interactiveupgrade_to_3_1()
-	{
-	    if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-	        return LogUtil::registerError($this->__('Error! No permission for this action.'));
-	    }
-	
-	    $submit = FormUtil::getPassedValue('submit', null, 'GETPOST');
-	
-	    if (!empty($submit)) {
-	        $result = $this->upgrade_to_3_1();
-	        if ($result<>true) {
-	            return LogUtil::registerError($this->__('Error! Could not upgrade to Dizkus 3.1.'));
-	        }
-	        return System::redirect(ModUtil::url('Dizkus', 'init', 'interactiveupgrade', array('oldversion' => '3.1' )));
-	    }
-	
-	    return System::redirect(ModUtil::url('Modules', 'admin', 'view'));
-	}
-	
-	/**
-	 * upgrade to 3.1
-	 */
-	public function upgrade_to_3_1()
-	{
-	    // merge posts and posts_text table
-	    ModUtil::dbInfoLoad('Dizkus');
-	
-	    $ztable = DBUtil::getTables();
-	
-	    $poststable      = $ztable['dizkus_posts'];
-	    $postscolumn     = $ztable['dizkus_posts_column'];
-	    $poststexttable  = $ztable['dizkus_posts_text'];
-	    $poststextcolumn = $ztable['dizkus_posts_text_column'];
-	
-	    // change table structures
-	    DBUtil::changeTable('dizkus_posts');
-	    DBUtil::changeTable('dizkus_ranks');
-	
-	    DBUtil::dropColumn('dizkus_topics', 'topic_notify');
-	    DBUtil::dropColumn('dizkus_topics', 'sticky_label');
-	    DBUtil::dropColumn('dizkus_topics', 'poll_id');
-	    DBUtil::dropColumn('dizkus_forums', 'forum_access');
-	    DBUtil::dropColumn('dizkus_forums', 'forum_type');
-	    DBUtil::dropColumn('dizkus_topic_subscription', 'forum_id');
-	
-	    // add some missing index fields, all named 'id' if not existing
-	    DBUtil::executeSQL('ALTER TABLE '. $ztable['dizkus_topic_subscription'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-	    DBUtil::executeSQL('ALTER TABLE '. $ztable['dizkus_forum_mods'] .' ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-	    
-	    // due to a bug in 3.0 no primary key has been added to the dizkus_users table upon creation, we will add this now 
-	    $res = DBUtil::executeSQL('SHOW COLUMNS FROM '. $ztable['dizkus_users']);
-	    $id_exists = false;
-	    foreach($res as $resline) {
-	        //(array) 0:
-	        //   1. (string) 0 = id
-	        //   2. (string) 1 = int(11)
-	        //   3. (string) 2 = NO
-	        //   4. (string) 3 = PRI
-	        //   5. (NULL) 4 = (none)
-	        //   6. (string) 5 = auto_increment
-	        if($resline[0] == 'user_id' && $resline[3] == 'PRI') {
-	            // found id
-	            $id_exists = true;
-	            break;
-	        }
-	    }
-	    if (!$id_exists) {
-	        DBUtil::executeSQL('ALTER TABLE '. $ztable['dizkus_users'] .' ADD PRIMARY KEY(user_id)');
-	    }
-	
-	    // move all posting text from post_text to posts table and remove the post_text table - never knew why this has been split
-	    $sql = 'UPDATE ' . $poststable . ' AS p  
-	            SET p.' . $postscolumn['post_text'] . '= ( 
-	                SELECT pt1.' . $poststextcolumn['post_text'] . ' 
-	                FROM ' . $poststexttable . ' AS pt1
-	                WHERE pt1.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')
-	            WHERE EXISTS (
-	                SELECT pt.' . $poststextcolumn['post_text'] . ' 
-	                FROM ' . $poststexttable . ' AS pt 
-	                WHERE pt.' . $poststextcolumn['post_id'] . '=p.' . $poststextcolumn['post_id'] .')';
-	
-	    if (DBUtil::executeSQL($sql) != true) {
-	        LogUtil::registerError ($this->__("Error! Could not upgrade the table '%s'.", 'dizkus_posts'));
-	    }
-	
-	    // remove obsolete table
-	    DBUtil::dropTable('dizkus_posts_text');
-	
-	    // remove obsolete module variables
-	    $this->delVar('sendemailswithsqlerrors');
-	    $this->delVar('default_lang');
-	    
-	    // $this->migratecategories();
-	
-	    // drop old tables
-	    //
-	    // this will be done when the upgrade is finished and working - just before the release
-	    //
-	    // DBUtil::dropTable('dizkus_categories');
-	    // DBUtil::dropTable('dizkus_forums');
-	
-	    // introduce new module variable
-	    $this->setVar('allowgravatars', 1);
-	    $this->setVar('gravatarimage', 'gravatar.gif');
-	
-	    return true;
-	}
-	
+
 	/**
 	 * create default categories - unfinished code, do not use
 	 */
 	public function createdefaultcategory($regpath = '/__SYSTEM__/Modules/Dizkus')
 	{
-	    // load necessary classes
-	    Loader::loadClass('CategoryUtil');
-	    Loader::loadClassFromModule('Categories', 'Category');
-	    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-	
 	    // get the language file
 	    $lang = ZLanguage::getLanguageCode();
 	
@@ -604,7 +327,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	
 	    if (!$nCat) {
 	        // create placeholder for all our migrated categories
-	        $cat = new PNCategory ();
+	        $cat = new Categories_DBObject_Category ();
 	        $cat->setDataField('parent_id', $rootcat['id']);
 	        $cat->setDataField('name', 'Dizkus');
 	        $cat->setDataField('display_name', array($lang => 'Dizkus forums')); 
@@ -621,7 +344,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	    $rootcat = CategoryUtil::getCategoryByPath($regpath);
 	    if ($rootcat) {
 	        // create an entry in the categories registry to the Main property
-	        $registry = new PNCategoryRegistry();
+	        $registry = new Categories_DBObject_Registry();
 	        $registry->setDataField('modname', 'Dizkus');
 	        $registry->setDataField('table', 'dizkus_topics');
 	        $registry->setDataField('property', 'dizkus_topics');
@@ -642,17 +365,12 @@ Class Dizkus_Installer extends Zikula_Installer
 	    
 	    // pull all data from the old tables
 	    $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
-	
-	    // load necessary classes
-	    Loader::loadClass('CategoryUtil');
-	    Loader::loadClassFromModule('Categories', 'Category');
-	    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-	
-	    // get the language file
+
+        // get the language file
 	    $langs = LanguageUtil::getInstalledLanguages();
 	
 	    // create the Main category and entry in the categories registry
-	    _dizkus_createdefaultcategory();
+	    $this->createdefaultcategory();
 	
 	    // get the category path for which we're going to insert our upgraded Dizkus categories
 	    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Dizkus');
@@ -665,7 +383,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	    foreach ($tree as $oldcategory) {
 	        // increment max forum id
 	        $maxforumid++;
-	        $cat = new PNCategory();
+	        $cat = new Categories_DBObject_Category();
 	        $cat->setDataField('parent_id', $rootcat['id']);
 	        $cat->setDataField('name', $oldcategory['cat_title']);
 	        $titlelangarray = array();
@@ -702,7 +420,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	
 	        // forums in this category
 	        foreach ($oldcategory['forums'] as $forum) {
-	            $fcat = new PNCategory();
+	            $fcat = new Categories_DBObject_Category();
 	            $fcat->setDataField('parent_id', $newcatid);
 	            $fcat->setDataField('name', $forum['forum_name']);
 	

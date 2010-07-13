@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_user_ignorelistmanagementHandler
+class Dizkus_Form_Handler_User_IgnoreListManagement
 {
     function initialize(&$render)
     {   

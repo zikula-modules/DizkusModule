@@ -32,7 +32,7 @@
 
                 <ul>
                     {if isset($post.poster_data.rank)}
-                    <li><strong>{gt text="Rank"}: </strong>{$post.poster_data.rank|varprepfordisplay}</li>
+                    <li><strong>{gt text="Rank"}: </strong>{$post.poster_data.rank|safetext}</li>
                     {/if}
                     <li><strong>{gt text="Registered"}: </strong>{$post.poster_data.pn_user_regdate|dateformat:'datebrief'}</li>
                     {if !$post.poster_data.online}

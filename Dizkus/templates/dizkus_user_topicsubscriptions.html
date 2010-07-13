@@ -29,7 +29,7 @@
                     <li class="row">
                         <dl class="icon">
                             <dt class='ctheme-topic-title'>
-                                <a href="{$subscription.last_post_url_anchor}" title="{$subscription.forum_name|varprepfordisplay} :: {$subscription.topic_title|varprepfordisplay}">{$subscription.topic_title|varprepfordisplay}</a>
+                                <a href="{$subscription.last_post_url_anchor}" title="{$subscription.forum_name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>
                                 <span>{gt text="Forum"}: {$subscription.forum_name|truncate:70}</span>
                             </dt>
                             <dd class="favorites">

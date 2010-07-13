@@ -18,13 +18,8 @@ class Dizkus_Version extends Zikula_Version
         $meta['oldnames']       = array('pnForum');
         $meta['description']    = 'An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.';
         $meta['url']            = $this->__('forums');
-        $meta['version']        = '3.2';
-        $meta['contact']        = 'http://code.zikula.org/dizkus';
-        $meta['author']         = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer';
-        $meta['changelog']      = 'docs/changelog.txt';
-        $meta['credits']        = 'docs/credits.txt';
-        $meta['help']           = 'docs/install.txt';
-        $meta['license']        = 'docs/license.txt';
+        $meta['version']        = '3.2.0';
+        $meta['contact']        = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer http://code.zikula.org/dizkus';
         $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
                                       'Dizkus::CreateForum' => 'CategoryID::');
 
@@ -33,11 +28,11 @@ class Dizkus_Version extends Zikula_Version
                                       array('modname'    => 'bbcode', 
                                             'minversion' => '2.0', 
                                             'maxversion' => '', 
-                                            'status'     => PNMODULE_DEPENDENCY_RECOMMENDED),
+                                            'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
                                       array('modname'    => 'bbsmile', 
                                             'minversion' => '2.1', 
                                             'maxversion' => '', 
-                                            'status'     => PNMODULE_DEPENDENCY_RECOMMENDED)
+                                            'status'     => ModUtil::DEPENDENCY_RECOMMENDED)
                                      );
         return $meta;
     }

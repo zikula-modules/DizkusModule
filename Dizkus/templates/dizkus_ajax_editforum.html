@@ -11,7 +11,7 @@
 
             <div class="z-formrow">
                 <label for="forum_name">{gt text="Forum"}</label>
-                <input type="text" id="forum_name" name="forum_name" size="70" maxlength="150" value="{$forum.forum_name|varprepfordisplay}" />
+                <input type="text" id="forum_name" name="forum_name" size="70" maxlength="150" value="{$forum.forum_name|safetext}" />
             </div>
 
             {if $newforum neq true}
@@ -30,7 +30,7 @@
 
             <div class="z-formrow">
                 <label for="forum_desc">{gt text="Description"}</label>
-                <textarea id="forum_desc" class="dzk_texpand" name="desc" rows="10" cols="60">{$forum.forum_desc|pnvarprephtmldisplay}</textarea>
+                <textarea id="forum_desc" class="dzk_texpand" name="desc" rows="10" cols="60">{$forum.forum_desc|safehtml}</textarea>
             </div>
 
             <div class="z-formrow">
@@ -55,7 +55,7 @@
                 <span id="forum_mods" class="z-formnote">
                     {gt text="Current moderator(s):"}<br />
                     {foreach item='mod' from=$moderators}
-                    {$mod.uname|varprepfordisplay}&nbsp;{if $mod.uid > 1000000}({gt text="Group"}){/if}&nbsp;(<input type="checkbox" name="rem_mods[]" value="{$mod.uid}" />&nbsp;{gt text="Remove"})<br />
+                    {$mod.uname|safetext}&nbsp;{if $mod.uid > 1000000}({gt text="Group"}){/if}&nbsp;(<input type="checkbox" name="rem_mods[]" value="{$mod.uid}" />&nbsp;{gt text="Remove"})<br />
                     {foreachelse}
                     {gt text="No moderator appointed"}<br /><br />
                     {/foreach}
@@ -63,10 +63,10 @@
                     <select id="mods" name="mods[]" size="10" multiple="multiple">
                         <option value="0">{gt text="None"}</option>
                         {foreach item='group' from=$groups}
-                        <option value="{$group.gid}">{$group.name|varprepfordisplay} ({gt text="Group"})</option>
+                        <option value="{$group.gid}">{$group.name|safetext} ({gt text="Group"})</option>
                         {/foreach}
                         {foreach item='user' from=$users}
-                        <option value="{$user.uid}">{$user.uname|varprepfordisplay}</option>
+                        <option value="{$user.uid}">{$user.uname|safetext}</option>
                         {/foreach}
                     </select>
                 </span>
@@ -138,7 +138,7 @@
                 <select name="rssfeed" size="1">
                     <option value="0">{gt text="None"}</option>
                     {foreach item='feed from=$rssfeeds}
-                    <option value="{$feed.fid}" {if $feed.fid == $forum.externalsourceurl}selected="selected"{/if}>{$feed.name|varprepfordisplay} ({$feed.url})</option>
+                    <option value="{$feed.fid}" {if $feed.fid == $forum.externalsourceurl}selected="selected"{/if}>{$feed.name|safetext} ({$feed.url})</option>
                     {/foreach}
                 </select>
             </div>
