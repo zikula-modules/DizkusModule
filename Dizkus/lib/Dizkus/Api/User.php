@@ -384,7 +384,7 @@ class Dizkus_Api_User extends Zikula_Api {
                                     $username = $forum['pn_uname'];
                                 }
             
-                                $last_post = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $username), $dom));
+                                $last_post = DataUtil::formatForDisplay($this->__f('%1$s<br />by %2$s', array($posted_ml, $username)));
                                 $last_post = $last_post.' <a href="' . ModUtil::url('Dizkus','user','viewtopic', array('topic' => $forum['topic_id'])). '">
                                                           <img src="modules/Dizkus/images/icon_latest_topic.gif" alt="' . $posted_ml . ' ' . $username . '" height="9" width="18" /></a>';
                                 // new in 2.0.2 - no more preformattd output
@@ -689,7 +689,7 @@ class Dizkus_Api_User extends Zikula_Api {
             
                 $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
                 $posted_ml = DateUtil::formatDatetime($topic['post_time_unix'], 'datetimebrief');
-                $topic['last_post'] = DataUtil::formatForDisplay(__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster']), $dom));
+                $topic['last_post'] = DataUtil::formatForDisplay($this->>__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster'])));
             
                 // does this topic have enough postings to be hot?
                 $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
@@ -1729,7 +1729,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 // who is editing?
                 $edit_name  = UserUtil::isLoggedIn() ? UserUtil::getVar('uname') : ModUtil::getVar('Users', 'anonymous');
                 $edit_date = DateUtil::formatDatetime('', 'datetimebrief');
-                $args['message'] .= '<br /><br /><!-- editby --><br /><br /><em>' . $this->__f('Edited by %1$s on %2$s.', array($edit_name, $edit_date), $dom) . '</em><!-- end editby --> ';
+                $args['message'] .= '<br /><br /><!-- editby --><br /><br /><em>' . $this->__f('Edited by %1$s on %2$s.', array($edit_name, $edit_date)) . '</em><!-- end editby --> ';
             }
     
             // add signature placeholder
@@ -1983,8 +1983,8 @@ class Dizkus_Api_User extends Zikula_Api {
     
             if ($args['shadow'] == true) {
                 // user wants to have a shadow topic
-                $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])),$dom);
-                $subject = __f("*** The original posting '%s' has been moved", $topic['topic_title'], $dom);
+                $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])));
+                $subject = $this->__f("*** The original posting '%s' has been moved", $topic['topic_title']);
     
                 $this->storenewtopic(array('subject'  => $subject,
                                                     'message'  => $message,
@@ -2550,11 +2550,11 @@ class Dizkus_Api_User extends Zikula_Api {
                        break;
             case '5' : // last x hours
                        $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($args['nohours']) . " HOUR) ";
-                       $text = DataUtil::formatForDisplay(__f('Last %s hours', $args['nohours'], $dom));
+                       $text = DataUtil::formatForDisplay($this->__f('Last %s hours', $args['nohours']));
                        break;
             case '6' : // last visit
                        $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($args['last_visit']) . "' ";
-                       $text = DataUtil::formatForDisplay(__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief'), $dom));
+                       $text = DataUtil::formatForDisplay($this->__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief')));
                        break;
             case '1' :
             default:   // last 24 hours
@@ -3613,15 +3613,15 @@ class Dizkus_Api_User extends Zikula_Api {
                                     'start'         => $start));
     
         // FIXME Move this to a translatable template?
-        $message = $this->__f('Request for moderation on %s', System::getVar('sitename'), $dom) . "\n"
+        $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
                 . $args['post']['cat_title'] . '::' . $args['post']['forum_name'] . '::' . $args['post']['topic_rawsubject'] . "\n\n"
-                . $this->__f('Reporting user: %s', $reporting_username, $dom) . "\n"
+                . $this->__f('Reporting user: %s', $reporting_username) . "\n"
                 . $this->__('Comment:') . "\n"
                 . $comment . " \n\n"
                 . "---------------------------------------------------------------------\n"
                 . strip_tags($args['post']['post_text']) . " \n"
                 . "---------------------------------------------------------------------\n\n"
-                . $this->__('Link to topic: %s', DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid'.$args['post']['post_id'], true)), $dom) . "\n"
+                . $this->__('Link to topic: %s', DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid'.$args['post']['post_id'], true))) . "\n"
                 . "\n";
     
         if (count($recipients) > 0) {

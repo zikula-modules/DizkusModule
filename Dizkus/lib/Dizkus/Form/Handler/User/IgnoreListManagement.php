@@ -13,21 +13,19 @@ class Dizkus_Form_Handler_User_IgnoreListManagement
 {
     function initialize(&$render)
     {   
-        $dom = ZLanguage::getModuleDomain('Dizkus');
-
         // prepare list    
         $ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
         $ignorelist_options = array();
         switch ($ignorelist_handling)
         {
             case 'strict':
-                $ignorelist_options[] = array('text' => __('Strict', $dom), 'value' => 'strict');
+                $ignorelist_options[] = array('text' => $this->__('Strict'), 'value' => 'strict');
 
             case 'medium':
-                $ignorelist_options[] = array('text' => __('Medium', $dom), 'value' => 'medium');
+                $ignorelist_options[] = array('text' => $this->__('Medium'), 'value' => 'medium');
 
             default:
-                $ignorelist_options[] = array('text' => __('None', $dom), 'value' => 'none');
+                $ignorelist_options[] = array('text' => $this->__('None'), 'value' => 'none');
         }
 
         // get user's configuration
@@ -42,8 +40,6 @@ class Dizkus_Form_Handler_User_IgnoreListManagement
 
     function handleCommand(&$render, $args)
     {
-        $dom = ZLanguage::getModuleDomain('Dizkus');
-
         if ($args['commandName'] == 'update') {
             // Security check 
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
@@ -64,7 +60,7 @@ class Dizkus_Form_Handler_User_IgnoreListManagement
             // store attributes 
             DBUtil::updateObject($user, 'users', '', 'uid');
 
-            LogUtil::registerStatus(__('Done! Updated the \'Ignore list\' settings.', $dom));
+            LogUtil::registerStatus($this->__('Done! Updated the \'Ignore list\' settings.'));
 
             return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
         }

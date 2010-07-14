@@ -22,16 +22,14 @@
  */
 function smarty_function_topicpager($params, &$smarty)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
-    $total             = $params['total'];
+   $total             = $params['total'];
     $per_page          = ModUtil::getVar('Dizkus', 'posts_per_page');
     $start             = (int)FormUtil::getPassedValue('start', 1, 'GETPOST');
 
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $topic_id          = $params['topic_id'];
     if (empty($topic_id)) {
-		$smarty->trigger_error('topicpager: missing parameter topic_id');
+		$smarty->trigger_error($this->__('topicpager: missing parameter topic_id'));
 	}
 
     $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';
@@ -126,7 +124,7 @@ function smarty_function_topicpager($params, &$smarty)
 
     }
 
-    $page_string = '<p>' . __f('Go to page %s: ', $page_string, $dom) . '</p>';
+    $page_string = '<p>' . $this->__f('Go to page %s: ', $page_string) . '</p>';
 
     return $page_string;
 }

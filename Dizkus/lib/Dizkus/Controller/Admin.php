@@ -337,7 +337,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller
             // create a new forum
             $new = true;
             $cat_id = FormUtil::getPassedValue('cat');
-            $forum = array('forum_name'       => $this->__('-- Create new forum --', $dom),
+            $forum = array('forum_name'       => $this->__('-- Create new forum --'),
                            'forum_id'         => time(), /* for new forums only! */
                            'forum_desc'       => '',
                            'forum_order'      => -1,
@@ -369,16 +369,16 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         }
     
         $externalsourceoptions = array( 0 => array('checked'  => '',
-                                                   'name'     => $this->__('No external source', $dom),
+                                                   'name'     => $this->__('No external source'),
                                                    'ok'       => '',
                                                    'extended' => false),   // none
                                         1 => array('checked'  => '',
-                                                   'name'     => $this->__('Mail2Forum', $dom),
+                                                   'name'     => $this->__('Mail2Forum'),
                                                    'ok'       => '',
                                                    'extended' => true),  // mail
                                         2 => array('checked'  => '',
-                                                   'name'     => $this->__('RSS2Forum', $dom),
-                                                   'ok'       => (ModUtil::available('Feeds') == true) ? '' : $this->__("<span style=\"color: red;\">'Feeds' module is not available.</span>", $dom),
+                                                   'name'     => $this->__('RSS2Forum'),
+                                                   'ok'       => (ModUtil::available('Feeds') == true) ? '' : $this->__("<span style=\"color: red;\">'Feeds' module is not available.</span>"),
                                                    'extended' => true)); // rss
     
         $externalsourceoptions[$forum['pop3_active']]['checked'] = ' checked="checked"';
@@ -386,7 +386,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         $hooked_modules_raw = ModUtil::apiFunc('modules', 'admin', 'gethookedmodules',
                                            array('hookmodname' => 'Dizkus'));
     
-        $hooked_modules = array(array('name' => $this->__('No hooked module found.', $dom),
+        $hooked_modules = array(array('name' => $this->__('No hooked module found.'),
                                       'id'   => 0));
     
         $foundsel = false;
@@ -461,7 +461,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller
     
         if ($cat_id == 'new') {
             $new = true;
-            $category = array('cat_title'    => $this->__('-- Create new category --', $dom),
+            $category = array('cat_title'    => $this->__('-- Create new category --'),
                               'cat_id'       => time(),
                               'forum_count'  => 0);
             // we add a new category

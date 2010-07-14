@@ -22,8 +22,6 @@ class Dizkus_Form_Handler_User_SignatureManagement
 
     function handleCommand(&$render, $args)
     {
-        $dom = ZLanguage::getModuleDomain('Dizkus');
-
         if ($args['commandName'] == 'update') {
             // Security check 
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
@@ -37,7 +35,7 @@ class Dizkus_Form_Handler_User_SignatureManagement
             }
 
             UserUtil::setVar('_SIGNATURE',$obj['signature']);
-            LogUtil::registerStatus(__('Done! Signature has been updated.', $dom));
+            LogUtil::registerStatus($this->__('Done! Signature has been updated.'));
 
             return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
         }

@@ -19,15 +19,13 @@
  */
 function smarty_function_printtopic_button($params, &$smarty)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     include_once 'modules/Dizkus/common.php';
     if (allowedtoreadcategoryandforum($params['cat_id'], $params['forum_id'])) {
         $themeinfo = ThemeUtil::getInfo('Printer');
         if ($themeinfo['active']) {
-            return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
+            return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay($this->__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay($this->__('Print topic')) . '</a>';
         }
-        return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
+        return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay($this->__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay($this->__('Print topic')) . '</a>';
     }
 
     return '';

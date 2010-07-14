@@ -18,8 +18,6 @@ include_once 'modules/Dizkus/common.php';
  */
 function Dizkus_needleapi_dizkus($args)
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
     // Get arguments from argument array
     $nid = $args['nid'];
     unset($args);
@@ -64,10 +62,10 @@ function Dizkus_needleapi_dizkus($args)
                                 $title = DataUtil::formatForDisplay($result[0]['forum_name']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
+                                $cache[$nid] = '<em>' . $this->__f('Error! You do not have the necessary authorisation for forum ID %s.', $id) . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id, $dom) . '</em>';
+                            $cache[$nid] = '<em>' . $this->__f('Error! The forum ID %s is unknown.', $id) . '</em>';
                         }
                         break;
 
@@ -89,23 +87,23 @@ function Dizkus_needleapi_dizkus($args)
                                 $title = DataUtil::formatForDisplay($result[0]['topic_title']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                             } else {
-                                $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for topic ID %s.', $id , $dom) . '</em>';
+                                $cache[$nid] = '<em>' . $this->__f('Error! You do not have the necessary authorisation for topic ID %s.', $id) . '</em>';
                             }
                         } else {
-                            $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id, $dom) .'</em>';
+                            $cache[$nid] = '<em>' . $this->__f('Error! The topic ID %s is unknown.', $id) .'</em>';
                         }
                         break;
 
                     default:
-                        $cache[$nid] = '<em>' . __("Error! Unknown parameter at position #1 ('F' or 'T').", $dom) . '</em>';
+                        $cache[$nid] = '<em>' . $this->__("Error! Unknown parameter at position #1 ('F' or 'T').") . '</em>';
                 }
             } else {
-                $cache[$nid] = '<em>' . __('Error! The Dizkus module is not available.', $dom) . '</em>';
+                $cache[$nid] = '<em>' . $this->__('Error! The Dizkus module is not available.') . '</em>';
             }    
         }
         $result = $cache[$nid];
     } else {
-        $result = '<em>' . __('Error! No needle ID.', $dom) . '</em>';
+        $result = '<em>' . $this->__('Error! No needle ID.') . '</em>';
     }
 
     return $result;

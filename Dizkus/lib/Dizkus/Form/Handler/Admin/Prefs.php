@@ -13,20 +13,18 @@ class Dizkus_Form_Handler_Admin_Prefs
 {
     function initialize(&$render)
     {
-        $dom = ZLanguage::getModuleDomain('Dizkus');
-
         $render->caching = false;
         $render->add_core_data();
 
-        $render->assign('post_sort_order_options', array(array('text' => __('Ascending', $dom),  'value' => 'ASC'),
-                                                         array('text' => __('Descending', $dom), 'value' => 'DESC')));
+        $render->assign('post_sort_order_options', array(array('text' => $this->__('Ascending'),  'value' => 'ASC'),
+                                                         array('text' => $this->__('Descending'), 'value' => 'DESC')));
 
-        $render->assign('deletehook_options', array(array('text' => __('Delete topic', $dom), 'value' => 'remove'),
-                                                      array('text' => __('Close topic', $dom),   'value' => 'lock')));
+        $render->assign('deletehook_options', array(array('text' => $this->__('Delete topic'), 'value' => 'remove'),
+                                                      array('text' => $this->__('Close topic'),   'value' => 'lock')));
 
-        $render->assign('ignorelist_options', array(array('text' => __('Strict', $dom), 'value' => 'strict'),
-                                                      array('text' => __('Medium', $dom), 'value' => 'medium'),
-                                                      array('text' => __('None', $dom),   'value' => 'none')));
+        $render->assign('ignorelist_options', array(array('text' => $this->__('Strict'), 'value' => 'strict'),
+                                                      array('text' => $this->__('Medium'), 'value' => 'medium'),
+                                                      array('text' => $this->__('None'),   'value' => 'none')));
 
         $modvars = ModUtil::getVar('Dizkus');
         $render->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
@@ -59,8 +57,6 @@ class Dizkus_Form_Handler_Admin_Prefs
 
     function handleCommand(&$render, $args)
     {
-        $dom = ZLanguage::getModuleDomain('Dizkus');
-
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError('index.php');
@@ -115,7 +111,7 @@ class Dizkus_Form_Handler_Admin_Prefs
             ModUtil::setVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
             ModUtil::setVar('Dizkus', 'gravatarimage',       $data['gravatarimage']);
 
-            LogUtil::registerStatus(__('Done! Updated configuration.', $dom));
+            LogUtil::registerStatus($this->__('Done! Updated configuration.'));
 
         } elseif ($args['commandName'] == 'restore') {
             // checkboxes 
@@ -152,11 +148,11 @@ class Dizkus_Form_Handler_Admin_Prefs
             ModUtil::setVar('Dizkus', 'email_from',          System::getVar('adminmail'));
             ModUtil::setVar('Dizkus', 'signature_start',     '');
             ModUtil::setVar('Dizkus', 'signature_end',       '');
-            ModUtil::setVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom));
+            ModUtil::setVar('Dizkus', 'forum_disabled_info', __('Sorry! The forums are currently off-line for maintenance. Please try later.'));
             ModUtil::setVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/images/ranks');
             ModUtil::setVar('Dizkus', 'gravatarimage',       'gravatar.gif');
 
-            LogUtil::registerStatus(__('Done! Reset configuration to default values.', $dom));
+            LogUtil::registerStatus($this->$this->__('Done! Reset configuration to default values.'));
         }
 
         return $render->redirect(ModUtil::url('Dizkus','admin','preferences'));

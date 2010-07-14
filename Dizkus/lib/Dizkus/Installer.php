@@ -180,7 +180,7 @@ Class Dizkus_Installer extends Zikula_Installer
 	    $this->setVar('shownewtopicconfirmation', 'no');
 	    $this->setVar('timespanforchanges', 24);
 	    $this->setVar('forum_enabled', 'yes');
-	    $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom));
+	    $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
 	    // 3.0
 	    $this->setVar('autosubscribe', 'no');
 	    $this->setVar('newtopicconfirmation', 'no');

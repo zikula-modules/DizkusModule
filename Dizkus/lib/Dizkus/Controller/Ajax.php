@@ -284,7 +284,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             dzk_ajaxerror($this->__('Error! No topic ID in \'Dizkus_ajax_lockunlocktopic()\'.'));
         }
         if (empty($mode) || (($mode <> 'lock') && ($mode <> 'unlock')) ) {
-            dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($mode), $dom));
+            dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($mode)));
         }
 
         list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
@@ -326,7 +326,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             dzk_ajaxerror($this->__('Error! No topic ID in \'Dizkus_ajax_stickyunstickytopic()\'.'));
         }
         if (empty($mode) || (($mode <> 'sticky') && ($mode <> 'unsticky')) ) {
-            dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_stickyunstickytopic()\'.', DataUtil::formatForDisplay($mode), $dom));
+            dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_stickyunstickytopic()\'.', DataUtil::formatForDisplay($mode)));
         }
 
         list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
@@ -390,7 +390,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 break;
 
             default:
-                dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_subscribeunsubscribetopic()\'.', DataUtil::formatForDisplay($mode), $dom));
+                dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_subscribeunsubscribetopic()\'.', DataUtil::formatForDisplay($mode)));
         }
 
         dzk_jsonizeoutput($newmode);
@@ -443,7 +443,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 break;
 
             default:
-                dzk_ajaxerror( $this->__f('Error! No or illegal mode (%s) parameter in Dizkus_ajax_subscribeunsubscribeforum()', DataUtil::formatForDisplay($mode), $dom));
+                dzk_ajaxerror( $this->__f('Error! No or illegal mode (%s) parameter in Dizkus_ajax_subscribeunsubscribeforum()', DataUtil::formatForDisplay($mode)));
         }
 
         dzk_jsonizeoutput(array('newmode' => $newmode,
@@ -499,7 +499,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 break;
 
             default:
-                dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_addremovefavorite()\'.', DataUtil::formatForDisplay($mode), $dom));
+                dzk_ajaxerror( $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_addremovefavorite()\'.', DataUtil::formatForDisplay($mode)));
         }
 
         dzk_jsonizeoutput(array('newmode' => $newmode,

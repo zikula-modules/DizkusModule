@@ -16,9 +16,7 @@
  */
 function smarty_function_allowedhtml($params, &$smarty) 
 {
-    $dom = ZLanguage::getModuleDomain('Dizkus');
-
-    $out = "<br />".__('Allowed HTML:', $dom)."<br />";
+    $out = "<br />".$this->__('Allowed HTML:')."<br />";
     $AllowableHTML = System::getVar('AllowableHTML');
     while (list($key, $access, ) = each($AllowableHTML)) {
     	if ($access > 0) $out .= " &lt;".$key."&gt;";
