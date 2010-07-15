@@ -689,7 +689,7 @@ class Dizkus_Api_User extends Zikula_Api {
             
                 $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
                 $posted_ml = DateUtil::formatDatetime($topic['post_time_unix'], 'datetimebrief');
-                $topic['last_post'] = DataUtil::formatForDisplay($this->>__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster'])));
+                $topic['last_post'] = DataUtil::formatForDisplay($this->__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster'])));
             
                 // does this topic have enough postings to be hot?
                 $topic['hot_topic'] = ($topic['topic_replies'] >= $hot_threshold) ? true : false;
