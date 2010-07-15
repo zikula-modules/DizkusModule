@@ -150,7 +150,7 @@ function smarty_function_dzkpager($params, &$smarty)
 
     }
 
-    $page_string = '<' . $tag . '>' . $this->__f('Go to page %s: ', $page_string) . '</' . $tag . '>';
+    $page_string = '<' . $tag . '>' . __f('Go to page %s: ', $page_string) . '</' . $tag . '>';
 
     return $page_string;
 }

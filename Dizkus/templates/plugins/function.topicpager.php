@@ -29,7 +29,7 @@ function smarty_function_topicpager($params, &$smarty)
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $topic_id          = $params['topic_id'];
     if (empty($topic_id)) {
-		$smarty->trigger_error($this->__('topicpager: missing parameter topic_id'));
+		$smarty->trigger_error(__('topicpager: missing parameter topic_id'));
 	}
 
     $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';
@@ -124,7 +124,7 @@ function smarty_function_topicpager($params, &$smarty)
 
     }
 
-    $page_string = '<p>' . $this->__f('Go to page %s: ', $page_string) . '</p>';
+    $page_string = '<p>' . __f('Go to page %s: ', $page_string) . '</p>';
 
     return $page_string;
 }

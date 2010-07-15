@@ -60,7 +60,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $url .= '#pid' . (int)$last_post_id;
     }
 
-    $title = $this->__('Go to topic');
+    $title = __('Go to topic');
 
     if (isset($forum_name) && !empty($forum_name)) {
         $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';

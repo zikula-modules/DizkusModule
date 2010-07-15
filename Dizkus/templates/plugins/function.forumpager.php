@@ -128,7 +128,7 @@ function smarty_function_forumpager($params, &$smarty)
 
     }
 
-    $page_string = '<p>' . $this->__f('Go to page %s: ',$page_string) . '</p>';
+    $page_string = '<p>' . __f('Go to page %s: ',$page_string) . '</p>';
 
     return $page_string;
 }
