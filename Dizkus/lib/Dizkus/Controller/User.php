@@ -377,7 +377,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                              array('post_id' => $post_id));
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
-           && ($post['poster_data']['pn_uid'] <> UserUtil::getVar('uid')) ) {
+           && ($post['poster_data']['uid'] <> UserUtil::getVar('uid')) ) {
             return LogUtil::registerPermissionError();
         }
     
@@ -427,7 +427,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                                       array('topic_id' => $post['topic_id'],
                                             'first'    => true));
     
-            if ($post['poster_data']['pn_uid'] == $firstpost['poster_data']['pn_uid']) {
+            if ($post['poster_data']['uid'] == $firstpost['poster_data']['uid']) {
                 $post['edit_subject'] = true;
             }
     

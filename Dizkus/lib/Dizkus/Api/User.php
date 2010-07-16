@@ -16,7 +16,7 @@ class Dizkus_Api_User extends Zikula_Api {
      * This function dynamically reads all fields of the <prefix>_users and <prefix>_dizkus_users
      * tables. When ever data fields are added there, they will be read too without any change here.
      *
-     * @params $args{'userid'] int the users id (pn_uid)
+     * @params $args{'userid'] int the users id (uid)
      * @returns array of userdata information
      */
     public function get_userdata_from_id($args)
@@ -56,11 +56,19 @@ class Dizkus_Api_User extends Zikula_Api {
             $userdata['seeip'] = false;
     
             //
+            // extract attributes
+            //
+            if (is_array($userdata['__ATTRIBUTES__']) && !empty($userdata['__ATTRIBUTES__'])) {
+                foreach ($userdata['__ATTRIBUTES__'] as $attributename => $attributevalue) {
+                    $userdata[$attributename] = $attributevalue; 
+                }
+            }
+            //
             // get the users group membership
             //
             /*
             $userdata['groups'] = ModUtil::apiFunc('Groups', 'user', 'getusergroups',
-                                                array('uid' => $userdata['pn_uid']));
+                                                array('uid' => $userdata['uid']));
             */
             $userdata['groups'] = array();
     
@@ -90,29 +98,24 @@ class Dizkus_Api_User extends Zikula_Api {
             //
             // user name
             //
-            if ($userdata['pn_uid'] != 1) {
+            if ($userdata['uid'] != 1) {
                 // user is logged in, display some info
                 $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-                $where = $ztable['session_info_column']['uid']." = '".$userdata['pn_uid']."'
-                          AND pn_lastused > '".DataUtil::formatForStore($activetime)."'";
+                $where = $ztable['session_info_column']['uid']." = '".$userdata['uid']."'
+                          AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
     
                 $sessioninfo =  DBUtil::selectObject('session_info', $where);         
-                $userdata['online'] = ($sessioninfo['uid'] == $userdata['pn_uid']) ? true : false; 
+                $userdata['online'] = ($sessioninfo['uid'] == $userdata['uid']) ? true : false; 
     
             } else {
                 // user is anonymous
-                $userdata['pn_uname'] = ModUtil::getVar('Users', 'anonymous');
+                $userdata['uname'] = ModUtil::getVar('Users', 'anonymous');
             }
         }
     
         if ($makedummy == true) {
             // we create a dummy user, so we need to adjust some of the information
             // gathered so far
-            $userdata['pn_name']   = $this->__('**unknown user**');
-            $userdata['pn_uname']  = $this->__('**unknown user**');
-            $userdata['pn_email']  = '';
-            $userdata['pn_femail'] = '';
-            $userdata['pn_url']    = '';
             $userdata['name']      = $this->__('**unknown user**');
             $userdata['uname']     = $this->__('**unknown user**');
             $userdata['email']     = '';
@@ -354,8 +357,10 @@ class Dizkus_Api_User extends Zikula_Api {
                 $forum['forum_pntopic']       = $row['forum_pntopic'];
                 $topic_title                  = $row['topic_title'];
                 $topic_replies                = $row['topic_replies'];
-                $forum['pn_uname']            = $row['pn_uname'];
-                $forum['pn_uid']              = $row['pn_uid'];
+                $forum['pn_uname']            = $row['pn_uname']; // fixme
+                $forum['pn_uid']              = $row['pn_uid'];  // fixme
+                $forum['uname']               = $row['pn_uname'];
+                $forum['uid']                 = $row['pn_uid'];
                 $forum['topic_id']            = $row['topic_id'];
                 $forum['post_time']           = $row['post_time'];
             
@@ -378,10 +383,10 @@ class Dizkus_Api_User extends Zikula_Api {
                             $posted_unixtime= dzk_str2time($forum['post_time']); // strtotime ($forum['post_time']);
                             $posted_ml = DateUtil::formatDatetime($posted_unixtime, 'datetimebrief');
                             if ($posted_unixtime) {
-                                if ($forum['pn_uid']==1) {
+                                if ($forum['uid']==1) {
                                     $username = ModUtil::getVar('Users', 'anonymous');
                                 } else {
-                                    $username = $forum['pn_uname'];
+                                    $username = $forum['uname'];
                                 }
             
                                 $last_post = DataUtil::formatForDisplay($this->__f('%1$s<br />by %2$s', array($posted_ml, $username)));
@@ -671,7 +676,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $res = DBUtil::executeSQL($sql, $args['start'], $args['topics_per_page']);
         $colarray = array('topic_id', 'topic_title', 'topic_views', 'topic_replies', 'sticky', 'topic_status',
-                          'topic_last_post_id', 'topic_poster', 'pn_uname', 'last_poster', 'post_time');
+                          'topic_last_post_id', 'topic_poster', 'uname', 'last_poster', 'post_time');
         $result    = DBUtil::marshallObjects($res, $colarray);
     
     //    $forum['forum_id'] = $forum['forum_id'];
@@ -682,8 +687,8 @@ class Dizkus_Api_User extends Zikula_Api {
                 if ($topic['last_poster'] == 'Anonymous') {
                     $topic['last_poster'] = ModUtil::getVar('Users', 'anonymous');
                 }
-                if ($topic['pn_uname'] == 'Anonymous') {
-                    $topic['pn_uname'] = ModUtil::getVar('Users', 'anonymous');
+                if ($topic['uname'] == 'Anonymous') {
+                    $topic['uname'] = ModUtil::getVar('Users', 'anonymous');
                 }
                 $topic['total_posts'] = $topic['topic_replies'] + 1;
             
@@ -957,7 +962,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     //$message = phpbb_br2nl($message);
                     //$post['post_text'] = phpbb_br2nl($post['post_text']);
                 
-                    $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['_SIGNATURE']);
+                    $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['signature']);
                 
                     if ($hooks == true) {
                         // call hooks for $message
@@ -986,7 +991,7 @@ class Dizkus_Api_User extends Zikula_Api {
                         // user is allowed to moderate
                         $post['poster_data']['moderate'] = true;
                         $post['poster_data']['edit'] = true;
-                    } elseif ($post['poster_data']['pn_uid'] == $currentuserid) {
+                    } elseif ($post['poster_data']['uid'] == $currentuserid) {
                         // user is allowed to moderate || own post
                         // if the timespanforchanges (in hrs!) setting allows it
                         // timespanforchanges is in hours, but we need seconds:
@@ -1049,7 +1054,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     AND (t.forum_id = f.forum_id)
                     AND (p.topic_id = t.topic_id)
                     AND (p.poster_id = u.pn_uid)';
-            $colarray = array('forum_id', 'cat_id', 'topic_id', 'topic_title', 'topic_status', 'post_text', 'post_time', 'pn_uname');
+            $colarray = array('forum_id', 'cat_id', 'topic_id', 'topic_title', 'topic_status', 'post_text', 'post_time', 'uname');
         } else {
             // No post id, just check topic.
             // reply without quote
@@ -1082,7 +1087,7 @@ class Dizkus_Api_User extends Zikula_Api {
             // just for backwards compatibility
             $text = Dizkus_undo_make_clickable($text);
             $text = str_replace('[addsig]', '', $text);
-            $reply['message'] = '[quote='.$reply['pn_uname'].']'.$text.'[/quote]';
+            $reply['message'] = '[quote='.$reply['uname'].']'.$text.'[/quote]';
         } else {
             $reply['message'] = '';
         }
@@ -1101,7 +1106,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $reply['attach_signature'] = true;
                 $reply['subscribe_topic'] = false;
                 $is_subscribed = $this->get_topic_subscription_status(array('userid'   => $pn_uid,
-                                                                                    'topic_id' => $reply['topic_id']));
+                                                                            'topic_id' => $reply['topic_id']));
     
                 if ($is_subscribed == true || ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') {
                     $reply['subscribe_topic'] = true;
@@ -1159,7 +1164,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
             
                 // We do this _before_ bbencode(), otherwise we'd kill the bbcode's html.
-                $message = Dizkus_replacesignature($message, $review['poster_data']['_SIGNATURE']);
+                $message = Dizkus_replacesignature($message, $review['poster_data']['signature']);
             
                 // call hooks for $message
                 list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
@@ -1287,7 +1292,7 @@ class Dizkus_Api_User extends Zikula_Api {
     /**
      * get_topic_subscription_status
      *
-     * @params $args['userid'] int the users pn_uid
+     * @params $args['userid'] int the users uid
      * @params $args['topic_id'] int the topic id
      * @returns bool true if the user is subscribed or false if not
      */
@@ -1306,7 +1311,7 @@ class Dizkus_Api_User extends Zikula_Api {
     /**
      * get_forum_subscription_status
      *
-     * @params $args['userid'] int the users pn_uid
+     * @params $args['userid'] int the users uid
      * @params $args['forum_id'] int the forums id
      * @returns bool true if the user is subscribed or false if not
      */
@@ -1330,7 +1335,7 @@ class Dizkus_Api_User extends Zikula_Api {
     /**
      * get_forum_favorites_status
      *
-     * @params $args['userid'] int the users pn_uid
+     * @params $args['userid'] int the users uid
      * @params $args['forum_id'] int the forums id
      * @returns bool true if the user is subscribed or false if not
      */
@@ -1452,7 +1457,7 @@ class Dizkus_Api_User extends Zikula_Api {
         //  without html-specialchars, bbcode, smilies <br /> and [addsig]
         $posted_message = stripslashes($args['message']);
     
-        //  anonymous user has uid=0, but needs pn_uid=1
+        //  anonymous user has uid=0, but needs uid=1
         if (isset($args['post_as']) && !empty($args['post_as']) && is_numeric($args['post_as'])) {
             $pn_uid = $args['post_as'];
         } else {
@@ -1615,7 +1620,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $post['poster_data']['seeip'] = false;
         $post['poster_data']['moderate'] = false;
     
-        if ($post['poster_data']['pn_uid']==$pn_uid) {
+        if ($post['poster_data']['uid']==$pn_uid) {
             // user is allowed to moderate || own post
             $post['poster_data']['edit'] = true;
         }
@@ -1636,7 +1641,7 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         $post['post_textdisplay'] = phpbb_br2nl($message);
-        $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['_SIGNATURE']);
+        $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
     
         // call hooks for $message_display ($message remains untouched for the textarea)
         list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
@@ -2057,7 +2062,7 @@ class Dizkus_Api_User extends Zikula_Api {
      * Sending notify e-mail to users subscribed to the topic of the forum
      *
      * @params $args['topic_id'] int the topics id
-     * @params $args['poster_id'] int the users pn_uid
+     * @params $args['poster_id'] int the users uid
      * @params $args['post_message'] string the text
      * @params $args['type'] int, 0=new message, 2=reply
      * @returns void
@@ -2099,7 +2104,8 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         $topic_unixtime= dzk_str2time($myrow[0]['topic_time']); //strtotime ($myrow['topic_time']);
-        $topic_time_ml = DateUtil::formatDatetime($topic_unixtime, 'datetimebrief');
+        $DU = new DateUtil();
+        $topic_time_ml = $DU->formatDatetime($topic_unixtime, 'datetimebrief');
     
         $poster_name = UserUtil::getVar('uname',$args['poster_id']);
     
@@ -2718,7 +2724,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         //  insert values into topics-table
         $newtopic = array('topic_title'  => $post['topic_subject'],
-                          'topic_poster' => $post['poster_data']['pn_uid'],
+                          'topic_poster' => $post['poster_data']['uid'],
                           'forum_id'     => $post['forum_id'],
                           'topic_time'   => DateUtil::getDatetime('', '%Y-%m-%d %H:%M'));
         $newtopic = DBUtil::insertObject($newtopic, 'dizkus_topics', 'topic_id');

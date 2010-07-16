@@ -9,7 +9,7 @@
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$post.poster_data.pn_uname|userprofilelink}</strong>
+                    <strong>{$post.poster_data.uname|userprofilelink}</strong>
                     <br />
                     {dzkuseravatar uid=$post.poster_data.uid}
                     {if isset($post.poster_data.rank_image) && isset($post.poster_data.rank)}
@@ -22,7 +22,7 @@
                     {if isset($post.poster_data.rank)}
                     <li><strong>{gt text="Rank"}: </strong>{$post.poster_data.rank|safetext}</li>
                     {/if}
-                    <li><strong>{gt text="Registered"}: </strong>{$post.poster_data.pn_user_regdate|dateformat:'datebrief'}</li>
+                    <li><strong>{gt text="Registered"}: </strong>{$post.poster_data.user_regdate|dateformat:'datebrief'}</li>
                     {if !$post.poster_data.online}
                     <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if}
