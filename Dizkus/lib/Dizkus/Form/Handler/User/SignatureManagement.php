@@ -9,13 +9,13 @@
  * @package Dizkus
  */
 
-class Dizkus_Form_Handler_User_SignatureManagement
+class Dizkus_Form_Handler_User_SignatureManagement extends Form_Handler
 {
     function initialize(&$render)
     {       
-        $render->assign('signature', UserUtil::getVar('_SIGNATURE'));
+        $render->assign('signature', UserUtil::getVar('signature'));
         $render->caching = false;
-        $render->add_core_data('PNConfig');
+        $render->add_core_data(CONFIG_MODULE);
 
         return true;
     }
@@ -34,8 +34,8 @@ class Dizkus_Form_Handler_User_SignatureManagement
                 return false;
             }
 
-            UserUtil::setVar('_SIGNATURE',$obj['signature']);
-            LogUtil::registerStatus(__('Done! Signature has been updated.'));
+            UserUtil::setVar('signature',$obj['signature']);
+            LogUtil::registerStatus($this->__('Done! Signature has been updated.'));
 
             return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
         }
