@@ -17,9 +17,9 @@
 function AjaxError ($error='', $code='400 Bad data')
 {
     if (!empty($error)) {
-        header('HTTP/1.0 ' . $code);
+        header('HTTP/1.0 ' . DataUtil::formatForDisplay($code));
         echo DataUtil::convertToUTF8($error);
-        pnShutDown();
+        Zikula::shutdown();
     }
 }
 
