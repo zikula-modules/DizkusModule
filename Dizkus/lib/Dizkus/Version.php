@@ -16,7 +16,7 @@ class Dizkus_Version extends Zikula_Version
         $meta = array();
         $meta['displayname']    = $this->__('Dizkus forums');
         $meta['oldnames']       = array('pnForum');
-        $meta['description']    = 'An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.';
+        $meta['description']    = $this->__('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.');
         $meta['url']            = $this->__('forums');
         $meta['version']        = '3.2.0';
         $meta['contact']        = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer http://code.zikula.org/dizkus';

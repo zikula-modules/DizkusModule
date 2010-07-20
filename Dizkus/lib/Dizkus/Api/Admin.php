@@ -244,18 +244,18 @@ class Dizkus_Api_Admin extends Zikula_Api {
     {
         $ztable = DBUtil::getTables();
     
-        $sql = 'SELECT u.pn_uname, u.pn_uid
+        $sql = 'SELECT u.z_uname, u.z_uid
                 FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
-                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND u.pn_uid = f.user_id
+                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND u.z_uid = f.user_id
                 AND f.user_id<1000000';
     
         $res = DBUtil::executeSQL($sql);
         $colarray = array('uname', 'uid');
         $result1    = DBUtil::marshallObjects($res, $colarray);
     
-        $sql = 'SELECT g.pn_name, g.pn_gid
+        $sql = 'SELECT g.z_name, g.z_gid
                 FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods'].' f
-                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND g.pn_gid = f.user_id-1000000
+                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND g.z_gid = f.user_id-1000000
                 AND f.user_id>1000000';
     
         $res = DBUtil::executeSQL($sql);
@@ -274,19 +274,19 @@ class Dizkus_Api_Admin extends Zikula_Api {
     {
         $ztable = DBUtil::getTables();
     
-        $sql = "SELECT n.pn_uid, n.pn_uname
+        $sql = "SELECT n.z_uid, n.z_uname
                 FROM ".$ztable['users']." AS n
                 left JOIN ".$ztable['dizkus_users']." AS u
-                ON u.user_id=n.pn_uid
-                WHERE n.pn_uid != 1 ";
+                ON u.user_id=n.z_uid
+                WHERE n.z_uid != 1 ";
     
         foreach($args['moderators'] as $mod) {
             if ($mod['uid']<=1000000) {
                 // mod uids > 1000000 are groups
-                $sql .= "AND n.pn_uid != '".DataUtil::formatForStore($mod['uid'])."'";
+                $sql .= "AND n.z_uid != '".DataUtil::formatForStore($mod['uid'])."'";
             }
         }
-        $sql .= "ORDER BY pn_uname";
+        $sql .= "ORDER BY z_uname";
     
         $res = DBUtil::executeSQL($sql);
         $colarray = array('uid', 'uname');
@@ -304,7 +304,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
         $ztable = DBUtil::getTables();
         
         // read groups
-        $sql = "SELECT g.pn_gid+1000000, g.pn_name
+        $sql = "SELECT g.z_gid+1000000, g.z_name
                 FROM ".$ztable['groups']." AS g ";
     
         $where_flag = false;
@@ -319,11 +319,11 @@ class Dizkus_Api_Admin extends Zikula_Api {
                 if ($group_flag) {
                     $sql .= ' AND ';
                 }
-                $sql .= "g.pn_gid != '".DataUtil::formatForStore((int)$mod['uid']-1000000)."' ";
+                $sql .= "g.z_gid != '".DataUtil::formatForStore((int)$mod['uid']-1000000)."' ";
                 $group_flag = true;
             }
         }
-        $sql .= "ORDER BY g.pn_name";
+        $sql .= "ORDER BY g.z_name";
     
         $res = DBUtil::executeSQL($sql);
         $colarray = array('gid', 'name');
@@ -517,10 +517,10 @@ class Dizkus_Api_Admin extends Zikula_Api {
             case 'user': 
                 // copy new users to dizkus_users table
                 $sql = 'INSERT INTO ' . $ztable['dizkus_users'] . ' (user_id)
-                        SELECT pn_uid
+                        SELECT z_uid
                         FROM ' . $ztable['users'] . '
                         LEFT JOIN ' . $ztable['dizkus_users'] . '
-                        ON user_id = pn_uid
+                        ON user_id = z_uid
                         WHERE user_id IS NULL';
     
                 DBUtil::executeSQL($sql);

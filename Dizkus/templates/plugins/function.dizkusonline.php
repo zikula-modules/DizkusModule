@@ -76,16 +76,16 @@ function smarty_function_dizkusonline($params, &$smarty)
     $moderators = ModUtil::apiFunc('Dizkus', 'user', 'get_moderators', array());
 
     if (System::getVar('anonymoussessions')) {
-        $anonwhere = "AND $ztable[session_info].pn_uid >= '0'";
+        $anonwhere = "AND $ztable[session_info].z_uid >= '0'";
     } else {
-        $anonwhere = "AND $ztable[session_info].pn_uid > '0'";
+        $anonwhere = "AND $ztable[session_info].z_uid > '0'";
     }
-    $sql = "SELECT   $ztable[session_info].pn_uid, $ztable[users].pn_uname
+    $sql = "SELECT   $ztable[session_info].z_uid, $ztable[users].z_uname
             FROM     $ztable[session_info], $ztable[users]
-            WHERE    $ztable[session_info].pn_lastused > '$activetime'
+            WHERE    $ztable[session_info].z_lastused > '$activetime'
             $anonwhere
-            AND      if ($ztable[session_info].pn_uid='0','1',$ztable[session_info].pn_uid) = $ztable[users].pn_uid
-            GROUP BY $ztable[session_info].pn_ipaddr, $ztable[session_info].pn_uid";
+            AND      if ($ztable[session_info].z_uid='0','1',$ztable[session_info].z_uid) = $ztable[users].z_uid
+            GROUP BY $ztable[session_info].z_ipaddr, $ztable[session_info].z_uid";
 
     $res = DBUtil::executeSQL($sql);
     $onlineusers = DBUtil::marshallObjects($res, array('uid', 'uname'));
