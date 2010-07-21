@@ -40,7 +40,7 @@ function smarty_function_readlastposts($params, &$smarty)
         return;
     }
 
-    include_once 'modules/Dizkus/common.php';
+    include_once 'modules/Dizkus/bootstrap.php';
     // get some enviroment
     $ztable = DBUtil::getTables();
 

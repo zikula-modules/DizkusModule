@@ -48,8 +48,6 @@
  * @return       array
  */
 
-include_once 'modules/Dizkus/common.php';
-
 function smarty_function_dizkusonline($params, &$smarty)
 {
     if (!isset($params['category_id'])) {

@@ -19,7 +19,7 @@
  */
 function smarty_function_printtopic_button($params, &$smarty)
 {
-    include_once 'modules/Dizkus/common.php';
+    include_once 'modules/Dizkus/bootstrap.php';
     if (allowedtoreadcategoryandforum($params['cat_id'], $params['forum_id'])) {
         $themeinfo = ThemeUtil::getInfo('Printer');
         if ($themeinfo['active']) {

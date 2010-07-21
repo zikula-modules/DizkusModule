@@ -20,7 +20,7 @@ System::init();
 /**
  * load Dizkus specific support functions
  */
-include_once 'modules/Dizkus/common.php';
+include_once 'modules/Dizkus/bootstrap.php';
 
 $forum_id =      FormUtil::getPassedValue('forum_id', null, 'GET');
 $cat_id   =      FormUtil::getPassedValue('cat_id', null, 'GET');

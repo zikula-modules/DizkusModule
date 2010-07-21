@@ -9,8 +9,6 @@
  * @package Dizkus
  */
 
-include_once 'modules/Dizkus/common.php';
-
 /**
  * Dizkus needle
  * @param $args['nid'] needle id
