@@ -142,7 +142,6 @@ var DizkusUser = Class.create(DizkusBase, {
                 $('sortorder').observe('click', this.changesortorder.bind(this)).removeClassName('hidden');
                 break;
             default:
-                alert('unknown funcname found');
                 return;
         }
     },
@@ -306,7 +305,7 @@ var DizkusUser = Class.create(DizkusBase, {
                                         $('bbcode_postingtext_' + this.post_id + '_edit').removeClassName('hidden');
                                     }
                                     if ($$('postingtext_' + this.post_id + '_editor .bb_standardsmilies')) {
-                                        $$('bbsmile_smilies').each(function(el) {
+                                        $$('.bbsmile_smilies').each(function(el) {
                                             el.removeClassName('bbsmile_smilies');
                                         });
                                         if($('smiliemodal')) {
@@ -314,7 +313,7 @@ var DizkusUser = Class.create(DizkusBase, {
                                         }
                                     }
                                 
-                                    $$('dzk_texpand').each(function(el){
+                                    $$('.dzk_texpand').each(function(el){
                                       new Texpand(el, {autoShrink: true, shrinkOnBlur:false, expandOnFocus: false, expandOnLoad: true });
                                     });
                                
