@@ -237,31 +237,31 @@ var DizkusUser = Class.create(DizkusBase, {
                     method: 'post',
                     parameters: pars,
                     onComplete: function(originalRequest)
-                    {
-                        this.sortorderstatus = false;
-
-                        // show error if necessary
-                        if( originalRequest.status != 200 ) {
-                            json = Zikula.ajaxResponseError(originalRequest);
-                            return;
-                        }
-
-                        json = Zikula.dejsonize(originalRequest.responseText);
-                        Zikula.updateauthids(json.authid);
-                    
-                        switch(json.data) {
-                            case 'desc':
-                                $('sortorder_asc').addClassName('hidden');
-                                $('sortorder_desc').removeClassName('hidden'); 
-                                break;
-                            case 'asc':
-                                $('sortorder_desc').addClassName('hidden');
-                                $('sortorder_asc').removeClassName('hidden');
-                                break;
-                            default:
-                                 alert('wrong result from changesortorder');
-                        }
-                    }.bind(this)
+                                {
+                                    this.sortorderstatus = false;
+                                
+                                    // show error if necessary
+                                    if( originalRequest.status != 200 ) {
+                                        json = Zikula.ajaxResponseError(originalRequest);
+                                        return;
+                                    }
+                                
+                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    Zikula.updateauthids(json.authid);
+                                
+                                    switch(json.data) {
+                                        case 'desc':
+                                            $('sortorder_asc').addClassName('hidden');
+                                            $('sortorder_desc').removeClassName('hidden'); 
+                                            break;
+                                        case 'asc':
+                                            $('sortorder_desc').addClassName('hidden');
+                                            $('sortorder_asc').removeClassName('hidden');
+                                            break;
+                                        default:
+                                             alert('wrong result from changesortorder');
+                                    }
+                                }.bind(this)
                 });
         }
     },
@@ -274,7 +274,7 @@ var DizkusUser = Class.create(DizkusBase, {
             this.post_id = editpostlinkid.split('_')[1];
             pars = "module=Dizkus&func=editpost&post=" + this.post_id;
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
+            myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",
                 {
                     method: 'post',
@@ -358,42 +358,41 @@ var DizkusUser = Class.create(DizkusBase, {
     
         Ajax.Responders.register(this.dzk_globalhandlers);
         myAjax = new Ajax.Request(
-                        Zikula.Config.baseURL+"ajax.php",
-                        {
-                            method: 'post',
-                            parameters: pars,
-                            onComplete: function(originalRequest) 
-                                        {
-                                            this.editstatus = false;
-                                            this.editchanged = false;
-                                            
-                                            // show error if necessary
-                                            if( originalRequest.status != 200 ) {
-                                                json = Zikula.ajaxResponseError(originalRequest);
-                                                return;
-                                            }
+            Zikula.Config.baseURL+"ajax.php",
+            {
+                method: 'post',
+                parameters: pars,
+                onComplete: function(originalRequest) 
+                            {
+                                this.editstatus = false;
+                                this.editchanged = false;
+                                
+                                // show error if necessary
+                                if( originalRequest.status != 200 ) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    return;
+                                }
 
-                                            json = Zikula.dejsonize(originalRequest.responseText);
-                                            Zikula.updateauthids(json.authid);
-                                                                                
-                                            $('postingtext_' + this.post_id + '_editor').remove();
-                                        
-                                            if(json.action == 'deleted') {
-                                                $('posting_' + this.post_id).remove();
-                                            } else if (json.action == 'topic_deleted') {
-                                                window.setTimeout("window.location.href='" + json.redirect + "';", 500);
-                                                return;
-                                            } else {
-                                                $('postingtext_' + this.post_id).update(json.post_text).show();
-                                            }
-                                        
-                                            //  hide quickreply
-                                            if($('dzk_quickreply')) {
-                                                Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-                                            }
-                                        }.bind(this)
-                        }
-                        );
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                                Zikula.updateauthids(json.authid);
+                                                                    
+                                $('postingtext_' + this.post_id + '_editor').remove();
+                            
+                                if(json.action == 'deleted') {
+                                    $('posting_' + this.post_id).remove();
+                                } else if (json.action == 'topic_deleted') {
+                                    window.setTimeout("window.location.href='" + json.redirect + "';", 500);
+                                    return;
+                                } else {
+                                    $('postingtext_' + this.post_id).update(json.post_text).show();
+                                }
+                            
+                                //  hide quickreply
+                                if($('dzk_quickreply')) {
+                                    Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
+                                }
+                            }.bind(this)
+            });
     
         $('postingoptions_' + this.post_id + '').show();
     },
@@ -417,7 +416,7 @@ var DizkusUser = Class.create(DizkusBase, {
             this.subjectstatus = true;
             pars = "module=Dizkus&func=edittopicsubject&topic=" + this.edittopicsubjectbuttonid.split('_')[1];
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
+            myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",
                 {
                     method: 'post',
@@ -457,30 +456,29 @@ var DizkusUser = Class.create(DizkusBase, {
                "&subject=" + encodeURIComponent($F('topicsubjectedit_subject')) +
                "&authid=" + $F('topicsubjectedit_authid');
         Ajax.Responders.register(this.dzk_globalhandlers);
-        var myAjax = new Ajax.Request(
-                        Zikula.Config.baseURL+"ajax.php",
-                        {
-                            method: 'post',
-                            parameters: pars,
-                            onComplete: function(originalRequest)
-                                        {
-                                            this.subjectstatus = false;
-                                            
-                                            // show error if necessary
-                                            if( originalRequest.status != 200 ) {
-                                                json = Zikula.ajaxResponseError(originalRequest);
-                                                return;
-                                            }
-                                        
-                                            json = Zikula.dejsonize(originalRequest.responseText);
-                                        
-                                            $('topicsubjectedit_editor').remove();
-                                            Zikula.updateauthids(json.authid);
-                                            $(this.edittopicsubjectbuttonid).update(json.topic_title).show();
-                                            //$(this.edittopicsubjectbuttonid).show();
-                                        }.bind(this)
-                        }
-                        );
+        myAjax = new Ajax.Request(
+            Zikula.Config.baseURL+"ajax.php",
+            {
+                method: 'post',
+                parameters: pars,
+                onComplete: function(originalRequest)
+                            {
+                                this.subjectstatus = false;
+                                
+                                // show error if necessary
+                                if( originalRequest.status != 200 ) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    return;
+                                }
+                            
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                            
+                                $('topicsubjectedit_editor').remove();
+                                Zikula.updateauthids(json.authid);
+                                $(this.edittopicsubjectbuttonid).update(json.topic_title).show();
+                                //$(this.edittopicsubjectbuttonid).show();
+                            }.bind(this)
+            });
     },
     
     topicsubjecteditcancel: function()
@@ -497,7 +495,7 @@ var DizkusUser = Class.create(DizkusBase, {
             this.stickystatus = true;
             pars = "module=Dizkus&func=stickyunstickytopic&topic=" + this.toggletopicstickybuttonid.split('_')[1] + "&mode=" + ((this.topic_sticky == false) ? 'sticky' : 'unsticky');
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
+            myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",
                 {
                     method: 'post',
@@ -621,54 +619,53 @@ var DizkusUser = Class.create(DizkusBase, {
             this.newtopicstatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingPost);
     
-            var pars = 'module=Dizkus&func=newtopic' +
-                       '&forum=' + $F('forum') +
-                       '&subject=' + encodeURIComponent($F('subject')) +
-                       '&message=' + encodeURIComponent($F('message')) +
-                       '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
-                       '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic') +
-                       '&authid=' + $F('authid');
+            pars = 'module=Dizkus&func=newtopic' +
+                   '&forum=' + $F('forum') +
+                   '&subject=' + encodeURIComponent($F('subject')) +
+                   '&message=' + encodeURIComponent($F('message')) +
+                   '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
+                   '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic') +
+                   '&authid=' + $F('authid');
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
-                            Zikula.Config.baseURL+'ajax.php',
-                            {
-                                method: 'post',
-                                parameters: pars,
-                                onComplete: function (originalRequest)
-                                            {
-                                                hidedizkusinfo();
-                                                this.newtopicstatus = false;
-                                            
-                                                // show error if necessary
-                                                if (originalRequest.status != 200) {
-                                                    json = Zikula.ajaxResponseError(originalRequest);
-                                                    //dzk_showajaxerror(originalRequest.responseText);
-                                                    return;
-                                                }
-                                            
-                                                json = Zikula.dejsonize(originalRequest.responseText);
-                                                Zikula.updateauthids(json.authid);
-                                            
-                                                if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
-                                                    newTopicUpload = true;
-                                                    newTopicRedirect = json.redirect;
-                                                    $('MediaAttach_redirect').value = json.uploadredirect;
-                                                    $('MediaAttach_objectid').value = json.uploadobjectid;
-                                                    this.updateAuthid(json.uploadauthid);
-                                                    $('btnUpload').click();
-                                                }
-                                            
-                                                if (json.confirmation == false || !$('newtopicconfirmation')) {
-                                                    this.showdizkusinfo(redirecting);
-                                                } else {
-                                                    $('dzk_newtopic').hide();
-                                                    $('newtopicconfirmation').update(json.confirmation).show();
-                                                }
-                                                window.setTimeout("window.location.href='" + json.redirect + "';", 3000);
-                                            }.bind(this)
+            myAjax = new Ajax.Request(
+                Zikula.Config.baseURL+'ajax.php',
+                {
+                    method: 'post',
+                    parameters: pars,
+                    onComplete: function (originalRequest)
+                                {
+                                    hidedizkusinfo();
+                                    this.newtopicstatus = false;
+                                
+                                    // show error if necessary
+                                    if (originalRequest.status != 200) {
+                                        json = Zikula.ajaxResponseError(originalRequest);
+                                        //dzk_showajaxerror(originalRequest.responseText);
+                                        return;
+                                    }
+                                
+                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    Zikula.updateauthids(json.authid);
+                                
+                                    if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
+                                        newTopicUpload = true;
+                                        newTopicRedirect = json.redirect;
+                                        $('MediaAttach_redirect').value = json.uploadredirect;
+                                        $('MediaAttach_objectid').value = json.uploadobjectid;
+                                        this.updateAuthid(json.uploadauthid);
+                                        $('btnUpload').click();
+                                    }
+                                
+                                    if (json.confirmation == false || !$('newtopicconfirmation')) {
+                                        this.showdizkusinfo(redirecting);
+                                    } else {
+                                        $('dzk_newtopic').hide();
+                                        $('newtopicconfirmation').update(json.confirmation).show();
+                                    }
+                                    window.setTimeout("window.location.href='" + json.redirect + "';", 3000);
+                                }.bind(this)
    
-                               }
-                               );
+                });
         }
         if (event) Event.stop(event);
     },
@@ -679,40 +676,39 @@ var DizkusUser = Class.create(DizkusBase, {
             this.newtopicstatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
     
-            var pars = "module=Dizkus&func=newtopic" +
-                       '&forum=' + $F('forum') +        
-                       "&subject=" + encodeURIComponent($F('subject')) +
-                       "&message=" + encodeURIComponent($F('message')) +
-                       "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
-                       "&preview=1" +
-                       "&authid=" + $F('authid');
+            pars = "module=Dizkus&func=newtopic" +
+                   '&forum=' + $F('forum') +        
+                   "&subject=" + encodeURIComponent($F('subject')) +
+                   "&message=" + encodeURIComponent($F('message')) +
+                   "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
+                   "&preview=1" +
+                   "&authid=" + $F('authid');
 
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
-                            Zikula.Config.baseURL+'ajax.php',
-                            {
-                                method: 'post',
-                                parameters: pars,
-                                onComplete: function (originalRequest)
-                                            {
-                                                this.hidedizkusinfo();
-                                                this.newtopicstatus = false;
+            myAjax = new Ajax.Request(
+                Zikula.Config.baseURL+'ajax.php',
+                {
+                    method: 'post',
+                    parameters: pars,
+                    onComplete: function (originalRequest)
+                                {
+                                    this.hidedizkusinfo();
+                                    this.newtopicstatus = false;
 
-                                                // show error if necessary
-                                                if( originalRequest.status != 200 ) {
-                                                    json = Zikula.ajaxResponseError(originalRequest);
-                                                    this.newtopicstatus = false;
-                                                    if (event) Event.stop(event);
-                                                    return;
-                                                }
-                                            
-                                                json = Zikula.dejsonize(originalRequest.responseText);
-                                                Zikula.updateauthids(json.authid);
-                                                $('newtopicpreview').update(json.data).show();
-                                                if (event) Event.stop(event);
-                                            }.bind(this)
-                            }
-                            );
+                                    // show error if necessary
+                                    if( originalRequest.status != 200 ) {
+                                        json = Zikula.ajaxResponseError(originalRequest);
+                                        this.newtopicstatus = false;
+                                        if (event) Event.stop(event);
+                                        return;
+                                    }
+                                
+                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    Zikula.updateauthids(json.authid);
+                                    $('newtopicpreview').update(json.data).show();
+                                    if (event) Event.stop(event);
+                                }.bind(this)
+                });
             if (event) Event.stop(event);
         }
     },
@@ -746,9 +742,9 @@ var DizkusUser = Class.create(DizkusBase, {
         quotetext.strip();
         if(quotetext.length == 0) {
             // read the messages text using ajax
-            var pars = "module=Dizkus&func=preparequote&post=" + quotelinkid.split('_')[1];
+            pars = "module=Dizkus&func=preparequote&post=" + quotelinkid.split('_')[1];
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
+            myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",
                 {
                     method: 'post',
@@ -795,58 +791,57 @@ var DizkusUser = Class.create(DizkusBase, {
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingReply);
         
-            var pars = 'module=Dizkus&func=reply' +
-                       '&topic=' + $F('topic') +
-                       '&message=' + encodeURIComponent($F('message')) +
-                       '&attach_signature=' + getcheckboxvalue('attach_signature') +
-                       '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') +
-                       '&authid=' + $F('authid');
+            pars = 'module=Dizkus&func=reply' +
+                   '&topic=' + $F('topic') +
+                   '&message=' + encodeURIComponent($F('message')) +
+                   '&attach_signature=' + getcheckboxvalue('attach_signature') +
+                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') +
+                   '&authid=' + $F('authid');
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
-                            Zikula.Config.baseURL+"ajax.php",
-                            {
-                                method: 'post',
-                                parameters: pars,
-                                onComplete: function(originalRequest)
-                                            {
-                                                this.hidedizkusinfo();
-                                            
-                                                // show error if necessary
-                                                if( originalRequest.status != 200 ) {
-                                                    json = Zikula.ajaxResponseError(originalRequest);
-                                                    this.replystatus = false;
-                                                    if (event) Event.stop(event);
-                                                    return;
-                                                }
-                                            
-                                                json = Zikula.dejsonize(originalRequest.responseText);
-                                                Zikula.updateauthids(json.authid);
-                                            
-                                                // clear textarea and reset preview
-                                                this.cancelQuickReply()
-                                            
-                                                // show new posting
-                                                $('quickreplyposting').update(json.data).removeClassName('hidden');
-                                            
-                                                // prepare everything for another quick reply
-                                                new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
-                                                // clear old id
-                                                $('quickreplyposting').id = '';
-                                                // rename new id
-                                                $('new_quickreplyposting').id = 'quickreplyposting';
-                                                // enable js options in quickreply
-                                                $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
-                                            
-                                                if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
-                                                    Zikula.updateauthids(json.uploadauthid);
-                                                    $('btnUpload').click();
-                                                    Zikula.updateauthids(json.authid);
-                                                }
-                                            
-                                                this.replystatus = false;
-                                            }.bind(this)
-                            }
-                            );
+            myAjax = new Ajax.Request(
+                Zikula.Config.baseURL+"ajax.php",
+                {
+                    method: 'post',
+                    parameters: pars,
+                    onComplete: function(originalRequest)
+                                {
+                                    this.hidedizkusinfo();
+                                
+                                    // show error if necessary
+                                    if( originalRequest.status != 200 ) {
+                                        json = Zikula.ajaxResponseError(originalRequest);
+                                        this.replystatus = false;
+                                        if (event) Event.stop(event);
+                                        return;
+                                    }
+                                
+                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    Zikula.updateauthids(json.authid);
+                                
+                                    // clear textarea and reset preview
+                                    this.cancelQuickReply()
+                                
+                                    // show new posting
+                                    $('quickreplyposting').update(json.data).removeClassName('hidden');
+                                
+                                    // prepare everything for another quick reply
+                                    new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
+                                    // clear old id
+                                    $('quickreplyposting').id = '';
+                                    // rename new id
+                                    $('new_quickreplyposting').id = 'quickreplyposting';
+                                    // enable js options in quickreply
+                                    $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
+                                
+                                    if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
+                                        Zikula.updateauthids(json.uploadauthid);
+                                        $('btnUpload').click();
+                                        Zikula.updateauthids(json.authid);
+                                    }
+                                
+                                    this.replystatus = false;
+                                }.bind(this)
+                });
         }
         if (event) Event.stop(event); 
         return false;
@@ -863,39 +858,38 @@ var DizkusUser = Class.create(DizkusBase, {
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
         
-            var pars = "module=Dizkus&func=reply" +
-                       "&topic=" + $F('topic') +
-                       "&message=" + encodeURIComponent($F('message')) +
-                       "&attach_signature=" + getcheckboxvalue('attach_signature') +
-                       "&preview=1" +
-                       "&authid=" + $F('authid');
+            pars = "module=Dizkus&func=reply" +
+                   "&topic=" + $F('topic') +
+                   "&message=" + encodeURIComponent($F('message')) +
+                   "&attach_signature=" + getcheckboxvalue('attach_signature') +
+                   "&preview=1" +
+                   "&authid=" + $F('authid');
         
             Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Ajax.Request(
-                            Zikula.Config.baseURL+"ajax.php",
-                            {
-                                method: 'post',
-                                parameters: pars,
-                                onComplete: function(originalRequest)
-                                            {
-                                                this.hidedizkusinfo();
-                                                
-                                                // show error if necessary
-                                                if( originalRequest.status != 200 ) {
-                                                    Zikula.ajaxResponseError(originalRequest);
-                                                    this.replystatus = false;
-                                                    if (event) Event.stop(event);
-                                                    return;
-                                                }
-                                                
-                                                json = Zikula.dejsonize(originalRequest.responseText);
-                                                Zikula.updateauthids(json.authid);
-                                                $('quickreplypreview').update(json.data).removeClassName('hidden');
-                                                this.replystatus = false;
-                                                //if (event) Event.stop(event);
-                                            }.bind(this)
-                            }
-                            );
+            myAjax = new Ajax.Request(
+                Zikula.Config.baseURL+"ajax.php",
+                {
+                    method: 'post',
+                    parameters: pars,
+                    onComplete: function(originalRequest)
+                                {
+                                    this.hidedizkusinfo();
+                                    
+                                    // show error if necessary
+                                    if( originalRequest.status != 200 ) {
+                                        Zikula.ajaxResponseError(originalRequest);
+                                        this.replystatus = false;
+                                        if (event) Event.stop(event);
+                                        return;
+                                    }
+                                    
+                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    Zikula.updateauthids(json.authid);
+                                    $('quickreplypreview').update(json.data).removeClassName('hidden');
+                                    this.replystatus = false;
+                                    //if (event) Event.stop(event);
+                                }.bind(this)
+                });
         }
 
         if (event) Event.stop(event);
