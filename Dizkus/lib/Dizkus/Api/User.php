@@ -22,7 +22,7 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_userdata_from_id($args)
     {
         $userid = $args['userid'];
-    
+
         static $usersarray;
     
         //if (isset($usersarray) && is_array($usersarray) && array_key_exists($userid, $usersarray)) {
@@ -36,6 +36,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $makedummy = false;
         // get the core user data
         $userdata = UserUtil::getVars($userid);
+
         if ($userdata == false) {
             // create a dummy user basing on Anonymous
             // necessary for some socks :-)
@@ -46,71 +47,83 @@ class Dizkus_Api_User extends Zikula_Api {
         $ztable = DBUtil::getTables();
     
         $dizkus_userdata = DBUtil::selectObjectByID('dizkus_users', $userid, 'user_id');
+        if (!is_array($dizkus_userdata)) {
+            // not yet in dizkus_users table, fake an entry for now
+            $dizkus_userdata = array('user_posts'      => 0,
+                                     'user_rank'       => 0,
+                                     'user_level'      => 0,
+                                     'use_lastvisit'   => 0,
+                                     'user_favorites'  => 0,
+                                     'user_post_order' => 0);
+        }
         
-        if (is_array($dizkus_userdata)) {
-            $userdata = array_merge($userdata, $dizkus_userdata);
-    
-            // set some basic data
-            $userdata['moderate'] = false;
-            $userdata['reply'] = false;
-            $userdata['seeip'] = false;
-    
-            //
-            // extract attributes
-            //
-            if (is_array($userdata['__ATTRIBUTES__']) && !empty($userdata['__ATTRIBUTES__'])) {
-                foreach ($userdata['__ATTRIBUTES__'] as $attributename => $attributevalue) {
-                    $userdata[$attributename] = $attributevalue; 
-                }
+        $userdata = array_merge($userdata, $dizkus_userdata);
+
+        // set some basic data
+        $userdata['moderate'] = false;
+        $userdata['reply'] = false;
+        $userdata['seeip'] = false;
+
+        //
+        // extract attributes if existing
+        //
+        if (array_key_exists('__ATTRIBUTES', $userdata) && is_array($userdata['__ATTRIBUTES__'])) {
+            foreach ($userdata['__ATTRIBUTES__'] as $attributename => $attributevalue) {
+                $userdata[$attributename] = $attributevalue; 
             }
-            //
-            // get the users group membership
-            //
-            /*
-            $userdata['groups'] = ModUtil::apiFunc('Groups', 'user', 'getusergroups',
-                                                array('uid' => $userdata['uid']));
-            */
-            $userdata['groups'] = array();
-    
-            //
-            // get the users rank
-            //
-            if ($userdata['user_rank'] != 0) {
-                $rank = DBUtil::selectObjectByID('dizkus_ranks', $userdata['user_rank'], 'rank_id');
-    
-            } elseif ($userdata['user_posts'] != 0) {
-                $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
-                          AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
-    
-                $rank = DBUtil::selectObject('dizkus_ranks', $where);
+        }
+        
+        if(!array_key_exists('signature', $userdata)) {
+            $userdata['signature'] = '';
+        }
+        //
+        // get the users group membership
+        //
+        /*
+        $userdata['groups'] = ModUtil::apiFunc('Groups', 'user', 'getusergroups',
+                                            array('uid' => $userdata['uid']));
+        */
+        $userdata['groups'] = array();
+
+        //
+        // get the users rank
+        //
+        $rank = null;
+        if ($userdata['user_rank'] != 0) {
+            $rank = DBUtil::selectObjectByID('dizkus_ranks', $userdata['user_rank'], 'rank_id');
+
+        } elseif ($userdata['user_posts'] != 0) {
+            $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
+                      AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
+
+            $rank = DBUtil::selectObject('dizkus_ranks', $where);
+        } 
+        
+        if (is_array($rank)) {
+            $userdata = array_merge($userdata, $rank);
+            $userdata['rank'] = $userdata['rank_title']; // backwards compatibility
+            $userdata['rank_link'] = (substr($userdata['rank_desc'], 0, 7) == 'http://') ? $userdata['rank_desc'] : '';
+            if ($userdata['rank_image']) {
+                $userdata['rank_image']      = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $userdata['rank_image'];
+                $userdata['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($userdata['rank_image']) : null;
             }
-    
-            if (is_array($rank)) {
-                $userdata = array_merge($userdata, $rank);
-                $userdata['rank'] = $userdata['rank_title']; // backwards compatibility
-                $userdata['rank_link'] = (substr($userdata['rank_desc'], 0, 7) == 'http://') ? $userdata['rank_desc'] : '';
-                if ($userdata['rank_image']) {
-                    $userdata['rank_image']      = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $userdata['rank_image'];
-                    $userdata['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($userdata['rank_image']) : null;
-                }
-            }
-            
-            //
-            // user name
-            //
-            if ($userdata['uid'] != 1) {
-                // user is logged in, display some info
-                $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-                $where = $ztable['session_info_column']['uid']." = '".$userdata['uid']."'
-                          AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
-    
-                $sessioninfo =  DBUtil::selectObject('session_info', $where);         
-                $userdata['online'] = ($sessioninfo['uid'] == $userdata['uid']) ? true : false; 
-    
-            } else {
-                // user is anonymous
-                $userdata['uname'] = ModUtil::getVar('Users', 'anonymous');
-            }
+        }
+        
+        //
+        // user name
+        //
+        if ($userdata['uid'] != 1) {
+            // user is logged in, display some info
+            $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
+            $where = $ztable['session_info_column']['uid']." = '".$userdata['uid']."'
+                      AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
+
+            $sessioninfo =  DBUtil::selectObject('session_info', $where);         
+            $userdata['online'] = ($sessioninfo['uid'] == $userdata['uid']) ? true : false; 
+
+        } else {
+            // user is anonymous
+            $userdata['uname'] = ModUtil::getVar('Users', 'anonymous');
         }
     
         if ($makedummy == true) {
@@ -426,14 +439,14 @@ class Dizkus_Api_User extends Zikula_Api {
             
                         // is the user subscribed to the forum?
                         $forum['is_subscribed'] = 0;
-                        if ($this->get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                        if ($this->get_forum_subscription_status(array('user_id' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                             $forum['is_subscribed'] = 1;
                         }
             
                         // is this forum in the favorite list?
                         $forum['is_favorite'] = 0;
                         if ($dizkusvars['favorites_enabled'] == 'yes') {
-                            if ($this->get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+                            if ($this->get_forum_favorites_status(array('user_id' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
                                 $forum['is_favorite'] = 1;
                             }
                         }
@@ -616,13 +629,13 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // is the user subscribed to the forum?
         $forum['is_subscribed'] = 0;
-        if ($this->get_forum_subscription_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+        if ($this->get_forum_subscription_status(array('user_id' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
             $forum['is_subscribed'] = 1;
         }
     
         // is this forum in the favorite list?
         $forum['is_favorite'] = 0;
-        if ($this->get_forum_favorites_status(array('userid' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
+        if ($this->get_forum_favorites_status(array('user_id' => UserUtil::getVar('uid'), 'forum_id' => $forum['forum_id'])) == true) {
             $forum['is_favorite'] = 1;
         }
     
@@ -1087,7 +1100,7 @@ class Dizkus_Api_User extends Zikula_Api {
             // just for backwards compatibility
             $text = Dizkus_undo_make_clickable($text);
             $text = str_replace('[addsig]', '', $text);
-            $reply['message'] = '[quote='.$reply['uname'].']'.$text.'[/quote]';
+            $reply['message'] = '[quote='.$reply['uname'].']'.trim($text).'[/quote]';
         } else {
             $reply['message'] = '';
         }
@@ -1317,42 +1330,32 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function get_forum_subscription_status($args)
     {
-        static $cache = array();
+        $ztables = DBUtil::getTables();
+        $subcolumn = $ztables['dizkus_subscription_column'];
     
-        if (!isset($cache[$args['userid']])) {
-            $ztables = DBUtil::getTables();
-            $subcolumn = $ztables['dizkus_subscription_column'];
+        $where = ' WHERE ' . $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . 
+                 ' AND '   . $subcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
     
-            $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
-            $cache[$args['userid']] = DBUtil::selectFieldMaxArray ('dizkus_subscription', 'msg_id', 'COUNT', $where, 'forum_id');
-        }
-    
-        $count = isset($cache[$args['userid']][$args['forum_id']]) ? $cache[$args['userid']][$args['forum_id']] : 0;
-    
+        $count = DBUtil::selectObjectCount('dizkus_subscription', $where);
         return $count > 0;
     }
     
     /**
      * get_forum_favorites_status
      *
-     * @params $args['userid'] int the users uid
+     * @params $args['user_id'] int the users uid
      * @params $args['forum_id'] int the forums id
      * @returns bool true if the user is subscribed or false if not
      */
     public function get_forum_favorites_status($args)
     {
-        static $cache = array();
+        $ztables = DBUtil::getTables();
+        $favcolumn = $ztables['dizkus_forum_favorites_column'];
     
-        if (!isset($cache[$args['userid']])){
-            $ztables = DBUtil::getTables();
-            $subcolumn = $ztables['dizkus_subscription_column'];
+        $where = ' WHERE ' . $favcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . 
+                 ' AND '   . $favcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
     
-            $where = $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']);
-            $cache[$args['userid']] = DBUtil::selectFieldMaxArray ('dizkus_forum_favorites', 'forum_id', 'COUNT', $where, 'forum_id');
-        }
-    
-        $count = isset($cache[$args['userid']][$args['forum_id']]) ? $cache[$args['userid']][$args['forum_id']] : 0;
-    
+        $count = DBUtil::selectObjectCount('dizkus_forum_favorites', $where);
         return $count > 0;
     }
     
@@ -1397,9 +1400,9 @@ class Dizkus_Api_User extends Zikula_Api {
             // user is not allowed to post
             return LogUtil::registerPermissionError();
         }
-    
-        $newtopic['poster_data'] = $this->get_userdata_from_id(array('userid' => UserUtil::getVar('uid')));
-    
+
+        $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', 
+                                                    array('userid' => UserUtil::getVar('uid')));
         $newtopic['subject'] = $args['subject'];
         $newtopic['message'] = $args['message'];
         $newtopic['message_display'] = $args['message']; // phpbb_br2nl($args['message']);

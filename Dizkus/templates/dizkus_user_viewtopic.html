@@ -3,7 +3,7 @@
 
 {include file='dizkus_user_header.html'}
 
-<div class="dzk_topicoptions roundedbar dzk_rounded">
+<div class="dzk_topicoptions roundedbar dzk_rounded" id="topic_{$topic.topic_id}">
     <div class="inner">
         <div id="dzk_javascriptareatopic" class="hidden">
             <ul class="dzk_topicoptions linklist z-clearfix">
@@ -23,8 +23,11 @@
 
                 {if $zcore.logged_in}
                 <li>
-                    <a id="subscribetopicbutton" class="dzk_img {if $topic.is_subscribed eq 1}hidden{/if} subscribetopiclink" onclick="javascript:subscribeunsubscribetopic({$topic.topic_id},'subscribe');" href="javascript:void(0);" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a>
-                    <a id="unsubscribetopicbutton" class="dzk_img {if $topic.is_subscribed eq 0}hidden{/if} unsubscribetopiclink" onclick="javascript:subscribeunsubscribetopic({$topic.topic_id},'unsubscribe');" href="javascript:void(0);" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a>
+                    {if $topic.is_subscribed eq 0}
+                    <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_unsubscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a>
+                    {else}
+                    <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_subscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a>
+                    {/if}
                 </li>
                 {/if}
                 {if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
@@ -35,13 +38,19 @@
             {if $topic.access_moderate eq 1}
             <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
-                    <a id="locktopicbutton" class="dzk_img {if $topic.topic_status eq 1}hidden{/if} locktopiclink" title="{gt text="Lock topic"}" href="javascript:void(0);" onclick="javascript:lockunlocktopic({$topic.topic_id}, 'lock');">{gt text="Lock topic"}</a>
-                    <a id="unlocktopicbutton" class="dzk_img {if $topic.topic_status eq 0}hidden{/if} unlocktopiclink" title="{gt text="Unlock topic"}" href="javascript:void(0);" onclick="javascript:lockunlocktopic({$topic.topic_id}, 'unlock');">{gt text="Unlock topic"}</a>
+                    {if $topic.topic_status eq 0}
+                    <a id="toggletopiclockbutton_{$topic.topic_id}_unlocked" class="dzk_img" title="{gt text="Lock topic"}" href="javascript:void(0);">{gt text="Lock topic"}</a>
+                    {else}
+                    <a id="toggletopiclockbutton_{$topic.topic_id}_locked" class="dzk_img" title="{gt text="Unlock topic"}" href="javascript:void(0);">{gt text="Unlock topic"}</a>
+                    {/if}
                 </li>
 
                 <li>
-                    <a class="dzk_img {if $topic.sticky eq 1}hidden{/if} stickytopiclink" id="stickytopicbutton" title="{gt text="Give this topic 'sticky' status"}"   href="javascript:void(0);" onclick="javascript:stickyunstickytopic({$topic.topic_id}, 'sticky')">{gt text="Give this topic 'sticky' status"}</a>
-                    <a class="dzk_img {if $topic.sticky eq 0}hidden{/if} unstickytopiclink" id="unstickytopicbutton" title="{gt text="Remove 'sticky' status"}" href="javascript:void(0);" onclick="javascript:stickyunstickytopic({$topic.topic_id}, 'unsticky')">{gt text="Remove 'sticky' status"}</a>
+                    {if $topic.sticky eq 0}
+                    <a class="dzk_img" id="toggletopicstickybutton_{$topic.topic_id}_unsticky" title="{gt text="Give this topic 'sticky' status"}"   href="javascript:void(0);">{gt text="Give this topic 'sticky' status"}</a>
+                    {else}
+                    <a class="dzk_img" id="toggletopicstickybutton_{$topic.topic_id}_sticky" title="{gt text="Remove 'sticky' status"}" href="javascript:void(0);">{gt text="Remove 'sticky' status"}</a>
+                    {/if}
                 </li>
 
                 <li><a class="dzk_img movetopiclink" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
@@ -157,9 +166,9 @@
                                         </li>
                                         {/if}
                                         <li id="quickreplybuttons" class="dzk_buttonmargin hidden">
-                                            <button id="btnCreateQuickReply" class="dzk_img ok" onclick="createQuickReply(); return false;" type="submit" title="{gt text="Submit"}">{gt text="Submit"}</button>
-                                            <button class="dzk_img preview" onclick="previewQuickReply(); return false;" type="submit" title="{gt text="Preview"}">{gt text="Preview"}</button>
-                                            <button class="dzk_img cancel" onclick="clearQuickReply();" type="reset" title="{gt text="Cancel"}">{gt text="Cancel"}</button>
+                                            <button id="btnCreateQuickReply" class="dzk_img ok" type="submit" title="{gt text="Submit"}">{gt text="Submit"}</button>
+                                            <button id="btnPreviewQuickReply" class="dzk_img preview" type="submit" title="{gt text="Preview"}">{gt text="Preview"}</button>
+                                            <button id="btnCancelQuickReply" class="dzk_img cancel" type="reset" title="{gt text="Cancel"}">{gt text="Cancel"}</button>
                                         </li>
 
                                         <li id="nonajaxquickreplybuttons" class="dzk_buttonmargin">
@@ -209,33 +218,12 @@
     var updatingPost = "{{gt text='Updating post...'}}";
     var statusNotChanged = "{{gt text='Unchanged'}}";
     var statusChanged = "{{gt text='Changed'}}";
-
-    Event.observe(window, 'load', init_topicview);
-    function init_topicview()
-    {
-        $('dzk_javascriptareatopic').removeClassName('hidden');
-        if($('dzk_quickreply')) {
-            $('quickreplybuttons').removeClassName('hidden');
-            $('nonajaxquickreplybuttons').addClassName('hidden');
-            $('quickreplyform').action = '';
-        }
-        $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
-
-        if($('subscribetopicbutton') && $('unsubscribetopicbutton')) {
-            var is_subscribed = 0;
-            if(is_subscribed == 0) {
-                Element.show('subscribetopicbutton');
-            } else {
-                Element.show('unsubscribetopicbutton');
-            }
-        }
-    }
-
-    {{if ($topic.topic_status neq 1) and ($topic.access_comment eq true)}}
-    //var btnCreateQuickReply = $('btnCreateQuickReply');
-    Event.observe('btnCreateQuickReply', 'click', createQuickReply);
-    {{/if}}
-
+    var subscribeTopic = "{{gt text='Subscribe to topic'}}";
+    var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
+    var lockTopic = "{{gt text='Lock topic'}}";
+    var unlockTopic = "{{gt text='Unlock topic'}}";
+    var stickyTopic = "{{gt text="Give this topic 'sticky' status"}}";
+    var unstickyTopic = "{{gt text="Remove 'sticky' status"}}";
     // ]]>
 </script>
 

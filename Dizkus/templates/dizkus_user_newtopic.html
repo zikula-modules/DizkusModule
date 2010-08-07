@@ -52,13 +52,13 @@
                                         </li>
                                         {/if}
                                         <li id="newtopicbuttons" class="dzk_buttonmargin" style="display: none;">
-                                            <button id="btnCreateNewTopic" class="dzk_img ok" onclick="createnewtopic(); return false;" type="submit" title="{gt text="Submit"}">
+                                            <button id="btnCreateNewTopic" class="dzk_img ok" type="submit" title="{gt text="Submit"}">
                                                 {gt text="Submit"}
                                             </button>
-                                            <button class="dzk_img preview" onclick="previewnewtopic(); return false;" type="submit" title="{gt text="Preview"}">
+                                            <button id="btnPreviewNewTopic" class="dzk_img preview" type="submit" title="{gt text="Preview"}">
                                                 {gt text="Preview"}
                                             </button>
-                                            <button class="dzk_img cancel" onclick="clearnewtopic();" type="reset" title="{gt text="Cancel"}">
+                                            <button id="btnCancelNewTopic" class="dzk_img cancel" type="reset" title="{gt text="Cancel"}">
                                                 {gt text="Cancel"}
                                             </button>
                                         </li>
@@ -92,15 +92,6 @@
     var preparingPreview = '{{gt text="Preparing preview..."}}';
     var redirecting = '{{gt text="Redirecting you to the new topic..."}}';
 
-    Element.show($('newtopicbuttons'));
-    Element.remove($('nonajaxnewtopicbuttons'));
-    if($('nonajaxnewtopicpreview')) {
-        Element.remove($('nonajaxnewtopicpreview'));
-    }
-    $('newtopicform').action = '';
-
-    //var btnCreateNewTopic = $('btnCreateNewTopic');
-    Event.observe('btnCreateNewTopic', 'click', createnewtopic);
 
     // ]]>
 </script>

@@ -3,6 +3,45 @@
  *
  */
 
+var DizkusBase = Class.create({
+    initialize: function() { /* nothing to do here atm */ },
+    
+    getcheckboxvalue: function(id){
+        if($(id)) {
+            if($(id).checked==true) {
+                return $(id).value;
+            }
+            return '';
+        }
+    },
+
+    /*
+     * show an ajax error
+     * to-do: beautify this function
+     */
+    showajaxerror: function(error){
+        alert(error);
+    },
+    
+    showdizkusinfo: function(infotext) {
+        if($('dizkusinformation')) {
+            $('dizkusinformation').update(infotext).style.visibility = 'visible';
+        }
+    },
+    
+    hidedizkusinfo: function() {
+        if($('dizkusinformation')) {
+            $('dizkusinformation').update('&nbsp;').style.visibility = 'hidden';
+        }
+    },
+    
+    redirect: function(redirecturl) {
+        window.location.href = redirecturl;
+    }
+    
+});
+
+
 function getcheckboxvalue(id)
 {
     if($(id)) {

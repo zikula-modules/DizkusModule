@@ -17,33 +17,19 @@
 
             {if $zcore.logged_in}
             <li>
-                <a class="dzk_img hidden subscribelink" id="subscribeforumbutton_{$forum.forum_id}" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'subscribe');" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
-                <a class="dzk_img hidden unsubscribelink" id="unsubscribeforumbutton_{$forum.forum_id}" onclick="javascript:subscribeunsubscribeforum({$forum.forum_id}, 'unsubscribe');" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
-                <script type="text/javascript">
-                    // <![CDATA[
-                    var is_favorite = {{$forum.is_subscribed}};
-                    if(is_favorite == 0) {
-                        $('subscribeforumbutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
-                    } else {
-                        $('unsubscribeforumbutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
-                    }
-                    // ]]>
-                </script>
+                {if $forum.is_subscribed eq 0}
+                <a id="toggleforumsubscriptionbutton_{$forum.forum_id}_unsubscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                {else}
+                <a id="toggleforumsubscriptionbutton_{$forum.forum_id}_subscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
+                {/if}
             </li>
             {if $zcore.Dizkus.favorites_enabled eq "yes"}
             <li>
-                <a class="dzk_img hidden addfavoritelink" id="addfavoritebutton_{$forum.forum_id}"  onclick="javascript:addremovefavorite({$forum.forum_id}, 'add');"    href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
-                <a class="dzk_img hidden removefavoritelink" id="removefavoritebutton_{$forum.forum_id}" onclick="javascript:addremovefavorite({$forum.forum_id}, 'remove');" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
-                <script type="text/javascript">
-                    // <![CDATA[
-                    var is_favorite = {{$forum.is_favorite}};
-                    if(is_favorite == 0) {
-                        $('addfavoritebutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
-                    } else {
-                        $('removefavoritebutton_'  + {{$forum.forum_id}}).toggleClassName('hidden');
-                    }
-                    // ]]>
-                </script>
+                {if $forum.is_favorite eq 0}
+                <a id="toggleforumfavouritebutton_{$forum.forum_id}_nofavourite" class="dzk_img" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                {else}
+                <a id="toggleforumfavouritebutton_{$forum.forum_id}_favourite" class="dzk_img" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                {/if}
             </li>
             {/if}
             {/if}
@@ -184,18 +170,13 @@
 </ul>
 {/if}
 
-{if $forum.access_moderate eq true or $forum.access_comment or $zcore.logged_in}
 <script type="text/javascript">
     // <![CDATA[
-
-    Event.observe(window, 'load', init_viewforum);
-
-    function init_viewforum()
-    {
-        $('dzk_javascriptareaforum').removeClassName('hidden');
-    }
+    var subscribeForum = "{{gt text='Subscribe to forum'}}";
+    var unsubscribeForum = "{{gt text='Unsubscribe from forum'}}";
+    var favouriteForum = "{{gt text='Add forum to favourites'}}";
+    var unfavouriteForum = "{{gt text='Remove forum from favourites'}}";
     // ]]>
 </script>
-{/if}
 
 {include file='dizkus_user_footer.html'}

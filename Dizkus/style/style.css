@@ -112,6 +112,10 @@ div#editpostoptions ul li {
 }
 #dizkus h2 .editabletopicheader {
     display: inline;
+    cursor: pointer;
+}
+#dizkus h2 .noneditabletopicheader {
+    display: inline;
 }
 #dizkus h3.footer_title {
     border:none;

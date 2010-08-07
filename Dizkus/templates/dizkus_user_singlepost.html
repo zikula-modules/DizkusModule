@@ -76,10 +76,10 @@
 
                         {if isset($topic) AND $topic.topic_status neq 1}
                         {if $post.poster_data.reply eq true}
-                        <li><a class="quotepostlink" id="quotebutton_{$post.post_id}" onclick="javascript:createQuote({$post.post_id});" title="{gt text="Quote"}" href="javascript:void(0);">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote' }</a></li>
+                        <li><a class="quotepostlink" id="quotebutton_{$post.post_id}" title="{gt text="Quote"}" href="javascript:void(0);">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote' }</a></li>
                         {/if}
                         {if $post.poster_data.edit eq 1}
-                        <li><a class="editpostlink" id="editbutton_{$post.post_id}" onclick="javascript:quickEdit({$post.post_id});" title="{gt text="Edit/delete"}" href="javascript:void(0);">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit' }</a></li>
+                        <li><a class="editpostlink" id="editbutton_{$post.post_id}" title="{gt text="Edit/delete"}" href="javascript:void(0);">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit' }</a></li>
                         {/if}
                         {elseif isset($topic)}
                         <li>{img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked" }</li>

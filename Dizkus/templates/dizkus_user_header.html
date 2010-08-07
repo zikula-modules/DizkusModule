@@ -109,9 +109,15 @@
     <h2>{$forum.forum_name|safetext}</h2>
     {elseif $func eq 'viewtopic' AND isset($topic)}
     <h2>
-        <span class="editabletopicheader" id="topicsubject_{$topic.topic_id}" {if $topic.access_topicsubjectedit eq 1}title="{gt text="Click to edit"}" onclick="javascript:topicsubjectedit({$topic.topic_id})"{/if}>
-            <span id="topicsubject_{$topic.topic_id}_content">{$topic.topic_title|safetext}</span>
+        {if $topic.access_topicsubjectedit eq 1}
+        <span class="editabletopicheader" id="edittopicsubjectbutton_{$topic.topic_id}" title="{gt text="Click to edit"}">
+            {$topic.topic_title|safetext}
         </span>
+        {else}
+        <span class="noneditabletopicheader">
+            {$topic.topic_title|safetext}
+        </span>       
+        {/if}
         <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom" }</a>
     </h2>
     {elseif $maintitle neq ''}

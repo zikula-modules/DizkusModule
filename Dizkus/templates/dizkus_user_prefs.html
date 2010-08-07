@@ -13,23 +13,20 @@
             <ul class="linklist z-clearfix">
                 <li>{gt text="Recent posts order in topic view"}
                     <br />
-                    <span style="display: none;" id="sortorder_asc"><a class="dzk_img sortorderasclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})</span>
-                    <span style="display: none;" id="sortorder_desc"><a class="dzk_img sortorderdesclink" onclick="javascript:changesortorder();" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})</span>
+                    <span><a id="sortorder" class="dzk_img sortorderasclink hidden" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}:
+                    {if $post_order eq 'asc'}
+                    <span id="sortorder_asc">{gt text="Oldest submissions at top"})</span>
+                    <span id="sortorder_desc" class="hidden">{gt text="Newest submissions at top"})</span>
+                    {elseif $post_order eq 'desc'}
+                    <span id="sortorder_asc" class="hidden">{gt text="Oldest submissions at top"})</span>
+                    <span id="sortorder_desc">{gt text="Newest submissions at top"})</span>
+                    {/if}
+                    </span>
                     <form action="javascript:void(0);" method="post">
                         <div>
                             <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                         </div>
                     </form>
-                    <script type="text/javascript">
-                        // <![CDATA[
-                        var post_order = '{{$post_order}}';
-                        if(post_order == 'asc') {
-                            Element.toggle('sortorder_asc');
-                        } else {
-                            Element.toggle('sortorder_desc');
-                        }
-                        // ]]>
-                    </script>
                     <noscript>
                         <div>
                             {if $post_order == 'asc'}
