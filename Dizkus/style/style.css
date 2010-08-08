@@ -558,6 +558,11 @@ div#editpostoptions ul li {
 
 /* buttons */
 
+#dizkus button,
+#dizkus_admin button {
+    cursor: pointer;
+}
+
 #dizkus button.dzk_img,
 #dizkus input.dzk_img,
 #dizkus_admin button.dzk_img,

@@ -25,632 +25,616 @@ var globalhandlers = {
 };
 Ajax.Responders.register(globalhandlers);
 
+document.observe('dom:loaded', function() 
+                               {     
+                                   Zikula.define('Dizkus');
+                                   new DizkusAdmin(); 
+                               });
 
-function loadforum(forumid)
-{
-    dzk_toggleprogressimage(false, forumid);
-    //if(Element.visible('editforum_' + forumid) == false) {
-    var pars = "module=Dizkus&type=admin&func=editforum&forum_id=" + forumid;
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php',
-        {
-            method: 'post', 
-            parameters: pars, 
-            onComplete: editforum
-        });
-}
-
-function editforum(originalRequest)
-{    
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-    var result = dejsonize(originalRequest.responseText);
-
-    dzk_toggleprogressimage(false, result.forum_id);
-    Element.update('editforum_' + result.forum_id, result.data);
-    Effect.toggle('editforum_' + result.forum_id, 'slide');
-    Event.observe('showforum_' + result.forum_id, 'click', function(){hideshowforum(result.forum_id)}, false);
-    Event.observe('hideforum_' + result.forum_id, 'click', function(){hideshowforum(result.forum_id)}, false);
-    Element.show('hideforum_' + result.forum_id);
-    Element.hide('showforum_' + result.forum_id);
-    Element.hide('loadforum_' + result.forum_id);
-}
-
-function loadcategory(catid)
-{
-    dzk_toggleprogressimage(true, catid);
-    var pars = "module=Dizkus&type=admin&func=editcategory&cat=" + catid;
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php',
-        {
-            method: 'post', 
-            parameters: pars, 
-            onComplete: editcategory
-        });
-}
-
-function editcategory(originalRequest, json)
-{    
-    dzk_toggleprogressimage(true, json.cat_id);
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-    Element.update('editcategory_' + json.cat_id, json.data);
-    Effect.toggle('editcategory_' + json.cat_id, 'slide');
-    Event.observe('showcategory_' + json.cat_id, 'click', function(){hideshowcategory(json.cat_id)}, false);
-    Event.observe('hidecategory_' + json.cat_id, 'click', function(){hideshowcategory(json.cat_id)}, false);
-    Element.hide('loadcategory_' + json.cat_id);
-    Element.hide('showcategory_' + json.cat_id);
-    Element.show('hidecategory_' + json.cat_id);
-}
-
-function storeforum(forumid)
-{
-    dzk_toggleprogressimage(false, forumid);
-    var pars = "module=Dizkus&type=admin&func=storeforum&" + Form.serialize('editforumform_'+ forumid);
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php',
-        {
-            method: 'post', 
-            parameters: pars, 
-            onComplete: storeforum_response
-        });
-}
-
-function storeforum_response(originalRequest)
-{
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-
-    var json = dejsonize(originalRequest.responseText);
-    updateAuthid(json.authid);
-    switch(json.action) {
-        case 'delete':
-            var forum = 'forum_' + json.old_id;
-            // hide it
-            Effect.toggle(forum, 'slide');
-            // check if there are more forums, if not, show place holder
-            if($(forum).parentNode.childNodes.length == 3) {
-                // 3 = this forum li, emptycategory li  + newforum li
-                // after removing it the list will be virtually empty
-                Element.show('emptycategory_' + json.cat_id);
-                $('deletecategory_' + json.cat_id).style.visibility = '';
-            } else {
-                $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
-            }
-            // remove it
-            Element.remove(forum);
-            break;
-        case 'update':
-            Element.update('forumtitle_' + json.forum.forum_id, json.forumtitle);
-            Element.update('editforum_' + json.forum.forum_id, json.editforumhtml);
-            dzk_toggleprogressimage(false, json.forum.forum_id);
-            break;
-        case 'add':
-            var newforumtitle = 'forumtitle_' + json.forum.forum_id;
-            $('forumtitle_' + json.old_id).id = newforumtitle; 
-            Element.update(newforumtitle, json.forumtitle);
-
-            var neweditforum = 'editforum_' + json.forum.forum_id;
-            $('editforum_' + json.old_id).id = neweditforum; 
-            Element.update(neweditforum, json.editforumhtml);
-
-            var newforum = 'forum_' + json.forum.forum_id;
-            $('forum_' + json.old_id).id = newforum;
-
-            var newhideforum = 'hideforum_' + json.forum.forum_id;
-            $('hideforum_' + json.old_id).id = newhideforum;
-            Event.observe(newhideforum, 'click', function(){hideshowforum(json.forum.forum_id)}, false);
-            Element.show(newhideforum);
-            
-            var newshowforum = 'showforum_' + json.forum.forum_id;
-            $('showforum_' + json.old_id).id = newshowforum;
-            Event.observe(newshowforum, 'click', function(){hideshowforum(json.forum.forum_id)}, false);
-            Element.hide(newshowforum);
-
-            Element.remove('canceladdforum_' + json.old_id);
-            dzk_toggleprogressimage(false, json.old_id);
-            $('progressforumimage_' + json.old_id).id = 'progressforumimage_' + json.forum.forum_id;
-
-            $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
-            break;
-        default:
-            dzk_showajaxerror('Error! \'storeforum_response()\' received illegal action type from server.');   
-    }
-}
-
-function storecategory(catid)
-{
-    dzk_toggleprogressimage(true, catid);
-    var pars = "module=Dizkus&type=admin&func=storecategory&" + Form.serialize('editcategoryform_'+ catid);
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php',
-        {
-            method: 'post', 
-            parameters: pars, 
-            onComplete: storecategory_response
-        });
-}
-
-function storecategory_response(originalRequest, json)
-{
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-    var json = dejsonize(originalRequest.responseText);
-
-    dzk_toggleprogressimage(true, json.old_id);
-    updateAuthid(json.authid);
-    
-    switch(json.action) {
-        case 'add':
-            $('category_' + json.old_id).id = 'category_' + json.cat_id;
-            
-            var newhidecategory = 'hidecategory_' + json.cat_id;
-            $('hidecategory_' + json.old_id).id = newhidecategory;
-            Event.observe(newhidecategory, 'click', function(){hideshowcategory(json.cat_id)}, false);
-            
-            var newshowcategory = 'showcategory_' + json.cat_id;
-            $('showcategory_' + json.old_id).id = newshowcategory;
-            Event.observe(newshowcategory, 'click', function(){hideshowcategory(json.cat_id)}, false);
-
-            var newcategorytitle = 'categorytitle_' + json.cat_id;
-            $('categorytitle_' + json.old_id).id = newcategorytitle;
-            Element.update(newcategorytitle, '<a href="' + json.cat_linkurl + '">' + json.cat_title + '</a> (' + json.cat_id + ')');
-            
-            var newaddforum = 'addforum_' + json.cat_id;
-            $('addforum_' + json.old_id).id = newaddforum;
-            Element.show(newaddforum);
-            Event.observe(newaddforum, 'click', function(){addforum(json.cat_id)}, false);
-
-            var newhideforumlist = 'hideforumlist_' + json.cat_id;
-            $('hideforumlist_' + json.old_id).id = newhideforumlist;
-            Element.show(newhideforumlist);
-            Event.observe(newhideforumlist, 'click', function(){hideshowforumlist(json.cat_id)}, false);
-            
-            var newshowforumlist = 'showforumlist_' + json.cat_id;
-            $('showforumlist_' + json.old_id).id = newshowforumlist;
-            Element.hide(newshowforumlist);
-            Event.observe(newshowforumlist, 'click', function(){hideshowforumlist(json.cat_id)}, false);
-
-            var newprogresscategoryimage = 'progresscategoryimage_' + json.cat_id;
-            $('progresscategoryimage_' + json.old_id).id = newprogresscategoryimage;
-            $(newprogresscategoryimage).style.visibilty = 'hidden';
-
-            
-            var newcid = 'cid_' + json.cat_id;
-            $('cid_' + json.old_id).id = newcid;
-            Element.show(newcid);
-
-            
-            var newemptycategory = 'emptycategory_' + json.cat_id;
-            $('emptycategory_' + json.old_id).id = newemptycategory;
-            Element.show(newemptycategory);
-
-
-            Element.remove('canceladdcategory_' + json.old_id);
-            var neweditcategory = 'editcategory_' + json.cat_id;          
-
-            $('editcategory_' + json.old_id).id = neweditcategory;
-            Element.update(neweditcategory, json.edithtml);
-
-            // new forum li
-            var newforum = 'newforum_cat' + json.cat_id;
-            $('newforum_cat' + json.old_id).id = newforum;
-            
-            var newforumtitle = 'forumtitle_cat' + json.cat_id;   
-            $('forumtitle_cat' + json.old_id).id = newforumtitle;
-            
-            var newhideforum = 'hideforum_cat' + json.cat_id;
-            $('hideforum_cat' + json.old_id).id = newhideforum;
-            
-            var newshowforum = 'showforum_cat' + json.cat_id;   
-            $('showforum_cat' + json.old_id).id = newshowforum;
-           
-            var newcanceladdforum = 'canceladdforum_cat' + json.cat_id; 
-            $('canceladdforum_cat' + json.old_id).id = newcanceladdforum;
-            
-            var newprogressforumimage = 'progressforumimage_cat' + json.cat_id;
-            $('progressforumimage_cat' + json.old_id).id = newprogressforumimage;
-            
-            var neweditforum = 'neweditforum_' + json.cat_id; 
-            $('neweditforum_' + json.old_id).id = neweditforum;
-            
-            break;
-        case 'update':
-            Element.update('categorytitle_' + json.cat_id, '<a href="' + json.cat_linkurl + '">' + json.cat_title + '</a> (' + json.cat_id + ')');
-            break;
-        case 'delete':
-            Element.remove('category_' + json.cat_id);
-            break;
-        default:
-            dzk_showajaxerror('Error! Unknown action received from server.');
-    }
-}
-
-function addforum(catid)
-{
-    dzk_toggleprogressimage(true, catid);
-    var pars = "module=Dizkus&type=admin&func=editforum&forum_id=-1&cat=" + catid;
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php', 
-        {
-            method: 'post', 
-            parameters: pars, 
-            onComplete: addforuminit
-        });
-}
-
-function addforuminit(originalRequest)
-{    
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-
-    var result = dejsonize(originalRequest.responseText);
-
-    dzk_toggleprogressimage(true, result.cat_id);
-    // copy newforum li
-    var newnewforum = $('newforum_cat' + result.cat_id).cloneNode(true);
-
-    // update existig newforum li with data retreved from server
-    // and show it
-    var neweditforum = 'editforum_' + result.forum_id;
-    $('neweditforum_' + result.cat_id).id = neweditforum;
-    Element.update(neweditforum, result.data);
-    Element.show(neweditforum);
-
-    // set new id in newforum li
-    var newforum = 'forum_' + result.forum_id;
-    $('newforum_cat' + result.cat_id).id = newforum;
-    Element.show(newforum);
-
-    var newforumtitle = 'forumtitle_' + result.forum_id;
-    $('forumtitle_cat' + result.cat_id).id = newforumtitle;
-
-    var newhideforum = 'hideforum_' + result.forum_id;
-    $('hideforum_cat' + result.cat_id).id = newhideforum;
-    Event.observe(newhideforum, 'click', function(){hideshowforum(result.forum_id)}, false);
-    Element.show(newhideforum);
-
-    var newshowforum = 'showforum_' + result.forum_id;
-    $('showforum_cat' + result.cat_id).id = newshowforum;
-    Event.observe(newshowforum, 'click', function(){hideshowforum(result.forum_id)}, false);
-    Element.hide(newshowforum);
-
-    var newcanceladdforum = 'canceladdforum_' + result.forum_id;
-    $('canceladdforum_cat' + result.cat_id).id = newcanceladdforum;
-    Event.observe(newcanceladdforum, 'click', function(){canceladdforum(result.forum_id, result.cat_id)}, false);
-
-    $('progressforumimage_cat' + result.cat_id).id = 'progressforumimage_' + result.forum_id;
-
-    // append copied li to the ul - now we can add another new forum without 
-    // needing to store the first one
-    $('cid_' + result.cat_id).appendChild(newnewforum);
-    if(Element.visible('cid_' + result.cat_id) == false) {
-        hideshowforumlist(result.cat_id);
-    }
-    Element.hide('emptycategory_' + result.cat_id);
-}
-
-function addcategory()
-{
-    var pars = "module=Dizkus&type=admin&func=editcategory&cat=new";
-    var myAjax = new Ajax.Request(
-        document.location.pnbaseURL+'ajax.php',
-        {
-            method: 'post', 
-            parameters: pars, 
-            onComplete: addcategoryinit
-        });
-}
-
-function addcategoryinit(originalRequest, json)
-{    
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-
-    // copy newcategory li
-    var newnewcategory = $('newcategory').cloneNode(true);
-    
-    // update existing newcategory li with data retreved from server
-    Element.update('neweditcategory', json.data);
-    // and show it
-    
-    // set new id in newcategory li
-    var newcategory = 'category_' + json.cat_id;
-    $('newcategory').id = newcategory;
-
-    var neweditcategory = 'editcategory_' + json.cat_id;
-    $('neweditcategory').id = neweditcategory;
-    Element.show(neweditcategory);
-
-    $('newcategorytitle').id = 'categorytitle_' + json.cat_id;
-
-    var newhidecategory = 'hidecategory_' + json.cat_id;
-    $('newhidecategory').id = newhidecategory;
-    Event.observe(newhidecategory, 'click', function(){hideshowcategory(json.cat_id)}, false);
-    Element.show(newhidecategory);
-    
-    var newshowcategory = 'showcategory_' + json.cat_id;
-    $('newshowcategory').id = newshowcategory;
-    Event.observe(newshowcategory, 'click', function(){hideshowcategory(json.cat_id)}, false);
-    Element.hide(newshowcategory);
-
-    var newhideforumlist = 'hideforumlist_' + json.cat_id;
-    $('newhideforumlist').id = newhideforumlist;
-    Element.hide(newhideforumlist);
-    
-    var newshowforumlist = 'showforumlist_' + json.cat_id;
-    $('newshowforumlist').id = newshowforumlist;
-    Element.hide(newshowforumlist);
-
-    var newprogresscategoryimage = 'progresscategoryimage_' + json.cat_id;
-    $('newprogresscategoryimage').id = newprogresscategoryimage;
-    
-    var newcanceladdcategory = 'canceladdcategory_' + json.cat_id;
-    $('newcanceladdcategory').id = newcanceladdcategory;
-    Event.observe(newcanceladdcategory, 'click', function(){canceladdcategory(json.cat_id)}, false);
-    
-    var newaddforum = 'addforum_' + json.cat_id;
-    $('newaddforum').id = newaddforum;
-    Element.hide(newaddforum);
-
-    var newcid = 'cid_' + json.cat_id;
-    $('newcid').id = newcid;
-    
-    var newemptycategory = 'emptycategory_' + json.cat_id;
-    $('newemptycategory').id = newemptycategory;
-
-    // new forum li
-    var newforum = 'newforum_cat' + json.cat_id;
-    $('newforum').id = newforum;
-    
-    var newforumtitle = 'forumtitle_cat' + json.cat_id;   
-    $('newforumtitle').id = newforumtitle;
-    
-    var newhideforum = 'hideforum_cat' + json.cat_id;
-    $('newhideforum').id = newhideforum;
-    
-    var newshowforum = 'showforum_cat' + json.cat_id;   
-    $('newshowforum').id = newshowforum;
-    
-    var newcanceladdforum = 'canceladdforum_cat' + json.cat_id; 
-    $('newcanceladdforum').id = newcanceladdforum;
-    
-    var newprogressforumimage = 'progressforumimage_cat' + json.cat_id;
-    $('newprogressforumimage').id = newprogressforumimage;
-    
-    var neweditforum = 'neweditforum_' + json.cat_id; 
-    $('neweditforum').id = neweditforum;
-
-    // append copied li to the ul - now we can add another new category without 
-    // needing to store the first one
-    $('category').appendChild(newnewcategory);
-
-    Effect.toggle(newcategory, 'slide');
-}
-
-function canceladdcategory(catid)
-{
-    Effect.toggle('category_' + catid, 'slide');
-    Element.remove('category_' + catid);
-}
-
-function canceladdforum(forumid, catid)
-{
-    var forum = 'forum_' + forumid;
-    // hide it
-    Effect.toggle(forum, 'slide');
-    // check if there are more forums, if not, show place holder
-    if($(forum).parentNode.childNodes.length == 3) {
-        // 3 = this forum li, emptycategory li  + newforum li
-        // after removing it the list will be virtually empty
-        Element.show('emptycategory_' + catid);
-    }
-    // remove it
-    Element.remove(forum);
-}
-
-function storetreeorder()
-{
-    if(treeorderstatus == false) {
-        showdizkusinfo(storingnewsortorder);
-        treeorderstatus = true;
-        var pars = 'module=Dizkus&type=admin&func=reordertreesave&' + Sortable.serialize('category');
-        for(var j=0; j < containments.length; j++) {
-            pars = pars + '&' + Sortable.serialize(containments[j]);
-        }
-        pars = pars + '&authid=' + $F('authid');
-        var myAjax = new Ajax.Request(
-            document.location.pnbaseURL+'ajax.php',
-            {
-                method: 'post', 
-                parameters: pars, 
-                onComplete: storetreeorder_response
-            });
-    }
-    
-}
-
-function storetreeorder_response(originalRequest, json)
-{
-    hidedizkusinfo();
-    treeorderstatus = false;
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-
-    updateAuthid(json.authid);
-}
-
-
-function hideshowforum(forumid)
-{
-    Effect.toggle('editforum_' + forumid, 'slide');
-    Element.toggle('hideforum_' + forumid);
-    Element.toggle('showforum_' + forumid);
-    return;
-}
-
-function hideshowcategory(catid)
-{
-    Effect.toggle('editcategory_' + catid, 'slide');
-    Element.toggle('hidecategory_' + catid);
-    Element.toggle('showcategory_' + catid);
-    return;
-}
-
-function hideshowforumlist(catid)
-{
-    Effect.toggle('cid_' + catid, 'slide');
-    Element.toggle('hideforumlist_' + catid);
-    Element.toggle('showforumlist_' + catid);
-}
-
-function storenewforumorder()
-{
-    if(forumliststatus == false) {
-        showdizkusinfo(storingnewsortorder);
-        forumliststatus = true;
-        var pars = 'module=Dizkus&type=admin&func=newforumordersave&' + Sortable.serialize('forums') + '&cat_id=' + $F('cat_id') + '&authid=' + $F('authid');
-        var myAjax = new Ajax.Request(
-            document.location.pnbaseURL+'ajax.php',
-            {
-                method: 'post', 
-                parameters: pars, 
-                onComplete: storenewforumorder_response
-            });
-    }
-    
-}
-
-function storenewforumorder_response(originalRequest, json)
-{
-    hidedizkusinfo();
-    forumliststatus = false;
-    // show error if necessary
-    if( originalRequest.status != 200 ) { 
-        dzk_showajaxerror(originalRequest.responseText);
-        return;
-    }
-
-    updateAuthid(json.authid);
-}
-
-function create_sortables()
-{
-    /* var cids = $$('.dzk_treeforumlist');
-    if(cids.length > 0) {
-        for(var i=0; i<cids.length; i++) {
-            containments[containments.length] = cids[i].id;
-        }
-    }
-    */
-    // create containments array
-    $$('.dzk_treeforumlist').each(
-        function(containment)
-        {
-            containments[containments.length] = containment.id;
-        }
-        );
-    
-    containments.each(
-    function(containment)
+var DizkusAdmin = Class.create(DizkusBase, {
+    initialize: function() 
     {
-        Sortable.create(containment,
-                        {dropOnEmpty: true,
-                         handle: 'dzk_handle',
-                         overlap: 'horizontal',
-                         containment: containments,
-                         onUpdate: function() 
-                             {
-                             containments.each(
-                                function(containment)
-                                {
-                                    // value is cid_X, but we need the X only
-                                    if(containment != 'newcid') {
-                                        var temp = containment.split('_');
-                                        if($(containment).childNodes.length == 2) {
-                                            Element.show('emptycategory_' + temp[1]);
-                                        } else {
-                                            Element.hide('emptycategory_' + temp[1]);
-                                        }
+        this.containments = new Array();
+        this.forumliststatus = false;
+        this.treeorderstatus = false;
+        
+/*        
+        this.globalhandlers = {
+            onCreate: function(){
+                if($('dizkus')) {
+                    $('dizkus').style.cursor = 'wait';
+                }       
+            },
+        
+            onComplete: function() {
+                if(Ajax.activeRequestCount == 0){
+                    if($('dizkus')) {
+                        $('dizkus').style.cursor = 'auto';
+                    }
+                }
+            }
+        };
+        Ajax.Responders.register(this.globalhandlers);
+*/
+        // add some observers
+        $$('button.createnewcategory').each(function(el) { el.observe('click', this.editcategory.bind(this, -1))}.bind(this)); /* -1 = new category */
+        $$('button.storetreeorder').each(function(el) { el.observe('click', this.storetreeorder.bind(this))}.bind(this));
+        
+        // add observers to edit category, add forum and edit forum buttons
+        $$('button[id^="editcategory"]').each(function(el) 
+                                        { 
+                                            el.observe('click', this.editcategory.bind(this, el.id.split('_')[1]));
+                                        }.bind(this));
+        $$('button[id^="editforum"]').each(function(el) 
+                                        { 
+                                            el.observe('click', this.editforum.bind(this, el.id.split('_')[1], el.id.split('_')[2])); /* cat_id alse needed here */
+                                        }.bind(this));
+        $$('button[id^="addforum"]').each(function(el) 
+                                        { 
+                                            el.observe('click', this.editforum.bind(this, -1, el.id.split('_')[1])); /* -1 = new forum, */
+                                        }.bind(this));
+
+        // add observers to hide and show forum list buttons
+        $$('button[id^="hideforumlist"]').each(function(el) 
+                                        { 
+                                            el.observe('click', this.toggleforumlist.bind(this, el.id.split('_')[1]));
+                                        }.bind(this));
+        $$('button[id^="showforumlist"]').each(function(el) 
+                                        { 
+                                            el.observe('click', this.toggleforumlist.bind(this, el.id.split('_')[1]));
+                                        }.bind(this));
+  
+        // create the sortable
+        this.createsortables();
+              
+    },
+
+    editcategory: function(cat_id)
+    {
+        this.toggleprogressimage(true, cat_id);
+        pars = "module=Dizkus&func=editcategory&cat=" + cat_id;
+        myAjax = new Ajax.Request(
+            Zikula.Config.baseURL+'ajax.php',
+            {
+                method: 'post', 
+                parameters: pars, 
+                onComplete: function(originalRequest)
+                            {
+                                // show error if necessary
+                                if( originalRequest.status != 200 ) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    if(json.new == true) {
+                                         this.toggleprogressimage(true, -1);
+                                    } else {
+                                         this.toggleprogressimage(true, json.cat_id);
                                     }
+                                    return;
                                 }
-                                )
-                             },    
-                         constraint: false
-                        });
+
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                                Zikula.updateauthids(json.authid);
+
+                                if(json.new == true) {
+                                     this.toggleprogressimage(true, -1);
+                                    // new category
+                                    // copy newcategory li
+                                    newnewcategory = $('newcategory').cloneNode(true);
+                                    
+                                    // update existing newcategory li with data retreved from server
+                                    $('neweditcategorycontent').update(json.data);
+                                    // and show it
+                                    
+                                    // add observer for submit button
+                                    $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, json.cat_id));
+                                    
+                                    // set new id in newcategory li
+                                    $('newcategory').id = 'category_' + json.cat_id;
+                                    
+                                    $('neweditcategorycontent').id = 'editcategorycontent_' + json.cat_id;
+                                    
+                                    $('newcategorytitle').id = 'categorytitle_' + json.cat_id;
+                                    
+                                    $('newhidecategory').id = 'hidecategory_' + json.cat_id;
+                                    $('hidecategory_' + json.cat_id).observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                    
+                                    $('newshowcategory').id = 'showcategory_' + json.cat_id;
+                                    $('showcategory_' + json.cat_id).hide().observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                    
+                                    $('newhideforumlist').hide().id = 'hideforumlist_' + json.cat_id;
+                                    
+                                    $('newshowforumlist').hide().id = 'showforumlist_' + json.cat_id;
+                                    
+                                    $('newprogresscategoryimage').id = 'progresscategoryimage_' + json.cat_id;
+                                    
+                                    $('newcanceladdcategory').id = 'canceladdcategory_' + json.cat_id;
+                                    $('canceladdcategory_' + json.cat_id).observe('click', this.canceladdcategory.bind(this, json.cat_id));
+                                    
+                                    $('newaddforum').hide().id = 'addforum_' + json.cat_id;
+                                    
+                                    $('newcid').id = 'cid_' + json.cat_id;
+                                    
+                                    $('newemptycategory').id = 'emptycategory_' + json.cat_id;
+                                    
+                                    // new forum li
+                                    $('newforum').id = 'newforum_cat' + json.cat_id;
+                                    
+                                    $('newforumtitle').id = 'forumtitle_cat' + json.cat_id;
+                                    
+                                    $('newhideforum').id = 'hideforum_cat' + json.cat_id;
+                                    
+                                    $('newshowforum').id = 'showforum_cat' + json.cat_id;
+                                    
+                                    $('newcanceladdforum').id = 'canceladdforum_cat' + json.cat_id;
+                                    
+                                    $('newprogressforumimage').id = 'progressforumimage_cat' + json.cat_id;
+                                    
+                                    $('neweditforum').id = 'neweditforum_' + json.cat_id;
+                                    
+                                    // append copied li to the ul - now we can add another new category without 
+                                    // needing to store the first one
+                                    $('category').appendChild(newnewcategory);
+                                    
+                                    Effect.toggle('category_' + json.cat_id, 'slide');
+                                } else {
+                                    this.toggleprogressimage(true, json.cat_id);
+                                    // existing category
+                                    $('editcategorycontent_' + json.cat_id).update(json.data);
+                                    // add observer for submit button
+                                    $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, json.cat_id));
     
-    if($(containment).childNodes.length == 2) {
-            if(containment != 'newcid') {
-                var temp = containment.split('_');
-                Element.show('emptycategory_' + temp[1]);
+                                    Effect.toggle('editcategorycontent_' + json.cat_id, 'slide');
+                                    $('editcategory_' + json.cat_id).hide();
+                                    $('showcategory_' + json.cat_id).hide().observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                    $('hidecategory_' + json.cat_id).show().observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                }
+                            }.bind(this)
+            });
+    },
+ 
+    canceladdcategory: function(cat_id)
+    {
+        Effect.toggle('category_' + cat_id, 'slide', { afterFinish: function(cat_id) { $('category_' + cat_id).remove(); }.bind(this, cat_id)});
+    },
+    
+    hideshowcategory: function(cat_id)
+    {
+        Effect.toggle('editcategorycontent_' + cat_id, 'slide', { afterFinish: function(cat_id) 
+                                                                               {
+                                                                                   $('hidecategory_' + cat_id).toggle();
+                                                                                   $('showcategory_' + cat_id).toggle();
+                                                                               }.bind(this, cat_id)});
+        return;
+    },
+
+    storecategory: function(cat_id)
+    {
+        this.toggleprogressimage(true, cat_id);
+        pars = "module=Dizkus&func=storecategory&" + Form.serialize('editcategoryform_'+ cat_id);
+        myAjax = new Ajax.Request(
+            Zikula.Config.baseURL+'ajax.php',
+            {
+                method: 'post', 
+                parameters: pars, 
+                onComplete: function(originalRequest)
+                            {
+                                if( originalRequest.status != 200 ) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    this.toggleprogressimage(true, json.old_id);
+                                    return;
+                                }
+
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                                Zikula.updateauthids(json.authid);
+                            
+                                this.toggleprogressimage(true, json.old_id);
+                                
+                                switch(json.action) {
+                                    case 'add':
+                                        $('category_' + json.old_id).addClassName('existingcategory').id = 'category_' + json.cat_id;
+
+                                        // add observer for submit button
+                                        $('submitcategory_' + json.old_id).id = 'submitcategory_' + json.cat_id;
+                                        $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, json.cat_id));
+                                        
+                                        $('hidecategory_' + json.old_id).id = 'hidecategory_' + json.cat_id;
+                                        $('hidecategory_' + json.cat_id).observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                        
+                                        $('showcategory_' + json.old_id).id = 'showcategory_' + json.cat_id;
+                                        $('showcategory_' + json.cat_id).observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                            
+                                        $('categorytitle_' + json.old_id).id = 'categorytitle_' + json.cat_id;
+                                        $('categorytitle_' + json.cat_id).update('<a href="' + json.cat_linkurl + '">' + json.cat_title + '</a> (' + json.cat_id + ')');
+                                        
+                                        $('addforum_' + json.old_id).show().id = 'addforum_' + json.cat_id;
+                                        $('addforum_' + json.cat_id).observe('click', this.addforum.bind(this, json.cat_id));
+                            
+                                        $('hideforumlist_' + json.old_id).show().id = 'hideforumlist_' + json.cat_id;
+                                        $('hideforumlist_' + json.cat_id).observe('click', this.toggleforumlist.bind(this, json.cat_id));
+                                        
+                                        $('showforumlist_' + json.old_id).hide().id = 'showforumlist_' + json.cat_id;
+                                        $('showforumlist_' + json.cat_id).observe('click', this.toggleforumlist.bind(this, json.cat_id));
+                            
+                                        $('progresscategoryimage_' + json.old_id).id = 'progresscategoryimage_' + json.cat_id;
+                                        $('progresscategoryimage_' + json.cat_id).style.visibilty = 'hidden';
+                            
+                                        $('cid_' + json.old_id).show().id = 'cid_' + json.cat_id;
+                            
+                                        $('emptycategory_' + json.old_id).show().id = 'emptycategory_' + json.cat_id;
+                            
+                                        $('canceladdcategory_' + json.old_id).remove();
+                                        
+                                        $('editcategorycontent_' + json.old_id).id = 'editcategorycontent_' + json.cat_id;
+                                        $('editcategorycontent_' + json.cat_id).update(json.edithtml);
+                            
+                                        // new forum li
+                                        $('newforum_cat' + json.old_id).id = 'newforum_cat' + json.cat_id;
+                                        
+                                        $('forumtitle_cat' + json.old_id).id = 'forumtitle_cat' + json.cat_id;
+                                        
+                                        $('hideforum_cat' + json.old_id).id = 'hideforum_cat' + json.cat_id;
+                                        
+                                        $('showforum_cat' + json.old_id).id = 'showforum_cat' + json.cat_id;
+                                       
+                                        $('canceladdforum_cat' + json.old_id).id = 'canceladdforum_cat' + json.cat_id;
+                                        
+                                        $('progressforumimage_cat' + json.old_id).id = 'progressforumimage_cat' + json.cat_id;
+                                        
+                                        $('neweditforum_' + json.old_id).id = 'neweditforum_' + json.cat_id;
+
+                                        // recreate sortables
+                                        this.createsortables();
+                                        
+                                        break;
+                                    case 'update':
+                                        $('categorytitle_' + json.cat_id).update('<a href="' + json.cat_linkurl + '">' + json.cat_title + '</a> (' + json.cat_id + ')');
+                                        break;
+                                    case 'delete':
+                                        $('category_' + json.cat_id).remove();
+
+                                        // recreate sortables
+                                        this.createsortables();
+
+                                        break;
+                                    default:
+                                        dzk_showajaxerror('Error! Unknown action received from server.');
+                                }
+                            }.bind(this)
+            });
+        return false;
+    },
+
+    editforum: function(forum_id, cat_id)
+    {
+        if (forum_id == -1) {
+            this.toggleprogressimage(true, cat_id);
+        } else {
+            this.toggleprogressimage(false, forum_id);
+        }
+        pars = "module=Dizkus&func=editforum&forum_id=" + forum_id;
+        if(forum_id == -1) {
+            pars += '&cat=' + cat_id;
+        }
+        myAjax = new Ajax.Request(
+            Zikula.Config.baseURL+'ajax.php',
+            {
+                method: 'post', 
+                parameters: pars, 
+                onComplete: function(originalRequest)
+                            {
+                                // show error if necessary
+                                if( originalRequest.status != 200 ) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    if (json.new == true) {
+                                        this.toggleprogressimage(true, json.cat_id);
+                                    } else {
+                                        this.toggleprogressimage(false, json.forum_id);
+                                    }
+                                    return;
+                                }
+                                    
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                                Zikula.updateauthids(json.authid);
+                            
+                                if(json.new == true) {
+                                    this.toggleprogressimage(true, json.cat_id);
+
+                                    // copy newforum li
+                                    newnewforum = $('newforum_cat' + json.cat_id).cloneNode(true);
+                                    // update existing newforum li with data retrieved from server
+                                    // and show it
+                                    $('neweditforumcontent_' + json.cat_id).update(json.data).show().id = 'editforumcontent_' + json.forum_id;
+
+                                    // add some observers
+                                    $('submitforum_' + json.forum_id).observe('click', this.storeforum.bind(this, json.forum_id));
+                                    $('extsource_1_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 1, json.forum_id));
+                                    $('extsource_2_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 2, json.forum_id));
+                                    $('extsource_3_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 3, json.forum_id));
+                                    
+                                    // set new id in newforum li
+                                    $('newforum_cat' + json.cat_id).show().id = 'forum_' + json.forum_id;
+                                
+                                    $('forumtitle_cat' + json.cat_id).id = 'forumtitle_' + json.forum_id;
+                                
+                                
+                                    $('hideforum_cat' + json.cat_id).id = 'hideforum_' + json.forum_id;
+                                    $('hideforum_' + json.forum_id).show().observe('click', this.toggleforum.bind(this, json.forum_id));
+
+                                    $('showforum_cat' + json.cat_id).id = 'showforum_' + json.forum_id;
+                                    $('showforum_' + json.forum_id).hide().observe('click', this.toggleforum.bind(this, json.forum_id));
+                                
+                                    $('canceladdforum_cat' + json.cat_id).id = 'canceladdforum_' + json.forum_id;
+                                    $('canceladdforum_' + json.forum_id).observe('click', this.canceladdforum.bind(this, json.forum_id, json.cat_id));
+                                
+                                    $('progressforumimage_cat' + json.cat_id).id = 'progressforumimage_' + json.forum_id;
+                                
+                                    // append copied li to the ul - now we can add another new forum without 
+                                    // needing to store the first one
+                                    $('cid_' + json.cat_id).appendChild(newnewforum);
+                                    
+                                    if($('cid_' + json.cat_id).visible() == false) {
+                                        this.toggleforumlist(json.cat_id);
+                                    }
+                                    
+                                    // hide "this category does not contain a forum" message
+                                    $('emptycategory_' + json.cat_id).hide();
+                                } else {
+                                    this.toggleprogressimage(false, json.forum_id);
+                                    $('editforumcontent_' + json.forum_id).update(json.data);
+
+                                    // add observer for submit button
+                                    $('submitforum_' + json.forum_id).observe('click', this.storeforum.bind(this, json.forum_id));
+                                    
+                                    Effect.toggle('editforumcontent_' + json.forum_id, 'slide');
+                                    $('showforum_' + json.forum_id).hide().observe('click', this.toggleforum.bind(this, json.forum_id));
+                                    $('hideforum_' + json.forum_id).show().observe('click', this.toggleforum.bind(this, json.forum_id));
+                                    $('editforum_' + json.forum_id + '_' + json.cat_id).hide();
+                                }
+                            }.bind(this)
+            });
+    },
+    
+    toggleforum: function(forum_id)
+    {
+        Effect.toggle('editforumcontent_' + forum_id, 'slide', { afterFinish: function(forum_id) 
+                                                                    {
+                                                                        $('hideforum_' + forum_id).toggle();
+                                                                        $('showforum_' + forum_id).toggle();
+                                                                    }.bind(this, forum_id)});
+    },
+
+    canceladdforum: function(forum_id, cat_id)
+    {
+        // hide it
+        Effect.toggle('forum_' + forum_id, 'slide', { afterFinish: function(forum_id, cat_id)
+                                                                   {
+                                                                       // check if there are more forums, if not, show place holder
+                                                                       if($('forum_' + forum_id).parentNode.childNodes.length == 3) {
+                                                                           // 3 = this forum li, emptycategory li  + newforum li
+                                                                           // after removing it the list will be virtually empty
+                                                                           $('emptycategory_' + cat_id).show();
+                                                                       }
+                                                                       // remove it
+                                                                       $('forum_' + forum_id).remove();
+                                                                   }.bind(this, forum_id, cat_id)});
+    },
+
+    storeforum: function(forum_id)
+    {
+        this.toggleprogressimage(false, forum_id);
+        pars = "module=Dizkus&func=storeforum&" + Form.serialize('editforumform_'+ forum_id);
+        myAjax = new Ajax.Request(
+            Zikula.Config.baseURL+'ajax.php',
+            {
+                method: 'post', 
+                parameters: pars, 
+                onComplete: function(originalRequest)
+                            {
+                                if( originalRequest.status != 200 ) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    this.toggleprogressimage(false, json.old_id);
+                                    return;
+                                }
+
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                                Zikula.updateauthids(json.authid);
+
+                                this.toggleprogressimage(false, json.old_id);
+                                switch(json.action) {
+                                    case 'delete':
+                                        // hide it
+                                        Effect.toggle('forum_' + json.old_id, 'slide', { afterFinish: function(forum_id, cat_id)
+                                                                                                      {
+                                                                                                          // check if there are more forums, if not, show place holder
+                                                                                                          if($('forum_' + forum_id).parentNode.childNodes.length == 3) {
+                                                                                                              // 3 = this forum li, emptycategory li  + newforum li
+                                                                                                              // after removing it the list will be virtually empty
+                                                                                                              $('emptycategory_' + cat_id).show();
+                                                                                                              $('deletecategory_' + cat_id).style.visibility = '';
+                                                                                                          } else {
+                                                                                                              $('deletecategory_' + cat_id).style.visibility = 'hidden';
+                                                                                                          }
+                                                                                                          // remove it
+                                                                                                          Element.remove('forum_' + forum_id);
+                                                                                                      }.bind(this, json.forum_id, json.cat_id)});
+                                        // recreate sortables
+                                        this.createsortables();
+
+                                        break;
+                                    case 'update':
+                                        $('forumtitle_' + json.forum_id).update(json.forumtitle);
+                                        $('editforumcontent_' + json.forum_id).update(json.editforumhtml);
+                                        break;
+                                    case 'add':
+                                        $('forumtitle_' + json.old_id).id = 'forumtitle_' + json.forum_id; 
+                                        $('forumtitle_' + json.forum_id).update(json.forumtitle);
+                            
+                                        $('editforumcontent_' + json.old_id).id = 'editforumcontent_' + json.forum_id; 
+                                        $('editforumcontent_' + json.forum_id).update(json.editforumhtml);
+                            
+                                        $('forum_' + json.old_id).addClassName('existingforum').id = 'forum_' + json.forum_id;
+                            
+                                        $('hideforum_' + json.old_id).show().id = 'hideforum_' + json.forum_id;
+                                        $('hideforum_' + json.forum_id).observe('click', this.toggleforum.bind(this, json.forum_id));
+                                        
+                                        $('showforum_' + json.old_id).hide().id = 'showforum_' + json.forum_id;
+                                        $('showforum_' + json.forum_id).observe('click', this.toggleforum.bind(this, json.forum_id));
+                            
+                                        $('canceladdforum_' + json.old_id).remove();
+
+                                        $('progressforumimage_' + json.old_id).id = 'progressforumimage_' + json.forum_id;
+                            
+                                        $('deletecategory_' + json.cat_id).style.visibility = 'hidden';
+                                        
+                                        // recreate sortables
+                                        this.createsortables();
+                                        
+                                        break;
+                                    default:
+                                        dzk_showajaxerror('Error! \'storeforum_response()\' received illegal action type from server.');   
+                                }
+                            }.bind(this)
+            });
+    },
+       
+    storetreeorder: function()
+    {
+console.log('store tree order');
+    },
+        
+    toggleforumlist: function(cat_id)
+    {
+        Effect.toggle('cid_' + cat_id, 'slide', { afterFinish: function(cat_id) 
+                                                               {
+                                                                   $('hideforumlist_' + cat_id).toggle();
+                                                                   $('showforumlist_' + cat_id).toggle();
+                                                               }.bind(this, cat_id)});
+    },
+       
+    toggleprogressimage: function(typ, id)
+    {
+        // typ true = category (id=cat_id), false=forum (id=forum_id)
+        if(id != -1) {
+            imageid = (typ == true) ? 'progresscategoryimage_' + id : 'progressforumimage_' + id;
+        } else {
+            imageid = 'progressnewcategoryimage';
+        }    
+    
+        if($(imageid)) {
+            if($(imageid).style.visibility == 'hidden') {
+                $(imageid).style.visibility = '';
+            } else {
+                $(imageid).style.visibility = 'hidden';
             }
         }
-    });
+        return;
+    },
 
-    Sortable.create("category",
-                    { 
-                      handle: 'dzk_handle' 
-                    });
+    createsortables: function()
+    {
+        /* var cids = $$('.dzk_treeforumlist');
+        if(cids.length > 0) {
+            for(var i=0; i<cids.length; i++) {
+                containments[containments.length] = cids[i].id;
+            }
+        }
+        */
+        // create containments array
+        $$('ul[id^="cid"]').each(function(containment)
+                                 {
+                                     this.containments[this.containments.length] = containment.id;
+                                 }.bind(this));
+        
+        // now create the sortables per category
+        this.containments.each(function(containment)
+                               {
+                                          
+                                   Sortable.create(containment,
+                                                   {dropOnEmpty: true,
+                                                    only: 'existing',
+                                                    handle: 'dzk_handle',
+                                                    overlap: 'horizontal',
+                                                    containment: this.containments,
+                                                    onUpdate: function(containment) 
+                                                              {
+                                                   //this.showdizkusinfo(storingnewsortorder);
+                                                   pars = 'module=Dizkus&func=savetree&' + Sortable.serialize(containment) + '&cat_id=' + containment.id.split('_')[1] + '&authid=' + $F('authid');
+                                                   myAjax = new Ajax.Request(
+                                                       Zikula.Config.baseURL+'ajax.php',
+                                                       {
+                                                           method: 'post', 
+                                                           parameters: pars, 
+                                                           onComplete: function(originalRequest)
+                                                                       {
+                                                                          //this.hidedizkusinfo();
+                                                                          // show error if necessary
+                                                                          if( originalRequest.status != 200 ) {
+                                                                              json = Zikula.ajaxResponseError(originalRequest);
+                                                                              return;
+                                                                          }
+                                          
+                                                                          json = Zikula.dejsonize(originalRequest.responseText);
+                                                                          Zikula.updateauthids(json.authid);
+                                                                       }.bind(this)
+                                                       });
 
-}
+                                               }.bind(this),    
+                                     constraint: false
+                                    });
+                               }.bind(this));
+    
+        // and now the sortable fr the categories themselves
+        Sortable.create("category",
+                        { handle: 'dzk_handle',
+                          only: 'existing',
+                          onUpdate: function()
+                                    {
+                                        //showdizkusinfo(storingnewsortorder);
+                                        pars = 'module=Dizkus&func=savetree&' + Sortable.serialize('category') + '&authid=' + $F('authid');
+                                        myAjax = new Ajax.Request(
+                                            Zikula.Config.baseURL+'ajax.php',
+                                            {
+                                                method: 'post', 
+                                                parameters: pars, 
+                                                onComplete: function(originalRequest)
+                                                            {
+                                                                //this.hidedizkusinfo();
+                                                                // show error if necessary
+                                                                if( originalRequest.status != 200 ) {
+                                                                    json = Zikula.ajaxResponseError(originalRequest);
+                                                                    return;
+                                                                }
+                                
+                                                                json = Zikula.dejsonize(originalRequest.responseText);
+                                                                Zikula.updateauthids(json.authid);
+                                                            }.bind(this)
+                                            });
+                                    }.bind(this) 
+                        });
+    },
 
-function dzk_toggleprogressimage(typ, id)
-{
-    // typ true = category (id=cat_id), false=forum (id=forum_id)
-    var imageid;
-    if(typ==true) {
-        imageid = 'progresscategoryimage_' + id;
-    } else {
-        imageid = 'progressforumimage_' + id;
-    }        
-
-    if($(imageid)) {
-        if($(imageid).style.visibility == 'hidden') {
-            $(imageid).style.visibility = '';
-        } else {
-            $(imageid).style.visibility = 'hidden';
+    showextendedoptions: function(extsource, forum_id)
+    {
+        switch(extsource) {
+            case 1:
+                $('pnlogindata_' + forum_id).show();
+                $('mail2forum_' + forum_id).show();
+                $('rss2forum_' + forum_id).hide();
+                break;
+            case 2:
+                $('pnlogindata_' + forum_id).show();
+                $('mail2forum_' + forum_id).hide();
+                $('rss2forum_' + forum_id).show();
+                break;
+            default:
+                $('pnlogindata_' + forumid).hide();
+                $('mail2forum_' + forumid).hide();
+                $('rss2forum_' + forumid).hide();
         }
     }
-    return;
-}
+});
 
-function showextendedoptions(extsource, forumid)
-{
-    switch(extsource) {
-        case 1:
-            Element.show('pnlogindata_' + forumid);
-            Element.show('mail2forum_' + forumid);
-            Element.hide('rss2forum_' + forumid);
-            break;
-        case 2:
-            Element.show('pnlogindata_' + forumid);
-            Element.hide('mail2forum_' + forumid);
-            Element.show('rss2forum_' + forumid);
-            break;
-        default:
-            Element.hide('pnlogindata_' + forumid);
-            Element.hide('mail2forum_' + forumid);
-            Element.hide('rss2forum_' + forumid);
-    }
-}
+
+
+
+
+

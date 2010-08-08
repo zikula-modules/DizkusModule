@@ -1,6 +1,6 @@
 {*  $Id$  *}
 
-<form class="z-form" id="editforumform_{$forum.forum_id}" name="editforumform_{$forum.forum_id}" action="{modurl modname='Dizkus type='admin' func='forum'}" method="post">
+<form class="z-form" id="editforumform_{$forum.forum_id}" name="editforumform_{$forum.forum_id}" action="javascript:void(0);" method="post">
     <div>
         <fieldset>
             {if $newforum eq true}
@@ -76,8 +76,8 @@
                 <label for="pop3_active">{gt text="External source"}</label>
                 {foreach item='extsource' from=$externalsourceoptions key='num'}
                 <div class="z-formlist">
-                    <input id="{$num}_{$forum.forum_id}" onchange="javascript:showextendedoptions({$num}, {$forum.forum_id})" type="radio" name="extsource" value="{$num}" {$extsource.checked} />
-                    <label for="{$num}_{$forum.forum_id}">{$extsource.name}</label>&nbsp;{$extsource.ok}
+                    <input id="extsource_{$num}_{$forum.forum_id}" type="radio" name="extsource" value="{$num}" {$extsource.checked} />
+                    <label for="extsource_{$num}_{$forum.forum_id}">{$extsource.name}</label>&nbsp;{$extsource.ok}
                 </div>
                 {/foreach}
             </div>
@@ -160,7 +160,7 @@
             <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
             <input type="hidden" name="forum_id" value="{$forum.forum_id}" />
             <input type="hidden" name="cat_id" value="{$forum.cat_id}" />
-            <button class="dzk_img ok" onclick="javascript:storeforum({$forum.forum_id}); return false;" name="submit" type="submit">{gt text="Save"}</button>
+            <button id="submitforum_{$forum.forum_id}" class="dzk_img ok" name="submit">{gt text="Save"}</button>
         </div>
 
     </div>

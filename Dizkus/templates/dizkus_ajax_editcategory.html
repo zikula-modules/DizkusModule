@@ -1,6 +1,6 @@
 {*  $Id$  *}
 
-<form class="z-form" id="editcategoryform_{$category.cat_id}" name="editcategoryform_{$category.cat_id}" action="{modurl modname='Dizkus' type='admin' func='category'}" method="post">
+<form class="z-form" id="editcategoryform_{$category.cat_id}" name="editcategoryform_{$category.cat_id}" action="javascript: void(0);" method="post">
     <div>
         <fieldset>
             <legend>{gt text="Edit category title"}</legend>
@@ -19,7 +19,7 @@
             {/if}
         </fieldset>
         <div class="z-formbuttons">
-            <button class="dzk_img ok" onclick="javascript:storecategory({$category.cat_id}); return false;" name="submit" type="submit">{gt text="Submit"}</button>
+            <button id="submitcategory_{$category.cat_id}" class="dzk_img ok" name="submit">{gt text="Submit"}</button>
         </div>
     </div>
 </form>
