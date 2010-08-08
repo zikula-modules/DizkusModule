@@ -40,7 +40,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             }
         }
         if ($loggedIn && $favorites) {
-            $tree = ModUtil::apiFunc('Dizkus', 'user', 'getFavorites',
+            $tree = ModUtil::apiFunc('Dizkus', 'user', 'getfavorites',
                                  array('user_id'    => (int)UserUtil::getVar('uid'),
                                        'last_visit' => $last_visit ));
         } else {

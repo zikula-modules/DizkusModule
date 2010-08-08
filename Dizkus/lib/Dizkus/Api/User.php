@@ -2688,15 +2688,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         return array($posts, $m2fposts, $rssposts, $text);
     }
-    
-    /**
-     * helper function to extract forum_ids from forum array
-     */
-    function _get_forum_ids($f)
-    {
-        return $f['forum_id'];
-    }
-    
+        
     /**
      * usersync
      * stub function for syncing new users to Dizkus
@@ -3814,4 +3806,12 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     }
 
+}
+
+/**
+ * helper function to extract forum_ids from forum array
+ */
+function _get_forum_ids($f)
+{
+    return $f['forum_id'];
 }
