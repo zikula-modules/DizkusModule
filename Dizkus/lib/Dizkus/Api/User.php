@@ -22,6 +22,11 @@ class Dizkus_Api_User extends Zikula_Api {
     public function get_userdata_from_id($args)
     {
         $userid = $args['userid'];
+        
+        if(is_null($userid)) {
+            // core bug #2462 workaround, dangerous, if the guest user id changed.... 
+            $userid = 1;
+        }
 
         static $usersarray;
     
