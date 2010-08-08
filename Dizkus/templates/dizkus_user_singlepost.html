@@ -9,7 +9,7 @@
 {if $post.contactlist_ignored|default:0 == 1}
 <div id="hidelink_posting_{$post.post_id}" class="roundedbar dzk_rounded">
     {gt text="Show hidden postings of ignored user"} <em>{$post.poster_data.uname}</em>
-    <a href="javascript:void(0);" title="{gt text="Click here"}" onclick="javascript:$('posting_{$post.post_id}').toggle();javascript:$('hidelink_posting_{$post.post_id}').toggle();">({gt text="Click here"})</a>
+    <a href="javascript:void(0);" title="{gt text="Click here"}">({gt text="Click here"})</a>
 </div>
 {/if}
 

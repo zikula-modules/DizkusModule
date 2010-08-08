@@ -18,17 +18,17 @@
             {if $zcore.logged_in}
             <li>
                 {if $forum.is_subscribed eq 0}
-                <a id="toggleforumsubscriptionbutton_{$forum.forum_id}_unsubscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
                 {else}
-                <a id="toggleforumsubscriptionbutton_{$forum.forum_id}_subscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
+                <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                 {/if}
             </li>
             {if $zcore.Dizkus.favorites_enabled eq "yes"}
             <li>
                 {if $forum.is_favorite eq 0}
-                <a id="toggleforumfavouritebutton_{$forum.forum_id}_nofavourite" class="dzk_img" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
                 {else}
-                <a id="toggleforumfavouritebutton_{$forum.forum_id}_favourite" class="dzk_img" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                 {/if}
             </li>
             {/if}

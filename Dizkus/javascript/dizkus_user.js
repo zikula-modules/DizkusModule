@@ -77,14 +77,12 @@ var DizkusUser = Class.create(DizkusBase, {
                 $('dzk_javascriptareaforum').removeClassName('hidden');
                 
                 // find out the forum subscription status
-                this.toggleforumsubscriptionbuttonid = $$('a[id^="toggleforumsubscriptionbutton"]').first().id;
-                this.forum_subscribed = (this.toggleforumsubscriptionbuttonid.split('_')[2] == 'subscribed' ? true : false);
-                $(this.toggleforumsubscriptionbuttonid).observe('click', this.toggleforumsubscription.bind(this));
+                toggleforumsubscriptionbutton = $$('a[id^="toggleforumsubscriptionbutton"]').first();
+                toggleforumsubscriptionbutton.observe('click', this.toggleforumsubscription.bind(this, toggleforumsubscriptionbutton.id));
 
                 // find out the forum favourite status
-                this.toggleforumfavouritebuttonid = $$('a[id^="toggleforumfavouritebutton"]').first().id;
-                this.forum_favourite = (this.toggleforumfavouritebuttonid.split('_')[2] == 'favourite' ? true : false);
-                $(this.toggleforumfavouritebuttonid).observe('click', this.toggleforumfavourite.bind(this));
+                toggleforumfavouritebutton = $$('a[id^="toggleforumfavouritebutton"]').first();
+                toggleforumfavouritebutton.observe('click', this.toggleforumfavourite.bind(this, toggleforumfavouritebutton.id));
             
                 break;
             case 'viewtopic':
@@ -129,17 +127,32 @@ var DizkusUser = Class.create(DizkusBase, {
                 // add observers to quote buttons per post
                 $$('a[id^="quotebutton"]').each(function(el) 
                                                 { 
-                                                    $(el.id).observe('click', this.createQuote.bind(this, el.id));
+                                                    el.observe('click', this.createQuote.bind(this, el.id));
                                                 }.bind(this));
                                                 
                 // add observers to edit buttons per post
                 $$('a[id^="editbutton"]').each(function(eb) 
                                                { 
-                                                   $(eb.id).observe('click', this.quickEdit.bind(this, eb.id));
+                                                   eb.observe('click', this.quickEdit.bind(this, eb.id));
                                                }.bind(this));
+
+                // find out if the contactlist ignoring stuff is there
+                $$('a[id^="hidelink_posting"]').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.toggleposting.bind(this, el.id.split('_')[2]));
+                                                }.bind(this));
                 break;
             case 'prefs':
                 $('sortorder').observe('click', this.changesortorder.bind(this)).removeClassName('hidden');
+                // add some observers
+                $$('a[id^="toggleforumsubscriptionbutton"]').each(function(el) 
+                                                                  {
+                                                                      el.observe('click', this.toggleforumsubscription.bind(this, el.id));
+                                                                  }.bind(this));
+                $$('a[id^="toggleforumfavouritebutton"]').each(function(el) 
+                                                               {
+                                                                   el.observe('click', this.toggleforumfavourite.bind(this, el.id));
+                                                               }.bind(this));
                 break;
             case 'moderateforum':
             case 'topicsubscriptions':
@@ -154,11 +167,18 @@ var DizkusUser = Class.create(DizkusBase, {
         }
     },
     
-    toggleforumfavourite: function() 
+    toggleposting: function(post_id)
+    {
+        $('posting_{$post.post_id}').toggle();
+        $('hidelink_posting_{$post.post_id}').toggle();
+        return;
+    },
+    
+    toggleforumfavourite: function(toggleforumfavouritebuttonid) 
     {
         if(this.favouritestatus == false) {
             this.favouritestatus = true;
-            pars = "module=Dizkus&func=addremovefavorite&forum=" + this.toggleforumfavouritebuttonid.split('_')[1] + "&mode=" + ((this.forum_favourite == false) ? 'add' : 'remove');
+            pars = "module=Dizkus&func=toggleforumfavourite&forum=" + toggleforumfavouritebuttonid.split('_')[1];
             Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",
@@ -177,27 +197,24 @@ var DizkusUser = Class.create(DizkusBase, {
                                     
                                     json = Zikula.dejsonize(originalRequest.responseText);
 
-                                    if(['added', 'removed'].include(json.data)) {
-                                        if (this.forum_favourite == false) {
-                                            this.forum_favourite = true;
-                                            $(this.toggleforumfavouritebuttonid).update(unfavouriteForum);
-                                        } else {
-                                           this.forum_favourite = false;
-                                           $(this.toggleforumfavouritebuttonid).update(favouriteForum);
-                                        }
+                                    if (json.data == 'added') {
+                                        $(toggleforumfavouritebuttonid).update(unfavouriteForum);
+                                    } else if (json.data == 'removed') {
+                                        $(toggleforumfavouritebuttonid).update(favouriteForum);
                                     } else {
                                          alert('Error! Erroneous result from favourite addition/removal.');
                                     }
+
                                 }.bind(this)
                 });
         }
     },
     
-    toggleforumsubscription: function()
+    toggleforumsubscription: function(toggleforumsubscriptionbuttonid)
     {
         if(this.subscribeforumstatus == false) {
             this.subscribeforumstatus = true;
-            pars = "module=Dizkus&func=subscribeunsubscribeforum&forum=" + this.toggleforumsubscriptionbuttonid.split('_')[1] + "&mode=" + ((this.forum_subscribed == false) ? 'subscribe' : 'unsubscribe');
+            pars = "module=Dizkus&func=toggleforumsubscription&forum=" + toggleforumsubscriptionbuttonid.split('_')[1]
             Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php",
@@ -216,14 +233,10 @@ var DizkusUser = Class.create(DizkusBase, {
                                 
                                     json = Zikula.dejsonize(originalRequest.responseText);
                                 
-                                    if(['subscribed', 'unsubscribed'].include(json.data)) {
-                                        if (this.forum_subscribed == false) {
-                                            this.forum_subscribed = true;
-                                            $(this.toggleforumsubscriptionbuttonid).update(unsubscribeForum);
-                                        } else {
-                                           this.forum_subscribed = false;
-                                           $(this.toggleforumsubscriptionbuttonid).update(subscribeForum);
-                                        }
+                                    if (json.data == 'subscribed') {
+                                        $(toggleforumsubscriptionbuttonid).update(unsubscribeForum);
+                                    } else if (json.data == 'unsubscribed') {
+                                        $(toggleforumsubscriptionbuttonid).update(subscribeForum);
                                     } else {
                                          alert('Error! Erroneous result from subscription/unsubscription action.');
                                     }

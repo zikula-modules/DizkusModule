@@ -392,14 +392,13 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
      * subscribeunsubscribeforum
      *
      */
-    public function subscribeunsubscribeforum()
+    public function toggleforumsubscription()
     {
         if (dzk_available(false) == false) {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
         $forum_id = FormUtil::getPassedValue('forum', '');
-        $mode     = FormUtil::getPassedValue('mode', '');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
     /*
@@ -409,7 +408,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
     */
         if (empty($forum_id)) {
-            return AjaxUtil::error($this->__('Error! No forum ID in \'Dizkus_ajax_subscribeunsubscribeforum()\'.'), array(), true, true, '400 Bad Data');
+            return AjaxUtil::error($this->__('Error! No forum ID in \'toggleforumsubscription()\'.'), array(), true, true, '400 Bad Data');
         }
 
         $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
@@ -420,24 +419,20 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
         }
 
-        switch ($mode)
-        {
-            case 'subscribe':
-                ModUtil::apiFunc('Dizkus', 'user', 'subscribe_forum',
-                             array('forum_id' => $forum_id,
-                                   'silent'   => true));
-                $newmode = 'subscribed';
-                break;
-
-            case 'unsubscribe':
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum',
-                             array('forum_id' => $forum_id,
-                                   'silent'   => true));
-                $newmode = 'unsubscribed';
-                break;
-
-            default:
-                return AjaxUtil::error($this->__f('Error! No or illegal mode (%s) parameter in Dizkus_ajax_subscribeunsubscribeforum()', DataUtil::formatForDisplay($mode)), array(), true, true, '400 Bad Data');
+        $subscribed = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_subscription_status', 
+                                       array('user_id' => UserUtil::getVar('uid'), 
+                                             'forum_id' => $forum_id));
+        
+        if ($subscribed == true){
+            ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum',
+                         array('forum_id' => $forum_id,
+                               'silent'   => true));
+            $newmode = 'unsubscribed';
+        } else {
+            ModUtil::apiFunc('Dizkus', 'user', 'subscribe_forum',
+                         array('forum_id' => $forum_id,
+                               'silent'   => true));
+            $newmode = 'subscribed';
         }
 
         AjaxUtil::output($newmode, true, false, false);
@@ -447,7 +442,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
      * addremovefavorite
      *
      */
-    public function addremovefavorite()
+    public function toggleforumfavourite()
     {
         if (dzk_available(false) == false) {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
@@ -458,7 +453,6 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
 
         $forum_id = FormUtil::getPassedValue('forum', '');
-        $mode     = FormUtil::getPassedValue('mode', '');
 
         if (empty($forum_id)) {
             return AjaxUtil::error($this->__('Error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.'), array(), true, true, '400 Bad Data');
@@ -479,22 +473,18 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
         }
 
-        switch ($mode)
-        {
-            case 'add':
-                ModUtil::apiFunc('Dizkus', 'user', 'add_favorite_forum',
-                             array('forum_id' => $forum_id ));
-                $newmode = 'added';
-                break;
-
-            case 'remove':
-                ModUtil::apiFunc('Dizkus', 'user', 'remove_favorite_forum',
-                             array('forum_id' => $forum_id ));
-                $newmode = 'removed';
-                break;
-
-            default:
-                return AjaxUtil::error($this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_addremovefavorite()\'.', DataUtil::formatForDisplay($mode)), array(), true, true, '400 Bad Data');
+        $subscribed = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_favorites_status', 
+                                       array('user_id' => UserUtil::getVar('uid'), 
+                                             'forum_id' => $forum_id));
+        
+        if ($subscribed == true){
+            ModUtil::apiFunc('Dizkus', 'user', 'remove_favorite_forum',
+                         array('forum_id' => $forum_id ));
+            $newmode = 'removed';
+        } else {
+            ModUtil::apiFunc('Dizkus', 'user', 'add_favorite_forum',
+                         array('forum_id' => $forum_id ));
+            $newmode = 'added';
         }
 
         AjaxUtil::output($newmode, true, false, false);

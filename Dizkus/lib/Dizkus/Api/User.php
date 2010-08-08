@@ -1306,7 +1306,7 @@ class Dizkus_Api_User extends Zikula_Api {
     /**
      * get_topic_subscription_status
      *
-     * @params $args['userid'] int the users uid
+     * @params $args['user_id'] int the users uid
      * @params $args['topic_id'] int the topic id
      * @returns bool true if the user is subscribed or false if not
      */
@@ -1325,7 +1325,7 @@ class Dizkus_Api_User extends Zikula_Api {
     /**
      * get_forum_subscription_status
      *
-     * @params $args['userid'] int the users uid
+     * @params $args['user_id'] int the users uid
      * @params $args['forum_id'] int the forums id
      * @returns bool true if the user is subscribed or false if not
      */
