@@ -654,13 +654,12 @@ var DizkusUser = Class.create(DizkusBase, {
                     parameters: pars,
                     onComplete: function (originalRequest)
                                 {
-                                    hidedizkusinfo();
+                                    this.hidedizkusinfo();
                                     this.newtopicstatus = false;
                                 
                                     // show error if necessary
                                     if (originalRequest.status != 200) {
                                         json = Zikula.ajaxResponseError(originalRequest);
-                                        //dzk_showajaxerror(originalRequest.responseText);
                                         return;
                                     }
                                 

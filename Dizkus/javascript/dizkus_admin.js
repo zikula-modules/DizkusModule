@@ -319,7 +319,7 @@ var DizkusAdmin = Class.create(DizkusBase, {
 
                                         break;
                                     default:
-                                        dzk_showajaxerror('Error! Unknown action received from server.');
+                                        Zikula.showajaxerror('Error! Unknown action received from server.');
                                 }
                             }.bind(this)
             });
@@ -513,7 +513,7 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                         
                                         break;
                                     default:
-                                        dzk_showajaxerror('Error! \'storeforum_response()\' received illegal action type from server.');   
+                                        Zikula.showajaxerror('Error! \'storeforum_response()\' received illegal action type from server.');   
                                 }
                             }.bind(this)
             });
@@ -579,7 +579,7 @@ console.log('store tree order');
                                                     containment: this.containments,
                                                     onUpdate: function(containment) 
                                                               {
-                                                   //this.showdizkusinfo(storingnewsortorder);
+                                                   this.showdizkusinfo(storingnewsortorder);
                                                    pars = 'module=Dizkus&func=savetree&' + Sortable.serialize(containment) + '&cat_id=' + containment.id.split('_')[1] + '&authid=' + $F('authid');
                                                    myAjax = new Ajax.Request(
                                                        Zikula.Config.baseURL+'ajax.php',
@@ -588,7 +588,7 @@ console.log('store tree order');
                                                            parameters: pars, 
                                                            onComplete: function(originalRequest)
                                                                        {
-                                                                          //this.hidedizkusinfo();
+                                                                          this.hidedizkusinfo();
                                                                           // show error if necessary
                                                                           if( originalRequest.status != 200 ) {
                                                                               json = Zikula.ajaxResponseError(originalRequest);
@@ -611,7 +611,7 @@ console.log('store tree order');
                           only: 'existing',
                           onUpdate: function()
                                     {
-                                        //showdizkusinfo(storingnewsortorder);
+                                        this.showdizkusinfo(storingnewsortorder);
                                         pars = 'module=Dizkus&func=savetree&' + Sortable.serialize('category') + '&authid=' + $F('authid');
                                         myAjax = new Ajax.Request(
                                             Zikula.Config.baseURL+'ajax.php',
@@ -620,7 +620,7 @@ console.log('store tree order');
                                                 parameters: pars, 
                                                 onComplete: function(originalRequest)
                                                             {
-                                                                //this.hidedizkusinfo();
+                                                                this.hidedizkusinfo();
                                                                 // show error if necessary
                                                                 if( originalRequest.status != 200 ) {
                                                                     json = Zikula.ajaxResponseError(originalRequest);
