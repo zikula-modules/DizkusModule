@@ -15,7 +15,7 @@
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <h2>{gt text="Manage topic subscriptions"}</h2>
         <table class="z-admintable">
-            <caption>(<label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />&nbsp;)</caption>
+            <caption>(<label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" />&nbsp;)</caption>
             <thead>
                 <tr>
                     <th>{gt text="Topic"}</th>
@@ -33,7 +33,7 @@
                         {$subscription.poster_name|userprofilelink}
                     </td>
                     <td>
-                        <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="{$subscription.topic_id}" />
+                        <input class="topic_checkbox" type="checkbox" name="topic_id[]" value="{$subscription.topic_id}" />
                     </td>
                 </tr>
                 {/foreach}
@@ -47,7 +47,7 @@
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <h2>{gt text="Manage forum subscriptions"}</h2>
         <table class="z-admintable">
-            <caption>(<label for="allforum">{gt text="Remove all forum subscriptions"}</label>&nbsp;<input name="allforum" id="allforum" onclick="CheckAll('forum');" type="checkbox" value="1" />&nbsp;)</caption>
+            <caption>(<label for="allforum">{gt text="Remove all forum subscriptions"}</label>&nbsp;<input name="allforum" id="allforum" type="checkbox" value="1" />&nbsp;)</caption>
             <thead>
                 <tr>
                     <th>{gt text="Forum"}</th>
@@ -61,7 +61,7 @@
                         <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.topic_title} :: {$subscription.forum_name}">{$subscription.forum_name|safetext}</a>
                     </td>
                     <td>
-                        <input class="forum_checkbox" type="checkbox" onclick="CheckCheckAll('forum');" name="forum_id[]" value="{$subscription.forum_id}" />
+                        <input class="forum_checkbox" type="checkbox" name="forum_id[]" value="{$subscription.forum_id}" />
                     </td>
                 </tr>
                 {/foreach}

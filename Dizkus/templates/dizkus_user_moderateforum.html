@@ -24,7 +24,7 @@
                         <dt><span>{gt text="Topic"}</span></dt>
                         <dd class="posts"><span>{gt text="Replies"}</span></dd>
                         <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
-                        <dd class="mark"><span>{gt text="Selection"}<input onclick="CheckAll('topic');" type="checkbox" id="alltopic"  value="" /></span></dd>
+                        <dd class="mark"><span>{gt text="Selection"}<input type="checkbox" id="alltopic"  value="" /></span></dd>
                     </dl>
                 </li>
             </ul>
@@ -64,7 +64,7 @@
                             </span>
                         </dd>
                         <dd class="mark">
-                            <input type="checkbox" onclick="CheckCheckAll('topic');" class="topic_checkbox" name="topic_id[]" value="{$topic.topic_id}" />
+                            <input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{$topic.topic_id}" />
                         </dd>
                     </dl>
                 </li>

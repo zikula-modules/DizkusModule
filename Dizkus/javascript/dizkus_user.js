@@ -141,6 +141,14 @@ var DizkusUser = Class.create(DizkusBase, {
             case 'prefs':
                 $('sortorder').observe('click', this.changesortorder.bind(this)).removeClassName('hidden');
                 break;
+            case 'moderateforum':
+            case 'topicsubscriptions':
+                $('alltopic').observe('click', this.checkAll.bind(this, 'topic'));
+                $$('input.topic_checkbox').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.checkCheckAll.bind(this, 'topic'));
+                                                }.bind(this));
+                break;
             default:
                 return;
         }

@@ -193,12 +193,12 @@ class Dizkus_Controller_User extends Zikula_Controller
         $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
         $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
         $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
-    
+            
         /**
-         * if cancel is submitted move to forum-view
+         * if cancel is submitted move to topic-view
          */
         if (!empty($cancel)) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=> $topic_id)));
+            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
     
         $preview = (empty($preview)) ? false : true;
@@ -368,7 +368,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $preview  = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
         $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
         $cancel   = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
-    
+                    
         if (empty($post_id) || !is_numeric($post_id)) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
         }

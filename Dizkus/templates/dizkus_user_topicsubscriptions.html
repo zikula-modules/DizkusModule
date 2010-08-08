@@ -23,7 +23,7 @@
                 </ul>
                 <ul class="topiclist forums">
                     <li class="row categorytitle">
-                        <label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" onclick="CheckAll('topic');" type="checkbox" value="1" />
+                        <label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" />
                     </li>
                     {foreach item=subscription from=$subscriptions}
                     <li class="row">
@@ -39,7 +39,7 @@
                                 </span>
                             </dd>
                             <dd class="lastpost">
-                                <input class="topic_checkbox" type="checkbox" onclick="CheckCheckAll('topic');" name="topic_id[]" value="{$subscription.topic_id}" />
+                                <input class="topic_checkbox" type="checkbox" name="topic_id[]" value="{$subscription.topic_id}" />
                             </dd>
                         </dl>
                     </li>

@@ -37,6 +37,7 @@ var DizkusAdmin = Class.create(DizkusBase, {
         this.containments = new Array();
         this.forumliststatus = false;
         this.treeorderstatus = false;
+        this.funcname = '';
         
 /*        
         this.globalhandlers = {
@@ -56,36 +57,58 @@ var DizkusAdmin = Class.create(DizkusBase, {
         };
         Ajax.Responders.register(this.globalhandlers);
 */
-        // add some observers
-        $$('button.createnewcategory').each(function(el) { el.observe('click', this.editcategory.bind(this, -1))}.bind(this)); /* -1 = new category */
-        $$('button.storetreeorder').each(function(el) { el.observe('click', this.storetreeorder.bind(this))}.bind(this));
-        
-        // add observers to edit category, add forum and edit forum buttons
-        $$('button[id^="editcategory"]').each(function(el) 
-                                        { 
-                                            el.observe('click', this.editcategory.bind(this, el.id.split('_')[1]));
-                                        }.bind(this));
-        $$('button[id^="editforum"]').each(function(el) 
-                                        { 
-                                            el.observe('click', this.editforum.bind(this, el.id.split('_')[1], el.id.split('_')[2])); /* cat_id alse needed here */
-                                        }.bind(this));
-        $$('button[id^="addforum"]').each(function(el) 
-                                        { 
-                                            el.observe('click', this.editforum.bind(this, -1, el.id.split('_')[1])); /* -1 = new forum, */
-                                        }.bind(this));
+        // find out which func we are in, this will help us to identify what needs to be done
+        this.funcname = window.location.search.toQueryParams().func;
 
-        // add observers to hide and show forum list buttons
-        $$('button[id^="hideforumlist"]').each(function(el) 
-                                        { 
-                                            el.observe('click', this.toggleforumlist.bind(this, el.id.split('_')[1]));
-                                        }.bind(this));
-        $$('button[id^="showforumlist"]').each(function(el) 
-                                        { 
-                                            el.observe('click', this.toggleforumlist.bind(this, el.id.split('_')[1]));
-                                        }.bind(this));
-  
-        // create the sortable
-        this.createsortables();
+        switch(this.funcname)
+        {
+            case 'reordertree':
+                // add some observers
+                $$('button.createnewcategory').each(function(el) { el.observe('click', this.editcategory.bind(this, -1))}.bind(this)); /* -1 = new category */
+                $$('button.storetreeorder').each(function(el) { el.observe('click', this.storetreeorder.bind(this))}.bind(this));
+                
+                // add observers to edit category, add forum and edit forum buttons
+                $$('button[id^="editcategory"]').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.editcategory.bind(this, el.id.split('_')[1]));
+                                                }.bind(this));
+                $$('button[id^="editforum"]').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.editforum.bind(this, el.id.split('_')[1], el.id.split('_')[2])); /* cat_id alse needed here */
+                                                }.bind(this));
+                $$('button[id^="addforum"]').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.editforum.bind(this, -1, el.id.split('_')[1])); /* -1 = new forum, */
+                                                }.bind(this));
+                
+                // add observers to hide and show forum list buttons
+                $$('button[id^="hideforumlist"]').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.toggleforumlist.bind(this, el.id.split('_')[1]));
+                                                }.bind(this));
+                $$('button[id^="showforumlist"]').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.toggleforumlist.bind(this, el.id.split('_')[1]));
+                                                }.bind(this));
+                
+                // create the sortable
+                this.createsortables();
+                break;
+
+            case 'managesubscriptions':
+                $('alltopic').observe('click', this.checkAll.bind(this, 'topic'));
+                $$('input.topic_checkbox').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.checkCheckAll.bind(this, 'topic'));
+                                                }.bind(this));
+                $('allforum').observe('click', this.checkAll.bind(this, 'forum'));
+                $$('input.forum_checkbox').each(function(el) 
+                                                { 
+                                                    el.observe('click', this.checkCheckAll.bind(this, 'forum'));
+                                                }.bind(this));
+                break;
+        }
+
               
     },
 
