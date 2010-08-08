@@ -1015,7 +1015,8 @@ class Dizkus_Api_User extends Zikula_Api {
                 
                     // integrate contactlist's ignorelist here (part 2/2)
                     // the added variable will be handled in templates
-                    if (in_array($post['poster_id'], $ignored_uids)) $post['contactlist_ignored'] = 1;
+                    $post['contactlist_ignored'] = (in_array($post['poster_id'], $ignored_uids)) ? 1 : 0;
+                    //orignal von quan (e_all): if (in_array($post['poster_id'], $ignored_uids)) $post['contactlist_ignored'] = 1;
                 
                     array_push($topic['posts'], $post);
                 }
