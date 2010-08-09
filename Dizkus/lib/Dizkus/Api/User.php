@@ -1532,7 +1532,7 @@ class Dizkus_Api_User extends Zikula_Api {
             // update subscription
             if ($args['subscribe_topic'] == 1) {
                 // user wants to subscribe the new topic
-                $this->subscribe_topic(array('topic_id' => $topic_id));
+                $this->subscribe_topic(array('topic_id' => $obj['topic_id']));
             }
         }
     
