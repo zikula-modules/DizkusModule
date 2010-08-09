@@ -65,7 +65,6 @@ var DizkusAdmin = Class.create(DizkusBase, {
             case 'reordertree':
                 // add some observers
                 $$('button.createnewcategory').each(function(el) { el.observe('click', this.editcategory.bind(this, -1))}.bind(this)); /* -1 = new category */
-                $$('button.storetreeorder').each(function(el) { el.observe('click', this.storetreeorder.bind(this))}.bind(this));
                 
                 // add observers to edit category, add forum and edit forum buttons
                 $$('button[id^="editcategory"]').each(function(el) 
@@ -191,7 +190,7 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                     
                                     $('newprogressforumimage').id = 'progressforumimage_cat' + json.cat_id;
                                     
-                                    $('neweditforum').id = 'neweditforum_' + json.cat_id;
+                                    $('neweditforumcontent').id = 'neweditforumcontent_' + json.cat_id;
                                     
                                     // append copied li to the ul - now we can add another new category without 
                                     // needing to store the first one
@@ -519,11 +518,6 @@ var DizkusAdmin = Class.create(DizkusBase, {
             });
     },
        
-    storetreeorder: function()
-    {
-console.log('store tree order');
-    },
-        
     toggleforumlist: function(cat_id)
     {
         Effect.toggle('cid_' + cat_id, 'slide', { afterFinish: function(cat_id) 

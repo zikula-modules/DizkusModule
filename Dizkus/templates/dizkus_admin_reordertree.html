@@ -7,11 +7,10 @@
 
 <div class="z-clearfix" style="margin-top: 1em;">
     <button class="dzk_img add z-floatleft createnewcategory">{gt text="Create new category"}</button>
-                    <img id="progressnewcategoryimage" style="visibility: hidden;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
-    <button class="dzk_img ok z-floatright storetreeorder" type="submit">{gt text="Save tree order"}</button>
+    <img id="progressnewcategoryimage" style="visibility: hidden;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
+    <div id="dizkusinformation" class="z-floatleft" style="margin-left: 3em; visibility: hidden;">&nbsp;</div>
 </div>
 
-<div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
 <ul id="category">
     {foreach item='category' from=$categorytree}
@@ -117,10 +116,7 @@
 
 <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
 
-<div class="z-clearfix" style="margin-top: 1em;">
-    <button class="dzk_img add z-floatleft createnewcategory">{gt text="Create new category"}</button>
-    <button class="dzk_img ok z-floatright storetreeorder" type="submit">{gt text="Save tree order"}</button>
-</div>
+<button class="z-clearfix dzk_img add z-floatleft createnewcategory">{gt text="Create new category"}</button>
 
 <script type="text/javascript">
     // <![CDATA[
