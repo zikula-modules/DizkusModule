@@ -582,6 +582,14 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                                            parameters: pars, 
                                                            onComplete: function(originalRequest)
                                                                        {
+                                                                          // check if the forum list for this category is empty
+                                                                         if($$('#'+containment.id+' li[class*=existing]').size() == 0) {
+                                                                            // show message
+                                                                            $('emptycategory_' + containment.id.split('_')[1]).show();
+                                                                          } else {
+                                                                              // hide message
+                                                                            $('emptycategory_' + containment.id.split('_')[1]).hide();
+                                                                          } 
                                                                           this.hidedizkusinfo();
                                                                           // show error if necessary
                                                                           if( originalRequest.status != 200 ) {
