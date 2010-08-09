@@ -22,7 +22,7 @@
                     <input type="hidden" id="quote" name="quote" value="" />
                     <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id|safetext}">{$newtopic.forum_name|safetext|modcallhooks}</a></legend>
+                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id}">{$newtopic.forum_name|modcallhooks}</a></legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                             <div>
