@@ -493,7 +493,15 @@ class Dizkus_Controller_User extends Zikula_Controller
     
                 case 'move':
                 case 'join':
-                    $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
+                    $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
+                    $list = array();
+                    foreach($tree as $categoryname => $category) {
+                        foreach($category['forums'] as $forum) {
+                            $list[$forum['forum_id']] = $categoryname . '::' . $forum['forum_name'];
+                        }
+                    }
+                    $this->view->assign('forums', $list);
+
                     $templatename = 'dizkus_user_movetopic.html';
                     break;
     
