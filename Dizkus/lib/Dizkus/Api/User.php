@@ -2912,14 +2912,6 @@ class Dizkus_Api_User extends Zikula_Api {
     }
     
     /**
-     * helper function
-     */
-    function _get_favorites($f)
-    {
-        return (int)$f['forum_id'];
-    }
-    
-    /**
      * get_favorite_status
      *
      * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
@@ -3820,3 +3812,12 @@ function _get_forum_ids($f)
 {
     return $f['forum_id'];
 }
+
+/**
+ * helper function
+ */
+function _get_favorites($f)
+{
+    return (int)$f['forum_id'];
+}
+    
