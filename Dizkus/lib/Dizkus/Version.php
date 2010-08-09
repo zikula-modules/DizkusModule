@@ -25,11 +25,11 @@ class Dizkus_Version extends Zikula_Version
 
         // module depedencies
         $meta['dependencies']   = array(
-                                      array('modname'    => 'bbcode', 
+                                      array('modname'    => 'BBCode', 
                                             'minversion' => '2.0', 
                                             'maxversion' => '', 
                                             'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
-                                      array('modname'    => 'bbsmile', 
+                                      array('modname'    => 'BBSmile', 
                                             'minversion' => '2.1', 
                                             'maxversion' => '', 
                                             'status'     => ModUtil::DEPENDENCY_RECOMMENDED)

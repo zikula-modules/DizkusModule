@@ -18,10 +18,10 @@
 function smarty_function_bbsmile($params, &$smarty)
 {
     $out = "";
-	if (ModUtil::available('bbsmile') && ModUtil::isHooked('bbsmile', 'Dizkus')) {
-	    $out = ModUtil::func('bbsmile', 'user', 'bbsmiles',
-	                     array('textfieldid' => $params['textfieldid']));
-	}
+	  if (ModUtil::available('BBSmile') && ModUtil::isHooked('BBSmile', 'Dizkus')) {
+	      $out = ModUtil::func('BBSmile', 'user', 'bbsmiles',
+	                       array('textfieldid' => $params['textfieldid']));
+	  }
 
 	return $out;
 }

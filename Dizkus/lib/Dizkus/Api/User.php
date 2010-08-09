@@ -3671,7 +3671,7 @@ class Dizkus_Api_User extends Zikula_Api {
             return false;
         }
     
-        $bbcode = ModUtil::available('bbcode');
+        $bbcode = ModUtil::available('BBCode');
         $boldstart = '';
         $boldend   = '';
         $urlstart  = '';

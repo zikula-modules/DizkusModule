@@ -18,7 +18,7 @@ function Dizkus_commentsapi_News($args)
     $link = ModUtil::url('News', 'user', 'display', array('sid' => $args['objectid']), null, null, true);
     $lang = ZLanguage::getLanguageCode();
 
-    if (ModUtil::isHooked('bbcode', 'Dizkus')) {
+    if (ModUtil::isHooked('BBCode', 'Dizkus')) {
         $notes = '[i]' . $news['notes'] . '[/i]';
         $link  = '[url]' .$link. '[/url]';
     }

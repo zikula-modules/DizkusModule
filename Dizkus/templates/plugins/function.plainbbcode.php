@@ -20,8 +20,8 @@ function smarty_function_plainbbcode($params, &$smarty)
 {
     $out = "";
     if (isset($params['textfieldid']) && !empty($params['textfieldid'])) {
-	    if (ModUtil::available('bbcode') && ModUtil::isHooked('bbcode', 'Dizkus')) {
-	        $out = ModUtil::func('bbcode', 'user', 'bbcodes', $params);
+	    if (ModUtil::available('BBCode') && ModUtil::isHooked('BBCode', 'Dizkus')) {
+	        $out = ModUtil::func('BBCode', 'user', 'bbcodes', $params);
 	    }
     }
 
