@@ -252,6 +252,8 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         $this->view->assign('categorytree', $categorytree);
         $this->view->assign('catids', $catids);
         $this->view->assign('forumids', $forumids);
+        $this->view->assign('newcategory', false);
+        $this->view->assign('newforum', false);
     
         return $this->view->fetch('dizkus_admin_reordertree.html');
     }

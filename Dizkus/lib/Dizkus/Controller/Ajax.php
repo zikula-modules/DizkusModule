@@ -797,7 +797,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     /**
      * editcategory
      */
-    public function editcategory($args=array())
+    public function createcategory($args=array())
     {
     
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
@@ -805,30 +805,18 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
         }
     
-        $cat_id   = FormUtil::getPassedValue('cat', (isset($args['cat'])) ? $args['cat'] : '', 'GETPOST');
-    
-        if ($cat_id == '-1') {
-            $new = true;
-            $category = array('cat_title'    => $this->__('-- Create new category --'),
-                              'cat_id'       => time(),
-                              'forum_count'  => 0);
-            // we add a new category
-        } else {
-            $new = false;
-            $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
-                                     array( 'cat_id' => $cat_id ));
-            $forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
-                                   array('cat_id'    => $cat_id,
-                                         'permcheck' => 'nocheck'));
-            $category['forum_count'] = count($forums);
-        }
+        // we add a new category
+
+        $category = array('cat_title'    => $this->__('-- Create new category --'),
+                          'cat_id'       => time(),
+                          'forums'       => array(),
+                          'forum_count'  => 0);
     
         $this->view->assign('category', $category );
-        $this->view->assign('newcategory', $new);
+        $this->view->assign('newcategory', true);
     
-        AjaxUtil::output(array('data'     => $this->view->fetch('dizkus_ajax_editcategory.html'),
-                               'cat_id'   => $category['cat_id'],
-                               'new'      => $new),
+        AjaxUtil::output(array('data'     => $this->view->fetch('dizkus_ajax_singlecategory.html'),
+                               'cat_id'   => $category['cat_id']),
                           true, false, false);
     }
 
@@ -863,7 +851,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             if (count($forums) > 0) {
                 $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
                                          array( 'cat_id' => $cat_id ));
-                return AjaxUtil::error($this->__f('Error! This category contains %s forum)', DataUtil::formatForDisplay(count($forums))), array(), true, true, '400 Bad Data');
+                return AjaxUtil::error($this->__f('Error! This category contains %s forum)', DataUtil::formatForDisplay(count($forums))), array('cat_id' => $cat_id, 'old_id' => $cat_id), true, true, '400 Bad Data');
             }
             $res = ModUtil::apiFunc('Dizkus', 'admin', 'deletecategory',
                                 array('cat_id' => $cat_id));
@@ -883,17 +871,20 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             if (!is_bool($cat_id)) {
                 $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
                                          array( 'cat_id' => $cat_id ));
+/*
                 $category_forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                                                     array('cat_id'    => $category['cat_id'],
                                                           'permcheck' => ACCESS_ADMIN)); 
-                $category['forum_count'] = count($category_forums);
+*/
+                $category['forum_count'] = 0;
+                $category['forums'] = array();
                 $this->view->assign('category', $category );
                 $this->view->assign('newcategory', false);
                 AjaxUtil::output(array('cat_id'      => $cat_id,
                                        'old_id'      => $original_catid,
                                        'cat_title'   => $cat_title,
                                        'action'      => 'add',
-                                       'edithtml'    => $this->view->fetch('dizkus_ajax_editcategory.html'),
+                                       'edithtml'    => $this->view->fetch('dizkus_ajax_singlecategory.html'),
                                        'cat_linkurl' => ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id))),
                                  true, false, false); 
             } else {
@@ -939,6 +930,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         if ($forum_id == -1) {
             // create a new forum
             $new = true;
+            $template = 'dizkus_ajax_singleforum.html';
             $cat_id = FormUtil::getPassedValue('cat');
             $forum = array('forum_name'       => $this->__('-- Create new forum --'),
                            'forum_id'         => time(), /* for new forums only! */
@@ -962,6 +954,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         } else {
             // we are editing
             $new = false;
+            $template = 'dizkus_ajax_editforum.html';
             $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                                   array('forum_id'  => $forum_id,
                                         'permcheck' => ACCESS_ADMIN));
@@ -1037,7 +1030,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         $this->view->assign('forum', $forum);
         $this->view->assign('newforum', $new);
     
-        $html = $this->view->fetch('dizkus_ajax_editforum.html');
+        $html = $this->view->fetch($template);
     
         if (!isset($returnhtml)) {
             AjaxUtil::output(array('forum_id' => $forum['forum_id'],
