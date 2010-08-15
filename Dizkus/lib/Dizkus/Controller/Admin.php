@@ -236,22 +236,8 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         }
     
         $categorytree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
-        $catids = array();
-        $forumids = array();
-        if (is_array($categorytree) && count($categorytree) > 0) {
-            foreach ($categorytree as $category) {
-                $catids[] = $category['cat_id'];
-                if (is_array($category['forums']) && count($category['forums']) > 0) {
-                    foreach ($category['forums'] as $forum) {
-                        $forumids[] = $forum['forum_id'];
-                    }
-                }
-            }
-        }
-    
+
         $this->view->assign('categorytree', $categorytree);
-        $this->view->assign('catids', $catids);
-        $this->view->assign('forumids', $forumids);
         $this->view->assign('newcategory', false);
         $this->view->assign('newforum', false);
     
@@ -268,55 +254,55 @@ class Dizkus_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        $submit     = FormUtil::getPassedValue('submit');
-        $pnusername = FormUtil::getPassedValue('pnusername');
+        $submit   = FormUtil::getPassedValue('submit');
+        $username = FormUtil::getPassedValue('username');
     
-        $pnuid = 0;
+        $uid = 0;
         $topicsubscriptions = array();
         $forumsubscriptions = array();
     
-        if (!empty($pnusername)) {
-            $pnuid = UserUtil::getIDFromName($pnusername);
+        if (!empty($username)) {
+            $uid = UserUtil::getIDFromName($username);
         }
-        if (!empty($pnuid)) {
-            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions', array('user_id' => $pnuid));
-            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_subscriptions', array('user_id' => $pnuid));
+        if (!empty($uid)) {
+            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions', array('user_id' => $uid));
+            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_subscriptions', array('user_id' => $uid));
         }
     
         if (!$submit) {
             // submit is empty
-            $this->view->assign('pnusername', $pnusername);
-            $this->view->assign('pnuid', $pnuid = UserUtil::getIDFromName($pnusername));
+            $this->view->assign('username', $username);
+            $this->view->assign('uid', $uid = UserUtil::getIDFromName($username));
             $this->view->assign('topicsubscriptions', $topicsubscriptions);
             $this->view->assign('forumsubscriptions', $forumsubscriptions);
     
             return $this->view->fetch('dizkus_admin_managesubscriptions.html');
     
         } else {  // submit not empty
-            $pnuid      = FormUtil::getPassedValue('pnuid');
-            $allforums  = FormUtil::getPassedValue('allforum');
-            $forum_ids  = FormUtil::getPassedValue('forum_id');
-            $alltopics  = FormUtil::getPassedValue('alltopic');
-            $topic_ids  = FormUtil::getPassedValue('topic_id');
+            $uid       = FormUtil::getPassedValue('uid');
+            $allforums = FormUtil::getPassedValue('allforum');
+            $forum_ids = FormUtil::getPassedValue('forum_id');
+            $alltopics = FormUtil::getPassedValue('alltopic');
+            $topic_ids = FormUtil::getPassedValue('topic_id');
     
             if ($allforums == '1') {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $pnuid));
+                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $uid));
             } elseif (count($forum_ids) > 0) {
                 for($i = 0; $i < count($forum_ids); $i++) {
-                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $pnuid, 'forum_id' => $forum_ids[$i]));
+                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $uid, 'forum_id' => $forum_ids[$i]));
                 }
             }
     
             if ($alltopics == '1') {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $pnuid));
+                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $uid));
             } elseif (count($topic_ids) > 0) {
                 for($i = 0; $i < count($topic_ids); $i++) {
-                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $pnuid, 'topic_id' => $topic_ids[$i]));
+                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $uid, 'topic_id' => $topic_ids[$i]));
                 }
             }
         }
     
-        return System::redirect(ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('pnusername' => UserUtil::getVar('uname', $pnuid))));
+        return System::redirect(ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('username' => UserUtil::getVar('uname', $uid))));
     }
 
 }

@@ -20,12 +20,12 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $topic_id         = FormUtil::getPassedValue('topic');
-        $message          = FormUtil::getPassedValue('message', '');
-        $title            = FormUtil::getPassedValue('title', '');
-        $attach_signature = FormUtil::getPassedValue('attach_signature');
-        $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
-        $preview          = FormUtil::getPassedValue('preview', 0);
+        $topic_id         = FormUtil::getPassedValue('topic', null, 'POST');
+        $message          = FormUtil::getPassedValue('message', '', 'POST');
+        $title            = FormUtil::getPassedValue('title', '', 'POST');
+        $attach_signature = FormUtil::getPassedValue('attach_signature', null, 'POST');
+        $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic', null, 'POST');
+        $preview          = FormUtil::getPassedValue('preview', 0, 'POST');
         $preview          = ($preview == '1') ? true : false;
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -115,7 +115,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $post_id = FormUtil::getPassedValue('post');
+        $post_id = FormUtil::getPassedValue('post', null, 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -139,7 +139,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $post_id = FormUtil::getPassedValue('post');
+        $post_id = FormUtil::getPassedValue('post', null, 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -166,7 +166,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $post_id = FormUtil::getPassedValue('post');
+        $post_id = FormUtil::getPassedValue('post', null, 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -204,11 +204,11 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $post_id = FormUtil::getPassedValue('post', '');
-        $subject = FormUtil::getPassedValue('subject', '');
-        $message = FormUtil::getPassedValue('message', '');
-        $delete  = FormUtil::getPassedValue('delete');
-        $attach_signature = FormUtil::getPassedValue('attach_signature');
+        $post_id = FormUtil::getPassedValue('post', '', 'POST');
+        $subject = FormUtil::getPassedValue('subject', '', 'POST');
+        $message = FormUtil::getPassedValue('message', '', 'POST');
+        $delete  = FormUtil::getPassedValue('delete', null, 'POST');
+        $attach_signature = FormUtil::getPassedValue('attach_signature', null, 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -272,8 +272,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $topic_id = FormUtil::getPassedValue('topic', '');
-        $mode     = FormUtil::getPassedValue('mode', '');
+        $topic_id = FormUtil::getPassedValue('topic', '', 'POST');
+        $mode     = FormUtil::getPassedValue('mode', '', 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -311,8 +311,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $topic_id = FormUtil::getPassedValue('topic', '');
-        $mode     = FormUtil::getPassedValue('mode', '');
+        $topic_id = FormUtil::getPassedValue('topic', '', 'POST');
+        $mode     = FormUtil::getPassedValue('mode', '', 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -348,8 +348,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $topic_id = FormUtil::getPassedValue('topic', '');
-        $mode     = FormUtil::getPassedValue('mode', '');
+        $topic_id = FormUtil::getPassedValue('topic', '', 'POST');
+        $mode     = FormUtil::getPassedValue('mode', '', 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -398,7 +398,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $forum_id = FormUtil::getPassedValue('forum', '');
+        $forum_id = FormUtil::getPassedValue('forum', '', 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
     /*
@@ -452,7 +452,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error($this->__('Error! Favourites have been disabled.'), array(), true, true, '400 Bad Data');
         }
 
-        $forum_id = FormUtil::getPassedValue('forum', '');
+        $forum_id = FormUtil::getPassedValue('forum', '', 'POST');
 
         if (empty($forum_id)) {
             return AjaxUtil::error($this->__('Error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.'), array(), true, true, '400 Bad Data');
@@ -500,7 +500,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $topic_id = FormUtil::getPassedValue('topic', '');
+        $topic_id = FormUtil::getPassedValue('topic', '', 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -537,8 +537,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
-        $topic_id = FormUtil::getPassedValue('topic', '');
-        $subject  = FormUtil::getPassedValue('subject', '');
+        $topic_id = FormUtil::getPassedValue('topic', '', 'POST');
+        $subject  = FormUtil::getPassedValue('subject', '', 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -623,12 +623,12 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        $forum_id         = FormUtil::getPassedValue('forum');
-        $message          = FormUtil::getPassedValue('message', '');
-        $subject          = FormUtil::getPassedValue('subject', '');
-        $attach_signature = FormUtil::getPassedValue('attach_signature');
-        $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic');
-        $preview          = (int)FormUtil::getPassedValue('preview', 0);
+        $forum_id         = FormUtil::getPassedValue('forum', null, 'POST');
+        $message          = FormUtil::getPassedValue('message', '', 'POST');
+        $subject          = FormUtil::getPassedValue('subject', '', 'POST');
+        $attach_signature = FormUtil::getPassedValue('attach_signature', null, 'POST');
+        $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic', null, 'POST');
+        $preview          = (int)FormUtil::getPassedValue('preview', 0, 'POST');
 
         $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $forum_id));
@@ -839,10 +839,10 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(null, array(), true, true);
         }
     
-        $cat_id    = FormUtil::getPassedValue('cat_id');
-        $cat_title = FormUtil::getPassedValue('cat_title');
-        $add       = FormUtil::getPassedValue('add');
-        $delete    = FormUtil::getPassedValue('delete');
+        $cat_id    = FormUtil::getPassedValue('cat_id', null, 'POST');
+        $cat_title = FormUtil::getPassedValue('cat_title', null, 'POST');
+        $add       = FormUtil::getPassedValue('add', null, 'POST');
+        $delete    = FormUtil::getPassedValue('delete', null, 'POST');
     
         if (!empty($delete)) {
             $forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
@@ -920,8 +920,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
         }
     
-        $forum_id   = isset($args['forum_id']) ? $args['forum_id'] : FormUtil::getPassedValue('forum_id', null, 'GETPOST');
-        $returnhtml = isset($args['returnhtml']) ? $args['returnhtml'] : FormUtil::getPassedValue('returnhtml', null, 'GETPOST');
+        $forum_id   = isset($args['forum_id']) ? $args['forum_id'] : FormUtil::getPassedValue('forum_id', null, 'POST');
+        $returnhtml = isset($args['returnhtml']) ? $args['returnhtml'] : FormUtil::getPassedValue('returnhtml', null, 'POST');
     
         if (!isset($forum_id)) {
             return AjaxUtil::error($this->__('Error! Missing forum_id.'), array(), true, true);
@@ -1062,30 +1062,30 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     
         SessionUtil::setVar('zk_ajax_call', 'ajax');
     
-        $forum_name           = FormUtil::getPassedValue('forum_name');
-        $forum_id             = FormUtil::getPassedValue('forum_id');
-        $cat_id               = FormUtil::getPassedValue('cat_id');
-        $desc                 = FormUtil::getPassedValue('desc');
-        $mods                 = FormUtil::getPassedValue('mods');
-        $rem_mods             = FormUtil::getPassedValue('rem_mods');
-        $extsource            = FormUtil::getPassedValue('extsource');
-        $rssfeed              = FormUtil::getPassedValue('rssfeed');
-        $pop3_server          = FormUtil::getPassedValue('pop3_server');
-        $pop3_port            = FormUtil::getPassedValue('pop3_port');
-        $pop3_login           = FormUtil::getPassedValue('pop3_login');
-        $pop3_password        = FormUtil::getPassedValue('pop3_password');
-        $pop3_passwordconfirm = FormUtil::getPassedValue('pop3_passwordconfirm');
-        $pop3_interval        = FormUtil::getPassedValue('pop3_interval');
-        $pop3_matchstring     = FormUtil::getPassedValue('pop3_matchstring');
-        $pnuser               = FormUtil::getPassedValue('pnuser');
-        $pnpassword           = FormUtil::getPassedValue('pnpassword');
-        $pnpasswordconfirm    = FormUtil::getPassedValue('pnpasswordconfirm');
-        $moduleref            = FormUtil::getPassedValue('moduleref');
-        $pop3_test            = FormUtil::getPassedValue('pop3_test');
-        $add                  = FormUtil::getPassedValue('add');
-        $delete               = FormUtil::getPassedValue('delete');
+        $forum_name           = FormUtil::getPassedValue('forum_name', null, 'POST');
+        $forum_id             = FormUtil::getPassedValue('forum_id', null, 'POST');
+        $cat_id               = FormUtil::getPassedValue('cat_id', null, 'POST');
+        $desc                 = FormUtil::getPassedValue('desc', null, 'POST');
+        $mods                 = FormUtil::getPassedValue('mods', null, 'POST');
+        $rem_mods             = FormUtil::getPassedValue('rem_mods', null, 'POST');
+        $extsource            = FormUtil::getPassedValue('extsource', null, 'POST');
+        $rssfeed              = FormUtil::getPassedValue('rssfeed', null, 'POST');
+        $pop3_server          = FormUtil::getPassedValue('pop3_server', null, 'POST');
+        $pop3_port            = FormUtil::getPassedValue('pop3_port', null, 'POST');
+        $pop3_login           = FormUtil::getPassedValue('pop3_login', null, 'POST');
+        $pop3_password        = FormUtil::getPassedValue('pop3_password', null, 'POST');
+        $pop3_passwordconfirm = FormUtil::getPassedValue('pop3_passwordconfirm', null, 'POST');
+        $pop3_interval        = FormUtil::getPassedValue('pop3_interval', null, 'POST');
+        $pop3_matchstring     = FormUtil::getPassedValue('pop3_matchstring', null, 'POST');
+        $pnuser               = FormUtil::getPassedValue('pnuser', null, 'POST');
+        $pnpassword           = FormUtil::getPassedValue('pnpassword', null, 'POST');
+        $pnpasswordconfirm    = FormUtil::getPassedValue('pnpasswordconfirm', null, 'POST');
+        $moduleref            = FormUtil::getPassedValue('moduleref', null, 'POST');
+        $pop3_test            = FormUtil::getPassedValue('pop3_test', null, 'POST');
+        $add                  = FormUtil::getPassedValue('add', null, 'POST');
+        $delete               = FormUtil::getPassedValue('delete', null, 'POST');
     
-        $pntopic              = (int)FormUtil::getpassedValue('pncategory', 0);
+        $pntopic              = (int)FormUtil::getpassedValue('pncategory', 0, 'POST');
     
         $pop3testresulthtml = '';
         if (!empty($delete)) {
@@ -1229,7 +1229,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
 */
         }
     
-        $categoryarray = FormUtil::getPassedValue('category', null, 'GETPOST');
+        $categoryarray = FormUtil::getPassedValue('category', null, 'POST');
         // the last entry in the $category is the placeholder for a new
         // category, we need to remove this
         // not used any longer: array_pop($categoryarray);
@@ -1268,9 +1268,9 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             }
         } else {
             // store forum order
-            $cat_id = FormUtil::getPassedValue('cat_id', null, 'GETPOST');
+            $cat_id = FormUtil::getPassedValue('cat_id', null, 'POST');
             if (!is_null($cat_id)) {
-                $forumsarray = FormUtil::getPassedValue('cid_'.DataUtil::formatForDisplay($cat_id), null, 'GETPOST');
+                $forumsarray = FormUtil::getPassedValue('cid_'.DataUtil::formatForDisplay($cat_id), null, 'POST');
                 if (is_array($forumsarray) && count($forumsarray) > 0) {
                     foreach ($forumsarray as $forumorder => $forum_id) {
                         // array key start with 0, but we need 1, so we increase the order

@@ -541,7 +541,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                 case 'move':
                     list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
                     if ($forum_id == $f_id) {
-                        return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'), __FILE__, __LINE__);
+                        return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
                     }
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
                         return LogUtil::registerPermissionError();

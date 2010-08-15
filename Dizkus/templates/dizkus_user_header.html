@@ -17,7 +17,9 @@
 
 {formutil_getpassedvalue name='func' default='main' assign='func'}
 {* set the page title *}
-{assign var='maintitle' value=$maintitle|default:''}
+{if !isset($maintitle)}
+{assign var='maintitle' value=''}
+{/if}
 {if $func eq 'main'}
 {gt text='Category list' assign='maintitle'}
 {elseif $func eq 'viewforum' AND isset($forum)}

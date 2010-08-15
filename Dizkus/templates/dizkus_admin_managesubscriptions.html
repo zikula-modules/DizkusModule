@@ -4,13 +4,13 @@
 
 <form class="z-form" id="subscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
     <fieldset>
-        <label for="pnusername">{gt text="User name"}</label>&nbsp;<input type="text" name="pnusername" id="pnusername" value="{$pnusername}" />&nbsp;<button class="dzk_img search" type="submit" name="submit">{gt text="Show users' subscriptions"}</button>
+        <label for="username">{gt text="User name"}</label>&nbsp;<input type="text" name="username" id="username" value="{$username}" />&nbsp;<button class="dzk_img search" type="submit" name="submit">{gt text="Show users' subscriptions"}</button>
     </fieldset>
 </form>
 
 <form class="z-form" id="managesubscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
     <div>
-        <input type="hidden" name="pnuid" value="{$pnuid}" />
+        <input type="hidden" name="uid" value="{$uid}" />
         {if $topicsubscriptions|@count <> 0}
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <h2>{gt text="Manage topic subscriptions"}</h2>
@@ -58,7 +58,7 @@
                 {foreach item='subscription' from=$forumsubscriptions}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
-                        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.topic_title} :: {$subscription.forum_name}">{$subscription.forum_name|safetext}</a>
+                        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.cat_title} :: {$subscription.forum_name}">{$subscription.forum_name|safetext}</a>
                     </td>
                     <td>
                         <input class="forum_checkbox" type="checkbox" name="forum_id[]" value="{$subscription.forum_id}" />
