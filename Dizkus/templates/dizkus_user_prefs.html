@@ -49,9 +49,25 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Favourites"}<br />
-                    <a class="dzk_img showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
-                    <br />
-                    <a class="dzk_img showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
+                    <span><a id="forumdisplaymode" class="dzk_img favouriteslink hidden" href="javascript:void(0);" title="{gt text="Toggle forum display"}">{gt text="Toggle forum display"}</a>&nbsp;({gt text="now showing"}
+                    {if $favorites eq true}
+                    <span id="favorites_true">{gt text="favourite forums only"})</span>
+                    <span id="favorites_false" class="hidden">{gt text="all forums"})</span>
+                    {else}
+                    <span id="favorites_true" class="hidden">{gt text="favourite forums only"})</span>
+                    <span id="favorites_false">{gt text="all forums"})</span>
+                    {/if}
+                    </span>
+
+                    <noscript>
+                        <div>
+                            {if $favorites eq true}
+                            <a class="dzk_img showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
+                            {else}
+                            <a class="dzk_img showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
+                            {/if}
+                        </div>
+                    </noscript>
                 </li>
             </ul>
             {/if}

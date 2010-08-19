@@ -190,7 +190,7 @@ function Dizkus_tables()
                                                   'topic_last_post_id' => 'topic_last_post_id');
 
     //
-    // users
+    // users - obsole since 3.2.0 as these data have been moved to attributes, remove in a later version
     //
     $ztable['dizkus_users'] = DBUtil::getLimitedTablename('dizkus_users');
     $ztable['dizkus_users_column'] = array('user_id'         => 'user_id',

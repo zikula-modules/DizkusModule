@@ -13,7 +13,7 @@ class Dizkus_Api_User extends Zikula_Api {
 
     /**
      * get_userdata_from_id
-     * This function dynamically reads all fields of the <prefix>_users and <prefix>_dizkus_users
+     * This function dynamically reads all fields of the <prefix>_users
      * tables. When ever data fields are added there, they will be read too without any change here.
      *
      * @params $args{'userid'] int the users id (uid)
@@ -47,13 +47,19 @@ class Dizkus_Api_User extends Zikula_Api {
             // necessary for some socks :-)
             $userdata  = UserUtil::getVars(1);
             $makedummy = true;
+            $userdata = array_merge($userdata,  array('user_posts'      => 0,
+                                                      'user_rank'       => 0,
+                                                      'user_level'      => 0,
+                                                      'use_lastvisit'   => 0,
+                                                      'user_favorites'  => 0,
+                                                      'user_post_order' => 0));
         }
     
         $ztable = DBUtil::getTables();
-    
-        $dizkus_userdata = DBUtil::selectObjectByID('dizkus_users', $userid, 'user_id');
+/*    
+        $dizkus_userdata = DBUtil::selectObjectByID('dizkus__users', $userid, 'user_id');
         if (!is_array($dizkus_userdata)) {
-            // not yet in dizkus_users table, fake an entry for now
+            // not yet in dizkus__users table, fake an entry for now
             $dizkus_userdata = array('user_posts'      => 0,
                                      'user_rank'       => 0,
                                      'user_level'      => 0,
@@ -61,8 +67,8 @@ class Dizkus_Api_User extends Zikula_Api {
                                      'user_favorites'  => 0,
                                      'user_post_order' => 0);
         }
-        
-        $userdata = array_merge($userdata, $dizkus_userdata);
+*/        
+        //$userdata = array_merge($userdata, $dizkus_userdata);
 
         // set some basic data
         $userdata['moderate'] = false;
@@ -70,14 +76,19 @@ class Dizkus_Api_User extends Zikula_Api {
         $userdata['seeip'] = false;
 
         //
-        // extract attributes if existing
+        // extract attributes if existing, also necessary for the Dizkus attributes to the users table
         //
-        if (array_key_exists('__ATTRIBUTES', $userdata) && is_array($userdata['__ATTRIBUTES__'])) {
+        if (array_key_exists('__ATTRIBUTES__', $userdata) && is_array($userdata['__ATTRIBUTES__'])) {
             foreach ($userdata['__ATTRIBUTES__'] as $attributename => $attributevalue) {
-                $userdata[$attributename] = $attributevalue; 
+                if (substr($attributename, 0, 7) == 'dizkus_') {
+                    // cut off the dizkus_ form 
+                    $userdata[substr($attributename, 7, strlen($attributename))] = $attributevalue; 
+                } else {
+                    $userdata[$attributename] = $attributevalue; 
+                }
             }
         }
-        
+
         if(!array_key_exists('signature', $userdata)) {
             $userdata['signature'] = '';
         }
@@ -97,9 +108,9 @@ class Dizkus_Api_User extends Zikula_Api {
         if ($userdata['user_rank'] != 0) {
             $rank = DBUtil::selectObjectByID('dizkus_ranks', $userdata['user_rank'], 'rank_id');
 
-        } elseif ($userdata['user_posts'] != 0) {
-            $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
-                      AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
+        } elseif ($userdata['users_posts'] != 0) {
+            $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['users_posts']).'
+                      AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['users_posts']);
 
             $rank = DBUtil::selectObject('dizkus_ranks', $where);
         } 
@@ -223,7 +234,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
             case 'allmembers':
                 if (!isset($cache[$type])){
-                   $cache[$type] = DBUtil::selectObjectCount('dizkus_users');
+                   $cache[$type] = DBUtil::selectObjectCount('users');
                 }
                 
                 return  $cache[$type];
@@ -1240,11 +1251,7 @@ class Dizkus_Api_User extends Zikula_Api {
         } else {
             $pn_uid = 1;
         }
-    
-        // sync the current user, so that new users
-        // get into the Dizkus database
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $pn_uid, 'type' => 'user')); 
-    
+        
         if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
             // for privacy issues ip logging can be deactivated
             $poster_ip = '127.0.0.1';
@@ -1275,8 +1282,9 @@ class Dizkus_Api_User extends Zikula_Api {
         DBUtil::incrementObjectFieldByID('dizkus_topics', 'topic_replies', $obj['topic_id'], 'topic_id');
     
         if ($islogged) {
-            // user logged in we have to update users-table
-            DBUtil::incrementObjectFieldByID('dizkus_users', 'user_posts', $obj['poster_id'], 'user_id');
+            // user logged in we have to update users attributes
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts') + 1);
+            //DBUtil::incrementObjectFieldByID('dizkus__users', 'user_posts', $obj['poster_id'], 'user_id');
     
             // update subscription
             if ($args['subscribe_topic']==1) {
@@ -1479,11 +1487,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $pn_uid = 1;
             }
         }
-    
-        // sync the current user, so that new users
-        // get into the Dizkus database
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $pn_uid, 'type' => 'user'));
-    
+        
         // some enviroment for logging ;)
         if (System::serverGetVar('HTTP_X_FORWARDED_FOR')){
             $poster_ip = System::serverGetVar('HTTP_X_FORWARDED_FOR');
@@ -1527,7 +1531,8 @@ class Dizkus_Api_User extends Zikula_Api {
     
         if (UserUtil::isLoggedIn()) {
             // user logged in we have to update users-table
-            DBUtil::incrementObjectFieldByID('dizkus_users', 'user_posts', $obj['topic_poster'], 'user_id');
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts') + 1);
+            //DBUtil::incrementObjectFieldByID('dizkus__users', 'user_posts', $obj['topic_poster'], 'user_id');
     
             // update subscription
             if ($args['subscribe_topic'] == 1) {
@@ -1819,7 +1824,8 @@ class Dizkus_Api_User extends Zikula_Api {
             DBUtil::deleteObjectByID('dizkus_posts', $args['post_id'], 'post_id');
             
             // decrement user post counter 
-            DBUtil::decrementObjectFieldByID('dizkus_users', 'user_posts', $post_to_delete['poster_id'], 'user_id');
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $post_to_delete['poster_id']) - 1, $post_to_delete['poster_id']);
+            //DBUtil::decrementObjectFieldByID('dizkus__users', 'user_posts', $post_to_delete['poster_id'], 'user_id');
              
              // update forum       
             DBUtil::updateObject($forum, 'dizkus_forums', null, 'forum_id');
@@ -2038,7 +2044,8 @@ class Dizkus_Api_User extends Zikula_Api {
         // step #2 go through the posting array and decrement the posting counter
         // TO-DO: for larger topics use IN(..., ..., ...) with 50 or 100 posting ids per sql
         foreach ($postsarray as $posting) {
-            DBUtil::decrementObjectFieldByID('dizkus_users', 'user_posts', $posting['poster_id'], 'user_id');
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting['poster_id']) - 1, $posting['poster_id']);
+            //DBUtil::decrementObjectFieldByID('dizkus__users', 'user_posts', $posting['poster_id'], 'user_id');
         }
     
        // now delete postings
@@ -2693,18 +2700,6 @@ class Dizkus_Api_User extends Zikula_Api {
     
         return array($posts, $m2fposts, $rssposts, $text);
     }
-        
-    /**
-     * usersync
-     * stub function for syncing new users to Dizkus
-     *
-     * @params none
-     * @returns api call result
-     */
-    public function usersync()
-    {
-        return ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('type' => 'all users'));
-    }
     
     /**
      * splittopic
@@ -2925,9 +2920,10 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
-        $obj = DBUtil::selectObjectByID('dizkus_users', $args['user_id'], 'user_id', null, null, null, false);
+        //$obj = DBUtil::selectObjectByID('dizkus__users', $args['user_id'], 'user_id', null, null, null, false);
     
-        return (bool)$obj['user_favorites'];
+        $fav_status = (int)UserUtil::getVar('dizkus_user_favorites', $args['user_id']);
+        return ($fav_status == 1) ? true : false;
     }
     
     /**
@@ -2945,23 +2941,26 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         $recentstatus = $this->get_favorite_status(array('user_id' => $args['user_id']));
-        $args['user_favorites'] = ($recentstatus==true) ? 0 : 1;
-        DBUtil::updateObject($args, 'dizkus_users', '', 'user_id');
+        $user_favorites = ($recentstatus==true) ? 0 : 1;
+        UserUtil::setVar('dizkus_user_favorites', $user_favorites, $args['user_id']);
+        // force reload from db
+        UserUtil::getVars($args['user_id'], true);
+        //DBUtil::updateObject($args, 'dizkus__users', '', 'user_id');
     
-        return (bool)$args['user_favorites'];
+        return (bool)$user_favorites;
     }
     
     /**
      * get_user_post_order
      * Determines the users desired post order for topics.
      * Either Newest First or Oldest First
-     * Returns 'ASC' or 'DESC' on success, false on failure.
+     * Returns 'ASC' (0) or 'DESC' (1) on success, false on failure.
      *
      * @params user_id - The user id of the person who's order we
      *                  are trying to determine
      * @returns string on success, false on failure
      */
-    public function get_user_post_order($args)
+    public function get_user_post_order($args = array())
     {
         $loggedIn = UserUtil::isLoggedIn();
     
@@ -2986,14 +2985,8 @@ class Dizkus_Api_User extends Zikula_Api {
             }
         }
     
-        $obj = DBUtil::selectObjectByID('dizkus_users', $args['user_id'], 'user_id', null, null, null, false);
-    
-        if (is_array($obj)) {
-            $post_order = ($obj['user_post_order']) ? 'DESC' : 'ASC';
-        } else {
-            $post_order = ModUtil::getVar('Dizkus', 'post_sort_order');
-        }
-    
+        //$obj = DBUtil::selectObjectByID('dizkus__users', $args['user_id'], 'user_id', null, null, null, false);
+        $post_order = (UserUtil::getVar('dizkus_user_post_order', $args['user_id']) == 1) ? 'DESC' : 'ASC';
         return $post_order;
     }
     
@@ -3005,7 +2998,7 @@ class Dizkus_Api_User extends Zikula_Api {
      * @returns bool - true on success, false on failure
      *
      */
-    public function change_user_post_order($args)
+    public function change_user_post_order($args = array())
     {
         // if we didn't get a user_id and the user isn't logged in then
         // return false because there is no database entry to update
@@ -3013,10 +3006,13 @@ class Dizkus_Api_User extends Zikula_Api {
             $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
-        $post_order = ModUtil::apiFunc('Dizkus','user','get_user_post_order');
-        $args['user_post_order'] = ($post_order == 'DESC') ? 0 : 1;
+        $post_order = $this->get_user_post_order();
+        $new_post_order = ($post_order == 'DESC') ? 0 : 1; // new value, not recent!
     
-        return DBUtil::updateObject($args, 'dizkus_users', '', 'user_id');
+        UserUtil::setVar('dizkus_user_post_order', $new_post_order, $args['user_id']);
+        // force reload of data from db
+        UserUtil::getVars($args['user_id'], true);
+        return true;
     }
     
     /**

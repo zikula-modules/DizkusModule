@@ -25,7 +25,7 @@
                     {if isset($post.poster_data.rank_image) && isset($post.poster_data.rank)}
                     <br />
                     {if $post.poster_data.rank_link neq ''}<a href="{$post.poster_data.rank_link}" title="{$post.poster_data.rank_link}">{/if}
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster_data.rank_image}" alt="{$post.poster_data.rank}" title="{$post.poster_data.rank_desc}" {$post.poster_data.rank_image_image_attr.3} />
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster_data.rank_image}" alt="{$post.poster_data.rank}" title="{$post.poster_data.rank_desc}" />
                     {if $post.poster_data.rank_link neq ''}</a>{/if}
                     {/if}
                 </div>
@@ -38,7 +38,7 @@
                     {if !$post.poster_data.online}
                     <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if}
-                    <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.user_posts}</li>
+                    <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.users_posts}</li>
                     {if $zcore.logged_in eq true}
                     <li>
                         {$post.poster_data.uname|userprofilelink:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif"}

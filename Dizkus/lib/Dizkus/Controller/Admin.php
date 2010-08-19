@@ -57,10 +57,7 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         $silent = FormUtil::getPassedValue('silent', 0);
     
         $messages = array();
-    
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all users'));
-    
+        
         $messages[] = DataUtil::formatForDisplay($this->__('Done! Synchronized Zikula users and Dizkus users.'));
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
@@ -133,10 +130,6 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         $lastletter = FormUtil::getPassedValue('lastletter');
         $page       = (int)FormUtil::getPassedValue('page', 1, 'GETPOST');
     
-        // sync the current user, so that new users
-        // get into the Dizkus database
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('type' => 'all users')); 
-    
         // check for a letter parameter
         if (!empty($lastletter)) {
             $letter = $lastletter;
@@ -152,7 +145,6 @@ class Dizkus_Controller_Admin extends Zikula_Controller
         if (!$submit) {
             list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
                                                      array('ranktype' => 1));
-    
             $tables = DBUtil::getTables();
     
             $userscol  = $tables['users_column'];
@@ -165,10 +157,8 @@ class Dizkus_Controller_Admin extends Zikula_Controller
                 $start = ($page-1) * $perpage;
                 $users = DBUtil::selectObjectArray('users', $where, $orderby, $start, $perpage);
             }
-    
             $allusers = array();
-            foreach ($users as $user)
-            {
+            foreach ($users as $user) {
                 if ($user['uid'] == 1)  continue;
     
                 $alias = '';

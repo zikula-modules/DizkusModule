@@ -66,13 +66,13 @@ Class Dizkus_Installer extends Zikula_Installer
             $this->uninstall();
             return false;
         }
-    
+/*    
         // creating users table
-        if (!DBUtil::createTable('dizkus_users')) {
+        if (!DBUtil::createTable('dizkus__users')) {
             $this->uninstall();
             return false;
         }
-    
+*/    
         // creating topic_subscription table (new in 1.7.5)
         if (!DBUtil::createTable('dizkus_topic_subscription')) {
             $this->uninstall();
@@ -265,13 +265,13 @@ Class Dizkus_Installer extends Zikula_Installer
                 return false;
             }
         }
-        
-        if (in_array($ztables['dizkus_users'], $tables)) {
-                if (!DBUtil::dropTable('dizkus_users')) {
+/*        
+        if (in_array($ztables['dizkus__users'], $tables)) {
+            if (!DBUtil::dropTable('dizkus__users')) {
                 return false;
             }
         }
-        
+*/        
         if (in_array($ztables['dizkus_topic_subscription'], $tables)) {
             if (!DBUtil::dropTable('dizkus_topic_subscription')) {
                 return false;

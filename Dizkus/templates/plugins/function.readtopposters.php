@@ -21,28 +21,23 @@ function smarty_function_readtopposters($params, &$smarty)
 {
     $postermax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
 
+    ModUtil::dbInfoLoad('Settings');
     $ztable = DBUtil::getTables();
-    $sql = "SELECT user_id,user_posts
-          FROM ".$ztable['dizkus_users']." 
-          WHERE user_id <> 1
-          AND user_posts > 0
-          ORDER BY user_posts DESC";
+    $objcol = $ztable['objectdata_attributes_column'];
+        
+    $where = $objcol['attribute_name'] . "='dizkus_user_posts'";
+    $orderby = $objcol['value'] . ' DESC';
+    $topposters = DBUtil::selectObjectArray('objectdata_attributes', $where, $orderby, -1, $postermax);
 
-    $res = DBUtil::executeSQL($sql, -1, $postermax);
-    $colarray = array('user_id', 'user_posts');
-    $result    = DBUtil::marshallObjects($res, $colarray);
-
-    $result_postermax = count($result);
-    if ($result_postermax <= $postermax) {
-      $postermax = $result_postermax;
-    }
-
-    $topposters = array();
-    if (is_array($result) && !empty($result)) {
-        foreach ($result as $topposter) {
-            $topposter['user_name'] = DataUtil::formatForDisplay(UserUtil::getVar('uname', $topposter['user_id']));
-            array_push($topposters, $topposter);
+    if (is_array($topposters) && !empty($topposters)) {
+        for($i=0; $i < count($topposters); $i++) {
+            $topposters[$i]['user_name'] = DataUtil::formatForDisplay(UserUtil::getVar('uname', $topposters[$i]['object_id']));
+            // for BC reasons
+            $topposters[$i]['user_posts'] = DataUtil::formatForDisplay($topposters[$i]['value']);
+            $topposters[$i]['user_id']    = DataUtil::formatForDisplay($topposters[$i]['object_id']);
         }
+    } else {
+        $toppposters = array();
     }
 
     $smarty->assign('toppostercount', count($topposters));

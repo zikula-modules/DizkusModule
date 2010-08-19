@@ -32,6 +32,7 @@ var DizkusUser = Class.create(DizkusBase, {
         this.subjectstatus = false;
         this.sortorderstatus = false;
         this.newtopicstatus = false;
+        this.toggleforumdisplay = false;
 
         // global setting of combination effect
         this.comboeffect = 'slide';
@@ -91,7 +92,7 @@ var DizkusUser = Class.create(DizkusBase, {
                 if($('dzk_quickreply')) {
                     $('quickreplybuttons').removeClassName('hidden');
                     $('nonajaxquickreplybuttons').remove();
-                    $('quickreplyform').action = '';
+                    $('quickreplyform').action = 'javascript:void(0);';
                 }
                 $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
 
@@ -144,6 +145,10 @@ var DizkusUser = Class.create(DizkusBase, {
                 break;
             case 'prefs':
                 $('sortorder').observe('click', this.changesortorder.bind(this)).removeClassName('hidden');
+                if ($('forumdisplaymode')) {
+                    $('forumdisplaymode').observe('click', this.toggledisplay.bind(this)).removeClassName('hidden');
+                }
+
                 // add some observers
                 $$('a[id^="toggleforumsubscriptionbutton"]').each(function(el) 
                                                                   {
@@ -285,6 +290,43 @@ var DizkusUser = Class.create(DizkusBase, {
                 });
         }
     },
+
+    toggledisplay: function()
+    {
+        if(this.toggleforumdisplay == false) {
+            this.toggleforumdisplay = true;
+            pars = "module=Dizkus&func=changeforumdisplay&authid=" + $F('authid');
+            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Ajax.Request(
+                Zikula.Config.baseURL+"ajax.php",
+                {
+                    method: 'post',
+                    parameters: pars,
+                    onComplete: function(originalRequest)
+                                {
+                                    this.toggleforumdisplay = false;
+                                
+                                    // show error if necessary
+                                    if( originalRequest.status != 200 ) {
+                                        json = Zikula.ajaxResponseError(originalRequest);
+                                        return;
+                                    }
+                                
+                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    Zikula.updateauthids(json.authid);
+                                
+                                    if(json.data == true) {
+                                        $('favorites_true').removeClassName('hidden');
+                                        $('favorites_false').addClassName('hidden'); 
+
+                                    } else {
+                                        $('favorites_true').addClassName('hidden');
+                                        $('favorites_false').removeClassName('hidden');
+                                    }
+                                }.bind(this)
+                });
+        }
+    },
     
     quickEdit: function(editpostlinkid)
     {
@@ -367,7 +409,7 @@ var DizkusUser = Class.create(DizkusBase, {
                '&post=' + this.post_id +
                '&message=' + encodeURIComponent($F('postingtext_' + this.post_id + '_edit')) +
                '&authid=' + $F('postingtext_' + this.post_id + '_authid') +
-               '&attach_signature=' + getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature');
+               '&attach_signature=' + this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature');
 
         if($('postingtext_' + this.post_id + '_delete') && $('postingtext_' + this.post_id + '_delete').checked == true) {
             $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + deletingPost + '</span>');
@@ -809,12 +851,11 @@ var DizkusUser = Class.create(DizkusBase, {
 
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingReply);
-        
             pars = 'module=Dizkus&func=reply' +
                    '&topic=' + $F('topic') +
                    '&message=' + encodeURIComponent($F('message')) +
-                   '&attach_signature=' + getcheckboxvalue('attach_signature') +
-                   '&subscribe_topic=' + getcheckboxvalue('subscribe_topic') +
+                   '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
+                   '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic') +
                    '&authid=' + $F('authid');
             Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Ajax.Request(
@@ -880,7 +921,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "module=Dizkus&func=reply" +
                    "&topic=" + $F('topic') +
                    "&message=" + encodeURIComponent($F('message')) +
-                   "&attach_signature=" + getcheckboxvalue('attach_signature') +
+                   "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
                    "&preview=1" +
                    "&authid=" + $F('authid');
         

@@ -116,6 +116,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
         return $this->view->fetch('dizkus_user_viewforum.html');
     }
@@ -169,6 +170,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $this->view->assign('post_count', count($topic['posts']));
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
         return $this->view->fetch('dizkus_user_viewtopic.html');
     }
@@ -683,7 +685,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             case 'showallforums':
             case 'showfavorites':
                 if (ModUtil::getVar('Dizkus', 'favorites_enabled')=='yes') {
-                    $return_to = (!empty($return_to))? $return_to : 'main';
+                    $return_to = (!empty($return_to))? $return_to : 'prefs';
                     $favorites = ModUtil::apiFunc('Dizkus', 'user', 'change_favorite_status');
                     $params = array();
                 }
@@ -699,6 +701,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                 $this->view->assign('ignorelist_handling', ModUtil::getVar('Dizkus','ignorelist_handling'));
                 $this->view->assign('contactlist_available', ModUtil::available('ContactList'));
                 $this->view->assign('post_order', strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order')));
+                $this->view->assign('favorites', ModUtil::apiFunc('Dizkus','user','get_favorite_status'));
                 $this->view->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
     
                 return $this->view->fetch('dizkus_user_prefs.html');
@@ -899,6 +902,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
                                                 array('id'   => '0',
                                                       'type' => 'all' )));
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
         return $this->view->fetch('dizkus_user_latestposts.html');
     }

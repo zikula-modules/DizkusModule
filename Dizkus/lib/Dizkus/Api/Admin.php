@@ -273,20 +273,19 @@ class Dizkus_Api_Admin extends Zikula_Api {
     public function readusers($args)
     {
         $ztable = DBUtil::getTables();
+        $userscolumn = $ztable['users_column'];
     
-        $sql = "SELECT n.z_uid, n.z_uname
-                FROM ".$ztable['users']." AS n
-                left JOIN ".$ztable['dizkus_users']." AS u
-                ON u.user_id=n.z_uid
-                WHERE n.z_uid != 1 ";
+        $sql = "SELECT ".$userscolumn['uid'].", ".$userscolumn['uname']."
+                FROM ".$ztable['users']."
+                WHERE ".$userscolumn['uid']." != 1 ";
     
         foreach($args['moderators'] as $mod) {
             if ($mod['uid']<=1000000) {
                 // mod uids > 1000000 are groups
-                $sql .= "AND n.z_uid != '".DataUtil::formatForStore($mod['uid'])."'";
+                $sql .= "AND ".$userscolumn['uid']." != '".DataUtil::formatForStore($mod['uid'])."' ";
             }
         }
-        $sql .= "ORDER BY z_uname";
+        $sql .= "ORDER BY ".$userscolumn['uname'];
     
         $res = DBUtil::executeSQL($sql);
         $colarray = array('uid', 'uname');
@@ -409,15 +408,20 @@ class Dizkus_Api_Admin extends Zikula_Api {
     
     /**
      * readrankusers
-     * rank_id
+     * read all users that have a certain rank_id
      */
     public function readrankusers($args)
     {
+        ModUtil::dbInfoLoad('Settings');
         $ztable = DBUtil::getTables();
-    
+        $objcol = $ztable['objectdata_attributes_column'];
+        
+        $where = $objcol['attribute_name'] . "='dizkus_user_rank' AND " .$objcol['value']."=" . DataUtil::formatForStore($args['rank_id']);
+        $users = DBUtil::selectObjectArray('objectdata_attributes', $where, '', -1, -1, 'object_id');
+/*    
         $sql = 'SELECT  u.user_id
                 FROM ' . $ztable['dizkus_ranks'] . ' as r,
-                     ' . $ztable['dizkus_users'].' as u
+                     ' . $ztable['dizkus__users'].' as u
                 WHERE r.rank_id=' . DataUtil::formatForStore($args['rank_id']) . '
                   AND u.user_rank=r.rank_id
                   AND r.rank_special=1
@@ -426,16 +430,8 @@ class Dizkus_Api_Admin extends Zikula_Api {
         $res      = DBUtil::executeSQL($sql);
         $objarray = DBUtil::marshallObjects($res, array('user_id'));
         $users    = array_map('_get_rank_users', $objarray);
-    
-        return $users;
-    }
-    
-    /**
-     * helper function
-     */
-    function _get_rank_users($u)
-    {
-        return $u['user_id'];
+*/  
+        return array_keys($users);
     }
     
     /**
@@ -451,9 +447,10 @@ class Dizkus_Api_Admin extends Zikula_Api {
         if (is_array($args['setrank'])) {
             $ranksavearray = array();
             foreach($args['setrank'] as $user_id => $rank_id) {
-                $ranksavearray[] = array('user_id' => $user_id, 'user_rank' => $rank_id);
+                UserUtil::setVar('dizkus_user_rank', $rank_id, $user_id);
+                //$ranksavearray[] = array('user_id' => $user_id, 'user_rank' => $rank_id);
             }
-            DBUtil::updateObjectArray($ranksavearray, 'dizkus_users', 'user_id');
+            //DBUtil::updateObjectArray($ranksavearray, 'dizkus__users', 'user_id');
         }
     
         return true;
@@ -500,31 +497,39 @@ class Dizkus_Api_Admin extends Zikula_Api {
                 break;
     
             case 'all posts':
-                $sql = "SELECT poster_id,
-                               count(poster_id) as total_posts
-                        FROM ".$ztable['dizkus_posts']."
-                        GROUP BY poster_id";
-                $res = DBUtil::executeSQL($sql);
-                $colarray = array('user_id', 'user_posts');
-                $result   = DBUtil::marshallObjects($res, $colarray);
-                // can this be done in SQL without reading with PHP and writing with PHP? I do not care about MySQL 5 only solutions
-                if (is_array($result) && !empty($result)) {
-                     DBUtil::updateObjectArray($result, 'dizkus_users', 'user_id');
-                }
-                break;
-    
-            case 'all users':
-            case 'user': 
-                // copy new users to dizkus_users table
-                $sql = 'INSERT INTO ' . $ztable['dizkus_users'] . ' (user_id)
-                        SELECT z_uid
-                        FROM ' . $ztable['users'] . '
-                        LEFT JOIN ' . $ztable['dizkus_users'] . '
-                        ON user_id = z_uid
-                        WHERE user_id IS NULL';
-    
+                ModUtil::dbInfoLoad('Settings');
+                $tables = DBUtil::getTables();
+                
+                $objtable    = $tables['objectdata_attributes'];
+                $objcolumn   = $tables['objectdata_attributes_column'];
+                $poststable  = $tables['dizkus_posts'];
+                $postscolumn = $tables['dizkus_posts_column'];
+                
+                // drop all attributes 'dizkus_user_posts'
+                DBUtil::deleteWhere('objectdata_attributes', $objcolumn['attribute_name'] . "='dizkus_user_posts'");
+            
+                // re-insert from scratch
+                $timestring = DataUtil::formatForStore(date('Y-m-d H:i:s'));
+                $this_uid   = DataUtil::formatForStore(UserUtil::getVar('uid'));
+                $sql = "INSERT INTO " . $objtable . " (" . $objcolumn['attribute_name'] . ",
+                                                       " . $objcolumn['object_type'] . ",
+                                                       " . $objcolumn['object_id'] . ",
+                                                       " . $objcolumn['value'] . ",
+                                                       " . $objcolumn['cr_date'] . ",
+                                                       " . $objcolumn['cr_uid'] . ",
+                                                       " . $objcolumn['lu_date'] . ",
+                                                       " . $objcolumn['lu_uid'] . ")
+                        SELECT 'dizkus_users_posts',
+                               'users',
+                               " . $postscolumn['poster_id'] . ",
+                               COUNT(" . $postscolumn['poster_id'] . ") as total_posts,
+                               '" . $timestring . "',
+                               " . $this_uid . ",
+                               '" . $timestring . "',
+                               " . $this_uid . "
+                        FROM " . $poststable . "
+                        GROUP BY " . $postscolumn['poster_id'];
                 DBUtil::executeSQL($sql);
-    
                 break;
             default:
                 return LogUtil::registerError('Error! Bad parameter in synchronisation:', null, ModUtil::url('Dizkus', 'admin', 'main'));
@@ -755,3 +760,12 @@ class Dizkus_Api_Admin extends Zikula_Api {
     }
 
 }
+
+/**
+ * helper function
+ */
+function _get_rank_users($u)
+{
+    return $u['user_id'];
+}
+    

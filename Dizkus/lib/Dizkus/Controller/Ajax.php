@@ -600,9 +600,36 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         }
 
         ModUtil::apiFunc('Dizkus', 'user', 'change_user_post_order');
-        $newmode = strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order'));
+        $new_post_order =  strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order'));
 
-        dzk_jsonizeoutput($newmode, true, true);
+        dzk_jsonizeoutput($new_post_order, true, true);
+    }
+
+    /**
+     * change forum display
+     *
+     */
+    public function changeforumdisplay()
+    {
+        if (dzk_available(false) == false) {
+            return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
+        }
+
+        SessionUtil::setVar('zk_ajax_call', 'ajax');
+
+        if (!UserUtil::isLoggedIn()) {
+            return AjaxUtil::error($this->__('Error! This feature is for registered users only.'), array(), true, true, '400 Bad Data');
+        }
+
+        if (!SecurityUtil::confirmAuthKey()) {
+            LogUtil::registerAuthidError();
+            return AjaxUtil::error(null, array(), true, true, '400 Bad data');
+        }
+
+        ModUtil::apiFunc('Dizkus', 'user', 'change_favorite_status');
+        $new_favorite_status =  ModUtil::apiFunc('Dizkus','user','get_favorite_status');
+
+        dzk_jsonizeoutput($new_favorite_status, true, true);
     }
 
     /**
