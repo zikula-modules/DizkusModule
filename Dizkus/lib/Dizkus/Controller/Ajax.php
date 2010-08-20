@@ -147,7 +147,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                                  array('post_id'     => $post_id));
             if ($post['poster_data']['edit'] == true) {
-                dzk_jsonizeoutput($post, false);
+                AjaxUtil::output($post, true, false, false);
             } else {
                 LogUtil::registerPermissionError();
                 return AjaxUtil::error(null, array(), true, true, '400 Bad Data');
@@ -579,10 +579,10 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     }
 
     /**
-     * changesortorder
+     * togglesortorder
      *
      */
-    public function changesortorder()
+    public function togglesortorder()
     {
         if (dzk_available(false) == false) {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
@@ -602,14 +602,14 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         ModUtil::apiFunc('Dizkus', 'user', 'change_user_post_order');
         $new_post_order =  strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order'));
 
-        dzk_jsonizeoutput($new_post_order, true, true);
+        AjaxUtil::output($new_post_order, true, false, false);
     }
 
     /**
      * change forum display
      *
      */
-    public function changeforumdisplay()
+    public function toggleforumdisplay()
     {
         if (dzk_available(false) == false) {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
@@ -629,7 +629,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         ModUtil::apiFunc('Dizkus', 'user', 'change_favorite_status');
         $new_favorite_status =  ModUtil::apiFunc('Dizkus','user','get_favorite_status');
 
-        dzk_jsonizeoutput($new_favorite_status, true, true);
+        AjaxUtil::output($new_favorite_status, true, false, false);
     }
 
     /**
@@ -1269,29 +1269,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 if (ModUtil::apiFunc('Dizkus', 'admin', 'updatecategory',
                                  array('cat_id'    => $cat_id,
                                        'cat_order' => $catorder)) == false) {
-                    dzk_ajaxerror('updatecategory(): cannot reorder category ' . $cat_id . ' (' . $catorder . ')');
+                    return AjaxUtil::error($this->__f('Error! cannot reorder category %s.', $cat_id), array(), true, true, '400 Bad data');
                 }
-/*        
-                $forumsincategoryarray = FormUtil::getPassedValue('cid_' . $cat_id);
-                // last two item in the array or for internal purposes in the template
-                // we do not need them, in fact they lead to errors when we
-                // do not remove them
-                //array_pop($forumsincategoryarray);
-                //array_pop($forumsincategoryarray);
-                if (is_array($forumsincategoryarray) && count($forumsincategoryarray) > 0) {
-                    foreach ($forumsincategoryarray as $forumorder => $forum_id) {
-                        if (!empty($forum_id) && is_numeric($forum_id)) {
-                            // array key start with 0, but we need 1, so we increase the order
-                            // value
-                            $forumorder++;
-                            $newforum = array('forum_id'    => $forum_id,
-                                              'cat_id'      => $cat_id,
-                                              'forum_order' => $forumorder);
-                            DBUtil::updateObject($newforum, 'dizkus_forums', null, 'forum_id');
-                        }
-                    }
-                }
-*/
             }
         } else {
             // store forum order
@@ -1311,7 +1290,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 }
             }
         }    
-        dzk_jsonizeoutput('', true, true);
+        AjaxUtil::output('', true, false, false);
     }
 
 }

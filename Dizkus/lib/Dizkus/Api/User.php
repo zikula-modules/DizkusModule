@@ -56,19 +56,6 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         $ztable = DBUtil::getTables();
-/*    
-        $dizkus_userdata = DBUtil::selectObjectByID('dizkus__users', $userid, 'user_id');
-        if (!is_array($dizkus_userdata)) {
-            // not yet in dizkus__users table, fake an entry for now
-            $dizkus_userdata = array('user_posts'      => 0,
-                                     'user_rank'       => 0,
-                                     'user_level'      => 0,
-                                     'use_lastvisit'   => 0,
-                                     'user_favorites'  => 0,
-                                     'user_post_order' => 0);
-        }
-*/        
-        //$userdata = array_merge($userdata, $dizkus_userdata);
 
         // set some basic data
         $userdata['moderate'] = false;
@@ -1291,7 +1278,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 // user wants to subscribe the topic
                 $this->subscribe_topic(array('topic_id' => $obj['topic_id']));
             } else {
-                // user wants not to subscribe the topic
+                // user does not want to subscribe the topic
                 $this->unsubscribe_topic(array('topic_id' => $obj['topic_id'],
                                                        'silent'   => true));
             }

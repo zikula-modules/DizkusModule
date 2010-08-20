@@ -409,62 +409,6 @@ function dzkstriptags($text='')
 }
 
 /**
- * dzk_ajaxerror
- *
- * display an error during Ajax execution
- */
-function dzk_ajaxerror($error='Error! An unspecified ajax error occurred.', $createauthid = false)
-{
-    if (!empty($error)) {
-        if ($createauthid == true) {
-            dzk_jsonizeoutput($error, $createauthid, false, false);
-        } else {    
-            SessionUtil::delVar('zk_ajax_call');
-            header('HTTP/1.0 400 Bad Data');
-            echo DataUtil::formatForDisplay($error);
-            System::shutDown();
-        }
-    }
-}
-
-/**
- * encode data in JSON
- * This functions can add a new authid if requested to do so.
- * If the supplied args is not an array, it will be converted to an
- * array with 'data' as key.
- * Authid field will always be named 'authid'. Any other field 'authid'
- * will be overwritten!
- *
- */
-function dzk_jsonizeoutput($args, $createauthid = false, $xjsonheader = false, $ok = true)
-{
-    if (!is_array($args)) {
-        $data = array('data' => $args);
-    } else {
-        $data = $args;
-    }
-    if ($createauthid == true) {
-        $data['authid'] = SecurityUtil::generateAuthKey('Dizkus');
-    }
-    $output = json_encode($data);
-
-    SessionUtil::delVar('zk_ajax_call');
-    if ($ok == true) {
-        header('HTTP/1.0 200 OK');
-    } else {
-        header('HTTP/1.0 400 Bad Data');
-    }
-    if ($xjsonheader == false) {
-        echo $output;
-    } else {
-        header('X-JSON:(' . $output . ')');
-        echo $output;
-    }
-    System::shutDown();
-
-}
-
-/**
  * sorting user lists by ['uname']
  */
 function cmp_userorder($a, $b)

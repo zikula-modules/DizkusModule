@@ -13,13 +13,13 @@
             <ul class="linklist z-clearfix">
                 <li>{gt text="Recent posts order in topic view"}
                     <br />
-                    <span><a id="sortorder" class="dzk_img sortorderasclink hidden" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}:
+                    <span><a id="sortorder" class="dzk_img sortorderasclink hidden" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="now showing"}
                     {if $post_order eq 'asc'}
-                    <span id="sortorder_asc">{gt text="Oldest submissions at top"})</span>
-                    <span id="sortorder_desc" class="hidden">{gt text="Newest submissions at top"})</span>
+                    <span id="sortorder_asc">{gt text="oldest submissions at top"})</span>
+                    <span id="sortorder_desc" class="hidden">{gt text="newest submissions at top"})</span>
                     {elseif $post_order eq 'desc'}
-                    <span id="sortorder_asc" class="hidden">{gt text="Oldest submissions at top"})</span>
-                    <span id="sortorder_desc">{gt text="Newest submissions at top"})</span>
+                    <span id="sortorder_asc" class="hidden">{gt text="oldest submissions at top"})</span>
+                    <span id="sortorder_desc">{gt text="newest submissions at top"})</span>
                     {/if}
                     </span>
                     <form action="javascript:void(0);" method="post">

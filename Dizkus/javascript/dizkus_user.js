@@ -144,7 +144,7 @@ var DizkusUser = Class.create(DizkusBase, {
                                                 }.bind(this));
                 break;
             case 'prefs':
-                $('sortorder').observe('click', this.changesortorder.bind(this)).removeClassName('hidden');
+                $('sortorder').observe('click', this.togglesortorder.bind(this)).removeClassName('hidden');
                 if ($('forumdisplaymode')) {
                     $('forumdisplaymode').observe('click', this.toggledisplay.bind(this)).removeClassName('hidden');
                 }
@@ -250,11 +250,11 @@ var DizkusUser = Class.create(DizkusBase, {
         }
     },
  
-    changesortorder: function()
+    togglesortorder: function()
     {
         if(this.sortorderstatus == false) {
             this.sortorderstatus = true;
-            pars = "module=Dizkus&func=changesortorder&authid=" + $F('authid');
+            pars = "module=Dizkus&func=togglesortorder&authid=" + $F('authid');
             Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",
@@ -284,7 +284,7 @@ var DizkusUser = Class.create(DizkusBase, {
                                             $('sortorder_asc').removeClassName('hidden');
                                             break;
                                         default:
-                                             alert('wrong result from changesortorder');
+                                             alert('wrong result from togglesortorder');
                                     }
                                 }.bind(this)
                 });
@@ -295,7 +295,7 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.toggleforumdisplay == false) {
             this.toggleforumdisplay = true;
-            pars = "module=Dizkus&func=changeforumdisplay&authid=" + $F('authid');
+            pars = "module=Dizkus&func=toggleforumdisplay&authid=" + $F('authid');
             Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Ajax.Request(
                 Zikula.Config.baseURL+"ajax.php",

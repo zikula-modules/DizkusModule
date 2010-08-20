@@ -418,19 +418,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
         
         $where = $objcol['attribute_name'] . "='dizkus_user_rank' AND " .$objcol['value']."=" . DataUtil::formatForStore($args['rank_id']);
         $users = DBUtil::selectObjectArray('objectdata_attributes', $where, '', -1, -1, 'object_id');
-/*    
-        $sql = 'SELECT  u.user_id
-                FROM ' . $ztable['dizkus_ranks'] . ' as r,
-                     ' . $ztable['dizkus__users'].' as u
-                WHERE r.rank_id=' . DataUtil::formatForStore($args['rank_id']) . '
-                  AND u.user_rank=r.rank_id
-                  AND r.rank_special=1
-                  AND u.user_id <>""';
-    
-        $res      = DBUtil::executeSQL($sql);
-        $objarray = DBUtil::marshallObjects($res, array('user_id'));
-        $users    = array_map('_get_rank_users', $objarray);
-*/  
+
         return array_keys($users);
     }
     
@@ -448,9 +436,7 @@ class Dizkus_Api_Admin extends Zikula_Api {
             $ranksavearray = array();
             foreach($args['setrank'] as $user_id => $rank_id) {
                 UserUtil::setVar('dizkus_user_rank', $rank_id, $user_id);
-                //$ranksavearray[] = array('user_id' => $user_id, 'user_rank' => $rank_id);
             }
-            //DBUtil::updateObjectArray($ranksavearray, 'dizkus__users', 'user_id');
         }
     
         return true;
