@@ -76,7 +76,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             $post['post_textdisplay'] = phpbb_br2nl($message);
             if ($attach_signature == 1) {
                 $post['post_textdisplay'] .= '[addsig]';
-                $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
+                $post['post_textdisplay'] = dzk_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
             }
             // call hooks for $message_display ($message remains untouched for the textarea)
             list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
@@ -745,7 +745,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
 
         if (($attach_signature == 1) && (!empty($newtopic['poster_data']['signature']))){
             $newtopic['message_display'] .= '[addsig]';
-            $newtopic['message_display'] = Dizkus_replacesignature($newtopic['message_display'], $newtopic['poster_data']['signature']);
+            $newtopic['message_display'] = dzk_replacesignature($newtopic['message_display'], $newtopic['poster_data']['signature']);
         }
 
         list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));

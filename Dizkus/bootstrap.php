@@ -9,20 +9,6 @@
  * @package Dizkus
  */
 
-
-/**
- * old fashioned AhaxUtil::error function from 1.2.x
- *
- */
-function AjaxError ($error='', $code='400 Bad data')
-{
-    if (!empty($error)) {
-        header('HTTP/1.0 ' . DataUtil::formatForDisplay($code));
-        echo DataUtil::convertToUTF8($error);
-        Zikula::shutdown();
-    }
-}
-
 /**
  * internal debug function
  *
@@ -53,20 +39,6 @@ function dzkdebug($name='', $data, $die = false)
         if ($die==true) {
             System::shutDown();
         }
-    }
-}
-
-/**
- * is_serialized
- * checks if a string is a serialized array
- *
- * @params $string the string to test
- * @returns boolean true or false
- */
-if (!function_exists('Dizkus_is_serialized'))
-{
-    function Dizkus_is_serialized( $string ) {
-        return @unserialize($string) !== '';
     }
 }
 
@@ -205,10 +177,10 @@ function cmp_catorder($a, $b)
 }
 
 /**
- * Dizkus_replacesignature
+ * dzk_replacesignature
  *
  */
-function Dizkus_replacesignature($text, $signature='')
+function dzk_replacesignature($text, $signature='')
 {
     $removesignature = ModUtil::getVar('Dizkus', 'removesignature');
     if ($removesignature == 'yes') {

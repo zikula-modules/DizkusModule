@@ -978,7 +978,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     //$message = phpbb_br2nl($message);
                     //$post['post_text'] = phpbb_br2nl($post['post_text']);
                 
-                    $post['post_text'] = Dizkus_replacesignature($post['post_text'], $post['poster_data']['signature']);
+                    $post['post_text'] = dzk_replacesignature($post['post_text'], $post['poster_data']['signature']);
                 
                     if ($hooks == true) {
                         // call hooks for $message
@@ -1181,7 +1181,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
             
                 // We do this _before_ bbencode(), otherwise we'd kill the bbcode's html.
-                $message = Dizkus_replacesignature($message, $review['poster_data']['signature']);
+                $message = dzk_replacesignature($message, $review['poster_data']['signature']);
             
                 // call hooks for $message
                 list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
@@ -1592,7 +1592,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $post['post_time']    = DataUtil::formatForDisplay($post['post_time']);
         $message              = $post['post_text'];
         $post['has_signature']= (substr($message, -8, 8)=='[addsig]');
-        $post['post_rawtext'] = Dizkus_replacesignature($message, '');
+        $post['post_rawtext'] = dzk_replacesignature($message, '');
         $post['post_rawtext'] = preg_replace("#<!-- editby -->(.*?)<!-- end editby -->#si", '', $post['post_rawtext']);
         $post['post_rawtext'] = str_replace('<br />', '', $post['post_rawtext']);
     
@@ -1642,7 +1642,7 @@ class Dizkus_Api_User extends Zikula_Api {
         }
     
         $post['post_textdisplay'] = phpbb_br2nl($message);
-        $post['post_textdisplay'] = Dizkus_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
+        $post['post_textdisplay'] = dzk_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
     
         // call hooks for $message_display ($message remains untouched for the textarea)
         list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
