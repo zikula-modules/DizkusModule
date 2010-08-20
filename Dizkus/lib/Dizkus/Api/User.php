@@ -3538,7 +3538,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $email_from = System::getVar('adminmail');
         }
     
-        $subject .= DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']['topic_rawsubject']);
+        $subject  = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']['topic_rawsubject']);
         $sitename = System::getVar('sitename');
     
         $recipients = array();
@@ -3589,23 +3589,25 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $reporting_userid   = UserUtil::getVar('uid');
         $reporting_username = UserUtil::getVar('uname');
+        if (is_null($reporting_username)) {
+            $reporting_username == $this->__('Guest');
+        }
     
         $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies',
-                              array('topic_replies' => $args['post']['topic_replies'],
-                                    'start'         => $start));
+                              array('topic_replies' => $args['post']['topic_replies']));
     
         // FIXME Move this to a translatable template?
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
                 . $args['post']['cat_title'] . '::' . $args['post']['forum_name'] . '::' . $args['post']['topic_rawsubject'] . "\n\n"
                 . $this->__f('Reporting user: %s', $reporting_username) . "\n"
                 . $this->__('Comment:') . "\n"
-                . $comment . " \n\n"
+                . $args['comment'] . " \n\n"
                 . "---------------------------------------------------------------------\n"
                 . strip_tags($args['post']['post_text']) . " \n"
                 . "---------------------------------------------------------------------\n\n"
-                . $this->__('Link to topic: %s', DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid'.$args['post']['post_id'], true))) . "\n"
+                . $this->__f('<a href="%s">Link to topic</a>', DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid'.$args['post']['post_id'], true))) . "\n"
                 . "\n";
-    
+
         if (count($recipients) > 0) {
             foreach($recipients as $recipient) {
                 ModUtil::apiFunc('Mailer', 'user', 'sendmessage',

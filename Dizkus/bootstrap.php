@@ -19,23 +19,21 @@ function dzkdebug($name='', $data, $die = false)
         $type = gettype($data);
         echo "\n<!-- begin debug of $name -->\n<div style=\"color: red;\">$name ($type";
         if (is_array($data)||is_object($data)) {
-            $size = count($data);
-            if ($size>0) {
-                echo ", size=$size entries):<pre>";
+            if (count($data) > 0) {
+                echo ', size=$size entries):<pre>';
                 echo htmlspecialchars(print_r($data, true));
-                echo "</pre>:<br />";
+                echo '</pre>:<br />';
             } else {
-                echo "):empty<br />";
+                echo '):empty<br />';
             }
         } else if (is_bool($data)) {
-            echo ") ";
-            echo ($data==true) ? "true<br />" : "false<br />";
+            echo ($data==true) ? ") true<br />" : ") false<br />";
         } else if (is_string($data)) {
-            echo ", len=".strlen($data).") :$data:<br />";
+            echo ', len='.strlen($data).') :'.DataUil::formatForDisplay($data).':<br />';
         } else {
-            echo ") :$data:<br />";
+            echo ') :'.$data.':<br />';
         }
-        echo "</div><br />\n<!-- end debug of $name -->";
+        echo '</div><br />\n<!-- end debug of $name -->';
         if ($die==true) {
             System::shutDown();
         }
