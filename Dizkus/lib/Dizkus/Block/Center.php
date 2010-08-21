@@ -62,8 +62,6 @@ class Dizkus_Block_Center extends Zikula_Block
 	    // Break out options from our content field
 	    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 	
-	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
-	
 	    // check if cb_template is set, if not, use the default centerblock template
 	    if (empty($vars['cb_template'])) {
 	        $vars['cb_template'] = 'dizkus_centerblock_display.html';
@@ -77,11 +75,11 @@ class Dizkus_Block_Center extends Zikula_Block
 	        foreach($params as $param)
 	        {
 	            $paramdata = explode('=', $param);
-	            $render->assign(trim($paramdata[0]), trim($paramdata[1]));
+	            $this->view->assign(trim($paramdata[0]), trim($paramdata[1]));
 	        }
 	    }
 	
-	    $blockinfo['content'] = $render->fetch(trim($vars['cb_template']));
+	    $blockinfo['content'] = $this->view->fetch(trim($vars['cb_template']));
 	
 	    return BlockUtil::themesideblock($blockinfo);
 	}
@@ -122,9 +120,8 @@ class Dizkus_Block_Center extends Zikula_Block
 	        $vars['cb_template']   = 'dizkus_centerblock_display.html';
 	    }
 	
-	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
-	    $render->assign('vars', $vars);
+	    $this->view->assign('vars', $vars);
 	
-	    return $render->fetch('dizkus_centerblock_config.html');
+	    return $this->view->fetch('dizkus_centerblock_config.html');
 	}
 }
