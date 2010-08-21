@@ -14,10 +14,10 @@ Rename this to dizkus_centerblock_display.html if you want to use it
         // <![CDATA[
         new Ajax.PeriodicalUpdater(
         'newposts',
-        'index.php',
+        Zikula.Config.baseURL + 'ajax.php',
         {
-            method: 'get',
-            parameters: 'module=Dizkus&type=ajax&func=newposts',
+            method: 'post',
+            parameters: 'module=Dizkus&func=newposts',
             frequency: 60
         });
         // ]]>
