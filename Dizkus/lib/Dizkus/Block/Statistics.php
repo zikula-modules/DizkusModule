@@ -65,20 +65,16 @@ class Dizkus_Block_Statistics extends Zikula_Block
 	        $vars['sb_parameters'] = 'maxposts=5';
 	    }
 	
-	    // build the output
-	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
-	
 	    $params = explode(',', $vars['sb_parameters']);
 	
 	    if (is_array($params) && count($params) > 0) {
-	        foreach ($params as $param)
-	        {
+	        foreach ($params as $param) {
 	            $paramdata = explode('=', $param);
-	            $render->assign(trim($paramdata[0]), trim($paramdata[1]));
+	            $this->view->assign(trim($paramdata[0]), trim($paramdata[1]));
 	        }
 	    }
 	
-	    $blockinfo['content'] = $render->fetch(trim($vars['sb_template']));
+	    $blockinfo['content'] = $this->view->fetch(trim($vars['sb_template']));
 	
 	    return BlockUtil::themesideblock($blockinfo);
 	}
@@ -119,11 +115,11 @@ class Dizkus_Block_Statistics extends Zikula_Block
 	        $vars['sb_template']   = 'dizkus_statisticsblock_display.html';
 	    }
 	
-	    $render = Zikula_View::getInstance('Dizkus', false, null, true);
+	    //$render = Zikula_View::getInstance('Dizkus', false, null, true);
 	
-	    $render->assign('vars', $vars);
+	    $this->view->assign('vars', $vars);
 	
-	    return $render->fetch('dizkus_statisticsblock_config.html');
+	    return $this->view->fetch('dizkus_statisticsblock_config.html');
 	}
 
 }
