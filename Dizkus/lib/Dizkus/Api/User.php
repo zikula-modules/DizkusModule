@@ -2112,10 +2112,10 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $poster_name = UserUtil::getVar('uname',$args['poster_id']);
     
-        $forum_id      = DataUtil::formatForDisplay($myrow[0]['forum_id']);
-        $forum_name    = DataUtil::formatForDisplay($myrow[0]['forum_name']);
-        $category_name = DataUtil::formatForDisplay($myrow[0]['cat_title']);
-        $topic_subject = DataUtil::formatForDisplay($myrow[0]['topic_title']);
+        $forum_id      = $myrow[0]['forum_id'];
+        $forum_name    = $myrow[0]['forum_name'];
+        $category_name = $myrow[0]['cat_title'];
+        $topic_subject = $myrow[0]['topic_title'];
     
         $subject = ($args['type'] == 2) ? 'Re: ' : '';
         $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
@@ -2201,21 +2201,20 @@ class Dizkus_Api_User extends Zikula_Api {
         if (count($recipients) > 0) {
             $sitename = System::getVar('sitename');
         
-            $render = Zikula_View::getInstance('Dizkus', false, null, true);
-            $render->assign('sitename', $sitename);
-            $render->assign('category_name', $category_name);
-            $render->assign('forum_name', $forum_name);
-            $render->assign('topic_subject', $topic_subject);
-            $render->assign('poster_name', $poster_name);
-            $render->assign('topic_time_ml', $topic_time_ml);
-            $render->assign('post_message', $args['post_message']);
-            $render->assign('topic_id', $args['topic_id']);
-            $render->assign('forum_id', $forum_id);
-            $render->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
-            $render->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
-            $render->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
-            $render->assign('base_url', System::getBaseUrl());
-            $message = $render->fetch('dizkus_mail_notifyuser.txt');
+            $this->view->assign('sitename', $sitename);
+            $this->view->assign('category_name', $category_name);
+            $this->view->assign('forum_name', $forum_name);
+            $this->view->assign('topic_subject', $topic_subject);
+            $this->view->assign('poster_name', $poster_name);
+            $this->view->assign('topic_time_ml', $topic_time_ml);
+            $this->view->assign('post_message', $args['post_message']);
+            $this->view->assign('topic_id', $args['topic_id']);
+            $this->view->assign('forum_id', $forum_id);
+            $this->view->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
+            $this->view->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
+            $this->view->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
+            $this->view->assign('base_url', System::getBaseUrl());
+            $message = $this->view->fetch('dizkus_mail_notifyuser.txt');
           
             foreach ($recipients as $subscriber) {
                 // integrate contactlist's ignorelist here
