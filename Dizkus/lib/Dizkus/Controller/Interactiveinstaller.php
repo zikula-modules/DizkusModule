@@ -347,6 +347,8 @@ Class Dizkus_Controller_Interactiveinstaller extends Zikula_InteractiveInstaller
         // done - now drop the dizkus_users table
         DBUtil::dropTable('dizkus_users');
     
+        $this->delVar('autosubscribe');
+    
         return true;
     }
 
