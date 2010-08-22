@@ -1377,6 +1377,7 @@ class Dizkus_Api_User extends Zikula_Api {
     
         $newtopic = array();
         $newtopic['forum_id'] = $args['forum_id'];
+        $newtopic['topic_id'] = 0;
     
         // select forum name and cat title based on forum_id
         $sql = "SELECT f.forum_name,
@@ -1414,7 +1415,7 @@ class Dizkus_Api_User extends Zikula_Api {
         if (UserUtil::isLoggedIn()) {
             if ($args['topic_start'] == true) {
                 $newtopic['attach_signature'] = true;
-                $newtopic['subscribe_topic']  = (ModUtil::getVar('Dizkus', 'autosubscribe')=='yes') ? true : false;
+                $newtopic['subscribe_topic']  = ((int)UserUtil::getVar('dizkus_autosubscription', -1, 1)==1) ? true : false;
             } else {
                 $newtopic['attach_signature'] = $args['attach_signature'];
                 $newtopic['subscribe_topic']  = $args['subscribe_topic'];
@@ -3785,6 +3786,23 @@ class Dizkus_Api_User extends Zikula_Api {
             // return admin's default value
             return $default;
         }
+    }
+    
+    /**
+     * toggle new topic subscription
+     *
+     */
+    public function togglenewtopicsubscription($args)
+    {
+        $user_id = (isset($args['user_id'])) ? $args['user_id'] : UserUtil::getVar('uid');
+        if (is_null($user_id)) {
+            $user_id = 1;
+        }
+        
+        $asmode = (int)UserUtil::getVar('dizkus_autosubscription', $user_id);
+        $asmode = ($asmode == 0) ? 1 : 0;
+        UserUtil::setVar('dizkus_autosubscription', $asmode, $user_id);
+        return $asmode;
     }
 
 }

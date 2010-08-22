@@ -90,6 +90,36 @@
             </ul>
             {/if}
 
+            <ul class="linklist z-clearfix">
+                <li>
+                    {gt text="Autosubscribe to new topics"}<br />
+                    <span id="javascriptautosubscription" class="dzk_img autosubscribelink hidden">
+                    {if $autosubscribe eq true}
+                    <input id="newtopicautosubscribe" name="newtopicautosubscribe" type="checkbox" value="1" checked="checked" style="margin-right: 1em;" />
+                    <span id="autosubscription">{gt text="Yes, autosubscribe to new topics"}</span>
+                    <span id="noautosubscription" class="hidden">{gt text="No, do not autosubscribe to new topics"}</span>
+                    {else}
+                    <input id="newtopicautosubscribe" name="newtopicautosubscribe" type="checkbox" value="1" style="margin-right: 1em;" />
+                    <span id="autosubscription" class="hidden">{gt text="Yes, autosubscribe to new topics"}</span>
+                    <span id="noautosubscription">{gt text="No, do not autosubscribe to new topics"}</span>
+                    {/if}
+                    <img id="progressautosubscribe" style="visibility: hidden;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
+                    </span>
+
+                    <noscript>
+                        <div>
+                            {if $autosubscribe eq false}
+                            {gt text="(You are not subscribing new topics by default now)"}<br />
+                            <a class="dzk_img autosubscribelink" href="{modurl modname=Dizkus type=user func=prefs act=autosubscribe}" title="{gt text="Autosubscribe to new topics"}">{gt text="Yes, autosubscribe to new topics"}</a>
+                            {else}
+                            {gt text="(You are subscribing new topics by default now)"}< br />
+                            <a class="dzk_img autosubscribelink" href="{modurl modname=Dizkus type=user func=prefs act=noautosubscribe}" title="{gt text="Do not autosubscribeto new topics"}">{gt text="No, do not autosubscribeto new topics"}</a>
+                            {/if}
+                        </div>
+                    </noscript>
+                </li>
+            </ul>
+
         </div>
     </div>
 

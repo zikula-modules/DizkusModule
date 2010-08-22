@@ -29,7 +29,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Form_Handler
         $modvars = ModUtil::getVar('Dizkus');
         $render->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
         $render->assign('slimforum_checked', $modvars['slimforum'] == 'yes' ? 1 : 0);
-        $render->assign('autosubscribe_checked', isset($modvars['autosubscribe']) && $modvars['autosubscribe'] == 'yes' ? 1 : 0);
         $render->assign('m2f_enabled_checked', $modvars['m2f_enabled'] == 'yes' ? 1 : 0);
         $render->assign('rss2f_enabled_checked', $modvars['rss2f_enabled'] == 'yes' ? 1 : 0);
         $render->assign('favorites_enabled_checked', $modvars['favorites_enabled'] == 'yes' ? 1 : 0);
@@ -73,7 +72,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Form_Handler
             // checkboxes 
             ModUtil::setVar('Dizkus', 'log_ip',                  $data['log_ip'] == 1 ? 'yes' : 'no');
             ModUtil::setVar('Dizkus', 'slimforum',               $data['slimforum'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'autosubscribe',           $data['autosubscribe'] == 1 ? 'yes' : 'no');
             ModUtil::setVar('Dizkus', 'm2f_enabled',             $data['m2f_enabled'] == 1 ? 'yes' : 'no');
             ModUtil::setVar('Dizkus', 'rss2f_enabled',           $data['rss2f_enabled'] == 1 ? 'yes' : 'no');
             ModUtil::setVar('Dizkus', 'favorites_enabled',       $data['favorites_enabled'] == 1 ? 'yes' : 'no');
@@ -117,7 +115,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Form_Handler
             // checkboxes 
             ModUtil::setVar('Dizkus', 'log_ip',                  'no');
             ModUtil::setVar('Dizkus', 'slimforum',               'no');
-            ModUtil::setVar('Dizkus', 'autosubscribe',           'no');
             ModUtil::setVar('Dizkus', 'm2f_enabled',             'yes');
             ModUtil::setVar('Dizkus', 'rss2f_enabled',           'yes');
             ModUtil::setVar('Dizkus', 'favorites_enabled',       'yes');

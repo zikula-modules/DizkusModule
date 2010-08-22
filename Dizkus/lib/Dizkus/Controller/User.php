@@ -344,6 +344,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('newtopic', $newtopic);
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_newtopic.html');
         }
@@ -690,11 +691,19 @@ class Dizkus_Controller_User extends Zikula_Controller
                     $params = array();
                 }
                 break;
+
+            case 'noautosubscribe':
+            case 'autosubscribe':
+                $return_to = (!empty($return_to))? $return_to : 'prefs';
+                $nm = ModUtil::apiFunc('Dizkus', 'user', 'togglenewtopicsubscription');
+                $params = array();
+                break;
     
             default:
                 list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
     
                 $this->view->assign('last_visit', $last_visit);
+                $this->view->assign('autosubscribe', (bool)UserUtil::getVar('dizkus_autosubscription', -1, 0));
                 $this->view->assign('favorites_enabled', ModUtil::getVar('Dizkus', 'favorites_enabled'));
                 $this->view->assign('last_visit_unix', $last_visit_unix);
                 $this->view->assign('signaturemanagement', ModUtil::getVar('Dizkus','signaturemanagement'));

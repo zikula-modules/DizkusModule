@@ -148,6 +148,8 @@ var DizkusUser = Class.create(DizkusBase, {
                 if ($('forumdisplaymode')) {
                     $('forumdisplaymode').observe('click', this.toggledisplay.bind(this)).removeClassName('hidden');
                 }
+                $('javascriptautosubscription').removeClassName('hidden');
+                $('newtopicautosubscribe').observe('click', this.toggleautosubscription.bind(this));
 
                 // add some observers
                 $$('a[id^="toggleforumsubscriptionbutton"]').each(function(el) 
@@ -214,6 +216,41 @@ var DizkusUser = Class.create(DizkusBase, {
                 });
         }
     },
+    
+    toggleautosubscription: function()
+    {
+        pars = "module=Dizkus&func=toggleautosubscription";
+        Ajax.Responders.register(this.dzk_globalhandlers);
+        myAjax = new Ajax.Request(
+            Zikula.Config.baseURL + "ajax.php",
+            {
+                method: 'post',
+                parameters: pars,
+                onComplete: function(originalRequest)
+                            {
+                                // show error if necessary
+                                if (originalRequest.status != 200) {
+                                    json = Zikula.ajaxResponseError(originalRequest);
+                                    return;
+                                }
+                            
+                                json = Zikula.dejsonize(originalRequest.responseText);
+                                switch(json.data) {
+                                    case 'autosubscription':
+                                        $('noautosubscription').addClassName('hidden');
+                                        $('autosubscription').removeClassName('hidden');
+                                        break;
+                                    case 'noautosubscription':
+                                        $('noautosubscription').removeClassName('hidden');
+                                        $('autosubscription').addClassName('hidden');
+                                        break;
+                                    default:
+                                        alert('Error! Erroneous result from toggleautosubscription action.');
+                                }
+                            }.bind(this)
+            });
+    },
+    
     
     toggleforumsubscription: function(toggleforumsubscriptionbuttonid)
     {

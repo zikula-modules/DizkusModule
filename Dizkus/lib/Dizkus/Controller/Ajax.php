@@ -439,6 +439,28 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     }
 
     /**
+     * toggle new topics auto subscription
+     *
+     */
+    public function toggleautosubscription()
+    {
+        if (dzk_available(false) == false) {
+            return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
+        }
+
+        SessionUtil::setVar('zk_ajax_call', 'ajax');
+    /*
+        if (!SecurityUtil::confirmAuthKey()) {
+            LogUtil::registerAuthidError();
+            return AjaxUtil::error(null, array(), true, true);
+        }
+    */
+
+        $newmode = ((int)ModUtil::apiFunc('Dizkus', 'user', 'togglenewtopicsubscription') == 1) ? 'autosubscription' : 'noautosubscription';
+        AjaxUtil::output($newmode, true, false, false);
+    }
+
+    /**
      * addremovefavorite
      *
      */
