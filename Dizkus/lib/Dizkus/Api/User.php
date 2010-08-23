@@ -113,22 +113,14 @@ class Dizkus_Api_User extends Zikula_Api {
         }
         
         //
-        // user name
+        // user online status
         //
-        if ($userdata['uid'] != 1) {
-            // user is logged in, display some info
-            $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-            $where = $ztable['session_info_column']['uid']." = '".$userdata['uid']."'
-                      AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
+        $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
+        $where = $ztable['session_info_column']['uid']." = '".$userdata['uid']."'
+                  AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
+        $sessioninfo =  DBUtil::selectObject('session_info', $where);         
+        $userdata['online'] = ($sessioninfo['uid'] == $userdata['uid']) ? true : false; 
 
-            $sessioninfo =  DBUtil::selectObject('session_info', $where);         
-            $userdata['online'] = ($sessioninfo['uid'] == $userdata['uid']) ? true : false; 
-
-        } else {
-            // user is anonymous
-            $userdata['uname'] = ModUtil::getVar('Users', 'anonymous');
-        }
-    
         if ($makedummy == true) {
             // we create a dummy user, so we need to adjust some of the information
             // gathered so far

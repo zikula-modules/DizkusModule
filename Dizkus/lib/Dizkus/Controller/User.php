@@ -256,6 +256,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('preview', $preview);
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_reply.html');
         }
@@ -443,6 +444,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('post', $post);
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_editpost.html');
         }
@@ -485,6 +487,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $this->view->setCaching(false);
         $this->view->assign('mode', $mode);
         $this->view->assign('topic_id', $topic_id);
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
         if (empty($submit)) {
             switch ($mode)
@@ -838,8 +841,9 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('sendto_email', $sendto_email);
             $this->view->assign('emailsubject', $emailsubject);
             $this->view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) ."\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
-            $this->view->assign( 'last_visit', $last_visit);
-            $this->view->assign( 'last_visit_unix', $last_visit_unix);
+            $this->view->assign('last_visit', $last_visit);
+            $this->view->assign('last_visit_unix', $last_visit_unix);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_emailtopic.html');
         }
@@ -956,6 +960,7 @@ class Dizkus_Controller_User extends Zikula_Controller
     
         } else {
             $this->view->assign('post', $post);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_splittopic.html');
         }
@@ -1083,6 +1088,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                                              'start' => $start)) . '#pid' . $post['post_id']);
         } else {
             $this->view->assign('post', $post);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_movepost.html');
         }
@@ -1116,6 +1122,7 @@ class Dizkus_Controller_User extends Zikula_Controller
     
         if (!$submit) {
             $this->view->assign('post', $post);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
             return $this->view->fetch('dizkus_user_jointopics.html');
     
@@ -1187,6 +1194,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('forum',$forum);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
             // For Movetopic
             $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
     
@@ -1310,6 +1318,7 @@ class Dizkus_Controller_User extends Zikula_Controller
     
         if (!$submit) {
             $this->view->assign('post', $post);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
             return $this->view->fetch('dizkus_user_notifymod.html');
     
         } else {
@@ -1353,6 +1362,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         if (!$submit) {
             $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
             $this->view->assign('subscriptions', $subscriptions);
+            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
             return $this->view->fetch('dizkus_user_topicsubscriptions.html');
     
         } else {
