@@ -83,7 +83,7 @@ Class Dizkus_Installer extends Zikula_Installer
             $this->uninstall();
             return false;
         }
-    
+ /*   
         // create the hooks: create, delete, display.
         // everything else is not needed , at least not atm.
         //
@@ -133,7 +133,7 @@ Class Dizkus_Installer extends Zikula_Installer
                                'showdiscussionlink')) {
             return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'display'));
         }
-        
+*/        
         // create FULLTEXT index 
         if (strtolower($GLOBALS['ZConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
             // FULLTEXT does not work an innodb - by design

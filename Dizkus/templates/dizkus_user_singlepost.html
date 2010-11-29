@@ -1,7 +1,5 @@
-{* $Id$ *}
-
 {configgetvar name='messagemodule' assign='msgmodule'}
-{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$zcore.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
+{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
 
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
 <a id="pid{$post.post_id}" ></a>
@@ -39,7 +37,7 @@
                     <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if}
                     <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.users_posts}</li>
-                    {if $zcore.logged_in eq true}
+                    {if $coredata.logged_in eq true}
                     <li>
                         {$post.poster_data.uname|userprofilelink:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif"}
                         {if $msgmodule}

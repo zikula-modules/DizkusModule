@@ -15,13 +15,13 @@
                 <li><a class="dzk_img newtopiclink" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
-                {if $zcore.logged_in}
+                {if $coredata.logged_in}
                 <li><a class="dzk_img mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                 {/if}
 
                 <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
 
-                {if $zcore.logged_in}
+                {if $coredata.logged_in}
                 <li>
                     {if $topic.is_subscribed eq 0}
                     <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_unsubscribed" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a>
@@ -70,13 +70,13 @@
                     <li><a class="dzk_img newtopiclink" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
                     {/if}
 
-                    {if $zcore.logged_in}
+                    {if $coredata.logged_in}
                     <li><a class="dzk_img mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                     {/if}
 
                     <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
 
-                    {if $zcore.logged_in}
+                    {if $coredata.logged_in}
                     {if $topic.is_subscribed == 0}
                     <li><a class="dzk_img subscribetopiclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id}" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a></li>
                     {else}
@@ -148,14 +148,14 @@
                             <div id="dizkusinformation"></div>
                             <textarea class="dzk_textarea_{lang} dzk_texpand" id="message" name="message" rows="10" cols="60"></textarea>
                             {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
-                            {if $zcore.Dizkus.striptags == 'yes'}
+                            {if $coredata.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
                             <div class="dzk_subcols z-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong>{gt text="Options"}</strong></li>
-                                        {if $zcore.logged_in}
+                                        {if $coredata.logged_in}
                                         <li>
                                             <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
                                             <label for="attach_signature">{gt text="Attach my signature"}</label>

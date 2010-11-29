@@ -850,12 +850,11 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     {
     
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            LogUtil::registerPermissionError();
-            return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
+            LogUtil::registerPermissionError(null, true);
+            throw new Zikula_Exception_Forbidden();
         }
     
         // we add a new category
-
         $category = array('cat_title'    => $this->__('-- Create new category --'),
                           'cat_id'       => time(),
                           'forums'       => array(),
@@ -864,9 +863,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         $this->view->assign('category', $category );
         $this->view->assign('newcategory', true);
     
-        AjaxUtil::output(array('data'     => $this->view->fetch('dizkus_ajax_singlecategory.html'),
-                               'cat_id'   => $category['cat_id']),
-                          true, false, false);
+        return new Zikula_Response_Ajax(array('tpl'     => $this->view->fetch('dizkus_ajax_singlecategory.html'),
+                                              'cat_id'  => $category['cat_id']));
     }
 
     /**
@@ -879,13 +877,13 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         SessionUtil::setVar('zk_ajax_call', 'ajax');
     
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            LogUtil::registerPermissionError();
-            return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
+            LogUtil::registerPermissionError(null, true);
+            throw new Zikula_Exception_Forbidden();
         }
     
         if (!SecurityUtil::confirmAuthKey()) {
             LogUtil::registerAuthidError();
-            return AjaxUtil::error(null, array(), true, true);
+            throw new Zikula_Exception_Fatal();
         }
     
         $cat_id    = FormUtil::getPassedValue('cat_id', null, 'POST');
@@ -900,26 +898,27 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             if (count($forums) > 0) {
                 $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
                                          array( 'cat_id' => $cat_id ));
-                return AjaxUtil::error($this->__f('Error! This category contains %s forum)', DataUtil::formatForDisplay(count($forums))), array('cat_id' => $cat_id, 'old_id' => $cat_id), true, true, '400 Bad Data');
+            	return new Zikula_Response_Ajax_BadData(array('cat_id' => $cat_id, 'old_id' => $cat_id), 
+            	                                        $this->__f('Error! This category contains %s forum)', DataUtil::formatForDisplay(count($forums))));
             }
             $res = ModUtil::apiFunc('Dizkus', 'admin', 'deletecategory',
                                 array('cat_id' => $cat_id));
             if ($res == true) {
-                AjaxUtil::output(array('cat_id' => $cat_id,
-                                       'old_id' => $cat_id,
-                                       'action' => 'delete'),
-                                  true, false, false); 
+                return new Zikula_Response_Ajax(array('cat_id' => $cat_id,
+                                                      'old_id' => $cat_id,
+                                                      'action' => 'delete'));
             } else {
-                return AjaxUtil::error($this->__f('Error! Could not delete category %s)', DataUtil::formatForDisplay($catd_id)), array(), true, true, '400 Bad Data');
+            	return new Zikula_Response_Ajax_BadData(array(), 
+            											$this->__f('Error! Could not delete category %s)', DataUtil::formatForDisplay($catd_id)));
             }
     
         } elseif (!empty($add)) {
             $original_catid = $cat_id;
             $cat_id = ModUtil::apiFunc('Dizkus', 'admin', 'addcategory',
-                                   array('cat_title' => $cat_title));
+                                       array('cat_title' => $cat_title));
             if (!is_bool($cat_id)) {
                 $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
-                                         array( 'cat_id' => $cat_id ));
+                                             array('cat_id' => $cat_id));
 /*
                 $category_forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                                                     array('cat_id'    => $category['cat_id'],
@@ -929,29 +928,29 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 $category['forums'] = array();
                 $this->view->assign('category', $category );
                 $this->view->assign('newcategory', false);
-                AjaxUtil::output(array('cat_id'      => $cat_id,
-                                       'old_id'      => $original_catid,
-                                       'cat_title'   => $cat_title,
-                                       'action'      => 'add',
-                                       'edithtml'    => $this->view->fetch('dizkus_ajax_singlecategory.html'),
-                                       'cat_linkurl' => ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id))),
-                                 true, false, false); 
+                return new Zikula_Response_Ajax(array('cat_id'      => $cat_id,
+				                                      'old_id'      => $original_catid,
+				                                      'cat_title'   => $cat_title,
+				                                      'action'      => 'add',
+				                                      'edithtml'    => $this->view->fetch('dizkus_ajax_singlecategory.html'),
+				                                      'cat_linkurl' => ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id))));
             } else {
-                return AjaxUtil::error($this->__f('Error! Could not create category %s)', DataUtil::formatForDisplay($cat_title)), array(), true, true, '400 Bad Data');
+            	return new Zikula_Response_Ajax_BadData(array(), 
+            											$this->__f('Error! Could not create category %s)', DataUtil::formatForDisplay($cat_title)));
             }
     
         } else {
             if (ModUtil::apiFunc('Dizkus', 'admin', 'updatecategory',
                              array('cat_title' => $cat_title,
                                    'cat_id'    => $cat_id)) == true) {
-                AjaxUtil::output(array('cat_id'      => $cat_id,
-                                       'old_id'      => $cat_id,
-                                       'cat_title'   => $cat_title,
-                                       'action'      => 'update',
-                                       'cat_linkurl' => ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id))),
-                                 true, false, false); 
+                return new Zikula_Response_Ajax(array('cat_id'      => $cat_id,
+                                       			      'old_id'      => $cat_id,
+				                                      'cat_title'   => $cat_title,
+				                                      'action'      => 'update',
+				                                      'cat_linkurl' => ModUtil::url('Dizkus', 'user', 'main', array('viewcat' => $cat_id))));
             } else {
-                return AjaxUtil::error($this->__f('Error! Could not update category %s)', DataUtil::formatForDisplay($cat_id)), array(), true, true, '400 Bad Data');
+            	return new Zikula_Response_Ajax_BadData(array(), 
+            											$this->__f('Error! Could not update category %s)', DataUtil::formatForDisplay($cat_id)));
             }
         }
     }
@@ -965,15 +964,15 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     {
     
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            LogUtil::registerPermissionError();
-            return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
+            LogUtil::registerPermissionError(null, true);
+            throw new Zikula_Exception_Forbidden();
         }
     
         $forum_id   = isset($args['forum_id']) ? $args['forum_id'] : FormUtil::getPassedValue('forum_id', null, 'POST');
         $returnhtml = isset($args['returnhtml']) ? $args['returnhtml'] : FormUtil::getPassedValue('returnhtml', null, 'POST');
     
         if (!isset($forum_id)) {
-            return AjaxUtil::error($this->__('Error! Missing forum_id.'), array(), true, true);
+        	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Missing forum_id.'));
         }
     
         if ($forum_id == -1) {
@@ -1082,11 +1081,10 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
         $html = $this->view->fetch($template);
     
         if (!isset($returnhtml)) {
-            AjaxUtil::output(array('forum_id' => $forum['forum_id'],
-                                   'cat_id'   => $forum['cat_id'],
-                                   'new'      => $new,
-                                   'data'     => $html),
-                             true, false, false);
+            return new Zikula_Response_Ajax(array('forum_id' => $forum['forum_id'],
+                                                  'cat_id'   => $forum['cat_id'],
+                                   				  'new'      => $new,
+                                   				  'data'     => $html));
         }
     
         return($html);
@@ -1100,13 +1098,13 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     public function storeforum()
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            LogUtil::registerPermissionError();
-            return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
+            LogUtil::registerPermissionError(null, true);
+            throw new Zikula_Exception_Forbidden();
         }
     
         if (!SecurityUtil::confirmAuthKey()) {
             LogUtil::registerAuthidError();
-            return AjaxUtil::error(null, array(), true, true, '400 Bad data');
+            throw new Zikula_Exception_Fatal();
         }
     
         SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -1156,10 +1154,10 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
             }
     
             if ($pop3_password <> $pop3_passwordconfirm) {
-                return AjaxUtil::error($this->__('Error! The two passwords you entered for POP3 access do not match. Please correct your entries and try again.'), array(), true, true, '400 Bad data');
+				return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The two passwords you entered for POP3 access do not match. Please correct your entries and try again.'));
             }
             if ($pnpassword <> $pnpasswordconfirm) {
-                return AjaxUtil::error($this->__('Error! The two passwords you entered as user passwords do not match. Please correct your entries and try again.'), array(), true, true, '400 Bad data');
+				return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The two passwords you entered as user passwords do not match. Please correct your entries and try again.'));
             }
     
             if (!empty($add)) {
@@ -1244,16 +1242,15 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 $pop3testresulthtml = $this->view->fetch('dizkus_admin_pop3test.html');
             }
         } 
-    
-        AjaxUtil::output(array('action'         => $action,
-                               'forum'          => $newforum,
-                               'cat_id'         => $cat_id,
-                               'old_id'         => $old_id,
-                               'forum_id'       => $forum_id,  /* duplicate, but now the returned information are equal to the cateogry ones */
-                               'pop3resulthtml' => $pop3testresulthtml,
-                               'editforumhtml'  => $editforumhtml,
-                               'forumtitle'     => $forumtitle),
-                          true, false, false);
+
+        return new Zikula_Response_Ajax(array('action'         => $action,
+				                              'forum'          => $newforum,
+				                              'cat_id'         => $cat_id,
+				                              'old_id'         => $old_id,
+				                              'forum_id'       => $forum_id,  /* duplicate, but now the returned information are equal to the cateogry ones */
+				                              'pop3resulthtml' => $pop3testresulthtml,
+				                              'editforumhtml'  => $editforumhtml,
+				                              'forumtitle'     => $forumtitle));
     }
 
     /**
@@ -1265,8 +1262,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
     {
     
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            LogUtil::registerPermissionError();
-            return AjaxUtil::error(null, array(), true, true, '403 Forbidden');
+            LogUtil::registerPermissionError(null, true);
+            throw new Zikula_Exception_Forbidden();
         }
     
         SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -1291,7 +1288,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                 if (ModUtil::apiFunc('Dizkus', 'admin', 'updatecategory',
                                  array('cat_id'    => $cat_id,
                                        'cat_order' => $catorder)) == false) {
-                    return AjaxUtil::error($this->__f('Error! cannot reorder category %s.', $cat_id), array(), true, true, '400 Bad data');
+                    return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! cannot reorder category %s.', $cat_id));
                 }
             }
         } else {
@@ -1311,8 +1308,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller {
                     }
                 }
             }
-        }    
-        AjaxUtil::output('', true, false, false);
+        }
+        return new Zikula_Response_Ajax(array());    
     }
 
 }

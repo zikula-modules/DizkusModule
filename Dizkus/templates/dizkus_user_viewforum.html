@@ -1,12 +1,10 @@
-{* $Id$ *}
-
 {include file='dizkus_user_header.html'}
 
 {if $forum.forum_desc <> ''}
 <p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
 {/if}
 
-{if $forum.access_moderate eq true or $forum.access_comment or $zcore.logged_in}
+{if $forum.access_moderate eq true or $forum.access_comment or $coredata.logged_in}
 <div class="roundedbar dzk_rounded">
     <div class="inner">
         <ul id="dzk_javascriptareaforum" class="hidden linklist z-clearfix">
@@ -15,7 +13,7 @@
             <li><a class="dzk_img newtopiclink" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
             {/if}
 
-            {if $zcore.logged_in}
+            {if $coredata.logged_in}
             <li>
                 {if $forum.is_subscribed eq 0}
                 <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
@@ -23,7 +21,7 @@
                 <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                 {/if}
             </li>
-            {if $zcore.Dizkus.favorites_enabled eq "yes"}
+            {if $coredata.Dizkus.favorites_enabled eq "yes"}
             <li>
                 {if $forum.is_favorite eq 0}
                 <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
@@ -50,13 +48,13 @@
                 <li><a class="dzk_img moderatelink" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
                 {/if}
 
-                {if $zcore.logged_in}
+                {if $coredata.logged_in}
                 {if $forum.is_subscribed eq 0}
                 <li><a class="dzk_img subscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id}" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a></li>
                 {else}
                 <li><a class="dzk_img unsubscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a></li>
                 {/if}
-                {if $zcore.Dizkus.favorites_enabled eq "yes"}
+                {if $coredata.Dizkus.favorites_enabled eq "yes"}
                 {if $forum.is_favorite eq 0}
                 <li><a class="dzk_img addfavoritelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a></li>
                 {else}

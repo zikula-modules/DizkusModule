@@ -1,4 +1,3 @@
-{*  $Id$  *}
 {gt text="Reply to" assign=templatetitle}
 {pagesetvar name='title' value=$templatetitle}
 
@@ -30,7 +29,7 @@
                                 <label for="message">{gt text="Message body"}</label><br />
                                 <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60">{$reply.message}</textarea>
                                 {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
-                                {if $zcore.Dizkus.striptags == 'yes'}
+                                {if $coredata.Dizkus.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
                             </div>
@@ -39,7 +38,7 @@
                                 <div id="replyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong>{gt text="Options"}</strong></li>
-                                        {if $zcore.logged_in}
+                                        {if $coredata.logged_in}
                                         <li>
                                             <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
                                             <label for="attach_signature">{gt text="Attach my signature"}</label>

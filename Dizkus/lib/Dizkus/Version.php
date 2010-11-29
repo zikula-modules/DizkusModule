@@ -22,15 +22,17 @@ class Dizkus_Version extends Zikula_Version
         $meta['contact']        = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer http://code.zikula.org/dizkus';
         $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
                                       'Dizkus::CreateForum' => 'CategoryID::');
-
+		$meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
+		                              HookUtil::PROVIDER_CAPABLE   => array('enabled' => true));
+        
         // module depedencies
         $meta['dependencies']   = array(
                                       array('modname'    => 'BBCode', 
-                                            'minversion' => '2.0', 
+                                            'minversion' => '3.0.0', 
                                             'maxversion' => '', 
                                             'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
                                       array('modname'    => 'BBSmile', 
-                                            'minversion' => '2.1', 
+                                            'minversion' => '3.0.0', 
                                             'maxversion' => '', 
                                             'status'     => ModUtil::DEPENDENCY_RECOMMENDED)
                                      );

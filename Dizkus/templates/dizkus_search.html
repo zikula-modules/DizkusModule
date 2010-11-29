@@ -1,10 +1,8 @@
-{*  $Id$  *}
-
 <div id="dzk_search">
     <div>
         <input type="checkbox" name="active[Dizkus]" id="active_Dizkus" value="1" { if $active }checked="checked"{ /if } />
         <label for="active_Dizkus">{gt text='Search forums' domain="module_dizkus"}</label>
-        <div class="z-formnote z-informationmsg">{gt text='Notice: For forum searches, your search query must be between %1$s and %2$s characters long.' tag1=$zcore.Dizkus.minsearchlength tag2=$zcore.Dizkus.maxsearchlength domain="module_dizkus"}</div>
+        <div class="z-formnote z-informationmsg">{gt text='Notice: For forum searches, your search query must be between %1$s and %2$s characters long.' tag1=$coredata.Dizkus.minsearchlength tag2=$coredata.Dizkus.maxsearchlength domain="module_dizkus"}</div>
     </div>
 
     <input type="hidden" name="Dizkus_startnum" value="0" />

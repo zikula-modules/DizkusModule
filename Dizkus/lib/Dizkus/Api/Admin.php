@@ -578,10 +578,10 @@ class Dizkus_Api_Admin extends Zikula_Api {
         $newforum = DBUtil::insertObject($args, 'dizkus_forums', 'forum_id');
     
         $count = 0;
-        if (is_array($mods) && count($mods)>0) {
-            foreach($mods as $mod) {
+        if (!is_null($mods) && is_array($mods) && count($mods)>0) {
+        	foreach($mods as $singlemod) {
                 $newmod = array('forum_id' => $newforum['forum_id'],
-                                'user_id'  => $mod[0]);
+                                'user_id'  => $singlemod); // [0]??
                 $newmod = DBUtil::insertObject($newmod, 'dizkus_forum_mods'); // todo: add index field to forum_mods table!!!!
             }
         }
@@ -595,8 +595,8 @@ class Dizkus_Api_Admin extends Zikula_Api {
         }
     
         // Let any hooks know that we have created a new item.
-        ModUtil::callHooks('item', 'create', $newforum['forum_id'], array('module' => 'Dizkus',
-                                                                      'forum_id' => $newforum['forum_id']));
+        //ModUtil::callHooks('item', 'create', $newforum['forum_id'], array('module' => 'Dizkus',
+        //                                                              'forum_id' => $newforum['forum_id']));
     
         return $newforum['forum_id'];
     }

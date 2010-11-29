@@ -105,41 +105,36 @@ var DizkusAdmin = Class.create(DizkusBase, {
     createcategory: function(cat_id)
     {
         this.toggleprogressimage(true, cat_id);
-        pars = "module=Dizkus&func=createcategory";
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL+'ajax.php',
+        pars = {};
+        myAjax = new Zikula.Ajax.Request(
+            'ajax.php?module=Dizkus&func=createcategory',
             {
                 method: 'post', 
                 parameters: pars, 
-                onComplete: function(originalRequest)
+                onComplete: function(req)
                             {
                                 // show error if necessary
-                                if( originalRequest.status != 200 ) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
-                                    if(json.new == true) {
-                                         this.toggleprogressimage(true, -1);
-                                    } else {
-                                         this.toggleprogressimage(true, json.cat_id);
-                                    }
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
+                                    this.toggleprogressimage(true, -1);
                                     return;
                                 }
 
-                                json = Zikula.dejsonize(originalRequest.responseText);
-                                Zikula.updateauthids(json.authid);
+								msg = req.getData();
 
                                 // new category
                                 this.toggleprogressimage(true, -1);
-                                $('category').insert(json.data);
+                                $('category').insert(msg.tpl);
 
-                                $('hidecategory_' + json.cat_id).show().observe('click', this.hideshowcategory.bind(this, json.cat_id));
-                                $('showcategory_' + json.cat_id).hide().observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                $('hidecategory_' + msg.cat_id).show().observe('click', this.hideshowcategory.bind(this, msg.cat_id));
+                                $('showcategory_' + msg.cat_id).hide().observe('click', this.hideshowcategory.bind(this, msg.cat_id));
 
-                                $('hideforumlist_' + json.cat_id).hide();
-                                $('showforumlist_' + json.cat_id).hide();
-                                $('canceladdcategory_' + json.cat_id).observe('click', this.canceladdcategory.bind(this, json.cat_id));
-                                $('addforum_' + json.cat_id).hide();
+                                $('hideforumlist_' + msg.cat_id).hide();
+                                $('showforumlist_' + msg.cat_id).hide();
+                                $('canceladdcategory_' + msg.cat_id).observe('click', this.canceladdcategory.bind(this, msg.cat_id));
+                                $('addforum_' + msg.cat_id).hide();
 
-                                $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, json.cat_id));
+                                $('submitcategory_' + msg.cat_id).observe('click', this.storecategory.bind(this, msg.cat_id));
                             }.bind(this)
             });
     },
@@ -162,52 +157,53 @@ var DizkusAdmin = Class.create(DizkusBase, {
     storecategory: function(cat_id)
     {
         this.toggleprogressimage(true, cat_id);
-        pars = "module=Dizkus&func=storecategory&" + Form.serialize('editcategoryform_'+ cat_id);
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL+'ajax.php',
+        pars = Form.serialize('editcategoryform_'+ cat_id);
+        myAjax = new Zikula.Ajax.Request(
+            'ajax.php?module=Dizkus&func=storecategory',
             {
                 method: 'post', 
-                parameters: pars, 
-                onComplete: function(originalRequest)
+                parameters: pars,
+                authid: 'authid',
+                onComplete: function(req)
                             {
-                                if( originalRequest.status != 200 ) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
-                                    this.toggleprogressimage(true, json.old_id);
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
+                                    msg = req.getData();
+                                    this.toggleprogressimage(true, msg.old_id);
                                     return;
                                 }
 
-                                json = Zikula.dejsonize(originalRequest.responseText);
-                                Zikula.updateauthids(json.authid);
-                            
-                                this.toggleprogressimage(true, json.old_id);
-                                
-                                switch(json.action) {
-                                    case 'add':
-                                        $('category_' + json.old_id).remove();
-                                        $('category').insert(json.edithtml);
+								msg = req.getData();
 
-                                        $('hidecategory_' + json.cat_id).hide().observe('click', this.hideshowcategory.bind(this, json.cat_id));
-                                        $('showcategory_' + json.cat_id).show().observe('click', this.hideshowcategory.bind(this, json.cat_id));
+                                this.toggleprogressimage(true, msg.old_id);
+                                
+                                switch(msg.action) {
+                                    case 'add':
+                                        $('category_' + msg.old_id).remove();
+                                        $('category').insert(msg.edithtml);
+
+                                        $('hidecategory_' + msg.cat_id).hide().observe('click', this.hideshowcategory.bind(this, msg.cat_id));
+                                        $('showcategory_' + msg.cat_id).show().observe('click', this.hideshowcategory.bind(this, msg.cat_id));
     
-                                        $('hideforumlist_' + json.cat_id).hide();
-                                        $('showforumlist_' + json.cat_id).show();
-                                        $('addforum_' + json.cat_id).show();
+                                        $('hideforumlist_' + msg.cat_id).hide();
+                                        $('showforumlist_' + msg.cat_id).show();
+                                        $('addforum_' + msg.cat_id).show();
     
-                                        $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, json.cat_id));
+                                        $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, msg.cat_id));
 
                                         // recreate sortables
                                         this.createsortables();
                                         
                                         break;
                                     case 'update':
-                                        $('categorytitle_' + json.cat_id).update('<a href="' + json.cat_linkurl + '">' + json.cat_title + '</a> (' + json.cat_id + ')');
+                                        $('categorytitle_' + msg.cat_id).update('<a href="' + msg.cat_linkurl + '">' + msg.cat_title + '</a> (' + msg.cat_id + ')');
                                         break;
                                     case 'delete':
-                                        Effect.toggle('category_' + json.cat_id, 'slide', { afterFinish: function(cat_id)
+                                        Effect.toggle('category_' + msg.cat_id, 'slide', { afterFinish: function(cat_id)
                                                                                                       {
                                                                                                           // remove it
                                                                                                           $('category_' + cat_id).remove();
-                                                                                                      }.bind(this, json.cat_id)});
+                                                                                                      }.bind(this, msg.cat_id)});
                                         // recreate sortables
                                         this.createsortables();
 
@@ -227,67 +223,65 @@ var DizkusAdmin = Class.create(DizkusBase, {
         } else {
             this.toggleprogressimage(false, forum_id);
         }
-        pars = "module=Dizkus&func=editforum&forum_id=" + forum_id;
-        if(forum_id == -1) {
-            pars += '&cat=' + cat_id;
-        }
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL+'ajax.php',
+        pars = {'forum_id': forum_id, 'cat': cat_id};
+
+        myAjax = new Zikula.Ajax.Request(
+            'ajax.php?module=Dizkus&func=editforum',
             {
                 method: 'post', 
                 parameters: pars, 
-                onComplete: function(originalRequest)
+                onComplete: function(req)
                             {
                                 // show error if necessary
-                                if( originalRequest.status != 200 ) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
-                                    if (json.new == true) {
-                                        this.toggleprogressimage(true, json.cat_id);
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
+                                    msg = req.getData();
+                                    if (msg.new == true) {
+                                        this.toggleprogressimage(true, msg.cat_id);
                                     } else {
-                                        this.toggleprogressimage(false, json.forum_id);
+                                        this.toggleprogressimage(false, msg.forum_id);
                                     }
                                     return;
                                 }
                                     
-                                json = Zikula.dejsonize(originalRequest.responseText);
-                                Zikula.updateauthids(json.authid);
-                            
-                                if(json.new == true) {
-                                    this.toggleprogressimage(true, json.cat_id);
+                                msg = req.getData();
+                           
+                                if(msg.new == true) {
+                                    this.toggleprogressimage(true, msg.cat_id);
 
-                                    $('cid_' + json.cat_id).insert(json.data);
+                                    $('cid_' + msg.cat_id).insert(msg.data);
 
-                                    $('submitforum_' + json.forum_id).observe('click', this.storeforum.bind(this, json.forum_id));
-                                    $('extsource_0_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 0, json.forum_id));
-                                    $('extsource_1_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 1, json.forum_id));
-                                    $('extsource_2_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 2, json.forum_id));
+                                    $('submitforum_' + msg.forum_id).observe('click', this.storeforum.bind(this, msg.forum_id));
+                                    $('extsource_0_' + msg.forum_id).observe('change', this.showextendedoptions.bind(this, 0, msg.forum_id));
+                                    $('extsource_1_' + msg.forum_id).observe('change', this.showextendedoptions.bind(this, 1, msg.forum_id));
+                                    $('extsource_2_' + msg.forum_id).observe('change', this.showextendedoptions.bind(this, 2, msg.forum_id));
 
-                                    $('editforum_' + json.forum_id).hide();
-                                    $('hideforum_' + json.forum_id).show().observe('click', this.toggleforum.bind(this, json.forum_id));
-                                    $('showforum_' + json.forum_id).hide().observe('click', this.toggleforum.bind(this, json.forum_id));
-                                    $('canceladdforum_' + json.forum_id).observe('click', this.canceladdforum.bind(this, json.forum_id));
+                                    $('editforum_' + msg.forum_id).hide();
+                                    $('hideforum_' + msg.forum_id).show().observe('click', this.toggleforum.bind(this, msg.forum_id));
+                                    $('showforum_' + msg.forum_id).hide().observe('click', this.toggleforum.bind(this, msg.forum_id));
+                                    $('canceladdforum_' + msg.forum_id).observe('click', this.canceladdforum.bind(this, msg.forum_id));
 
-                                    if($('cid_' + json.cat_id).visible() == false) {
-                                        this.toggleforumlist(json.cat_id);
+                                    if($('cid_' + msg.cat_id).visible() == false) {
+                                        this.toggleforumlist(msg.cat_id);
                                     }
 
                                     // hide "this category does not contain a forum" message
-                                    $('emptycategory_' + json.cat_id).hide();
+                                    $('emptycategory_' + msg.cat_id).hide();
 
                                     // recreate sortables
                                     this.createsortables();
 
                                 } else {
-                                    this.toggleprogressimage(false, json.forum_id);
-                                    $('editforumcontent_' + json.forum_id).update(json.data);
+                                    this.toggleprogressimage(false, msg.forum_id);
+                                    $('editforumcontent_' + msg.forum_id).update(msg.data);
 
                                     // add observer for submit button
-                                    $('submitforum_' + json.forum_id).observe('click', this.storeforum.bind(this, json.forum_id));
+                                    $('submitforum_' + msg.forum_id).observe('click', this.storeforum.bind(this, msg.forum_id));
                                     
-                                    Effect.toggle('editforumcontent_' + json.forum_id, 'slide');
-                                    $('showforum_' + json.forum_id).hide().observe('click', this.toggleforum.bind(this, json.forum_id));
-                                    $('hideforum_' + json.forum_id).show().observe('click', this.toggleforum.bind(this, json.forum_id));
-                                    $('editforum_' + json.forum_id).hide();
+                                    Effect.toggle('editforumcontent_' + msg.forum_id, 'slide');
+                                    $('showforum_' + msg.forum_id).hide().observe('click', this.toggleforum.bind(this, msg.forum_id));
+                                    $('hideforum_' + msg.forum_id).show().observe('click', this.toggleforum.bind(this, msg.forum_id));
+                                    $('editforum_' + msg.forum_id).hide();
                                 }
                             }.bind(this)
             });
@@ -323,28 +317,28 @@ var DizkusAdmin = Class.create(DizkusBase, {
     storeforum: function(forum_id)
     {
         this.toggleprogressimage(false, forum_id);
-        pars = "module=Dizkus&func=storeforum&" + Form.serialize('editforumform_'+ forum_id);
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL+'ajax.php',
+        pars = Form.serialize('editforumform_'+ forum_id);
+        myAjax = new Zikula.Ajax.Request(
+            'ajax.php?module=Dizkus&func=storeforum',
             {
                 method: 'post', 
                 parameters: pars, 
-                onComplete: function(originalRequest)
+                onComplete: function(req)
                             {
-                                if( originalRequest.status != 200 ) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
-                                    this.toggleprogressimage(false, json.old_id);
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
+                                    msg = req.getData();
+                                    this.toggleprogressimage(false, msg.old_id);
                                     return;
                                 }
 
-                                json = Zikula.dejsonize(originalRequest.responseText);
-                                Zikula.updateauthids(json.authid);
+                                msg = req.getData();
 
-                                this.toggleprogressimage(false, json.old_id);
-                                switch(json.action) {
+                                this.toggleprogressimage(false, msg.old_id);
+                                switch(msg.action) {
                                     case 'delete':
                                         // hide it
-                                        Effect.toggle('forum_' + json.old_id, 'slide', { afterFinish: function(forum_id, cat_id)
+                                        Effect.toggle('forum_' + msg.old_id, 'slide', { afterFinish: function(forum_id, cat_id)
                                                                                                       {
                                                                                                           // check if there are more forums, if not, show place holder
                                                                                                           if($('forum_' + forum_id).siblings().size() == 1) {
@@ -357,40 +351,40 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                                                                                           }
                                                                                                           // remove it
                                                                                                           $('forum_' + forum_id).remove;
-                                                                                                      }.bind(this, json.forum_id, json.cat_id)});
+                                                                                                      }.bind(this, msg.forum_id, msg.cat_id)});
                                         // recreate sortables
                                         this.createsortables();
 
                                         break;
                                     case 'update':
-                                        $('forumtitle_' + json.forum_id).update(json.forumtitle);
+                                        $('forumtitle_' + msg.forum_id).update(msg.forumtitle);
                                         break;
                                     case 'add':
-                                        $('forumtitle_' + json.old_id).id = 'forumtitle_' + json.forum_id; 
-                                        $('forumtitle_' + json.forum_id).update(json.forumtitle);
+                                        $('forumtitle_' + msg.old_id).id = 'forumtitle_' + msg.forum_id; 
+                                        $('forumtitle_' + msg.forum_id).update(msg.forumtitle);
                             
-                                        $('editforumcontent_' + json.old_id).id = 'editforumcontent_' + json.forum_id; 
-                                        $('editforumcontent_' + json.forum_id).update(json.editforumhtml);
+                                        $('editforumcontent_' + msg.old_id).id = 'editforumcontent_' + msg.forum_id; 
+                                        $('editforumcontent_' + msg.forum_id).update(msg.editforumhtml);
 
-                                        $('submitforum_' + json.forum_id).observe('click', this.storeforum.bind(this, json.forum_id));
+                                        $('submitforum_' + msg.forum_id).observe('click', this.storeforum.bind(this, msg.forum_id));
                                         
-                                        $('extsource_0_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 0, json.forum_id));
-                                        $('extsource_1_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 1, json.forum_id));
-                                        $('extsource_2_' + json.forum_id).observe('change', this.showextendedoptions.bind(this, 2, json.forum_id));
+                                        $('extsource_0_' + msg.forum_id).observe('change', this.showextendedoptions.bind(this, 0, msg.forum_id));
+                                        $('extsource_1_' + msg.forum_id).observe('change', this.showextendedoptions.bind(this, 1, msg.forum_id));
+                                        $('extsource_2_' + msg.forum_id).observe('change', this.showextendedoptions.bind(this, 2, msg.forum_id));
                             
-                                        $('forum_' + json.old_id).id = 'forum_' + json.forum_id;
+                                        $('forum_' + msg.old_id).id = 'forum_' + msg.forum_id;
                             
-                                        $('hideforum_' + json.old_id).show().id = 'hideforum_' + json.forum_id;
-                                        $('hideforum_' + json.forum_id).observe('click', this.toggleforum.bind(this, json.forum_id));
+                                        $('hideforum_' + msg.old_id).show().id = 'hideforum_' + msg.forum_id;
+                                        $('hideforum_' + msg.forum_id).observe('click', this.toggleforum.bind(this, msg.forum_id));
                                         
-                                        $('showforum_' + json.old_id).hide().id = 'showforum_' + json.forum_id;
-                                        $('showforum_' + json.forum_id).observe('click', this.toggleforum.bind(this, json.forum_id));
+                                        $('showforum_' + msg.old_id).hide().id = 'showforum_' + msg.forum_id;
+                                        $('showforum_' + msg.forum_id).observe('click', this.toggleforum.bind(this, msg.forum_id));
                             
-                                        $('canceladdforum_' + json.old_id).remove();
+                                        $('canceladdforum_' + msg.old_id).remove();
 
-                                        $('progressforumimage_' + json.old_id).id = 'progressforumimage_' + json.forum_id;
+                                        $('progressforumimage_' + msg.old_id).id = 'progressforumimage_' + msg.forum_id;
                             
-                                        $('deletecategory_' + json.cat_id).hide();
+                                        $('deletecategory_' + msg.cat_id).hide();
                                         
                                         // recreate sortables
                                         this.createsortables();
@@ -452,13 +446,14 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                                     onUpdate: function(containment) 
                                                               {
                                                    this.showdizkusinfo(storingnewsortorder);
-                                                   pars = 'module=Dizkus&func=savetree&' + Sortable.serialize(containment) + '&cat_id=' + containment.id.split('_')[1] + '&authid=' + $F('authid');
-                                                   myAjax = new Ajax.Request(
-                                                       Zikula.Config.baseURL+'ajax.php',
+                                                   pars = Sortable.serialize(containment) + '&cat_id=' + containment.id.split('_')[1];
+                                                   myAjax = new Zikula.Ajax.Request(
+                                                       'ajax.php?module=Dizkus&func=savetree',
                                                        {
                                                            method: 'post', 
                                                            parameters: pars, 
-                                                           onComplete: function(originalRequest)
+                                                           authid: 'authid',
+                                                           onComplete: function(req)
                                                                        {
                                                                           // check if the forum list for this category is empty
                                                                          if($$('#'+containment.id+' li[class*=existing]').size() == 0) {
@@ -470,13 +465,10 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                                                           } 
                                                                           this.hidedizkusinfo();
                                                                           // show error if necessary
-                                                                          if( originalRequest.status != 200 ) {
-                                                                              json = Zikula.ajaxResponseError(originalRequest);
+                                                                          if (!req.isSuccess()) {
+                                                                              Zikula.showajaxerror(req.getMessage());
                                                                               return;
                                                                           }
-                                          
-                                                                          json = Zikula.dejsonize(originalRequest.responseText);
-                                                                          Zikula.updateauthids(json.authid);
                                                                        }.bind(this)
                                                        });
 
@@ -485,30 +477,28 @@ var DizkusAdmin = Class.create(DizkusBase, {
                                     });
                                }.bind(this));
     
-        // and now the sortable fr the categories themselves
+        // and now the sortable for the categories themselves
         Sortable.create("category",
                         { handle: 'dzk_handle',
                           only: 'existing',
                           onUpdate: function()
                                     {
                                         this.showdizkusinfo(storingnewsortorder);
-                                        pars = 'module=Dizkus&func=savetree&' + Sortable.serialize('category') + '&authid=' + $F('authid');
-                                        myAjax = new Ajax.Request(
-                                            Zikula.Config.baseURL+'ajax.php',
+                                        pars = Sortable.serialize('category');
+                                        myAjax = new Zikula.Ajax.Request(
+                                            'ajax.php?module=Dizkus&func=savetree',
                                             {
                                                 method: 'post', 
                                                 parameters: pars, 
-                                                onComplete: function(originalRequest)
+                                                authid: 'authid',
+                                                onComplete: function(req)
                                                             {
                                                                 this.hidedizkusinfo();
                                                                 // show error if necessary
-                                                                if( originalRequest.status != 200 ) {
-                                                                    json = Zikula.ajaxResponseError(originalRequest);
+                                                                if (!req.isSuccess()) {
+                                                                    Zikula.showajaxerror(req.getMessage());
                                                                     return;
                                                                 }
-                                
-                                                                json = Zikula.dejsonize(originalRequest.responseText);
-                                                                Zikula.updateauthids(json.authid);
                                                             }.bind(this)
                                             });
                                     }.bind(this) 
