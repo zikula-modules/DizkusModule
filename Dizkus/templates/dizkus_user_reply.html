@@ -3,7 +3,7 @@
 
 {include file='dizkus_user_header.html'}
 
-{modcallhooks hookobject='item' hookaction='display' hookid=$reply.topic_id implode=false}
+{*modcallhooks hookobject='item' hookaction='display' hookid=$reply.topic_id implode=false*}
 
 {if $preview|default:false}
 <div id="replypreview" style="margin:1em 0;">

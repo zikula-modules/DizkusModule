@@ -1,6 +1,6 @@
 {include file='dizkus_user_header.html'}
 
-{modcallhooks hookobject='item' hookaction='display' hookid=$newtopic.topic_id|default:0 implode=false assign='hooks'}
+{*modcallhooks hookobject='item' hookaction='display' hookid=$newtopic.topic_id|default:0 implode=false assign='hooks'*}
 
 <div id="newtopicpreview" style="display: none;">&nbsp;</div>
 
@@ -20,7 +20,7 @@
                     <input type="hidden" id="quote" name="quote" value="" />
                     <input type="hidden" id="authid" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id}">{$newtopic.forum_name|modcallhooks}</a></legend>
+                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id}">{$newtopic.forum_name}{*|modcallhooks*}</a></legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                             <div>

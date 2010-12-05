@@ -248,7 +248,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                                         'subscribe_topic'  => $subscribe_topic));
             if ($preview == true) {
                 $reply['message'] = dzkVarPrepHTMLDisplay($message);
-                list($reply['message_display']) = ModUtil::callHooks('item', 'transform', '', array($message));
+//                list($reply['message_display']) = ModUtil::callHooks('item', 'transform', '', array($message));
                 $reply['message_display'] = nl2br($reply['message_display']);
             }
 
@@ -437,7 +437,7 @@ class Dizkus_Controller_User extends Zikula_Controller
     
             if (!empty($message)) {
                 $post['post_rawtext'] = $message;
-                list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', '', array(nl2br($message)));
+//                list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', '', array(nl2br($message)));
             }
     
             $this->view->assign('preview', $preview);

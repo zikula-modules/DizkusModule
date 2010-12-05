@@ -185,28 +185,28 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.favouritestatus == false) {
             this.favouritestatus = true;
-            pars = "module=Dizkus&func=toggleforumfavourite&forum=" + toggleforumfavouritebuttonid.split('_')[1];
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = "forum=" + toggleforumfavouritebuttonid.split('_')[1];
+//Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=toggleforumfavourite",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    onComplete: function(req)
                                 {
                                     this.favouritestatus = false;
                                     
                                     // show error if necessary
-                                    if (originalRequest.status != 200) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
                                     
-                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    msg = req.getData();
 
-                                    if (json.data == 'added') {
+                                    if (msg.data == 'added') {
                                         $(toggleforumfavouritebuttonid).update(unfavouriteForum);
-                                    } else if (json.data == 'removed') {
+                                    } else if (msg.data == 'removed') {
                                         $(toggleforumfavouritebuttonid).update(favouriteForum);
                                     } else {
                                          alert('Error! Erroneous result from favourite addition/removal.');
@@ -219,23 +219,23 @@ var DizkusUser = Class.create(DizkusBase, {
     
     toggleautosubscription: function()
     {
-        pars = "module=Dizkus&func=toggleautosubscription";
+        pars = '';
         Ajax.Responders.register(this.dzk_globalhandlers);
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL + "ajax.php",
+        myAjax = new Zikula.Ajax.Request(
+            "ajax.php?module=Dizkus&func=toggleautosubscription",
             {
                 method: 'post',
                 parameters: pars,
-                onComplete: function(originalRequest)
+                onComplete: function(req)
                             {
                                 // show error if necessary
-                                if (originalRequest.status != 200) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
                                     return;
                                 }
                             
-                                json = Zikula.dejsonize(originalRequest.responseText);
-                                switch(json.data) {
+                                msg = req.getData();
+                                switch(msg.data) {
                                     case 'autosubscription':
                                         $('noautosubscription').addClassName('hidden');
                                         $('autosubscription').removeClassName('hidden');
@@ -256,28 +256,28 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.subscribeforumstatus == false) {
             this.subscribeforumstatus = true;
-            pars = "module=Dizkus&func=toggleforumsubscription&forum=" + toggleforumsubscriptionbuttonid.split('_')[1]
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php",
+            pars = "forum=" + toggleforumsubscriptionbuttonid.split('_')[1]
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=toggleforumsubscription",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    onComplete: function(req)
                                 {
                                     this.subscribeforumstatus = false;
                                 
                                     // show error if necessary
-                                    if (originalRequest.status != 200) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    msg = req.getData();
                                 
-                                    if (json.data == 'subscribed') {
+                                    if (msg.data == 'subscribed') {
                                         $(toggleforumsubscriptionbuttonid).update(unsubscribeForum);
-                                    } else if (json.data == 'unsubscribed') {
+                                    } else if (msg.data == 'unsubscribed') {
                                         $(toggleforumsubscriptionbuttonid).update(subscribeForum);
                                     } else {
                                          alert('Error! Erroneous result from subscription/unsubscription action.');
@@ -291,27 +291,27 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.sortorderstatus == false) {
             this.sortorderstatus = true;
-            pars = "module=Dizkus&func=togglesortorder&authid=" + $F('authid');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = '';
+//   Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=togglesortorder",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    authid: 'authid',
+                    onComplete: function(req)
                                 {
                                     this.sortorderstatus = false;
                                 
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    Zikula.updateauthids(json.authid);
+                                    msg = req.getData();
                                 
-                                    switch(json.data) {
+                                    switch(msg.data) {
                                         case 'desc':
                                             $('sortorder_asc').addClassName('hidden');
                                             $('sortorder_desc').removeClassName('hidden'); 
@@ -332,27 +332,27 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.toggleforumdisplay == false) {
             this.toggleforumdisplay = true;
-            pars = "module=Dizkus&func=toggleforumdisplay&authid=" + $F('authid');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = '';
+//          Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=toggleforumdisplay",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    authid: 'authid',
+                    onComplete: function(req)
                                 {
                                     this.toggleforumdisplay = false;
                                 
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    Zikula.updateauthids(json.authid);
+                                    msg = req.getData();
                                 
-                                    if(json.data == true) {
+                                    if(msg.data == true) {
                                         $('favorites_true').removeClassName('hidden');
                                         $('favorites_false').addClassName('hidden'); 
 
@@ -371,27 +371,26 @@ var DizkusUser = Class.create(DizkusBase, {
             this.editstatus = true;
             this.editchanged = false;
             this.post_id = editpostlinkid.split('_')[1];
-            pars = "module=Dizkus&func=editpost&post=" + this.post_id;
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = "post=" + this.post_id;
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=editpost",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    onComplete: function(req)
                                 {
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json.Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         this.editstatus = false;
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    msg = req.getData();
                                 
                                     // hide posting options, update authid                                
                                     $('postingoptions_' + this.post_id).hide();
-                                    Zikula.updateauthids(json.authid);
 
                                     // hide quickreply
                                     if ($('dzk_quickreply')) {
@@ -399,7 +398,7 @@ var DizkusUser = Class.create(DizkusBase, {
                                     }
                                 
                                     // add inline editor
-                                    new Insertion.After($('postingtext_' + this.post_id), json.data);
+                                    new Insertion.After($('postingtext_' + this.post_id), msg.data);
                                     
                                     if ($('bbcode_postingtext_' + this.post_id + '_edit')) {
                                         $('bbcode_postingtext_' + this.post_id + '_edit').removeClassName('hidden');
@@ -442,10 +441,8 @@ var DizkusUser = Class.create(DizkusBase, {
             return;
         }
     
-        pars = 'module=Dizkus&func=updatepost' +
-               '&post=' + this.post_id +
+        pars = '&post=' + this.post_id +
                '&message=' + encodeURIComponent($F('postingtext_' + this.post_id + '_edit')) +
-               '&authid=' + $F('postingtext_' + this.post_id + '_authid') +
                '&attach_signature=' + this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature');
 
         if($('postingtext_' + this.post_id + '_delete') && $('postingtext_' + this.post_id + '_delete').checked == true) {
@@ -455,35 +452,35 @@ var DizkusUser = Class.create(DizkusBase, {
             $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + updatingPost + '</span>');
         }
     
-        Ajax.Responders.register(this.dzk_globalhandlers);
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL+"ajax.php",
+//        Ajax.Responders.register(this.dzk_globalhandlers);
+        myAjax = new Zikula.Ajax.Request(
+            "ajax.php?module=Dizkus&func=updatepost",
             {
                 method: 'post',
                 parameters: pars,
-                onComplete: function(originalRequest) 
+                authid: 'authid',
+                onComplete: function(req) 
                             {
                                 this.editstatus = false;
                                 this.editchanged = false;
                                 
                                 // show error if necessary
-                                if( originalRequest.status != 200 ) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
                                     return;
                                 }
 
-                                json = Zikula.dejsonize(originalRequest.responseText);
-                                Zikula.updateauthids(json.authid);
+                                msg = req.getData();
                                                                     
                                 $('postingtext_' + this.post_id + '_editor').remove();
                             
-                                if(json.action == 'deleted') {
+                                if(msg.action == 'deleted') {
                                     $('posting_' + this.post_id).remove();
-                                } else if (json.action == 'topic_deleted') {
-                                    window.setTimeout("window.location.href='" + json.redirect + "';", 500);
+                                } else if (msg.action == 'topic_deleted') {
+                                    window.setTimeout("window.location.href='" + msg.redirect + "';", 500);
                                     return;
                                 } else {
-                                    $('postingtext_' + this.post_id).update(json.post_text).show();
+                                    $('postingtext_' + this.post_id).update(msg.post_text).show();
                                 }
                             
                                 //  hide quickreply
@@ -513,28 +510,28 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.subjectstatus == false) {
             this.subjectstatus = true;
-            pars = "module=Dizkus&func=edittopicsubject&topic=" + this.edittopicsubjectbuttonid.split('_')[1];
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = "topic=" + this.edittopicsubjectbuttonid.split('_')[1];
+//          Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=edittopicsubject",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    authid: 'authid',
+                    onComplete: function(req)
                                 {
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json.Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         this.subjectstatus = false;
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    msg = req.getData();
                                 
                                     $(this.edittopicsubjectbuttonid).hide();
-                                    Zikula.updateauthids(json.authid);
                                 
-                                    new Insertion.After($(this.edittopicsubjectbuttonid), json.data);
+                                    new Insertion.After($(this.edittopicsubjectbuttonid), msg.data);
                                     $('topicsubjectedit_save').observe('click', this.topicsubjecteditsave.bind(this));
                                     $('topicsubjectedit_cancel').observe('click', this.topicsubjecteditcancel.bind(this));
 
@@ -550,31 +547,29 @@ var DizkusUser = Class.create(DizkusBase, {
             return;
         }
     
-        pars = "module=Dizkus&func=updatetopicsubject" +
-               "&topic=" + this.edittopicsubjectbuttonid.split('_')[1] +
-               "&subject=" + encodeURIComponent($F('topicsubjectedit_subject')) +
-               "&authid=" + $F('topicsubjectedit_authid');
+        pars = "&topic=" + this.edittopicsubjectbuttonid.split('_')[1] +
+               "&subject=" + encodeURIComponent($F('topicsubjectedit_subject'));
         Ajax.Responders.register(this.dzk_globalhandlers);
-        myAjax = new Ajax.Request(
-            Zikula.Config.baseURL+"ajax.php",
+        myAjax = new Zikula.Ajax.Request(
+            "ajax.php?module=Dizkus&func=updatetopicsubject",
             {
                 method: 'post',
                 parameters: pars,
-                onComplete: function(originalRequest)
+                authid: 'authid',
+                onComplete: function(req)
                             {
                                 this.subjectstatus = false;
                                 
                                 // show error if necessary
-                                if( originalRequest.status != 200 ) {
-                                    json = Zikula.ajaxResponseError(originalRequest);
+                                if (!req.isSuccess()) {
+                                    Zikula.showajaxerror(req.getMessage());
                                     return;
                                 }
                             
-                                json = Zikula.dejsonize(originalRequest.responseText);
+                                msg = req.getData();
                             
                                 $('topicsubjectedit_editor').remove();
-                                Zikula.updateauthids(json.authid);
-                                $(this.edittopicsubjectbuttonid).update(json.topic_title).show();
+                                $(this.edittopicsubjectbuttonid).update(msg.topic_title).show();
                                 //$(this.edittopicsubjectbuttonid).show();
                             }.bind(this)
             });
@@ -582,7 +577,7 @@ var DizkusUser = Class.create(DizkusBase, {
     
     topicsubjecteditcancel: function()
     {
-        $('topicsubjecteditor').remove();
+        $('topicsubjectedit_editor').remove();
         $(this.edittopicsubjectbuttonid).show();
         this.subjectstatus = false;
         return false;
@@ -592,25 +587,25 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.stickystatus == false) {
             this.stickystatus = true;
-            pars = "module=Dizkus&func=stickyunstickytopic&topic=" + this.toggletopicstickybuttonid.split('_')[1] + "&mode=" + ((this.topic_sticky == false) ? 'sticky' : 'unsticky');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = "topic=" + this.toggletopicstickybuttonid.split('_')[1] + "&mode=" + ((this.topic_sticky == false) ? 'sticky' : 'unsticky');
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=stickyunstickytopic",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    onComplete: function(req)
                                 {
                                     this.stickystatus = false;
                                     
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
-                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    msg = req.getData();
                                 
-                                    if(['sticky', 'unsticky'].include(json.data)) {
+                                    if(['sticky', 'unsticky'].include(msg.data)) {
                                         if (this.topic_sticky == false) {
                                             this.topic_sticky = true;
                                             $(this.toggletopicstickybuttonid).update(unstickyTopic);
@@ -630,25 +625,25 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.lockstatus == false) {
             this.lockstatus = true;
-            pars = "module=Dizkus&func=lockunlocktopic&topic=" + this.toggletopiclockbuttonid.split('_')[1] + "&mode=" + ((this.topic_locked == false) ? 'lock' : 'unlock');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = "topic=" + this.toggletopiclockbuttonid.split('_')[1] + "&mode=" + ((this.topic_locked == false) ? 'lock' : 'unlock');
+//          Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=lockunlocktopic",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest) 
+                    onComplete: function(req) 
                                 {
                                     this.lockstatus = false;
 
                                     // show error if necessary
-                                    if (originalRequest.status != 200) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
-                                    json = Zikula.dejsonize(originalRequest.responseText);
+                                    msg = req.getData();
                                 
-                                    if(['locked', 'unlocked'].include(json.data)) {
+                                    if(['locked', 'unlocked'].include(msg.data)) {
                                         if (this.topic_locked == false) {
                                             this.topic_locked = true;
                                             $(this.toggletopiclockbuttonid).update(unlockTopic);
@@ -668,25 +663,25 @@ var DizkusUser = Class.create(DizkusBase, {
     {
         if(this.subscribestatus == false) {
             this.subscribestatus = true;
-            pars = "module=Dizkus&func=subscribeunsubscribetopic&topic=" + this.toggletopicsubscriptionbuttonid.split('_')[1] + "&mode=" + ((this.topic_subscribed == false) ? 'subscribe' : 'unsubscribe');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            pars = "topic=" + this.toggletopicsubscriptionbuttonid.split('_')[1] + "&mode=" + ((this.topic_subscribed == false) ? 'subscribe' : 'unsubscribe');
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=subscribeunsubscribetopic",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    onComplete: function(req)
                                 {
                                     this.subscribestatus = false;
                                     
                                     // show error if necessary
-                                    if (originalRequest.status != 200) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
                                     
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    if(['subscribed', 'unsubscribed'].include(json.data)) {
+                                    msg = req.getData();
+                                    if(['subscribed', 'unsubscribed'].include(msg.data)) {
                                         if (this.topic_subscribed == false) {
                                             this.topic_subscribed = true;
                                             $(this.toggletopicsubscriptionbuttonid).update(unsubscribeTopic);
@@ -718,49 +713,47 @@ var DizkusUser = Class.create(DizkusBase, {
             this.newtopicstatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingPost);
     
-            pars = 'module=Dizkus&func=newtopic' +
-                   '&forum=' + $F('forum') +
+            pars = '&forum=' + $F('forum') +
                    '&subject=' + encodeURIComponent($F('subject')) +
                    '&message=' + encodeURIComponent($F('message')) +
                    '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
-                   '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic') +
-                   '&authid=' + $F('authid');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+'ajax.php',
+                   '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic');
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                'ajax.php?module=Dizkus&func=newtopic',
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function (originalRequest)
+                    authid: 'authid',
+                    onComplete: function (req)
                                 {
                                     this.hidedizkusinfo();
                                     this.newtopicstatus = false;
                                 
                                     // show error if necessary
-                                    if (originalRequest.status != 200) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    Zikula.updateauthids(json.authid);
+                                    msg = req.getData();
                                 
-                                    if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
+                                    if ($('myuploadframe') && $('btnUpload') && msg.uploadauthid) {
                                         newTopicUpload = true;
-                                        newTopicRedirect = json.redirect;
-                                        $('MediaAttach_redirect').value = json.uploadredirect;
-                                        $('MediaAttach_objectid').value = json.uploadobjectid;
-                                        this.updateAuthid(json.uploadauthid);
+                                        newTopicRedirect = msg.redirect;
+                                        $('MediaAttach_redirect').value = msg.uploadredirect;
+                                        $('MediaAttach_objectid').value = msg.uploadobjectid;
+                                        this.updateAuthid(msg.uploadauthid);
                                         $('btnUpload').click();
                                     }
                                 
-                                    if (json.confirmation == false || !$('newtopicconfirmation')) {
+                                    if (msg.confirmation == false || !$('newtopicconfirmation')) {
                                         this.showdizkusinfo(redirecting);
                                     } else {
                                         $('dzk_newtopic').hide();
-                                        $('newtopicconfirmation').update(json.confirmation).show();
+                                        $('newtopicconfirmation').update(msg.confirmation).show();
                                     }
-                                    window.setTimeout("window.location.href='" + json.redirect + "';", 3000);
+                                    window.setTimeout("window.location.href='" + msg.redirect + "';", 3000);
                                 }.bind(this)
    
                 });
@@ -774,36 +767,34 @@ var DizkusUser = Class.create(DizkusBase, {
             this.newtopicstatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
     
-            pars = "module=Dizkus&func=newtopic" +
-                   '&forum=' + $F('forum') +        
+            pars = '&forum=' + $F('forum') +        
                    "&subject=" + encodeURIComponent($F('subject')) +
                    "&message=" + encodeURIComponent($F('message')) +
                    "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
-                   "&preview=1" +
-                   "&authid=" + $F('authid');
+                   "&preview=1" ;
 
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+'ajax.php',
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                'ajax.php?module=Dizkus&func=newtopic',
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function (originalRequest)
+                    authid: 'authid',
+                    onComplete: function (req)
                                 {
                                     this.hidedizkusinfo();
                                     this.newtopicstatus = false;
 
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxeError(req.getMessage());
                                         this.newtopicstatus = false;
                                         if (event) Event.stop(event);
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    Zikula.updateauthids(json.authid);
-                                    $('newtopicpreview').update(json.data).show();
+                                    msg = req.getData();
+                                    $('newtopicpreview').update(msg.data).show();
                                     if (event) Event.stop(event);
                                 }.bind(this)
                 });
@@ -840,17 +831,17 @@ var DizkusUser = Class.create(DizkusBase, {
         quotetext.strip();
         if(quotetext.length == 0) {
             // read the messages text using ajax
-            pars = "module=Dizkus&func=preparequote&post=" + quotelinkid.split('_')[1];
+            pars = "post=" + quotelinkid.split('_')[1];
             Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=preparequote",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest) 
+                    onComplete: function(req) 
                                 {
-                                    if( originalRequest.status != 200 ) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if(!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         if (event) Event.stop(event);
                                         return;
                                     }
@@ -860,8 +851,8 @@ var DizkusUser = Class.create(DizkusBase, {
                                         oldvalue += '\n';
                                     }
                                     
-                                    result = Zikula.dejsonize(originalRequest.responseText);
-                                    $('message').setValue(oldvalue + result.message  + '\n').focus();
+                                    msg = req.getData();
+                                    $('message').setValue(oldvalue + msg.message  + '\n').focus();
                                     return;                    
                                 }.bind(this)
                 });
@@ -888,38 +879,36 @@ var DizkusUser = Class.create(DizkusBase, {
 
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingReply);
-            pars = 'module=Dizkus&func=reply' +
-                   '&topic=' + $F('topic') +
+            pars = '&topic=' + $F('topic') +
                    '&message=' + encodeURIComponent($F('message')) +
                    '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
-                   '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic') +
-                   '&authid=' + $F('authid');
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+                   '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic');
+//          Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=reply",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    authid: 'authid',
+                    onComplete: function(req)
                                 {
                                     this.hidedizkusinfo();
                                 
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        json = Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.getMessage()) {
+                                        Zikula.showajaxeError(req.getMessage());
                                         this.replystatus = false;
                                         if (event) Event.stop(event);
                                         return;
                                     }
                                 
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    Zikula.updateauthids(json.authid);
+                                    msg = req.getData();
                                 
                                     // clear textarea and reset preview
                                     this.cancelQuickReply()
                                 
                                     // show new posting
-                                    $('quickreplyposting').update(json.data).removeClassName('hidden');
+                                    $('quickreplyposting').update(msg.data).removeClassName('hidden');
                                 
                                     // prepare everything for another quick reply
                                     new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
@@ -930,10 +919,9 @@ var DizkusUser = Class.create(DizkusBase, {
                                     // enable js options in quickreply
                                     $$('ul.javascriptpostingoptions').each(function(el) { el.removeClassName('hidden'); });
                                 
-                                    if ($('myuploadframe') && $('btnUpload') && json.uploadauthid) {
-                                        Zikula.updateauthids(json.uploadauthid);
+                                    if ($('myuploadframe') && $('btnUpload') && msg.uploadauthid) {
+                                        Zikula.updateauthids(msg.uploadauthid);
                                         $('btnUpload').click();
-                                        Zikula.updateauthids(json.authid);
                                     }
                                 
                                     this.replystatus = false;
@@ -955,34 +943,32 @@ var DizkusUser = Class.create(DizkusBase, {
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
         
-            pars = "module=Dizkus&func=reply" +
-                   "&topic=" + $F('topic') +
+            pars = "&topic=" + $F('topic') +
                    "&message=" + encodeURIComponent($F('message')) +
                    "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
-                   "&preview=1" +
-                   "&authid=" + $F('authid');
+                   "&preview=1";
         
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Ajax.Request(
-                Zikula.Config.baseURL+"ajax.php",
+//            Ajax.Responders.register(this.dzk_globalhandlers);
+            myAjax = new Zikula.Ajax.Request(
+                "ajax.php?module=Dizkus&func=reply",
                 {
                     method: 'post',
                     parameters: pars,
-                    onComplete: function(originalRequest)
+                    authid: 'authid',
+                    onComplete: function(req)
                                 {
                                     this.hidedizkusinfo();
                                     
                                     // show error if necessary
-                                    if( originalRequest.status != 200 ) {
-                                        Zikula.ajaxResponseError(originalRequest);
+                                    if (!req.isSuccess()) {
+                                        Zikula.showajaxerror(req.getMessage());
                                         this.replystatus = false;
                                         if (event) Event.stop(event);
                                         return;
                                     }
                                     
-                                    json = Zikula.dejsonize(originalRequest.responseText);
-                                    Zikula.updateauthids(json.authid);
-                                    $('quickreplypreview').update(json.data).removeClassName('hidden');
+                                    msg = req.getData();
+                                    $('quickreplypreview').update(msg.data).removeClassName('hidden');
                                     this.replystatus = false;
                                     //if (event) Event.stop(event);
                                 }.bind(this)

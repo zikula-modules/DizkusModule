@@ -50,9 +50,17 @@ class Dizkus_Api_User extends Zikula_Api {
             $userdata = array_merge($userdata,  array('user_posts'      => 0,
                                                       'user_rank'       => 0,
                                                       'user_level'      => 0,
-                                                      'use_lastvisit'   => 0,
+                                                      'user_lastvisit'   => 0,
                                                       'user_favorites'  => 0,
                                                       'user_post_order' => 0));
+        } else {
+        	// create some items that might be missing
+        	if (!array_key_exists('user_rank', $userdata)) {
+        		$userdata['user_rank'] = 0;
+        	}
+        	if (!array_key_exists('user_posts', $userdata)) {
+        		$userdata['user_posts'] = 0;
+        	}
         }
     
         $ztable = DBUtil::getTables();
@@ -95,9 +103,9 @@ class Dizkus_Api_User extends Zikula_Api {
         if ($userdata['user_rank'] != 0) {
             $rank = DBUtil::selectObjectByID('dizkus_ranks', $userdata['user_rank'], 'rank_id');
 
-        } elseif ($userdata['users_posts'] != 0) {
-            $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['users_posts']).'
-                      AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['users_posts']);
+        } elseif ($userdata['user_posts'] != 0) {
+            $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
+                      AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
 
             $rank = DBUtil::selectObject('dizkus_ranks', $where);
         } 
@@ -974,7 +982,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 
                     if ($hooks == true) {
                         // call hooks for $message
-                        list($post['post_text']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_text']));
+//                        list($post['post_text']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_text']));
                     }
                 
                     $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
@@ -1176,7 +1184,7 @@ class Dizkus_Api_User extends Zikula_Api {
                 $message = dzk_replacesignature($message, $review['poster_data']['signature']);
             
                 // call hooks for $message
-                list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
+//                list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
                 $review['post_text'] = $message;
             
                 array_push($reply['topic_review'], $review);
@@ -1287,8 +1295,8 @@ class Dizkus_Api_User extends Zikula_Api {
     
         // Let any hooks know that we have created a new item.
         //ModUtil::callHooks('item', 'create', $this_post, array('module' => 'Dizkus'));
-        ModUtil::callHooks('item', 'update', $obj['topic_id'], array('module' => 'Dizkus',
-                                                          'post_id' => $obj['post_id']));
+//        ModUtil::callHooks('item', 'update', $obj['topic_id'], array('module' => 'Dizkus',
+//                                                          'post_id' => $obj['post_id']));
     
         $this->notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['poster_id'], 'post_message' => $posted_message, 'type' => '2'));
     
@@ -1401,7 +1409,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $newtopic['message'] = $args['message'];
         $newtopic['message_display'] = $args['message']; // phpbb_br2nl($args['message']);
     
-        list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
+//        list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
         $newtopic['message_display'] = nl2br($newtopic['message_display']);
     
         if (UserUtil::isLoggedIn()) {
@@ -1506,7 +1514,7 @@ class Dizkus_Api_User extends Zikula_Api {
             DBUtil::updateObject($obj, 'dizkus_topics', '', 'topic_id');
     
             // Let any hooks know that we have created a new item.
-            ModUtil::callHooks('item', 'create', $obj['topic_id'], array('module' => 'Dizkus'));
+//            ModUtil::callHooks('item', 'create', $obj['topic_id'], array('module' => 'Dizkus'));
         }
     
         if (UserUtil::isLoggedIn()) {
@@ -1638,7 +1646,7 @@ class Dizkus_Api_User extends Zikula_Api {
         $post['post_textdisplay'] = dzk_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
     
         // call hooks for $message_display ($message remains untouched for the textarea)
-        list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
+//        list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
         $post['post_textdisplay'] = dzkVarPrepHTMLDisplay($post['post_textdisplay']);
         $post['post_text'] = $post['post_textdisplay'];
     
@@ -1749,8 +1757,8 @@ class Dizkus_Api_User extends Zikula_Api {
     
             // Let any hooks know that we have updated an item.
             //ModUtil::callHooks('item', 'update', $post_id, array('module' => 'Dizkus'));
-            ModUtil::callHooks('item', 'update', $args['post_id'], array('module'  => 'Dizkus',
-                                                                      'post_id' => $args['post_id']));
+//            ModUtil::callHooks('item', 'update', $args['post_id'], array('module'  => 'Dizkus',
+//                                                                      'post_id' => $args['post_id']));
     
             // update done, return now
             return ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']));
@@ -2048,7 +2056,7 @@ class Dizkus_Api_User extends Zikula_Api {
         DBUtil::updateObject($forum, 'dizkus_forums', null, 'forum_id');
         
         // Let any hooks know that we have deleted an item (topic).
-        ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
+//        ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
         return $forum_id;

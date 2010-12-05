@@ -205,7 +205,7 @@ function smarty_function_readlastposts($params, &$smarty)
 
             $lastpost['post_text'] = dzk_replacesignature($lastpost['post_text'], '');
             // call hooks for $message
-            list($lastpost['post_text']) = ModUtil::callHooks('item', 'transform', '', array($lastpost['post_text']));
+//            list($lastpost['post_text']) = ModUtil::callHooks('item', 'transform', '', array($lastpost['post_text']));
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text']));
 
             $lastpost['posted_unixtime']= strtotime ($lastpost['topic_time']);
