@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Block_Center extends Zikula_Block
+class Dizkus_Block_Center extends Zikula_Controller_Block
 {
 	/**
 	 * init
