@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Hook extends Zikula_Api {
+class Dizkus_Api_Hook extends Zikula_AbstractApi {
     
     /**
      * createbyitem

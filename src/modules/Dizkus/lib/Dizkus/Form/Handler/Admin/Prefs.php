@@ -9,149 +9,137 @@
  * @package Dizkus
  */
 
-class Dizkus_Form_Handler_Admin_Prefs extends Form_Handler
-{
-    function initialize(&$render)
-    {
-        $render->caching = false;
-        $render->add_core_data();
 
-        $render->assign('post_sort_order_options', array(array('text' => $this->__('Ascending'),  'value' => 'ASC'),
+
+class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
+{
+    function initialize(Zikula_Form_View $view)
+    {
+        $this->view->caching = false;
+
+        $this->view->assign('post_sort_order_options', array(array('text' => $this->__('Ascending'),  'value' => 'ASC'),
                                                          array('text' => $this->__('Descending'), 'value' => 'DESC')));
 
-        $render->assign('deletehook_options', array(array('text' => $this->__('Delete topic'), 'value' => 'remove'),
+        $this->view->assign('deletehook_options', array(array('text' => $this->__('Delete topic'), 'value' => 'remove'),
                                                       array('text' => $this->__('Close topic'),   'value' => 'lock')));
 
-        $render->assign('ignorelist_options', array(array('text' => $this->__('Strict'), 'value' => 'strict'),
+        $this->view->assign('ignorelist_options', array(array('text' => $this->__('Strict'), 'value' => 'strict'),
                                                       array('text' => $this->__('Medium'), 'value' => 'medium'),
                                                       array('text' => $this->__('None'),   'value' => 'none')));
 
-        $modvars = ModUtil::getVar('Dizkus');
-        $render->assign('log_ip_checked', $modvars['log_ip'] == 'yes' ? 1 : 0);
-        $render->assign('slimforum_checked', $modvars['slimforum'] == 'yes' ? 1 : 0);
-        $render->assign('m2f_enabled_checked', $modvars['m2f_enabled'] == 'yes' ? 1 : 0);
-        $render->assign('rss2f_enabled_checked', $modvars['rss2f_enabled'] == 'yes' ? 1 : 0);
-        $render->assign('favorites_enabled_checked', $modvars['favorites_enabled'] == 'yes' ? 1 : 0);
-        $render->assign('hideusers_checked', $modvars['hideusers'] == 'yes' ? 1 : 0);
-        $render->assign('signaturemanagement_checked', $modvars['signaturemanagement'] == 'yes' ? 1 : 0);
-        $render->assign('removesignature_checked', $modvars['removesignature'] == 'yes' ? 1 : 0);
-        $render->assign('allowgravatars_checked', $modvars['allowgravatars']);
-        $render->assign('ignorelist_handling', $modvars['ignorelist_handling'] == 'yes' ? 1 : 0);
-        $render->assign('striptags_checked', $modvars['striptags'] == 'yes' ? 1 : 0);
-        $render->assign('newtopicconfirmation_checked', isset($modvars['newtopicconfirmation']) && $modvars['newtopicconfirmation'] == 'yes' ? 1 : 0);
-        $render->assign('forum_enabled_checked', $modvars['forum_enabled'] == 'yes' ? 1 : 0);
-        $render->assign('fulltextindex_checked', $modvars['fulltextindex'] == 'yes' ? 1 : 0);
-        $render->assign('extendedsearch_checked', $modvars['extendedsearch'] == 'yes' ? 1 : 0);
-        $render->assign('showtextinsearchresults_checked', $modvars['showtextinsearchresults'] == 'yes' ? 1 : 0);
 
-		$render->assign('contactlist_available', ModUtil::available('ContactList'));
+        $this->view->assign($this->getVars());
+        
+        //$this->view->assign('contactlist_available', $this->view->available('ContactList'));
 
-        $serverinfo = DBUtil::serverInfo();
-        $render->assign('dbversion', $serverinfo['description']);
-        $render->assign('dbtype', DBConnectionStack::getConnectionDBType());
-        $render->assign('dbname', DBConnectionStack::getConnectionDBName());
+        /*$serverinfo = DBUtil::serverInfo();
+        $this->view->assign('dbversion', $serverinfo['description']);
+        $this->view->assign('dbtype', DBConnectionStack::getConnectionDBType());
+        $this->view->assign('dbname', DBConnectionStack::getConnectionDBName());*/
 
         return true;
     }
 
-    function handleCommand(&$render, $args)
+    function handleCommand(Zikula_Form_View $view, &$args)
     {
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError('index.php');
         }
 
-        if ($args['commandName'] == 'submit') {
-            $ok   = $render->isValid(); 
-            $data = $render->getValues();
+        if ($args['commandName'] == 'submit') {        
 
-            if (!$ok) {
+            // check for valid form
+            if (!$view->isValid()) {
                 return false;
             }
+        
+            $data = $view->getValues();
+
 
             // checkboxes 
-            ModUtil::setVar('Dizkus', 'log_ip',                  $data['log_ip'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'slimforum',               $data['slimforum'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'm2f_enabled',             $data['m2f_enabled'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'rss2f_enabled',           $data['rss2f_enabled'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'favorites_enabled',       $data['favorites_enabled'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'hideusers',               $data['hideusers'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'signaturemanagement',     $data['signaturemanagement'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'removesignature',         $data['removesignature'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'allowgravatars',          $data['allowgravatars']);
-            ModUtil::setVar('Dizkus', 'striptags',               $data['striptags'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'newtopicconfirmation',    $data['newtopicconf'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'forum_enabled',           $data['forum_enabled'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'fulltextindex',           $data['fulltextindex'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'extendedsearch',          $data['extendedsearch'] == 1 ? 'yes' : 'no');
-            ModUtil::setVar('Dizkus', 'showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
+            $this->setVar('log_ip',                  $data['log_ip'] == 1 ? 'yes' : 'no');
+            $this->setVar('slimforum',               $data['slimforum'] == 1 ? 'yes' : 'no');
+            $this->setVar('m2f_enabled',             $data['m2f_enabled'] == 1 ? 'yes' : 'no');
+            $this->setVar('rss2f_enabled',           $data['rss2f_enabled'] == 1 ? 'yes' : 'no');
+            $this->setVar('favorites_enabled',       $data['favorites_enabled'] == 1 ? 'yes' : 'no');
+            $this->setVar('hideusers',               $data['hideusers'] == 1 ? 'yes' : 'no');
+            $this->setVar('signaturemanagement',     $data['signaturemanagement'] == 1 ? 'yes' : 'no');
+            $this->setVar('removesignature',         $data['removesignature'] == 1 ? 'yes' : 'no');
+            $this->setVar('allowgravatars',          $data['allowgravatars']);
+            $this->setVar('striptags',               $data['striptags'] == 1 ? 'yes' : 'no');
+            $this->setVar('newtopicconfirmation',    $data['newtopicconf'] == 1 ? 'yes' : 'no');
+            $this->setVar('forum_enabled',           $data['forum_enabled'] == 1 ? 'yes' : 'no');
+            $this->setVar('fulltextindex',           $data['fulltextindex'] == 1 ? 'yes' : 'no');
+            $this->setVar('extendedsearch',          $data['extendedsearch'] == 1 ? 'yes' : 'no');
+            $this->setVar('showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
 
             // dropdowns
-            ModUtil::setVar('Dizkus', 'post_sort_order',     $data['post_sort_order']);
-            ModUtil::setVar('Dizkus', 'deletehookaction',    $data['deletehookaction']);
-            if (ModUtil::available('ContactList')) {
-                ModUtil::setVar('Dizkus', 'ignorelist_handling', $data['ignorelist_handling']);
-            }
+            $this->setVar('post_sort_order',     $data['post_sort_order']);
+            $this->setVar('deletehookaction',    $data['deletehookaction']);
+            //if ($this->available('ContactList')) {
+            //    $this->setVar('ignorelist_handling', $data['ignorelist_handling']);
+            //}
 
             // ints
-            ModUtil::setVar('Dizkus', 'hot_threshold',      $data['hot_threshold']);
-            ModUtil::setVar('Dizkus', 'posts_per_page',     $data['posts_per_page']);
-            ModUtil::setVar('Dizkus', 'topics_per_page',    $data['topics_per_page']);
-            ModUtil::setVar('Dizkus', 'timespanforchanges', $data['timespanforchanges']);
-            ModUtil::setVar('Dizkus', 'minsearchlength',    $data['minsearchlength']);
-            ModUtil::setVar('Dizkus', 'maxsearchlength',    $data['maxsearchlength']);
+            $this->setVar('hot_threshold',      $data['hot_threshold']);
+            $this->setVar('posts_per_page',     $data['posts_per_page']);
+            $this->setVar('topics_per_page',    $data['topics_per_page']);
+            $this->setVar('timespanforchanges', $data['timespanforchanges']);
+            $this->setVar('minsearchlength',    $data['minsearchlength']);
+            $this->setVar('maxsearchlength',    $data['maxsearchlength']);
 
             // strings
-            ModUtil::setVar('Dizkus', 'email_from',          $data['email_from']);
-            ModUtil::setVar('Dizkus', 'signature_start',     $data['signature_start']);
-            ModUtil::setVar('Dizkus', 'signature_end',       $data['signature_end']);
-            ModUtil::setVar('Dizkus', 'forum_disabled_info', $data['forum_disabled_info']);
-            ModUtil::setVar('Dizkus', 'url_ranks_images',    $data['url_ranks_images']);
-            ModUtil::setVar('Dizkus', 'gravatarimage',       $data['gravatarimage']);
+            $this->setVar('email_from',          $data['email_from']);
+            $this->setVar('signature_start',     $data['signature_start']);
+            $this->setVar('signature_end',       $data['signature_end']);
+            $this->setVar('forum_disabled_info', $data['forum_disabled_info']);
+            $this->setVar('url_ranks_images',    $data['url_ranks_images']);
+            $this->setVar('gravatarimage',       $data['gravatarimage']);
 
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
 
         } elseif ($args['commandName'] == 'restore') {
             // checkboxes 
-            ModUtil::setVar('Dizkus', 'log_ip',                  'no');
-            ModUtil::setVar('Dizkus', 'slimforum',               'no');
-            ModUtil::setVar('Dizkus', 'm2f_enabled',             'yes');
-            ModUtil::setVar('Dizkus', 'rss2f_enabled',           'yes');
-            ModUtil::setVar('Dizkus', 'favorites_enabled',       'yes');
-            ModUtil::setVar('Dizkus', 'hideusers',               'no');
-            ModUtil::setVar('Dizkus', 'signaturemanagement',     'no');
-            ModUtil::setVar('Dizkus', 'removesignature',         'no');
-            ModUtil::setVar('Dizkus', 'allowgravatars',          1);
-            ModUtil::setVar('Dizkus', 'striptags',               'no');
-            ModUtil::setVar('Dizkus', 'newtopicconfirmation',    'no');
-            ModUtil::setVar('Dizkus', 'forum_enabled',           'yes');
-            ModUtil::setVar('Dizkus', 'sendemailswithsqlerrors', 'no');
-            ModUtil::setVar('Dizkus', 'showtextinsearchresults', 'yes');
+            $this->setVar('log_ip',                  'no');
+            $this->setVar('slimforum',               'no');
+            $this->setVar('m2f_enabled',             'yes');
+            $this->setVar('rss2f_enabled',           'yes');
+            $this->setVar('favorites_enabled',       'yes');
+            $this->setVar('hideusers',               'no');
+            $this->setVar('signaturemanagement',     'no');
+            $this->setVar('removesignature',         'no');
+            $this->setVar('allowgravatars',          1);
+            $this->setVar('striptags',               'no');
+            $this->setVar('newtopicconfirmation',    'no');
+            $this->setVar('forum_enabled',           'yes');
+            $this->setVar('sendemailswithsqlerrors', 'no');
+            $this->setVar('showtextinsearchresults', 'yes');
 
             // dropdowns
-            ModUtil::setVar('Dizkus', 'post_sort_order',     'ASC');
-            ModUtil::setVar('Dizkus', 'deletehookaction',    'lock');
-            ModUtil::setVar('Dizkus', 'ignorelist_handling', 'medium');
+            $this->setVar('post_sort_order',     'ASC');
+            $this->setVar('deletehookaction',    'lock');
+            $this->setVar('ignorelist_handling', 'medium');
 
             // ints
-            ModUtil::setVar('Dizkus', 'hot_threshold',      20);
-            ModUtil::setVar('Dizkus', 'posts_per_page',     15);
-            ModUtil::setVar('Dizkus', 'topics_per_page',    15);
-            ModUtil::setVar('Dizkus', 'timespanforchanges', 24);
-            ModUtil::setVar('Dizkus', 'minsearchlength',    3);
-            ModUtil::setVar('Dizkus', 'maxsearchlength',    30);
+            $this->setVar('hot_threshold',      20);
+            $this->setVar('posts_per_page',     15);
+            $this->setVar('topics_per_page',    15);
+            $this->setVar('timespanforchanges', 24);
+            $this->setVar('minsearchlength',    3);
+            $this->setVar('maxsearchlength',    30);
 
             // strings
-            ModUtil::setVar('Dizkus', 'email_from',          System::getVar('adminmail'));
-            ModUtil::setVar('Dizkus', 'signature_start',     '');
-            ModUtil::setVar('Dizkus', 'signature_end',       '');
-            ModUtil::setVar('Dizkus', 'forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
-            ModUtil::setVar('Dizkus', 'url_ranks_images',    'modules/Dizkus/images/ranks');
-            ModUtil::setVar('Dizkus', 'gravatarimage',       'gravatar.gif');
+            $this->setVar('email_from',          System::getVar('adminmail'));
+            $this->setVar('signature_start',     '');
+            $this->setVar('signature_end',       '');
+            $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
+            $this->setVar('url_ranks_images',    'modules/Dizkus/images/ranks');
+            $this->setVar('gravatarimage',       'gravatar.gif');
 
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
 
-        return $render->redirect(ModUtil::url('Dizkus','admin','preferences'));
+        return true;//$this->redirect($this->url('Dizkus','admin','preferences'));
     }
 }

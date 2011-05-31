@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Form_Handler_User_IgnoreListManagement extends Form_Handler
+class Dizkus_Form_Handler_User_IgnoreListManagement extends Form_AbstractHandler
 {
     function initialize(&$render)
     {   

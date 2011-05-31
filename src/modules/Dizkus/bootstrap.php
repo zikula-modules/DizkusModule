@@ -555,7 +555,7 @@ function dzk_available($deliverhtml = true)
     if ((ModUtil::getVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
         if ($deliverhtml == true) {
             $render = Zikula_View::getInstance('Dizkus', true, 'dizkus_disabled', true);
-            return $render->fetch('dizkus_disabled.html');
+            return $render->fetch('dizkus_disabled.tpl');
         } else {
             return false;
         }

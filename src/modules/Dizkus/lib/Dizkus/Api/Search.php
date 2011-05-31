@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Search extends Zikula_Api {
+class Dizkus_Api_Search extends Zikula_AbstractApi {
     
     /**
      * Search plugin info
@@ -29,7 +29,7 @@ class Dizkus_Api_Search extends Zikula_Api {
             $render = Zikula_View::getInstance('Dizkus', false, null, true);
             $render->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
             $render->assign('forums', ModUtil::apiFunc('Dizkus', 'admin', 'readforums'));
-            return $render->fetch('dizkus_search.html');
+            return $render->fetch('dizkus_search.tpl');
         }
         return '';
     }
@@ -40,7 +40,7 @@ class Dizkus_Api_Search extends Zikula_Api {
      * Access checking is ignored since access check has
      * already been done. But we add a link to the topic found
      */
-    public function search_check(&$args)
+    public function search_check($args)
     {
         $args['datarow']['url'] = $args['datarow']['extra'];
         return true;
@@ -55,6 +55,7 @@ class Dizkus_Api_Search extends Zikula_Api {
      */
     public function search($args)
     {
+        
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return false;
         }
@@ -79,7 +80,7 @@ class Dizkus_Api_Search extends Zikula_Api {
         // check mod var for fulltext support
         //$funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 0) == 1) ? 'fulltext' : 'nonfulltext';
         $funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
-    
+        
         return ModUtil::apiFunc('Dizkus', 'search', $funcname, $args);
     }
     
@@ -189,6 +190,7 @@ class Dizkus_Api_Search extends Zikula_Api {
      */
     public function fulltext($args)
     {
+        
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return false;
         }
@@ -200,7 +202,7 @@ class Dizkus_Api_Search extends Zikula_Api {
             // return empty result set without even doing a db access
             return false;
         }
-    
+
         // partial sql stored in $wherematch
         $wherematch = '';
     
@@ -265,7 +267,6 @@ class Dizkus_Api_Search extends Zikula_Api {
             $whereforums .= 'p.forum_id IN (' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
     
-    
         $this->start_search($wherematch, $whereforums);
         return true;
     }
@@ -282,7 +283,7 @@ class Dizkus_Api_Search extends Zikula_Api {
         $textsql = ($showtextinsearchresults == 'yes') ? 'REPLACE(p.post_text, \'[addsig]\', \'\') as text' : '\'\'';
             
         $sql = 'INSERT INTO ' . $ztable['search_result'] . '
-                (sres_title, sres_text, sres_module, sres_extra, sres_created, sres_found, sres_sesid)
+                (z_title, z_text, z_module, z_extra, z_created, z_found, z_sesid)
                 SELECT
                   t.topic_title,
                   '.$textsql.',

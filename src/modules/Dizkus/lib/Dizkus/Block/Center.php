@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Block_Center extends Zikula_Controller_Block
+class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
 {
 	/**
 	 * init
@@ -64,7 +64,7 @@ class Dizkus_Block_Center extends Zikula_Controller_Block
 	
 	    // check if cb_template is set, if not, use the default centerblock template
 	    if (empty($vars['cb_template'])) {
-	        $vars['cb_template'] = 'dizkus_centerblock_display.html';
+	        $vars['cb_template'] = 'centerblock/display.tpl';
 	    }
 	    if (empty($vars['cb_parameters'])) {
 	        $vars['cb_parameters'] = 'maxposts=5';
@@ -93,7 +93,7 @@ class Dizkus_Block_Center extends Zikula_Controller_Block
 	        return false;
 	    }
 	    
-	    $cb_template   = FormUtil::getPassedValue('cb_template', 'dizkus_centerblock_display.html', 'POST');
+	    $cb_template   = FormUtil::getPassedValue('cb_template', 'centerblock/display.tpl', 'POST');
 	    $cb_parameters = FormUtil::getPassedValue('cb_parameters', 'maxposts=5', 'POST');
 	
 	    $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
@@ -117,11 +117,11 @@ class Dizkus_Block_Center extends Zikula_Controller_Block
 	        $vars['cb_parameters'] = 'maxposts=5';
 	    }
 	    if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
-	        $vars['cb_template']   = 'dizkus_centerblock_display.html';
+	        $vars['cb_template']   = 'centerblock/display.tpl';
 	    }
 	
 	    $this->view->assign('vars', $vars);
 	
-	    return $this->view->fetch('dizkus_centerblock_config.html');
+	    return $this->view->fetch('centerblock/config.tpl');
 	}
 }

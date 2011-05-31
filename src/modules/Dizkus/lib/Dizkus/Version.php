@@ -9,7 +9,7 @@
  * @link http://code.zikula.org/dizkus
  */
 
-class Dizkus_Version extends Zikula_Version
+class Dizkus_Version extends Zikula_AbstractVersion
 {
     public function getMetaData() 
     {
@@ -37,5 +37,16 @@ class Dizkus_Version extends Zikula_Version
                                             'status'     => ModUtil::DEPENDENCY_RECOMMENDED)
                                      );
         return $meta;
+    }
+    
+    protected function setupHookBundles()
+    {
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.editor', 'ui_hooks', $this->__('Dizkus editor'));
+        $bundle->addEvent('display_view', 'dizkus.ui_hooks.editor.display_view');
+        $this->registerHookSubscriberBundle($bundle);
+        
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.dizkus.filter_hooks.message', 'filter_hooks', $this->__('Dizkus filters'));
+        $bundle->addEvent('filter', 'dizkus.filter_hooks.message.filter');
+        $this->registerHookSubscriberBundle($bundle);
     }
 }

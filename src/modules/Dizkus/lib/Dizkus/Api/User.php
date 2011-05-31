@@ -9,8 +9,42 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_User extends Zikula_Api {
+class Dizkus_Api_User extends Zikula_AbstractApi {
 
+        /**
+     * Instance of Zikula_View.
+     *
+     * @var Zikula_View
+     */
+    protected $view;
+
+    /**
+     * Initialize.
+     *
+     * @return void
+     */
+    protected function initialize()
+    {
+        $this->setView();
+    }
+
+    /**
+     * Set view property.
+     *
+     * @param Zikula_View $view Default null means new Render instance for this module name.
+     *
+     * @return Zikula_AbstractController
+     */
+    protected function setView(Zikula_View $view = null)
+    {
+        if (is_null($view)) {
+            $view = Zikula_View::getInstance($this->getName());
+        }
+
+        $this->view = $view;
+        return $this;
+    }
+    
     /**
      * get_userdata_from_id
      * This function dynamically reads all fields of the <prefix>_users
@@ -303,8 +337,11 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function readcategorytree($args)
     {
-        $last_visit = (isset($args['last_visit'])) ? $args['last_visit'] : 0;
-    
+        extract($args);
+        if(empty($last_visit)) {
+            $last_visit = 0;
+        }
+
         static $tree;
     
         $dizkusvars = ModUtil::getVar('Dizkus');
@@ -321,6 +358,15 @@ class Dizkus_Api_User extends Zikula_Api {
         $topicstable = $ztable['dizkus_topics'];
         $userstable  = $ztable['users'];
     
+
+
+        if(!empty($cat_id)) {
+            $cat = ' AND '.$forumstable.'.cat_id='.$cat_id;
+        } else {
+            $cat = '';
+        }
+
+
         $sql = 'SELECT ' . $cattable . '.cat_id AS cat_id,
                        ' . $cattable . '.cat_title AS cat_title,
                        ' . $cattable . '.cat_order AS cat_order,
@@ -340,6 +386,7 @@ class Dizkus_Api_User extends Zikula_Api {
                        ' . $poststable . '.post_time AS post_time
                 FROM ' . $cattable . '
                 LEFT JOIN ' . $forumstable . ' ON ' . $forumstable . '.cat_id=' . $cattable . '.cat_id
+                AND '.$forumstable.'.is_subforum=0'.$cat.' 
                 LEFT JOIN ' . $poststable . ' ON ' . $poststable . '.post_id=' . $forumstable . '.forum_last_post_id
                 LEFT JOIN ' . $topicstable . ' ON ' . $topicstable . '.topic_id=' . $poststable . '.topic_id
                 LEFT JOIN ' . $userstable . ' ON ' . $userstable . '.z_uid=' . $poststable . '.poster_id
@@ -349,6 +396,7 @@ class Dizkus_Api_User extends Zikula_Api {
                           'forum_last_post_id', 'forum_moduleref', 'forum_pntopic', 'topic_title', 'topic_replies', 'pn_uname', 'pn_uid', 
                           'topic_id', 'post_time');
         $result = DBUtil::marshallObjects($res, $colarray);
+
     
         $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
     
@@ -476,6 +524,11 @@ class Dizkus_Api_User extends Zikula_Api {
         uasort($tree, 'cmp_catorder');
     
         return $tree;
+    }
+
+    public function readsubforums($args)
+    {
+
     }
     
     /**
@@ -754,6 +807,10 @@ class Dizkus_Api_User extends Zikula_Api {
                             $skippages = 1;
                         }
             
+                        if(empty($start)) {
+                            $start = 0;
+                        }
+
                         if ($skippages != 1 || $lastpage) {
                             if ($x!=0) $pagination .= ', ';
                             $pagination .= '<a href="' . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id'], 'start' => $start)) . '" title="' . $topic['topic_title'] . ' ' . DataUtil::formatForDisplay($this->__('Page #')) . ' ' . $pagenr . '">' . $pagenr . '</a>';
@@ -2073,6 +2130,7 @@ class Dizkus_Api_User extends Zikula_Api {
      */
     public function notify_by_email($args)
     {
+
         $ztable = DBUtil::getTables();
     
         setlocale (LC_TIME, System::getVar('locale'));
@@ -2215,7 +2273,7 @@ class Dizkus_Api_User extends Zikula_Api {
             $this->view->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
             $this->view->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
             $this->view->assign('base_url', System::getBaseUrl());
-            $message = $this->view->fetch('dizkus_mail_notifyuser.txt');
+            $message = $this->view->fetch('mail/notifyuser.txt');
           
             foreach ($recipients as $subscriber) {
                 // integrate contactlist's ignorelist here
@@ -2228,6 +2286,7 @@ class Dizkus_Api_User extends Zikula_Api {
                     $send = true;
                 }
                 if ($send) {
+                    $uid = UserUtil::getVar('uid');
                     $args = array( 'fromname'    => $sitename,
                                    'fromaddress' => $email_from,
                                    'toname'      => $subscriber['name'],
@@ -2237,7 +2296,6 @@ class Dizkus_Api_User extends Zikula_Api {
                                    'headers'     => array('X-UserID: ' . md5($uid),
                                                           'X-Mailer: Dizkus v' . $modinfo['version'],
                                                           'X-DizkusTopicID: ' . $args['topic_id']));
-        
                     ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
                 }
             }

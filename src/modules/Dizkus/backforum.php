@@ -59,7 +59,7 @@ $render = Zikula_View::getInstance('Dizkus', false);
 /**
  * check if template for feed exists
  */
-$templatefile = 'dizkus_feed_' . DataUtil::formatForOS($feed) . '.html';
+$templatefile = 'feed/' . DataUtil::formatForOS($feed) . '.tpl';
 if (!$render->template_exists($templatefile)) {
     // silently stop working
     die(DataUtil::formatForDisplay(__f('Error! Could not find a template for an %s-type feed.', $feed)));

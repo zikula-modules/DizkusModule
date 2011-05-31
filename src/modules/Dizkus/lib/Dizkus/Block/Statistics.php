@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Block_Statistics extends Zikula_Controller_Block
+class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
 {
 	/**
 	 * init
@@ -59,7 +59,7 @@ class Dizkus_Block_Statistics extends Zikula_Controller_Block
 	
 	    // check if cb_template is set, if not, use the default centerblock template
 	    if (empty($vars['sb_template'])) {
-	        $vars['sb_template'] = 'dizkus_statisticsblock_display.html';
+	        $vars['sb_template'] = 'statisticsblock/display.tpl';
 	    }
 	    if (empty($vars['sb_parameters'])) {
 	        $vars['sb_parameters'] = 'maxposts=5';
@@ -88,7 +88,7 @@ class Dizkus_Block_Statistics extends Zikula_Controller_Block
 	        return false;
 	    }
 	
-	    $sb_template   = FormUtil::getPassedValue('sb_template', 'dizkus_statisticsblock_display.html', 'POST');
+	    $sb_template   = FormUtil::getPassedValue('sb_template', 'statisticsblock/display.tpl', 'POST');
 	    $sb_parameters = FormUtil::getPassedValue('sb_parameters', 'maxposts=5', 'POST');
 	
 	    $blockinfo['content'] = BlockUtil::varsToContent(compact('sb_template', 'sb_parameters'));
@@ -112,14 +112,14 @@ class Dizkus_Block_Statistics extends Zikula_Controller_Block
 	        $vars['sb_parameters'] = 'maxposts=5';
 	    }
 	    if (!isset($vars['sb_template']) || empty($vars['sb_template'])) {
-	        $vars['sb_template']   = 'dizkus_statisticsblock_display.html';
+	        $vars['sb_template']   = 'statisticsblock/display.tpl';
 	    }
 	
 	    //$render = Zikula_View::getInstance('Dizkus', false, null, true);
 	
 	    $this->view->assign('vars', $vars);
 	
-	    return $this->view->fetch('dizkus_statisticsblock_config.html');
+	    return $this->view->fetch('statisticsblock/config.tpl');
 	}
 
 }

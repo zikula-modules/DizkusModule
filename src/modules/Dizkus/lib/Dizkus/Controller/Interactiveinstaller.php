@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-Class Dizkus_Controller_Interactiveinstaller extends Zikula_InteractiveInstaller
+Class Dizkus_Controller_Interactiveinstaller extends Zikula_AbstractInteractiveInstaller
 {
 	
     /**
@@ -38,15 +38,15 @@ Class Dizkus_Controller_Interactiveinstaller extends Zikula_InteractiveInstaller
         switch ($oldversion)
         {
             case '2.7.1':
-                $templatefile = 'dizkus_upgrade_30.html';
+                $templatefile = 'upgrade/30.tpl';
                 break;
     
             case '3.0':
-                $templatefile = 'dizkus_upgrade_31.html';
+                $templatefile = 'upgrade/31.tpl';
                 break;
     
             case '3.1':
-                $templatefile = 'dizkus_upgrade_320.html';
+                $templatefile = 'upgrade/320.tpl';
                 break;
                   
             default:

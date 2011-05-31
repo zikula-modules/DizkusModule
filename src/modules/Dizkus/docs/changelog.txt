@@ -69,7 +69,7 @@ Minimum PHP version 5.2.0!
 - fixed #136    no edit post function
 - fixed #132    When a topic is moved the forums are not updated
 - fixed #122    invalid auth when notifying a mod
-- fixed #99     userprofilelink modifier seems not to work correctly with dizkus
+- fixed #99     profilelinkbyuname modifier seems not to work correctly with dizkus
 - fixed #95     Fatal error: Cannot redeclare getforumerror() When accessing rss2dizkus.php
 - fixed #83     "view your posts" not working
 - fixed #55     create new topic with js disabled fails
@@ -141,14 +141,14 @@ for more information see http://code.zikula.org/dizkus/query?status=closed&group
 - fixed [#2767] language edit (english)
 - fixed [#2922] index error
 - fixed [#2944] + [#2945] &'s not converted into entities in search plugin
-- fixed [#2903] Riesige Fehlerbox bei Bedienerfehler beim Ändern eines Postings
+- fixed [#2903] Riesige Fehlerbox bei Bedienerfehler beim ï¿½ndern eines Postings
 - fixed [#2952] Incorrect entites in moved thread template
 - fixed [#3076] Wrong time for guests
 - fixed [#3110] Signature in Preview
 - fixed [#2946] issues header in search results
 - fixed [#3121] Signatur nach Editieren bei Posting obwohl nicht aktiviert
 - added [#3494] Ability to call topic by post_id (credits to Arjen Tebbenhof)
-- fixed [#3599] blending probléme
+- fixed [#3599] blending problï¿½me
 - fixed [#4089] Duplicate define
 - fixed [#4156] searchAPI change to make Xanthia search-plugin function correctly
 - fixed [#5142] modifier.profilelink.php - incorrect target
@@ -186,7 +186,7 @@ Important changes:
 - added new option to remove all html tags outside of [code][/code] from new postings
 - removed obsolete setting "minimum postings for anchor", the plugin postanchor is deprecated
   now, do not use it any longer!
-- fixed path disclosure in user settings displayed in user.php (credits to Jörg Napp for this)
+- fixed path disclosure in user settings displayed in user.php (credits to Jï¿½rg Napp for this)
 - added mail2forum feature
 - forum search now optional with FULLTEXT index
 - new option to turn off the favorites system
@@ -244,7 +244,7 @@ Important changes:
 Fixes:
 - improvements for use of short urls (viewforum.php, latest.php)
 - fixed redirect when replying to topics with more then one page in reply.php (thx to jn)
-- fixed permission schema in prefs.php (thx to  Michael Cohen)
+- fixed permission schema in prefs.php (thx to ï¿½Michael Cohen)
 - fixed missing input check in viewtopic for $start var (thx to Marc Bradshaw)
 - fixed missing pnVarPrepForDisplay in editpost.php (thx to immof)
 - fixed posting count when deleting posting from other authors in editpost.php (thx to ydb)

@@ -21,9 +21,9 @@ Class Dizkus_Installer extends Zikula_Installer
     public function install()
     {
         // no gettext here as we are not sure which way of gettext to use 
-        if (version_compare(System::VERSION_NUM, '1.3.0-dev', '<')) {
-            return LogUtil::registerError($this->__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
-        }
+        //if (version_compare(System::VERSION_NUM, '1.3.0-dev', '<')) {
+          //  return LogUtil::registerError($this->__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
+        //}
     
         // TODO move this to a loop
         // creating categories table
@@ -196,6 +196,10 @@ Class Dizkus_Installer extends Zikula_Installer
         $this->setVar('allowgravatars', 1);
         $this->setVar('gravatarimage', 'gravatar.gif');
     
+        
+        HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
+
+        
         // Initialisation successful
         return true;
     }
@@ -310,6 +314,10 @@ Class Dizkus_Installer extends Zikula_Installer
         // remove module vars
         $this->delVars();
     
+        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
+
+        
+        
         // Deletion successful
         return true;
     }
@@ -461,6 +469,10 @@ Class Dizkus_Installer extends Zikula_Installer
             }
         }
     
+        return true;
+    }
+
+    public function upgrade($oldversion) {
         return true;
     }
 }

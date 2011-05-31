@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Admin extends Zikula_Api {
+class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
     /**
      * readcatgories
@@ -709,13 +709,22 @@ class Dizkus_Api_Admin extends Zikula_Api {
         $links = array();
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN))
         {
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', ''),
+            /*$links[] = array('url' => ModUtil::url('Dizkus', 'admin', ''),
                              'text' => $this->__('Start'),
-                             'title' => $this->__('Index page'));
+                             'title' => $this->__('Index page'));*/
     
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'reordertree'),
-                             'text' => $this->__('Edit forum tree'),
-                             'title' => $this->__('Create, delete, edit and re-order categories and forums'));
+            $links[] = array(
+                'url'   => ModUtil::url('Dizkus', 'admin', 'reordertree'),
+                'text'  => $this->__('Edit forum tree'),
+                'title' => $this->__('Create, delete, edit and re-order categories and forums'),
+                'links' => array(
+                    array(
+                        'url' => ModUtil::url('Dizkus', 'admin', 'subforums'),
+                        'text' => $this->__('Sub forums')
+                    ),
+                ),
+                'class' => 'z-icon-es-view',
+            );
     
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
                              'text' => $this->__('Edit user ranks'),
@@ -737,9 +746,12 @@ class Dizkus_Api_Admin extends Zikula_Api {
                              'text' => $this->__('Synchronize forum/topic index'),
                              'title' => $this->__('Synchronize forum and topic indexes to fix any discrepancies that might exist'));
     
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'preferences'),
-                             'text' => $this->__('Settings'),
-                             'title' => $this->__('Edit general forum-wide settings'));
+            $links[] = array(
+                'url' => ModUtil::url('Dizkus', 'admin', 'preferences'),
+                'text' => $this->__('Settings'),
+                'title' => $this->__('Edit general forum-wide settings'),
+                'class' => 'z-icon-es-config',
+            );
         }
     
         return $links;

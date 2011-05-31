@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Account extends Zikula_Api {
+class Dizkus_Api_Account extends Zikula_AbstractApi {
     
 /**
  * Return an array of items to show in the your account panel

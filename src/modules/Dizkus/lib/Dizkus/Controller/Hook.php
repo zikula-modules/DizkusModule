@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Controller_Hook extends Zikula_Controller {
+class Dizkus_Controller_Hook extends Zikula_AbstractController {
     
     /**
      * showdiscussionlink
@@ -37,7 +37,7 @@ class Dizkus_Controller_Hook extends Zikula_Controller {
             $this->view->setCaching(false);
             $this->view->assign('topic', $topic);
     
-            return $this->view->fetch('dizkus_hook_display.html');
+            return $this->view->fetch(hook/display.tpl');
         }
     
         return false;

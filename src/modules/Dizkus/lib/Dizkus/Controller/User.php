@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Controller_User extends Zikula_Controller
+class Dizkus_Controller_User extends Zikula_AbstractController
 {
     public function postInitialize()
     {
@@ -23,6 +23,12 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function main($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -83,7 +89,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                                                 array('id'   => '0',
                                                       'type' => 'all' )));
     
-        return $this->view->fetch('dizkus_user_main.html');
+        return $this->view->fetch('user/main.tpl');
     }
     
     /**
@@ -95,6 +101,13 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function viewforum($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -104,6 +117,17 @@ class Dizkus_Controller_User extends Zikula_Controller
         $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
         $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
     
+        
+        
+         $subforums = DBUtil::selectObjectArray('dizkus_forums', $where = 'WHERE is_subforum ='.$forum_id );
+         foreach ($subforums as $key => $subforum) {
+             $subforums[$key]['new_posts'] = false;
+             $subforums[$key]['last_post'] = '';
+         }
+         $this->view->assign('subforums', $subforums);
+        
+        
+        
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
     
         $forum = ModUtil::apiFunc('Dizkus', 'user', 'readforum',
@@ -112,13 +136,14 @@ class Dizkus_Controller_User extends Zikula_Controller
                                     'last_visit'      => $last_visit,
                                     'last_visit_unix' => $last_visit_unix));
     
+        
         $this->view->assign('forum', $forum);
         $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
         $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-        return $this->view->fetch('dizkus_user_viewforum.html');
+        return $this->view->fetch('user/viewforum.tpl');
     }
     
     /**
@@ -126,7 +151,13 @@ class Dizkus_Controller_User extends Zikula_Controller
      *
      */
     public function viewtopic($args=array())
-    {
+    {        
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -172,7 +203,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $this->view->assign('last_visit_unix', $last_visit_unix);
         $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-        return $this->view->fetch('dizkus_user_viewtopic.html');
+        return $this->view->fetch('user/viewtopic.tpl');
     }
     
     /**
@@ -181,6 +212,13 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function reply($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -216,9 +254,9 @@ class Dizkus_Controller_User extends Zikula_Controller
     
         if ($submit == true && $preview == false) {
             // Confirm authorisation code
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
             $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
@@ -258,7 +296,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_reply.html');
+            return $this->view->fetch('user/reply.tpl');
         }
     }
     
@@ -268,6 +306,12 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function newtopic($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -317,9 +361,9 @@ class Dizkus_Controller_User extends Zikula_Controller
         if ($submit == true && $preview == false) {
             // it's a submitted page
             // Confirm authorisation code
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             //store the new topic
             $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
@@ -332,7 +376,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
                 $this->view->assign('topic', ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
     
-                return $this->view->fetch('dizkus_user_newtopicconfirmation.html');
+                return $this->view->fetch('user/newtopicconfirmation.tpl');
     
             } else {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
@@ -347,7 +391,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_newtopic.html');
+            return $this->view->fetch('user/newtopic.tpl');
         }
     }
     
@@ -357,6 +401,12 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function editpost($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -405,9 +455,9 @@ class Dizkus_Controller_User extends Zikula_Controller
         if ($submit && !$preview) {
     
             // Confirm authorisation code
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             // store the new topic
             $redirect = ModUtil::apiFunc('Dizkus', 'user', 'updatepost',
@@ -446,7 +496,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_editpost.html');
+            return $this->view->fetch('user/editpost.tpl');
         }
     }
     
@@ -456,6 +506,12 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function topicadmin($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -494,7 +550,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             {
                 case 'del':
                 case 'delete':
-                    $templatename = 'dizkus_user_deletetopic.html';
+                    $templatename = 'user/deletetopic.tpl';
                     break;
     
                 case 'move':
@@ -508,22 +564,22 @@ class Dizkus_Controller_User extends Zikula_Controller
                     }
                     $this->view->assign('forums', $list);
 
-                    $templatename = 'dizkus_user_movetopic.html';
+                    $templatename = 'user/movetopic.tpl';
                     break;
     
                 case 'lock':
                 case 'unlock':
-                    $templatename = 'dizkus_user_locktopic.html';
+                    $templatename = 'user/locktopic.tpl';
                     break;
     
                 case 'sticky':
                 case 'unsticky':
-                    $templatename = 'dizkus_user_stickytopic.html';
+                    $templatename = 'user/stickytopic.tpl';
                     break;
     
                 case 'viewip':
                     $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
-                    $templatename = 'dizkus_user_viewip.html';
+                    $templatename = 'user/viewip.tpl';
                     break;
     
                 default:
@@ -532,9 +588,9 @@ class Dizkus_Controller_User extends Zikula_Controller
             return $this->view->fetch($templatename);
     
         } else { // submit is set
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             switch ($mode)
             {
@@ -613,6 +669,12 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function prefs($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -716,7 +778,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                 $this->view->assign('favorites', ModUtil::apiFunc('Dizkus','user','get_favorite_status'));
                 $this->view->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
     
-                return $this->view->fetch('dizkus_user_prefs.html');
+                return $this->view->fetch('user/prefs.tpl');
         }
     
         return System::redirect(ModUtil::url('Dizkus', 'user', $return_to, $params));
@@ -728,6 +790,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function signaturemanagement()
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -745,7 +812,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $render = FormUtil::newForm('Dizkus');
     
         // Return the output
-        return $render->execute('dizkus_user_signaturemanagement.html', new Dizkus_Form_Handler_User_SignatureManagement());
+        return $render->execute('user/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
     }
     
     /**
@@ -754,6 +821,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function ignorelistmanagement()
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -777,7 +849,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         $render = FormUtil::newForm('Dizkus');
     
         // Return the output
-        return $render->execute('dizkus_user_ignorelistmanagement.html', new Dizkus_Form_Handler_User_IgnoreListManagement());
+        return $render->execute('user/ignorelistmanagement.tpl', new Dizkus_Form_Handler_User_IgnoreListManagement());
     }
     
     /**
@@ -785,6 +857,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function emailtopic($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -821,9 +898,9 @@ class Dizkus_Controller_User extends Zikula_Controller
         }
     
         if (!empty($submit)) {
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             ModUtil::apiFunc('Dizkus', 'user', 'emailtopic',
                          array('sendto_email' => $sendto_email,
@@ -845,7 +922,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_emailtopic.html');
+            return $this->view->fetch('user/emailtopic.tpl');
         }
     }
     
@@ -854,6 +931,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function viewlatest($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -917,7 +999,7 @@ class Dizkus_Controller_User extends Zikula_Controller
                                                       'type' => 'all' )));
         $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-        return $this->view->fetch('dizkus_user_latestposts.html');
+        return $this->view->fetch('user/latestposts.tpl');
     }
     
     /**
@@ -926,6 +1008,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function splittopic($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -946,9 +1033,9 @@ class Dizkus_Controller_User extends Zikula_Controller
     
         if (!empty($submit)) {
             // Confirm authorisation code
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
             // submit is set, we split the topic now
             $post['topic_subject'] = $newsubject;
     
@@ -962,7 +1049,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('post', $post);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_splittopic.html');
+            return $this->view->fetch('user/splittopic.tpl');
         }
     }
     
@@ -973,6 +1060,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function printtopic($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -1002,7 +1094,7 @@ class Dizkus_Controller_User extends Zikula_Controller
     
                 $this->view->assign('post', $post);
     
-                $output = $this->view->fetch('dizkus_user_printpost.html');
+                $output = $this->view->fetch('user/printpost.tpl');
             } elseif ($topic_id <> 0) {
                 $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
                                      array('topic_id'  => $topic_id,
@@ -1011,7 +1103,7 @@ class Dizkus_Controller_User extends Zikula_Controller
     
                 $this->view->assign('topic', $topic);
     
-                $output = $this->view->fetch('dizkus_user_printtopic.html');
+                $output = $this->view->fetch('user/printtopic.tpl');
             } else {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
             }
@@ -1049,6 +1141,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function movepost($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -1067,9 +1164,9 @@ class Dizkus_Controller_User extends Zikula_Controller
         }
     
         if (!empty($submit)) {
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
             // submit is set, we move the posting now
             // Existe el Topic ? --- Exists new Topic ?
             $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic,
@@ -1090,7 +1187,7 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('post', $post);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_movepost.html');
+            return $this->view->fetch('user/movepost.tpl');
         }
     }
     
@@ -1102,6 +1199,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function jointopics($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -1124,12 +1226,12 @@ class Dizkus_Controller_User extends Zikula_Controller
             $this->view->assign('post', $post);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('dizkus_user_jointopics.html');
+            return $this->view->fetch('user/jointopics.tpl');
     
         } else {
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             // check if from_topic exists. this function will return an error if not
             $from_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
@@ -1154,6 +1256,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function moderateforum($args=array())
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -1198,13 +1305,13 @@ class Dizkus_Controller_User extends Zikula_Controller
             // For Movetopic
             $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
     
-            return $this->view->fetch('dizkus_user_moderateforum.html');
+            return $this->view->fetch('user/moderateforum.tpl');
     
         } else {
             // submit is set
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
             if (count($topic_ids) <> 0) {
                 switch ($mode)
                 {
@@ -1282,6 +1389,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function report($args)
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -1295,11 +1407,11 @@ class Dizkus_Controller_User extends Zikula_Controller
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                              array('post_id' => $post_id));
     
-        if (SecurityUtil::confirmAuthKey()) {
+        //if (SecurityUtil::confirmAuthKey()) {
             $authkeycheck = true;
-        } else {
+        /*} else {
             $authkeycheck = false;
-        }
+        }*/
     
         // some spam checks:
         // - remove html and compare with original comment
@@ -1319,7 +1431,7 @@ class Dizkus_Controller_User extends Zikula_Controller
         if (!$submit) {
             $this->view->assign('post', $post);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-            return $this->view->fetch('dizkus_user_notifymod.html');
+            return $this->view->fetch('user/notifymod.tpl');
     
         } else {
             // submit is set
@@ -1346,6 +1458,11 @@ class Dizkus_Controller_User extends Zikula_Controller
      */
     public function topicsubscriptions($args)
     {
+        // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
         $disabled = dzk_available();
         if (!is_bool($disabled)) {
             return $disabled;
@@ -1363,13 +1480,13 @@ class Dizkus_Controller_User extends Zikula_Controller
             $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
             $this->view->assign('subscriptions', $subscriptions);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-            return $this->view->fetch('dizkus_user_topicsubscriptions.html');
+            return $this->view->fetch('user/topicsubscriptions.tpl');
     
         } else {
             // submit is set
-            if (!SecurityUtil::confirmAuthKey()) {
+            /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
-            }
+            }*/
     
             if (is_array($topic_id) && (count($topic_id) > 0)) {
                 for ($i = 0; $i < count($topic_id); $i++) {
