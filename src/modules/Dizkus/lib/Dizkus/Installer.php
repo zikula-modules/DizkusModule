@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-Class Dizkus_Installer extends Zikula_Installer
+Class Dizkus_Installer extends Zikula_AbstractInstaller
 {
     /**
      *  Initialize a new install of the Dizkus module

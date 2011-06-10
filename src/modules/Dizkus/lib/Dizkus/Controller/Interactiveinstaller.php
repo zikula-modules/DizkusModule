@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-Class Dizkus_Controller_Interactiveinstaller extends Zikula_AbstractInteractiveInstaller
+Class Dizkus_Controller_Interactiveinstaller extends Zikula_Controller_AbstractInteractiveInstaller
 {
 	
     /**
