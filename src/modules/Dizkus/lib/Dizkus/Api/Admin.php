@@ -709,10 +709,6 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
         $links = array();
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN))
         {
-            /*$links[] = array('url' => ModUtil::url('Dizkus', 'admin', ''),
-                             'text' => $this->__('Start'),
-                             'title' => $this->__('Index page'));*/
-    
             $links[] = array(
                 'url'   => ModUtil::url('Dizkus', 'admin', 'reordertree'),
                 'text'  => $this->__('Edit forum tree'),
@@ -720,32 +716,33 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                 'links' => array(
                     array(
                         'url' => ModUtil::url('Dizkus', 'admin', 'subforums'),
-                        'text' => $this->__('Sub forums')
-                    ),
-                ),
-                'class' => 'z-icon-es-view',
+                        'text' => $this->__('Sub forums')),
+                    array(
+                        'url' => ModUtil::url('Dizkus', 'admin', 'syncforums'),
+                        'text' => $this->__('Synchronize forum/topic index'),
+                        'title' => $this->__('Synchronize forum and topic indexes to fix any discrepancies that might exist'),
+                )),
+                'class' => 'z-icon-es-options',
             );
-    
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
-                             'text' => $this->__('Edit user ranks'),
-                             'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'));
-    
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 1)),
-                             'text' => $this->__('Edit honorary ranks'),
-                             'title' => $this->__('Create, delete and edit special ranks for particular users'));
-    
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'assignranks'),
-                             'text' => $this->__('Assign honorary rank'),
-                             'title' => $this->__('Assign honorary user ranks to users'));
-    
+                    'text' => $this->__('Edit user ranks'),
+                    'class' => 'z-icon-es-group',
+                    'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'),
+                    'links' => array(
+                        array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
+                              'text' => $this->__('Edit user ranks'),
+                              'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts')),
+                        array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 1)),
+                              'text' => $this->__('Edit honorary ranks'),
+                              'title' => $this->__('Create, delete and edit special ranks for particular users')),
+                        array('url' => ModUtil::url('Dizkus', 'admin', 'assignranks'),
+                              'text' => $this->__('Assign honorary rank'),
+                              'title' => $this->__('Assign honorary user ranks to users'))
+                    ));
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'managesubscriptions'),
                              'text' => $this->__('Manage subscriptions'),
-                             'title' => $this->__('Remove a user\'s topic and forum subscriptions'));
-    
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'syncforums'),
-                             'text' => $this->__('Synchronize forum/topic index'),
-                             'title' => $this->__('Synchronize forum and topic indexes to fix any discrepancies that might exist'));
-    
+                             'title' => $this->__('Remove a user\'s topic and forum subscriptions'),
+                             'class' => 'z-icon-es-mail');
             $links[] = array(
                 'url' => ModUtil::url('Dizkus', 'admin', 'preferences'),
                 'text' => $this->__('Settings'),
