@@ -1,5 +1,7 @@
-{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{ajaxheader modname='Dizkus'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin_ranks.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="edit" size="small"}
