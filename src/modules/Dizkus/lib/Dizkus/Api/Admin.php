@@ -244,18 +244,18 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     {
         $ztable = DBUtil::getTables();
     
-        $sql = 'SELECT u.z_uname, u.z_uid
+        $sql = 'SELECT u.uname, u.uid
                 FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
-                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND u.z_uid = f.user_id
+                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND u.uid = f.user_id
                 AND f.user_id<1000000';
     
         $res = DBUtil::executeSQL($sql);
         $colarray = array('uname', 'uid');
         $result1    = DBUtil::marshallObjects($res, $colarray);
     
-        $sql = 'SELECT g.z_name, g.z_gid
+        $sql = 'SELECT g.name, g.gid
                 FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods'].' f
-                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND g.z_gid = f.user_id-1000000
+                WHERE f.forum_id = '.DataUtil::formatForStore($args['forum_id']).' AND g.gid = f.user_id-1000000
                 AND f.user_id>1000000';
     
         $res = DBUtil::executeSQL($sql);
@@ -303,7 +303,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
         $ztable = DBUtil::getTables();
         
         // read groups
-        $sql = "SELECT g.z_gid+1000000, g.z_name
+        $sql = "SELECT g.gid+1000000, g.name
                 FROM ".$ztable['groups']." AS g ";
     
         $where_flag = false;
@@ -318,11 +318,11 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                 if ($group_flag) {
                     $sql .= ' AND ';
                 }
-                $sql .= "g.z_gid != '".DataUtil::formatForStore((int)$mod['uid']-1000000)."' ";
+                $sql .= "g.gid != '".DataUtil::formatForStore((int)$mod['uid']-1000000)."' ";
                 $group_flag = true;
             }
         }
-        $sql .= "ORDER BY g.z_name";
+        $sql .= "ORDER BY g.name";
     
         $res = DBUtil::executeSQL($sql);
         $colarray = array('gid', 'name');
@@ -362,7 +362,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
         if (is_array($ranks)) {
             foreach ($ranks as $cnt => $rank) {
-            	$ranks[$cnt]['users'] = ModUtil::apiFunc('Dizkus', 'admin', 'readrankusers',
+                $ranks[$cnt]['users'] = ModUtil::apiFunc('Dizkus', 'admin', 'readrankusers',
                                               array('rank_id' => $ranks[$cnt]['rank_id']));
             }
         }
