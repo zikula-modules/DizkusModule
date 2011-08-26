@@ -1,5 +1,11 @@
-{gt text="Settings" assign=templatetitle}
-{include file='admin/header.tpl'}
+{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="config" size="small"}
+    <h3>{gt text="Settings"}</h3>
+</div>
+
+<div id="dizkus_admin">
 
 {form cssClass="z-form"}
 {formvalidationsummary}
@@ -174,5 +180,6 @@
 
 {/form}
 
+</div>
 
-{include file='admin/footer.tpl'}
+{adminfooter}

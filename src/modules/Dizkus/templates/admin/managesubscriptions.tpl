@@ -1,5 +1,11 @@
-{gt text="Manage subscriptions" assign=templatetitle}
-{include file='admin/header.tpl'}
+{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="mail" size="small"}
+    <h3>{gt text="Manage subscriptions"}</h3>
+</div>
+
+<div id="dizkus_admin">
 
 <form class="z-form" id="subscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
     <fieldset>
@@ -77,4 +83,6 @@
     </div>
 </form>
 
-{include file='admin/footer.tpl'}
+</div>
+
+{adminfooter}

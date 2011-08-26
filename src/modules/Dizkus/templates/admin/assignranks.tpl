@@ -1,5 +1,11 @@
-{gt text="Assign honorary rank" assign=templatetitle}
-{include file='admin/header.tpl'}
+{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="group" size="small"}
+    <h3>{gt text="Assign honorary rank"}</h3>
+</div>
+
+<div id="dizkus_admin">
 
 <p class="z-informationmsg">{gt text="In this page, you can select particular users and assign them honorary ranks."}</p>
 
@@ -47,4 +53,6 @@
     </div>
 </form>
 
-{include file='admin/footer.tpl'}
+</div>
+
+{adminfooter}

@@ -1110,7 +1110,7 @@ msgstr "Zurück zur Forenadministration"
 
 #: templates/dizkus_admin_reordertree.html:6
 msgid "Notice: You can use drag and drop to arrange the order of forums and categories within the forum tree. Your changes will be saved when you click on the 'Save tree order' button."
-msgstr "Hinweis: Hier können Foren und Kategorien mit der Maus per Drag & Drop sortiert werden. Erst mit Klick auf Speichern werden die Änderungen in die Datenbank geschrieben."
+msgstr "Hinweis: Hier können Foren und Kategorien mit der Maus per Drag+Drop sortiert werden. Erst mit Klick auf Speichern werden die Änderungen in die Datenbank geschrieben."
 
 #: templates/dizkus_admin_reordertree.html:9
 #: templates/dizkus_admin_reordertree.html:120

@@ -1,6 +1,12 @@
-{gt text="Edit forum tree" assign=templatetitle}
 {img src='icon_dbaccess.gif' assign='progressicon'}
-{include file='admin/header.tpl'}
+{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="options" size="small"}
+    <h3>{gt text="Edit forum tree"}</h3>
+</div>
+
+<div id="dizkus_admin">
 
 <p class="z-informationmsg">{gt text="Notice: You can use drag and drop to arrange the order of forums and categories within the forum tree. Your changes will be saved when you click on the 'Save tree order' button."}</p>
 
@@ -9,7 +15,6 @@
     <img id="progressnewcategoryimage" style="visibility: hidden;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
     <div id="dizkusinformation" class="z-floatleft" style="margin-left: 3em; visibility: hidden;">&nbsp;</div>
 </div>
-
 
 <ul id="category">
     {foreach item='category' from=$categorytree}
@@ -27,4 +32,6 @@
     // ]]>
 </script>
 
-{include file='admin/footer.tpl'}
+</div>
+
+{adminfooter}

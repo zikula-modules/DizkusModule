@@ -1,11 +1,17 @@
-{gt text="Settings" assign=templatetitle}
-{include file='admin/header.tpl'}
+{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="edit" size="small"}
+    <h3>{gt text="Sub forum"}</h3>
+</div>
+
+<div id="dizkus_admin">
 
 {form cssClass="z-form"}
 {formvalidationsummary}
 
 <fieldset>
-    <legend>{gt text="General settings"}</legend>
+    <legend>{gt text="Sub forum settings"}</legend>
 
     <div class="z-formrow">
         {formlabel for="forum_name" __text='Name'}
@@ -16,17 +22,18 @@
         {formtextinput id="forum_desc" textMode="multiline" rows="3" cols="40"}
     </div>
     <div class="z-formrow">
-        {formlabel for="cat_id" __text="Main forum"}
+        {formlabel for="is_subforum" __text="Main forum"}
         {formdropdownlist id="is_subforum" items=$mainforums}
     </div>
 </fieldset>
 
-<div class="z-formbuttons">
-    {formbutton id="submit" commandName="submit" __text="Save" class="dzk_img ok"}
-    {formbutton id="restore" commandName="cancel" __text="Cancel" class="dzk_img cancel"}
+<div class="z-formbuttons z-buttons">
+    {formbutton id="submit" commandName="submit" __text="Save" class="z-bt-ok"}
+    {formbutton id="restore" commandName="cancel" __text="Cancel" class="z-bt-cancel"}
 </div>
 
 {/form}
 
+</div>
 
-{include file='admin/footer.tpl'}
+{adminfooter}

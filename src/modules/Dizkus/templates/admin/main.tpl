@@ -1,6 +1,7 @@
-{gt text="Dizkus Administration" assign=templatetitle}
-{include file='admin/header.tpl'}
-
+{adminheader}
 <br />
-
-{include file='admin/footer.tpl'}
+<div class="z-gap">
+    <h3>{gt text="Dizkus Administration"}</h3>
+</div>
+<br />
+{adminfooter}

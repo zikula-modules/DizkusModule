@@ -1,6 +1,12 @@
-{gt text="Edit user ranks" assign=templatetitle}
-{include file='admin/header.tpl'}
-{pageaddvar name="javascript" value="modules/Dizkus/javascript/dizkus_admin_ranks.js}
+{ajaxheader modname='Dizkus' filename='dizkus_tools.js,dizkus_admin.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin_ranks.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="edit" size="small"}
+    <h3>{gt text="Edit user ranks"}</h3>
+</div>
+
+<div id="dizkus_admin">
 
 <p class="z-informationmsg">{gt text="In this page, you can create, delete and edit user ranks for that users acquire automatically after a certain number of posts in the forums. To create a new rank, simply type entries in the fields of the 'Create new user rank' section and click on the 'Create' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."}</p>
 
@@ -85,4 +91,6 @@
     </div>
 </form>
 
-{include file='admin/footer.tpl'}
+</div>
+
+{adminfooter}
