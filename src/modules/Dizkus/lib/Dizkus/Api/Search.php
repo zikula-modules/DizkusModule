@@ -283,14 +283,14 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         $textsql = ($showtextinsearchresults == 'yes') ? 'REPLACE(p.post_text, \'[addsig]\', \'\') as text' : '\'\'';
             
         $sql = 'INSERT INTO ' . $ztable['search_result'] . '
-                (z_title, z_text, z_module, z_extra, z_created, z_found, z_sesid)
+                (title, text, module, extra, created, found, sesid)
                 SELECT
                   t.topic_title,
                   '.$textsql.',
                   \'Dizkus\',
                   REPLACE (\''.$topicurl.'\', \'%%%\', t.topic_id) as extra,
                   p.post_time,
-                  NOW(),
+                  NOW(), 
                   \''.$sessionid.'\'
                   FROM '.$ztable['dizkus_posts'].' AS p,
                        '.$ztable['dizkus_topics'].' AS t
