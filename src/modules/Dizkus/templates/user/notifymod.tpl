@@ -14,7 +14,7 @@
             <legend>{$templatetitle}</legend>
             <div class="z-formrow">
                 <label for="modcomment">{gt text="Your comment"}:</label>
-                <textarea id="modcomment" rows="6" cols="60" name="comment" class="dzk_texpand"></textarea>
+                <textarea id="modcomment" rows="6" cols="60" name="comment"></textarea>
             </div>
         </fieldset>
         <div class="z-formbuttons z-buttons">

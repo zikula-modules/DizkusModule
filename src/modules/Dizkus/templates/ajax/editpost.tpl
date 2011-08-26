@@ -3,7 +3,7 @@
         <strong>{gt text="Status"}:</strong> <span id="postingtext_{$post.post_id}_status">{gt text="Unchanged"}</span>
     </div>
     {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id=$postingtextareaid}
-    <textarea id="{$postingtextareaid}" class="dzk_texpand" rows="10" cols="60" name="postingtext_{$post.post_id}_edit">{$post.post_rawtext}</textarea>
+    <textarea id="{$postingtextareaid}" rows="10" cols="60" name="postingtext_{$post.post_id}_edit">{$post.post_rawtext}</textarea>
     <div class="dzk_subcols z-clearfix">
         <div id="editpostoptions" class="dzk_col_left">
             <ul>

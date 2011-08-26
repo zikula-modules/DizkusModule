@@ -1,19 +1,3 @@
-/**
- *
- * $Id$
- *
- */
-
-
-Event.observe(window, 'load', function() {
-    Zikula.define('Dizkus');
-    if($$('.dzk_texpand').size() != 0) {
-        $$('.dzk_texpand').each(function(el){
-            new Texpand(el, {autoShrink: false, shrinkOnBlur:false});
-        });
-    }
-});
-
 document.observe('dom:loaded', function() { new DizkusUser(); });
 
 var DizkusUser = Class.create(DizkusBase, {
@@ -412,10 +396,6 @@ var DizkusUser = Class.create(DizkusBase, {
                                         }
                                     }
                                 
-                                    $$('.dzk_texpand').each(function(el){
-                                      new Texpand(el, {autoShrink: true, shrinkOnBlur:false, expandOnFocus: false, expandOnLoad: true });
-                                    });
-                               
                                     $('postingtext_' + this.post_id + '_edit').observe('keyup', this.quickEditchanged.bind(this));
                                     $('postingtext_' + this.post_id + '_save').observe('click', this.quickEditsave.bind(this));
                                     $('postingtext_' + this.post_id + '_cancel').observe('click', this.quickEditcancel.bind(this));

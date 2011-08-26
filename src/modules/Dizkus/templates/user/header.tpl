@@ -1,7 +1,6 @@
 {pageaddvar name='javascript' value='javascript/ajax/prototype.js'}
 {pageaddvar name='javascript' value='javascript/helpers/Zikula.js'}
 {pageaddvar name='javascript' value='javascript/ajax/effects.js'}
-{pageaddvar name='javascript' value='javascript/texpand.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
 

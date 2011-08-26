@@ -27,7 +27,7 @@
 
                             <div>
                                 <label for="message">{gt text="Message body"}</label><br />
-                                <textarea id="message" name="message" class="dzk_texpand" rows="10" cols="60">{$reply.message}</textarea>
+                                <textarea id="message" name="message" rows="10" cols="60">{$reply.message}</textarea>
                                 {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
                                 {if $coredata.Dizkus.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>

@@ -22,7 +22,7 @@
             </div>
             <div class="z-formrow">
                 <label for="message">{gt text="Message body"}</label>
-                <textarea id="message" class="dzk_texpand" name="message" rows="10" cols="80">{$message|safetext}</textarea>
+                <textarea id="message" name="message" rows="10" cols="80">{$message|safetext}</textarea>
             </div>
         </fieldset>
         <div class="z-formbuttons z-buttons">
