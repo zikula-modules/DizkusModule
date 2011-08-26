@@ -158,16 +158,15 @@
                     <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
                 </li>
                 {/if}
-                <li id="quickreplybuttons" class="dzk_buttonmargin hidden">
-                    <button id="btnCreateQuickReply" class="dzk_img ok" type="submit" title="{gt text="Submit"}">{gt text="Submit"}</button>
-                    <button id="btnPreviewQuickReply" class="dzk_img preview" type="submit" title="{gt text="Preview"}">{gt text="Preview"}</button>
-                    <button id="btnCancelQuickReply" class="dzk_img cancel" type="reset" title="{gt text="Cancel"}">{gt text="Cancel"}</button>
+                <li id="quickreplybuttons" class="z-buttons hidden">
+                    {button id="btnCreateQuickReply" class="z-bt-small" src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
+                    {button id="btnPreviewQuickReply" class="z-bt-small" src=xeyes.png set=icons/extrasmall __alt="Preview" __title="Preview" __text="Preview"}
+                    {button id="btnCancelQuickReply" class="z-bt-small" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
                 </li>
-
-                <li id="nonajaxquickreplybuttons" class="dzk_buttonmargin">
-                    <input class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}" />
-                    <input class="dzk_img preview" type="submit" name="preview" value="{gt text="Preview"}" />
-                    <input class="dzk_img cancel" type="submit" name="cancel" value="{gt text="Cancel"}" />
+                <li id="nonajaxquickreplybuttons" class="z-buttons">
+                    <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                    <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
+                    <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
                 </li>
             </ul>
 

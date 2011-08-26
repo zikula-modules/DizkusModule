@@ -1,5 +1,3 @@
-/*  $Id$  */
-
 /*******************************************************************************
 * phpBB3's prosilver theme adapted for Dizkus
 *
@@ -131,10 +129,6 @@ div#editpostoptions ul li {
 
 /* elements */
 
-#dizkus img {
-    border: none;
-    vertical-align: middle;
-}
 #dizkus hr {
     border: 0 none #FFFFFF;
     border-top: 1px solid #CCCCCC;
@@ -548,7 +542,9 @@ div#editpostoptions ul li {
     width: 98%;
 }
 #dizkus #quickreplybuttons,
-#dizkus #newtopicbuttons {
+#dizkus #newtopicbuttons,
+#dizkus #nonajaxnewtopicbuttons,
+#dizkus #nonajaxquickreplybuttons {
     margin: 1em 0;
 }
 #dizkus .bbcode p {
@@ -632,12 +628,6 @@ div#editpostoptions ul li {
     font-weight: bold;
     border:none;
     padding: 0 10px;
-}
-#dizkus .dzk_form input {
-    font-weight: normal;
-    vertical-align: middle;
-    /*padding: 0 3px;*/
-    font-family: Verdana, Helvetica, Arial, sans-serif;
 }
 #dizkus .dzk_form select {
     font-family: Verdana, Helvetica, Arial, sans-serif;
