@@ -15,7 +15,7 @@
             <p>{$message}</p>
             {/foreach}
         </fieldset>
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <input type="submit" name="backtoforum" value="{gt text="Back to forum administration"}" />
         </div>
     </form>

@@ -25,7 +25,7 @@
                 <textarea id="message" class="dzk_texpand" name="message" rows="10" cols="80">{$message|safetext}</textarea>
             </div>
         </fieldset>
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}">{gt text="Submit"}</button>
         </div>
     </div>

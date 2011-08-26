@@ -9,7 +9,8 @@
 
     <form class="z-form" id="subscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
         <fieldset>
-            <label for="username">{gt text="User name"}</label>&nbsp;<input type="text" name="username" id="username" value="{$username}" />&nbsp;<button class="dzk_img search" type="submit" name="submit">{gt text="Show users' subscriptions"}</button>
+            <label for="username">{gt text="User name"}</label>&nbsp;<input type="text" name="username" id="username" value="{$username}" />
+            {button class="z-button z-bt-small" src=search.png set=icons/extrasmall __alt="Show users' subscriptions" __title="Show users' subscriptions" __text="Show users' subscriptions"}
         </fieldset>
     </form>
 
@@ -77,12 +78,11 @@
             <h3>{gt text="No forum subscriptions found."}</h3>
             {/if}
 
-            <div class="z-formbuttons">
-                <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}">{gt text="Submit"}</button>
+            <div class="z-formbuttons z-buttons">
+                {button src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
             </div>
         </div>
     </form>
 
 </div>
-
 {adminfooter}

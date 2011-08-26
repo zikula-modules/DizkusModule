@@ -17,7 +17,7 @@
                 <textarea id="modcomment" rows="6" cols="60" name="comment" class="dzk_texpand"></textarea>
             </div>
         </fieldset>
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}">{gt text="Submit"}</button>
         </div>
     </div>

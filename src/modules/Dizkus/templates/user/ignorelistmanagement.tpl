@@ -17,7 +17,7 @@
         {formdropdownlist id="ignorelist_myhandling" items=$ignorelist_options selectedValue=$ignorelist_myhandling}
     </div>
 </fieldset>
-<div class="z-formbuttons">
+<div class="z-formbuttons z-buttons">
     {formbutton commandName="update" __text="Save" class="dzk_img ok"}
 </div>
 {/form}

@@ -15,7 +15,7 @@
                 <input type="text" id="newsubject" name="newsubject" value="{gt text="Split"}: {$post.topic_subject}" size="40" maxlength="100" />
             </div>
         </fieldset>
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Split topic"}">{gt text="Split topic"}</button>
         </div>
     </div>

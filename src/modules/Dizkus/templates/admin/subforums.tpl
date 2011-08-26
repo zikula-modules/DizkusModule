@@ -24,9 +24,9 @@
             {foreach item=subforum from=$subforums}
             <tr class="{cycle values=z-odd,z-even}">
                 <td>
-                    <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name}</a>
+                    <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a>
                 </td>
-                <td>{$subforum.forum_desc}</td>
+                <td>{$subforum.forum_desc|safetext}</td>
                 <td>
                     {getForumName id=$subforum.cat_id}
                 </td>
@@ -35,7 +35,7 @@
                 </td>
             </tr>
             {foreachelse}
-            <tr class="z-admintableempty"><td colspan="4">{gt text="No sub forums available!"}</td></tr>
+            <tr class="z-admintableempty"><td colspan="4">{gt text="No sub forums available"}</td></tr>
             {/foreach}
         </tbody>
     </table>

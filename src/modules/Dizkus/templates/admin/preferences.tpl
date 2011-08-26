@@ -173,9 +173,9 @@
         </div>
     </fieldset>
 
-    <div class="z-formbuttons">
-        {formbutton id="submit" commandName="submit" __text="Save" class="dzk_img ok"}
-        {formbutton id="restore" commandName="restore" __text="Restore defaults" class="dzk_img cancel"}
+    <div class="z-formbuttons z-buttons">
+        {formbutton id="submit" commandName="submit" __text="Save" class="z-bt-ok"}
+        {formbutton id="restore" commandName="restore" __text="Restore defaults" class="z-bt-delete"}
     </div>
 
     {/form}

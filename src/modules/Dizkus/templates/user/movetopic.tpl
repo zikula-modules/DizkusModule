@@ -24,7 +24,7 @@
                 <label for="createshadowtopic">{gt text="Create shadow topic"}</label>
                 <input type="checkbox" id="createshadowtopic" name="createshadowtopic" value="1" />
             </div>
-            <div class="z-formbuttons">
+            <div class="z-formbuttons z-buttons">
                 <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Move topic"}">{gt text="Move topic"}</button>
             </div>
         </fieldset>
@@ -44,7 +44,7 @@
                     <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />
                 </span>
             </div>
-            <div class="z-formbuttons">
+            <div class="z-formbuttons z-buttons">
                 <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Join topics"}">{gt text="Join topics"}</button>
             </div>
         </fieldset>

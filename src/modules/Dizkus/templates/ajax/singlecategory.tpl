@@ -38,7 +38,7 @@
                     <input type="hidden" name="add" value="add" />
                     {/if}
                 </fieldset>
-                <div class="z-formbuttons">
+                <div class="z-formbuttons z-buttons">
                     <button id="submitcategory_{$category.cat_id}" class="dzk_img ok" name="submit">{gt text="Submit"}</button>
                 </div>
             </div>

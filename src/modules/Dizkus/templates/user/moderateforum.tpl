@@ -129,7 +129,7 @@
             </span>
         </div>
     </fieldset>
-    <div class="z-formbuttons">
+    <div class="z-formbuttons z-buttons">
         {* FOR Creating shadow topic the authkey is needed *}
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <button class="dzk_img ok" name="submit" type="submit" value="submit" title="{gt text="Submit"}">{gt text="Submit"}</button>

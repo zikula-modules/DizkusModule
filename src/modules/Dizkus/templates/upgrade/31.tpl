@@ -14,7 +14,7 @@
                 <span>3.1</span>
             </div>
         </fieldset>
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <input type="hidden" name="authkey" value="{$authid}" />
             <input type="submit" name="submit" value="{gt text="Next"}" />
         </div>

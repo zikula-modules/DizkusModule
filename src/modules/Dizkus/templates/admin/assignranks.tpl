@@ -46,10 +46,10 @@
             </tbody>
         </table>
 
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <input type="hidden" name="lastletter" value="{$letter|safetext}" />
             <input type="hidden" name="page" value="{$page|safetext}" />
-            <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}">{gt text="Submit"}</button>
+            {button src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
         </div>
     </form>
 

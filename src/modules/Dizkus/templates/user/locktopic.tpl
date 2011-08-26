@@ -19,7 +19,7 @@
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <fieldset id="dzk_locktopic">
             <legend>{gt text="Confirmation prompt"}</legend>
-            <div class="z-formbuttons">
+            <div class="z-formbuttons z-buttons">
                 <button class="dzk_img ok" type="submit" name="submit" value="{$buttontitle}">{$buttontitle}</button>
             </div>
         </fieldset>

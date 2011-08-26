@@ -154,7 +154,7 @@
         </fieldset>
         {/if}
 
-        <div class="z-formbuttons">
+        <div class="z-formbuttons z-buttons">
             <input type="hidden" name="authid" value="" />
             <input type="hidden" name="forum_id" value="{$forum.forum_id}" />
             <input type="hidden" name="cat_id" value="{$forum.cat_id}" />
