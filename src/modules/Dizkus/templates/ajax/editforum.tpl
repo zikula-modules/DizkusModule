@@ -42,12 +42,12 @@
                 </select>
                 <p class="z-formnote z-sub">{gt text="Notice: This is used for the comments feature. All submissions within this module will be posted within this forum. The list only includes modules for which Dizkus has been activated as a hook."}</p>
             </div>
-{*
+            {*
             <div class="z-formrow">
                 <label for="pncategory">< !--[gt text="Select category"]-- ></label>
                 < !--[$categoryselector]-- >
             </div>
-*}
+            *}
             <div class="z-formrow">
                 <label for="forum_mods">{gt text="Moderation"}</label>
                 <span id="forum_mods" class="z-formnote">
