@@ -51,13 +51,13 @@ Jeremy Coates (lists@co-comp.co.uk)
 
 Translation team:
 -----------------
-Deutsch: Jan Hübener, Andreas Krapohl
+Deutsch: Jan HÃ¼bener, Andreas Krapohl
 Dutch: Henk-Jan (henk@augustinusga.com)
 French: agoramusic
 
 Japan: Kazuyoshi Shinada
 Kor: geogo@hitel.net
-Norvegian: Dag-Asle LangÜ <dagasle@hotmail.com>
+Norvegian: Dag-Asle LangÃœ <dagasle@hotmail.com>
 Russian: Shundalov Vladimir (navigator@pwp.ru)
 	 Volodymyr Metenchuk (voll@parex.lv)
 	 Artem Lipounov aka almer
