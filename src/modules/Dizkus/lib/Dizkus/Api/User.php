@@ -88,7 +88,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                                                       'user_favorites'  => 0,
                                                       'user_post_order' => 0));
         } else {
-        	// create some items that might be missing
+                // create some items that might be missing
         	if (!array_key_exists('user_rank', $userdata)) {
         		$userdata['user_rank'] = 0;
         	}
@@ -380,8 +380,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                        ' . $forumstable . '.forum_pntopic AS forum_pntopic,
                        ' . $topicstable . '.topic_title AS topic_title,
                        ' . $topicstable . '.topic_replies AS topic_replies,
-                       ' . $userstable . '.z_uname AS pn_uname,
-                       ' . $userstable . '.z_uid AS pn_uid,
+                       ' . $userstable . '.uname AS pn_uname,
+                       ' . $userstable . '.uid AS pn_uid,
                        ' . $poststable . '.topic_id AS topic_id,
                        ' . $poststable . '.post_time AS post_time
                 FROM ' . $cattable . '
@@ -389,7 +389,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 AND '.$forumstable.'.is_subforum=0'.$cat.' 
                 LEFT JOIN ' . $poststable . ' ON ' . $poststable . '.post_id=' . $forumstable . '.forum_last_post_id
                 LEFT JOIN ' . $topicstable . ' ON ' . $topicstable . '.topic_id=' . $poststable . '.topic_id
-                LEFT JOIN ' . $userstable . ' ON ' . $userstable . '.z_uid=' . $poststable . '.poster_id
+                LEFT JOIN ' . $userstable . ' ON ' . $userstable . '.uid=' . $poststable . '.poster_id
                 ORDER BY ' . $cattable . '.cat_order, ' . $forumstable . '.forum_order, ' . $forumstable . '.forum_name';
         $res = DBUtil::executeSQL($sql);
         $colarray = array('cat_id', 'cat_title', 'cat_order', 'forum_id', 'forum_name', 'forum_desc', 'forum_topics', 'forum_posts',
@@ -544,14 +544,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $ztable = DBUtil::getTables();
     
         if (!empty($forum_id)) {
-            $sql = 'SELECT u.z_uname, u.z_uid
+            $sql = 'SELECT u.uname, u.uid
                     FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
-                    WHERE f.forum_id = '.DataUtil::formatForStore($forum_id).' AND u.z_uid = f.user_id
+                    WHERE f.forum_id = '.DataUtil::formatForStore($forum_id).' AND u.uid = f.user_id
                     AND f.user_id < 1000000';
         } else {
-            $sql = 'SELECT u.z_uname, u.z_uid
+            $sql = 'SELECT u.uname, u.uid
                     FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
-                    WHERE u.z_uid = f.user_id
+                    WHERE u.uid = f.user_id
                     AND f.user_id < 1000000
                     GROUP BY f.user_id';
         }
@@ -567,14 +567,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         }
     
         if (!empty($forum_id)) {
-            $sql = 'SELECT g.z_name, g.z_gid
+            $sql = 'SELECT g.name, g.gid
                     FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods']." f
-                    WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.z_gid = f.user_id-1000000
+                    WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.gid = f.user_id-1000000
                     AND f.user_id > 1000000";
         } else {
-            $sql = 'SELECT g.z_name, g.z_gid
+            $sql = 'SELECT g.name, g.gid
                     FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods'].' f
-                    WHERE g.z_gid = f.user_id-1000000
+                    WHERE g.gid = f.user_id-1000000
                     AND f.user_id > 1000000
                     GROUP BY f.user_id';
         }
@@ -727,14 +727,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                        t.topic_status,
                        t.topic_last_post_id,
                        t.topic_poster,
-                       u.z_uname,
-                       u2.z_uname as last_poster,
+                       u.uname,
+                       u2.uname as last_poster,
                        p.post_time,
                        t.topic_poster
                 FROM ' . $ztable['dizkus_topics'] . ' AS t
-                LEFT JOIN ' . $ztable['users'] . ' AS u ON t.topic_poster = u.z_uid
+                LEFT JOIN ' . $ztable['users'] . ' AS u ON t.topic_poster = u.uid
                 LEFT JOIN ' . $ztable['dizkus_posts'] . ' AS p ON t.topic_last_post_id = p.post_id
-                LEFT JOIN ' . $ztable['users'] . ' AS u2 ON p.poster_id = u2.z_uid
+                LEFT JOIN ' . $ztable['users'] . ' AS u2 ON p.poster_id = u2.uid
                 WHERE t.forum_id = ' .(int)DataUtil::formatForStore($forum['forum_id']) . '
                 ' . $whereignorelist . '
                 ORDER BY t.sticky DESC, p.post_time DESC';
@@ -1119,7 +1119,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                            t.topic_status,
                            p.post_text,
                            p.post_time,
-                           u.z_uname
+                           u.uname
                     FROM '.$ztable['dizkus_forums'].' AS f,
                          '.$ztable['dizkus_topics'].' AS t,
                          '.$ztable['dizkus_posts'].' AS p,
@@ -1127,7 +1127,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                     WHERE (p.post_id = '.(int)DataUtil::formatForStore($args['post_id']).')
                     AND (t.forum_id = f.forum_id)
                     AND (p.topic_id = t.topic_id)
-                    AND (p.poster_id = u.z_uid)';
+                    AND (p.poster_id = u.uid)';
             $colarray = array('forum_id', 'cat_id', 'topic_id', 'topic_title', 'topic_status', 'post_text', 'post_time', 'uname');
         } else {
             // No post id, just check topic.
@@ -1901,10 +1901,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $viewip['poster_ip'] = DBUtil::selectField('dizkus_posts', 'poster_ip', 'post_id='.DataUtil::formatForStore($args['post_id']));
         $viewip['poster_host'] = gethostbyaddr($viewip['poster_ip']);
     
-        $sql = "SELECT z_uid, z_uname, count(*) AS postcount
+        $sql = "SELECT uid, uname, count(*) AS postcount
                 FROM ".$ztable['dizkus_posts']." p, ".$ztable['users']." u
-                WHERE poster_ip='".DataUtil::formatForStore($viewip['poster_ip'])."' && p.poster_id = u.z_uid
-                GROUP BY z_uid";
+                WHERE poster_ip='".DataUtil::formatForStore($viewip['poster_ip'])."' && p.poster_id = u.uid
+                GROUP BY uid";
         $res       = DBUtil::executeSQL($sql);
         $colarray  = array('uid', 'uname', 'postcount');
         $viewip['users'] = DBUtil::marshallObjects($res, $colarray);
@@ -2330,7 +2330,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                        t.topic_time,
                        t.topic_replies,
                        t.topic_last_post_id,
-                       u.z_uname,
+                       u.uname,
                        f.forum_id,
                        f.forum_name
                 FROM '.$ztable['dizkus_topic_subscription'].' AS ts,
@@ -2339,7 +2339,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                      '.$ztable['dizkus_forums'].' AS f
                 WHERE (ts.user_id='.(int)DataUtil::formatForStore($args['user_id']).'
                   AND t.topic_id=ts.topic_id
-                  AND u.z_uid=ts.user_id
+                  AND u.uid=ts.user_id
                   AND f.forum_id=t.forum_id)
                 ORDER BY f.forum_id, ts.topic_id';
     
