@@ -1,6 +1,6 @@
 {if $coredata.Dizkus.forum_enabled neq 'no'}
 
-<div style="margin-bottom: 1em;">
+<div class="dzk_marginbottom">
     {formutil_getpassedvalue name='func' default='main' assign='func'}
     {if ($func eq 'main' OR $func eq 'viewforum') AND isset($forum)}
     <h3 class="footer_title">{gt text="Posts"}</h3>

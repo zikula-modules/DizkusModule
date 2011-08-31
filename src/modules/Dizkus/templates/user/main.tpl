@@ -12,15 +12,9 @@
                         <dt>
                             <span><a id="categorylink_{$category.cat_id}" class="{if $category.new_posts == true}newpostscategorylink{else}categorylink{/if}" title="{gt text="Go to category"} '{$category.cat_title|safetext}'" href="{modurl modname='Dizkus' type=user func=main viewcat=$category.cat_id}">{$category.cat_title|safetext}</a></span>
                         </dt>
-                        <dd class="topics">
-                            <span>{gt text="Topics"}</span>
-                        </dd>
-                        <dd class="posts">
-                            <span>{gt text="Posts"}</span>
-                        </dd>
-                        <dd class="lastpost">
-                            <span>{gt text="Last post"}</span>
-                        </dd>
+                        <dd class="topics"><span>{gt text="Topics"}</span></dd>
+                        <dd class="posts"><span>{gt text="Posts"}</span></dd>
+                        <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
                     </dl>
                 </li>
             </ul>
@@ -77,18 +71,10 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt>
-                            <span>{$view_category_data.cat_title|safetext}</span>
-                        </dt>
-                        <dd class="topics">
-                            <span>{gt text="Topics"}</span>
-                        </dd>
-                        <dd class="posts">
-                            <span>{gt text="Posts"}</span>
-                        </dd>
-                        <dd class="lastpost">
-                            <span>{gt text="Last post"}</span>
-                        </dd>
+                        <dt><span>{$view_category_data.cat_title|safetext}</span></dt>
+                        <dd class="topics"><span>{gt text="Topics"}</span></dd>
+                        <dd class="posts"><span>{gt text="Posts"}</span></dd>
+                        <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
                     </dl>
                 </li>
             </ul>
@@ -120,15 +106,13 @@
                                 {/if}
                             </span>
                             {else}
-                            <span>{$forum.last_post}</span>
+                            <span>{$forum.last_post|default:'&nbsp;'}</span>
                             {/if}
                         </dd>
                     </dl>
                 </li>
                 {foreachelse}
-                <li class="row dzk_empty">
-                    {gt text="No forums created."}
-                </li>
+                <li class="row dzk_empty">{gt text="No forums created."}</li>
                 {/foreach}
             </ul>
 
