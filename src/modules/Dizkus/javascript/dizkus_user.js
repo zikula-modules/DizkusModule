@@ -26,7 +26,7 @@ var DizkusUser = Class.create(DizkusBase, {
 
         this.dzk_globalhandlers = {
             onCreate: function(){
-                $$('.dzk_img').each(function(el){ el.disabled = true; });
+                $$('.dzk_detachable').each(function(el){ el.disabled = true; });
                 if($('dizkus')) {
                     $('dizkus').style.cursor = 'wait';
                 }
@@ -34,7 +34,7 @@ var DizkusUser = Class.create(DizkusBase, {
         
             onComplete: function() {
                 if(Ajax.activeRequestCount == 0){
-                    $$('.dzk_img').each(function(el){ el.disabled = false; });
+                    $$('.dzk_detachable').each(function(el){ el.disabled = false; });
                     if($('dizkus')) {
                         $('dizkus').style.cursor = 'auto';
                     }

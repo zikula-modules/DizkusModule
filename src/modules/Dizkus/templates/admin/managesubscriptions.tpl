@@ -12,7 +12,7 @@
     <form class="z-form" id="subscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
         <fieldset>
             <label for="username">{gt text="User name"}</label>&nbsp;<input type="text" name="username" id="username" value="{$username}" />
-            {button class="z-button z-bt-small" src=search.png set=icons/extrasmall __alt="Show users' subscriptions" __title="Show users' subscriptions" __text="Show users' subscriptions"}
+            {button class="z-button z-bt-small" src="search.png" set="icons/extrasmall" __alt="Show users' subscriptions" __title="Show users' subscriptions" __text="Show users' subscriptions"}
         </fieldset>
     </form>
 
@@ -81,7 +81,7 @@
             {/if}
 
             <div class="z-formbuttons z-buttons">
-                {button src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
+                {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
             </div>
         </div>
     </form>

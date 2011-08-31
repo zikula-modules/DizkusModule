@@ -48,14 +48,14 @@
                                         </li>
                                         {/if}
                                         <li id="newtopicbuttons" class="z-buttons" style="display: none;">
-                                            {button id="btnCreateNewTopic" class="z-bt-small" src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
-                                            {button id="btnPreviewNewTopic" class="z-bt-small" src=xeyes.png set=icons/extrasmall __alt="Preview" __title="Preview" __text="Preview"}
-                                            {button id="btnCancelNewTopic" class="z-bt-small" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
+                                            {button id="btnCreateNewTopic" class="dzk_detachable dzk_button z-bt-small" src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+                                            {button id="btnPreviewNewTopic" class="dzk_detachable dzk_button z-bt-small" src="xeyes.png" set="icons/extrasmall" __alt="Preview" __title="Preview" __text="Preview"}
+                                            {button id="btnCancelNewTopic" class="dzk_detachable dzk_button z-bt-small" src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
                                         </li>
                                         <li id="nonajaxnewtopicbuttons" class="z-buttons">
-                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
-                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
-                                            <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
+                                            <input class="dzk_button z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input class="dzk_button z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
+                                            <input class="dzk_button z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
                                         </li>
                                     </ul>
 

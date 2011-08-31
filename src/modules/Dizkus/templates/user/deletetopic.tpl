@@ -12,8 +12,8 @@
         <fieldset id="dzk_deletetopic">
             <legend>{gt text="Confirmation prompt"}</legend>
             <div class="z-formbuttons z-buttons">
-                {button src=button_ok.gif set=icons/small type="submit" name="submit" value="delete" __alt="Delete this topic" __title="Delete this topic"}
-                <a href="{modurl modname=Dizkus type=user func=view}">{img modname=core src=button_cancel.png set=icons/small __alt="Cancel" __title="Cancel"}</a>
+                {button src="button_ok.gif" set="icons/extrasmall" type="submit" name="submit" value="delete" __alt="Delete this topic" __title="Delete this topic"}
+                <a href="{modurl modname=Dizkus type=user func=view}">{img modname='core' src='button_cancel.png' set='icons/extrasmall' __alt='Cancel' __title='Cancel'}</a>
             </div>
         </fieldset>
     </div>

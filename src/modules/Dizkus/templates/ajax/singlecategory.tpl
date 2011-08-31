@@ -39,7 +39,7 @@
                     {/if}
                 </fieldset>
                 <div class="z-formbuttons z-buttons">
-                    {button id="submitcategory_`$category.cat_id`" src=button_ok.png set=icons/extrasmall __alt="Save" __title="Save" __text="Save"}
+                    {button id="submitcategory_`$category.cat_id`" src="button_ok.png" set="icons/extrasmall" __alt="Save" __title="Save" __text="Save"}
                 </div>
             </div>
         </form>
