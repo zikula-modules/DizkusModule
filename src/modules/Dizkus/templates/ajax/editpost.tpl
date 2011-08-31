@@ -11,9 +11,9 @@
                 {if $post.poster_data.moderate eq true}
                 <li><input id="postingtext_{$post.post_id}_delete" type="checkbox"  value="1" /><label for="postingtext_{$post.post_id}_delete">&nbsp;{gt text="Delete post"}</label></li>
                 {/if}
-                <li id="quickreplybuttons">
-                    <button class="dzk_img ok"  type="submit" name="submit" id="postingtext_{$post.post_id}_save" type="button" value="{gt text="Submit"}">{gt text="Submit"}</button>
-                    <button class="dzk_img cancel" type="submit" name="submit" id="postingtext_{$post.post_id}_cancel" type="button" value="{gt text="Cancel"}">{gt text="Cancel"}</button>
+                <li id="quickreplybuttons" class="z-buttons">
+                    {button id="postingtext_`$post.post_id`_save" class="dzk_detachable z-bt-small" src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+                    {button id="postingtext_`$post.post_id`_cancel" class="dzk_detachable z-bt-small" src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
                 </li>
             </ul>
         </div>
