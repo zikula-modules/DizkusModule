@@ -33,7 +33,7 @@
 
                 <div class="postbody dzk_colpost_right">
                     <div class="postinfo">
-                        {if isset($topic)}<a class="linktopostlink" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
+                        {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$post.topic_id start=$topic.start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
                         <strong>{gt text="Posted"}:</strong>&nbsp;{$post.posted_unixtime|dateformat:'datetimebrief'}
                     </div>
                     <div class="content" id="postingtext_{$post.post_id}">

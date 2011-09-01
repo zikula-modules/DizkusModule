@@ -42,10 +42,10 @@
                         <dd class="lastpost">
                             {if isset($subforum.last_post_data)}
                             <span>
-                                <dfn>{gt text="Last post"}</dfn> {gt text="by"} {$subforum.last_post_data.name|profilelinkbyuname}<br />
+                                {gt text="Last post by %s" tag1=$subforum.last_post_data.name|profilelinkbyuname}<br />
                                 {gt text="Written on"} {$subforum.last_post_data.unixtime|dateformat:'datetimebrief'}:
                                 {if $subforum.last_post_data.url_anchor neq ''}
-                                <a class="latesttopicimage" href="{$subforum.last_post_data.url_anchor|safetext}" title="{gt text="View latest post"} '{$subforum.last_post_data.subject|safehtml|truncate:70}'">{$subforum.last_post_data.subject|safetext|truncate:70}</a>
+                                <a class="latesttopicimage tooltips" href="{$subforum.last_post_data.url_anchor|safetext}" title="{gt text='View latest post: %s' tag1=$subforum.last_post_data.subject|safehtml|truncate:70}">{$subforum.last_post_data.subject|safetext|truncate:70}</a>
                                 {/if}
                             </span>
                             {else}
@@ -66,30 +66,30 @@
             <ul id="dzk_javascriptareaforum" class="hidden linklist z-clearfix">
                 {* Moderate *}
                 {if $forum.access_comment}
-                <li><a class="dzk_arrow newtopiclink" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
                 {if $coredata.logged_in}
                 <li>
                     {if $forum.is_subscribed eq 0}
-                    <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                    <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
                     {else}
-                    <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
+                    <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                     {/if}
                 </li>
                 {if $coredata.Dizkus.favorites_enabled eq "yes"}
                 <li>
                     {if $forum.is_favorite eq 0}
-                    <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                    <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
                     {else}
-                    <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                    <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                     {/if}
                 </li>
                 {/if}
                 {/if}
 
                 {if $forum.access_moderate eq true}
-                <li><a class="dzk_arrow moderatelink" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
+                <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
                 {/if}
             </ul>
 
@@ -186,7 +186,7 @@
                     <dd class="views">{$topic.topic_views}<dfn>{gt text="Views"}</dfn></dd>
                     <dd class="lastpost">
                         <span>
-                            <dfn>{gt text="Last post"}</dfn> {gt text="By"} {$topic.last_poster|profilelinkbyuname}<br />
+                            {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />
                             {$topic.post_time_unix|dateformat:'datetimebrief'}
                             <a title="{gt text="View latest post"}" href="{$topic.last_post_url_anchor|safetext}">{img modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest posts" }</a>
                         </span>
