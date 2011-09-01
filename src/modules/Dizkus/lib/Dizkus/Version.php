@@ -5,7 +5,7 @@
  * @copyright 2003 by Andreas Krapohl, 2004 by Frank Schummertz
  * @package Dizkus
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
- * @link http://code.zikula.org/dizkus
+ * @link https://github.com/zikula-modules/Dizkus
  */
 
 class Dizkus_Version extends Zikula_AbstractVersion
@@ -18,7 +18,7 @@ class Dizkus_Version extends Zikula_AbstractVersion
         $meta['description']    = $this->__('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.');
         $meta['url']            = $this->__('forums');
         $meta['version']        = '3.2.0';
-        $meta['contact']        = 'Andreas Krapohl, Frank Schummertz, Carsten Volmer http://code.zikula.org/dizkus';
+        $meta['contact']        = 'http://support.zikula.de';
         $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
                                       'Dizkus::CreateForum' => 'CategoryID::');
 		$meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),

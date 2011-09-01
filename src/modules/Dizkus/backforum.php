@@ -7,7 +7,7 @@
  * @copyright 2005 by Dizkus Team
  * @package Dizkus
  * @license GPL <http://www.gnu.org/licenses/gpl.html>
- * @link http://code.zikula.org/dizkus
+ * @link https://github.com/zikula-modules/Dizkus
  */
 
 /**
