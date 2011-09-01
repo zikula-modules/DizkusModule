@@ -1,5 +1,4 @@
 <?php
-
 /**
  * readtopforums
  * reads the last $maxforums forums and assign them in a
@@ -8,6 +7,7 @@
  * @params maxforums (int) number of forums to read, default = 5
  *
  */
+
 function smarty_function_readtopforums($params, &$smarty) 
 {
     $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;

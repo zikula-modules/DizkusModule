@@ -4,12 +4,9 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  * @link http://code.zikula.org/dizkus
- * @version $Id: Prefs.php 1376 2010-08-22 12:02:46Z Landseer $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
-
 
 class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandler
 {

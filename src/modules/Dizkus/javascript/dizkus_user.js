@@ -1,3 +1,7 @@
+/**
+ * dizkus_user.js
+ */
+
 document.observe('dom:loaded', function() { new DizkusUser(); });
 
 var DizkusUser = Class.create(DizkusBase, {

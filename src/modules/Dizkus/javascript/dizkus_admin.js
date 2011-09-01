@@ -1,8 +1,5 @@
 /**
  * dizkus_admin.js
- *
- * $Id$
- *
  */
 
 document.observe('dom:loaded', function() 

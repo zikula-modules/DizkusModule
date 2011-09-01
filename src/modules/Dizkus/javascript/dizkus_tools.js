@@ -1,6 +1,5 @@
-/*
- * $Id$
- *
+/**
+ * dizkus_tools.js
  */
 
 var DizkusBase = Class.create({

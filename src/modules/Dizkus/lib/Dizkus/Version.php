@@ -1,7 +1,6 @@
 <?php
 /**
  * general module informations
- * @version $Id$
  * @author Andreas Krapohl
  * @copyright 2003 by Andreas Krapohl, 2004 by Frank Schummertz
  * @package Dizkus

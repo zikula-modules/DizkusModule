@@ -4,7 +4,6 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  * @link http://code.zikula.org/dizkus
- * @version $Id: modifier.dzkbbsmile.php 1361 2010-08-09 16:55:19Z Landseer $
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
