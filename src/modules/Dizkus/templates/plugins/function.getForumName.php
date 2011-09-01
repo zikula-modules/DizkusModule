@@ -8,7 +8,6 @@
  * @package Dizkus
  */
 
-// id, type
 /**
  * adminlink plugin
  * adds a link to the configuration of a category or forum
@@ -20,6 +19,6 @@ function smarty_function_getForumName($params, &$smarty)
 {
     extract($params);
     $forum = DBUtil::selectObjectByID('dizkus_forums', $id, 'forum_id');
-    $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum'=>$id));
+    $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id));
     return '<a href="'.DataUtil::formatForDisplay($url).'">'.DataUtil::formatForDisplay($forum['forum_name']).'</a>';
 }

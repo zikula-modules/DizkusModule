@@ -48,47 +48,49 @@
     <div class="dzk_navbar dzk_rounded">
         <div class="inner z-clearfix">
             {* start of breadcrumbs *}
+            {strip}
             <ul class="linklist navlinks z-clearfix">
                 <li class="icon-home">
-                    <a class="dzk_arrow homelink tooltips" title="{gt text='Forums index page'}" href="{modurl modname='Dizkus' type='user' func='main'}">{gt text="Forums index page"}</a>
+                    <a class="dzk_arrow homelink tooltips" title="{gt text='Go to forums index page'}" href="{modurl modname='Dizkus' type='user' func='main'}">{gt text="Forums index page"}</a>
                 </li>
                 {if $func eq 'main' AND $view_category neq -1}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}{$view_category_data.cat_title|safetext}
+                    <span class="tooltips" title="{gt text='Category'}">{gt text="&nbsp;::&nbsp;"}{$view_category_data.cat_title|safetext}</span>
                 </li>
                 {elseif ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$forum.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id}">{$forum.cat_title|safetext}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$forum.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id}">{$forum.cat_title|safetext}</a>
                 </li>
                 {elseif $func eq 'viewtopic' AND isset($topic)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$topic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id}">{$topic.cat_title|safetext}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$topic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id}">{$topic.cat_title|safetext}</a>
                 </li>
                 {elseif $func eq 'newtopic'}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{gt text="Go to category"}: {$newtopic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id}">{$newtopic.cat_title|safetext}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$newtopic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id}">{$newtopic.cat_title|safetext}</a>
                 </li>
                 {/if}
                 {if ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
                 {if $forum.is_subforum == 1}
                 <li>
                     {gt text="&nbsp;::&nbsp;"}
-                    {getForumName id=$forum.cat_id}
+                    <span class="tooltips" title="{gt text='Forum name'}">{getForumName id=$forum.cat_id}</span>
                 </li>
                 {/if}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}{$forum.forum_name|safetext}
+                    <span class="tooltips" title="{gt text='Forum name'}">{gt text="&nbsp;::&nbsp;"}{$forum.forum_name|safetext}</span>
                 </li>
                 {/if}
                 {if $func eq 'viewtopic' AND isset($topic)}
                 <li>
-                    {gt text="&nbsp;::&nbsp;"}<a title="{$topic.forum_name|safetext}" href="{modurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id}">{$topic.forum_name|safetext}</a>
+                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{$topic.forum_name|safetext}" href="{modurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id}">{$topic.forum_name|safetext}</a>
                 </li>
                 {/if}
                 {if $favorites|default:false}
                 <li>&nbsp;<em>({gt text="Favourites"})</em></li>
                 {/if}
             </ul>
+            {/strip}
             {* end of breadcrumbs *}
 
             <ul class="linklist z-clearfix" style="float:right;">
