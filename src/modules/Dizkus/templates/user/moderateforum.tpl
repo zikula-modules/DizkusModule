@@ -59,7 +59,7 @@
                             <span>
                                 {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />
                                 {$topic.post_time_unix|dateformat:'datetimebrief'}
-                                <a title="{gt text="View latest post"}" href="{$topic.last_post_url_anchor|safetext}">{img modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest post" }</a>
+                                <a class="tooltips" title="{gt text="View latest post"}" href="{$topic.last_post_url_anchor|safetext}">{img modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest post" }</a>
                             </span>
                         </dd>
                         <dd class="mark">

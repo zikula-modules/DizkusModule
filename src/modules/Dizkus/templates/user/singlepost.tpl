@@ -1,5 +1,4 @@
 {assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
-
 {assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
 
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
@@ -40,7 +39,8 @@
                     <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.user_posts}</li>
                     {if $coredata.logged_in eq true}
                     <li>
-                        {$post.poster_data.uname|profilelinkbyuname:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif"}
+                        {* image link to profile deactivated because of a bug in the core *}
+                        {* $post.poster_data.uname|profilelinkbyuname:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif" *}
                         {if $msgmodule}
                         <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster_data.uid}">{img modname='Dizkus' src='icon_post_pn.gif' __alt='Send a private message'}</a>
                         {/if}

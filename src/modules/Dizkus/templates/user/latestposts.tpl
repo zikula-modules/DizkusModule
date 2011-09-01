@@ -60,7 +60,7 @@
                             <a href="{$post.last_post_url_anchor}" title="{$post.topic_title|truncate:70}">{$post.topic_title|truncate:70}</a>
                             <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' func='viewforum' forum=$post.forum_id}" title="{$post.forum_name|truncate:70}">{$post.forum_name|truncate:70}</a></span>
                         </dt>
-                        <dd class="posts">{gt text='%s reply' plural='%s replies' count=$post.topic_replies tag1=$post.topic_replies}</dd>
+                        <dd class="posts">{$post.topic_replies|safetext}</dd>
                         <dd class="lastpost">
                             <span>
                                 {gt text="Posted by %s" tag1=$post.poster_name|profilelinkbyuname}<br />
@@ -112,7 +112,7 @@
                             <a href="{$post.last_post_url_anchor}" title="{$post.cat_title} :: {$post.forum_name}">{$post.topic_title}</a>
                             <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' func='viewforum' forum=$post.forum_id}" title="{$post.forum_name}">{$post.forum_name|truncate:"50"}</a></span>
                         </dt>
-                        <dd class="posts">{gt text='%s reply' plural='%s replies' count=$post.topic_replies tag1=$post.topic_replies}</dd>
+                        <dd class="posts">{$post.topic_replies|safetext}</dd>
                         <dd class="lastpost">
                             <span>
                                 {gt text="Posted by %s" tag1=$post.poster_name|profilelinkbyuname}<br />
@@ -167,7 +167,7 @@
                             <a href="{$post.last_post_url_anchor}" title="{$post.cat_title} :: {$post.forum_name}">{$post.topic_title}</a>
                             <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' func='viewforum' forum=$post.forum_id}" title="{$post.forum_name}">{$post.forum_name|truncate:"50"}</a></span>
                         </dt>
-                        <dd class="posts">{gt text='%s reply' plural='%s replies' count=$post.topic_replies tag1=$post.topic_replies}</dd>
+                        <dd class="posts">{$post.topic_replies|safetext}</dd>
                         <dd class="lastpost">
                             <span>
                                 {gt text="Posted by %s" tag1=$post.poster_name|profilelinkbyuname}<br />

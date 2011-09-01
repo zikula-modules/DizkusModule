@@ -34,13 +34,13 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{gt text='%s topic' plural='%s topics' count=$forum.forum_topics|safetext tag1=$forum.forum_topics|safetext}</dd>
-                        <dd class="posts">{gt text='%s post' plural='%s posts' count=$forum.forum_posts|safetext tag1=$forum.forum_posts|safetext}</dd>
+                        <dd class="topics">{$forum.forum_topics|safetext}</dd>
+                        <dd class="posts">{$forum.forum_posts|safetext}</dd>
                         <dd class="lastpost">
                             {if isset($forum.last_post_data)}
                             <span>
                                 {gt text="Last post by %s" tag1=$forum.last_post_data.name|profilelinkbyuname}<br />
-                                {gt text="Written on"} {$forum.last_post_data.unixtime|dateformat:'datetimebrief'}:
+                                {gt text="Written on %s:" tag1=$forum.last_post_data.unixtime|dateformat:'datetimebrief'}
                                 {if $forum.last_post_data.url_anchor neq ''}
                                 <a class="latesttopicimage tooltips" href="{$forum.last_post_data.url_anchor|safetext}" title="{gt text='View latest post: %s' tag1=$forum.last_post_data.subject|safehtml|truncate:70}">{$forum.last_post_data.subject|safetext|truncate:70}</a>
                                 {/if}
@@ -94,13 +94,13 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{gt text='%s topic' plural='%s topics' count=$forum.forum_topics|safetext tag1=$forum.forum_topics|safetext}</dd>
-                        <dd class="posts">{gt text='%s post' plural='%s posts' count=$forum.forum_posts|safetext tag1=$forum.forum_posts|safetext}</dd>
+                        <dd class="topics">{$forum.forum_topics|safetext}</dd>
+                        <dd class="posts">{$forum.forum_posts|safetext}</dd>
                         <dd class="lastpost">
                             {if isset($forum.last_post_data)}
                             <span>
                                 {gt text="Last post by %s" tag1=$forum.last_post_data.name|profilelinkbyuname}<br />
-                                {gt text="Written on"} {$forum.last_post_data.unixtime|dateformat:'datetimebrief'}:
+                                {gt text="Written on %s:" tag1=$forum.last_post_data.unixtime|dateformat:'datetimebrief'}
                                 {if $forum.last_post_data.url_anchor neq ''}
                                 <a class="latesttopicimage tooltips" href="{$forum.last_post_data.url_anchor|safetext}" title="{gt text='View latest post: %s' tag1=$forum.last_post_data.subject|safehtml}">{$forum.last_post_data.subject|safetext}</a>
                                 {/if}
