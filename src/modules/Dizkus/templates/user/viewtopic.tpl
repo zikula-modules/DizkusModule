@@ -132,7 +132,7 @@
     <div class="inner">
         <div class="dzk_subcols z-clearfix">
             <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
-                <div id="dzk_quickreply2">
+                <div id="dzk_quickreply">
                     <input type="hidden" id="forum" name="forum" value="{$topic.forum_id}" />
                     <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
                     <input type="hidden" id="quote" name="quote" value="" />

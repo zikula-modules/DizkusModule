@@ -77,7 +77,7 @@ var DizkusUser = Class.create(DizkusBase, {
             case 'viewtopic':
                 $('dzk_javascriptareatopic').removeClassName('hidden');
                 
-                if($('dzk_quickreply2')) {
+                if($('dzk_quickreply')) {
                     $('quickreplybuttons').removeClassName('hidden');
                     $('nonajaxquickreplybuttons').remove();
                     $('quickreplyform').action = 'javascript:void(0);';
@@ -381,8 +381,8 @@ var DizkusUser = Class.create(DizkusBase, {
                                     $('postingoptions_' + this.post_id).hide();
 
                                     // hide quickreply
-                                    if ($('dzk_quickreply2')) {
-                                        Effect.toggle($('dzk_quickreply2'), this.comboeffect, this.comboparams);
+                                    if ($('dzk_quickreply')) {
+                                        Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
                                     }
                                 
                                     // add inline editor
@@ -468,8 +468,8 @@ var DizkusUser = Class.create(DizkusBase, {
                                 }
                             
                                 //  hide quickreply
-                                if($('dzk_quickreply2')) {
-                                    Effect.toggle($('dzk_quickreply2'), this.comboeffect, this.comboparams);
+                                if($('dzk_quickreply')) {
+                                    Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
                                 }
                             }.bind(this)
             });
@@ -485,8 +485,8 @@ var DizkusUser = Class.create(DizkusBase, {
         this.editchanged = false;
     
         // unhide quickreply
-        if($('dzk_quickreply2')) {
-            Effect.toggle($('dzk_quickreply2'), this.comboeffect, this.comboparams);
+        if($('dzk_quickreply')) {
+            Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
         }
     },
        
