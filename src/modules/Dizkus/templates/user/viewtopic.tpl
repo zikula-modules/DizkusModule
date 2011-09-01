@@ -128,52 +128,68 @@
 {dzkpager total=$topic.total_posts}
 
 {if ($topic.topic_status neq 1) and ($topic.access_comment eq true)}
-
-
-<form id="quickreplyform" name="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type=user func=reply}" method="post" enctype="multipart/form-data">
-    <div id="dzk_quickreply2">
-        <input type="hidden" id="forum" name="forum" value="{$topic.forum_id}" />
-        <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
-        <input type="hidden" id="quote" name="quote" value="" />
-        <input type="hidden" id="authid" name="authid" value="" />
-
-        {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
-        <textarea id="message" name="message" cols="10" rows="10"></textarea>
-
-
-        {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
-        {if $coredata.Dizkus.striptags == 'yes'}
-        <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
-        {/if}
+<div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded">
+    <div class="inner">
         <div class="dzk_subcols z-clearfix">
-            <ul>
-                <li><strong>{gt text="Options"}</strong></li>
-                {if $coredata.logged_in}
-                <li>
-                    <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                    <label for="attach_signature">{gt text="Attach my signature"}</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1" />
-                    <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
-                </li>
-                {/if}
-                <li id="quickreplybuttons" class="z-buttons hidden">
-                    {button id="btnCreateQuickReply" class="dzk_detachable z-bt-small" src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
-                    {button id="btnPreviewQuickReply" class="dzk_detachable z-bt-small" src=xeyes.png set=icons/extrasmall __alt="Preview" __title="Preview" __text="Preview"}
-                    {button id="btnCancelQuickReply" class="dzk_detachable z-bt-small" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
-                </li>
-                <li id="nonajaxquickreplybuttons" class="z-buttons">
-                    <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
-                    <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
-                    <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
-                </li>
-            </ul>
+            <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
+                <div id="dzk_quickreply2">
+                    <input type="hidden" id="forum" name="forum" value="{$topic.forum_id}" />
+                    <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
+                    <input type="hidden" id="quote" name="quote" value="" />
+                    <input type="hidden" id="authid" name="authid" value="" />
+                    <div class="post_header">
+                        <label for="message" class="quickreply_title" style="display:block;">{gt text="Quick reply"}</label>
+                    </div>
+                    <div class="post_text_wrap">
+                        <div class="post_text">
+                            <div id="dizkusinformation"></div>
+                            <textarea id="message" name="message" cols="10" rows="60"></textarea>
+                            {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
+                            {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
+                            {if $coredata.Dizkus.striptags == 'yes'}
+                            <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                            {/if}
 
+                            <div class="dzk_subcols z-clearfix">
+                                <div id="quickreplyoptions" class="dzk_col_left">
+                                    <ul>
+                                        <li><strong>{gt text="Options"}</strong></li>
+                                        {if $coredata.logged_in}
+                                        <li>
+                                            <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                            <label for="attach_signature">{gt text="Attach my signature"}</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1" />
+                                            <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
+                                        </li>
+                                        {/if}
+                                        <li id="quickreplybuttons" class="z-buttons hidden">
+                                            {button id="btnCreateQuickReply" class="dzk_detachable z-bt-small" src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
+                                            {button id="btnPreviewQuickReply" class="dzk_detachable z-bt-small" src=xeyes.png set=icons/extrasmall __alt="Preview" __title="Preview" __text="Preview"}
+                                            {button id="btnCancelQuickReply" class="dzk_detachable z-bt-small" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
+                                        </li>
+                                        <li id="nonajaxquickreplybuttons" class="z-buttons">
+                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
+                                            <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="dzk_col_right">
+                                    {plainbbcode textfieldid='message'}
+                                    {bbsmile textfieldid='message'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post_footer"></div>
+                </div>
+            </form>
         </div>
-    </div>
-</form>
 
+    </div>
+</div>
 
 {mediaattach_fileuploads objectid=$topic.topic_id}
 <div id="dzk_displayhooks">

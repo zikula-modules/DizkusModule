@@ -47,6 +47,7 @@
                         {if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
                         <a title="{gt text="View IP address"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id}">{img modname='Dizkus' src='icon_post_ip.gif' __alt='View IP address'}</a>
                         {/if}
+                        &nbsp;
                     </li>
                     {/if}
                 </ul>

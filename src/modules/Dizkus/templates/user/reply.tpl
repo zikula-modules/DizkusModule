@@ -21,7 +21,7 @@
                     <input type="hidden" name="topic" value="{$reply.topic_id}" />
                     <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="Reply to"}: {$reply.topic_subject|dzkbbsmile}</legend>
+                        <legend class="post_header">{gt text="Reply to %s" tag1=$reply.topic_subject|safetext}</legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
