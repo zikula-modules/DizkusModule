@@ -54,7 +54,7 @@
                             <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                             {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                         </dt>
-                        <dd class="posts">{gt text="%s reply" plural='%s replies' cound=$forum.forum_topics tag1=$forum.forum_topics}</dd>
+                        <dd class="posts">{$forum.forum_topics}</dd>
                         <dd class="lastpost">
                             <span>
                                 {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />
@@ -107,7 +107,7 @@
             <select name="moveto" id="moveto">
                 <option value=''>&lt;&lt; {gt text="Select target forum"} &gt;&gt;</option>
                 {foreach item=singleforum from=$forums}
-                <option value="{$singleforum.forum_id}">{$singleforum.cat_title}{gt text="&nbsp;::&nbsp;"}{$singleforum.forum_name}</option>
+                <option value="{$singleforum.forum_id}">{$singleforum.cat_title|safetext}{gt text="&nbsp;::&nbsp;"}{$singleforum.forum_name|safetext}</option>
                 {/foreach}
             </select>
         </div>
@@ -117,14 +117,14 @@
         </div>
         <div class="z-formrow">
             <label for="jointotopic">{gt text="To join topics, select the target topic here"}</label>
-            <span id="jointotopic">
-                <select name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
+            <span>
+                <select id="jointotopic" name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
                     <option value=''>&lt;&lt; {gt text="Choose target topic"} &gt;&gt;</option>
                     {foreach item=topic from=$forum.topics}
                     <option value="{$topic.topic_id}">{$topic.topic_title|safetext}</option>
                     {/foreach}
                 </select>
-                {gt text="or"}&nbsp;{gt text="Target topic"}&nbsp;#
+                <label for="jointo">{gt text="or target topic #"}</label>
                 <input type="text" name="jointo" id="jointo" value="" size="5" maxlength="10" />
             </span>
         </div>
