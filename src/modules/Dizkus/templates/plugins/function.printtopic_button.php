@@ -22,9 +22,9 @@ function smarty_function_printtopic_button($params, &$smarty)
     if (allowedtoreadcategoryandforum($params['cat_id'], $params['forum_id'])) {
         $themeinfo = ThemeUtil::getInfo('Printer');
         if ($themeinfo['active']) {
-            return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
+            return '<a class="dzk_arrow printlink" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
         }
-        return '<a class="dzk_img printlink" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
+        return '<a class="dzk_arrow printlink" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
     }
 
     return '';

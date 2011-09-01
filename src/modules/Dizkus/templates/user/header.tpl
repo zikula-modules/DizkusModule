@@ -43,7 +43,7 @@
             {* start of breadcrumbs *}
             <ul class="linklist navlinks z-clearfix">
                 <li class="icon-home">
-                    <a class="dzk_img homelink" title="{gt text='Forums index page'}" href="{modurl modname='Dizkus' type='user' func='main'}">{gt text="Forums index page"}</a>
+                    <a class="dzk_arrow homelink" title="{gt text='Forums index page'}" href="{modurl modname='Dizkus' type='user' func='main'}">{gt text="Forums index page"}</a>
                 </li>
                 {if $func eq 'main' AND $view_category neq -1}
                 <li>
@@ -87,19 +87,19 @@
             <ul class="linklist z-clearfix" style="float:right;">
                 {if $coredata.logged_in eq 1 AND $func eq 'main' AND $coredata.Dizkus.favorites_enabled eq 'yes'}
                 {if $favorites}
-                <li><a class="dzk_img showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
+                <li><a class="dzk_arrow showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
                 {else}
-                <li><a class="dzk_img showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourite forums only"}">{gt text="Show favourite forums only"}</a></li>
+                <li><a class="dzk_arrow showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourite forums only"}">{gt text="Show favourite forums only"}</a></li>
                 {/if}
                 {/if}
-                <li><a class="dzk_img latestpostslink" title="{gt text="View latest posts"}" href="{modurl modname='Dizkus' type=user func=viewlatest}">{gt text="View latest posts"}</a></li>
-                <li><a class="dzk_img searchlink" title="{gt text="Search forums"}" href="{modurl modname='Search' type=user func=main}">{gt text="Search forums"}</a></li>
+                <li><a class="dzk_arrow latestpostslink" title="{gt text="View latest posts"}" href="{modurl modname='Dizkus' type=user func=viewlatest}">{gt text="View latest posts"}</a></li>
+                <li><a class="dzk_arrow searchlink" title="{gt text="Search forums"}" href="{modurl modname='Search' type=user func=main}">{gt text="Search forums"}</a></li>
                 {if $coredata.logged_in neq 1}
-                <li><a class="dzk_img loginlink" title="{gt text="Log-in"}" href="{modurl modname="Users" type="user" func="loginscreen"}">{gt text="Log-in"}</a></li>
-                <li><a class="dzk_img registerlink" title="{gt text="Register"}" href="{modurl modname="Users" type="user" func="register"}">{gt text="Register"}</a></li>
+                <li><a class="dzk_arrow loginlink" title="{gt text="Log-in"}" href="{modurl modname="Users" type="user" func="loginscreen"}">{gt text="Log-in"}</a></li>
+                <li><a class="dzk_arrow registerlink" title="{gt text="Register"}" href="{modurl modname="Users" type="user" func="register"}">{gt text="Register"}</a></li>
                 {else}
-                <li><a class="dzk_img searchpostslink" title="{gt text="View your posts"}" href="{$coredata.user.uname|searchlink}">{gt text="View your posts"}</a></li>
-                <li><a class="dzk_img configurelink" title="{gt text="Personal settings"}" href="{modurl type="user" modname="Dizkus" func="prefs"}">{gt text="Personal settings"}</a></li>
+                <li><a class="dzk_arrow searchpostslink" title="{gt text="View your posts"}" href="{$coredata.user.uname|searchlink}">{gt text="View your posts"}</a></li>
+                <li><a class="dzk_arrow configurelink" title="{gt text="Personal settings"}" href="{modurl type="user" modname="Dizkus" func="prefs"}">{gt text="Personal settings"}</a></li>
                 {/if}
             </ul>
         </div>

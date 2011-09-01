@@ -48,22 +48,22 @@
                     <ul class="nonjavascriptpostingoptions linklist z-clearfix" style="float:right;">
                         {if $post.poster_data.moderate eq true}
                         {if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)}
-                        <li><a class="dzk_img movepostlink" title="{gt text="Move post"}" href="{modurl modname='Dizkus' type=user func=movepost post=$post.post_id}">{gt text="Move post"}</a></li>
-                        <li><a class="dzk_img splittopiclink" title="{gt text="Split topic"}" href="{modurl modname='Dizkus' type=user func=splittopic post=$post.post_id}">{gt text="Split topic"}</a></li>
+                        <li><a class="dzk_arrow movepostlink" title="{gt text="Move post"}" href="{modurl modname='Dizkus' type=user func=movepost post=$post.post_id}">{gt text="Move post"}</a></li>
+                        <li><a class="dzk_arrow splittopiclink" title="{gt text="Split topic"}" href="{modurl modname='Dizkus' type=user func=splittopic post=$post.post_id}">{gt text="Split topic"}</a></li>
                         {/if}
                         {/if}
 
                         {if isset($topic) AND $topic.topic_status neq 1}
                         {if $post.poster_data.reply eq true}
-                        <li><a class="dzk_img quotepostlink" title="{gt text="Quote"}" href="{modurl modname='Dizkus' type=user func=reply post=$post.post_id}">{gt text="Quote"}</a></li>
+                        <li><a class="dzk_arrow quotepostlink" title="{gt text="Quote"}" href="{modurl modname='Dizkus' type=user func=reply post=$post.post_id}">{gt text="Quote"}</a></li>
                         {/if}
                         {if $post.poster_data.edit eq 1}
-                        <li><a class="dzk_img editpostlink" title="{gt text="Edit/delete"}" href="{modurl modname='Dizkus' type=user func=editpost post=$post.post_id}">{gt text="Edit"}</a></li>
+                        <li><a class="dzk_arrow editpostlink" title="{gt text="Edit/delete"}" href="{modurl modname='Dizkus' type=user func=editpost post=$post.post_id}">{gt text="Edit"}</a></li>
                         {/if}
                         {elseif isset($topic)}
                         {img modname='Dizkus' src=icon_post_close.gif __alt="Topic locked" }
                         {/if}
-                        <li><a class="dzk_img notifymoderatorlink" href="{modurl modname='Dizkus' type=user func=report post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{gt text="Notify moderator"}</a></li>
+                        <li><a class="dzk_arrow notifymoderatorlink" href="{modurl modname='Dizkus' type=user func=report post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{gt text="Notify moderator"}</a></li>
                     </ul>
                 </div>
                 {/if}

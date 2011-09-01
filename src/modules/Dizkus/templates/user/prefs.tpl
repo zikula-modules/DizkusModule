@@ -12,7 +12,7 @@
             <ul class="linklist z-clearfix">
                 <li>{gt text="Recent posts order in topic view"}
                     <br />
-                    <span><a id="sortorder" class="dzk_img sortorderasclink hidden" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="now showing"}
+                    <span><a id="sortorder" class="dzk_arrow sortorderasclink hidden" href="javascript:void(0);" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="now showing"}
                     {if $post_order eq 'asc'}
                     <span id="sortorder_asc">{gt text="oldest submissions at top"})</span>
                     <span id="sortorder_desc" class="hidden">{gt text="newest submissions at top"})</span>
@@ -29,9 +29,9 @@
                     <noscript>
                         <div>
                             {if $post_order == 'asc'}
-                            <a class="dzk_img sortorderasclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})
+                            <a class="dzk_arrow sortorderasclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Oldest submissions at top"})
                             {else}
-                            <a class="dzk_img sortorderdesclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})
+                            <a class="dzk_arrow sortorderdesclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="change_post_order" return_to="prefs"}" title="{gt text="Change post order"}">{gt text="Change post order"}</a>&nbsp;({gt text="Recent posts sort order"}: {gt text="Newest submissions at top"})
                             {/if}
                         </div>
                     </noscript>
@@ -40,7 +40,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Manage topic subscriptions"}<br />
-                    <a class="dzk_img subscribetopiclink" href="{modurl modname='Dizkus' type=user func=topicsubscriptions}" title="{gt text="Manage topic subscriptions"}">{gt text="Manage topic subscriptions"}</a>
+                    <a class="dzk_arrow subscribetopiclink" href="{modurl modname='Dizkus' type=user func=topicsubscriptions}" title="{gt text="Manage topic subscriptions"}">{gt text="Manage topic subscriptions"}</a>
                 </li>
             </ul>
 
@@ -48,7 +48,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Favourites"}<br />
-                    <span><a id="forumdisplaymode" class="dzk_img favouriteslink hidden" href="javascript:void(0);" title="{gt text="Toggle forum display"}">{gt text="Toggle forum display"}</a>&nbsp;({gt text="now showing"}
+                    <span><a id="forumdisplaymode" class="dzk_arrow favouriteslink hidden" href="javascript:void(0);" title="{gt text="Toggle forum display"}">{gt text="Toggle forum display"}</a>&nbsp;({gt text="now showing"}
                     {if $favorites eq true}
                     <span id="favorites_true">{gt text="favourite forums only"})</span>
                     <span id="favorites_false" class="hidden">{gt text="all forums"})</span>
@@ -61,9 +61,9 @@
                     <noscript>
                         <div>
                             {if $favorites eq true}
-                            <a class="dzk_img showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
+                            <a class="dzk_arrow showallforumslink" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a>
                             {else}
-                            <a class="dzk_img showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
+                            <a class="dzk_arrow showfavoriteslink" href="{modurl modname=Dizkus type=user func=prefs act=showfavorites}" title="{gt text="Show favourites only"}">{gt text="Show favourites only"}</a>
                             {/if}
                         </div>
                     </noscript>
@@ -75,7 +75,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Posting display settings"}<br />
-                    <a class="dzk_img subscribelink" href="{modurl modname=Dizkus type=user func=signaturemanagement}" title="{gt text="Manage your signature"}">{gt text="Manage your signature"}</a>
+                    <a class="dzk_arrow subscribelink" href="{modurl modname=Dizkus type=user func=signaturemanagement}" title="{gt text="Manage your signature"}">{gt text="Manage your signature"}</a>
                 </li>
             </ul>
             {/if}
@@ -84,7 +84,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="'Ignore list' settings"}<br />
-                    <a class="dzk_img subscribelink" href="{modurl modname=Dizkus type=user func=ignorelistmanagement}" title="{gt text="Manage settings for the list of users that you are ignoring"}">{gt text="Manage settings for your ignore list"}</a>
+                    <a class="dzk_arrow subscribelink" href="{modurl modname=Dizkus type=user func=ignorelistmanagement}" title="{gt text="Manage settings for the list of users that you are ignoring"}">{gt text="Manage settings for your ignore list"}</a>
                 </li>
             </ul>
             {/if}
@@ -92,7 +92,7 @@
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Autosubscribe to new topics"}<br />
-                    <span id="javascriptautosubscription" class="dzk_img autosubscribelink hidden">
+                    <span id="javascriptautosubscription" class="dzk_arrow autosubscribelink hidden">
                     {if $autosubscribe eq true}
                     <input id="newtopicautosubscribe" name="newtopicautosubscribe" type="checkbox" value="1" checked="checked" style="margin-right: 1em;" />
                     <span id="autosubscription">{gt text="Yes, autosubscribe to new topics"}</span>
@@ -109,10 +109,10 @@
                         <div>
                             {if $autosubscribe eq false}
                             {gt text="(You are not subscribing new topics by default now)"}<br />
-                            <a class="dzk_img autosubscribelink" href="{modurl modname=Dizkus type=user func=prefs act=autosubscribe}" title="{gt text="Autosubscribe to new topics"}">{gt text="Yes, autosubscribe to new topics"}</a>
+                            <a class="dzk_arrow autosubscribelink" href="{modurl modname=Dizkus type=user func=prefs act=autosubscribe}" title="{gt text="Autosubscribe to new topics"}">{gt text="Yes, autosubscribe to new topics"}</a>
                             {else}
                             {gt text="(You are subscribing new topics by default now)"}< br />
-                            <a class="dzk_img autosubscribelink" href="{modurl modname=Dizkus type=user func=prefs act=noautosubscribe}" title="{gt text="Do not autosubscribeto new topics"}">{gt text="No, do not autosubscribeto new topics"}</a>
+                            <a class="dzk_arrow autosubscribelink" href="{modurl modname=Dizkus type=user func=prefs act=noautosubscribe}" title="{gt text="Do not autosubscribeto new topics"}">{gt text="No, do not autosubscribeto new topics"}</a>
                             {/if}
                         </div>
                     </noscript>
@@ -153,9 +153,9 @@
                         </dt>
                         <dd class="favorites">
                             {if $forum.is_subscribed eq 0}
-                            <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
+                            <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
                             {else}
-                            <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
+                            <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                             {/if}
 
                             <noscript>
@@ -171,9 +171,9 @@
                         {if $favorites_enabled eq 'yes'}
                         <dd class="favorites">
                             {if $forum.is_favorite eq 0}
-                            <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                            <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
                             {else}
-                            <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_img" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                            <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow" href="javascript:void(0);" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
                             {/if}
                             <noscript>
                                 <div>
