@@ -54,7 +54,7 @@
                             <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                             {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                         </dt>
-                        <dd class="posts">{gt text="%s replies" tag1=$topic.topic_replies}</dd>
+                        <dd class="posts">{gt text="%s reply" plural='%s replies' cound=$forum.forum_topics tag1=$forum.forum_topics}</dd>
                         <dd class="lastpost">
                             <span>
                                 {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />

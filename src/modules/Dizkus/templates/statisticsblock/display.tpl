@@ -26,7 +26,7 @@
     {foreach item=lastpost from=$lastposts}
     <li>
         <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.forum_name} :: {$lastpost.topic_title}">{$lastpost.topic_title|dzkbbsmile|truncate:21}</a><br />
-        {gt text="%s reply" plural="%s replies" tag1=$lastpost.topic_replies count=$lastpost.topic_replies domain="module_dizkus"}
+        {gt text='%s reply' plural='%s replies' tag1=$lastpost.topic_replies count=$lastpost.topic_replies domain="module_dizkus"}
         <br />
         {$lastpost.poster_name|profilelinkbyuname}<br />{$lastpost.posted_unixtime|dateformat:'datetimebrief':'':true}
     </li>

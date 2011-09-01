@@ -34,8 +34,8 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{gt text="%s topics" tag1=$forum.forum_topics|safehtml}</dd>
-                        <dd class="posts">{gt text="%s Posts" tag1=$forum.forum_posts|safehtml}</dd>
+                        <dd class="topics">{gt text='%s topic' plural='%s topics' count=$forum.forum_topics|safetext tag1=$forum.forum_topics|safetext}</dd>
+                        <dd class="posts">{gt text='%s post' plural='%s posts' count=$forum.forum_posts|safetext tag1=$forum.forum_posts|safetext}</dd>
                         <dd class="lastpost">
                             {if isset($forum.last_post_data)}
                             <span>
@@ -94,8 +94,8 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{gt text="%s topics" tag1=$forum.forum_topics|safehtml}</dd>
-                        <dd class="posts">{gt text="%s Posts" tag1=$forum.forum_posts|safehtml}</dd>
+                        <dd class="topics">{gt text='%s topic' plural='%s topics' count=$forum.forum_topics|safetext tag1=$forum.forum_topics|safetext}</dd>
+                        <dd class="posts">{gt text='%s post' plural='%s posts' count=$forum.forum_posts|safetext tag1=$forum.forum_posts|safetext}</dd>
                         <dd class="lastpost">
                             {if isset($forum.last_post_data)}
                             <span>

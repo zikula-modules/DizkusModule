@@ -271,10 +271,6 @@ div#editpostoptions ul li {
 #dizkus ul.topiclist li dt {
     width: 43%;
 }
-#dizkus ul.topiclist dfn {
-    /* Labels for post/view counts */
-    display: none;
-}
 
 /* Forum list styles */
 

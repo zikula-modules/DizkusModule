@@ -10,4 +10,3 @@
 {gt text="Maintain topic and forum subscriptions: %s" tag1=$subscription_url}
 
 {gt text="You are receiving this e-mail message because you are subscribed to be notified of events in the forums on %s." tag1=$base_url}
-

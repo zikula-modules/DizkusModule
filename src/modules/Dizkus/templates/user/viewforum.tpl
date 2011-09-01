@@ -36,14 +36,13 @@
                             {/foreach}
                             {/if}
                         </dt>
-
-                        <dd class="topics">{gt text="%s topics" tag1=$subforum.forum_topics|safehtml}</dd>
-                        <dd class="posts">{gt text="%s posts" tag1=$subforum.forum_posts|safehtml}</dd>
+                        <dd class="topics">{gt text='%s topic' plural='%s topics' count=$subforum.forum_topics|safetext tag1=$subforum.forum_topics|safetext}</dd>
+                        <dd class="posts">{gt text='%s post' plural='%s posts' count=$subforum.forum_posts|safetext tag1=$subforum.forum_posts|safetext}</dd>
                         <dd class="lastpost">
                             {if isset($subforum.last_post_data)}
                             <span>
                                 {gt text="Last post by %s" tag1=$subforum.last_post_data.name|profilelinkbyuname}<br />
-                                {gt text="Written on"} {$subforum.last_post_data.unixtime|dateformat:'datetimebrief'}:
+                                {gt text="Written on %s" tag1=$subforum.last_post_data.unixtime|dateformat:'datetimebrief'}:
                                 {if $subforum.last_post_data.url_anchor neq ''}
                                 <a class="latesttopicimage tooltips" href="{$subforum.last_post_data.url_anchor|safetext}" title="{gt text='View latest post: %s' tag1=$subforum.last_post_data.subject|safehtml|truncate:70}">{$subforum.last_post_data.subject|safetext|truncate:70}</a>
                                 {/if}
@@ -182,8 +181,8 @@
                         <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                         {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                     </dt>
-                    <dd class="posts">{gt text="%s replies" tag1=$topic.topic_replies}</dd>
-                    <dd class="views">{gt text="%s views" tag1=$topic.topic_views}</dd>
+                    <dd class="posts">{gt text='%s reply' plural='%s replies' count=$topic.topic_replies tag1=$topic.topic_replies}</dd>
+                    <dd class="views">{gt text='%s view' plural='%s views' count=$topic.topic_views tag1=$topic.topic_views}</dd>
                     <dd class="lastpost">
                         <span>
                             {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />
