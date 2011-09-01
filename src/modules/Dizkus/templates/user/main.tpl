@@ -34,8 +34,8 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{$forum.forum_topics|safehtml} <dfn>{gt text="Topics"}</dfn></dd>
-                        <dd class="posts">{$forum.forum_posts|safehtml} <dfn>{gt text="Posts"}</dfn></dd>
+                        <dd class="topics">{gt text="%s topics" tag1=$forum.forum_topics|safehtml}</dd>
+                        <dd class="posts">{gt text="%s Posts" tag1=$forum.forum_posts|safehtml}</dd>
                         <dd class="lastpost">
                             {if isset($forum.last_post_data)}
                             <span>
@@ -94,8 +94,8 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{$forum.forum_topics|safehtml} <dfn>{gt text="Topics"}</dfn></dd>
-                        <dd class="posts">{$forum.forum_posts|safehtml} <dfn>{gt text="Posts"}</dfn></dd>
+                        <dd class="topics">{gt text="%s topics" tag1=$forum.forum_topics|safehtml}</dd>
+                        <dd class="posts">{gt text="%s Posts" tag1=$forum.forum_posts|safehtml}</dd>
                         <dd class="lastpost">
                             {if isset($forum.last_post_data)}
                             <span>

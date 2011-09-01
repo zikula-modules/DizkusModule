@@ -33,7 +33,7 @@
                             </dt>
                             <dd class="favorites">
                                 <span>
-                                    <dfn>{gt text="Posted"}</dfn> {gt text="by"} {$subscription.poster_name|profilelinkbyuname}<br />
+                                    {gt text="Posted by %s" tag1=$subscription.poster_name|profilelinkbyuname}<br />
                                     {$subscription.topic_time|dateformat:'datetimebrief'}
                                 </span>
                             </dd>

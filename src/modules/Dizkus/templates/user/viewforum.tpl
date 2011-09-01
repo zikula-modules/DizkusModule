@@ -37,8 +37,8 @@
                             {/if}
                         </dt>
 
-                        <dd class="topics">{$subforum.forum_topics|safehtml} <dfn>{gt text="Topics"}</dfn></dd>
-                        <dd class="posts">{$subforum.forum_posts|safehtml} <dfn>{gt text="Posts"}</dfn></dd>
+                        <dd class="topics">{gt text="%s topics" tag1=$subforum.forum_topics|safehtml}</dd>
+                        <dd class="posts">{gt text="%s posts" tag1=$subforum.forum_posts|safehtml}</dd>
                         <dd class="lastpost">
                             {if isset($subforum.last_post_data)}
                             <span>
@@ -179,11 +179,11 @@
                         {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' }
                         {/if}
                         {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name}
-                        <span>{gt text="Poster"}: {$topic.uname|profilelinkbyuname}</span>
+                        <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                         {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                     </dt>
-                    <dd class="posts">{$topic.topic_replies}<dfn>{gt text="Replies"}</dfn></dd>
-                    <dd class="views">{$topic.topic_views}<dfn>{gt text="Views"}</dfn></dd>
+                    <dd class="posts">{gt text="%s replies" tag1=$topic.topic_replies}</dd>
+                    <dd class="views">{gt text="%s views" tag1=$topic.topic_views}</dd>
                     <dd class="lastpost">
                         <span>
                             {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />

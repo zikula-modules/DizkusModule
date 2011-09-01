@@ -51,13 +51,13 @@
                             {/if}
                             {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name}
                             <em class="z-sub">({$topic.topic_views} {gt text="Views"})</em>
-                            <span>{gt text="Poster"}: {$topic.uname|profilelinkbyuname}</span>
+                            <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                             {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                         </dt>
-                        <dd class="posts">{$topic.topic_replies}<dfn>{gt text="Replies"}</dfn></dd>
+                        <dd class="posts">{gt text="%s replies" tag1=$topic.topic_replies}</dd>
                         <dd class="lastpost">
                             <span>
-                                <dfn>{gt text="Last post"}</dfn> {gt text="by"} {$topic.last_poster|profilelinkbyuname}<br />
+                                {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />
                                 {$topic.post_time_unix|dateformat:'datetimebrief'}
                                 <a title="{gt text="View latest post"}" href="{$topic.last_post_url_anchor|safetext}">{img modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest post" }</a>
                             </span>
