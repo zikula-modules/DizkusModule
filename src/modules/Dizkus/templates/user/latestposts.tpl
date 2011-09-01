@@ -49,13 +49,13 @@
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
                             {if $post.sticky eq 1}
-                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)" }
+                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
                             {/if}
                             {if $post.topic_status eq 1}
-                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted." }
+                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
                             {/if}
                             {if $post.hot_topic eq 1}
-                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic" }
+                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                             {/if}
                             <a href="{$post.last_post_url_anchor}" title="{$post.topic_title|truncate:70}">{$post.topic_title|truncate:70}</a>
                             <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' func='viewforum' forum=$post.forum_id}" title="{$post.forum_name|truncate:70}">{$post.forum_name|truncate:70}</a></span>
@@ -103,13 +103,13 @@
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
                             {if $post.sticky eq 1}
-                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)" }
+                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
                             {/if}
                             {if $post.topic_status eq 1}
-                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted." }
+                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
                             {/if}
                             {if $post.hot_topic eq 1}
-                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic" }
+                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                             {/if}
                             <a href="{$post.last_post_url_anchor}" title="{$post.cat_title} :: {$post.forum_name}">{$post.topic_title}</a>
                             <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' func='viewforum' forum=$post.forum_id}" title="{$post.forum_name}">{$post.forum_name|truncate:"50"}</a></span>
@@ -158,13 +158,13 @@
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
                             {if $post.sticky eq 1}
-                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)" }
+                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
                             {/if}
                             {if $post.topic_status eq 1}
-                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted." }
+                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
                             {/if}
                             {if $post.hot_topic eq 1}
-                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic" }
+                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                             {/if}
                             <a href="{$post.last_post_url_anchor}" title="{$post.cat_title} :: {$post.forum_name}">{$post.topic_title}</a>
                             <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' func='viewforum' forum=$post.forum_id}" title="{$post.forum_name}">{$post.forum_name|truncate:"50"}</a></span>

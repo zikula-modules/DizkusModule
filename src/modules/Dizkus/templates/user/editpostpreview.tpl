@@ -61,7 +61,7 @@
                         <li><a class="dzk_arrow editpostlink tooltips" title="{gt text="Edit post"}" href="{modurl modname='Dizkus' type=user func=editpost post=$post.post_id}">{gt text="Edit"}</a></li>
                         {/if}
                         {elseif isset($topic)}
-                        {img modname='Dizkus' src=icon_post_close.gif class="tooltips" __alt="Topic locked" }
+                        {img modname='Dizkus' src=icon_post_close.gif class="tooltips" __alt="Topic locked"}
                         {/if}
                         <li><a class="dzk_arrow notifymoderatorlink tooltips" href="{modurl modname='Dizkus' type=user func=report post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{gt text="Notify moderator"}</a></li>
                     </ul>

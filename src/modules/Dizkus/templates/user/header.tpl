@@ -131,7 +131,7 @@
             {$topic.topic_title|safetext}
         </span>       
         {/if}
-        <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom" }</a>
+        <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a>
     </h2>
     {elseif $maintitle neq ''}
     <h2>{$maintitle|safetext}</h2>

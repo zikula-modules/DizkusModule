@@ -1,6 +1,6 @@
 <div id="dzk_search">
     <div>
-        <input type="checkbox" name="active[Dizkus]" id="active_Dizkus" value="1" { if $active }checked="checked"{ /if } />
+        <input type="checkbox" name="active[Dizkus]" id="active_Dizkus" value="1" {if $active}checked="checked"{/if} />
         <label for="active_Dizkus">{gt text='Search forums' domain="module_dizkus"}</label>
         <div class="z-formnote z-informationmsg">{gt text='Notice: For forum searches, your search query must be between %1$s and %2$s characters long.' tag1=$coredata.Dizkus.minsearchlength tag2=$coredata.Dizkus.maxsearchlength domain="module_dizkus"}</div>
     </div>
@@ -14,9 +14,9 @@
         <dd>
             <select name="Dizkus_forum[]" id="Dizkus_forum" size="5" multiple="multiple">
                 <option value="-1" selected="selected">{gt text='All forums' domain="module_dizkus"}</option>
-                { foreach item='forum' from=$forums }
-                <option value="{ $forum.forum_id }">{ $forum.cat_title|safetext } {gt text='&nbsp;::&nbsp;'} { $forum.forum_name|safetext }</option>
-                { /foreach }
+                {foreach item='forum' from=$forums}
+                <option value="{$forum.forum_id}">{$forum.cat_title|safetext} {gt text='&nbsp;::&nbsp;'} {$forum.forum_name|safetext}</option>
+                {/foreach}
             </select>
         </dd>
 
