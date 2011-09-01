@@ -191,14 +191,10 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->setVar('ignorelist_handling', 'medium');
         $this->setVar('minsearchlength', 3);
         $this->setVar('maxsearchlength', 30);
-        // 3.1
-        $this->setVar('allowgravatars', 1);
-        $this->setVar('gravatarimage', 'gravatar.gif');
-    
-        
+        // 3.2
+
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
 
-        
         // Initialisation successful
         return true;
     }

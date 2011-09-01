@@ -106,15 +106,6 @@
             {formcheckbox id="removesignature" checked=$removesignature_checked}
         </div>
         <div class="z-formrow">
-            {formlabel for="allowgravatars" __text="Allow globally recognized avatars"}
-            {formcheckbox id="allowgravatars" checked=$allowgravatars_checked}
-        </div>
-        <div class="z-formrow">
-            {formlabel for="gravatarimage" __text="Default gravatar image"}
-            {formtextinput id="gravatarimage" text=$coredata.Dizkus.gravatarimage size="150" maxLength="250"}
-            <em class="z-sub z-formnote">{gt text="Example: gravatar.gif"}</em>
-        </div>
-        <div class="z-formrow">
             {formlabel for="newtopicconf" __text="Display confirmation when a new topic has been created"}
             {formcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked}
         </div>

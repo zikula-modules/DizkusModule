@@ -63,7 +63,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('hideusers',               $data['hideusers'] == 1 ? 'yes' : 'no');
             $this->setVar('signaturemanagement',     $data['signaturemanagement'] == 1 ? 'yes' : 'no');
             $this->setVar('removesignature',         $data['removesignature'] == 1 ? 'yes' : 'no');
-            $this->setVar('allowgravatars',          $data['allowgravatars']);
             $this->setVar('striptags',               $data['striptags'] == 1 ? 'yes' : 'no');
             $this->setVar('newtopicconfirmation',    $data['newtopicconf'] == 1 ? 'yes' : 'no');
             $this->setVar('forum_enabled',           $data['forum_enabled'] == 1 ? 'yes' : 'no');
@@ -92,7 +91,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('signature_end',       $data['signature_end']);
             $this->setVar('forum_disabled_info', $data['forum_disabled_info']);
             $this->setVar('url_ranks_images',    $data['url_ranks_images']);
-            $this->setVar('gravatarimage',       $data['gravatarimage']);
 
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
 
@@ -106,7 +104,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('hideusers',               'no');
             $this->setVar('signaturemanagement',     'no');
             $this->setVar('removesignature',         'no');
-            $this->setVar('allowgravatars',          1);
             $this->setVar('striptags',               'no');
             $this->setVar('newtopicconfirmation',    'no');
             $this->setVar('forum_enabled',           'yes');
@@ -132,11 +129,10 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('signature_end',       '');
             $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
             $this->setVar('url_ranks_images',    'modules/Dizkus/images/ranks');
-            $this->setVar('gravatarimage',       'gravatar.gif');
 
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
 
-        return true;//$this->redirect($this->url('Dizkus','admin','preferences'));
+        return true;
     }
 }

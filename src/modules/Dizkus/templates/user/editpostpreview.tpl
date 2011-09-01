@@ -10,7 +10,7 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster_data.uname|profilelinkbyuname}</strong>
                     <br />
-                    {dzkuseravatar uid=$post.poster_data.uid}
+                    {useravatar uid=$post.poster_data.uid}
                     {if isset($post.poster_data.rank_image) && isset($post.poster_data.rank)}
                     <br />
                     <img class="userinforankimage" src="{$baseurl}{$post.poster_data.rank_image}" alt="{$post.poster_data.rank}" />

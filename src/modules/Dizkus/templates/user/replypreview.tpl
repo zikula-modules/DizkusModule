@@ -8,7 +8,7 @@
                 <div class="dzk_avatar">
                     <strong>{$reply.poster_data.uname|profilelinkbyuname}</strong>
                     <br />
-                    {dzkuseravatar uid=$reply.poster_data.uid}
+                    {useravatar uid=$reply.poster_data.uid}
                     {if isset($reply.poster_data.rank_image) && isset($reply.poster_data.rank)}
                     <br />
                     <img class="userinforankimage" src="{$baseurl}{$reply.poster_data.rank_image}" alt="{$reply.poster_data.rank}" {$reply.poster_data.rank_image_image_attr.3} />

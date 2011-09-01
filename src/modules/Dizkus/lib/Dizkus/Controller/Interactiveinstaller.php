@@ -347,7 +347,8 @@ Class Dizkus_Controller_Interactiveinstaller extends Zikula_Controller_AbstractI
         DBUtil::dropTable('dizkus_users');
     
         $this->delVar('autosubscribe');
-    
+        $this->delVar('allowgravatars');
+        $this->delVar('gravatarimage');
         return true;
     }
 
