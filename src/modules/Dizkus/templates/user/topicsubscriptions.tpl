@@ -58,9 +58,9 @@
 
         {/if}
 
-        <p>
+        <div class="z-buttons z-gap">
             {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
-        </p>
+        </div>
     </div>
 </form>
 

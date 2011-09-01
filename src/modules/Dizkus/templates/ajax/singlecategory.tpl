@@ -20,19 +20,19 @@
                 <img id="progresscategoryimage_{$category.cat_id}" style="visibility: hidden; margin-left: 5px;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
             </div>
         </div>
-        <form class="z-form" id="editcategoryform_{$category.cat_id}" name="editcategoryform_{$category.cat_id}" action="javascript: void(0);" method="post">
+        <form class="z-form" id="editcategoryform_{$category.cat_id}" action="javascript: void(0);" method="post">
             <div id="editcategorycontent_{$category.cat_id}" style="{if $newcategory <> true}display: none; {/if}margin: 0 1em;">
                 <fieldset>
                     <legend>{gt text="Edit category title"}</legend>
                     <input type="hidden" name="cat_id" value="{$category.cat_id}" />
                     <input type="hidden" name="authid" value="" />
                     <div class="z-formrow">
-                        <label for="cat_title">{gt text="Category"}</label>
-                        <input id="cat_title" name="cat_title" type="text" value="{$category.cat_title}" size="50" maxlength="100" />
+                        <label for="cat_title_{$category.cat_id}">{gt text="Category"}</label>
+                        <input id="cat_title_{$category.cat_id}" name="cat_title" type="text" value="{$category.cat_title}" size="50" maxlength="100" />
                     </div>
                     <div class="z-formrow"  {if $category.forums|@count <> 0} style="display: none;"{/if} id="deletecategory_{$category.cat_id}">
-                        <label for="delete">{gt text="Delete this category"}</label>
-                        <input name="delete" id="delete" type="checkbox" value="delete" />
+                        <label for="delete_{$category.cat_id}">{gt text="Delete this category"}</label>
+                        <input name="delete" id="delete_{$category.cat_id}" type="checkbox" value="delete" />
                     </div>
                     {if $newcategory eq true}
                     <input type="hidden" name="add" value="add" />
