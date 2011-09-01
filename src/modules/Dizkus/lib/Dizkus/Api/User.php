@@ -443,7 +443,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                                 $forum['new_posts'] = false;
                             }
             
-                            $posted_unixtime= dzk_str2time($forum['post_time']); // strtotime ($forum['post_time']);
+                            $posted_unixtime= strtotime($forum['post_time']);
                             $posted_ml = DateUtil::formatDatetime($posted_unixtime, 'datetimebrief');
                             if ($posted_unixtime) {
                                 if ($forum['uid']==1) {
@@ -760,7 +760,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 }
                 $topic['total_posts'] = $topic['topic_replies'] + 1;
             
-                $topic['post_time_unix'] = dzk_str2time($topic['post_time']); //strtotime ($topic['post_time']);
+                $topic['post_time_unix'] = strtotime($topic['post_time']);
                 $posted_ml = DateUtil::formatDatetime($topic['post_time_unix'], 'datetimebrief');
                 $topic['last_post'] = DataUtil::formatForDisplay($this->__f('%1$s<br />by %2$s', array($posted_ml, $topic['last_poster'])));
             
@@ -917,7 +917,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $topic = $result[0];
             $topic['topic_id'] = $args['topic_id'];
             $topic['start'] = $start;
-            $topic['topic_unixtime'] = dzk_str2time($topic['topic_time']); //strtotime ($topic['topic_time']);
+            $topic['topic_unixtime'] = strtotime($topic['topic_time']);
             $topic['post_sort_order'] = $post_sort_order;
     
             // pop3_active contains the external source (if any), create the correct var name
@@ -1029,7 +1029,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                     }
                     // we now have the data and use them
                     $post['poster_data'] = $userdata[$post['poster_id']];
-                    $post['posted_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
+                    $post['posted_unixtime'] = strtotime($post['post_time']);
                     // we use br2nl here for backwards compatibility
                     //$message = phpbb_br2nl($message);
                     //$post['post_text'] = phpbb_br2nl($post['post_text']);
@@ -1228,7 +1228,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 $review['poster_data'] = $this->get_userdata_from_id(array('userid' => $review['poster_id']));
             
                 // TODO extract unixtime directly from MySql
-                $review['post_unixtime'] = dzk_str2time($review['post_time']); //strtotime ($review['post_time']);
+                $review['post_unixtime'] = strtotime($review['post_time']);
                 $review['post_ml'] = DateUtil::formatDatetime($review['post_unixtime'], 'datetimebrief');
             
                 $message = $review['post_text'];
@@ -1664,7 +1664,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $post['poster_data'] = $this->get_userdata_from_id(array('userid' => $post['poster_id']));
     
         // create unix timestamp
-        $post['post_unixtime'] = dzk_str2time($post['post_time']); //strtotime ($post['post_time']);
+        $post['post_unixtime'] = strtotime($post['post_time']);
         $post['posted_unixtime'] = $post['post_unixtime'];
     
         $pn_uid = UserUtil::getVar('uid');
@@ -2164,7 +2164,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
-        $topic_unixtime= dzk_str2time($myrow[0]['topic_time']); //strtotime ($myrow['topic_time']);
+        $topic_unixtime= strtotime($myrow[0]['topic_time']);
         $DU = new DateUtil();
         $topic_time_ml = $DU->formatDatetime($topic_unixtime, 'datetimebrief');
     
@@ -2719,7 +2719,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 $post['poster_name'] = UserUtil::getVar('uname', $post['poster_id']);
             }
     
-            $post['posted_unixtime'] = dzk_str2time($post['post_time']); // strtotime ($post['post_time']);
+            $post['posted_unixtime'] = strtotime($post['post_time']);
             $post['post_time'] = DateUtil::formatDatetime($post['posted_unixtime'], 'datetimebrief');
     
             $post['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic',
