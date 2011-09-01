@@ -8,7 +8,7 @@
 <p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
 {/if}
 
-<form class="z-form" method="post" action="{modurl modname=Dizkus type=user func=moderateforum forum=$forum.forum_id}">
+<form class="z-form" method="post" action="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">
 
     {if $forum.topics}
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
@@ -130,10 +130,9 @@
         </div>
     </fieldset>
     <div class="z-formbuttons z-buttons">
-        {* FOR Creating shadow topic the authkey is needed *}
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
-        <button class="dzk_img ok" name="submit" type="submit" value="submit" title="{gt text="Submit"}">{gt text="Submit"}</button>
-        <button class="dzk_img cancel" name="reset" type="reset" value="reset" title="{gt text="Cancel"}">{gt text="Cancel"}</button>
+        {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+        {button src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
     </div>
 </form>
 

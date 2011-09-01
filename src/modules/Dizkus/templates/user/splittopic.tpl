@@ -16,7 +16,7 @@
             </div>
         </fieldset>
         <div class="z-formbuttons z-buttons">
-            <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Split topic"}">{gt text="Split topic"}</button>
+            {button src="button_ok.png" set="icons/extrasmall" __alt="Split topic" __title="Split topic" __text="Split topic"}
         </div>
     </div>
 </form>

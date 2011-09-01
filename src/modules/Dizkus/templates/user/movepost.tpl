@@ -18,7 +18,7 @@
             </div>
         </fieldset>
         <div class="z-formbuttons z-buttons">
-            <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Move post"}">{gt text="Move post"}</button>
+            {button src="button_ok.png" set="icons/extrasmall" __alt="Move post" __title="Move post" __text="Move post"}
         </div>
     </div>
 </form>

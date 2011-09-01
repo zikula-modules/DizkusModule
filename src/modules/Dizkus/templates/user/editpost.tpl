@@ -54,10 +54,10 @@
                                             <label for="attach_signature">&nbsp;{gt text="Attach my signature"}</label>
                                         </li>
                                         {/if}
-                                        <li id="editpostbuttons" class="dzk_buttonmargin">
-                                            <input class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}" />
-                                            <input class="dzk_img preview" type="submit" name="preview" value="{gt text="Preview"}" />
-                                            <input class="dzk_img cancel" type="submit" name="cancel" value="{gt text="Cancel"}" />
+                                        <li id="editpostbuttons" class="z-buttons">
+                                            {button class="dzk_detachable z-bt-small" src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+                                            {button class="dzk_detachable z-bt-small" src="xeyes.png" set="icons/extrasmall" __alt="Preview" __title="Preview" __text="Preview"}
+                                            {button class="dzk_detachable z-bt-small" src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
                                         </li>
                                     </ul>
 

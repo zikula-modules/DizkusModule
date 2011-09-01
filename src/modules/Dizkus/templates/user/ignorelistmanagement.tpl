@@ -18,7 +18,7 @@
     </div>
 </fieldset>
 <div class="z-formbuttons z-buttons">
-    {formbutton commandName="update" __text="Save" class="dzk_img ok"}
+    {formbutton commandName="update" __text="Save" class="z-bt-ok"}
 </div>
 {/form}
 

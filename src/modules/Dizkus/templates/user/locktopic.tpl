@@ -20,7 +20,7 @@
         <fieldset id="dzk_locktopic">
             <legend>{gt text="Confirmation prompt"}</legend>
             <div class="z-formbuttons z-buttons">
-                <button class="dzk_img ok" type="submit" name="submit" value="{$buttontitle}">{$buttontitle}</button>
+                {button src="button_ok.png" set="icons/extrasmall" alt=$buttontitle title=$buttontitle text=$buttontitle}
             </div>
         </fieldset>
     </div>

@@ -25,7 +25,7 @@
                 <input type="checkbox" id="createshadowtopic" name="createshadowtopic" value="1" />
             </div>
             <div class="z-formbuttons z-buttons">
-                <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Move topic"}">{gt text="Move topic"}</button>
+                {button src="button_ok.png" set="icons/extrasmall" __alt="Move topic" __title="Move topic" __text="Move topic"}
             </div>
         </fieldset>
     </div>
@@ -45,7 +45,7 @@
                 </span>
             </div>
             <div class="z-formbuttons z-buttons">
-                <button class="dzk_img ok" type="submit" name="submit" value="{gt text="Join topics"}">{gt text="Join topics"}</button>
+                {button src="button_ok.png" set="icons/extrasmall" __alt="Join topics" __title="Join topics" __text="Join topics"}
             </div>
         </fieldset>
     </div>

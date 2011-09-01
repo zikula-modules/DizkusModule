@@ -1,10 +1,5 @@
 /*******************************************************************************
-* phpBB3's prosilver theme adapted for Dizkus
-*
-* @author Giacomo Gatelli [arthens]
-* @author Mateo Tibaquir� [nestormateo]
-* @author Carsten Volmer [herr.vorragend]
-*
+* Dizkus Stylesheet
 /*******************************************************************************/
 
 #dizkus .dzk_col_left {
@@ -550,70 +545,6 @@ div#editpostoptions ul li {
 #dizkus .bbcode p {
     margin: 2px 0;
     padding: 2px 0;
-}
-
-/* buttons */
-
-#dizkus button,
-#dizkus_admin button {
-    cursor: pointer;
-}
-
-#dizkus button.dzk_img,
-#dizkus input.dzk_img,
-#dizkus_admin button.dzk_img,
-#dizkus_admin input.dzk_img {
-    background:none;
-    border:1px outset #CCCCCC;
-    cursor:pointer;
-    font-size:1em;
-    line-height:1em;
-    padding:3px 5px 3px 20px;
-    color: black;
-}
-
-#dizkus a.dzk_img,
-#dizkus_admin a.dzk_img {
-    padding:3px 5px 3px 20px;
-}
-#dizkus .dzk_buttonmargin .dzk_img,
-#dizkus_admin .dzk_buttonmargin .dzk_img {
-    margin:0 5px 0 0;
-}
-#dizkus button.ok,
-#dizkus input.ok,
-#dizkus_admin button.ok,
-#dizkus_admin input.ok {
-    background: url(../images/icon_ok.gif) no-repeat 2px 50%;
-}
-
-#dizkus button.cancel,
-#dizkus input.cancel,
-#dizkus_admin button.cancel,
-#dizkus_admin input.cancel {
-    background: url(../images/icon_cancel.gif) no-repeat 2px 50%;
-}
-
-#dizkus button.preview,
-#dizkus input.preview,
-#dizkus_admin button.preview,
-#dizkus_admin input.preview {
-    background: url(../images/icon_preview.gif) no-repeat 2px 50%;
-}
-
-#dizkus button.delete,
-#dizkus_admin button.delete {
-    background: url(../images/icon_delete.gif) no-repeat 2px 50%;
-}
-
-#dizkus button.add,
-#dizkus_admin button.add {
-    background: url(../images/icon_add.gif) no-repeat 2px 50%;
-}
-
-#dizkus button.search,
-#dizkus_admin button.search {
-    background: url(../images/icon_search.gif) no-repeat 2px 50%;
 }
 
 /*******************************************************************************/

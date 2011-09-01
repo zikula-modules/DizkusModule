@@ -48,10 +48,10 @@
                                             <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
                                         </li>
                                         {/if}
-                                        <li id="nonajaxreplybuttons" class="dzk_buttonmargin">
-                                            <input class="dzk_img ok" type="submit" name="submit" value="{gt text="Submit"}" />
-                                            <input class="dzk_img preview" type="submit" name="preview" value="{gt text="Preview"}" />
-                                            <input class="dzk_img cancel" type="submit" name="reset" value="{gt text="Cancel"}" />
+                                        <li id="nonajaxreplybuttons" class="z-buttons">
+                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
+                                            <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
                                         </li>
                                     </ul>
                                 </div>

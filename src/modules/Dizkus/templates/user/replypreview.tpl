@@ -30,7 +30,7 @@
             <div class="postbody dzk_colpost_right">
 
                 <div class="postinfo">
-                    {if isset($topic)}<a class="dzk_img linktopostlink" style="margin-right: 5px;" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start}#pid{$reply.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
+                    {if isset($topic)}<a class="linktopostlink" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start}#pid{$reply.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
                     <strong>{gt text="Posted"}:</strong>&nbsp;{$smarty.now|dateformat:'datetimebrief'}
                 </div>
 
