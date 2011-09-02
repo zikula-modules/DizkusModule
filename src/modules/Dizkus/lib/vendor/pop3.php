@@ -462,7 +462,7 @@ class pop3_class
 						$response=substr($response,1,strlen($response)-1);
 					break;
 			}
-			$body[$line]=$response;
+			$body[$line]=utf8_encode($response);
 		}
 		return("");
 	}
