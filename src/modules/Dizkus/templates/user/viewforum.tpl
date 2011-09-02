@@ -29,12 +29,6 @@
                         <dt {if $subforum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if} >
                             <a title="{gt text="Go to subforum"} '{$subforum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a><br />
                             {if $subforum.forum_desc neq ''}{$subforum.forum_desc|safehtml}<br />{/if}
-                            {if !empty($subforum.forum_mods)}
-                            <em>{gt text="Moderated by"}:</em>
-                            {foreach name='moderators' item='mod' key='modid' from=$subforum.forum_mods}
-                            {if $modid lt 1000000}{$mod|profilelinkbyuname}{else}{$mod|safetext}{/if}{if !$smarty.foreach.moderators.last}, {/if}
-                            {/foreach}
-                            {/if}
                         </dt>
                         <dd class="topics">{$subforum.forum_topics|safetext}</dd>
                         <dd class="posts">{$subforum.forum_posts|safetext}</dd>
@@ -177,7 +171,7 @@
                         {if $showattachment eq 1}
                         {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' }
                         {/if}
-                        {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name}
+                        {$topic.topic_id|viewtopiclink:$topic.topic_title}
                         <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                         {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                     </dt>
@@ -206,7 +200,6 @@
     <div class="inner"><strong>{gt text="There are no topics in this forum."}</strong></div>
 </div>
 {/if}
-
 
 {if $forum.forum_mods|@count > 0}
 <ul id="dzk_moderatorlist" class="linklist z-clearfix">

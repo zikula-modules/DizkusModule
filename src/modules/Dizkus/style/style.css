@@ -100,7 +100,6 @@ div#editpostoptions ul li {
 /* titles */
 
 #dizkus h2 {
-    margin:0.8em 0;
     text-align: left;
 }
 #dizkus h2 .editabletopicheader {
@@ -113,7 +112,7 @@ div#editpostoptions ul li {
 #dizkus h3.footer_title {
     border:none;
     border-bottom:1px solid #CCCCCC;
-    clear:both;
+    /*clear:both;*/
     color:inherit;
     font-size:1.05em;
     font-weight:bold;
@@ -146,6 +145,7 @@ div#editpostoptions ul li {
 #dizkus .roundedbar {
     background: #f2f3f3 url('../images/innerbox_bg.gif') repeat-x scroll 0 0;
     padding: 5px;
+    margin-bottom: 1.5em;
 }
 #dizkus .roundedbar {
     margin-bottom: 0.8em;
@@ -154,7 +154,7 @@ div#editpostoptions ul li {
 #dizkus .forumbg {
     margin-bottom: 4px;
     padding: 5px;
-    clear: both;
+    /*clear: both;*/
     background: #616161 url('../images/forabg.gif') repeat-x scroll 0 0;
 }
 

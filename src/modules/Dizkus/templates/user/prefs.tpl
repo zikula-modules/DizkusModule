@@ -37,6 +37,7 @@
                     </noscript>
                 </li>
             </ul>
+
             <ul class="linklist z-clearfix">
                 <li>
                     {gt text="Manage topic subscriptions"}<br />
