@@ -1307,7 +1307,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         }
     
         // Prep for DB is done by DBUtil
-        $obj['post_time']  = date('Y-m-d H:i');
+        $obj['post_time']  = date('Y-m-d H:i:s');
         $obj['topic_id']   = $args['topic_id'];
         $obj['forum_id']   = $forum_id;
         $obj['post_text']  = $args['message'];
@@ -3728,10 +3728,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         foreach ($args['items'] as $item)
         {
             // create the reference, we need it twice
-            $dateTimestamp = $item->get_date("Y-m-d H:i");
+            $dateTimestamp = $item->get_date("Y-m-d H:i:s");
             if (empty($dateTimestamp)) {
                 $reference = md5($item->get_link());
-                $dateTimestamp = date("Y-m-d H:i", time());
+                $dateTimestamp = date("Y-m-d H:i:s", time());
             } else {
                 $reference = md5($item->get_link() . '-' . $dateTimestamp);
             }
