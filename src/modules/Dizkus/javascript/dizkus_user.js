@@ -47,7 +47,19 @@ var DizkusUser = Class.create(DizkusBase, {
         };
 
         // find out which func we are in, this will help us to identify what needs to be done
-        this.funcname = window.location.search.toQueryParams().func;
+        var urlParts = document.URL.split('/');
+        var numUrlParts = urlParts.length;
+        var urlPart = '';
+        for (var i = 0; i < numUrlParts; i++) {
+            urlPart = urlParts[i];
+            if (urlPart == 'newtopic' || urlPart == 'viewforum' || urlPart == 'viewtopic' || urlPart == 'prefs' || urlPart == 'moderateforum' || urlPart == 'topicsubscriptions') {
+                this.funcname = urlPart;
+                break;
+            }
+        }
+        if (this.funcname == '') {
+            this.funcname = window.location.search.toQueryParams().func;
+        }
 
         switch (this.funcname) {
             case 'newtopic':
@@ -176,7 +188,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "forum=" + toggleforumfavouritebuttonid.split('_')[1];
 //Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=toggleforumfavourite",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumfavourite",
                 {
                     method: 'post',
                     parameters: pars,
@@ -210,7 +222,7 @@ var DizkusUser = Class.create(DizkusBase, {
         pars = '';
         Ajax.Responders.register(this.dzk_globalhandlers);
         myAjax = new Zikula.Ajax.Request(
-            "ajax.php?module=Dizkus&func=toggleautosubscription",
+            Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleautosubscription",
             {
                 method: 'post',
                 parameters: pars,
@@ -247,7 +259,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "forum=" + toggleforumsubscriptionbuttonid.split('_')[1]
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=toggleforumsubscription",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumsubscription",
                 {
                     method: 'post',
                     parameters: pars,
@@ -282,7 +294,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = '';
 //   Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=togglesortorder",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=togglesortorder",
                 {
                     method: 'post',
                     parameters: pars,
@@ -323,7 +335,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = '';
 //          Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=toggleforumdisplay",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumdisplay",
                 {
                     method: 'post',
                     parameters: pars,
@@ -362,7 +374,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "post=" + this.post_id;
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=editpost",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=editpost",
                 {
                     method: 'post',
                     parameters: pars,
@@ -438,7 +450,7 @@ var DizkusUser = Class.create(DizkusBase, {
     
 //        Ajax.Responders.register(this.dzk_globalhandlers);
         myAjax = new Zikula.Ajax.Request(
-            "ajax.php?module=Dizkus&func=updatepost",
+            Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatepost",
             {
                 method: 'post',
                 parameters: pars,
@@ -497,7 +509,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "topic=" + this.edittopicsubjectbuttonid.split('_')[1];
 //          Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=edittopicsubject",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=edittopicsubject",
                 {
                     method: 'post',
                     parameters: pars,
@@ -535,7 +547,7 @@ var DizkusUser = Class.create(DizkusBase, {
                "&subject=" + encodeURIComponent($F('topicsubjectedit_subject'));
         Ajax.Responders.register(this.dzk_globalhandlers);
         myAjax = new Zikula.Ajax.Request(
-            "ajax.php?module=Dizkus&func=updatetopicsubject",
+            Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatetopicsubject",
             {
                 method: 'post',
                 parameters: pars,
@@ -574,7 +586,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "topic=" + this.toggletopicstickybuttonid.split('_')[1] + "&mode=" + ((this.topic_sticky == false) ? 'sticky' : 'unsticky');
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=stickyunstickytopic",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=stickyunstickytopic",
                 {
                     method: 'post',
                     parameters: pars,
@@ -612,7 +624,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "topic=" + this.toggletopiclockbuttonid.split('_')[1] + "&mode=" + ((this.topic_locked == false) ? 'lock' : 'unlock');
 //          Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=lockunlocktopic",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=lockunlocktopic",
                 {
                     method: 'post',
                     parameters: pars,
@@ -650,7 +662,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "topic=" + this.toggletopicsubscriptionbuttonid.split('_')[1] + "&mode=" + ((this.topic_subscribed == false) ? 'subscribe' : 'unsubscribe');
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=subscribeunsubscribetopic",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=subscribeunsubscribetopic",
                 {
                     method: 'post',
                     parameters: pars,
@@ -704,7 +716,7 @@ var DizkusUser = Class.create(DizkusBase, {
                    '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic');
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                'ajax.php?module=Dizkus&func=newtopic',
+                Zikula.Config.baseURL + 'ajax.php?module=Dizkus&func=newtopic',
                 {
                     method: 'post',
                     parameters: pars,
@@ -759,7 +771,7 @@ var DizkusUser = Class.create(DizkusBase, {
 
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                'ajax.php?module=Dizkus&func=newtopic',
+                Zikula.Config.baseURL + 'ajax.php?module=Dizkus&func=newtopic',
                 {
                     method: 'post',
                     parameters: pars,
@@ -818,7 +830,7 @@ var DizkusUser = Class.create(DizkusBase, {
             pars = "post=" + quotelinkid.split('_')[1];
             Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=preparequote",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=preparequote",
                 {
                     method: 'post',
                     parameters: pars,
@@ -869,7 +881,7 @@ var DizkusUser = Class.create(DizkusBase, {
                    '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic');
 //          Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=reply",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
                 {
                     method: 'post',
                     parameters: pars,
@@ -934,7 +946,7 @@ var DizkusUser = Class.create(DizkusBase, {
         
 //            Ajax.Responders.register(this.dzk_globalhandlers);
             myAjax = new Zikula.Ajax.Request(
-                "ajax.php?module=Dizkus&func=reply",
+                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
                 {
                     method: 'post',
                     parameters: pars,
