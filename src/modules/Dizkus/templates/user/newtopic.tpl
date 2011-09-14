@@ -18,7 +18,7 @@
                     <input type="hidden" id="quote" name="quote" value="" />
                     <input type="hidden" id="authid" name="authid" value="" />
                     <fieldset>
-                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' func='viewforum' forum=$newtopic.forum_id}">{$newtopic.forum_name}{*|modcallhooks*}</a></legend>
+                        <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$newtopic.forum_id}">{$newtopic.forum_name}{*|modcallhooks*}</a></legend>
                         <div>
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                             <div>
@@ -27,7 +27,7 @@
                             </div>
                                 
                                 <br />
-                                {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}	
+                                {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
                                 <textarea class="lumicula_textarea" id="message" name="message" rows="10" cols="60" style="width:98%;">{$newtopic.message}</textarea>
                                 {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
                                 {if $coredata.Dizkus.striptags == 'yes'}
