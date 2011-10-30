@@ -25,13 +25,13 @@ Zikula.Dizkus.Base = Class.create({
 
     showdizkusinfo: function(infotext) {
         if($('dizkusinformation')) {
-            $('dizkusinformation').update(infotext).style.visibility = 'visible';
+            $('dizkusinformation').update(infotext).setStyle({visibility: 'visible'});
         }
     },
 
     hidedizkusinfo: function() {
         if($('dizkusinformation')) {
-            $('dizkusinformation').update('&nbsp;').style.visibility = 'hidden';
+            $('dizkusinformation').update('&nbsp;').setStyle({visibility: 'hidden'});
         }
     },
 
@@ -46,7 +46,7 @@ Zikula.Dizkus.Base = Class.create({
     },
 
     checkCheckAll: function(formtype) {
-        totalon = 0;
+        var totalon = 0;
         $$('.' + formtype + '_checkbox').each(function(el) {
             if (el.checked) {
                 totalon++;
