@@ -3,7 +3,7 @@
  */
 Zikula.define('Dizkus');
 
-Zikula.Dizkus.Base = Class.create({
+Zikula.Dizkus.BaseClass = Class.create({
     initialize: function() { /* nothing to do here atm */ },
 
     getcheckboxvalue: function(id) {

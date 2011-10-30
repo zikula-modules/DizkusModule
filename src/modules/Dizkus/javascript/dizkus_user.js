@@ -4,10 +4,10 @@
 Zikula.define('Dizkus');
 
 document.observe('dom:loaded', function() {
-    new Zikula.Dizkus.User();
+    Zikula.Dizkus.User = new Zikula.Dizkus.UserClass();
 });
 
-Zikula.Dizkus.User = Class.create(Zikula.Dizkus.Base, {
+Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     initialize: function() {
         this.funcname = '';
 

@@ -5,10 +5,10 @@
 Zikula.define('Dizkus');
 
 document.observe('dom:loaded', function() {
-    new Zikula.Dizkus.Admin();
+    Zikula.Dizkus.Admin = new Zikula.Dizkus.AdminClass();
 });
 
-Zikula.Dizkus.Admin = Class.create(Zikula.Dizkus.Base, {
+Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
     initialize: function() {
         this.containments = []
         this.funcname = '';
