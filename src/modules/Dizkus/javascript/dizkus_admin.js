@@ -423,8 +423,9 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
     createsortables: function() {
         // create containments array
+        this.containments = [];
         $$('ul[id^="cid"]').each(function(containment) {
-            this.containments[this.containments.length] = containment.id;
+            this.containments.push(containment.id);
         }.bind(this));
 
         // now create the sortables per category
