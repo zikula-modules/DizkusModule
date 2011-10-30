@@ -10,7 +10,7 @@ document.observe('dom:loaded', function() {
 
 Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
     initialize: function() {
-        this.containments = []
+        this.containments = [];
         this.funcname = '';
 
 
@@ -95,8 +95,8 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
     createcategory: function(cat_id) {
         this.toggleprogressimage(true, cat_id);
-        pars = {};
-        myAjax = new Zikula.Ajax.Request(
+        var pars = {};
+        var myAjax = new Zikula.Ajax.Request(
             'ajax.php?module=Dizkus&func=createcategory',
             {
                 method: 'post',
@@ -109,7 +109,7 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
 
                     // new category
                     this.toggleprogressimage(true, -1);
@@ -149,22 +149,21 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
     storecategory: function(cat_id) {
         this.toggleprogressimage(true, cat_id);
-        pars = Form.serialize('editcategoryform_'+ cat_id);
-        myAjax = new Zikula.Ajax.Request(
+        var pars = Form.serialize('editcategoryform_'+ cat_id);
+        var myAjax = new Zikula.Ajax.Request(
             'ajax.php?module=Dizkus&func=storecategory',
             {
                 method: 'post',
                 parameters: pars,
-                authid: 'authid',
                 onComplete: function(req) {
                     if (!req.isSuccess()) {
                         Zikula.showajaxerror(req.getMessage());
-                        msg = req.getData();
+                        var msg = req.getData();
                         this.toggleprogressimage(true, msg.old_id);
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
 
                     this.toggleprogressimage(true, msg.old_id);
 
@@ -180,7 +179,7 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                             $('showforumlist_' + msg.cat_id).show();
                             $('addforum_' + msg.cat_id).show();
 
-                            $('submitcategory_' + json.cat_id).observe('click', this.storecategory.bind(this, msg.cat_id));
+                            $('submitcategory_' + msg.cat_id).observe('click', this.storecategory.bind(this, msg.cat_id));
 
                             // recreate sortables
                             this.createsortables();
@@ -215,12 +214,12 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
         } else {
             this.toggleprogressimage(false, forum_id);
         }
-        pars = {
+        var pars = {
             'forum_id': forum_id, 
             'cat': cat_id
         };
 
-        myAjax = new Zikula.Ajax.Request(
+        var myAjax = new Zikula.Ajax.Request(
             'ajax.php?module=Dizkus&func=editforum',
             {
                 method: 'post',
@@ -229,8 +228,8 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                     // show error if necessary
                     if (!req.isSuccess()) {
                         Zikula.showajaxerror(req.getMessage());
-                        msg = req.getData();
-                        if (msg.new == true) {
+                        var msg = req.getData();
+                        if (msg['new'] == true) {
                             this.toggleprogressimage(true, msg.cat_id);
                         } else {
                             this.toggleprogressimage(false, msg.forum_id);
@@ -238,9 +237,9 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
 
-                    if(msg.new == true) {
+                    if(msg['new'] == true) {
                         this.toggleprogressimage(true, msg.cat_id);
 
                         $('cid_' + msg.cat_id).insert(msg.data);
@@ -300,7 +299,7 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 if($('forum_' + forum_id).siblings().size() == 1) {
                     // 3 = this forum li, emptycategory li  + newforum li
                     // after removing it the list will be virtually empty
-                    cat_id = $('forum_' + forum_id).parentNode.id.split('_')[1];
+                    var cat_id = $('forum_' + forum_id).parentNode.id.split('_')[1];
                     $('emptycategory_' + cat_id).show();
                 }
                 // remove it
@@ -311,8 +310,8 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
     storeforum: function(forum_id) {
         this.toggleprogressimage(false, forum_id);
-        pars = Form.serialize('editforumform_'+ forum_id);
-        myAjax = new Zikula.Ajax.Request(
+        var pars = Form.serialize('editforumform_'+ forum_id);
+        var myAjax = new Zikula.Ajax.Request(
             'ajax.php?module=Dizkus&func=storeforum',
             {
                 method: 'post',
@@ -320,12 +319,12 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 onComplete: function(req) {
                     if (!req.isSuccess()) {
                         Zikula.showajaxerror(req.getMessage());
-                        msg = req.getData();
+                        var msg = req.getData();
                         this.toggleprogressimage(false, msg.old_id);
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
 
                     this.toggleprogressimage(false, msg.old_id);
                     switch(msg.action) {
@@ -405,6 +404,7 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
     toggleprogressimage: function(typ, id) {
         // typ true = category (id=cat_id), false=forum (id=forum_id)
+        var imageid;
         if(id != -1) {
             imageid = (typ == true) ? 'progresscategoryimage_' + id : 'progressforumimage_' + id;
         } else {
@@ -439,13 +439,12 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 containment: this.containments,
                 onUpdate: function(containment) {
                     this.showdizkusinfo(storingnewsortorder);
-                    pars = Sortable.serialize(containment) + '&cat_id=' + containment.id.split('_')[1];
-                    myAjax = new Zikula.Ajax.Request(
+                    var pars = Sortable.serialize(containment) + '&cat_id=' + containment.id.split('_')[1];
+                    var myAjax = new Zikula.Ajax.Request(
                         'ajax.php?module=Dizkus&func=savetree',
                         {
                             method: 'post',
                             parameters: pars,
-                            authid: 'authid',
                             onComplete: function(req) {
                                 // check if the forum list for this category is empty
                                 if($$('#'+containment.id+' li[class*=existing]').size() == 0) {
@@ -477,13 +476,12 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
             only: 'existing',
             onUpdate: function() {
                 this.showdizkusinfo(storingnewsortorder);
-                pars = Sortable.serialize('category');
-                myAjax = new Zikula.Ajax.Request(
+                var pars = Sortable.serialize('category');
+                var myAjax = new Zikula.Ajax.Request(
                     'ajax.php?module=Dizkus&func=savetree',
                     {
                         method: 'post',
                         parameters: pars,
-                        authid: 'authid',
                         onComplete: function(req) {
                             this.hidedizkusinfo();
                             // show error if necessary
@@ -511,9 +509,9 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 $('rss2forum_' + forum_id).show();
                 break;
             default:
-                $('pnlogindata_' + forumid).hide();
-                $('mail2forum_' + forumid).hide();
-                $('rss2forum_' + forumid).hide();
+                $('pnlogindata_' + forum_id).hide();
+                $('mail2forum_' + forum_id).hide();
+                $('rss2forum_' + forum_id).hide();
         }
     }
 });
