@@ -2,13 +2,11 @@
  * dizkus_admin.js
  */
 
-document.observe('dom:loaded', function() 
-                               {     
-                                   Zikula.define('Dizkus');
-                                   new DizkusAdmin(); 
-                               });
+Zikula.define('Dizkus');
 
-var DizkusAdmin = Class.create(DizkusBase, {
+document.observe('dom:loaded', function() { new Zikula.Dizkus.Admin(); });
+
+Zikula.Dizkus.Admin = Class.create(Zikula.Dizkus.Base, {
     initialize: function() 
     {
         this.containments = new Array();

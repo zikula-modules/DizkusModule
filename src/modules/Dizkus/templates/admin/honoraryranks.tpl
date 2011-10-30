@@ -23,7 +23,7 @@
                 <div class="z-formrow">
                     <label for="newrank_image">{gt text="Internal Dizkus image"}</label>
                     <div>
-                        <select name="ranks[-1][rank_image]" id="newrank_image" onchange="ShowNewRankImage('{$coredata.Dizkus.url_ranks_images}')">
+                        <select name="ranks[-1][rank_image]" id="newrank_image" onchange="Zikula.Dizkus.ShowNewRankImage('{$coredata.Dizkus.url_ranks_images}')">
                             {foreach name='availableranks' item='rankimage' from=$rankimages}
                             <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign=selectedimage"}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                             {/foreach}
@@ -62,7 +62,7 @@
                         <input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|safetext}" maxlength="50" size="20" />
                     </td>
                     <td>
-                        <select name="ranks[{$rank.rank_id}][rank_image]" id="rank_image{$num}" onchange="ShowRankImage({$num}, '{$coredata.Dizkus.url_ranks_images}')">
+                        <select name="ranks[{$rank.rank_id}][rank_image]" id="rank_image{$num}" onchange="Zikula.Dizkus.ShowRankImage({$num}, '{$coredata.Dizkus.url_ranks_images}')">
                             {foreach item='rankimage' from=$rankimages}
                             <option value="{$rankimage}" {if $rankimage eq $rank.rank_image}selected="selected"{/if}>{$rankimage}</option>
                             {/foreach}

@@ -1,10 +1,11 @@
 /**
  * dizkus_tools.js
  */
+Zikula.define('Dizkus');
 
-var DizkusBase = Class.create({
+Zikula.Dizkus.Base = Class.create({
     initialize: function() { /* nothing to do here atm */ },
-    
+
     getcheckboxvalue: function(id){
         if($(id)) {
             if($(id).checked==true) {

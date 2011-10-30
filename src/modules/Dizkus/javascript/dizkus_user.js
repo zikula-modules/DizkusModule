@@ -1,10 +1,11 @@
 /**
  * dizkus_user.js
  */
+Zikula.define('Dizkus');
 
-document.observe('dom:loaded', function() { new DizkusUser(); });
+document.observe('dom:loaded', function() { new Zikula.Dizkus.User(); });
 
-var DizkusUser = Class.create(DizkusBase, {
+Zikula.Dizkus.User = Class.create(Zikula.Dizkus.Base, {
     initialize: function() 
     {
         this.funcname = '';
