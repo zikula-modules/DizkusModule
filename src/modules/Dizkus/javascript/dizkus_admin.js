@@ -369,9 +369,11 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                             $('forum_' + msg.old_id).id = 'forum_' + msg.forum_id;
 
+                            $('hideforum_' + msg.old_id).stopObserving();
                             $('hideforum_' + msg.old_id).show().id = 'hideforum_' + msg.forum_id;
                             $('hideforum_' + msg.forum_id).observe('click', this.toggleforum.bind(this, msg.forum_id));
 
+                            $('showforum_' + msg.old_id).stopObserving();
                             $('showforum_' + msg.old_id).hide().id = 'showforum_' + msg.forum_id;
                             $('showforum_' + msg.forum_id).observe('click', this.toggleforum.bind(this, msg.forum_id));
 
