@@ -78,11 +78,15 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 break;
 
             case 'managesubscriptions':
-                $('alltopic').observe('click', this.checkAll.bind(this, 'topic'));
+                if ($('alltopic')) {
+                    $('alltopic').observe('click', this.checkAll.bind(this, 'topic'));
+                }
                 $$('input.topic_checkbox').each(function(el) {
                     el.observe('click', this.checkCheckAll.bind(this, 'topic'));
                 }.bind(this));
-                $('allforum').observe('click', this.checkAll.bind(this, 'forum'));
+                if ($('allforum')) {
+                    $('allforum').observe('click', this.checkAll.bind(this, 'forum'));
+                }
                 $$('input.forum_checkbox').each(function(el) {
                     el.observe('click', this.checkCheckAll.bind(this, 'forum'));
                 }.bind(this));
