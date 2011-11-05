@@ -735,7 +735,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             var newTopicRedirect = msg.redirect;
                             $('MediaAttach_redirect').value = msg.uploadredirect;
                             $('MediaAttach_objectid').value = msg.uploadobjectid;
-                            this.updateAuthid(msg.uploadauthid);
                             $('btnUpload').click();
                         }
 
@@ -898,6 +897,12 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                         // show new posting
                         $('quickreplyposting').update(msg.data).removeClassName('hidden');
+                        // add observers to quote buttons per post
+                        var quotebutton = $('posting_'+msg.post_id).down('a[id^="quotebutton"]');
+                        quotebutton.observe('click', this.createQuote.bind(this, quotebutton.id));
+                        // add observers to edit buttons per post
+                        var editbutton = $('posting_'+msg.post_id).down('a[id^="editbutton"]');
+                        editbutton.observe('click', this.quickEdit.bind(this, editbutton.id));
 
                         // prepare everything for another quick reply
                         new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
