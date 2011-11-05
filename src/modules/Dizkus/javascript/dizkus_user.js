@@ -207,9 +207,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggleforumfavourite: function(toggleforumfavouritebuttonid) {
         if(this.favouritestatus == false) {
             this.favouritestatus = true;
-            pars = "forum=" + toggleforumfavouritebuttonid.split('_')[1];
+            var pars = "forum=" + toggleforumfavouritebuttonid.split('_')[1];
             //Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumfavourite",
                 {
                     method: 'post',
@@ -223,7 +223,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         if (msg.data == 'added') {
                             $(toggleforumfavouritebuttonid).update(unfavouriteForum);
@@ -240,9 +240,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     },
 
     toggleautosubscription: function() {
-        pars = '';
+        var pars = '';
         Ajax.Responders.register(this.dzk_globalhandlers);
-        myAjax = new Zikula.Ajax.Request(
+        var myAjax = new Zikula.Ajax.Request(
             Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleautosubscription",
             {
                 method: 'post',
@@ -254,7 +254,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
                     switch(msg.data) {
                         case 'autosubscription':
                             $('noautosubscription').addClassName('hidden');
@@ -276,9 +276,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggleforumsubscription: function(toggleforumsubscriptionbuttonid) {
         if(this.subscribeforumstatus == false) {
             this.subscribeforumstatus = true;
-            pars = "forum=" + toggleforumsubscriptionbuttonid.split('_')[1]
+            var pars = "forum=" + toggleforumsubscriptionbuttonid.split('_')[1]
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumsubscription",
                 {
                     method: 'post',
@@ -292,7 +292,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         if (msg.data == 'subscribed') {
                             $(toggleforumsubscriptionbuttonid).update(unsubscribeForum);
@@ -310,9 +310,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     togglesortorder: function() {
         if(this.sortorderstatus == false) {
             this.sortorderstatus = true;
-            pars = '';
+            var pars = '';
             //   Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=togglesortorder",
                 {
                     method: 'post',
@@ -327,7 +327,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         switch(msg.data) {
                             case 'desc':
@@ -350,9 +350,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggledisplay: function() {
         if(this.toggleforumdisplay == false) {
             this.toggleforumdisplay = true;
-            pars = '';
+            var pars = '';
             //          Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumdisplay",
                 {
                     method: 'post',
@@ -367,7 +367,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         if(msg.data == true) {
                             $('favorites_true').removeClassName('hidden');
@@ -388,9 +388,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             this.editstatus = true;
             this.editchanged = false;
             this.post_id = editpostlinkid.split('_')[1];
-            pars = "post=" + this.post_id;
+            var pars = "post=" + this.post_id;
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=editpost",
                 {
                     method: 'post',
@@ -403,7 +403,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         // hide posting options, update authid
                         $('postingoptions_' + this.post_id).hide();
@@ -451,7 +451,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             return;
         }
 
-        pars = '&post=' + this.post_id +
+        var pars = '&post=' + this.post_id +
         '&message=' + encodeURIComponent($F('postingtext_' + this.post_id + '_edit')) +
         '&attach_signature=' + this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature');
 
@@ -463,7 +463,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         }
 
         //        Ajax.Responders.register(this.dzk_globalhandlers);
-        myAjax = new Zikula.Ajax.Request(
+        var myAjax = new Zikula.Ajax.Request(
             Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatepost",
             {
                 method: 'post',
@@ -479,7 +479,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
 
                     $('postingtext_' + this.post_id + '_editor').remove();
 
@@ -518,9 +518,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     edittopicsubject: function() {
         if(this.subjectstatus == false) {
             this.subjectstatus = true;
-            pars = "topic=" + this.edittopicsubjectbuttonid.split('_')[1];
+            var pars = "topic=" + this.edittopicsubjectbuttonid.split('_')[1];
             //          Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=edittopicsubject",
                 {
                     method: 'post',
@@ -534,7 +534,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         $(this.edittopicsubjectbuttonid).hide();
 
@@ -554,10 +554,10 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             return;
         }
 
-        pars = "&topic=" + this.edittopicsubjectbuttonid.split('_')[1] +
+        var pars = "&topic=" + this.edittopicsubjectbuttonid.split('_')[1] +
         "&subject=" + encodeURIComponent($F('topicsubjectedit_subject'));
         Ajax.Responders.register(this.dzk_globalhandlers);
-        myAjax = new Zikula.Ajax.Request(
+        var myAjax = new Zikula.Ajax.Request(
             Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatetopicsubject",
             {
                 method: 'post',
@@ -572,7 +572,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                         return;
                     }
 
-                    msg = req.getData();
+                    var msg = req.getData();
 
                     $('topicsubjectedit_editor').remove();
                     $(this.edittopicsubjectbuttonid).update(msg.topic_title).show();
@@ -592,9 +592,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggletopicsticky: function() {
         if(this.stickystatus == false) {
             this.stickystatus = true;
-            pars = "topic=" + this.toggletopicstickybuttonid.split('_')[1] + "&mode=" + ((this.topic_sticky == false) ? 'sticky' : 'unsticky');
+            var pars = "topic=" + this.toggletopicstickybuttonid.split('_')[1] + "&mode=" + ((this.topic_sticky == false) ? 'sticky' : 'unsticky');
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=stickyunstickytopic",
                 {
                     method: 'post',
@@ -607,7 +607,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             Zikula.showajaxerror(req.getMessage());
                             return;
                         }
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         if(['sticky', 'unsticky'].include(msg.data)) {
                             if (this.topic_sticky == false) {
@@ -629,9 +629,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggletopiclock: function() {
         if(this.lockstatus == false) {
             this.lockstatus = true;
-            pars = "topic=" + this.toggletopiclockbuttonid.split('_')[1] + "&mode=" + ((this.topic_locked == false) ? 'lock' : 'unlock');
+            var pars = "topic=" + this.toggletopiclockbuttonid.split('_')[1] + "&mode=" + ((this.topic_locked == false) ? 'lock' : 'unlock');
             //          Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=lockunlocktopic",
                 {
                     method: 'post',
@@ -644,7 +644,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             Zikula.showajaxerror(req.getMessage());
                             return;
                         }
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         if(['locked', 'unlocked'].include(msg.data)) {
                             if (this.topic_locked == false) {
@@ -666,9 +666,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggletopicsubscription: function() {
         if(this.subscribestatus == false) {
             this.subscribestatus = true;
-            pars = "topic=" + this.toggletopicsubscriptionbuttonid.split('_')[1] + "&mode=" + ((this.topic_subscribed == false) ? 'subscribe' : 'unsubscribe');
+            var pars = "topic=" + this.toggletopicsubscriptionbuttonid.split('_')[1] + "&mode=" + ((this.topic_subscribed == false) ? 'subscribe' : 'unsubscribe');
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=subscribeunsubscribetopic",
                 {
                     method: 'post',
@@ -682,7 +682,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
                         if(['subscribed', 'unsubscribed'].include(msg.data)) {
                             if (this.topic_subscribed == false) {
                                 this.topic_subscribed = true;
@@ -711,13 +711,13 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             this.newtopicstatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingPost);
 
-            pars = '&forum=' + $F('forum') +
+            var pars = '&forum=' + $F('forum') +
             '&subject=' + encodeURIComponent($F('subject')) +
             '&message=' + encodeURIComponent($F('message')) +
             '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
             '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic');
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + 'ajax.php?module=Dizkus&func=newtopic',
                 {
                     method: 'post',
@@ -733,11 +733,12 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         if ($('myuploadframe') && $('btnUpload') && msg.uploadauthid) {
-                            newTopicUpload = true;
-                            newTopicRedirect = msg.redirect;
+                            // is this used?
+                            var newTopicUpload = true;
+                            var newTopicRedirect = msg.redirect;
                             $('MediaAttach_redirect').value = msg.uploadredirect;
                             $('MediaAttach_objectid').value = msg.uploadobjectid;
                             this.updateAuthid(msg.uploadauthid);
@@ -764,14 +765,14 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             this.newtopicstatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
 
-            pars = '&forum=' + $F('forum') +
+            var pars = '&forum=' + $F('forum') +
             "&subject=" + encodeURIComponent($F('subject')) +
             "&message=" + encodeURIComponent($F('message')) +
             "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
             "&preview=1" ;
 
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + 'ajax.php?module=Dizkus&func=newtopic',
                 {
                     method: 'post',
@@ -789,7 +790,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
                         $('newtopicpreview').update(msg.data).show();
                         if (event) Event.stop(event);
                     }.bind(this)
@@ -812,7 +813,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     createQuote: function(quotelinkid) {
         // check if the user highlighted a text portion and quote this instead of loading the
         // posting text from the server
-        var selection;
+        var selection, quotetext;
         if (window.getSelection) {
             quotetext = window.getSelection()+'';
         } else if (document.getSelection) {
@@ -828,9 +829,9 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         quotetext.strip();
         if(quotetext.length == 0) {
             // read the messages text using ajax
-            pars = "post=" + quotelinkid.split('_')[1];
+            var pars = "post=" + quotelinkid.split('_')[1];
             Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=preparequote",
                 {
                     method: 'post',
@@ -838,16 +839,15 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                     onComplete: function(req) {
                         if(!req.isSuccess()) {
                             Zikula.showajaxerror(req.getMessage());
-                            if (event) Event.stop(event);
                             return;
                         }
 
-                        oldvalue = $F('message');
+                        var oldvalue = $F('message');
                         if(oldvalue.length != 0) {
                             oldvalue += '\n';
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
                         $('message').setValue(oldvalue + msg.message  + '\n').focus();
                         return;
                     }.bind(this)
@@ -875,12 +875,12 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + storingReply);
-            pars = '&topic=' + $F('topic') +
+            var pars = '&topic=' + $F('topic') +
             '&message=' + encodeURIComponent($F('message')) +
             '&attach_signature=' + this.getcheckboxvalue('attach_signature') +
             '&subscribe_topic=' + this.getcheckboxvalue('subscribe_topic');
             //          Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
                 {
                     method: 'post',
@@ -899,7 +899,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
 
                         // clear textarea and reset preview
                         this.cancelQuickReply()
@@ -943,13 +943,13 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             this.replystatus = true;
             this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
 
-            pars = "&topic=" + $F('topic') +
+            var pars = "&topic=" + $F('topic') +
             "&message=" + encodeURIComponent($F('message')) +
             "&attach_signature=" + this.getcheckboxvalue('attach_signature') +
             "&preview=1";
 
             //            Ajax.Responders.register(this.dzk_globalhandlers);
-            myAjax = new Zikula.Ajax.Request(
+            var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
                 {
                     method: 'post',
@@ -966,7 +966,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             return;
                         }
 
-                        msg = req.getData();
+                        var msg = req.getData();
                         $('quickreplypreview').update(msg.data).removeClassName('hidden');
                         this.replystatus = false;
                     //if (event) Event.stop(event);
