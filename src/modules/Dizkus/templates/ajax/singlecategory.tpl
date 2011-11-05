@@ -25,7 +25,6 @@
                 <fieldset>
                     <legend>{gt text="Edit category title"}</legend>
                     <input type="hidden" name="cat_id" value="{$category.cat_id}" />
-                    <input type="hidden" name="authid" value="" />
                     <div class="z-formrow">
                         <label for="cat_title_{$category.cat_id}">{gt text="Category"}</label>
                         <input id="cat_title_{$category.cat_id}" name="cat_title" type="text" value="{$category.cat_title}" size="50" maxlength="100" />

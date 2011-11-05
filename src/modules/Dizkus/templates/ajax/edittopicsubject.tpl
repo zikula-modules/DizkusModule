@@ -8,7 +8,6 @@
                     {button id="topicsubjectedit_save" class="dzk_detachable z-bt-small" src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
                     {button id="topicsubjectedit_cancel" class="dzk_detachable z-bt-small" src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
                 </span>
-                <input type="hidden" id="topicsubjectedit_authid" name="topicsubjectedit_authid" value="{insert name='generateauthkey' module='Dizkus'}" />
             </div>
         </fieldset>
     </form>

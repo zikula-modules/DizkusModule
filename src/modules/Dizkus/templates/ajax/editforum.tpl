@@ -155,7 +155,6 @@
         {/if}
 
         <div class="z-formbuttons z-buttons">
-            <input type="hidden" name="authid" value="" />
             <input type="hidden" name="forum_id" value="{$forum.forum_id}" />
             <input type="hidden" name="cat_id" value="{$forum.cat_id}" />
             {button id="submitforum_`$forum.forum_id`" src="button_ok.png" set="icons/extrasmall" __alt="Save" __title="Save" __text="Save"}
