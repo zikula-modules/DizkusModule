@@ -317,7 +317,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function(req) {
                         this.sortorderstatus = false;
 
@@ -357,7 +356,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function(req) {
                         this.toggleforumdisplay = false;
 
@@ -468,7 +466,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             {
                 method: 'post',
                 parameters: pars,
-                authid: 'authid',
                 onComplete: function(req) {
                     this.editstatus = false;
                     this.editchanged = false;
@@ -525,7 +522,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function(req) {
                         // show error if necessary
                         if (!req.isSuccess()) {
@@ -562,7 +558,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             {
                 method: 'post',
                 parameters: pars,
-                authid: 'authid',
                 onComplete: function(req) {
                     this.subjectstatus = false;
 
@@ -722,7 +717,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function (req) {
                         this.hidedizkusinfo();
                         this.newtopicstatus = false;
@@ -777,7 +771,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function (req) {
                         this.hidedizkusinfo();
                         this.newtopicstatus = false;
@@ -885,7 +878,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function(req) {
                         this.hidedizkusinfo();
 
@@ -954,7 +946,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 {
                     method: 'post',
                     parameters: pars,
-                    authid: 'authid',
                     onComplete: function(req) {
                         this.hidedizkusinfo();
 
