@@ -83,15 +83,23 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 $('btnCancelNewTopic').observe('click', this.cancelnewtopic.bind(this));
                 break;
             case 'viewforum':
-                $('dzk_javascriptareaforum').removeClassName('hidden');
+                if ($('dzk_javascriptareaforum')) {
+                    $('dzk_javascriptareaforum').removeClassName('hidden');
+                }
 
                 // find out the forum subscription status
-                toggleforumsubscriptionbutton = $$('a[id^="toggleforumsubscriptionbutton"]').first();
-                toggleforumsubscriptionbutton.observe('click', this.toggleforumsubscription.bind(this, toggleforumsubscriptionbutton.id));
+                var toggleforumsubscriptionbutton = $$('a[id^="toggleforumsubscriptionbutton"]');
+                if (toggleforumsubscriptionbutton.size() > 0) {
+                    toggleforumsubscriptionbutton = toggleforumsubscriptionbutton.first();
+                    toggleforumsubscriptionbutton.observe('click', this.toggleforumsubscription.bind(this, toggleforumsubscriptionbutton.id));
+                }
 
                 // find out the forum favourite status
-                toggleforumfavouritebutton = $$('a[id^="toggleforumfavouritebutton"]').first();
-                toggleforumfavouritebutton.observe('click', this.toggleforumfavourite.bind(this, toggleforumfavouritebutton.id));
+                var toggleforumfavouritebutton = $$('a[id^="toggleforumfavouritebutton"]');
+                if (toggleforumfavouritebutton.size() > 0) {
+                    toggleforumfavouritebutton = toggleforumfavouritebutton.first();
+                    toggleforumfavouritebutton.observe('click', this.toggleforumfavourite.bind(this, toggleforumfavouritebutton.id));
+                }
 
                 break;
             case 'viewtopic':
@@ -107,23 +115,35 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 });
 
                 // find out the topic subscription status
-                this.toggletopicsubscriptionbuttonid = $$('a[id^="toggletopicsubscriptionbutton"]').first().id;
-                this.topic_subscribed = (this.toggletopicsubscriptionbuttonid.split('_')[2] == 'subscribed' ? true : false);
-                $(this.toggletopicsubscriptionbuttonid).observe('click', this.toggletopicsubscription.bind(this));
+                var toggletopicsubscriptionbuttonid = $$('a[id^="toggletopicsubscriptionbutton"]');
+                if (toggletopicsubscriptionbuttonid.size() > 0) {
+                    this.toggletopicsubscriptionbuttonid = toggletopicsubscriptionbuttonid.first().id;
+                    this.topic_subscribed = (this.toggletopicsubscriptionbuttonid.split('_')[2] == 'subscribed' ? true : false);
+                    $(this.toggletopicsubscriptionbuttonid).observe('click', this.toggletopicsubscription.bind(this));
+                }
 
                 // find out the lock status
-                this.toggletopiclockbuttonid = $$('a[id^="toggletopiclockbutton"]').first().id;
-                this.topic_locked = (this.toggletopiclockbuttonid.split('_')[2] == 'locked' ? true : false);
-                $(this.toggletopiclockbuttonid).observe('click', this.toggletopiclock.bind(this));
+                var toggletopiclockbutton = $$('a[id^="toggletopiclockbutton"]');
+                if (toggletopiclockbutton.size() > 0) {
+                    this.toggletopiclockbuttonid = toggletopiclockbutton.first().id;
+                    this.topic_locked = (this.toggletopiclockbuttonid.split('_')[2] == 'locked' ? true : false);
+                    $(this.toggletopiclockbuttonid).observe('click', this.toggletopiclock.bind(this));
+                }
 
                 // find out the sticky status
-                this.toggletopicstickybuttonid = $$('a[id^="toggletopicstickybutton"]').first().id;
-                this.topic_sticky = (this.toggletopicstickybuttonid.split('_')[2] == 'locked' ? true : false);
-                $(this.toggletopicstickybuttonid).observe('click', this.toggletopicsticky.bind(this));
+                var toggletopicstickybutton = $$('a[id^="toggletopicstickybutton"]');
+                if (toggletopicstickybutton.size() > 0) {
+                    this.toggletopicstickybuttonid = toggletopicstickybutton.first().id;
+                    this.topic_sticky = (this.toggletopicstickybuttonid.split('_')[2] == 'locked' ? true : false);
+                    $(this.toggletopicstickybuttonid).observe('click', this.toggletopicsticky.bind(this));
+                }
 
                 // find out if the topic is editable
-                this.edittopicsubjectbuttonid = $$('span[id^="edittopicsubjectbutton"]').first().id;
-                $(this.edittopicsubjectbuttonid).observe('click', this.edittopicsubject.bind(this));
+                var edittopicsubjectbuttonid = $$('span[id^="edittopicsubjectbutton"]');
+                if (edittopicsubjectbuttonid.size() > 0) {
+                    this.edittopicsubjectbuttonid = edittopicsubjectbuttonid.first().id;
+                    $(this.edittopicsubjectbuttonid).observe('click', this.edittopicsubject.bind(this));
+                }
 
                 if($('btnCreateQuickReply')) {
                     $('btnCreateQuickReply').observe('click', this.createQuickReply.bind(this));
