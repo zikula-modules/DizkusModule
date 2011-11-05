@@ -412,7 +412,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                         }
 
                         // add inline editor
-                        new Insertion.After($('postingtext_' + this.post_id), msg.data);
+                        $('postingtext_' + this.post_id).insert({after: msg.data});
 
                         if ($('bbcode_postingtext_' + this.post_id + '_edit')) {
                             $('bbcode_postingtext_' + this.post_id + '_edit').removeClassName('hidden');
@@ -534,7 +534,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                         $(this.edittopicsubjectbuttonid).hide();
 
-                        new Insertion.After($(this.edittopicsubjectbuttonid), msg.data);
+                        $(this.edittopicsubjectbuttonid).insert({after: msg.data});
                         $('topicsubjectedit_save').observe('click', this.topicsubjecteditsave.bind(this));
                         $('topicsubjectedit_cancel').observe('click', this.topicsubjecteditcancel.bind(this));
 
@@ -905,7 +905,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                         editbutton.observe('click', this.quickEdit.bind(this, editbutton.id));
 
                         // prepare everything for another quick reply
-                        new Insertion.After('quickreplyposting', '<li id="new_quickreplyposting"></li>');
+                        $('quickreplyposting').insert({after: '<li id="new_quickreplyposting"></li>'});
                         // clear old id
                         $('quickreplyposting').id = '';
                         // rename new id
