@@ -56,7 +56,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     {
         $userid = $args['userid'];
         
-        if(is_null($userid) || UserUtil::isLoggedIn() == false) {
+        if(is_null($userid)) {
             // core bug #2462 workaround, dangerous, if the guest user id changed.... 
             $userid = 1;
         }
