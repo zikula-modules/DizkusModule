@@ -170,28 +170,28 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
         $view     = strtolower(FormUtil::getPassedValue('view', (isset($args['view'])) ? $args['view'] : '', 'GETPOST'));
     
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
     
         if (!empty($view) && ($view=='next' || $view=='previous')) {
-            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_previous_or_next_topic_id',
+            $topic_id = ModUtil::apiFunc($this->name, 'user', 'get_previous_or_next_topic_id',
                                      array('topic_id' => $topic_id,
                                            'view'     => $view));
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
+            return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic',
                                 array('topic' => $topic_id)));
         }
     
         // begin patch #3494 part 2, credits to teb
         if (!empty($post_id) && is_numeric($post_id) && empty($topic_id)) {
-            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+            $topic_id = ModUtil::apiFunc($this->name, 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
             if ($topic_id <> false) {
                 // redirect instad of continue, better for SEO
-                return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', 
+                return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', 
                                            array('topic' => $topic_id)));
             }
         }
         // end patch #3494 part 2
     
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
+        $topic = ModUtil::apiFunc($this->name, 'user', 'readtopic',
                               array('topic_id'   => $topic_id,
                                     'start'      => $start,
                                     'count'      => true));
@@ -200,7 +200,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('post_count', count($topic['posts']));
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+        $this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
     
         return $this->view->fetch('user/viewtopic.tpl');
     }
@@ -808,10 +808,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // Create output and assign data
-        $render = FormUtil::newForm('Dizkus');
+        $form = FormUtil::newForm($this->name, $this);
     
         // Return the output
-        return $render->execute('user/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
+        return $form->execute('user/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
     }
     
     /**
@@ -845,7 +845,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     	}
     
         // Create output and assign data
-        $render = FormUtil::newForm('Dizkus');
+        $render = FormUtil::newForm($this->name, $this);
     
         // Return the output
         return $render->execute('user/ignorelistmanagement.tpl', new Dizkus_Form_Handler_User_IgnoreListManagement());

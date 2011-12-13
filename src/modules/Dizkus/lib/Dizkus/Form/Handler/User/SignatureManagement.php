@@ -8,7 +8,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Form_Handler_User_SignatureManagement extends Form_AbstractHandler
+class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractHandler
 {
     function initialize(&$render)
     {       
