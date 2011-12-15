@@ -1300,12 +1300,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $poster_ip = '127.0.0.1';
         } else {
             // some enviroment for logging ;)
-            $poster_ip = System::serverGetVar('HTTP_X_FORWARDED_FOR');
-            if (empty($poster_ip)){
+            if (System::serverGetVar('HTTP_X_FORWARDED_FOR')) {
+                $poster_ip = System::serverGetVar('REMOTE_ADDR')."/".System::serverGetVar('HTTP_X_FORWARDED_FOR');
+            } else {
                 $poster_ip = System::serverGetVar('REMOTE_ADDR');
-            }
+             }
         }
-    
+
         // Prep for DB is done by DBUtil
         $obj['post_time']  = date('Y-m-d H:i:s');
         $obj['topic_id']   = $args['topic_id'];
@@ -1534,7 +1535,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         
         // some enviroment for logging ;)
         if (System::serverGetVar('HTTP_X_FORWARDED_FOR')){
-            $poster_ip = System::serverGetVar('HTTP_X_FORWARDED_FOR');
+            $poster_ip = System::serverGetVar('REMOTE_ADDR')."/".System::serverGetVar('HTTP_X_FORWARDED_FOR');
         } else {
             $poster_ip = System::serverGetVar('REMOTE_ADDR');
         }

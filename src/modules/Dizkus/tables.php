@@ -105,7 +105,7 @@ function Dizkus_tables()
                                                 'forum_id'    => 'I NOTNULL DEFAULT 0',
                                                 'poster_id'   => 'I NOTNULL DEFAULT 1',
                                                 'post_time'   => 'C(20) NOTNULL DEFAULT \'\'',
-                                                'poster_ip'   => 'C(16) NOTNULL DEFAULT \'\'',
+                                                'poster_ip'   => 'C(50) NOTNULL DEFAULT \'\'',
                                                 'post_msgid'  => 'C(100) NOTNULL DEFAULT \'\'',
                                                 'post_text'   => 'X NOTNULL DEFAULT \'\'',
                                                 'post_title'  => 'C(255) NOTNULL DEFAULT \'\'');
