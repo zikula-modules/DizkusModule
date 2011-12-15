@@ -90,12 +90,12 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    
-        $submit   = FormUtil::getPassedValue('submit', null, 'GETPOST');
-        $ranktype = (int)FormUtil::getPassedValue('ranktype', 0, 'GETPOST');
-    
-        if (!$submit) {
-            list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
+    	
+        $submit = $this->request->getPost()->filter('submit',2);
+        $ranktype = $this->request->getGet()->filter('ranktype', 0, FILTER_SANITIZE_NUMBER_INT);
+              
+        if ($submit == 2) {
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'admin', 'readranks',
                                                       array('ranktype' => $ranktype));
     
             $this->view->assign('ranks', $ranks);
@@ -108,11 +108,12 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
                 return $this->view->fetch('admin/honoraryranks.tpl');
             }
         } else {
-            $ranks = FormUtil::getPassedValue('ranks');
-            ModUtil::apiFunc('Dizkus', 'admin', 'saverank', array('ranks' => $ranks));
+        	$ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
+            //$ranks = FormUtil::getPassedValue('ranks');
+            ModUtil::apiFunc($this->name, 'admin', 'saverank', array('ranks' => $ranks));
         }
     
-        return System::redirect(ModUtil::url('Dizkus','admin', 'ranks', array('ranktype' => $ranktype)));
+        return System::redirect(ModUtil::url($this->name,'admin', 'ranks', array('ranktype' => $ranktype)));
     }
     
     /**
