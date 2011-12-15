@@ -13,9 +13,8 @@
 /**
  * initialize the Zikula environment
  */
-include 'lib/ZLoader.php';
-ZLoader::register();
-System::init();
+include 'lib/bootstrap.php';
+$core->init();
 
 /**
  * load Dizkus specific support functions
@@ -115,7 +114,9 @@ if (!empty($forum_id)) {
     // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries
     $allowedforums = array_map('_get_forum_ids', $userforums);
-    $where = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
+    if (count($allowedforums) > 0) {
+        $where = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
+    }
 }    
 
 $render->assign('forum_name', $forumname);
