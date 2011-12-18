@@ -59,7 +59,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $url .= '#pid' . (int)$last_post_id;
     }
 
-    $title = __('Go to topic');
+    /*$title = __('Go to topic');
 
     if (isset($forum_name) && !empty($forum_name)) {
         $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';
@@ -68,7 +68,20 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     if (isset($subject) && !empty($subject)) {
         $subject = DataUtil::formatForDisplay($subject);
         $title .= ' ' . $subject;
-    }
+    }*/
+    
+    
+    $post = DBUtil::selectObjectByID('dizkus_posts', $topic_id, 'topic_id');
+    $title = substr($post['post_text'], 0, 255);
+    $title = DataUtil::formatForDisplayHTML($title);
+    $hook = new Zikula_FilterHook('dizkus.filter_hooks.message.filter', $title);
+    $title =  ServiceUtil::getManager()->getService('zikula.hookmanager')->notify($hook)->getData();
 
-    return '<a '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
+    
+    
+                      $t = '<script type="text/javascript">
+                        var defaultTooltip = new Zikula.UI.Tooltip($(\'post_preview\'));
+                        </script>';
+    
+    return '<a id="post_preview" '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>'.$t;
 }
