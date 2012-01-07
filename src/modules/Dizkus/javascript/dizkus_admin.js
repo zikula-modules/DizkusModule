@@ -181,7 +181,7 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                             $('hideforumlist_' + msg.cat_id).hide();
                             $('showforumlist_' + msg.cat_id).show();
-                            $('addforum_' + msg.cat_id).show();
+                            $('addforum_' + msg.cat_id).show().observe('click', this.editforum.bind(this, -1, msg.cat_id));
 
                             $('submitcategory_' + msg.cat_id).observe('click', this.storecategory.bind(this, msg.cat_id));
 
