@@ -129,7 +129,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         $letter     = FormUtil::getPassedValue('letter');
         $lastletter = FormUtil::getPassedValue('lastletter');
         $page       = (int)FormUtil::getPassedValue('page', 1, 'GETPOST');
-    
+
         // check for a letter parameter
         if (!empty($lastletter)) {
             $letter = $lastletter;
@@ -142,7 +142,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         }
         $letter = strtolower($letter);
     
-        if (!$submit) {
+        if (is_null($submit)) {
             list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
                                                      array('ranktype' => 1));
             $tables = DBUtil::getTables();
