@@ -4,7 +4,7 @@
 <p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
 {/if}
 
-{if $forum.access_moderate eq true or $forum.access_comment or $coredata.logged_in}
+{if $forum.access_moderate eq true or $forum.access_comment eq true}
 
 <div id="dzk_maincategorylist">
 
@@ -115,8 +115,8 @@
             </noscript>
         </div>
     </div>
-    {/if}
 </div>
+{/if}
 
 {if $forum.topics}
 
