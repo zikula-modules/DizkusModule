@@ -162,10 +162,6 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->setVar('post_sort_order', 'ASC');
         $this->setVar('log_ip', 'no');
         $this->setVar('slimforum', 'no');
-        $this->setVar('hideusers', 'no');
-        $this->setVar('removesignature', 'no');
-        $this->setVar('striptags', 'no');
-        $this->setVar('deletehookaction', 'lock');
         // 2.5
         $this->setVar('extendedsearch', 'no');
         $this->setVar('m2f_enabled', 'yes');
