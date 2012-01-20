@@ -17,7 +17,7 @@
 
         <div class="z-formrow">
             {formlabel for="forum_enabled" __text='Forums are accessible to visitors'}
-            {formcheckbox id="forum_enabled" checked=$forum_enabled_checked}
+            {formcheckbox id="forum_enabled"}
         </div>
         <p class="z-formnote z-informationmsg">
             {gt text="If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."}
@@ -28,7 +28,7 @@
         </div>
         <div class="z-formrow">
             {formlabel for="email_from" __text="Sender address for e-mail messages from forums"}
-            {formtextinput id="email_from" text=$coredata.Dizkus.email_from size="30" maxLength="100"}
+            {formemailinput id="email_from" text=$coredata.Dizkus.email_from size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
             {formlabel for="hot_threshold" __text="'Hot topic' threshold"}
@@ -44,7 +44,7 @@
         </div>
         <div class="z-formrow">
             {formlabel for="hideusers" __text="Hide users in forum admin interface"}
-            {formcheckbox id="hideusers" checked=$hideusers_checked}
+            {formcheckbox id="hideusers"}
         </div>
         <div class="z-formrow">
             {formlabel for="url_ranks_images" __text="Path to rank images"}
@@ -59,17 +59,17 @@
         </div>
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
-            {formcheckbox id="fulltextindex" checked=$fulltextindex_checked}
+            {formcheckbox id="fulltextindex"}
             <p class="z-formnote z-informationmsg">{gt text="Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
         </div>
         <div class="z-formrow">
             {formlabel for="extendedsearch" __text="Enable extended full-text search in internal search"}
-            {formcheckbox id="extendedsearch" checked=$extendedsearch_checked}
+            {formcheckbox id="extendedsearch"}
             <p class="z-formnote z-informationmsg">{gt text="Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
         </div>
         <div class="z-formrow">
             {formlabel for="showtextinsearchresults" __text="Show text in search results"}
-            {formcheckbox id="showtextinsearchresults" checked=$showtextinsearchresults_checked}
+            {formcheckbox id="showtextinsearchresults"}
             <p class="z-formnote z-informationmsg">{gt text="Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table."}</p>
         </div>
         <div class="z-formrow">
@@ -99,15 +99,15 @@
         </div>
         <div class="z-formrow">
             {formlabel for="signaturemanagement" __text="Enable signature management via forum user settings"}
-            {formcheckbox id="signaturemanagement" checked=$signaturemanagement_checked}
+            {formcheckbox id="signaturemanagement"}
         </div>
         <div class="z-formrow">
             {formlabel for="removesignature" __text="Strip user signatures from posts"}
-            {formcheckbox id="removesignature" checked=$removesignature_checked}
+            {formcheckbox id="removesignature"}
         </div>
         <div class="z-formrow">
             {formlabel for="newtopicconf" __text="Display confirmation when a new topic has been created"}
-            {formcheckbox id="newtopicconf" checked=$newtopicconfirmation_checked}
+            {formcheckbox id="newtopicconf"}
         </div>
         <div class="z-formrow">
             {if $contactlist_available eq true}
@@ -124,11 +124,11 @@
         <legend>{gt text="Security settings"}</legend>
         <div class="z-formrow">
             {formlabel for="log_ip" __text="Log IP addresses"}
-            {formcheckbox id="log_ip" checked=$log_ip_checked}
+            {formcheckbox id="log_ip"}
         </div>
         <div class="z-formrow">
             {formlabel for="striptags" __text="Strip HTML tags from new posts"}
-            {formcheckbox id="striptags" checked=$striptags_checked}
+            {formcheckbox id="striptags"}
             <p class="z-formnote z-informationmsg">{gt text="Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags."}</p>
         </div>
 
@@ -146,19 +146,19 @@
 
         <div class="z-formrow">
             {formlabel for="slimforum" __text="Hide category view when there is only one category"}
-            {formcheckbox id="slimforum" checked=$slimforum_checked}
+            {formcheckbox id="slimforum"}
         </div>
         <div class="z-formrow">
             {formlabel for="m2f_enabled" __text="Enable Mail2Forum"}
-            {formcheckbox id="m2f_enabled" checked=$m2f_enabled_checked}
+            {formcheckbox id="m2f_enabled"}
         </div>
         <div class="z-formrow">
             {formlabel for="rss2f_enabled" __text="Enable RSS2Forum"}
-            {formcheckbox id="rss2f_enabled" checked=$rss2f_enabled_checked}
+            {formcheckbox id="rss2f_enabled"}
         </div>
         <div class="z-formrow">
             {formlabel for="favorites_enabled" __text="Enable favourites"}
-            {formcheckbox id="favorites_enabled" checked=$favorites_enabled_checked}
+            {formcheckbox id="favorites_enabled"}
         </div>
         <div class="z-formrow">
             {formlabel for="deletehookaction" __text="Action to be performed when 'delete' hook is called"}

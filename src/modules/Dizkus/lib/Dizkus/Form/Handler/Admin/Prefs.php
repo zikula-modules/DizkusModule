@@ -24,15 +24,39 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
                                                       array('text' => $this->__('Medium'), 'value' => 'medium'),
                                                       array('text' => $this->__('None'),   'value' => 'none')));
 
-
-        $this->view->assign($this->getVars());
+        $vars = $this->getVars();
+        $yesorno = array(
+            'log_ip',                 
+            'slimforum',             
+            'm2f_enabled',            
+            'rss2f_enabled',
+            'favorites_enabled',
+            'hideusers',
+            'signaturemanagement',     
+            'removesignature',
+            'striptags',               
+            'newtopicconfirmation',
+            'forum_enabled',
+            'fulltextindex',
+            'extendedsearch',
+            'showtextinsearchresults'
+        );
+        foreach ($yesorno as $value) {
+            if (array_key_exists($value, $vars) and $vars[$value] == 'yes') {
+       		$vars[$value] = true;
+            } else {
+       	        $vars[$value] = false;
+       	    }
+        }
+        
+        $this->view->assign($vars);
         
         //$this->view->assign('contactlist_available', $this->view->available('ContactList'));
 
-        /*$serverinfo = DBUtil::serverInfo();
+        $serverinfo = DBUtil::serverInfo();
         $this->view->assign('dbversion', $serverinfo['description']);
-        $this->view->assign('dbtype', DBConnectionStack::getConnectionDBType());
-        $this->view->assign('dbname', DBConnectionStack::getConnectionDBName());*/
+        //$this->view->assign('dbtype', DBConnectionStack::getConnectionDBType());
+        //$this->view->assign('dbname', DBConnectionStack::getConnectionDBName());
 
         return true;
     }
