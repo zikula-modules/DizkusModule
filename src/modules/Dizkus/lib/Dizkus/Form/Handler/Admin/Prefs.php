@@ -51,7 +51,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
         
         $this->view->assign($vars);
         
-        //$this->view->assign('contactlist_available', $this->view->available('ContactList'));
+        $this->view->assign('contactlist_available', ModUtil::available('ContactList'));
 
         $serverinfo = DBUtil::serverInfo();
         $this->view->assign('dbversion', $serverinfo['description']);
