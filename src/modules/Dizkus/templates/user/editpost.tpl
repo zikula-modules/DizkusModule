@@ -60,7 +60,6 @@
                                             {button class="dzk_detachable z-bt-small" src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
                                         </li>
                                     </ul>
-
                                 </div>
                                 <div class="dzk_col_right">
                                     {plainbbcode textfieldid=message}

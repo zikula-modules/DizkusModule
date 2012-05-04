@@ -17,23 +17,12 @@
  */
 function smarty_function_plainbbcode($params, &$smarty)
 {
-     /*$out = "";
-    if (isset($params['textfieldid']) && !empty($params['textfieldid'])) {
-	    if (ModUtil::available('LuMicuLa')) {
-	        $out = ModUtil::func('LuMicuLa', 'user', 'transform', $params);
-	    }
-    }
-
-	return $out;*/
-    
-    
-    
     $out = "";
     if (isset($params['textfieldid']) && !empty($params['textfieldid'])) {
-	    if (ModUtil::available('BBCode')) {
-	        $out = ModUtil::func('BBCode', 'user', 'bbcodes', $params);
-	    }
+        if (ModUtil::available('BBCode')) {
+            $out = ModUtil::func('BBCode', 'user', 'bbcodes', $params);
+        }
     }
 
-	return $out;
+    return $out;
 }

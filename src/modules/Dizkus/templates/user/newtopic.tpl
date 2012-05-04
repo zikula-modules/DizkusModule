@@ -19,22 +19,23 @@
                     <input type="hidden" id="authid" name="authid" value="" />
                     <fieldset>
                         <legend class="post_header">{gt text="New topic in forum"}:&nbsp;<a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$newtopic.forum_id}">{$newtopic.forum_name}{*|modcallhooks*}</a></legend>
-                        <div>
+                        <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                             <div>
                                 <label for="subject">{gt text="Subject line"}</label><br />
-                                <input style="width: 98%" class="lumicula_textarea" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$newtopic.subject|safehtml}" />
+                                <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$newtopic.subject|safehtml}" />
                             </div>
-                                
-                                <br />
-                                {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
-                                <textarea class="lumicula_textarea" id="message" name="message" rows="10" cols="60" style="width:98%;">{$newtopic.message}</textarea>
-                                {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
-                                {if $coredata.Dizkus.striptags == 'yes'}
-                                <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
-                                {/if}
 
-                                <div class="dzk_subcols z-clearfix">
+                            <br />
+                            {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
+                            <textarea id="message" name="message" rows="10" cols="60">{$newtopic.message}</textarea>
+                            {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
+                            {if $coredata.Dizkus.striptags == 'yes'}
+                            <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                            {/if}
+
+                            <div class="dzk_subcols z-clearfix">
+                                <div id="newtopicoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong>{gt text="Options"}</strong></li>
                                         {if $coredata.logged_in}
@@ -58,15 +59,18 @@
                                             <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
                                         </li>
                                     </ul>
-
-
+                                </div>
+                                <div class="dzk_col_right">
+                                    {plainbbcode textfieldid=message}
+                                    {bbsmile textfieldid=message}
+                                </div>
                             </div>
+
                         </div>
                     </fieldset>
                 </div>
             </form>
         </div>
-
     </div>
 </div>
 
@@ -77,8 +81,6 @@
     var storingPost = '{{gt text="Storing post..."}}';
     var preparingPreview = '{{gt text="Preparing preview..."}}';
     var redirecting = '{{gt text="Redirecting you to the new topic..."}}';
-
-
     // ]]>
 </script>
 
