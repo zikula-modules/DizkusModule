@@ -27,7 +27,7 @@
                             </div>
 
                             <br />
-                            {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
+                            {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view'}
                             <textarea id="message" name="message" rows="10" cols="60">{$newtopic.message}</textarea>
                             {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
                             {if $coredata.Dizkus.striptags == 'yes'}
