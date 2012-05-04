@@ -56,8 +56,8 @@
                                     </ul>
                                 </div>
                                 <div class="dzk_col_left">
-                                    {plainbbcode textfieldid='message'}
-                                    {bbsmile textfieldid='message'}
+                                    {* plainbbcode textfieldid='message' *}
+                                    {* bbsmile textfieldid='message' *}
                                 </div>
                             </div>
                         </div>
