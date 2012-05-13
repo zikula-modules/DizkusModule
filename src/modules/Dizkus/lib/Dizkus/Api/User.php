@@ -2903,7 +2903,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         }
     
         $ztable = DBUtil::getTables();
-        $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $ztable['dizkus_forum_favorites_column']['user_id'] - '=' . (int)DataUtil::formatForStore($args['user_id']));
+        $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $ztable['dizkus_forum_favorites_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']));
         $favorites = array_map('_get_favorites', $objarray);
     
         // categoryCount is needed since the categories aren't stored as numerical
