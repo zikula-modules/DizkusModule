@@ -44,7 +44,7 @@
 
     <a id="top" accesskey="t"></a>
 
-    {if $coredata.Dizkus.forum_enabled neq 'no'}
+    {if $modvars.Dizkus.forum_enabled neq 'no'}
     <div class="dzk_navbar dzk_rounded">
         <div class="inner z-clearfix">
             {* start of breadcrumbs *}
@@ -94,7 +94,7 @@
             {* end of breadcrumbs *}
 
             <ul class="linklist z-clearfix" style="float:right;">
-                {if $coredata.logged_in eq 1 AND $func eq 'main' AND $coredata.Dizkus.favorites_enabled eq 'yes'}
+                {if $coredata.logged_in eq 1 AND $func eq 'main' AND $modvars.Dizkus.favorites_enabled eq 'yes'}
                 {if $favorites}
                 <li><a class="dzk_arrow showallforumslink tooltips" href="{modurl modname=Dizkus type=user func=prefs act=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
                 {else}

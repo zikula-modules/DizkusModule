@@ -70,7 +70,7 @@
                     <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
                     {/if}
                 </li>
-                {if $coredata.Dizkus.favorites_enabled eq "yes"}
+                {if $modvars.Dizkus.favorites_enabled eq "yes"}
                 <li>
                     {if $forum.is_favorite eq 0}
                     <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
@@ -103,7 +103,7 @@
                     {else}
                     <li><a class="dzk_arrow unsubscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a></li>
                     {/if}
-                    {if $coredata.Dizkus.favorites_enabled eq "yes"}
+                    {if $modvars.Dizkus.favorites_enabled eq "yes"}
                     {if $forum.is_favorite eq 0}
                     <li><a class="dzk_arrow addfavoritelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a></li>
                     {else}

@@ -1,4 +1,4 @@
-{if $coredata.Dizkus.forum_enabled neq 'no'}
+{if $modvars.Dizkus.forum_enabled neq 'no'}
 
 <div class="dzk_marginbottom">
     {formutil_getpassedvalue name='func' default='main' assign='func'}

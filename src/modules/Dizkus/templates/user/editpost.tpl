@@ -35,7 +35,7 @@
                             <div>
                                 <label for="message">{gt text="Message body"}</label><br />
                                 <textarea id="message" name="message" rows="10" cols="60">{$post.post_rawtext}</textarea>
-                                {if $coredata.Dizkus.striptags == 'yes'}
+                                {if $modvars.Dizkus.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
                             </div>

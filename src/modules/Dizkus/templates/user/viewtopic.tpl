@@ -146,7 +146,7 @@
                             <textarea id="message" name="message" cols="10" rows="60"></textarea>
                             {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id=$topic.topic_id}
                             {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
-                            {if $coredata.Dizkus.striptags == 'yes'}
+                            {if $modvars.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
 
