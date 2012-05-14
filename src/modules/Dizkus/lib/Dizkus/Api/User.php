@@ -3168,7 +3168,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                                             //echo htmlspecialchars($header),"\n";
                                             // get subject
                                             $header = strtolower($header);
-                                            if (strpos($header, 'subject:') === 0) {
+                                            if (strpos(strtolower($header), 'subject:') === 0) {
                                                 $subject = trim(strip_tags(substr($header, 8)));
                                             }
                                             // get sender
