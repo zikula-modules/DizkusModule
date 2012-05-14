@@ -116,13 +116,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
         $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
     
-        
-        
-         $subforums = DBUtil::selectObjectArray('dizkus_forums', $where = 'WHERE is_subforum ='.$forum_id );
-         foreach ($subforums as $key => $subforum) {
-             $subforums[$key]['new_posts'] = false;
-             $subforums[$key]['last_post'] = '';
-         }
+        $subforums = $this->entityManager->getRepository('Dizkus_Entity_Subforums')
+                                   ->findBy(array('is_subforum' => $forum_id)); 
          $this->view->assign('subforums', $subforums);
         
         

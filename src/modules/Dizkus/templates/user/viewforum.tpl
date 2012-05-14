@@ -26,23 +26,21 @@
                 {foreach item='subforum' from=$subforums}
                 <li class="row">
                     <dl class="icon">
-                        <dt {if $subforum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if} >
+                        <dt {*if $subforum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if*} >
                             <a title="{gt text="Go to subforum"} '{$subforum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a><br />
                             {if $subforum.forum_desc neq ''}{$subforum.forum_desc|safehtml}<br />{/if}
                         </dt>
                         <dd class="topics">{$subforum.forum_topics|safetext}</dd>
                         <dd class="posts">{$subforum.forum_posts|safetext}</dd>
+                                             
                         <dd class="lastpost">
-                            {if isset($subforum.last_post_data)}
+                            {lastpost forumID=$subforum.forum_id}
+                            {if isset($lastpost)}
                             <span>
-                                {gt text="Last post by %s" tag1=$subforum.last_post_data.name|profilelinkbyuname}<br />
-                                {gt text="Written on %s:" tag1=$subforum.last_post_data.unixtime|dateformat:'datetimebrief'}
-                                {if $subforum.last_post_data.url_anchor neq ''}
-                                <a class="latesttopicimage tooltips" href="{$subforum.last_post_data.url_anchor|safetext}" title="{gt text='View latest post: %s' tag1=$subforum.last_post_data.subject|safehtml|truncate:70}">{$subforum.last_post_data.subject|safetext|truncate:70}</a>
-                                {/if}
+                                {gt text="Last post by %s" tag1=$lastpost.poster_id|profilelinkbyuid}<br />
+                                {gt text="Written on %s:" tag1=$lastpost.post_time|dateformat:'datetimebrief'}
+                                <a class="latesttopicimage tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$lastpost.post_id}" title="{gt text='View latest post: %s' tag1=$lastpost.post_title|safehtml|truncate:70}">{$lastpost.post_title|safetext|truncate:70}</a>
                             </span>
-                            {else}
-                            <span>{$subforum.last_post|default:'&nbsp;'}</span>
                             {/if}
                         </dd>
                     </dl>
