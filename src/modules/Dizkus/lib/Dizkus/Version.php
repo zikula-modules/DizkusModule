@@ -23,8 +23,8 @@ class Dizkus_Version extends Zikula_AbstractVersion
         $meta['contact']        = 'http://support.zikula.de';
         $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
                                       'Dizkus::CreateForum' => 'CategoryID::');
-		$meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
-		                              HookUtil::PROVIDER_CAPABLE   => array('enabled' => true));
+        $meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
+                                      HookUtil::PROVIDER_CAPABLE   => array('enabled' => true));
         
         // module depedencies
         $meta['dependencies']   = array(
