@@ -32,7 +32,7 @@
                         </dt>
                         <dd class="topics">{$subforum.forum_topics|safetext}</dd>
                         <dd class="posts">{$subforum.forum_posts|safetext}</dd>
-                                             
+
                         <dd class="lastpost">
                             {lastpost forumID=$subforum.forum_id}
                             {if isset($lastpost)}

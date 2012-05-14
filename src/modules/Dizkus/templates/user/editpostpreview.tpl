@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="content" id="postingtext_{$post.post_id}">
-                    {$post.post_textdisplay}
+                    {$post.post_textdisplay|safehtml|notifyfilters:'dizkus.filter_hooks.message.filter'}
                 </div>
 
             </div>
