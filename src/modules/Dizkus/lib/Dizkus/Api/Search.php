@@ -56,7 +56,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     {
         
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            return false;
+            return true;
         }
     
         $args['forums']      = FormUtil::getPassedValue('Dizkus_forum', null, 'GETPOST');
@@ -105,7 +105,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     public function nonfulltext($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            return false;
+            return true;
         }
     
         // get all forums the user is allowed to read
@@ -113,7 +113,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             // return empty result set without even doing a db access
-            return false;
+            return true;
         }
     
         switch ($args['searchwhere'])
@@ -124,7 +124,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
                 if ($searchauthor > 0) {
                     $wherematch = " p.poster_id='" . DataUtil::formatForStore($searchauthor) . "'";
                 } else {
-                    return false;
+                    return true;
                 }
                 break;
     
@@ -161,7 +161,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
             if (count($args['forums']) == 0) {
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access
-                return false;
+                return true;
             }
             $whereforums = 'p.forum_id IN(' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
@@ -191,7 +191,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     {
         
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            return false;
+            return true;
         }
     
         // get all forums the user is allowed to read
@@ -199,7 +199,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             // return empty result set without even doing a db access
-            return false;
+            return true;
         }
 
         // partial sql stored in $wherematch
@@ -212,7 +212,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
                 if ($searchauthor > 0) {
                     $wherematch = " p.poster_id='" . DataUtil::formatForStore($searchauthor) . "'";
                 } else {
-                    return false;
+                    return true;
                 }
                 break;
     
@@ -261,7 +261,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
             if (count($args['forums']) == 0) {
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access
-                return false;
+                return true;
             }
             $whereforums .= 'p.forum_id IN (' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
