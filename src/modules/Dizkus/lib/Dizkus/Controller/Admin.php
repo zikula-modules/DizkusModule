@@ -124,7 +124,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    
+
         $submit     = FormUtil::getPassedValue('submit');
         $letter     = FormUtil::getPassedValue('letter');
         $lastletter = FormUtil::getPassedValue('lastletter');
@@ -136,8 +136,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         }
     
         // count users and forbid '*' if more than 1000 users are present
-        $usercount = DBUtil::selectObjectCount('users');
-        if (empty($letter) || strlen($letter) != 1 || (($usercount > 1000) && $letter == '*')) {
+        if (empty($letter) || strlen($letter) != 1) {
             $letter = 'a';
         }
         $letter = strtolower($letter);
@@ -145,49 +144,40 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (is_null($submit)) {
             list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
                                                      array('ranktype' => 1));
-            $tables = DBUtil::getTables();
-    
-            $userscol  = $tables['users_column'];
-            $where     = 'LEFT('.$userscol['uname'].',1) LIKE \''.DataUtil::formatForStore($letter).'%\'';
-            $orderby   = $userscol['uname'].' ASC';
-            $usercount = DBUtil::selectObjectCount('users', $where);
-    
-            $perpage = 50;
-            if ($page <> -1 && $perpage <> -1) {
-                $start = ($page-1) * $perpage;
-                $users = DBUtil::selectObjectArray('users', $where, $orderby, $start, $perpage);
-            }
-            $allusers = array();
-            foreach ($users as $user) {
-                if ($user['uid'] == 1)  continue;
-    
-                $alias = '';
-                if (!empty($user['name'])) {
-                    $alias = ' (' . $user['name'] . ')';
-                }
-    
-                $user['name'] = $user['uname'] . $alias;
-    
-                $user['rank_id'] = 0;
-                for ($cnt = 0; $cnt < count($ranks); $cnt++) {
-                    if (in_array($user['uid'], $ranks[$cnt]['users'])) {
-                        $user['rank_id'] = $ranks[$cnt]['rank_id'];
-                    }
-                }
-                array_push($allusers, $user);
-            }
-    /*
-            $inlinecss = '<style type="text/css">' ."\n";
+            $perpage = 20;
+            
+            /*$inlinecss = '<style type="text/css">' ."\n";
             $rankpath = ModUtil::getVar('Dizkus', 'url_ranks_images') .'/';
             foreach ($ranks as $rank) {
                 $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['rank_image'].'"); }' . "\n";
             }
             $inlinecss .= '</style>' . "\n";
-            PageUtil::addVar('rawtext', $inlinecss);
-    */        
-            //usort($allusers, 'cmp_userorder');
-    
-            unset($users);
+            PageUtil::addVar('rawtext', $inlinecss);*/
+            
+            $em = $this->getService('doctrine.entitymanager');
+            $query = $em->createQueryBuilder();
+            $query->select('u.uid, u.uname, a.value as rank_id')
+                  ->from('Dizkus_Entity_Users', 'u')
+                  ->leftJoin('u.attributes', 'a')
+                  ->where("a.attribute_name = 'dizkus_user_rank'")
+                  ->orderBy("u.uname");
+            
+            
+            if (!empty($letter) and $letter != '*') {
+                $query->andWhere("u.uname LIKE :letter")
+                      ->setParameter('letter', DataUtil::formatForStore($letter).'%');
+            }
+            
+            $query = $query->getQuery();
+            
+            
+            // Paginator
+            $startnum = ($page-1)*$perpage;
+            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
+            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
+            $allusers = $paginateQuery->getArrayResult();
+            
+                        
     
             $this->view->assign('ranks', $ranks);
             $this->view->assign('rankimages', $rankimages);
@@ -195,8 +185,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             $this->view->assign('letter', $letter);
             $this->view->assign('page', $page);
             $this->view->assign('perpage', $perpage);
-            $this->view->assign('usercount', $usercount);
-            $this->view->assign('allow_star', ($usercount < 1000));
+            $this->view->assign('usercount', $count);
     
             return $this->view->fetch('admin/assignranks.tpl');
     

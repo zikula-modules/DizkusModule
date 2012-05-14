@@ -25,5 +25,5 @@
 <p class="z-center">{gt text="No posts" domain="module_dizkus"}</p>
 {/if}
 <p class="z-center">
-    <a style="font-size: 0.8em;" href="{modurl modname=Dizkus func=main}" title="{gt text="Go to forum" domain="module_dizkus"}">{gt text="Go to forum" domain="module_dizkus"}</a>
+    <a style="font-size: 0.8em;" href="{modurl modname=Dizkus type='user' func=main}" title="{gt text="Go to forum" domain="module_dizkus"}">{gt text="Go to forum" domain="module_dizkus"}</a>
 </p>

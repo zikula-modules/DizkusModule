@@ -12,14 +12,10 @@
     <p class="z-informationmsg">{gt text="In this page, you can select particular users and assign them honorary ranks."}</p>
 
     <div class="rankuser-alphanav z-center">
-        {if $allow_star eq true}
         [{pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="*;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"}&nbsp;]
-        {else}
-        [{pagerabc posvar="letter" separator="&nbsp;|&nbsp;" names="A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;?" forwardvars="module,type,func"}&nbsp;]
-        {/if}
     </div>
 
-    {pager rowcount=$usercount limit=$perpage posvar="page" display="page" maxpages="20" template="pageritems.html" class="z-center"}
+    
 
     <form class="z-form" action="{modurl modname=Dizkus type=admin func=assignranks}" method="post">
         <table class="z-admintable">
@@ -47,6 +43,8 @@
                 {/foreach}
             </tbody>
         </table>
+            
+        {pager rowcount=$usercount limit=$perpage posvar="page" display="page" maxpages="20" class="z-center"}
 
         <div class="z-formbuttons z-buttons">
             <input type="hidden" name="lastletter" value="{$letter|safetext}" />
@@ -54,7 +52,5 @@
             {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
         </div>
     </form>
-
-</div>
-
+</div>    
 {adminfooter}

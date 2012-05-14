@@ -348,23 +348,16 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
             }
         }
         asort($filelist);
-    
-        $ztables = DBUtil::getTables();
-        $rcol = $ztables['dizkus_ranks_column'];
-    
-        if ($args['ranktype']==0) {
-            $orderby = 'ORDER BY ' . $rcol['rank_min'];
+
+        if ($args['ranktype'] == 0) {
+            $orderby = 'rank_min';
         } else {
-            $orderby = 'ORDER BY ' . $rcol['rank_title'];
+            $orderby = 'rank_title';
         }
-        $ranks = DBUtil::selectObjectArray('dizkus_ranks', 'WHERE ' . $rcol['rank_special'] . '=' . DataUtil::formatForStore($args['ranktype']), $orderby);
-    
-        if (is_array($ranks)) {
-            foreach ($ranks as $cnt => $rank) {
-            	$ranks[$cnt]['users'] = ModUtil::apiFunc('Dizkus', 'admin', 'readrankusers',
-                                              array('rank_id' => $ranks[$cnt]['rank_id']));
-            }
-        }
+                
+        $ranks = $this->entityManager->getRepository('Dizkus_Entity_Ranks')
+                                   ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
+        
     /*
         // add a dummy rank on top for new ranks
         array_unshift($ranks, array('rank_id'      => -1,
