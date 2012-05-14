@@ -34,6 +34,7 @@
                             {/if}
                             <div>
                                 <label for="message">{gt text="Message body"}</label><br />
+                                {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
                                 <textarea id="message" name="message" rows="10" cols="60">{$post.post_rawtext}</textarea>
                                 {if $modvars.Dizkus.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
