@@ -28,6 +28,10 @@ class Dizkus_Version extends Zikula_AbstractVersion
         
         // module depedencies
         $meta['dependencies']   = array(
+                                      array('modname'    => 'LuMicuLa', 
+                                            'minversion' => '0.1.0', 
+                                            'maxversion' => '', 
+                                            'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
                                       array('modname'    => 'BBCode', 
                                             'minversion' => '3.0.0', 
                                             'maxversion' => '', 
