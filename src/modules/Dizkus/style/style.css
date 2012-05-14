@@ -76,8 +76,7 @@ div#editpostoptions ul li {
 #dizkus a.dzk_notextdecoration,
 #dizkus .dzk_navbar a,
 #dizkus .roundedbar a,
-#dizkus .forumbg a,
-#dizkus .forum_post a {
+#dizkus .forumbg a {
     text-decoration : none;
 }
 #dizkus .dzk_navbar a:hover,
