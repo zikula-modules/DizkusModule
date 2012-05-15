@@ -24,6 +24,12 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
                                                       array('text' => $this->__('Medium'), 'value' => 'medium'),
                                                       array('text' => $this->__('None'),   'value' => 'none')));
 
+        $spam_protectors = array(
+            array('text' => $this->__('No spam protector'), 'value' => 'no'),
+            array('text' => 'Akismet', 'value' => 'Akismet')
+        );
+        $this->view->assign('spam_protectors', $spam_protectors);
+
         $vars = $this->getVars();
         $yesorno = array(
             'log_ip',                 
@@ -95,27 +101,29 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
 
             // dropdowns
-            $this->setVar('post_sort_order',     $data['post_sort_order']);
-            $this->setVar('deletehookaction',    $data['deletehookaction']);
+            $this->setVar('post_sort_order',         $data['post_sort_order']);
+            $this->setVar('deletehookaction',        $data['deletehookaction']);
             //if ($this->available('ContactList')) {
             //    $this->setVar('ignorelist_handling', $data['ignorelist_handling']);
             //}
 
             // ints
-            $this->setVar('hot_threshold',      $data['hot_threshold']);
-            $this->setVar('posts_per_page',     $data['posts_per_page']);
-            $this->setVar('topics_per_page',    $data['topics_per_page']);
-            $this->setVar('timespanforchanges', $data['timespanforchanges']);
-            $this->setVar('minsearchlength',    $data['minsearchlength']);
-            $this->setVar('maxsearchlength',    $data['maxsearchlength']);
+            $this->setVar('hot_threshold',           $data['hot_threshold']);
+            $this->setVar('posts_per_page',          $data['posts_per_page']);
+            $this->setVar('topics_per_page',         $data['topics_per_page']);
+            $this->setVar('timespanforchanges',      $data['timespanforchanges']);
+            $this->setVar('minsearchlength',         $data['minsearchlength']);
+            $this->setVar('maxsearchlength',         $data['maxsearchlength']);
 
             // strings
-            $this->setVar('email_from',          $data['email_from']);
-            $this->setVar('signature_start',     $data['signature_start']);
-            $this->setVar('signature_end',       $data['signature_end']);
-            $this->setVar('forum_disabled_info', $data['forum_disabled_info']);
-            $this->setVar('url_ranks_images',    $data['url_ranks_images']);
+            $this->setVar('email_from',              $data['email_from']);
+            $this->setVar('signature_start',         $data['signature_start']);
+            $this->setVar('signature_end',           $data['signature_end']);
+            $this->setVar('forum_disabled_info',     $data['forum_disabled_info']);
+            $this->setVar('url_ranks_images',        $data['url_ranks_images']);
 
+            $this->setVar('spam_protector',          $data['spam_protector']);
+            
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
 
         } elseif ($args['commandName'] == 'restore') {
@@ -154,6 +162,8 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
             $this->setVar('url_ranks_images',    'modules/Dizkus/images/ranks');
 
+            $this->setVar('spam_protector',      'none');
+            
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
 

@@ -19,6 +19,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	
+        
         $topic_id         = FormUtil::getPassedValue('topic', null, 'POST');
         $message          = FormUtil::getPassedValue('message', '', 'POST');
         $title            = FormUtil::getPassedValue('title', '', 'POST');
@@ -60,6 +61,12 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
                                                  'attach_signature' => $attach_signature,
                                                  'subscribe_topic'  => $subscribe_topic,
                                                  'title'            => $title));
+            
+            if (!isset($post_id)) {
+                return new Zikula_Response_Ajax_BadData(array());
+                $error = "<p class='z-errormsg'>".$this->__('Error! Your post contains unacceptable content and has been rejected.').'</p>';
+                return new Zikula_Response_Ajax(array('data' => $error));
+            }
 
             $topic['start'] = $start;
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
@@ -233,12 +240,18 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             $orig_post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                                       array('post_id'     => $post_id));
 
-            ModUtil::apiFunc('Dizkus', 'user', 'updatepost',
+            $update = ModUtil::apiFunc('Dizkus', 'user', 'updatepost',
                          array('post_id'          => $post_id,
                                'subject'          => $subject,
                                'message'          => $message,
                                'delete'           => $delete,
                                'attach_signature' => ($attach_signature==1)));
+            
+            if (!$update) {
+                return new Zikula_Response_Ajax_BadData(
+                    array()
+                );
+            }
 
             if ($delete <> '1') {
                 $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',

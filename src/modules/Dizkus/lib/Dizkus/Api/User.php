@@ -1270,6 +1270,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
+        
+        if ($this->isSpam($args['message'])) {
+            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+        }
     
         if (trim($args['message']) == '') {
             return LogUtil::registerError($this->__('Error! You tried to post a blank message. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
@@ -1505,6 +1509,12 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         if (!allowedtowritetocategoryandforum($cat_id, $args['forum_id'])) {
             return LogUtil::registerPermissionError();
         }
+        
+        if ($this->isSpam($args['message'])) {
+            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+        }
+        
+        
     
         if (trim($args['message']) == '' || trim($args['subject']) == '') {
             // either message or subject is empty
@@ -1747,6 +1757,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     {
         if (!isset($args['topic_id']) || empty($args['topic_id']) || !is_numeric($args['topic_id'])) {
             $args['topic_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $args['post_id']));
+        }
+        
+        if ($this->isSpam($args['message'])) {
+            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
         }
     
         $ztable = DBUtil::getTables();
@@ -3863,21 +3877,35 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return $asmode;
     }
 
-}
 
-/**
- * helper function to extract forum_ids from forum array
- */
-function _get_forum_ids($f)
-{
-    return $f['forum_id'];
-}
+    /**
+    * helper function to extract forum_ids from forum array
+    */
+    function _get_forum_ids($f)
+    {
+        return $f['forum_id'];
+    }
 
-/**
- * helper function
- */
-function _get_favorites($f)
-{
-    return (int)$f['forum_id'];
-}
+    /**
+    * helper function
+    */
+    function _get_favorites($f)
+    {
+        return (int)$f['forum_id'];
+    }
+ 
     
+    public function isSpam($message)
+    {        
+        // Akismet
+        if (ModUtil::available('Akismet') && $this->getVar('spam_protector') == 'Akismet') {
+            if (ModUtil::apiFunc('Akismet', 'user', 'isspam', array('content' => $message))) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    
+}

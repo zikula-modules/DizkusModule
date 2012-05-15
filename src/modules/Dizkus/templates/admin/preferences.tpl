@@ -50,6 +50,10 @@
             {formlabel for="url_ranks_images" __text="Path to rank images"}
             {formtextinput id="url_ranks_images" text=$modvars.Dizkus.url_ranks_images size="30" maxLength="100"}
         </div>
+        <div class="z-formrow">
+            {formlabel for="spam_protector" __text="Spam protection"}
+            {formdropdownlist id="spam_protector" items=$spam_protectors}
+        </div>
     </fieldset>
 
     <fieldset>
