@@ -21,7 +21,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * @params 'viewcat' int only expand the category, all others shall be hidden / collapsed
      */
     public function main($args=array())
-    {
+    {   
         // Permission check
         $this->throwForbiddenUnless(
             SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
@@ -493,6 +493,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $this->view->fetch('user/editpost.tpl');
         }
     }
+    
+    
+    public function deletetopic($args=array()) {
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/deletetopic.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
+    }
+    
     
     /**
      * topicadmin
