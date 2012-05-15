@@ -698,6 +698,33 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
                 DBUtil::executeSQL($sql);
             }
         }
+        
+        
+        // remove table prefixes
+        $dizkusTables = array(
+            'dizkus_categories',
+            'dizkus_forum_mods',
+            'dizkus_forums',
+            'dizkus_posts',
+            'dizkus_subscription',
+            'dizkus_ranks',
+            'dizkus_topics',
+            'dizkus_topic_subscription',
+            'dizkus_forum_favorites'
+        );
+        $prefix = $this->serviceManager['prefix'];
+        $connection = Doctrine_Manager::getInstance()->getConnection('default');
+        foreach ($dizkusTables as $value) {
+            $sql = 'RENAME TABLE ' . $prefix . '_'. $value . ' TO ' . $value;
+            $stmt = $connection->prepare($sql);
+            try {
+                $stmt->execute();
+            } catch (Exception $e) {
+                LogUtil::registerError($e);
+            }
+        }
+        
+        
     
         // done - now drop the dizkus_users table
         DBUtil::dropTable('dizkus_users');
