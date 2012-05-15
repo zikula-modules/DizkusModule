@@ -17,9 +17,5 @@
                 </li>
             </ul>
         </div>
-        <div class="dzk_col_right">
-            {* plainbbcode textfieldid=message *}
-            {* bbsmile textfieldid=message *}
-        </div>
     </div>
 </div>
