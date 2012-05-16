@@ -11,6 +11,7 @@
 class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
 {
     private $topic_id;
+    private $topic_poster;
     
     function initialize(Zikula_Form_View $view)
     {
@@ -34,9 +35,13 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             'count'    => false)
         );
     
+        $this->topic_poster = $topic['topic_poster'];
+        
         if ($topic['access_moderate'] <> true) {
             return LogUtil::registerPermissionError();
         }
+        
+        $view->assign('topicTitle', $topic['topic_title']);
         
         $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
         
@@ -49,6 +54,27 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
         }
 
+        // check for valid form
+        if (!$view->isValid()) {
+            return false;
+        }
+
+        $data = $view->getValues();
+        
+        
+        if ($data['sendReason'] && !empty($data['reason'])) {
+            $toaddress = UserUtil::getVar('email', $this->topic_poster);
+            ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
+                    'toaddress' => $toaddress,
+                    'subject'   => $this->__('Post deleted'),
+                    'body'      => $data['reason'],
+                    'html'      => true
+                )
+            );
+            
+            LogUtil::registerStatus($this->__('Email sended!'));
+        }
+        
         $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $this->topic_id));
         
         return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)));        

@@ -12,6 +12,17 @@
     <div>
         <fieldset id="dzk_deletetopic">
             <legend>{gt text="Confirmation prompt"}</legend>
+            <div class="z-formrow">
+                {formlabel for="sendReason" __text='Send a reason to the poster'}
+                {formcheckbox id="sendReason" value=false onclick="Zikula.checkboxswitchdisplaystate(this, 'diskus_reason_container', true);"}
+            </div>
+            
+             <div class="z-formrow" id="diskus_reason_container" style="display:none">
+                {formlabel for="reason" text='Write a reason'}
+                {gt text='Your post "%s" was deleted, because ' tag1=$topicTitle assign='reason'}
+                {formtextinput id="reason" textMode="multiline" rows="3" cols="40"}
+            </div>
+            
             <div class="z-formbuttons z-buttons">
                 {formbutton class="z-bt-ok"     commandName="save"   __text="Yes"}
                 {formbutton class="z-bt-cancel" commandName="cancel" __text="No"}
