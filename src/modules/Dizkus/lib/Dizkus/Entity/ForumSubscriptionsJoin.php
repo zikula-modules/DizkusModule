@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_subscription")
  */
-class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
+class Dizkus_Entity_ForumSubscriptionsJoin extends Zikula_EntityAccess
 {
     
     /**
@@ -40,6 +40,13 @@ class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
     private $user_id = 0;
     
     
+    /**
+     * item forum
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Forums")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     */
+    private $forum;
+
     
     public function getmsg_id()
     {
@@ -51,27 +58,14 @@ class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
         return $this->forum_id;
     }
     
+    public function getforum()
+    {
+        return $this->forum;
+    }
     
     public function getuser_id()
     {
         return $this->user_id;
     }
-    
-  
-    public function setmsg_id($id)
-    {
-        $this->msg_id = $id;
-    }
-    
-    public function setforum_id($id)
-    {
-        $this->forum_id = $id;
-    }
-    
-    public function setuser_id($id)
-    {
-        $this->user_id = $id;
-    }
-
     
 }

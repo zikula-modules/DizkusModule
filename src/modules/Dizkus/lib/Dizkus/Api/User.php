@@ -1396,14 +1396,18 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function get_forum_subscription_status($args)
     {
-        $ztables = DBUtil::getTables();
-        $subcolumn = $ztables['dizkus_subscription_column'];
-    
-        $where = ' WHERE ' . $subcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . 
-                 ' AND '   . $subcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
-    
-        $count = DBUtil::selectObjectCount('dizkus_subscription', $where);
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('COUNT(s.msg_id)')
+           ->from('Dizkus_Entity_ForumSubscriptions', 's')
+           ->where('s.user_id = :user')
+           ->setParameter('user', $args['user_id'])
+           ->andWhere('s.forum_id = :forum')
+           ->setParameter('forum', $args['forum_id'])
+           ->setMaxResults(1);
+        $count = $qb->getQuery()->getSingleScalarResult();
         return $count > 0;
+        
     }
     
     /**
@@ -2489,14 +2493,20 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
             return LogUtil::registerPermissionError();
         }
-    
-        if ($this->get_forum_subscription_status($args) == false) {
+        
+        if ($this->get_forum_subscription_status($args) == false) {            
             // add user only if not already subscribed to the forum
             // we can use the args parameter as-is
-            DBUtil::insertObject($args, 'dizkus_subscription');
+            $item = new Dizkus_Entity_ForumSubscriptions();
+            $data = array('user_id' => $args['user_id'], 'forum_id' => $args['forum_id']);
+            $item->merge($data);
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();      
+            return true;
         }
     
-        return true;
+        return false;
+        
     }
     
     /**
@@ -2515,15 +2525,21 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
-    
-        $ztable = DBUtil::getTables();
-    
-        $where = $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
-        if (!empty($args['forum_id'])) {
-            $where .= ' AND ' . $ztable['dizkus_subscription_column']['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
+        
+        if(empty($args['forum_id'])) {
+            return LogUtil::registerArgsError();
         }
-    
-        return DBUtil::deleteWhere('dizkus_subscription', $where);
+                
+        $subscription = $this->entityManager
+                             ->getRepository('Dizkus_Entity_ForumSubscriptions')
+                             ->findOneBy(array(
+                                 'user_id' => $args['user_id'],
+                                 'forum_id' => $args['forum_id'])
+                            );
+        $this->entityManager->remove($subscription);
+        $this->entityManager->flush();
+        
+        return true;
     }
     
     
@@ -3847,7 +3863,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function getForumSubscriptions($uid)
     {
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptions')
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptionsJoin')
                                    ->findBy(array('user_id' => $uid));
     
         return $subscriptions;
