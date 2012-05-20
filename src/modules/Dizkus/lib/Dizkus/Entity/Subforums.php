@@ -270,4 +270,34 @@ class Dizkus_Entity_Subforums extends Zikula_EntityAccess
         return $this->forum_pntopic;
     }
 
+    
+    public function setforum_id($forum_id)
+    {
+        $this->forum_id = $forum_id;
+    }
+    
+    public function setforum_name($forum_name)
+    {
+        $this->forum_name = $forum_name;
+    }
+    
+    public function setforum_desc($forum_name)
+    {
+        $this->forum_desc = $forum_name;
+    }
+    
+    
+    public function setis_subforum($is_subforum)
+    {
+        $this->is_subforum = $is_subforum;
+    }
+    
+    
+    public function setcat_id($cat_id)
+    {
+        $this->cat_id = $cat_id;
+    }
+    
 }
+
+

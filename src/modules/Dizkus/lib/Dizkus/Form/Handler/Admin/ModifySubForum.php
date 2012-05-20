@@ -10,7 +10,7 @@
 
 class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandler
 {
-    private $_id;
+    private $subforum;
     
     function initialize(Zikula_Form_View $view)
     {
@@ -22,10 +22,9 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
         
         if ($id) {
             $view->assign('templatetitle', $this->__('Modify subforum'));
-            $subforum   = DBUtil::selectObjectByID ('dizkus_forums', $id, 'forum_id');
-            if ($subforum) {
-                $this->_id = $id;
-               $this->view->assign($subforum);
+            $this->subforum = $this->entityManager->find('Dizkus_Entity_Subforums', $id);            
+            if ($this->subforum) {
+               $this->view->assign($this->subforum->toArray());
             } else {
                 return LogUtil::registerError($this->__f('Article with id %s not found', $id));
             }
@@ -51,11 +50,6 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
 
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError('index.php');
-        }
-
         $url = ModUtil::url('Dizkus', 'admin', 'subforums' );
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
@@ -70,16 +64,17 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
 
         
         // switch between edit and create mode
-        if ($this->_id) {
-            $data['forum_id'] = $this->_id;
-            $mainforum   = DBUtil::selectObjectByID ('dizkus_forums', $data['is_subforum'], 'forum_id');
-            $data['cat_id'] = $mainforum['cat_id'];
-            DBUtil::updateObject($data, 'dizkus_forums', null, 'forum_id');
-        } else {
-            $mainforum   = DBUtil::selectObjectByID ('dizkus_forums', $data['is_subforum'], 'forum_id');
-            $data['cat_id'] = $mainforum['cat_id'];
-            DBUtil::insertObject($data, 'dizkus_forums','forum_id');
-        }
+        if (!$this->subforum) {
+            $this->subforum = new Dizkus_Entity_Subforums();
+        } 
+        
+        $mainforum   = DBUtil::selectObjectByID ('dizkus_forums', $data['is_subforum'], 'forum_id');
+        $data['cat_id'] = $mainforum['cat_id'];
+        
+        
+        $this->subforum->merge($data);
+        $this->entityManager->persist($this->subforum);
+        $this->entityManager->flush();
 
         return $view->redirect($url);
     }

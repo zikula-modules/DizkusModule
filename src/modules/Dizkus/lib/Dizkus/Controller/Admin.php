@@ -24,7 +24,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    
+        
         return $this->view->fetch('admin/main.tpl');
     }
     
@@ -213,10 +213,9 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        $subforums = DBUtil::selectObjectArray('dizkus_forums', $where = 'WHERE is_subforum > 0');
+        
+        $subforums = ModUtil::apiFunc('Dizkus', 'user', 'readSubForums');
         $this->view->assign('subforums', $subforums);
-
-    
         return $this->view->fetch('admin/subforums.tpl');
        
     }
@@ -256,59 +255,8 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      */
     public function managesubscriptions()
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        $submit   = FormUtil::getPassedValue('submit');
-        $username = FormUtil::getPassedValue('username');
-    
-        $uid = 0;
-        $topicsubscriptions = array();
-        $forumsubscriptions = array();
-    
-        if (!empty($username)) {
-            $uid = UserUtil::getIDFromName($username);
-        }
-        if (!empty($uid)) {
-            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions', array('user_id' => $uid));
-            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_subscriptions', array('user_id' => $uid));
-        }
-    
-        if (!$submit) {
-            // submit is empty
-            $this->view->assign('username', $username);
-            $this->view->assign('uid', $uid = UserUtil::getIDFromName($username));
-            $this->view->assign('topicsubscriptions', $topicsubscriptions);
-            $this->view->assign('forumsubscriptions', $forumsubscriptions);
-    
-            return $this->view->fetch('admin/managesubscriptions.tpl');
-    
-        } else {  // submit not empty
-            $uid       = FormUtil::getPassedValue('uid');
-            $allforums = FormUtil::getPassedValue('allforum');
-            $forum_ids = FormUtil::getPassedValue('forum_id');
-            $alltopics = FormUtil::getPassedValue('alltopic');
-            $topic_ids = FormUtil::getPassedValue('topic_id');
-    
-            if ($allforums == '1') {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $uid));
-            } elseif (count($forum_ids) > 0) {
-                for($i = 0; $i < count($forum_ids); $i++) {
-                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum', array('user_id' => $uid, 'forum_id' => $forum_ids[$i]));
-                }
-            }
-    
-            if ($alltopics == '1') {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $uid));
-            } elseif (count($topic_ids) > 0) {
-                for($i = 0; $i < count($topic_ids); $i++) {
-                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('user_id' => $uid, 'topic_id' => $topic_ids[$i]));
-                }
-            }
-        }
-    
-        return System::redirect(ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('username' => UserUtil::getVar('uname', $uid))));
+        $form = FormUtil::newForm('Dizkus', $this);
+        return $form->execute('admin/managesubscriptions.tpl', new Dizkus_Form_Handler_Admin_ManageSubscriptions());   
     }
 
 }

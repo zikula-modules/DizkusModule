@@ -1,7 +1,15 @@
-{ajaxheader modname='Dizkus'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin.js'}
+{ajaxheader modname=$modinfo.name filename='Zikula.Dizkus.Admin.ManageSubscriptions.js' ui=true}
+{pageaddvar name="stylesheet" value="modules/Dizkus/style/liveusersearch.css"}
 {adminheader}
+{strip}
+{pageaddvarblock}
+<script type="text/javascript">
+    document.observe("dom:loaded", function() {
+        liveusersearch();
+    });
+</script>
+{/pageaddvarblock}
+{/strip}
 <div class="z-admin-content-pagetitle">
     {icon type="mail" size="small"}
     <h3>{gt text="Manage subscriptions"}</h3>
@@ -9,82 +17,98 @@
 
 <div id="dizkus_admin">
 
-    <form class="z-form" id="subscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
-        <fieldset>
-            <label for="username">{gt text="User name"}</label>&nbsp;<input type="text" name="username" id="username" value="{$username}" />
-            {button class="z-button z-bt-small" src="search.png" set="icons/extrasmall" __alt="Show users' subscriptions" __title="Show users' subscriptions" __text="Show users' subscriptions"}
-        </fieldset>
-    </form>
+    {form cssClass="z-form"}
+    {formvalidationsummary}
+        <div id="liveusersearch" class="">
+            <fieldset>
+                <label for="username">{gt text="Search for a user"}:</label>&nbsp;<input size="25" maxlength="25" type="text" id="username" value="{$username}" />
+                <div id="username_choices" class="autocomplete_user"></div>
+            </fieldset>
+        </div>
+   
 
-    <form class="z-form" id="managesubscriptions" action="{modurl modname='Dizkus' type='admin' func='managesubscriptions'}" method="post">
         <div>
-            <input type="hidden" name="uid" value="{$uid}" />
-            {if $topicsubscriptions|@count <> 0}
-            <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
+            {if count($topicsubscriptions) > 0}
             <h2>{gt text="Manage topic subscriptions"}</h2>
             <table class="z-admintable">
-                <caption>(<label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" />&nbsp;)</caption>
                 <thead>
                     <tr>
+                        <th width=15px></th>
                         <th>{gt text="Topic"}</th>
                         <th>{gt text="Poster"}</th>
-                        <th>{gt text="Unsubscribe from topic"}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {foreach item='subscription' from=$topicsubscriptions}
                     <tr class="{cycle values='z-odd,z-even'}">
                         <td>
-                            <a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.forum_name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>
+                            {formcheckbox id=$subscription.id group='topicsubscriptions' cssClass="topicsubscriptions"}
                         </td>
                         <td>
-                            {$subscription.poster_name|profilelinkbyuname}
+                            {$subscription.topic.topic_title}
+                            {*<a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.forum_name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>*}
                         </td>
                         <td>
-                            <input class="topic_checkbox" type="checkbox" name="topic_id[]" value="{$subscription.topic_id}" />
+                            {$subscription.topic.topic_poster|profilelinkbyuid}
                         </td>
                     </tr>
                     {/foreach}
+                    <tr class="{cycle values='z-odd,z-even'}">
+                        <td>
+                            <input name="alltopic" type="checkbox" value="1" onClick="Zikula.toggleInput('.topicsubscriptions');" />
+                        </td>
+                        <td colspan=2>
+                            <em>{gt text="All"}</em>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             {else}
             <h3>{gt text="No topic subscriptions found."}</h3>
             {/if}
 
-            {if $forumsubscriptions|@count <> 0}
-            <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
+            {if count($forumsubscriptions) > 0}
             <h2>{gt text="Manage forum subscriptions"}</h2>
             <table class="z-admintable">
-                <caption>(<label for="allforum">{gt text="Remove all forum subscriptions"}</label>&nbsp;<input name="allforum" id="allforum" type="checkbox" value="1" />&nbsp;)</caption>
                 <thead>
                     <tr>
+                        <th width=15px></th>
                         <th>{gt text="Forum"}</th>
-                        <th>{gt text="Unsubscribe from forum"}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     {foreach item='subscription' from=$forumsubscriptions}
-                    <tr class="{cycle values='z-odd,z-even'}">
-                        <td>
-                            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.cat_title} :: {$subscription.forum_name}">{$subscription.forum_name|safetext}</a>
+                    <tr clas="{cycle values='z-odd,z-even'}">
+                        <td >
+                            {formcheckbox id=$subscription.msg_id group='forumsubscriptions' cssClass="forumsubscriptions"}
                         </td>
                         <td>
-                            <input class="forum_checkbox" type="checkbox" name="forum_id[]" value="{$subscription.forum_id}" />
+                            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.forum.forum_name}">{$subscription.forum.forum_name|safetext}</a>
                         </td>
                     </tr>
                     {/foreach}
+                    <tr class="{cycle values='z-odd,z-even'}">
+                        <td>
+                            <input name="allforums" type="checkbox" value="1" onClick="Zikula.toggleInput('.forumsubscriptions');" />
+                        </td>
+                        <td>
+                            <em>{gt text="All"}</em>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
+                
+             
 
             {else}
             <h3>{gt text="No forum subscriptions found."}</h3>
             {/if}
 
             <div class="z-formbuttons z-buttons">
-                {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+                {formbutton id="submit" commandName="submit" __text="Unsubscribe selected" class="z-bt-ok"}
             </div>
         </div>
-    </form>
+     {/form}
 
 </div>
 {adminfooter}

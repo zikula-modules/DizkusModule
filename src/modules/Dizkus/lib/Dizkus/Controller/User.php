@@ -253,7 +253,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             }*/
     
             // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-            $topic = DBUtil::selectObjectByID('dizkus_topics',$topic_id,'topic_id');
+            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
             $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
             if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
                 return LogUtil::registerError($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'), null, ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));

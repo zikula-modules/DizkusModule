@@ -105,5 +105,40 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
         return $this->rank_image;
     }
   
-
+    public function setrank_id($rank_id)
+    {
+        $this->rank_id = $rank_id;
+    }
+    
+    public function setrank_title($rank_title)
+    {
+        $this->rank_title = $rank_title;
+    }
+    
+    public function setrank_desc($rank_desc)
+    {
+        $this->rank_desc = $rank_desc;
+    }
+    
+    public function setrank_min($rank_min)
+    {
+        $this->rank_min = $rank_min;
+    }
+    
+    public function setrank_max($rank_max)
+    {
+        $this->rank_max = $rank_max;
+    }
+    
+    public function setrank_special($rank_special)
+    {
+        $this->rank_special =$rank_special;
+    }
+    
+    public function setrank_image($rank_image)
+    {
+        $this->rank_image = $rank_image;
+    }
+    
+    
 }

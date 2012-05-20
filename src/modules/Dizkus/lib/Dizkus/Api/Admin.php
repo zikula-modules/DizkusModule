@@ -11,56 +11,20 @@
 class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
     /**
-     * readcatgories
+     * read catgory
+     * 
      * read the categories from database, if cat_id is set, only this one will be read
      *
-     * @params $args['cat_id'] int the category id to read (optional)
+     * @params cat_id int the category id to read (optional)
      * @returns array of category information
      *
      */
-    public function readcategories($args)
+    public function readcategory($cat_id)
     {
-        $ztables = DBUtil::getTables();
-        $catcolumn = $ztables['dizkus_categories_column'];
-    
-        $where = '';
-        if (isset($args['cat_id'])) {
-            $where .= "WHERE $catcolumn[cat_id]=" . DataUtil::formatForStore($args['cat_id']) . " ";
-        }
-        $orderby = 'cat_order ASC';
-    
-        $categories = DBUtil::selectObjectArray('dizkus_categories', $where, $orderby);
-        if (isset($args['cat_id'])) {
-            return $categories[0];
-        }
-    
-        // we now check the cat_order field in each category entry. Each
-        // cat_order may only appear once there. If we find it more than once, we will adjust
-        // all following cat_orders by incrementing them by 1
-        // the fact that is array is sorted by cat_order simplifies this :-)
-        $last_cat_order = 0;   // for comparison
-        $cat_order_adjust = 0; // holds the number of shifts we have to do
-        $shifted = false; // trigger, if true we have to update the db
-        for ($i = 0; $i < count($categories); $i++) {
-            // we leave cat_order = 0 untouched!
-            if ($cat_order_adjust > 0) {
-                // we have done at least one change before which means that all foloowing categories
-                // have to be changed too.
-                $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
-                $shifted = true;
-            } else if ($categories[$i]['cat_order'] == $last_cat_order ) {
-                $cat_order_adjust++;
-                $categories[$i]['cat_order'] = $categories[$i]['cat_order'] + $cat_order_adjust;
-                $shifted = true;
-            }
-            $last_cat_order = $categories[$i]['cat_order'];
-        }
-        if ($shifted == true) {
-            DBUtil::updateObjectArray($categories, 'dizkus_categories', 'cat_id');
-        }
-    
-        return $categories;
+        return $this->entityManager->find('Dizkus_Entity_Categories', $cat_id)->toArray();
     }
+    
+    
     
     /**
      * updatecategory
@@ -70,27 +34,21 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
      * @params $args['cat_id'] int category id
      */
     public function updatecategory($args)
-    {
+    {        
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
         
-        // copy all entries from $args to $obj that are found in the categories table
-        // this prevents possible SQL errors if non existing keys are passed to this function
-        $ztables = DBUtil::getTables();
-        $obj = array();
-        foreach ($args as $key => $arg) {
-            if (array_key_exists($key, $ztables['dizkus_categories_column'])) {
-                $obj[$key] = $arg;
-            }
+        if (!isset($args['cat_id'])) {
+            return LogUtil::registerArgsError();
         }
+        
+        $category = $this->entityManager->find('Dizkus_Entity_Categories', $args['cat_id']);
+        $category->merge($args);
+        $this->entityManager->persist($category);
+        $this->entityManager->flush();
     
-        if (isset($obj['cat_id'])) {
-            $obj = DBUtil::updateObject($obj, 'dizkus_categories', null, 'cat_id');
-            return true;
-        }
-    
-        return false;
+        return true;
     }
     
     /**
@@ -101,17 +59,23 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
      */
     public function addcategory($args)
     {
+        
+        
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    
-        if (isset($args['cat_title'])) {
-            $args['cat_order'] = DBUtil::selectObjectCount('dizkus_categories') + 1;
-            $obj = DBUtil::insertObject($args, 'dizkus_categories', 'cat_id');
-            return $obj['cat_id'];
+        
+        if (empty($args['cat_title'])) {
+            return false;
         }
-    
-        return false;
+        
+        $count = count($this->entityManager->getRepository('Dizkus_Entity_Categories')->findAll());
+        $args['cat_order'] = $count+1;
+        $category = new Dizkus_Entity_Categories();            
+        $category->merge($args);
+        $this->entityManager->persist($category);
+        $this->entityManager->flush();
+        return $category->getcat_id();
     }
     
     /**
@@ -333,7 +297,10 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
     /**
      * readranks
-     * @params ranktype   
+     * 
+     * @params ranktype
+     * 
+     * @return array
      *
      */
     public function readranks($args)
@@ -358,21 +325,12 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
         $ranks = $this->entityManager->getRepository('Dizkus_Entity_Ranks')
                                    ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
         
-    /*
-        // add a dummy rank on top for new ranks
-        array_unshift($ranks, array('rank_id'      => -1,
-                                    'rank_title'   => '',
-                                    'rank_min'     => 0,
-                                    'rank_max'     => 0,
-                                    'rank_special' => 0,
-                                    'rank_image'   => 'onestar.gif',
-                                    'users'        => array()));
-    */
         return array($filelist, $ranks);
     }
     
     /**
      * saverank
+     * 
      * @params rank_special, rank_id, rank_min, rank_max, rank_image, rank_id
      */
     public function saverank($args)
@@ -383,39 +341,29 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
         foreach ($args['ranks'] as $rankid => $rank)
         {
-            if ($rankid == '-1') {
-                $res = DBUtil::insertObject($rank, 'dizkus_ranks', 'rank_id');
+            if ($rankid == '-1') {                
+                $r = new Dizkus_Entity_Ranks();
+                $r->merge($rank);
+                $this->entityManager->persist($r);
             } else {
-                $rank['rank_id'] = $rankid;
+                $r = $this->entityManager->find('Dizkus_Entity_Ranks', $rankid);
+                
                 if ($rank['rank_delete'] == '1') {
-                    $res = DBUtil::deleteObject($rank, 'dizkus_ranks', null, 'rank_id');
+                    $this->entityManager->remove($r);
                 } else {
-                    $res = DBUtil::updateObject($rank, 'dizkus_ranks', null, 'rank_id');
+                    $r->merge($rank);
+                    $this->entityManager->persist($r);
                 }
             }
         }
-    
-        return $res;
-    }
-    
-    /**
-     * readrankusers
-     * read all users that have a certain rank_id
-     */
-    public function readrankusers($args)
-    {
-        ModUtil::dbInfoLoad('Settings');
-        $ztable = DBUtil::getTables();
-        $objcol = $ztable['objectdata_attributes_column'];
-        
-        $where = $objcol['attribute_name'] . "='dizkus_user_rank' AND " .$objcol['value']."=" . DataUtil::formatForStore($args['rank_id']);
-        $users = DBUtil::selectObjectArray('objectdata_attributes', $where, '', -1, -1, 'object_id');
+        $this->entityManager->flush();
 
-        return array_keys($users);
+        return true;
     }
     
     /**
      * assignranksave
+     * 
      * setrank array(uid) = rank_id
      */
     public function assignranksave($args)

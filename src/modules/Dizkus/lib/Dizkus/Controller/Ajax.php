@@ -8,7 +8,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Controller_Ajax extends Zikula_AbstractController {
+class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax {
 
     /**
      * reply
@@ -33,8 +33,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         $message = dzkstriptags($message);
         $title   = dzkstriptags($title);
 
-        // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-        $topic = DBUtil::selectObjectByID('dizkus_topics', $topic_id, 'topic_id');
+        // ContactList integration: Is the user ignored and allowed to write an answer to this topic?        
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
+        
+        
         $topic['start'] = 0;
         $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
         if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
@@ -917,8 +919,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
                                    array('cat_id'    => $cat_id,
                                          'permcheck' => 'nocheck'));
             if (count($forums) > 0) {
-                $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
-                                         array( 'cat_id' => $cat_id ));
+                $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategory', $cat_id);
             	return new Zikula_Response_Ajax_BadData(array('cat_id' => $cat_id, 'old_id' => $cat_id), 
             	                                        $this->__f('Error! This category contains %s forum)', DataUtil::formatForDisplay(count($forums))));
             }
@@ -938,8 +939,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             $cat_id = ModUtil::apiFunc('Dizkus', 'admin', 'addcategory',
                                        array('cat_title' => $cat_title));
             if (!is_bool($cat_id)) {
-                $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategories',
-                                             array('cat_id' => $cat_id));
+                $category = ModUtil::apiFunc('Dizkus', 'admin', 'readcategory', $cat_id);
 /*
                 $category_forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                                                     array('cat_id'    => $category['cat_id'],
@@ -1323,6 +1323,40 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             }
         }
         return new Zikula_Response_Ajax(array());    
+    }
+    
+    
+     /**
+     * Performs a user search based on the user name fragment entered so far.
+     *
+     * Parameters passed via POST:
+     * ---------------------------
+     * string fragment A partial user name entered by the user.
+     *
+     * @return string Zikula_Response_Ajax_Plain with list of users matching the criteria.
+     */
+    public function getUsers()
+    {
+        //$this->checkAjaxToken();
+        $view = Zikula_View::getInstance($this->name);
+
+        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+            $fragment = $this->request->getGet()->get('fragment', $this->request->getPost()->get('fragment'));
+
+            ModUtil::dbInfoLoad($this->name);
+            $tables = DBUtil::getTables();
+
+            $usersColumn = $tables['users_column'];
+
+            $where = 'WHERE ' . $usersColumn['uname'] . ' REGEXP \'(' . DataUtil::formatForStore($fragment) . ')\'';
+            $results = DBUtil::selectObjectArray('users', $where);
+
+            $view->assign('results', $results);
+        }
+
+        $output = $view->fetch('ajax/getusers.tpl');
+
+        return new Zikula_Response_Ajax_Plain($output);
     }
 
 }

@@ -23,6 +23,13 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $topic_id;
 
+    
+    /**
+     * The following are annotations which define the topic_id field.
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $topic_poster;
 
     /**
      * The following are annotations which define the topic_title field.
@@ -37,6 +44,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     public function gettopic_id()
     {
         return $this->topic_id;
+    }
+    
+    public function gettopic_poster()
+    {
+        return $this->topic_poster;
     }
     
     public function gettopic_title()

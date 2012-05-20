@@ -83,7 +83,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $userdata = array_merge($userdata,  array('user_posts'      => 0,
                                                       'user_rank'       => 0,
                                                       'user_level'      => 0,
-                                                      'user_lastvisit'   => 0,
+                                                      'user_lastvisit'  => 0,
                                                       'user_favorites'  => 0,
                                                       'user_post_order' => 0));
         } else {
@@ -525,10 +525,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return $tree;
     }
 
-    public function readsubforums($args)
-    {
-
-    }
     
     /**
      * Returns an array of all the moderators of a forum
@@ -846,6 +842,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     {
         return strcmp($a['post_time_unix'], $b['post_time_unix']) * -1;
     }
+    
+    
+    public function readtopic0($topicID)
+    {
+        $this->entityManager->find('Dizkus_Entity_Topic', $topicID)->toArray();   
+    }
+    
+    
     
     /**
      * readtopic
@@ -1846,7 +1850,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $post_to_delete = $posts[$args['post_id']];
             
             // read the raw topic itself
-            $topic = DBUtil::selectObjectById('dizkus_topics', $args['topic_id'], 'topic_id');
+            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $args['topic_id']);
             // read the raw forum
             $forum = DBUtil::selectObjectById('dizkus_forums', $firstpost['forum_id'], 'forum_id');
             
@@ -2050,7 +2054,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $ztable = DBUtil::getTables();
     
         // get the old forum id and old post date
-        $topic = DBUtil::selectObjectById('dizkus_topics', $args['topic_id'], 'topic_id');
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $args['topic_id']);
     
         if ($topic['forum_id'] <> $args['forum_id']) {
             // set new forum id
@@ -2319,6 +2323,22 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
+     * getTopicSubscriptions
+     *
+     * @params none
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns array with topic ids, may be empty
+     */
+    public function getTopicSubscriptions($uid)
+    {
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
+                                   ->findBy(array('user_id' => $uid));
+    
+        return $subscriptions;
+    }
+    
+    
+    /**
      * get_topic_subscriptions
      *
      * @params none
@@ -2387,6 +2407,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         return $subscriptions;
     }
+    
+    
+    
+    
     
     /**
      * subscribe_topic
@@ -2501,6 +2525,37 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         return DBUtil::deleteWhere('dizkus_subscription', $where);
     }
+    
+    
+    /**
+     * unsubscribe_forum
+     *
+     * @params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns void
+     */
+    public function unsubscribe_forum_by_id($id)
+    {
+        $subscription = $this->entityManager->find('Dizkus_Entity_ForumSubscriptions', $id);
+        $this->entityManager->remove($subscription);
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * unsubscribe_forum
+     *
+     * @params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns void
+     */
+    public function unsubscribe_topic_by_id($id)
+    {
+        $subscription = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $id);
+        $this->entityManager->remove($subscription);
+        $this->entityManager->flush();
+    }
+    
+    
     
     /**
      * add_favorite_forum
@@ -2775,7 +2830,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         // before we do anything we will read the topic_last_post_id because we will need
         // this one later (it will become the topic_last_post_id of the new thread)
         // DBUtil:: read complete topic
-        $oldtopic = DBUtil::selectObjectByID('dizkus_topics', $post['topic_id'],'topic_id');
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $post['topic_id']);
     
         //  insert values into topics-table
         $newtopic = array('topic_title'  => $post['topic_subject'],
@@ -3716,7 +3771,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * insertrss
+     * insert rss
      *
      * @params $args['forum']    array with forum data
      * @params $args['items']    array with feed data as returned from Feeds module
@@ -3781,6 +3836,21 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         return true;
     
+    }
+    
+    /**
+     * getTopicSubscriptions
+     *
+     * @params none
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns array with topic ids, may be empty
+     */
+    public function getForumSubscriptions($uid)
+    {
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptions')
+                                   ->findBy(array('user_id' => $uid));
+    
+        return $subscriptions;
     }
     
     /**
@@ -3906,6 +3976,16 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         
         return false;
     }
-    
-    
+
+    public function readSubForums()
+    {   
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('s')
+           ->from('Dizkus_Entity_Subforums', 's')
+           ->where('s.is_subforum > 0')
+           ->orderBy('s.forum_name', 'DESC');
+        
+        return $qb->getQuery()->getArrayResult();
+    }
 }
