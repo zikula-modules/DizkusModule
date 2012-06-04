@@ -8,16 +8,21 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides topic api functions
+ */
 class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
     
     
     /**
-     * lockunlocktopic
+     * Toggle a topic lock.
      *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['mode']     string lock or unlock
-     * @returns void
+     * @param array $args Arguments array.
+     *        int $args['topic_id'] Topic id.
+     *        string $args['mode'] Lock mode (lock|unlocked).
+     *
+     * @return void
      */
     public function toggleLock($args)
     {
@@ -36,11 +41,13 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
     
     /**
-     * stickyunstickytopic
+     * Sticky/unsticky a topic.
      *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['mode']     string sticky or unsticky
-     * @returns void
+     * @param array $args Arguments array.
+     *        int $args['topic_id'] Topic id.
+     *        string $args['mode'] Sticky mode (sticky|unsticky).
+     *
+     * @return void
      */
     public function toggleSticky($args)
     {
@@ -59,11 +66,13 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
     
     /**
-     * subscribe_topic
+     * Subscribe a topic.
      *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     * @returns void
+     * @param array $args Arguments array.
+     *        int $args['topic_id'] Topic id.
+     *        int $args['user_id'] User id (optional: needs ACCESS_ADMIN).
+     *
+     * @return void|bool
      */
     public function subscribe($args)
     {
@@ -77,10 +86,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
-    
-        
-        if (!$this->getSubscriptionStatus(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id']))) 
-        {
+
+        $status = $this->getSubscriptionStatus(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id']));
+        if (!$status) {
             $subscription = new Dizkus_Entity_TopicSubscriptions();
             $subscription->settopic_id($args['topic_id']);
             $subscription->setuser_id($args['user_id']);
@@ -93,12 +101,13 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
     
     /**
-     * unsubscribe a topic
+     * Unsubscribe a topic.
      *
-     * @params $args['topic_id'] int the topics id, if not set we unsubscribe all topics
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     * @params $args['silent'] bool true=no error message when not subscribed, simply return void (obsolete)
-     * @returns bool
+     * @param array $args Arguments array.
+     *        int $args['topic_id'] Topics id, if not set we unsubscribe all topics.
+     *        int $args['user_id']  Users id (needs ACCESS_ADMIN).
+     *
+     * @return void|bool
      */
     public function unsubscribe($args)
     {   
@@ -110,7 +119,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             $args['user_id'] = UserUtil::getVar('uid');
         }        
         
-        unset($args['silent']);
+        unset($args['silent']); // obsulet value
         
         $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
                                              ->findBy($args);
@@ -123,11 +132,13 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     }
     
     /**
-     * Get topic subscription status
+     * Get topic subscription status.
      *
-     * @params $args['user_id'] int the users uid
-     * @params $args['topic_id'] int the topic id
-     * @returns bool true if the user is subscribed or false if not
+     * @param array $args Arguments array.
+     *        int $args['user_id'] Users uid.
+     *        int $args['topic_id'] Topic id.
+     *
+     * @return bool true if the user is subscribed or false if not
      */
     public function getSubscriptionStatus($args)
     {
@@ -325,7 +336,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             // this increases the amount of memory used but speeds up the loading of topics
             $userdata = array();
     
-            if (is_array($result2) && !empty($result2)){
+            if (is_array($result2) && !empty($result2)) {
                 foreach ($result2 as $post) {
                     $post['topic_id'] = $topic['topic_id'];
                 
@@ -346,7 +357,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
                 
                     if ($hooks == true) {
                         // call hooks for $message
-//                        list($post['post_text']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_text']));
+                        // list($post['post_text']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_text']));
                     }
                 
                     $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);

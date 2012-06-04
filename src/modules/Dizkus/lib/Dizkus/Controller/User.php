@@ -473,8 +473,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 case 'join':
                     $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
                     $list = array();
-                    foreach($tree as $categoryname => $category) {
-                        foreach($category['forums'] as $forum) {
+                    foreach ($tree as $categoryname => $category) {
+                        foreach ($category['forums'] as $forum) {
                             $list[$forum['forum_id']] = $categoryname . '::' . $forum['forum_name'];
                         }
                     }
