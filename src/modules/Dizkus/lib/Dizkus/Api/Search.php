@@ -280,7 +280,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         $now = time();
         $showtextinsearchresults = ModUtil::getVar('Dizkus', 'showtextinsearchresults', 'no');
         $textsql = ($showtextinsearchresults == 'yes') ? 'REPLACE(p.post_text, \'[addsig]\', \'\') as text' : '\'\'';
-            
+        
         $sql = 'INSERT INTO ' . $ztable['search_result'] . '
                 (title, text, module, extra, created, found, sesid)
                 SELECT

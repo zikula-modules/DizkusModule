@@ -8,8 +8,20 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides a handler to the modules preferences.
+ */
 class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 {
+    /**
+     * Setup form.
+     *
+     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     *
+     * @return boolean
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     */
     function initialize(Zikula_Form_View $view)
     {
         $this->view->caching = false;
@@ -48,11 +60,11 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             'showtextinsearchresults'
         );
         foreach ($yesorno as $value) {
-            if (array_key_exists($value, $vars) and $vars[$value] == 'yes') {
-       		$vars[$value] = true;
+            if (array_key_exists($value, $vars) && $vars[$value] == 'yes') {
+                $vars[$value] = true;
             } else {
-       	        $vars[$value] = false;
-       	    }
+                $vars[$value] = false;
+            }
         }
         
         $this->view->assign($vars);
@@ -67,6 +79,14 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
         return true;
     }
 
+    /**
+     * Handle form submission.
+     *
+     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
+     * @param array            &$args Arguments.
+     *
+     * @return bool|void
+     */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         // Security check
@@ -80,9 +100,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             if (!$view->isValid()) {
                 return false;
             }
-        
             $data = $view->getValues();
-
 
             // checkboxes 
             $this->setVar('log_ip',                  $data['log_ip'] == 1 ? 'yes' : 'no');
@@ -166,7 +184,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
-
         return true;
     }
 }

@@ -8,8 +8,16 @@
  * @link https://github.com/zikula-modules/Dizkus
  */
 
+/**
+ * Provides metadata for this module to the Extensions module.
+ */
 class Dizkus_Version extends Zikula_AbstractVersion
 {
+    /**
+     * Assemble and return module metadata.
+     *
+     * @return array Module metadata.
+     */
     public function getMetaData() 
     {
         $meta = array();
@@ -43,7 +51,12 @@ class Dizkus_Version extends Zikula_AbstractVersion
                                      );
         return $meta;
     }
-    
+
+    /**
+     * Define the hook bundles supported by this module.
+     *
+     * @return void
+     */
     protected function setupHookBundles()
     {
         $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.editor', 'ui_hooks', $this->__('Dizkus editor'));

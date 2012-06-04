@@ -148,7 +148,6 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 $('showcategory_' + cat_id).toggle();
             }.bind(this, cat_id)
         });
-        return;
     },
 
     storecategory: function(cat_id) {
@@ -424,7 +423,6 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                 $(imageid).style.visibility = 'hidden';
             }
         }
-        return;
     },
 
     createsortables: function() {
@@ -465,7 +463,6 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                                 // show error if necessary
                                 if (!req.isSuccess()) {
                                     Zikula.showajaxerror(req.getMessage());
-                                    return;
                                 }
                             }.bind(this)
                         }
@@ -494,7 +491,6 @@ Zikula.Dizkus.AdminClass = Class.create(Zikula.Dizkus.BaseClass, {
                             // show error if necessary
                             if (!req.isSuccess()) {
                                 Zikula.showajaxerror(req.getMessage());
-                                return;
                             }
                         }.bind(this)
                     }

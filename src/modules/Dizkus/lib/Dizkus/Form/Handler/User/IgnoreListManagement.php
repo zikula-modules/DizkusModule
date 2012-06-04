@@ -8,9 +8,21 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides a handler to manage the ignore list.
+ */
 class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_AbstractHandler
 {
-    function initialize(&$render)
+    /**
+     * Setup form.
+     *
+     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     *
+     * @return boolean
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     */
+    function initialize(Zikula_Form_View $view)
     {   
         // prepare list    
         $ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
@@ -19,25 +31,33 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
         {
             case 'strict':
                 $ignorelist_options[] = array('text' => $this->__('Strict'), 'value' => 'strict');
-
+                break;
             case 'medium':
                 $ignorelist_options[] = array('text' => $this->__('Medium'), 'value' => 'medium');
-
+                break;
             default:
                 $ignorelist_options[] = array('text' => $this->__('None'), 'value' => 'none');
         }
 
         // get user's configuration
-        $render->caching = false;
-        $render->add_core_data(CONFIG_MODULE);
+        $view->caching = false;
+        $view->add_core_data(CONFIG_MODULE);
 
         // assign data
-        $render->assign('ignorelist_options',    $ignorelist_options);
-        $render->assign('ignorelist_myhandling', ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid'))));
+        $view->assign('ignorelist_options',    $ignorelist_options);
+        $view->assign('ignorelist_myhandling', ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid'))));
         return true;
     }
 
-    function handleCommand(&$render, $args)
+    /**
+     * Handle form submission.
+     *
+     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
+     * @param array            &$args Arguments.
+     *
+     * @return bool|void
+     */
+    function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'update') {
             // Security check 
@@ -46,14 +66,15 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
             }
 
             // get the Form data and do a validation check
-            $obj = $render->getValues();          
-            if (!$render->isValid()) {
+            $obj = $view->getValues();
+            if (!$view->isValid()) {
                 return false;
             }
 
             // update user's attributes
             $uid = UserUtil::getVar('uid'); 
-            $user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false);        $obj['uid'] = UserUtil::getVar('uid');
+            $user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false);
+            $obj['uid'] = UserUtil::getVar('uid');
             $user['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling']; 
 
             // store attributes 
@@ -61,7 +82,8 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
 
             LogUtil::registerStatus($this->__('Done! Updated the \'Ignore list\' settings.'));
 
-            return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
+            $url = ModUtil::url('Dizkus','user','prefs');
+            return $view->redirect($url);
         }
 
         return true;

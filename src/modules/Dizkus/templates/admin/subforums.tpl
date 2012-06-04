@@ -24,7 +24,7 @@
         </thead>
         <tbody>
             {foreach item=subforum from=$subforums}
-            <tr class="{cycle values=z-odd,z-even}">
+            <tr class="{cycle values='z-odd,z-even'}">
                 <td>
                     <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a>
                 </td>

@@ -8,10 +8,28 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides a handler to edit subforums.
+ */
 class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandler
 {
+    /**
+     * topic poster uid
+     *
+     * @var entity
+     */
     private $subforum;
-    
+
+
+    /**
+     * Setup form.
+     *
+     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     *
+     * @return boolean
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     */
     function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN) ) {
@@ -24,7 +42,7 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
             $view->assign('templatetitle', $this->__('Modify subforum'));
             $this->subforum = $this->entityManager->find('Dizkus_Entity_Subforums', $id);            
             if ($this->subforum) {
-               $this->view->assign($this->subforum->toArray());
+                $this->view->assign($this->subforum->toArray());
             } else {
                 return LogUtil::registerError($this->__f('Article with id %s not found', $id));
             }
@@ -49,6 +67,14 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
         return true;
     }
 
+    /**
+     * Handle form submission.
+     *
+     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
+     * @param array            &$args Arguments.
+     *
+     * @return bool|void
+     */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         $url = ModUtil::url('Dizkus', 'admin', 'subforums' );
@@ -56,11 +82,10 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
             return $view->redirect($url);
         }
         
-        // check for valid form
+        // check for valid form and get data
         if (!$view->isValid()) {
             return false;
         }
-        
         $data = $view->getValues();
 
         
@@ -79,6 +104,7 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
         $this->entityManager->persist($this->subforum);
         $this->entityManager->flush();
 
+        // redirect to the admin subforum overview
         return $view->redirect($url);
     }
 }

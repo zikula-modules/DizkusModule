@@ -10,7 +10,7 @@
 
 class Dizkus_Api_User extends Zikula_AbstractApi {
 
-        /**
+    /**
      * Instance of Zikula_View.
      *
      * @var Zikula_View
@@ -700,15 +700,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 ORDER BY t.sticky DESC, p.post_time DESC';
                 //ORDER BY t.sticky DESC"; // RNG
                 //ORDER BY t.sticky DESC, p.post_time DESC";
-    //FC            ORDER BY t.sticky DESC"; // RNG
-    //FC            //ORDER BY t.sticky DESC, p.post_time DESC";
+                //FC ORDER BY t.sticky DESC"; // RNG
+                //FC //ORDER BY t.sticky DESC, p.post_time DESC";
     
         $res = DBUtil::executeSQL($sql, $args['start'], $args['topics_per_page']);
         $colarray = array('topic_id', 'topic_title', 'topic_views', 'topic_replies', 'sticky', 'topic_status',
                           'topic_last_post_id', 'topic_poster', 'uname', 'last_poster', 'post_time');
         $result    = DBUtil::marshallObjects($res, $colarray);
     
-    //    $forum['forum_id'] = $forum['forum_id'];
+        //    $forum['forum_id'] = $forum['forum_id'];
         $forum['topics']   = array();
     
         if (is_array($result) && !empty($result)) {
@@ -807,13 +807,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     {
         return strcmp($a['post_time_unix'], $b['post_time_unix']) * -1;
     }
-    
-    
-    public function readtopic0($topicID)
-    {
-        $this->entityManager->find('Dizkus_Entity_Topic', $topicID)->toArray();   
-    }
-    
     
     
     /**
@@ -984,7 +977,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 $message = dzk_replacesignature($message, $review['poster_data']['signature']);
             
                 // call hooks for $message
-//                list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
+                // list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
                 $review['post_text'] = $message;
             
                 array_push($reply['topic_review'], $review);
@@ -1761,8 +1754,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function movetopic($args)
     {
-        $ztable = DBUtil::getTables();
-    
         // get the old forum id and old post date
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $args['topic_id']);
     
@@ -2531,9 +2522,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     public function splittopic($args)
     {
         $post = $args['post'];
-    
-        $ztable = DBUtil::getTables();
-    
+
         // before we do anything we will read the topic_last_post_id because we will need
         // this one later (it will become the topic_last_post_id of the new thread)
         // DBUtil:: read complete topic
@@ -2886,7 +2875,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      * @params $args['forum'] array with forum information
      * @params $args['force'] boolean if true force connection no matter of active setting or interval
      * @params $args['debug'] boolean indicates debug mode on/off
-     * @returns none
+     * @returns void
      */
     public function mailcron($args)
     {
@@ -3150,8 +3139,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function movepost($args)
     {
-        $post     = $args['post'];
-        $to_topic = $args['to_topic'];
+        $old_topic_id = $args['old_topic_id'];
+        $to_topic_id     = $args['to_topic_id'];
+        $post_id      = $args['post_id'];
         
         // 1 . update topic_id, post_time in posts table
         // for post[post_id]
@@ -3166,8 +3156,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         // 1 . update topic_id in posts table
         $sql = 'UPDATE '.$ztable['dizkus_posts'].'
-                SET topic_id='.(int)DataUtil::formatForStore($to_topic).'
-                WHERE post_id = '.(int)DataUtil::formatForStore($post['post_id']);
+                SET topic_id='.(int)DataUtil::formatForStore($to_topic_id).'
+                WHERE post_id = '.(int)DataUtil::formatForStore($post_id);
     
         DBUtil::executeSQL($sql);
     
@@ -3177,7 +3167,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         // get the new topic_last_post_id of to_topic
         $sql = 'SELECT post_id, post_time
                 FROM '.$ztable['dizkus_posts'].'
-                WHERE topic_id = '.(int)DataUtil::formatForStore($to_topic).'
+                WHERE topic_id = '.(int)DataUtil::formatForStore($to_topic_id).'
                 ORDER BY post_time DESC';
     
         $res = DBUtil::executeSQL($sql, -1, 1);
@@ -3190,18 +3180,18 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 SET topic_replies = topic_replies + 1,
                     topic_last_post_id='.(int)DataUtil::formatForStore($to_last_post_id).',
                     topic_time=\''.DataUtil::formatForStore($to_post_time).'\'
-                WHERE topic_id='.(int)DataUtil::formatForStore($to_topic);
+                WHERE topic_id='.(int)DataUtil::formatForStore($to_topic_id);
     
         DBUtil::executeSQL($sql);
     
-        // for old topic ($post[topic_id]
+        // for old topic ($old_topic_id)
         // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
         // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
     
         // get the new topic_last_post_id of the old topic
         $sql = 'SELECT post_id, post_time
                 FROM '.$ztable['dizkus_posts'].'
-                WHERE topic_id = '.(int)DataUtil::formatForStore($post['topic_id']).'
+                WHERE topic_id = '.(int)DataUtil::formatForStore($old_topic_id).'
                 ORDER BY post_time DESC';
     
         $res = DBUtil::executeSQL($sql, -1, 1);
@@ -3215,11 +3205,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 SET topic_replies = topic_replies - 1,
                     topic_last_post_id='.(int)DataUtil::formatForStore($old_last_post_id).',
                     topic_time=\''.DataUtil::formatForStore($old_post_time).'\'
-                WHERE topic_id='.(int)DataUtil::formatForStore($post['topic_id']);
+                WHERE topic_id='.(int)DataUtil::formatForStore($old_topic_id);
     
         DBUtil::executeSQL($sql);
     
-        return $this->get_last_topic_page(array('topic_id' => $post['topic_id']));
+        return $this->get_last_topic_page(array('topic_id' => $old_topic_id));
     }
     
     /**
@@ -3424,7 +3414,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $reporting_userid   = UserUtil::getVar('uid');
         $reporting_username = UserUtil::getVar('uname');
         if (is_null($reporting_username)) {
-            $reporting_username == $this->__('Guest');
+            $reporting_username = $this->__('Guest');
         }
     
         $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies',

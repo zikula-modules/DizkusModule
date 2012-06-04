@@ -36,5 +36,3 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
     }
     
 }
-
-?>

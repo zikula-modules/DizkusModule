@@ -8,7 +8,7 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Subscriptions extends Zikula_AbstractApi {
+class Dizkus_Api_Forum extends Zikula_AbstractApi {
     
 
     
@@ -31,10 +31,9 @@ class Dizkus_Api_Subscriptions extends Zikula_AbstractApi {
            ->setParameter('forum', $args['forum_id'])
            ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
+
         return $count > 0;
-        
+
     }
     
 }
-
-?>

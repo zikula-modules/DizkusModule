@@ -254,7 +254,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      *
      */
     public function managesubscriptions()
-    {
+    {   
         $form = FormUtil::newForm('Dizkus', $this);
         return $form->execute('admin/managesubscriptions.tpl', new Dizkus_Form_Handler_Admin_ManageSubscriptions());   
     }

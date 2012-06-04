@@ -8,28 +8,53 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides a handler to delete a topic.
+ */
 class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
 {
+    /**
+     * topic id
+     *
+     * @var integer
+     */
     private $topic_id;
+
+
+    /**
+     * topic poster uid
+     *
+     * @var integer
+     */
     private $topic_poster;
-    
+
+
+     /**
+      * Setup form.
+      *
+      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+      *
+      * @return boolean
+      *
+      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+      */
     function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        
-        $this->topic_id = (int)FormUtil::getPassedValue('topic');
+
+        $this->topic_id = (int)$this->request->query->get('topic');
         
         
         if (empty($this->topic_id)) {
-            $post_id  = (int)FormUtil::getPassedValue('post');
+            $post_id  = (int)$this->request->query->get('post');
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }
             $this->topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
         }
-    
+
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array(
             'topic_id' => $this->topic_id,
             'count'    => false)
@@ -48,20 +73,29 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         return true;
     }
 
+    /**
+     * Handle form submission.
+     *
+     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
+     * @param array            &$args Arguments.
+     *
+     * @return bool|void
+     */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
+        // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
             return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
         }
 
-        // check for valid form
+        // check for valid form and get data
         if (!$view->isValid()) {
             return false;
         }
-
         $data = $view->getValues();
         
-        
+
+        // send the poster a reason why his/her post was deleted
         if ($data['sendReason'] && !empty($data['reason'])) {
             $toaddress = UserUtil::getVar('email', $this->topic_poster);
             ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
@@ -71,13 +105,12 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
                     'html'      => true
                 )
             );
-            
             LogUtil::registerStatus($this->__('Email sended!'));
         }
-        
-        $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $this->topic_id));
 
+        // redirect to the forum of the deleted topic
+        $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $this->topic_id));
         $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
-        return $view->redirect($url);        
+        return $view->redirect($url);
     }
 }

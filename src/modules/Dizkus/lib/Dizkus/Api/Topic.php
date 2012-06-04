@@ -203,10 +203,10 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         
         $colarray = array('topic_title', 'topic_poster', 'topic_status', 'forum_id', 'sticky', 'topic_time', 'topic_replies',
                           'topic_last_post_id', 'forum_name', 'cat_id', 'forum_pop3_active', 'cat_title');
-        $result    = DBUtil::marshallObjects($res, $colarray);        
+        $result    = DBUtil::marshallObjects($res, $colarray);   
         
         
-        //$this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id']);
+        //$result[0] = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
                       
         
         
@@ -398,5 +398,3 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     }
     
 }
-
-?>

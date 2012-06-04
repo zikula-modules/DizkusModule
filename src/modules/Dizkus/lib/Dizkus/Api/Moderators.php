@@ -72,6 +72,3 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi {
         return $mods;
     }
 }
-
-
-?>

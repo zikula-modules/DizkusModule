@@ -68,7 +68,7 @@
             </thead>
             <tbody>
                 {foreach key='num' item='rank' from=$ranks}
-                <tr class="{cycle values=z-odd,z-even}">
+                <tr class="{cycle values='z-odd,z-even'}">
                     <td><input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|safetext}" maxlength="50" size="20" /></td>
                     <td><input type="text" name="ranks[{$rank.rank_id}][rank_min]" value="{$rank.rank_min}" maxlength="5" size="4" /></td>
                     <td><input type="text" name="ranks[{$rank.rank_id}][rank_max]" value="{$rank.rank_max}" maxlength="5" size="4" /></td>

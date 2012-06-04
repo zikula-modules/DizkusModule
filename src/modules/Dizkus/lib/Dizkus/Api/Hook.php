@@ -50,8 +50,11 @@ class Dizkus_Api_Hook extends Zikula_AbstractApi {
             if (file_exists($functionfilename) && is_readable($functionfilename)) {
                 list($subject, $message, $pntopic, $authorid) = ModUtil::apiFunc('Dizkus', 'comments', $modname, array('objectid' => $args['objectid']));
             }
-    
-            $forum_id = DBUtil::selectField('dizkus_forums', 'forum_id', "forum_moduleref='$modid'");
+            
+            $forum_id = $this->entityManager->getRepository('Dizkus_Entity_Forums')
+                      ->findOneBy('forum_moduleref', $modid)->getforum_id();    
+            
+            
             ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
                          array('forum_id'  => $forum_id,
                                'subject'   => $subject,

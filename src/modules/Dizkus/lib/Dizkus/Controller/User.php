@@ -517,7 +517,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                     break;
     
                 case 'move':
-                    list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
+                    list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
                     if ($forum_id == $f_id) {
                         return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
                     }
@@ -556,7 +556,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
                 case 'join':
                     $to_topic_id = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
-                    list($f_id, $c_id) = Dizkus_userapi_get_forumid_and_categoryid_from_topicid(array('topic_id' => $to_topic_id));
+                    list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $to_topic_id));
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
                         return LogUtil::registerPermissionError();
                     }
@@ -666,6 +666,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
             case 'showallforums':
                 $return_to = (!empty($return_to))? $return_to : 'main';
+                break;
             case 'showfavorites':
                 if (ModUtil::getVar('Dizkus', 'favorites_enabled')=='yes') {
                     $return_to = (!empty($return_to))? $return_to : 'main';
@@ -1053,59 +1054,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * movepost
+     * 
      * Move a single post to another thread
      * added by by el_cuervo -- dev-postnuke.com
      */
-    public function movepost($args=array())
+    public function movepost()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        // get the input
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $to_topic = (int)FormUtil::getPassedValue('to_topic', (isset($args['to_topic'])) ? $args['to_topic'] : null, 'GETPOST');
-    
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-    
-        if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
-        }
-    
-        if (!empty($submit)) {
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-            // submit is set, we move the posting now
-            // Existe el Topic ? --- Exists new Topic ?
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic,
-                                                                        'complete' => false,
-                                                                        'count' => false));
-            $post['new_topic'] = $to_topic;
-            $post['old_topic'] = $topic['topic_id'];
-    
-            $start = ModUtil::apiFunc('Dizkus', 'user', 'movepost', array('post'     => $post,
-                                                                      'to_topic' => $to_topic));
-    
-            $start = $start - $start%ModUtil::getVar('Dizkus', 'posts_per_page', 15);
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                       array('topic' => $to_topic,
-                                             'start' => $start)) . '#pid' . $post['post_id']);
-        } else {
-            $this->view->assign('post', $post);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
-            return $this->view->fetch('user/movepost.tpl');
-        }
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/movepost.tpl', new Dizkus_Form_Handler_User_MovePost());
     }
     
     /**
@@ -1304,69 +1260,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * @params $post int post_id
      * @params $comment string comment of reporter
      */
-    public function report($args)
+    public function report()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        // get the input
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $comment  = FormUtil::getPassedValue('comment', (isset($args['comment'])) ? $args['comment'] : '', 'GETPOST');
-    
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
-                             array('post_id' => $post_id));
-    
-        //if (SecurityUtil::confirmAuthKey()) {
-            $authkeycheck = true;
-        /*} else {
-            $authkeycheck = false;
-        }*/
-    
-        // some spam checks:
-        // - remove html and compare with original comment
-        // - use censor and compare with original comment
-        // if only one of this comparisons fails -> trash it, it is spam.
-        if (!UserUtil::isLoggedIn() && $authkeycheck == true ) {
-            if (strip_tags($comment) <> $comment) {
-                // possibly spam, stop now
-                // get the users ip address and store it in zTemp/Dizkus_spammers.txt
-                dzk_blacklist();
-                // set 403 header and stop
-                header('HTTP/1.0 403 Forbidden');
-                System::shutDown();
-            }
-        }
-    
-        if (!$submit) {
-            $this->view->assign('post', $post);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-            return $this->view->fetch('user/notifymod.tpl');
-    
-        } else {
-            // submit is set
-            if ($authkeycheck == false) {
-                return LogUtil::registerAuthidError();
-            }
-    
-            ModUtil::apiFunc('Dizkus', 'user', 'notify_moderator',
-                         array('post'    => $post,
-                               'comment' => $comment));
-    
-            $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies',
-                                  array('topic_replies' => $post['topic_replies']));
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                       array('topic' => $post['topic_id'],
-                                             'start' => $start)));
-        }
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/notifymod.tpl', new Dizkus_Form_Handler_User_Report());
     }
     
     /**

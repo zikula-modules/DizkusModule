@@ -36,7 +36,7 @@ class Dizkus_Controller_Hook extends Zikula_AbstractController {
             $this->view->setCaching(false);
             $this->view->assign('topic', $topic);
     
-            return $this->view->fetch(hook/display.tpl');
+            return $this->view->fetch('hook/display.tpl');
         }
     
         return false;

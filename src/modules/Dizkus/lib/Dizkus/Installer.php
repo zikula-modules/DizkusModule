@@ -367,7 +367,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
     
           // get the language file
-        $langs = LanguageUtil::getInstalledLanguages();
+        $langs = ZLanguage::getInstalledLanguages();
     
         // create the Main category and entry in the categories registry
         $this->createdefaultcategory();

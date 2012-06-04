@@ -78,7 +78,7 @@
                 </thead>
                 <tbody >
                     {foreach item='subscription' from=$forumsubscriptions}
-                    <tr clas="{cycle values='z-odd,z-even'}">
+                    <tr class="{cycle values='z-odd,z-even'}">
                         <td >
                             {formcheckbox id=$subscription.msg_id group='forumsubscriptions' cssClass="forumsubscriptions"}
                         </td>

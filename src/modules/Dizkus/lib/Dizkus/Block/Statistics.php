@@ -38,7 +38,7 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
 	public function display($blockinfo)
 	{
 	    if (!ModUtil::available('Dizkus')) {
-	        return;
+	        return false;
 	    }
 	
 	    //check for Permission

@@ -66,7 +66,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax {
             
             if (!isset($post_id)) {
                 return new Zikula_Response_Ajax_BadData(array());
-                $error = "<p class='z-errormsg'>".$this->__('Error! Your post contains unacceptable content and has been rejected.').'</p>';
+                $error = '<p class="z-errormsg">'.$this->__('Error! Your post contains unacceptable content and has been rejected.').'</p>';
                 return new Zikula_Response_Ajax(array('data' => $error));
             }
 
@@ -1343,14 +1343,11 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax {
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             $fragment = $this->request->getGet()->get('fragment', $this->request->getPost()->get('fragment'));
 
-            ModUtil::dbInfoLoad($this->name);
             $tables = DBUtil::getTables();
-
             $usersColumn = $tables['users_column'];
-
-            $where = 'WHERE ' . $usersColumn['uname'] . ' REGEXP \'(' . DataUtil::formatForStore($fragment) . ')\'';
-            $results = DBUtil::selectObjectArray('users', $where);
-
+            $where = $usersColumn['uname'] . ' REGEXP \'(' . DataUtil::formatForStore($fragment) . ')\'';
+            $results = UserUtil::getUsers($where);
+            
             $view->assign('results', $results);
         }
 

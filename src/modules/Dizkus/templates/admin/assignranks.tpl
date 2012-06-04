@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 {foreach item=user from=$allusers}
-                <tr class="{cycle values=z-odd,z-even}">
+                <tr class="{cycle values='z-odd,z-even'}">
                     <td>{$user.uname|profilelinkbyuname}</td>
                     <td>
                         <select name="setrank[{$user.uid}]">

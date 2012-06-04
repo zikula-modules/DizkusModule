@@ -8,18 +8,37 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides a handler for the signature management.
+ */
 class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractHandler
 {
-    function initialize(&$render)
-    {       
-        $render->assign('signature', UserUtil::getVar('signature'));
-        $render->caching = false;
-        $render->add_core_data(CONFIG_MODULE);
-
+    /**
+     * Setup form.
+     *
+     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     *
+     * @return boolean
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     */
+    function initialize(Zikula_Form_View $view)
+    {
+        $view->assign('signature', UserUtil::getVar('signature'));
+        $view->caching = false;
+        $view->add_core_data(CONFIG_MODULE);
         return true;
     }
 
-    function handleCommand(&$render, $args)
+    /**
+     * Handle form submission.
+     *
+     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
+     * @param array            &$args Arguments.
+     *
+     * @return bool|void
+     */
+    function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'update') {
             // Security check 
@@ -28,15 +47,17 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
             }
 
             // get the Form data and do a validation check
-            $obj = $render->getValues();          
-            if (!$render->isValid()) {
+            $obj = $view->getValues();
+            if (!$view->isValid()) {
                 return false;
             }
 
             UserUtil::setVar('signature',$obj['signature']);
             LogUtil::registerStatus($this->__('Done! Signature has been updated.'));
 
-            return $render->redirect(ModUtil::url('Dizkus','user','prefs'));
+            // redirect to user preferences page
+            $url = ModUtil::url('Dizkus','user','prefs');
+            return $view->redirect($url);
         }
 
         return true;

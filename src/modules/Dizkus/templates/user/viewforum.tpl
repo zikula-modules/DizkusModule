@@ -1,6 +1,6 @@
 {include file='user/header.tpl'}
 
-{if $forum.forum_desc <> ''}
+{if $forum.forum_desc neq ''}
 <p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
 {/if}
 

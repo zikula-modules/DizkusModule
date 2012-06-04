@@ -8,11 +8,35 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides a handler to create a new topic.
+ */
 class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 {
+    /**
+     * forum id
+     *
+     * @var integer
+     */
     private $forum_id;
+
+    /**
+     * topic poster uid
+     *
+     * @var integer
+     */
     private $topic_poster;
-    
+
+
+    /**
+     * Setup form.
+     *
+     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     *
+     * @return boolean
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     */
     function initialize(Zikula_Form_View $view)
     {
         // Permission check
@@ -27,9 +51,9 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         }
     
         // get the input
-        $this->forum_id = (int)FormUtil::getPassedValue('forum');
+        $this->forum_id = (int)$this->request->query->get('forum');
         if (!isset($this->forum_id)) {
-            return LogUtil::registerError($this->_('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
+            return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
         }
         
         $view->assign('preview', false);
@@ -37,6 +61,14 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         return true;
     }
 
+    /**
+     * Handle form submission.
+     *
+     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
+     * @param array            &$args Arguments.
+     *
+     * @return bool|void
+     */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
@@ -64,7 +96,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         $newtopic = ModUtil::apiFunc('Dizkus', 'user', 'preparenewtopic', $data);
         
         
-        
+        // show preview
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
             $view->assign('newtopic', $newtopic);
@@ -74,12 +106,11 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
             return true;
         }
 
-        
+        // store new topic
         $data['forum_id'] = $this->forum_id;
-            
-        $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', $data);        
-        
+        $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', $data);
 
+        // redirect to the new topic
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id));
         return $view->redirect($url);
         

@@ -6,21 +6,21 @@
 <p class="z-informationmsg">
     {gt text="A moderator will be notified about the selected posting.<br />Valid reasons are: Copyright violations, personal insults and so on.<br />The following are not valid reasons for moderation: Typos, difference of opinion on the topic et cetera."}
 </p>
-<form class="z-form z-linear" action="{modurl modname=Dizkus type=user func=report}" method="post">
+{form cssClass="z-form z-linear"}
+{formvalidationsummary}
     <div>
-        <input type="hidden" name="post" value="{$post.post_id}" />
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <fieldset id="dzk_notifymoderator">
-            <legend>{$templatetitle}</legend>
             <div class="z-formrow">
-                <label for="modcomment">{gt text="Your comment"}:</label>
-                <textarea id="modcomment" rows="6" cols="60" name="comment"></textarea>
+                {formlabel for="modcomment" __text="Your comment:"}
+                {formtextinput id="modcomment" textMode="multiline" rows="6" cols="60"}
             </div>
-        </fieldset>
+                
         <div class="z-formbuttons z-buttons">
-            {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+            {formbutton class="z-bt-ok"     commandName="send"   __text="Send"}
+            {formbutton class="z-bt-cancel" commandName="cancel" __text="Cancel"}
         </div>
+        </fieldset>
     </div>
-</form>
+{/form}
 
 {include file='user/footer.tpl'}

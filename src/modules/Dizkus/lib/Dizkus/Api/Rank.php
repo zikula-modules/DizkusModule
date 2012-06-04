@@ -8,6 +8,3 @@
  * @package Dizkus
  */
 
-
-
-?>

@@ -42,7 +42,7 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
 	    }
 	
 	    // check for Permission
-	    if (!SecurityUtil::checkPermission('Dizkus_Centerblock::', "$blockinfo[bid]::", ACCESS_READ)){
+	    if (!SecurityUtil::checkPermission('Dizkus::Centerblock', "$blockinfo[bid]::", ACCESS_READ)){
 	        return;
 	    }
 	

@@ -393,7 +393,6 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
      */
     public function sync($args)
     {
-        $ztable = DBUtil::getTables();
         switch ($args['type'])
         {
             case 'forum':
@@ -500,8 +499,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
             return LogUtil::registerPermissionError();
         }
     
-        $ztable = DBUtil::getTables();
-    
+
         $args['forum_name'] = strip_tags($args['forum_name']);
         if (empty($args['forum_name'])) {
             return LogUtil::registerError($this->__('Error! You did not enter all the required information in the form. Did you assign at least one moderator? Please correct your entries and try again.'));

@@ -201,7 +201,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggleposting: function(post_id) {
         $('posting_{$post.post_id}').toggle();
         $('hidelink_posting_{$post.post_id}').toggle();
-        return;
     },
 
     toggleforumfavourite: function(toggleforumfavouritebuttonid) {
@@ -446,7 +445,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             this.editchanged = true;
             $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + statusChanged + '</span>');
         }
-        return;
     },
 
     quickEditsave: function() {
@@ -824,7 +822,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         $('subject').clear();
         $('newtopicpreview').update('&nbsp;').hide();
         this.newtopicstatus = false;
-        return;
     },
 
     createQuote: function(quotelinkid) {
@@ -868,7 +865,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                         var msg = req.getData();
                         $('message').setValue(oldvalue + msg.message  + '\n').focus();
-                        return;
                     }.bind(this)
                 }
             );
@@ -880,8 +876,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             oldvalue += '\n';
         }
         $('message').setValue(oldvalue + '[quote]' + quotetext  + '[/quote]\n').focus();
-
-        return;
     },
 
     createQuickReply: function(event) {
@@ -915,7 +909,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                             this.replystatus = false;
                             if (event) {
                                 Event.stop(event)
-                            };
+                            }
                             return;
                         }
 
@@ -1005,14 +999,12 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         if (event) {
             Event.stop(event);
         }
-        return;
     },
 
     cancelQuickReply: function(event) {
         $('message').clear();
         $('quickreplypreview').update('&nbsp;').addClassName('hidden');
         this.replystatus = false;
-        return;
     }
 
 });
