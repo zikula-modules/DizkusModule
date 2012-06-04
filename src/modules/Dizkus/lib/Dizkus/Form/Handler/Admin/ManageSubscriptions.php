@@ -14,6 +14,7 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
     
     function initialize(Zikula_Form_View $view)
     {
+        
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN) ) {
             return LogUtil::registerPermissionError();
         }

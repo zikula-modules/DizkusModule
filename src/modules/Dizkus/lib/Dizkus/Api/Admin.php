@@ -59,8 +59,6 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
      */
     public function addcategory($args)
     {
-        
-        
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
@@ -86,7 +84,8 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
      *
      */
     public function deletecategory($args)
-    {
+    {        
+        
         if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
@@ -103,7 +102,11 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                 }  //foreach forum
             }
             // now we can delete the category
-            return DBUtil::deleteObject($args, 'dizkus_categories', null, 'cat_id');
+            $category = $this->entityManager->find('Dizkus_Entity_Categories', $args['cat_id']);
+            $this->entityManager->remove($category);
+            $this->entityManager->flush();
+            return true;
+            
         }
     
         return LogUtil::registerError($this->__('Error! The action you wanted to perform was not successful for some reason, maybe because of a problem with what you input. Please check and try again.'));

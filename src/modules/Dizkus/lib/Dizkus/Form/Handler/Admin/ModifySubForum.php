@@ -33,12 +33,13 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
         } 
         
         
-        $mainforums0 = DBUtil::selectObjectArray('dizkus_forums', $where = 'WHERE is_subforum = 0');
+        $mainforums0 = $this->entityManager->getRepository('Dizkus_Entity_Forums')
+                                   ->findBy(array('is_subforum' => 0), array('forum_name' => 'ASC'));                
         $mainforums  = array();
         foreach ($mainforums0 as $mainforum) {
             $mainforums[] = array(
-                'value' => $mainforum['forum_id'],
-                'text' => $mainforum['forum_name']
+                'value' => $mainforum->getforum_id(),
+                'text' => $mainforum->getforum_name()
             );
         }
         $this->view->assign('mainforums', $mainforums);
@@ -67,9 +68,11 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
         if (!$this->subforum) {
             $this->subforum = new Dizkus_Entity_Subforums();
         } 
+                
+        $mainforum = $this->entityManager->getRepository('Dizkus_Entity_Forums')
+                                   ->findOneBy(array('forum_id' => $data['is_subforum']));
         
-        $mainforum   = DBUtil::selectObjectByID ('dizkus_forums', $data['is_subforum'], 'forum_id');
-        $data['cat_id'] = $mainforum['cat_id'];
+        $data['cat_id'] = $mainforum->getcat_id();
         
         
         $this->subforum->merge($data);

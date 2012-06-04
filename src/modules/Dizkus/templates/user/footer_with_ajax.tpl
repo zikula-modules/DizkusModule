@@ -5,7 +5,7 @@
         // <![CDATA[
         new Ajax.PeriodicalUpdater(
         'dzk_footer',
-        document.location.pnbaseURL + 'index.php',
+        Zikula.Config.baseURL+'index.php',
         {
             method: 'get',
             parameters: 'module=Dizkus&type=ajax&func=forumusers',

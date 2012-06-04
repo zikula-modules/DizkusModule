@@ -20,7 +20,7 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Moderators", mappedBy="user_id")
      */
     private $uid;
     
@@ -70,6 +70,5 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
         $this->attributes = new Doctrine\Common\Collections\ArrayCollection();
         return true;
     }
-   
 
 }

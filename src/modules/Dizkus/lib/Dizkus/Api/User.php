@@ -198,7 +198,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             case 'all':
             case 'allposts':
                 if (!isset($cache[$type])){
-                   $cache[$type] = DBUtil::selectObjectCount('dizkus_posts');
+                    $cache[$type] = $this->countEntity('Posts');
                 }
                 
                 return $cache[$type];
@@ -206,7 +206,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'category':
                 if (!isset($cache[$type])){
-                   $cache[$type] = DBUtil::selectObjectCount('dizkus_categories');
+                   $cache[$type] = $this->countEntity('Categories');
                 }
                 
                 return  $cache[$type];
@@ -214,7 +214,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'forum':
                 if (!isset($cache[$type])){
-                   $cache[$type] = DBUtil::selectObjectCount('dizkus_forums');
+                   $cache[$type] = $this->countEntity('Forums');
                 }
                 
                 return $cache[$type];
@@ -222,7 +222,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'topic':
                 if (!isset($cache[$type][$id])){
-                   $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_posts', 'WHERE topic_id = ' .(int)DataUtil::formatForStore($id));
+                   $cache[$type][$id] = $this->countEntity('Posts', 'topic_id', $id);
                 }
                 
                 return  $cache[$type][$id];
@@ -230,7 +230,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'forumposts':
                 if (!isset($cache[$type][$id])){
-                   $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_posts', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+                   $cache[$type][$id] = $this->countEntity('Posts', 'forum_id', $id);
                 }
                 
                 return  $cache[$type][$id];
@@ -238,7 +238,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'forumtopics':
                 if (!isset($cache[$type][$id])){
-                   $cache[$type][$id] = DBUtil::selectObjectCount('dizkus_topics', 'WHERE forum_id = ' .(int)DataUtil::formatForStore($id));
+                   $cache[$type][$id] = $this->countEntity('Topics', 'forum_id', $id);
                 }
                 
                 return  $cache[$type][$id];
@@ -246,7 +246,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'alltopics':
                 if (!isset($cache[$type])){
-                   $cache[$type] = DBUtil::selectObjectCount('dizkus_topics');
+                   $cache[$type] = $this->countEntity('Topics');
                 }
                 
                 return  $cache[$type];
@@ -254,7 +254,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
             case 'allmembers':
                 if (!isset($cache[$type])){
-                   $cache[$type] = DBUtil::selectObjectCount('users');
+                   $cache[$type] = count(UserUtil::getUsers());
                 }
                 
                 return  $cache[$type];
@@ -273,6 +273,19 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             default:
                 return LogUtil::registerError($this->__("Error! Wrong parameters in boardstats()."), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
+    }
+    
+    private function countEntity($entityname, $where = null, $parameter = null) {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(a)')
+           ->from('Dizkus_Entity_'.$entityname, 'a');
+        if (isset($where) && isset($parameter)) {
+            $qb->andWhere('a.'.$where.' = :parameter')
+               ->setParameter('parameter', $parameter);
+            
+        }
+        return (int)$qb->getQuery()->getSingleScalarResult();
+        
     }
     
     /**
@@ -533,61 +546,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      * @returns array containing the pn_uid as index and the users name as value
      */
     public function get_moderators($args)
-    {
-        $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
-    
-        $ztable = DBUtil::getTables();
-    
-        if (!empty($forum_id)) {
-            $sql = 'SELECT u.uname, u.uid
-                    FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
-                    WHERE f.forum_id = '.DataUtil::formatForStore($forum_id).' AND u.uid = f.user_id
-                    AND f.user_id < 1000000';
-        } else {
-            $sql = 'SELECT u.uname, u.uid
-                    FROM '.$ztable['users'].' u, '.$ztable['dizkus_forum_mods'].' f
-                    WHERE u.uid = f.user_id
-                    AND f.user_id < 1000000
-                    GROUP BY f.user_id';
-        }
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('uname', 'uid');
-        $result = DBUtil::marshallObjects($res, $colarray);
-    
-        $mods = array();
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $user) {
-                $mods[$user['uid']] = $user['uname'];
-            }
-        }
-    
-        if (!empty($forum_id)) {
-            $sql = 'SELECT g.name, g.gid
-                    FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods']." f
-                    WHERE f.forum_id = '".DataUtil::formatForStore($forum_id)."' AND g.gid = f.user_id-1000000
-                    AND f.user_id > 1000000";
-        } else {
-            $sql = 'SELECT g.name, g.gid
-                    FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods'].' f
-                    WHERE g.gid = f.user_id-1000000
-                    AND f.user_id > 1000000
-                    GROUP BY f.user_id';
-        }
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('gname', 'gid');
-        $result = DBUtil::marshallObjects($res, $colarray);
-    
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $group) {
-                $mods[$group['gid'] + 1000000] = $group['gname'];
-            }
-        }
-    
-        return $mods;
+    {       
+        return ModUtil::apiFunc($this->name, 'Moderators', 'get', $args);
     }
     
     /**
      * setcookies
+     * 
      * reads the cookie, updates it and returns the last visit date in readable (%Y-%m-%d %H:%M)
      * and unix time format
      *
@@ -865,232 +830,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function readtopic($args)
     {
-        $dizkusvars      = ModUtil::getVar('Dizkus');
-        $posts_per_page  = $dizkusvars['posts_per_page'];
-        $topics_per_page = $dizkusvars['topics_per_page'];
-    
-        $post_sort_order = ModUtil::apiFunc('Dizkus','user','get_user_post_order');
-    
-        $complete = (isset($args['complete'])) ? $args['complete'] : false;
-        $count    = (isset($args['count'])) ? $args['count'] : false;
-        $start    = (isset($args['start'])) ? $args['start'] : -1;
-        $hooks    = (isset($args['nohook']) && $args['nohook'] == false) ? false : true;
-    
-        $currentuserid = UserUtil::getVar('uid');
-        $now = time();
-        $timespanforchanges = !empty($dizkusvars['timespanforchanges']) ? $dizkusvars['timespanforchanges'] : 24;
-        $timespansecs = $timespanforchanges * 60 * 60;
-    
-        $ztable = DBUtil::getTables();
-    
-        $sql = 'SELECT t.topic_title,
-                       t.topic_poster,
-                       t.topic_status,
-                       t.forum_id,
-                       t.sticky,
-                       t.topic_time,
-                       t.topic_replies,
-                       t.topic_last_post_id,
-                       f.forum_name,
-                       f.cat_id,
-                       f.forum_pop3_active,
-                       c.cat_title
-                FROM  '.$ztable['dizkus_topics'].' t
-                LEFT JOIN '.$ztable['dizkus_forums'].' f ON f.forum_id = t.forum_id
-                LEFT JOIN '.$ztable['dizkus_categories'].' AS c ON c.cat_id = f.cat_id
-                WHERE t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']);
-    
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('topic_title', 'topic_poster', 'topic_status', 'forum_id', 'sticky', 'topic_time', 'topic_replies',
-                          'topic_last_post_id', 'forum_name', 'cat_id', 'forum_pop3_active', 'cat_title');
-        $result    = DBUtil::marshallObjects($res, $colarray);
-    
-        // integrate contactlist's ignorelist here (part 1/2)
-        $ignored_uids = array();
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid')));
-        if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-            // get user's ignore list
-            $ignored_users = ModUtil::apiFunc('ContactList','user','getallignorelist',array('uid' => UserUtil::getVar('uid')));
-            $ignored_uids = array();
-            foreach ($ignored_users as $item) {
-                $ignored_uids[] = (int)$item['iuid'];
-            }
-        }
-    
-        if (is_array($result) && !empty($result)) {
-            $topic = $result[0];
-            $topic['topic_id'] = $args['topic_id'];
-            $topic['start'] = $start;
-            $topic['topic_unixtime'] = strtotime($topic['topic_time']);
-            $topic['post_sort_order'] = $post_sort_order;
-    
-            // pop3_active contains the external source (if any), create the correct var name
-            // 0 - no external source
-            // 1 - mail
-            // 2 - rss
-            $topic['externalsource'] = $topic['forum_pop3_active'];
-            // kill the wrong var
-            unset($topic['forum_pop3_active']);
-    
-            if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
-                return LogUtil::registerPermissionError();
-            }
-    
-            $topic['forum_mods'] = $this->get_moderators(array('forum_id' => $topic['forum_id']));
-    
-            $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
-            $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-            $topic['access_comment']  = false;
-            $topic['access_moderate'] = false;
-            $topic['access_admin']    = false;
-            if ($topic['access_read'] == true) {
-                $topic['access_comment']  = $topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-                if ($topic['access_comment'] == true) {
-                    $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-                    if ($topic['access_moderate'] == true) {
-                        $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-                    }
-                }
-            }
-            // check permission to change the topic subject
-            if ($topic['access_moderate']) {
-                // user has moderate perms, copy this to topicsubjectedit
-                $topic['access_topicsubjectedit'] = $topic['access_moderate'];
-            } else {
-                // check if user is the topic starter and give him the permission to
-                // update the subject
-                $topic['access_topicsubjectedit'] = (UserUtil::getVar('uid') == $topic['topic_poster']);
-            }
-    
-            // get the next and previous topic_id's for the next / prev button
-            $topic['next_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'next'));
-            $topic['prev_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
-    
-            // get the users topic_subscription status to show it in the quick repliy checkbox
-            // correctly
-            if ($this->get_topic_subscription_status(array('userid'   => $currentuserid,
-                                                                   'topic_id' => $topic['topic_id'])) == true) {
-                $topic['is_subscribed'] = 1;
-            } else {
-                $topic['is_subscribed'] = 0;
-            }
-    
-            /**
-             * update topic counter
-             */
-            if ($count == true) {
-                DBUtil::incrementObjectFieldByID('dizkus_topics', 'topic_views', $topic['topic_id'], 'topic_id');
-            }
-            /**
-             * more then one page in this topic?
-             */
-            $topic['total_posts'] = $this->boardstats(array('id' => $topic['topic_id'], 'type' => 'topic'));
-    
-            if ($topic['total_posts'] > $posts_per_page) {
-                $times = 0;
-                for ($x = 0; $x < $topic['total_posts']; $x += $posts_per_page) {
-                    $times++;
-                }
-                $topic['pages'] = $times;
-            }
-    
-            $topic['post_start'] = (!empty($start)) ? $start : 0;
-    
-            // topic_pager is obsolete, inform the user about this
-            $topic['topic_pager'] = 'Error! Deprecated \'$topic.topic_pager\' data field used. Please update the template to incorporate the topic pager plug-in.';
-    
-            $topic['posts'] = array();
-    
-            // read posts
-            $where = 'WHERE topic_id = '.(int)DataUtil::formatForStore($topic['topic_id']);
-            $orderby = 'ORDER BY post_id '.DataUtil::formatForStore($post_sort_order);
-            if ($complete == true) {
-                //$res2 = DBUtil::executeSQL($sql2);
-                $result2 = DBUtil::selectObjectArray('dizkus_posts', $where, $orderby);
-            } else {
-                //$res2 = DBUtil::executeSQL($sql2, $start, $posts_per_page);
-                $result2 = DBUtil::selectObjectArray('dizkus_posts', $where, $orderby, $start, $posts_per_page);
-            }
-            
-            // performance patch:
-            // we store all userdata read for the single postings in the $userdata
-            // array for later use. If user A is referenced more than once in the
-            // topic, we do not need to load his dat again from the db.
-            // array index = userid
-            // array value = array with user information
-            // this increases the amount of memory used but speeds up the loading of topics
-            $userdata = array();
-    
-            if (is_array($result2) && !empty($result2)){
-                foreach ($result2 as $post) {
-                    $post['topic_id'] = $topic['topic_id'];
-                
-                    // check if array_key_exists() with poster _id in $userdata
-                    //if (!array_key_exists($post['poster_id'], $userdata)) {
-                    if (!isset($userdata[$post['poster_id']])) {
-                        // not in array, load the data now...
-                        $userdata[$post['poster_id']] = $this->get_userdata_from_id(array('userid' => $post['poster_id']));
-                    }
-                    // we now have the data and use them
-                    $post['poster_data'] = $userdata[$post['poster_id']];
-                    $post['posted_unixtime'] = strtotime($post['post_time']);
-                    // we use br2nl here for backwards compatibility
-                    //$message = phpbb_br2nl($message);
-                    //$post['post_text'] = phpbb_br2nl($post['post_text']);
-                
-                    $post['post_text'] = dzk_replacesignature($post['post_text'], $post['poster_data']['signature']);
-                
-                    if ($hooks == true) {
-                        // call hooks for $message
-//                        list($post['post_text']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_text']));
-                    }
-                
-                    $post['post_text'] = dzkVarPrepHTMLDisplay($post['post_text']);
-                    //$post['post_text'] = DataUtil::formatForDisplayHTML($post['post_text']);
-                
-                    $post['poster_data']['reply'] = false;
-                    if ($topic['access_comment'] || $topic['access_moderate'] || $topic['access_admin']) {
-                        // user is allowed to reply
-                        $post['poster_data']['reply'] = true;
-                    }
-                
-                    $post['poster_data']['seeip'] = false;
-                    if (($topic['access_moderate'] || $topic['access_admin']) && $dizkusvars['log_ip'] == 'yes') {
-                        //ModUtil::getVar('Dizkus', 'log_ip') == 'yes') {
-                        // user is allowed to see ip
-                        $post['poster_data']['seeip'] = true;
-                    }
-                    
-                    $post['poster_data']['moderate'] = false;
-                    $post['poster_data']['edit'] = false;
-                    if ($topic['access_moderate'] || $topic['access_admin']) {
-                        // user is allowed to moderate
-                        $post['poster_data']['moderate'] = true;
-                        $post['poster_data']['edit'] = true;
-                    } elseif ($post['poster_data']['uid'] == $currentuserid) {
-                        // user is allowed to moderate || own post
-                        // if the timespanforchanges (in hrs!) setting allows it
-                        // timespanforchanges is in hours, but we need seconds:
-                        if (($now - $post['posted_unixtime']) <= $timespansecs ) {
-                            $post['poster_data']['edit'] = true;
-                        }
-                    }
-                
-                    // integrate contactlist's ignorelist here (part 2/2)
-                    // the added variable will be handled in templates
-                    $post['contactlist_ignored'] = (in_array($post['poster_id'], $ignored_uids)) ? 1 : 0;
-                    //orignal von quan (e_all): if (in_array($post['poster_id'], $ignored_uids)) $post['contactlist_ignored'] = 1;
-                
-                    array_push($topic['posts'], $post);
-                }
-            }
-            unset($userdata);
-        } else {
-            // no results - topic does not exist
-            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
-        }
-    
-        return $topic;
+        return ModUtil::apiFunc($this->name, 'Topic', 'read', $args);    
     }
     
     /**
@@ -1182,7 +922,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             if ($args['reply_start']==true) {
                 $reply['attach_signature'] = true;
                 $reply['subscribe_topic'] = false;
-                $is_subscribed = $this->get_topic_subscription_status(array('userid'   => $pn_uid,
+                $is_subscribed = $this->get_topic_subscription_status(array('user_id'   => $pn_uid,
                                                                             'topic_id' => $reply['topic_id']));
     
                 if ($is_subscribed == true || ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') {
@@ -1377,14 +1117,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function get_topic_subscription_status($args)
     {
-        $ztables = DBUtil::getTables();
-        $tsubcolumn = $ztables['dizkus_topic_subscription_column'];
-    
-        $where = ' WHERE ' . $tsubcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['userid']) . 
-                 ' AND '   . $tsubcolumn['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
-    
-        $count = DBUtil::selectObjectCount('dizkus_topic_subscription', $where);
-        return $count > 0;
+        return ModUtil::apiFunc($this->name, 'Topic', 'getSubscriptionStatus', $args);
     }
     
     /**
@@ -1396,18 +1129,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function get_forum_subscription_status($args)
     {
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('COUNT(s.msg_id)')
-           ->from('Dizkus_Entity_ForumSubscriptions', 's')
-           ->where('s.user_id = :user')
-           ->setParameter('user', $args['user_id'])
-           ->andWhere('s.forum_id = :forum')
-           ->setParameter('forum', $args['forum_id'])
-           ->setMaxResults(1);
-        $count = $qb->getQuery()->getSingleScalarResult();
-        return $count > 0;
-        
+        return ModUtil::apiFunc($this->name, 'Forum', 'getSubscriptionStatus', $args);   
     }
     
     /**
@@ -1419,14 +1141,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function get_forum_favorites_status($args)
     {
-        $ztables = DBUtil::getTables();
-        $favcolumn = $ztables['dizkus_forum_favorites_column'];
-    
-        $where = ' WHERE ' . $favcolumn['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . 
-                 ' AND '   . $favcolumn['forum_id'] . '=' . (int)DataUtil::formatForStore($args['forum_id']);
-    
-        $count = DBUtil::selectObjectCount('dizkus_forum_favorites', $where);
-        return $count > 0;
+        return ModUtil::apiFunc($this->name, 'Favorites', 'getForumStatus', $args);
     }
     
     /**
@@ -1943,12 +1658,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function lockunlocktopic($args)
     {
-        if (isset($args['topic_id']) && is_numeric($args['topic_id']) && isset($args['mode'])) {
-            $tobj['topic_id']     = $args['topic_id'];
-            $tobj['topic_status'] = ($args['mode']=='lock') ? 1 : 0;
-            DBUtil::updateObject($tobj, 'dizkus_topics', '', 'topic_id');
-        }
-        return;
+        return ModUtil::apiFunc($this->name, 'Topic', 'toggleLock', $args);
     }
     
     /**
@@ -1960,12 +1670,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function stickyunstickytopic($args)
     {
-        if (isset($args['topic_id']) && is_numeric($args['topic_id']) && isset($args['mode'])) {
-            $tobj['topic_id'] = $args['topic_id'];
-            $tobj['sticky']   = ($args['mode']=='sticky') ? 1 : 0;
-            DBUtil::updateObject($tobj, 'dizkus_topics', '', 'topic_id');
-        }
-        return;
+        return ModUtil::apiFunc($this->name, 'Topic', 'toggleSticky', $args);
     }
     
     /**
@@ -1999,6 +1704,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
     /**
      * readuserforums
+     * 
      * reads all forums the recent users is allowed to see
      *
      * @params $args['cat_id'] int a category id (optional, if set, only reads the forums in this category)
@@ -2094,48 +1800,58 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function deletetopic($args)
     {
-        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
+        $topic_id = $args['topic_id'];
+        
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid(array('topic_id' => $topic_id));
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
-        }
-    
-        $ztable = DBUtil::getTables();
+        }    
     
         // Update the users's post count, this might be slow on big topics but it makes other parts of the
         // forum faster so we win out in the long run.
         
         // step #1: get all post ids and posters ids
-        $where = $ztable['dizkus_posts_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
-        $postsarray = DBUtil::selectObjectArray('dizkus_posts', $where);
+        $postings = $this->entityManager->getRepository('Dizkus_Entity_Posts')
+                                        ->findBy(array('topic_id' => $topic_id));
+        
     
         // step #2 go through the posting array and decrement the posting counter
         // TO-DO: for larger topics use IN(..., ..., ...) with 50 or 100 posting ids per sql
-        foreach ($postsarray as $posting) {
-            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting['poster_id']) - 1, $posting['poster_id']);
+        // step #3 and delete postings      
+        foreach ($postings as $posting) {
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting->getposter_id()) - 1, $posting->getposter_id());
             //DBUtil::decrementObjectFieldByID('dizkus__users', 'user_posts', $posting['poster_id'], 'user_id');
+            $this->entityManager->remove($posting);            
         }
-    
-       // now delete postings
-        // we will use the same $where as before!
-        DBUtil::deleteWhere('dizkus_posts', $where);
+                
     
         // now delete the topic itself
-        DBUtil::deleteObjectByID('dizkus_topics', $args['topic_id'], 'topic_id');
+        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')->find($topic_id);
+        $this->entityManager->remove($topic);
+        
+                
     
         // remove topic subscriptions
-        $where = $ztable['dizkus_topic_subscription_column']['topic_id'] .'=' . (int)DataUtil::formatForStore($args['topic_id']);
-        DBUtil::deleteWhere('dizkus_topic_subscription', $where);
-    
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
+                                             ->findBy(array('topic_id' => $topic_id));
+        foreach ($subscriptions as $subscription) {
+            $this->entityManager->remove($subscription);            
+        }
+
         // get forum info for adjustments
-        $forum = DBUtil::selectObjectById('dizkus_forums', $forum_id, 'forum_id');
+        
+        
+        $forum = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $forum_id);
         // decrement forum_topics counter
         $forum['forum_topics']--;
         // decrement forum_posts counter
-        $forum['forum_posts'] = $forum['forum_posts'] - count($postsarray);
-        DBUtil::updateObject($forum, 'dizkus_forums', null, 'forum_id');
+        $forum['forum_posts'] = $forum['forum_posts'] - count($postings);    
+        
+        
+        $this->entityManager->flush();
         
         // Let any hooks know that we have deleted an item (topic).
-//        ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
+        // ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
         return $forum_id;
@@ -2425,24 +2141,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function subscribe_topic($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        } else {
-            $args['user_id'] = UserUtil::getVar('uid');
-        }
-    
-        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
-        if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        if ($this->get_topic_subscription_status(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id'])) == false) {
-            // add user only if not already subscribed to the topic
-            $sobj['topic_id'] = $args['topic_id'];
-            $sobj['user_id'] =  $args['user_id'];
-            DBUtil::insertObject($sobj, 'dizkus_topic_subscription');
-        }
-        return;
+        ModUtil::apiFunc($this->name, 'Topic', 'subscribe', $args);
     }
     
     /**
@@ -2455,22 +2154,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function unsubscribe_topic($args)
     {
-        if (isset($args['user_id'])) {
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-                return LogUtil::registerPermissionError();
-            }
-        } else {
-            $args['user_id'] = UserUtil::getVar('uid');
-        }
-    
-        $ztable = DBUtil::getTables();
-    
-        $where = 'WHERE ' . $ztable['dizkus_topic_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']);
-        if (!empty($args['topic_id'])) {
-            $where .= ' AND ' . $ztable['dizkus_topic_subscription_column']['topic_id'] . '=' . (int)DataUtil::formatForStore($args['topic_id']);
-        }
-    
-        return DBUtil::deleteWhere('dizkus_topic_subscription', $where);
+        ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', $args);
     }
     
     /**
@@ -2596,7 +2280,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         if ($this->get_forum_favorites_status($args) == false) {
             // add user only if not already a favorite
             // we can use the args parameter as-is
-            DBUtil::insertObject($args, 'dizkus_forum_favorites');
+            $favorite = new Dizkus_Entity_Favorites();
+            $favorite->merge($args);
+            $this->entityManager->persist($favorite);
+            $this->entityManager->flush();            
         }
     
         return true;
@@ -2610,16 +2297,20 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      * @returns bool
      */
     public function remove_favorite_forum($args)
-    {
+    {        
         if (!isset($args['user_id'])) {
             $args['user_id'] = (int)UserUtil::getVar('uid');
         }
     
         // remove from favorites - no need to check the favorite status, we delete it anyway
-        $where = "user_id='".(int)DataUtil::formatForStore($args['user_id'])."'
-                  AND forum_id='".(int)DataUtil::formatForStore($args['forum_id'])."'";
-    
-        return DBUtil::deleteWhere('dizkus_forum_favorites', $where);
+        $user_id  = (int)DataUtil::formatForStore($args['user_id']);
+        $forum_id = (int)DataUtil::formatForStore($args['forum_id']);
+                
+        $favorite = $this->entityManager->getRepository('Dizkus_Entity_Favorites')
+                                   ->findOneBy(array('user_id' => $user_id, 'forum_id' => $forum_id));  
+        $this->entityManager->remove($favorite);
+        $this->entityManager->flush();
+        return true;
     }
     
     /**
@@ -3781,9 +3472,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerArgsError();
         }
     
-        $topic_id = DBUtil::selectFieldByID('dizkus_topics', 'topic_id', $args['reference'], 'topic_reference');
-    
-        return $topic_id;
+        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')
+                      ->findOneBy('topic_reference', $args['reference']);    
+        return $topic->toArray();
     }
     
     /**

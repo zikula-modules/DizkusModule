@@ -21,7 +21,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * @params 'viewcat' int only expand the category, all others shall be hidden / collapsed
      */
     public function main($args=array())
-    {   
+    {        
         // Permission check
         $this->throwForbiddenUnless(
             SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
@@ -298,95 +298,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * newtopic
      *
      */
-    public function newtopic($args=array())
+    public function newtopic()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        // get the input
-        $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-        if ($forum_id == null) {
-            return LogUtil::registerError($this->_('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
-        }
-        
-        $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
-        $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
-        $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
-        $subscribe_topic = (int)FormUtil::getPassedValue('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0, 'GETPOST');
-        $preview  = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
-        $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $cancel   = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
-    
-        $preview = (empty($preview)) ? false : true;
-        $cancel  = (empty($cancel))  ? false : true;
-        $submit  = (empty($submit))  ? false : true;
-    
-        //  if cancel is submitted move to forum-view
-        if ($cancel == true) {
-            return System::redirect(ModUtil::url('Dizkus','user', 'viewforum', array('forum' => $forum_id)));
-        }
-    
-        $message = dzkstriptags($message);
-        // check for maximum message size
-        if ((strlen($message) +  strlen('[addsig]')) > 65535) {
-            LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
-            // switch to preview mode
-            $preview = true;
-        }
-    
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-    
-        $newtopic = ModUtil::apiFunc('Dizkus', 'user', 'preparenewtopic',
-                                 array('forum_id'   => $forum_id,
-                                       'subject'    => $subject,
-                                       'message'    => $message,
-                                       'topic_start'=> (empty($subject) && empty($message)),
-                                       'attach_signature' => $attach_signature,
-                                       'subscribe_topic'  => $subscribe_topic));
-    
-        if ($submit == true && $preview == false) {
-            // it's a submitted page
-            // Confirm authorisation code
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-    
-            //store the new topic
-            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
-                                     array('forum_id'         => $forum_id,
-                                           'subject'          => $subject,
-                                           'message'          => $message,
-                                           'attach_signature' => $attach_signature,
-                                           'subscribe_topic'  => $subscribe_topic));
-    
-            if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-                $this->view->assign('topic', ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id, 'count' => false)));
-    
-                return $this->view->fetch('user/newtopicconfirmation.tpl');
-    
-            } else {
-                return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                           array('topic' => $topic_id),
-                                           null, null, true));
-            }
-        } else {
-            // new topic
-            $this->view->assign('preview', $preview);
-            $this->view->assign('newtopic', $newtopic);
-            $this->view->assign('last_visit', $last_visit);
-            $this->view->assign('last_visit_unix', $last_visit_unix);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
-            return $this->view->fetch('user/newtopic.tpl');
-        }
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/newtopic.tpl', new Dizkus_Form_Handler_User_NewTopic());
     }
     
     /**
@@ -495,7 +410,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
     
     
-    public function deletetopic($args=array()) {
+    public function deletetopic() {
         $form = FormUtil::newForm($this->name, $this);
         return $form->execute('user/deletetopic.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
     }

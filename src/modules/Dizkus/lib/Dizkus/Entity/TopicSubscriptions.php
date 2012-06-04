@@ -39,12 +39,7 @@ class Dizkus_Entity_TopicSubscriptions extends Zikula_EntityAccess
     private $user_id = 0;
     
     
-        
-    /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Topics")
-     * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
-     */
-    private $topic;
+
     
     
     

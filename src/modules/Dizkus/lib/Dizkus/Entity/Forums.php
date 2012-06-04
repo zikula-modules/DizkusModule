@@ -21,6 +21,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_ForumSubscriptions", mappedBy="forum_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $forum_id;
@@ -69,10 +70,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $is_subforum = 0;
     
-
-    
-    
-    
     
     
     public function getforum_id()
@@ -98,6 +95,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         return $this->cat_id;
     }
-    
+
 
 }

@@ -76,7 +76,8 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         }
         
         $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $this->topic_id));
-        
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)));        
+
+        $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
+        return $view->redirect($url);        
     }
 }
