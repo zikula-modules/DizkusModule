@@ -26,7 +26,7 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
     {
         $view->assign('signature', UserUtil::getVar('signature'));
         $view->caching = false;
-        $view->add_core_data(CONFIG_MODULE);
+        $view->add_core_data();
         return true;
     }
 

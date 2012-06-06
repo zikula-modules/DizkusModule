@@ -3,10 +3,9 @@
 {include file='user/header.tpl'}
 
 <h2>{$templatetitle}</h2>
-<form id="dzk_topicsubscriptions" action="{modurl modname=Dizkus type=user func=topicsubscriptions}" method="post">
+{form id="dzk_topicsubscriptions"}
+{formvalidationsummary}
     <div>
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
-
         {if $subscriptions}
         <div class="forumbg dzk_rounded">
             <div class="inner">
@@ -22,7 +21,7 @@
                 </ul>
                 <ul class="topiclist forums">
                     <li class="row categorytitle">
-                        <label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" />
+                        <label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" onclick="Zikula.toggleInput('.z-form-checkbox');"/>
                     </li>
                     {foreach item=subscription from=$subscriptions}
                     <li class="row">
@@ -38,7 +37,7 @@
                                 </span>
                             </dd>
                             <dd class="lastpost">
-                                <input class="topic_checkbox" type="checkbox" name="topic_id[]" value="{$subscription.topic_id}" />
+                                {formcheckbox class="topic_checkbox" id=$subscription.topic_id group="topicIds"}
                             </dd>
                         </dl>
                     </li>
@@ -58,10 +57,10 @@
 
         {/if}
 
-        <div class="z-buttons z-gap">
-            {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+        <div class="z-buttons z-formbuttons">
+            {formbutton class="z-bt-ok" commandName="save" __text="Submit"}
         </div>
     </div>
-</form>
+{/form}
 
 {include file='user/footer.tpl'}

@@ -2,33 +2,29 @@
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
-{if $error_msg neq ''}
-<div class="z-errormsg">{$error_msg}</div>
-{/if}
-
-<form id="emailtopic" class="z-form" action="{modurl modname='Dizkus' type='user' func='emailtopic'}" method="post">
+{form cssClass="z-form"}
+{formvalidationsummary}
     <div>
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
-        <input type="hidden" name="topic" value="{$topic.topic_id}" />
         <fieldset id="dzk_emailtopic">
             <legend>{$templatetitle}</legend>
             <div class="z-formrow">
-                <label for="sendto_email">{gt text="Sent to"}</label>
-                <input type="text" id="sendto_email" name="sendto_email" size="50" maxlength="50" value="{$sendto_email}" />
+                {formlabel for="sendto_email" text="Sent to"}
+                {formemailinput id="sendto_email" size="50" maxLength="50" mandatory=true}
             </div>
             <div class="z-formrow">
-                <label for="emailsubject">{gt text="Subject line"}&nbsp;</label>
-                <input type="text" id="emailsubject" name="emailsubject" size="50" maxlength="100" value="{$emailsubject}" />
+                {formlabel for="emailsubject" text="Subject line"}
+                {formtextinput id="emailsubject" size="50" maxLength="100" mandatory=true}
             </div>
             <div class="z-formrow">
-                <label for="message">{gt text="Message body"}</label>
-                <textarea id="message" name="message" rows="10" cols="80">{$message|safetext}</textarea>
+                {formlabel for="message" text="Message body"}
+                {formtextinput id="message" textMode="multiline" rows="10" cols="80" mandatory=true}
             </div>
         </fieldset>
-        <div class="z-formbuttons z-buttons">
-            {button class="dzk_detachable z-bt-small" src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+        <div class="z-buttons z-formbuttons">
+            {formbutton class="z-bt-ok"     commandName="send"   __text="Send"}
+            {formbutton class="z-bt-cancel" commandName="cancel" __text="Cancel"}
         </div>
     </div>
-</form>
+{/form}
 
 {include file='user/footer.tpl'}

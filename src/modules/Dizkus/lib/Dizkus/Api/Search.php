@@ -76,8 +76,8 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
             return true;
         }
     
-        $args['forums']      = FormUtil::getPassedValue('Dizkus_forum', null, 'GETPOST');
-        $args['searchwhere'] = FormUtil::getPassedValue('Dizkus_searchwhere', 'post', 'GETPOST');
+        $args['forums']      = $this->request->request->get('Dizkus_forum', null);
+        $args['searchwhere'] = $this->request->request->get('Dizkus_searchwhere', 'post');
     
         $minlen = ModUtil::getVar('Dizkus', 'minsearchlength', 3);
         $maxlen = ModUtil::getVar('Dizkus', 'maxsearchlength', 30);
@@ -187,6 +187,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     
     /**
      * fulltext
+     *
      * the function that will search the forum using fulltext indices - does not work on
      * InnoDB databases!!!
      *
@@ -196,6 +197,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
      * from Dizkus:
      * @params searchwhere   string 'posts' or 'author'
      * @params forums        array of forums to search
+     *
      * @return boolean
      */
     private function fulltext($args)

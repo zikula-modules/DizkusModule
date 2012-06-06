@@ -33,8 +33,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $disabled;
         }
         
-        $viewcat   =  (int)FormUtil::getPassedValue('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : -1, 'GETPOST');
-        $favorites = (bool)FormUtil::getPassedValue('favorites', (isset($args['favorites'])) ? $args['favorites'] : false, 'GETPOST');
+        $viewcat   =  (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : -1);
+        $favorites = (bool)$this->request->query->get('favorites', (isset($args['favorites'])) ? $args['favorites'] : false);
     
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
         $loggedIn = UserUtil::isLoggedIn();
@@ -93,10 +93,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * viewforum
+     *
      * opens a forum and shows the last postings
      *
      * @params 'forum' int the forum id
      * @params 'start' int the posting to start with if on page 1+
+     *
+     * @return string
      */
     public function viewforum($args=array())
     {
@@ -113,8 +116,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-        $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
+        $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+        $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
     
         $subforums = $this->entityManager->getRepository('Dizkus_Entity_Subforums')
                                    ->findBy(array('is_subforum' => $forum_id)); 
@@ -158,12 +161,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
         // begin patch #3494 part 1, credits to teb
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
+        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
         // end patch #3494 part 1
-        $start    = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
-        $view     = strtolower(FormUtil::getPassedValue('view', (isset($args['view'])) ? $args['view'] : '', 'GETPOST'));
+        $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
+        $view     = strtolower($this->request->query->get('view', (isset($args['view'])) ? $args['view'] : ''));
     
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
     
@@ -219,14 +222,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
-        $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
-        $subscribe_topic = (int)FormUtil::getPassedValue('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0, 'GETPOST');
-        $preview = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
-        $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $cancel = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
+        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+        $message  = $this->request->query->get('message', (isset($args['message'])) ? $args['message'] : '');
+        $attach_signature = (int)$this->request->query->get('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0);
+        $subscribe_topic = (int)$this->request->query->get('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0);
+        $preview = $this->request->query->get('preview', (isset($args['preview'])) ? $args['preview'] : '');
+        $submit = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+        $cancel = $this->request->query->get('cancel', (isset($args['cancel'])) ? $args['cancel'] : '');
             
         /**
          * if cancel is submitted move to topic-view
@@ -280,7 +283,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                         'subscribe_topic'  => $subscribe_topic));
             if ($preview == true) {
                 $reply['message'] = dzkVarPrepHTMLDisplay($message);
-//                list($reply['message_display']) = ModUtil::callHooks('item', 'transform', '', array($message));
+                //list($reply['message_display']) = ModUtil::callHooks('item', 'transform', '', array($message));
                 $reply['message_display'] = nl2br($reply['message_display']);
             }
 
@@ -322,15 +325,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $subject  = FormUtil::getPassedValue('subject', (isset($args['subject'])) ? $args['subject'] : '', 'GETPOST');
-        $message  = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
-        $attach_signature = (int)FormUtil::getPassedValue('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0, 'GETPOST');
-        $delete   = FormUtil::getPassedValue('delete', (isset($args['delete'])) ? $args['delete'] : '', 'GETPOST');
-        $preview  = FormUtil::getPassedValue('preview', (isset($args['preview'])) ? $args['preview'] : '', 'GETPOST');
-        $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $cancel   = FormUtil::getPassedValue('cancel', (isset($args['cancel'])) ? $args['cancel'] : '', 'GETPOST');
+        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+        $subject  = $this->request->query->get('subject', (isset($args['subject'])) ? $args['subject'] : '');
+        $message  = $this->request->query->get('message', (isset($args['message'])) ? $args['message'] : '');
+        $attach_signature = (int)$this->request->query->get('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0);
+        $delete   = $this->request->query->get('delete', (isset($args['delete'])) ? $args['delete'] : '');
+        $preview  = $this->request->query->get('preview', (isset($args['preview'])) ? $args['preview'] : '');
+        $submit   = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+        $cancel   = $this->request->query->get('cancel', (isset($args['cancel'])) ? $args['cancel'] : '');
                     
         if (empty($post_id) || !is_numeric($post_id)) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
@@ -408,8 +411,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $this->view->fetch('user/editpost.tpl');
         }
     }
-    
-    
+
+    /**
+     * Delete topic
+     *
+     * @return string
+     */
     public function deletetopic() {
         $form = FormUtil::newForm($this->name, $this);
         return $form->execute('user/deletetopic.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
@@ -434,12 +441,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-        $mode     = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
-        $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $shadow   = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
+        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+        $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+        $mode     = $this->request->query->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
+        $submit   = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+        $shadow   = $this->request->query->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
         $shadow   = (empty($shadow)) ? false : true;
     
         if (empty($topic_id) && !empty($post_id)) {
@@ -555,7 +562,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                     break;
     
                 case 'join':
-                    $to_topic_id = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
+                    $to_topic_id = (int)$this->request->query->get('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null);
                     list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $to_topic_id));
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
                         return LogUtil::registerPermissionError();
@@ -601,11 +608,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $topic_id  = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $act       = FormUtil::getPassedValue('act', (isset($args['act'])) ? $args['act'] : '', 'GETPOST');
-        $return_to = FormUtil::getPassedValue('return_to', (isset($args['return_to'])) ? $args['return_to'] : '', 'GETPOST');
-        $forum_id  = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-        $user_id   = (int)FormUtil::getPassedValue('user', (isset($args['user'])) ? $args['user'] : null, 'GETPOST');
+        $topic_id  = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+        $act       = $this->request->query->get('act', (isset($args['act'])) ? $args['act'] : '');
+        $return_to = $this->request->query->get('return_to', (isset($args['return_to'])) ? $args['return_to'] : '');
+        $forum_id  = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+        $user_id   = (int)$this->request->query->get('user', (isset($args['user'])) ? $args['user'] : null);
     
         // user_id will only be used if we have admin permissions otherwise the
         // user can edit his prefs only but not others users prefs
@@ -757,11 +764,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
     
-    	// check for Contactlist module and admin settings
-    	$ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
-    	if (!ModUtil::available('ContactList') || ($ignorelist_handling == 'none')) {
-    	  	return LogUtil::registerError($this->__("No 'ignore list' configuration is currently possible."), null, ModUtil::url('Dizkus', 'user', 'prefs'));
-    	}
+        // check for Contactlist module and admin settings
+        $ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
+        if (!ModUtil::available('ContactList') || ($ignorelist_handling == 'none')) {
+            return LogUtil::registerError($this->__("No 'ignore list' configuration is currently possible."), null, ModUtil::url('Dizkus', 'user', 'prefs'));
+        }
     
         // Create output and assign data
         $render = FormUtil::newForm($this->name, $this);
@@ -772,80 +779,19 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * emailtopic
+     *
+     * @return string
      */
-    public function emailtopic($args=array())
+    public function emailtopic()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        // get the input
-        $topic_id      = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
-        $emailsubject  = FormUtil::getPassedValue('emailsubject', (isset($args['emailsubject'])) ? $args['emailsubject'] : '', 'GETPOST');
-        $message       = FormUtil::getPassedValue('message', (isset($args['message'])) ? $args['message'] : '', 'GETPOST');
-        $sendto_email  = FormUtil::getPassedValue('sendto_email', (isset($args['sendto_email'])) ? $args['sendto_email'] : '', 'GETPOST');
-        $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    
-        if (!UserUtil::isLoggedIn()) {
-            return LogUtil::registerError($this->__('Error! You need to be logged-in to perform this action.'), null, ModUtil::url('Users', 'user', 'login'));
-        }
-    
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-    
-        if (!empty($submit)) {
-            if (!System::varValidate($sendto_email, 'email')) {
-                // Empty e-mail is checked here too
-                $error_msg = DataUtil::formatForDisplay($this->__('Error! Either you did not enter an e-mail address for the recipient, or the e-mail address you entered was invalid.'));
-                $sendto_email = '';
-                unset($submit);
-            } else if ($message == '') {
-                $error_msg = DataUtil::formatForDisplay($this->__('Error! You must enter a message.'));
-                unset($submit);
-            } else if ($emailsubject == '') {
-                $error_msg = DataUtil::formatForDisplay($this->__('Error! You must enter a subject line for the e-mail message.'));
-                unset($submit);
-            }
-        } else {
-            $error_msg = null;
-        }
-    
-        if (!empty($submit)) {
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-    
-            ModUtil::apiFunc('Dizkus', 'user', 'emailtopic',
-                         array('sendto_email' => $sendto_email,
-                               'message'      => $message,
-                               'subject'      => $emailsubject));
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
-        } else {
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
-                                  array('topic_id'   => $topic_id));
-    
-            $emailsubject = (!empty($emailsubject)) ? $emailsubject : $topic['topic_title'];
-    
-            $this->view->assign('topic', $topic);
-            $this->view->assign('error_msg', $error_msg);
-            $this->view->assign('sendto_email', $sendto_email);
-            $this->view->assign('emailsubject', $emailsubject);
-            $this->view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) ."\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=>$topic_id), null, null, true));
-            $this->view->assign('last_visit', $last_visit);
-            $this->view->assign('last_visit_unix', $last_visit_unix);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
-            return $this->view->fetch('user/emailtopic.tpl');
-        }
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/emailtopic.tpl', new Dizkus_Form_Handler_User_EmailTopic());
     }
     
     /**
      * latest
+     *
+     * @return string
      */
     public function viewlatest($args=array())
     {
@@ -864,10 +810,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $selorder   = (int)FormUtil::getPassedValue('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1, 'GETPOST');
-        $nohours    = (int)FormUtil::getPassedValue('nohours', (isset($args['nohours'])) ? $args['nohours'] : null, 'GETPOST');
-        $unanswered = (int)FormUtil::getPassedValue('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0, 'GETPOST');
-        $amount     = (int)FormUtil::getPassedValue('amount', (isset($args['amount'])) ? $args['amount'] : null, 'GETPOST');
+        $selorder   = (int)$this->request->query->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1);
+        $nohours    = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
+        $unanswered = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
+        $amount     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
     
         if (!empty($amount) && !is_numeric($amount)) {
             unset($amount);
@@ -937,9 +883,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $post_id    = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $newsubject = FormUtil::getPassedValue('newsubject', (isset($args['newsubject'])) ? $args['newsubject'] : '', 'GETPOST');
-        $submit     = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+        $post_id    = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+        $newsubject = $this->request->query->get('newsubject', (isset($args['newsubject'])) ? $args['newsubject'] : '');
+        $submit     = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
     
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                              array('post_id' => $post_id));
@@ -973,8 +919,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * print
+     *
      * prepare print view of the selected posting or topic
      *
+     * @return string
      */
     public function printtopic($args=array())
     {
@@ -989,8 +937,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $post_id  = (int)FormUtil::getPassedValue('post', (isset($args['post'])) ? $args['post'] : null, 'GETPOST');
-        $topic_id = (int)FormUtil::getPassedValue('topic', (isset($args['topic'])) ? $args['topic'] : null, 'GETPOST');
+        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
     
         if (useragent_is_bot() == true) {
             if ($post_id <> 0 ) {
@@ -1056,7 +1004,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * movepost
      * 
      * Move a single post to another thread
-     * added by by el_cuervo -- dev-postnuke.com
+     *
+     * @return string
      */
     public function movepost()
     {
@@ -1067,7 +1016,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     /**
      * jointopics
      * Join a topic with another toipic                                                                                                  ?>
-     * by el_cuervo -- dev-postnuke.com
      *
      */
     public function jointopics($args=array())
@@ -1083,10 +1031,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         // get the input
-        $post_id       = (int)FormUtil::getPassedValue('post_id', (isset($args['post_id'])) ? $args['post_id'] : null, 'GETPOST');
-        $submit        = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $to_topic_id   = (int)FormUtil::getPassedValue('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null, 'GETPOST');
-        $from_topic_id = (int)FormUtil::getPassedValue('from_topic_id', (isset($args['from_topic_id'])) ? $args['from_topic_id'] : null, 'GETPOST');
+        $post_id       = (int)$this->request->query->get('post_id', (isset($args['post_id'])) ? $args['post_id'] : null);
+        $submit        = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
+        $to_topic_id   = (int)$this->request->query->get('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null);
+        $from_topic_id = (int)$this->request->query->get('from_topic_id', (isset($args['from_topic_id'])) ? $args['from_topic_id'] : null);
     
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
     
@@ -1122,10 +1070,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * moderateforum
-     * simple moderation of multiple topics
      *
-     * @params to be documented :-)
+     * Simple moderation of multiple topics.
      *
+     * @param array $args The Arguments array.
+     *
+     * @return string
      */
     public function moderateforum($args=array())
     {
@@ -1182,9 +1132,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         } else {
             // submit is set
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
+            //if (!SecurityUtil::confirmAuthKey()) {
+            //    return LogUtil::registerAuthidError();
+            //}*/
             if (count($topic_ids) <> 0) {
                 switch ($mode)
                 {
@@ -1255,10 +1205,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * report
-     * notify a moderator about a posting
      *
-     * @params $post int post_id
-     * @params $comment string comment of reporter
+     * Notify a moderator about a posting.
+     *
+     * @return string
      */
     public function report()
     {
@@ -1268,48 +1218,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
     /**
      * topicsubscriptions
-     * manage the users topic subscription
+     *
+     * Manage the users topic subscription.
+     *
+     * @return string
      */
-    public function topicsubscriptions($args)
+    public function topicsubscriptions()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
-        }
-    
-        // get the input
-        $topic_id = FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : null, 'GETPOST');
-        $submit   = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-    
-        if (!$submit) {
-            $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
-            $this->view->assign('subscriptions', $subscriptions);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-            return $this->view->fetch('user/topicsubscriptions.tpl');
-    
-        } else {
-            // submit is set
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-    
-            if (is_array($topic_id) && (count($topic_id) > 0)) {
-                for ($i = 0; $i < count($topic_id); $i++) {
-                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('topic_id' => $topic_id[$i]));
-                }
-            }
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'topicsubscriptions'));
-        }
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/topicsubscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
     }
 
 }

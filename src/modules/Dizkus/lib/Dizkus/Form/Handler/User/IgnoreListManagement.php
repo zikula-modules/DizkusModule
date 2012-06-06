@@ -41,7 +41,7 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
 
         // get user's configuration
         $view->caching = false;
-        $view->add_core_data(CONFIG_MODULE);
+        $view->add_core_data();
 
         // assign data
         $view->assign('ignorelist_options',    $ignorelist_options);

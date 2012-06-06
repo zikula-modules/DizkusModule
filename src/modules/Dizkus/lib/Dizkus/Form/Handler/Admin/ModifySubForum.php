@@ -14,9 +14,9 @@
 class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandler
 {
     /**
-     * topic poster uid
+     * subforum
      *
-     * @var entity
+     * @var statement
      */
     private $subforum;
 
@@ -36,7 +36,7 @@ class Dizkus_Form_Handler_Admin_ModifySubForum extends Zikula_Form_AbstractHandl
             return LogUtil::registerPermissionError();
         }
         
-        $id = FormUtil::getPassedValue('id');
+        $id = $this->request->request->get('id');
         
         if ($id) {
             $view->assign('templatetitle', $this->__('Modify subforum'));

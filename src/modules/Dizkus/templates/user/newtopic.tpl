@@ -50,9 +50,9 @@
                                             
                                             
         <div class="z-formbuttons z-buttons">
-            {formbutton class="z-bt-ok"     commandName="save"   __text="Submit"}
-            {formbutton class="z-bt-preview"   commandName="preview" __text="Preview"}
-            {formbutton class="z-bt-cancel" commandName="cancel" __text="Cancel"}
+            {formbutton class="z-bt-ok"      commandName="save"   __text="Submit"}
+            {formbutton class="z-bt-preview" commandName="preview" __text="Preview"}
+            {formbutton class="z-bt-cancel"  commandName="cancel" __text="Cancel"}
         </div><br />                           
    
     </fieldset>

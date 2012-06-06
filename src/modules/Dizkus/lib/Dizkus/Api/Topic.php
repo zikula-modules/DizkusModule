@@ -110,19 +110,21 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
      * @return void|bool
      */
     public function unsubscribe($args)
-    {   
+    {
+        $where = array();
         if (isset($args['user_id'])) {
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
                 return LogUtil::registerPermissionError();
             }
+            $where['user_id'] = $args[user_id];
         } else {
-            $args['user_id'] = UserUtil::getVar('uid');
-        }        
-        
-        unset($args['silent']); // obsulet value
+            $where['user_id'] = UserUtil::getVar('uid');
+        }
+
+        $where = $args['topic_id'];
         
         $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
-                                             ->findBy($args);
+                                             ->findBy($where);
         foreach ($subscriptions as $subscription) {
             $this->entityManager->remove($subscription);
         }
@@ -170,16 +172,19 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
 
 
     /**
-     * readtopic
-     * reads a topic with the last posts_per_page answers (incl the initial posting when on page #1)
+     * read
      *
-     * @params $args['topic_id'] it the topics id
-     * @params $args['start'] int number of posting to start with (if on page 1+)
-     * @params $args['complete'] bool if true, reads the complete thread and does not care about
-     *                               the posts_per_page setting, ignores 'start'
-     * @params $args['count']      bool  true if we have raise the read counter, default false
-     * @params $args['nohook']     bool  true if transform hooks should not modify post text
-     * @returns very complex array, see {debug} for more information
+     * This function reads a topic with the last posts_per_page answers (incl the initial posting when on page #1)
+     *
+     * @param array $args Arguments array.
+     *        int $args['topic_id'] The topics id.
+     *        int $args['start'] Number of posting to start with (if on page 1+).
+     *        boolean $args['complete'] If true, reads the complete thread and does not care about the posts_per_page
+     *        setting, ignores 'start'.
+     *        boolean $args['count'] True if we have raise the read counter, default false.
+     *        boolean $args['nohook'] True if transform hooks should not modify post text.
+     *
+     * @return array Very complex array, see {debug} for more information
      */
     public function read($args)
     {
@@ -219,10 +224,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
                 WHERE t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']);
     
         $res = DBUtil::executeSQL($sql);
-        
-        
-        
-        
         
         $colarray = array('topic_title', 'topic_poster', 'topic_status', 'forum_id', 'sticky', 'topic_time', 'topic_replies',
                           'topic_last_post_id', 'forum_name', 'cat_id', 'forum_pop3_active', 'cat_title');
@@ -302,15 +303,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
                 $topic['is_subscribed'] = 0;
             }
     
-            /**
-             * update topic counter
-             */
+            // update topic counter
             if ($count == true) {
                 DBUtil::incrementObjectFieldByID('dizkus_topics', 'topic_views', $topic['topic_id'], 'topic_id');
             }
-            /**
-             * more then one page in this topic?
-             */
+            // more then one page in this topic?
             $topic['total_posts'] = ModUtil::apiFunc($this->name, 'Users', 'boardstats', array('id' => $topic['topic_id'], 'type' => 'topic'));
     
             if ($topic['total_posts'] > $posts_per_page) {
@@ -329,15 +326,19 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             $topic['posts'] = array();
     
             // read posts
-            $where = 'WHERE topic_id = '.(int)DataUtil::formatForStore($topic['topic_id']);
-            $orderby = 'ORDER BY post_id '.DataUtil::formatForStore($post_sort_order);
-            if ($complete == true) {
-                //$res2 = DBUtil::executeSQL($sql2);
-                $result2 = DBUtil::selectObjectArray('dizkus_posts', $where, $orderby);
-            } else {
-                //$res2 = DBUtil::executeSQL($sql2, $start, $posts_per_page);
-                $result2 = DBUtil::selectObjectArray('dizkus_posts', $where, $orderby, $start, $posts_per_page);
+            $em = $this->getService('doctrine.entitymanager');
+            $qb = $em->createQueryBuilder();
+            $qb->select('p')
+                ->from('Dizkus_Entity_Posts', 'p')
+                ->where('p.topic_id = :topic_id')
+                ->setParameter('topic_id', $topic['topic_id'])
+                ->orderBy('p.post_id', $post_sort_order);
+            $query = $qb->getQuery();
+            if (!$complete) {
+                $query->setFirstResult($start);
+                $query->setMaxResults($posts_per_page);
             }
+            $result2 = $query->getArrayResult();
             
             // performance patch:
             // we store all userdata read for the single postings in the $userdata
@@ -419,5 +420,126 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
         return $topic;
     }
-    
+
+
+    /**
+     * getIdByReference
+     *
+     * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
+     *
+     * @param string $reference The reference.
+     *
+     * @return array Topic data as array
+     */
+    public function getIdByReference($reference)
+    {
+        if (empty($reference)) {
+            return LogUtil::registerArgsError();
+        }
+
+        return $this->entityManager->getRepository('Dizkus_Entity_Topics')
+                                   ->findOneBy('topic_reference', $reference)
+                                   ->toArray();
+    }
+
+
+    /**
+     * email
+     *
+     * This functions emails a topic to a given email address.
+     *
+     * @param array $args Arguments array.
+     *        string $args['sendto_email'] The recipients email address.
+     *        string $args['message'] The text.
+     *        string $args['subject'] The subject.
+     *
+     * @return boolean
+     */
+    public function email($args)
+    {
+        $sender_name = UserUtil::getVar('uname');
+        $sender_email = UserUtil::getVar('email');
+        if (!UserUtil::isLoggedIn()) {
+            $sender_name = ModUtil::getVar('Users', 'anonymous');
+            $sender_email = ModUtil::getVar('Dizkus', 'email_from');
+        }
+
+        $params = array(
+            'fromname'    => $sender_name,
+            'fromaddress' => $sender_email,
+            'toname'      => $args['sendto_email'],
+            'toaddress'   => $args['sendto_email'],
+            'subject'     => $args['subject'],
+            'body'        => $args['message'],
+        );
+        return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $params);
+    }
+
+    /**
+     * deletet
+     *
+     * This function deletes a topic given by id.
+     *
+     * @param int $topic_id The topics id.
+     *
+     * @return int the forums id for redirecting
+     */
+    public function delete($topic_id)
+    {
+        list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
+        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+            return LogUtil::registerPermissionError();
+        }
+
+        // Update the users's post count, this might be slow on big topics but it makes other parts of the
+        // forum faster so we win out in the long run.
+
+        // step #1: get all post ids and posters ids
+        $postings = $this->entityManager->getRepository('Dizkus_Entity_Posts')
+            ->findBy(array('topic_id' => $topic_id));
+
+
+        // step #2 go through the posting array and decrement the posting counter
+        // TO-DO: for larger topics use IN(..., ..., ...) with 50 or 100 posting ids per sql
+        // step #3 and delete postings
+        foreach ($postings as $posting) {
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting->getposter_id()) - 1, $posting->getposter_id());
+            //DBUtil::decrementObjectFieldByID('dizkus__users', 'user_posts', $posting['poster_id'], 'user_id');
+            $this->entityManager->remove($posting);
+        }
+
+
+        // now delete the topic itself
+        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')->find($topic_id);
+        $this->entityManager->remove($topic);
+
+
+
+        // remove topic subscriptions
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
+            ->findBy(array('topic_id' => $topic_id));
+        foreach ($subscriptions as $subscription) {
+            $this->entityManager->remove($subscription);
+        }
+
+        // get forum info for adjustments
+
+
+        $forum = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $forum_id);
+        // decrement forum_topics counter
+        $forum['forum_topics']--;
+        // decrement forum_posts counter
+        $forum['forum_posts'] = $forum['forum_posts'] - count($postings);
+
+
+        $this->entityManager->flush();
+
+        // Let any hooks know that we have deleted an item (topic).
+        // ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
+
+        ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
+        return $forum_id;
+    }
+
+
 }

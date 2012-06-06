@@ -53,7 +53,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        $silent = FormUtil::getPassedValue('silent', 0);
+        $silent = $this->request->request->get('silent', 0);
     
         $messages = array();
         
@@ -125,10 +125,10 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $submit     = FormUtil::getPassedValue('submit');
-        $letter     = FormUtil::getPassedValue('letter');
-        $lastletter = FormUtil::getPassedValue('lastletter');
-        $page       = (int)FormUtil::getPassedValue('page', 1, 'GETPOST');
+        $submit     = $this->request->query->get('submit');
+        $letter     = $this->request->query->get('letter');
+        $lastletter = $this->request->query->get('lastletter');
+        $page       = (int)$this->request->query->get('page', 1);
 
         // check for a letter parameter
         if (!empty($lastletter)) {
@@ -194,7 +194,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             unset($_GET['submit']);
             unset($_POST['submit']);
             unset($_REQUEST['submit']);
-            $setrank = FormUtil::getPassedValue('setrank');
+            $setrank = $this->request->request->get('setrank');
             ModUtil::apiFunc('Dizkus', 'admin', 'assignranksave', 
                          array('setrank' => $setrank));
         }
@@ -206,7 +206,9 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     
     
     /**
-     * 
+     * subforums
+     *
+     * @return string
      */
     public function subforums()
     {
