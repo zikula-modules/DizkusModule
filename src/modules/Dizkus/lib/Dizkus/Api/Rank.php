@@ -8,3 +8,11 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides the rank api functions
+ */
+class Dizkus_Api_Rank extends Zikula_AbstractApi {
+
+
+
+}

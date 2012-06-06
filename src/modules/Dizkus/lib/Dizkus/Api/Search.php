@@ -8,10 +8,15 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides the search api functions
+ */
 class Dizkus_Api_Search extends Zikula_AbstractApi {
     
     /**
      * Search plugin info
+     *
+     * @return array Info array
      */
     public function info()
     {
@@ -21,6 +26,11 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     
     /**
      * Search form component
+     *
+     * @param array $args The arguments array.
+     *        bool $args['active'] The active value.
+     *
+     * @return string
      */
     public function options($args)
     {
@@ -38,6 +48,10 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
      *
      * Access checking is ignored since access check has
      * already been done. But we add a link to the topic found
+     *
+     * @param array $args The arguments array.
+     *
+     * @return string
      */
     public function search_check($args)
     {
@@ -48,9 +62,12 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     /**
      * Search plugin main function
      *
-     * @params q             string the text to search
-     * @params searchtype    string 'AND', 'OR' or 'EXACT'
-     * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+     * @param array $args The arguments array.
+     *        string $args['q'] The text to search.
+     *        string $args['searchtype'] The type of the search ('AND', 'OR' or 'EXACT').
+     *        string $args['ssearchorder'] The search order ('newest', 'oldest' or 'alphabetical').
+     *
+     * @return string
      */
     public function search($args)
     {
@@ -79,30 +96,28 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         // check mod var for fulltext support
         //$funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 0) == 1) ? 'fulltext' : 'nonfulltext';
         $funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
-        
-        return ModUtil::apiFunc('Dizkus', 'search', $funcname, $args);
+
+        return $this->$funcname($args);
     }
     
     /**
      * nonfulltext
+     *
      * the function that will search the forum
      *
-     * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL Dizkus_searchapi_search INSTEAD
-     *
-     * @private
-     *
-     * @params q             string the text to search
-     * @params searchtype    string 'AND', 'OR' or 'EXACT'
-     * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
-     * @params numlimit      int    limit for search, defaultsto 10
-     * @params page          int    number of page t show
-     * @params startnum      int    the first item to show
+     * @param array $args The arguments array.
+     * q             string the text to search
+     * searchtype    string 'AND', 'OR' or 'EXACT'
+     * searchorder   string 'newest', 'oldest' or 'alphabetical'
+     * numlimit      int    limit for search, defaultsto 10
+     * page          int    number of page t show
+     * startnum      int    the first item to show
      * from Dizkus:
-     * @params searchwhere   string 'posts' or 'author'
-     * @params forums        array of forums to dearch
-     * @returns true or false
+     * searchwhere   string 'posts' or 'author'
+     * forums        array of forums to dearch
+     * @return boolean
      */
-    public function nonfulltext($args)
+    private function nonfulltext($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
@@ -175,19 +190,15 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
      * the function that will search the forum using fulltext indices - does not work on
      * InnoDB databases!!!
      *
-     * THIS FUNCTION SHOULD NOT BE USED DIRECTLY, CALL Dizkus_searchapi_search INSTEAD
-     *
-     * @private
-     *
      * @params q             string the text to search
      * @params searchtype    string 'AND', 'OR' or 'EXACT'
      * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
      * from Dizkus:
      * @params searchwhere   string 'posts' or 'author'
      * @params forums        array of forums to search
-     * @returns true or false
+     * @return boolean
      */
-    public function fulltext($args)
+    private function fulltext($args)
     {
         
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
@@ -269,7 +280,15 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         $this->start_search($wherematch, $whereforums);
         return true;
     }
-    
+
+    /**
+     * Start search
+     *
+     * @param string $wherematch  The where expression.
+     * @param string $whereforums The text to search.
+     *
+     * @return boolean
+     */
     function start_search($wherematch, $whereforums)
     {
         ModUtil::dbInfoLoad('Search');

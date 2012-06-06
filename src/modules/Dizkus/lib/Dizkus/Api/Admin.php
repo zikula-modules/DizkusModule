@@ -13,10 +13,11 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     /**
      * read catgory
      * 
-     * read the categories from database, if cat_id is set, only this one will be read
+     * Read the categories from database, if cat_id is set, only this one will be read.
      *
-     * @params cat_id int the category id to read (optional)
-     * @returns array of category information
+     * @param int $cat_id The category id to read (optional).
+     *
+     * @return array of category information
      *
      */
     public function readcategory($cat_id)
@@ -28,10 +29,13 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
     /**
      * updatecategory
-     * update a category in database, either cat_title or cat_order
+     *
+     * Update a category in database, either cat_title or cat_order.
     
-     * @params $args['cat_title'] string category title
-     * @params $args['cat_id'] int category id
+     * @param string $args['cat_title'] Category title.
+     * @param int    $args['cat_id']    Category id.
+     *
+     * @return boolean
      */
     public function updatecategory($args)
     {        
@@ -53,9 +57,12 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
     /**
      * addcategory
-     * adds a new category
      *
-     * @params $args['cat_title'] string the categories title
+     * Adds a new category.
+     *
+     * @params string $args['cat_title'] The categories title.
+     *
+     * @return int|boolean
      */
     public function addcategory($args)
     {
@@ -309,7 +316,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     public function readranks($args)
     {
         // read images
-        $path     = ModUtil::getVar('Dizkus', 'url_ranks_images');
+        $path     = $this->getVar('url_ranks_images');
         $handle   = opendir($path);
         $filelist = array();
         while ($file = readdir($handle)) {
@@ -326,7 +333,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
         }
                 
         $ranks = $this->entityManager->getRepository('Dizkus_Entity_Ranks')
-                                   ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
+                                     ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
         
         return array($filelist, $ranks);
     }
@@ -338,12 +345,11 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
      */
     public function saverank($args)
     {
-    	if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
     
-        foreach ($args['ranks'] as $rankid => $rank)
-        {
+        foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {                
                 $r = new Dizkus_Entity_Ranks();
                 $r->merge($rank);
@@ -377,7 +383,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
         if (is_array($args['setrank'])) {
             $ranksavearray = array();
-            foreach($args['setrank'] as $user_id => $rank_id) {
+            foreach ($args['setrank'] as $user_id => $rank_id) {
                 UserUtil::setVar('dizkus_user_rank', $rank_id, $user_id);
             }
         }
@@ -520,9 +526,11 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
         $count = 0;
         if (!is_null($mods) && is_array($mods) && count($mods)>0) {
-        	foreach($mods as $singlemod) {
-                $newmod = array('forum_id' => $newforum['forum_id'],
-                                'user_id'  => $singlemod); // [0]??
+            foreach ($mods as $singlemod) {
+                $newmod = array(
+                            'forum_id' => $newforum['forum_id'],
+                            'user_id'  => $singlemod
+                          ); // [0]??
                 $newmod = DBUtil::insertObject($newmod, 'dizkus_forum_mods'); // todo: add index field to forum_mods table!!!!
             }
         }
@@ -589,10 +597,11 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     }
     
     /**
-     * delete forum
+     * Delete  a forum
      *
      * @params $args['forum_id']
      *
+     * @return boolean
      */
     public function deleteforum($args)
     {
@@ -630,26 +639,16 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     */
         return DBUtil::deleteWhere('dizkus_posts', $whereforumid);
     }
-    
-    /**
-     * get_pntopics
-     */
-    public function get_pntopics()
-    {
-        return false;
-    }
-    
+
     /**
      * get available admin panel links
      *
-     * @author Mark West
      * @return array array of admin links
      */
     public function getlinks()
     {
         $links = array();
-        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN))
-        {
+        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url'   => ModUtil::url('Dizkus', 'admin', 'reordertree'),
                 'text'  => $this->__('Edit forum tree'),
@@ -658,14 +657,18 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                     array(
                         'url'   => ModUtil::url('Dizkus', 'admin', 'reordertree'),
                         'text'  => $this->__('Edit forum tree'),
-                        'title' => $this->__('Create, delete, edit and re-order categories and forums')),
+                        'title' => $this->__('Create, delete, edit and re-order categories and forums')
+                    ),
                     array(
-                        'url' => ModUtil::url('Dizkus', 'admin', 'subforums'),
-                        'text' => $this->__('Sub forums')),
+                        'url'   => ModUtil::url('Dizkus', 'admin', 'subforums'),
+                        'text'  => $this->__('Sub forums'),
+                        'title' => $this->__('Create, delete, edit and re-order sub categories')
+                    ),
                     array(
-                        'url' => ModUtil::url('Dizkus', 'admin', 'syncforums'),
-                        'text' => $this->__('Synchronize forum/topic index'),
-                        'title' => $this->__('Synchronize forum and topic indexes to fix any discrepancies that might exist')
+                        'url'   => ModUtil::url('Dizkus', 'admin', 'syncforums'),
+                        'text'  => $this->__('Synchronize forum/topic index'),
+                        'title' => $this->__('Synchronize forum and topic indexes to fix any discrepancies that might exist'
+                    )
                 )),
                 'class' => 'z-icon-es-options',
             );
@@ -674,20 +677,27 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                     'class' => 'z-icon-es-group',
                     'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'),
                     'links' => array(
-                        array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
-                              'text' => $this->__('Edit user ranks'),
-                              'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts')),
-                        array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 1)),
-                              'text' => $this->__('Edit honorary ranks'),
-                              'title' => $this->__('Create, delete and edit special ranks for particular users')),
-                        array('url' => ModUtil::url('Dizkus', 'admin', 'assignranks'),
-                              'text' => $this->__('Assign honorary rank'),
-                              'title' => $this->__('Assign honorary user ranks to users'))
-                    ));
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'managesubscriptions'),
-                             'text' => $this->__('Manage subscriptions'),
-                             'title' => $this->__('Remove a user\'s topic and forum subscriptions'),
-                             'class' => 'z-icon-es-mail');
+                        array(
+                            'url'   => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
+                            'text'  => $this->__('Edit user ranks'),
+                            'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts')),
+                        array(
+                            'url'   => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 1)),
+                            'text'  => $this->__('Edit honorary ranks'),
+                            'title' => $this->__('Create, delete and edit special ranks for particular users')
+                        ),
+                        array(
+                            'url'   => ModUtil::url('Dizkus', 'admin', 'assignranks'),
+                            'text'  => $this->__('Assign honorary rank'),
+                            'title' => $this->__('Assign honorary user ranks to users'))
+                        )
+                    );
+            $links[] = array(
+                            'url'   => ModUtil::url('Dizkus', 'admin', 'managesubscriptions'),
+                            'text'  => $this->__('Manage subscriptions'),
+                            'title' => $this->__('Remove a user\'s topic and forum subscriptions'),
+                            'class' => 'z-icon-es-mail'
+                       );
             $links[] = array(
                 'url' => ModUtil::url('Dizkus', 'admin', 'preferences'),
                 'text' => $this->__('Settings'),
@@ -698,14 +708,4 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
     
         return $links;
     }
-
 }
-
-/**
- * helper function
- */
-function _get_rank_users($u)
-{
-    return $u['user_id'];
-}
-    

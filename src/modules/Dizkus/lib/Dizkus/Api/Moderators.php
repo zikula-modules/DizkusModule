@@ -8,22 +8,23 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides the moderators api functions
+ */
 class Dizkus_Api_Moderators extends Zikula_AbstractApi {
 
     /**
      * Returns an array of all the moderators of a forum
      *
-     * @params $args['forum_id'] int the forums id
-     * @returns array containing the pn_uid as index and the users name as value
+     * @param array $args Arguments array.
+     *        int   $args['forum_id'] Forums id.
+     *
+     * @return array containing the pn_uid as index and the users name as value
      */
     public function get($args)
     {        
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
-    
-        $ztable = DBUtil::getTables();
-    
-        
-        
+
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('u.uid, u.uname')
@@ -46,7 +47,8 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi {
                 $mods[$user['uid']] = $user['uname'];
             }
         }
-    
+
+        $ztable = DBUtil::getTables();
         if (!empty($forum_id)) {
             $sql = 'SELECT g.name, g.gid
                     FROM '.$ztable['groups'].' g, '.$ztable['dizkus_forum_mods']." f

@@ -392,7 +392,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             var pars = {
                 post: this.post_id
             }
-            //            Ajax.Responders.register(this.dzk_globalhandlers);
+            // Ajax.Responders.register(this.dzk_globalhandlers);
             var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=editpost",
                 {
@@ -448,11 +448,11 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     },
 
     quickEditsave: function() {
-        if($F('postingtext_' + this.post_id + '_edit').blank() == true) {
+
+       if($F('postingtext_' + this.post_id + '_edit').blank() == true) {
             // no text
             return;
         }
-
         var pars = {
             post: this.post_id,
             message: $F('postingtext_' + this.post_id + '_edit'),
@@ -466,7 +466,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
             $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + updatingPost + '</span>');
         }
 
-        //        Ajax.Responders.register(this.dzk_globalhandlers);
+        // Ajax.Responders.register(this.dzk_globalhandlers);
         var myAjax = new Zikula.Ajax.Request(
             Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatepost",
             {
@@ -486,6 +486,8 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                     $('postingtext_' + this.post_id + '_editor').remove();
 
+
+
                     if(msg.action == 'deleted') {
                         $('posting_' + this.post_id).remove();
                     } else if (msg.action == 'topic_deleted') {
@@ -502,6 +504,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 }.bind(this)
             }
         );
+
 
         $('postingoptions_' + this.post_id + '').show();
     },
@@ -970,7 +973,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 preview: 1
             }
 
-            //            Ajax.Responders.register(this.dzk_globalhandlers);
+            // Ajax.Responders.register(this.dzk_globalhandlers);
             var myAjax = new Zikula.Ajax.Request(
                 Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
                 {

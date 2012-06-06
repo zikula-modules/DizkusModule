@@ -9,7 +9,7 @@
  */
 
 /**
- * This class provides topic api functions
+ * This class provides the topic api functions
  */
 class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
@@ -155,8 +155,20 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $count = $qb->getQuery()->getSingleScalarResult();
         return $count > 0; 
     }
-    
-    
+
+    /**
+     * readtopic
+     *
+     * @param int $topic_id The topic id.
+     *
+     * @return array
+     */
+    public function read0($topic_id) {
+        return $this->entityManager->find('Dizkus_Entity_Topics', $topic_id)->toArray();
+    }
+
+
+
     /**
      * readtopic
      * reads a topic with the last posts_per_page answers (incl the initial posting when on page #1)

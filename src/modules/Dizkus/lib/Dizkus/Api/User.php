@@ -1102,11 +1102,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * get_topic_subscription_status
+     * Get topic subscription status
      *
-     * @params $args['user_id'] int the users uid
-     * @params $args['topic_id'] int the topic id
-     * @returns bool true if the user is subscribed or false if not
+     * @param array $args The arguments array.
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return boolean
      */
     public function get_topic_subscription_status($args)
     {
@@ -1114,11 +1116,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * get_forum_subscription_status
+     * Get forum subscription status
      *
-     * @params $args['user_id'] int the users uid
-     * @params $args['forum_id'] int the forums id
-     * @returns bool true if the user is subscribed or false if not
+     * @param array $args The arguments array.
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return boolean
      */
     public function get_forum_subscription_status($args)
     {
@@ -1126,11 +1130,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * get_forum_favorites_status
+     * Get forum favorites status
      *
-     * @params $args['user_id'] int the users uid
-     * @params $args['forum_id'] int the forums id
-     * @returns bool true if the user is subscribed or false if not
+     * @param array $args The arguments array.
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return boolean
      */
     public function get_forum_favorites_status($args)
     {
@@ -1186,7 +1192,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $newtopic['message'] = $args['message'];
         $newtopic['message_display'] = $args['message']; // phpbb_br2nl($args['message']);
     
-//        list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
+        // list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
         $newtopic['message_display'] = nl2br($newtopic['message_display']);
     
         if (UserUtil::isLoggedIn()) {
@@ -1230,8 +1236,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
         }
         
-        
-    
+
         if (trim($args['message']) == '' || trim($args['subject']) == '') {
             // either message or subject is empty
             return LogUtil::registerError($this->__('Error! You tried to post a blank message. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
@@ -1458,16 +1463,19 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * update post
-     * updates a posting in the db after editing it
+     * Update post
      *
-     * @params $args['post_id'] int the postings id
-     * @params $args['topic_id'] int the topic id (might be empty!!!)
-     * @params $args['subject'] string the subject
-     * @params $args['message'] string the text
-     * @params $args['delete'] boolean true if the posting is to be deleted
-     * @params $args['attach_signature'] boolean true if the addsig place holder has to be appended
-     * @returns string url to redirect to after action (topic of forum if the (last) posting has been deleted)
+     * Updates a posting in the db after editing it.
+     *
+     * @param array $args The arguments array.
+     *        int $args['post_id'] The postings id.
+     *        int $args['topic_id'] The topic id (might be empty!!!).
+     *        string $args['subject'] The subject.
+     *        string $args['message'] The text.
+     *        boolean $args['delete'] True if the posting is to be deleted.
+     *        boolean $args['attach_signature'] True if the addsig place holder has to be appended.
+     *
+     * @return string url to redirect to after action (topic of forum if the (last) posting has been deleted)
      */
     public function updatepost($args)
     {
@@ -1491,11 +1499,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 WHERE (p.post_id = '".(int)DataUtil::formatForStore($args['post_id'])."')
                   AND (t.topic_id = p.topic_id)
                   AND (f.forum_id = p.forum_id)";
+
         $res = DBUtil::executeSQL($sql);
         $colarray = array('poster_id', 'forum_id', 'topic_status', 'cat_id');
         $result = DBUtil::marshallObjects($res, $colarray);
         $row = $result[0];
-    
+
+
+
+
         if (!is_array($row)) {
             return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
@@ -1527,7 +1539,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             }
     
             // add signature placeholder
-            if ($row['poster_id'] <> 1 && $args['attach_signature'] == true){
+            if ($row['poster_id'] <> 1 && $args['attach_signature'] == true) {
                 $args['message'] .= '[addsig]';
             }
     
@@ -1543,9 +1555,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             }
     
             // Let any hooks know that we have updated an item.
-            //ModUtil::callHooks('item', 'update', $post_id, array('module' => 'Dizkus'));
-//            ModUtil::callHooks('item', 'update', $args['post_id'], array('module'  => 'Dizkus',
-//                                                                      'post_id' => $args['post_id']));
+            // ModUtil::callHooks('item', 'update', $post_id, array('module' => 'Dizkus'));
+            // ModUtil::callHooks('item', 'update', $args['post_id'], array('module'  => 'Dizkus',
+            // 'post_id' => $args['post_id']));
     
             // update done, return now
             return ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']));
@@ -1562,10 +1574,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $post_to_delete = $posts[$args['post_id']];
             
             // read the raw topic itself
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $args['topic_id']);
+            $topic = ModUtil::apiFunc('Dizkus', 'Topic', 'read0', $args['topic_id']);
             // read the raw forum
             $forum = DBUtil::selectObjectById('dizkus_forums', $firstpost['forum_id'], 'forum_id');
-            
+
             if ($args['post_id'] == $lastpost['post_id']) {
                 // posting is the last one in the array
                 // if it is the first one too, delete the topic
@@ -1602,15 +1614,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $post_to_delete['poster_id']) - 1, $post_to_delete['poster_id']);
             //DBUtil::decrementObjectFieldByID('dizkus__users', 'user_posts', $post_to_delete['poster_id'], 'user_id');
              
-             // update forum       
+            // update forum
             DBUtil::updateObject($forum, 'dizkus_forums', null, 'forum_id');
             
             // update topic
             DBUtil::updateObject($topic, 'dizkus_topics', null, 'topic_id');
-    
-            if(SessionUtil::getVar('zk_ajax_call', '')  <> 'ajax') {
-                return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                  array('topic' => $topic['topic_id'])));
+
+            if (SessionUtil::getVar('zk_ajax_call', '')  <> 'ajax') {
+                $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id']));
+                return System::redirect($url);
             }
         }
     
@@ -1621,8 +1633,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     /**
      * get_viewip_data
      *
-     * @params $args['post_id] int the postings id
-     * @returns array with informstion ...
+     * @param array $args The argument array.
+     *        int $args['post_id] The postings id.
+     *
+     * @return array with informstion.
      */
     public function get_viewip_data($args)
     {
@@ -1643,11 +1657,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * lockunlocktopic
+     * toogle topic lock
      *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['mode']     string lock or unlock
-     * @returns void
+     * @param array $args The argument array.
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return statement
      */
     public function lockunlocktopic($args)
     {
@@ -1655,11 +1671,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
     
     /**
-     * stickyunstickytopic
+     * toogle sticky topic
      *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['mode']     string sticky or unsticky
-     * @returns void
+     * @param array $args The argument array.
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return statement
      */
     public function stickyunstickytopic($args)
     {
@@ -1676,7 +1694,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     public function get_forumid_and_categoryid_from_topicid($args)
     {
         $ztable = DBUtil::getTables();
-    
+
         // we know about the topic_id, let's find out the forum and catgeory name for permission checks
         $sql = "SELECT f.forum_id,
                        c.cat_id
@@ -1692,6 +1710,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         $colarray = array('forum_id', 'cat_id');
         $objarray = DBUtil::marshallObjects ($res, $colarray);
+
         return array_values($objarray[0]); // forum_id, cat_id
     }
     

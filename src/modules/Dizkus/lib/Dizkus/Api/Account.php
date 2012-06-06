@@ -8,14 +8,19 @@
  * @package Dizkus
  */
 
+/**
+ * This class provides the account api functions
+ */
 class Dizkus_Api_Account extends Zikula_AbstractApi {
     
-/**
- * Return an array of items to show in the your account panel
- *
- * @params   uname   string   the user name
- * @return   array   array of items, or false on failure
- */
+    /**
+     * Return an array of items to show in the your account panel.
+     *
+     * @param array $args Arguments array.
+     *        string $args['uname'] User name.
+     *
+     * @return array Array of items.
+     */
     public function getall($args)
     {
         // the array that will hold the options
