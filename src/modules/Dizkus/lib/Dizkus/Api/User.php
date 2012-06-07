@@ -482,7 +482,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         setcookie('DizkusLastVisitTemp', $temptime, time()+1800, $path);
     
         // set vars for all scripts
-        $last_visit = DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M');
+        $last_visit = DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M:%S');
     
         return array($last_visit, $temptime);
     }
@@ -1158,7 +1158,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $poster_ip = '127.0.0.1';
         }
     
-        $time = (isset($args['time'])) ? $args['time'] : DateUtil::getDatetime('', '%Y-%m-%d %H:%M');
+        $time = (isset($args['time'])) ? $args['time'] : DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S');
     
         // create topic
         $obj['topic_title']     = $args['subject'];
@@ -2236,7 +2236,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $newtopic = array('topic_title'  => $post['topic_subject'],
                           'topic_poster' => $post['poster_data']['uid'],
                           'forum_id'     => $post['forum_id'],
-                          'topic_time'   => DateUtil::getDatetime('', '%Y-%m-%d %H:%M'));
+                          'topic_time'   => DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S'));
         $newtopic = DBUtil::insertObject($newtopic, 'dizkus_topics', 'topic_id');
     
         // increment topics count by 1
