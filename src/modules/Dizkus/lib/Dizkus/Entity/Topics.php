@@ -41,7 +41,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     /**
      * The following are annotations which define the topic time field.
      * 
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="datetime")
      */
     private $topic_time;
     
@@ -53,7 +53,14 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $topic_status = 0;
-    
+
+
+    /**
+     * The following are annotations which define the topic views field.
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $topic_views = 0;
     
     /**
      * The following are annotations which define the topic_title field.
@@ -77,8 +84,9 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $forum_id;
-    
-    
+
+
+
     public function gettopic_id()
     {
         return $this->topic_id;
@@ -109,6 +117,12 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     public function gettopic_replies()
     {
         return $this->topic_replies;
+    }
+
+
+    public function gettopic_views()
+    {
+        return $this->topic_views;
     }
     
     
@@ -142,6 +156,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     public function unsticky()
     {
         $this->sticky = false;
+    }
+
+    public function counter()
+    {
+        $this->topic_views++;
     }
 
 }

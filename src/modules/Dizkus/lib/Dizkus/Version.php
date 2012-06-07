@@ -26,7 +26,7 @@ class Dizkus_Version extends Zikula_AbstractVersion
         $meta['description']    = $this->__('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.');
         $meta['url']            = $this->__('forums');
         $meta['version']        = '3.2.0';
-        $meta['core_min'] = '1.3.0'; // Fixed to 1.3.x range
+        $meta['core_min'] = '1.3.3'; // Fixed to 1.3.x range
         $meta['core_max'] = '1.3.99'; // Fixed to 1.3.x range
         $meta['contact']        = 'http://support.zikula.de';
         $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',

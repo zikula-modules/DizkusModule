@@ -20,15 +20,6 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
      */
     private $topic_id;
 
-
-    /**
-     * topic poster uid
-     *
-     * @var integer
-     */
-    private $topic_poster;
-
-
      /**
       * Setup form.
       *

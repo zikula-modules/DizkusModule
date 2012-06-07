@@ -50,7 +50,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     /**
      * The following are annotations which define the post_time field.
      * 
-     * @ORM\Column(type="string", length="20")
+     * @ORM\Column(type="datetime")
      */
     private $post_time = '';
     
@@ -83,8 +83,9 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @ORM\Column(type="string", length="255")
      */
     private $post_title = '';
-    
-    
+
+
+
     
     public function getpost_id()
     {
@@ -108,7 +109,8 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     
     public function getpost_time()
     {
-        return $this->post_time;
+        $time = new DateTime($this->post_time);
+        return $time->format('Y-m-d H:i:s');
     }
     
     public function getposter_ip()
