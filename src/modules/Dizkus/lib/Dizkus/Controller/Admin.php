@@ -50,33 +50,28 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      */
     public function syncforums()
     {
+        $showstatus = !($this->request->request->get('silent', 0));
+        
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        $silent = $this->request->request->get('silent', 0);
-    
-        $messages = array();
-        
-        $messages[] = DataUtil::formatForDisplay($this->__('Done! Synchronized Zikula users and Dizkus users.'));
-    
+        if ($showstatus)  LogUtil::registerStatus(
+                DataUtil::formatForDisplay($this->__('Done! Synchronized Zikula users and Dizkus users.')) );
+
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all forums'));
-    
-        $messages[] = DataUtil::formatForDisplay($this->__('Done! Synchronized forum index.'));
+        if ($showstatus)  LogUtil::registerStatus(
+            DataUtil::formatForDisplay($this->__('Done! Synchronized forum index.')) );
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all topics'));
-    
-        $messages[] = DataUtil::formatForDisplay($this->__('Done! Synchronized topics.'));
+        if ($showstatus)  LogUtil::registerStatus(
+            DataUtil::formatForDisplay($this->__('Done! Synchronized topics.')) );
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all posts'));
-    
-        $messages[] = DataUtil::formatForDisplay($this->__('Done! Synchronized posts counter.'));
-    
-        if ($silent != 1) {
-            LogUtil::registerStatus($messages);
-        }
+        if ($showstatus)  LogUtil::registerStatus(
+            DataUtil::formatForDisplay($this->__('Done! Synchronized posts counter.')) );
     
         return System::redirect(ModUtil::url('Dizkus', 'admin', 'main'));
     }
