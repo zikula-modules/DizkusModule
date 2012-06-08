@@ -398,7 +398,7 @@ function dzk_blacklist()
     $fh = fopen($blacklistfile, 'a');
     if ($fh) {
         $ip = dzk_getip();
-        $line = implode(',', array(strftime('%Y-%m-%d %H:%M'),
+        $line = implode(',', array(strftime('%Y-%m-%d %H:%M:%S'),
                                    $ip,
                                    System::serverGetVar('REQUEST_METHOD'),
                                    System::serverGetVar('REQUEST_URI'),

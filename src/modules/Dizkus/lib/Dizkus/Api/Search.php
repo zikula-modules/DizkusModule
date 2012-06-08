@@ -75,10 +75,13 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
         }
-    
-        $args['forums']      = $this->request->request->get('Dizkus_forum', null);
-        $args['searchwhere'] = $this->request->request->get('Dizkus_searchwhere', 'post');
-    
+        if ($this->request->isGet()) {
+            $args['forums']      = $this->request->query->get('Dizkus_forum', null);
+            $args['searchwhere'] = $this->request->query->get('Dizkus_searchwhere', 'post');
+        } else {
+            $args['forums']      = $this->request->request->get('Dizkus_forum', null);
+            $args['searchwhere'] = $this->request->request->get('Dizkus_searchwhere', 'post');
+        }
         $minlen = ModUtil::getVar('Dizkus', 'minsearchlength', 3);
         $maxlen = ModUtil::getVar('Dizkus', 'maxsearchlength', 30);
         if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
