@@ -867,54 +867,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
     
     /**
-     * splittopic
+     * Split topic
      *
+     * @return string
      */
-    public function splittopic($args=array())
+    public function splittopic()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        // get the input
-        $post_id    = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $newsubject = $this->request->query->get('newsubject', (isset($args['newsubject'])) ? $args['newsubject'] : '');
-        $submit     = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-    
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
-                             array('post_id' => $post_id));
-    
-        if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
-        }
-    
-        if (!empty($submit)) {
-            // Confirm authorisation code
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-            // submit is set, we split the topic now
-            $post['topic_subject'] = $newsubject;
-    
-            $newtopic_id = ModUtil::apiFunc('Dizkus', 'user', 'splittopic',
-                                       array('post' => $post));
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                       array('topic' => $newtopic_id)));
-    
-        } else {
-            $this->view->assign('post', $post);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
-            return $this->view->fetch('user/splittopic.tpl');
-        }
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/splittopic.tpl', new Dizkus_Form_Handler_User_SplitTopic());
     }
     
     /**

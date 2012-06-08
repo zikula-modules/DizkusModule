@@ -2216,15 +2216,22 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         return array($posts, $m2fposts, $rssposts, $text);
     }
-    
+
+
     /**
      * splittopic
      *
+     * param array $args The argument array.
      * @params $args['post'] array with posting data as returned from readpost()
-     * @returns int id of the new topic
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return int id of the new topic
      */
     public function splittopic($args)
     {
+        return ModUtil::apiFunc($this->name, 'Forum', 'unsubscribeById', $id);
+
         $post = $args['post'];
 
         // before we do anything we will read the topic_last_post_id because we will need
@@ -2247,7 +2254,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $where = 'WHERE topic_id = '.(int)DataUtil::formatForStore($post['topic_id']).'
                   AND post_id >= '.(int)DataUtil::formatForStore($post['post_id']);
         $posts_to_move = DBUtil::selectObjectCount('dizkus_posts', $where);
-    
+
+
+
         // update the topic_id in the postings
         // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
         // post_id > $post['post_id']
@@ -2260,18 +2269,21 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($post['topic_id']).'
                   ORDER BY post_time DESC';
         $lastpost = DBUtil::selectObject('dizkus_posts', $where);
-    
+
+        $oldtopic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $post['topic_id']);
+
         // update the new topic
         $newtopic['topic_replies']      = (int)$posts_to_move - 1;
-        $newtopic['topic_last_post_id'] = $oldtopic['topic_last_post_id'];
+        $newtopic['topic_last_post_id'] = $post['topic_last_post_id'];
         DBUtil::updateObject($newtopic, 'dizkus_topics', null, 'topic_id');
-    
+
+
         // update the old topic
         $oldtopic['topic_replies']      = $oldtopic['topic_replies'] - $posts_to_move;
         $oldtopic['topic_last_post_id'] = $lastpost['post_id'];
         $oldtopic['topic_time']         = $lastpost['post_time'];
         DBUtil::updateObject($oldtopic, 'dizkus_topics', null, 'topic_id');
-    
+
         return $newtopic['topic_id'];
     }
     
