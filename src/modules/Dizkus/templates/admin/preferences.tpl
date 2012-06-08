@@ -59,7 +59,7 @@
     <fieldset>
         <legend>{gt text="Advanced settings"}</legend>
         <div class="z-warningmsg">
-            {gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be. <br /><br />Database name: '%s'; type: '%s'; version: '%s'." tag1=$dbname tag2=$dbtype tag3=$dbversion}
+            {gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be."}
         </div>
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
