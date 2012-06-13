@@ -55,23 +55,18 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        if ($showstatus)  LogUtil::registerStatus(
-                DataUtil::formatForDisplay($this->__('Done! Synchronized Zikula users and Dizkus users.')) );
 
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all forums'));
-        if ($showstatus)  LogUtil::registerStatus(
-            DataUtil::formatForDisplay($this->__('Done! Synchronized forum index.')) );
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all topics'));
-        if ($showstatus)  LogUtil::registerStatus(
-            DataUtil::formatForDisplay($this->__('Done! Synchronized topics.')) );
     
         ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all posts'));
+
         if ($showstatus)  LogUtil::registerStatus(
-            DataUtil::formatForDisplay($this->__('Done! Synchronized posts counter.')) );
+            DataUtil::formatForDisplay($this->__('Done! Synchronized users, forum index, topics, and posts counter.')) );
     
         return System::redirect(ModUtil::url('Dizkus', 'admin', 'main'));
     }
