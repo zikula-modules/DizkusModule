@@ -724,7 +724,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             }
         }
         
-        
+        // Update poster_ip field length
+        DBUtil::changeTable('dizkus_posts');
     
         // done - now drop the dizkus_users table
         DBUtil::dropTable('dizkus_users');
