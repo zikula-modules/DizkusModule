@@ -476,7 +476,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
                 break;
     
             case '3.1':
-                $this->upgrade_to_3_2_0();
+                $this->upgrade_to_4_0_0();
                 break;
         }
     }
@@ -657,7 +657,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
     /**
      * upgrade to 3.2
      */
-    public function upgrade_to_3_2_0()
+    public function upgrade_to_4_0_0()
     {
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
@@ -724,7 +724,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             }
         }
         
-        
+        // Update poster_ip field length
+        DBUtil::changeTable('dizkus_posts');
     
         // done - now drop the dizkus_users table
         DBUtil::dropTable('dizkus_users');
