@@ -1,4 +1,4 @@
-{include file='user/header.tpl'}
+
 
 <div class="dzk_topicoptions roundedbar dzk_rounded" id="topic_{$topic.topic_id}">
     <div class="inner">
@@ -222,5 +222,5 @@
     // ]]>
 </script>
 
-{include file='user/footer.tpl'}
-{zdebug}
+
+

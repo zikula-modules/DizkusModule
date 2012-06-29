@@ -46,7 +46,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     private $topic_time;
     
     
-    
     /**
      * The following are annotations which define the topic_title field.
      * 
@@ -85,8 +84,14 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $forum_id;
 
+     /**
+     * The following are annotations which define the forum id field.
+     * 
+     * @ORM\Column(type="string", length="60")
+     */
+    private $topic_reference = '';
 
-
+    
     public function gettopic_id()
     {
         return $this->topic_id;
@@ -110,7 +115,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     
     public function gettopic_time()
     {
-        return $this->topic_time;
+       return $this->topic_time;
     }
     
     
@@ -133,9 +138,13 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     
     public function getforum_id()
     {
-        return $this->forum_id;
+      return $this->forum_id;
     }
     
+    public function gettopic_reference()
+    {
+      return $this->topic_reference;
+    }
     
     public function lock()
     {
@@ -162,5 +171,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     {
         $this->topic_views++;
     }
+    
 
 }

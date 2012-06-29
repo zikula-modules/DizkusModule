@@ -59,6 +59,14 @@ class Dizkus_Version extends Zikula_AbstractVersion
      */
     protected function setupHookBundles()
     {
+        
+        $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.dizkus.ui_hooks.comments', 'ui_hooks', $this->__('Dizkus Comment Hooks'));
+        $bundle->addServiceHandler('display_view', 'Dizkus_HookHandlers', 'uiView', 'dizkus.hooks.comments');
+        $bundle->addServiceHandler('process_edit', 'Dizkus_HookHandlers', 'processEdit', 'dizkus.hooks.comments');
+        $bundle->addServiceHandler('process_delete', 'Dizkus_HookHandlers', 'processDelete', 'dizkus.hooks.comments');
+        $this->registerHookProviderBundle($bundle);
+        
+        
         $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.editor', 'ui_hooks', $this->__('Dizkus editor'));
         $bundle->addEvent('display_view', 'dizkus.ui_hooks.editor.display_view');
         $this->registerHookSubscriberBundle($bundle);

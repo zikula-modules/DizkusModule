@@ -191,12 +191,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $dizkusvars      = ModUtil::getVar('Dizkus');
         $posts_per_page  = $dizkusvars['posts_per_page'];
         $topics_per_page = $dizkusvars['topics_per_page'];
-    
         $post_sort_order = ModUtil::apiFunc('Dizkus','user','get_user_post_order');
-    
+      
         $complete = (isset($args['complete'])) ? $args['complete'] : false;
         $count    = (isset($args['count'])) ? $args['count'] : false;
-        $start    = (isset($args['start'])) ? $args['start'] : -1;
+        $start    = (isset($args['start'])) ? $args['start'] : 0;
         $hooks    = (isset($args['nohook']) && $args['nohook'] == false) ? false : true;
     
         $currentuserid = UserUtil::getVar('uid');
@@ -205,13 +204,13 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $timespansecs = $timespanforchanges * 60 * 60;
 
         
-        
-        $topic = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
-
-        // no results - topic does not exist
-        if (!$topic) {
-            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+        $topic_id = (isset($args['topic_id'])) ? $args['topic_id'] : false;
+         if (!$topic_id) {
+            return LogUtil::registerError($this->__('Error! <pre>'.$topic_id.'</pre>'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
+    
+        $topic = $this->entityManager->find('Dizkus_Entity_Topics', $topic_id)->toArray();
+
 
         // integrate forum and category information
         $forum                      = ModUtil::apiFunc($this->name, 'Forum', 'get', $topic['forum_id'] );
@@ -234,7 +233,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         }
     
         $topic['start']           = $start;
-        $topic['topic_unixtime']  = $topic['topic_time']->getTimestamp();
+        $topic['topic_unixtime']  = $topic['topic_time'];
         $topic['post_sort_order'] = $post_sort_order;
 
         // pop3_active contains the external source (if any), create the correct var name
@@ -419,7 +418,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         }
 
         return $this->entityManager->getRepository('Dizkus_Entity_Topics')
-                                   ->findOneBy('topic_reference', $reference)
+                                   ->findOneBy(array('topic_reference' => $reference))
                                    ->toArray();
     }
 

@@ -189,7 +189,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
         // end patch #3494 part 2
     
-        $topic = ModUtil::apiFunc($this->name, 'user', 'readtopic',
+        $topic = ModUtil::apiFunc($this->name, 'Topic', 'read',
                               array('topic_id'   => $topic_id,
                                     'start'      => $start,
                                     'count'      => true));
@@ -458,15 +458,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                               array('topic_id' => $topic_id,
                                     'count'    => false));
     
-        if ($topic['access_moderate'] <> true) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        $this->view->add_core_data();
-        $this->view->setCaching(false);
-        $this->view->assign('mode', $mode);
-        $this->view->assign('topic_id', $topic_id);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+
     
         if (empty($submit)) {
             switch ($mode)
@@ -508,6 +500,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 default:
                     return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
+
+                $this->view->add_core_data();
+                $this->view->setCaching(false);
+                $this->view->assign('mode', $mode);
+                $this->view->assign('topic_id', $topic_id);
+                $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+
+
             return $this->view->fetch($templatename);
     
         } else { // submit is set
@@ -528,9 +528,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                     if ($forum_id == $f_id) {
                         return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
                     }
+
                     if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
                         return LogUtil::registerPermissionError();
                     }
+                   
                     ModUtil::apiFunc('Dizkus', 'user', 'movetopic',
                                  array('topic_id' => $topic_id,
                                        'forum_id' => $forum_id,
@@ -581,8 +583,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
                 default:
             }
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
+            
+            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id))); 
+            
         }
     }
     
