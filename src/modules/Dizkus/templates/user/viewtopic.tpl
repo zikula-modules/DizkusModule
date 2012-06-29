@@ -223,4 +223,3 @@
 </script>
 
 {include file='user/footer.tpl'}
-{zdebug}

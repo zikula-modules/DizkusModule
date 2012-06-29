@@ -191,25 +191,7 @@ function Dizkus_tables()
     $ztable['dizkus_topics_column_idx'] = array('forum_id'           => 'forum_id',
                                                   'topic_last_post_id' => 'topic_last_post_id');
 
-    //
-    // users - obsole since 3.2.0 as these data have been moved to attributes, remove in a later version
-    //
-    $ztable['dizkus_users'] = DBUtil::getLimitedTablename('dizkus_users');
-    $ztable['dizkus_users_column'] = array('user_id'         => 'user_id',
-                                            'user_posts'      => 'user_posts',
-                                            'user_rank'       => 'user_rank',
-                                            'user_level'      => 'user_level',
-                                            'user_lastvisit'  => 'user_lastvisit',
-                                            'user_favorites'  => 'user_favorites',
-                                            'user_post_order' => 'user_post_order');
-    $ztable['dizkus_users_column_def'] = array('user_id'         => 'I PRIMARY',
-                                                'user_posts'      => 'I UNSIGNED NOTNULL DEFAULT 0',
-                                                'user_rank'       => 'I UNSIGNED NOTNULL DEFAULT 0',
-                                                'user_level'      => 'I UNSIGNED NOTNULL DEFAULT 1',
-                                                'user_lastvisit'  => 'T DEFAULT NULL',
-                                                'user_favorites'  => 'I(1) NOTNULL DEFAULT 0',
-                                                'user_post_order' => 'I(1) NOTNULL DEFAULT 0');
-
+   
     // new in 1.7.5
     // 
     // topic_subscriptions
