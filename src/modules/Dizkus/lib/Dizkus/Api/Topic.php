@@ -231,7 +231,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         }
     
         $topic['start']           = $start;
-        $topic['topic_unixtime']  = strtotime($topic['topic_time']);
+        $topic['topic_unixtime']  = $topic['topic_time']->GetTimestamp();
         $topic['post_sort_order'] = $post_sort_order;
 
         // pop3_active contains the external source (if any), create the correct var name
