@@ -56,18 +56,30 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync',
+        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all forums'));
+        if ($showstatus && $succesful) {
+            LogUtil::registerStatus($this->__('Done! Synchronized forum index.') );
+        } else {
+            return LogUtil::registerError($this->__("Error synchronizing forum index"));
+        }
     
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync',
+        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all topics'));
+        if ($showstatus && $succesful) {
+            LogUtil::registerStatus($this->__('Done! Synchronized topics.') );
+        } else {
+            return LogUtil::registerError($this->__("Error synchronizing topics."));
+        }
     
-        ModUtil::apiFunc('Dizkus', 'admin', 'sync',
+        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
                      array('type' => 'all posts'));
+        if ($showstatus && $succesful) {
+            LogUtil::registerStatus($this->__('Done! Synchronized posts counter.') );
+        } else {
+            return LogUtil::registerError($this->__("Error synchronizing posts counter."));
+        }
 
-        if ($showstatus)  LogUtil::registerStatus(
-            DataUtil::formatForDisplay($this->__('Done! Synchronized users, forum index, topics, and posts counter.')) );
-    
         return System::redirect(ModUtil::url('Dizkus', 'admin', 'main'));
     }
     

@@ -655,7 +655,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
     
     
     /**
-     * upgrade to 3.2
+     * upgrade to 4.0.0
      */
     public function upgrade_to_4_0_0()
     {
@@ -735,7 +735,5 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('gravatarimage');
         return true;
     }
-    
-    
-    
+        
 }
