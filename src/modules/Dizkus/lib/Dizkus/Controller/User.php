@@ -462,12 +462,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
     
-        $this->view->add_core_data();
-        $this->view->setCaching(false);
-        $this->view->assign('mode', $mode);
-        $this->view->assign('topic_id', $topic_id);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
         if (empty($submit)) {
             switch ($mode)
             {
@@ -508,7 +502,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 default:
                     return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
-            return $this->view->fetch($templatename);
+    
+        $this->view->add_core_data();
+        $this->view->setCaching(false);
+        $this->view->assign('mode', $mode);
+        $this->view->assign('topic_id', $topic_id);
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+
+	return $this->view->fetch($templatename);
     
         } else { // submit is set
             /*if (!SecurityUtil::confirmAuthKey()) {
