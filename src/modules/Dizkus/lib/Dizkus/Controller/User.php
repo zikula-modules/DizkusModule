@@ -457,11 +457,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id' => $topic_id,
                                     'count'    => false));
-    
+
+	/* This does not work. Commenting out until we decide to fix or remove totally.
         if ($topic['access_moderate'] <> true) {
             return LogUtil::registerPermissionError();
         }
-    
+	*/
+	
         if (empty($submit)) {
             switch ($mode)
             {
