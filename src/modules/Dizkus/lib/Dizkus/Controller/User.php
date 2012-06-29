@@ -189,7 +189,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
         // end patch #3494 part 2
     
-        $topic = ModUtil::apiFunc($this->name, 'user', 'readtopic',
+        $topic = ModUtil::apiFunc($this->name, 'Topic', 'read',
                               array('topic_id'   => $topic_id,
                                     'start'      => $start,
                                     'count'      => true));
@@ -582,7 +582,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 default:
             }
     
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
+	    return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
     }
     
