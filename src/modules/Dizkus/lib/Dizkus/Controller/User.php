@@ -439,16 +439,27 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (!is_bool($disabled)) {
             return $disabled;
         }
-    
-        // get the input
-        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-        $mode     = $this->request->query->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
-        $submit   = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-        $shadow   = $this->request->query->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
-        $shadow   = (empty($shadow)) ? false : true;
-    
+
+	// get the input
+	if ($this->request->isPost()) {
+	    error_log("Post");
+	    $topic_id = (int)$this->request->request->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+	    $post_id  = (int)$this->request->request->get('post', (isset($args['post'])) ? $args['post'] : null);
+	    $forum_id = (int)$this->request->request->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+	    $mode     = $this->request->request->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
+	    $submit   = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+	    $shadow   = $this->request->request->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
+	} else {
+	    error_log("GET");
+	    $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+	    $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+	    $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+	    $mode     = $this->request->query->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
+	    $submit   = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+	    $shadow   = $this->request->query->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
+	}
+	error_log("Topic ID is $topic_id");
+	$shadow   = (empty($shadow)) ? false : true;
         if (empty($topic_id) && !empty($post_id)) {
             $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid',
                                      array('post_id' => $post_id));
