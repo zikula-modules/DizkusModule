@@ -1561,9 +1561,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     public function movetopic($args)
     {
         // get the old forum id and old post date
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $args['topic_id']);
-    
-        if ($topic['forum_id'] <> $args['forum_id']) {
+	$topic = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
+
+	if ($topic['forum_id'] <> $args['forum_id']) {
             // set new forum id
             $newtopic['forum_id'] = $args['forum_id'];
             DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
@@ -3168,7 +3168,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         }
     
         $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')
-                      ->findOneBy('topic_reference', $args['reference']);    
+                      ->findOneBy(array('topic_reference' => $args['reference']));
         return $topic->toArray();
     }
     
