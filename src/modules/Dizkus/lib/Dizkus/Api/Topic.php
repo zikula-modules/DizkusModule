@@ -211,11 +211,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $topic = $this->entityManager->find('Dizkus_Entity_Topics', $topic_id)->toArray();
 
         // integrate forum and category information
-        $forum                      = ModUtil::apiFunc($this->name, 'Forum', 'get', $topic['forum_id'] );
-        $topic['forum_name']        = $forum['forum_name'];
-        $topic['cat_id']            = $forum['cat_id'];
-        $topic['cat_title']         = ModUtil::apiFunc($this->name, 'Category', 'getTitle', $forum['cat_id']);
-        $topic['forum_pop3_active'] = $forum['forum_pop3_active'];
+        $forum                      = $this->entityManager->find('Dizkus_Entity_Forums', $topic['forum_id']);
+        $topic['forum_name']        = (string)$forum->getforum_name();
+        $topic['cat_id']            = (int)$forum->getcat_id();
+        $topic['cat_title']         = (string)$this->entityManager->find('Dizkus_Entity_Categories', $forum['cat_id'])->getcat_title();
+        $topic['forum_pop3_active'] = (int)$forum->getforum_pop3_active();
 
 
         // integrate contactlist's ignorelist here (part 1/2)
