@@ -117,7 +117,7 @@
         {foreach key='num' item='post' from=$topic.posts}
         {counter}
         <li class="post_{$post.post_id}">
-            {include file='user/singlepost.tpl'}
+            {include file='post/singlepost.tpl'}
         </li>
         {/foreach}
         <li id="quickreplyposting" class="hidden">&nbsp;</li>

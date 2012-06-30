@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to create a new topic.
  */
-class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Topic_NewTopic extends Zikula_Form_AbstractHandler
 {
     /**
      * forum id
@@ -93,7 +93,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
         
         
-        $newtopic = ModUtil::apiFunc('Dizkus', 'user', 'preparenewtopic', $data);
+        $newtopic = ModUtil::apiFunc('Dizkus', 'topic', 'preparenewtopic', $data);
         
         
         // show preview
@@ -108,7 +108,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 
         // store new topic
         $data['forum_id'] = $this->forum_id;
-        $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', $data);
+        $topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'storenewtopic', $data);
 
         // redirect to the new topic
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id));

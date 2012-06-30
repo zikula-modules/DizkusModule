@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to delete a topic.
  */
-class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Topic_JoinTopic extends Zikula_Form_AbstractHandler
 {
 
     /**
@@ -81,7 +81,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         // submit is set, we split the topic now
         $this->post['topic_subject'] = $data['newsubject'];
 
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'user', 'splittopic', array('post' => $this->post));
+        $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'jointopic', array('post' => $this->post));
 
         echo $newtopic_id;
 
