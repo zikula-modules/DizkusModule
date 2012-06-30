@@ -1,6 +1,6 @@
 Dizkus Forums
 ========================
 
-Dizkus is the official forum module for Zikula.
+Dizkus is a fully integrated forum solution for Zikula 1.3+.
 
-Ejoy it !
+Enjoy it !
