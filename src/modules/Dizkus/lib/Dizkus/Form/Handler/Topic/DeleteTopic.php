@@ -62,10 +62,7 @@ class Dizkus_Form_Handler_Topic_DeleteTopic extends Zikula_Form_AbstractHandler
     
         $this->topic_poster = $topic['topic_poster'];
         
-        if ($topic['access_moderate'] <> true) {
-            return LogUtil::registerPermissionError();
-        }
-        
+      
         $view->assign('topicTitle', $topic['topic_title']);
         
         $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
@@ -109,7 +106,7 @@ class Dizkus_Form_Handler_Topic_DeleteTopic extends Zikula_Form_AbstractHandler
         }
 
         // redirect to the forum of the deleted topic
-        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'deletetopic', array('topic_id' => $this->topic_id));
+        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', $this->topic_id);
         $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
         return $view->redirect($url);
     }

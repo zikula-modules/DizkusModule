@@ -82,7 +82,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $args['topic_id']));
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid(array('topic_id' => $args['topic_id']));
         if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
@@ -248,11 +248,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             return LogUtil::registerPermissionError();
         }
 
-        $topic['forum_mods'] = ModUtil::apiFunc($this->name, 'Users', 'get_moderators', array('forum_id' => $topic['forum_id']));
+        $topic['forum_mods'] =  ModUtil::apiFunc($this->name, 'Moderators', 'get',array('forum_id' => $topic['forum_id']));
 
         $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
-        $topic['access_comment']  = false;
+        $topic['access_comment']  = true;
         $topic['access_moderate'] = false;
         $topic['access_admin']    = false;
         if ($topic['access_read'] == true) {
@@ -275,12 +275,12 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         }
 
         // get the next and previous topic_id's for the next / prev button
-        $topic['next_topic_id'] = ModUtil::apiFunc($this->name, 'Users', 'get_previous_or_next_topic_id', array('topic_id' => $topic['topic_id'], 'view'=>'next'));
-        $topic['prev_topic_id'] = ModUtil::apiFunc($this->name, 'Users', 'get_previous_or_next_topic_id', array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
+        $topic['next_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'next'));
+        $topic['prev_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
 
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly
-        if (ModUtil::apiFunc($this->name, 'Users', 'get_topic_subscription_status', array('user_id'   => $currentuserid, 'topic_id' => $topic['topic_id'])) == true) {
+        if ($this->get_topic_subscription_status(array('user_id'   => $currentuserid, 'topic_id' => $topic['topic_id'])) == true) {
             $topic['is_subscribed'] = 1;
         } else {
             $topic['is_subscribed'] = 0;
@@ -466,7 +466,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
      */
     public function delete($topic_id)
     {
-        list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid($topic_id);
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
@@ -746,8 +746,13 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
      * @params $args['topic_id'] int the topics id
      * @returns array(forum_id, category_id)
      */
-    public function get_forumid_and_categoryid_from_topicid($args)
+    public function get_forumid_and_categoryid_from_topicid($topic_id)
     {
+        
+        if (!isset($topic_id)) {
+            return LogUtil::registerError($this->__('Error! no topic id.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+        }
+        
         $ztable = DBUtil::getTables();
 
         // we know about the topic_id, let's find out the forum and catgeory name for permission checks
@@ -756,7 +761,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
                 FROM  ".$ztable['dizkus_topics']." t
                 LEFT JOIN ".$ztable['dizkus_forums']." f ON f.forum_id = t.forum_id
                 LEFT JOIN ".$ztable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
-                WHERE t.topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
+                WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
     
         $res = DBUtil::executeSQL($sql);
         if ($res === false) {
@@ -765,7 +770,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
         $colarray = array('forum_id', 'cat_id');
         $objarray = DBUtil::marshallObjects ($res, $colarray);
-
         return array_values($objarray[0]); // forum_id, cat_id
     }
     

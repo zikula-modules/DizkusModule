@@ -1,15 +1,14 @@
-{gt text="Move or join topics" assign=templatetitle}
+{gt text="Move topic" assign=templatetitle}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
 <h2>{$templatetitle}</h2>
 
-<form class="z-form" action="{modurl modname='Dizkus' type='user' func='topicadmin'}" method="get">
+<form class="z-form" action="{modurl modname='Dizkus' type='topic' func='movetopic'}" method="get">
     <div>
     	<input type="hidden" name="module" value="Dizkus" />
-        <input type="hidden" name="type" value="user" />
-        <input type="hidden" name="func" value="topicadmin" />
-        <input type="hidden" name="mode" value="{$mode}" />
+        <input type="hidden" name="type" value="topic" />
+        <input type="hidden" name="func" value="movetopic" />
         <input type="hidden" name="topic" value="{$topic_id}" />
         <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
         <fieldset id="dzk_movetopic">

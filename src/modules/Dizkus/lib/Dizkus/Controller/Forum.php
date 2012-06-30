@@ -139,7 +139,7 @@ class Dizkus_Controller_Forum extends Zikula_AbstractController
             // For Movetopic
             $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
     
-            return $this->view->fetch('user/moderateforum.tpl');
+            return $this->view->fetch('forum/moderateforum.tpl');
     
         } else {
             // submit is set
@@ -152,7 +152,7 @@ class Dizkus_Controller_Forum extends Zikula_AbstractController
                     case 'del':
                     case 'delete':
                         foreach ($topic_ids as $topic_id) {
-                            $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
+                            $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'deletetopic', array('topic_id' => $topic_id));
                         }
                         break;
     

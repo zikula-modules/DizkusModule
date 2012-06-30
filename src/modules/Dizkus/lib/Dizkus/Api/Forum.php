@@ -499,12 +499,12 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
      *
      * @return int|boolean on success, false on failure
      */
-    public function get_forum_category($args)
+    public function get_forum_category($forum_id)
     {
-        if (!isset($args['forum_id'])) {
+        if (!isset($forum_id)) {
             return false;
         }
-        return ModUtil::apiFunc($this->name, 'Forum', 'getCategory', $args['forum_id']);
+        return ModUtil::apiFunc($this->name, 'Forum', 'getCategory', $forum_id);
     }
     
      

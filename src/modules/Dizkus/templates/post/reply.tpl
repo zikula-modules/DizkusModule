@@ -7,7 +7,7 @@
 
 {if $preview|default:false}
 <div id="replypreview" style="margin:1em 0;">
-    {include file='user/replypreview.tpl'}
+    {include file='post/replypreview.tpl'}
 </div>
 {/if}
 
@@ -16,7 +16,7 @@
 
         <div class="dzk_subcols z-clearfix">
 
-            <form id="post" class="dzk_form" action="{modurl modname='Dizkus' type=user func=reply}" method="post" enctype="multipart/form-data">
+            <form id="post" class="dzk_form" action="{modurl modname='Dizkus' type=post func=reply}" method="post" enctype="multipart/form-data">
                 <div>
                     <input type="hidden" name="topic" value="{$reply.topic_id}" />
                     <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />

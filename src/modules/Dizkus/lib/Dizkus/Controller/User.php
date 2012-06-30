@@ -90,70 +90,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         return $this->view->fetch('user/main.tpl');
     }
-    
-    /**
-     * viewforum
-     *
-     * opens a forum and shows the last postings
-     *
-     * @params 'forum' int the forum id
-     * @params 'start' int the posting to start with if on page 1+
-     *
-     * @return string
-     */
-    public function viewforum($args=array())
-    {
-       return ModUtil::Func('Dizkus', 'Forum', 'viewforum',$args);
-    }
-    /**
-     * viewtopic
-     *
-     */
-    public function viewtopic($args=array())
-    {        
-      return ModUtil::Func('Dizkus', 'Topic', 'viewtopic',$args);
-    }
-    
-    /**
-     * reply
-     *
-     */
-    public function reply($args=array())
-    {
-         return ModUtil::Func('Dizkus', 'Post', 'reply', $args);
-    }
-    
-    /**
-     * newtopic
-     *
-     */
-    public function newtopic()
-    {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('topic/newtopic.tpl', new Dizkus_Form_Handler_Topic_NewTopic());
-    }
-    
-    /**
-     * editpost
-     *
-     */
-    public function editpost($args=array())
-    {
-       return ModUtil::Func('Dizkus', 'Post', 'editpost', $args);
-    }
 
-    /**
-     * Delete topic
-     *
-     * @return string
-     */
-    public function deletetopic() {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('topic/deletetopic.tpl', new Dizkus_Form_Handler_Topic_DeleteTopic());
-    }
-    
-    
-    
     /**
      * prefs
      *
@@ -349,104 +286,92 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         return $render->execute('user/ignorelistmanagement.tpl', new Dizkus_Form_Handler_User_IgnoreListManagement());
     }
     
+     public function viewip()
+    {
+              // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        
+        $disabled = dzk_available();
+        if (!is_bool($disabled)) {
+            return $disabled;
+        }
+
+    // get the input
+    if ($this->request->isPost()) {
+        $post_id  = (int)$this->request->request->get('post', (isset($args['post'])) ? $args['post'] : null);
+        } else {
+        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+        }
+
+        $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
+        $templatename = 'user/viewip.tpl';
+  
+        $this->view->add_core_data();
+        $this->view->setCaching(false);
+        $this->view->assign('mode', $mode);
+        $this->view->assign('topic_id', $topic_id);
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+
+        return $this->view->fetch($templatename);
+    }
+    
+    
     /**
+     * Forum to remove?
+     */
+     
+    public function viewforum($args=array())
+    {
+       return ModUtil::Func('Dizkus', 'Forum', 'viewforum',$args);
+    }
+    
+     /**
+     * moderateforum will be removed
+     */
+    public function moderateforum($args=array())
+    {
+       return ModUtil::Func('Dizkus', 'Forum', 'moderateforum', $args);
+    }
+    
+     /**
+     * viewtopic
+     *
+     */
+    public function viewtopic($args=array())
+    {        
+      return ModUtil::Func('Dizkus', 'topic', 'viewtopic',$args);
+    }
+    
+        /**
+     * newtopic
+     *
+     */
+    public function newtopic()
+    {
+       return ModUtil::Func('Dizkus', 'topic', 'newtopic', $args); 
+    }
+    
+     /**
      * emailtopic
      *
      * @return string
      */
     public function emailtopic()
     {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('topic/emailtopic.tpl', new Dizkus_Form_Handler_Topic_EmailTopic());
+        return ModUtil::Func('Dizkus', 'topic', 'emailtopic', $args); 
     }
     
-    /**
-     * latest
-     *
-     * @return string
-     */
-    public function viewlatest($args=array())
-    {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        if (useragent_is_bot() == true) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
-        }
-    
-        // get the input
-        $selorder   = (int)$this->request->query->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1);
-        $nohours    = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
-        $unanswered = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
-        $amount     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
-    
-        if (!empty($amount) && !is_numeric($amount)) {
-            unset($amount);
-            }
-    
-        // maximum last 100 posts maybe shown
-        if (isset($amount) && $amount>100) {
-            $amount = 100;
-            }
-    
-        if (!empty($amount)) {
-            $selorder = 7;
-            }
-    
-        if (!empty($nohours) && !is_numeric($nohours)) {
-            unset($nohours);
-        }
-    
-        // maximum two weeks back = 2 * 24 * 7 hours
-        if (isset($nohours) && $nohours > 336) {
-            $nohours = 336;
-        }
-    
-        if (!empty($nohours)) {
-            $selorder = 5;
-        }
-    
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-    
-        list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'post', 'get_latest_posts',
-                                                                 array('selorder'   => $selorder,
-                                                                       'nohours'    => $nohours,
-                                                                       'amount'     => $amount,
-                                                                       'unanswered' => $unanswered,
-                                                                       'last_visit' => $last_visit,
-                                                                       'last_visit_unix' => $last_visit_unix));
-    
-        $this->view->assign('posts', $posts);
-        $this->view->assign('m2fposts', $m2fposts);
-        $this->view->assign('rssposts', $rssposts);
-        $this->view->assign('text', $text);
-        $this->view->assign('nohours', $nohours);
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
-                                                array('id'   => '0',
-                                                      'type' => 'all' )));
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
-        return $this->view->fetch('post/latestposts.tpl');
-    }
-    
-    /**
+     /**
      * Split topic
      *
      * @return string
      */
     public function splittopic()
     {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('topic/splittopic.tpl', new Dizkus_Form_Handler_Topic_SplitTopic());
+       return ModUtil::Func('Dizkus', 'topic', 'splittopic', $args);
     }
     
     /**
@@ -460,21 +385,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     {
         return ModUtil::Func('Dizkus', 'Topic', 'printtopic', $args);
     }
-    
-    /**
-     * movepost
-     * 
-     * Move a single post to another thread
-     *
-     * @return string
-     */
-    public function movepost()
-    {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('post/movepost.tpl', new Dizkus_Form_Handler_Post_MovePost());
-    }
-    
-    /**
+
+      /**
      * jointopics
      * Join a topic with another toipic                                                                                                  ?>
      *
@@ -484,18 +396,65 @@ class Dizkus_Controller_User extends Zikula_AbstractController
        return ModUtil::Func('Dizkus', 'Topic', 'jointopic', $args);
     }
     
-    /**
-     * moderateforum
+     /**
+     * topicsubscriptions
      *
-     * Simple moderation of multiple topics.
-     *
-     * @param array $args The Arguments array.
+     * Manage the users topic subscription.
      *
      * @return string
      */
-    public function moderateforum($args=array())
+    public function topicsubscriptions()
     {
-       return ModUtil::Func('Dizkus', 'Forum', 'moderateforum', $args);
+        return ModUtil::Func('Dizkus', 'topic', 'topicsubscriptions', $args); 
+    }
+      /**
+     * Delete topic
+     *
+     * @return string
+     */
+    public function deletetopic() 
+    {
+        return ModUtil::Func('Dizkus', 'topic', 'deletetopic', $args);    
+    }
+  
+    /**
+     * Post 
+     *
+     */
+    public function reply($args=array())
+    {
+         return ModUtil::Func('Dizkus', 'Post', 'reply', $args);
+    }
+    
+    /**
+     * editpost
+     *
+     */
+    public function editpost($args=array())
+    {
+       return ModUtil::Func('Dizkus', 'Post', 'editpost', $args);
+    } 
+     
+    /**
+     * latest
+     *
+     * @return string
+     */
+    public function viewlatest($args=array())
+    {
+       return ModUtil::Func('Dizkus', 'Post', 'viewlatest', $args);  
+    }
+   
+    /**
+     * movepost
+     * 
+     * Move a single post to another thread
+     *
+     * @return string
+     */
+    public function movepost()
+    {
+        return ModUtil::Func('Dizkus', 'Post', 'movepost', $args);
     }
     
     /**
@@ -507,21 +466,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function report()
     {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/notifymod.tpl', new Dizkus_Form_Handler_Post_Report());
+        return ModUtil::Func('Dizkus', 'Post', 'report', $args);
     }
     
-    /**
-     * topicsubscriptions
-     *
-     * Manage the users topic subscription.
-     *
-     * @return string
-     */
-    public function topicsubscriptions()
-    {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('topic/topicsubscriptions.tpl', new Dizkus_Form_Handler_Topic_TopicSubscriptions());
-    }
-
 }

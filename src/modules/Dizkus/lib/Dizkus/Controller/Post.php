@@ -264,4 +264,76 @@ class Dizkus_Controller_Post extends Zikula_AbstractController
         return false;
     }
 
+    public function viewlatest($args=array())
+    {
+    // Permission check
+        $this->throwForbiddenUnless(
+            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        );
+        
+        $disabled = dzk_available();
+        if (!is_bool($disabled)) {
+            return $disabled;
+        }
+    
+        if (useragent_is_bot() == true) {
+            return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+        }
+    
+        // get the input
+        $selorder   = (int)$this->request->query->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1);
+        $nohours    = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
+        $unanswered = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
+        $amount     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
+    
+        if (!empty($amount) && !is_numeric($amount)) {
+            unset($amount);
+            }
+    
+        // maximum last 100 posts maybe shown
+        if (isset($amount) && $amount>100) {
+            $amount = 100;
+            }
+    
+        if (!empty($amount)) {
+            $selorder = 7;
+            }
+    
+        if (!empty($nohours) && !is_numeric($nohours)) {
+            unset($nohours);
+        }
+    
+        // maximum two weeks back = 2 * 24 * 7 hours
+        if (isset($nohours) && $nohours > 336) {
+            $nohours = 336;
+        }
+    
+        if (!empty($nohours)) {
+            $selorder = 5;
+        }
+    
+        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+    
+        list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'post', 'get_latest_posts',
+                                                                 array('selorder'   => $selorder,
+                                                                       'nohours'    => $nohours,
+                                                                       'amount'     => $amount,
+                                                                       'unanswered' => $unanswered,
+                                                                       'last_visit' => $last_visit,
+                                                                       'last_visit_unix' => $last_visit_unix));
+    
+        $this->view->assign('posts', $posts);
+        $this->view->assign('m2fposts', $m2fposts);
+        $this->view->assign('rssposts', $rssposts);
+        $this->view->assign('text', $text);
+        $this->view->assign('nohours', $nohours);
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
+                                                array('id'   => '0',
+                                                      'type' => 'all' )));
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+    
+        return $this->view->fetch('post/latestposts.tpl');
+     }
 }

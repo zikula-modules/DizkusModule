@@ -57,7 +57,7 @@
             <ul id="dzk_javascriptareaforum" class="hidden linklist z-clearfix">
                 {* Moderate *}
                 {if $forum.access_comment}
-                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=topic func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
                 {if $coredata.logged_in}
@@ -88,7 +88,7 @@
                 <ul id="dzk_nonjavascriptareaforum" class="linklist z-clearfix">
                     {* Moderate *}
                     {if $forum.access_comment}
-                    <li><a class="dzk_arrow newtopiclink" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                    <li><a class="dzk_arrow newtopiclink" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=topic func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                     {/if}
 
                     {if $forum.access_moderate eq true}
