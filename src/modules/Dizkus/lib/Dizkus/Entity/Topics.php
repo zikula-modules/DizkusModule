@@ -46,7 +46,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     private $topic_time;
     
     
-    
     /**
      * The following are annotations which define the topic_title field.
      * 
@@ -85,6 +84,12 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $forum_id;
 
+    /**
+     * The following are annotations which define the topic reference field.
+     * 
+     * @ORM\Column(type="string", length="60")
+     */
+    private $topic_reference = '';
 
 
     public function gettopic_id()
@@ -135,7 +140,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     {
         return $this->forum_id;
     }
-    
+
+    public function gettopic_reference()
+    {
+        return $this->topic_reference;
+    }
     
     public function lock()
     {

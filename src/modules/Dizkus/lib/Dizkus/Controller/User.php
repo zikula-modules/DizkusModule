@@ -189,7 +189,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
         // end patch #3494 part 2
     
-        $topic = ModUtil::apiFunc($this->name, 'user', 'readtopic',
+        $topic = ModUtil::apiFunc($this->name, 'Topic', 'read',
                               array('topic_id'   => $topic_id,
                                     'start'      => $start,
                                     'count'      => true));
@@ -439,16 +439,24 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (!is_bool($disabled)) {
             return $disabled;
         }
-    
-        // get the input
-        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-        $mode     = $this->request->query->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
-        $submit   = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-        $shadow   = $this->request->query->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
-        $shadow   = (empty($shadow)) ? false : true;
-    
+
+	// get the input
+	if ($this->request->isPost()) {
+	    $topic_id = (int)$this->request->request->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+	    $post_id  = (int)$this->request->request->get('post', (isset($args['post'])) ? $args['post'] : null);
+	    $forum_id = (int)$this->request->request->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+	    $mode     = $this->request->request->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
+	    $submit   = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+	    $shadow   = $this->request->request->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
+	} else {
+	    $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+	    $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
+	    $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+	    $mode     = $this->request->query->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
+	    $submit   = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+	    $shadow   = $this->request->query->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
+	}
+	$shadow   = (empty($shadow)) ? false : true;
         if (empty($topic_id) && !empty($post_id)) {
             $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid',
                                      array('post_id' => $post_id));
@@ -457,17 +465,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
                               array('topic_id' => $topic_id,
                                     'count'    => false));
-    
+
+	/* This does not work. Commenting out until we decide to fix or remove totally.
         if ($topic['access_moderate'] <> true) {
             return LogUtil::registerPermissionError();
         }
-    
-        $this->view->add_core_data();
-        $this->view->setCaching(false);
-        $this->view->assign('mode', $mode);
-        $this->view->assign('topic_id', $topic_id);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
+	*/
+	
         if (empty($submit)) {
             switch ($mode)
             {
@@ -508,7 +512,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 default:
                     return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
             }
-            return $this->view->fetch($templatename);
+    
+        $this->view->add_core_data();
+        $this->view->setCaching(false);
+        $this->view->assign('mode', $mode);
+        $this->view->assign('topic_id', $topic_id);
+        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+
+	return $this->view->fetch($templatename);
     
         } else { // submit is set
             /*if (!SecurityUtil::confirmAuthKey()) {
@@ -582,7 +593,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 default:
             }
     
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
+	    return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
     }
     
