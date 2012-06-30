@@ -25,7 +25,7 @@
                 <input type="checkbox" id="createshadowtopic" name="createshadowtopic" value="1" />
             </div>
             <div class="z-formbuttons z-buttons">
-                {button src="button_ok.png" set="icons/extrasmall" __alt="Move topic" __title="Move topic" __text="Move topic"}
+                {button src="button_ok.png" set="icons/extrasmall" __alt="Move topic" __title="Move topic" value='true' __text="Move topic"}
             </div>
         </fieldset>
     </div>
