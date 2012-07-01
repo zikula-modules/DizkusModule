@@ -15,7 +15,7 @@
 
         <div class="dzk_subcols z-clearfix">
 
-            <form id="editpost" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='editpost'}" method="post" enctype="multipart/form-data">
+            <form id="editpost" class="dzk_form" action="{modurl modname='Dizkus' type='post' func='editpost'}" method="post" enctype="multipart/form-data">
                 <div>
                     <input type="hidden" name="post" value="{$post.post_id}" />
                     <input type="hidden" name="forum"  value="{$post.forum_id}" />

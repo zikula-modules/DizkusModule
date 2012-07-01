@@ -70,7 +70,7 @@ function smarty_function_dizkusonline($params, &$smarty)
     $numusers  = 0;
     $unames    = array();
 
-    $moderators = ModUtil::apiFunc('Dizkus', 'user', 'get_moderators', array());
+    $moderators = ModUtil::apiFunc('Dizkus', 'moderators', 'get', array());
 
     if (System::getVar('anonymoussessions')) {
         $anonwhere = "AND $ztable[session_info].uid >= '0'";

@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to report posts.
  */
-class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Post_Report extends Zikula_Form_AbstractHandler
 {
     /**
      * post id
@@ -60,7 +60,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
     {
         // get the input
         $post_id = (int)$this->request->query->get('post');
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
+        $post = ModUtil::apiFunc('Dizkus', 'post', 'readpost', array('post_id' => $post_id));
         
         
         if ($args['commandName'] == 'cancel') {
@@ -94,11 +94,11 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         
 
     
-        ModUtil::apiFunc('Dizkus', 'user', 'notify_moderator',
+        ModUtil::apiFunc('Dizkus', 'post', 'notify_moderator',
                         array('post'    => $post,
                             'comment' => $data['comment']));
     
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies',
+        $start = ModUtil::apiFunc('Dizkus', 'topic', 'get_page_from_topic_replies',
                                   array('topic_replies' => $post['topic_replies']));
     
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic',

@@ -215,13 +215,11 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
 
 
-
     public function getforum_order()
     {
         return $this->forum_order;
     }
-    
-    
+        
     
     public function getforum_pop3_active()
     {
@@ -235,7 +233,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
     
       
-    public function getforum_port()
+    public function getforum_pop3_port()
     {
         return $this->forum_pop3_port;
     }

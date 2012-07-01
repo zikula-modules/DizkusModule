@@ -15,7 +15,242 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     
     
     
+   
+    
     /**
+     * preparenewtopic
+     *
+     * @params $args['message'] string the text (only set when preview is selected)
+     * @params $args['subject'] string the subject (only set when preview is selected)
+     * @params $args['forum_id'] int the forums id
+     * @params $args['topic_start'] bool true if we start a new topic
+     * @params $args['attach_signature'] int 1= attach signature, otherwise no
+     * @params $args['subscribe_topic'] int 1= subscribe topic, otherwise no
+     * @returns array with information....
+     */
+    public function preparenewtopic($args)
+    {
+        $ztable = DBUtil::getTables();
+    
+        $newtopic = array();
+        $newtopic['forum_id'] = $args['forum_id'];
+        $newtopic['topic_id'] = 0;
+    
+        // select forum name and cat title based on forum_id
+        $sql = "SELECT f.forum_name,
+                       c.cat_id,
+                       c.cat_title
+                FROM ".$ztable['dizkus_forums']." AS f,
+                    ".$ztable['dizkus_categories']." AS c
+                WHERE (forum_id = '".(int)DataUtil::formatForStore($args['forum_id'])."'
+                AND f.cat_id=c.cat_id)";
+        $res = DBUtil::executeSQL($sql);
+        $colarray = array('forum_name', 'cat_id', 'cat_title');
+        $myrow    = DBUtil::marshallObjects($res, $colarray);
+    
+        $newtopic['cat_id']     = $myrow[0]['cat_id'];
+        $newtopic['forum_name'] = DataUtil::formatForDisplay($myrow[0]['forum_name']);
+        $newtopic['cat_title']  = DataUtil::formatForDisplay($myrow[0]['cat_title']);
+    
+        $newtopic['topic_unixtime'] = time();
+    
+        // need at least "comment" to add newtopic
+        if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
+            // user is not allowed to post
+            return LogUtil::registerPermissionError();
+        }
+
+        $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', 
+                                                    array('userid' => UserUtil::getVar('uid')));
+        $newtopic['subject'] = $args['subject'];
+        $newtopic['message'] = $args['message'];
+        $newtopic['message_display'] = $args['message']; // phpbb_br2nl($args['message']);
+    
+        // list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
+        $newtopic['message_display'] = nl2br($newtopic['message_display']);
+    
+        if (UserUtil::isLoggedIn()) {
+            if ($args['topic_start'] == true) {
+                $newtopic['attach_signature'] = true;
+                $newtopic['subscribe_topic']  = ((int)UserUtil::getVar('dizkus_autosubscription', -1, 1)==1) ? true : false;
+            } else {
+                $newtopic['attach_signature'] = $args['attach_signature'];
+                $newtopic['subscribe_topic']  = $args['subscribe_topic'];
+            }
+        } else {
+            $newtopic['attach_signature'] = false;
+            $newtopic['subscribe_topic']  = false;
+        }
+    
+        return $newtopic;
+    }
+    
+    /**
+     * storenewtopic
+     *
+     * @params $args['subject'] string the subject
+     * @params $args['message'] string the text
+     * @params $args['forum_id'] int the forums id
+     * @params $args['time'] string (optional) the time, only needed when creating a shadow
+     *                             topic
+     * @params $args['attach_signature'] int 1=yes, otherwise no
+     * @params $args['subscribe_topic'] int 1=yes, otherwise no
+     * @params $args['reference']  string for comments feature: <modname>-<objectid>
+     * @params $args['post_as']    int used id under which this topic should be posted
+     * @returns int the new topics id
+     */
+    public function storenewtopic($args)
+    {
+        $cat_id = ModUtil::apiFunc('Dizkus', 'user', array('forum_id' => $args['forum_id']));
+        if (!allowedtowritetocategoryandforum($cat_id, $args['forum_id'])) {
+            return LogUtil::registerPermissionError();
+        }
+        
+        if ($this->isSpam($args['message'])) {
+            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+        }
+        
+
+        if (trim($args['message']) == '' || trim($args['subject']) == '') {
+            // either message or subject is empty
+            return LogUtil::registerError($this->__('Error! You tried to post a blank message. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+        }
+    
+        /*
+        it's a submitted page and message and subject are not empty
+        */
+    
+        //  grab message for notification
+        //  without html-specialchars, bbcode, smilies <br /> and [addsig]
+        $posted_message = stripslashes($args['message']);
+    
+        //  anonymous user has uid=0, but needs uid=1
+        if (isset($args['post_as']) && !empty($args['post_as']) && is_numeric($args['post_as'])) {
+            $pn_uid = $args['post_as'];
+        } else {
+            if (UserUtil::isLoggedIn()) {
+                if ($args['attach_signature'] == 1) {
+                    $args['message'] .= '[addsig]';
+                }
+                $pn_uid = UserUtil::getVar('uid');
+            } else  {
+                $pn_uid = 1;
+            }
+        }
+        
+        // some enviroment for logging ;)
+        if (System::serverGetVar('HTTP_X_FORWARDED_FOR')){
+            $poster_ip = System::serverGetVar('REMOTE_ADDR')."/".System::serverGetVar('HTTP_X_FORWARDED_FOR');
+        } else {
+            $poster_ip = System::serverGetVar('REMOTE_ADDR');
+        }
+        // for privavy issues ip logging can be deactivated
+        if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
+            $poster_ip = '127.0.0.1';
+        }
+    
+        $time = (isset($args['time'])) ? $args['time'] : DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S');
+    
+        // create topic
+        $obj['topic_title']     = $args['subject'];
+        $obj['topic_poster']    = $pn_uid;
+        $obj['forum_id']        = $args['forum_id'];
+        $obj['topic_time']      = $time;
+        $obj['topic_reference'] = (isset($args['reference'])) ? $args['reference'] : '';
+        DBUtil::insertObject($obj, 'dizkus_topics', 'topic_id');
+    
+        // create posting
+        $pobj['topic_id']   = $obj['topic_id'];
+        $pobj['forum_id']   = $obj['forum_id'];
+        $pobj['poster_id']  = $obj['topic_poster'];
+        $pobj['post_time']  = $obj['topic_time'];
+        $pobj['poster_ip']  = $poster_ip;
+        $pobj['post_msgid'] = (isset($msgid)) ? $msgid : '';
+        $pobj['post_text']  = $args['message'];
+        $pobj['post_title'] = $obj['topic_title'];
+        DBUtil::insertObject($pobj, 'dizkus_posts', 'post_id');
+    
+        if ($pobj['post_id']) {
+            //  updates topics-table
+            $obj['topic_last_post_id'] = $pobj['post_id'];
+            DBUtil::updateObject($obj, 'dizkus_topics', '', 'topic_id');
+    
+            // Let any hooks know that we have created a new item.
+//            ModUtil::callHooks('item', 'create', $obj['topic_id'], array('module' => 'Dizkus'));
+        }
+    
+        if (UserUtil::isLoggedIn()) {
+            // user logged in we have to update users-table
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts') + 1);
+            //DBUtil::incrementObjectFieldByID('dizkus__users', 'user_posts', $obj['topic_poster'], 'user_id');
+    
+            // update subscription
+            if ($args['subscribe_topic'] == 1) {
+                // user wants to subscribe the new topic
+                $this->subscribe(array('topic_id' => $obj['topic_id']));
+            }
+        }
+    
+        // update forums-table
+        $fobj['forum_id']           = $obj['forum_id'];
+        $fobj['forum_last_post_id'] = $pobj['post_id'];
+        DBUtil::updateObject($fobj, 'dizkus_forums', null, 'forum_id');
+        DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_posts',  $obj['forum_id'], 'forum_id');
+        DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_topics', $obj['forum_id'], 'forum_id');
+    
+        // notify for newtopic
+         ModUtil::apiFunc('Dizkus', 'user', 'notify_by_email',array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['topic_poster'], 'post_message' => $posted_message, 'type' => '0'));
+    
+        // delete temporary session var
+        SessionUtil::delVar('topic_started');
+    
+        //  switch to topic display
+        return $obj['topic_id'];
+    }
+    
+     
+ /**
+     * movetopic
+     * moves a topic to another forum
+     *
+     * @params $args['topic_id'] int the topics id
+     * @params $args['forum_id'] int the destination forums id
+     * @params $args['shadow']   boolean true = create shadow topic
+     * @returns void
+     */
+    public function movetopic($args)
+    {
+        // get the old forum id and old post date
+        $topic = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
+    
+        if ($topic['forum_id'] <> $args['forum_id']) {
+            // set new forum id
+            $newtopic['forum_id'] = $args['forum_id'];
+            DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
+    
+            $newpost['forum_id'] = $args['forum_id'];
+            DBUtil::updateObject($newpost, 'dizkus_posts', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'post_id');
+    
+            if ($args['shadow'] == true) {
+                // user wants to have a shadow topic
+                $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])));
+                $subject = $this->__f("*** The original posting '%s' has been moved", $topic['topic_title']);
+    
+                $this->storenewtopic(array('subject'  => $subject,
+                                                    'message'  => $message,
+                                                    'forum_id' => $topic['forum_id'],
+                                                    'time'     => $topic['topic_time'],
+                                                    'no_sig'   => true));
+            }
+            ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $args['forum_id'], 'type' => 'forum'));
+            ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $topic['forum_id'], 'type' => 'forum'));
+        }
+    
+        return;
+    }
+
+
+     /**
      * Toggle a topic lock.
      *
      * @param array $args Arguments array.
@@ -82,7 +317,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $args['topic_id']));
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid($args['topic_id']);
         if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
@@ -98,6 +333,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
 
         return;
     }
+    
     
     
     /**
@@ -120,43 +356,38 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         } else {
             $where['user_id'] = UserUtil::getVar('uid');
         }
-
-        $where = $args['topic_id'];
+        
+        if (isset($args['topic_id'])) {
         
         $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
-                                             ->findBy($where);
+                                             ->findBy(array('topic_id'=> $args['topic_id']));
         foreach ($subscriptions as $subscription) {
             $this->entityManager->remove($subscription);
         }
         $this->entityManager->flush();
-    
+        }
         return;
     }
     
+
+       
     /**
-     * Get topic subscription status.
+     * unsubscribe_topic_by_id
      *
-     * @param array $args Arguments array.
-     *        int $args['user_id'] Users uid.
-     *        int $args['topic_id'] Topic id.
-     *
-     * @return bool true if the user is subscribed or false if not
+     * @params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns void
      */
-    public function getSubscriptionStatus($args)
+    public function unsubscribe_topic_by_id($id)
     {
-        
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('COUNT(s)')
-           ->from('Dizkus_Entity_TopicSubscriptions', 's')
-           ->where('s.user_id = :user')
-           ->setParameter('user', $args['user_id'])
-           ->andWhere('s.topic_id = :topic')
-           ->setParameter('topic', $args['topic_id'])
-           ->setMaxResults(1);
-        $count = $qb->getQuery()->getSingleScalarResult();
-        return $count > 0; 
+        $subscription = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $id);
+        $this->entityManager->remove($subscription);
+        $this->entityManager->flush();
     }
+    
+    
+    
+    
 
     /**
      * readtopic
@@ -248,7 +479,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             return LogUtil::registerPermissionError();
         }
 
-        $topic['forum_mods'] = ModUtil::apiFunc($this->name, 'Users', 'get_moderators', array('forum_id' => $topic['forum_id']));
+        $topic['forum_mods'] =  ModUtil::apiFunc($this->name, 'Moderators', 'get',array('forum_id' => $topic['forum_id']));
 
         $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
         $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
@@ -275,12 +506,12 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         }
 
         // get the next and previous topic_id's for the next / prev button
-        $topic['next_topic_id'] = ModUtil::apiFunc($this->name, 'Users', 'get_previous_or_next_topic_id', array('topic_id' => $topic['topic_id'], 'view'=>'next'));
-        $topic['prev_topic_id'] = ModUtil::apiFunc($this->name, 'Users', 'get_previous_or_next_topic_id', array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
+        $topic['next_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'next'));
+        $topic['prev_topic_id'] = $this->get_previous_or_next_topic_id(array('topic_id' => $topic['topic_id'], 'view'=>'previous'));
 
         // get the users topic_subscription status to show it in the quick repliy checkbox
         // correctly
-        if (ModUtil::apiFunc($this->name, 'Users', 'get_topic_subscription_status', array('user_id'   => $currentuserid, 'topic_id' => $topic['topic_id'])) == true) {
+        if ($this->getSubscriptionStatus(array('user_id'   => $currentuserid, 'topic_id' => $topic['topic_id'])) == true) {
             $topic['is_subscribed'] = 1;
         } else {
             $topic['is_subscribed'] = 0;
@@ -292,7 +523,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             $this->entityManager->flush();
         }
         // more then one page in this topic?
-        $topic['total_posts'] = ModUtil::apiFunc($this->name, 'Users', 'boardstats', array('id' => $topic['topic_id'], 'type' => 'topic'));
+        $topic['total_posts'] = ModUtil::apiFunc($this->name, 'User', 'boardstats', array('id' => $topic['topic_id'], 'type' => 'topic'));
 
         if ($topic['total_posts'] > $posts_per_page) {
             $times = 0;
@@ -402,26 +633,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
     }
 
 
-    /**
-     * getIdByReference
-     *
-     * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
-     *
-     * @param string $reference The reference.
-     *
-     * @return array Topic data as array
-     */
-    public function getIdByReference($reference)
-    {
-        if (empty($reference)) {
-            return LogUtil::registerArgsError();
-        }
-
-        return $this->entityManager->getRepository('Dizkus_Entity_Topics')
-                                   ->findOneBy(array('topic_reference' => $reference))
-                                   ->toArray();
-    }
-
 
     /**
      * email
@@ -454,6 +665,181 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         );
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $params);
     }
+    
+     /**
+     * splittopic
+     *
+     * param array $args The argument array.
+     * @params $args['post'] array with posting data as returned from readpost()
+     *
+     * @deprecated since 4.0.0
+     *
+     * @return int id of the new topic
+     */
+    public function splittopic($args)
+    {
+        
+        //return ModUtil::apiFunc($this->name, 'Forum', 'unsubscribeById', $id);
+        //why forum should be unsubscribe_topic_by_id if so
+        $post = $args['post'];
+        //return ModUtil::apiFunc($this->name, 'Forum', 'unsubscribeById', $id);
+        
+
+        // before we do anything we will read the topic_last_post_id because we will need
+        // this one later (it will become the topic_last_post_id of the new thread)
+        // DBUtil:: read complete topic
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'read0', $post['topic_id']);
+    
+        //  insert values into topics-table
+        $newtopic = array('topic_title'  => $post['topic_subject'],
+                          'topic_poster' => $post['poster_data']['uid'],
+                          'forum_id'     => $post['forum_id'],
+                          'topic_time'   => DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S'));
+        $newtopic = DBUtil::insertObject($newtopic, 'dizkus_topics', 'topic_id');
+    
+        // increment topics count by 1
+        DBUtil::incrementObjectFieldById('dizkus_forums', 'forum_topics', $post['forum_id'], 'forum_id');
+    
+        // now we need to change the postings:
+        // first step: count the number of posting we have to move
+        $where = 'WHERE topic_id = '.(int)DataUtil::formatForStore($post['topic_id']).'
+                  AND post_id >= '.(int)DataUtil::formatForStore($post['post_id']);
+        $posts_to_move = DBUtil::selectObjectCount('dizkus_posts', $where);
+
+
+
+        // update the topic_id in the postings
+        // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
+        // post_id > $post['post_id']
+        $updateposts = array('topic_id' => $newtopic['topic_id']);
+        $where = 'WHERE post_id >= '.(int)DataUtil::formatForStore($post['post_id']).'
+                  AND topic_id = '.$post['topic_id'];
+        DBUtil::updateObject($updateposts, 'dizkus_posts', $where, 'post_id');
+    
+        // get the new topic_last_post_id of the old topic
+        $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($post['topic_id']).'
+                  ORDER BY post_time DESC';
+        $lastpost = DBUtil::selectObject('dizkus_posts', $where);
+
+        $oldtopic = $this->read0($post['topic_id']);
+
+        // update the new topic
+        $newtopic['topic_replies']      = (int)$posts_to_move - 1;
+        $newtopic['topic_last_post_id'] = $post['topic_last_post_id'];
+        DBUtil::updateObject($newtopic, 'dizkus_topics', null, 'topic_id');
+
+
+        // update the old topic
+        $oldtopic['topic_replies']      = $oldtopic['topic_replies'] - $posts_to_move;
+        $oldtopic['topic_last_post_id'] = $lastpost['post_id'];
+        $oldtopic['topic_time']         = $lastpost['post_time'];
+        DBUtil::updateObject($oldtopic, 'dizkus_topics', null, 'topic_id');
+
+         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $post['topic_id'], 'type' => 'topic'));
+         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $newtopic['topic_id'], 'type' => 'topic'));
+         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $post['forum_id'], 'type' => 'forum'));
+        return $newtopic['topic_id'];
+    }
+    
+    
+     /**
+     * jointopics
+     * joins two topics together
+     *
+     * @params $args['from_topic_id'] int this topic get integrated into to_topic
+     * @params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
+     */
+    public function jointopics($args)
+    {
+        // check if from_topic exists. this function will return an error if not
+        $from_topic = $this->read(array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
+        if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
+            // user is not allowed to moderate this forum
+            return LogUtil::registerPermissionError();
+        }
+    
+        // check if to_topic exists. this function will return an error if not
+        $to_topic = $this->read(array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
+        if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
+            // user is not allowed to moderate this forum
+            return LogUtil::registerPermissionError();
+        }
+    
+        $ztable = DBUtil::getTables();
+        
+        // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
+        // and from_topic['forum_id'] to to_topic['forum_id']
+        $post_temp = array('topic_id' => $to_topic['topic_id'],
+                           'forum_id' => $to_topic['forum_id']);
+        $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($from_topic['topic_id']);
+        DBUtil::updateObject($post_temp, 'dizkus_posts', $where, 'post_id');                         
+    
+        // to_topic['topic_replies'] must be incremented by from_topic['topic_replies'] + 1 (initial
+        // posting
+        // update to_topic['topic_time'] and to_topic['topic_last_post_id']
+        // get new topic_time and topic_last_post_id
+        $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($to_topic['topic_id']).'
+                  ORDER BY post_time DESC';
+        $res = DBUtil::selectObject('dizkus_posts', $where);
+        $new_last_post_id = $res['post_id'];
+        $new_post_time    = $res['post_time'];
+    
+        // update to_topic
+        $to_topic_temp = array('topic_id'           => $to_topic['topic_id'],
+                               'topic_replies'      => $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1,
+                               'topic_last_post_id' => $new_last_post_id,
+                               'topic_time'         => $new_post_time);
+        DBUtil::updateObject($to_topic_temp, 'dizkus_topics', null, 'topic_id');  
+    
+        // delete from_topic from dizkus_topics
+        DBUtil::deleteObjectByID('dizkus_topics', $from_topic['topic_id'], 'topic_id');
+    
+        // update forums table
+        // get topics count: decrement from_topic['forum_id']'s topic count by 1
+        DBUtil::decrementObjectFieldById('dizkus_forums', 'forum_topics', $from_topic['forum_id'], 'forum_id');
+    
+        // get posts count: if both topics are in the same forum, we just have to increment
+        // the post count by 1 for the initial posting that is now part of the to_topic,
+        // if they are in different forums, we have to decrement the post count
+        // in from_topic's forum and increment it in to_topic's forum by from_topic['topic_replies'] + 1
+        // for the initial posting
+        // get last_post: if both topics are in the same forum, everything stays
+        // as-is, if not, we update both, even if it is not necessary
+    
+        if ($from_topic['forum_id'] == $to_topic['forum_id']) {
+            // same forum, post count in the forum doesn't change
+        } else {
+            // different forum
+            // get last post in forums
+            $where = 'WHERE forum_id='.(int)DataUtil::formatForStore($from_topic['forum_id']).'
+                      ORDER BY post_time DESC';
+            $res = DBUtil::selectObject('dizkus_posts', $where);
+            $from_forum_last_post_id = $res['post_id'];
+    
+            $where = 'WHERE forum_id='.(int)DataUtil::formatForStore($to_topic['forum_id']).'
+                      ORDER BY post_time DESC';
+            $res = DBUtil::selectObject('dizkus_posts', $where);
+            $to_forum_last_post_id = $res['post_id'];
+            
+            // calculate posting count difference
+            $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies']+1);
+            // decrement from_topic's forum post_count
+            $sql = "UPDATE ".$ztable['dizkus_forums']."
+                    SET forum_posts = forum_posts - $post_count_difference,
+                        forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post_id) . "'
+                    WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
+            DBUtil::executeSQL($sql);
+    
+            // increment o_topic's forum post_count
+            $sql = "UPDATE ".$ztable['dizkus_forums']."
+                    SET forum_posts = forum_posts + $post_count_difference,
+                        forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post_id) . "'
+                    WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
+            DBUtil::executeSQL($sql);
+        }
+        return $to_topic['topic_id'];
+    }
+    
 
     /**
      * deletet
@@ -466,7 +852,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
      */
     public function delete($topic_id)
     {
-        list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
+        list($forum_id, $cat_id) = $this->get_forumid_and_categoryid_from_topicid($topic_id);
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
         }
@@ -521,5 +907,404 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         return $forum_id;
     }
 
+   
+     
+ 
+ /**
+     * get_forumid_and categoryid_from_topicid
+     * used for permission checks
+     *
+     * @params $args['topic_id'] int the topics id
+     * @returns array(forum_id, category_id)
+     */
+    public function get_forumid_and_categoryid_from_topicid($topic_id)
+    {
+        
+        if (!isset($topic_id)) {
+            return LogUtil::registerError($this->__('Error! no topic id.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+        }
+        
+        $ztable = DBUtil::getTables();
 
+        // we know about the topic_id, let's find out the forum and catgeory name for permission checks
+        $sql = "SELECT f.forum_id,
+                       c.cat_id
+                FROM  ".$ztable['dizkus_topics']." t
+                LEFT JOIN ".$ztable['dizkus_forums']." f ON f.forum_id = t.forum_id
+                LEFT JOIN ".$ztable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
+                WHERE t.topic_id = '".(int)DataUtil::formatForStore($topic_id)."'";
+    
+        $res = DBUtil::executeSQL($sql);
+        if ($res === false) {
+            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+        }
+    
+        $colarray = array('forum_id', 'cat_id');
+        $objarray = DBUtil::marshallObjects ($res, $colarray);
+        return array_values($objarray[0]); // forum_id, cat_id
+    }
+       
+
+ /**
+     * getTopicSubscriptions
+     *
+     * @params none
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns array with topic ids, may be empty
+     */
+    public function getTopicSubscriptions($uid)
+    {
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
+                                   ->findBy(array('user_id' => $uid));
+    
+        return $subscriptions;
+    }
+    
+    
+    /**
+     * get_topic_subscriptions
+     *
+     * @params none
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     *
+     * @return array with topic ids, may be empty
+     */
+    public function get_topic_subscriptions($args)
+    {
+        $ztable = DBUtil::getTables();
+    
+        if (isset($args['user_id'])) {
+            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+                return LogUtil::registerPermissionError();
+            }
+        } else {
+            $args['user_id'] = UserUtil::getVar('uid');
+        }
+    
+        // read the topic ids
+        $sql = 'SELECT ts.topic_id,
+                       t.topic_title,
+                       t.topic_poster,
+                       t.topic_time,
+                       t.topic_replies,
+                       t.topic_last_post_id,
+                       u.uname,
+                       f.forum_id,
+                       f.forum_name
+                FROM '.$ztable['dizkus_topic_subscription'].' AS ts,
+                     '.$ztable['dizkus_topics'].' AS t,
+                     '.$ztable['users'].' AS u,
+                     '.$ztable['dizkus_forums'].' AS f
+                WHERE (ts.user_id='.(int)DataUtil::formatForStore($args['user_id']).'
+                  AND t.topic_id=ts.topic_id
+                  AND u.uid=ts.user_id
+                  AND f.forum_id=t.forum_id)
+                ORDER BY f.forum_id, ts.topic_id';
+    
+        $res = DBUtil::executeSQL($sql);
+        $colarray = array('topic_id', 'topic_title', 'topic_poster', 'topic_time', 'topic_replies', 'topic_last_post_id', 'poster_name',
+                          'forum_id', 'forum_name');
+        $subscriptions    = DBUtil::marshallObjects($res, $colarray);
+    
+        $post_sort_order = ModUtil::apiFunc('Dizkus', 'user', 'get_user_post_order', array('user_id' => $args['user_id']));
+        $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
+    
+        if (is_array($subscriptions) && !empty($subscriptions)) {
+            for ($cnt=0; $cnt<count($subscriptions); $cnt++) {
+                 
+                if ($post_sort_order == 'ASC') {
+                    $start = ((ceil(($subscriptions[$cnt]['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
+                } else {
+                    // latest topic is on top anyway...
+                    $start = 0;
+                }
+                // we now create the url to the last post in the thread. This might
+                // on site 1, 2 or what ever in the thread, depending on topic_replies
+                // count and the posts_per_page setting
+                $subscriptions[$cnt]['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic',
+                                                                                     array('topic' => $subscriptions[$cnt]['topic_id'],
+                                                                                           'start' => $start)));
+                
+                $subscriptions[$cnt]['last_post_url_anchor'] = $subscriptions[$cnt]['last_post_url'] . '#pid' . $subscriptions[$cnt]['topic_last_post_id'];
+            }
+        }
+    
+        return $subscriptions;
+    }
+
+     /**
+     * get_firstlast_post_in_topic
+     * gets the first or last post in a topic, false if no posts
+     *
+     * @params $args['topic_id'] int the topics id
+     * @params $args['first']   boolean if true then get the first posting, otherwise the last
+     * @params $args['id_only'] boolean if true, only return the id, not the complete post information
+     * @returns array with post information or false or (int)id if id_only is true
+     */
+    public function get_firstlast_post_in_topic($args)
+    {
+        if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
+            $ztable = DBUtil::getTables();
+            $option  = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
+            $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $ztable['dizkus_posts_column']['topic_id'].' = '.(int)$args['topic_id']);
+    
+            if ($post_id <> false) {
+                if (isset($args['id_only']) && $args['id_only'] == true) {
+                    return $post_id;
+                }
+                return $this->readpost(array('post_id' => $post_id));
+            }
+        }
+    
+        return false;
+    }
+    
+
+    /**
+     * getIdByReference
+     *
+     * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
+     *
+     * @param string $reference The reference.
+     *
+     * @return array Topic data as array
+     */
+    public function getIdByReference($reference)
+    {
+        if (empty($reference)) {
+            return LogUtil::registerArgsError();
+        }
+
+        return $this->entityManager->getRepository('Dizkus_Entity_Topics')
+                                   ->findOneBy(array('topic_reference' => $reference))
+                                   ->toArray();
+    }
+
+
+        /**
+     * Get topic subscription status.
+     *
+     * @param array $args Arguments array.
+     *        int $args['user_id'] Users uid.
+     *        int $args['topic_id'] Topic id.
+     *
+     * @return bool true if the user is subscribed or false if not
+     */
+    public function getSubscriptionStatus($args)
+    {
+        
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('COUNT(s)')
+           ->from('Dizkus_Entity_TopicSubscriptions', 's')
+           ->where('s.user_id = :user')
+           ->setParameter('user', $args['user_id'])
+           ->andWhere('s.topic_id = :topic')
+           ->setParameter('topic', $args['topic_id'])
+           ->setMaxResults(1);
+        $count = $qb->getQuery()->getSingleScalarResult();
+        return $count > 0; 
+    }
+
+
+    /**
+     * get_page_from_topic_replies
+     * Uses the number of topic_replies and the posts_per_page settings to determine the page
+     * number of the last post in the thread. This is needed for easier navigation.
+     *
+     * @params $args['topic_replies'] int number of topic replies
+     * @return int page number of last posting in the thread
+     */
+    public function get_page_from_topic_replies($topic_replies)
+    {
+        if (!isset($topic_replies) || !is_numeric($topic_replies) || $topic_replies < 0 ) {
+            return LogUtil::registerArgsError();
+        }
+    
+        // get some enviroment
+        $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
+        $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
+    
+        $last_page = 0;
+        if ($post_sort_order == 'ASC') {
+            // +1 for the initial posting
+            $last_page = floor(($topic_replies + 1) / $posts_per_page);
+        }
+    
+        // if not ASC then DESC which means latest topic is on top anyway...
+        return $last_page;
+    }
+    
+
+    
+    /**
+     * get_previous_or_next_topic_id
+     * returns the next or previous topic_id in the same forum of a given topic_id
+     *
+     * @params $args['topic_id'] int the reference topic_id
+     * @params $args['view']     string either "next" or "previous"
+     * @returns int topic_id maybe the same as the reference id if no more topics exist in the selectd direction
+     */
+    public function get_previous_or_next_topic_id($args)
+    {
+        if (!isset($args['topic_id']) || !isset($args['view']) ) {
+            return LogUtil::registerArgsError();
+        }
+    
+        switch ($args['view'])
+        {
+            case 'previous':
+                $math = '<';
+                $sort = 'DESC';
+                break;
+    
+            case 'next':
+                $math = '>';
+                $sort = 'ASC';
+                break;
+    
+            default:
+                return LogUtil::registerArgsError();
+        }
+    
+        $ztable = DBUtil::getTables();
+    
+        // integrate contactlist's ignorelist here
+        $whereignorelist = '';
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist',array('uid' => UserUtil::getVar('uid')));
+        if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
+            // get user's ignore list
+            $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist',array('uid' => UserUtil::getVar('uid')));
+            $ignored_uids = array();
+            foreach ($ignored_users as $item) {
+                $ignored_uids[]=(int)$item['iuid'];
+            }
+            if (count($ignored_uids) > 0) {
+                $whereignorelist = " AND t1.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+            }
+        }
+    
+        $sql = 'SELECT t1.topic_id
+                FROM '.$ztable['dizkus_topics'].' AS t1,
+                     '.$ztable['dizkus_topics'].' AS t2
+                WHERE t2.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']).'
+                  AND t1.topic_time '.$math.' t2.topic_time
+                  AND t1.forum_id = t2.forum_id
+                  AND t1.sticky = 0
+                  '.$whereignorelist.'
+                ORDER BY t1.topic_time '.$sort;
+    
+        $res      = DBUtil::executeSQL($sql, -1, 1);
+        $newtopic = DBUtil::marshallObjects($res, array('topic_id'));
+    
+        return isset($newtopic[0]['topic_id']) ? $newtopic[0]['topic_id'] : 0;
+    }
+
+/**
+     * get_topic_by_postmsgid
+     * gets a topic_id from the postings msgid
+     *
+     * @params $args['msgid'] string the msgid
+     * @returns int topic_id or false if not found
+     *
+     */
+    public function get_topic_by_postmsgid($msgid)
+    {
+        if (!isset($msgid) || empty($msgid)) {
+            return LogUtil::registerArgsError();
+        }
+    
+        return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $msgid, 'post_msgid');
+    }
+    
+    /**
+     * get_topicid_by_postid
+     * gets a topic_id from the post_id
+     *
+     * @params $args['post_id'] string the post_id
+     * @returns int topic_id or false if not found
+     *
+     */
+    public function get_topicid_by_postid($post_id)
+    {
+        if (!isset($post_id) || empty($post_id)) {
+            return LogUtil::registerArgsError();
+        }
+    
+        return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $post_id, 'post_id');
+    }
+
+      /**
+     * get_last_topic_page
+     * returns the number of the last page of the topic if more than posts_per_page entries
+     * eg. for use as the start parameter in urls
+     *
+     * @params $args['topic_id'] int the topic id
+     * @returns int the page number
+     */
+    public function get_last_topic_page($topic_id)
+    {
+        // get some enviroment
+        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
+        $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
+    
+        if (!isset($topic_id) || !is_numeric($topic_id)) {
+            return LogUtil::registerArgsError();
+        }
+    
+        if ($post_sort_order == 'ASC') {
+            $num_postings = DBUtil::selectFieldByID('dizkus_topics', 'topic_replies', $topic_id, 'topic_id');
+            // add 1 for the initial posting as we deal with the replies here
+            $num_postings++;
+            $last_page = floor($num_postings / $posts_per_page);
+        } else {
+            // DESC = latest topic is on top = page 0 anyway...
+            $last_page = 0;
+        }
+    
+        return $last_page;
+    }
+    
+   
+     /**
+     * get_topicid_by_reference
+     * gets a topic reference as parameter and delivers the internal topic id
+     * used for Dizkus as comment module
+     *
+     * @params $args['reference'] string the refernce
+     */
+    public function get_topicid_by_reference($reference)
+    {
+        if (!isset($reference) || empty($reference)) {
+            return LogUtil::registerArgsError();
+        }
+    
+        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')
+                      ->findOneBy(array('topic_reference' => $reference));    
+        return $topic->toArray();
+    }
+    
+        /**
+     * toggle new topic subscription
+     *
+     */
+    public function togglenewtopicsubscription($user_id)
+    {
+        $user_id = (isset($user_id)) ? $user_id : UserUtil::getVar('uid');
+        if (is_null($user_id)) {
+            $user_id = 1;
+        }
+        
+        $asmode = (int)UserUtil::getVar('dizkus_autosubscription', $user_id);
+        $asmode = ($asmode == 0) ? 1 : 0;
+        UserUtil::setVar('dizkus_autosubscription', $asmode, $user_id);
+        return $asmode;
+    }
+    
+    
+    
+    
+    
+    
+    
 }

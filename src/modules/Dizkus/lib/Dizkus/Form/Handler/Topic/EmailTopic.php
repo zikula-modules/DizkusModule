@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to email a topic.
  */
-class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Topic_EmailTopic extends Zikula_Form_AbstractHandler
 {
     /**
      * topic id
@@ -74,7 +74,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        ModUtil::apiFunc('Dizkus', 'user', 'emailtopic', array(
+        ModUtil::apiFunc('Dizkus', 'topic', 'emailtopic', array(
             'sendto_email' => $data['sendto_email'],
             'message'      => $data['message'],
             'subject'      => $data['emailsubject']

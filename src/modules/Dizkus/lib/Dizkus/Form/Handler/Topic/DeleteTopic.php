@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to delete a topic.
  */
-class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Topic_DeleteTopic extends Zikula_Form_AbstractHandler
 {
     /**
      * topic id
@@ -52,20 +52,17 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }
-            $this->topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+            $this->topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'get_topicid_by_postid', $post_id);
         }
 
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array(
+        $topic = ModUtil::apiFunc('Dizkus', 'topic', 'readtopic', array(
             'topic_id' => $this->topic_id,
             'count'    => false)
         );
     
         $this->topic_poster = $topic['topic_poster'];
         
-        if ($topic['access_moderate'] <> true) {
-            return LogUtil::registerPermissionError();
-        }
-        
+      
         $view->assign('topicTitle', $topic['topic_title']);
         
         $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
@@ -85,7 +82,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus','topic','viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -109,8 +106,8 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         }
 
         // redirect to the forum of the deleted topic
-        $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $this->topic_id));
-        $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
+        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', $this->topic_id);
+        $url = ModUtil::url('Dizkus', 'forum', 'viewforum', array('forum' => $forum_id));
         return $view->redirect($url);
     }
 }

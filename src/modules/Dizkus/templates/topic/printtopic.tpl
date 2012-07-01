@@ -1,3 +1,4 @@
+
 {pagesetvar name=title value=$topic.topic_title}
 {assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
 

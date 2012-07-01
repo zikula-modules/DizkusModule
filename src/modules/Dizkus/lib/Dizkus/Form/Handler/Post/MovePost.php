@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to move a post.
  */
-class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Post_MovePost extends Zikula_Form_AbstractHandler
 {
     /**
      * post id
@@ -51,7 +51,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
     
         // get the input
         $this->post_id = (int)$this->request->query->get('post');
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $this->post_id));
+        $post = ModUtil::apiFunc('Dizkus', 'post', 'read', $this->post_id);
         $this->old_topic_id = $post['topic_id'];
     
         if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
@@ -74,7 +74,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id, 'start' => '0#pid'.$this->post_id));
+            $url = ModUtil::url('Dizkus','topic','viewtopic', array('topic' => $this->old_topic_id, 'start' => '0#pid'.$this->post_id));
             return $view->redirect($url);
         }
 
@@ -87,11 +87,11 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         $data['old_topic_id'] = $this->old_topic_id;
         $data['post_id']      = $this->post_id;
     
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'movepost', $data);
+        $start = ModUtil::apiFunc('Dizkus', 'post', 'movepost', $data);
         $start = $start - $start%ModUtil::getVar('Dizkus', 'posts_per_page', 15);
         
         
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)).'#pid'.$this->post_id;
+        $url = ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)).'#pid'.$this->post_id;
         return $view->redirect($url);        
     }
 }

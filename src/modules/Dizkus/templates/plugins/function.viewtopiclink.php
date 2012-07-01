@@ -39,24 +39,21 @@
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
  */
-function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_name=null, $class=null, $start=null, $last_post_id=null)
+function smarty_function_viewtopiclink($params, &$smarty)
 {
-    if (!isset($topic_id)) {
+    if (!isset($params['topic_id'])) {
         return '';
     }
 
-    if (isset($class) && !empty($class)) {
-        $class = 'class="' . DataUtil::formatForDisplay($class) . '"';
+
+    $args = array('topic' => (int)$params['topic_id']);
+    if (isset($params['start'])) {
+        $args['start'] = (int)$params['start'];
     }
 
-    $args = array('topic' => (int)$topic_id);
-    if (isset($start)) {
-        $args['start'] = (int)$start;
-    }
-
-    $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $args);
-    if (isset($last_post_id)) {
-        $url .= '#pid' . (int)$last_post_id;
+    $url = ModUtil::url('Dizkus', 'topic', 'viewtopic', $args);
+    if (isset($params['last_post_id'])) {
+        $url .= '#pid' . (int)$params['last_post_id'];
     }
 
     /*$title = __('Go to topic');
@@ -71,17 +68,10 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     }*/
     
     
-    $post = DBUtil::selectObjectByID('dizkus_posts', $topic_id, 'topic_id');
-    $title = substr($post['post_text'], 0, 255);
-    $title = DataUtil::formatForDisplayHTML($title);
-    $hook = new Zikula_FilterHook('dizkus.filter_hooks.message.filter', $title);
-    $title =  ServiceUtil::getManager()->getService('zikula.hookmanager')->notify($hook)->getData();
-
+    $post = DBUtil::selectObjectByID('dizkus_posts', $params['topic_id'], 'topic_id');
+    $lastposttext = DataUtil::formatForDisplayHTML($post['post_text']);
+   
     
-    
-                      $t = '<script type="text/javascript">
-                        var defaultTooltip = new Zikula.UI.Tooltip($(\'post_preview\'));
-                        </script>';
-    
-    return '<a id="post_preview" '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>'.$t;
+    $smarty->assign('lastposttext', $lastposttext);
+    $smarty->assign('lastposturl', $url);
 }

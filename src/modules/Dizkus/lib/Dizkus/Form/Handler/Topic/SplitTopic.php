@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to delete a topic.
  */
-class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_Topic_SplitTopic extends Zikula_Form_AbstractHandler
 {
 
     /**
@@ -69,7 +69,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus','topic','viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -81,11 +81,10 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         // submit is set, we split the topic now
         $this->post['topic_subject'] = $data['newsubject'];
 
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'user', 'splittopic', array('post' => $this->post));
+        $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'splittopic', array('post' => $this->post));
 
-        echo $newtopic_id;
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
+        $url = ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $newtopic_id));
         return $view->redirect($url);
     }
 }
