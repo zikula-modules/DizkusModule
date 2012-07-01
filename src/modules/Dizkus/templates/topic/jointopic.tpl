@@ -1,27 +1,23 @@
-{gt text="Join topics" assign=templatetitle}
+{gt text="Join topic" assign=templatetitle}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
-<h2>{$templatetitle}</h2>
+{form cssClass="z-form z-linear"}
+{formvalidationsummary}
 
-<form class="z-form" action="{modurl modname=Dizkus type=topic func=jointopic}" method="post">
-    <div>
-        <input type="hidden" name="mode" value="join" />
-        <input type="hidden" name="topic" value="{$topic_id}" />
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
-        <fieldset id="dzk_jointopic">
+        <fieldset id="dzk_movetopic">
             <legend>{gt text="Join topic with another topic"}</legend>
+             <p class="z-informationmsg">{gt text="Target topic Id must be different than"} {$from_topic_id}</p>
             <div class="z-formrow">
-                <label for="to_topic_id">{gt text="ID of target topic"}</label>
-                <span>
-                    <input type="text" id="to_topic_id" name="to_topic_id" value="" size="10" maxlength="20" />
-                </span>
-            </div>
-            <div class="z-formbuttons z-buttons">
-                {button src="button_ok.png" set="icons/extrasmall" __alt="Join topics" __title="Join topics" __text="Join topics"}
-            </div>
-        </fieldset>
-    </div>
-</form>
+            	{formlabel for="subject" text="ID of target topic" mandatory=true}
+            	{formtextinput id="to_topic_id" size="10" maxLength="200"}
+            </div>                                           
+        <div class="z-formbuttons z-buttons">
+            {formbutton class="z-bt-ok"      commandName="jointopic"   __text="Join"}
+            {formbutton class="z-bt-cancel"      commandName="cancel"   __text="Back"}
+        </div><br />                           
+   
+    </fieldset>
+{/form}
 
 {include file='user/footer.tpl'}

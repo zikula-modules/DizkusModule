@@ -52,7 +52,7 @@ class Dizkus_Form_Handler_Topic_DeleteTopic extends Zikula_Form_AbstractHandler
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }
-            $this->topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'get_topicid_by_postid', array('post_id' => $post_id));
+            $this->topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'get_topicid_by_postid', $post_id);
         }
 
         $topic = ModUtil::apiFunc('Dizkus', 'topic', 'readtopic', array(
@@ -82,7 +82,7 @@ class Dizkus_Form_Handler_Topic_DeleteTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus','topic','viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -107,7 +107,7 @@ class Dizkus_Form_Handler_Topic_DeleteTopic extends Zikula_Form_AbstractHandler
 
         // redirect to the forum of the deleted topic
         $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', $this->topic_id);
-        $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
+        $url = ModUtil::url('Dizkus', 'forum', 'viewforum', array('forum' => $forum_id));
         return $view->redirect($url);
     }
 }

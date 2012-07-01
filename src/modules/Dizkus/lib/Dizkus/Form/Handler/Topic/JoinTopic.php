@@ -19,8 +19,9 @@ class Dizkus_Form_Handler_Topic_JoinTopic extends Zikula_Form_AbstractHandler
      *
      * @var arrat
      */
-    private $post;
-
+    private $from_topic_id;
+    private $to_topic_id;
+    
 
     /**
      * Setup form.
@@ -41,19 +42,11 @@ class Dizkus_Form_Handler_Topic_JoinTopic extends Zikula_Form_AbstractHandler
         if (!is_bool($disabled)) {
             return $disabled;
         }
-
-        $post_id = (int)$this->request->query->get('post');
-        $this->post = ModUtil::apiFunc('Dizkus', 'Post', 'read', $post_id);
-
-        if (!allowedtomoderatecategoryandforum($this->post['cat_id'], $this->post['forum_id'])) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
-        }
-
-        $this->view->assign($this->post);
-        $this->view->assign('newsubject', $this->__('Split').': '.$this->post['topic_subject']);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-
+        
+        // get the input
+        $this->from_topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+    
+        $this->view->assign('from_topic_id', $this->from_topic_id);
         return true;
     }
 
@@ -69,7 +62,7 @@ class Dizkus_Form_Handler_Topic_JoinTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus','topic','viewtopic', array('topic' => $this->from_topic_id)));
         }
 
         // check for valid form and get data
@@ -77,15 +70,13 @@ class Dizkus_Form_Handler_Topic_JoinTopic extends Zikula_Form_AbstractHandler
             return false;
         }
         $data = $view->getValues();
+        $this->to_topic_id = $data['to_topic_id'];
+        
+       
+        $new_topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'jointopics', array('from_topic_id' => (int)$this->from_topic_id,
+                                                                       'to_topic_id'   => (int)$this->to_topic_id));
 
-        // submit is set, we split the topic now
-        $this->post['topic_subject'] = $data['newsubject'];
-
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'jointopic', array('post' => $this->post));
-
-        echo $newtopic_id;
-
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
+        $url = ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $new_topic_id));
         return $view->redirect($url);
     }
 }

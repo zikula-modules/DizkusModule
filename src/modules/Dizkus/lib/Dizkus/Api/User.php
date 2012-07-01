@@ -471,8 +471,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $this->view->assign('post_message', $args['post_message']);
             $this->view->assign('topic_id', $args['topic_id']);
             $this->view->assign('forum_id', $forum_id);
-            $this->view->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
-            $this->view->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
+            $this->view->assign('reply_url', ModUtil::url('Dizkus', 'post', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
+            $this->view->assign('topic_url', ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
             $this->view->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
             $this->view->assign('base_url', System::getBaseUrl());
             $message = $this->view->fetch('mail/notifyuser.txt');

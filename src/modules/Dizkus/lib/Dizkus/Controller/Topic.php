@@ -57,16 +57,16 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
             $topic_id = ModUtil::apiFunc($this->name, 'topic', 'get_previous_or_next_topic_id',
                                      array('topic_id' => $topic_id,
                                            'view'     => $view));
-            return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic',
+            return System::redirect(ModUtil::url($this->name, 'topic', 'viewtopic',
                                 array('topic' => $topic_id)));
         }
     
         // begin patch #3494 part 2, credits to teb
         if (!empty($post_id) && is_numeric($post_id) && empty($topic_id)) {
-            $topic_id = ModUtil::apiFunc($this->name, 'topic', 'get_topicid_by_postid', array('post_id' => $post_id));
+            $topic_id = ModUtil::apiFunc($this->name, 'topic', 'get_topicid_by_postid',$post_id);
             if ($topic_id <> false) {
                 // redirect instad of continue, better for SEO
-                return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', 
+                return System::redirect(ModUtil::url($this->name, 'topic', 'viewtopic', 
                                            array('topic' => $topic_id)));
             }
         }
@@ -97,19 +97,9 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
         return $form->execute('topic/newtopic.tpl', new Dizkus_Form_Handler_Topic_NewTopic());
     }
     
-
-    /**
-     * Delete topic
-     *
-     * @return string
-     */
-    public function deletetopic() {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('topic/deletetopic.tpl', new Dizkus_Form_Handler_Topic_DeleteTopic());
-    }
     
       /**
-     * Delete topic
+     * Move topic
      *
      * @return string
      */
@@ -117,10 +107,6 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
         $form = FormUtil::newForm($this->name, $this);
         return $form->execute('topic/movetopic.tpl', new Dizkus_Form_Handler_Topic_MoveTopic());
     }
-    
-    
-    
-  
     
    
     /**
@@ -134,7 +120,6 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
         return $form->execute('topic/emailtopic.tpl', new Dizkus_Form_Handler_Topic_EmailTopic());
     }
     
-
     
     /**
      * Split topic
@@ -146,6 +131,29 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
         $form = FormUtil::newForm($this->name, $this);
         return $form->execute('topic/splittopic.tpl', new Dizkus_Form_Handler_Topic_SplitTopic());
     }
+    
+        /**
+     * jointopics
+     * Join a topic with another toipic                                                                                                  ?>
+     *
+     */
+    public function jointopic($args=array())
+    {
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('topic/jointopic.tpl', new Dizkus_Form_Handler_Topic_JoinTopic());
+    }
+
+     /**
+     * Delete topic
+     *
+     * @return string
+     */
+    public function deletetopic() 
+    {
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('topic/deletetopic.tpl', new Dizkus_Form_Handler_Topic_DeleteTopic());
+    }
+    
     
     /**
      * print
@@ -172,8 +180,7 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
     
         if (useragent_is_bot() == true) {
             if ($post_id <> 0 ) {
-                $topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'get_topicid_by_postid',
-                                        array('post_id' => $post_id));
+                $topic_id = ModUtil::apiFunc('Dizkus', 'topic', 'get_topicid_by_postid',$post_id);
             }
             if (($topic_id <> 0) && ($topic_id<>false)) {
                 return $this->viewtopic(array('topic' => $topic_id,
@@ -185,14 +192,13 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
             $this->view->add_core_data();
             $this->view->setCaching(false);
             if ($post_id <> 0) {
-                $post = ModUtil::apiFunc('Dizkus', 'post', 'readpost',
-                                     array('post_id' => $post_id));
+                $post = ModUtil::apiFunc('Dizkus', 'post', 'read',$post_id);
     
                 $this->view->assign('post', $post);
     
                 $output = $this->view->fetch('post/printpost.tpl');
             } elseif ($topic_id <> 0) {
-                $topic = ModUtil::apiFunc('Dizkus', 'topic', 'readtopic',
+                $topic = ModUtil::apiFunc('Dizkus', 'topic', 'read',
                                      array('topic_id'  => $topic_id,
                                            'complete' => true,
                                            'count' => false ));
@@ -229,63 +235,6 @@ class Dizkus_Controller_Topic extends Zikula_AbstractController
             System::shutDown();
         }
     }
-    
-    
-    /**
-     * jointopics
-     * Join a topic with another toipic                                                                                                  ?>
-     *
-     */
-    public function jointopics($args=array())
-    {
-        // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
-        );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
-        // get the input
-        $post_id       = (int)$this->request->query->get('post_id', (isset($args['post_id'])) ? $args['post_id'] : null);
-        $submit        = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $to_topic_id   = (int)$this->request->query->get('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null);
-        $from_topic_id = (int)$this->request->query->get('from_topic_id', (isset($args['from_topic_id'])) ? $args['from_topic_id'] : null);
-    
-        $post = ModUtil::apiFunc('Dizkus', 'post', 'readpost', array('post_id' => $post_id));
-    
-        if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
-        }
-    
-        if (!$submit) {
-            $this->view->assign('post', $post);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
-            return $this->view->fetch('topic/jointopics.tpl');
-    
-        } else {
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-    
-            // check if from_topic exists. this function will return an error if not
-            $from_topic = ModUtil::apiFunc('Dizkus', 'topic', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
-            // check if to_topic exists. this function will return an error if not
-            $to_topic = ModUtil::apiFunc('Dizkus', 'topic', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
-            // submit is set, we split the topic now
-            //$post['new_topic'] = $totopic;
-            //$post['old_topic'] = $old_topic;
-            $res = ModUtil::apiFunc('Dizkus', 'topic', 'jointopics', array('from_topic' => $from_topic,
-                                                                       'to_topic'   => $to_topic));
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $res)));
-        }
-    }
-    
 
     
     /**

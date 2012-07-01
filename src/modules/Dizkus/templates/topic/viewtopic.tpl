@@ -53,6 +53,7 @@
                 </li>
 
                 <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=topic func=movetopic topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                 <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Join topic"}" href="{modurl modname='Dizkus' type=topic func=jointopic topic=$topic.topic_id}">{gt text="Join topic"}</a></li>
                 <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type=topic func=deletetopic topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
             </ul>
             {/if}
@@ -223,9 +224,6 @@
     var unstickyTopic = "{{gt text="Remove 'sticky' status"}}";
     // ]]>
 </script>
-
-
-
 
 
 {include file='user/footer.tpl'}

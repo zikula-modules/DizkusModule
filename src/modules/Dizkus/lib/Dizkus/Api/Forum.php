@@ -507,6 +507,20 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return ModUtil::apiFunc($this->name, 'Forum', 'getCategory', $forum_id);
     }
     
+        /**
+     * getTopicSubscriptions
+     *
+     * @params none
+     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
+     * @returns array with topic ids, may be empty
+     */
+    public function getForumSubscriptions($uid)
+    {
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptionsJoin')
+                                   ->findBy(array('user_id' => $uid));
+    
+        return $subscriptions;
+    }
      
     /**
      * get_forum_subscriptions
@@ -515,14 +529,14 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
      * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
      * @returns array with forum ids, may be empty
      */
-    public function get_forum_subscriptions($args)
+    public function get_forum_subscriptions($user_id)
     {
-        if (isset($args['user_id'])) {
+        if (isset($user_id)) {
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
                 return LogUtil::registerPermissionError();
             }
         } else {
-            $args['user_id'] = UserUtil::getVar('uid');
+            $user_id = UserUtil::getVar('uid');
         }
     
         $ztable = DBUtil::getTables();
@@ -535,7 +549,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
                 FROM ' . $ztable['dizkus_subscription'] . ' AS fs,
                      ' . $ztable['dizkus_forums'] . ' AS f,
                      ' . $ztable['dizkus_categories'] . ' AS c 
-                WHERE fs.' . $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . '
+                WHERE fs.' . $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($user_id) . '
                   AND f.' . $ztable['dizkus_forums_column']['forum_id'] . '=fs.' . $ztable['dizkus_subscription_column']['forum_id'] . '
                   AND c.' . $ztable['dizkus_categories_column']['cat_id'] . '=f.' . $ztable['dizkus_forums_column']['cat_id']. '
                 ORDER BY c.' . $ztable['dizkus_categories_column']['cat_order'] . ', f.' . $ztable['dizkus_forums_column']['forum_order'];

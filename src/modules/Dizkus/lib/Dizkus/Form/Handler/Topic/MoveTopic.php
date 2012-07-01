@@ -19,9 +19,11 @@ class Dizkus_Form_Handler_Topic_MoveTopic extends Zikula_Form_AbstractHandler
      *
      * @var arrat
      */
-    private $post;
+    private $topic_id;
 
-
+    private $topic;
+    
+    private $oldforum_id;
     /**
      * Setup form.
      *
@@ -41,17 +43,32 @@ class Dizkus_Form_Handler_Topic_MoveTopic extends Zikula_Form_AbstractHandler
         if (!is_bool($disabled)) {
             return $disabled;
         }
-
-        $post_id = (int)$this->request->query->get('post');
-        $this->post = ModUtil::apiFunc('Dizkus', 'Post', 'read', $post_id);
-
-        if (!allowedtomoderatecategoryandforum($this->post['cat_id'], $this->post['forum_id'])) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
+      
+        // get the input
+        $this->topic_id = (int)$this->request->query->get('topic');
+         if (!isset($this->topic_id)) {
+            return LogUtil::registerError($this->__('Error! Missing topic id.'), null, ModUtil::url('Dizkus','user', 'main'));
         }
-
-        $this->view->assign($this->post);
-        $this->view->assign('newsubject', $this->__('Split').': '.$this->post['topic_subject']);
+       
+        $this->topic = ModUtil::apiFunc('Dizkus', 'topic', 'read0',
+                              array('topic_id' => $this->topic_id));
+      
+        $this->oldforum_id = $this->topic['forum_id'];
+      
+   
+        $tree = ModUtil::apiFunc('Dizkus', 'category', 'readcategorytree');
+        $list = array();
+        foreach ($tree as $categoryname => $category) {
+            foreach ($category['forums'] as $forum) {
+              $list[$forum['forum_id']]['text'] = $categoryname . '::' . $forum['forum_name'];
+              $list[$forum['forum_id']]['value']= $forum['forum_id'];
+            }
+        }
+                    
+        unset($list[$this->oldforum_id]);
+                   
+        $this->view->assign('forums', $list);
+        $this->view->assign('topic_id', $this->topic_id);
         $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
 
         return true;
@@ -69,7 +86,7 @@ class Dizkus_Form_Handler_Topic_MoveTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus','forum','viewforum', array('forum' => $this->oldforum_id)));
         }
 
         // check for valid form and get data
@@ -78,14 +95,22 @@ class Dizkus_Form_Handler_Topic_MoveTopic extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        // submit is set, we split the topic now
-        $this->post['topic_subject'] = $data['newsubject'];
+        
+        list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'topic', 'get_forumid_and_categoryid_from_topicid',$this->topic_id);
+        if ($forum_id == $f_id) {
+            return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
+         }
+        if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+            return LogUtil::registerPermissionError();
+         }
+          
+          ModUtil::apiFunc('Dizkus', 'topic', 'movetopic',
+                                 array('topic_id' => (int)$this->topic_id,
+                                       'forum_id' => $data['forum'],
+                                       'shadow'   => $data['shadow'] ));
 
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'movetopic', array('post' => $this->post));
-
-        echo $newtopic_id;
-
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
-        return $view->redirect($url);
+      
+        //redirect back to forum so we can move other topics
+        return $view->redirect(ModUtil::url('Dizkus','forum','viewforum', array('forum' => $this->oldforum_id)));
     }
 }

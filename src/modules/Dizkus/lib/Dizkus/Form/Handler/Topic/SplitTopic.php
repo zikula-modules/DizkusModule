@@ -69,7 +69,7 @@ class Dizkus_Form_Handler_Topic_SplitTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus','topic','viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -83,9 +83,8 @@ class Dizkus_Form_Handler_Topic_SplitTopic extends Zikula_Form_AbstractHandler
 
         $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'splittopic', array('post' => $this->post));
 
-        echo $newtopic_id;
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
+        $url = ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $newtopic_id));
         return $view->redirect($url);
     }
 }

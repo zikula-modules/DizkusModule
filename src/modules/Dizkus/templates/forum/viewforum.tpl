@@ -169,7 +169,9 @@
                         {if $showattachment eq 1}
                         {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' }
                         {/if}
-                        {$topic.topic_id|viewtopiclink:$topic.topic_title}
+                        {viewtopiclink topic_id=$topic.topic_id subject=$topic.topic_title}
+                        <a href="{$lastposturl}" class="post_tooltip" title="#post_preview_{$topic.topic_id}">{$topic.topic_title}</a>
+                        <span id="post_preview_{$topic.topic_id}" style="display: none;">{$lastposttext|safehtml|notifyfilters:'dizkus.filter_hooks.message.filter'}</span>
                         <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
                         {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                     </dt>
@@ -213,6 +215,7 @@
 
 <script type="text/javascript">
     // <![CDATA[
+    var tooltips = Zikula.UI.Tooltips($$('.post_tooltip'));
     var subscribeForum = "{{gt text='Subscribe to forum'}}";
     var unsubscribeForum = "{{gt text='Unsubscribe from forum'}}";
     var favouriteForum = "{{gt text='Add forum to favourites'}}";

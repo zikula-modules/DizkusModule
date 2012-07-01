@@ -312,7 +312,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->add_core_data();
         $this->view->setCaching(false);
         $this->view->assign('mode', $mode);
-        $this->view->assign('topic_id', $topic_id);
+        $this->view->assign('topic_id', ModUtil::apifunc('Dizkus', 'topic', 'get_topicid_by_postid', $post_id));
         $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
 
         return $this->view->fetch($templatename);

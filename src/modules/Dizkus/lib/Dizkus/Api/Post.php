@@ -237,7 +237,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             if ($args['reply_start']==true) {
                 $reply['attach_signature'] = true;
                 $reply['subscribe_topic'] = false;
-                $is_subscribed = $this->get_topic_subscription_status(array('user_id'   => $pn_uid,
+                $is_subscribed = ModUtil::apiFunc($this->name, 'topic', 'get_topic_subscription_status',array('user_id'   => $pn_uid,
                                                                             'topic_id' => $reply['topic_id']));
     
                 if ($is_subscribed == true || ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') {
@@ -250,7 +250,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
                 $reply['subscribe_topic'] = $args['subscribe_topic'];
             }
         }
-        $reply['poster_data'] = $this->get_userdata_from_id(array('userid' => $pn_uid));
+        $reply['poster_data'] = ModUtil::apiFunc($this->name, 'user', 'get_userdata_from_id', array('userid' => $pn_uid));
     
         if ($reply['topic_status'] == 1) {
             return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
@@ -284,7 +284,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
                     $review['poster_id'] = 1;
                 }
             
-                $review['poster_data'] = $this->get_userdata_from_id(array('userid' => $review['poster_id']));
+                $review['poster_data'] = ModUtil::apiFunc($this->name, 'user', 'get_userdata_from_id', array('userid' => $post['poster_id']));
             
                 // TODO extract unixtime directly from MySql
                 $review['post_unixtime'] = strtotime($review['post_time']);
@@ -323,8 +323,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
      */
     public function storereply($args)
     {
-        list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'topic', 'get_forumid_and_categoryid_from_topicid',
-                                                array('topic_id' => $args['topic_id']));
+        list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'topic', 'get_forumid_and_categoryid_from_topicid',$args['topic_id']);
     
         if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
@@ -396,11 +395,10 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             // update subscription
             if ($args['subscribe_topic']==1) {
                 // user wants to subscribe the topic
-                $this->subscribe_topic(array('topic_id' => $obj['topic_id']));
+               ModUtil::apiFunc('Dizkus', 'topic', 'subscribe',array('topic_id' => $obj['topic_id']));
             } else {
                 // user does not want to subscribe the topic
-                $this->unsubscribe_topic(array('topic_id' => $obj['topic_id'],
-                                                       'silent'   => true));
+                ModUtil::apiFunc('Dizkus', 'topic', 'unsubscribe',array('topic_id' => $obj['topic_id']));
             }
         }
     
@@ -411,14 +409,14 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
         DBUtil::incrementObjectFieldByID('dizkus_forums', 'forum_posts', $obj['forum_id'], 'forum_id');
     
         // get the last topic page
-        $start = $this->get_last_topic_page(array('topic_id' => $obj['topic_id']));
+         $start = ModUtil::apiFunc('Dizkus', 'topic', 'get_last_topic_page',$obj['topic_id']);
     
         // Let any hooks know that we have created a new item.
         //ModUtil::callHooks('item', 'create', $this_post, array('module' => 'Dizkus'));
 //        ModUtil::callHooks('item', 'update', $obj['topic_id'], array('module' => 'Dizkus',
 //                                                          'post_id' => $obj['post_id']));
     
-        $this->notify_by_email(array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['poster_id'], 'post_message' => $posted_message, 'type' => '2'));
+        ModUtil::apiFunc('Dizkus', 'user', 'notify_by_email',array('topic_id' => $obj['topic_id'], 'poster_id' => $obj['poster_id'], 'post_message' => $posted_message, 'type' => '2'));
     
         return array($start, $obj['post_id']);
     }
@@ -442,7 +440,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
     public function updatepost($args)
     {
         if (!isset($args['topic_id']) || empty($args['topic_id']) || !is_numeric($args['topic_id'])) {
-            $args['topic_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $args['post_id']));
+            $args['topic_id'] = ModUtil::apiFunc('Dizkus', 'topic', 'get_topicid_by_postid', $args['post_id']);
         }
         
         if ($this->isSpam($args['message'])) {
@@ -522,7 +520,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             // 'post_id' => $args['post_id']));
     
             // update done, return now
-            return ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']));
+            return ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $args['topic_id']));
     
         } else {
             // we are going to delete this posting
@@ -536,7 +534,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             $post_to_delete = $posts[$args['post_id']];
             
             // read the raw topic itself
-            $topic = ModUtil::apiFunc('Dizkus', 'Topic', 'read0', $args['topic_id']);
+            $topic = ModUtil::apiFunc('Dizkus', 'topic', 'read0', $args['topic_id']);
             // read the raw forum
             $forum = DBUtil::selectObjectById('dizkus_forums', $firstpost['forum_id'], 'forum_id');
 
@@ -547,9 +545,9 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
                     // ... and it is also the first posting in the topic, so we can simply
                     // delete the complete topic
                     // this also adjusts the counters
-                    ModUtil::apiFunc('Dizkus', 'topic', 'deletetopic', array('topic_id' => $args['topic_id']));
+                    ModUtil::apiFunc('Dizkus', 'topic', 'delete',$args['topic_id']);
                     // cannot return to the topic, must return to the forum
-                    return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $row['forum_id'])));
+                    return System::redirect(ModUtil::url('Dizkus', 'forum', 'viewforum', array('forum' => $row['forum_id'])));
                 } else {
                     // it was the last one, but there is still more in this topic
                     // find the new "last posting" in this topic
@@ -583,7 +581,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             DBUtil::updateObject($topic, 'dizkus_topics', null, 'topic_id');
 
             if (SessionUtil::getVar('zk_ajax_call', '')  <> 'ajax') {
-                $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic['topic_id']));
+                $url = ModUtil::url('Dizkus', 'topic', 'viewtopic', array('topic' => $topic['topic_id']));
                 return System::redirect($url);
             }
         }
@@ -750,7 +748,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             $post['posted_unixtime'] = strtotime($post['post_time']);
             $post['post_time'] = DateUtil::formatDatetime($post['posted_unixtime'], 'datetimebrief');
     
-            $post['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic',
+            $post['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'topic', 'viewtopic',
                                                          array('topic' => $post['topic_id'],
                                                                'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page), null, null, true));
     
@@ -853,7 +851,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
     
         DBUtil::executeSQL($sql);
     
-        return $this->get_last_topic_page(array('topic_id' => $old_topic_id));
+        return ModUtil::apiFunc('Dizkus', 'topic', 'get_last_topic_page',$old_topic_id);
     } 
 
  /**
