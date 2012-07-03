@@ -148,4 +148,21 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->getcat_id();
     }
 
+    /**
+     * getForum
+     *
+     * Return forum entity information as an array
+     *
+     * @param int $forum_id The forum id to find the category of.
+     *
+     * @return int|boolean on success, false on failure
+     */
+    public function getForum($forum_id)
+    {
+        if (!is_numeric($forum_id)) {
+            return false;
+        }
+        return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
+    }
+
 }
