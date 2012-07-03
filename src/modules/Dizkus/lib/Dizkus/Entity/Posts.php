@@ -110,7 +110,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     public function getpost_time()
     {
         $time = new DateTime($this->post_time);
-        return $time->format('Y-m-d H:i:s');
+        return $time->format('Y-m-d H:i');
     }
     
     public function getposter_ip()

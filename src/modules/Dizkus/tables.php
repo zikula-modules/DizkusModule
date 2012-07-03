@@ -191,6 +191,8 @@ function Dizkus_tables()
     $ztable['dizkus_topics_column_idx'] = array('forum_id'           => 'forum_id',
                                                   'topic_last_post_id' => 'topic_last_post_id');
 
+
+
     //
     // users - obsole since 3.2.0 as these data have been moved to attributes, remove in a later version
     //
@@ -210,6 +212,7 @@ function Dizkus_tables()
                                                 'user_favorites'  => 'I(1) NOTNULL DEFAULT 0',
                                                 'user_post_order' => 'I(1) NOTNULL DEFAULT 0');
 
+   
     // new in 1.7.5
     // 
     // topic_subscriptions

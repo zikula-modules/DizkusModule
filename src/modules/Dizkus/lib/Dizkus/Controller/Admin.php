@@ -218,7 +218,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
         
-        $subforums = ModUtil::apiFunc('Dizkus', 'user', 'readSubForums');
+        $subforums = ModUtil::apiFunc('Dizkus', 'forum', 'readSubForums');
         $this->view->assign('subforums', $subforums);
         return $this->view->fetch('admin/subforums.tpl');
        
@@ -244,7 +244,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
     
-        $categorytree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
+        $categorytree = ModUtil::apiFunc('Dizkus', 'category', 'readcategorytree');
 
         $this->view->assign('categorytree', $categorytree);
         $this->view->assign('newcategory', false);
