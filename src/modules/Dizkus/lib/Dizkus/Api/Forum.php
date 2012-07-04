@@ -165,4 +165,128 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
     }
 
+
+
+    /**
+     * getForumTree
+     *
+     * Determines the forum tree.
+     *
+     * @return array
+     */
+    public function getTree()
+    {
+        $parents = array();
+        $categories = ModUtil::apiFunc('Dizkus', 'Category', 'getAll');
+        foreach ($categories as $key => $category) {
+            $parents[] = array(
+                'id'        => $category['cat_id'],
+                'name'      => $category['cat_title'],
+                'subforums' => $this->getSubTree($category['cat_id'], true)
+            );
+        }
+        return $parents;
+    }
+
+
+    /**
+     * getForumTree
+     *
+     * Determines a forum subtree.
+     *
+     * @return array
+     */
+    private function getSubTree($parent_id, $category = false)
+    {
+
+        if ($category) {
+            $find = array('cat_id' => $parent_id, 'parent_id' => 0);
+        } else {
+            $find = array('parent_id' => $parent_id);
+        }
+
+        $output = array();
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find, array('forum_order' => 'ASC'));
+        foreach ($forums as $forum) {
+            $output[] = array(
+                'id'        => $forum->getforum_id(),
+                'name'      => $forum->getforum_name(),
+                'subforums' => $this->getSubTree($forum->getforum_id()),
+            );
+        }
+        return $output;
+    }
+
+
+    /**
+     * getForumTree
+     *
+     * Determines the forum tree.
+     *
+     * @return array
+     */
+    public function getTreeAsDropdownList()
+    {
+        $parents = array();
+        $categories = ModUtil::apiFunc('Dizkus', 'Category', 'getAll');
+        foreach ($categories as $key => $category) {
+            $parents[] = array('value' => 'c'.$category['cat_id'], 'text' => $category['cat_title']);
+            $parents = array_merge($parents, $this->getSubTreeAsDropdownList($category['cat_id'], 0));
+        }
+        return $parents;
+    }
+
+
+    /**
+     * getForumTree
+     *
+     * Determines a forum subtree.
+     *
+     * @return array
+     */
+    private function getSubTreeAsDropdownList($parent_id, $level)
+    {
+
+        if ($level == 0) {
+            $find = array('cat_id' => $parent_id, 'parent_id' => 0);
+        } else {
+            $find = array('parent_id' => $parent_id);
+        }
+
+        $output = array();
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find);
+        foreach ($forums as $forum) {
+            $output[] = array('value' => $forum->getforum_id(), 'text' => str_repeat("--", $level+1).$forum->getforum_name());
+            $output = array_merge($output, $this->getSubTree($forum->getforum_id(),$level+1));
+        }
+        return $output;
+    }
+
+
+
+    /**
+     * getForumTree
+     *
+     * Determines a forum subtree.
+     *
+     * @return array
+     */
+    public function getHighestOrder($parentId)
+    {
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('MAX(f.forum_order)')
+            ->from('Dizkus_Entity_Forums', 'f')
+            ->where('f.parent_id = :parentId')
+            ->setParameter('parentId', $parentId);
+        $highestOrder = $qb->getQuery()->getArrayResult();
+        if (!$highestOrder) {
+            return 1;
+        } else {
+            return $highestOrder[0][1]+1;
+        }
+
+    }
+
+
 }

@@ -207,33 +207,6 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     }
     
     
-    /**
-     * subforums
-     *
-     * @return string
-     */
-    public function subforums()
-    {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
-        
-        $subforums = ModUtil::apiFunc('Dizkus', 'user', 'readSubForums');
-        $this->view->assign('subforums', $subforums);
-        return $this->view->fetch('admin/subforums.tpl');
-       
-    }
-    
-        /**
-     * 
-     */
-    public function modifysubforum()
-    {
-        $form = FormUtil::newForm('Dizkus', $this);
-        return $form->execute('admin/modifysubforum.tpl', new Dizkus_Form_Handler_Admin_ModifySubForum());
-    }
-    
-    
     /** 
      * reordertree
      *
@@ -251,6 +224,157 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         $this->view->assign('newforum', false);
     
         return $this->view->fetch('admin/reordertree.tpl');
+    }
+
+
+
+    /**
+     * tree
+     *
+     * Tree.
+     *
+     * @return string
+     */
+    public function tree()
+    {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
+        }
+
+        return $this->view->assign('tree', ModUtil::apiFunc($this->name, 'Forum', 'getTree'))
+            ->fetch('admin/tree.tpl');
+
+    }
+
+
+    /**
+     * changeCatagoryOrder
+     *
+     * @return string
+     */
+    public function changeCatagoryOrder() {
+
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+
+        $id = $this->request->query->get('id', null);
+        $action = $this->request->query->get('action');
+
+        if (is_null($id) || is_null($action)) {
+            LogUtil::registerArgsError();
+            return $this->redirect($url);
+        }
+
+        $category = $this->entityManager->find('Dizkus_Entity_Categories', $id);
+        $cat_order = $category->getcat_order();
+
+        // get lower/higher category
+        if ($action == 'increase') {
+            $order = 'DESC';
+            $operator = '<';
+        } else {
+            $order = 'ASC';
+            $operator = '>';
+        }
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from('Dizkus_Entity_Categories', 'c')
+            ->where('c.cat_order '.$operator.' :order')
+            ->setParameter('order', $category->getcat_order())
+            ->orderBy('c.cat_order', $order)
+            ->setMaxResults(1);
+        $category2 = $qb->getQuery()->getArrayResult();
+        if ($category2) {
+            $category2 = $category2[0];
+        } else {
+            return LogUtil::registerError($this->__('No higher category!'));
+        }
+
+        $category->setcat_order($category2['cat_order']);
+        $higerCategory = $this->entityManager->find('Dizkus_Entity_Categories', $category2['cat_id']);
+        $higerCategory->setcat_order($cat_order);
+
+        $this->entityManager->flush();
+
+
+        return $this->redirect($url);
+    }
+
+
+
+    /**
+     * changeCatagoryOrder
+     *
+     * @return string
+     */
+    public function changeForumOrder() {
+
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+
+        $id = $this->request->query->get('id', null);
+        $action = $this->request->query->get('action');
+
+        if (is_null($id) || is_null($action)) {
+            LogUtil::registerArgsError();
+            return $this->redirect($url);
+        }
+
+        $forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+        $forum_order = $forum->getforum_order();
+
+        // get lower/higher forum
+        if ($action == 'increase') {
+            $order = 'DESC';
+            $operator = '<';
+        } else {
+            $order = 'ASC';
+            $operator = '>';
+        }
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('f')
+            ->from('Dizkus_Entity_Forums', 'f')
+            ->where('f.forum_order '.$operator.' :order')
+            ->setParameter('order', $forum->getforum_order())
+            ->andWhere('f.parent_id = :parentId')
+            ->setParameter('parentId', $forum->getparent_id())
+            ->orderBy('f.forum_order', $order)
+            ->setMaxResults(1);
+        $forum2 = $qb->getQuery()->getArrayResult();
+        if ($forum2) {
+            $forum2 = $forum2[0];
+        } else {
+            return LogUtil::registerError($this->__('No higher forum!'));
+        }
+
+        $forum->setforum_order($forum2['forum_order']);
+        $higerForum = $this->entityManager->find('Dizkus_Entity_Forums', $forum2['forum_id']);
+        $higerForum->setforum_order($forum_order);
+
+        $this->entityManager->flush();
+
+
+        return $this->redirect($url);
+    }
+
+
+    /**
+     *
+     */
+    public function modifycategory()
+    {
+        $form = FormUtil::newForm('Dizkus', $this);
+        return $form->execute('admin/modifycategory.tpl', new Dizkus_Form_Handler_Admin_ModifyCategory());
+    }
+
+
+    /**
+     *
+     */
+    public function modifyforum()
+    {
+        $form = FormUtil::newForm('Dizkus', $this);
+        return $form->execute('admin/modifyforum.tpl', new Dizkus_Form_Handler_Admin_ModifyForum());
     }
                     
     /**

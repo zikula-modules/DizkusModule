@@ -660,9 +660,9 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                         'title' => $this->__('Create, delete, edit and re-order categories and forums')
                     ),
                     array(
-                        'url'   => ModUtil::url('Dizkus', 'admin', 'subforums'),
-                        'text'  => $this->__('Sub forums'),
-                        'title' => $this->__('Create, delete, edit and re-order sub categories')
+                        'url'   => ModUtil::url('Dizkus', 'admin', 'tree'),
+                        'text'  => $this->__('New forum tree'),
+                        'title' => $this->__('Create, delete, edit and re-order the forum tree')
                     ),
                     array(
                         'url'   => ModUtil::url('Dizkus', 'admin', 'syncforums'),

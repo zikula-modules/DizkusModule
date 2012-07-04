@@ -35,9 +35,9 @@ class Dizkus_Entity_Categories extends Zikula_EntityAccess {
     /**
      * The following are annotations which define the cat_order field.
      * 
-     * @ORM\Column(type="string", length="10")
+     * @ORM\Column(type="integer")
      */
-    private $cat_order = '';
+    private $cat_order = 1;
     
     
     
