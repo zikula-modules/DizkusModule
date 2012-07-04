@@ -684,6 +684,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
             case 'showallforums':
                 $return_to = (!empty($return_to))? $return_to : 'main';
+                $favorites = ModUtil::apiFunc('Dizkus', 'user', 'change_favorite_status');
                 break;
             case 'showfavorites':
                 if (ModUtil::getVar('Dizkus', 'favorites_enabled')=='yes') {

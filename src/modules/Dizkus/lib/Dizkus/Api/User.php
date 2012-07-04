@@ -3362,21 +3362,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
 
 
-    /**
-    * helper function to extract forum_ids from forum array
-    */
-    function _get_forum_ids($f)
-    {
-        return $f['forum_id'];
-    }
 
-    /**
-    * helper function
-    */
-    function _get_favorites($f)
-    {
-        return (int)$f['forum_id'];
-    }
  
     
     public function isSpam($message)
@@ -3402,4 +3388,21 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         
         return $qb->getQuery()->getArrayResult();
     }
+}
+
+
+/**
+ * helper function to extract forum_ids from forum array
+ */
+function _get_forum_ids($f)
+{
+    return $f['forum_id'];
+}
+
+/**
+ * helper function
+ */
+function _get_favorites($f)
+{
+    return (int)$f['forum_id'];
 }

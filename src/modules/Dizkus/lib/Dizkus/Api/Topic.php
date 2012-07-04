@@ -203,7 +203,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $timespanforchanges = $this->getVar('timespanforchanges', 24);
         $timespansecs = $timespanforchanges * 60 * 60;
 
-	$topic_id = (isset($args['topic_id'])) ? $args['topic_id'] : false;
+        $topic_id = (isset($args['topic_id'])) ? $args['topic_id'] : false;
         // no results - topic does not exist
         if (!$topic_id) {
             return LogUtil::registerError($this->__("Error! The topic you selected (ID: $topic_id) was not found. Please go back and try again."), null, ModUtil::url('Dizkus', 'user', 'main'));
@@ -214,7 +214,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $forum                      = $this->entityManager->find('Dizkus_Entity_Forums', $topic['forum_id']);
         $topic['forum_name']        = (string)$forum->getforum_name();
         $topic['cat_id']            = (int)$forum->getcat_id();
-        $topic['cat_title']         = (string)$this->entityManager->find('Dizkus_Entity_Categories', $forum['cat_id'])->getcat_title();
+        //$topic['cat_title']         = (string)$this->entityManager->find('Dizkus_Entity_Categories', $forum['cat_id'])->getcat_title();
         $topic['forum_pop3_active'] = (int)$forum->getforum_pop3_active();
 
 
