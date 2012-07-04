@@ -57,7 +57,7 @@
                 <li>
                     <span class="tooltips" title="{gt text='Category'}">{gt text="&nbsp;::&nbsp;"}{$view_category_data.cat_title|safetext}</span>
                 </li>
-                {elseif ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
+                {*elseif ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
                 <li>
                     {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$forum.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id}">{$forum.cat_title|safetext}</a>
                 </li>
@@ -68,19 +68,21 @@
                 {elseif $func eq 'newtopic'}
                 <li>
                     {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$newtopic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id}">{$newtopic.cat_title|safetext}</a>
-                </li>
+                </li>*}
                 {/if}
+
+
+
                 {if ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
-                {if $parent_id > 0}
                 <li>
                     {gt text="&nbsp;::&nbsp;"}
-                    <span class="tooltips" title="{gt text='Forum name'}">{getForumName id=$forum.cat_id}</span>
+                    <span class="tooltips" title="{gt text='Forum name'}">{modapifunc modname='Dizkus' type='Forum' func='getBreadcrumbs' forum=$forum}</span>
                 </li>
                 {/if}
-                <li>
-                    <span class="tooltips" title="{gt text='Forum name'}">{gt text="&nbsp;::&nbsp;"}{$forum.forum_name|safetext}</span>
-                </li>
-                {/if}
+
+
+
+
                 {if $func eq 'viewtopic' AND isset($topic)}
                 <li>
                     {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{$topic.forum_name|safetext}" href="{modurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id}">{$topic.forum_name|safetext}</a>

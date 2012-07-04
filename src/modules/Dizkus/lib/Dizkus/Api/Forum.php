@@ -162,7 +162,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         if (!is_numeric($forum_id)) {
             return false;
         }
-        return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
+        return $this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
     }
 
 
@@ -285,6 +285,44 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         } else {
             return $highestOrder[0][1]+1;
         }
+
+    }
+
+
+    /**
+     * get forum bread crumbs
+     *
+     * @param array $args The argument array.
+     *
+     * @return strimg
+     */
+    public function getBreadcrumbs($args)
+    {
+        if (!isset($args['forum'])) {
+            return '';
+        }
+
+        $forum =$args['forum'];
+
+
+        $breadcrumbs = array();
+        $breadcrumbs[] = $forum['forum_name'];
+        $i = 0;
+        while ($forum['parent_id'] != 0 && $i < 10) {
+
+            $forum = $this->getForum($forum['parent_id']);
+            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id']));
+            $breadcrumbs[] = '<a href="'.$url.'">'.$forum['forum_name'].'</a>';
+            $i++;
+
+        }
+
+
+        $category = ModUtil::apiFunc($this->name, 'Category', 'get', $forum['cat_id']);
+        $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $forum['cat_id']));
+        $breadcrumbs[] = '<a href="'.$url.'">'.$category['cat_title'].'</a>';
+
+        return implode(' :: ', array_reverse($breadcrumbs));
 
     }
 

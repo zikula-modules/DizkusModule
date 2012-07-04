@@ -13,10 +13,29 @@
  */
 class Dizkus_Api_Category extends Zikula_AbstractApi {
 
+
+    /**
+     * get category
+     *
+     * Return category entity as an array
+     *
+     * @param int $cat_id The category id to find the category of.
+     *
+     * @return array|boolean
+     */
+    public function get($cat_id)
+    {
+        if (!is_numeric($cat_id)) {
+            return false;
+        }
+        return $this->entityManager->find('Dizkus_Entity_Categories', $cat_id)->toArray();
+    }
+
+
     /**
      * Check if this is the first post in a topic.
      *
-     * @return boolean
+     * @return array
      */
     public function getAll()
     {
