@@ -120,7 +120,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
     
         $subforums = $this->entityManager->getRepository('Dizkus_Entity_Subforums')
-                                   ->findBy(array('is_subforum' => $forum_id)); 
+                                   ->findBy(array('parent_id' => $forum_id)); 
         $this->view->assign('subforums', $subforums);
         
         

@@ -2,3 +2,5 @@
 .directory
 nbproject
 .git*
+
+src/modules/Dizkus/lib/Dizkus/Entity/Subforums.php

@@ -70,7 +70,7 @@ class Dizkus_Entity_Subforums extends Zikula_EntityAccess
      *
      * @ORM\Column(type="integer")
      */
-    private $is_subforum = 0;
+    private $parent_id = 0;
 
     /**
      * The following are annotations which define the forum_order field.
@@ -200,9 +200,9 @@ class Dizkus_Entity_Subforums extends Zikula_EntityAccess
         return $this->cat_id;
     }
     
-    public function getis_subforum()
+    public function getparent_id()
     {
-        return $this->is_subforum;
+        return $this->parent_id;
     }
     
     public function getforum_order()
@@ -287,9 +287,9 @@ class Dizkus_Entity_Subforums extends Zikula_EntityAccess
     }
     
     
-    public function setis_subforum($is_subforum)
+    public function setparent_id($parent_id)
     {
-        $this->is_subforum = $is_subforum;
+        $this->parent_id = $parent_id;
     }
     
     

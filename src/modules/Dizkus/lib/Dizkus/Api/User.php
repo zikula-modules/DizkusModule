@@ -278,7 +278,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                        ' . $poststable . '.post_time AS post_time
                 FROM ' . $cattable . '
                 LEFT JOIN ' . $forumstable . ' ON ' . $forumstable . '.cat_id=' . $cattable . '.cat_id
-                AND '.$forumstable.'.is_subforum=0'.$cat.' 
+                AND '.$forumstable.'.parent_id=0'.$cat.' 
                 LEFT JOIN ' . $poststable . ' ON ' . $poststable . '.post_id=' . $forumstable . '.forum_last_post_id
                 LEFT JOIN ' . $topicstable . ' ON ' . $topicstable . '.topic_id=' . $poststable . '.topic_id
                 LEFT JOIN ' . $userstable . ' ON ' . $userstable . '.uid=' . $poststable . '.poster_id
@@ -3397,7 +3397,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $qb = $em->createQueryBuilder();
         $qb->select('s')
            ->from('Dizkus_Entity_Subforums', 's')
-           ->where('s.is_subforum > 0')
+           ->where('s.parent_id > 0')
            ->orderBy('s.forum_name', 'DESC');
         
         return $qb->getQuery()->getArrayResult();

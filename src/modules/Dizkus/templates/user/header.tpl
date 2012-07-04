@@ -71,7 +71,7 @@
                 </li>
                 {/if}
                 {if ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
-                {if $forum.is_subforum == 1}
+                {if $parent_id > 0}
                 <li>
                     {gt text="&nbsp;::&nbsp;"}
                     <span class="tooltips" title="{gt text='Forum name'}">{getForumName id=$forum.cat_id}</span>

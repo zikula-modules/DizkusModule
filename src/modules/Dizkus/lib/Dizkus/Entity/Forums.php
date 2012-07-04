@@ -68,7 +68,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      *
      * @ORM\Column(type="integer")
      */
-    private $is_subforum = 0;
+    private $parent_id = 0;
     
     /**
      * The following are annotations which define the forum_id field.
@@ -204,9 +204,9 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->forum_last_post_id;
     }
     
-     public function getis_subforum()
+     public function getparent_id()
     {
-        return $this->is_subforum;
+        return $this->parent_id;
     }
 
     public function getcat_id()
