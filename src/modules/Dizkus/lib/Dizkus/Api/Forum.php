@@ -12,7 +12,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
     
 
     
-    /**
+   /**
      * Get forum subscription status
      *
      * @param array $args The argument array.
@@ -39,7 +39,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
     }
 
 
-    /**
+   /**
      * subscribe
      *
      * @param array $args The argument array.
@@ -77,7 +77,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
     }
 
 
-    /**
+   /**
      * unsubscribe
      *
      * Unsubscribe a forum
@@ -148,24 +148,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->getcat_id();
     }
     
-      /**
-     * getCategory
-     *
-     * Determines the category that a forum belongs to.
-     *
-     * @param int $forum_id The forum id to find the category of.
-     *
-     * @return int|boolean on success, false on failure
-     */
-    public function getForum($forum_id)
-    {
-        if (!is_numeric($forum_id)) {
-            return false;
-        }
-        return $this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
-    }
-    
-        /**
+   /**
      * get_last_post_in_forum
      * gets the last post in a forum, false if no posts
      *
@@ -190,7 +173,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
     }
 
     
-      /**
+   /**
      * readforum
      * reads the forum information and the last posts_per_page topics incl. poster data
      *
