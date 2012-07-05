@@ -45,55 +45,13 @@
     <a id="top" accesskey="t"></a>
 
     {if $modvars.Dizkus.forum_enabled neq 'no'}
-    <div class="dzk_navbar dzk_rounded">
-        <div class="inner z-clearfix">
-            {* start of breadcrumbs *}
-            {strip}
-            <ul class="linklist navlinks z-clearfix">
-                <li class="icon-home">
-                    <a class="dzk_arrow homelink tooltips" title="{gt text='Go to forums index page'}" href="{modurl modname='Dizkus' type='user' func='main'}">{gt text="Forums index page"}</a>
-                </li>
-                {if $func eq 'main' AND $view_category neq -1}
-                <li>
-                    <span class="tooltips" title="{gt text='Category'}">{gt text="&nbsp;::&nbsp;"}{$view_category_data.cat_title|safetext}</span>
-                </li>
-                {*elseif ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
-                <li>
-                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$forum.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$forum.cat_id}">{$forum.cat_title|safetext}</a>
-                </li>
-                {elseif $func eq 'viewtopic' AND isset($topic)}
-                <li>
-                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$topic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$topic.cat_id}">{$topic.cat_title|safetext}</a>
-                </li>
-                {elseif $func eq 'newtopic'}
-                <li>
-                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{gt text="Go to category"}: {$newtopic.cat_title|safetext}" href="{modurl modname='Dizkus' type=user func=main viewcat=$newtopic.cat_id}">{$newtopic.cat_title|safetext}</a>
-                </li>*}
-                {/if}
 
 
+        <div class="dzk_navbar dzk_rounded">
+            <div class="inner z-clearfix">
 
-                {if ($func eq 'viewforum' OR $func eq 'moderateforum') AND isset($forum)}
-                <li>
-                    {gt text="&nbsp;::&nbsp;"}
-                    <span class="tooltips" title="{gt text='Forum name'}">{modapifunc modname='Dizkus' type='Forum' func='getBreadcrumbs' forum=$forum}</span>
-                </li>
-                {/if}
+            {breadcrumbs forum=$forum|default:false topic=$topic|default:false func=$func favorites=$favorites|default:false}
 
-
-
-
-                {if $func eq 'viewtopic' AND isset($topic)}
-                <li>
-                    {gt text="&nbsp;::&nbsp;"}<a class="tooltips" title="{$topic.forum_name|safetext}" href="{modurl modname='Dizkus' type=user func=viewforum forum=$topic.forum_id}">{$topic.forum_name|safetext}</a>
-                </li>
-                {/if}
-                {if $favorites|default:false}
-                <li>&nbsp;<em>({gt text="Favourites"})</em></li>
-                {/if}
-            </ul>
-            {/strip}
-            {* end of breadcrumbs *}
 
             <ul class="linklist z-clearfix" style="float:right;">
                 {if $coredata.logged_in eq 1 AND $func eq 'main' AND $modvars.Dizkus.favorites_enabled eq 'yes'}

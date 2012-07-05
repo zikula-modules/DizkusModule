@@ -298,31 +298,61 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
      */
     public function getBreadcrumbs($args)
     {
-        if (!isset($args['forum'])) {
-            return '';
+        $breadcrumbs = array();
+        $view = Zikula_View::getInstance('Dizkus');
+
+        if (isset($args['topic']) && $args['topic']) {
+            $forumId = $args['topic']['forum_id'];
+            $args['forum'] = $this->getForum($forumId);
         }
 
-        $forum =$args['forum'];
+
+        if (!isset($args['forum']) || !$args['forum']) {
+            if ($args['func'] == 'prefs') {
+                $view->assign('current', $this->__('Personal Settings'));
+            }
+            return $view->fetch('user/breadcrumbs.tpl');
+        }
+
+        $forum = $args['forum'];
 
 
-        $breadcrumbs = array();
-        $breadcrumbs[] = $forum['forum_name'];
+        if ($args['func'] == 'viewtopic') {
+            $breadcrumbs[] = array(
+                'url'   => ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id'])),
+                'title' => $forum['forum_name']
+            );
+            $current = $args['topic']['topic_title'];
+        } else if ($args['func'] == 'viewforum') {
+            $current = $forum['forum_name'];
+        }
+
+
+
         $i = 0;
         while ($forum['parent_id'] != 0 && $i < 10) {
 
             $forum = $this->getForum($forum['parent_id']);
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id']));
-            $breadcrumbs[] = '<a href="'.$url.'">'.$forum['forum_name'].'</a>';
+            $breadcrumbs[] = array(
+                'url'   => ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id'])),
+                'title' => $forum['forum_name']
+            );
             $i++;
 
         }
 
 
         $category = ModUtil::apiFunc($this->name, 'Category', 'get', $forum['cat_id']);
-        $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $forum['cat_id']));
-        $breadcrumbs[] = '<a href="'.$url.'">'.$category['cat_title'].'</a>';
+        $breadcrumbs[] = array(
+            'url'   => ModUtil::url($this->name, 'user', 'main', array('viewcat' => $forum['cat_id'])),
+            'title' => $category['cat_title']
+        );
 
-        return implode(' :: ', array_reverse($breadcrumbs));
+
+
+        return $view->assign('breadcrumbs', array_reverse($breadcrumbs))
+                    ->assign('current', $current)
+                    ->fetch('user/breadcrumbs.tpl');
 
     }
 
