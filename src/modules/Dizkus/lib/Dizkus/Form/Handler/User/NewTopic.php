@@ -55,7 +55,9 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         if (!isset($this->forum_id)) {
             return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
         }
-        
+
+        $forum = $this->entityManager->find('Dizkus_Entity_Forums', $this->forum_id)->toArray();
+        $view->assign('forum', $forum);
         $view->assign('preview', false);
         
         return true;

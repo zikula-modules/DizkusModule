@@ -307,7 +307,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         }
 
 
-        if (!isset($args['forum']) || !$args['forum']) {
+        if ($args['func'] == 'prefs') {
             if ($args['func'] == 'prefs') {
                 $view->assign('current', $this->__('Personal Settings'));
             }
@@ -325,8 +325,13 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
             $current = $args['topic']['topic_title'];
         } else if ($args['func'] == 'viewforum') {
             $current = $forum['forum_name'];
+        } else if ($args['func'] == 'newtopic') {
+            $breadcrumbs[] = array(
+                'url'   => ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id'])),
+                'title' => $forum['forum_name']
+            );
+            $current = $this->__('New topic');
         }
-
 
 
         $i = 0;

@@ -50,8 +50,17 @@
         <div class="dzk_navbar dzk_rounded">
             <div class="inner z-clearfix">
 
-            {breadcrumbs forum=$forum|default:false topic=$topic|default:false func=$func favorites=$favorites|default:false}
+            {if !isset($favorites)}
+                {assign var='favorites' value=false}
+            {/if}
+            {if !isset($topic)}
+                {assign var='topic' value=false}
+            {/if}
+            {if !isset($forum)}
+                {assign var='forum' value=false}
+            {/if}
 
+            {breadcrumbs forum=$forum topic=$topic func=$func favorites=$favorites}
 
             <ul class="linklist z-clearfix" style="float:right;">
                 {if $coredata.logged_in eq 1 AND $func eq 'main' AND $modvars.Dizkus.favorites_enabled eq 'yes'}

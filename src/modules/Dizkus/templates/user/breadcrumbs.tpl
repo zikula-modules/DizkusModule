@@ -37,7 +37,7 @@
         {/if}
 
 
-        {if $favorites|default:false}
+        {if isset($favorites) and $favorites}
             <li>&nbsp;<em>({gt text="Favourites"})</em></li>
         {/if}
     </ul>
