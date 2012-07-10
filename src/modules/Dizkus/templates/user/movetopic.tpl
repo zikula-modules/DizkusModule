@@ -31,10 +31,14 @@
         </div>
 
         <div class="z-formbuttons z-buttons">
-            {formbutton class="z-bt-ok"      commandName="join"   __text="Join topics"}
-        </div><br />
+            {formbutton class="z-bt-ok" commandName="join"   __text="Join topics"}
+        </div>
 
     </fieldset>
+
+    <div class="z-buttons">
+        {formbutton class="z-bt-cancel" commandName="cancel"   __text="Cancel"}
+    </div><br />
 
 {/form}
 

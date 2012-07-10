@@ -13,13 +13,6 @@
  */
 class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 {
-    /**
-     * post id
-     *
-     * @var integer
-     */
-    private $post_id;
-
 
     /**
      * old post id
@@ -50,8 +43,8 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         }
 
 
-        $topicId = (int)$this->request->query->get('topic', null);
-        $view->assign('topic', $topicId);
+        $this->old_topic_id = (int)$this->request->query->get('topic', null);
+        $view->assign('topic', $this->old_topic_id);
         $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getTreeAsDropdownList', false));
     }
 
@@ -66,8 +59,10 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
+
+
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id, 'start' => '0#pid'.$this->post_id));
+            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id));
             return $view->redirect($url);
         }
 
@@ -78,6 +73,44 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
 
+
+        if ($args['commandName'] == 'move') {
+
+            list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
+            if ($data['forum_id'] == $f_id) {
+                return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
+            }
+            if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                return LogUtil::registerPermissionError();
+            }
+            $data['topic_id'] = $this->old_topic_id;
+
+            ModUtil::apiFunc('Dizkus', 'user', 'movetopic', $data);
+
+            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id));
+            return $view->redirect($url);
+        }
+
+
+        if ($args['commandName'] == 'join') {
+            list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
+            if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                return LogUtil::registerPermissionError();
+            }
+
+            if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->old_topic_id)) {
+                // user wants to copy topic to itself
+                return LogUtil::registerError($this->__('Error! The original topic cannot be the same as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $f_id)));
+            }
+
+            $data['from_topic_id'] = $this->old_topic_id;
+
+            ModUtil::apiFunc('Dizkus', 'user', 'jointopics', $data);
+
+            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $data['to_topic_id']));
+            return $view->redirect($url);
+
+        }
 
         return true;
     }

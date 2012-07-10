@@ -488,20 +488,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (empty($submit)) {
             switch ($mode)
             {
-                case 'move':
-                case 'join':
-                    $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
-                    $list = array();
-                    foreach ($tree as $categoryname => $category) {
-                        foreach ($category['forums'] as $forum) {
-                            $list[$forum['forum_id']] = $categoryname . '::' . $forum['forum_name'];
-                        }
-                    }
-                    $this->view->assign('forums', $list);
-
-                    $templatename = 'user/movetopic.tpl';
-                    break;
-    
                 case 'lock':
                 case 'unlock':
                     $templatename = 'user/locktopic.tpl';
@@ -536,20 +522,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
             switch ($mode)
             {
-                case 'move':
-                    list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-                    if ($forum_id == $f_id) {
-                        return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
-                    }
-                    if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                        return LogUtil::registerPermissionError();
-                    }
-                    ModUtil::apiFunc('Dizkus', 'user', 'movetopic',
-                                 array('topic_id' => $topic_id,
-                                       'forum_id' => $forum_id,
-                                       'shadow'   => $shadow ));
-                    break;
-    
                 case 'lock':
                 case 'unlock':
                     list($f_id, $c_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
@@ -573,25 +545,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                  array('topic_id' => $topic_id,
                                        'mode'     => $mode));
                     break;
-    
-                case 'join':
-                    $to_topic_id = (int)$this->request->query->get('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null);
-                    list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $to_topic_id));
-                    if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
-                        return LogUtil::registerPermissionError();
-                    }
-
-                    if (!empty($to_topic_id) && ($to_topic_id == $topic_id)) {
-                        // user wants to copy topic to itself
-                        return LogUtil::registerError($this->__('Error! The original topic cannot be the same as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $f_id)));
-                    }
-                    ModUtil::apiFunc('Dizkus', 'user', 'jointopics',
-                                 array('from_topic_id' => $topic_id,
-                                       'to_topic_id'   => $to_topic_id));
-    
-                    return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $to_topic_id)));
-                    break;
-    
                 default:
             }
     
