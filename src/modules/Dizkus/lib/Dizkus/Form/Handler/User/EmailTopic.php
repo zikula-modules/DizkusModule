@@ -31,13 +31,8 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
       */
     function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
-
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
         }
 
         $this->topic_id = (int)$this->request->query->get('topic');

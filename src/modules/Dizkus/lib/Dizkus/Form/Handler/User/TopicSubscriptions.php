@@ -28,9 +28,8 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
         if (!UserUtil::isLoggedIn()) {

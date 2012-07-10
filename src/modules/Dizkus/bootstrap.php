@@ -476,27 +476,6 @@ function dzk_getip()
 }
 
 /**
- * dzk_available
- * check if Dizkus is available
- *
- * @params deliverhtml     boolean, return html or boolean if forum is turned off, default true=html, use false in Ajax functions
- *return html or boolean
- */
-function dzk_available($deliverhtml = true)
-{
-    if ((ModUtil::getVar('Dizkus', 'forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-        if ($deliverhtml == true) {
-            $render = Zikula_View::getInstance('Dizkus', true, 'dizkus_disabled', true);
-            return $render->fetch('dizkus_disabled.tpl');
-        } else {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
  * dzk is an image
  * check if a filename is an image or not
  */

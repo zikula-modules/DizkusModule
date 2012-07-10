@@ -21,17 +21,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * @params 'viewcat' int only expand the category, all others shall be hidden / collapsed
      */
     public function main($args=array())
-    {        
+    {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
         
         $viewcat   =  (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : -1);
         $favorites = (bool)$this->request->query->get('favorites', (isset($args['favorites'])) ? $args['favorites'] : false);
@@ -104,16 +98,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewforum($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         // get the input
         $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
@@ -150,15 +137,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewtopic($args=array())
     {        
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
+
     
         // get the input
         $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
@@ -210,16 +192,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function reply($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         // get the input
         $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
@@ -314,15 +289,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function editpost($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         // get the input
         $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
@@ -443,15 +412,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function topicadmin($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
 
 	// get the input
 	if ($this->request->isPost()) {
@@ -559,15 +522,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function prefs($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         if (!UserUtil::isLoggedIn()) {
             return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
@@ -683,14 +640,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function signaturemanagement()
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         if (!UserUtil::isLoggedIn()) {
             return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
@@ -714,15 +666,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function ignorelistmanagement()
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
-    
+
         if (!UserUtil::isLoggedIn()) {
             return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
         }
@@ -763,14 +710,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewlatest($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         if (useragent_is_bot() == true) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
@@ -781,54 +723,61 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $nohours    = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
         $unanswered = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
         $amount     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
-    
+
+
+
+
         if (!empty($amount) && !is_numeric($amount)) {
-            unset($amount);
-            }
-    
-        // maximum last 100 posts maybe shown
-        if (isset($amount) && $amount>100) {
-            $amount = 100;
-            }
-    
-        if (!empty($amount)) {
-            $selorder = 7;
-            }
-    
-        if (!empty($nohours) && !is_numeric($nohours)) {
-            unset($nohours);
-        }
-    
-        // maximum two weeks back = 2 * 24 * 7 hours
-        if (isset($nohours) && $nohours > 336) {
-            $nohours = 336;
-        }
-    
-        if (!empty($nohours)) {
-            $selorder = 5;
-        }
-    
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-    
-        list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'user', 'get_latest_posts',
-                                                                 array('selorder'   => $selorder,
-                                                                       'nohours'    => $nohours,
-                                                                       'amount'     => $amount,
-                                                                       'unanswered' => $unanswered,
-                                                                       'last_visit' => $last_visit,
-                                                                       'last_visit_unix' => $last_visit_unix));
-    
-        $this->view->assign('posts', $posts);
-        $this->view->assign('m2fposts', $m2fposts);
-        $this->view->assign('rssposts', $rssposts);
-        $this->view->assign('text', $text);
-        $this->view->assign('nohours', $nohours);
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
-                                                array('id'   => '0',
-                                                      'type' => 'all' )));
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+         unset($amount);
+         }
+
+
+
+
+
+     // maximum last 100 posts maybe shown
+     if (isset($amount) && $amount>100) {
+         $amount = 100;
+         }
+
+     if (!empty($amount)) {
+         $selorder = 7;
+         }
+
+     if (!empty($nohours) && !is_numeric($nohours)) {
+         unset($nohours);
+     }
+
+     // maximum two weeks back = 2 * 24 * 7 hours
+     if (isset($nohours) && $nohours > 336) {
+         $nohours = 336;
+     }
+
+     if (!empty($nohours)) {
+         $selorder = 5;
+     }
+
+     list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+
+     list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'user', 'get_latest_posts',
+                                                              array('selorder'   => $selorder,
+                                                                    'nohours'    => $nohours,
+                                                                    'amount'     => $amount,
+                                                                    'unanswered' => $unanswered,
+                                                                    'last_visit' => $last_visit,
+                                                                    'last_visit_unix' => $last_visit_unix));
+
+     $this->view->assign('posts', $posts);
+     $this->view->assign('m2fposts', $m2fposts);
+     $this->view->assign('rssposts', $rssposts);
+     $this->view->assign('text', $text);
+     $this->view->assign('nohours', $nohours);
+     $this->view->assign('last_visit', $last_visit);
+     $this->view->assign('last_visit_unix', $last_visit_unix);
+     $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
+                                             array('id'   => '0',
+                                                   'type' => 'all' )));
+     $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
         return $this->view->fetch('user/latestposts.tpl');
     }
@@ -854,14 +803,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function printtopic($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         // get the input
         $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
@@ -948,14 +892,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function jointopics($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         // get the input
         $post_id       = (int)$this->request->query->get('post_id', (isset($args['post_id'])) ? $args['post_id'] : null);
@@ -1007,14 +946,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function moderateforum($args=array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)
+        $this->throwForbidden(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
-        
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            return $disabled;
-        }
     
         // get the input
         $forum_id  = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');

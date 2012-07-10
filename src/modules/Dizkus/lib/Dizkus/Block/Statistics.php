@@ -60,9 +60,8 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
         }
 
         // check if forum is turned off
-        $disabled = dzk_available();
-        if (!is_bool($disabled)) {
-            $blockinfo['content'] = $disabled;
+        if ($this->getVar('forum_enabled') == 'no') {
+            $blockinfo['content'] = $this->getVar('forum_disabled_info');
             return BlockUtil::themesideblock($blockinfo);
         }
 

@@ -14,7 +14,7 @@
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type=user func=viewlatest selorder=3}">{gt text="Yesterday"}</a></li>
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type=user func=viewlatest selorder=2}">{gt text="Today"}</a></li>
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type=user func=viewlatest selorder=1}">{gt text="Last 24 hours"}</a></li>
-                    <li><a class="dzk_arrow"></a><button type="submit">{gt text="Last"}</button> <input type="text" name="nohours" id="Dizkus_hours" size="3" value="{$nohours}" maxlength="3" tabindex="0" /> <button type="submit">{gt text="hours"}</button></li>
+                    <li><a class="dzk_arrow"></a><button type="submit">{gt text="Last"}</button> <input type="text" name="nohours" id="Dizkus_hours" size="3" value="{$nohours|default:2}" maxlength="3" tabindex="0" /> <button type="submit">{gt text="hours"}</button></li>
                 </ul>
                 <ul class="linklist z-clearfix">
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type=user func=viewlatest selorder=4}">{gt text="Last week"}</a></li>

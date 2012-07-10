@@ -20,7 +20,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function reply()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         
@@ -132,7 +132,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function preparequote()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -156,7 +156,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function readpost()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
         }
 
@@ -183,10 +183,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function editpost()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-    	
+
         $post_id = $this->request->request->get('post', null, 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -226,7 +226,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function updatepost()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -318,7 +318,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function lockunlocktopic()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -357,7 +357,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function stickyunstickytopic()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	
@@ -394,7 +394,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function subscribeunsubscribetopic()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -443,7 +443,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function toggleforumsubscription()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -493,7 +493,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function toggleautosubscription()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	
@@ -515,7 +515,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function toggleforumfavourite()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -567,7 +567,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function edittopicsubject()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	
@@ -607,7 +607,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function updatetopicsubject()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -657,7 +657,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function togglesortorder()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
           	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -685,7 +685,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function toggleforumdisplay()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
           	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	
@@ -715,7 +715,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
     {
   
     
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
@@ -851,7 +851,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function forumusers()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	
@@ -874,7 +874,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function newposts()
     {
-        if (dzk_available(false) == false) {
+        if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
     	

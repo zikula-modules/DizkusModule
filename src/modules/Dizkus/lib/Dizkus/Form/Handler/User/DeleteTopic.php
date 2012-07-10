@@ -40,7 +40,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
       */
     function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
