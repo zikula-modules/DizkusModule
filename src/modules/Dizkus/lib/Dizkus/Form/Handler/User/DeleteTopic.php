@@ -85,7 +85,8 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id));
+            return $view->redirect($url);
         }
 
         // check for valid form and get data
@@ -109,7 +110,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         }
 
         // redirect to the forum of the deleted topic
-        $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $this->topic_id));
+        $forum_id = ModUtil::apiFunc('Dizkus', 'Topic', 'delete',$this->topic_id);
         $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
         return $view->redirect($url);
     }
