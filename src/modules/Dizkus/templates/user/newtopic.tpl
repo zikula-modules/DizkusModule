@@ -12,8 +12,8 @@
 {form cssClass="z-form z-linear"}
 {formvalidationsummary}
     <fieldset>
-        
-        <div class="z-formrow">          
+
+        <div class="z-formrow">
             {formlabel for="subject" text="Subject line" mandatory=true}
             {formtextinput id="subject" size="80" maxLength="100"}
         </div>
@@ -47,14 +47,14 @@
                 </ul>
             </div>
         </div><br />
-                                            
-                                            
+
+
         <div class="z-formbuttons z-buttons">
             {formbutton class="z-bt-ok"      commandName="save"   __text="Submit"}
             {formbutton class="z-bt-preview" commandName="preview" __text="Preview"}
             {formbutton class="z-bt-cancel"  commandName="cancel" __text="Cancel"}
-        </div><br />                           
-   
+        </div><br />
+
     </fieldset>
 {/form}
 

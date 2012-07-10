@@ -1,4 +1,5 @@
-{include file='user/header.tpl'}
+{assign var='templatetitle' value=$topic.topic_title}
+{include file='user/header.tpl' parent=$topic.forum_id}
 
 <div class="dzk_topicoptions roundedbar dzk_rounded" id="topic_{$topic.topic_id}">
     <div class="inner">
@@ -50,7 +51,7 @@
                     {/if}
                 </li>
 
-                <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=movetopic topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
                 <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type=user func=deletetopic topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
             </ul>
             {/if}

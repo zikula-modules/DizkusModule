@@ -225,13 +225,18 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
      *
      * @return array
      */
-    public function getTreeAsDropdownList()
+    public function getTreeAsDropdownList($showCategories = true)
     {
         $parents = array();
-        $categories = ModUtil::apiFunc('Dizkus', 'Category', 'getAll');
-        foreach ($categories as $key => $category) {
-            $parents[] = array('value' => 'c'.$category['cat_id'], 'text' => $category['cat_title']);
-            $parents = array_merge($parents, $this->getSubTreeAsDropdownList($category['cat_id'], 0));
+
+        if (is_array($showCategories) && count($showCategories) == 0) {
+            $categories = ModUtil::apiFunc('Dizkus', 'Category', 'getAll');
+            foreach ($categories as $category) {
+                $parents[] = array('value' => 'c'.$category['cat_id'], 'text' => $category['cat_title']);
+                $parents = array_merge($parents, $this->getSubTreeAsDropdownList($category['cat_id'], 0, true));
+            }
+        } else {
+            $parents = array_merge($parents, $this->getSubTreeAsDropdownList(0, -1));
         }
         return $parents;
     }
@@ -244,10 +249,10 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
      *
      * @return array
      */
-    private function getSubTreeAsDropdownList($parent_id, $level)
+    private function getSubTreeAsDropdownList($parent_id, $level, $category = false)
     {
 
-        if ($level == 0) {
+        if ($category) {
             $find = array('cat_id' => $parent_id, 'parent_id' => 0);
         } else {
             $find = array('parent_id' => $parent_id);
@@ -256,10 +261,15 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         $output = array();
         $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find);
         foreach ($forums as $forum) {
-            $output[] = array('value' => $forum->getforum_id(), 'text' => str_repeat("--", $level+1).$forum->getforum_name());
-            $output = array_merge($output, $this->getSubTree($forum->getforum_id(),$level+1));
+            $output[] = array(
+                         'value' => $forum->getforum_id(),
+                         'text' => str_repeat("--", $level+1).$forum->getforum_name()
+                        );
+            $output = array_merge($output, $this->getSubTreeAsDropdownList($forum->getforum_id(),$level+1));
         }
         return $output;
+
+
     }
 
 
@@ -301,37 +311,26 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         $breadcrumbs = array();
         $view = Zikula_View::getInstance('Dizkus');
 
-        if (isset($args['topic']) && $args['topic']) {
-            $forumId = $args['topic']['forum_id'];
-            $args['forum'] = $this->getForum($forumId);
-        }
 
-
-        if ($args['func'] == 'prefs') {
-            if ($args['func'] == 'prefs') {
-                $view->assign('current', $this->__('Personal Settings'));
-            }
+        if (!isset($args['parent'])) {
             return $view->fetch('user/breadcrumbs.tpl');
         }
 
-        $forum = $args['forum'];
+        $f = $this->request->query->get('func', null);
 
-
-        if ($args['func'] == 'viewtopic') {
+        if ($f == 'movetopic' || $f == 'deletetopic') {
+            $topic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $args['parent']);
             $breadcrumbs[] = array(
-                'url'   => ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id'])),
-                'title' => $forum['forum_name']
+                'url'   => ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic['topic_id'])),
+                'title' => $topic['topic_title']
             );
-            $current = $args['topic']['topic_title'];
-        } else if ($args['func'] == 'viewforum') {
-            $current = $forum['forum_name'];
-        } else if ($args['func'] == 'newtopic') {
-            $breadcrumbs[] = array(
-                'url'   => ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum['forum_id'])),
-                'title' => $forum['forum_name']
-            );
-            $current = $this->__('New topic');
+            $forum = array('parent_id' => $topic['forum_id']);
+        } else if (is_array($args['parent'])) {
+            $forum = $args['parent'];
+        } else {
+            $forum = array('parent_id' => $args['parent']);
         }
+
 
 
         $i = 0;
@@ -346,17 +345,14 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
 
         }
 
-
         $category = ModUtil::apiFunc($this->name, 'Category', 'get', $forum['cat_id']);
         $breadcrumbs[] = array(
             'url'   => ModUtil::url($this->name, 'user', 'main', array('viewcat' => $forum['cat_id'])),
             'title' => $category['cat_title']
         );
 
-
-
         return $view->assign('breadcrumbs', array_reverse($breadcrumbs))
-                    ->assign('current', $current)
+                    ->assign('templatetitle', $args['templatetitle'])
                     ->fetch('user/breadcrumbs.tpl');
 
     }

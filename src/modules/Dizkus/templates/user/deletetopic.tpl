@@ -1,6 +1,6 @@
 {gt text="Delete this topic" assign=templatetitle}
 {pagesetvar name=title value=$templatetitle}
-{include file='user/header.tpl'}
+{include file='user/header.tpl' parent=$topic_id}
 
 <h2>{$templatetitle}</h2>
 <div class="z-warningmsg">
@@ -19,7 +19,7 @@
             
              <div class="z-formrow" id="diskus_reason_container" style="display:none">
                 {formlabel for="reason" text='Write a reason'}
-                {gt text='Your post "%s" was deleted, because ' tag1=$topicTitle assign='reason'}
+                {gt text='Your post "%s" was deleted, because ' tag1=$topic_title assign='reason'}
                 {formtextinput id="reason" textMode="multiline" rows="3" cols="40"}
             </div>
             

@@ -421,7 +421,20 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $form = FormUtil::newForm($this->name, $this);
         return $form->execute('user/deletetopic.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
     }
-    
+
+
+
+    /**
+     * movetopic
+     *
+     * @return string
+     */
+    public function movetopic()
+    {
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/movetopic.tpl', new Dizkus_Form_Handler_User_MoveTopic());
+    }
+
     
     /**
      * topicadmin
@@ -475,11 +488,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (empty($submit)) {
             switch ($mode)
             {
-                case 'del':
-                case 'delete':
-                    $templatename = 'user/deletetopic.tpl';
-                    break;
-    
                 case 'move':
                 case 'join':
                     $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
@@ -528,12 +536,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
             switch ($mode)
             {
-                case 'del':
-                case 'delete':
-                    $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
-                    return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id)));
-                    break;
-    
                 case 'move':
                     list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
                     if ($forum_id == $f_id) {

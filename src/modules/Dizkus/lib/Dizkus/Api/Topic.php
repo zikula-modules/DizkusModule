@@ -165,8 +165,10 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
      *
      * @return array
      */
-    public function read0($topic_id) {
-        return $this->entityManager->find('Dizkus_Entity_Topics', $topic_id)->toArray();
+    public function read0($topic_id)
+    {
+
+        return $this->entityManager->getRepository('Dizkus_Entity_Topics')->find($topic_id)->toArray();
     }
 
 

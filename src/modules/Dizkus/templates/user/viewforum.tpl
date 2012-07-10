@@ -1,4 +1,5 @@
-{include file='user/header.tpl'}
+{assign var='templatetitle' value=$forum.forum_name}
+{include file='user/header.tpl' parent=$forum}
 
 {if $forum.forum_desc neq ''}
 <p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
