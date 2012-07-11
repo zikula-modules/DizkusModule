@@ -650,10 +650,10 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
         $links = array();
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             $links[] = array(
-                'url'   => ModUtil::url('Dizkus', 'admin', 'reordertree'),
+                'url'   => ModUtil::url('Dizkus', 'admin', 'tree'),
                 'text'  => $this->__('Edit forum tree'),
                 'title' => $this->__('Create, delete, edit and re-order categories and forums'),
-                'links' => array(
+                /*'links' => array(
                     array(
                         'url'   => ModUtil::url('Dizkus', 'admin', 'reordertree'),
                         'text'  => $this->__('Edit forum tree'),
@@ -669,7 +669,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi {
                         'text'  => $this->__('Synchronize forum/topic index'),
                         'title' => $this->__('Synchronize forum and topic indexes to fix any discrepancies that might exist'
                     )
-                )),
+                )),*/
                 'class' => 'z-icon-es-options',
             );
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),

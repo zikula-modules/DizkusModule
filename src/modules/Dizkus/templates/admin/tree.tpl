@@ -9,15 +9,24 @@
 
 <div id="dizkus_admin">
 
-    <p>
-        <a href="{modurl modname='Dizkus' type='admin' func='modifycategory'}">
-            {button class="z-floatleft z-button z-bt-small" src="edit_add.png" set="icons/extrasmall" __alt="Create new category" __title="Create new category" __text="Create new category"}
-        </a>
-        <a href="{modurl modname='Dizkus' type='admin' func='modifyforum'}">
-        {button class="z-floatleft z-button z-bt-small" src="edit_add.png" set="icons/extrasmall" __alt="Create new forum" __title="Create new forum" __text="Create new forum"}
-        </a>
-    </p>
-    <br /><br /><br />
+
+    <ul class="z-menulinks">
+        <li>
+            <a href="{modurl modname='Dizkus' type='admin' func='modifycategory'}" title="Create a new category" class="z-iconlink z-icon-es-new">
+                Create a new category
+            </a>
+        </li>
+        <li>
+            <a href="{modurl modname='Dizkus' type='admin' func='modifyforum'}" title="Create a new forum" class="z-iconlink z-icon-es-new">
+                Create a new forum
+            </a>
+        </li>
+        <li>
+            <a href="{modurl modname='Dizkus' type='admin' func='syncforums'}" title="Synchronize forum and topic indexes to fix any discrepancies that might exist" class="z-iconlink z-icon-es-gears">
+                Synchronize forum/topic index
+            </a>
+        </li>
+    </ul><br />
 
     <table class="z-admintable">
         <thead>

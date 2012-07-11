@@ -21,11 +21,8 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      */
     public function main()
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
-        
-        return $this->view->fetch('admin/main.tpl');
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+        return System::redirect($url);
     }
     
     /**
