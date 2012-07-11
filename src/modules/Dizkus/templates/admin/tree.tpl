@@ -13,17 +13,17 @@
     <ul class="z-menulinks">
         <li>
             <a href="{modurl modname='Dizkus' type='admin' func='modifycategory'}" title="Create a new category" class="z-iconlink z-icon-es-new">
-                Create a new category
+                {gt text='Create a new category'}
             </a>
         </li>
         <li>
             <a href="{modurl modname='Dizkus' type='admin' func='modifyforum'}" title="Create a new forum" class="z-iconlink z-icon-es-new">
-                Create a new forum
+                {gt text='Create a new forum'}
             </a>
         </li>
         <li>
-            <a href="{modurl modname='Dizkus' type='admin' func='syncforums'}" title="Synchronize forum and topic indexes to fix any discrepancies that might exist" class="z-iconlink z-icon-es-gears">
-                Synchronize forum/topic index
+            <a href="{modurl modname='Dizkus' type='admin' func='syncforums'}" title="Recalculate cached post and topics totals" class="z-iconlink z-icon-es-gears">
+                {gt text='Recalculate cached post and topics totals'}
             </a>
         </li>
     </ul><br />
