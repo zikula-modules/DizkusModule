@@ -23,7 +23,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function main($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
         
@@ -98,7 +98,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewforum($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -137,7 +137,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewtopic($args=array())
     {        
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
 
@@ -192,7 +192,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function reply($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -289,7 +289,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function editpost($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -412,7 +412,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function topicadmin($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
 
@@ -522,7 +522,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function prefs($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -640,7 +640,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function signaturemanagement()
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -666,7 +666,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function ignorelistmanagement()
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
 
@@ -710,7 +710,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewlatest($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -803,7 +803,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function printtopic($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -892,7 +892,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function jointopics($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
@@ -946,7 +946,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function moderateforum($args=array())
     {
         // Permission check
-        $this->throwForbidden(
+        $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
