@@ -184,6 +184,57 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         return $this->view->fetch('user/viewtopic.tpl');
     }
+
+
+
+    /**
+     * Set a topic to solved
+     *
+     * @return boolean
+     */
+    public function topicsolved()
+    {
+        // Permission check
+        $this->throwForbiddenUnless(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
+        );
+
+        // get the input
+        $topicId = (int)$this->request->query->get('topic');
+
+        // set topic solved
+        $this->entityManager->find('Dizkus_Entity_Topics', $topicId)->setSolved(true);
+        $this->entityManager->flush();
+
+        // redirect to viewtopic
+        $url = ModUtil::url($this->name, 'User', 'viewtopic', array('topic' => $topicId));
+        return System::redirect($url);
+    }
+
+
+    /**
+     * Set a topic to solved
+     *
+     * @return boolean
+     */
+    public function topicunsolved()
+    {
+        // Permission check
+        $this->throwForbiddenUnless(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
+        );
+
+        // get the input
+        $topicId = (int)$this->request->query->get('topic');
+
+        // set topic solved
+        $this->entityManager->find('Dizkus_Entity_Topics', $topicId)->setSolved(false);
+        $this->entityManager->flush();
+
+        // redirect to viewtopic
+        $url = ModUtil::url($this->name, 'User', 'viewtopic', array('topic' => $topicId));
+        return System::redirect($url);
+    }
     
     /**
      * reply

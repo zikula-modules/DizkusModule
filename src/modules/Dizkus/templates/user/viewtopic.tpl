@@ -27,9 +27,27 @@
                     <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_subscribed" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a>
                     {/if}
                 </li>
+                {if $modvars.Dizkus.solved_enabled}
+                <li>
+                    {if $topic.solved eq 0}
+                    <a class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='User' func='topicsolved' topic=$topic.topic_id}" title="{gt text="Mark as solved"}">
+                        {gt text="Mark as solved"}
+                    </a>
+                    {else}
+                    <a class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='User' func='topicunsolved' topic=$topic.topic_id}" title="{gt text="Mark as unsolved"}">
+                        {gt text="Mark as unsolved"}
+                    </a>
+                    {/if}
+                </li>
                 {/if}
+                {/if}
+
                 {if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
-                <li><a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">&nbsp;</a></li>
+                <li>
+                    <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">
+                        &nbsp;
+                    </a>
+                </li>
                 {/if}
             </ul>
 

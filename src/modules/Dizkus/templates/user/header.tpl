@@ -34,9 +34,17 @@
 {elseif $func eq 'newtopic'}
 {gt text='New topic in forum' assign='maintitle'}
 {/if}
+
+{if isset($templatetitle)}
+    {assign var='maintitle' value=$templatetitle}
+{/if}
+
+
 {if $maintitle neq ''}
 {pagesetvar name='title' value=$maintitle}
 {/if}
+
+
 
 {insert name='getstatusmsg'}
 
@@ -89,10 +97,16 @@
     <h2>
         {if $topic.access_topicsubjectedit eq 1}
         <span class="editabletopicheader tooltips" id="edittopicsubjectbutton_{$topic.topic_id}" title="{gt text="Click to edit"}">
+            {if $topic.solved eq 1 and $modvars.Dizkus.solved_enabled}
+            {gt text="[Solved]"}
+            {/if}
             {$topic.topic_title|safetext}
         </span>
         {else}
         <span class="noneditabletopicheader">
+            {if $topic.solved eq 1 and $modvars.Dizkus.solved_enabled}
+                {gt text="[Solved]"}
+            {/if}
             {$topic.topic_title|safetext}
         </span>       
         {/if}

@@ -92,6 +92,15 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     private $topic_reference = '';
 
 
+
+    /**
+     * The following are annotations which define the solved field.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $solved = false;
+
+
     public function gettopic_id()
     {
         return $this->topic_id;
@@ -145,7 +154,14 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     {
         return $this->topic_reference;
     }
-    
+
+
+    public function getSolved()
+    {
+        return $this->solved;
+    }
+
+
     public function lock()
     {
         $this->topic_status = 1;
@@ -170,6 +186,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     public function counter()
     {
         $this->topic_views++;
+    }
+
+    public function setSolved($solved)
+    {
+        $this->solved = $solved;
     }
 
 }

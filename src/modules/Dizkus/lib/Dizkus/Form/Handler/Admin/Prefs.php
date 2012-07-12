@@ -112,6 +112,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('fulltextindex',           $data['fulltextindex'] == 1 ? 'yes' : 'no');
             $this->setVar('extendedsearch',          $data['extendedsearch'] == 1 ? 'yes' : 'no');
             $this->setVar('showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
+            $this->setVar('solved_enabled',          $data['solved_enabled']);
 
             // dropdowns
             $this->setVar('post_sort_order',         $data['post_sort_order']);
@@ -154,6 +155,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('forum_enabled',           'yes');
             $this->setVar('sendemailswithsqlerrors', 'no');
             $this->setVar('showtextinsearchresults', 'yes');
+            $this->setVar('solve_enabled',           false);
 
             // dropdowns
             $this->setVar('post_sort_order',     'ASC');

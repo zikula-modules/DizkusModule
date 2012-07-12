@@ -32,8 +32,8 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="string", length="150")
      */
     private $forum_name = '';
-                                                 
-       
+
+
     /**
      * The following are annotations which define the forum_desc field.
      * 
@@ -62,7 +62,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $cat_id = 0;
-    
+
     /**
      * The following are annotations which define the forum_id field.
      *
@@ -183,10 +183,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer", length=4)
      */
     private $forum_pntopic = 0;
-
-
-
-
 
 
 
@@ -312,9 +308,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
 
 
-
-
-
     public function setforum_id($forum_id)
     {
         $this->forum_id = $forum_id;
@@ -420,7 +413,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         $this->forum_order = $forum_order;
     }
-
 
 
 

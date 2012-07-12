@@ -54,6 +54,10 @@
             {formlabel for="spam_protector" __text="Spam protection"}
             {formdropdownlist id="spam_protector" items=$spam_protectors}
         </div>
+        <div class="z-formrow">
+            {formlabel for="solved_enabled" __text="Enable solve option for topics"}
+            {formcheckbox id="solved_enabled"}
+        </div>
     </fieldset>
 
     <fieldset>
