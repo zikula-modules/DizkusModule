@@ -113,6 +113,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('extendedsearch',          $data['extendedsearch'] == 1 ? 'yes' : 'no');
             $this->setVar('showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
             $this->setVar('solved_enabled',          $data['solved_enabled']);
+            $this->setVar('ajax',                    $data['ajax']);
 
             // dropdowns
             $this->setVar('post_sort_order',         $data['post_sort_order']);

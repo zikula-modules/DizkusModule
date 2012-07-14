@@ -248,15 +248,16 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         );
     
         // get the input
-        $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-        $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $message  = $this->request->query->get('message', (isset($args['message'])) ? $args['message'] : '');
-        $attach_signature = (int)$this->request->query->get('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0);
-        $subscribe_topic = (int)$this->request->query->get('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0);
-        $preview = $this->request->query->get('preview', (isset($args['preview'])) ? $args['preview'] : '');
-        $submit = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-        $cancel = $this->request->query->get('cancel', (isset($args['cancel'])) ? $args['cancel'] : '');
-            
+        $topic_id = (int)$this->request->request->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
+        $post_id  = (int)$this->request->request->get('post', (isset($args['post'])) ? $args['post'] : null);
+        $message  = $this->request->request->get('message', (isset($args['message'])) ? $args['message'] : '');
+        $attach_signature = (int)$this->request->request->get('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0);
+        $subscribe_topic = (int)$this->request->request->get('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0);
+        $preview = $this->request->request->get('preview', (isset($args['preview'])) ? $args['preview'] : '');
+        $submit = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
+        $cancel = $this->request->request->get('cancel', (isset($args['cancel'])) ? $args['cancel'] : '');
+
+
         /**
          * if cancel is submitted move to topic-view
          */

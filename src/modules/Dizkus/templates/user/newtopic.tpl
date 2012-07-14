@@ -14,8 +14,8 @@
     <fieldset>
 
         <div class="z-formrow">
-            {formlabel for="subject" text="Subject line" mandatory=true}
-            {formtextinput id="subject" size="80" maxLength="100"}
+            {formlabel for="subject" text="Subject line"}
+            {formtextinput id="subject" size="80" maxLength="100" mandatory=true}
         </div>
 
         <br />

@@ -1,5 +1,17 @@
+{pageaddvar name='javascript' value='jquery'}
 {assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
-{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
+{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"}
+
+
+<script type="text/javascript">
+    function quote(text, user) {
+        if(window.editorquote) {
+            editorquote(text, user);
+        } else {
+            jQuery('#message').val(text);
+        }
+    }
+</script>
 
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
 <a id="pid{$post.post_id}" ></a>
@@ -66,7 +78,7 @@
             <div class="postlink">
                 {if !isset($preview) OR $preview neq true}
                 <div class="dzk_colpost_right">
-                    <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions hidden linklist z-clearfix" style="float:right;">
+                    <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions linklist z-clearfix" style="float:right;">
                         {if $post.poster_data.moderate eq true}
                         {if (isset($num) AND $num neq 0) OR (isset($topic) AND $topic.start neq 0)}
                         <li><a class="movepostlink tooltips" title="{gt text="Move post"}" href="{modurl modname='Dizkus' type=user func=movepost post=$post.post_id}">{img modname='Dizkus' src='icon_post_move.gif' __alt='Move post' }</a></li>
@@ -76,10 +88,12 @@
 
                         {if isset($topic) AND $topic.topic_status neq 1}
                         {if $post.poster_data.reply eq true}
-                        <li><a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" href="javascript:void(0);">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a></li>
+                        <li>
+                            <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{$post.post_text|safehtml}', '{$post.poster_data.uname}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>
+                        </li>
                         {/if}
                         {if $post.poster_data.edit eq 1}
-                        <li><a class="editpostlink tooltips" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="javascript:void(0);">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
+                        <li><a class="editpostlink tooltips" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
                         {/if}
                         {elseif isset($topic)}
                         <li>{img modname='Dizkus' src="icon_post_close.gif" class="tooltips" __alt="Topic locked" }</li>
