@@ -464,8 +464,14 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
      *
      * @return int the forums id for redirecting
      */
-    public function delete($topic_id)
+    public function delete($topic)
     {
+        if (!is_array($topic)) {
+            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')->findOneBy($topic);
+        }
+        $topic_id = $topic->gettopic_id();
+
+
         list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
         if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
             return LogUtil::registerPermissionError();
@@ -490,7 +496,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
 
 
         // now delete the topic itself
-        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')->find($topic_id);
+
         $this->entityManager->remove($topic);
 
 

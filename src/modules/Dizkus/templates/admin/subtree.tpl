@@ -10,6 +10,9 @@
         <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.id}">
             {img modname=core set=icons/extrasmall src=demo.png __alt="Show"}
         </a>
+        <a href="{modurl modname='Dizkus' type='admin' func='deleteforum' id=$forum.id}">
+            {img modname=core set=icons/extrasmall src=14_layer_deletelayer.png __alt="Delete"}
+        </a>
 
 
         {if !$smarty.foreach.foo.first}

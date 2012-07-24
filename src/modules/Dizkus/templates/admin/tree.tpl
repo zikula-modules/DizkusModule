@@ -36,7 +36,7 @@
             </tr>
         </thead>
         <tbody>
-            {foreach item='category' from=$tree name='foo'}
+            {foreach item='category' from=$tree name='fooo'}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
                         <a href="{modurl modname='Dizkus' type='user' func='viewforum'}">{$category.name|safetext}</a>
@@ -48,20 +48,21 @@
                         <a href="{modurl modname='Dizkus' type='user' func='main' viewcat=$category.id}">
                             {img modname=core set=icons/extrasmall src=demo.png __alt="Show"}
                         </a>
-                        {if $smarty.foreach.foo.first}
-                            <a href="{modurl modname='Dizkus' type='admin' func='changeCatagoryOrder' id=$category.id action='decrease'}" style="margin-left:20px">
-                                {img modname=core set=icons/extrasmall src=down.png __alt="Down"}
-                            </a>
-                        {else}
+                        <a href="{modurl modname='Dizkus' type='admin' func='deletecategory' id=$category.id}">
+                            {img modname=core set=icons/extrasmall src=14_layer_deletelayer.png __alt="Delete"}
+                        </a>
+                        {if !$smarty.foreach.fooo.first}
                             <a href="{modurl modname='Dizkus' type='admin' func='changeCatagoryOrder' id=$category.id action='increase'}">
                                 {img modname=core set=icons/extrasmall src=up.png __alt="Up"}
                             </a>
-                            {if !$smarty.foreach.foo.last}
-                            <a href="{modurl modname='Dizkus' type='admin' func='changeCatagoryOrder' id=$category.id action='decrease'}">
+                        {/if}
+
+                        {if !$smarty.foreach.fooo.last}
+                            <a href="{modurl modname='Dizkus' type='admin' func='changeCatagoryOrder' id=$category.id action='decrease'}"{if $smarty.foreach.fooo.first} style="margin-left:20px"{/if}>
                                 {img modname=core set=icons/extrasmall src=down.png __alt="Down"}
                             </a>
-                            {/if}
                         {/if}
+
                     </td>
                 </tr>
                 {if count($category.subforums) > 0}

@@ -358,4 +358,54 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
     }
 
 
+    /**
+     * delete forum
+     *
+     * @return array
+     */
+    public function delete($forum)
+    {
+        // check if it input is a doctrine array
+        if (!is_array($forum)) {
+            $forum = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findOneBy($forum);
+        }
+
+        // delete sub forums
+        $find = array('parent_id' => $forum->getforum_id());
+        $subforums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find);
+        foreach ($subforums as $subforum) {
+            $this->delete($subforum);
+        }
+
+        // delete topics
+        $this->deleteChildTopics($forum->getforum_id());
+
+        // delete forum
+        $this->entityManager->remove($forum);
+
+
+        $this->entityManager->flush();
+    }
+
+
+    /**
+     * delete child topics
+     *
+     * @return array
+     */
+    public function deleteChildTopics($forum_id)
+    {
+        $find = array('forum_id' => $forum->getforum_id());
+        $topics = $this->entityManager->getRepository('Dizkus_Entity_Topics')->findBy($find);
+        foreach ($topics as $topic) {
+            ModUtil::apiFunc($this->name, 'Topic', 'delete', $topic);
+        }
+
+    }
+
+
+
+
+
+
 }

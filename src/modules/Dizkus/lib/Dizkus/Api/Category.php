@@ -37,13 +37,20 @@ class Dizkus_Api_Category extends Zikula_AbstractApi {
      *
      * @return array
      */
-    public function getAll()
+    public function getAll($exclude = array())
     {
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('c')
             ->from('Dizkus_Entity_Categories', 'c')
             ->orderBy('c.cat_order', 'ASC');
+
+
+        if (!is_array($exclude)) {
+            $qb->where('c.cat_id != :exclude')
+               ->setParameter('exclude', $exclude);
+        }
+
         return $qb->getQuery()->getArrayResult();
         //return $this->entityManager->getRepository('Dizkus_Entity_Categories')->findAll();
     }
@@ -70,6 +77,41 @@ class Dizkus_Api_Category extends Zikula_AbstractApi {
             return $highestOrder[0][1]+1;
         }
 
+    }
+
+
+    /**
+     * get forums of a category
+     *
+     * @param int $catId Category ID.
+     *
+     * @return array
+     */
+    public function getForums($catId)
+    {
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('f')
+            ->from('Dizkus_Entity_Forums', 'f')
+            ->where('f.parent_id = 0 and f.cat_id = :catId')
+            ->setParameter('catId', $catId);
+        return $qb->getQuery()->getArrayResult();
+
+    }
+
+
+    /**
+     * delete child forums
+     *
+     * @return array
+     */
+    public function deleteChildForums($cat_id)
+    {
+        $find = array('parent_id' => 0, 'cat_id' => $cat_id);
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find);
+        foreach ($forums as $forum) {
+            ModUtil::apiFunc($this->name, 'Forum', 'delete', $forum);
+        }
     }
 
 
