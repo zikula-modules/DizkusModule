@@ -1,6 +1,4 @@
 Dizkus Forums
 ========================
 
-Dizkus is a fully integrated forum solution for Zikula 1.3+.
-
-Enjoy it !
+Please dont use this version. Unfortunately there is still a lot to do.
