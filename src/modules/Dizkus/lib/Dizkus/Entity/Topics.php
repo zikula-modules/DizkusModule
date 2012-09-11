@@ -25,7 +25,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
 
     
     /**
-     * The following are annotations which define the topic_id field.
+     * The following are annotations which define the topic_poster field.
      *
      * @ORM\Column(type="integer")
      */
@@ -47,7 +47,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     
     
     /**
-     * The following are annotations which define the topic_title field.
+     * The following are annotations which define the topic status field.
      * 
      * @ORM\Column(type="integer")
      */
@@ -62,7 +62,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     private $topic_views = 0;
     
     /**
-     * The following are annotations which define the topic_title field.
+     * The following are annotations which define the topic replies field.
      * 
      * @ORM\Column(type="integer", length=10)
      */
@@ -70,7 +70,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     
     
     /**
-     * The following are annotations which define the topic_title field.
+     * The following are annotations which define the sticky field.
      * 
      * @ORM\Column(type="boolean")
      */
