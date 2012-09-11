@@ -92,7 +92,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     private $topic_reference = '';
 
 
-
     /**
      * The following are annotations which define the solved field.
      *
