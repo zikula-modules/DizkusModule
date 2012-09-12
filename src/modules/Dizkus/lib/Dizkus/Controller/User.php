@@ -127,7 +127,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('last_visit_unix', $last_visit_unix);
         $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-        return $this->view->fetch('user/viewforum.tpl');
+        return $this->view->fetch('user/forum/view.tpl');
     }
     
     /**
@@ -182,7 +182,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('last_visit_unix', $last_visit_unix);
         $this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
     
-        return $this->view->fetch('user/viewtopic.tpl');
+        return $this->view->fetch('user/topic/view.tpl');
     }
 
 
@@ -320,7 +320,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('user/reply.tpl');
+            return $this->view->fetch('user/topic/reply.tpl');
         }
     }
     
@@ -331,7 +331,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function newtopic()
     {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/newtopic.tpl', new Dizkus_Form_Handler_User_NewTopic());
+        return $form->execute('user/topic/new.tpl', new Dizkus_Form_Handler_User_NewTopic());
     }
     
     /**
@@ -429,7 +429,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('user/editpost.tpl');
+            return $this->view->fetch('user/post/edit.tpl');
         }
     }
 
@@ -440,7 +440,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function deletetopic() {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/deletetopic.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
+        return $form->execute('user/topic/delete.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
     }
 
 
@@ -453,7 +453,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function movetopic()
     {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/movetopic.tpl', new Dizkus_Form_Handler_User_MoveTopic());
+        return $form->execute('user/topic/move.tpl', new Dizkus_Form_Handler_User_MoveTopic());
     }
 
     
@@ -505,12 +505,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             {
                 case 'lock':
                 case 'unlock':
-                    $templatename = 'user/locktopic.tpl';
+                    $templatename = 'user/topic/lock.tpl';
                     break;
     
                 case 'sticky':
                 case 'unsticky':
-                    $templatename = 'user/stickytopic.tpl';
+                    $templatename = 'user/topic/sticky.tpl';
                     break;
     
                 case 'viewip':
@@ -751,7 +751,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function emailtopic()
     {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/emailtopic.tpl', new Dizkus_Form_Handler_User_EmailTopic());
+        return $form->execute('user/topic/email.tpl', new Dizkus_Form_Handler_User_EmailTopic());
     }
     
     /**
@@ -831,7 +831,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                                    'type' => 'all' )));
      $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-        return $this->view->fetch('user/latestposts.tpl');
+        return $this->view->fetch('user/post/latest.tpl');
     }
     
     /**
@@ -842,7 +842,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function splittopic()
     {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/splittopic.tpl', new Dizkus_Form_Handler_User_SplitTopic());
+        return $form->execute('user/topic/split.tpl', new Dizkus_Form_Handler_User_SplitTopic());
     }
     
     /**
@@ -883,7 +883,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
                 $this->view->assign('post', $post);
     
-                $output = $this->view->fetch('user/printpost.tpl');
+                $output = $this->view->fetch('user/post/print.tpl');
             } elseif ($topic_id <> 0) {
                 $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
                                      array('topic_id'  => $topic_id,
@@ -892,7 +892,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
                 $this->view->assign('topic', $topic);
     
-                $output = $this->view->fetch('user/printtopic.tpl');
+                $output = $this->view->fetch('user/topic/print.tpl');
             } else {
                 return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
             }
@@ -933,7 +933,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function movepost()
     {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/movepost.tpl', new Dizkus_Form_Handler_User_MovePost());
+        return $form->execute('user/post/move.tpl', new Dizkus_Form_Handler_User_MovePost());
     }
     
     /**
@@ -965,7 +965,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->assign('post', $post);
             $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     
-            return $this->view->fetch('user/jointopics.tpl');
+            return $this->view->fetch('user/topic/join.tpl');
     
         } else {
             /*if (!SecurityUtil::confirmAuthKey()) {
@@ -1041,7 +1041,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             // For Movetopic
             $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
     
-            return $this->view->fetch('user/moderateforum.tpl');
+            return $this->view->fetch('user/forum/moderate.tpl');
     
         } else {
             // submit is set
@@ -1139,7 +1139,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function topicsubscriptions()
     {
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/topicsubscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
+        return $form->execute('user/topic/subscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
     }
 
 }
