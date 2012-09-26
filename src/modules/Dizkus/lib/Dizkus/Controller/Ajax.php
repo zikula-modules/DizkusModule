@@ -118,7 +118,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         //
         //} else {
         return new Zikula_Response_Ajax(
-            array('data' => $this->view->fetch('user/singlepost.tpl'),
+            array('data' => $this->view->fetch('user/post/single.tpl'),
             'post_id' => $post['post_id'])
         );
         //}
@@ -839,7 +839,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
 
 
         
-        return new Zikula_Response_Ajax(array('data'     => $this->view->fetch('user/newtopicpreview.tpl'),
+        return new Zikula_Response_Ajax(array('data'     => $this->view->fetch('user/topic/newpreview.tpl'),
                                               'newtopic' => $newtopic));
     }
 

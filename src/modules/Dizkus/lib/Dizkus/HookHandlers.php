@@ -92,7 +92,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
         
-        $hook->setResponse(new Zikula_Response_DisplayHook('provider.dizkus.ui_hooks.comments', $view, DataUtil::formatForOS($templateset) . '/user/viewtopic.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook('provider.dizkus.ui_hooks.comments', $view, DataUtil::formatForOS($templateset) . '/user/topic/view.tpl'));
     }
 
 }
