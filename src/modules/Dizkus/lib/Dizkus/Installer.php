@@ -734,7 +734,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
 
-        LogUtil::registerError($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'))
+        LogUtil::registerError($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
         
         return true;
     }
