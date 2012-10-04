@@ -20,7 +20,7 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
      */
     public function init()
     {
-        SecurityUtil::registerPermissionSchema('Dizkus_Statisticsblock::', 'Block ID::');
+        SecurityUtil::registerPermissionSchema('Dizkus::Statisticsblock', 'Block ID::');
     }
 
     /**
