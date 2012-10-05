@@ -48,7 +48,7 @@ function smarty_function_readlastposts($params, &$smarty)
         // get the category id and check permissions
         $params['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $params['forum_id']));
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $params)) {
+        if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $params)) {
             $smarty->assign('lastpostcount', 0);
             $smarty->assign('lastposts', array());
             return;
@@ -96,7 +96,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 if (!empty($wherefavorites)) {
                     $wherefavorites .= ' OR ';
                 }
-                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $resline)) {
+                if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $resline)) {
                     $wherefavorites .= 'f.forum_id=' .  (int)DataUtil::formatForStore($resline['forum_id']); // . ' OR ';
                 }
             }

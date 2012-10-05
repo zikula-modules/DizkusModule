@@ -19,7 +19,7 @@
 function smarty_function_printtopic_button($params, &$smarty)
 {
     include_once 'modules/Dizkus/bootstrap.php';
-    if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $params)) {
+    if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $params)) {
         $themeinfo = ThemeUtil::getInfo('Printer');
         if ($themeinfo['active']) {
             return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
