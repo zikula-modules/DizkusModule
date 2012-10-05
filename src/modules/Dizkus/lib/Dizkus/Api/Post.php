@@ -78,7 +78,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
 
         $objarray = DBUtil::marshallObjects ($result, $colarray);
         $post = $objarray[0];
-        if (!allowedtoreadcategoryandforum($post['cat_id'], $post['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             return LogUtil::registerPermissionError();
         }
 
@@ -105,7 +105,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
 
         $pn_uid = UserUtil::getVar('uid');
         $post['moderate'] = false;
-        if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+        if (ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
             $post['moderate'] = true;
         }
 
@@ -118,17 +118,17 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             // user is allowed to moderate || own post
             $post['poster_data']['edit'] = true;
         }
-        if (allowedtowritetocategoryandforum($post['cat_id'], $post['forum_id'])) {
+        if (ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $post)) {
             // user is allowed to reply
             $post['poster_data']['reply'] = true;
         }
 
-        if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id']) &&
+        if (ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post) &&
             ModUtil::getVar('Dizkus', 'log_ip') == 'yes') {
             // user is allowed to see ip
             $post['poster_data']['seeip'] = true;
         }
-        if (allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+        if (ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
             // user is allowed to moderate
             $post['poster_data']['moderate'] = true;
             $post['poster_data']['edit'] = true;

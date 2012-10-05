@@ -54,7 +54,11 @@ function Dizkus_needleapi_dizkus($args)
                         $result    = DBUtil::marshallObjects($res, $colarray);
                         
                         if (is_array($result) && !empty($result)) {
-                            if (allowedtoreadcategoryandforum($result[0]['cat_id'], $id)) {
+                            $forum = array(
+                                'cat_id' => $result[0]['cat_id'],
+                                'forum_id' => $id
+                            );
+                            if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
                                 $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id)));
                                 $title = DataUtil::formatForDisplay($result[0]['forum_name']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
@@ -79,7 +83,7 @@ function Dizkus_needleapi_dizkus($args)
                         $result    = DBUtil::marshallObjects($res, $colarray);
                         
                         if (is_array($result) && !empty($result)) {
-                            if (allowedtoreadcategoryandforum($result[0]['cat_id'], $result[0]['forum_id'])) {
+                            if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $result[0])) {
                                 $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
                                 $title = DataUtil::formatForDisplay($result[0]['topic_title']);
                                 $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';

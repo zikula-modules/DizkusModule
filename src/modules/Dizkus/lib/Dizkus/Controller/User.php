@@ -97,10 +97,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function viewforum($args=array())
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+
     
         // get the input
         $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
@@ -119,8 +116,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                     'start'           => $start,
                                     'last_visit'      => $last_visit,
                                     'last_visit_unix' => $last_visit_unix));
-    
-        
+
+
+        // Permission check
+        $this->throwForbiddenUnless(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)
+        );
+
         $this->view->assign('forum', $forum);
         $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
         $this->view->assign('last_visit', $last_visit);
@@ -136,10 +138,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function viewtopic($args=array())
     {        
-        // Permission check
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+
 
     
         // get the input
@@ -175,6 +174,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                               array('topic_id'   => $topic_id,
                                     'start'      => $start,
                                     'count'      => true));
+
+        // Permission check
+        $this->throwForbiddenUnless(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)
+        );
     
         $this->view->assign('topic', $topic);
         $this->view->assign('post_count', count($topic['posts']));
@@ -195,6 +199,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function topicsolved()
     {
         // Permission check
+        // todo check topic
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
@@ -220,6 +225,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function topicunsolved()
     {
         // Permission check
+        // todo check topic
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
@@ -243,6 +249,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function reply($args=array())
     {
         // Permission check
+        // todo check topic
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
@@ -341,6 +348,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function editpost($args=array())
     {
         // Permission check
+        // todo check topic
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
@@ -362,8 +370,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
                              array('post_id' => $post_id));
-    
-        if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])
+
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)
            && ($post['poster_data']['uid'] <> UserUtil::getVar('uid')) ) {
             return LogUtil::registerPermissionError();
         }
@@ -539,9 +547,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             {
                 case 'lock':
                 case 'unlock':
-                    list($f_id, $c_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
+                    $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                       array('topic_id' => $topic_id));
-                    if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                         return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'lockunlocktopic',
@@ -551,9 +559,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
                 case 'sticky':
                 case 'unsticky':
-                    list($f_id, $c_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
+                    $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                       array('topic_id' => $topic_id));
-                    if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                         return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'stickyunstickytopic',
@@ -955,8 +963,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $from_topic_id = (int)$this->request->query->get('from_topic_id', (isset($args['from_topic_id'])) ? $args['from_topic_id'] : null);
     
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-    
-        if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
@@ -1022,8 +1030,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                     'start'           => $start,
                                     'last_visit'      => $last_visit,
                                     'last_visit_unix' => $last_visit_unix));
-    
-        if (!allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $forum)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }

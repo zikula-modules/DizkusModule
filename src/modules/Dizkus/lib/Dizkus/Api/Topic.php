@@ -82,8 +82,8 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
             $args['user_id'] = UserUtil::getVar('uid');
         }
     
-        list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $args['topic_id']));
-        if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        $topic = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $args['topic_id']));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)) {
             return LogUtil::registerPermissionError();
         }
 
@@ -244,23 +244,23 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         // kill the wrong var
         unset($topic['forum_pop3_active']);
 
-        if (!allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)) {
             return LogUtil::registerPermissionError();
         }
 
         $topic['forum_mods'] = ModUtil::apiFunc($this->name, 'Users', 'get_moderators', array('forum_id' => $topic['forum_id']));
 
-        $topic['access_see']      = allowedtoseecategoryandforum($topic['cat_id'], $topic['forum_id']);
-        $topic['access_read']     = $topic['access_see'] && allowedtoreadcategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+        $topic['access_see']      = ModUtil::apiFunc($this->name, 'Permission', 'canSee', $topic);
+        $topic['access_read']     = $topic['access_see'] && ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic);
         $topic['access_comment']  = false;
         $topic['access_moderate'] = false;
         $topic['access_admin']    = false;
         if ($topic['access_read'] == true) {
-            $topic['access_comment']  = $topic['access_read'] && allowedtowritetocategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+            $topic['access_comment']  = $topic['access_read'] && ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $topic));
             if ($topic['access_comment'] == true) {
-                $topic['access_moderate'] = $topic['access_comment'] && allowedtomoderatecategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+                $topic['access_moderate'] = $topic['access_comment'] && ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic);
                 if ($topic['access_moderate'] == true) {
-                    $topic['access_admin']    = $topic['access_moderate'] && allowedtoadmincategoryandforum($topic['cat_id'], $topic['forum_id'], $currentuserid);
+                    $topic['access_admin'] = $topic['access_moderate'] && ModUtil::apiFunc($this->name, 'Permission', 'canAdministrate', $topic);
                 }
             }
         }
@@ -473,7 +473,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
 
 
         list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        $params = array(
+            'cat_id' => $cat_id,
+            'forum_id' => $forum_id
+        );
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $params)) {
             return LogUtil::registerPermissionError();
         }
 

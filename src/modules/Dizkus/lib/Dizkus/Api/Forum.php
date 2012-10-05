@@ -56,9 +56,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
             $args['user_id'] = UserUtil::getVar('uid');
         }
 
-        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
-            array('forum_id' => $args['forum_id']));
-        if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('forum_id' => $args['forum_id']));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
             return LogUtil::registerPermissionError();
         }
 

@@ -37,10 +37,10 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $post_id = (int)$this->request->query->get('post');
-        $this->post = ModUtil::apiFunc('Dizkus', 'Post', 'read', $post_id);
+        $postId = (int)$this->request->query->get('post');
+        $this->post = ModUtil::apiFunc('Dizkus', 'Post', 'read', $postId);
 
-        if (!allowedtomoderatecategoryandforum($this->post['cat_id'], $this->post['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->post)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }

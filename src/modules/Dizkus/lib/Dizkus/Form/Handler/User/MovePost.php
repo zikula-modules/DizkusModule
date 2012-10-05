@@ -49,7 +49,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $this->post_id));
         $this->old_topic_id = $post['topic_id'];
     
-        if (!allowedtomoderatecategoryandforum($post['cat_id'], $post['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }

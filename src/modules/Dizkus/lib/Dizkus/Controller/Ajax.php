@@ -334,10 +334,11 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($mode)));
         }
 
-        list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                 array('topic_id' => $topic_id));
 
-        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }
@@ -373,10 +374,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         	return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_stickyunstickytopic()\'.', DataUtil::formatForDisplay($mode)));
         }
 
-        list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                 array('topic_id' => $topic_id));
 
-        if (!allowedtomoderatecategoryandforum($cat_id, $forum_id)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }
@@ -407,10 +408,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in Dizkus_ajax_subscribeunsubscribetopic().'));
         }
 
-        list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                 array('topic_id' => $topic_id));
 
-        if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }
@@ -460,10 +461,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'toggleforumsubscription()\'.'));
         }
 
-        $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
-                               array('forum_id' => $forum_id));
+        $forum = array('forum_id' => $forum_id);
+        $forum['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', $forum);
 
-        if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum_id)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }
@@ -536,10 +537,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
     
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
-                               array('forum_id' => $forum_id));
+        $forum = array('forum_id' => $forum_id);
+        $forum['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', $forum);
 
-        if (!allowedtoreadcategoryandforum($cat_id, $forum_id)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
             LogUtil::registerPermissionError();
             throw new Zikula_Exception_Forbidden();
         }
@@ -625,8 +626,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             $topic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $topic_id);
             $topicposter = $topic['topic_poster'];
 
-            list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-            if (!allowedtomoderatecategoryandforum($cat_id, $forum_id) && UserUtil::getVar('uid') <> $topicposter) {
+            $topic= ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) && UserUtil::getVar('uid') <> $topicposter) {
                 LogUtil::registerPermissionError(null, true);
                 throw new Zikula_Exception_Forbidden();
             }
@@ -731,7 +732,11 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $forum_id));
 
-        if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+        $topic = array(
+            'cat_id' => $cat_id,
+            'forum_id' => $forum_id
+        );
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $topic)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }

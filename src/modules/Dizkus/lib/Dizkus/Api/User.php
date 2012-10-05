@@ -319,8 +319,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                 $forum['uid']                 = $row['pn_uid'];
                 $forum['topic_id']            = $row['topic_id'];
                 $forum['post_time']           = $row['post_time'];
-            
-                if (allowedtoseecategoryandforum($cat['cat_id'], $forum['forum_id'])) {
+
+                $allowedToSee = ModUtil::apiFunc($this->name, 'Permission', 'canSee', $forum);
+                if ($allowedToSee) {
                     if (!array_key_exists($cat['cat_title'], $tree)) {
                         $tree[$cat['cat_title']] = $cat;
                     }
@@ -506,8 +507,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         if ($forum == false) {
             return LogUtil::registerError($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
-    
-        if (!allowedtoseecategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+
+        $allowedToSee = ModUtil::apiFunc($this->name, 'Permission', 'canSee', $forum);
+        if (!$allowedToSee) {
             return LogUtil::registerPermissionError();
         }
     
@@ -539,10 +541,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         }
     
         // if user can write into Forum, set a flag
-        $forum['access_comment'] = allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id']);
+        $forum['access_comment'] = ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $forum);
     
         // if user can moderate Forum, set a flag
-        $forum['access_moderate'] = allowedtomoderatecategoryandforum($forum['cat_id'], $forum['forum_id']);
+        $forum['access_moderate'] = ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $forum);
     
         // forum_pager is obsolete, inform the user about this
         $forum['forum_pager'] = 'Error! Deprecated \'$forum.forum_pager\' data field used. Please update the template to incorporate the forum pager plug-in.';
@@ -817,7 +819,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
-        if (!allowedtowritetocategoryandforum($reply['cat_id'], $reply['forum_id'])) {
+        if (!aModUtil::apiFunc($this->name, 'Permission', 'canWrite', $reply)) {
             return LogUtil::registerPermissionError();
         }
     
@@ -884,10 +886,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function storereply($args)
     {
-        list($forum_id, $cat_id) = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
+        $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                 array('topic_id' => $args['topic_id']));
     
-        if (!allowedtowritetocategoryandforum($cat_id, $forum_id)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $topic)) {
             return LogUtil::registerPermissionError();
         }
         
@@ -1064,7 +1066,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $newtopic['topic_unixtime'] = time();
     
         // need at least "comment" to add newtopic
-        if (!allowedtowritetocategoryandforum($newtopic['cat_id'], $newtopic['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $newtopic)) {
             // user is not allowed to post
             return LogUtil::registerPermissionError();
         }
@@ -1110,8 +1112,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function storenewtopic($args)
     {
-        $cat_id = $this->get_forum_category(array('forum_id' => $args['forum_id']));
-        if (!allowedtowritetocategoryandforum($cat_id, $args['forum_id'])) {
+        $args['cat_id'] = $this->get_forum_category(array('forum_id' => $args['forum_id']));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $args)) {
             return LogUtil::registerPermissionError();
         }
         
@@ -1305,7 +1307,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         }
     
         if ((($row['poster_id'] != UserUtil::getVar('uid')) || ($row['topic_status'] == 1)) &&
-            !allowedtomoderatecategoryandforum($row['cat_id'], $row['forum_id'])) {
+            !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $row)) {
             // user is not allowed to edit post
             return LogUtil::registerPermissionError();
         }
@@ -1314,7 +1316,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         if (empty($args['delete'])) {
     
             // update the posting
-            if (!allowedtoadmincategoryandforum($row['cat_id'], $row['forum_id'])) {
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canAdministrate', $row['cat_id'])) {
                 // if not admin then add a edited by line
                 // If it's been edited more than once, there might be old "edited by" strings with
                 // escaped HTML code in them. We want to fix this up right here:
@@ -1980,7 +1982,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
                               array('forum_id' => $args['forum_id']));
     
-        if (!allowedtoreadcategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
             return LogUtil::registerPermissionError();
         }
     
@@ -2630,7 +2632,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
                             // login the correct user
                             if (UserUtil::logIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
                                 mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' successfully logged in.', $args['debug']);
-                                if (!allowedtowritetocategoryandforum($forum['cat_id'], $forum['forum_id'])) {
+                                if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $forum)) {
                                     mailcronecho("Error! Insufficient permissions for " . UserUtil::getVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
                                     UserUtil::logOut();
                                     mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' logged out.', $args['debug']);
@@ -2971,14 +2973,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     {
         // check if from_topic exists. this function will return an error if not
         $from_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
-        if (!allowedtomoderatecategoryandforum($from_topic['cat_id'], $from_topic['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $from_topic)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
     
         // check if to_topic exists. this function will return an error if not
         $to_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
-        if (!allowedtomoderatecategoryandforum($to_topic['cat_id'], $to_topic['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $to_topic)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }

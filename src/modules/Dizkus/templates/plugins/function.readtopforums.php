@@ -37,7 +37,7 @@ function smarty_function_readtopforums($params, &$smarty)
     $topforums = array();
     if (is_array($result) && !empty($result)) {
         foreach ($result as $topforum) {
-            if (allowedtoreadcategoryandforum($topforum['cat_id'], $topforum['forum_id'])) {
+            if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topforum)) {
                 $topforum['forum_name'] = DataUtil::formatForDisplay($topforum['forum_name']);
                 $topforum['cat_title'] = DataUtil::formatForDisplay($topforum['cat_title']);
                 array_push($topforums, $topforum);

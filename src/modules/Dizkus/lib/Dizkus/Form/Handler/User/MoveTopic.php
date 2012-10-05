@@ -71,11 +71,11 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
         if ($args['commandName'] == 'move') {
 
-            list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
-            if ($data['forum_id'] == $f_id) {
+            $topic = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
+            if ($data['forum_id'] == $topic['forum_id']) {
                 return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
             }
-            if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                 return LogUtil::registerPermissionError();
             }
             $data['topic_id'] = $this->old_topic_id;
@@ -88,8 +88,8 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
 
         if ($args['commandName'] == 'join') {
-            list($f_id, $c_id) = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
-            if (!allowedtomoderatecategoryandforum($c_id, $f_id)) {
+            $topic = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                 return LogUtil::registerPermissionError();
             }
 

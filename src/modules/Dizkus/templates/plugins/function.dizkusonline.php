@@ -90,7 +90,8 @@ function smarty_function_dizkusonline($params, &$smarty)
         $total = count($onlineusers);
         foreach ($onlineusers as $onlineuser) {
             if ($onlineuser['uid'] != 0) {
-                $onlineuser['admin'] = (isset($moderators[$onlineuser['uid']]) && $moderators[$onlineuser['uid']] == $onlineuser['uname']) || allowedtoadmincategoryandforum($params['category_id'], $params['forum_id'], $onlineuser['uid']);
+                $params['user_id'] = $onlineuser['uid'];
+                $onlineuser['admin'] = (isset($moderators[$onlineuser['uid']]) && $moderators[$onlineuser['uid']] == $onlineuser['uname']) || ModUtil::apiFunc($this->name, 'Permission', 'canAdministrate',$params);
                 $unames[$onlineuser['uid']] = $onlineuser;
                 $numusers++;
             } else {

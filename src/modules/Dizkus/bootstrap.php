@@ -126,46 +126,6 @@ function phpbb_br2nl($str)
 }
 
 /**
- * allowedtoseecategoryandforum
- */
-function allowedtoseecategoryandforum($category_id, $forum_id, $user_id = null)
-{
-    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_OVERVIEW, $user_id);
-}
-
-/**
- * allowedtoreadcategoryandforum
- */
-function allowedtoreadcategoryandforum($category_id, $forum_id, $user_id = null)
-{
-    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_READ, $user_id);
-}
-
-/**
- * allowedtowritetocategoryandforum
- */
-function allowedtowritetocategoryandforum($category_id, $forum_id, $user_id = null)
-{
-    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_COMMENT, $user_id);
-}
-
-/**
- * allowedtomoderatecategoryandforum
- */
-function allowedtomoderatecategoryandforum($category_id, $forum_id, $user_id = null)
-{
-    return SecurityUtil::checkPermission('Dizkus::', $category_id . ':' . $forum_id . ':', ACCESS_MODERATE, $user_id);
-}
-
-/**
- * allowedtoadmincategoryandforum
- */
-function allowedtoadmincategoryandforum($category_id, $forum_id, $user_id = null)
-{
-    return SecurityUtil::checkPermission('Dizkus::', "{$category_id}:{$forum_id}:", ACCESS_ADMIN, $user_id);
-}
-
-/**
  * sorting categories by cat_order (this is a VARCHAR, so we need this function for sorting)
  *
  */

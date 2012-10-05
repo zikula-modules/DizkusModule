@@ -109,7 +109,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url('Dizkus', 'admin', 'tree' );
+        $url = ModUtil::url('Dizkus', 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
@@ -123,14 +123,14 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $data = $view->getValues();
 
 
-        if ($data['pop3_passwordconfirm'] != $data['pop3_password']) {
+        if ($data['extsource'] == 'mail2forum' && $data['pop3_passwordconfirm'] != $data['pop3_password']) {
             return LogUtil::registerError('Passwords are not matching!');
         } else {
             unset($data['pop3_passwordconfirm']);
         }
 
 
-        if ($data['pnpasswordconfirm'] != $data['pnpassword']) {
+        if ($data['extsource'] == 'mail2forum' && $data['pnpasswordconfirm'] != $data['pnpassword']) {
             return LogUtil::registerError('Passwords are not matching!');
         } else {
             unset($data['pnpasswordconfirm']);
@@ -173,7 +173,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
 
         // insert added moderators
         foreach ($forum_mods as $forum_mod) {
-
             $newModerator = new Dizkus_Entity_Moderators2();
             $newModerator->setForum_id($forum_id);
             $newModerator->setUser_id($forum_mod);

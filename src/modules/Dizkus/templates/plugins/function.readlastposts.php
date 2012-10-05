@@ -46,9 +46,9 @@ function smarty_function_readlastposts($params, &$smarty)
     $whereforum = '';
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
         // get the category id and check permissions
-        $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
+        $params['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
                                array('forum_id' => $params['forum_id']));
-        if (!allowedtoreadcategoryandforum($cat_id, $params['forum_id'])) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $params)) {
             $smarty->assign('lastpostcount', 0);
             $smarty->assign('lastposts', array());
             return;
@@ -65,7 +65,7 @@ function smarty_function_readlastposts($params, &$smarty)
             return;
         }
         
-        foreach($userforums as $userforum) {
+        foreach ($userforums as $userforum) {
             if (strlen($whereforum)>0) {
                 $whereforum .= ', ';
             }
@@ -96,7 +96,7 @@ function smarty_function_readlastposts($params, &$smarty)
                 if (!empty($wherefavorites)) {
                     $wherefavorites .= ' OR ';
                 }
-                if (allowedtoreadcategoryandforum($resline['cat_id'], $resline['forum_id'])) {
+                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $resline)) {
                     $wherefavorites .= 'f.forum_id=' .  (int)DataUtil::formatForStore($resline['forum_id']); // . ' OR ';
                 }
             }
