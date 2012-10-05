@@ -777,10 +777,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         // the next line is only producing a valid result, if we get a post_id which
         // means we are producing a reply with quote
         if (array_key_exists('post_text', $reply)) {
-            $text = Dizkus_bbdecode($reply['post_text']);
-            $text = preg_replace('/(<br[ \/]*?>)/i', '', $text);
+            $text = preg_replace('/(<br[ \/]*?>)/i', '', $reply['post_text']);
             // just for backwards compatibility
-            $text = Dizkus_undo_make_clickable($text);
             $text = str_replace('[addsig]', '', $text);
             $reply['message'] = '[quote='.$reply['uname'].']'.trim($text).'[/quote]';
         } else {
