@@ -1,5 +1,5 @@
 {ajaxheader modname='Dizkus' ui=true}
-{if $modvars.Dizkus.ajax}
+{if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
 {pageaddvar name='javascript' value='javascript/helpers/Zikula.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}

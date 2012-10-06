@@ -256,7 +256,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi {
         $topic['access_moderate'] = false;
         $topic['access_admin']    = false;
         if ($topic['access_read'] == true) {
-            $topic['access_comment']  = $topic['access_read'] && ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $topic));
+            $topic['access_comment']  = $topic['access_read'] && ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $topic);
             if ($topic['access_comment'] == true) {
                 $topic['access_moderate'] = $topic['access_comment'] && ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic);
                 if ($topic['access_moderate'] == true) {

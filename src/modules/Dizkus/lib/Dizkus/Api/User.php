@@ -931,10 +931,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
              }
         }
 
+
         // Prep for DB is done by DBUtil
         $obj['post_time']  = date('Y-m-d H:i:s');
         $obj['topic_id']   = $args['topic_id'];
-        $obj['forum_id']   = $forum_id;
+        $obj['forum_id']   = $topic['forum_id'];
         $obj['post_text']  = $args['message'];
         $obj['poster_id']  = $pn_uid;
         $obj['poster_ip']  = $poster_ip;
@@ -1495,10 +1496,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
-        $colarray = array('forum_id', 'cat_id');
-        $objarray = DBUtil::marshallObjects ($res, $colarray);
+        $colarray = array('forum_id' => 'forum_id','cat_id' => 'cat_id');
+        $objarray = DBUtil::marshallObjects($res, $colarray);
 
-        return array_values($objarray[0]); // forum_id, cat_id
+        return $objarray[0]; // forum_id, cat_id
     }
     
     /**
