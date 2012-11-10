@@ -62,7 +62,6 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $view->assign('post_count', count($topic['posts']));
         $view->assign('last_visit', $last_visit);
         $view->assign('last_visit_unix', $last_visit_unix);
-        $view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
         $view->assign('modinfo', ModUtil::getInfo(ModUtil::getIdFromName($mod)));
         $view->assign('msgmodule', System::getVar('messagemodule', ''));
         $view->assign('prfmodule', System::getVar('profilemodule', ''));

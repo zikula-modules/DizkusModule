@@ -37,18 +37,18 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
         
         $id = $this->request->query->get('id');
-        
+
+
+
         if ($id) {
             $view->assign('templatetitle', $this->__('Modify subforum'));
             $forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
-            if ($forum) {
-                $this->view->assign($forum->toArray());
-            } else {
+            if (!$forum) {
                 return LogUtil::registerError($this->__f('Article with id %s not found', $id));
             }
 
-            $forum_mods = ModUtil::apiFunc('Dizkus', 'admin', 'readforummods', $forum->getforum_id());
-            $view->assign('forum_mods', $forum_mods);
+            //$forum_mods = ModUtil::apiFunc('Dizkus', 'admin', 'readforummods', $forum->getforum_id());
+            //$view->assign('forum_mods', $forum_mods);
 
 
 
@@ -59,13 +59,18 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
                 $this->view->assign('extsource', 'noexternal');
             }
 
-            $this->view->assign('parent', $forum->getparent());
+            //$this->view->assign('parent', $forum->getparent());
 
         } else {
+            $forum = new Dizkus_Entity_Forums();
             $view->assign('templatetitle', $this->__('Create forum'));
         }
 
 
+        $t = $forum->toArray();
+        unset($t['parent']);
+
+        $view->assign($t);
 
         $users  = UserUtil::getAll();
         $groups = UserUtil::getGroups();
@@ -86,7 +91,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $view->assign('usersAndGroups', $usersAndGroups);
 
 
-        $this->view->assign('parents', ModUtil::apiFunc($this->name, 'Forum', 'getTreeAsDropdownList'));
+        $this->view->assign('parents', ModUtil::apiFunc($this->name, 'Forum', 'getParents'));
                 
         $this->view->caching = false;
 
@@ -122,6 +127,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
+        $data['parent'] = $this->entityManager->find('Dizkus_Entity_Forums', $data['parent']);
 
         if ($data['extsource'] == 'mail2forum' && $data['pop3_passwordconfirm'] != $data['pop3_password']) {
             return LogUtil::registerError('Passwords are not matching!');
@@ -155,7 +161,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
 
 
 
-        if ($forum) {
+        /*if ($forum) {
             $moderators = $this->entityManager->getRepository('Dizkus_Entity_Moderators')
                 ->findBy(array('forum_id' => $forum_id));
 
@@ -177,7 +183,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             $newModerator->setForum_id($forum_id);
             $newModerator->setUser_id($forum_mod);
             $this->entityManager->persist($newModerator);
-        }
+        }*/
 
         $this->entityManager->flush();
 

@@ -54,7 +54,6 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
             return LogUtil::registerPermissionError();
         }
         
-        $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
     }
 
 

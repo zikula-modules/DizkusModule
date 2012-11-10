@@ -43,20 +43,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $this->view = $view;
         return $this;
     }
-    
-    /**
-     * get_userdata_from_id
-     *
-     * @param array $args The arguments array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return array of userdata information
-     */
-    public function get_userdata_from_id($args)
-    {
-        return ModUtil::apiFunc($this->name, 'UserData', 'getFromId', $args['userid']);
-    }
+
     
     /**
      * Returns the total number of posts in the whole system, a forum, or a topic
@@ -229,6 +216,17 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function readcategorytree($args)
     {
+        $em = $this->getService('doctrine.entitymanager');
+        $qb = $em->createQueryBuilder();
+        $qb->select('e')
+            ->from('Dizkus_Entity_Category', 'e');
+
+        $query = $qb->getQuery();
+        return $query->getResult();
+
+
+
+
         extract($args);
         if(empty($last_visit)) {
             $last_visit = 0;
@@ -419,20 +417,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return $tree;
     }
 
-    
-    /**
-     * Returns an array of all the moderators of a forum
-     *
-     * @param array $args The arguments array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return array containing the pn_uid as index and the users name as value
-     */
-    public function get_moderators($args)
-    {       
-        return ModUtil::apiFunc($this->name, 'Moderators', 'get', $args);
-    }
+
     
     /**
      * setcookies
@@ -710,166 +695,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     {
         return ModUtil::apiFunc($this->name, 'Topic', 'read', $args);    
     }
-    
-    /**
-     * preparereply
-     * prepare a reply to a posting by reading the last ten postign in revers order for review
-     *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['post_id'] int the post id to reply to
-     * @params $args['quote'] bool if user wants to qupte or not (**not used**)
-     * @params $args['last_visit'] string the users last visit data (**not used**)
-     * @params $args['reply_start'] bool true if we start a new reply
-     * @params $args['attach_signature'] int 1=attach signature, otherwise no
-     * @params $args['subscribe_topic'] int =subscribe topic, otherwise no
-     * @return array Very complex array, see {debug} for more information
-     */
-    public function preparereply($args)
-    {
-        $ztable = DBUtil::getTables();
-    
-        $reply = array();
-    
-        if ($args['post_id'] <> 0) {
-            // We have a post id, so include that in the checks
-            // create a reply with quote
-            $sql = 'SELECT f.forum_id,
-                           f.cat_id,
-                           t.topic_id,
-                           t.topic_title,
-                           t.topic_status,
-                           p.post_text,
-                           p.post_time,
-                           u.uname
-                    FROM '.$ztable['dizkus_forums'].' AS f,
-                         '.$ztable['dizkus_topics'].' AS t,
-                         '.$ztable['dizkus_posts'].' AS p,
-                         '.$ztable['users'].' AS u
-                    WHERE (p.post_id = '.(int)DataUtil::formatForStore($args['post_id']).')
-                    AND (t.forum_id = f.forum_id)
-                    AND (p.topic_id = t.topic_id)
-                    AND (p.poster_id = u.uid)';
-            $colarray = array('forum_id', 'cat_id', 'topic_id', 'topic_title', 'topic_status', 'post_text', 'post_time', 'uname');
-        } else {
-            // No post id, just check topic.
-            // reply without quote
-            $sql = 'SELECT f.forum_id,
-                           f.cat_id,
-                           t.topic_id,
-                           t.topic_title,
-                           t.topic_status
-                    FROM '.$ztable['dizkus_forums'].' AS f,
-                         '.$ztable['dizkus_topics'].' AS t
-                    WHERE (t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']).')
-                    AND (t.forum_id = f.forum_id)';
-            $colarray = array('forum_id', 'cat_id', 'topic_id', 'topic_title', 'topic_status');
-        }
-        $res = DBUtil::executeSQL($sql);
-        $result = DBUtil::marshallObjects($res, $colarray);
-    
-        if (!is_array($result) || empty($result)) {
-            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
-        } else {
-            $reply = $result[0];
-        }
-    
-        $reply['topic_subject'] = DataUtil::formatForDisplay($reply['topic_title']);
-        // the next line is only producing a valid result, if we get a post_id which
-        // means we are producing a reply with quote
-        if (array_key_exists('post_text', $reply)) {
-            $text = preg_replace('/(<br[ \/]*?>)/i', '', $reply['post_text']);
-            // just for backwards compatibility
-            $text = str_replace('[addsig]', '', $text);
-            $reply['message'] = '[quote='.$reply['uname'].']'.trim($text).'[/quote]';
-        } else {
-            $reply['message'] = '';
-        }
-    
-        // anonymous user has uid=0, but needs uid=1
-        // also check subscription status here
-        if (!UserUtil::isLoggedIn()) {
-            $pn_uid = 1;
-            $reply['attach_signature'] = false;
-            $reply['subscribe_topic'] = false;
-        } else {
-            $pn_uid = UserUtil::getVar('uid');
-            // get the users topic_subscription status to show it in the quick repliy checkbox
-            // correctly
-            if ($args['reply_start']==true) {
-                $reply['attach_signature'] = true;
-                $reply['subscribe_topic'] = false;
-                $is_subscribed = $this->get_topic_subscription_status(array('user_id'   => $pn_uid,
-                                                                            'topic_id' => $reply['topic_id']));
-    
-                if ($is_subscribed == true || ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') {
-                    $reply['subscribe_topic'] = true;
-                } else {
-                    $reply['subscribe_topic'] = false;
-                }
-            } else {
-                $reply['attach_signature'] = $args['attach_signature'];
-                $reply['subscribe_topic'] = $args['subscribe_topic'];
-            }
-        }
-        $reply['poster_data'] = $this->get_userdata_from_id(array('userid' => $pn_uid));
-    
-        if ($reply['topic_status'] == 1) {
-            return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
-        }
-    
-        if (!aModUtil::apiFunc($this->name, 'Permission', 'canWrite', $reply)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        // Topic review (show last 10)
-        $sql = 'SELECT p.post_id,
-                       p.poster_id,
-                       p.post_time,
-                       p.post_text,
-                       t.topic_title
-                FROM '.$ztable['dizkus_posts'].' p
-                LEFT JOIN '.$ztable['dizkus_topics'].' t ON t.topic_id=p.topic_id
-                WHERE p.topic_id = ' . (int)DataUtil::formatForStore($reply['topic_id']) . ' 
-                ORDER BY p.post_id DESC';
-    
-        $res = DBUtil::executeSQL($sql, -1, 10);
-        $colarray = array('post_id', 'poster_id', 'post_time', 'post_text', 'topic_title');
-        $result    = DBUtil::marshallObjects($res, $colarray);
-    
-        $reply['topic_review'] = array();
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $review) {
-                $review['user_name'] = UserUtil::getVar('uname', $review['poster_id']);
-                if ($review['user_name'] == '') {
-                    // user deleted from the db?
-                    $review['poster_id'] = 1;
-                }
-            
-                $review['poster_data'] = $this->get_userdata_from_id(array('userid' => $review['poster_id']));
-            
-                // TODO extract unixtime directly from MySql
-                $review['post_unixtime'] = strtotime($review['post_time']);
-                $review['post_ml'] = DateUtil::formatDatetime($review['post_unixtime'], 'datetimebrief');
-            
-                $message = $review['post_text'];
-                // we use br2nl here for backward compatibility
-                $message = phpbb_br2nl($message);
-                // Before we insert the sig, we have to strip its HTML if HTML is disabled by the admin.
-            
-                // We do this _before_ bbencode(), otherwise we'd kill the bbcode's html.
-                $message = dzk_replacesignature($message, $review['poster_data']['signature']);
-            
-                // call hooks for $message
-                // list($message) = ModUtil::callHooks('item', 'transform', $review['post_id'], array($message));
-                $review['post_text'] = $message;
-            
-                array_push($reply['topic_review'], $review);
-            }
-        }
-    
-        return $reply;
-    }
-    
+
     /**
      * storereply
      * store the users reply in the database
@@ -985,48 +811,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return array($start, $obj['post_id']);
     }
     
-    /**
-     * Get topic subscription status
-     *
-     * @param array $args The arguments array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function get_topic_subscription_status($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Topic', 'getSubscriptionStatus', $args);
-    }
-    
-    /**
-     * Get forum subscription status
-     *
-     * @param array $args The arguments array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function get_forum_subscription_status($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Forum', 'getSubscriptionStatus', $args);   
-    }
-    
-    /**
-     * Get forum favorites status
-     *
-     * @param array $args The arguments array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function get_forum_favorites_status($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Favorites', 'getForumStatus', $args);
-    }
-    
+
+
     /**
      * preparenewtopic
      *
@@ -1041,11 +827,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     public function preparenewtopic($args)
     {
         $ztable = DBUtil::getTables();
-    
+
         $newtopic = array();
         $newtopic['forum_id'] = $args['forum_id'];
         $newtopic['topic_id'] = 0;
-    
+
         // select forum name and cat title based on forum_id
         $sql = "SELECT f.forum_name,
                        c.cat_id,
@@ -1057,28 +843,28 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $res = DBUtil::executeSQL($sql);
         $colarray = array('forum_name', 'cat_id', 'cat_title');
         $myrow    = DBUtil::marshallObjects($res, $colarray);
-    
+
         $newtopic['cat_id']     = $myrow[0]['cat_id'];
         $newtopic['forum_name'] = DataUtil::formatForDisplay($myrow[0]['forum_name']);
         $newtopic['cat_title']  = DataUtil::formatForDisplay($myrow[0]['cat_title']);
-    
+
         $newtopic['topic_unixtime'] = time();
-    
+
         // need at least "comment" to add newtopic
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $newtopic)) {
             // user is not allowed to post
             return LogUtil::registerPermissionError();
         }
 
-        $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', 
+        $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id',
                                                     array('userid' => UserUtil::getVar('uid')));
         $newtopic['subject'] = $args['subject'];
         $newtopic['message'] = $args['message'];
         $newtopic['message_display'] = $args['message']; // phpbb_br2nl($args['message']);
-    
+
         // list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
         $newtopic['message_display'] = nl2br($newtopic['message_display']);
-    
+
         if (UserUtil::isLoggedIn()) {
             if ($args['topic_start'] == true) {
                 $newtopic['attach_signature'] = true;
@@ -1091,7 +877,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             $newtopic['attach_signature'] = false;
             $newtopic['subscribe_topic']  = false;
         }
-    
+
         return $newtopic;
     }
     
@@ -1218,38 +1004,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return $obj['topic_id'];
     }
     
-    
-    /**
-     * readpost
-     *
-     * Reads a single posting
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return array with posting information.
-     *
-     */
-    public function readpost($args)
-    {
-        return ModUtil::apiFunc('Dizkus', 'Post', 'read', $args['post_id']);
-    }
-    
-    /**
-     * Check if this is the first post in a topic.
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function is_first_post($args)
-    {
-        return ModUtil::apiFunc('Dizkus', 'Post', 'isFirst', $args);
-    }
-    
+
     /**
      * Update post
      *
@@ -1444,33 +1199,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return $viewip;
     }
     
-    /**
-     * toogle topic lock
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function lockunlocktopic($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Topic', 'toggleLock', $args);
-    }
-    
-    /**
-     * toogle sticky topic
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function stickyunstickytopic($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Topic', 'toggleSticky', $args);
-    }
+
+
     
     /**
      * get_forumid_and categoryid_from_topicid
@@ -1590,19 +1320,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return;
     }
     
-    /**
-     * deletetopic
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @returns int the forums id for redirecting
-     */
-    public function deletetopic($args)
-    {
-        ModUtil::apiFunc($this->name, 'Topic', 'delete', $args['topic_id']);
-    }
+
     
     /**
      * Sending notify e-mail to users subscribed to the topic of the forum
@@ -1877,77 +1595,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     }
 
 
-    
-    /**
-     * subscribe_topic
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function subscribe_topic($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Topic', 'subscribe', $args);
-    }
-    
-    /**
-     * unsubscribe_topic
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function unsubscribe_topic($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', $args);
-    }
-    
-    /**
-     * subscribe_forum
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function subscribe_forum($args)
-    {
-        ModUtil::apiFunc($this->name, 'Forum', 'subscribe', $args);
-    }
-    
-    /**
-     * unsubscribe_forum
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function unsubscribe_forum($args)
-    {
-        return ModUtil::apiFunc($this->name, 'Forum', 'unsubscribe', $args);
-    }
-    
-
-    /**
-     * unsubscribe_forum_by_id
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function unsubscribe_forum_by_id($id)
-    {
-        return ModUtil::apiFunc($this->name, 'Forum', 'unsubscribeById', $id);
-    }
 
     /**
      * unsubscribe_topic_by_id
@@ -1963,79 +1610,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $this->entityManager->flush();
     }
     
-    
-    
-    /**
-     * add_favorite_forum
-     *
-     * @params $args['forum_id'] int the forums id
-     * @params $args['user_id'] int - Optional - the user id
-     * @returns void
-     */
-    public function add_favorite_forum($args)
-    {
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
-        }
-    
-        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
-                              array('forum_id' => $args['forum_id']));
-    
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        if ($this->get_forum_favorites_status($args) == false) {
-            // add user only if not already a favorite
-            // we can use the args parameter as-is
-            $favorite = new Dizkus_Entity_Favorites();
-            $favorite->merge($args);
-            $this->entityManager->persist($favorite);
-            $this->entityManager->flush();            
-        }
-    
-        return true;
-    }
-    
-    /**
-     * remove_favorite_forum
-     *
-     * @params $args['forum_id'] int the forums id
-     * @params $args['user_id'] int - Optional - the user id
-     * @returns bool
-     */
-    public function remove_favorite_forum($args)
-    {        
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
-        }
-    
-        // remove from favorites - no need to check the favorite status, we delete it anyway
-        $user_id  = (int)DataUtil::formatForStore($args['user_id']);
-        $forum_id = (int)DataUtil::formatForStore($args['forum_id']);
-                
-        $favorite = $this->entityManager->getRepository('Dizkus_Entity_Favorites')
-                                   ->findOneBy(array('user_id' => $user_id, 'forum_id' => $forum_id));  
-        $this->entityManager->remove($favorite);
-        $this->entityManager->flush();
-        return true;
-    }
 
-
-
-    /**
-     * emailtopic
-     *
-     * @param array $args The argument array.
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return boolean
-     */
-    public function emailtopic($args)
-    {
-        ModUtil::apiFunc($this->name, 'Topic', 'email', $args);
-    }
     
     /**
      * get_latest_posts
@@ -2223,6 +1798,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      * splittopic
      *
      * param array $args The argument array.
+     *
      * @params $args['post'] array with posting data as returned from readpost()
      *
      * @deprecated since 4.0.0
@@ -2350,132 +1926,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
     
         return isset($newtopic[0]['topic_id']) ? $newtopic[0]['topic_id'] : 0;
     }
+
+
     
-    /**
-     * getfavorites
-     * return the list of favorite forums for this user
-     *
-     * @params $args['user_id'] -Optional- the user id of the person who we want the favorites for
-     * @params $args['last_visit'] timestamp date of last visit
-     * @returns array of categories with an array of forums in the catgories
-     *
-     */
-    public function getfavorites($args)
-    {
-        static $tree;
-    
-        // if we have already gone through this once then don't do it again
-        // if we have a favorites block displayed and are looking at the
-        // forums this will get called twice.
-        if (isset($tree)) {
-            return $tree;
-        }
-    
-        // lets get all the forums just like we would a normal display
-        // we'll figure out which ones aren't needed further down.
-        $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $args['last_visit'] ));
-    
-        // if they are anonymous they can't have favorites
-        if (!UserUtil::isLoggedIn()) {
-            return $tree;
-        }
-    
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
-        }
-    
-        $ztable = DBUtil::getTables();
-        $objarray = DBUtil::selectObjectArray('dizkus_forum_favorites', $ztable['dizkus_forum_favorites_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']));
-        $favorites = array_map('_get_favorites', $objarray);
-    
-        // categoryCount is needed since the categories aren't stored as numerical
-        // indexes.  They are stored as associative arrays.
-        $categoryCount=0;
-        // loop through all the forums and delete all forums that aren't part of
-        // the favorites.
-        $deleteMe = array();
-        foreach ($tree as $categoryIndex => $category)
-        {
-            // $count is needed because the index changes as we splice the array
-            // but the foreach is working on a copy of the array so the $forumIndex
-            // value will point to non-existent elements in the modified array.
-            $count = 0;
-            foreach ($category['forums'] as $forumIndex => $forum)
-            {
-                // if this isn't one of our favorites then we need to remove it
-                if (!in_array((int)$forum['forum_id'], $favorites, true)){
-                    // remove the forum that isn't one of the favorites
-                    array_splice($tree[$categoryIndex]['forums'], ($forumIndex - $count) , 1);
-                    // increment $count because we will need to subtract this number
-                    // from the index the next time around since this many entries\
-                    // has been removed from the original array.
-                    $count++;
-                }
-            }
-            // lets see if the category is empty.  If it is we don't want to
-            // display it in the favorites
-            if (count($tree[$categoryIndex]['forums']) === 0) {
-                $deleteMe[] = $categoryCount;
-            }
-            // increase the index number to keep track of where we are in the array
-            $categoryCount++;
-        }
-    
-        // reverse the order so we don't need to do all the crazy subtractions
-        // that we had to do above
-        $deleteMe = array_reverse($deleteMe);
-        foreach ($deleteMe as $category) {
-            // remove the empyt category from the array
-            array_splice($tree, $category , 1);
-        }
-    
-        // return the modified array
-        return $tree;
-    }
-    
-    /**
-     * get_favorite_status
-     *
-     * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
-     * @params $args['user_id'] int the users id
-     * @returns boolean
-     *
-     */
-    public function get_favorite_status($args)
-    {
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
-        }
-    
-        //$obj = DBUtil::selectObjectByID('dizkus__users', $args['user_id'], 'user_id', null, null, null, false);
-    
-        $fav_status = (int)UserUtil::getVar('dizkus_user_favorites', $args['user_id']);
-        return ($fav_status == 1) ? true : false;
-    }
-    
-    /**
-     * change_favorite_status
-     *
-     * changes the flag in the users table that indicates the users last choice: show all forum (0) or favorites only (1)
-     * @params $args['user_id'] int the users id
-     * @returns 0 or 1
-     *
-     */
-    public function change_favorite_status($args)
-    {
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
-        }
-    
-        $recentstatus = $this->get_favorite_status(array('user_id' => $args['user_id']));
-        $user_favorites = ($recentstatus==true) ? 0 : 1;
-        UserUtil::setVar('dizkus_user_favorites', $user_favorites, $args['user_id']);
-        // force reload from db
-        UserUtil::getVars($args['user_id'], true);
-        //DBUtil::updateObject($args, 'dizkus__users', '', 'user_id');
-    
-        return (bool)$user_favorites;
-    }
+
     
     /**
      * get_user_post_order
@@ -2541,23 +1995,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         UserUtil::getVars($args['user_id'], true);
         return true;
     }
-    
-    /**
-     * get_forum_category
-     *
-     * @param forum_id - The forum id to find the category of
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return int|boolean on success, false on failure
-     */
-    public function get_forum_category($args)
-    {
-        if (!isset($args['forum_id'])) {
-            return false;
-        }
-        return ModUtil::apiFunc($this->name, 'Forum', 'getCategory', $args['forum_id']);
-    }
+
     
     /**
      * get_page_from_topic_replies
@@ -3378,17 +2816,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         return false;
     }
 
-    public function readSubForums()
-    {   
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('s')
-           ->from('Dizkus_Entity_Subforums', 's')
-           ->where('s.parent_id > 0')
-           ->orderBy('s.forum_name', 'DESC');
-        
-        return $qb->getQuery()->getArrayResult();
-    }
 }
 
 
@@ -3398,12 +2825,4 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
 function _get_forum_ids($f)
 {
     return $f['forum_id'];
-}
-
-/**
- * helper function
- */
-function _get_favorites($f)
-{
-    return (int)$f['forum_id'];
 }

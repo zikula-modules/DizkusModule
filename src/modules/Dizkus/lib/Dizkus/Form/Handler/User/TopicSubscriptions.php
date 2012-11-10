@@ -38,7 +38,6 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
 
         $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
         $view->assign('subscriptions', $subscriptions);
-        $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
         return true;
     }
 

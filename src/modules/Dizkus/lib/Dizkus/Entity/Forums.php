@@ -1,20 +1,21 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 
 /**
- * Favorites entity class.
+ * Forums entity class.
  *
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity
+ * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
+ * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */
 class Dizkus_Entity_Forums extends Zikula_EntityAccess
 {
-    
-    
 
     /**
      * The following are annotations which define the forum_id field.
@@ -29,7 +30,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     /**
      * The following are annotations which define the forum_name field.
      * 
-     * @ORM\Column(type="string", length="150")
+     * @ORM\Column(type="string", length=150)
      */
     private $forum_name = '';
 
@@ -48,35 +49,70 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $forum_topics = 0;
+
+
+    /**
+     * The number of posts of the forum
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $forum_posts = 0;
     
     /**
      * The following are annotations which define the forum_last_post_id field.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $forum_last_post_id = 0;
-    
-    /**
-     * The following are annotations which define the cat_id field.
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $cat_id = 0;
+    private $forum_last_post_id = null;
 
     /**
-     * The following are annotations which define the forum_id field.
-     *
-     * @ORM\Column(type="integer")
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer")
      */
-    private $parent_id = 0;
+    private $lft;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    private $lvl;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer")
+     */
+    private $rgt;
 
 
     /**
-     * The following are annotations which define the forum order field.
-     *
-     * @ORM\Column(type="integer")
+     * @Gedmo\TreeRoot
+     * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    private $forum_order = 0;
+    private $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="children")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="forum_id")
+     */
+    private $parent;
+
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="parent")
+     * @ORM\OrderBy({"lft" = "ASC"})
+     */
+    private $children;
+
+
+    /**
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Posts")
+     * @ORM\JoinColumn(name="forum_last_post_id", referencedColumnName="post_id")
+     */
+    private $last_post;
+
+
 
     /**
      * The following are annotations which define the forum_pop3_active field.
@@ -135,7 +171,14 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_pop3_lastconnect = 0;
 
 
-
+    /**
+     * forum moderators
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderators",
+     *                mappedBy="forum_id", cascade={"all"},
+     *                orphanRemoval=false)
+     */
+    private $forum_mods;
 
 
 
@@ -186,6 +229,59 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
 
 
+
+
+
+
+
+    /**
+     * The following are annotations which define the cat_id field.
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $cat_id = 0;
+
+    /**
+     * The following are annotations which define the forum_id field.
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $parent_id = 0;
+
+
+    /**
+     * The following are annotations which define the forum order field.
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $forum_order = 0;
+
+
+
+
+    /**
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Favorites",cascade={"persist"})
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id", nullable=true)
+     */
+    private $favorites;
+
+
+    public function getfavorites()
+    {
+        return $this->favorites;
+    }
+
+
+    public function getforum_mods()
+    {
+        return $this->forum_mods;
+    }
+
+
+
+
+
+
     public function getforum_id()
     {
         return $this->forum_id;
@@ -204,11 +300,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->forum_desc;
     }
     
-    
-    public function getcat_id()
-    {
-        return $this->cat_id;
-    }
+
 
     public function getForum_topics()
     {
@@ -226,15 +318,9 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->forum_posts;
     }
 
-
-    public function getparent_id()
+    public function getlast_post()
     {
-        return $this->parent_id;
-    }
-
-    public function getforum_order()
-    {
-        return $this->forum_order;
+        return $this->last_post;
     }
 
     public function getforum_pop3_active()
@@ -298,14 +384,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
 
 
-    public function getparent()
-    {
-        if ($this->parent_id == 0) {
-            return 'c'.$this->cat_id;
-        } else {
-            return $this->parent_id;
-        }
-    }
 
 
     public function setforum_id($forum_id)
@@ -323,17 +401,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_desc = $forum_name;
     }
 
-
-    public function setparent_id($parent_id)
-    {
-        $this->parent_id = $parent_id;
-    }
-
-
-    public function setcat_id($cat_id)
-    {
-        $this->cat_id = $cat_id;
-    }
 
     public function setextsource($extsource)
     {
@@ -388,44 +455,84 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
 
 
-    public function setparent($parent)
+
+
+
+
+
+
+
+
+
+    public function getParent()
     {
-        // category parent
-        if (substr($parent, 0 , 1) == 'c') {
-            $parent = substr($parent, 1);
-            if ($parent != $this->cat_id) {
-                // change category
-                $this->cat_id = $parent;
-            }
-            return;
-        }
-
-
-        if ($parent != $this->parent_id) {
-            // change forum
-            $this->parent_id = $parent;
-            $this->cat_id = 0;
-            $this->forum_order = ModUtil::apiFunc('Dizkus', 'Forum', 'getHighestOrder', $parent);
-        }
+        return $this->parent;
     }
 
-    public function setforum_order($forum_order)
+    public function getChildren()
     {
-        $this->forum_order = $forum_order;
+        return $this->children;
+    }
+
+    public function getLft()
+    {
+        return $this->lft;
+    }
+
+
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    public function getRgt()
+    {
+        return $this->rgt;
+    }
+
+
+
+
+    public function setParent(Dizkus_Entity_Forums $parent = null)
+    {
+        $this->parent = $parent;
     }
 
 
 
 
 
+    public function getCat_id()
+    {
+        return $this->cat_id;
+    }
+
+    public function getParent_id()
+    {
+        return $this->parent_id;
+    }
 
 
+    public function getForum_order()
+    {
+        return $this->forum_order;
+    }
 
 
+    public function getTopics()
+    {
+        return $this->topics;
+    }
 
-
-
-
+    public function getNumberOfTopics()
+    {
+        return count($this->topics);
+    }
 
 
 }

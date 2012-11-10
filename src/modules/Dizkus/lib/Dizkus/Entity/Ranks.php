@@ -26,14 +26,14 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
     /**
      * The following are annotations which define the rank_title field.
      * 
-     * @ORM\Column(type="string", length="50")
+     * @ORM\Column(type="string", length=50)
      */
     private $rank_title = '';
     
     /**
      * The following are annotations which define the rank_desc field.
      * 
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      */
     private $rank_desc = '';
     
@@ -65,7 +65,7 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
     /**
      * The following are annotations which define the rank_image field.
      * 
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      */
     private $rank_image = '';
     

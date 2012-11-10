@@ -1,33 +1,55 @@
 {assign var='templatetitle' value=$topic.topic_title}
 {include file='user/header.tpl' parent=$topic.forum_id}
 
+<h2>
+{usergetvar name='uid' assign='currentUser'}
+{if $permissions.moderate eq 1 || $topic.topic_poster eq $currentUser}
+<span class="editabletopicheader tooltips" id="edittopicsubjectbutton_{$topic.topic_id}" title="{gt text="Click to edit"}">
+        {if $topic.solved eq 1 and $modvars.Dizkus.solved_enabled}
+            {gt text="[Solved]"}
+        {/if}
+        {$topic.topic_title|safetext}
+    </span>
+{else}
+<span class="noneditabletopicheader">
+    {if $topic.solved eq 1 and $modvars.Dizkus.solved_enabled}
+        {gt text="[Solved]"}
+    {/if}
+    {$topic.topic_title|safetext}
+</span>
+<a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a>
+{/if}
+</h2>
+
+{userloggedin assign='userloggedin'}
+
 <div class="dzk_topicoptions roundedbar dzk_rounded" id="topic_{$topic.topic_id}">
     <div class="inner">
-        <div id="dzk_javascriptareatopic" class="hidden">
+        <div id="dzk_javascriptareatopic">
             <ul class="dzk_topicoptions linklist z-clearfix">
-                {if $topic.prev_topic_id and $topic.topic_id neq $topic.prev_topic_id}
+                {*if $topic.prev_topic_id and $topic.topic_id neq $topic.prev_topic_id }
                 <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
-                {/if}
+                {/if*}
 
-                {if $topic.access_comment}
+                {if $permissions.comment}
                 <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
-                {if $coredata.logged_in}
+                {if $userloggedin}
                 <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                 {/if}
 
-                <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
+                {*<li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}*}</li>
 
-                {if $coredata.logged_in}
+                {if $userloggedin}
                 <li>
-                    {if $topic.is_subscribed eq 0}
+                    {*if $topic.is_subscribed eq 0}
                     <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_unsubscribed" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a>
                     {else}
                     <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_subscribed" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a>
-                    {/if}
+                    {/if*}
                 </li>
-                {if $modvars.Dizkus.solved_enabled}
+                {if $modvars.Dizkus.solved_enabled|default:0}
                 <li>
                     {if $topic.solved eq 0}
                     <a class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='User' func='topicsolved' topic=$topic.topic_id}" title="{gt text="Mark as solved"}">
@@ -42,16 +64,16 @@
                 {/if}
                 {/if}
 
-                {if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
+                {*if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
                 <li>
                     <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">
                         &nbsp;
                     </a>
                 </li>
-                {/if}
+                {/if*}
             </ul>
 
-            {if $topic.access_moderate eq 1}
+            {if $permissions.moderate eq 1}
             <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
                     {if $topic.topic_status eq 0}
@@ -78,34 +100,34 @@
         <noscript>
             <div id="dzk_nonjavascriptareatopic">
                 <ul class="dzk_topicoptions linklist z-clearfix">
-                    {if $topic.topic_id neq $topic.prev_topic_id}
+                    {*if $topic.topic_id neq $topic.prev_topic_id}
                     <li><a class="dzk_arrow previoustopiclink" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
-                    {/if}
+                    {/if*}
 
-                    {if $topic.access_comment}
+                    {if $permissions.comment}
                     <li><a class="dzk_arrow newtopiclink" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
                     {/if}
 
-                    {if $coredata.logged_in}
+                    {if $userloggedin}
                     <li><a class="dzk_arrow mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                     {/if}
 
-                    <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
+                    <li>{*printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id*}</li>
 
-                    {if $coredata.logged_in}
-                    {if $topic.is_subscribed == 0}
+                    {if $userloggedin}
+                    {*if $topic.is_subscribed == 0}
                     <li><a class="dzk_arrow subscribetopiclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="subscribe_topic" topic=$topic.topic_id}" title="{gt text="Subscribe to topic"}">{gt text="Subscribe to topic"}</a></li>
                     {else}
                     <li><a class="dzk_arrow unsubscribetopiclink" href="{modurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_topic" topic=$topic.topic_id}" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a></li>
-                    {/if}
+                    {/if*}
                     {/if}
 
-                    {if $topic.topic_id neq $topic.next_topic_id}
+                    {*if $topic.topic_id neq $topic.next_topic_id}
                     <li><a class="dzk_arrow nexttopiclink" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">&nbsp;</a></li>
-                    {/if}
+                    {/if*}
                 </ul>
 
-                {if $topic.access_moderate eq 1}
+                {if $permissions.moderate eq 1}
                 <ul class="dzk_topicoptions linklist z-clearfix">
                     {if $topic.topic_status eq 0}
                     <li><a class="dzk_arrow locktopiclink" title="{gt text="Lock topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id}">{gt text="Lock topic"}</a></li>
@@ -128,12 +150,12 @@
     </div>
 </div>
 
-{dzkpager total=$topic.total_posts}
+{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
 <div id="dzk_postinglist">
     <ul>
         {counter start=0 print=false assign='post_counter'}
-        {foreach key='num' item='post' from=$topic.posts}
+        {foreach key='num' item='post' from=$posts}
         {counter}
         <li class="post_{$post.post_id}">
             {include file='user/post/single.tpl'}
@@ -144,9 +166,10 @@
     </ul>
 </div>
 
-{dzkpager total=$topic.total_posts}
+{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
-{if ($topic.topic_status neq 1) and ($topic.access_comment eq true)}
+{if ($topic.topic_status neq 1) and ($permissions.comment eq true)}
+<a id="reply">
 <div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded">
     <div class="inner">
         <div class="dzk_subcols z-clearfix">
@@ -174,7 +197,7 @@
                                 <div id="quickreplyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong>{gt text="Options"}</strong></li>
-                                        {if $coredata.logged_in}
+                                        {if $userloggedin}
                                         <li>
                                             <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
                                             <label for="attach_signature">{gt text="Attach my signature"}</label>
@@ -214,14 +237,8 @@
 
 {/if}
 
-{if $topic.forum_mods|@count > 0}
-<ul id="dzk_moderatorlist" class="linklist z-clearfix">
-    <li><em>{gt text="Moderated by"}:</em></li>
-    {foreach name=moderators item=mod from=$topic.forum_mods}
-    <li>{$mod|profilelinkbyuname}{if !$smarty.foreach.moderators.last}, {/if}</li>
-    {/foreach}
-</ul>
-{/if}
+
+{include file='user/moderatedBy.tpl' mods=$topic.forum_mods}
 
 <script type="text/javascript">
     // <![CDATA[

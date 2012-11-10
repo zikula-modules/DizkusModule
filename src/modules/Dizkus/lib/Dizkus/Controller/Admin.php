@@ -228,7 +228,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     /**
      * tree
      *
-     * Tree.
+     * Show the forum tree.
      *
      * @return string
      */
@@ -238,8 +238,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        return $this->view->assign('tree', ModUtil::apiFunc($this->name, 'Forum', 'getTree'))
-            ->fetch('admin/tree.tpl');
+        return $this->view->assign('tree', Dizkus_ContentType_Tree::get())->fetch('admin/tree.tpl');
 
     }
 

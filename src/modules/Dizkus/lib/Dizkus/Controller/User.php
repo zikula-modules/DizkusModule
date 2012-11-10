@@ -27,60 +27,25 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
         
-        $viewcat   =  (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : -1);
+        $viewcat   =  (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : 0);
         $favorites = (bool)$this->request->query->get('favorites', (isset($args['favorites'])) ? $args['favorites'] : false);
-    
+
+
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
         $loggedIn = UserUtil::isLoggedIn();
-    
-        if (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes') {
-            if ($loggedIn && !$favorites) {
-                $favorites = ModUtil::apiFunc('Dizkus', 'user', 'get_favorite_status');
-            }
-        }
-        if ($loggedIn && $favorites) {
-            $tree = ModUtil::apiFunc('Dizkus', 'user', 'getfavorites',
-                                 array('user_id'    => (int)UserUtil::getVar('uid'),
-                                       'last_visit' => $last_visit ));
-        } else {
-            $tree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree',
-                                 array('last_visit' => $last_visit ));
-    
-            if (ModUtil::getVar('Dizkus', 'slimforum') == 'yes') {
-                // this needs to be in here because we want to display the favorites
-                // not go to it if there is only one
-                // check if we have one category and one forum only
-                if (count($tree)==1) {
-                    foreach ($tree as $catname => $forumarray) {
-                        if (count($forumarray['forums']) == 1) {
-                            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum'=>$forumarray['forums'][0]['forum_id'])));
-                        } else {
-                            $viewcat = $tree[$catname]['cat_id'];
-                        }
-                    }
-                }
-            }
-        }
-    
-        $view_category_data = array();
-        if ($viewcat <> -1) {
-            foreach ($tree as $category) {
-                if ($category['cat_id'] == $viewcat) {
-                    $view_category_data = $category;
-                    break;
-                }
-            }
-        }
-    
+
+        $tree = Dizkus_ContentType_Tree::getOneLevel($viewcat);
+
+
+
         $this->view->assign('favorites', $favorites);
+        $this->view->assign('viewcat', $viewcat);
         $this->view->assign('tree', $tree);
-        $this->view->assign('view_category', $viewcat);
-        $this->view->assign('view_category_data', $view_category_data);
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
-                                                array('id'   => '0',
-                                                      'type' => 'all' )));
+        $this->view->assign('numposts', 11);//ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
+                                               // array('id'   => '0',
+                                                 //     'type' => 'all' )));
     
         return $this->view->fetch('user/main.tpl');
     }
@@ -101,34 +66,35 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         // get the input
         $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-        $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
-    
-        $subforums = $this->entityManager->getRepository('Dizkus_Entity_Subforums')
-                                   ->findBy(array('parent_id' => $forum_id)); 
-        $this->view->assign('subforums', $subforums);
-        
+        $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
+
+
+
+
+
         
         
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-    
-        $forum = ModUtil::apiFunc('Dizkus', 'user', 'readforum',
-                              array('forum_id'        => $forum_id,
-                                    'start'           => $start,
-                                    'last_visit'      => $last_visit,
-                                    'last_visit_unix' => $last_visit_unix));
 
+
+        $forum = new Dizkus_ContentType_Forum();
+        $forum->find($forum_id);
+        $this->view->assign('forum', $forum->toArray());
+        $this->view->assign('topics', $forum->getTopics($start));
+        $this->view->assign('pager', $forum->getPager());
+        $this->view->assign('permissions', $forum->getPermissions());
+        $this->view->assign('breadcrumbs', $forum->getBreadcrumbs());
 
         // Permission check
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)
         );
 
-        $this->view->assign('forum', $forum);
+        //$this->view->assign('forum', $forum);
         $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
+
         return $this->view->fetch('user/forum/view.tpl');
     }
     
@@ -137,10 +103,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      *
      */
     public function viewtopic($args=array())
-    {        
-
-
-    
+    {
         // get the input
         $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
         // begin patch #3494 part 1, credits to teb
@@ -149,7 +112,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
         $view     = strtolower($this->request->query->get('view', (isset($args['view'])) ? $args['view'] : ''));
     
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
+        /*list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
     
         if (!empty($view) && ($view=='next' || $view=='previous')) {
             $topic_id = ModUtil::apiFunc($this->name, 'user', 'get_previous_or_next_topic_id',
@@ -168,23 +131,31 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                            array('topic' => $topic_id)));
             }
         }
-        // end patch #3494 part 2
+        // end patch #3494 part 2 */
     
-        $topic = ModUtil::apiFunc($this->name, 'Topic', 'read',
-                              array('topic_id'   => $topic_id,
-                                    'start'      => $start,
-                                    'count'      => true));
+
+
+        $topic = new Dizkus_ContentType_Topic($topic_id);
 
         // Permission check
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)
-        );
-    
-        $this->view->assign('topic', $topic);
-        $this->view->assign('post_count', count($topic['posts']));
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
+        //$this->throwForbiddenUnless(
+        //    ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)
+        //);
+
+
+
+
+
+        $this->view->assign('start', $start);
+        $this->view->assign('topic', $topic->get()->toArray());
+        $this->view->assign('posts', $topic->getPosts($start));
+        $this->view->assign('pager', $topic->getPager());
+        $this->view->assign('permissions', $topic->getPermissions());
+        $this->view->assign('breadcrumbs', $topic->getBreadcrumbs());
+        //$this->view->assign('post_count', count($topic['posts']));
+        //$this->view->assign('last_visit', $last_visit);
+        //$this->view->assign('last_visit_unix', $last_visit_unix);
+        //$this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
     
         return $this->view->fetch('user/topic/view.tpl');
     }
@@ -325,8 +296,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->assign('preview', $preview);
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
+
             return $this->view->fetch('user/topic/reply.tpl');
         }
     }
@@ -435,8 +405,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->assign('post', $post);
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
+
             return $this->view->fetch('user/post/edit.tpl');
         }
     }
@@ -534,7 +503,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->setCaching(false);
         $this->view->assign('mode', $mode);
         $this->view->assign('topic_id', $topic_id);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
 
 	return $this->view->fetch($templatename);
     
@@ -653,18 +621,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 ModUtil::apiFunc('Dizkus', 'user', 'change_user_post_order');
                 $params = array('topic' => $topic_id);
                 break;
-    
-            case 'showallforums':
-                $return_to = (!empty($return_to))? $return_to : 'main';
-                $favorites = ModUtil::apiFunc('Dizkus', 'user', 'change_favorite_status');
-                break;
-            case 'showfavorites':
-                if (ModUtil::getVar('Dizkus', 'favorites_enabled')=='yes') {
-                    $return_to = (!empty($return_to))? $return_to : 'main';
-                    $favorites = ModUtil::apiFunc('Dizkus', 'user', 'change_favorite_status');
-                    $params = array();
-                }
-                break;
+
 
             case 'noautosubscribe':
             case 'autosubscribe':
@@ -684,7 +641,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 $this->view->assign('ignorelist_handling', ModUtil::getVar('Dizkus','ignorelist_handling'));
                 $this->view->assign('contactlist_available', ModUtil::available('ContactList'));
                 $this->view->assign('post_order', strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order')));
-                $this->view->assign('favorites', ModUtil::apiFunc('Dizkus','user','get_favorite_status'));
                 $this->view->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
     
                 return $this->view->fetch('user/prefs.tpl');
@@ -692,30 +648,57 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         return System::redirect(ModUtil::url('Dizkus', 'user', $return_to, $params));
     }
-    
+
+
+    /**
+     * signature management
+     *
+     */
+    public function showAllForums()
+    {
+        UserUtil::setVar('dizkus_user_favorites', false);
+        return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+    }
+
+    /**
+     * signature management
+     *
+     */
+    public function showFavorites()
+    {
+        UserUtil::setVar('dizkus_user_favorites', true);
+        return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+
+    }
+
+
+    /**
+     * Add/remove a forum from the favorites
+     */
+    public function changeForumFavoriteStatus()
+    {
+        $action = $this->request->query->get('action');
+        $forum = (int)$this->request->query->get('forum');
+
+        if ($action == 'add') {
+            ModUtil::apiFunc($this->name, 'Favorites', 'add', array('forum_id' => $forum));
+        } else {
+            ModUtil::apiFunc($this->name, 'Favorites', 'remove', array('forum_id' => $forum));
+        }
+
+        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum)));
+    }
+
+
+
     /**
      * signature management
      * 
      */
     public function signaturemanagement()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
-    
-        if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
-        }
-        // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar('Dizkus','signaturemanagement') == 'yes'))) {
-            return LogUtil::registerPermissionError();
-        }
-    
         // Create output and assign data
         $form = FormUtil::newForm($this->name, $this);
-    
-        // Return the output
         return $form->execute('user/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
     }
     
@@ -837,8 +820,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
                                              array('id'   => '0',
                                                    'type' => 'all' )));
-     $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
+
         return $this->view->fetch('user/post/latest.tpl');
     }
     
@@ -971,8 +953,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         if (!$submit) {
             $this->view->assign('post', $post);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-    
+
             return $this->view->fetch('user/topic/join.tpl');
     
         } else {
@@ -1045,7 +1026,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
             $this->view->assign('forum',$forum);
-            $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
             // For Movetopic
             $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
     

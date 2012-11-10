@@ -37,16 +37,28 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         }
     
         // creating forums table
-        if (!DBUtil::createTable('dizkus_forums')) {
-            $this->uninstall();
+        //if (!DBUtil::createTable('dizkus_forums')) {
+        //    $this->uninstall();
+        //    return false;
+        //}
+
+        try {
+            DoctrineHelper::createSchema($this->entityManager, array(
+                'Dizkus_Entity_Forums',
+                'Dizkus_Entity_Posts',
+                'Dizkus_Entity_Topics',
+                'Dizkus_Entity_Favorites'
+            ));
+        } catch (Exception $e) {
+            LogUtil::registerStatus($e->getMessage());
             return false;
         }
     
         // creating posts table
-        if (!DBUtil::createTable('dizkus_posts')) {
-            $this->uninstall();
-            return false;
-        }
+        //if (!DBUtil::createTable('dizkus_posts')) {
+        //    $this->uninstall();
+        //    return false;
+        //}
     
         // creating subscription table
         if (!DBUtil::createTable('dizkus_subscription')) {
@@ -61,10 +73,10 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         }
     
         // creating topics table
-        if (!DBUtil::createTable('dizkus_topics')) {
-            $this->uninstall();
-            return false;
-        }
+        //if (!DBUtil::createTable('dizkus_topics')) {
+        //    $this->uninstall();
+        //    return false;
+       // }
 /*    
         // creating users table
         if (!DBUtil::createTable('dizkus__users')) {
@@ -78,10 +90,10 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             return false;
         }
     
-        if (!DBUtil::createTable('dizkus_forum_favorites')) {
-            $this->uninstall();
-            return false;
-        }
+        //if (!DBUtil::createTable('dizkus_forum_favorites')) {
+        //    $this->uninstall();
+        //    return false;
+        //}
  /*   
         // create the hooks: create, delete, display.
         // everything else is not needed , at least not atm.

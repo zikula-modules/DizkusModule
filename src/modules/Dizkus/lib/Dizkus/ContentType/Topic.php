@@ -1,0 +1,234 @@
+<?php
+/**
+ * Copyright Pages Team 2012
+ *
+ * This work is contributed to the Zikula Foundation under one or more
+ * Contributor Agreements and licensed to You under the following license:
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ * @package Pages
+ * @link https://github.com/zikula-modules/Pages
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
+ */
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+class Dizkus_ContentType_Topic
+{
+
+    private $_topic;
+    private $_itemsPerPage;
+    private $_numberOfItems;
+    private $_firstPost;
+
+    protected  $entityManager;
+    protected $name;
+
+
+    /**
+     * construct
+     */
+
+
+    public function __construct($id = null)
+    {
+        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $this->name = 'Dizkus';
+
+        if ($id > 0) {
+            $this->_topic = $this->entityManager->find('Dizkus_Entity_Topics', $id);
+        } else {
+            $this->_topic = new Dizkus_Entity_Topics();
+        }
+    }
+
+    /**
+     * create
+     *
+     */
+    public function create()
+    {
+        $this->_topic = new Dizkus_Entity_Topics();
+    }
+
+    /**
+     * return page as array
+     *
+     * @return mixed array or false
+     */
+    public function toArray()
+    {
+        if (!$this->_topic) {
+            return false;
+        }
+
+        return $this->_topic->toArray();
+    }
+
+    /**
+     * return page as array
+     *
+     * @return array
+     */
+    public function getId()
+    {
+        return $this->_topic->getPageId();
+    }
+
+    /**
+     * return topic as doctrine2 object
+     *
+     * @return object
+     */
+    public function get()
+    {
+        return $this->_topic;
+    }
+
+
+    public function getPermissions()
+    {
+        return ModUtil::apiFunc($this->name, 'Permission', 'get', $this->_topic);
+    }
+
+
+
+
+    /**
+     * return posts of a topic as doctrine2 object
+     *
+     * @return object
+     */
+    public function getPosts($startNumber = 1)
+    {
+
+        $this->_itemsPerPage = ModUtil::getVar($this->name,'posts_per_page');
+
+        $id = $this->_topic->gettopic_id();
+
+
+        $query = $this->entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from('Dizkus_Entity_Posts', 'p')
+            ->where('p.topic_id = :topicId')
+            ->setParameter('topicId', $id)
+            ->getQuery();
+
+        $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
+        $paginator = new Paginator($query);
+        $this->_numberOfItems = count($paginator);
+
+        return $paginator;
+
+    }
+
+
+    /**
+     * return page as array
+     *
+     * @return array
+     */
+    public function getPager()
+    {
+        return array(
+            'itemsperpage' => $this->_itemsPerPage,
+            'numitems'     => $this->_numberOfItems
+        );
+    }
+
+
+    /**
+     * get forum bread crumbs
+     *
+     * @return string
+     */
+    public function getBreadcrumbs()
+    {
+        $i = $this->entityManager->find('Dizkus_Entity_Forums', $this->_topic->getForum_id());
+
+        $output = array();
+        while ($i->getLvl() != 0) {
+            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
+            $output[] = array(
+                'url' => $url,
+                'title' => $i->getForum_name()
+            );
+            $i = $i->getParent();
+        }
+        // root
+        $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $i->getForum_id()));
+        $output[] = array(
+            'url' => $url,
+            'title' => $i->getForum_name()
+        );
+        return array_reverse($output);
+    }
+
+
+
+
+    /**
+     * return page as array
+     *
+     * @return array
+     */
+    public function incrementReadCount()
+    {
+        $this->_topic->incrementCounter();
+        $this->entityManager->flush();
+        return true;
+    }
+
+
+    public function merge($data)
+    {
+        // prepare first post
+        $this->_firstPost = new Dizkus_Entity_Posts();
+        $this->_firstPost->setforum_id($data['forum_id']);
+        $this->_firstPost->setpost_text($data['message']);
+        unset($data['message']);
+        $this->_firstPost->setpost_attach_signature($data['post_attach_signature']);
+        unset($data['post_attach_signature']);
+        $this->_firstPost->setpost_title($data['topic_title']);
+        unset($data['subscribe_topic']);
+
+        $this->_topic->setlast_post($this->_firstPost);
+
+        $this->_topic->merge($data);
+    }
+
+
+    /**
+     * return page as array
+∂     *
+     * @return boolean
+     */
+    public function store()
+    {
+        // write topic
+        $this->entityManager->persist($this->_topic);
+        $this->entityManager->flush();
+
+        // write first post
+        $this->_firstPost->settopic_id($this->_topic->gettopic_id());
+        $this->entityManager->persist($this->_firstPost);
+        $this->entityManager->flush();
+
+        return $this->_topic->gettopic_id();
+    }
+
+    /**
+     * return page as array
+     *
+     * @return boolean
+     */
+    public function remove()
+    {
+        $this->entityManager->remove($this->_topic);
+        $this->entityManager->flush();
+        return true;
+    }
+
+}

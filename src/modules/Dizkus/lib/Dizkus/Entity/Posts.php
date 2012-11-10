@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
 
 /**
@@ -22,43 +24,70 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $post_id;
-    
+
+    public function getpost_id()
+    {
+        return $this->post_id;
+    }
+
+
     /**
      * The following are annotations which define the topic_id field.
      *
-     * @ORM\Id
      * @ORM\Column(type="integer")
      */
     private $topic_id = 0;
-    
+
+    public function gettopic_id()
+    {
+        return $this->topic_id;
+    }
+
+    public function settopic_id($id)
+    {
+        return $this->topic_id = $id;
+    }
+
     /**
      * The following are annotations which define the forum_id field.
      *
-     * @ORM\Id
      * @ORM\Column(type="integer")
      */
     private $forum_id = 0;
 
+    public function getforum_id()
+    {
+        return $this->forum_id;
+    }
+
+    public function setforum_id($forumId)
+    {
+        return $this->forum_id = $forumId;
+    }
+
+
+
     /**
      * The following are annotations which define the poster_id field.
      *
-     * @ORM\Id
      * @ORM\Column(type="integer")
+     * @ZK\StandardFields(type="userid", on="create")
      */
-    private $poster_id = 0;
+    private $poster_id;
 
     /**
      * The following are annotations which define the post_time field.
      * 
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
-    private $post_time = '';
+    private $post_time;
     
     
     /**
      * The following are annotations which define the poster_ip field.
      * 
-     * @ORM\Column(type="string", length="50")
+     * @ORM\Column(type="string", length=50)
      */
     private $poster_ip = '';
 
@@ -66,7 +95,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     /**
      * The following are annotations which define the post_msgid field.
      * 
-     * @ORM\Column(type="string", length="100")
+     * @ORM\Column(type="string", length=100)
      */
     private $post_msgid = '';
 
@@ -76,31 +105,63 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @ORM\Column(type="text")
      */
     private $post_text = '';
-    
+
+    public function getpost_text()
+    {
+        return $this->post_text;
+    }
+
+    public function setpost_text($text)
+    {
+        return $this->post_text = stripslashes($text);
+    }
+
+
+    /**
+     * The following are annotations which define the post_attach_signature field.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $post_attach_signature = false;
+
+    public function getpost_attach_signature()
+    {
+        return $this->post_attach_signature;
+    }
+
+    public function setpost_attach_signature($attachSignature)
+    {
+        return $this->post_attach_signature = $attachSignature;
+    }
+
+
+
+
     /**
      * The following are annotations which define the post_title field.
      * 
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length=255)
      */
     private $post_title = '';
 
+    public function getpost_title()
+    {
+        return $this->post_title;
+    }
+
+    public function setpost_title($title)
+    {
+        return $this->post_title = $title;
+    }
 
 
+
     
-    public function getpost_id()
-    {
-        return $this->post_id;
-    }
+
     
-    public function gettopic_id()
-    {
-        return $this->topic_id;
-    }
+
     
-    public function getforum_id()
-    {
-        return $this->forum_id;
-    }
+
     
     public function getposter_id()
     {
@@ -109,8 +170,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     
     public function getpost_time()
     {
-        $time = new DateTime($this->post_time);
-        return $time->format('Y-m-d H:i:s');
+        return $this->post_time;
     }
     
     public function getposter_ip()
@@ -122,15 +182,42 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     {
         return $this->post_msgid;
     }
-    
-    public function getpost_text()
+
+
+
+    public function getposter_data()
     {
-        return $this->post_text;
+        return array(
+            'online' => 'a',
+            'rank_image' => 'a',
+            'rank' => 'a',
+            'rank_link' => 'a',
+            'rank_desc' => 'a',
+            'moderate' => 'a',
+            'edit' => 'a',
+            'reply' => 'a',
+            'user_regdate' => 'a',
+            'user_posts' => 'a',
+            'seeip' => 'a',
+
+
+        );
     }
-    
-    public function getpost_title()
+
+
+    public function __construct()
     {
-        return $this->post_title;
+        if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
+            // for privacy issues ip logging can be deactivated
+            $this->poster_ip = '127.0.0.1';
+        } else {
+            // some enviroment for logging ;)
+            if (System::serverGetVar('HTTP_X_FORWARDED_FOR')) {
+                $this->poster_ip = System::serverGetVar('REMOTE_ADDR')."/".System::serverGetVar('HTTP_X_FORWARDED_FOR');
+            } else {
+                $this->poster_ip = System::serverGetVar('REMOTE_ADDR');
+            }
+        }
     }
     
 

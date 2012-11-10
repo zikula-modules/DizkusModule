@@ -14,13 +14,13 @@
     <fieldset>
 
         <div class="z-formrow">
-            {formlabel for="subject" text="Subject line"}
-            {formtextinput id="subject" size="80" maxLength="100" mandatory=true}
+            {formlabel for="topic_title" text="Subject line"}
+            {formtextinput id="topic_title" size="80" maxLength="100" mandatory=true}
         </div>
 
         <br />
         {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
-        {formtextinput id="message" textMode="multiline" rows="10" cols="60"}
+        {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLenght="65527"}
         {if isset($hooks.MediaAttach)}
             {$hooks.MediaAttach}
         {/if}
@@ -36,8 +36,8 @@
                     <li><strong>{gt text="Options"}</strong></li>
                     {if $coredata.logged_in}
                     <li>
-                        {formcheckbox id="attach_signature" checked=1}
-                        {formlabel for="attach_signature" __text="Attach my signature"}
+                        {formcheckbox id="post_attach_signature" checked=1}
+                        {formlabel for="post_attach_signature" __text="Attach my signature"}
                     </li>
                     <li>
                         {formcheckbox id="subscribe_topic" checked=1}

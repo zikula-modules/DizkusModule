@@ -28,7 +28,7 @@ class Dizkus_Entity_Categories extends Zikula_EntityAccess {
     /**
      * The following are annotations which define the cat_title field.
      * 
-     * @ORM\Column(type="string", length="100")
+     * @ORM\Column(type="string", length=100)
      */
     private $cat_title = '';
     

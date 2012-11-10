@@ -26,14 +26,14 @@ class Dizkus_Entity_Moderators extends Zikula_EntityAccess
     /**
      * The following are annotations which define the forum id field.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topics", inversedBy="forum_mods")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      */
     private $forum_id;
     
     /**
      * The following are annotations which define the user id field.
-     * 
-     * @ORM\Id
+     *
      * @ORM\Column(type="integer")
      */
     private $user_id;

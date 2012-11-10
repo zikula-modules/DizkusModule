@@ -20,13 +20,6 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      */
     private $_forumId;
 
-    /**
-     * topic poster uid
-     *
-     * @var integer
-     */
-    private $topic_poster;
-
 
     /**
      * Setup form.
@@ -39,21 +32,25 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      */
     function initialize(Zikula_Form_View $view)
     {
+
+
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
     
         // get the input
-        $forumId = (int)$this->request->query->get('forum');
-        if (!isset($this->forum_id)) {
+        $this->_forumId = (int)$this->request->query->get('forum');
+
+        if (!isset($this->_forumId)) {
             return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
         }
 
-        $forum = $this->entityManager->find('Dizkus_Entity_Forums', $forumId)->toArray();
-        $view->assign('forum', $forum);
+        $forum = new Dizkus_ContentType_Forum();
+        $forum->find($this->_forumId);
+        $view->assign('forum', $forum->get());
+        $view->assign('breadcrumbs', $forum->getBreadcrumbs());
         $view->assign('preview', false);
 
-        $this->_forumId = $forumId;
 
         return true;
     }
@@ -68,10 +65,8 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $forumId = $this->_forumId;
-
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forumId));
+            $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId));
 
             return $view->redirect($url);
         }
@@ -83,34 +78,31 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
-        
-        
-        // check for maximum message size
-        if ((strlen($data['message']) +  strlen('[addsig]')) > 65535) {
+        $data['forum_id'] = $this->_forumId;
 
-            return LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
-            // switch to preview mode
-        }
-        
-        list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-        
-        
-        $newtopic = ModUtil::apiFunc('Dizkus', 'user', 'preparenewtopic', $data);
-        
+
+        /*if ($this->isSpam($args['message'])) {
+            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+        }*/
+
+
+
+        $newtopic = new Dizkus_ContentType_Topic();
+        $newtopic->merge($data);
         
         // show preview
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
-            $view->assign('newtopic', $newtopic);
+            $view->assign('newtopic', $newtopic->toArray());
+            list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit', $lastVisit);
             $view->assign('last_visit_unix', $lastVisitUnix);
-            $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
+            $view->assign('data', $data);
             return true;
         }
 
         // store new topic
-        $data['forum_id'] = $forumId;
-        $topicId = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', $data);
+        $topicId = $newtopic->store();
 
         // redirect to the new topic
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topicId));

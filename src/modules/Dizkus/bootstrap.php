@@ -1,4 +1,15 @@
 <?php
+
+
+
+
+$helper = ServiceUtil::getService('doctrine_extensions');
+$helper->getListener('timestampable');
+$helper->getListener('standardfields');
+
+$em = ServiceUtil::getService('doctrine.entitymanager');
+$em->getEventManager()->addEventSubscriber(new \Gedmo\Tree\TreeListener());
+
 /**
  * Dizkus
  *

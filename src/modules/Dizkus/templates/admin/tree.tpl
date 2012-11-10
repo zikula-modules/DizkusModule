@@ -36,7 +36,9 @@
             </tr>
         </thead>
         <tbody>
-            {foreach item='category' from=$tree name='fooo'}
+        {include file='admin/subtree.tpl'}
+            {*foreach item='item' from=$tree name='fooo'}
+
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
                         <a href="{modurl modname='Dizkus' type='user' func='viewforum'}">{$category.name|safetext}</a>
@@ -65,17 +67,13 @@
 
                     </td>
                 </tr>
-                {if count($category.subforums) > 0}
-                    {assign var='margin2' value=20}
-                    {include file="admin/subtree.tpl" forums=$category.subforums margin=$margin2}
-                {/if}
             {foreachelse}
                 <tr class="z-admintableempty">
                     <td colspan="4">
-                        {gt text="No sub forums available"}
+                        {gt text="No categories and forums available"}
                     </td>
                 </tr>
-            {/foreach}
+            {/foreach*}
         </tbody>
 
     </table>

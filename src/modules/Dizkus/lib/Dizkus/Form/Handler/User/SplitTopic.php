@@ -47,7 +47,6 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
 
         $this->view->assign($this->post);
         $this->view->assign('newsubject', $this->__('Split').': '.$this->post['topic_subject']);
-        $this->view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
 
         return true;
     }
