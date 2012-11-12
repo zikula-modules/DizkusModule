@@ -27,10 +27,14 @@ class Dizkus_ContentType_Forum
     /**
      * construct
      */
-    public function __construct()
+    public function __construct($id = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
+
+        if ($id > 0) {
+            $this->_forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+        }
     }
 
 
@@ -79,7 +83,7 @@ class Dizkus_ContentType_Forum
      */
     public function getId()
     {
-        return $this->_forum->getPageId();
+        return $this->_forum->getForum_id();
     }
 
     /**
@@ -196,30 +200,51 @@ class Dizkus_ContentType_Forum
 
     /**
      * return page as array
+     */
+    public function incrementPostCount()
+    {
+        $this->_forum->incrementForum_posts();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * return page as array
+     */
+    public function incrementTopicCount()
+    {
+        $this->_forum->incrementForum_topics();
+        $this->entityManager->flush();
+    }
+
+
+    /**
+     * return page as array
      *
      * @param array $data Page data.
      *
      * @return boolean
      */
-    public function set($data)
+    public function set($data, $setPermalink = true)
     {
-        // define the permalink title if not present
-        $urltitlecreatedfromtitle = false;
-        if (!isset($data['urltitle']) || empty($data['urltitle'])) {
-            $data['urltitle'] = DataUtil::formatPermalink($data['title']);
-            $urltitlecreatedfromtitle = true;
-        }
-
-        if (ModUtil::apiFunc('Pages', 'admin', 'checkuniquepermalink', $data) === false) {
-            $data['urltitle'] = '';
-            if ($urltitlecreatedfromtitle == true) {
-                return LogUtil::registerError(__('The permalinks retrieved from the title has to be unique!'));
-            } else {
-                return LogUtil::registerError(__('The permalink has to be unique!'));
+        if ($setPermalink) {
+            // define the permalink title if not present
+            $urltitlecreatedfromtitle = false;
+            if (!isset($data['urltitle']) || empty($data['urltitle'])) {
+                $data['urltitle'] = DataUtil::formatPermalink($data['title']);
+                $urltitlecreatedfromtitle = true;
             }
-            return LogUtil::registerError(
-                __('The permalink has been removed, please update the page with a correct and unique permalink')
-            );
+
+            if (ModUtil::apiFunc('Pages', 'admin', 'checkuniquepermalink', $data) === false) {
+                $data['urltitle'] = '';
+                if ($urltitlecreatedfromtitle == true) {
+                    return LogUtil::registerError(__('The permalinks retrieved from the title has to be unique!'));
+                } else {
+                    return LogUtil::registerError(__('The permalink has to be unique!'));
+                }
+                return LogUtil::registerError(
+                    __('The permalink has been removed, please update the page with a correct and unique permalink')
+                );
+            }
         }
 
         $this->_forum->merge($data);

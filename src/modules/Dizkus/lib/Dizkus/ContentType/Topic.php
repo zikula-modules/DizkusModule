@@ -43,14 +43,16 @@ class Dizkus_ContentType_Topic
         }
     }
 
+
     /**
      * create
      *
      */
-    public function create()
+    public function exists()
     {
-        $this->_topic = new Dizkus_Entity_Topics();
+        return $this->_topic ? true : false;
     }
+
 
     /**
      * return page as array
@@ -67,13 +69,24 @@ class Dizkus_ContentType_Topic
     }
 
     /**
-     * return page as array
+     * return topic id
      *
-     * @return array
+     * @return int
      */
     public function getId()
     {
-        return $this->_topic->getPageId();
+        return $this->_topic->gettopic_id();
+    }
+
+
+    /**
+     * return topic title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->_topic->gettopic_title();
     }
 
     /**
@@ -84,6 +97,16 @@ class Dizkus_ContentType_Topic
     public function get()
     {
         return $this->_topic;
+    }
+
+    /**
+     * return topic forum id
+     *
+     * @return int
+     */
+    public function getForumId()
+    {
+        return $this->_topic->getForum_id();
     }
 
 
@@ -110,10 +133,12 @@ class Dizkus_ContentType_Topic
 
         $query = $this->entityManager
             ->createQueryBuilder()
-            ->select('p')
+            ->select('p, u, r')
             ->from('Dizkus_Entity_Posts', 'p')
             ->where('p.topic_id = :topicId')
             ->setParameter('topicId', $id)
+            ->leftJoin('p.poster', 'u')
+            ->leftJoin('u.user_rank', 'r')
             ->getQuery();
 
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
@@ -171,14 +196,27 @@ class Dizkus_ContentType_Topic
 
     /**
      * return page as array
-     *
-     * @return array
      */
-    public function incrementReadCount()
+    public function incrementViewsCount()
     {
-        $this->_topic->incrementCounter();
+        $this->_topic->incrementTopic_views();
         $this->entityManager->flush();
-        return true;
+    }
+
+
+
+    public function setLastPost($lastPost)
+    {
+        $this->_topic->setlast_post($lastPost);
+    }
+
+    /**
+     * return page as array
+     */
+    public function incrementRepliesCount()
+    {
+        $this->_topic->incrementTopic_replies();
+        $this->entityManager->flush();
     }
 
 
@@ -202,7 +240,7 @@ class Dizkus_ContentType_Topic
 
     /**
      * return page as array
-∂     *
+     *
      * @return boolean
      */
     public function store()
@@ -211,16 +249,31 @@ class Dizkus_ContentType_Topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->flush();
 
+        // prepare poster data
+        $uid = UserUtil::getVar('uid');
+        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        if (!$poster) {
+            $poster = new Dizkus_Entity_Poster();
+            $poster->setuser_id($uid);
+        }
+        $poster->increaseUser_posts();
+
         // write first post
         $this->_firstPost->settopic_id($this->_topic->gettopic_id());
+        $this->_firstPost->setposter($poster);
         $this->entityManager->persist($this->_firstPost);
         $this->entityManager->flush();
+
+        // icrement forum post count
+        $forum = new Dizkus_ContentType_Forum($this->getForumId());
+        $forum->incrementPostCount();
+        $forum->incrementTopicCount();
 
         return $this->_topic->gettopic_id();
     }
 
     /**
-     * return page as array
+     * remove topic
      *
      * @return boolean
      */
@@ -229,6 +282,105 @@ class Dizkus_ContentType_Topic
         $this->entityManager->remove($this->_topic);
         $this->entityManager->flush();
         return true;
+    }
+
+
+    /**
+     * set topic sticky
+     *
+     * @return boolean
+     */
+    public function sticky()
+    {
+        $this->_topic->sticky();
+        $this->entityManager->flush();
+        return true;
+    }
+
+    /**
+     * set topic unsticky
+     *
+     * @return boolean
+     */
+    public function unsticky()
+    {
+        $this->_topic->unsticky();
+        $this->entityManager->flush();
+        return true;
+    }
+
+
+    /**
+     * lock topic
+     *
+     * @return boolean
+     */
+    public function lock()
+    {
+        $this->_topic->lock();
+        $this->entityManager->flush();
+        return true;
+    }
+
+    /**
+     * unlock topic
+     *
+     * @return boolean
+     */
+    public function unlock()
+    {
+        $this->_topic->unlock();
+        $this->entityManager->flush();
+        return true;
+    }
+
+
+    /**
+     * set topic solved
+     *
+     * @return boolean
+     */
+    public function solved()
+    {
+        $this->_topic->setSolved(true);
+        $this->entityManager->flush();
+        return true;
+    }
+
+    /**
+     * set topic unsolved
+     *
+     * @return boolean
+     */
+    public function unsolved()
+    {
+        $this->_topic->setSolved(false);
+        $this->entityManager->flush();
+        return true;
+    }
+
+
+    /**
+     * get if the current user is subscribed
+     *
+     * @return boolean
+     */
+    public function isSubscribed()
+    {
+        if (!UserUtil::isLoggedIn()) {
+            return false;
+        }
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('COUNT(s)')
+            ->from('Dizkus_Entity_TopicSubscriptions', 's')
+            ->where('s.user_id = :user')
+            ->setParameter('user', UserUtil::getVar('uid'))
+            ->andWhere('s.topic_id = :topic')
+            ->setParameter('topic', $this->_topic->gettopic_id())
+            ->setMaxResults(1);
+        $count = $qb->getQuery()->getSingleScalarResult();
+        return $count > 0 ? true : false;
     }
 
 }

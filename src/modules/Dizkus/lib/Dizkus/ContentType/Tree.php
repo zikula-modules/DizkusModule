@@ -43,10 +43,12 @@ class Dizkus_ContentType_Tree extends Zikula_AbstractBase
 
 
         // favorites
-        if (UserUtil::isLoggedIn() && $this->getVar('favorites_enabled') == 'yes' && UserUtil::getVar('dizkus_user_favorites')) {
-            $qb->join('c.favorites', 'fa')
-               ->andWhere('fa.user_id = :uid')
-               ->setParameter('uid', UserUtil::getVar('uid'));
+        if (UserUtil::isLoggedIn() && $this->getVar('favorites_enabled') == 'yes') {
+            if (ModUtil::apiFunc($this->name, 'Favorites', 'getStatus')) {
+                $qb->join('c.favorites', 'fa')
+                   ->andWhere('fa.user_id = :uid')
+                   ->setParameter('uid', UserUtil::getVar('uid'));
+            }
         }
 
         return $qb->getQuery()->getResult();

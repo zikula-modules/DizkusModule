@@ -35,7 +35,7 @@
 
         <ul class="linklist z-clearfix" style="float:right;">
         {if $coredata.logged_in eq 1 AND $func eq 'main' AND $modvars.Dizkus.favorites_enabled eq 'yes'}
-            {usergetvar name='dizkus_user_favorites' assign="favorites"}
+            {modapifunc modname='Dizkus' type='Favorites' func='getStatus' assign="favorites"}
             {if $favorites}
                 <li><a class="dzk_arrow showallforumslink tooltips" href="{modurl modname=Dizkus type=user func=showallforums}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
                 {else}
