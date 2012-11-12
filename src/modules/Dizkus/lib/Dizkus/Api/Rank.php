@@ -14,53 +14,159 @@
 class Dizkus_Api_Rank extends Zikula_AbstractApi {
 
 
+    private $_userRanks = array();
+
+
     /**
-     * getById
+     * Get all ranks
      *
-     * Get a rank by its id.
+     * @param array $args Arguments array.
      *
-     * @param int $id The rank id.
+     * @return array
      *
-     * @return array The rank array
      */
-    public function getById($id) {
-        return $this->entityManager->find('Dizkus_Entity_Ranks', $id)->toArray();
+    public function getAll($args)
+    {
+        // read images
+        $path     = $this->getVar('url_ranks_images');
+        $handle   = opendir($path);
+        $filelist = array();
+        while ($file = readdir($handle)) {
+            if (dzk_isimagefile($path.'/'.$file)) {
+                $filelist[] = $file;
+            }
+        }
+        asort($filelist);
+
+        if ($args['ranktype'] == 0) {
+            $orderby = 'rank_min';
+        } else {
+            $orderby = 'rank_title';
+        }
+
+        $ranks = $this->entityManager->getRepository('Dizkus_Entity_Ranks')
+            ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
+
+        return array($filelist, $ranks);
     }
 
 
     /**
-     * addToUserData
+     * Modify a rank
      *
-     * Add rank infos to the userdata.
+     * @param array $args Argument array
      *
-     * @param array $userdata The userdata.
-     *
-     * @return array The userdata with the rank information
+     * @return boolean
      */
-    public function addToUserData($userdata) {
-        $ztable = DBUtil::getTables();
-
-        $rank = null;
-        if ($userdata['user_rank'] != 0) {
-            $rank = ModUtil::apiFunc($this->name, 'Rank', 'getById', $userdata['user_rank']);
-
-        } elseif ($userdata['user_posts'] != 0) {
-            $where =        $ztable['dizkus_ranks_column']['rank_min'].' <= '.(int)DataUtil::formatForStore($userdata['user_posts']).'
-                      AND '.$ztable['dizkus_ranks_column']['rank_max'].' >= '.(int)DataUtil::formatForStore($userdata['user_posts']);
-
-            $rank = DBUtil::selectObject('dizkus_ranks', $where);
+    public function save($args)
+    {
+        if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
         }
 
-        if (is_array($rank)) {
-            $userdata = array_merge($userdata, $rank);
-            $userdata['rank'] = $userdata['rank_title']; // backwards compatibility
-            $userdata['rank_link'] = (substr($userdata['rank_desc'], 0, 7) == 'http://') ? $userdata['rank_desc'] : '';
-            if ($userdata['rank_image']) {
-                $userdata['rank_image']      = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $userdata['rank_image'];
-                $userdata['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($userdata['rank_image']) : null;
+        //rank_special, rank_id, rank_min, rank_max, rank_image, rank_id
+
+        foreach ($args['ranks'] as $rankid => $rank) {
+            if ($rankid == '-1') {
+                $r = new Dizkus_Entity_Ranks();
+                $r->merge($rank);
+                $this->entityManager->persist($r);
+            } else {
+                $r = $this->entityManager->find('Dizkus_Entity_Ranks', $rankid);
+
+                if ($rank['rank_delete'] == '1') {
+                    $this->entityManager->remove($r);
+                } else {
+                    $r->merge($rank);
+                    $this->entityManager->persist($r);
+                }
             }
         }
-        return $userdata;
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+
+
+    /**
+     * assignranksave
+     *
+     * setrank array(uid) = rank_id
+     */
+    public function assign($args)
+    {
+        if (!SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
+        }
+
+        if (is_array($args['setrank'])) {
+            $ranksavearray = array();
+            foreach ($args['setrank'] as $user_id => $rank_id) {
+                UserUtil::setVar('dizkus_user_rank', $rank_id, $user_id);
+            }
+        }
+
+        return true;
+    }
+
+
+
+    /**
+     * Get user rank data
+     *
+     * @param array $args Arguments array.
+     *
+     * @return array The rank data of the poster
+     */
+    public function getData($args)
+    {
+        $data = array();
+
+        if (!isset($args['poster'])) {
+            return $data;
+        }
+
+        // user has assigned rank
+        $userRank = $args['poster']->getuser_rank();
+        if (isset($userRank)) {
+            $data = $userRank->toArray();
+            return $data = $this->addImageAndLink($data);
+        }
+
+        // check if rank by number of posts is cached
+        $uid = $args['poster']->getuser_id();
+        if (array_key_exists($uid, $this->_userRanks)) {
+            return $this->_userRanks[$uid];
+        }
+
+        // get rank by number of post
+        $userRank = $this->entityManager
+            ->createQueryBuilder()
+            ->select('r')
+            ->from('Dizkus_Entity_Ranks', 'r')
+            ->where('r.rank_min <= :posts and r.rank_max >= :posts')
+            ->setParameter('posts', $args['poster']->getuser_posts())
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getArrayResult();
+        if (isset($userRank[0])) {
+            $data = $this->addImageAndLink($userRank[0]);
+        }
+        // cache rank by number of posts
+        $this->_userRanks[$uid] = $data;
+
+        return $data;
+    }
+
+    private function addImageAndLink($data)
+    {
+        $data['rank_link'] = (substr($data['rank_desc'], 0, 7) == 'http://') ? $data['rank_desc'] : '';
+        if (!empty($data['rank_image'])) {
+            $data['rank_image']      = $this->getVar('url_ranks_images') . '/' . $data['rank_image'];
+            $data['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($data['rank_image']) : null;
+        }
+        return $data;
     }
 
 }

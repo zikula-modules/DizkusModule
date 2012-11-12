@@ -19,7 +19,7 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
      *
      * @var integer
      */
-    private $uid;
+    private $_uid;
 
 
     /**
@@ -27,7 +27,7 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
      *
      * @var string
      */
-    private $username;
+    private $_username;
 
 
     /**
@@ -36,8 +36,6 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
      *
      * @return boolean
-     *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
     function initialize(Zikula_Form_View $view)
     {
@@ -45,20 +43,21 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
             return LogUtil::registerPermissionError();
         }
 
-        $this->uid = 0;
+        $this->_uid = 0;
         $topicsubscriptions = array();
         $forumsubscriptions = array();
-        $this->username = $this->request->query->get('username', '');
+        $this->_username = $this->request->query->get('username', '');
 
-        if (!empty($this->username)) {
-            $this->uid = UserUtil::getIDFromName($this->username);
-        }
-        if (!empty($this->uid)) {
-            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getTopicSubscriptions', $this->uid);
-            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getForumSubscriptions', $this->uid);
+        if (!empty($this->_username)) {
+            $this->_uid = UserUtil::getIDFromName($this->_username);
         }
 
-        $view->assign('username', $this->username);
+        if (!empty($this->_uid)) {
+            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getTopicSubscriptions', $this->_uid);
+            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getForumSubscriptions', $this->_uid);
+        }
+
+        $view->assign('username', $this->_username);
         $view->assign('topicsubscriptions', $topicsubscriptions);
         $view->assign('forumsubscriptions', $forumsubscriptions);
         $view->caching = false;
@@ -93,11 +92,11 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
 
         foreach ($data['topicsubscriptions'] as $id => $selected) {
             if ($selected) {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic_by_id', $id);
+                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_TopicById', $id);
             }
         }
 
-        $url = ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('username' => $this->username));
+        $url = ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('username' => $this->_username ));
         return $view->redirect($url);
     }
 }

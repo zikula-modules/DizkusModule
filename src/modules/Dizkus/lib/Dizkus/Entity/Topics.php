@@ -75,6 +75,22 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $topic_replies = 0;
 
+    public function gettopic_replies()
+    {
+        return $this->topic_replies;
+    }
+
+    public function setTopic_replies($replies)
+    {
+        $this->topic_replies = $replies;
+    }
+
+
+
+    public function incrementTopic_replies()
+    {
+        $this->topic_replies++;
+    }
 
     /**
      * The following are annotations which define the sticky field.
@@ -101,10 +117,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
 
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Posts",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Posts", cascade={"persist"})
      * @ORM\JoinColumn(name="topic_last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
+
 
 
     public function getlast_post()
@@ -172,10 +189,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     }
 
 
-    public function gettopic_replies()
-    {
-        return $this->topic_replies;
-    }
+
 
 
     public function gettopic_views()
@@ -227,7 +241,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         $this->sticky = false;
     }
 
-    public function counter()
+    public function incrementTopic_views()
     {
         $this->topic_views++;
     }

@@ -50,6 +50,21 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_topics = 0;
 
+    public function getForum_topics()
+    {
+        return $this->forum_topics;
+    }
+
+    public function setForum_topics($topics)
+    {
+        $this->forum_topics = $topics;
+    }
+
+    public function incrementForum_topics()
+    {
+        $this->forum_topics++;
+    }
+
 
     /**
      * The number of posts of the forum
@@ -57,6 +72,21 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $forum_posts = 0;
+
+    public function getforum_posts()
+    {
+        return $this->forum_posts;
+    }
+
+    public function setforum_posts($posts)
+    {
+        $this->forum_posts = $posts;
+    }
+
+    public function incrementForum_posts()
+    {
+        $this->forum_posts++;
+    }
     
     /**
      * The following are annotations which define the forum_last_post_id field.
@@ -260,7 +290,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Favorites",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Favorites", cascade={"persist"})
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id", nullable=true)
      */
     private $favorites;
@@ -302,21 +332,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     
 
 
-    public function getForum_topics()
-    {
-        return $this->forum_topics;
-    }
+
 
     public function getForum_last_post_id()
     {
-        return $this->forum_topics;
+        return $this->forum_last_post_id;
     }
 
 
-    public function getforum_posts()
-    {
-        return $this->forum_posts;
-    }
+
 
     public function getlast_post()
     {

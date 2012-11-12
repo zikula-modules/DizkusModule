@@ -53,24 +53,21 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all forums'));
+        $succesful = ModUtil::apiFunc('Dizkus', 'Sync', 'forums');
         if ($showstatus && $succesful) {
-            LogUtil::registerStatus($this->__('Done! Synchronized forum index.') );
+            LogUtil::registerStatus($this->__('Done! Synchronized forum index.'));
         } else {
             return LogUtil::registerError($this->__("Error synchronizing forum index"));
         }
     
-        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all topics'));
+        $succesful = ModUtil::apiFunc('Dizkus', 'Sync', 'topics');
         if ($showstatus && $succesful) {
             LogUtil::registerStatus($this->__('Done! Synchronized topics.') );
         } else {
             return LogUtil::registerError($this->__("Error synchronizing topics."));
         }
     
-        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all posts'));
+        $succesful = ModUtil::apiFunc('Dizkus', 'Sync', 'posters');
         if ($showstatus && $succesful) {
             LogUtil::registerStatus($this->__('Done! Synchronized posts counter.') );
         } else {
@@ -85,17 +82,15 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      */
     public function ranks()
     {
-    
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    	
-        $submit = $this->request->getPost()->filter('submit',2);
+
+        $submit = $this->request->getPost()->filter('submit', 2);
         $ranktype = $this->request->getGet()->filter('ranktype', 0, FILTER_SANITIZE_NUMBER_INT);
               
         if ($submit == 2) {
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'admin', 'readranks',
-                                                      array('ranktype' => $ranktype));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
     
             $this->view->assign('ranks', $ranks);
             $this->view->assign('ranktype', $ranktype);
@@ -107,12 +102,12 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
                 return $this->view->fetch('admin/honoraryranks.tpl');
             }
         } else {
-        	$ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
+            $ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
             //$ranks = FormUtil::getPassedValue('ranks');
-            ModUtil::apiFunc($this->name, 'admin', 'saverank', array('ranks' => $ranks));
+            ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
     
-        return System::redirect(ModUtil::url($this->name,'admin', 'ranks', array('ranktype' => $ranktype)));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype)));
     }
     
     /**
@@ -141,8 +136,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         $letter = strtolower($letter);
     
         if (is_null($submit)) {
-            list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
-                                                     array('ranktype' => 1));
+            list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => 1));
             $perpage = 20;
             
             /*$inlinecss = '<style type="text/css">' ."\n";
@@ -194,7 +188,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             unset($_POST['submit']);
             unset($_REQUEST['submit']);
             $setrank = $this->request->request->get('setrank');
-            ModUtil::apiFunc('Dizkus', 'admin', 'assignranksave', 
+            ModUtil::apiFunc('Dizkus', 'Rank', 'assignranksave',
                          array('setrank' => $setrank));
         }
     
@@ -397,7 +391,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      * managesubscriptions
      *
      */
-    public function managesubscriptions()
+    public function manageSubscriptions()
     {   
         $form = FormUtil::newForm('Dizkus', $this);
         return $form->execute('admin/managesubscriptions.tpl', new Dizkus_Form_Handler_Admin_ManageSubscriptions());   

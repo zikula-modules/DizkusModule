@@ -14,6 +14,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     {
         $this->view->setCaching(false)->add_core_data();
     }
+
+
     /**
      * main
      * show all categories and forums a user may see
@@ -27,25 +29,18 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
         
-        $viewcat   =  (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : 0);
-        $favorites = (bool)$this->request->query->get('favorites', (isset($args['favorites'])) ? $args['favorites'] : false);
+        $viewcat = (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : 0);
+        $this->view->assign('viewcat', $viewcat);
 
-
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-        $loggedIn = UserUtil::isLoggedIn();
+        list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $this->view->assign('last_visit', $lastVisit);
+        $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         $tree = Dizkus_ContentType_Tree::getOneLevel($viewcat);
-
-
-
-        $this->view->assign('favorites', $favorites);
-        $this->view->assign('viewcat', $viewcat);
         $this->view->assign('tree', $tree);
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('numposts', 11);//ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
-                                               // array('id'   => '0',
-                                                 //     'type' => 'all' )));
+
+        $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('id' => '0', 'type' => 'all'));
+        $this->view->assign('numposts', $numposts);
     
         return $this->view->fetch('user/main.tpl');
     }
@@ -62,15 +57,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function viewforum($args=array())
     {
-
-    
         // get the input
         $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
         $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
-
-
-
-
 
         
         
@@ -142,6 +131,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         //    ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)
         //);
 
+        if (!$topic->exists()) {
+            return LogUtil::registerError($this->__f("Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topic_id)), null, ModUtil::url('Dizkus', 'user', 'main'));
+        }
+
 
 
 
@@ -152,66 +145,21 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('pager', $topic->getPager());
         $this->view->assign('permissions', $topic->getPermissions());
         $this->view->assign('breadcrumbs', $topic->getBreadcrumbs());
+        $this->view->assign('isSubscribed', $topic->isSubscribed());
         //$this->view->assign('post_count', count($topic['posts']));
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         //$this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
-    
+
+
+        $topic->incrementViewsCount();
+
         return $this->view->fetch('user/topic/view.tpl');
     }
 
 
 
-    /**
-     * Set a topic to solved
-     *
-     * @return boolean
-     */
-    public function topicsolved()
-    {
-        // Permission check
-        // todo check topic
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
 
-        // get the input
-        $topicId = (int)$this->request->query->get('topic');
-
-        // set topic solved
-        $this->entityManager->find('Dizkus_Entity_Topics', $topicId)->setSolved(true);
-        $this->entityManager->flush();
-
-        // redirect to viewtopic
-        $url = ModUtil::url($this->name, 'User', 'viewtopic', array('topic' => $topicId));
-        return System::redirect($url);
-    }
-
-
-    /**
-     * Set a topic to solved
-     *
-     * @return boolean
-     */
-    public function topicunsolved()
-    {
-        // Permission check
-        // todo check topic
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
-
-        // get the input
-        $topicId = (int)$this->request->query->get('topic');
-
-        // set topic solved
-        $this->entityManager->find('Dizkus_Entity_Topics', $topicId)->setSolved(false);
-        $this->entityManager->flush();
-
-        // redirect to viewtopic
-        $url = ModUtil::url($this->name, 'User', 'viewtopic', array('topic' => $topicId));
-        return System::redirect($url);
-    }
     
     /**
      * reply
@@ -255,11 +203,47 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
     
         if ($submit == true && $preview == false) {
+
+
+
+
+            $uid = UserUtil::getVar('uid');
+            $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+            if(!$poster) {
+                $poster = new Dizkus_Entity_Poster();
+                $poster->setuser_id($uid);
+            }
+            $poster->increaseUser_posts();
+
+            $data = array(
+                'topic_id'         => $topic_id,
+                'post_text'          => $message,
+                'post_attach_signature' => $attach_signature,
+            );
+
+            $post = new Dizkus_Entity_Posts();
+            $post->merge($data);
+            $post->setposter($poster);
+            $this->entityManager->persist($post);
+
+            $topic = new Dizkus_ContentType_Topic($topic_id);
+            $topic->setLastPost($post);
+            $topic->incrementRepliesCount();
+
+
+            $forum = new Dizkus_ContentType_Forum($topic->getForumId());
+            $forum->incrementPostCount();
+
+            $post->setforum_id($topic->getForumId());
+            $this->entityManager->flush();
+
+
             // Confirm authorisation code
             /*if (!SecurityUtil::confirmAuthKey()) {
                 return LogUtil::registerAuthidError();
             }*/
-    
+
+            /*
             // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
             $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
             $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
@@ -273,6 +257,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                                                  'message'          => $message,
                                                  'attach_signature' => $attach_signature,
                                                  'subscribe_topic'  => $subscribe_topic));
+            */
     
             return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
                                 array('topic' => $topic_id,
@@ -315,8 +300,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * editpost
      *
      */
-    public function editpost($args=array())
+    public function editpost()
     {
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/post/edit.tpl', new Dizkus_Form_Handler_User_EditPost());
+
         // Permission check
         // todo check topic
         $this->throwForbiddenUnless(
@@ -570,52 +558,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         switch ($act)
         {
-            case 'subscribe_topic':
-                $return_to = (!empty($return_to))? $return_to : 'viewtopic';
-                ModUtil::apiFunc('Dizkus', 'user', 'subscribe_topic',
-                             array('topic_id' => $topic_id ));
-                $params = array('topic' => $topic_id);
-                break;
-    
-            case 'unsubscribe_topic':
-                $return_to = (!empty($return_to))? $return_to : 'viewtopic';
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic',
-                             array('topic_id' => $topic_id ));
-                $params = array('topic' => $topic_id);
-                break;
-    
-            case 'subscribe_forum':
-                $return_to = (!empty($return_to))? $return_to : 'viewforum';
-                ModUtil::apiFunc('Dizkus', 'user', 'subscribe_forum',
-                             array('forum_id' => $forum_id ));
-                $params = array('forum' => $forum_id);
-                break;
-    
-            case 'unsubscribe_forum':
-                $return_to = (!empty($return_to))? $return_to : 'viewforum';
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum',
-                             array('forum_id' => $forum_id ));
-                $params = array('forum' => $forum_id);
-                break;
-    
-            case 'add_favorite_forum':
-                if (ModUtil::getVar('Dizkus', 'favorites_enabled')=='yes') {
-                    $return_to = (!empty($return_to))? $return_to : 'viewforum';
-                    ModUtil::apiFunc('Dizkus', 'user', 'add_favorite_forum',
-                                 array('forum_id' => $forum_id ));
-                    $params = array('forum' => $forum_id);
-                }
-                break;
-    
-            case 'remove_favorite_forum':
-                if (ModUtil::getVar('Dizkus', 'favorites_enabled')=='yes') {
-                    $return_to = (!empty($return_to))? $return_to : 'viewforum';
-                    ModUtil::apiFunc('Dizkus', 'user', 'remove_favorite_forum',
-                                 array('forum_id' => $forum_id ));
-                    $params = array('forum' => $forum_id);
-                }
-                break;
-    
             case 'change_post_order':
                 $return_to = (!empty($return_to))? $return_to : 'viewtopic';
                 ModUtil::apiFunc('Dizkus', 'user', 'change_user_post_order');
@@ -656,8 +598,23 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function showAllForums()
     {
-        UserUtil::setVar('dizkus_user_favorites', false);
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+        $url = ModUtil::url('Dizkus', 'user', 'main');
+
+        if (!UserUtil::isLoggedIn()) {
+            LogUtil::registerPermissionError();
+            return System::redirect($url);
+        }
+
+        $uid = UserUtil::getVar('uid');
+        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        if(!$posterData) {
+            $posterData = new Dizkus_Entity_Poster();
+        }
+        $posterData->setuser_favorites(false);
+        $this->entityManager->flush();
+
+        return System::redirect($url);
+
     }
 
     /**
@@ -666,9 +623,24 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function showFavorites()
     {
-        UserUtil::setVar('dizkus_user_favorites', true);
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+        $url = ModUtil::url('Dizkus', 'user', 'main');
 
+        if (!UserUtil::isLoggedIn()) {
+            LogUtil::registerPermissionError();
+            return System::redirect($url);
+        }
+
+        $uid = UserUtil::getVar('uid');
+        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        if(!$posterData) {
+            $posterData = new Dizkus_Entity_Poster();
+            $posterData->setuser_id($uid);
+        }
+        $posterData->setuser_favorites(true);
+        $this->entityManager->persist($posterData);
+        $this->entityManager->flush();
+
+        return System::redirect($url);
     }
 
 
@@ -690,6 +662,37 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
 
+    /**
+     * Add/remove the sticky status of a topic
+     */
+    public function changeTopicStatus()
+    {
+        $action = $this->request->query->get('action');
+        $topicId = (int)$this->request->query->get('topic');
+
+        if ($action == 'subscribe'){
+            ModUtil::apiFunc($this->name, 'Topic', 'subscribe', array('topic_id' => $topicId));
+        } else if ($action == 'unsubscribe'){
+            ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', array('topic_id' => $topicId));
+        } else {
+            $topic = new Dizkus_ContentType_Topic($topicId);
+            if ($action == 'sticky') {
+                $topic->sticky();
+            } else if ($action == 'unsticky') {
+                $topic->unsticky();
+            } else if ($action == 'lock') {
+                $topic->lock();
+            } else if ($action == 'unlock') {
+                $topic->unlock();
+            } else if ($action == 'solved') {
+                $topic->solved();
+            } else if ($action == 'unsolved') {
+                $topic->unsolved();
+            }
+        }
+
+        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topicId)));
+    }
 
     /**
      * signature management
@@ -771,55 +774,54 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
 
         if (!empty($amount) && !is_numeric($amount)) {
-         unset($amount);
-         }
+            unset($amount);
+        }
 
 
 
 
 
-     // maximum last 100 posts maybe shown
-     if (isset($amount) && $amount>100) {
-         $amount = 100;
-         }
+        // maximum last 100 posts maybe shown
+        if (isset($amount) && $amount>100) {
+            $amount = 100;
+        }
 
-     if (!empty($amount)) {
-         $selorder = 7;
-         }
+        if (!empty($amount)) {
+            $selorder = 7;
+        }
 
-     if (!empty($nohours) && !is_numeric($nohours)) {
-         unset($nohours);
-     }
+        if (!empty($nohours) && !is_numeric($nohours)) {
+            unset($nohours);
+        }
 
-     // maximum two weeks back = 2 * 24 * 7 hours
-     if (isset($nohours) && $nohours > 336) {
-         $nohours = 336;
-     }
+        // maximum two weeks back = 2 * 24 * 7 hours
+        if (isset($nohours) && $nohours > 336) {
+            $nohours = 336;
+        }
 
-     if (!empty($nohours)) {
-         $selorder = 5;
-     }
+        if (!empty($nohours)) {
+            $selorder = 5;
+        }
 
-     list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
-     list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'user', 'get_latest_posts',
-                                                              array('selorder'   => $selorder,
-                                                                    'nohours'    => $nohours,
-                                                                    'amount'     => $amount,
-                                                                    'unanswered' => $unanswered,
-                                                                    'last_visit' => $last_visit,
-                                                                    'last_visit_unix' => $last_visit_unix));
+        list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'user', 'get_latest_posts',
+                                                                  array('selorder'   => $selorder,
+                                                                        'nohours'    => $nohours,
+                                                                        'amount'     => $amount,
+                                                                        'unanswered' => $unanswered,
+                                                                        'last_visit' => $last_visit,
+                                                                        'last_visit_unix' => $last_visit_unix));
 
-     $this->view->assign('posts', $posts);
-     $this->view->assign('m2fposts', $m2fposts);
-     $this->view->assign('rssposts', $rssposts);
-     $this->view->assign('text', $text);
-     $this->view->assign('nohours', $nohours);
-     $this->view->assign('last_visit', $last_visit);
-     $this->view->assign('last_visit_unix', $last_visit_unix);
-     $this->view->assign('numposts', ModUtil::apiFunc('Dizkus', 'user', 'boardstats',
-                                             array('id'   => '0',
-                                                   'type' => 'all' )));
+        $this->view->assign('posts', $posts);
+        $this->view->assign('m2fposts', $m2fposts);
+        $this->view->assign('rssposts', $rssposts);
+        $this->view->assign('text', $text);
+        $this->view->assign('nohours', $nohours);
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('id'   => '0', 'type' => 'all' ));
+        $this->view->assign('numposts', $numposts);
 
         return $this->view->fetch('user/post/latest.tpl');
     }

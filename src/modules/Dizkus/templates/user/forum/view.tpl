@@ -37,13 +37,8 @@
                         <dd class="posts">{$subforum.forum_posts|safetext}</dd>
 
                         <dd class="lastpost">
-                            {lastpost forumID=$subforum.forum_id}
-                            {if isset($lastpost)}
-                            <span>
-                                {gt text="Last post by %s" tag1=$lastpost.poster_id|profilelinkbyuid}<br />
-                                {gt text="Written on %s:" tag1=$lastpost.post_time|dateformat:'datetimebrief'}
-                                <a class="latesttopicimage tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$lastpost.post_id}" title="{gt text='View latest post: %s' tag1=$lastpost.post_title|safehtml|truncate:70}">{$lastpost.post_title|safetext|truncate:70}</a>
-                            </span>
+                            {if isset($forum.last_post)}
+                            {include file='user/lastPostBy.tpl' last_post=$forum.last_post}
                             {/if}
                         </dd>
                     </dl>
@@ -183,7 +178,9 @@
                     <dd class="posts">{$topic.topic_replies}</dd>
                     <dd class="views">{$topic.topic_views}</dd>
                     <dd class="lastpost">
+                        {if isset($topic.last_post)}
                         {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
+                        {/if}
                     </dd>
                 </dl>
             </li>

@@ -3,6 +3,8 @@
 {assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"}
 
 
+{modapifunc modname='Dizkus' type='UserData' func='getUserOnlineStatus' uid=$post.poster.user_id assign='isPosterOnline'}
+
 <script type="text/javascript">
     function quote(text, user) {
         if(window.editorquote) {
@@ -20,43 +22,53 @@
 
 {if $post3.contactlist_ignored|default:0 == 1}
 <div id="hidelink_posting_{$post.post_id}" class="roundedbar dzk_rounded">
-    {gt text="Show hidden postings of ignored user"} <em>{$post.poster_id}</em>
+    {gt text="Show hidden postings of ignored user"} <em>{$post.poster.user_id}</em>
     <a href="javascript:void(0);" title="{gt text="Click here"}">({gt text="Click here"})</a>
 </div>
 {/if}
 
-<div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $post.poster_data.online}{$onlinestyle}{/if}>
+<div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $isPosterOnline}{$onlinestyle}{/if}>
     <div class="inner">
 
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$post.poster_id|profilelinkbyuid}</strong>
+                    <strong>{$post.poster.user_id|profilelinkbyuid}</strong>
                     <br />
-                    {useravatar uid=$post.poster_id}
-                    {if isset($post.poster_data.rank_image) && isset($post.poster_data.rank)}
+                    {useravatar uid=$post.poster.user_id}
+
+
+                    {modapifunc modname='Dizkus' type='Rank' func='getData' poster=$post.poster assign='rank'}
+
+
+                    {if !empty($rank.rank_image)}
                     <br />
-                    {if $post.poster_data.rank_link neq ''}<a href="{$post.poster_data.rank_link}" title="{$post.poster_data.rank_link}">{/if}
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster_data.rank_image}" alt="{$post.poster_data.rank}" title="{$post.poster_data.rank_desc}" />
-                    {if $post.poster_data.rank_link neq ''}</a>{/if}
+                    {if $rank.rank_link neq ''}
+                    <a href="{$rank.rank_link}" title="{$rank.rank_link}">
+                    {/if}
+                    <img class="userinforankimage" src="{$baseurl}{$rank.rank_image}" alt="{$rank.rank_title}" title="{$rank.rank_desc}" />
+                    {if $rank.rank_link neq ''}</a>{/if}
                     {/if}
                 </div>
 
                 <ul>
-                    {if isset($post.poster_data.rank)}
-                    <li><strong>{gt text="Rank"}: </strong>{$post.poster_data.rank|safetext}</li>
+                    {if !empty($rank.rank_title)}
+                    <li><strong>{gt text="Rank"}: </strong>{$rank.rank_title|safetext}</li>
                     {/if}
-                    <li><strong>{gt text="Registered"}: </strong>{$post.poster_data.user_regdate|dateformat:'datebrief'}</li>
-                    {if !$post.poster_data.online}
-                    <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
+                    {usergetvar name='user_regdate' assign="user_regdate"}
+                    <li><strong>{gt text="Registered"}: </strong>{$user_regdate|dateformat:'datebrief'}</li>
+                    {if !$isPosterOnline}
+                    <li><strong>{gt text="Last visit"}: </strong>{$post.poster.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if}
-                    <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.user_posts}</li>
+
+
+                    <li><strong>{gt text="Posts"}: </strong>{$post.poster.user_posts}</li>
                     {if $coredata.logged_in eq true}
                     <li>
                         {* image link to profile deactivated because of a bug in the core *}
                         {* $post.user_data.uname|profilelinkbyuname:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif" *}
                         {if $msgmodule}
-                        <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster_id}">{img modname='Dizkus' src='icon_post_pn.gif' __alt='Send a private message'}</a>
+                        <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}">{img modname='Dizkus' src='icon_post_pn.gif' __alt='Send a private message'}</a>
                         {/if}
                         {if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
                         <a title="{gt text="View IP address"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id}">{img modname='Dizkus' src='icon_post_ip.gif' __alt='View IP address'}</a>
@@ -102,7 +114,7 @@
                         {if isset($topic) AND $topic.topic_status neq 1}
                         {if $permissions.comment eq true}
                         <li>
-                            <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{$post.post_text|safehtml}', '{$post.poster_id}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>
+                            <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{$post.post_text|safehtml}', '{$post.poster.user_id}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>
                         </li>
                         {/if}
                         {if $permissions.edit eq 1}

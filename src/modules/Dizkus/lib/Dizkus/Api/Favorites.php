@@ -10,6 +10,8 @@
 
 class Dizkus_Api_Favorites extends Zikula_AbstractApi {
 
+    private $_favorites = array();
+
     /**
      * get_favorite_status
      *
@@ -24,33 +26,24 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
             $args['user_id'] = (int)UserUtil::getVar('uid');
         }
 
-        $status = (int)UserUtil::getVar('dizkus_user_favorites', $args['user_id']);
-        return ($status == 1) ? true : false;
-    }
 
 
-    /**
-     * change_favorite_status
-     *
-     * changes the flag in the users table that indicates the users last choice: show all forum (0) or favorites only (1)
-     * @params $args['user_id'] int the users id
-     * @returns 0 or 1
-     *
-     */
-    public function change_favorite_status($args)
-    {
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
+        // caching
+        if (array_key_exists($args['user_id'], $this->_favorites)) {
+            return $this->_favorites[$args['user_id']];
         }
 
-        $recentstatus = $this->get_favorite_status(array('user_id' => $args['user_id']));
-        $user_favorites = ($recentstatus==true) ? 0 : 1;
-        UserUtil::setVar('dizkus_user_favorites', $user_favorites, $args['user_id']);
-        // force reload from db
-        UserUtil::getVars($args['user_id'], true);
-        //DBUtil::updateObject($args, 'dizkus__users', '', 'user_id');
+        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $args['user_id']);
+        if (!$posterData) {
+            return false;
+        }
 
-        return (bool)$user_favorites;
+
+
+        $output = $posterData->getuser_favorites();
+
+        return $output;
+
     }
 
     /**
@@ -99,8 +92,6 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum_id'])) {
             return LogUtil::registerPermissionError();
         }
-
-        print_r('xxx');
 
         if ($this->getStatus($args) == false) {
             // add user only if not already a favorite

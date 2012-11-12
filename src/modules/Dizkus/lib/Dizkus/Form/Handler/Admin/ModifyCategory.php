@@ -46,7 +46,6 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
             }
         } else {
             $category = new Dizkus_Entity_Forums();
-            //$category->setcat_order(ModUtil::apiFunc('Dizkus', 'Category', 'getHighestOrder'));
             $view->assign('templatetitle', $this->__('Create category'));
         }
 

@@ -68,14 +68,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
 
 
     /**
-     * The following are annotations which define the poster_id field.
-     *
-     * @ORM\Column(type="integer")
-     * @ZK\StandardFields(type="userid", on="create")
-     */
-    private $poster_id;
-
-    /**
      * The following are annotations which define the post_time field.
      * 
      * @ORM\Column(type="datetime")
@@ -185,10 +177,27 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
 
 
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"} )
+     * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
+     */
+    private $poster;
+
+    public function getposter()
+    {
+        return $this->poster;
+    }
+
+    public function setposter($poster)
+    {
+        return $this->poster = $poster;
+    }
+
+
     public function getposter_data()
     {
         return array(
-            'online' => 'a',
             'rank_image' => 'a',
             'rank' => 'a',
             'rank_link' => 'a',
@@ -196,7 +205,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
             'moderate' => 'a',
             'edit' => 'a',
             'reply' => 'a',
-            'user_regdate' => 'a',
             'user_posts' => 'a',
             'seeip' => 'a',
 

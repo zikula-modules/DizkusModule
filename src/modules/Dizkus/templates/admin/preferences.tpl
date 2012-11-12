@@ -51,14 +51,6 @@
             {formtextinput id="url_ranks_images" text=$modvars.Dizkus.url_ranks_images size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
-            {formlabel for="spam_protector" __text="Spam protection"}
-            {formdropdownlist id="spam_protector" items=$spam_protectors}
-        </div>
-        <div class="z-formrow">
-            {formlabel for="solved_enabled" __text="Enable solve option for topics"}
-            {formcheckbox id="solved_enabled"}
-        </div>
-        <div class="z-formrow">
             {formlabel for="ajax" __text="Enable ajax"}
             {formcheckbox id="ajax"}
         </div>
@@ -66,9 +58,6 @@
 
     <fieldset>
         <legend>{gt text="Advanced settings"}</legend>
-        <div class="z-warningmsg">
-            {gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be."}
-        </div>
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
             {formcheckbox id="fulltextindex"}
