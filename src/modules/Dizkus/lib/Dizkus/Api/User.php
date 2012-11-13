@@ -817,7 +817,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
-        if (!aModUtil::apiFunc($this->name, 'Permission', 'canWrite', $reply)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $reply)) {
             return LogUtil::registerPermissionError();
         }
     
