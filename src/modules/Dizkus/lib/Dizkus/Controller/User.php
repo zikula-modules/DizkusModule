@@ -204,38 +204,17 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     
         if ($submit == true && $preview == false) {
 
-
-
-
-            $uid = UserUtil::getVar('uid');
-            $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
-            if(!$poster) {
-                $poster = new Dizkus_Entity_Poster();
-                $poster->setuser_id($uid);
-            }
-            $poster->increaseUser_posts();
-
             $data = array(
                 'topic_id'         => $topic_id,
                 'post_text'          => $message,
                 'post_attach_signature' => $attach_signature,
             );
 
-            $post = new Dizkus_Entity_Posts();
-            $post->merge($data);
-            $post->setposter($poster);
-            $this->entityManager->persist($post);
 
-            $topic = new Dizkus_ContentType_Topic($topic_id);
-            $topic->setLastPost($post);
-            $topic->incrementRepliesCount();
+            $post = new Dizkus_ContentType_Post();
+            $post->create($data);
 
 
-            $forum = new Dizkus_ContentType_Forum($topic->getForumId());
-            $forum->incrementPostCount();
-
-            $post->setforum_id($topic->getForumId());
-            $this->entityManager->flush();
 
 
             // Confirm authorisation code
@@ -535,60 +514,27 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * prefs
      *
      */
-    public function prefs($args=array())
+    public function prefs()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
-    
+        $form = FormUtil::newForm($this->name, $this);
+
+        return $form->execute('user/prefs/prefs.tpl', new Dizkus_Form_Handler_User_Prefs());
+    }
+
+
+    public function manageForumSubscriptions()
+    {
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
+            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-    
-        // get the input
-        $topic_id  = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-        $act       = $this->request->query->get('act', (isset($args['act'])) ? $args['act'] : '');
-        $return_to = $this->request->query->get('return_to', (isset($args['return_to'])) ? $args['return_to'] : '');
-        $forum_id  = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-        $user_id   = (int)$this->request->query->get('user', (isset($args['user'])) ? $args['user'] : null);
-    
-        // user_id will only be used if we have admin permissions otherwise the
-        // user can edit his prefs only but not others users prefs
-    
-        switch ($act)
-        {
-            case 'change_post_order':
-                $return_to = (!empty($return_to))? $return_to : 'viewtopic';
-                ModUtil::apiFunc('Dizkus', 'user', 'change_user_post_order');
-                $params = array('topic' => $topic_id);
-                break;
 
+        return $this->view->fetch('user/prefs/manageForumSubscriptions.tpl');
+    }
 
-            case 'noautosubscribe':
-            case 'autosubscribe':
-                $return_to = (!empty($return_to))? $return_to : 'prefs';
-                $nm = ModUtil::apiFunc('Dizkus', 'user', 'togglenewtopicsubscription');
-                $params = array();
-                break;
-    
-            default:
-                list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-    
-                $this->view->assign('last_visit', $last_visit);
-                $this->view->assign('autosubscribe', (bool)UserUtil::getVar('dizkus_autosubscription', -1, 0));
-                $this->view->assign('favorites_enabled', ModUtil::getVar('Dizkus', 'favorites_enabled'));
-                $this->view->assign('last_visit_unix', $last_visit_unix);
-                $this->view->assign('signaturemanagement', ModUtil::getVar('Dizkus','signaturemanagement'));
-                $this->view->assign('ignorelist_handling', ModUtil::getVar('Dizkus','ignorelist_handling'));
-                $this->view->assign('contactlist_available', ModUtil::available('ContactList'));
-                $this->view->assign('post_order', strtolower(ModUtil::apiFunc('Dizkus','user','get_user_post_order')));
-                $this->view->assign('tree', ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree', array('last_visit' => $last_visit )));
-    
-                return $this->view->fetch('user/prefs.tpl');
-        }
-    
-        return System::redirect(ModUtil::url('Dizkus', 'user', $return_to, $params));
+    public function manageTopicSubscriptions()
+    {
+        $form = FormUtil::newForm($this->name, $this);
+        return $form->execute('user/prefs/manageTopicSubscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
     }
 
 
@@ -700,9 +646,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function signaturemanagement()
     {
-        // Create output and assign data
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
+        return $form->execute('user/prefs/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
     }
     
     /**
@@ -734,7 +679,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $render = FormUtil::newForm($this->name, $this);
     
         // Return the output
-        return $render->execute('user/ignorelistmanagement.tpl', new Dizkus_Form_Handler_User_IgnoreListManagement());
+        return $render->execute('user/prefs/ignorelistmanagement.tpl', new Dizkus_Form_Handler_User_IgnoreListManagement());
     }
     
     /**
@@ -1118,18 +1063,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $form = FormUtil::newForm($this->name, $this);
         return $form->execute('user/notifymod.tpl', new Dizkus_Form_Handler_User_Report());
     }
-    
-    /**
-     * topicsubscriptions
-     *
-     * Manage the users topic subscription.
-     *
-     * @return string
-     */
-    public function topicsubscriptions()
-    {
-        $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('user/topic/subscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
-    }
+
 
 }

@@ -6,7 +6,7 @@
 
 {if $preview}
 <div id="editpostpreview" style="margin:1em 0;">
-    {include file='user/post/editpreview.tpl'}
+    {include file='user/post/single.tpl'}
 </div>
 {/if}
 
@@ -43,10 +43,12 @@
                                     <ul>
                                         {if $moderate eq true}
                                         <li><strong>{gt text="Options"}</strong></li>
+                                        {if !$post_first}
                                         <li>
-                                            <input type="checkbox" name="delete" id="delete" tabindex="0" value="1" />
-                                            <label for="delete">&nbsp;{gt text="Delete post"}</label>
+                                            {formcheckbox id="delete"}
+                                            {formlabel for="delete" __text="Delete post"}
                                         </li>
+                                        {/if}
                                         <li>
                                             {formcheckbox id="post_attach_signature"}
                                             {formlabel for="post_attach_signature" __text="Attach my signature"}

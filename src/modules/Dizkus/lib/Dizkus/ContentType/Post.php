@@ -72,6 +72,10 @@ class Dizkus_ContentType_Post
     }
 
 
+    public function isFirst()
+    {
+        return $this->_post->getpost_first();
+    }
 
     /**
      * return topic as doctrine2 object
@@ -84,7 +88,7 @@ class Dizkus_ContentType_Post
     }
 
 
-    public function merge($data)
+    public function prepare($data)
     {
         $this->_post->merge($data);
     }
@@ -94,10 +98,67 @@ class Dizkus_ContentType_Post
      *
      * @return boolean
      */
-    public function store()
+    public function update($data = null)
     {
-        // write topic
+        if (!is_null($data)) {
+            $this->prepare($data);
+        }
+
+        // update topic
         $this->entityManager->persist($this->_post);
+        $this->entityManager->flush();
+    }
+
+
+    /**
+     * return page as array
+     *
+     * @return boolean
+     */
+    public function create($data = null)
+    {
+        if (!is_null($data)) {
+            $this->prepare($data);
+        }
+
+        // increment poster posts
+        $uid = UserUtil::getVar('uid');
+        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        if (!$poster) {
+            $poster = new Dizkus_Entity_Poster();
+            $poster->setuser_id($uid);
+        }
+        $poster->incrementUser_posts();
+
+        // increment topic posts
+        $this->_topic->setLastPost($this->_post);
+        $this->_topic->incrementRepliesCount();
+
+        // increment forum posts
+        $forum = new Dizkus_ContentType_Forum($this->_topic->getForumId());
+        $forum->incrementPostCount();
+
+        $this->_post->setposter($poster);
+        $this->_post->setforum_id($topic->getForumId());
+        $this->entityManager->persist($this->_post);
+        $this->entityManager->flush();
+    }
+
+
+    /**
+     * return page as array
+     *
+     * @return boolean
+     */
+    public function delete()
+    {
+        $this->_post->getposter()->decrementUser_posts();
+        $this->_topic->decrementRepliesCount();
+
+        $forum = new Dizkus_ContentType_Forum($this->_topic->getForumId());
+        $forum->decrementPostCount();
+
+        $this->entityManager->remove($this->_post);
         $this->entityManager->flush();
     }
 

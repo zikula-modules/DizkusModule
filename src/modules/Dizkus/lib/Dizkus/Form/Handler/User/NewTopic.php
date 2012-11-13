@@ -88,12 +88,12 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 
 
         $newtopic = new Dizkus_ContentType_Topic();
-        $newtopic->merge($data);
+        $newtopic->prepare($data);
         
         // show preview
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
-            $view->assign('newtopic', $newtopic->toArray());
+            $view->assign('post', $newtopic->getPreview());
             list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit', $lastVisit);
             $view->assign('last_visit_unix', $lastVisitUnix);

@@ -6,9 +6,9 @@
         <div class="dzk_subcols z-clearfix">
             <div class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$newtopic.topic_poster|profilelinkbyuid}</strong>
+                    <strong>{$newtopic.poster.poster_id|profilelinkbyuid}</strong>
                     <br />
-                    {useravatar uid=$newtopic.topic_poster}
+                    {useravatar uid=$newtopic.poster.poster_i}
                     {*if isset($newtopic.poster_data.rank_image) && isset($newtopic.poster_data.rank)}
                     <br />
                     <img class="userinforankimage" src="{$baseurl}{$newtopic.poster_data.rank_image}" alt="{$newtopic.poster_data.rank}" />
@@ -16,7 +16,7 @@
                 </div>
 
                 <ul>
-                    {if isset($newtopic.poster_data.rank)}
+                    {if isset($newtopic.poster.rank)}
                     <li><strong>{gt text="Rank"}: </strong>{*$newtopic.poster_data.rank|safetext*}</li>
                     {/if}
                     <li><strong>{gt text="Registered"}: </strong>{*$newtopic.poster_data.user_regdate|dateformat:'datebrief'*}</li>

@@ -92,6 +92,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         $this->topic_replies++;
     }
 
+    public function decrementTopic_replies()
+    {
+        $this->topic_replies--;
+    }
+
     /**
      * The following are annotations which define the sticky field.
      *

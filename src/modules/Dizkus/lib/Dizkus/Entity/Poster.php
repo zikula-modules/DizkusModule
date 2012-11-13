@@ -51,9 +51,32 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
         return $this->user_posts = $posts;
     }
 
-    public function increaseUser_posts() {
-        return $this->user_posts = $this->user_posts+1;
+    public function incrementUser_posts() {
+        $this->user_posts++;
     }
+
+    public function decrementUser_posts() {
+        $this->user_posts--;
+    }
+
+
+    /**
+     * The following are annotations which define the topic_id field.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $user_autosubscribe = true;
+
+    public function getuser_autosubscribe()
+    {
+        return $this->user_autosubscribe;
+    }
+
+    public function setuser_autosubscribe($autosubscribe)
+    {
+        return $this->user_autosubscribe = $autosubscribe;
+    }
+
 
     /**
      * The following are annotations which define the forum_id field.

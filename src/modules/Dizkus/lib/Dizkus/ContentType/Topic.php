@@ -219,8 +219,17 @@ class Dizkus_ContentType_Topic
         $this->entityManager->flush();
     }
 
+    /**
+     * return page as array
+     */
+    public function decrementRepliesCount()
+    {
+        $this->_topic->decrementTopic_replies();
+        $this->entityManager->flush();
+    }
 
-    public function merge($data)
+
+    public function prepare($data)
     {
         // prepare first post
         $this->_firstPost = new Dizkus_Entity_Posts();
@@ -235,7 +244,24 @@ class Dizkus_ContentType_Topic
         $this->_topic->setlast_post($this->_firstPost);
 
         $this->_topic->merge($data);
+
+        // prepare poster data
+        $uid = UserUtil::getVar('uid');
+        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        if (!$poster) {
+            $poster = new Dizkus_Entity_Poster();
+            $poster->setuser_id($uid);
+        }
+        $poster->incrementUser_posts();
+
+        $this->_firstPost->setposter($poster);
     }
+
+    public function getPreview()
+    {
+        return $this->_firstPost;
+    }
+
 
 
     /**
@@ -249,18 +275,8 @@ class Dizkus_ContentType_Topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->flush();
 
-        // prepare poster data
-        $uid = UserUtil::getVar('uid');
-        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
-        if (!$poster) {
-            $poster = new Dizkus_Entity_Poster();
-            $poster->setuser_id($uid);
-        }
-        $poster->increaseUser_posts();
-
         // write first post
         $this->_firstPost->settopic_id($this->_topic->gettopic_id());
-        $this->_firstPost->setposter($poster);
         $this->entityManager->persist($this->_firstPost);
         $this->entityManager->flush();
 

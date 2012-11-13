@@ -86,21 +86,31 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
 
 
 
-        $this->_post->merge($data);
+
+
+        if (isset($data['delete']) && $data['delete'] === true) {
+            $this->_post->delete();
+            return $view->redirect($url);
+        }
+        unset($data['delete']);
+
+
+
+        $this->_post->prepare($data);
 
         // show preview
-        /*if ($args['commandName'] == 'preview') {
+        if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
-            $view->assign('newtopic', $newtopic->toArray());
+            $view->assign('post', $this->_post->toArray());
             list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit', $lastVisit);
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
             return true;
-        }*/
+        }
 
         // store post
-        $this->_post->store();
+        $this->_post->update();
 
         // redirect to the new topic
         return $view->redirect($url);

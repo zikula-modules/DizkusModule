@@ -128,6 +128,25 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
 
 
 
+    /**
+     * The following are annotations which define the post_attach_signature field.
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $post_first = false;
+
+    public function getpost_first()
+    {
+        return $this->post_first;
+    }
+
+    public function setpost_first($first)
+    {
+        return $this->post_first = $first;
+    }
+
+
+
 
     /**
      * The following are annotations which define the post_title field.

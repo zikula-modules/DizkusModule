@@ -9,10 +9,18 @@
  */
 
 /**
- * This class provides a handler to manage topic subscriptions.
+ * This class provides a handler to create a new topic.
  */
-class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
 {
+    /**
+     * forum id
+     *
+     * @var integer
+     */
+    private $_posterData;
+
+
     /**
      * Setup form.
      *
@@ -24,23 +32,31 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
      */
     function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
 
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
+            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
+    
+        // get the input
+        $this->_posterData = new Dizkus_ContentType_PosterData(UserUtil::getVar('uid'));
 
-        $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
-        $view->assign('subscriptions', $subscriptions);
+
+        $view->assign($this->_posterData->toArray());
+        $orders = array(
+            0 => array(
+                'text' => 'newest submissions at top',
+                'value' => 0
+            ),
+            1 => array(
+                'text' => 'oldest submissions at top',
+                'value' => 1
+            )
+        );
+        $view->assign('orders', $orders);
+
+
         return true;
     }
-
 
     /**
      * Handle form submission.
@@ -52,22 +68,19 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
+        if ($args['commandName'] == 'cancel') {
+            $url = ModUtil::url('Dizkus', 'user', 'prefs');
+            return $view->redirect($url);
+        }
+    
         // check for valid form
         if (!$view->isValid()) {
             return false;
         }
 
         $data = $view->getValues();
+        $this->_posterData->store($data);
 
-        if (count($data['topicIds']) > 0) {
-            foreach ($data['topicIds'] as $topicId) {
-                if ($topicId) {
-                    ModUtil::apiFunc('Dizkus', 'Topic', 'unsubscribe', array('topic_id' => $topicId));
-                }
-            }
-        }
-
-        $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
-        return $view->redirect($url);
+        return true;
     }
 }

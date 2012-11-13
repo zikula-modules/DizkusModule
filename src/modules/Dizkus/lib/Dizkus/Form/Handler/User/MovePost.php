@@ -45,14 +45,25 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         }
     
         // get the input
-        $this->post_id = (int)$this->request->query->get('post');
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $this->post_id));
-        $this->old_topic_id = $post['topic_id'];
-    
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
+        $id = (int)$this->request->query->get('post');
+
+        $post = new Dizkus_ContentType_Post($id);
+
+        if ($post->isFirst()) {
+            LogUtil::registerError('You can not move the first post of a topic!');
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $post->getTopicId()));
+            return System::redirect($url);
         }
+
+        return true;
+
+        //$post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $this->post_id));
+        //$this->old_topic_id = $post['topic_id'];
+    
+        //if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
+        //    // user is not allowed to moderate this forum
+        //    return LogUtil::registerPermissionError();
+        //}
         
     }
 
