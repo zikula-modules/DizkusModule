@@ -1,6 +1,7 @@
 {ajaxheader modname='Dizkus'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin.js'}
+
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="options" size="small"}
@@ -8,8 +9,6 @@
 </div>
 
 <div id="dizkus_admin">
-
-
     <ul class="z-menulinks">
         <li>
             <a href="{modurl modname='Dizkus' type='admin' func='modifycategory'}" title="Create a new category" class="z-iconlink z-icon-es-new">
@@ -39,7 +38,7 @@
             {foreach item='category' from=$tree name='fooo'}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
-                        <a href="{modurl modname='Dizkus' type='user' func='viewforum'}">{$category.name|safetext}</a>
+                        <a href="{modurl modname='Dizkus' type='user' func='main' viewcat=$category.id}">{$category.name|safetext}</a>
                     </td>
                     <td nowrap>
                         <a href="{modurl modname='Dizkus' type='admin' func='modifycategory' id=$category.id}">
@@ -51,6 +50,7 @@
                         <a href="{modurl modname='Dizkus' type='admin' func='deletecategory' id=$category.id}">
                             {img modname=core set=icons/extrasmall src=14_layer_deletelayer.png __alt="Delete"}
                         </a>
+
                         {if !$smarty.foreach.fooo.first}
                             <a href="{modurl modname='Dizkus' type='admin' func='changeCatagoryOrder' id=$category.id action='increase'}">
                                 {img modname=core set=icons/extrasmall src=up.png __alt="Up"}
@@ -62,7 +62,6 @@
                                 {img modname=core set=icons/extrasmall src=down.png __alt="Down"}
                             </a>
                         {/if}
-
                     </td>
                 </tr>
                 {if count($category.subforums) > 0}
@@ -77,9 +76,7 @@
                 </tr>
             {/foreach}
         </tbody>
-
     </table>
-
 </div>
 
 {adminfooter}

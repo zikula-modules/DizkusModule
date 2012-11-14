@@ -9,16 +9,16 @@
  */
 
 /**
- * This class provides a handler to edit subforums.
+ * This class provides a handler to edit forums.
  */
 class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
 {
     /**
-     * subforum
+     * forum
      *
      * @var statement
      */
-    private $subforum;
+    private $forum;
 
 
     /**
@@ -39,19 +39,18 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $id = $this->request->query->get('id');
         
         if ($id) {
-            $view->assign('templatetitle', $this->__('Modify subforum'));
+            $view->assign('templatetitle', $this->__('Modify forum'));
             $forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+
             if ($forum) {
                 $this->view->assign($forum->toArray());
+                $this->forum = $forum;
             } else {
                 return LogUtil::registerError($this->__f('Article with id %s not found', $id));
             }
 
             $forum_mods = ModUtil::apiFunc('Dizkus', 'admin', 'readforummods', $forum->getforum_id());
             $view->assign('forum_mods', $forum_mods);
-
-
-
 
             if ($forum->getforum_pop3_active()) {
                 $this->view->assign('extsource', 'mail2forum');
@@ -64,8 +63,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         } else {
             $view->assign('templatetitle', $this->__('Create forum'));
         }
-
-
 
         $users  = UserUtil::getAll();
         $groups = UserUtil::getGroups();
@@ -83,15 +80,12 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
                 'text'  => $value['name'].' ('.$this->__('Group').')',
             );
         }
-        $view->assign('usersAndGroups', $usersAndGroups);
 
+        $view->assign('usersAndGroups', $usersAndGroups)
+             ->assign('parents', ModUtil::apiFunc($this->name, 'Forum', 'getTreeAsDropdownList'))
+             ->assign('id', $id);
 
-        $this->view->assign('parents', ModUtil::apiFunc($this->name, 'Forum', 'getTreeAsDropdownList'));
-                
-        $this->view->caching = false;
-
-
-        $this->forum = $forum;
+        $this->view->caching = Zikula_View::CACHE_DISABLED;
 
         return true;
     }
@@ -110,25 +104,23 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         $url = ModUtil::url('Dizkus', 'admin', 'tree');
+
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
 
-        $forum = $this->forum;
-        
         // check for valid form and get data
         if (!$view->isValid()) {
             return false;
         }
-        $data = $view->getValues();
 
+        $data = $view->getValues();
 
         if ($data['extsource'] == 'mail2forum' && $data['pop3_passwordconfirm'] != $data['pop3_password']) {
             return LogUtil::registerError('Passwords are not matching!');
         } else {
             unset($data['pop3_passwordconfirm']);
         }
-
 
         if ($data['extsource'] == 'mail2forum' && $data['pnpasswordconfirm'] != $data['pnpassword']) {
             return LogUtil::registerError('Passwords are not matching!');
@@ -139,25 +131,17 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $forum_mods = $data['forum_mods'];
         unset($data['forum_mods']);
 
-        
         // switch between edit and create mode
-        if (!$forum) {
-            $forum = new Dizkus_Entity_Forums();
-        }
+        $forum = $this->forum ? $this->forum : new Dizkus_Entity_Forums();
+        $edit  = $forum->getforum_id();
 
-
-        $forum_id = $forum->getforum_id();
-        
-        
         $forum->merge($data);
         $this->entityManager->persist($forum);
         $this->entityManager->flush();
 
-
-
         if ($forum) {
             $moderators = $this->entityManager->getRepository('Dizkus_Entity_Moderators')
-                ->findBy(array('forum_id' => $forum_id));
+                               ->findBy(array('forum_id' => $forum->getforum_id()));
 
             // remove deselected moderators
             foreach ($moderators as $moderator) {
@@ -170,16 +154,21 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             }
         }
 
-
         // insert added moderators
         foreach ($forum_mods as $forum_mod) {
             $newModerator = new Dizkus_Entity_Moderators2();
-            $newModerator->setForum_id($forum_id);
+            $newModerator->setForum_id($forum->getforum_id());
             $newModerator->setUser_id($forum_mod);
             $this->entityManager->persist($newModerator);
         }
 
         $this->entityManager->flush();
+
+        if ($edit) {
+            LogUtil::registerStatus(__('Forum successfully updated.'));
+        } else {
+            LogUtil::registerStatus(__('Forum successfully created.'));
+        }
 
         // redirect to the admin forum overview
         return $view->redirect($url);

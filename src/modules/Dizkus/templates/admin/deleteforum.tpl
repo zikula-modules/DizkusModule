@@ -1,3 +1,4 @@
+
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="delete" size="small"}
@@ -5,10 +6,8 @@
 </div>
 
 <div id="dizkus_admin">
-
     {form cssClass="z-form"}
     {formvalidationsummary}
-
 
     <div class="z-warningmsg">
         {gt text="Are you sure want to remove the forum '%s'." tag1=$forum_name}
@@ -20,7 +19,7 @@
         {formdropdownlist id="action" items=$actions}
     </div>
     {else}
-    {formtextinput textMode="hidden" id='action' value=''}
+        {formtextinput textMode="hidden" id='action' value=''}
     {/if}
 
     <div class="z-formbuttons z-buttons">
@@ -29,7 +28,6 @@
     </div>
 
     {/form}
-
 </div>
 
 {adminfooter}
