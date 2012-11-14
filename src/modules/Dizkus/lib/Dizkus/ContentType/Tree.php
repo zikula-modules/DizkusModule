@@ -30,6 +30,7 @@ class Dizkus_ContentType_Tree extends Zikula_AbstractBase
         $qb = $this->entityManager
             ->createQueryBuilder()
             ->select('f, c, l')
+            ->orderBy('f.lft')
             ->from('Dizkus_Entity_Forums', 'f')
             ->leftJoin('f.children', 'c')
             ->leftJoin('c.last_post', 'l');

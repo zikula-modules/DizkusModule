@@ -22,10 +22,19 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_ForumSubscriptions", mappedBy="forum_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $forum_id;
+
+    public function getforum_id()
+    {
+        return $this->forum_id;
+    }
+
+    public function setforum_id($forum_id)
+    {
+        $this->forum_id = $forum_id;
+    }
 
     /**
      * The following are annotations which define the forum_name field.
@@ -34,6 +43,18 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_name = '';
 
+    public function getforum_name()
+    {
+        return $this->forum_name;
+    }
+
+    public function setforum_name($forum_name)
+    {
+        $this->forum_name = $forum_name;
+    }
+
+
+
 
     /**
      * The following are annotations which define the forum_desc field.
@@ -41,14 +62,29 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="text")
      */
     private $forum_desc = '';
-    
-    
+
+
+    public function getforum_desc()
+    {
+        return $this->forum_desc;
+    }
+
+
+    public function setforum_desc($forum_name)
+    {
+        $this->forum_desc = $forum_name;
+    }
+
+
+
+
+
     /**
      * The following are annotations which define the forum_topics field.
      *
      * @ORM\Column(type="integer")
      */
-    private $forum_topics = 0;
+    private $forum_topics = 10;
 
     public function getForum_topics()
     {
@@ -64,7 +100,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         $this->forum_topics++;
     }
-
 
     /**
      * The number of posts of the forum
@@ -95,30 +130,63 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_last_post_id = null;
 
+    public function getForum_last_post_id()
+    {
+        return $this->forum_last_post_id;
+    }
+
     /**
      * @Gedmo\TreeLeft
-     * @ORM\Column(name="lft", type="integer")
+     * @ORM\Column(name="forum_order", type="integer")
      */
     private $lft;
+
+
+    public function getLft()
+    {
+        return $this->lft;
+    }
+
+
+
+
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $lvl;
+    private $lvl = 1;
+
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
-    private $rgt;
+    private $rgt = 3;
 
+    public function getRgt()
+    {
+        return $this->rgt;
+    }
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(name="root", type="integer", nullable=true)
+     * @ORM\Column(name="cat_id", type="integer", nullable=true)
      */
     private $root;
+
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+
 
     /**
      * @Gedmo\TreeParent
@@ -126,6 +194,19 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\JoinColumn(name="parent", referencedColumnName="forum_id")
      */
     private $parent;
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent(Dizkus_Entity_Forums $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+
+
 
 
 
@@ -135,12 +216,28 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $children;
 
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
 
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Posts")
      * @ORM\JoinColumn(name="forum_last_post_id", referencedColumnName="post_id")
      */
     private $last_post;
+
+    public function getlast_post()
+    {
+        return $this->last_post;
+    }
+
+
+    public function setlast_post($post)
+    {
+        return $this->last_post = $post;
+    }
 
 
 
@@ -151,6 +248,28 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_pop3_active = false;
 
+    public function getforum_pop3_active()
+    {
+        return $this->forum_pop3_active;
+    }
+
+
+    public function setforum_pop3_active($pop3_active)
+    {
+        $this->forum_pop3_active = $pop3_active;
+    }
+
+
+    public function setextsource($extsource)
+    {
+        if ($extsource == 'mail2forum') {
+            $this->forum_pop3_active = true;
+        } else {
+            $this->forum_pop3_active = false;
+        }
+    }
+
+
 
     /**
      * The following are annotations which define the forum_pop3_server field.
@@ -158,6 +277,19 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="boolean")
      */
     private $forum_pop3_server = '';
+
+
+    public function getforum_pop3_server()
+    {
+        return $this->forum_pop3_server;
+    }
+
+
+    public function setforum_pop3_server($pop3_server)
+    {
+        $this->forum_pop3_server = $pop3_server;
+    }
+
 
 
 
@@ -169,12 +301,36 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_pop3_port = 110;
 
 
+    public function getforum_pop3_port()
+    {
+        return $this->forum_pop3_port;
+    }
+
+    public function setforum_pop3_port($pop3_port)
+    {
+        $this->forum_pop3_port = $pop3_port;
+    }
+
+
+
     /**
      * The following are annotations which define the forum_pop3_login field.
      *
      * @ORM\Column(type="string", length=60)
      */
     private $forum_pop3_login = '';
+
+
+    public function getforum_pop3_login()
+    {
+        return $this->forum_pop3_login;
+    }
+
+    public function setforum_pop3_login($pop3_login)
+    {
+        $this->forum_pop3_login = $pop3_login ;
+    }
+
 
 
     /**
@@ -185,12 +341,36 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_pop3_password = '';
 
 
+    public function getforum_pop3_password()
+    {
+        return $this->forum_pop3_password;
+    }
+
+
+    public function setforum_pop3_password($pop3_password)
+    {
+        $this->forum_pop3_password = $pop3_password;
+    }
+
+
+
     /**
      * The following are annotations which define the forum_pop3_interval field.
      *
      * @ORM\Column(type="integer", length=4)
      */
     private $forum_pop3_interval = 0;
+
+    public function getforum_pop3_interval()
+    {
+        return $this->forum_pop3_interval;
+    }
+
+    public function setforum_pop3_interval($pop3_interval)
+    {
+        $this->forum_pop3_interval = $pop3_interval;
+    }
+
 
 
     /**
@@ -199,6 +379,18 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $forum_pop3_lastconnect = 0;
+
+
+    public function getforum_pop3_lastconnect()
+    {
+        return $this->forum_pop3_lastconnect;
+    }
+
+    public function setforum_pop3_lastconnect($pop3_lastconnection)
+    {
+        $this->forum_pop3_lastconnect = $pop3_lastconnection;
+    }
+
 
 
     /**
@@ -222,6 +414,18 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_pop3_pnuser = '';
 
 
+    public function getforum_pop3_pnuser()
+    {
+        return $this->forum_pop3_pnuser;
+    }
+
+    public function setforum_pop3_pnuser($pop3_pnuser)
+    {
+        $this->forum_pop3_pnuser = $pop3_pnuser;
+    }
+
+
+
 
     /**
      * The following are annotations which define the forum_pop3_interval field.
@@ -231,6 +435,16 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_pop3_pnpassword = '';
 
 
+    public function getforum_pop3_pnpassword()
+    {
+        return $this->forum_pop3_pnpassword;
+    }
+
+    public function setforum_pop3_pnpassword($pop3_pnpassword)
+    {
+        $this->forum_pop3_pnpassword = $pop3_pnpassword;
+    }
+
 
     /**
      * The following are annotations which define the forum_pop3_interval field.
@@ -238,6 +452,20 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="string", length=255)
      */
     private $forum_pop3_matchstring = '';
+
+
+    public function getforum_pop3_matchstring()
+    {
+        return $this->forum_pop3_matchstring;
+    }
+
+
+    public function setforum_pop3_matchstring($pop3_matchstring)
+    {
+        $this->forum_pop3_matchstring = $pop3_matchstring;
+    }
+
+
 
 
 
@@ -249,6 +477,19 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_moduleref = 0;
 
 
+    public function getforum_moduleref()
+    {
+        return $this->forum_moduleref;
+    }
+
+
+    public function setforum_moduleref($moduleref)
+    {
+        $this->forum_moduleref = $moduleref;
+    }
+
+
+
 
     /**
      * The following are annotations which define the forum_pntopic field.
@@ -258,33 +499,20 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     private $forum_pntopic = 0;
 
 
+    public function getforum_pntopic()
+    {
+        return $this->forum_pntopic;
+    }
+
+
+    public function setforum_pntopic($pntopic)
+    {
+        $this->forum_pntopic = $pntopic;
+    }
 
 
 
 
-
-
-    /**
-     * The following are annotations which define the cat_id field.
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $cat_id = 0;
-
-    /**
-     * The following are annotations which define the forum_id field.
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $parent_id = 0;
-
-
-    /**
-     * The following are annotations which define the forum order field.
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $forum_order = 0;
 
 
 
@@ -312,251 +540,17 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
 
 
-    public function getforum_id()
-    {
-        return $this->forum_id;
-    }
-    
-    
-    
-    public function getforum_name()
-    {
-        return $this->forum_name;
-    }
-    
-    
-    public function getforum_desc()
-    {
-        return $this->forum_desc;
-    }
-    
 
 
 
 
-    public function getForum_last_post_id()
-    {
-        return $this->forum_last_post_id;
-    }
 
 
 
 
-    public function getlast_post()
-    {
-        return $this->last_post;
-    }
 
-    public function getforum_pop3_active()
-    {
-        return $this->forum_pop3_active;
-    }
 
-    public function getforum_pop3_server()
-    {
-        return $this->forum_pop3_server;
-    }
 
-    public function getforum_pop3_port()
-    {
-        return $this->forum_pop3_port;
-    }
-
-    public function getforum_pop3_login()
-    {
-        return $this->forum_pop3_login;
-    }
-
-    public function getforum_pop3_password()
-    {
-        return $this->forum_pop3_password;
-    }
-
-    public function getforum_pop3_interval()
-    {
-        return $this->forum_pop3_interval;
-    }
-
-    public function getforum_pop3_lastconnect()
-    {
-        return $this->forum_pop3_lastconnect;
-    }
-
-    public function getforum_pop3_pnuser()
-    {
-        return $this->forum_pop3_pnuser;
-    }
-
-    public function getforum_pop3_pnpassword()
-    {
-        return $this->forum_pop3_pnpassword;
-    }
-
-    public function getforum_pop3_matchstring()
-    {
-        return $this->forum_pop3_matchstring;
-    }
-
-    public function getforum_moduleref()
-    {
-        return $this->forum_moduleref;
-    }
-
-    public function getforum_pntopic()
-    {
-        return $this->forum_pntopic;
-    }
-
-
-
-
-    public function setforum_id($forum_id)
-    {
-        $this->forum_id = $forum_id;
-    }
-
-    public function setforum_name($forum_name)
-    {
-        $this->forum_name = $forum_name;
-    }
-
-    public function setforum_desc($forum_name)
-    {
-        $this->forum_desc = $forum_name;
-    }
-
-
-    public function setextsource($extsource)
-    {
-        if ($extsource == 'mail2forum') {
-            $this->forum_pop3_active = true;
-        } else {
-            $this->forum_pop3_active = false;
-        }
-    }
-
-
-    public function setpnuser($pnuser)
-    {
-        $this->pnuser = $pnuser;
-    }
-
-
-    public function setpop3_test($pop3_test)
-    {
-        $this->pop3_test = $pop3_test;
-    }
-
-    public function setpop3_server($pop3_server)
-    {
-        $this->pop3_server = $pop3_server;
-    }
-
-    public function setPop3_port($pop3_port)
-    {
-        $this->pop3_port = $pop3_port;
-    }
-
-
-    public function setpop3_login($pop3_login)
-    {
-        $this->pop3_login = $pop3_login;
-    }
-
-    public function setPop3_matchstring($pop3_matchstring)
-    {
-        $this->pop3_matchstring = $pop3_matchstring;
-    }
-
-    public function setpnpassword($pnpassword)
-    {
-        $this->pnpassword = $pnpassword;
-    }
-
-    public function setpop3_password($pop3_password)
-    {
-        $this->pop3_password = $pop3_password;
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    public function getLft()
-    {
-        return $this->lft;
-    }
-
-
-    public function getLvl()
-    {
-        return $this->lvl;
-    }
-
-    public function getRoot()
-    {
-        return $this->root;
-    }
-
-    public function getRgt()
-    {
-        return $this->rgt;
-    }
-
-
-
-
-    public function setParent(Dizkus_Entity_Forums $parent = null)
-    {
-        $this->parent = $parent;
-    }
-
-
-
-
-
-    public function getCat_id()
-    {
-        return $this->cat_id;
-    }
-
-    public function getParent_id()
-    {
-        return $this->parent_id;
-    }
-
-
-    public function getForum_order()
-    {
-        return $this->forum_order;
-    }
-
-
-    public function getTopics()
-    {
-        return $this->topics;
-    }
-
-    public function getNumberOfTopics()
-    {
-        return count($this->topics);
-    }
 
 
 }

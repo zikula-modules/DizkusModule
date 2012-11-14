@@ -13,7 +13,7 @@ use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
  */
-class Dizkus_Entity_Posts extends Zikula_EntityAccess
+class Dizkus_Entity_310_Post extends Zikula_EntityAccess
 {
 
     /**
@@ -146,6 +146,8 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     }
 
 
+
+
     /**
      * The following are annotations which define the post_title field.
      * 
@@ -164,14 +166,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     }
 
 
-
-    
-
-    
-
-    
-
-    
 
     
     public function getpost_time()
@@ -193,42 +187,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"} )
-     * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
-     */
-    private $poster;
-
-    public function getposter()
-    {
-        return $this->poster;
-    }
-
-    public function setposter($poster)
-    {
-        return $this->poster = $poster;
-    }
-
-
-    public function getposter_data()
-    {
-        return array(
-            'rank_image' => 'a',
-            'rank' => 'a',
-            'rank_link' => 'a',
-            'rank_desc' => 'a',
-            'moderate' => 'a',
-            'edit' => 'a',
-            'reply' => 'a',
-            'user_posts' => 'a',
-            'seeip' => 'a',
-
-
-        );
-    }
-
-
-
-    /**
      * @ORM\Column(type="integer"))
      */
     private $poster_id;
@@ -238,21 +196,5 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->poster_id;
     }
 
-
-    public function __construct()
-    {
-        if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
-            // for privacy issues ip logging can be deactivated
-            $this->poster_ip = '127.0.0.1';
-        } else {
-            // some enviroment for logging ;)
-            if (System::serverGetVar('HTTP_X_FORWARDED_FOR')) {
-                $this->poster_ip = System::serverGetVar('REMOTE_ADDR')."/".System::serverGetVar('HTTP_X_FORWARDED_FOR');
-            } else {
-                $this->poster_ip = System::serverGetVar('REMOTE_ADDR');
-            }
-        }
-    }
-    
 
 }

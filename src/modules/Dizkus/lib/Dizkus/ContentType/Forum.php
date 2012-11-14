@@ -34,33 +34,33 @@ class Dizkus_ContentType_Forum
 
         if ($id > 0) {
             $this->_forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+        } else {
+            $this->_forum = new Dizkus_Entity_forums();
         }
     }
 
 
     /**
-     * find
-     *
-     * @param array $args Arguments.
+     * Check if forum exists
      *
      * @return boolean
      */
-    public function find($id)
+    public function exists()
     {
-        $this->_forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
-
-        return true;
-
+        return $this->_forum ? true : false;
     }
+
 
     /**
-     * create
+     * Check if forum is category (lvl ==0)
      *
+     * @return boolean
      */
-    public function create()
+    public function isCategory()
     {
-        $this->_forum = new Dizkus_Entity_forums();
+        return $this->_forum->getLvl() == 0 ? false : true;
     }
+
 
     /**
      * return page as array
@@ -216,6 +216,12 @@ class Dizkus_ContentType_Forum
         $this->entityManager->flush();
     }
 
+    public function setLastPost($post)
+    {
+        $this->_forum->setlast_post($post);
+        $this->entityManager->flush();
+    }
+
 
     /**
      * return page as array
@@ -224,33 +230,11 @@ class Dizkus_ContentType_Forum
      *
      * @return boolean
      */
-    public function set($data, $setPermalink = true)
+    public function store($data)
     {
-        if ($setPermalink) {
-            // define the permalink title if not present
-            $urltitlecreatedfromtitle = false;
-            if (!isset($data['urltitle']) || empty($data['urltitle'])) {
-                $data['urltitle'] = DataUtil::formatPermalink($data['title']);
-                $urltitlecreatedfromtitle = true;
-            }
-
-            if (ModUtil::apiFunc('Pages', 'admin', 'checkuniquepermalink', $data) === false) {
-                $data['urltitle'] = '';
-                if ($urltitlecreatedfromtitle == true) {
-                    return LogUtil::registerError(__('The permalinks retrieved from the title has to be unique!'));
-                } else {
-                    return LogUtil::registerError(__('The permalink has to be unique!'));
-                }
-                return LogUtil::registerError(
-                    __('The permalink has been removed, please update the page with a correct and unique permalink')
-                );
-            }
-        }
-
         $this->_forum->merge($data);
         $this->entityManager->persist($this->_forum);
         $this->entityManager->flush();
-        return true;
     }
 
     /**

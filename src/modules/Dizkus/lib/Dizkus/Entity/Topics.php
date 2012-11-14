@@ -25,6 +25,10 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $topic_id;
 
+    public function settopic_id($id) {
+        $this->topic_id = $id;
+    }
+
 
     /**
      * The following are annotations which define the topic_poster field.

@@ -18,7 +18,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
      *
      * @var statement
      */
-    private $subforum;
+    private $_forum;
 
 
     /**
@@ -36,45 +36,48 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             return LogUtil::registerPermissionError();
         }
         
-        $id = $this->request->query->get('id');
-
-
-
+        $id = $this->request->query->get('id', null);
         if ($id) {
             $view->assign('templatetitle', $this->__('Modify subforum'));
-            $forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
-            if (!$forum) {
-                return LogUtil::registerError($this->__f('Article with id %s not found', $id));
-            }
+        } else {
+            $view->assign('templatetitle', $this->__('Create forum'));
+        }
+
+        $forum = new Dizkus_ContentType_Forum($id);
+
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+        if (!$forum->exists()) {
+            return LogUtil::registerError($this->__f('Item with id %s not found', $id), null, $url);
+        }
+        if (!$forum->isCategory()) {
+            return LogUtil::registerError($this->__f('Item with id %s is a category', $id), null, $url);
+
+        }
+
+
 
             //$forum_mods = ModUtil::apiFunc('Dizkus', 'admin', 'readforummods', $forum->getforum_id());
             //$view->assign('forum_mods', $forum_mods);
 
 
-
-
-            if ($forum->getforum_pop3_active()) {
-                $this->view->assign('extsource', 'mail2forum');
-            } else {
-                $this->view->assign('extsource', 'noexternal');
-            }
-
-            //$this->view->assign('parent', $forum->getparent());
-
-        } else {
-            $forum = new Dizkus_Entity_Forums();
-            $view->assign('templatetitle', $this->__('Create forum'));
-        }
-
-
         $t = $forum->toArray();
         unset($t['parent']);
 
+
+        if ($forum->get()->getforum_pop3_active()) {
+            $this->view->assign('extsource', 'mail2forum');
+        } else {
+            $this->view->assign('extsource', 'noexternal');
+        }
+
+
+
         $view->assign($t);
 
+
+        // assign all users and groups
         $users  = UserUtil::getAll();
         $groups = UserUtil::getGroups();
-
         $usersAndGroups = array();
         foreach ($users as $value) {
             $usersAndGroups[] = array(
@@ -96,7 +99,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $this->view->caching = false;
 
 
-        $this->forum = $forum;
+        $this->_forum = $forum;
 
         return true;
     }
@@ -119,8 +122,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             return $view->redirect($url);
         }
 
-        $forum = $this->forum;
-        
+
         // check for valid form and get data
         if (!$view->isValid()) {
             return false;
@@ -142,22 +144,14 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             unset($data['pnpasswordconfirm']);
         }
 
-        $forum_mods = $data['forum_mods'];
+        //$forum_mods = $data['forum_mods'];
         unset($data['forum_mods']);
 
-        
-        // switch between edit and create mode
-        if (!$forum) {
-            $forum = new Dizkus_Entity_Forums();
-        }
 
-
-        $forum_id = $forum->getforum_id();
+        //$forum_id = $forum->getforum_id();
         
         
-        $forum->merge($data);
-        $this->entityManager->persist($forum);
-        $this->entityManager->flush();
+        $this->_forum->store($data);
 
 
 
@@ -185,7 +179,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             $this->entityManager->persist($newModerator);
         }*/
 
-        $this->entityManager->flush();
+        //$this->entityManager->flush();
 
         // redirect to the admin forum overview
         return $view->redirect($url);

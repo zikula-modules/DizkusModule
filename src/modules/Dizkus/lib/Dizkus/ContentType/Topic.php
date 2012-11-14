@@ -45,8 +45,9 @@ class Dizkus_ContentType_Topic
 
 
     /**
-     * create
+     * Check if topic exists
      *
+     * @return boolean
      */
     public function exists()
     {
@@ -284,6 +285,7 @@ class Dizkus_ContentType_Topic
         $forum = new Dizkus_ContentType_Forum($this->getForumId());
         $forum->incrementPostCount();
         $forum->incrementTopicCount();
+        $forum->setLastPost($this->_firstPost);
 
         return $this->_topic->gettopic_id();
     }

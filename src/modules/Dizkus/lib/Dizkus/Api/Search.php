@@ -82,8 +82,8 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
             $args['forums']      = $this->request->request->get('Dizkus_forum', null);
             $args['searchwhere'] = $this->request->request->get('Dizkus_searchwhere', 'post');
         }
-        $minlen = ModUtil::getVar('Dizkus', 'minsearchlength', 3);
-        $maxlen = ModUtil::getVar('Dizkus', 'maxsearchlength', 30);
+        $minlen = $this->getVar('minsearchlength', 3);
+        $maxlen = $this->getVar('maxsearchlength', 30);
         if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
             return LogUtil::registerStatus($this->__f('Error! For forum searches, the search string must be between %1$s and %2$s characters in length.', array($minlen, $maxlen)));
         }
@@ -97,8 +97,8 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         }
     
         // check mod var for fulltext support
-        //$funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 0) == 1) ? 'fulltext' : 'nonfulltext';
-        $funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
+        //$funcname = ($this->getVar('fulltextindex', 0) == 1) ? 'fulltext' : 'nonfulltext';
+        $funcname = ($this->getVar('fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
 
         return $this->$funcname($args);
     }
@@ -240,7 +240,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
                     $wherematch  =  "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
                 } else {
                     $plusminuscount = preg_match('/[\+\-]/', $args['q']);
-                    if ((ModUtil::getVar('Dizkus', 'extendedsearch', 'no') == 'yes') && ($plusminuscount > 0)) {
+                    if (($this->getVar('extendedsearch', 'no') == 'yes') && ($plusminuscount > 0)) {
                         // seems to be an extended search
                         $q = DataUtil::formatForStore($args['q']);
                         $wherematch  = "(MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) OR MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE)) \n";
@@ -302,7 +302,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         $topicurl = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => '%%%'));
         $sessionid = DataUtil::formatForStore(session_id());
         $now = time();
-        $showtextinsearchresults = ModUtil::getVar('Dizkus', 'showtextinsearchresults', 'no');
+        $showtextinsearchresults = $this->getVar('showtextinsearchresults', 'no');
         $textsql = ($showtextinsearchresults == 'yes') ? 'REPLACE(p.post_text, \'[addsig]\', \'\') as text' : '\'\'';
         
         $sql = 'INSERT INTO ' . $ztable['search_result'] . '

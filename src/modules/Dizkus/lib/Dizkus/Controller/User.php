@@ -36,12 +36,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('last_visit', $lastVisit);
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        $tree = Dizkus_ContentType_Tree::getOneLevel($viewcat);
-        $this->view->assign('tree', $tree);
+        $tree = new Dizkus_ContentType_Tree($this->serviceManager);
+        $this->view->assign('tree', $tree->getOneLevel($viewcat));
 
         $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
-    
+
         return $this->view->fetch('user/main.tpl');
     }
     
@@ -66,8 +66,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
 
-        $forum = new Dizkus_ContentType_Forum();
-        $forum->find($forum_id);
+        $forum = new Dizkus_ContentType_Forum($forum_id);
         $this->view->assign('forum', $forum->toArray());
         $this->view->assign('topics', $forum->getTopics($start));
         $this->view->assign('pager', $forum->getPager());
@@ -205,11 +204,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if ($submit == true && $preview == false) {
 
             $data = array(
-                'topic_id'         => $topic_id,
-                'post_text'          => $message,
-                'post_attach_signature' => $attach_signature,
+                'topic_id'              => $topic_id,
+                'post_text'             => $message,
+                'post_attach_signature' => $attach_signature
             );
-
 
             $post = new Dizkus_ContentType_Post();
             $post->create($data);

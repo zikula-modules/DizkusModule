@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_categories")
  */
-class Dizkus_Entity_Categories extends Zikula_EntityAccess {
+class Dizkus_Entity_310_Category extends Zikula_EntityAccess {
 
     
     

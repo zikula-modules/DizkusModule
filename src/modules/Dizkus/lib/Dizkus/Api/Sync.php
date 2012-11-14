@@ -11,8 +11,11 @@
 class Dizkus_Api_Sync extends Zikula_AbstractApi {
     
 
-    public function all() {
-
+    public function all($silendMode = false)
+    {
+        $this->forums();
+        $this->topics();
+        $this->posters();
     }
 
     
@@ -33,8 +36,6 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
 
     public function forum($args)
     {
-
-
         if ($args['forum'] instanceof Dizkus_Entity_Forums) {
             $id = $args['forum']->getForum_id();
         } else {
@@ -103,7 +104,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
     }
 
 
-    public function posters($args)
+    public function posters()
     {
         $qb = $this->entityManager->createQueryBuilder();
         $posts = $qb->select('count(p)', 'd.user_id')

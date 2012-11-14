@@ -73,7 +73,7 @@
                     <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
                 </div>
                 <div class="content" id="postingtext_{$post.post_id}">
-                    {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.message.filter'}
+                    {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.message.filter'}gg
 
                     {if $post.post_attach_signature}
                     {usergetvar name='signature' assign="signature"}

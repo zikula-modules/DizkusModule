@@ -10,7 +10,7 @@
 
 class Dizkus_Api_Favorites extends Zikula_AbstractApi {
 
-    private $_favorites = array();
+    private $_favorites;
 
     /**
      * get_favorite_status
@@ -20,29 +20,20 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
      * @returns boolean
      *
      */
-    public function getStatus($args)
+    public function getStatus()
     {
-        if (!isset($args['user_id'])) {
-            $args['user_id'] = (int)UserUtil::getVar('uid');
-        }
-
-
-
         // caching
-        if (array_key_exists($args['user_id'], $this->_favorites)) {
-            return $this->_favorites[$args['user_id']];
+        if (isset($this->_favorites)) {
+            return $this->_favorites;
         }
 
-        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $args['user_id']);
+        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', UserUtil::getVar('uid'));
         if (!$posterData) {
             return false;
         }
+        $this->_favorites = $posterData->getuser_favorites();
 
-
-
-        $output = $posterData->getuser_favorites();
-
-        return $output;
+        return $this->_favorites;
 
     }
 

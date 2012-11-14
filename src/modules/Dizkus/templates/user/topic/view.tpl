@@ -166,8 +166,8 @@
                                         </li>
                                         {/if}
                                         <li id="quickreplybuttons" class="z-buttons">
-                                            {button id="btnCreateQuickReply" class="dzk_detachable z-bt-small" src=button_ok.png set=icons/extrasmall __alt="Submit" __title="Submit" __text="Submit"}
-                                            {button id="btnPreviewQuickReply" class="dzk_detachable z-bt-small" src=xeyes.png set=icons/extrasmall __alt="Preview" __title="Preview" __text="Preview"}
+                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
                                             {button type="button" id="btnCancelQuickReply" class="dzk_detachable z-bt-small hidden" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
                                         </li>
                                     </ul>

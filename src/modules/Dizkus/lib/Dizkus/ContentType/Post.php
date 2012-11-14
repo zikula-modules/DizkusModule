@@ -131,6 +131,7 @@ class Dizkus_ContentType_Post
         $poster->incrementUser_posts();
 
         // increment topic posts
+        $this->_topic = new Dizkus_ContentType_Topic($data['topic_id']);
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
 
@@ -139,7 +140,7 @@ class Dizkus_ContentType_Post
         $forum->incrementPostCount();
 
         $this->_post->setposter($poster);
-        $this->_post->setforum_id($topic->getForumId());
+        $this->_post->setforum_id($this->_topic->getForumId());
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }
