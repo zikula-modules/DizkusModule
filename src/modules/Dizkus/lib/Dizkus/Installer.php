@@ -132,27 +132,30 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
                                'showdiscussionlink')) {
             return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'display'));
         }
-*/        
-        // create FULLTEXT index 
-        if (strtolower($GLOBALS['ZConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
+*/
+        // create FULLTEXT index if not innodb
+        $databases = ServiceUtil::getManager()->getArgument('databases');
+        $connName  = Doctrine_Manager::getInstance()->getCurrentConnection()->getName();
+
+        if (strtolower($databases[$connName]['dbtabletype']) <> 'innodb') {
             // FULLTEXT does not work an innodb - by design
             // for now we assume that it works with all other table types, if not, please open a ticket
             $ztables      = DBUtil::getTables();
             $topicstable  = DataUtil::formatForStore($ztables['dizkus_topics']);
             $topictitle   = DataUtil::formatForStore($ztables['dizkus_topics_column']['topic_title']);
             $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
-            
+
             $poststable = DataUtil::formatForStore($ztables['dizkus_posts']);
             $poststext  = DataUtil::formatForStore($ztables['dizkus_posts_column']['post_text']);
             $res2 = DBUtil::executeSQL('ALTER TABLE ' . $poststable . ' ADD FULLTEXT ' . $poststext . ' (' . $poststext . ')');
-    
+
             if ($res1 == true && $res2 == true) {
                 ModUtil::setVar('Dizkus', 'fulltextindex', 'yes');
             } else {
                 ModUtil::setVar('Dizkus', 'fulltextindex', 'no');
             }
         }
-        
+
         // forum settings
         $this->setVar('posts_per_page', 15);
         $this->setVar('topics_per_page', 15);
