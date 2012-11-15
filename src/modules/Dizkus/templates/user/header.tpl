@@ -1,9 +1,9 @@
 {ajaxheader modname='Dizkus' ui=true}
-{if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
+{*if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax*}
 {pageaddvar name='javascript' value='javascript/helpers/Zikula.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
-{/if}
+{*/if*}
 
 {pageaddvarblock}
 <script type="text/javascript">
@@ -23,29 +23,27 @@
 {/browserhack}
 
 {formutil_getpassedvalue name='func' default='main' assign='func'}
-{* set the page title *}
-{if !isset($maintitle)}
-{assign var='maintitle' value=''}
-{/if}
-{if $func eq 'main'}
-{gt text='Forum' assign='maintitle'}
-{elseif $func eq 'viewforum' AND isset($forum)}
-{assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name}
-{elseif $func eq 'viewtopic' AND isset($topic)}
-{assign var='maintitle' value=$topic.topic_title}
-{elseif $func eq 'newtopic'}
-{gt text='New topic in forum' assign='maintitle'}
-{/if}
 
+{* set the page title *}
 {if isset($templatetitle)}
     {assign var='maintitle' value=$templatetitle}
-{/if}
+{elseif !isset($maintitle)}
+    {assign var='maintitle' value=''}
 
+    {if $func eq 'main'}
+        {gt text='Forum' assign='maintitle'}
+    {elseif $func eq 'viewforum' AND isset($forum)}
+        {assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name}
+    {elseif $func eq 'viewtopic' AND isset($topic)}
+        {assign var='maintitle' value=$topic.topic_title}
+    {elseif $func eq 'newtopic'}
+        {gt text='New topic in forum' assign='maintitle'}
+    {/if}
+{/if}
 
 {if $maintitle neq ''}
-{pagesetvar name='title' value=$maintitle}
+    {pagesetvar name='title' value=$maintitle}
 {/if}
-
 
 
 {insert name='getstatusmsg'}
@@ -55,8 +53,6 @@
     <a id="top" accesskey="t"></a>
 
     {if $modvars.Dizkus.forum_enabled neq 'no'}
-
-
         <div class="dzk_navbar dzk_rounded">
             <div class="inner z-clearfix">
 

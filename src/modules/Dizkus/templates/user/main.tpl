@@ -1,3 +1,4 @@
+
 {include file='user/header.tpl'}
 
 {if $view_category == -1}

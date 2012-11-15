@@ -97,13 +97,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function viewforum($args=array())
     {
-
-    
         // get the input
         $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
         $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
     
-        $subforums = $this->entityManager->getRepository('Dizkus_Entity_Subforums')
+        $subforums = $this->entityManager->getRepository('Dizkus_Entity_Forums')
                                    ->findBy(array('parent_id' => $forum_id)); 
         $this->view->assign('subforums', $subforums);
         
@@ -348,7 +346,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function editpost($args=array())
     {
         // Permission check
-        // todo check topic
+        // TODO check topic
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );

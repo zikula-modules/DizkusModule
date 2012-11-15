@@ -8,10 +8,8 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Forum extends Zikula_AbstractApi {
-    
-
-    
+class Dizkus_Api_Forum extends Zikula_AbstractApi
+{
     /**
      * Get forum subscription status
      *
@@ -35,9 +33,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count > 0;
-
     }
-
 
     /**
      * subscribe
@@ -75,7 +71,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return false;
     }
 
-
     /**
      * unsubscribe
      *
@@ -111,7 +106,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return true;
     }
 
-
     /**
      * unsubscribeById
      *
@@ -128,7 +122,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         $this->entityManager->flush();
         return true;
     }
-
 
     /**
      * getCategory
@@ -165,7 +158,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
     }
 
 
-
     /**
      * getForumTree
      *
@@ -186,7 +178,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         }
         return $parents;
     }
-
 
     /**
      * getForumTree
@@ -216,7 +207,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return $output;
     }
 
-
     /**
      * getForumTree
      *
@@ -240,7 +230,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return $parents;
     }
 
-
     /**
      * getForumTree
      *
@@ -250,7 +239,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
      */
     private function getSubTreeAsDropdownList($parent_id, $level, $category = false)
     {
-
         if ($category) {
             $find = array('cat_id' => $parent_id, 'parent_id' => 0);
         } else {
@@ -267,11 +255,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
             $output = array_merge($output, $this->getSubTreeAsDropdownList($forum->getforum_id(),$level+1));
         }
         return $output;
-
-
     }
-
-
 
     /**
      * getForumTree
@@ -296,7 +280,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         }
 
     }
-
 
     /**
      * get forum bread crumbs
@@ -330,8 +313,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
             $forum = array('parent_id' => $args['parent']);
         }
 
-
-
         $i = 0;
         while ($forum['parent_id'] != 0 && $i < 10) {
 
@@ -353,9 +334,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return $view->assign('breadcrumbs', array_reverse($breadcrumbs))
                     ->assign('templatetitle', $args['templatetitle'])
                     ->fetch('user/breadcrumbs.tpl');
-
     }
-
 
     /**
      * delete forum
@@ -382,10 +361,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         // delete forum
         $this->entityManager->remove($forum);
 
-
         $this->entityManager->flush();
     }
-
 
     /**
      * delete child topics
@@ -401,10 +378,4 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         }
 
     }
-
-
-
-
-
-
 }

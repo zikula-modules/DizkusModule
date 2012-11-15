@@ -161,6 +161,7 @@ div#editpostoptions ul li {
 
 #dizkus ul.linklist {
     display: block;
+    font-size: 90%;
     margin: 0;
 }
 #dizkus ul.linklist li {

@@ -1,16 +1,13 @@
-{gt text="Moderate" assign=templatetitle}
-{pagesetvar name=title value=$templatetitle}
-{include file='user/header.tpl'}
 
-<h2>{$templatetitle}</h2>
+{include file='user/header.tpl' __templatetitle='Moderate'}
 
-{if $forum.forum_desc <> ''}
+{*if $forum.forum_desc <> ''}
 <p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
-{/if}
+{/if*}
 
+{if $forum.topics}
 <form class="z-form" method="post" action="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">
 
-    {if $forum.topics}
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
     {dzkpager total=$forum.forum_topics}
 
@@ -75,16 +72,6 @@
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
     {dzkpager total=$forum.forum_topics}
 
-    {else}
-
-    <div class="forumbg dzk_message dzk_rounded">
-        <div class="inner">
-            <strong>{gt text="There are no topics in this forum."}</strong>
-        </div>
-    </div>
-
-    {/if}
-
     <div class="z-warningmsg">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>
 
     <fieldset>
@@ -135,5 +122,15 @@
         {button src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
     </div>
 </form>
+
+{else}
+
+<div class="forumbg dzk_message dzk_rounded">
+    <div class="inner">
+        <strong>{gt text="There are no topics in the forum '%s' to moderate." tag1=$forum.forum_name|safetext}</strong>
+    </div>
+</div>
+
+{/if}
 
 {include file='user/footer.tpl'}
