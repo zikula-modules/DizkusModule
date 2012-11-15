@@ -9,7 +9,6 @@
     {form cssClass="z-form"}
     {formvalidationsummary}
 
-
     <div class="z-warningmsg">
         {gt text="Are you sure want to remove the category '%s'." tag1=$cat_title}
     </div>
@@ -20,7 +19,7 @@
         {formdropdownlist id="action" items=$actions}
     </div>
     {else}
-    {formtextinput textMode="hidden" id='action' value=''}
+        {formtextinput textMode="hidden" id='action' value=''}
     {/if}
 
     <div class="z-formbuttons z-buttons">

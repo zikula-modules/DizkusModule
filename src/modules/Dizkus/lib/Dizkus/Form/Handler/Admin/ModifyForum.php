@@ -9,12 +9,12 @@
  */
 
 /**
- * This class provides a handler to edit subforums.
+ * This class provides a handler to edit forums.
  */
 class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
 {
     /**
-     * subforum
+     * forum
      *
      * @var statement
      */
@@ -38,7 +38,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         
         $id = $this->request->query->get('id', null);
         if ($id) {
-            $view->assign('templatetitle', $this->__('Modify subforum'));
+            $view->assign('templatetitle', $this->__('Modify forum'));
         } else {
             $view->assign('templatetitle', $this->__('Create forum'));
         }
@@ -95,8 +95,9 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
 
 
         $this->view->assign('parents', ModUtil::apiFunc($this->name, 'Forum', 'getParents'));
-                
-        $this->view->caching = false;
+
+
+        $this->view->caching = Zikula_View::CACHE_DISABLED;
 
 
         $this->_forum = $forum;
@@ -154,6 +155,12 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $this->_forum->store($data);
 
 
+        // ToDo: add status messages
+        /*if ($edit) {
+            LogUtil::registerStatus(__('Forum successfully updated.'));
+        } else {
+            LogUtil::registerStatus(__('Forum successfully created.'));
+        }*/
 
         /*if ($forum) {
             $moderators = $this->entityManager->getRepository('Dizkus_Entity_Moderators')

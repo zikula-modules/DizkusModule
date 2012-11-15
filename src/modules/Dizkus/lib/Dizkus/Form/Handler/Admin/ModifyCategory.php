@@ -9,7 +9,7 @@
  */
 
 /**
- * This class provides a handler to edit subforums.
+ * This class provides a handler to edit categories.
  */
 class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandler
 {

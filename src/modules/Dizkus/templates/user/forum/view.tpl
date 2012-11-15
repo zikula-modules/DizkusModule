@@ -1,5 +1,4 @@
-{assign var='templatetitle' value=$forum.forum_name}
-{include file='user/header.tpl' parent=$forum}
+{include file='user/header.tpl' parent=$forum templatetitle=$forum.forum_name}
 
 <h2>{$forum.forum_name|safetext}</h2>
 

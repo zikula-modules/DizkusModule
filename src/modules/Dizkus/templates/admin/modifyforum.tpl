@@ -1,4 +1,4 @@
-{ajaxheader modname='Dizkus' filename='chosen/chosen.proto.min.js'}
+{ajaxheader ui=true modname='Dizkus' filename='chosen/chosen.proto.min.js'}
 {pageaddvar name='stylesheet' value='modules/Dizkus/javascript/chosen/chosen.css'}
 
 {adminheader}
@@ -17,7 +17,6 @@
 
     {form cssClass="z-form"}
     {formvalidationsummary}
-
 
     <fieldset>
 
@@ -97,10 +96,7 @@
 
 
 
-
-
-
-
+        {* TODO do all the control of these fieldsets with javascript onload *}
         <fieldset id="pnlogindata" {*if $forum.externalsource == 0*}style="display:none;"{*/if*}>
         <div class="z-formrow">
             {formlabel for="pnuser" __text="User name"}
@@ -147,7 +143,7 @@
             {formtextinput id="pop3_matchstring" maxLength="255" size="30" }
             <em class="z-formnote z-sub">
                 {gt text="Notice: This rule is a regular expression applied to posts incoming via e-mail, in order to prevent spam postings. If there is no rule here then no checks will be performed."}
-                </em>
+            </em>
         </div>
     </fieldset>
     </div>

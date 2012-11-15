@@ -45,8 +45,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         try {
             DoctrineHelper::createSchema($this->entityManager, $entities);
         } catch (Exception $e) {
-            LogUtil::registerStatus($e->getMessage());
-            return false;
+            return LogUtil::registerError($e->getMessage());
         }
 
     
@@ -209,12 +208,13 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             'Dizkus_Entity_TopicSubscriptions',
             'Dizkus_Entity_Ranks'
         );
-        DoctrineHelper::dropSchema($this->entityManager, $entities);
-        if (in_array($ztables['dizkus_topic_subscription'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_topic_subscription')) {
-                return false;
-            }
+
+        try {
+            DoctrineHelper::dropSchema($this->entityManager, $entities);
+        } catch (Exception $e) {
         }
+
+
     
         // remove the hooks
         //
@@ -247,10 +247,9 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
     
         // remove module vars
         $this->delVars();
-    
-        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
 
-        
+        // unregister hooks
+        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
         
         // Deletion successful
         return true;
@@ -604,11 +603,41 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
     {
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
-        
-        ModUtil::dbInfoLoad('Settings');
+
+
+        // remove the legacy hooks
+        //
+        // createhook
+        //
+        if (!ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'create'));
+        }
+        //
+        // updatehook
+        //
+        if (!ModUtil::unregisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'update'));
+        }
+        //
+        // deletehook
+        //
+        if (!ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'delete'));
+        }
+        //
+        // displayhook
+        //
+        if (!ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'display'));
+        }
+
+
+
+
+        /*ModUtil::dbInfoLoad('Settings');
         $tables = DBUtil::getTables();
         
-        /*$objtable   = $tables['objectdata_attributes'];
+        $objtable   = $tables['objectdata_attributes'];
         $objcolumn  = $tables['objectdata_attributes_column'];
         $userstable  = $tables['dizkus_users'];
         $userscolumn = $tables['dizkus_users_column'];
@@ -678,7 +707,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
 
-        LogUtil::registerError($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
+        LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
         
         return true;
     }
