@@ -1,6 +1,13 @@
 /**
  * dizkus_user.js
  */
+
+
+
+
+
+
+
 Zikula.define('Dizkus');
 
 document.observe('dom:loaded', function() {
@@ -18,7 +25,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         this.stickystatus = false;
         this.subscribestatus = false;
         this.subscribeforumstatus = false;
-        this.favouritestatus = false;
         this.subjectstatus = false;
         this.sortorderstatus = false;
         this.newtopicstatus = false;
@@ -81,26 +87,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 $('btnCreateNewTopic').observe('click', this.createnewtopic.bind(this));
                 $('btnPreviewNewTopic').observe('click', this.previewnewtopic.bind(this));
                 $('btnCancelNewTopic').observe('click', this.cancelnewtopic.bind(this));
-                break;
-            case 'viewforum':
-                if ($('dzk_javascriptareaforum')) {
-                    $('dzk_javascriptareaforum').removeClassName('hidden');
-                }
-
-                // find out the forum subscription status
-                var toggleforumsubscriptionbutton = $$('a[id^="toggleforumsubscriptionbutton"]');
-                if (toggleforumsubscriptionbutton.size() > 0) {
-                    toggleforumsubscriptionbutton = toggleforumsubscriptionbutton.first();
-                    toggleforumsubscriptionbutton.observe('click', this.toggleforumsubscription.bind(this, toggleforumsubscriptionbutton.id));
-                }
-
-                // find out the forum favourite status
-                var toggleforumfavouritebutton = $$('a[id^="toggleforumfavouritebutton"]');
-                if (toggleforumfavouritebutton.size() > 0) {
-                    toggleforumfavouritebutton = toggleforumfavouritebutton.first();
-                    toggleforumfavouritebutton.observe('click', this.toggleforumfavourite.bind(this, toggleforumfavouritebutton.id));
-                }
-
                 break;
             case 'viewtopic':
                 $('dzk_javascriptareatopic').removeClassName('hidden');
@@ -170,23 +156,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                     el.observe('click', this.toggleposting.bind(this, el.id.split('_')[2]));
                 }.bind(this));
                 break;
-            case 'prefs':
-                $('sortorder').observe('click', this.togglesortorder.bind(this)).removeClassName('hidden');
-                if ($('forumdisplaymode')) {
-                    $('forumdisplaymode').observe('click', this.toggledisplay.bind(this)).removeClassName('hidden');
-                }
-                $('javascriptautosubscription').removeClassName('hidden');
-                $('newtopicautosubscribe').observe('click', this.toggleautosubscription.bind(this));
-
-                // add some observers
-                $$('a[id^="toggleforumsubscriptionbutton"]').each(function(el) {
-                    el.observe('click', this.toggleforumsubscription.bind(this, el.id));
-                }.bind(this));
-                $$('a[id^="toggleforumfavouritebutton"]').each(function(el) {
-                    el.observe('click', this.toggleforumfavourite.bind(this, el.id));
-                }.bind(this));
-                break;
-            case 'moderateforum':
             case 'topicsubscriptions':
                 $('alltopic').observe('click', this.checkAll.bind(this, 'topic'));
                 $$('input.topic_checkbox').each(function(el) {
@@ -201,43 +170,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     toggleposting: function(post_id) {
         $('posting_{$post.post_id}').toggle();
         $('hidelink_posting_{$post.post_id}').toggle();
-    },
-
-    toggleforumfavourite: function(toggleforumfavouritebuttonid) {
-        if(this.favouritestatus == false) {
-            this.favouritestatus = true;
-            var pars = {
-                forum: toggleforumfavouritebuttonid.split('_')[1]
-            }
-            //Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumfavourite",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        this.favouritestatus = false;
-
-                        // show error if necessary
-                        if (!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            return;
-                        }
-
-                        var msg = req.getData();
-
-                        if (msg.data == 'added') {
-                            $(toggleforumfavouritebuttonid).update(unfavouriteForum);
-                        } else if (msg.data == 'removed') {
-                            $(toggleforumfavouritebuttonid).update(favouriteForum);
-                        } else {
-                            alert('Error! Erroneous result from favourite addition/removal.');
-                        }
-
-                    }.bind(this)
-                }
-            );
-        }
     },
 
     toggleautosubscription: function() {
@@ -637,45 +569,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         }
     },
 
-    toggletopiclock: function() {
-        if(this.lockstatus == false) {
-            this.lockstatus = true;
-            var pars = {
-                topic: this.toggletopiclockbuttonid.split('_')[1],
-                mode: ((this.topic_locked == false) ? 'lock' : 'unlock')
-            }
-            //          Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=lockunlocktopic",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        this.lockstatus = false;
-
-                        // show error if necessary
-                        if (!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            return;
-                        }
-                        var msg = req.getData();
-
-                        if(['locked', 'unlocked'].include(msg.data)) {
-                            if (this.topic_locked == false) {
-                                this.topic_locked = true;
-                                $(this.toggletopiclockbuttonid).update(unlockTopic);
-                            } else {
-                                this.topic_locked = false;
-                                $(this.toggletopiclockbuttonid).update(lockTopic);
-                            }
-                        } else {
-                            alert('Error! Erroneous result from locking/unlocking action.');
-                        }
-                    }.bind(this)
-                }
-            );
-        }
-    },
 
     toggletopicsubscription: function() {
         if(this.subscribestatus == false) {
@@ -774,6 +667,11 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
                 }
             );
         }
+        if (event) Event.stop(event);
+    },
+
+    test: function(event) {
+        alert('hallo');
         if (event) Event.stop(event);
     },
 

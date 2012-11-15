@@ -703,70 +703,36 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
     
-        if (useragent_is_bot() == true) {
+        if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
         }
+
     
         // get the input
-        $selorder   = (int)$this->request->query->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1);
-        $nohours    = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
-        $unanswered = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
-        $amount     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
+        $params['selorder']   = $this->request->query->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1);
+        $params['nohours']    = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
+        $params['unanswered'] = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
+        $params['amount']     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
+        $this->view->assign($params);
 
-
-
-
-        if (!empty($amount) && !is_numeric($amount)) {
-            unset($amount);
-        }
-
-
-
-
-
-        // maximum last 100 posts maybe shown
-        if (isset($amount) && $amount>100) {
-            $amount = 100;
-        }
-
-        if (!empty($amount)) {
-            $selorder = 7;
-        }
-
-        if (!empty($nohours) && !is_numeric($nohours)) {
-            unset($nohours);
-        }
-
-        // maximum two weeks back = 2 * 24 * 7 hours
-        if (isset($nohours) && $nohours > 336) {
-            $nohours = 336;
-        }
-
-        if (!empty($nohours)) {
-            $selorder = 5;
-        }
-
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-
-        list($posts, $m2fposts, $rssposts, $text) = ModUtil::apiFunc('Dizkus', 'user', 'get_latest_posts',
-                                                                  array('selorder'   => $selorder,
-                                                                        'nohours'    => $nohours,
-                                                                        'amount'     => $amount,
-                                                                        'unanswered' => $unanswered,
-                                                                        'last_visit' => $last_visit,
-                                                                        'last_visit_unix' => $last_visit_unix));
+        list($posts, $m2fposts, $rssposts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'getLatest', $params);
 
         $this->view->assign('posts', $posts);
         $this->view->assign('m2fposts', $m2fposts);
         $this->view->assign('rssposts', $rssposts);
         $this->view->assign('text', $text);
-        $this->view->assign('nohours', $nohours);
+        $this->view->assign('pager', $pager);
+
+
+        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
-        $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('id'   => '0', 'type' => 'all' ));
-        $this->view->assign('numposts', $numposts);
+
 
         return $this->view->fetch('user/post/latest.tpl');
+
+
     }
     
     /**
@@ -798,7 +764,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $post_id  = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
         $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
     
-        if (useragent_is_bot() == true) {
+        if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             if ($post_id <> 0 ) {
                 $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid',
                                         array('post_id' => $post_id));

@@ -1,6 +1,8 @@
 {assign var='templatetitle' value=$topic.topic_title}
 {include file='user/header.tpl' parent=$topic.forum_id}
 
+<input id="topic_id" type="hidden" value={$topic.topic_id}>
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
 
 <script type="text/javascript">
     function quote(text) {
@@ -85,18 +87,24 @@
             <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
                     {if $topic.topic_status eq 0}
-                    <a id="toggletopiclockbutton_{$topic.topic_id}_unlocked" class="dzk_arrow tooltips" title="{gt text="Lock topic"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id}">{gt text="Lock topic"}</a>
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
+                        {gt text="Lock topic" assign='msg'}
                     {else}
-                    <a id="toggletopiclockbutton_{$topic.topic_id}_locked" class="dzk_arrow tooltips" title="{gt text="Unlock topic"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id}">{gt text="Unlock topic"}</a>
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
+                        {gt text="Unlock topic" assign='msg'}
                     {/if}
+                    <a id="toggletopiclock" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
                 </li>
 
                 <li>
                     {if $topic.sticky eq 0}
-                    <a id="toggletopicstickybutton_{$topic.topic_id}_unsticky" class="dzk_arrow tooltips" title="{gt text="Give this topic 'sticky' status"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id}">{gt text="Give this topic 'sticky' status"}</a>
-                    {else}
-                    <a id="toggletopicstickybutton_{$topic.topic_id}_sticky" class="dzk_arrow tooltips" title="{gt text="Remove 'sticky' status"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id}">{gt text="Remove 'sticky' status"}</a>
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id assign='url'}
+                        {gt text="Give this topic 'sticky' status" assign='msg'}
+                        {else}
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
+                        {gt text="Remove 'sticky' status" assign='msg'}
                     {/if}
+                    <a id="toggletopicsticky" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
                 </li>
 
                 <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=movetopic topic=$topic.topic_id}">{gt text="Move topic"}</a></li>

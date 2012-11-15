@@ -1831,6 +1831,35 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return false;
     }
 
+
+    /**
+     * Check if the useragent is a bot (blacklisted)
+     *
+     * @return boolean
+     */
+    function useragentIsBot()
+    {
+        // check the user agent - if it is a bot, return immediately
+        $robotslist = array (
+            'ia_archiver',
+            'googlebot',
+            'mediapartners-google',
+            'yahoo!',
+            'msnbot',
+            'jeeves',
+            'lycos'
+        );
+        $useragent = System::serverGetVar('HTTP_USER_AGENT');
+        for ($cnt=0; $cnt < count($robotslist); $cnt++) {
+            if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }
 
 

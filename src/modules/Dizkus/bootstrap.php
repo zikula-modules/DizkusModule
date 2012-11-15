@@ -139,30 +139,6 @@ if (!function_exists('microtime_float'))
     }
 }
 
-/**
- * useragent_is_bot
- * check if the useragent is a bot (blacklisted)
- *
- * returns bool
- */
-function useragent_is_bot()
-{
-    // check the user agent - if it is a bot, return immediately
-    $robotslist = array ( 'ia_archiver',
-                          'googlebot',
-                          'mediapartners-google',
-                          'yahoo!',
-                          'msnbot',
-                          'jeeves',
-                          'lycos');
-    $useragent = System::serverGetVar('HTTP_USER_AGENT');
-    for ($cnt=0; $cnt < count($robotslist); $cnt++) {
-        if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
-            return true;
-        }
-    }
-    return false;
-}
 
 /**
  * dzk_getimagepath

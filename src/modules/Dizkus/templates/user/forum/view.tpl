@@ -1,4 +1,8 @@
-{include file='user/header.tpl' parent=$forum templatetitle=$forum.forum_name}
+{assign var='templatetitle' value=$forum.forum_name}
+{include file='user/header.tpl' parent=$forum}
+<input id="forum_id" type="hidden" value={$forum.forum_id}>
+
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewforum.js'}
 
 <h2>{$forum.forum_name|safetext}</h2>
 
@@ -68,11 +72,14 @@
                 {if $modvars.Dizkus.favorites_enabled eq "yes"}
                 <li>
                     {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum_id=$forum.forum_id assign='isFavorite'}
-                    {if $isFavorite === true}
-                    <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='user' func='changeForumFavoriteStatus' action='remove' forum=$forum.forum_id}" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a>
+                    {if $isFavorite}
+                        {modurl modname='Dizkus' type='user' func='changeForumFavoriteStatus' action='remove' forum=$forum.forum_id assign='url'}
+                        {gt text="Remove forum from favourites" assign='msg'}
                     {else}
-                    <a id="toggleforumfavouritebutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='user' func='changeForumFavoriteStatus' action='add' forum=$forum.forum_id}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a>
+                        {modurl modname='Dizkus' type='user' func='changeForumFavoriteStatus' action='add' forum=$forum.forum_id assign='url'}
+                        {gt text="Add forum to favourites" assign='msg'}
                     {/if}
+                    <a id="toggleforumfavourite" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                 </li>
                 {/if}
                 {/if}
