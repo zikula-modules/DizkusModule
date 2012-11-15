@@ -25,10 +25,10 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $topic_id;
 
-    public function settopic_id($id) {
+    public function settopic_id($id)
+    {
         $this->topic_id = $id;
     }
-
 
     /**
      * The following are annotations which define the topic_poster field.
@@ -37,9 +37,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      * @ZK\StandardFields(type="userid", on="create")
      */
     private $topic_poster;
-
-
-
 
     /**
      * The following are annotations which define the topic_title field.
@@ -56,14 +53,12 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $topic_time;
 
-
     /**
      * The following are annotations which define the topic status field.
      *
      * @ORM\Column(type="integer")
      */
     private $topic_status = 0;
-
 
     /**
      * The following are annotations which define the topic views field.
@@ -89,8 +84,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         $this->topic_replies = $replies;
     }
 
-
-
     public function incrementTopic_replies()
     {
         $this->topic_replies++;
@@ -108,7 +101,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $sticky = false;
 
-
     /**
      * The following are annotations which define the forum id field.
      *
@@ -123,15 +115,11 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $topic_reference = '';
 
-
-
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Posts", cascade={"persist"})
      * @ORM\JoinColumn(name="topic_last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
-
-
 
     public function getlast_post()
     {
@@ -143,18 +131,12 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         return $this->last_post = $post;
     }
 
-
-
-
-
     /**
      * The following are annotations which define the solved field.
      *
      * @ORM\Column(type="boolean")
      */
     private $solved = false;
-
-
 
     /**
      * forum moderators
@@ -164,7 +146,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      *                orphanRemoval=false)
      */
     private $forum_mods;
-
 
     public function getforum_mods()
     {
@@ -191,21 +172,15 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         return $this->topic_status;
     }
 
-
     public function gettopic_time()
     {
         return $this->topic_time;
     }
 
-
-
-
-
     public function gettopic_views()
     {
         return $this->topic_views;
     }
-
 
     public function getsticky()
     {
@@ -222,12 +197,10 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         return $this->topic_reference;
     }
 
-
     public function getSolved()
     {
         return $this->solved;
     }
-
 
     public function lock()
     {
@@ -238,7 +211,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     {
         $this->topic_status = 0;
     }
-
 
     public function sticky()
     {
@@ -269,7 +241,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     {
         $this->forum_id = $id;
     }
-
 
     public function setSolved($solved)
     {

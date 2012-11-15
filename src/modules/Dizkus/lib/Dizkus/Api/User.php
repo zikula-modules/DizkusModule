@@ -8,8 +8,8 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_User extends Zikula_AbstractApi {
-
+class Dizkus_Api_User extends Zikula_AbstractApi
+{
     /**
      * Instance of Zikula_View.
      *

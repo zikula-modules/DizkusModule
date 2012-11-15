@@ -11,8 +11,8 @@
 /**
  * Ajax controller functions.
  */
-class Dizkus_Controller_Ajax extends Zikula_AbstractController {
-
+class Dizkus_Controller_Ajax extends Zikula_AbstractController
+{
     /**
      * reply
      *
@@ -39,8 +39,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
 
         // ContactList integration: Is the user ignored and allowed to write an answer to this topic?        
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
-        
-        
+
         $topic['start'] = 0;
         $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
         if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
@@ -337,7 +336,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid',
                                                 array('topic_id' => $topic_id));
 
-
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
@@ -435,8 +433,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             default:
                 return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in Dizkus_ajax_subscribeunsubscribetopic().', DataUtil::formatForDisplay($mode)));
         }
-        return new Zikula_Response_Ajax(array('data' => $newmode));
 
+        return new Zikula_Response_Ajax(array('data' => $newmode));
     }
 
     /**
@@ -505,9 +503,9 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             LogUtil::registerAuthidError();
             return AjaxUtil::error(null, array(), true, true);
         }*/
-    
 
         $newmode = ((int)ModUtil::apiFunc('Dizkus', 'user', 'togglenewtopicsubscription') == 1) ? 'autosubscription' : 'noautosubscription';
+
         return new Zikula_Response_Ajax(array('data' => $newmode));
     }
 
@@ -555,6 +553,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         } else {
             ModUtil::apiFunc('Dizkus', 'user', 'add_favorite_forum', array('forum_id' => $forum_id ));
         }
+
         return new Zikula_Response_Ajax(array('data' => $subscribed ? 'removed' : 'added'));
     }
 
@@ -710,8 +709,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function newtopic()
     {
-  
-    
         if ($this->getVar('forum_enabled') == 'no') {
         	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
@@ -741,9 +738,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         //$attach_signature = ($attach_signature=='1') ? true : false;
         //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
-        
-       
-        
         $message = dzkstriptags($message);
         // check for maximum message size
         if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
@@ -753,7 +747,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         if (strlen($message) == 0) {
             return AjaxUtil::error($this->__('Error! You tried to post a blank message. Please go back and try again.'), array(), true, true);
         }
-       
 
         if (strlen($subject) == 0) {
             return AjaxUtil::error($this->__('Error! The post has no subject line.'), array(), true, true);
@@ -761,10 +754,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         
         $this->view->add_core_data();
         $this->view->setCaching(false);
-        
 
         if ($preview == false) {
-
             // store new topic
             $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
                                      array('forum_id'         => $forum_id,
@@ -819,7 +810,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
             $newtopic['message_display'] = dzk_replacesignature($newtopic['message_display'], $newtopic['poster_data']['signature']);
         }
 
-//        list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
+//      list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
         $newtopic['message_display']       = dzkVarPrepHTMLDisplay($newtopic['message_display']);
 
         if (UserUtil::isLoggedIn()) {
@@ -837,8 +828,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
         }
 
         $this->view->assign('newtopic', $newtopic);
-
-
         
         return new Zikula_Response_Ajax(array('data'     => $this->view->fetch('user/topic/newpreview.tpl'),
                                               'newtopic' => $newtopic));
@@ -896,7 +885,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function createcategory()
     {
-    
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
@@ -1008,7 +996,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
      */
     public function editforum($args=array())
     {
-    
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
@@ -1380,5 +1367,4 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController {
 
         return new Zikula_Response_Ajax_Plain($output);
     }
-
 }

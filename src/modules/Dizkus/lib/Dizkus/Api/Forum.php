@@ -8,23 +8,16 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_Forum extends Zikula_AbstractApi {
-
-
-
-
+class Dizkus_Api_Forum extends Zikula_AbstractApi
+{
     public function getParents($id = null)
     {
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
         $parents = $repo->childrenHierarchy();
         $output = $this->getNode($parents, $id);
 
-
-
         return $output;
     }
-
-
 
     private function getNode($input, $id, $level = 0)
     {
@@ -45,8 +38,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return $output;
     }
 
-
-    
     /**
      * Get forum subscription status
      *
@@ -72,7 +63,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return $count > 0;
 
     }
-
 
     /**
      * subscribe
@@ -110,7 +100,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return false;
     }
 
-
     /**
      * unsubscribe
      *
@@ -146,7 +135,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return true;
     }
 
-
     /**
      * unsubscribeById
      *
@@ -161,9 +149,9 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         $subscription = $this->entityManager->find('Dizkus_Entity_ForumSubscriptions', $id);
         $this->entityManager->remove($subscription);
         $this->entityManager->flush();
+
         return true;
     }
-
 
     /**
      * getCategory
@@ -179,6 +167,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         if (!is_numeric($forum_id)) {
             return false;
         }
+
         return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->getcat_id();
     }
 
@@ -199,9 +188,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         return $this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
     }
 
-
-
-
     /**
      * delete child topics
      *
@@ -216,12 +202,4 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
         }
 
     }
-
-
-
-
-
-
-
-
 }
