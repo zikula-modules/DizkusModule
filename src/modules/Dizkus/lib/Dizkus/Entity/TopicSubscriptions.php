@@ -13,27 +13,21 @@ use Doctrine\ORM\Mapping as ORM;
 class Dizkus_Entity_TopicSubscriptions extends Zikula_EntityAccess
 {
     /**
-     * The following are annotations which define the id field.
+     * The following are annotations which define the topic_id field.
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * The following are annotations which define the topic_id field.
-     * 
      * @ORM\Column(type="integer", unique=false)
      */
     private $topic_id = 0;
 
     /**
      * The following are annotations which define the user_id field.
-     * 
+     *
+     * @ORM\Id
      * @ORM\Column(type="integer", unique=false)
      */
     private $user_id = 0;
+
 
 
     public function getid()

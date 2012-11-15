@@ -63,6 +63,7 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
      */
     private $rank_image = '';
 
+
     
     public function getrank_id()
     {

@@ -35,6 +35,14 @@ class Dizkus_Entity_Categories extends Zikula_EntityAccess
      */
     private $cat_order = 1;
 
+    /**
+     * Forums under this category.
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="category")
+     */
+    private $forums;
+
+
 
     public function getcat_id()
     {

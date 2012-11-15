@@ -19,8 +19,7 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $uid;
-    
-    
+
     /**
      * The following are annotations which define the uname field.
      * 
@@ -38,6 +37,49 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      */
     private $attributes;
 
+    /**
+     * Topics subscribed by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Topics", mappedBy="subscribers", fetch="LAZY")
+     */
+    private $topicSubscriptions;
+
+    /**
+     * Forums subscribed by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="moderators", fetch="LAZY")
+     */
+    private $forumModerated;
+
+    /**
+     * Forums subscribed by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="subscribers", fetch="LAZY")
+     */
+    private $forumSubscriptions;
+
+    /**
+     * Forums favorited by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="favorited", fetch="LAZY")
+     */
+    private $forumFavorites;
+
+    /**
+     * Topics posted by the user.
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topics", mappedBy="poster", fetch="LAZY")
+     */
+    private $forumTopics;
+
+    /**
+     * Posts by the user.
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Posts", mappedBy="poster", fetch="LAZY")
+     */
+    private $forumPosts;
+
+
 
     public function getuid()
     {
@@ -48,8 +90,7 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
     {
         return $this->uname;
     }
-    
-    
+
     public function getAttributes()
     {
         

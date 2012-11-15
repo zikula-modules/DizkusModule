@@ -20,7 +20,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
      */
     private $forum;
 
-
     /**
      * Setup form.
      *
@@ -35,7 +34,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN) ) {
             return LogUtil::registerPermissionError();
         }
-        
+
         $id = $this->request->query->get('id');
         
         if ($id) {
@@ -136,6 +135,8 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $edit  = $forum->getforum_id();
 
         $forum->merge($data);
+        $forum->setparent($data['parent']);
+        //var_dump($data, $forum->toArray(false));die();
         $this->entityManager->persist($forum);
         $this->entityManager->flush();
 

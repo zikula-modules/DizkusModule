@@ -27,8 +27,9 @@ class Dizkus_Entity_Favorites extends Zikula_EntityAccess
      * @ORM\Column(type="integer", unique=false)
      */
     private $user_id = 0;
-    
-    
+
+
+
     public function getForum_id()
     {
         return $this->forum_id;

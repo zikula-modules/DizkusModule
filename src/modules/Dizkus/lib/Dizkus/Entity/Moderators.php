@@ -13,17 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Dizkus_Entity_Moderators extends Zikula_EntityAccess
 {
     /**
-     * The following are annotations which define the id field.
+     * The following are annotations which define the forum id field.
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * The following are annotations which define the forum id field.
-     *git nano
      * @ORM\Column(type="integer", unique=false)
      */
     private $forum_id;
@@ -31,11 +23,29 @@ class Dizkus_Entity_Moderators extends Zikula_EntityAccess
     /**
      * The following are annotations which define the user id field.
      *
+     * @ORM\Id
      * @ORM\Column(type="integer", unique=false)
      */
     private $user_id;
 
-    
+    /**
+     * User data.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Users")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
+     */
+    private $user_data;
+
+    /**
+     * Related forum.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     */
+    private $forum;
+
+
+
     public function getForum_id()
     {
         return $this->forum_id;

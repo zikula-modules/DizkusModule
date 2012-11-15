@@ -23,13 +23,9 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $entities = array(
             'Dizkus_Entity_Categories',
             'Dizkus_Entity_Topics',
-            'Dizkus_Entity_TopicSubscriptions',
             'Dizkus_Entity_Forums',
-            'Dizkus_Entity_ForumSubscriptions',
             'Dizkus_Entity_Posts',
-            'Dizkus_Entity_Ranks',
-            'Dizkus_Entity_Moderators',
-            'Dizkus_Entity_Favorites'
+            'Dizkus_Entity_Ranks'
         );
 
         try {
@@ -117,13 +113,9 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $entities = array(
             'Dizkus_Entity_Categories',
             'Dizkus_Entity_Topics',
-            'Dizkus_Entity_TopicSubscriptions',
             'Dizkus_Entity_Forums',
-            'Dizkus_Entity_ForumSubscriptions',
             'Dizkus_Entity_Posts',
-            'Dizkus_Entity_Ranks',
-            'Dizkus_Entity_Moderators',
-            'Dizkus_Entity_Favorites'
+            'Dizkus_Entity_Ranks'
         );
 
         try {

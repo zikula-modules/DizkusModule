@@ -20,7 +20,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $post_id;
-    
+
     /**
      * The following are annotations which define the topic_id field.
      *
@@ -76,6 +76,31 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @ORM\Column(type="string", length="255")
      */
     private $post_title = '';
+
+    /**
+     * Forum of the post.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     */
+    private $forum;
+
+    /**
+     * Topic of the post.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topics")
+     * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
+     */
+    private $topic;
+
+    /**
+     * Poster.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Users", inversedBy="forumPosts")
+     * @ORM\JoinColumn(name="poster_id", referencedColumnName="uid")
+     */
+    private $poster;
+
 
 
     public function getpost_id()

@@ -33,7 +33,7 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      *
      * @ORM\Column(type="integer")
      */
-    private $topic_poster = 0;
+    private $topic_poster = 1;
 
     /**
      * The following are annotations which define the topic time field.
@@ -97,6 +97,34 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $forum_id = 0;
+
+    /**
+     * Forum of the topic.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     */
+    private $forum;
+
+    /**
+     * Poster of the topic.
+     *
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Users", inversedBy="forumTopics")
+     * @ORM\JoinColumn(name="topic_poster", referencedColumnName="uid")
+     */
+    private $poster;
+
+    /**
+     * Subscribed users.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Users", inversedBy="topicSubscriptions", fetch="LAZY")
+     * @ORM\JoinTable(name="dizkus_topic_subscription",
+     *   joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="uid")}
+     * )
+     */
+    private $subscribers;
+
 
 
     public function gettopic_id()
