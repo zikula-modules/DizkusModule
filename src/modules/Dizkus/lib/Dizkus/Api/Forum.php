@@ -201,60 +201,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi {
 
 
 
-    /**
-     * getForumTree
-     *
-     * Determines a forum subtree.
-     *
-     * @return array
-     */
-    public function getHighestOrder($parentId)
-    {
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('MAX(f.forum_order)')
-            ->from('Dizkus_Entity_Forums', 'f')
-            ->where('f.parent_id = :parentId')
-            ->setParameter('parentId', $parentId);
-        $highestOrder = $qb->getQuery()->getArrayResult();
-        if (!$highestOrder) {
-            return 1;
-        } else {
-            return $highestOrder[0][1]+1;
-        }
-
-    }
-
-
-    /**
-     * delete forum
-     *
-     * @return array
-     */
-    public function delete($forum)
-    {
-        // check if it input is a doctrine array
-        if (!is_array($forum)) {
-            $forum = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findOneBy($forum);
-        }
-
-        // delete sub forums
-        $find = array('parent_id' => $forum->getforum_id());
-        $subforums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find);
-        foreach ($subforums as $subforum) {
-            $this->delete($subforum);
-        }
-
-        // delete topics
-        $this->deleteChildTopics($forum->getforum_id());
-
-        // delete forum
-        $this->entityManager->remove($forum);
-
-
-        $this->entityManager->flush();
-    }
-
 
     /**
      * delete child topics

@@ -17,7 +17,7 @@ function Dizkus_tables()
     //
     // categories
     //
-    /*
+
     $ztable['dizkus_categories'] = DBUtil::getLimitedTablename('dizkus_categories');
     $ztable['dizkus_categories_column'] = array('cat_id'    => 'cat_id',
                                                  'cat_title' => 'cat_title',
@@ -25,7 +25,7 @@ function Dizkus_tables()
     $ztable['dizkus_categories_column_def'] = array('cat_id'    => 'I AUTO PRIMARY',
                                                      'cat_title' => 'C(100) NOTNULL DEFAULT \'\'',
                                                      'cat_order' => 'C(10) NOTNULL DEFAULT \'\'');
-    */
+
 
     //
     // forum_mods
@@ -51,7 +51,6 @@ function Dizkus_tables()
                                              'forum_posts'            => 'forum_posts',
                                              'forum_last_post_id'     => 'forum_last_post_id',
                                              'cat_id'                 => 'cat_id',
-                                             'parent_id'              => 'parent_id',
                                              'forum_order'            => 'forum_order',
                                              'forum_pop3_active'      => 'forum_pop3_active',
                                              'forum_pop3_server'      => 'forum_pop3_server',
@@ -72,7 +71,6 @@ function Dizkus_tables()
                                                  'forum_posts'            => 'I UNSIGNED NOTNULL DEFAULT 0',
                                                  'forum_last_post_id'     => 'I NOTNULL DEFAULT 0',
                                                  'cat_id'                 => 'I NOTNULL DEFAULT 0',
-                                                 'parent_id'              => 'I(11) NOTNULL DEFAULT 0',
                                                  'forum_order'            => 'I NOTNULL DEFAULT 0',
                                                  'forum_pop3_active'      => 'I(1) NOTNULL DEFAULT 0',
                                                  'forum_pop3_server'      => 'C(60) NOTNULL DEFAULT \'\'',
@@ -133,7 +131,7 @@ function Dizkus_tables()
     //
     // ranks
     //
-    /*
+
     $ztable['dizkus_ranks'] = DBUtil::getLimitedTablename('dizkus_ranks');
     $ztable['dizkus_ranks_column'] = array('rank_id'      => 'rank_id',
                                             'rank_title'   => 'rank_title',
@@ -151,7 +149,7 @@ function Dizkus_tables()
                                                 'rank_image'    => 'C(255) NOTNULL DEFAULT \'\'');
     $ztable['dizkus_ranks_column_idx'] = array ('rank_min'  => 'rank_min',
                                                  'rank_max'  => 'rank_max');
-    */
+
 
     // 
     // subscriptions
