@@ -35,6 +35,7 @@ class Dizkus_Entity_Categories extends Zikula_EntityAccess
      */
     private $cat_order = 1;
 
+
     public function getcat_id()
     {
         return $this->cat_id;

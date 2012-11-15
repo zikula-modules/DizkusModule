@@ -3,18 +3,16 @@
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * Favorites entity class.
  *
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity
- * @ORM\Table(name="dizkus_subscription")
+ * @ORM\Table(name="dizkus_subscription", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
 class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
 {
-    
     /**
      * The following are annotations which define the msg_id field.
      *
@@ -23,24 +21,22 @@ class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $msg_id;
-    
-    
+
     /**
      * The following are annotations which define the forum_id field.
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",unique=false)
      */
     private $forum_id = 0;
     
     /**
      * The following are annotations which define the user_id field.
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",unique=false)
      */
     private $user_id = 0;
     
-    
-    
+
     public function getmsg_id()
     {
         return $this->msg_id;
@@ -51,12 +47,10 @@ class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
         return $this->forum_id;
     }
     
-    
     public function getuser_id()
     {
         return $this->user_id;
     }
-    
   
     public function setmsg_id($id)
     {
@@ -72,6 +66,4 @@ class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
     {
         $this->user_id = $id;
     }
-
-    
 }

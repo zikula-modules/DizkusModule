@@ -3,7 +3,6 @@
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * Favorites entity class.
  *
@@ -14,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Dizkus_Entity_ForumSubscriptionsJoin extends Zikula_EntityAccess
 {
-    
     /**
      * The following are annotations which define the msg_id field.
      *
@@ -23,8 +21,7 @@ class Dizkus_Entity_ForumSubscriptionsJoin extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $msg_id;
-    
-    
+
     /**
      * The following are annotations which define the forum_id field.
      * 
@@ -38,16 +35,14 @@ class Dizkus_Entity_ForumSubscriptionsJoin extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $user_id = 0;
-    
-    
+
     /**
      * item forum
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Forums")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      */
     private $forum;
 
-    
+
     public function getmsg_id()
     {
         return $this->msg_id;
@@ -67,5 +62,4 @@ class Dizkus_Entity_ForumSubscriptionsJoin extends Zikula_EntityAccess
     {
         return $this->user_id;
     }
-    
 }

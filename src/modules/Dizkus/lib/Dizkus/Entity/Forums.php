@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity
- * @ORM\Table(name="dizkus_forums")
+ * @ORM\Table(name="dizkus_forums", indexes={@ORM\Index(name="forum_last_post_idx", columns={"forum_last_post_id"}), @ORM\Index(name="forum_moduleref_idx", columns={"forum_moduleref"})})
  */
 class Dizkus_Entity_Forums extends Zikula_EntityAccess
 {
@@ -17,7 +17,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_ForumSubscriptions", mappedBy="forum_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $forum_id;
@@ -42,11 +41,18 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $forum_topics = 0;
-    
+
+    /**
+     * The following are annotations which define the forum_topics field.
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $forum_posts = 0;
+
     /**
      * The following are annotations which define the forum_last_post_id field.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
     private $forum_last_post_id = 0;
     
@@ -144,7 +150,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     /**
      * The following are annotations which define the forum_moduleref field.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
     private $forum_moduleref = 0;
 

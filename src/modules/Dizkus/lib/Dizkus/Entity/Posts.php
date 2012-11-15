@@ -2,18 +2,16 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity
- * @ORM\Table(name="dizkus_posts")
+ * @ORM\Table(name="dizkus_posts", indexes={@ORM\Index(name="topic_idx", columns={"topic_id"}), @ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="poster_idx", columns={"poster_id"}), @ORM\Index(name="post_msg_idx", columns={"post_msgid"})})
  */
 class Dizkus_Entity_Posts extends Zikula_EntityAccess
 {
-
     /**
      * The following are annotations which define the post_id field.
      *
@@ -26,26 +24,23 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     /**
      * The following are annotations which define the topic_id field.
      *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
     private $topic_id = 0;
-    
+
     /**
      * The following are annotations which define the forum_id field.
      *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
     private $forum_id = 0;
 
     /**
      * The following are annotations which define the poster_id field.
      *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
-    private $poster_id = 0;
+    private $poster_id = 1;
 
     /**
      * The following are annotations which define the post_time field.
@@ -53,8 +48,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @ORM\Column(type="datetime")
      */
     private $post_time = '';
-    
-    
+
     /**
      * The following are annotations which define the poster_ip field.
      * 
@@ -62,11 +56,10 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      */
     private $poster_ip = '';
 
-    
     /**
      * The following are annotations which define the post_msgid field.
      * 
-     * @ORM\Column(type="string", length="100")
+     * @ORM\Column(type="string", length="100", unique=false)
      */
     private $post_msgid = '';
 
@@ -85,8 +78,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     private $post_title = '';
 
 
-
-    
     public function getpost_id()
     {
         return $this->post_id;
@@ -132,6 +123,4 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     {
         return $this->post_title;
     }
-    
-
 }
