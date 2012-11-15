@@ -9,7 +9,7 @@
  */
 
 /**
- * This class provides a handler to edit subforums.
+ * This class provides a handler to delete categories.
  */
 class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandler
 {

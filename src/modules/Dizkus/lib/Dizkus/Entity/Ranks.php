@@ -2,14 +2,13 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity
- * @ORM\Table(name="dizkus_ranks")
+ * @ORM\Table(name="dizkus_ranks", indexes={@ORM\Index(name="rank_min_idx", columns={"rank_min"}), @ORM\Index(name="rank_max_idx", columns={"rank_max"})})
  */
 class Dizkus_Entity_Ranks extends Zikula_EntityAccess
 {
@@ -21,8 +20,7 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $rank_id;
-    
-    
+
     /**
      * The following are annotations which define the rank_title field.
      * 
@@ -40,35 +38,32 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
     /**
      * The following are annotations which define the rank_min field.
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
     private $rank_min = 0;
-    
-    
+
     /**
      * The following are annotations which define the rank_max field.
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=false)
      */
     private $rank_max = 0;
-    
-    
+
     /**
      * The following are annotations which define the rank_special field.
      * 
      * @ORM\Column(type="integer", length=2)
      */
     private $rank_special = 0;
-    
-    
-    
+
     /**
      * The following are annotations which define the rank_image field.
      * 
      * @ORM\Column(type="string", length="255")
      */
     private $rank_image = '';
-    
+
+
     
     public function getrank_id()
     {
@@ -139,6 +134,4 @@ class Dizkus_Entity_Ranks extends Zikula_EntityAccess
     {
         $this->rank_image = $rank_image;
     }
-    
-    
 }

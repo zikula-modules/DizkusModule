@@ -8,8 +8,8 @@
  * @package Dizkus
  */
 
-class Dizkus_Api_User extends Zikula_AbstractApi {
-
+class Dizkus_Api_User extends Zikula_AbstractApi
+{
     /**
      * Instance of Zikula_View.
      *
@@ -817,7 +817,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
             return LogUtil::registerError($this->__('Error! You cannot post a message under this topic. It has been locked.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     
-        if (!aModUtil::apiFunc($this->name, 'Permission', 'canWrite', $reply)) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $reply)) {
             return LogUtil::registerPermissionError();
         }
     
@@ -3262,9 +3262,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
      */
     public function getForumSubscriptions($uid)
     {
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptionsJoin')
-                                   ->findBy(array('user_id' => $uid));
-    
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptions')
+                              ->findBy(array('user_id' => $uid));
+
         return $subscriptions;
     }
     
@@ -3383,7 +3383,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi {
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('s')
-           ->from('Dizkus_Entity_Subforums', 's')
+           ->from('Dizkus_Entity_Forums', 's')
            ->where('s.parent_id > 0')
            ->orderBy('s.forum_name', 'DESC');
         

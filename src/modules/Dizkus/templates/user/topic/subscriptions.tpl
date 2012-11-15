@@ -1,12 +1,10 @@
-{gt text="Manage topic subscriptions" assign=templatetitle}
-{pagesetvar name=title value=$templatetitle}
-{include file='user/header.tpl'}
 
-<h2>{$templatetitle}</h2>
-{form id="dzk_topicsubscriptions"}
-{formvalidationsummary}
+{include file='user/header.tpl' __templatetitle='Manage topic subscriptions'}
+
+{if $subscriptions}
+    {form id="dzk_topicsubscriptions"}
+    {formvalidationsummary}
     <div>
-        {if $subscriptions}
         <div class="forumbg dzk_rounded">
             <div class="inner">
 
@@ -47,20 +45,20 @@
             </div>
         </div>
 
-        {else}
-
-        <div class="forumbg dzk_message dzk_rounded">
-            <div class="inner">
-                <strong>{gt text="No topic subscriptions found."}</strong>
-            </div>
-        </div>
-
-        {/if}
-
         <div class="z-buttons z-formbuttons">
             {formbutton class="z-bt-ok" commandName="save" __text="Submit"}
         </div>
     </div>
 {/form}
+
+{else}
+
+<div class="forumbg dzk_message dzk_rounded">
+    <div class="inner">
+        <strong>{gt text="No topic subscriptions found."}</strong>
+    </div>
+</div>
+
+{/if}
 
 {include file='user/footer.tpl'}

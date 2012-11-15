@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -13,26 +12,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Users extends Zikula_EntityAccess
 {
-    
-    
     /**
      * The following are annotations which define the uid field.
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Moderators", mappedBy="user_id")
      */
     private $uid;
-    
-    
+
     /**
      * The following are annotations which define the uname field.
      * 
      * @ORM\Column(type="string", length="25")
      */
     private $uname = '';
-    
-  
+
     /**
      * attributes
      * 
@@ -42,8 +36,51 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      *                orphanRemoval=true)
      */
     private $attributes;
-    
-    
+
+    /**
+     * Topics subscribed by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Topics", mappedBy="subscribers", fetch="LAZY")
+     */
+    private $topicSubscriptions;
+
+    /**
+     * Forums subscribed by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="moderators", fetch="LAZY")
+     */
+    private $forumModerated;
+
+    /**
+     * Forums subscribed by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="subscribers", fetch="LAZY")
+     */
+    private $forumSubscriptions;
+
+    /**
+     * Forums favorited by the user.
+     *
+     * @ORM\ManyToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="favorited", fetch="LAZY")
+     */
+    private $forumFavorites;
+
+    /**
+     * Topics posted by the user.
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topics", mappedBy="poster", fetch="LAZY")
+     */
+    private $forumTopics;
+
+    /**
+     * Posts by the user.
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Posts", mappedBy="poster", fetch="LAZY")
+     */
+    private $forumPosts;
+
+
+
     public function getuid()
     {
         return $this->uid;
@@ -53,15 +90,13 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
     {
         return $this->uname;
     }
-    
-    
+
     public function getAttributes()
     {
         
         return $this->attributes;
     }
-    
-    
+
     /**
      * Construction function
      */
@@ -70,5 +105,4 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
         $this->attributes = new Doctrine\Common\Collections\ArrayCollection();
         return true;
     }
-
 }
