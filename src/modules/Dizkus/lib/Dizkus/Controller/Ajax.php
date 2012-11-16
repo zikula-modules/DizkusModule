@@ -321,18 +321,22 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
-        $topicId = FormUtil::getPassedValue('topic', '', 'POST');
-        $action     = FormUtil::getPassedValue('action', '', 'POST');
+        $params = array();
+        $params['topic_id'] = FormUtil::getPassedValue('topic', '', 'POST');
+        $params['action']   = FormUtil::getPassedValue('action', '', 'POST');
+
+        //$params['topic_id'] = 790;
+        //$params['action'] = 'solve';
+
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        if (empty($topicId)) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus_ajax_lockunlocktopic()\'.'));
+        if (empty($params['topic_id'])) {
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus_ajax_changeTopicStatus()\'.'));
         }
-        $actions = array('lock', 'unlock', 'sticky', 'unsticky');
-
-        if (empty($action) || !in_array($action, $actions) ) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($action)));
+        $actions = array('lock', 'unlock', 'sticky', 'unsticky', 'subscribe', 'unsubscribe', 'solve', 'unsolve');
+        if (empty($params['action']) || !in_array($params['action'], $actions) ) {
+            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($params['action'])));
         }
 
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
@@ -340,16 +344,9 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             throw new Zikula_Exception_Forbidden();
         }
 
-        $topic = new Dizkus_ContentType_Topic($topicId);
-        if ($action == 'lock') {
-            $topic->lock();
-        } else if ($action == 'unlock') {
-            $topic->unlock();
-        } else if ($action == 'sticky') {
-            $topic->sticky();
-        } else if ($action == 'unsticky') {
-            $topic->unsticky();
-        }
+
+
+        ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
         return new Zikula_Response_Ajax_Plain('successful');
     }

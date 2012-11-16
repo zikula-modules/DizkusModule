@@ -54,6 +54,10 @@
             {formlabel for="ajax" __text="Enable ajax"}
             {formcheckbox id="ajax"}
         </div>
+        <div class="z-formrow">
+            {formlabel for="solved_enabled" __text="Enable solved option in topics"}
+            {formcheckbox id="solved_enabled"}
+        </div>
     </fieldset>
 
     <fieldset>

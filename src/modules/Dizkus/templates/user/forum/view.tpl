@@ -185,7 +185,7 @@
                     <dd class="views">{$topic.topic_views}</dd>
                     <dd class="lastpost">
                         {if isset($topic.last_post)}
-                        {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
+                        {include file='user/lastPostBy.tpl' last_post=$topic.last_post replies=$topic.topic_replies}
                         {/if}
                     </dd>
                 </dl>

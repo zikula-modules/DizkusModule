@@ -99,7 +99,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // end patch #3494 part 1
         $start    = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
         $view     = strtolower($this->request->query->get('view', (isset($args['view'])) ? $args['view'] : ''));
-    
+
         /*list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
     
         if (!empty($view) && ($view=='next' || $view=='previous')) {
@@ -611,31 +611,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function changeTopicStatus()
     {
-        $action = $this->request->query->get('action');
-        $topicId = (int)$this->request->query->get('topic');
+        $params = array();
+        $params['action'] = $this->request->query->get('action');
+        $params['topic_id'] = (int)$this->request->query->get('topic');
+        ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        if ($action == 'subscribe'){
-            ModUtil::apiFunc($this->name, 'Topic', 'subscribe', array('topic_id' => $topicId));
-        } else if ($action == 'unsubscribe'){
-            ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', array('topic_id' => $topicId));
-        } else {
-            $topic = new Dizkus_ContentType_Topic($topicId);
-            if ($action == 'sticky') {
-                $topic->sticky();
-            } else if ($action == 'unsticky') {
-                $topic->unsticky();
-            } else if ($action == 'lock') {
-                $topic->lock();
-            } else if ($action == 'unlock') {
-                $topic->unlock();
-            } else if ($action == 'solved') {
-                $topic->solved();
-            } else if ($action == 'unsolved') {
-                $topic->unsolved();
-            }
-        }
-
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topicId)));
+        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $params['topic_id'])));
     }
 
     /**

@@ -358,7 +358,7 @@ class Dizkus_ContentType_Topic
      *
      * @return boolean
      */
-    public function solved()
+    public function solve()
     {
         $this->_topic->setSolved(true);
         $this->entityManager->flush();
@@ -370,7 +370,7 @@ class Dizkus_ContentType_Topic
      *
      * @return boolean
      */
-    public function unsolved()
+    public function unsolve()
     {
         $this->_topic->setSolved(false);
         $this->entityManager->flush();

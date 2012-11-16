@@ -112,6 +112,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             $this->setVar('url_ranks_images',    $data['url_ranks_images']);
 
             $this->setVar('ajax', $data['ajax']);
+            $this->setVar('solved_enabled', $data['solved_enabled']);
 
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
 

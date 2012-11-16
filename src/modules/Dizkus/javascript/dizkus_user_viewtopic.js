@@ -7,6 +7,9 @@ jQuery(document).ready(function () {
 
     jQuery("#toggletopiclock").click(changeTopicStatus);
     jQuery("#toggletopicsticky").click(changeTopicStatus);
+    jQuery("#toggletopicsubscription").click(changeTopicStatus);
+    jQuery("#toggletopicsolve").click(changeTopicStatus);
+
 });
 
 function changeTopicStatus(e) {
@@ -20,7 +23,16 @@ function changeTopicStatus(e) {
         action = 'sticky';
     } else if (i.text() == unstickyTopic) {
         action = 'unsticky';
+    } else if (i.text() == subscribeTopic) {
+        action = 'subscribe';
+    } else if (i.text() == unsubscribeTopic) {
+        action = 'unsubscribe';
+    } else if (i.text() == solveTopic) {
+        action = 'solve';
+    } else if (i.text() == unsolveTopic) {
+        action = 'unsolve';
     } else {
+        console.log('Wrong action');
         return;
     }
 
@@ -41,8 +53,19 @@ function changeTopicStatus(e) {
                     i.text(unstickyTopic);
                 } else if (action == 'unsticky') {
                     i.text(stickyTopic);
+                } else if (action == 'subscribe') {
+                    i.text(unsubscribeTopic);
+                } else if (action == 'unsubscribe') {
+                    i.text(subscribeTopic);
+                } else if (action == 'solve') {
+                    i.text(unsolveTopic);
+                    jQuery('#topic_solved').removeClass('z-hide');
+                } else if (action == 'unsolve') {
+                    i.text(solveTopic);
+                    jQuery('#topic_solved').addClass('z-hide');
                 }
             } else {
+                console.log(result);
                 alert('Error! Erroneous result from locking/unlocking action.');
             }
         },

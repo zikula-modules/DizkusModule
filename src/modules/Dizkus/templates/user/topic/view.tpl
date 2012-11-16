@@ -15,16 +15,16 @@
 {usergetvar name='uid' assign='currentUser'}
 {if $permissions.moderate eq 1 || $topic.topic_poster eq $currentUser}
 <span class="editabletopicheader tooltips" id="edittopicsubjectbutton_{$topic.topic_id}" title="{gt text="Click to edit"}">
-        {if $topic.solved eq 1 and $modvars.Dizkus.solved_enabled}
-            {gt text="[Solved]"}
-        {/if}
-        {$topic.topic_title|safetext}
+    <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
+    {gt text="[Solved]"}
     </span>
+    {$topic.topic_title|safetext}
+</span>
 {else}
 <span class="noneditabletopicheader">
-    {if $topic.solved eq 1 and $modvars.Dizkus.solved_enabled}
+    <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
         {gt text="[Solved]"}
-    {/if}
+    </span>
     {$topic.topic_title|safetext}
 </span>
 <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a>
@@ -54,22 +54,24 @@
                 {if $userloggedin}
                 <li>
                     {if $isSubscribed}
-                    <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_subscribed" class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id}" title="{gt text="Unsubscribe from topic"}">{gt text="Unsubscribe from topic"}</a>
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
+                        {gt text="Unsubscribe from topic" assign='msg'}
                     {else}
-                    <a id="toggletopicsubscriptionbutton_{$topic.topic_id}_unsubscribed" class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id}">{gt text="Subscribe to topic"}</a>
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
+                        {gt text="Subscribe to topic" assign='msg'}
                     {/if}
+                    <a id="toggletopicsubscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                 </li>
                 {if $modvars.Dizkus.solved_enabled|default:0}
                 <li>
-                    {if $topic.solved eq 0}
-                    <a class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='solved' topic=$topic.topic_id}" title="{gt text="Mark as solved"}">
-                        {gt text="Mark as solved"}
-                    </a>
-                    {else}
-                    <a class="dzk_arrow tooltips" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsolved' topic=$topic.topic_id}" title="{gt text="Mark as unsolved"}">
-                        {gt text="Mark as unsolved"}
-                    </a>
+                    {if $topic.solved}
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
+                        {gt text="Mark as unsolved" assign='msg'}
+                        {else}
+                        {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
+                        {gt text="Mark as solved" assign='msg'}
                     {/if}
+                    <a id="toggletopicsolve" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                 </li>
                 {/if}
                 {/if}
@@ -216,6 +218,8 @@
     var unlockTopic = "{{gt text='Unlock topic'}}";
     var stickyTopic = "{{gt text="Give this topic 'sticky' status"}}";
     var unstickyTopic = "{{gt text="Remove 'sticky' status"}}";
+    var solveTopic = "{{gt text="Mark as solved"}}";
+    var unsolveTopic = "{{gt text="Mark as unsolved"}}";
     // ]]>
 
 

@@ -13,7 +13,41 @@
  */
 class Dizkus_Api_Topic extends Zikula_AbstractApi
 {
-    
+
+
+    function changeStatus($args)
+    {
+
+        if ($args['action'] == 'subscribe') {
+            ModUtil::apiFunc($this->name, 'Topic', 'subscribe', array('topic_id' => $args['topic_id']));
+        } else if ($args['action'] == 'unsubscribe') {
+            ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', array('topic_id' => $args['topic_id']));
+        } else {
+            $topic = new Dizkus_ContentType_Topic($args['topic_id']);
+            switch ($args['action']) {
+                case 'sticky':
+                    $topic->sticky();
+                    break;
+                case 'unsticky':
+                    $topic->unsticky();
+                    break;
+                case 'lock':
+                    $topic->lock();
+                    break;
+                case 'unlock':
+                    $topic->unlock();
+                    break;
+                case 'solve':
+                    $topic->solve();
+                    break;
+                case 'unsolve':
+                    $topic->unsolve();
+                    break;
+            }
+        }
+    }
+
+
     /**
      * Subscribe a topic.
      *
@@ -21,7 +55,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
      *        int $args['topic_id'] Topic id.
      *        int $args['user_id'] User id (optional: needs ACCESS_ADMIN).
      *
-     * @return void|bool
+     * @return void
      */
     public function subscribe($args)
     {
@@ -33,7 +67,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
     
         // Todo Permission check
 
-        $status = $this->getSubscriptionStatus(array('userid' => $args['user_id'], 'topic_id' => $args['topic_id']));
+        $status = $this->getSubscriptionStatus(array('user_id' => $args['user_id'], 'topic_id' => $args['topic_id']));
         if (!$status) {
             $subscription = new Dizkus_Entity_TopicSubscriptions();
 
@@ -43,8 +77,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $this->entityManager->persist($subscription);
             $this->entityManager->flush();
         }
-
-        return;
     }
     
     
@@ -66,21 +98,20 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
                 return LogUtil::registerPermissionError();
             }
-            $where['user_id'] = $args[user_id];
+            $where['user_id'] = $args['user_id'];
         } else {
             $where['user_id'] = UserUtil::getVar('uid');
         }
 
-        $where = $args['topic_id'];
+        $where['topic_id'] = $args['topic_id'];
         
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
-                                             ->findBy($where);
-        foreach ($subscriptions as $subscription) {
-            $this->entityManager->remove($subscription);
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')->findBy($where);
+        if (isset($subscriptions)) {
+            foreach ($subscriptions as $subscription) {
+                $this->entityManager->remove($subscription);
+            }
+            $this->entityManager->flush();
         }
-        $this->entityManager->flush();
-    
-        return;
     }
     
     /**
@@ -94,7 +125,15 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
      */
     public function getSubscriptionStatus($args)
     {
-        
+        // check input
+        if (empty($args['topic_id'])) {
+            return LogUtil::registerArgsError();
+        }
+        if (empty($args['user_id'])) {
+            $args['user_id'] = UserUtil::getVar('uid');
+        }
+
+        // doctrine query
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('COUNT(s)')
@@ -105,7 +144,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
            ->setParameter('topic', $args['topic_id'])
            ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
-        return $count > 0; 
+
+        // Return true if the user is subscribed or false if not
+        return ($count > 0) ? true : false;;
     }
 
 
