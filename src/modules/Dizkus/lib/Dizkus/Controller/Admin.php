@@ -15,6 +15,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     {
         $this->view->setCaching(false)->add_core_data();
     }
+
     /**
      * the main administration function
      *
@@ -22,9 +23,36 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function main()
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
+
         return System::redirect($url);
     }
 
+    /**
+     * Change forum order
+     *
+     * Move up or down a forum in the tree
+     *
+     * @return boolean
+     */
+    public function changeForumOrder()
+    {
+        $action  = $this->request->query->get('action', 'moveUp');
+        $forumId = $this->request->query->get('forum', null);
+        if (empty($forumId)) {
+            return LogUtil::registerArgsError();
+        }
+        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
+        $forum = $repo->find($forumId);
+        if ($action == 'moveUp') {
+            $repo->moveUp($forum, true);
+        } else {
+            $repo->moveDown($forum, true);
+        }
+        $this->entityManager->flush();
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+
+        return System::redirect($url);
+    }
 
     /**
      * the main administration function
@@ -281,6 +309,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function modifycategory()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/modifycategory.tpl', new Dizkus_Form_Handler_Admin_ModifyCategory());
     }
 
@@ -291,6 +320,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function deletecategory()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/deletecategory.tpl', new Dizkus_Form_Handler_Admin_DeleteCategory());
     }
 
@@ -301,6 +331,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function modifyforum()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/modifyforum.tpl', new Dizkus_Form_Handler_Admin_ModifyForum());
     }
 
@@ -311,6 +342,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function deleteforum()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/deleteforum.tpl', new Dizkus_Form_Handler_Admin_DeleteForum());
     }
                     
@@ -321,6 +353,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function manageSubscriptions()
     {   
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/managesubscriptions.tpl', new Dizkus_Form_Handler_Admin_ManageSubscriptions());   
     }
 
