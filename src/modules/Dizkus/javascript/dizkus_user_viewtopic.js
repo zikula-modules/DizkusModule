@@ -76,3 +76,31 @@ function changeTopicStatus(e) {
     });
     e.preventDefault();
 }
+
+
+function changeTopicTitle(e) {
+
+    jQuery.ajax({
+        type: "POST",
+        data: {
+            topic: jQuery('#topic_id').val(),
+            title: jQuery('#topicsubjectedit_subject').val(),
+            action: 'setTitle'
+        },
+        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=changeTopicStatus",
+        success: function(result) {
+            if (result == 'successful') {
+                jQuery('#topicsubjectedit_editor').addClass('z-hide');
+                jQuery('#topic_title').text(jQuery('#topicsubjectedit_subject').val());
+            } else {
+                console.log(result);
+                alert('Error! Erroneous result from locking/unlocking action.');
+            }
+        },
+        error: function(result) {
+            Zikula.showajaxerror(result);
+            return;
+        }
+    });
+    e.preventDefault();
+}

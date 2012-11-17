@@ -12,24 +12,28 @@
 </script>
 
 <h2>
-{usergetvar name='uid' assign='currentUser'}
-{if $permissions.moderate eq 1 || $topic.topic_poster eq $currentUser}
-<span class="editabletopicheader tooltips" id="edittopicsubjectbutton_{$topic.topic_id}" title="{gt text="Click to edit"}">
-    <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
-    {gt text="[Solved]"}
-    </span>
-    {$topic.topic_title|safetext}
-</span>
-{else}
-<span class="noneditabletopicheader">
+<span class="editabletopicheader" id="edittopicsubjectbutton" title="">
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
         {gt text="[Solved]"}
     </span>
-    {$topic.topic_title|safetext}
+    <span id="topic_title">{$topic.topic_title|safetext}</span>
 </span>
 <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a>
-{/if}
 </h2>
+
+{* add inline edit *}
+{usergetvar name='uid' assign='currentUser'}
+{if $permissions.moderate eq 1 || $topic.topic_poster eq $currentUser}
+{include file='ajax/edittopicsubject.tpl'}
+<script type="text/javascript">
+    jQuery('#edittopicsubjectbutton').addClass('tooltips').attr('title', '{{gt text="Click to edit"}}');
+    jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')});
+    jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')});
+    jQuery("#topicsubjectedit_save").click(changeTopicTitle);
+
+</script>
+{/if}
+
 
 {userloggedin assign='userloggedin'}
 

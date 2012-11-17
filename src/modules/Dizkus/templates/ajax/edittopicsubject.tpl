@@ -1,4 +1,4 @@
-<div style="font-size:12px; letter-spacing:0; margin-top:5px; text-align:left;" id="topicsubjectedit_editor">
+<div style="font-size:12px; letter-spacing:0; margin-top:5px; text-align:left;" id="topicsubjectedit_editor" class="z-hide">
     <form id="topicsubject_{$topic.topic_id}_form" class="z-form z-linear" action="javascript:void(0);">
         <fieldset>
             <legend>{gt text='New subject name'}</legend>

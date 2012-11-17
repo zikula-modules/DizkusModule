@@ -248,5 +248,4 @@ class Dizkus_ContentType_Forum
         $this->entityManager->flush();
         return true;
     }
-
 }

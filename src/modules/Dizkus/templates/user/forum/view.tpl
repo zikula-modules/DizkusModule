@@ -88,34 +88,6 @@
                 <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
                 {/if}
             </ul>
-
-            <noscript>
-                <ul id="dzk_nonjavascriptareaforum" class="linklist z-clearfix">
-                    {* Moderate *}
-                    {if $permissions.comment}
-                    <li><a class="dzk_arrow newtopiclink" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
-                    {/if}
-
-                    {if $permissions.moderate eq true}
-                    <li><a class="dzk_arrow moderatelink" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
-                    {/if}
-
-                    {if $coredata.logged_in}
-                    {if $forum.is_subscribed eq 0}
-                    <li><a class="dzk_arrow subscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="subscribe_forum" forum=$forum.forum_id}" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a></li>
-                    {else}
-                    <li><a class="dzk_arrow unsubscribelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="unsubscribe_forum" forum=$forum.forum_id}" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a></li>
-                    {/if}
-                    {if $modvars.Dizkus.favorites_enabled eq "yes"}
-                    {if $forum.is_favorite eq 0}
-                    <li><a class="dzk_arrow addfavoritelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="add_favorite_forum" forum=$forum.forum_id}" title="{gt text="Add forum to favourites"}">{gt text="Add forum to favourites"}</a></li>
-                    {else}
-                    <li><a class="dzk_arrow removefavoritelink" href="{modurl modname="Dizkus" type="user" func="prefs" act="remove_favorite_forum" forum=$forum.forum_id}" title="{gt text="Remove forum from favourites"}">{gt text="Remove forum from favourites"}</a></li>
-                    {/if}
-                    {/if}
-                    {/if}
-                </ul>
-            </noscript>
         </div>
     </div>
 </div>

@@ -163,14 +163,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->post_title = $title;
     }
 
-
-
-    
-
-    
-
-    
-
     
 
     
@@ -224,18 +216,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
 
 
         );
-    }
-
-
-
-    /**
-     * @ORM\Column(type="integer"))
-     */
-    private $poster_id;
-
-    public function getposter_id()
-    {
-        return $this->poster_id;
     }
 
 

@@ -211,6 +211,13 @@ class Dizkus_ContentType_Topic
         $this->_topic->setlast_post($lastPost);
     }
 
+    public function setTitle($title)
+    {
+        $this->_topic->setTopic_title($title);
+        $this->entityManager->flush();
+    }
+
+
     /**
      * return page as array
      */

@@ -17,7 +17,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
     function changeStatus($args)
     {
-
         if ($args['action'] == 'subscribe') {
             ModUtil::apiFunc($this->name, 'Topic', 'subscribe', array('topic_id' => $args['topic_id']));
         } else if ($args['action'] == 'unsubscribe') {
@@ -42,6 +41,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
                     break;
                 case 'unsolve':
                     $topic->unsolve();
+                    break;
+                case 'setTitle':
+                    $topic->setTitle($args['title']);
                     break;
             }
         }

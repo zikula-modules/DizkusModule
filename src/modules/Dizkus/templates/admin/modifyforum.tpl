@@ -96,8 +96,8 @@
 
 
 
-        {* TODO do all the control of these fieldsets with javascript onload *}
-        <fieldset id="pnlogindata" {*if $forum.externalsource == 0*}style="display:none;"{*/if*}>
+    {* TODO do all the control of these fieldsets with javascript onload *}
+    {*<fieldset id="pnlogindata" {*if $forum.externalsource == 0*}{*style="display:none;"{*/if*}{*>
         <div class="z-formrow">
             {formlabel for="pnuser" __text="User name"}
             {formtextinput id="pnuser" maxLength="60" size="30"}
@@ -145,7 +145,7 @@
                 {gt text="Notice: This rule is a regular expression applied to posts incoming via e-mail, in order to prevent spam postings. If there is no rule here then no checks will be performed."}
             </em>
         </div>
-    </fieldset>
+    </fieldset> *}
     </div>
 
     {if $feeds}

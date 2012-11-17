@@ -1,6 +1,4 @@
 {gt text="Latest forum posts" assign=templatetitle}
-
-
 {pagesetvar name=title value="`$templatetitle` - `$text`"}
 
 {include file='user/header.tpl'}
@@ -61,15 +59,12 @@
                             {if $topic.topic_replies >= $modvars.Dizkus.hot_threshold}
                             {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                             {/if}
-                            <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id viewlast=1}" title="{$topic.topic_title|truncate:70}">{$topic.topic_title|truncate:70}</a>
+                            <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id}" title="{$topic.topic_title|truncate:70}">{$topic.topic_title|truncate:70}</a>
                             <span>{gt text="Forum"}: <a href="{*modurl modname='Dizkus' func='viewforum' forum=$topic.forum_id*}" title="{*$topic.forum_name|truncate:70*}">{*$topic.forum_name|truncate:70*}</a></span>
                         </dt>
                         <dd class="posts">{$topic.topic_replies|safetext}</dd>
                         <dd class="lastpost">
-                            <span>
-                                {gt text="Posted by %s" tag1=$topic.last_post.poster_id|profilelinkbyuid}<br />
-                                {$topic.last_post.post_time|dateformat:'datetimebrief'}
-                            </span>
+                         {include file='user/lastPostBy.tpl' last_post=$topic.last_post replies=$topic.topic_replies}
                         </dd>
                     </dl>
                 </li>
