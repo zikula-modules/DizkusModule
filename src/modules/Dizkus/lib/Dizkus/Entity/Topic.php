@@ -13,7 +13,7 @@ use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
  */
-class Dizkus_Entity_Topics extends Zikula_EntityAccess
+class Dizkus_Entity_Topic extends Zikula_EntityAccess
 {
 
     /**
@@ -101,12 +101,23 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $sticky = false;
 
+
     /**
-     * The following are annotations which define the forum id field.
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $forum_id;
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="topics")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     **/
+    private $forum;
+
+
+    public function getForum()
+    {
+        return $this->forum;
+    }
+
+    public function setForum(Dizkus_Entity_Forums $forum)
+    {
+        $this->forum = $forum;
+    }
 
     /**
      * The following are annotations which define the topic reference field.
@@ -138,14 +149,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
      */
     private $solved = false;
 
-    /**
-     * forum moderators
-     *
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderators",
-     *                mappedBy="forum_id", cascade={"all"},
-     *                orphanRemoval=false)
-     */
-    private $forum_mods;
 
     public function getforum_mods()
     {
@@ -185,11 +188,6 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     public function getsticky()
     {
         return $this->sticky;
-    }
-
-    public function getforum_id()
-    {
-        return $this->forum_id;
     }
 
     public function gettopic_reference()
@@ -237,13 +235,22 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
         $this->topic_poster = $poster;
     }
 
-    public function setForum_id($id)
-    {
-        $this->forum_id = $id;
-    }
-
     public function setSolved($solved)
     {
         $this->solved = $solved;
     }
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
+     */
+    private $posts;
+
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+
+
 }

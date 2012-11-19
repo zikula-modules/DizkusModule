@@ -105,9 +105,11 @@ class Dizkus_ContentType_Forum
     /**
      * get forum bread crumbs
      *
+     * @param boolean $withoutCurrent Show tree without the current item.
+     *
      * @return string
      */
-    public function getBreadcrumbs()
+    public function getBreadcrumbs($withoutCurrent = true)
     {
         if ($this->_forum->getLvl() == 0) {
             // already root
@@ -115,6 +117,14 @@ class Dizkus_ContentType_Forum
         }
 
         $output = array();
+        if (!$withoutCurrent) {
+            $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $this->_forum->getForum_id()));
+            $output[] = array(
+                'url' => $url,
+                'title' => $this->_forum->getForum_name()
+            );
+        }
+
         $i = $this->_forum->getParent();
         while ($i->getLvl() != 0) {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
@@ -130,6 +140,7 @@ class Dizkus_ContentType_Forum
             'url' => $url,
             'title' => $i->getForum_name()
         );
+
         return array_reverse($output);
     }
 

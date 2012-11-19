@@ -1,4 +1,6 @@
 <?php
+
+use Doctrine\ORM\Tools\Pagination\Paginator;
 /**
  * Dizkus
  *
@@ -451,11 +453,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function manageForumSubscriptions()
     {
-        if (!UserUtil::isLoggedIn()) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
+        $form = FormUtil::newForm($this->name, $this);
 
-        return $this->view->fetch('user/prefs/manageForumSubscriptions.tpl');
+        return $form->execute('user/prefs/manageForumSubscriptions.tpl', new Dizkus_Form_Handler_User_ForumSubscriptions());
     }
 
     /**
@@ -522,17 +522,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     /**
      * Add/remove a forum from the favorites
      */
-    public function changeForumFavoriteStatus()
+    public function modifyForum()
     {
-        $action = $this->request->query->get('action');
-        $forum = (int)$this->request->query->get('forum');
-        if ($action == 'add') {
-            ModUtil::apiFunc($this->name, 'Favorites', 'add', array('forum_id' => $forum));
-        } else {
-            ModUtil::apiFunc($this->name, 'Favorites', 'remove', array('forum_id' => $forum));
-        }
+        $params = array(
+            'action' => $this->request->query->get('action'),
+            'forum_id'  => (int)$this->request->query->get('forum')
+        );
+        ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum)));
+        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $params['forum_id'])));
     }
 
 
@@ -629,11 +627,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $params['amount']     = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
         $this->view->assign($params);
 
-        list($posts, $m2fposts, $rssposts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'getLatest', $params);
+        list($posts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'getLatest', $params);
 
         $this->view->assign('posts', $posts);
-        $this->view->assign('m2fposts', $m2fposts);
-        $this->view->assign('rssposts', $rssposts);
         $this->view->assign('text', $text);
         $this->view->assign('pager', $pager);
 
@@ -644,7 +640,51 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         return $this->view->fetch('user/post/latest.tpl');
     }
-    
+
+    public function egosearch()
+    {
+        $params = array('action' => $this->request->query->get('action', 'posts'));
+
+        return $this->search($params);
+    }
+
+    /**
+     * View latest topics
+     *
+     * @param array $args Arguments array.
+     *
+     * @return string
+     */
+    public function search($args)
+    {
+        // Permission check
+        $this->throwForbiddenUnless(
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead')
+        );
+
+        if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
+            return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+        }
+
+        $params = array();
+        $params['action'] = $this->request->query->get('action', (isset($args['action'])) ? $args['action'] : 'posts');
+        $params['uid']    = $this->request->query->get('user', (isset($args['user'])) ? $args['user'] : null);
+
+
+        list($posts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'search', $params);
+
+        $this->view->assign('posts', $posts);
+        $this->view->assign('text', $text);
+        $this->view->assign('pager', $pager);
+
+        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+
+        $this->view->assign('last_visit', $last_visit);
+        $this->view->assign('last_visit_unix', $last_visit_unix);
+
+        return $this->view->fetch('user/post/search.tpl');
+    }
+
     /**
      * Split topic
      *

@@ -33,8 +33,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
 
         $entities = array(
             'Dizkus_Entity_Forums',
-            'Dizkus_Entity_Posts',
-            'Dizkus_Entity_Topics',
+            'Dizkus_Entity_Post',
+            'Dizkus_Entity_Topic',
             'Dizkus_Entity_Favorites',
             'Dizkus_Entity_Poster',
             'Dizkus_Entity_Moderators',
@@ -199,8 +199,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         // drop table
         $entities = array(
             'Dizkus_Entity_Forums',
-            'Dizkus_Entity_Posts',
-            'Dizkus_Entity_Topics',
+            'Dizkus_Entity_Post',
+            'Dizkus_Entity_Topic',
             'Dizkus_Entity_Favorites',
             'Dizkus_Entity_Poster',
             'Dizkus_Entity_Moderators',

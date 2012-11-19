@@ -48,8 +48,8 @@
             <li><a class="dzk_arrow loginlink tooltips" title="{gt text="Log-in"}" href="{modurl modname="Users" type="user" func="loginscreen"}">{gt text="Log-in"}</a></li>
             <li><a class="dzk_arrow registerlink tooltips" title="{gt text="Register"}" href="{modurl modname="Users" type="user" func="register"}">{gt text="Register"}</a></li>
             {else}
-            <li><a class="dzk_arrow searchpostslink tooltips" title="{gt text="View your posts"}" href="{$coredata.user.uname|searchlink}">{gt text="View your posts"}</a></li>
-            <li><a class="dzk_arrow configurelink tooltips" title="{gt text="Personal settings"}" href="{modurl type="user" modname="Dizkus" func="prefs"}">{gt text="Personal settings"}</a></li>
+            <li><a class="dzk_arrow searchpostslink tooltips" title="{gt text="View your posts"}" href="{modurl modname="Dizkus" type="user" func="egosearch"}">{gt text="View your posts"}</a></li>
+            <li><a class="dzk_arrow configurelink tooltips" title="{gt text="Personal settings"}" href="{modurl modname="Dizkus" type="user" func="prefs"}">{gt text="Personal settings"}</a></li>
         {/if}
         </ul>
     </div>

@@ -168,45 +168,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     },
 
 
-
-    toggleforumsubscription: function(toggleforumsubscriptionbuttonid) {
-        if(this.subscribeforumstatus == false) {
-            this.subscribeforumstatus = true;
-            var pars = {
-                forum: toggleforumsubscriptionbuttonid.split('_')[1]
-            }
-            //            Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleforumsubscription",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        this.subscribeforumstatus = false;
-
-                        // show error if necessary
-                        if (!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            return;
-                        }
-
-                        var msg = req.getData();
-
-                        if (msg.data == 'subscribed') {
-                            $(toggleforumsubscriptionbuttonid).update(unsubscribeForum);
-                        } else if (msg.data == 'unsubscribed') {
-                            $(toggleforumsubscriptionbuttonid).update(subscribeForum);
-                        } else {
-                            alert('Error! Erroneous result from subscription/unsubscription action.');
-                        }
-                    }.bind(this)
-                }
-            );
-        }
-    },
-
-
-
     quickEdit: function(editpostlinkid) {
         if(this.editstatus == false) {
             this.editstatus = true;
@@ -273,21 +234,21 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     quickEditsave: function() {
 
        if($F('postingtext_' + this.post_id + '_edit').blank() == true) {
-            // no text
-            return;
-        }
-        var pars = {
-            post: this.post_id,
-            message: $F('postingtext_' + this.post_id + '_edit'),
-            attach_signature: this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature')
-        }
+           // no text
+           return;
+       }
+       var pars = {
+           post: this.post_id,
+           message: $F('postingtext_' + this.post_id + '_edit'),
+           attach_signature: this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature')
+       }
 
-        if($('postingtext_' + this.post_id + '_delete') && $('postingtext_' + this.post_id + '_delete').checked == true) {
-            $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + deletingPost + '</span>');
-            pars['delete'] =1;
-        } else {
-            $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + updatingPost + '</span>');
-        }
+       if($('postingtext_' + this.post_id + '_delete') && $('postingtext_' + this.post_id + '_delete').checked == true) {
+           $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + deletingPost + '</span>');
+           pars['delete'] =1;
+       } else {
+           $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + updatingPost + '</span>');
+       }
 
         // Ajax.Responders.register(this.dzk_globalhandlers);
         var myAjax = new Zikula.Ajax.Request(

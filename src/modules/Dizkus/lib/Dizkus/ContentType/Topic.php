@@ -21,8 +21,10 @@ class Dizkus_ContentType_Topic
     private $_itemsPerPage;
     private $_numberOfItems;
     private $_firstPost;
+    private $_subscribe = false;
+    private $_forumId;
 
-    protected  $entityManager;
+    protected $entityManager;
     protected $name;
 
 
@@ -39,7 +41,7 @@ class Dizkus_ContentType_Topic
         if ($id > 0) {
             $this->_topic = $this->entityManager->find('Dizkus_Entity_Topics', $id);
         } else {
-            $this->_topic = new Dizkus_Entity_Topics();
+            $this->_topic = new Dizkus_Entity_Topic();
         }
     }
 
@@ -240,29 +242,35 @@ class Dizkus_ContentType_Topic
     public function prepare($data)
     {
         // prepare first post
-        $this->_firstPost = new Dizkus_Entity_Posts();
+        $this->_firstPost = new Dizkus_Entity_Post();
         $this->_firstPost->setforum_id($data['forum_id']);
         $this->_firstPost->setpost_text($data['message']);
         unset($data['message']);
         $this->_firstPost->setpost_attach_signature($data['post_attach_signature']);
         unset($data['post_attach_signature']);
         $this->_firstPost->setpost_title($data['topic_title']);
+
+        $this->_subscribe = $data['subscribe_topic'];
         unset($data['subscribe_topic']);
+
+
+        $this->_forumId = $data['forum_id'];
+        unset($data['forum_id']);
 
         $this->_topic->setlast_post($this->_firstPost);
 
         $this->_topic->merge($data);
 
         // prepare poster data
-        $uid = UserUtil::getVar('uid');
-        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
-        if (!$poster) {
-            $poster = new Dizkus_Entity_Poster();
-            $poster->setuser_id($uid);
-        }
-        $poster->incrementUser_posts();
+        //$uid = UserUtil::getVar('uid');
+        //$poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        //if (!$poster) {
+        //    $poster = new Dizkus_Entity_Poster();
+        //    $poster->setuser_id($uid);
+        //}
+        //$poster->incrementUser_posts();
 
-        $this->_firstPost->setposter($poster);
+        $this->_firstPost->setposter_id(UserUtil::getVar('uid'));
     }
 
     public function getPreview()
@@ -293,6 +301,59 @@ class Dizkus_ContentType_Topic
         $forum->incrementPostCount();
         $forum->incrementTopicCount();
         $forum->setLastPost($this->_firstPost);
+
+        // subscribe
+        if ($this->_subscribe) {
+            $params = array(
+                'topic_id' => $this->_topic->gettopic_id(),
+                'action'   => 'subscribe'
+            );
+            ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+        }
+
+        return $this->_topic->gettopic_id();
+    }
+
+
+    /**
+     * return page as array
+     *
+     * @return boolean
+     */
+    public function create()
+    {
+        // add first post to topic
+        $this->_firstPost->settopic($this->_topic);
+
+
+        $forum = new Dizkus_ContentType_Forum($this->_forumId);
+
+
+        // add topic to forum
+        $this->_topic->setForum($forum->get());
+
+        // write topic
+        $this->entityManager->persist($this->_topic);
+        $this->entityManager->persist($this->_firstPost);
+
+
+        // icrement forum post count
+        $forum->incrementPostCount();
+        $forum->incrementTopicCount();
+        $forum->setLastPost($this->_firstPost);
+
+
+        $this->entityManager->flush();
+
+
+        // subscribe
+        if ($this->_subscribe) {
+            $params = array(
+                'topic_id' => $this->_topic->gettopic_id(),
+                'action'   => 'subscribe'
+            );
+            ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+        }
 
         return $this->_topic->gettopic_id();
     }

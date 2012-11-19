@@ -1,8 +1,6 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-
 
 /**
  * Favorites entity class.
@@ -28,14 +26,14 @@ class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
     /**
      * The following are annotations which define the forum_id field.
      * 
-     * @ORM\Column(type="integer", unique=false)
+     * @ORM\Column(type="integer")
      */
     private $forum_id = 0;
     
     /**
      * The following are annotations which define the user_id field.
      * 
-     * @ORM\Column(type="integer", unique=false)
+     * @ORM\Column(type="integer")
      */
     private $user_id = 0;
     

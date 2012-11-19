@@ -1,20 +1,19 @@
-{ajaxheader modname='Dizkus' ui=true}
-
 {pageaddvar name='javascript' value='jQuery'}
+{*pageaddvar name='javascript' value='jQuery-ui'}
+{pageaddvar name="stylesheet" value="javascript/jquery-ui/themes/base/jquery-ui.css"}
 
-{if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
-{pageaddvar name='javascript' value='javascript/helpers/Zikula.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
-{/if}
-
-{pageaddvarblock}
 <script type="text/javascript">
-    document.observe("dom:loaded", function() {
-        Zikula.UI.Tooltips($$('.tooltips'));
+    jQuery(document).ready(function()
+    {
+        // By suppling no content attribute, the library uses each elements title attribute by default
+        jQuery('.tooltips').tooltip({
+                position: {
+                    my: "left bottom+45",
+                    at: "left bottom"
+                }
+        });
     });
-</script>
-{/pageaddvarblock}
+</script>*}
 
 {browserhack condition="if gt IE 6"}
 <script type="text/javascript" src="{$baseurl}modules/Dizkus/javascript/niftycube.js"></script>

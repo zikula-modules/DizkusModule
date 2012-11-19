@@ -70,15 +70,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 
                 return $cache[$type];
                 break;
-    
-            case 'category':
-                if (!isset($cache[$type])){
-                   $cache[$type] = $this->countEntity('Categories');
-                }
-                
-                return  $cache[$type];
-                break;
-    
+
             case 'forum':
                 if (!isset($cache[$type])){
                    $cache[$type] = $this->countEntity('Forums');
@@ -300,37 +292,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     
 
 
-    
-    /**
-     * get_forumid_and categoryid_from_topicid
-     * used for permission checks
-     *
-     * @params $args['topic_id'] int the topics id
-     * @returns array(forum_id, category_id)
-     */
-    public function get_forumid_and_categoryid_from_topicid($args)
-    {
-        $ztable = DBUtil::getTables();
-
-        // we know about the topic_id, let's find out the forum and catgeory name for permission checks
-        $sql = "SELECT f.forum_id,
-                       c.cat_id
-                FROM  ".$ztable['dizkus_topics']." t
-                LEFT JOIN ".$ztable['dizkus_forums']." f ON f.forum_id = t.forum_id
-                LEFT JOIN ".$ztable['dizkus_categories']." AS c ON c.cat_id = f.cat_id
-                WHERE t.topic_id = '".(int)DataUtil::formatForStore($args['topic_id'])."'";
-    
-        $res = DBUtil::executeSQL($sql);
-        if ($res === false) {
-            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
-        }
-    
-        $colarray = array('forum_id' => 'forum_id','cat_id' => 'cat_id');
-        $objarray = DBUtil::marshallObjects($res, $colarray);
-
-        return $objarray[0]; // forum_id, cat_id
-    }
-    
     /**
      * readuserforums
      * 
@@ -380,32 +341,34 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
     
     /**
-     * movetopic
-     * moves a topic to another forum
+     * Move topic
+     *
+     * This function moves a given topic to another forum
      *
      * @params $args['topic_id'] int the topics id
      * @params $args['forum_id'] int the destination forums id
      * @params $args['shadow']   boolean true = create shadow topic
+     *
      * @returns void
      */
     public function movetopic($args)
     {
         // get the old forum id and old post date
-	$topic = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
+        $topic = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
 
-	if ($topic['forum_id'] <> $args['forum_id']) {
+        if ($topic['forum_id'] <> $args['forum_id']) {
             // set new forum id
             $newtopic['forum_id'] = $args['forum_id'];
             DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
-    
+
             $newpost['forum_id'] = $args['forum_id'];
             DBUtil::updateObject($newpost, 'dizkus_posts', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'post_id');
-    
+
             if ($args['shadow'] == true) {
                 // user wants to have a shadow topic
                 $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])));
                 $subject = $this->__f("*** The original posting '%s' has been moved", $topic['topic_title']);
-    
+
                 $this->storenewtopic(array('subject'  => $subject,
                                                     'message'  => $message,
                                                     'forum_id' => $topic['forum_id'],
@@ -422,12 +385,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
     
     /**
+     * Notify by e-mail
+     *
      * Sending notify e-mail to users subscribed to the topic of the forum
      *
      * @params $args['topic_id'] int the topics id
      * @params $args['poster_id'] int the users uid
      * @params $args['post_message'] string the text
      * @params $args['type'] int, 0=new message, 2=reply
+     *
      * @returns void
      */
     public function notify_by_email($args)
@@ -605,293 +571,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     
         return true;
     }
-    
-    /**
-     * getTopicSubscriptions
-     *
-     * @params none
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     * @returns array with topic ids, may be empty
-     */
-    public function getTopicSubscriptions($uid)
-    {
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
-                                   ->findBy(array('user_id' => $uid));
-    
-        return $subscriptions;
-    }
-    
-    
-    /**
-     * get_topic_subscriptions
-     *
-     * @params none
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     *
-     * @return array with topic ids, may be empty
-     */
-    public function get_topic_subscriptions($args)
-    {
-        $ztable = DBUtil::getTables();
-    
-        if (isset($args['user_id'])) {
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-                return LogUtil::registerPermissionError();
-            }
-        } else {
-            $args['user_id'] = UserUtil::getVar('uid');
-        }
-    
-        // read the topic ids
-        $sql = 'SELECT ts.topic_id,
-                       t.topic_title,
-                       t.topic_poster,
-                       t.topic_time,
-                       t.topic_replies,
-                       t.topic_last_post_id,
-                       u.uname,
-                       f.forum_id,
-                       f.forum_name
-                FROM '.$ztable['dizkus_topic_subscription'].' AS ts,
-                     '.$ztable['dizkus_topics'].' AS t,
-                     '.$ztable['users'].' AS u,
-                     '.$ztable['dizkus_forums'].' AS f
-                WHERE (ts.user_id='.(int)DataUtil::formatForStore($args['user_id']).'
-                  AND t.topic_id=ts.topic_id
-                  AND u.uid=ts.user_id
-                  AND f.forum_id=t.forum_id)
-                ORDER BY f.forum_id, ts.topic_id';
-    
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('topic_id', 'topic_title', 'topic_poster', 'topic_time', 'topic_replies', 'topic_last_post_id', 'poster_name',
-                          'forum_id', 'forum_name');
-        $subscriptions    = DBUtil::marshallObjects($res, $colarray);
-    
-        $post_sort_order = ModUtil::apiFunc('Dizkus', 'user', 'get_user_post_order', array('user_id' => $args['user_id']));
-        $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
-    
-        if (is_array($subscriptions) && !empty($subscriptions)) {
-            for ($cnt=0; $cnt<count($subscriptions); $cnt++) {
-                 
-                if ($post_sort_order == 'ASC') {
-                    $start = ((ceil(($subscriptions[$cnt]['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page);
-                } else {
-                    // latest topic is on top anyway...
-                    $start = 0;
-                }
-                // we now create the url to the last post in the thread. This might
-                // on site 1, 2 or what ever in the thread, depending on topic_replies
-                // count and the posts_per_page setting
-                $subscriptions[$cnt]['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                                                                     array('topic' => $subscriptions[$cnt]['topic_id'],
-                                                                                           'start' => $start)));
-                
-                $subscriptions[$cnt]['last_post_url_anchor'] = $subscriptions[$cnt]['last_post_url'] . '#pid' . $subscriptions[$cnt]['topic_last_post_id'];
-            }
-        }
-    
-        return $subscriptions;
-    }
-
-
-
-    /**
-     * Unsubscribe topic by subscribe id
-     *
-     * @params $args['forum_id'] int the forums id, if empty then we unsubscribe all forums
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     * @returns void
-     */
-    public function unsubscribeTopicById($id)
-    {
-        $subscription = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $id);
-        $this->entityManager->remove($subscription);
-        $this->entityManager->flush();
-    }
-    
-
-    
-    /**
-     * get_latest_posts
-     *
-     * @params $args['selorder'] int 1-6, see below
-     * @params $args['nohours'] int posting within these hours
-     * @params $args['unanswered'] int 0 or 1(= postings with no answers)
-     * @params $args['last_visit'] string the users last visit data
-     * @params $args['last_visit_unix'] string the users last visit data as unix timestamp
-     * @params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
-     * @returns array (postings, mail2forumpostings, rsspostings, text_to_display)
-     */
-    public function get_latest_posts($args)
-    {
-        $ztable = DBUtil::getTables();
-    
-        // init some arrays
-        $posts = array();
-        $m2fposts = array();
-        $rssposts = array();
-    
-        if (!isset($args['limit']) || empty($args['limit']) || ($args['limit'] < 0) || ($args['limit'] > 100)) {
-            $args['limit'] = 100;
-        }
-    
-        $dizkusvars      = ModUtil::getVar('Dizkus');
-        $posts_per_page  = $dizkusvars['posts_per_page'];
-        $post_sort_order = $dizkusvars['post_sort_order'];
-        $hot_threshold   = $dizkusvars['hot_threshold'];
-    
-        if ($args['unanswered'] == 1) {
-            $args['unanswered'] = "AND t.topic_replies = '0' ORDER BY t.topic_time DESC";
-        } else {
-            $args['unanswered'] = 'ORDER BY t.topic_time DESC';
-        }
-    
-        // sql part per selected time frame
-        switch ($args['selorder'])
-        {
-            case '2' : // today
-                       $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 0 ";
-                       $text = $this->__('Today');
-                       break;
-            case '3' : // yesterday
-                       $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) = 1 ";
-                       $text = $this->__('Yesterday');
-                       break;
-            case '4' : // lastweek
-                       $wheretime = " AND TO_DAYS(NOW()) - TO_DAYS(t.topic_time) < 8 ";
-                       $text= $this->__('Last week');
-                       break;
-            case '5' : // last x hours
-                       $wheretime  = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL " . DataUtil::formatForStore($args['nohours']) . " HOUR) ";
-                       $text = DataUtil::formatForDisplay($this->__f('Last %s hours', $args['nohours']));
-                       break;
-            case '6' : // last visit
-                       $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($args['last_visit']) . "' ";
-                       $text = DataUtil::formatForDisplay($this->__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief')));
-                       break;
-            case '1' :
-            default:   // last 24 hours
-                       $wheretime = " AND t.topic_time > DATE_SUB(NOW(), INTERVAL 1 DAY) ";
-                       $text  =$this->__('Last 24 hours');
-                       break;
-        }
-    
-        // get all forums the user is allowed to read
-        $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
-        if (!is_array($userforums) || count($userforums) == 0) {
-            // error or user is not allowed to read any forum at all
-            // return empty result set without even doing a db access
-            return array($posts, $m2fposts, $rssposts, $text);
-        }
-    
-        // now create a very simple array of forum_ids only. we do not need
-        // all the other stuff in the $userforums array entries
-        $allowedforums = array_map('_get_forum_ids', $userforums);
-        $whereforum = ' f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
-    
-        // integrate contactlist's ignorelist here
-        $whereignorelist = '';
-        if ((isset($dizkusvars['ignorelist_options']) && $dizkusvars['ignorelist_options'] <> 'none') && ModUtil::available('ContactList')) {
-            $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => UserUtil::getVar('uid')));
-            if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-                // get user's ignore list
-                $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist', array('uid' => UserUtil::getVar('uid')));
-                $ignored_uids = array();
-                foreach ($ignored_users as $item) {
-                    $ignored_uids[] = (int)$item['iuid'];
-                }
-                if (count($ignored_uids) > 0) {
-                    $whereignorelist = " AND t.topic_poster NOT IN (".DataUtil::formatForStore(implode(',', $ignored_uids)).")";
-                }
-            }
-        }
-    
-        $topicscols = DBUtil::_getAllColumnsQualified('dizkus_topics', 't');
-        // build the tricky sql
-        $sql = 'SELECT '. $topicscols .',
-                          f.forum_name,
-                          f.forum_pop3_active,
-                          c.cat_id,
-                          c.cat_title,
-                          p.post_time,
-                          p.poster_id
-                     FROM '.$ztable['dizkus_topics'].' AS t,
-                          '.$ztable['dizkus_forums'].' AS f,
-                          '.$ztable['dizkus_categories'].' AS c,
-                          '.$ztable['dizkus_posts'].' AS p
-                    WHERE f.forum_id = t.forum_id
-                      AND c.cat_id = f.cat_id
-                      AND p.post_id = t.topic_last_post_id
-                      AND '.$whereforum
-                           .$wheretime
-                           .$whereignorelist
-                           .$args['unanswered'];
-    
-        $res = DBUtil::executeSQL($sql, -1, $args['limit']);
-    
-        $colarray   = DBUtil::getColumnsArray ('dizkus_topics');
-        $colarray[] = 'forum_name';
-        $colarray[] = 'forum_pop3_active';
-        $colarray[] = 'cat_id';
-        $colarray[] = 'cat_title';
-        $colarray[] = 'post_time';
-        $colarray[] = 'poster_id';
-        $postarray  = DBUtil::marshallObjects ($res, $colarray);
-    
-        foreach ($postarray as $post) {
-            $post = DataUtil::formatForDisplay($post);
-    
-            // does this topic have enough postings to be hot?
-            $post['hot_topic'] = ($post['topic_replies'] >= $hot_threshold) ? true : false;
-    
-            // get correct page for latest entry
-            if ($post_sort_order == 'ASC') {
-                $hc_dlink_times = 0;
-                if (($post['topic_replies'] + 1 - $posts_per_page) >= 0) {
-                    $hc_dlink_times = 0;
-                    for ($x = 0; $x < $post['topic_replies'] + 1 - $posts_per_page; $x += $posts_per_page) {
-                        $hc_dlink_times++;
-                    }
-                }
-                $start = $hc_dlink_times * $posts_per_page;
-            } else {
-                // latest topic is on top anyway...
-                $start = 0;
-            }
-            $post['start'] = $start;
-    
-            if ($post['poster_id'] == 1) {
-                $post['poster_name'] = ModUtil::getVar('Users', 'anonymous');
-            } else {
-                $post['poster_name'] = UserUtil::getVar('uname', $post['poster_id']);
-            }
-    
-            $post['posted_unixtime'] = strtotime($post['post_time']);
-            $post['post_time'] = DateUtil::formatDatetime($post['posted_unixtime'], 'datetimebrief');
-    
-            $post['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                                         array('topic' => $post['topic_id'],
-                                                               'start' => (ceil(($post['topic_replies'] + 1)  / $posts_per_page) - 1) * $posts_per_page), null, null, true));
-    
-            $post['last_post_url_anchor'] = $post['last_post_url'] . '#pid' . $post['topic_last_post_id'];
-    
-            switch ((int)$post['forum_pop3_active'])
-            {
-                case 1: // mail2forum
-                    array_push($m2fposts, $post);
-                    break;
-                case 2:
-                    array_push($rssposts, $post);
-                    break;
-                case 0: // normal posting
-                default:
-                    array_push($posts, $post);
-            }
-        }
-    
-        return array($posts, $m2fposts, $rssposts, $text);
-    }
-
 
     /**
      * splittopic
@@ -1720,60 +1399,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return true;
     
     }
-    
-    /**
-     * getTopicSubscriptions
-     *
-     * @params none
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     * @returns array with topic ids, may be empty
-     */
-    public function getForumSubscriptions($uid)
-    {
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscriptionsJoin')
-                                   ->findBy(array('user_id' => $uid));
-    
-        return $subscriptions;
-    }
-    
-    /**
-     * get_forum_subscriptions
-     *
-     * @params none
-     * @params $args['user_id'] int the users id (needs ACCESS_ADMIN)
-     * @returns array with forum ids, may be empty
-     */
-    public function get_forum_subscriptions($args)
-    {
-        if (isset($args['user_id'])) {
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-                return LogUtil::registerPermissionError();
-            }
-        } else {
-            $args['user_id'] = UserUtil::getVar('uid');
-        }
-    
-        $ztable = DBUtil::getTables();
-    
-        // read the topic ids
-        $sql = 'SELECT f.' . $ztable['dizkus_forums_column']['forum_id'] . ',
-                       f.' . $ztable['dizkus_forums_column']['forum_name'] . ',
-                       c.' . $ztable['dizkus_categories_column']['cat_id'] . ',
-                       c.' . $ztable['dizkus_categories_column']['cat_title'] . '
-                FROM ' . $ztable['dizkus_subscription'] . ' AS fs,
-                     ' . $ztable['dizkus_forums'] . ' AS f,
-                     ' . $ztable['dizkus_categories'] . ' AS c 
-                WHERE fs.' . $ztable['dizkus_subscription_column']['user_id'] . '=' . (int)DataUtil::formatForStore($args['user_id']) . '
-                  AND f.' . $ztable['dizkus_forums_column']['forum_id'] . '=fs.' . $ztable['dizkus_subscription_column']['forum_id'] . '
-                  AND c.' . $ztable['dizkus_categories_column']['cat_id'] . '=f.' . $ztable['dizkus_forums_column']['cat_id']. '
-                ORDER BY c.' . $ztable['dizkus_categories_column']['cat_order'] . ', f.' . $ztable['dizkus_forums_column']['forum_order'];
-    
-        $res           = DBUtil::executeSQL($sql);
-        $colarray      = array('forum_id', 'forum_name', 'cat_id', 'cat_title');
-        $subscriptions = DBUtil::marshallObjects($res, $colarray);
-    
-        return $subscriptions;
-    }
+
     
     /**
      * get_settings_ignorelist

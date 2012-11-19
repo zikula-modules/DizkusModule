@@ -47,7 +47,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 
         $forum = new Dizkus_ContentType_Forum($this->_forumId);
         $view->assign('forum', $forum->get());
-        $view->assign('breadcrumbs', $forum->getBreadcrumbs());
+        $view->assign('breadcrumbs', $forum->getBreadcrumbs(false));
         $view->assign('preview', false);
 
 
@@ -64,6 +64,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
+
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId));
 
@@ -101,7 +102,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         }
 
         // store new topic
-        $topicId = $newtopic->store();
+        $topicId = $newtopic->create();
 
         // redirect to the new topic
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topicId));

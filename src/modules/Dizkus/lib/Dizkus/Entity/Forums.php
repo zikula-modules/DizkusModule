@@ -2,6 +2,7 @@
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -35,6 +36,8 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         $this->forum_id = $forum_id;
     }
+
+
 
     /**
      * The following are annotations which define the forum_name field.
@@ -84,7 +87,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      *
      * @ORM\Column(type="integer")
      */
-    private $forum_topics = 10;
+    private $forum_topics = 0;
 
     public function getForum_topics()
     {
@@ -122,18 +125,8 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         $this->forum_posts++;
     }
-    
-    /**
-     * The following are annotations which define the forum_last_post_id field.
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $forum_last_post_id = null;
 
-    public function getForum_last_post_id()
-    {
-        return $this->forum_last_post_id;
-    }
+
 
     /**
      * @Gedmo\TreeLeft
@@ -206,10 +199,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
 
 
-
-
-
-
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
@@ -223,8 +212,8 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Posts")
-     * @ORM\JoinColumn(name="forum_last_post_id", referencedColumnName="post_id")
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
+     * @ORM\JoinColumn(name="forum_last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
 
@@ -537,20 +526,20 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topic", mappedBy="forum")
+     */
+    private $topics;
+
+    public function getTopics()
+    {
+        return $this->topics;
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    public function __construct() {
+        $this->topics = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
 }

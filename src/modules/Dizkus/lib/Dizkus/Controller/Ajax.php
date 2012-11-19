@@ -359,89 +359,13 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         return new Zikula_Response_Ajax_Plain('successful');
     }
 
-    /**
-     * subscribeunsubscribeforum
-     *
-     */
-    public function toggleforumsubscription()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        $forum_id = FormUtil::getPassedValue('forum', '', 'POST');
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-   
-         /*if (!SecurityUtil::confirmAuthKey()) {
-            LogUtil::registerAuthidError();
-            return AjaxUtil::error(null, array(), true, true);
-        }*/
-    
-        if (empty($forum_id)) {
-        	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'toggleforumsubscription()\'.'));
-        }
-
-        $forum = array('forum_id' => $forum_id);
-        $forum['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', $forum);
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum_id)) {
-            LogUtil::registerPermissionError(null, true);
-            throw new Zikula_Exception_Forbidden();
-        }
-
-        $subscribed = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_subscription_status', 
-                                       array('user_id' => UserUtil::getVar('uid'), 
-                                             'forum_id' => $forum_id));
-        
-        if ($subscribed == true){
-            ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum',
-                         array('forum_id' => $forum_id,
-                               'silent'   => true));
-            $newmode = 'unsubscribed';
-        } else {
-            ModUtil::apiFunc('Dizkus', 'user', 'subscribe_forum',
-                         array('forum_id' => $forum_id,
-                               'silent'   => true));
-            $newmode = 'subscribed';
-        }
-
-        return new Zikula_Response_Ajax(array('data' => $newmode));
-    }
-
-    /**
-     * toggle new topics auto subscription
-     *
-     */
-    public function toggleautosubscription()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-    	
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-    
-        /*if (!SecurityUtil::confirmAuthKey()) {
-            LogUtil::registerAuthidError();
-            return AjaxUtil::error(null, array(), true, true);
-        }*/
-
-        $newmode = ((int)ModUtil::apiFunc('Dizkus', 'user', 'togglenewtopicsubscription') == 1) ? 'autosubscription' : 'noautosubscription';
-
-        return new Zikula_Response_Ajax(array('data' => $newmode));
-    }
-
-    public function test() {
-        $input = FormUtil::getPassedValue('input', '', 'POST');
-        return new Zikula_Response_Ajax_Plain($input.'gg');
-    }
 
 
     /**
      * addremovefavorite
      *
      */
-    public function toggleForumFavouriteState()
+    public function modifyForum()
     {
 
         if ($this->getVar('forum_enabled') == 'no') {
@@ -452,9 +376,11 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
         }
 
-        $forum_id = FormUtil::getPassedValue('forum', '', 'POST');
-        $action = FormUtil::getPassedValue('action', '', 'POST');
-        if (empty($forum_id)) {
+        $params = array(
+            'forum_id' => FormUtil::getPassedValue('forum', 'POST'),
+            'action'   => FormUtil::getPassedValue('action', 'POST')
+        );
+        if (empty($params['forum_id'])) {
         	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.'));
         }
 
@@ -471,7 +397,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        ModUtil::apiFunc($this->name, 'Favorites', $action, array('forum_id' => $forum_id));
+        ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
 
         return new Zikula_Response_Ajax_Plain('successful');

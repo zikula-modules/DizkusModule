@@ -53,8 +53,6 @@ class Dizkus_ContentType_Tree extends Zikula_AbstractBase
         }
 
         $query = $qb->getQuery();
-        $query->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, false);
-
         return $query->getResult();
     }
 

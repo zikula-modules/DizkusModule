@@ -151,6 +151,25 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         return ($count > 0) ? true : false;;
     }
 
+    /**
+     * Get topic subscriptions
+     *
+     * @params none
+     *
+     * @returns array with topic ids, may be empty
+     */
+    public function getSubscriptions($args)
+    {
+        if (empty($args['uid'])) {
+            $args['uid'] = UserUtil::getVar('uid');
+        }
+        $subscriptions = $this->entityManager
+            ->getRepository('Dizkus_Entity_TopicSubscriptions')
+            ->findBy(array('user_id' => $args['uid']));
+
+        return $subscriptions;
+    }
+
 
     /**
      * getIdByReference

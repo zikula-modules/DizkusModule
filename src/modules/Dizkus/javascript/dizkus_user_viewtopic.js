@@ -3,13 +3,10 @@
  */
 
 jQuery(document).ready(function () {
-    Zikula.define('Dizkus');
-
     jQuery("#toggletopiclock").click(changeTopicStatus);
     jQuery("#toggletopicsticky").click(changeTopicStatus);
     jQuery("#toggletopicsubscription").click(changeTopicStatus);
     jQuery("#toggletopicsolve").click(changeTopicStatus);
-
 });
 
 function changeTopicStatus(e) {

@@ -20,23 +20,20 @@
                 </ul>
                 <ul class="topiclist forums">
                     <li class="row categorytitle">
-                        <label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" onclick="Zikula.toggleInput('.z-form-checkbox');"/>
+                        <label for="alltopic">{gt text="Remove all topic subscriptions"}</label>&nbsp;<input name="alltopic" id="alltopic" type="checkbox" value="1" onclick="jQuery('.z-form-checkbox').attr('checked', this.checked);"/>
                     </li>
                     {foreach item=subscription from=$subscriptions}
                         <li class="row">
                             <dl class="icon">
                                 <dt class='ctheme-topic-title'>
-                                    <a href="{$subscription.last_post_url_anchor}" title="{$subscription.forum_name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>
-                                    <span>{gt text="Forum"}: {$subscription.forum_name|truncate:70}</span>
+                                    <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.topic_title|safetext}">{$subscription.topic.topic_title|safetext}</a>
+                                    <span>{gt text="Forum"}: {$subscription.topic.topic_id|truncate:70}</span>
                                 </dt>
-                                <dd class="favorites">
-                                <span>
-                                    {gt text="Posted by %s" tag1=$subscription.poster_name|profilelinkbyuname}<br />
-                                    {$subscription.topic_time|dateformat:'datetimebrief'}
-                                </span>
-                                </dd>
                                 <dd class="lastpost">
-                                    {formcheckbox class="topic_checkbox" id=$subscription.topic_id group="topicIds"}
+                                    {include file='user/lastPostBy.tpl' last_post=$subscription.topic.last_post replies=$subscription.topic.topic_replies}
+                                </dd>
+                                <dd class="favorites">
+                                    {formcheckbox class="topic_checkbox" id=$subscription.topic.topic_id group="topicIds"}
                                 </dd>
                             </dl>
                         </li>

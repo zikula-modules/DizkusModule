@@ -1,8 +1,10 @@
 {assign var='templatetitle' value=$forum.forum_name}
 {include file='user/header.tpl' parent=$forum}
-<input id="forum_id" type="hidden" value={$forum.forum_id}>
 
+{if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewforum.js'}
+<input id="forum_id" type="hidden" value={$forum.forum_id}>
+{/if}
 
 <h2>{$forum.forum_name|safetext}</h2>
 
@@ -63,23 +65,27 @@
 
                 {if $coredata.logged_in}
                 <li>
-                    {*if $forum.is_subscribed eq 0}
-                    <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Subscribe to forum"}">{gt text="Subscribe to forum"}</a>
-                    {else}
-                    <a id="toggleforumsubscriptionbutton_{$forum.forum_id}" class="dzk_arrow tooltips" href="javascript:void(0);" title="{gt text="Unsubscribe from forum"}">{gt text="Unsubscribe from forum"}</a>
-                    {/if*}
+                {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum_id=$forum.forum_id assign='isSubscribed'}
+                {if !$isSubscribed}
+                    {modurl modname='Dizkus' type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
+                    {gt text="Subscribe to forum" assign='msg'}
+                {else}
+                    {modurl modname='Dizkus' type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
+                    {gt text="Unsubscribe from forum" assign='msg'}
+                {/if}
+                <a id="forum-subscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                 </li>
                 {if $modvars.Dizkus.favorites_enabled eq "yes"}
                 <li>
                     {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum_id=$forum.forum_id assign='isFavorite'}
                     {if $isFavorite}
-                        {modurl modname='Dizkus' type='user' func='changeForumFavoriteStatus' action='remove' forum=$forum.forum_id assign='url'}
+                        {modurl modname='Dizkus' type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
                         {gt text="Remove forum from favourites" assign='msg'}
                     {else}
-                        {modurl modname='Dizkus' type='user' func='changeForumFavoriteStatus' action='add' forum=$forum.forum_id assign='url'}
+                        {modurl modname='Dizkus' type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
                         {gt text="Add forum to favourites" assign='msg'}
                     {/if}
-                    <a id="toggleforumfavourite" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
+                    <a id="forum-favourite" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                 </li>
                 {/if}
                 {/if}

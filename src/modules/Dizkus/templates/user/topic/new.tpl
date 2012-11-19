@@ -1,4 +1,4 @@
-{include file='user/header.tpl'}
+{include file='user/header.tpl' __templatetitle='New topic'}
 
 <div id="newtopicpreview" style="display: none;">&nbsp;</div>
 
@@ -15,13 +15,14 @@
     <fieldset>
 
         <div class="z-formrow">
-            {formlabel for="topic_title" text="Subject line"}
+            {formlabel for="topic_title" __text="Subject line"}
             {formtextinput id="topic_title" size="80" maxLength="100" mandatory=true}
         </div>
 
         <br />
         {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
-        {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLenght="65527"}
+        {formlabel for="message" __text="Message" class='z-hide'}
+        {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLenght="65527" mandatory=true}
         {if isset($hooks.MediaAttach)}
             {$hooks.MediaAttach}
         {/if}

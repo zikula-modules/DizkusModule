@@ -47,10 +47,13 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
      *
      * @return boolean True if the user is subscribed or false if not
      */
-    public function getSubscriptionStatus($args)
+    public function isSubscribed($args)
     {
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
+        if (empty($args['user_id'])) {
+            $args['user_id'] = UserUtil::getVar('uid');
+        }
+
+        $qb = $this->entityManager->createQueryBuilder();
         $qb->select('COUNT(s.msg_id)')
            ->from('Dizkus_Entity_ForumSubscriptions', 's')
            ->where('s.user_id = :user')
@@ -60,8 +63,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
            ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
 
-        return $count > 0;
-
+        return ($count > 0) ? true : false;
     }
 
     /**
@@ -86,7 +88,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         }
 
-        if ($this->getSubscriptionStatus($args) == false) {
+        if ($this->isSubscribed($args) == false) {
             // add user only if not already subscribed to the forum
             // we can use the args parameter as-is
             $item = new Dizkus_Entity_ForumSubscriptions();
@@ -153,6 +155,26 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         return true;
     }
 
+
+    /**
+     * Get topic subscriptions of a user
+     *
+     * @params none
+     *
+     * @returns array with topic ids, may be empty
+     */
+    public function getSubscriptions($args)
+    {
+        if (empty($args['uid'])) {
+            $args['uid'] = UserUtil::getVar('uid');
+        }
+        $subscriptions = $this->entityManager
+                              ->getRepository('Dizkus_Entity_ForumSubscriptionJoin')
+                              ->findBy(array('user_id' => $args['uid']));
+
+        return $subscriptions;
+    }
+
     /**
      * getCategory
      *
@@ -202,4 +224,25 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         }
 
     }
+
+
+    public function modify($args)
+    {
+        if (empty($args['forum_id'])) {
+            return LogUtil::registerArgsError();
+        }
+
+        if ($args['action'] == 'addToFavorites') {
+            ModUtil::apiFunc($this->name, 'Favorites', 'add', array('forum_id' => $args['forum_id']));
+        } else if ($args['action'] == 'removeFromFavorites') {
+            ModUtil::apiFunc($this->name, 'Favorites', 'remove', array('forum_id' => $args['forum_id']));
+        } else if ($args['action'] == 'subscribe') {
+            $this->subscribe($args);
+        } else if ($args['action'] == 'unsubscribe') {
+            $this->unsubscribe($args);
+        }
+
+        return true;
+    }
+
 }

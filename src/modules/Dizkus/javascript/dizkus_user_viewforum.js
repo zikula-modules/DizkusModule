@@ -3,45 +3,56 @@
  */
 
 jQuery(document).ready(function () {
-    Zikula.define('Dizkus');
-
     // toogle forum favorite state
-    jQuery("#toggleforumfavourite").click(function (e) {
-        var id = jQuery('#forum_id').val();
-        var action;
-
-        if (jQuery('#toggleforumfavourite').text() == favouriteForum) {
-            action = 'add';
-        } else {
-            action = 'remove';
-        }
-        this.favouritestatus = true;
-        var pars = {
-            forum: id,
-            action: action
-        }
-        //Ajax.Responders.register(this.dzk_globalhandlers);
-
-        jQuery.ajax({
-            type: "POST",
-            data: pars,
-            url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=toggleForumFavouriteState",
-            success: function(result) {
-                if (result == 'successful') {
-                    if (action == 'add') {
-                        jQuery('#toggleforumfavourite').text(unfavouriteForum);
-                    } else {
-                        jQuery('#toggleforumfavourite').text(favouriteForum);
-                    }
-                } else {
-                    alert('Error! Erroneous result from favourite addition/removal.');
-                }
-            },
-            error: function(result) {
-                Zikula.showajaxerror(result);
-                return;
-            }
-        });
-        e.preventDefault();
-    });
+    jQuery("#forum-favourite").click(modifyForum);
+    jQuery("#forum-subscription").click(modifyForum);
 });
+
+function modifyForum(e) {
+    var id = jQuery('#forum_id').val();
+    var action;
+    var i = jQuery(this);
+    if (i.text() == favouriteForum) {
+        action = 'addToFavorites';
+    } else if (i.text() == unfavouriteForum) {
+        action = 'removeFromFavorites';
+    } else if (i.text() == subscribeForum) {
+        action = 'subscribe';
+    } else if (i.text() == unsubscribeForum) {
+        action = 'unsubscribe';
+    }
+
+
+    this.favouritestatus = true;
+    var pars = {
+        forum: id,
+        action: action
+    }
+    //Ajax.Responders.register(this.dzk_globalhandlers);
+
+    jQuery.ajax({
+        type: "POST",
+        data: pars,
+        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=modifyForum",
+        success: function(result) {
+            if (result == 'successful') {
+                if (action == 'addToFavorites') {
+                    i.text(unfavouriteForum);
+                } else if (action == 'removeFromFavorites') {
+                    i.text(favouriteForum);
+                } else if (action == 'subscribe') {
+                    i.text(unsubscribeForum);
+                } else if (action == 'unsubscribe') {
+                    i.text(subscribeForum);
+                }
+            } else {
+                alert('Error! Erroneous result from favourite addition/removal.');
+            }
+        },
+        error: function(result) {
+            Zikula.showajaxerror(result);
+            return;
+        }
+    });
+    e.preventDefault();
+}

@@ -11,7 +11,7 @@
 /**
  * This class provides a handler to manage topic subscriptions.
  */
-class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHandler
+class Dizkus_Form_Handler_User_ForumSubscriptions extends Zikula_Form_AbstractHandler
 {
     /**
      * Setup form.
@@ -24,19 +24,11 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
      */
     function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ) || !UserUtil::isLoggedIn()) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
-
-        if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
-        }
-
-        $subscriptions = ModUtil::apiFunc('Dizkus', 'Topic', 'getSubscriptions');
+        $subscriptions = ModUtil::apiFunc('Dizkus', 'Forum', 'getSubscriptions');
         $view->assign('subscriptions', $subscriptions);
         return true;
     }
@@ -56,18 +48,16 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         if (!$view->isValid()) {
             return false;
         }
-
         $data = $view->getValues();
-
-        if (count($data['topicIds']) > 0) {
-            foreach (array_keys($data['topicIds']) as $topicId) {
-                if ($topicId) {
-                    ModUtil::apiFunc('Dizkus', 'Topic', 'unsubscribe', array('topic_id' => $topicId));
+        if (count($data['forumIds']) > 0) {
+            foreach (array_keys($data['forumIds']) as $forumId) {
+                if ($forumId) {
+                    ModUtil::apiFunc('Dizkus', 'Forum', 'unsubscribe', array('forum_id' => $forumId));
                 }
             }
         }
+        $url = ModUtil::url($this->name, 'user', 'manageForumSubscriptions');
 
-        $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
         return $view->redirect($url);
     }
 }

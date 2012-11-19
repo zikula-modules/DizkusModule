@@ -53,7 +53,8 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
         }
 
         if (!empty($this->_uid)) {
-            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getTopicSubscriptions', $this->_uid);
+            $params = array('uid' => $this->_uid);
+            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'Topic', 'getSubscriptions', $params);
             $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getForumSubscriptions', $this->_uid);
         }
 

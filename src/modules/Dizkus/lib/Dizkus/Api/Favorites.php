@@ -84,7 +84,7 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
             return LogUtil::registerPermissionError();
         }
 
-        if ($this->getStatus($args) == false) {
+        if ($this->isFavorite($args) == false) {
             // add user only if not already a favorite
             // we can use the args parameter as-is
             $favorite = new Dizkus_Entity_Favorites();
