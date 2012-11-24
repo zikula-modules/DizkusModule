@@ -15,6 +15,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     {
         $this->view->setCaching(false)->add_core_data();
     }
+
     /**
      * the main administration function
      *
@@ -22,7 +23,92 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function main()
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
+
         return System::redirect($url);
+    }
+
+    /**
+     * Change forum order
+     *
+     * Move up or down a forum in the tree
+     *
+     * @return boolean
+     */
+    public function changeForumOrder()
+    {
+        $action  = $this->request->query->get('action', 'moveUp');
+        $forumId = $this->request->query->get('forum', null);
+        if (empty($forumId)) {
+            return LogUtil::registerArgsError();
+        }
+        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
+        $forum = $repo->find($forumId);
+        if ($action == 'moveUp') {
+            $repo->moveUp($forum, true);
+        } else {
+            $repo->moveDown($forum, true);
+        }
+        $this->entityManager->flush();
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+
+        return System::redirect($url);
+    }
+
+    /**
+     * the main administration function
+     *
+     */
+    public function m()
+    {
+        DoctrineHelper::updateSchema($this->entityManager, array('Dizkus_Entity_Forums'));
+
+
+        // import new tree
+        $order = array('cat_order' =>'ASC');
+        $categories = $this->entityManager->getRepository('Dizkus_Entity_310_Category')->findBy(array(), $order);
+        foreach ($categories as $category) {
+            $newCatForum = new Dizkus_Entity_Forums();
+            $newCatForum->setforum_name($category->getcat_title());
+            $this->entityManager->persist($newCatForum);
+
+            $where = array('root' => $category->getcat_id());
+            $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($where);
+            foreach ($forums as $forum) {
+                $forum->setParent($newCatForum);
+                $this->entityManager->persist($forum);
+            }
+
+        }
+        $this->entityManager->flush();
+
+
+
+        // create missing poster data
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('p')
+            ->from('Dizkus_Entity_310_Post', 'p')
+            ->groupBy('p.poster_id');
+        $posts = $qb->getQuery()->getArrayResult();
+
+        foreach ($posts as $post) {
+            if ($post['poster_id'] > 0) {
+                $poster = $this->entityManager->getRepository('Dizkus_Entity_Poster')->find($post['poster_id']);
+                if (!$poster) {
+                    $poster = new Dizkus_Entity_Poster();
+                    $poster->setuser_id($post['poster_id']);
+                    $this->entityManager->persist($poster);
+                }
+            }
+        }
+        $this->entityManager->flush();
+
+
+
+        ModUtil::apiFunc('Dizkus', 'Sync', 'all');
+
+
+
+        return ' ';
     }
     
     /**
@@ -53,24 +139,21 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all forums'));
+        $succesful = ModUtil::apiFunc('Dizkus', 'Sync', 'forums');
         if ($showstatus && $succesful) {
-            LogUtil::registerStatus($this->__('Done! Synchronized forum index.') );
+            LogUtil::registerStatus($this->__('Done! Synchronized forum index.'));
         } else {
             return LogUtil::registerError($this->__("Error synchronizing forum index"));
         }
     
-        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all topics'));
+        $succesful = ModUtil::apiFunc('Dizkus', 'Sync', 'topics');
         if ($showstatus && $succesful) {
             LogUtil::registerStatus($this->__('Done! Synchronized topics.') );
         } else {
             return LogUtil::registerError($this->__("Error synchronizing topics."));
         }
     
-        $succesful = ModUtil::apiFunc('Dizkus', 'admin', 'sync',
-                     array('type' => 'all posts'));
+        $succesful = ModUtil::apiFunc('Dizkus', 'Sync', 'posters');
         if ($showstatus && $succesful) {
             LogUtil::registerStatus($this->__('Done! Synchronized posts counter.') );
         } else {
@@ -85,17 +168,15 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      */
     public function ranks()
     {
-    
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    	
-        $submit = $this->request->getPost()->filter('submit',2);
+
+        $submit = $this->request->getPost()->filter('submit', 2);
         $ranktype = $this->request->getGet()->filter('ranktype', 0, FILTER_SANITIZE_NUMBER_INT);
               
         if ($submit == 2) {
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'admin', 'readranks',
-                                                      array('ranktype' => $ranktype));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
     
             $this->view->assign('ranks', $ranks);
             $this->view->assign('ranktype', $ranktype);
@@ -107,12 +188,12 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
                 return $this->view->fetch('admin/honoraryranks.tpl');
             }
         } else {
-        	$ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
+            $ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
             //$ranks = FormUtil::getPassedValue('ranks');
-            ModUtil::apiFunc($this->name, 'admin', 'saverank', array('ranks' => $ranks));
+            ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
     
-        return System::redirect(ModUtil::url($this->name,'admin', 'ranks', array('ranktype' => $ranktype)));
+        return System::redirect(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype)));
     }
     
     /**
@@ -141,8 +222,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         $letter = strtolower($letter);
     
         if (is_null($submit)) {
-            list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'admin', 'readranks',
-                                                     array('ranktype' => 1));
+            list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => 1));
             $perpage = 20;
             
             /*$inlinecss = '<style type="text/css">' ."\n";
@@ -194,7 +274,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             unset($_POST['submit']);
             unset($_REQUEST['submit']);
             $setrank = $this->request->request->get('setrank');
-            ModUtil::apiFunc('Dizkus', 'admin', 'assignranksave', 
+            ModUtil::apiFunc('Dizkus', 'Rank', 'assignranksave',
                          array('setrank' => $setrank));
         }
     
@@ -202,33 +282,12 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
                                    array('letter' => $letter,
                                          'page'   => $page)));
     }
-    
-    
-    /** 
-     * reordertree
-     *
-     */
-    public function reordertree()
-    {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        $categorytree = ModUtil::apiFunc('Dizkus', 'user', 'readcategorytree');
-
-        $this->view->assign('categorytree', $categorytree);
-        $this->view->assign('newcategory', false);
-        $this->view->assign('newforum', false);
-    
-        return $this->view->fetch('admin/reordertree.tpl');
-    }
-
 
 
     /**
      * tree
      *
-     * Tree.
+     * Show the forum tree.
      *
      * @return string
      */
@@ -238,121 +297,10 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        return $this->view->assign('tree', ModUtil::apiFunc($this->name, 'Forum', 'getTree'))
-            ->fetch('admin/tree.tpl');
+        return $this->view->assign('tree', Dizkus_ContentType_Tree::get())->fetch('admin/tree.tpl');
 
     }
 
-
-    /**
-     * changeCatagoryOrder
-     *
-     * @return string
-     */
-    public function changeCatagoryOrder() {
-
-        $url = ModUtil::url($this->name, 'admin', 'tree');
-
-        $id = $this->request->query->get('id', null);
-        $action = $this->request->query->get('action');
-
-        if (is_null($id) || is_null($action)) {
-            LogUtil::registerArgsError();
-            return $this->redirect($url);
-        }
-
-        $category = $this->entityManager->find('Dizkus_Entity_Categories', $id);
-        $cat_order = $category->getcat_order();
-
-        // get lower/higher category
-        if ($action == 'increase') {
-            $order = 'DESC';
-            $operator = '<';
-        } else {
-            $order = 'ASC';
-            $operator = '>';
-        }
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('c')
-            ->from('Dizkus_Entity_Categories', 'c')
-            ->where('c.cat_order '.$operator.' :order')
-            ->setParameter('order', $category->getcat_order())
-            ->orderBy('c.cat_order', $order)
-            ->setMaxResults(1);
-        $category2 = $qb->getQuery()->getArrayResult();
-        if ($category2) {
-            $category2 = $category2[0];
-        } else {
-            return LogUtil::registerError($this->__('No higher category!'));
-        }
-
-        $category->setcat_order($category2['cat_order']);
-        $higerCategory = $this->entityManager->find('Dizkus_Entity_Categories', $category2['cat_id']);
-        $higerCategory->setcat_order($cat_order);
-
-        $this->entityManager->flush();
-
-
-        return $this->redirect($url);
-    }
-
-
-
-    /**
-     * changeCatagoryOrder
-     *
-     * @return string
-     */
-    public function changeForumOrder() {
-
-        $url = ModUtil::url($this->name, 'admin', 'tree');
-
-        $id = $this->request->query->get('id', null);
-        $action = $this->request->query->get('action');
-
-        if (is_null($id) || is_null($action)) {
-            LogUtil::registerArgsError();
-            return $this->redirect($url);
-        }
-
-        $forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
-        $forum_order = $forum->getforum_order();
-
-        // get lower/higher forum
-        if ($action == 'increase') {
-            $order = 'DESC';
-            $operator = '<';
-        } else {
-            $order = 'ASC';
-            $operator = '>';
-        }
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('f')
-            ->from('Dizkus_Entity_Forums', 'f')
-            ->where('f.forum_order '.$operator.' :order')
-            ->setParameter('order', $forum->getforum_order())
-            ->andWhere('f.parent_id = :parentId')
-            ->setParameter('parentId', $forum->getparent_id())
-            ->orderBy('f.forum_order', $order)
-            ->setMaxResults(1);
-        $forum2 = $qb->getQuery()->getArrayResult();
-        if ($forum2) {
-            $forum2 = $forum2[0];
-        } else {
-            return LogUtil::registerError($this->__('No higher forum!'));
-        }
-
-        $forum->setforum_order($forum2['forum_order']);
-        $higerForum = $this->entityManager->find('Dizkus_Entity_Forums', $forum2['forum_id']);
-        $higerForum->setforum_order($forum_order);
-
-        $this->entityManager->flush();
-
-
-        return $this->redirect($url);
-    }
 
 
     /**
@@ -361,6 +309,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function modifycategory()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/modifycategory.tpl', new Dizkus_Form_Handler_Admin_ModifyCategory());
     }
 
@@ -371,6 +320,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function deletecategory()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/deletecategory.tpl', new Dizkus_Form_Handler_Admin_DeleteCategory());
     }
 
@@ -381,6 +331,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function modifyforum()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/modifyforum.tpl', new Dizkus_Form_Handler_Admin_ModifyForum());
     }
 
@@ -391,6 +342,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     public function deleteforum()
     {
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/deleteforum.tpl', new Dizkus_Form_Handler_Admin_DeleteForum());
     }
                     
@@ -398,9 +350,10 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      * managesubscriptions
      *
      */
-    public function managesubscriptions()
+    public function manageSubscriptions()
     {   
         $form = FormUtil::newForm('Dizkus', $this);
+
         return $form->execute('admin/managesubscriptions.tpl', new Dizkus_Form_Handler_Admin_ManageSubscriptions());   
     }
 

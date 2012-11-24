@@ -11,6 +11,21 @@
 class Dizkus_Api_Permission extends Zikula_AbstractApi {
 
 
+
+    public function get($args)
+    {
+        $permissions = array();
+        $permissions['see']      = $this->canSee($args);
+        $permissions['read']     = $permissions['see']      && $this->canRead($args);
+        $permissions['comment']  = $permissions['read']     && $this->canWrite($args);
+        $permissions['moderate'] = $permissions['comment']  && $this->canModerate($args);
+        $permissions['edit']     = $permissions['moderate'];
+        $permissions['admin']    = $permissions['moderate'] && $this->canAdministrate($args);
+
+        return $permissions;
+    }
+
+
     /**
      * Check if a user is allowed to see category and forum.
      *
@@ -82,6 +97,10 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi {
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
+        if (gettype($args) == 'object') {
+            $args = $args->toArray();
+        }
+
         if ($this->getVar('forum_enabled') == 'no') {
             return LogUtil::registerError($this->getVar('forum_disabled_info'));
         }

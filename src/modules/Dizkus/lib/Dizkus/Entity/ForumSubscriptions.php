@@ -1,8 +1,6 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-
 
 /**
  * Favorites entity class.
@@ -10,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity
- * @ORM\Table(name="dizkus_subscription")
+ * @ORM\Table(name="dizkus_subscription", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
 class Dizkus_Entity_ForumSubscriptions extends Zikula_EntityAccess
 {

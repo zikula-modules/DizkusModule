@@ -39,15 +39,16 @@
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
  */
-function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_name=null, $class=null, $start=null, $last_post_id=null)
+function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_name=null, $class='', $start=null, $last_post_id=null)
 {
+    // ToDo: Possibilty do disable topic previews
+
+
     if (!isset($topic_id)) {
         return '';
     }
 
-    if (isset($class) && !empty($class)) {
-        $class = 'class="' . DataUtil::formatForDisplay($class) . '"';
-    }
+    $class = 'class="tooltips ' . DataUtil::formatForDisplay($class) . '"';
 
     $args = array('topic' => (int)$topic_id);
     if (isset($start)) {
@@ -58,30 +59,32 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     if (isset($last_post_id)) {
         $url .= '#pid' . (int)$last_post_id;
     }
+    
+    
 
-    /*$title = __('Go to topic');
+    // get first post text
+    $titel = '';
+    $em = ServiceUtil::getService('doctrine.entitymanager');
+    $qb = $em->createQueryBuilder();
+    $firstPost = $qb->select('p')
+                    ->from('Dizkus_Entity_Posts', 'p')
+                    ->where('p.topic_id = :id')
+                    ->setParameter('id', $topic_id)
+                    ->orderBy('p.post_time', 'DESC')
+                    ->getQuery()
+                    ->setMaxResults(1)
+                    ->getArrayResult();
 
-    if (isset($forum_name) && !empty($forum_name)) {
-        $title .= ' ' . DataUtil::formatForDisplay($forum_name) . ' ::';
+    if (isset($firstPost[0])) {
+        $title = $firstPost[0]['post_text'];
+        $title = substr($title, 0, 255);
+        $title = DataUtil::formatForDisplayHTML($title);
+        $hook = new Zikula_FilterHook('dizkus.filter_hooks.message.filter', $title);
+        $title = ServiceUtil::getManager()->getService('zikula.hookmanager')->notify($hook)->getData();
+
     }
+    // ToDo Renable it
+    $title ='';
 
-    if (isset($subject) && !empty($subject)) {
-        $subject = DataUtil::formatForDisplay($subject);
-        $title .= ' ' . $subject;
-    }*/
-    
-    
-    $post = DBUtil::selectObjectByID('dizkus_posts', $topic_id, 'topic_id');
-    $title = substr($post['post_text'], 0, 255);
-    $title = DataUtil::formatForDisplayHTML($title);
-    $hook = new Zikula_FilterHook('dizkus.filter_hooks.message.filter', $title);
-    $title =  ServiceUtil::getManager()->getService('zikula.hookmanager')->notify($hook)->getData();
-
-    
-    
-                      $t = '<script type="text/javascript">
-                        var defaultTooltip = new Zikula.UI.Tooltip($(\'post_preview\'));
-                        </script>';
-    
-    return '<a id="post_preview" '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>'.$t;
+    return '<a '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
 }

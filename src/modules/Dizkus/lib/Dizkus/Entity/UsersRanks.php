@@ -38,7 +38,7 @@ class Dizkus_Entity_UsersRanks extends Zikula_EntityAccess
     /**
      * The following are annotations which define the uname field.
      * 
-     * @ORM\Column(type="string", length="80")
+     * @ORM\Column(type="string", length=80)
      */
     private $attribute_name = '';
     

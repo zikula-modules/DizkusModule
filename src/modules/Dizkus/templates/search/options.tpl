@@ -8,6 +8,7 @@
     <input type="hidden" name="Dizkus_startnum" value="0" />
 
     <dl>
+        {* ToDo: Reactivate "search in forum"
         <dt>
             <label for="Dizkus_forum">{gt text='Category and forum:' domain="module_dizkus"}</label>
         </dt>
@@ -19,6 +20,7 @@
                 {/foreach}
             </select>
         </dd>
+        *}
 
         <dt>
             <label for="Dizkus_searchwhere">{gt text='Search in' domain="module_dizkus"}:</label>

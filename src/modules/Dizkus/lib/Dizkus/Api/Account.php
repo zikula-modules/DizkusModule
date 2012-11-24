@@ -38,14 +38,10 @@ class Dizkus_Api_Account extends Zikula_AbstractApi {
             // user does not exist
             return $items;
         }
-    
-        // Create an array of links to return
-        $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
-        if (count($userforums) <> 0) {
-            $items[] = array('url'     => ModUtil::url('Dizkus', 'user', 'prefs'),
-                             'title'   => $this->__('Forum'),
-                             'icon'    => 'icon_forumprefs.gif');
-        }
+
+        $items[] = array('url'     => ModUtil::url('Dizkus', 'user', 'prefs'),
+            'title'   => $this->__('Forum'),
+            'icon'    => 'icon_forumprefs.gif');
     
         // Return the items
         return $items;

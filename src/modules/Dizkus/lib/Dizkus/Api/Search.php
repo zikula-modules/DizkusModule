@@ -20,8 +20,10 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
      */
     public function info()
     {
-        return array('title'     => 'Dizkus',
-                     'functions' => array('Dizkus' => 'search'));
+        return array(
+            'title'     => $this->__('Dizkus'),
+            'functions' => array('Dizkus' => 'search')
+        );
     }
     
     /**
@@ -35,12 +37,12 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     public function options($args)
     {
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            $render = Zikula_View::getInstance('Dizkus', false, null, true);
-            $render->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
-            $render->assign('forums', ModUtil::apiFunc('Dizkus', 'admin', 'readforums'));
-            return $render->fetch('dizkus_search.tpl');
+            $view = Zikula_View::getInstance('Dizkus', false, null, true);
+            $view->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
+            $view->assign('forums', ModUtil::apiFunc('Dizkus', 'admin', 'readforums'));
+            return $view->fetch('search/options.tpl');
         }
-        return '';
+        return false;
     }
     
     /**
@@ -71,7 +73,8 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
      */
     public function search($args)
     {
-        
+
+
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
         }
@@ -82,8 +85,8 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
             $args['forums']      = $this->request->request->get('Dizkus_forum', null);
             $args['searchwhere'] = $this->request->request->get('Dizkus_searchwhere', 'post');
         }
-        $minlen = ModUtil::getVar('Dizkus', 'minsearchlength', 3);
-        $maxlen = ModUtil::getVar('Dizkus', 'maxsearchlength', 30);
+        $minlen = $this->getVar('minsearchlength', 3);
+        $maxlen = $this->getVar('maxsearchlength', 30);
         if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
             return LogUtil::registerStatus($this->__f('Error! For forum searches, the search string must be between %1$s and %2$s characters in length.', array($minlen, $maxlen)));
         }
@@ -95,12 +98,15 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         if ($args['searchwhere'] <> 'post' && $args['searchwhere'] <> 'author') {
             $args['searchwhere'] = 'post';
         }
-    
-        // check mod var for fulltext support
-        //$funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 0) == 1) ? 'fulltext' : 'nonfulltext';
-        $funcname = (ModUtil::getVar('Dizkus', 'fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
 
-        return $this->$funcname($args);
+        // ToDo: Reactivate fulltext support
+        // check mod var for fulltext support
+        //$funcname = ($this->getVar('fulltextindex', 0) == 1) ? 'fulltext' : 'nonfulltext';
+        //$funcname = ($this->getVar('fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
+
+        return $this->nonfulltext($args);
+
+        //return $this->$funcname($args);
     }
     
     /**
@@ -125,22 +131,16 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
         }
-    
-        // get all forums the user is allowed to read
-        $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
-        if (!is_array($userforums) || count($userforums) == 0) {
-            // error or user is not allowed to read any forum at all
-            // return empty result set without even doing a db access
-            return true;
-        }
-    
+
+
+        $where = '';
         switch ($args['searchwhere'])
         {
             case 'author':
                 // searchfor is empty, we search by author only (done later on)
                 $searchauthor = UserUtil::getIDFromName($args['q']);
                 if ($searchauthor > 0) {
-                    $wherematch = " p.poster_id='" . DataUtil::formatForStore($searchauthor) . "'";
+                    $where = "p.poster_id = " . DataUtil::formatForStore($searchauthor);
                 } else {
                     return true;
                 }
@@ -148,43 +148,64 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
     
             case 'post':
             default:
-                $searchtype = strtoupper($args['searchtype']);
-                if ($searchtype == 'EXACT') {
-                    $q = DataUtil::formatForStore($args['q']);
-                    $wherematch .= "(p.post_text LIKE '%$q%' OR t.topic_title LIKE '%$q%') \n";
-                } else {
-                    $wherematcharray = array();
-                    $words = explode(' ', $args['q']);
-                    foreach ($words as $word) {
-                        $word = DataUtil::formatForStore($word);
-                        // get post_text and match up forums/topics/posts
-                        //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                        $wherematcharray[] = "(p.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                    }
-                    $wherematch = implode(($searchtype == 'OR' ? ' OR ' : ' AND '), $wherematcharray);
+                $where = Search_Api_User::construct_where($args, array('t.topic_title', 'p.post_text'), null);
+                if (!empty($where)) {
+                    $where = trim(substr(trim($where), 1, -1));
                 }
         }
-    
-        // now create a very simple array of forum_ids only. we do not need
-        // all the other stuff in the $userforums array entries
-        $allowedforums = array_keys($userforums);
-    
-        if ((!is_array($args['forums']) && $args['forums'] == -1) || $args['forums'][0] == -1) {
-            // search in all forums we are allowed to see
-            $whereforums = 'p.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
-        } else {
-            // filter out forums we are not allowed to read
-            $args['forums'] = array_intersect($allowedforums, (array)$args['forums']);
-    
-            if (count($args['forums']) == 0) {
-                // error or user is not allowed to read any forum at all
-                // return empty result set without even doing a db access
-                return true;
+
+
+
+
+        ModUtil::dbInfoLoad('Search');
+        $table = DBUtil::getTables();
+        $searchTable = $table['search_result'];
+        $searchColumn = $table['search_result_column'];
+
+
+        // this is a bit of a hacky way to ustilize this API for Doctrine calls.
+
+
+        LogUtil::registerError(json_encode($where));
+
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('t')
+            ->from('Dizkus_Entity_Topic', 't')
+            ->leftJoin('t.posts', 'p')
+            ->add('where', $where);
+        $items = $qb->getQuery()->getResult();
+
+
+        $sessionId = session_id();
+
+
+        $insertSql =
+            "INSERT INTO $searchTable
+                ($searchColumn[title],
+                $searchColumn[text],
+                $searchColumn[extra],
+                $searchColumn[created],
+                $searchColumn[module],
+                $searchColumn[session])
+                VALUES ";
+
+        // Process the result set and insert into search result table
+        foreach ($items as $obj) {
+            $posts = $obj->getPosts();
+            $sql = $insertSql . '('
+                . '\'' . DataUtil::formatForStore($obj->getTopic_title()) . '\', '
+                . '\'' . DataUtil::formatForStore(($posts[0]->getPost_text())) . '\', '
+                . '\'' . DataUtil::formatForStore('abc') . '\', '
+                . '\'' . DateUtil::formatDatetime($obj->getTopic_time()) . '\', '
+                . '\'' . 'Dizkus' . '\', '
+                . '\'' . DataUtil::formatForStore($sessionId) . '\')';
+            $insertResult = DBUtil::executeSQL($sql);
+            if (!$insertResult) {
+                return LogUtil::registerError($this->__('Error! Could not load any page.'));
             }
-            $whereforums = 'p.forum_id IN(' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
-    
-        $this->start_search($wherematch, $whereforums);
+
         return true;
     }
     
@@ -240,7 +261,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
                     $wherematch  =  "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
                 } else {
                     $plusminuscount = preg_match('/[\+\-]/', $args['q']);
-                    if ((ModUtil::getVar('Dizkus', 'extendedsearch', 'no') == 'yes') && ($plusminuscount > 0)) {
+                    if (($this->getVar('extendedsearch', 'no') == 'yes') && ($plusminuscount > 0)) {
                         // seems to be an extended search
                         $q = DataUtil::formatForStore($args['q']);
                         $wherematch  = "(MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) OR MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE)) \n";
@@ -302,7 +323,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi {
         $topicurl = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => '%%%'));
         $sessionid = DataUtil::formatForStore(session_id());
         $now = time();
-        $showtextinsearchresults = ModUtil::getVar('Dizkus', 'showtextinsearchresults', 'no');
+        $showtextinsearchresults = $this->getVar('showtextinsearchresults', 'no');
         $textsql = ($showtextinsearchresults == 'yes') ? 'REPLACE(p.post_text, \'[addsig]\', \'\') as text' : '\'\'';
         
         $sql = 'INSERT INTO ' . $ztable['search_result'] . '
