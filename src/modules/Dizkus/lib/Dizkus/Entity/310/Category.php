@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_categories")
  */
-class Dizkus_Entity_Categories extends Zikula_EntityAccess {
+class Dizkus_Entity_310_Category extends Zikula_EntityAccess {
 
     
     
@@ -28,7 +28,7 @@ class Dizkus_Entity_Categories extends Zikula_EntityAccess {
     /**
      * The following are annotations which define the cat_title field.
      * 
-     * @ORM\Column(type="string", length="100")
+     * @ORM\Column(type="string", length=100)
      */
     private $cat_title = '';
     

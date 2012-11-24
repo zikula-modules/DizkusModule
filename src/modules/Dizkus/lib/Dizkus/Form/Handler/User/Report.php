@@ -35,8 +35,6 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-    
-        $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));    
 
         return true;
     }

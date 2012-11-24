@@ -15,6 +15,8 @@
  */
 function smarty_function_lastpost($params, &$smarty) 
 {
+    // ToDo: remove plugin
+
     $em = ServiceUtil::getService('doctrine.entitymanager');
     $qb = $em->createQueryBuilder();
     $qb->select('p')
@@ -25,8 +27,8 @@ function smarty_function_lastpost($params, &$smarty)
         ->orderBy('p.post_id', 'DESC')
         ->setMaxResults(1);
     $lastpost =  $qb->getQuery()->getArrayResult();
-    
-    
+
+
     if($lastpost) {
         $lastpost = $lastpost[0];
         if (empty($lastpost['post_title'])) {

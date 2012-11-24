@@ -1,4 +1,4 @@
-{ajaxheader modname='Dizkus' filename='chosen/chosen.proto.min.js'}
+{ajaxheader ui=true modname='Dizkus' filename='chosen/chosen.proto.min.js'}
 {pageaddvar name='stylesheet' value='modules/Dizkus/javascript/chosen/chosen.css'}
 
 {adminheader}
@@ -63,45 +63,46 @@
         </div>*}
 
 
+        <div id="chosenCss" class="z-formrow">
+            {formlabel for="userModerators" __text="Moderation (Users)"}
+            {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select" selectionMode='multiple'}
+        </div>
 
         <div id="chosenCss" class="z-formrow">
-            {formlabel for="forum_mods" __text="Moderation"}
-            {formdropdownlist id="forum_mods" items=$usersAndGroups  cssClass="chzn-select" selectionMode='multiple'}
+            {formlabel for="moderatorGroups" __text="Moderation (Groups)"}
+            {formdropdownlist id="moderatorGroups" items=$allGroups cssClass="chzn-select" selectionMode='multiple'}
         </div>
 
 
-        <div id="extsource" class="z-formrow">
-            {formlabel for="pop3_active" __text="External source"}
-                <div class="z-formlist">
-                    {formradiobutton id="noexternal" dataField="extsource" onclick="$('mail2forumField').hide();$('rss2forumField').hide()"}
-                    {formlabel for="noexternal" __text='No external source'}
-                </div>
-                <div class="z-formlist">
-                    {formradiobutton id="mail2forum" dataField="extsource" onclick="$('mail2forumField').show()"}
-                    {formlabel for="mail2forum" __text='Mail2Forum'}
-                </div>
-                <div class="z-formlist">
-                    {modavailable modname="Feeds" assign="feeds"}
-                    {if $feeds}
-                    {formradiobutton id="rss2forum" dataField='extsource' onclick="$('rss2forumField').show()"}
-                    {formlabel for="rss2forum" __text='RSS2Forum'}
-                    {else}
-                    {formradiobutton id="rss2forum" dataField='extsource' disabled=true}
-                    {formlabel for="rss2forum" __text='RSS2Forum'}
-                    &nbsp;<span style="color: red;">{gt text="'Feeds' module is not available."}</span>
-                    {/if}
-                </div>
-        </div>
-    </fieldset>
+            <div id="extsource" class="z-formrow">
+                {formlabel for="pop3_active" __text="External source"}
+                    <div class="z-formlist">
+                        {formradiobutton id="noexternal" dataField="extsource" onclick="$('mail2forumField').hide();$('rss2forumField').hide()"}
+                        {formlabel for="noexternal" __text='No external source'}
+                    </div>
+                    <div class="z-formlist">
+                        {formradiobutton id="mail2forum" dataField="extsource" onclick="$('mail2forumField').show()"}
+                        {formlabel for="mail2forum" __text='Mail2Forum'}
+                    </div>
+                    <div class="z-formlist">
+                        {modavailable modname="Feeds" assign="feeds"}
+                        {if $feeds}
+                        {formradiobutton id="rss2forum" dataField='extsource' onclick="$('rss2forumField').show()"}
+                        {formlabel for="rss2forum" __text='RSS2Forum'}
+                        {else}
+                        {formradiobutton id="rss2forum" dataField='extsource' disabled=true}
+                        {formlabel for="rss2forum" __text='RSS2Forum'}
+                        &nbsp;<span style="color: red;">{gt text="'Feeds' module is not available."}</span>
+                        {/if}
+                    </div>
+            </div>
+        </fieldset>
 
 
 
 
-
-
-
-
-    <fieldset id="pnlogindata" {*if $forum.externalsource == 0*}style="display:none;"{*/if*}>
+    {* TODO do all the control of these fieldsets with javascript onload *}
+    {*<fieldset id="pnlogindata" {*if $forum.externalsource == 0*}{*style="display:none;"{*/if*}{*>
         <div class="z-formrow">
             {formlabel for="pnuser" __text="User name"}
             {formtextinput id="pnuser" maxLength="60" size="30"}
@@ -147,9 +148,9 @@
             {formtextinput id="pop3_matchstring" maxLength="255" size="30" }
             <em class="z-formnote z-sub">
                 {gt text="Notice: This rule is a regular expression applied to posts incoming via e-mail, in order to prevent spam postings. If there is no rule here then no checks will be performed."}
-                </em>
+            </em>
         </div>
-    </fieldset>
+    </fieldset> *}
     </div>
 
     {if $feeds}

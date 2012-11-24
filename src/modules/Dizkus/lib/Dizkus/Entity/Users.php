@@ -20,15 +20,15 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Moderators", mappedBy="user_id")
      */
     private $uid;
-    
-    
+
+
+
     /**
      * The following are annotations which define the uname field.
      * 
-     * @ORM\Column(type="string", length="25")
+     * @ORM\Column(type="string", length=25)
      */
     private $uname = '';
     

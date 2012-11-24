@@ -43,7 +43,6 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
         $view->assign($topic);
         $view->assign('emailsubject', $emailsubject);
         $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) ."\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=>$this->topic_id), null, null, true));
-        $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
 
         return true;
     }

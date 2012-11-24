@@ -6,7 +6,7 @@
 
 {if $preview}
 <div id="editpostpreview" style="margin:1em 0;">
-    {include file='user/post/editpreview.tpl'}
+    {include file='user/post/single.tpl'}
 </div>
 {/if}
 
@@ -15,27 +15,24 @@
 
         <div class="dzk_subcols z-clearfix">
 
-            <form id="editpost" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='editpost'}" method="post" enctype="multipart/form-data">
+        {form cssClass="z-form"}
+        {formvalidationsummary}
                 <div>
-                    <input type="hidden" name="post" value="{$post.post_id}" />
-                    <input type="hidden" name="forum"  value="{$post.forum_id}" />
-                    <input type="hidden" name="topic"  value="{$post.topic_id}" />
-                    <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="Edit post"}: {$post.topic_subject|safetext}</legend>
+                        <legend class="post_header">{gt text="Edit post"}: {$topic_subject|safetext}</legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 
-                            {if $post.moderate eq true OR $post.edit_subject eq true}
+                            {*if $post.moderate eq true OR $post.edit_subject eq true}
                             <div>
                                 <label for="subject">{gt text="Subject line"}</label><br />
                                 <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$post.topic_subject|safehtml}" />
                             </div>
-                            {/if}
+                            {/if*}
                             <div>
-                                <label for="message">{gt text="Message body"}</label><br />
+                                {formlabel for="message" __text="Message body"}<br />
                                 {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
-                                <textarea id="message" name="message" rows="10" cols="60">{$post.post_rawtext}</textarea>
+                                {formtextinput textMode="multiline" id="post_text" rows="10" cols="60"}
                                 {if $modvars.Dizkus.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
@@ -44,30 +41,33 @@
                             <div class="dzk_subcols z-clearfix">
                                 <div id="editpostoptions" class="dzk_col_left">
                                     <ul>
-                                        {if $post.moderate eq true}
+                                        {if $moderate eq true}
                                         <li><strong>{gt text="Options"}</strong></li>
+                                        {if !$post_first}
                                         <li>
-                                            <input type="checkbox" name="delete" id="delete" tabindex="0" value="1" />
-                                            <label for="delete">&nbsp;{gt text="Delete post"}</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" name="attach_signature" id="attach_signature" {if $post.has_signature eq true}checked="checked"{/if} value="1" />
-                                            <label for="attach_signature">&nbsp;{gt text="Attach my signature"}</label>
+                                            {formcheckbox id="delete"}
+                                            {formlabel for="delete" __text="Delete post"}
                                         </li>
                                         {/if}
-                                        <li id="editpostbuttons" class="z-buttons">
-                                            {button class="dzk_detachable z-bt-small" src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
-                                            {button class="dzk_detachable z-bt-small" src="xeyes.png" set="icons/extrasmall" __alt="Preview" __title="Preview" __text="Preview"}
-                                            {button class="dzk_detachable z-bt-small" src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
+                                        <li>
+                                            {formcheckbox id="post_attach_signature"}
+                                            {formlabel for="post_attach_signature" __text="Attach my signature"}
                                         </li>
+                                        {/if}
                                     </ul>
                                 </div>
+                            </div>
+
+                            <div class="z-formbuttons z-buttons">
+                                {formbutton id="submit"  commandName="submit"  __text="Save"    class="z-bt-ok"}
+                                {formbutton id="preview" commandName="preview" __text="preview" class="z-bt-preview"}
+                                {formbutton id="cancel"  commandName="cancel"  __text="Cancel"  class="z-bt-cancel"}
                             </div>
 
                         </div>
                     </fieldset>
                 </div>
-            </form>
+            {/form}
         </div>
 
     </div>

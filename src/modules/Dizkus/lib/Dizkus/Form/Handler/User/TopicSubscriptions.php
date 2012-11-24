@@ -36,9 +36,8 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
             return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
         }
 
-        $subscriptions = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_subscriptions');
+        $subscriptions = ModUtil::apiFunc('Dizkus', 'Topic', 'getSubscriptions');
         $view->assign('subscriptions', $subscriptions);
-        $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
         return true;
     }
 
@@ -61,14 +60,14 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         $data = $view->getValues();
 
         if (count($data['topicIds']) > 0) {
-            foreach ($data['topicIds'] as $topicId) {
+            foreach (array_keys($data['topicIds']) as $topicId) {
                 if ($topicId) {
-                    ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_topic', array('topic_id' => $topicId));
+                    ModUtil::apiFunc('Dizkus', 'Topic', 'unsubscribe', array('topic_id' => $topicId));
                 }
             }
         }
 
-        $url = ModUtil::url($this->name, 'User', 'topicsubscriptions');
+        $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
         return $view->redirect($url);
     }
 }

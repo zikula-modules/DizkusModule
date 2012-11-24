@@ -67,9 +67,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         }
         
         $view->assign($topic);
-        
-        $view->assign('favorites', ModUtil::apifunc('Dizkus', 'user', 'get_favorite_status'));
-        
+
         return true;
     }
 

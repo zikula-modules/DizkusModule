@@ -32,15 +32,15 @@
         </div>
         <div class="z-formrow">
             {formlabel for="hot_threshold" __text="'Hot topic' threshold"}
-            {formintinput id="hot_threshold" text=$modvars.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=999}
+            {formintinput id="hot_threshold" text=$modvars.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=100}
         </div>
         <div class="z-formrow">
             {formlabel for="posts_per_page" __text="Posts per page in topic index (default:20)"}
-            {formintinput id="posts_per_page" text=$modvars.Dizkus.posts_per_page size="3" maxLength="3" minValue=5 maxValue=999}
+            {formintinput id="posts_per_page" text=$modvars.Dizkus.posts_per_page size="3" maxLength="3" minValue=1 maxValue=100}
         </div>
         <div class="z-formrow">
             {formlabel for="topics_per_page" __text="Topics per page in forum index (default:15)"}
-            {formintinput id="topics_per_page" text=$modvars.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=999}
+            {formintinput id="topics_per_page" text=$modvars.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=100}
         </div>
         <div class="z-formrow">
             {formlabel for="hideusers" __text="Hide users in forum admin interface"}
@@ -51,24 +51,17 @@
             {formtextinput id="url_ranks_images" text=$modvars.Dizkus.url_ranks_images size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
-            {formlabel for="spam_protector" __text="Spam protection"}
-            {formdropdownlist id="spam_protector" items=$spam_protectors}
-        </div>
-        <div class="z-formrow">
-            {formlabel for="solved_enabled" __text="Enable solve option for topics"}
-            {formcheckbox id="solved_enabled"}
-        </div>
-        <div class="z-formrow">
             {formlabel for="ajax" __text="Enable ajax"}
             {formcheckbox id="ajax"}
+        </div>
+        <div class="z-formrow">
+            {formlabel for="solved_enabled" __text="Enable solved option in topics"}
+            {formcheckbox id="solved_enabled"}
         </div>
     </fieldset>
 
     <fieldset>
         <legend>{gt text="Advanced settings"}</legend>
-        <div class="z-warningmsg">
-            {gt text="Caution! Inappropriate settings here can lead to unwanted side effects. You are recommended not to alter the settings below unless you fully understand what the results will be."}
-        </div>
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
             {formcheckbox id="fulltextindex"}

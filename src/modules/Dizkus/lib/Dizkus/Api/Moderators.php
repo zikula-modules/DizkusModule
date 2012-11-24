@@ -22,7 +22,9 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi {
      * @return array containing the pn_uid as index and the users name as value
      */
     public function get($args)
-    {        
+    {
+        return array();
+
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
 
         $em = $this->getService('doctrine.entitymanager');

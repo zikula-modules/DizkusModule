@@ -14,6 +14,8 @@
 class Dizkus_Api_UserData extends Zikula_AbstractApi {
 
 
+    private $_online;
+
     /**
      * user array
      *
@@ -21,6 +23,11 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi {
      */
     private $usersarray = array();
 
+
+
+    public function __construct() {
+        $this->_online = array();
+    }
 
     /**
      * get_userdata_from_id
@@ -131,18 +138,30 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi {
      *
      * Check if a user is online
      *
-     * @param int $uid The users id.
+     * @param array $args Arguments array.
      *
      * @return boolean True if online
      */
-    public function getUserOnlineStatus($uid)
+    public function getUserOnlineStatus($args)
     {
+        //int $uid The users id
+        if (empty($args['uid'])) {
+            $args['uid'] = UserUtil::getVar('uid');
+        }
+
+        if (array_key_exists($args['uid'], $this->_online)) {
+            return $this->_online[$args['uid']];
+        }
+
         $ztable = DBUtil::getTables();
         $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-        $where = $ztable['session_info_column']['uid']." = '".$uid."'
+        $where = $ztable['session_info_column']['uid']." = '".$args['uid']."'
                   AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
         $sessioninfo =  DBUtil::selectObject('session_info', $where);
-        return ($sessioninfo['uid'] == $uid) ? true : false;
+
+        $isOnline = ($sessioninfo['uid'] == $args['uid']) ? true : false;
+        $this->_online[$args['uid']] = $isOnline;
+        return $isOnline;
     }
 
 }

@@ -10,6 +10,19 @@
 
 Class Dizkus_Installer extends Zikula_AbstractInstaller
 {
+    private $_entities = array(
+        'Dizkus_Entity_Forums',
+        'Dizkus_Entity_Post',
+        'Dizkus_Entity_Topic',
+        'Dizkus_Entity_Favorites',
+        'Dizkus_Entity_Poster',
+        'Dizkus_Entity_ModeratorUser',
+        'Dizkus_Entity_ForumSubscriptions',
+        'Dizkus_Entity_TopicSubscriptions',
+        'Dizkus_Entity_Ranks'
+    );
+
+
     /**
      *  Initialize a new install of the Dizkus module
      *
@@ -19,69 +32,15 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
      */
     public function install()
     {
-        // no gettext here as we are not sure which way of gettext to use 
-        //if (version_compare(System::VERSION_NUM, '1.3.0-dev', '<')) {
-          //  return LogUtil::registerError($this->__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
-        //}
+
+        try {
+            DoctrineHelper::createSchema($this->entityManager, $this->_entities);
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage());
+        }
+
     
-        // TODO move this to a loop
-        // creating categories table
-        if (!DBUtil::createTable('dizkus_categories')) {
-            return false;
-        }
-    
-        // creating forum_mods table
-        if (!DBUtil::createTable('dizkus_forum_mods')) {
-            $this->uninstall();
-            return false;
-        }
-    
-        // creating forums table
-        if (!DBUtil::createTable('dizkus_forums')) {
-            $this->uninstall();
-            return false;
-        }
-    
-        // creating posts table
-        if (!DBUtil::createTable('dizkus_posts')) {
-            $this->uninstall();
-            return false;
-        }
-    
-        // creating subscription table
-        if (!DBUtil::createTable('dizkus_subscription')) {
-            $this->uninstall();
-            return false;
-        }
-    
-        // creating ranks table
-        if (!DBUtil::createTable('dizkus_ranks')) {
-            $this->uninstall();
-            return false;
-        }
-    
-        // creating topics table
-        if (!DBUtil::createTable('dizkus_topics')) {
-            $this->uninstall();
-            return false;
-        }
-/*    
-        // creating users table
-        if (!DBUtil::createTable('dizkus__users')) {
-            $this->uninstall();
-            return false;
-        }
-*/    
-        // creating topic_subscription table (new in 1.7.5)
-        if (!DBUtil::createTable('dizkus_topic_subscription')) {
-            $this->uninstall();
-            return false;
-        }
-    
-        if (!DBUtil::createTable('dizkus_forum_favorites')) {
-            $this->uninstall();
-            return false;
-        }
+
  /*   
         // create the hooks: create, delete, display.
         // everything else is not needed , at least not atm.
@@ -133,25 +92,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'display'));
         }
 */        
-        // create FULLTEXT index 
-        if (strtolower($GLOBALS['ZConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
-            // FULLTEXT does not work an innodb - by design
-            // for now we assume that it works with all other table types, if not, please open a ticket
-            $ztables      = DBUtil::getTables();
-            $topicstable  = DataUtil::formatForStore($ztables['dizkus_topics']);
-            $topictitle   = DataUtil::formatForStore($ztables['dizkus_topics_column']['topic_title']);
-            $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
-            
-            $poststable = DataUtil::formatForStore($ztables['dizkus_posts']);
-            $poststext  = DataUtil::formatForStore($ztables['dizkus_posts_column']['post_text']);
-            $res2 = DBUtil::executeSQL('ALTER TABLE ' . $poststable . ' ADD FULLTEXT ' . $poststext . ' (' . $poststext . ')');
-    
-            if ($res1 == true && $res2 == true) {
-                ModUtil::setVar('Dizkus', 'fulltextindex', 'yes');
-            } else {
-                ModUtil::setVar('Dizkus', 'fulltextindex', 'no');
-            }
-        }
+        // ToDo: create FULLTEXT index
+
         
         // forum settings
         $this->setVar('posts_per_page', 15);
@@ -176,7 +118,10 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->setVar('shownewtopicconfirmation', 'no');
         $this->setVar('timespanforchanges', 24);
         $this->setVar('forum_enabled', 'yes');
-        $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
+        $this->setVar(
+            'forum_disabled_info',
+            $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.')
+        );
         // 3.0
         $this->setVar('autosubscribe', 'no');
         $this->setVar('newtopicconfirmation', 'no');
@@ -191,6 +136,29 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
 
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
 
+
+        $food = new Dizkus_Entity_Forums();
+        $food->setforum_name('Food');
+
+        $fruits = new Dizkus_Entity_Forums();
+        $fruits->setforum_name('Fruits');
+        $fruits->setParent($food);
+
+        $vegetables = new Dizkus_Entity_Forums();
+        $vegetables->setforum_name('Vegetables');
+        $vegetables->setParent($food);
+
+        $carrots = new Dizkus_Entity_Forums();
+        $carrots->setforum_name('Carrots');
+        $carrots->setParent($vegetables);
+
+        $this->entityManager->persist($food);
+        $this->entityManager->persist($fruits);
+        $this->entityManager->persist($vegetables);
+        $this->entityManager->persist($carrots);
+        $this->entityManager->flush();
+
+
         // Initialisation successful
         return true;
     }
@@ -204,74 +172,12 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
      */
     public function uninstall()
     {
-        $tables = DBUtil::metaTables(true, true, '%dizkus%');
-        $ztables = DBUtil::getTables();
-    
-        if (in_array($ztables['dizkus_categories'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_categories')) {
-                return false;
-            }
+        try {
+            DoctrineHelper::dropSchema($this->entityManager, $this->_entities);
+        } catch (Exception $e) {
         }
-    
-        if (in_array($ztables['dizkus_forum_mods'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_forum_mods')) {
-                return false;
-            }
-        }
-    
-        if (in_array($ztables['dizkus_forums'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_forums')) {
-                return false;
-            }
-        }
-        
-        if (in_array($ztables['dizkus_forum_favorites'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_forum_favorites')) {
-                return false;
-            }
-        }
-        
-        if (in_array($ztables['dizkus_posts'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_posts')) {
-                return false;
-            }
-        }
-    
-        if (in_array($ztables['dizkus_posts_text'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_posts_text')) {
-                return false;
-            }
-        }
-    
-        if (in_array($ztables['dizkus_subscription'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_subscription')) {
-                return false;
-            }
-        }
-        
-        if (in_array($ztables['dizkus_ranks'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_ranks')) {
-                return false;
-            }
-        }
-        
-        if (in_array($ztables['dizkus_topics'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_topics')) {
-                return false;
-            }
-        }
-/*        
-        if (in_array($ztables['dizkus__users'], $tables)) {
-            if (!DBUtil::dropTable('dizkus__users')) {
-                return false;
-            }
-        }
-*/        
-        if (in_array($ztables['dizkus_topic_subscription'], $tables)) {
-            if (!DBUtil::dropTable('dizkus_topic_subscription')) {
-                return false;
-            }
-        }
+
+
     
         // remove the hooks
         //
@@ -304,10 +210,9 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
     
         // remove module vars
         $this->delVars();
-    
-        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
 
-        
+        // unregister hooks
+        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
         
         // Deletion successful
         return true;
@@ -661,8 +566,38 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
     {
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
-        
-        ModUtil::dbInfoLoad('Settings');
+
+
+        // remove the legacy hooks
+        //
+        // createhook
+        //
+        if (!ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'create'));
+        }
+        //
+        // updatehook
+        //
+        if (!ModUtil::unregisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'update'));
+        }
+        //
+        // deletehook
+        //
+        if (!ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'delete'));
+        }
+        //
+        // displayhook
+        //
+        if (!ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
+            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'display'));
+        }
+
+
+
+
+        /*ModUtil::dbInfoLoad('Settings');
         $tables = DBUtil::getTables();
         
         $objtable   = $tables['objectdata_attributes'];
@@ -697,7 +632,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
                         FROM " . $userstable;
                 DBUtil::executeSQL($sql);
             }
-        }
+        }*/
         
         
         // remove table prefixes
@@ -710,7 +645,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             'dizkus_ranks',
             'dizkus_topics',
             'dizkus_topic_subscription',
-            'dizkus_forum_favorites'
+            'dizkus_forum_favorites',
+            'dizkus_forum_users'
         );
         $prefix = $this->serviceManager['prefix'];
         $connection = Doctrine_Manager::getInstance()->getConnection('default');
@@ -728,13 +664,13 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         DBUtil::changeTable('dizkus_posts');
     
         // done - now drop the dizkus_users table
-        DBUtil::dropTable('dizkus_users');
+        //DBUtil::dropTable('dizkus_users');
     
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
 
-        LogUtil::registerError($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
+        LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
         
         return true;
     }
