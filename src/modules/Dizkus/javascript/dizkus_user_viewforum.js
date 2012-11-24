@@ -9,9 +9,7 @@ jQuery(document).ready(function () {
 });
 
 function modifyForum(e) {
-    var id = jQuery('#forum_id').val();
-    var action;
-    var i = jQuery(this);
+    var id = jQuery('#forum_id').val(), action, i = jQuery(this);
     if (i.text() == favouriteForum) {
         action = 'addToFavorites';
     } else if (i.text() == unfavouriteForum) {
@@ -34,7 +32,7 @@ function modifyForum(e) {
         type: "POST",
         data: pars,
         url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=modifyForum",
-        success: function(result) {
+        success: function (result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {
                     i.text(unfavouriteForum);
@@ -49,7 +47,7 @@ function modifyForum(e) {
                 alert('Error! Erroneous result from favourite addition/removal.');
             }
         },
-        error: function(result) {
+        error: function (result) {
             Zikula.showajaxerror(result);
             return;
         }

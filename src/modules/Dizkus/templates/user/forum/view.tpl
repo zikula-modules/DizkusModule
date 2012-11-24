@@ -184,7 +184,7 @@
 </div>
 {/if}
 
-{include file='user/moderatedBy.tpl' mods=$forum.forum_mods}
+{include file='user/moderatedBy.tpl' forum=$forum}
 
 <script type="text/javascript">
     // <![CDATA[

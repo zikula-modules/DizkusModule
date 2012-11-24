@@ -39,7 +39,7 @@ class Dizkus_ContentType_Topic
         $this->name = 'Dizkus';
 
         if ($id > 0) {
-            $this->_topic = $this->entityManager->find('Dizkus_Entity_Topics', $id);
+            $this->_topic = $this->entityManager->find('Dizkus_Entity_Topic', $id);
         } else {
             $this->_topic = new Dizkus_Entity_Topic();
         }
@@ -109,7 +109,7 @@ class Dizkus_ContentType_Topic
      */
     public function getForumId()
     {
-        return $this->_topic->getForum_id();
+        return $this->_topic->getForum()->getForum_id();
     }
 
 
@@ -174,7 +174,7 @@ class Dizkus_ContentType_Topic
      */
     public function getBreadcrumbs()
     {
-        $i = $this->entityManager->find('Dizkus_Entity_Forums', $this->_topic->getForum_id());
+        $i = $this->entityManager->find('Dizkus_Entity_Forums', $this->getForumId());
 
         $output = array();
         while ($i->getLvl() != 0) {

@@ -25,6 +25,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      */
     private $topic_id;
 
+    public function gettopic_id()
+    {
+        return $this->topic_id;
+    }
+
     public function settopic_id($id)
     {
         $this->topic_id = $id;
@@ -155,10 +160,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->forum_mods;
     }
 
-    public function gettopic_id()
-    {
-        return $this->topic_id;
-    }
+
 
     public function gettopic_poster()
     {

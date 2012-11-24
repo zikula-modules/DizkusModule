@@ -22,8 +22,6 @@ function smarty_function_dzkquote($params, &$smarty)
         return '';
     }
 
-
-
     if (!empty($params['uid'])) {
         $user = '='.UserUtil::getVar('uname', $params['uid']);
     } else {

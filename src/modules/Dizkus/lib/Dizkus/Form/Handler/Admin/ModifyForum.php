@@ -56,8 +56,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
 
 
 
-            //$forum_mods = ModUtil::apiFunc('Dizkus', 'admin', 'readforummods', $forum->getforum_id());
-            //$view->assign('forum_mods', $forum_mods);
 
 
         $t = $forum->toArray();
@@ -75,37 +73,38 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $view->assign($t);
 
 
-        // assign all users and groups
-        $users  = UserUtil::getAll();
-        $groups = UserUtil::getGroups();
-        $usersAndGroups = array();
-        foreach ($users as $value) {
-            $usersAndGroups[] = array(
-                'value' => $value['uid'],
-                'text'  => $value['uname'],
+        $view->assign('moderatorUsers', $forum->get()->getmoderatorUsersAsArray());
+        $view->assign('moderatorGroups', $forum->get()->getModeratorGroupsAsArray());
+
+        // assign all users for the moderator selection
+        $allUsers  = UserUtil::getAll();
+        $allUsersAsDrowpdownList = array();
+        foreach ($allUsers as $user) {
+            $allUsersAsDrowpdownList[] = array(
+                'value' => $user['uid'],
+                'text'  => $user['uname'],
             );
         }
+        $view->assign('allUsers', $allUsersAsDrowpdownList);
+
+        // assign all groups for the moderator selection
+        $groups = UserUtil::getGroups();
+        $allGroupsAsDrowpdownList = array();
         foreach ($groups as $value) {
-            $usersAndGroups[] = array(
-                'value' => '100000'.$value['gid'],
+            $allGroupsAsDrowpdownList[] = array(
+                'value' => $value['gid'],
                 'text'  => $value['name'].' ('.$this->__('Group').')',
             );
         }
-        $view->assign('usersAndGroups', $usersAndGroups);
-
+        $view->assign('allGroups', $allGroupsAsDrowpdownList);
 
         $this->view->assign('parents', ModUtil::apiFunc($this->name, 'Forum', 'getParents'));
-
-
         $this->view->caching = Zikula_View::CACHE_DISABLED;
-
 
         $this->_forum = $forum;
 
         return true;
     }
-
-
 
 
     /**
@@ -122,7 +121,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
-
 
         // check for valid form and get data
         if (!$view->isValid()) {
@@ -146,7 +144,9 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
 
         //$forum_mods = $data['forum_mods'];
-        unset($data['forum_mods']);
+        //unset($data['forum_mods']);
+
+
 
 
         //$forum_id = $forum->getforum_id();
@@ -185,8 +185,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             $newModerator->setUser_id($forum_mod);
             $this->entityManager->persist($newModerator);
         }*/
-
-        //$this->entityManager->flush();
 
         // redirect to the admin forum overview
         return $view->redirect($url);

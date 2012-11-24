@@ -36,7 +36,7 @@
             {formdropdownlist id="parent" items=$parents}
         </div>
 
-        {*if $forum_name}
+        {if $forum_name}
         <div class="z-formrow">
             {formlabel for="forum_info" __text="Forum Information"}
             <span id="forum_info">
@@ -48,7 +48,7 @@
                 </a>
             </span>
         </div>
-        {/if*}
+        {/if}
 
         {*<div class="z-formrow">
             {formlabel for="moduleref" __text="Hooked module"}
@@ -63,10 +63,15 @@
         </div>*}
 
 
-           {* <div id="chosenCss" class="z-formrow">
-                {formlabel for="forum_mods" __text="Moderation"}
-                {formdropdownlist id="forum_mods" items=$usersAndGroups  cssClass="chzn-select" selectionMode='multiple'}
-            </div>*}
+        <div id="chosenCss" class="z-formrow">
+            {formlabel for="userModerators" __text="Moderation (Users)"}
+            {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select" selectionMode='multiple'}
+        </div>
+
+        <div id="chosenCss" class="z-formrow">
+            {formlabel for="moderatorGroups" __text="Moderation (Groups)"}
+            {formdropdownlist id="moderatorGroups" items=$allGroups cssClass="chzn-select" selectionMode='multiple'}
+        </div>
 
 
             <div id="extsource" class="z-formrow">

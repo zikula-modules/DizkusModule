@@ -537,9 +537,105 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     }
 
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $moderatorUsers;
+
+    public function getModeratorUsers()
+    {
+        return $this->moderatorUsers;
+    }
+
+    public function getModeratorUsersAsArray()
+    {
+        $output = array();
+        foreach($this->moderatorUsers as $user) {
+            $output[] = $user->getUser_id();
+        }
+
+        return $output;
+    }
+
+
+    public function setModeratorUsers($users)
+    {
+        // remove moderators
+        foreach($this->moderatorUsers as $key => $moderator) {
+            $i = array_search($moderator->getUser_id(), $users);
+            if (!$i) {
+                $this->moderatorUsers->remove($key);
+            } else {
+                unset($users[$i]);
+            }
+        }
+        // add moderators
+        foreach($users as $uid) {
+            $newModerator = new Dizkus_Entity_Moderator_User();
+            $newModerator->setUser_id($uid);
+            $newModerator->setForum($this);
+            $this->moderatorUsers[] = $newModerator;
+        }
+    }
+
+
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $moderatorGroups;
+
+    public function getModeratorGroups()
+    {
+        return $this->moderatorGroups;
+    }
+
+    public function getModeratorGroupsAsArray()
+    {
+        $output = array();
+        foreach($this->moderatorGroups as $moderatorGroup) {
+            $output[] = $moderatorGroup->getGroup()->getGid();
+        }
+
+        return $output;
+    }
+
+
+    public function setModeratorGroups($moderatorGroups)
+    {
+        // remove moderators
+        foreach($this->moderatorGroups as $key => $moderatorGroup) {
+            $i = array_search($moderatorGroup->getGroup()->getGid(), $moderatorGroups);
+            if (!$i) {
+                $this->moderatorGroups->remove($key);
+            } else {
+                unset($moderatorGroups[$i]);
+            }
+        }
+        // add moderators
+        foreach($moderatorGroups as $gid) {
+            $em = ServiceUtil::getService('doctrine.entitymanager');
+            $group = $this->_topic = $em->find('Dizkus_Entity_Group', $gid);
+            $newModerator = new Dizkus_Entity_Moderator_Group();
+            $newModerator->setGroup($group);
+            $newModerator->setForum($this);
+            $this->moderatorGroups[] = $newModerator;
+        }
+    }
+
+
+
+
     public function __construct() {
         $this->topics = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->moderatorUsers = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->moderatorGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+
+
 
 
 }

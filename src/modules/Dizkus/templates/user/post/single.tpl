@@ -23,7 +23,7 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user_id|profilelinkbyuid}</strong>
                     <br />
-                    {useravatar uid=$post.poster.user_id}
+                    {useravatar uid=$post.poster.user_id|default:-1}
 
 
                     {modapifunc modname='Dizkus' type='Rank' func='getData' poster=$post.poster assign='rank'}

@@ -1327,7 +1327,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
     
-        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')
+        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')
                       ->findOneBy(array('topic_reference' => $args['reference']));
         return $topic->toArray();
     }
@@ -1344,7 +1344,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!$args['forum'] || !$args['items']) {
             return false;
         }
-    
+
+        // ToDo: Remove BBCode
         $bbcode = ModUtil::available('BBCode');
         $boldstart = '';
         $boldend   = '';

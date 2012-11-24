@@ -66,7 +66,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $forum = new Dizkus_ContentType_Forum($forumId);
-        $this->view->assign('forum', $forum->toArray());
+        $this->view->assign('forum', $forum->get());
         $this->view->assign('topics', $forum->getTopics($start));
         $this->view->assign('pager', $forum->getPager());
         $this->view->assign('permissions', $forum->getPermissions());
@@ -77,7 +77,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)
         );
 
-        $this->view->assign('hot_threshold', ModUtil::getVar('Dizkus', 'hot_threshold'));
+        $this->view->assign('hot_threshold', $this->getVar('hot_threshold'));
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
 
@@ -166,8 +166,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      *
      * @return string
      */
-    public function reply($args=array())
+    public function reply()
     {
+        $form = FormUtil::newForm($this->name, $this);
+
+        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
+
+
         // Permission check
         // todo check topic
         $this->throwForbiddenUnless(
@@ -198,7 +203,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $message = dzkstriptags($message);
         // check for maximum message size
         if ((strlen($message) +  strlen('[addsig]')) > 65535) {
-            LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+            LogUtil::registerStatus(
+                $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
+            );
             // switch to preview mode
             $preview = true;
         }
@@ -213,33 +220,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             $post = new Dizkus_ContentType_Post();
             $post->create($data);
+            $params = array(
+                'topic' => $topic_id,
+                'start' => $start
+            );
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $params) . '#pid' . $post_id;
 
-
-
-            // Confirm authorisation code
-            /*if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError();
-            }*/
-
-            /*
-            // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
-            $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $topic['topic_poster']));
-            if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList','user','isIgnored',array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
-                return LogUtil::registerError($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'), null, ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
-            }
-    
-            list($start,
-                 $post_id ) = ModUtil::apiFunc('Dizkus', 'user', 'storereply',
-                                           array('topic_id'         => $topic_id,
-                                                 'message'          => $message,
-                                                 'attach_signature' => $attach_signature,
-                                                 'subscribe_topic'  => $subscribe_topic));
-            */
-    
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                array('topic' => $topic_id,
-                                      'start' => $start)) . '#pid' . $post_id);
+            return System::redirect($url);
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $reply = ModUtil::apiFunc('Dizkus', 'user', 'preparereply',

@@ -10,6 +10,19 @@
 
 Class Dizkus_Installer extends Zikula_AbstractInstaller
 {
+    private $_entities = array(
+        'Dizkus_Entity_Forums',
+        'Dizkus_Entity_Post',
+        'Dizkus_Entity_Topic',
+        'Dizkus_Entity_Favorites',
+        'Dizkus_Entity_Poster',
+        'Dizkus_Entity_ModeratorUser',
+        'Dizkus_Entity_ForumSubscriptions',
+        'Dizkus_Entity_TopicSubscriptions',
+        'Dizkus_Entity_Ranks'
+    );
+
+
     /**
      *  Initialize a new install of the Dizkus module
      *
@@ -19,31 +32,9 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
      */
     public function install()
     {
-        // no gettext here as we are not sure which way of gettext to use 
-        //if (version_compare(System::VERSION_NUM, '1.3.0-dev', '<')) {
-          //  return LogUtil::registerError($this->__('Error! This version of the Dizkus module requires Zikula 1.3.0 or later. Installation has been stopped because this requirement is not met.'));
-        //}
-    
-        // TODO move this to a loop
-        // creating categories table
-        //if (!DBUtil::createTable('dizkus_categories')) {
-        //    return false;
-        //}
 
-
-        $entities = array(
-            'Dizkus_Entity_Forums',
-            'Dizkus_Entity_Post',
-            'Dizkus_Entity_Topic',
-            'Dizkus_Entity_Favorites',
-            'Dizkus_Entity_Poster',
-            'Dizkus_Entity_Moderators',
-            'Dizkus_Entity_ForumSubscriptions',
-            'Dizkus_Entity_TopicSubscriptions',
-            'Dizkus_Entity_Ranks'
-        );
         try {
-            DoctrineHelper::createSchema($this->entityManager, $entities);
+            DoctrineHelper::createSchema($this->entityManager, $this->_entities);
         } catch (Exception $e) {
             return LogUtil::registerError($e->getMessage());
         }
@@ -101,25 +92,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'display'));
         }
 */        
-        // create FULLTEXT index 
-        if (strtolower($GLOBALS['ZConfig']['DBInfo']['default']['dbtabletype']) <> 'innodb') {
-            // FULLTEXT does not work an innodb - by design
-            // for now we assume that it works with all other table types, if not, please open a ticket
-            $ztables      = DBUtil::getTables();
-            $topicstable  = DataUtil::formatForStore($ztables['dizkus_topics']);
-            $topictitle   = DataUtil::formatForStore($ztables['dizkus_topics_column']['topic_title']);
-            $res1 = DBUtil::executeSQL('ALTER TABLE ' . $topicstable . ' ADD FULLTEXT ' . $topictitle . ' (' . $topictitle . ')');
-            
-            $poststable = DataUtil::formatForStore($ztables['dizkus_posts']);
-            $poststext  = DataUtil::formatForStore($ztables['dizkus_posts_column']['post_text']);
-            $res2 = DBUtil::executeSQL('ALTER TABLE ' . $poststable . ' ADD FULLTEXT ' . $poststext . ' (' . $poststext . ')');
-    
-            if ($res1 == true && $res2 == true) {
-                ModUtil::setVar('Dizkus', 'fulltextindex', 'yes');
-            } else {
-                ModUtil::setVar('Dizkus', 'fulltextindex', 'no');
-            }
-        }
+        // ToDo: create FULLTEXT index
+
         
         // forum settings
         $this->setVar('posts_per_page', 15);
@@ -144,7 +118,10 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->setVar('shownewtopicconfirmation', 'no');
         $this->setVar('timespanforchanges', 24);
         $this->setVar('forum_enabled', 'yes');
-        $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
+        $this->setVar(
+            'forum_disabled_info',
+            $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.')
+        );
         // 3.0
         $this->setVar('autosubscribe', 'no');
         $this->setVar('newtopicconfirmation', 'no');
@@ -195,22 +172,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
      */
     public function uninstall()
     {
-
-        // drop table
-        $entities = array(
-            'Dizkus_Entity_Forums',
-            'Dizkus_Entity_Post',
-            'Dizkus_Entity_Topic',
-            'Dizkus_Entity_Favorites',
-            'Dizkus_Entity_Poster',
-            'Dizkus_Entity_Moderators',
-            'Dizkus_Entity_ForumSubscriptions',
-            'Dizkus_Entity_TopicSubscriptions',
-            'Dizkus_Entity_Ranks'
-        );
-
         try {
-            DoctrineHelper::dropSchema($this->entityManager, $entities);
+            DoctrineHelper::dropSchema($this->entityManager, $this->_entities);
         } catch (Exception $e) {
         }
 

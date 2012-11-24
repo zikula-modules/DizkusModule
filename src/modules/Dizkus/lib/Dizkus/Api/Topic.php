@@ -186,7 +186,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
 
-        return $this->entityManager->getRepository('Dizkus_Entity_Topics')
+        return $this->entityManager->getRepository('Dizkus_Entity_Topic')
                                    ->findOneBy(array('topic_reference' => $reference))
                                    ->toArray();
     }
@@ -236,7 +236,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
     public function delete($topic)
     {
         if (!is_array($topic)) {
-            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topics')->findOneBy($topic);
+            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy($topic);
         }
         $topic_id = $topic->gettopic_id();
 
