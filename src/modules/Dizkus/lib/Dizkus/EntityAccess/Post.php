@@ -14,7 +14,7 @@
  */
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class Dizkus_ContentType_Post
+class Dizkus_EntityAccess_Post
 {
 
     private $_post;
@@ -36,7 +36,7 @@ class Dizkus_ContentType_Post
 
         if ($id > 0) {
             $this->_post = $this->entityManager->find('Dizkus_Entity_Posts', $id);
-            $this->_topic = new Dizkus_ContentType_Topic($this->_post->gettopic_id());
+            $this->_topic = new Dizkus_EntityAccess_Topic($this->_post->gettopic_id());
         } else {
             $this->_post = new Dizkus_Entity_Posts();
         }
@@ -131,12 +131,12 @@ class Dizkus_ContentType_Post
         $poster->incrementUser_posts();
 
         // increment topic posts
-        $this->_topic = new Dizkus_ContentType_Topic($data['topic_id']);
+        $this->_topic = new Dizkus_EntityAccess_Topic($data['topic_id']);
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
 
         // increment forum posts
-        $forum = new Dizkus_ContentType_Forum($this->_topic->getForumId());
+        $forum = new Dizkus_EntityAccess_Forum($this->_topic->getForumId());
         $forum->incrementPostCount();
 
         $this->_post->setposter($poster);
@@ -156,7 +156,7 @@ class Dizkus_ContentType_Post
         $this->_post->getposter()->decrementUser_posts();
         $this->_topic->decrementRepliesCount();
 
-        $forum = new Dizkus_ContentType_Forum($this->_topic->getForumId());
+        $forum = new Dizkus_EntityAccess_Forum($this->_topic->getForumId());
         $forum->decrementPostCount();
 
         $this->entityManager->remove($this->_post);

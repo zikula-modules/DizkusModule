@@ -13,7 +13,7 @@
  * information regarding copyright and licensing.
  */
 
-class Dizkus_ContentType_Tree extends Zikula_AbstractBase
+class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
 {
 
     /**

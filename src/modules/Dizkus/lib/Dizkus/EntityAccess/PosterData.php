@@ -13,7 +13,7 @@
  * information regarding copyright and licensing.
  */
 
-class Dizkus_ContentType_PosterData
+class Dizkus_EntityAccess_PosterData
 {
 
     private $_poster;

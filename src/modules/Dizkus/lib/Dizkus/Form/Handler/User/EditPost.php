@@ -49,7 +49,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
             );
         }
 
-        $this->_post = new Dizkus_ContentType_Post($id);
+        $this->_post = new Dizkus_EntityAccess_Post($id);
         $view->assign($this->_post->toArray());
         $view->assign('preview', false);
 
