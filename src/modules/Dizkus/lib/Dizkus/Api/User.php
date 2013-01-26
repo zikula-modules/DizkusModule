@@ -72,7 +72,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'forum':
                 if (!isset($cache[$type])) {
-                    $cache[$type] = $this->countEntity('Forums');
+                    $cache[$type] = $this->countEntity('Forum');
                 }
 
                 return $cache[$type];
@@ -96,7 +96,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'forumtopics':
                 if (!isset($cache[$type][$id])) {
-                    $cache[$type][$id] = $this->countEntity('Topics', 'forum_id', $id);
+                    $cache[$type][$id] = $this->countEntity('Topic', 'forum_id', $id);
                 }
 
                 return $cache[$type][$id];
@@ -104,7 +104,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'alltopics':
                 if (!isset($cache[$type])) {
-                    $cache[$type] = $this->countEntity('Topics');
+                    $cache[$type] = $this->countEntity('Topic');
                 }
 
                 return $cache[$type];
@@ -344,7 +344,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     public function movetopic($args)
     {
         // get the old forum id and old post date
-        $topic = $this->entityManager->find('Dizkus_Entity_Topics', $args['topic_id'])->toArray();
+        $topic = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id'])->toArray();
 
         if ($topic['forum_id'] <> $args['forum_id']) {
             // set new forum id

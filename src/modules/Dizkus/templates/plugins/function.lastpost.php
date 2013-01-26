@@ -32,7 +32,7 @@ function smarty_function_lastpost($params, &$smarty)
     if($lastpost) {
         $lastpost = $lastpost[0];
         if (empty($lastpost['post_title'])) {
-            $topic =  $em->find('Dizkus_Entity_Topics', $lastpost['topic_id']);
+            $topic =  $em->find('Dizkus_Entity_Topic', $lastpost['topic_id']);
             $lastpost['post_title'] = $topic->gettopic_title();
         }
         $smarty->assign('lastpost', $lastpost);

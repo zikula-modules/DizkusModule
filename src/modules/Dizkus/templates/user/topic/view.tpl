@@ -1,5 +1,5 @@
 {assign var='templatetitle' value=$topic.topic_title}
-{include file='user/header.tpl' parent=$topic.forum_id}
+{include file='user/header.tpl' parent=$topic.forum.forum_id}
 
 <input id="topic_id" type="hidden" value={$topic.topic_id}>
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
@@ -46,14 +46,14 @@
                 {/if*}
 
                 {if $permissions.comment}
-                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
+                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
                 {if $userloggedin}
                 <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                 {/if}
 
-                {*<li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}*}</li>
+                {*<li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum.forum_id}*}</li>
 
                 {if $userloggedin}
                 <li>
@@ -147,7 +147,7 @@
         <div class="dzk_subcols z-clearfix">
             <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
                 <div>
-                    <input type="hidden" id="forum" name="forum" value="{$topic.forum_id}" />
+                    <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
                     <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
                     <input type="hidden" id="quote" name="quote" value="" />
                     <input type="hidden" id="authid" name="authid" value="" />
@@ -205,7 +205,7 @@
 {/if}
 
 
-{include file='user/moderatedBy.tpl' mods=$topic.forum_mods}
+{include file='user/moderatedBy.tpl' forum=$topic.forum}
 
 <script type="text/javascript">
     // <![CDATA[

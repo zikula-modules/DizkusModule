@@ -45,7 +45,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
         // count topics of a forum
         $qb = $this->entityManager->createQueryBuilder();
         $data['forum_topics'] = $qb->select('COUNT(t)')
-                ->from('Dizkus_Entity_Topics', 't')
+                ->from('Dizkus_Entity_Topic', 't')
                 ->where('t.forum_id = :id')
                 ->setParameter('id', $id)
                 ->getQuery()

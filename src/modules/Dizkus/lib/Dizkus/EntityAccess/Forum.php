@@ -156,8 +156,8 @@ class Dizkus_EntityAccess_Forum
         $query = $this->entityManager
                 ->createQueryBuilder()
                 ->select('p')
-                ->from('Dizkus_Entity_Topics', 'p')
-                ->where('p.forum_id = :forumId')
+                ->from('Dizkus_Entity_Topic', 'p')
+                ->where('p.forum = :forumId')
                 ->setParameter('forumId', $id)
                 ->leftJoin('p.last_post', 'l')
                 ->orderBy('p.sticky', 'DESC')
