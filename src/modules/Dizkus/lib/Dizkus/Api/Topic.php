@@ -250,7 +250,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // Update the users's post count, this might be slow on big topics but it makes other parts of the
         // forum faster so we win out in the long run.
         // step #1: get all post ids and posters ids
-        $postings = $this->entityManager->getRepository('Dizkus_Entity_Posts')
+        $postings = $this->entityManager->getRepository('Dizkus_Entity_Post')
                 ->findBy(array('topic_id' => $topic_id));
 
 

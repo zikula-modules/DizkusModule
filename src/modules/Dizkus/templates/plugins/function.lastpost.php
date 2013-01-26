@@ -20,7 +20,7 @@ function smarty_function_lastpost($params, &$smarty)
     $em = ServiceUtil::getService('doctrine.entitymanager');
     $qb = $em->createQueryBuilder();
     $qb->select('p')
-        ->from('Dizkus_Entity_Posts', 'p')
+        ->from('Dizkus_Entity_Post', 'p')
         ->where('p.forum_id = :forumID')
         ->setParameter('forumID', $params['forumID'])
         // only the oldiest one

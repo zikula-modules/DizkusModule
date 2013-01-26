@@ -152,18 +152,34 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     }
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"} )
+     * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
-    private $poster_id;
+    private $poster;
 
-    public function getposter_id()
+    /**
+     * Get User who made post
+     * 
+     * @return Dizkus_Entity_Poster
+     */
+    public function getposter()
     {
-        return $this->poster_id;
+        return $this->poster;
     }
 
-    public function setposter_id($poster)
+    public function setposter(Dizkus_Entity_Poster $poster)
     {
-        return $this->poster_id = $poster;
+        return $this->poster = $poster;
+    }
+    
+    /**
+     * convenience method
+     * 
+     * @return integer
+     */
+    public function getPoster_id()
+    {
+        return $this->poster->getuser_id();
     }
 
     public function getposter_data()
@@ -202,6 +218,11 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
      * */
     private $topic;
 
+    /**
+     * get Post topic
+     * 
+     * @return Dizkus_Entity_Topic
+     */
     public function getTopic()
     {
         return $this->topic;
@@ -210,6 +231,16 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     public function setTopic(Dizkus_Entity_Topic $topic)
     {
         $this->topic = $topic;
+    }
+    
+    /**
+     * convenience method
+     * 
+     * @return integer
+     */
+    public function getTopic_id()
+    {
+        return $this->topic->gettopic_id();
     }
 
 }

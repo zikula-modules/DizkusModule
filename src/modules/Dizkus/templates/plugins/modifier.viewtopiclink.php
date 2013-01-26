@@ -67,8 +67,8 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     $em = ServiceUtil::getService('doctrine.entitymanager');
     $qb = $em->createQueryBuilder();
     $firstPost = $qb->select('p')
-                    ->from('Dizkus_Entity_Posts', 'p')
-                    ->where('p.topic_id = :id')
+                    ->from('Dizkus_Entity_Post', 'p')
+                    ->where('p.topic = :id')
                     ->setParameter('id', $topic_id)
                     ->orderBy('p.post_time', 'DESC')
                     ->getQuery()
@@ -79,8 +79,9 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $title = $firstPost[0]['post_text'];
         $title = substr($title, 0, 255);
         $title = DataUtil::formatForDisplayHTML($title);
-        $hook = new Zikula_FilterHook('dizkus.filter_hooks.message.filter', $title);
-        $title = ServiceUtil::getManager()->getService('zikula.hookmanager')->notify($hook)->getData();
+        // disabled Jan 26, 2013 CAH - throwing error `undefined method notify()`
+//        $hook = new Zikula_FilterHook('dizkus.filter_hooks.message.filter', $title);
+//        $title = ServiceUtil::getManager()->getService('zikula.hookmanager')->notify($hook)->getData();
 
     }
     // ToDo Renable it

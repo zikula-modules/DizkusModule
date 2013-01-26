@@ -127,8 +127,8 @@ class Dizkus_EntityAccess_Topic
         $query = $this->entityManager
                 ->createQueryBuilder()
                 ->select('p, u, r')
-                ->from('Dizkus_Entity_Posts', 'p')
-                ->where('p.topic_id = :topicId')
+                ->from('Dizkus_Entity_Post', 'p')
+                ->where('p.topic = :topicId')
                 ->setParameter('topicId', $id)
                 ->leftJoin('p.poster', 'u')
                 ->leftJoin('u.user_rank', 'r')
@@ -242,15 +242,14 @@ class Dizkus_EntityAccess_Topic
         $this->_topic->merge($data);
 
         // prepare poster data
-        //$uid = UserUtil::getVar('uid');
-        //$poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
-        //if (!$poster) {
-        //    $poster = new Dizkus_Entity_Poster();
-        //    $poster->setuser_id($uid);
-        //}
-        //$poster->incrementUser_posts();
-
-        $this->_firstPost->setposter_id(UserUtil::getVar('uid'));
+        $uid = UserUtil::getVar('uid');
+        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        if (!$poster) {
+            $poster = new Dizkus_Entity_Poster();
+            $poster->setuser_id($uid);
+        }
+        $poster->incrementUser_posts();
+        $this->_firstPost->setposter($poster);
     }
 
     public function getPreview()

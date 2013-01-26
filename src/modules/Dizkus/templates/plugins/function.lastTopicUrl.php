@@ -20,8 +20,8 @@ function smarty_function_lastTopicUrl($params, &$smarty)
         $em = ServiceUtil::getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('count(p)')
-            ->from('Dizkus_Entity_Posts', 'p')
-            ->where('p.topic_id = :topicId')
+            ->from('Dizkus_Entity_Post', 'p')
+            ->where('p.topic = :topicId')
             ->setParameter('topicId', $params['topic']);
         // only the oldiest one
         $numberOfPosts = (int)$qb->getQuery()->getSingleScalarResult();

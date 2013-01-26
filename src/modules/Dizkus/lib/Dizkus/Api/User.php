@@ -64,7 +64,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             case 'all':
             case 'allposts':
                 if (!isset($cache[$type])) {
-                    $cache[$type] = $this->countEntity('Posts');
+                    $cache[$type] = $this->countEntity('Post');
                 }
 
                 return $cache[$type];
@@ -80,7 +80,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'topic':
                 if (!isset($cache[$type][$id])) {
-                    $cache[$type][$id] = $this->countEntity('Posts', 'topic_id', $id);
+                    $cache[$type][$id] = $this->countEntity('Post', 'topic_id', $id);
                 }
 
                 return $cache[$type][$id];
@@ -88,7 +88,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'forumposts':
                 if (!isset($cache[$type][$id])) {
-                    $cache[$type][$id] = $this->countEntity('Posts', 'forum_id', $id);
+                    $cache[$type][$id] = $this->countEntity('Post', 'forum_id', $id);
                 }
 
                 return $cache[$type][$id];

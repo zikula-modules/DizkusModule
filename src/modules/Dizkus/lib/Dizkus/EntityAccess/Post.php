@@ -32,10 +32,10 @@ class Dizkus_EntityAccess_Post
         $this->name = 'Dizkus';
 
         if ($id > 0) {
-            $this->_post = $this->entityManager->find('Dizkus_Entity_Posts', $id);
-            $this->_topic = new Dizkus_EntityAccess_Topic($this->_post->gettopic_id());
+            $this->_post = $this->entityManager->find('Dizkus_Entity_Post', $id);
+            $this->_topic = new Dizkus_EntityAccess_Topic($this->_post->getTopic_id());
         } else {
-            $this->_post = new Dizkus_Entity_Posts();
+            $this->_post = new Dizkus_Entity_Post();
         }
     }
 
