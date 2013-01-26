@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Copyright Pages Team 2012
+ * Dizkus
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
- *
- * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Pages
- * @link https://github.com/zikula-modules/Pages
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link https://github.com/zikula-modules/Dizkus
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
  */
-class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+
+class Dizkus_Entity_Repository_ForumsRepository extends NestedTreeRepository
 {
 
     /**
@@ -27,7 +24,7 @@ class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
      */
     public function getOneLevel($category = null)
     {
-        $qb = $this->entityManager
+        $qb = $this->_em
                 ->createQueryBuilder()
                 ->select('f, c, l')
                 ->orderBy('f.lft')
@@ -44,8 +41,8 @@ class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
 
 
         // favorites
-        if (UserUtil::isLoggedIn() && $this->getVar('favorites_enabled') == 'yes') {
-            if (ModUtil::apiFunc($this->name, 'Favorites', 'getStatus')) {
+        if (UserUtil::isLoggedIn() && ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes') {
+            if (ModUtil::apiFunc('Dizkus', 'Favorites', 'getStatus')) {
                 $qb->join('c.favorites', 'fa')
                         ->andWhere('fa.user_id = :uid')
                         ->setParameter('uid', UserUtil::getVar('uid'));
@@ -63,11 +60,9 @@ class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
      *
      * @return array
      */
-    public function get()
+    public function getTree()
     {
-        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
-
-        return $repo->childrenHierarchy(null, false);
+        return $this->childrenHierarchy(null, false);
     }
 
 }

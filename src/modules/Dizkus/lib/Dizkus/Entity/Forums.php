@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_ForumsRepository")
  */
 class Dizkus_Entity_Forums extends Zikula_EntityAccess
 {

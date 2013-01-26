@@ -291,8 +291,11 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
+        
+        $tree = $this->entityManager->getRepository('Dizkus_Entity_Forums')->getTree();
 
-        return $this->view->assign('tree', Dizkus_EntityAccess_Tree::get())->fetch('admin/tree.tpl');
+        return $this->view->assign('tree', $tree)
+                ->fetch('admin/tree.tpl');
     }
 
     /**
