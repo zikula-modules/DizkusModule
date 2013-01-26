@@ -132,9 +132,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         if (!$topic->exists()) {
             return LogUtil::registerError(
-                            $this->__f(
-                                    "Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topicId)
-                            ), null, ModUtil::url('Dizkus', 'user', 'main')
+                $this->__f(
+                        "Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topicId)
+                ), null, ModUtil::url('Dizkus', 'user', 'main')
             );
         }
 
