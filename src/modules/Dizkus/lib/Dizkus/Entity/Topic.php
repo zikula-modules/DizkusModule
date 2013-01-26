@@ -106,7 +106,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $sticky = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="topics")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="topics")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
@@ -116,7 +116,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->forum;
     }
 
-    public function setForum(Dizkus_Entity_Forums $forum)
+    public function setForum(Dizkus_Entity_Forum $forum)
     {
         $this->forum = $forum;
     }

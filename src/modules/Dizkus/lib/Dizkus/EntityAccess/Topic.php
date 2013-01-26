@@ -161,7 +161,7 @@ class Dizkus_EntityAccess_Topic
      */
     public function getBreadcrumbs()
     {
-        $i = $this->entityManager->find('Dizkus_Entity_Forums', $this->getForumId());
+        $i = $this->entityManager->find('Dizkus_Entity_Forum', $this->getForumId());
 
         $output = array();
         while ($i->getLvl() != 0) {

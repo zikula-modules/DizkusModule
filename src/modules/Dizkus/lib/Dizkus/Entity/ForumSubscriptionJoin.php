@@ -23,7 +23,7 @@ class Dizkus_Entity_ForumSubscriptionJoin extends Zikula_EntityAccess
     private $msg_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", cascade={"persist"} )
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", cascade={"persist"} )
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      */
     private $forum;

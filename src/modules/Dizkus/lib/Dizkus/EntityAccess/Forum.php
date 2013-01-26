@@ -33,7 +33,7 @@ class Dizkus_EntityAccess_Forum
         $this->name = 'Dizkus';
 
         if ($id > 0) {
-            $this->_forum = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+            $this->_forum = $this->entityManager->find('Dizkus_Entity_Forum', $id);
         } else {
             $this->_forum = new Dizkus_Entity_forums();
         }

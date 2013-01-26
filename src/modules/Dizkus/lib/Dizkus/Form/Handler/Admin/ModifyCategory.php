@@ -41,12 +41,12 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
 
         if ($id) {
             $view->assign('templatetitle', $this->__('Modify category'));
-            $category = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+            $category = $this->entityManager->find('Dizkus_Entity_Forum', $id);
             if (!$category) {
                 return LogUtil::registerError($this->__f('Category with id %s not found', $id));
             }
         } else {
-            $category = new Dizkus_Entity_Forums();
+            $category = new Dizkus_Entity_Forum();
             $view->assign('templatetitle', $this->__('Create category'));
         }
 

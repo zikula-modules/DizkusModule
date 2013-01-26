@@ -13,7 +13,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
 
     public function getParents($id = null)
     {
-        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
+        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
         $parents = $repo->childrenHierarchy();
         $output = $this->getNode($parents, $id);
 
@@ -190,7 +190,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             return false;
         }
 
-        return (int)$this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->getcat_id();
+        return (int)$this->entityManager->find('Dizkus_Entity_Forum', $forum_id)->getcat_id();
     }
 
     /**
@@ -207,7 +207,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         if (!is_numeric($forum_id)) {
             return false;
         }
-        return $this->entityManager->find('Dizkus_Entity_Forums', $forum_id)->toArray();
+        return $this->entityManager->find('Dizkus_Entity_Forum', $forum_id)->toArray();
     }
 
     /**

@@ -105,7 +105,7 @@ class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandl
                 ModUtil::apiFunc($this->name, 'Category', 'deleteChildForums', $cat_id);
             } else {
                 $find = array('parent_id' => 0, 'cat_id' => $cat_id);
-                $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($find);
+                $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy($find);
                 foreach ($forums as $forum) {
                     $forum->setcat_id($data['action']);
                 }

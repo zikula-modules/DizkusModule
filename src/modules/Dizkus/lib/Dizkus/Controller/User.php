@@ -38,7 +38,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         // get tree level
-        $level = $this->entityManager->getRepository('Dizkus_Entity_Forums')->getOneLevel($viewcat);
+        $level = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel($viewcat);
         $this->view->assign('tree', $level);
 
         $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('id' => '0', 'type' => 'all'));

@@ -12,7 +12,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
 {
 
     private $_entities = array(
-        'Dizkus_Entity_Forums',
+        'Dizkus_Entity_Forum',
         'Dizkus_Entity_Post',
         'Dizkus_Entity_Topic',
         'Dizkus_Entity_Favorites',
@@ -135,18 +135,18 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
 
 
-        $food = new Dizkus_Entity_Forums();
+        $food = new Dizkus_Entity_Forum();
         $food->setforum_name('Food');
 
-        $fruits = new Dizkus_Entity_Forums();
+        $fruits = new Dizkus_Entity_Forum();
         $fruits->setforum_name('Fruits');
         $fruits->setParent($food);
 
-        $vegetables = new Dizkus_Entity_Forums();
+        $vegetables = new Dizkus_Entity_Forum();
         $vegetables->setforum_name('Vegetables');
         $vegetables->setParent($food);
 
-        $carrots = new Dizkus_Entity_Forums();
+        $carrots = new Dizkus_Entity_Forum();
         $carrots->setforum_name('Carrots');
         $carrots->setParent($vegetables);
 

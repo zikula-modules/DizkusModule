@@ -40,7 +40,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="moderatorUsers")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorUsers")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
@@ -50,7 +50,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
         return $this->forum;
     }
 
-    public function setForum(Dizkus_Entity_Forums $forum)
+    public function setForum(Dizkus_Entity_Forum $forum)
     {
         $this->forum = $forum;
     }

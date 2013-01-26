@@ -41,7 +41,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (empty($forumId)) {
             return LogUtil::registerArgsError();
         }
-        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
+        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
         $forum = $repo->find($forumId);
         if ($action == 'moveUp') {
             $repo->moveUp($forum, true);
@@ -60,19 +60,19 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
      */
     public function m()
     {
-        DoctrineHelper::updateSchema($this->entityManager, array('Dizkus_Entity_Forums'));
+        DoctrineHelper::updateSchema($this->entityManager, array('Dizkus_Entity_Forum'));
 
 
         // import new tree
         $order = array('cat_order' => 'ASC');
         $categories = $this->entityManager->getRepository('Dizkus_Entity_310_Category')->findBy(array(), $order);
         foreach ($categories as $category) {
-            $newCatForum = new Dizkus_Entity_Forums();
+            $newCatForum = new Dizkus_Entity_Forum();
             $newCatForum->setforum_name($category->getcat_title());
             $this->entityManager->persist($newCatForum);
 
             $where = array('root' => $category->getcat_id());
-            $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findBy($where);
+            $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy($where);
             foreach ($forums as $forum) {
                 $forum->setParent($newCatForum);
                 $this->entityManager->persist($forum);
@@ -292,7 +292,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
         
-        $tree = $this->entityManager->getRepository('Dizkus_Entity_Forums')->getTree();
+        $tree = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getTree();
 
         return $this->view->assign('tree', $tree)
                 ->fetch('admin/tree.tpl');

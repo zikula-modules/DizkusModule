@@ -40,7 +40,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $id = $this->request->query->get('id', null);
 
         if ($id) {
-            $category = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+            $category = $this->entityManager->find('Dizkus_Entity_Forum', $id);
             if ($category) {
                 $this->view->assign($category->toArray());
             } else {

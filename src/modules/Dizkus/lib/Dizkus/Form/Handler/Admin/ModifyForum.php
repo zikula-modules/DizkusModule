@@ -127,7 +127,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        $data['parent'] = $this->entityManager->find('Dizkus_Entity_Forums', $data['parent']);
+        $data['parent'] = $this->entityManager->find('Dizkus_Entity_Forum', $data['parent']);
 
         if ($data['extsource'] == 'mail2forum' && $data['pop3_passwordconfirm'] != $data['pop3_password']) {
             return LogUtil::registerError('Passwords are not matching!');

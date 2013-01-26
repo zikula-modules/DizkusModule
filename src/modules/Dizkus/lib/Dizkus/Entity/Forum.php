@@ -12,9 +12,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_ForumsRepository")
+ * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_ForumRepository")
  */
-class Dizkus_Entity_Forums extends Zikula_EntityAccess
+class Dizkus_Entity_Forum extends Zikula_EntityAccess
 {
 
     /**
@@ -160,7 +160,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="children")
      * @ORM\JoinColumn(name="parent", referencedColumnName="forum_id")
      */
     private $parent;
@@ -170,13 +170,13 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->parent;
     }
 
-    public function setParent(Dizkus_Entity_Forums $parent = null)
+    public function setParent(Dizkus_Entity_Forum $parent = null)
     {
         $this->parent = $parent;
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forum", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;

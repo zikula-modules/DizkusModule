@@ -26,7 +26,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
      */
     public function forums()
     {
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forums')->findAll();
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findAll();
         foreach ($forums as $forum) {
             $this->forum(array('forum' => $forum, 'type' => 'forum'));
         }
@@ -35,11 +35,11 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
 
     public function forum($args)
     {
-        if ($args['forum'] instanceof Dizkus_Entity_Forums) {
+        if ($args['forum'] instanceof Dizkus_Entity_Forum) {
             $id = $args['forum']->getForum_id();
         } else {
             $id = $args['forum'];
-            $args['forum'] = $this->entityManager->find('Dizkus_Entity_Forums', $id);
+            $args['forum'] = $this->entityManager->find('Dizkus_Entity_Forum', $id);
         }
 
         // count topics of a forum

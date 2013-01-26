@@ -10,7 +10,7 @@
  */
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class Dizkus_Entity_Repository_ForumsRepository extends NestedTreeRepository
+class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
 {
 
     /**
@@ -28,7 +28,7 @@ class Dizkus_Entity_Repository_ForumsRepository extends NestedTreeRepository
                 ->createQueryBuilder()
                 ->select('f, c, l')
                 ->orderBy('f.lft')
-                ->from('Dizkus_Entity_Forums', 'f')
+                ->from('Dizkus_Entity_Forum', 'f')
                 ->leftJoin('f.children', 'c')
                 ->leftJoin('c.last_post', 'l');
 
