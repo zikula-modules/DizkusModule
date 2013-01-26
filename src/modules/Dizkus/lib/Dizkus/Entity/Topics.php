@@ -4,7 +4,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
-
 /**
  * Topics entity class.
  *
@@ -246,4 +245,5 @@ class Dizkus_Entity_Topics extends Zikula_EntityAccess
     {
         $this->solved = $solved;
     }
+
 }

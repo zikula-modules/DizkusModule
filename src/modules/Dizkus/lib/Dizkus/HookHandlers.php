@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2009 Zikula Foundation.
  *
@@ -39,20 +40,17 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-   
-        $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference',
-                                 array('reference' => '52-Kaik'));
-    
+
+        $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference', array('reference' => '52-Kaik'));
+
         if ($topic_id <> false) {
-            
-        $start = 0;
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
-                              array('topic_id'   => $topic_id,
-                                    'start'      => $start,
-                                    'count'      => true));
-                     
+
+            $start = 0;
+            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
+                        'start' => $start,
+                        'count' => true));
         }
-   
+
 
         // create the output object
         $view = Zikula_View::getInstance('Dizkus', false, null, true);
@@ -88,9 +86,9 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         static $mainScreen = true;
         $view->assign('mainscreen', $mainScreen);
         $mainScreen = false;
-        
+
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
-        
+
         $hook->setResponse(new Zikula_Response_DisplayHook('provider.dizkus.ui_hooks.comments', $view, DataUtil::formatForOS($templateset) . '/user/topic/view.tpl'));
     }
 

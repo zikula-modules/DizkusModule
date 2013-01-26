@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHandler
 {
+
     /**
      * Setup form.
      *
@@ -40,7 +42,6 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         $view->assign('subscriptions', $subscriptions);
         return true;
     }
-
 
     /**
      * Handle form submission.
@@ -70,4 +71,5 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
         return $view->redirect($url);
     }
+
 }

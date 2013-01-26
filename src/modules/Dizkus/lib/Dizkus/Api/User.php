@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,9 +8,9 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 class Dizkus_Api_User extends Zikula_AbstractApi
 {
+
     /**
      * Instance of Zikula_View.
      *
@@ -44,7 +45,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return $this;
     }
 
-    
     /**
      * Returns the total number of posts in the whole system, a forum, or a topic
      * Also can return the number of users on the system.
@@ -55,98 +55,96 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public function boardstats($args)
     {
-        $id   = isset($args['id']) ? $args['id'] : null;
+        $id = isset($args['id']) ? $args['id'] : null;
         $type = isset($args['type']) ? $args['type'] : null;
-    
+
         static $cache = array();
-    
-        switch ($type)
-        {
+
+        switch ($type) {
             case 'all':
             case 'allposts':
-                if (!isset($cache[$type])){
+                if (!isset($cache[$type])) {
                     $cache[$type] = $this->countEntity('Posts');
                 }
-                
+
                 return $cache[$type];
                 break;
 
             case 'forum':
-                if (!isset($cache[$type])){
-                   $cache[$type] = $this->countEntity('Forums');
+                if (!isset($cache[$type])) {
+                    $cache[$type] = $this->countEntity('Forums');
                 }
-                
+
                 return $cache[$type];
                 break;
-    
+
             case 'topic':
-                if (!isset($cache[$type][$id])){
-                   $cache[$type][$id] = $this->countEntity('Posts', 'topic_id', $id);
+                if (!isset($cache[$type][$id])) {
+                    $cache[$type][$id] = $this->countEntity('Posts', 'topic_id', $id);
                 }
-                
-                return  $cache[$type][$id];
+
+                return $cache[$type][$id];
                 break;
-    
+
             case 'forumposts':
-                if (!isset($cache[$type][$id])){
-                   $cache[$type][$id] = $this->countEntity('Posts', 'forum_id', $id);
+                if (!isset($cache[$type][$id])) {
+                    $cache[$type][$id] = $this->countEntity('Posts', 'forum_id', $id);
                 }
-                
-                return  $cache[$type][$id];
+
+                return $cache[$type][$id];
                 break;
-    
+
             case 'forumtopics':
-                if (!isset($cache[$type][$id])){
-                   $cache[$type][$id] = $this->countEntity('Topics', 'forum_id', $id);
+                if (!isset($cache[$type][$id])) {
+                    $cache[$type][$id] = $this->countEntity('Topics', 'forum_id', $id);
                 }
-                
-                return  $cache[$type][$id];
+
+                return $cache[$type][$id];
                 break;
-    
+
             case 'alltopics':
-                if (!isset($cache[$type])){
-                   $cache[$type] = $this->countEntity('Topics');
+                if (!isset($cache[$type])) {
+                    $cache[$type] = $this->countEntity('Topics');
                 }
-                
-                return  $cache[$type];
+
+                return $cache[$type];
                 break;
-    
+
             case 'allmembers':
-                if (!isset($cache[$type])){
-                   $cache[$type] = count(UserUtil::getUsers());
+                if (!isset($cache[$type])) {
+                    $cache[$type] = count(UserUtil::getUsers());
                 }
-                
-                return  $cache[$type];
+
+                return $cache[$type];
                 break;
-    
+
             case 'lastmember':
             case 'lastuser':
-                if (!isset($cache[$type])){
+                if (!isset($cache[$type])) {
                     $res = DBUtil::selectObjectArray('users', null, 'uid DESC', 1, 1);
                     $cache[$type] = $res[0]['uname'];
                 }
-                
-                return  $cache[$type];
+
+                return $cache[$type];
                 break;
-    
+
             default:
                 return LogUtil::registerError($this->__("Error! Wrong parameters in boardstats()."), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     }
-    
-    private function countEntity($entityname, $where = null, $parameter = null) {
+
+    private function countEntity($entityname, $where = null, $parameter = null)
+    {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('count(a)')
-           ->from('Dizkus_Entity_'.$entityname, 'a');
+                ->from('Dizkus_Entity_' . $entityname, 'a');
         if (isset($where) && isset($parameter)) {
-            $qb->andWhere('a.'.$where.' = :parameter')
-               ->setParameter('parameter', $parameter);
-            
+            $qb->andWhere('a.' . $where . ' = :parameter')
+                    ->setParameter('parameter', $parameter);
         }
         return (int)$qb->getQuery()->getSingleScalarResult();
-        
     }
-    
+
     /**
      * get_firstlast_post_in_topic
      * gets the first or last post in a topic, false if no posts
@@ -160,9 +158,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     {
         if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
             $ztable = DBUtil::getTables();
-            $option  = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
-            $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $ztable['dizkus_posts_column']['topic_id'].' = '.(int)$args['topic_id']);
-    
+            $option = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
+            $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $ztable['dizkus_posts_column']['topic_id'] . ' = ' . (int)$args['topic_id']);
+
             if ($post_id <> false) {
                 if (isset($args['id_only']) && $args['id_only'] == true) {
                     return $post_id;
@@ -170,10 +168,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 return $this->readpost(array('post_id' => $post_id));
             }
         }
-    
+
         return false;
     }
-    
+
     /**
      * get_last_post_in_forum
      * gets the last post in a forum, false if no posts
@@ -186,20 +184,18 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     {
         if (!empty($args['forum_id']) && is_numeric($args['forum_id'])) {
             $ztable = DBUtil::getTables();
-            $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $ztable['dizkus_posts_column']['forum_id'].' = '.(int)$args['forum_id']);
-    
+            $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $ztable['dizkus_posts_column']['forum_id'] . ' = ' . (int)$args['forum_id']);
+
             if (isset($args['id_only']) && $args['id_only'] == true) {
                 return $post_id;
             }
-    
+
             return $this->readpost(array('post_id' => $post_id));
         }
-    
+
         return false;
     }
 
-
-    
     /**
      * setcookies
      * 
@@ -222,48 +218,44 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         } elseif (substr($path, -1, 1) != '/') {
             $path .= '/';
         }
-    
-        setcookie('DizkusLastVisit', time(), time()+31536000, $path);
-    
-        if (!isset($_COOKIE['DizkusLastVisitTemp'])){
+
+        setcookie('DizkusLastVisit', time(), time() + 31536000, $path);
+
+        if (!isset($_COOKIE['DizkusLastVisitTemp'])) {
             $temptime = isset($_COOKIE['DizkusLastVisit']) ? $_COOKIE['DizkusLastVisit'] : '';
         } else {
             $temptime = $_COOKIE['DizkusLastVisitTemp'];
         }
-    
+
         if (empty($temptime)) {
             // check for old Cookies
             // TO-DO: remove this code in 3.2 or a bit later
-            if (!isset($_COOKIE['phpBBLastVisitTemp'])){
+            if (!isset($_COOKIE['phpBBLastVisitTemp'])) {
                 $temptime = isset($_COOKIE['phpBBLastVisit']) ? $_COOKIE['phpBBLastVisit'] : '';
             } else {
                 $temptime = $_COOKIE['phpBBLastVisitTemp'];
             }
         }
-    
+
         if (empty($temptime)) {
             $temptime = 0;
         }
-    
+
         // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-        setcookie('DizkusLastVisitTemp', $temptime, time()+1800, $path);
-    
+        setcookie('DizkusLastVisitTemp', $temptime, time() + 1800, $path);
+
         // set vars for all scripts
         $last_visit = DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M:%S');
-    
+
         return array($last_visit, $temptime);
     }
-    
 
-    
     // RNG
     function cmp_forumtopicsort($a, $b)
     {
         return strcmp($a['post_time_unix'], $b['post_time_unix']) * -1;
     }
 
-
-    
     /**
      * get_viewip_data
      *
@@ -275,22 +267,20 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     public function get_viewip_data($args)
     {
         $ztable = DBUtil::getTables();
-    
-        $viewip['poster_ip'] = DBUtil::selectField('dizkus_posts', 'poster_ip', 'post_id='.DataUtil::formatForStore($args['post_id']));
+
+        $viewip['poster_ip'] = DBUtil::selectField('dizkus_posts', 'poster_ip', 'post_id=' . DataUtil::formatForStore($args['post_id']));
         $viewip['poster_host'] = gethostbyaddr($viewip['poster_ip']);
-    
+
         $sql = "SELECT uid, uname, count(*) AS postcount
-                FROM ".$ztable['dizkus_posts']." p, ".$ztable['users']." u
-                WHERE poster_ip='".DataUtil::formatForStore($viewip['poster_ip'])."' && p.poster_id = u.uid
+                FROM " . $ztable['dizkus_posts'] . " p, " . $ztable['users'] . " u
+                WHERE poster_ip='" . DataUtil::formatForStore($viewip['poster_ip']) . "' && p.poster_id = u.uid
                 GROUP BY uid";
-        $res       = DBUtil::executeSQL($sql);
-        $colarray  = array('uid', 'uname', 'postcount');
+        $res = DBUtil::executeSQL($sql);
+        $colarray = array('uid', 'uname', 'postcount');
         $viewip['users'] = DBUtil::marshallObjects($res, $colarray);
-    
+
         return $viewip;
     }
-    
-
 
     /**
      * readuserforums
@@ -309,37 +299,37 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         } elseif (isset($args['cat_id'])) {
             $where = 'WHERE a.cat_id=' . DataUtil::formatForStore($args['cat_id']) . ' ';
         }
-    
+
         $joinInfo = array();
-        $joinInfo[] = array('join_table'          =>  'dizkus_categories',
-                            'join_field'          =>  'cat_title',
-                            'object_field_name'   =>  'cat_title',
-                            'compare_field_table' =>  'cat_id',
-                            'compare_field_join'  =>  'cat_id');
-    
+        $joinInfo[] = array('join_table' => 'dizkus_categories',
+            'join_field' => 'cat_title',
+            'object_field_name' => 'cat_title',
+            'compare_field_table' => 'cat_id',
+            'compare_field_join' => 'cat_id');
+
         $permFilter = array();
-        $permFilter[]  = array ('component_left'   =>  'Dizkus',
-                                'component_middle' =>  '',
-                                'component_right'  =>  '',
-                                'instance_left'    =>  'cat_id',
-                                'instance_middle'  =>  'forum_id',
-                                'instance_right'   =>  '',
-                                'level'            =>  ACCESS_READ);
-    
+        $permFilter[] = array('component_left' => 'Dizkus',
+            'component_middle' => '',
+            'component_right' => '',
+            'instance_left' => 'cat_id',
+            'instance_middle' => 'forum_id',
+            'instance_right' => '',
+            'level' => ACCESS_READ);
+
         // retrieve the admin module object array
         $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joinInfo, $where, 'forum_id', -1, -1, 'forum_id', $permFilter);
-    
+
         if ($forums === false) {
             return LogUtil::registerError($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
-    
+
         if (isset($args['forum_id']) && isset($forums[$args['forum_id']])) {
             return $forums[$args['forum_id']];
         }
-    
+
         return $forums;
     }
-    
+
     /**
      * Move topic
      *
@@ -359,31 +349,29 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if ($topic['forum_id'] <> $args['forum_id']) {
             // set new forum id
             $newtopic['forum_id'] = $args['forum_id'];
-            DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
+            DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id=' . (int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
 
             $newpost['forum_id'] = $args['forum_id'];
-            DBUtil::updateObject($newpost, 'dizkus_posts', 'topic_id='.(int)DataUtil::formatForStore($args['topic_id']), 'post_id');
+            DBUtil::updateObject($newpost, 'dizkus_posts', 'topic_id=' . (int)DataUtil::formatForStore($args['topic_id']), 'post_id');
 
             if ($args['shadow'] == true) {
                 // user wants to have a shadow topic
                 $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])));
                 $subject = $this->__f("*** The original posting '%s' has been moved", $topic['topic_title']);
 
-                $this->storenewtopic(array('subject'  => $subject,
-                                                    'message'  => $message,
-                                                    'forum_id' => $topic['forum_id'],
-                                                    'time'     => $topic['topic_time'],
-                                                    'no_sig'   => true));
+                $this->storenewtopic(array('subject' => $subject,
+                    'message' => $message,
+                    'forum_id' => $topic['forum_id'],
+                    'time' => $topic['topic_time'],
+                    'no_sig' => true));
             }
             ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $args['forum_id'], 'type' => 'forum'));
             ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $topic['forum_id'], 'type' => 'forum'));
         }
-    
+
         return;
     }
-    
 
-    
     /**
      * Notify by e-mail
      *
@@ -400,17 +388,17 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     {
 
         $ztable = DBUtil::getTables();
-    
-        setlocale (LC_TIME, System::getVar('locale'));
+
+        setlocale(LC_TIME, System::getVar('locale'));
         $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
-    
+
         // generate the mailheader info
         $email_from = ModUtil::getVar('Dizkus', 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use PN adminmail
             $email_from = System::getVar('adminmail');
         }
-    
+
         // normal notification
         $sql = 'SELECT t.topic_title,
                        t.topic_poster,
@@ -419,34 +407,34 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                        c.cat_title,
                        f.forum_name,
                        f.forum_id
-                FROM  '.$ztable['dizkus_topics'].' t
-                LEFT JOIN '.$ztable['dizkus_forums'].' f ON t.forum_id = f.forum_id
-                LEFT JOIN '.$ztable['dizkus_categories'].' c ON f.cat_id = c.cat_id
-                WHERE t.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']);
-    
+                FROM  ' . $ztable['dizkus_topics'] . ' t
+                LEFT JOIN ' . $ztable['dizkus_forums'] . ' f ON t.forum_id = f.forum_id
+                LEFT JOIN ' . $ztable['dizkus_categories'] . ' c ON f.cat_id = c.cat_id
+                WHERE t.topic_id = ' . (int)DataUtil::formatForStore($args['topic_id']);
+
         $res = DBUtil::executeSQL($sql);
         $colarray = array('topic_title', 'topic_poster', 'topic_time', 'cat_id', 'cat_title', 'forum_name', 'forum_id');
-        $myrow    = DBUtil::marshallObjects($res, $colarray);
-    
+        $myrow = DBUtil::marshallObjects($res, $colarray);
+
         if (!is_array($myrow)) {
             // no results - topic does not exist
             return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
-    
-        $topic_unixtime= strtotime($myrow[0]['topic_time']);
+
+        $topic_unixtime = strtotime($myrow[0]['topic_time']);
         $DU = new DateUtil();
         $topic_time_ml = $DU->formatDatetime($topic_unixtime, 'datetimebrief');
-    
-        $poster_name = UserUtil::getVar('uname',$args['poster_id']);
-    
-        $forum_id      = $myrow[0]['forum_id'];
-        $forum_name    = $myrow[0]['forum_name'];
+
+        $poster_name = UserUtil::getVar('uname', $args['poster_id']);
+
+        $forum_id = $myrow[0]['forum_id'];
+        $forum_name = $myrow[0]['forum_name'];
         $category_name = $myrow[0]['cat_title'];
         $topic_subject = $myrow[0]['topic_title'];
-    
+
         $subject = ($args['type'] == 2) ? 'Re: ' : '';
         $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
-    
+
         // we do not want to notify the sender = the recent user
         $thisuser = UserUtil::getVar('uid');
         // anonymous does not have uid, so we need a sql to exclude real users
@@ -456,41 +444,41 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             $fs_wherenotuser = ' AND fs.user_id <> ' . DataUtil::formatForStore($thisuser);
             $ts_wherenotuser = ' AND ts.user_id <> ' . DataUtil::formatForStore($thisuser);
         }
-    
+
         //  get list of forum subscribers with non-empty emails
         $sql = 'SELECT DISTINCT fs.user_id,
                                 c.cat_id
                 FROM ' . $ztable['dizkus_subscription'] . ' as fs,
                      ' . $ztable['dizkus_forums'] . ' as f,
                      ' . $ztable['dizkus_categories'] . ' as c
-                WHERE fs.forum_id='.DataUtil::formatForStore($forum_id).'
+                WHERE fs.forum_id=' . DataUtil::formatForStore($forum_id) . '
                   ' . $fs_wherenotuser . '
                   AND f.forum_id = fs.forum_id
                   AND c.cat_id = f.cat_id';
-    
+
         $res = DBUtil::executeSQL($sql);
         $colarray = array('uid', 'cat_id');
-        $result   = DBUtil::marshallObjects($res, $colarray);
-    
+        $result = DBUtil::marshallObjects($res, $colarray);
+
         $recipients = array();
         // check if list is empty - then do nothing
         // we create an array of recipients here
         if (is_array($result) && !empty($result)) {
             foreach ($result as $resline) {
                 // check permissions
-                if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'].':'.$forum_id.':', ACCESS_READ, $resline['uid'])) {
+                if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'] . ':' . $forum_id . ':', ACCESS_READ, $resline['uid'])) {
                     $emailaddress = UserUtil::getVar('email', $resline['uid']);
                     if (empty($emailaddress)) {
                         continue;
                     }
-                    $email['name']    = UserUtil::getVar('uname', $resline['uid']);
+                    $email['name'] = UserUtil::getVar('uname', $resline['uid']);
                     $email['address'] = $emailaddress;
-                    $email['uid']     = $resline['uid'];
+                    $email['uid'] = $resline['uid'];
                     $recipients[$email['name']] = $email;
                 }
             }
         }
-    
+
         //  get list of topic_subscribers with non-empty emails
         $sql = 'SELECT DISTINCT ts.user_id,
                                 c.cat_id,
@@ -499,16 +487,16 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                      ' . $ztable['dizkus_forums'] . ' as f,
                      ' . $ztable['dizkus_categories'] . ' as c,
                      ' . $ztable['dizkus_topics'] . ' as t
-                WHERE ts.topic_id='.DataUtil::formatForStore($args['topic_id']).'
+                WHERE ts.topic_id=' . DataUtil::formatForStore($args['topic_id']) . '
                   ' . $ts_wherenotuser . '
                   AND t.topic_id = ts.topic_id
                   AND f.forum_id = t.forum_id
                   AND c.cat_id = f.cat_id';
-    
+
         $res = DBUtil::executeSQL($sql);
         $colarray = array('uid', 'cat_id', 'forum_id');
-        $result   = DBUtil::marshallObjects($res, $colarray);
-    
+        $result = DBUtil::marshallObjects($res, $colarray);
+
         if (is_array($result) && !empty($result)) {
             foreach ($result as $resline) {
                 // check permissions
@@ -517,17 +505,17 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                     if (empty($emailaddress)) {
                         continue;
                     }
-                    $email['name']    = UserUtil::getVar('uname', $resline['uid']);
+                    $email['name'] = UserUtil::getVar('uname', $resline['uid']);
                     $email['address'] = $emailaddress;
-                    $email['uid']     = $resline['uid'];
+                    $email['uid'] = $resline['uid'];
                     $recipients[$email['name']] = $email;
                 }
             }
         }
-    
+
         if (count($recipients) > 0) {
             $sitename = System::getVar('sitename');
-        
+
             $this->view->assign('sitename', $sitename);
             $this->view->assign('category_name', $category_name);
             $this->view->assign('forum_name', $forum_name);
@@ -542,33 +530,33 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             $this->view->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
             $this->view->assign('base_url', System::getBaseUrl());
             $message = $this->view->fetch('mail/notifyuser.txt');
-          
+
             foreach ($recipients as $subscriber) {
                 // integrate contactlist's ignorelist here
-                $ignorelist_setting = ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => $subscriber['uid']));
-                if (ModUtil::available('ContactList') && 
-                    (in_array($ignorelist_setting, array('medium', 'strict'))) && 
-                    ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => UserUtil::getVar('uid')))) {
+                $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $subscriber['uid']));
+                if (ModUtil::available('ContactList') &&
+                        (in_array($ignorelist_setting, array('medium', 'strict'))) &&
+                        ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => UserUtil::getVar('uid')))) {
                     $send = false;
                 } else {
                     $send = true;
                 }
                 if ($send) {
                     $uid = UserUtil::getVar('uid');
-                    $args = array( 'fromname'    => $sitename,
-                                   'fromaddress' => $email_from,
-                                   'toname'      => $subscriber['name'],
-                                   'toaddress'   => $subscriber['address'],
-                                   'subject'     => $subject,
-                                   'body'        => $message,
-                                   'headers'     => array('X-UserID: ' . md5($uid),
-                                                          'X-Mailer: Dizkus v' . $modinfo['version'],
-                                                          'X-DizkusTopicID: ' . $args['topic_id']));
+                    $args = array('fromname' => $sitename,
+                        'fromaddress' => $email_from,
+                        'toname' => $subscriber['name'],
+                        'toaddress' => $subscriber['address'],
+                        'subject' => $subject,
+                        'body' => $message,
+                        'headers' => array('X-UserID: ' . md5($uid),
+                            'X-Mailer: Dizkus v' . $modinfo['version'],
+                            'X-DizkusTopicID: ' . $args['topic_id']));
                     ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
                 }
             }
         }
-    
+
         return true;
     }
 
@@ -593,21 +581,21 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // this one later (it will become the topic_last_post_id of the new thread)
         // DBUtil:: read complete topic
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $post['topic_id']);
-    
+
         //  insert values into topics-table
-        $newtopic = array('topic_title'  => $post['topic_subject'],
-                          'topic_poster' => $post['poster_data']['uid'],
-                          'forum_id'     => $post['forum_id'],
-                          'topic_time'   => DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S'));
+        $newtopic = array('topic_title' => $post['topic_subject'],
+            'topic_poster' => $post['poster_data']['uid'],
+            'forum_id' => $post['forum_id'],
+            'topic_time' => DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S'));
         $newtopic = DBUtil::insertObject($newtopic, 'dizkus_topics', 'topic_id');
-    
+
         // increment topics count by 1
         DBUtil::incrementObjectFieldById('dizkus_forums', 'forum_topics', $post['forum_id'], 'forum_id');
-    
+
         // now we need to change the postings:
         // first step: count the number of posting we have to move
-        $where = 'WHERE topic_id = '.(int)DataUtil::formatForStore($post['topic_id']).'
-                  AND post_id >= '.(int)DataUtil::formatForStore($post['post_id']);
+        $where = 'WHERE topic_id = ' . (int)DataUtil::formatForStore($post['topic_id']) . '
+                  AND post_id >= ' . (int)DataUtil::formatForStore($post['post_id']);
         $posts_to_move = DBUtil::selectObjectCount('dizkus_posts', $where);
 
 
@@ -616,32 +604,32 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
         // post_id > $post['post_id']
         $updateposts = array('topic_id' => $newtopic['topic_id']);
-        $where = 'WHERE post_id >= '.(int)DataUtil::formatForStore($post['post_id']).'
-                  AND topic_id = '.$post['topic_id'];
+        $where = 'WHERE post_id >= ' . (int)DataUtil::formatForStore($post['post_id']) . '
+                  AND topic_id = ' . $post['topic_id'];
         DBUtil::updateObject($updateposts, 'dizkus_posts', $where, 'post_id');
-    
+
         // get the new topic_last_post_id of the old topic
-        $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($post['topic_id']).'
+        $where = 'WHERE topic_id=' . (int)DataUtil::formatForStore($post['topic_id']) . '
                   ORDER BY post_time DESC';
         $lastpost = DBUtil::selectObject('dizkus_posts', $where);
 
         $oldtopic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $post['topic_id']);
 
         // update the new topic
-        $newtopic['topic_replies']      = (int)$posts_to_move - 1;
+        $newtopic['topic_replies'] = (int)$posts_to_move - 1;
         $newtopic['topic_last_post_id'] = $post['topic_last_post_id'];
         DBUtil::updateObject($newtopic, 'dizkus_topics', null, 'topic_id');
 
 
         // update the old topic
-        $oldtopic['topic_replies']      = $oldtopic['topic_replies'] - $posts_to_move;
+        $oldtopic['topic_replies'] = $oldtopic['topic_replies'] - $posts_to_move;
         $oldtopic['topic_last_post_id'] = $lastpost['post_id'];
-        $oldtopic['topic_time']         = $lastpost['post_time'];
+        $oldtopic['topic_time'] = $lastpost['post_time'];
         DBUtil::updateObject($oldtopic, 'dizkus_topics', null, 'topic_id');
 
         return $newtopic['topic_id'];
     }
-    
+
     /**
      * get_previous_or_next_topic_id
      * returns the next or previous topic_id in the same forum of a given topic_id
@@ -652,60 +640,58 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public function get_previous_or_next_topic_id($args)
     {
-        if (!isset($args['topic_id']) || !isset($args['view']) ) {
+        if (!isset($args['topic_id']) || !isset($args['view'])) {
             return LogUtil::registerArgsError();
         }
-    
-        switch ($args['view'])
-        {
+
+        switch ($args['view']) {
             case 'previous':
                 $math = '<';
                 $sort = 'DESC';
                 break;
-    
+
             case 'next':
                 $math = '>';
                 $sort = 'ASC';
                 break;
-    
+
             default:
                 return LogUtil::registerArgsError();
         }
-    
+
         $ztable = DBUtil::getTables();
-    
+
         // integrate contactlist's ignorelist here
         $whereignorelist = '';
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist',array('uid' => UserUtil::getVar('uid')));
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => UserUtil::getVar('uid')));
         if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
             // get user's ignore list
-            $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist',array('uid' => UserUtil::getVar('uid')));
+            $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist', array('uid' => UserUtil::getVar('uid')));
             $ignored_uids = array();
             foreach ($ignored_users as $item) {
-                $ignored_uids[]=(int)$item['iuid'];
+                $ignored_uids[] = (int)$item['iuid'];
             }
             if (count($ignored_uids) > 0) {
-                $whereignorelist = " AND t1.topic_poster NOT IN (".implode(',',$ignored_uids).")";
+                $whereignorelist = " AND t1.topic_poster NOT IN (" . implode(',', $ignored_uids) . ")";
             }
         }
-    
+
         $sql = 'SELECT t1.topic_id
-                FROM '.$ztable['dizkus_topics'].' AS t1,
-                     '.$ztable['dizkus_topics'].' AS t2
-                WHERE t2.topic_id = '.(int)DataUtil::formatForStore($args['topic_id']).'
-                  AND t1.topic_time '.$math.' t2.topic_time
+                FROM ' . $ztable['dizkus_topics'] . ' AS t1,
+                     ' . $ztable['dizkus_topics'] . ' AS t2
+                WHERE t2.topic_id = ' . (int)DataUtil::formatForStore($args['topic_id']) . '
+                  AND t1.topic_time ' . $math . ' t2.topic_time
                   AND t1.forum_id = t2.forum_id
                   AND t1.sticky = 0
-                  '.$whereignorelist.'
-                ORDER BY t1.topic_time '.$sort;
-    
-        $res      = DBUtil::executeSQL($sql, -1, 1);
+                  ' . $whereignorelist . '
+                ORDER BY t1.topic_time ' . $sort;
+
+        $res = DBUtil::executeSQL($sql, -1, 1);
         $newtopic = DBUtil::marshallObjects($res, array('topic_id'));
-    
+
         return isset($newtopic[0]['topic_id']) ? $newtopic[0]['topic_id'] : 0;
     }
 
-    
     /**
      * get_page_from_topic_replies
      * Uses the number of topic_replies and the posts_per_page settings to determine the page
@@ -716,24 +702,24 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public function get_page_from_topic_replies($args)
     {
-        if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0 ) {
+        if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0) {
             return LogUtil::registerArgsError();
         }
-    
+
         // get some enviroment
-        $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
+        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
         $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
-    
+
         $last_page = 0;
         if ($post_sort_order == 'ASC') {
             // +1 for the initial posting
             $last_page = floor(($args['topic_replies'] + 1) / $posts_per_page);
         }
-    
+
         // if not ASC then DESC which means latest topic is on top anyway...
         return $last_page;
     }
-    
+
     /**
      * cron
      *
@@ -747,27 +733,27 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (ModUtil::getVar('Dizkus', 'm2f_enabled') <> 'yes') {
             return;
         }
-    
+
         $force = (isset($args['force'])) ? (boolean)$args['force'] : false;
         $forum = $args['forum'];
-    
+
         include_once 'modules/Dizkus/lib/vendor/pop3.php';
-        if ( (($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time()-($forum['pop3_interval']*60)) ) || ($force == true) ) {
+        if ((($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time() - ($forum['pop3_interval'] * 60)) ) || ($force == true)) {
             mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
             // get new mails for this forum
             $pop3 = new pop3_class;
             $pop3->hostname = $forum['pop3_server'];
-            $pop3->port     = $forum['pop3_port'];
+            $pop3->port = $forum['pop3_port'];
             $error = '';
-    
+
             // open connection to pop3 server
             if (($error = $pop3->Open()) == '') {
-                mailcronecho("Connected to the POP3 server '".$pop3->hostname."'.\n", $args['debug']);
+                mailcronecho("Connected to the POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
                 // login to pop3 server
                 if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
-                    mailcronecho( "User '" . $forum['pop3_login'] . "' logged into POP3 server '".$pop3->hostname."'.\n", $args['debug']);
+                    mailcronecho("User '" . $forum['pop3_login'] . "' logged into POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
                     // check for message
-                    if (($error = $pop3->Statistics($messages,$size)) == '') {
+                    if (($error = $pop3->Statistics($messages, $size)) == '') {
                         mailcronecho("There are $messages messages in the mailbox, amounting to a total of $size bytes.\n", $args['debug']);
                         // get message list...
                         $result = $pop3->ListMessages('', 1);
@@ -806,7 +792,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                                 $from = trim(strip_tags(substr($header, 5)));
                                                 // replace @ and . to make it harder for email harvesers,
                                                 // credits to Teb for this idea
-                                                $from = str_replace(array('@','.'),array(' (at) ',' (dot) '), $from);
+                                                $from = str_replace(array('@', '.'), array(' (at) ', ' (dot) '), $from);
                                             }
                                             // get msgid from In-Reply-To: if this is an nswer to a prior
                                             // posting
@@ -817,7 +803,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                             if (strpos($header, 'message-id:') === 0) {
                                                 $msgid = trim(strip_tags(substr($header, 11)));
                                             }
-    
+
                                             // check for X-DizkusTopicID, if set, then this is a possible
                                             // loop (mailinglist subscribed to the forum too)
                                             if (strpos($header, 'X-DizkusTopicID:') === 0) {
@@ -827,7 +813,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                         if (empty($subject)) {
                                             $subject = DataUtil::formatForDisplay($this->__('Error! The post has no subject line.'));
                                         }
-    
+
                                         // check if subject matches our matchstring
                                         if (empty($original_topic_id)) {
                                             if (empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject) <> 0)) {
@@ -835,35 +821,32 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                                 if (!empty($replyto)) {
                                                     // this seems to be a reply, we find the original posting
                                                     // and store this mail in the same thread
-                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_by_postmsgid',
-                                                                             array('msgid' => $replyto));
+                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topic_by_postmsgid', array('msgid' => $replyto));
                                                     if (is_bool($topic_id) && $topic_id == false) {
                                                         // msgid not found, we clear replyto to create a new topic
                                                         $replyto = '';
                                                     } else {
                                                         // topic_id found, add this posting as a reply there
                                                         list($start,
-                                                             $post_id ) = ModUtil::apiFunc('Dizkus', 'user', 'storereply',
-                                                                                       array('topic_id'         => $topic_id,
-                                                                                             'message'          => $message,
-                                                                                             'attach_signature' => 1,
-                                                                                             'subscribe_topic'  => 0,
-                                                                                             'msgid'            => $msgid));
+                                                                $post_id ) = ModUtil::apiFunc('Dizkus', 'user', 'storereply', array('topic_id' => $topic_id,
+                                                                    'message' => $message,
+                                                                    'attach_signature' => 1,
+                                                                    'subscribe_topic' => 0,
+                                                                    'msgid' => $msgid));
                                                         mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n", $args['debug']);
                                                     }
                                                 }
-    
+
                                                 // check again for replyto and create a new topic
                                                 if (empty($replyto)) {
                                                     // store message in forum
-                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
-                                                                             array('subject'          => $subject,
-                                                                                   'message'          => $message,
-                                                                                   'forum_id'         => $forum['forum_id'],
-                                                                                   'attach_signature' => 1,
-                                                                                   'subscribe_topic'  => 0,
-                                                                                   'msgid'            => $msgid ));
-                                                    mailcronecho("Added new topic '$subject' (topic ID $topic_id) to '".$forum['forum_name'] ."' forum.\n", $args['debug']);
+                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('subject' => $subject,
+                                                                'message' => $message,
+                                                                'forum_id' => $forum['forum_id'],
+                                                                'attach_signature' => 1,
+                                                                'subscribe_topic' => 0,
+                                                                'msgid' => $msgid));
+                                                    mailcronecho("Added new topic '$subject' (topic ID $topic_id) to '" . $forum['forum_name'] . "' forum.\n", $args['debug']);
                                                 }
                                             } else {
                                                 mailcronecho("Warning! Message subject  line '$subject' does not match requirements and will be ignored.", $args['debug']);
@@ -880,11 +863,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                     mailcronecho('Done! User ' . $forum['pop3_pnuser'] . ' logged out.', $args['debug']);
                                 }
                             } else {
-                                mailcronecho("Error! Could not log user '". $forum['pop3_pnuser'] ."' in.\n");
+                                mailcronecho("Error! Could not log user '" . $forum['pop3_pnuser'] . "' in.\n");
                             }
                             // close pop3 connection and finally delete messages
-                            if ($error == '' && ($error=$pop3->Close()) == '') {
-                                mailcronecho("Disconnected from POP3 server '".$pop3->hostname."'.\n");
+                            if ($error == '' && ($error = $pop3->Close()) == '') {
+                                mailcronecho("Disconnected from POP3 server '" . $pop3->hostname . "'.\n");
                             }
                         } else {
                             $error = $result;
@@ -893,18 +876,18 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 }
             }
             if (!empty($error)) {
-                mailcronecho( "error: ",htmlspecialchars($error) . "\n");
+                mailcronecho("error: ", htmlspecialchars($error) . "\n");
             }
-    
+
             // store the timestamp of the last connection to the database
             $fobj['forum_pop3_lastconnect'] = time();
-            $fobj['forum_id']               = $forum['forum_id'];
+            $fobj['forum_id'] = $forum['forum_id'];
             DBUtil::updateObject($fobj, 'dizkus_forums', '', 'forum_id');
         }
-    
+
         return;
     }
-    
+
     /**
      * testpop3connection
      *
@@ -917,27 +900,26 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
             return LogUtil::registerArgsError();
         }
-    
-        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums',
-                              array('forum_id' => $args['forum_id']));
+
+        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('forum_id' => $args['forum_id']));
         Loader::includeOnce('modules/Dizkus/includes/pop3.php');
-    
+
         $pop3 = new pop3_class;
         $pop3->hostname = $forum['pop3_server'];
-        $pop3->port     = $forum['pop3_port'];
-    
+        $pop3->port = $forum['pop3_port'];
+
         $error = '';
         $pop3messages = array();
-        if (($error=$pop3->Open()) == '') {
-            $pop3messages[] = "connected to the POP3 server '".$pop3->hostname."'";
-            if (($error=$pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0))=='') {
+        if (($error = $pop3->Open()) == '') {
+            $pop3messages[] = "connected to the POP3 server '" . $pop3->hostname . "'";
+            if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
                 $pop3messages[] = "user '" . $forum['pop3_login'] . "' logged in";
-                if (($error=$pop3->Statistics($messages, $size))=='') {
+                if (($error = $pop3->Statistics($messages, $size)) == '') {
                     $pop3messages[] = "There are $messages messages in the mailbox, amounting to a total of $size bytes.";
-                    $result=$pop3->ListMessages('',1);
-                    if (is_array($result) && count($result)>0) {
+                    $result = $pop3->ListMessages('', 1);
+                    if (is_array($result) && count($result) > 0) {
                         for ($cnt = 1; $cnt <= count($result); $cnt++) {
-                            if (($error=$pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
+                            if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
                                 foreach ($headers as $header) {
                                     if (strpos(strtolower($header), 'subject:') === 0) {
                                         $subject = trim(strip_tags(substr($header, 8)));
@@ -945,11 +927,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                 }
                             }
                         }
-                        if ($error == '' && ($error=$pop3->Close()) == '') {
-                            $pop3messages[] = "Disconnected from POP3 server '".$pop3->hostname."'.\n";
+                        if ($error == '' && ($error = $pop3->Close()) == '') {
+                            $pop3messages[] = "Disconnected from POP3 server '" . $pop3->hostname . "'.\n";
                         }
                     } else {
-                        $error=$result;
+                        $error = $result;
                     }
                 }
             }
@@ -957,10 +939,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!empty($error)) {
             $pop3messages[] = 'error: ' . htmlspecialchars($error);
         }
-    
+
         return $pop3messages;
     }
-    
+
     /**
      * get_topic_by_postmsgid
      * gets a topic_id from the postings msgid
@@ -974,10 +956,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!isset($args['msgid']) || empty($args['msgid'])) {
             return LogUtil::registerArgsError();
         }
-    
+
         return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['msgid'], 'post_msgid');
     }
-    
+
     /**
      * get_topicid_by_postid
      * gets a topic_id from the post_id
@@ -991,10 +973,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!isset($args['post_id']) || empty($args['post_id'])) {
             return LogUtil::registerArgsError();
         }
-    
+
         return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['post_id'], 'post_id');
     }
-    
+
     /**
      * movepost
      *
@@ -1005,9 +987,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     public function movepost($args)
     {
         $old_topic_id = $args['old_topic_id'];
-        $to_topic_id     = $args['to_topic_id'];
-        $post_id      = $args['post_id'];
-        
+        $to_topic_id = $args['to_topic_id'];
+        $post_id = $args['post_id'];
+
         // 1 . update topic_id, post_time in posts table
         // for post[post_id]
         // 2 . update topic_replies in nuke_dizkus_topics ( COUNT )
@@ -1016,67 +998,66 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // for old_topic
         // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
         // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
-    
+
         $ztable = DBUtil::getTables();
-    
+
         // 1 . update topic_id in posts table
-        $sql = 'UPDATE '.$ztable['dizkus_posts'].'
-                SET topic_id='.(int)DataUtil::formatForStore($to_topic_id).'
-                WHERE post_id = '.(int)DataUtil::formatForStore($post_id);
-    
+        $sql = 'UPDATE ' . $ztable['dizkus_posts'] . '
+                SET topic_id=' . (int)DataUtil::formatForStore($to_topic_id) . '
+                WHERE post_id = ' . (int)DataUtil::formatForStore($post_id);
+
         DBUtil::executeSQL($sql);
-    
+
         // for to_topic
         // 2 . update topic_replies in dizkus_topics ( COUNT )
         // 3 . update topic_last_post_id in dizkus_topics
         // get the new topic_last_post_id of to_topic
         $sql = 'SELECT post_id, post_time
-                FROM '.$ztable['dizkus_posts'].'
-                WHERE topic_id = '.(int)DataUtil::formatForStore($to_topic_id).'
+                FROM ' . $ztable['dizkus_posts'] . '
+                WHERE topic_id = ' . (int)DataUtil::formatForStore($to_topic_id) . '
                 ORDER BY post_time DESC';
-    
+
         $res = DBUtil::executeSQL($sql, -1, 1);
         $colarray = array('post_id', 'post_time');
-        $result    = DBUtil::marshallObjects($res, $colarray);
+        $result = DBUtil::marshallObjects($res, $colarray);
         $to_last_post_id = $result[0]['post_id'];
-        $to_post_time    = $result[0]['post_time'];
-    
-        $sql = 'UPDATE '.$ztable['dizkus_topics'].'
+        $to_post_time = $result[0]['post_time'];
+
+        $sql = 'UPDATE ' . $ztable['dizkus_topics'] . '
                 SET topic_replies = topic_replies + 1,
-                    topic_last_post_id='.(int)DataUtil::formatForStore($to_last_post_id).',
-                    topic_time=\''.DataUtil::formatForStore($to_post_time).'\'
-                WHERE topic_id='.(int)DataUtil::formatForStore($to_topic_id);
-    
+                    topic_last_post_id=' . (int)DataUtil::formatForStore($to_last_post_id) . ',
+                    topic_time=\'' . DataUtil::formatForStore($to_post_time) . '\'
+                WHERE topic_id=' . (int)DataUtil::formatForStore($to_topic_id);
+
         DBUtil::executeSQL($sql);
-    
+
         // for old topic ($old_topic_id)
         // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
         // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
-    
         // get the new topic_last_post_id of the old topic
         $sql = 'SELECT post_id, post_time
-                FROM '.$ztable['dizkus_posts'].'
-                WHERE topic_id = '.(int)DataUtil::formatForStore($old_topic_id).'
+                FROM ' . $ztable['dizkus_posts'] . '
+                WHERE topic_id = ' . (int)DataUtil::formatForStore($old_topic_id) . '
                 ORDER BY post_time DESC';
-    
+
         $res = DBUtil::executeSQL($sql, -1, 1);
         $colarray = array('post_id', 'post_time');
-        $result    = DBUtil::marshallObjects($res, $colarray);
+        $result = DBUtil::marshallObjects($res, $colarray);
         $old_last_post_id = $result[0]['post_id'];
-        $old_post_time    = $result[0]['post_time'];
-    
+        $old_post_time = $result[0]['post_time'];
+
         // update
-        $sql = 'UPDATE '.$ztable['dizkus_topics'].'
+        $sql = 'UPDATE ' . $ztable['dizkus_topics'] . '
                 SET topic_replies = topic_replies - 1,
-                    topic_last_post_id='.(int)DataUtil::formatForStore($old_last_post_id).',
-                    topic_time=\''.DataUtil::formatForStore($old_post_time).'\'
-                WHERE topic_id='.(int)DataUtil::formatForStore($old_topic_id);
-    
+                    topic_last_post_id=' . (int)DataUtil::formatForStore($old_last_post_id) . ',
+                    topic_time=\'' . DataUtil::formatForStore($old_post_time) . '\'
+                WHERE topic_id=' . (int)DataUtil::formatForStore($old_topic_id);
+
         DBUtil::executeSQL($sql);
-    
+
         return $this->get_last_topic_page(array('topic_id' => $old_topic_id));
     }
-    
+
     /**
      * get_last_topic_page
      * returns the number of the last page of the topic if more than posts_per_page entries
@@ -1090,11 +1071,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // get some enviroment
         $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
         $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
-    
+
         if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
             return LogUtil::registerArgsError();
         }
-    
+
         if ($post_sort_order == 'ASC') {
             $num_postings = DBUtil::selectFieldByID('dizkus_topics', 'topic_replies', $args['topic_id'], 'topic_id');
             // add 1 for the initial posting as we deal with the replies here
@@ -1104,10 +1085,10 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             // DESC = latest topic is on top = page 0 anyway...
             $last_page = 0;
         }
-    
+
         return $last_page;
     }
-    
+
     /**
      * jointopics
      * joins two topics together
@@ -1123,47 +1104,47 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
-    
+
         // check if to_topic exists. this function will return an error if not
         $to_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $to_topic)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
-    
+
         $ztable = DBUtil::getTables();
-        
+
         // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
         // and from_topic['forum_id'] to to_topic['forum_id']
         $post_temp = array('topic_id' => $to_topic['topic_id'],
-                           'forum_id' => $to_topic['forum_id']);
-        $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($from_topic['topic_id']);
-        DBUtil::updateObject($post_temp, 'dizkus_posts', $where, 'post_id');                         
-    
+            'forum_id' => $to_topic['forum_id']);
+        $where = 'WHERE topic_id=' . (int)DataUtil::formatForStore($from_topic['topic_id']);
+        DBUtil::updateObject($post_temp, 'dizkus_posts', $where, 'post_id');
+
         // to_topic['topic_replies'] must be incremented by from_topic['topic_replies'] + 1 (initial
         // posting
         // update to_topic['topic_time'] and to_topic['topic_last_post_id']
         // get new topic_time and topic_last_post_id
-        $where = 'WHERE topic_id='.(int)DataUtil::formatForStore($to_topic['topic_id']).'
+        $where = 'WHERE topic_id=' . (int)DataUtil::formatForStore($to_topic['topic_id']) . '
                   ORDER BY post_time DESC';
         $res = DBUtil::selectObject('dizkus_posts', $where);
         $new_last_post_id = $res['post_id'];
-        $new_post_time    = $res['post_time'];
-    
+        $new_post_time = $res['post_time'];
+
         // update to_topic
-        $to_topic_temp = array('topic_id'           => $to_topic['topic_id'],
-                               'topic_replies'      => $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1,
-                               'topic_last_post_id' => $new_last_post_id,
-                               'topic_time'         => $new_post_time);
-        DBUtil::updateObject($to_topic_temp, 'dizkus_topics', null, 'topic_id');  
-    
+        $to_topic_temp = array('topic_id' => $to_topic['topic_id'],
+            'topic_replies' => $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1,
+            'topic_last_post_id' => $new_last_post_id,
+            'topic_time' => $new_post_time);
+        DBUtil::updateObject($to_topic_temp, 'dizkus_topics', null, 'topic_id');
+
         // delete from_topic from dizkus_topics
         DBUtil::deleteObjectByID('dizkus_topics', $from_topic['topic_id'], 'topic_id');
-    
+
         // update forums table
         // get topics count: decrement from_topic['forum_id']'s topic count by 1
         DBUtil::decrementObjectFieldById('dizkus_forums', 'forum_topics', $from_topic['forum_id'], 'forum_id');
-    
+
         // get posts count: if both topics are in the same forum, we just have to increment
         // the post count by 1 for the initial posting that is now part of the to_topic,
         // if they are in different forums, we have to decrement the post count
@@ -1171,41 +1152,41 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // for the initial posting
         // get last_post: if both topics are in the same forum, everything stays
         // as-is, if not, we update both, even if it is not necessary
-    
+
         if ($from_topic['forum_id'] == $to_topic['forum_id']) {
             // same forum, post count in the forum doesn't change
         } else {
             // different forum
             // get last post in forums
-            $where = 'WHERE forum_id='.(int)DataUtil::formatForStore($from_topic['forum_id']).'
+            $where = 'WHERE forum_id=' . (int)DataUtil::formatForStore($from_topic['forum_id']) . '
                       ORDER BY post_time DESC';
             $res = DBUtil::selectObject('dizkus_posts', $where);
             $from_forum_last_post_id = $res['post_id'];
-    
-            $where = 'WHERE forum_id='.(int)DataUtil::formatForStore($to_topic['forum_id']).'
+
+            $where = 'WHERE forum_id=' . (int)DataUtil::formatForStore($to_topic['forum_id']) . '
                       ORDER BY post_time DESC';
             $res = DBUtil::selectObject('dizkus_posts', $where);
             $to_forum_last_post_id = $res['post_id'];
-            
+
             // calculate posting count difference
-            $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies']+1);
+            $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies'] + 1);
             // decrement from_topic's forum post_count
-            $sql = "UPDATE ".$ztable['dizkus_forums']."
+            $sql = "UPDATE " . $ztable['dizkus_forums'] . "
                     SET forum_posts = forum_posts - $post_count_difference,
                         forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post_id) . "'
-                    WHERE forum_id='".(int)DataUtil::formatForStore($from_topic['forum_id'])."'";
+                    WHERE forum_id='" . (int)DataUtil::formatForStore($from_topic['forum_id']) . "'";
             DBUtil::executeSQL($sql);
-    
+
             // increment o_topic's forum post_count
-            $sql = "UPDATE ".$ztable['dizkus_forums']."
+            $sql = "UPDATE " . $ztable['dizkus_forums'] . "
                     SET forum_posts = forum_posts + $post_count_difference,
                         forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post_id) . "'
-                    WHERE forum_id='".(int)DataUtil::formatForStore($to_topic['forum_id'])."'";
+                    WHERE forum_id='" . (int)DataUtil::formatForStore($to_topic['forum_id']) . "'";
             DBUtil::executeSQL($sql);
         }
         return $to_topic['topic_id'];
     }
-    
+
     /**
      * notify moderators
      *
@@ -1214,22 +1195,21 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public function notify_moderator($args)
     {
-        setlocale (LC_TIME, System::getVar('locale'));
+        setlocale(LC_TIME, System::getVar('locale'));
         $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
-    
-        $mods = ModUtil::apiFunc('Dizkus', 'admin', 'readmoderators',
-                             array('forum_id' => $args['post']['forum_id']));
-    
+
+        $mods = ModUtil::apiFunc('Dizkus', 'admin', 'readmoderators', array('forum_id' => $args['post']['forum_id']));
+
         // generate the mailheader
         $email_from = ModUtil::getVar('Dizkus', 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use PN adminmail
             $email_from = System::getVar('adminmail');
         }
-    
-        $subject  = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']['topic_rawsubject']);
+
+        $subject = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']['topic_rawsubject']);
         $sitename = System::getVar('sitename');
-    
+
         $recipients = array();
         // check if list is empty - then do nothing
         // we create an array of recipients here
@@ -1240,13 +1220,12 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                     // mod_uid is gid
                     $group = ModUtil::apiFunc('Groups', 'user', 'get', array('gid' => (int)$mod['uid'] - 1000000));
                     if ($group <> false) {
-                        foreach($group['members'] as $gm_uid)
-                        {
+                        foreach ($group['members'] as $gm_uid) {
                             $mod_email = UserUtil::getVar('email', $gm_uid);
                             $mod_uname = UserUtil::getVar('uname', $gm_uid);
                             if (!empty($mod_email)) {
                                 array_push($recipients, array('uname' => $mod_uname,
-                                                              'email' => $mod_email));
+                                    'email' => $mod_email));
                             }
                             if ($gm_uid == 2) {
                                 // admin is also moderator
@@ -1254,13 +1233,12 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                             }
                         }
                     }
-    
                 } else {
                     $mod_email = UserUtil::getVar('email', $mod['uid']);
                     //uname is alread stored in $mod['uname']
                     if (!empty($mod_email)) {
                         array_push($recipients, array('uname' => $mod['uname'],
-                                                      'email' => $mod_email));
+                            'email' => $mod_email));
                     }
                     if ($mod['uid'] == 2) {
                         // admin is also moderator
@@ -1273,18 +1251,17 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // admin_is_mod flag now
         if ($admin_is_mod == false) {
             array_push($recipients, array('uname' => System::getVar('sitename'),
-                                          'email' => $email_from));
+                'email' => $email_from));
         }
-    
-        $reporting_userid   = UserUtil::getVar('uid');
+
+        $reporting_userid = UserUtil::getVar('uid');
         $reporting_username = UserUtil::getVar('uname');
         if (is_null($reporting_username)) {
             $reporting_username = $this->__('Guest');
         }
-    
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies',
-                              array('topic_replies' => $args['post']['topic_replies']));
-    
+
+        $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies', array('topic_replies' => $args['post']['topic_replies']));
+
         // FIXME Move this to a translatable template?
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
                 . $args['post']['cat_title'] . '::' . $args['post']['forum_name'] . '::' . $args['post']['topic_rawsubject'] . "\n\n"
@@ -1294,26 +1271,25 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 . "---------------------------------------------------------------------\n"
                 . strip_tags($args['post']['post_text']) . " \n"
                 . "---------------------------------------------------------------------\n\n"
-                . $this->__f('<a href="%s">Link to topic</a>', DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid'.$args['post']['post_id'], true))) . "\n"
+                . $this->__f('<a href="%s">Link to topic</a>', DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']['topic_id'], 'start' => $start), null, 'pid' . $args['post']['post_id'], true))) . "\n"
                 . "\n";
 
         if (count($recipients) > 0) {
-            foreach($recipients as $recipient) {
-                ModUtil::apiFunc('Mailer', 'user', 'sendmessage',
-                              array( 'fromname'    => $sitename,
-                                     'fromaddress' => $email_from,
-                                     'toname'      => $recipient['uname'],
-                                     'toaddress'   => $recipient['email'],
-                                     'subject'     => $subject,
-                                     'body'        => $message,
-                                     'headers'     => array('X-UserID: ' . $reporting_userid,
-                                                            'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
+            foreach ($recipients as $recipient) {
+                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array('fromname' => $sitename,
+                    'fromaddress' => $email_from,
+                    'toname' => $recipient['uname'],
+                    'toaddress' => $recipient['email'],
+                    'subject' => $subject,
+                    'body' => $message,
+                    'headers' => array('X-UserID: ' . $reporting_userid,
+                        'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
             }
         }
-    
+
         return;
     }
-    
+
     /**
      * get_topicid_by_reference
      * gets a topic reference as parameter and delivers the internal topic id
@@ -1326,12 +1302,12 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!isset($args['reference']) || empty($args['reference'])) {
             return LogUtil::registerArgsError();
         }
-    
+
         $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')
-                      ->findOneBy(array('topic_reference' => $args['reference']));
+                ->findOneBy(array('topic_reference' => $args['reference']));
         return $topic->toArray();
     }
-    
+
     /**
      * insert rss
      *
@@ -1348,18 +1324,17 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // ToDo: Remove BBCode
         $bbcode = ModUtil::available('BBCode');
         $boldstart = '';
-        $boldend   = '';
-        $urlstart  = '';
-        $urlend    = '';
+        $boldend = '';
+        $urlstart = '';
+        $urlend = '';
         if ($bbcode == true) {
             $boldstart = '[b]';
-            $boldend   = '[/b]';
-            $urlstart  = '[url]';
-            $urlend    = '[/url]';
+            $boldend = '[/b]';
+            $urlstart = '[url]';
+            $urlend = '[/url]';
         }
-    
-        foreach ($args['items'] as $item)
-        {
+
+        foreach ($args['items'] as $item) {
             // create the reference, we need it twice
             $dateTimestamp = $item->get_date("Y-m-d H:i:s");
             if (empty($dateTimestamp)) {
@@ -1368,40 +1343,36 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             } else {
                 $reference = md5($item->get_link() . '-' . $dateTimestamp);
             }
-    
+
             // Checking if the forum already has that news.
-            $check = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference',
-                                  array('reference' => $reference));
-    
+            $check = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference', array('reference' => $reference));
+
             if ($check == false) {
                 // Not found... we can add the news.
-                $subject  = $item->get_title();
-    
+                $subject = $item->get_title();
+
                 // Adding little display goodies - finishing with the url of the news...
-                $message  = $boldstart . $this->__('Summary') . ' :' . $boldend . "\n\n" . $item->get_description() . "\n\n" . $urlstart . $item->get_link() . $urlend . "\n\n";
-    
+                $message = $boldstart . $this->__('Summary') . ' :' . $boldend . "\n\n" . $item->get_description() . "\n\n" . $urlstart . $item->get_link() . $urlend . "\n\n";
+
                 // store message in forum
-                $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
-                                         array('subject'          => $subject,
-                                               'message'          => $message,
-                                               'time'             => $dateTimestamp,
-                                               'forum_id'         => $args['forum']['forum_id'],
-                                               'attach_signature' => 0,
-                                               'subscribe_topic'  => 0,
-                                               'reference'        => $reference));
-    
+                $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('subject' => $subject,
+                            'message' => $message,
+                            'time' => $dateTimestamp,
+                            'forum_id' => $args['forum']['forum_id'],
+                            'attach_signature' => 0,
+                            'subscribe_topic' => 0,
+                            'reference' => $reference));
+
                 if (!$topic_id) {
                     // An error occured... get away before screwing more.
                     return false;
                 }
             }
         }
-    
+
         return true;
-    
     }
 
-    
     /**
      * get_settings_ignorelist
      *
@@ -1415,18 +1386,17 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!ModUtil::available('ContactList')) {
             return false;
         }
-    
+
         // get parameters
         $uid = (int)$args['uid'];
         if (!($uid > 1)) {
             return false;
         }
-    
+
         $attr = UserUtil::getVar('__ATTRIBUTES__', $uid);
         $ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
-        $default = ModUtil::getVar('Dizkus','ignorelist_handling');
-        if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != ''))
-        {
+        $default = ModUtil::getVar('Dizkus', 'ignorelist_handling');
+        if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != '')) {
             if (($ignorelist_myhandling == 'strict') && ($default != $ignorelist_myhandling)) {
                 // maybe the admin value changed and the user's value is "higher" than the admin's value
                 return $default;
@@ -1439,25 +1409,18 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             return $default;
         }
     }
-    
 
-
-
-
- 
-    
     public function isSpam($message)
-    {        
+    {
         // Akismet
         if (ModUtil::available('Akismet') && $this->getVar('spam_protector') == 'Akismet') {
             if (ModUtil::apiFunc('Akismet', 'user', 'isspam', array('content' => $message))) {
                 return true;
             }
         }
-        
+
         return false;
     }
-
 
     /**
      * Check if the useragent is a bot (blacklisted)
@@ -1467,7 +1430,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     function useragentIsBot()
     {
         // check the user agent - if it is a bot, return immediately
-        $robotslist = array (
+        $robotslist = array(
             'ia_archiver',
             'googlebot',
             'mediapartners-google',
@@ -1477,7 +1440,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             'lycos'
         );
         $useragent = System::serverGetVar('HTTP_USER_AGENT');
-        for ($cnt=0; $cnt < count($robotslist); $cnt++) {
+        for ($cnt = 0; $cnt < count($robotslist); $cnt++) {
             if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
                 return true;
             }
@@ -1486,9 +1449,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return false;
     }
 
-
 }
-
 
 /**
  * helper function to extract forum_ids from forum array

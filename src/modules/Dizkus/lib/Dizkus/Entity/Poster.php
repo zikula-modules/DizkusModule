@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -27,12 +26,10 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
         return $this->user_id;
     }
 
-
     public function setuser_id($id)
     {
         return $this->user_id = $id;
     }
-
 
     /**
      * The following are annotations which define the topic_id field.
@@ -51,14 +48,15 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
         return $this->user_posts = $posts;
     }
 
-    public function incrementUser_posts() {
+    public function incrementUser_posts()
+    {
         $this->user_posts++;
     }
 
-    public function decrementUser_posts() {
+    public function decrementUser_posts()
+    {
         $this->user_posts--;
     }
-
 
     /**
      * The following are annotations which define the topic_id field.
@@ -77,7 +75,6 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
         return $this->user_autosubscribe = $autosubscribe;
     }
 
-
     /**
      * The following are annotations which define the forum_id field.
      *
@@ -94,7 +91,6 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
     {
         return $this->user_level = $level;
     }
-
 
     /**
      * The following are annotations which define the post_time field.
@@ -113,8 +109,6 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
         return $this->user_lastvisit = $lastvisit;
     }
 
-
-
     /**
      * The following are annotations which define the forum_id field.
      *
@@ -131,7 +125,6 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
     {
         return $this->user_favorites = $favorites;
     }
-
 
     /**
      * The following are annotations which define the forum_id field.
@@ -150,7 +143,6 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
         return $this->user_post_order = $post_order;
     }
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Ranks", cascade={"persist"} )
      * @ORM\JoinColumn(name="user_rank", referencedColumnName="rank_id", nullable=true)
@@ -166,8 +158,5 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
     {
         return $this->user_rank = $rank;
     }
-
-
-
 
 }

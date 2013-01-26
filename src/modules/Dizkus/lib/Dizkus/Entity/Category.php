@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Forums entity class.
  *
@@ -13,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Category extends Zikula_EntityAccess
 {
-    
 
     /**
      * The following are annotations which define the forum_id field.
@@ -31,18 +29,14 @@ class Dizkus_Entity_Category extends Zikula_EntityAccess
      */
     private $name;
 
-
     public function getId()
     {
         return $this->id;
     }
-    
-    
-    
+
     public function getName()
     {
         return $this->name;
     }
-
 
 }

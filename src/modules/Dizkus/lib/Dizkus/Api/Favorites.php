@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,8 +8,8 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
-class Dizkus_Api_Favorites extends Zikula_AbstractApi {
+class Dizkus_Api_Favorites extends Zikula_AbstractApi
+{
 
     private $_favorites;
 
@@ -34,7 +35,6 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
         $this->_favorites = $posterData->getuser_favorites();
 
         return $this->_favorites;
-
     }
 
     /**
@@ -55,16 +55,15 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('COUNT(f.forum_id)')
-           ->from('Dizkus_Entity_Favorites', 'f')
-           ->where('f.user_id = :user')
-           ->setParameter('user', $args['user_id'])
-           ->andWhere('f.forum_id = :forum')
-           ->setParameter('forum', $args['forum_id'])
-           ->setMaxResults(1);
+                ->from('Dizkus_Entity_Favorites', 'f')
+                ->where('f.user_id = :user')
+                ->setParameter('user', $args['user_id'])
+                ->andWhere('f.forum_id = :forum')
+                ->setParameter('forum', $args['forum_id'])
+                ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return ($count > 0) ? true : false;
-        
     }
 
     /**
@@ -110,16 +109,14 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi {
         }
 
         // remove from favorites - no need to check the favorite status, we delete it anyway
-        $user_id  = (int)DataUtil::formatForStore($args['user_id']);
+        $user_id = (int)DataUtil::formatForStore($args['user_id']);
         $forum_id = (int)DataUtil::formatForStore($args['forum_id']);
 
         $favorite = $this->entityManager->getRepository('Dizkus_Entity_Favorites')
-            ->findOneBy(array('user_id' => $user_id, 'forum_id' => $forum_id));
+                ->findOneBy(array('user_id' => $user_id, 'forum_id' => $forum_id));
         $this->entityManager->remove($favorite);
         $this->entityManager->flush();
         return true;
     }
-
-
 
 }

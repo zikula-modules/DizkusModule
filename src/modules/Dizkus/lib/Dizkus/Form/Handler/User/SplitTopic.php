@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -20,7 +21,6 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
      * @var arrat
      */
     private $post;
-
 
     /**
      * Setup form.
@@ -46,7 +46,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         }
 
         $this->view->assign($this->post);
-        $this->view->assign('newsubject', $this->__('Split').': '.$this->post['topic_subject']);
+        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post['topic_subject']);
 
         return true;
     }
@@ -63,7 +63,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -82,4 +82,5 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
         return $view->redirect($url);
     }
+
 }

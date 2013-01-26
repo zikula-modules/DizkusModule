@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Pages Team 2012
  *
@@ -23,16 +24,12 @@ class Dizkus_EntityAccess_Topic
     private $_firstPost;
     private $_subscribe = false;
     private $_forumId;
-
     protected $entityManager;
     protected $name;
-
 
     /**
      * construct
      */
-
-
     public function __construct($id = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
@@ -45,7 +42,6 @@ class Dizkus_EntityAccess_Topic
         }
     }
 
-
     /**
      * Check if topic exists
      *
@@ -55,7 +51,6 @@ class Dizkus_EntityAccess_Topic
     {
         return $this->_topic ? true : false;
     }
-
 
     /**
      * return page as array
@@ -80,7 +75,6 @@ class Dizkus_EntityAccess_Topic
     {
         return $this->_topic->gettopic_id();
     }
-
 
     /**
      * return topic title
@@ -112,14 +106,10 @@ class Dizkus_EntityAccess_Topic
         return $this->_topic->getForum()->getForum_id();
     }
 
-
     public function getPermissions()
     {
         return ModUtil::apiFunc($this->name, 'Permission', 'get', $this->_topic);
     }
-
-
-
 
     /**
      * return posts of a topic as doctrine2 object
@@ -129,29 +119,27 @@ class Dizkus_EntityAccess_Topic
     public function getPosts($startNumber = 1)
     {
 
-        $this->_itemsPerPage = ModUtil::getVar($this->name,'posts_per_page');
+        $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
 
         $id = $this->_topic->gettopic_id();
 
 
         $query = $this->entityManager
-            ->createQueryBuilder()
-            ->select('p, u, r')
-            ->from('Dizkus_Entity_Posts', 'p')
-            ->where('p.topic_id = :topicId')
-            ->setParameter('topicId', $id)
-            ->leftJoin('p.poster', 'u')
-            ->leftJoin('u.user_rank', 'r')
-            ->getQuery();
+                ->createQueryBuilder()
+                ->select('p, u, r')
+                ->from('Dizkus_Entity_Posts', 'p')
+                ->where('p.topic_id = :topicId')
+                ->setParameter('topicId', $id)
+                ->leftJoin('p.poster', 'u')
+                ->leftJoin('u.user_rank', 'r')
+                ->getQuery();
 
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
 
         return $paginator;
-
     }
-
 
     /**
      * return page as array
@@ -162,10 +150,9 @@ class Dizkus_EntityAccess_Topic
     {
         return array(
             'itemsperpage' => $this->_itemsPerPage,
-            'numitems'     => $this->_numberOfItems
+            'numitems' => $this->_numberOfItems
         );
     }
-
 
     /**
      * get forum bread crumbs
@@ -194,9 +181,6 @@ class Dizkus_EntityAccess_Topic
         return array_reverse($output);
     }
 
-
-
-
     /**
      * return page as array
      */
@@ -205,8 +189,6 @@ class Dizkus_EntityAccess_Topic
         $this->_topic->incrementTopic_views();
         $this->entityManager->flush();
     }
-
-
 
     public function setLastPost($lastPost)
     {
@@ -218,7 +200,6 @@ class Dizkus_EntityAccess_Topic
         $this->_topic->setTopic_title($title);
         $this->entityManager->flush();
     }
-
 
     /**
      * return page as array
@@ -237,7 +218,6 @@ class Dizkus_EntityAccess_Topic
         $this->_topic->decrementTopic_replies();
         $this->entityManager->flush();
     }
-
 
     public function prepare($data)
     {
@@ -278,8 +258,6 @@ class Dizkus_EntityAccess_Topic
         return $this->_firstPost;
     }
 
-
-
     /**
      * return page as array
      *
@@ -306,14 +284,13 @@ class Dizkus_EntityAccess_Topic
         if ($this->_subscribe) {
             $params = array(
                 'topic_id' => $this->_topic->gettopic_id(),
-                'action'   => 'subscribe'
+                'action' => 'subscribe'
             );
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
         }
 
         return $this->_topic->gettopic_id();
     }
-
 
     /**
      * return page as array
@@ -350,7 +327,7 @@ class Dizkus_EntityAccess_Topic
         if ($this->_subscribe) {
             $params = array(
                 'topic_id' => $this->_topic->gettopic_id(),
-                'action'   => 'subscribe'
+                'action' => 'subscribe'
             );
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
         }
@@ -369,7 +346,6 @@ class Dizkus_EntityAccess_Topic
         $this->entityManager->flush();
         return true;
     }
-
 
     /**
      * set topic sticky
@@ -395,7 +371,6 @@ class Dizkus_EntityAccess_Topic
         return true;
     }
 
-
     /**
      * lock topic
      *
@@ -419,7 +394,6 @@ class Dizkus_EntityAccess_Topic
         $this->entityManager->flush();
         return true;
     }
-
 
     /**
      * set topic solved
@@ -445,7 +419,6 @@ class Dizkus_EntityAccess_Topic
         return true;
     }
 
-
     /**
      * get if the current user is subscribed
      *
@@ -459,12 +432,12 @@ class Dizkus_EntityAccess_Topic
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('COUNT(s)')
-            ->from('Dizkus_Entity_TopicSubscriptions', 's')
-            ->where('s.user_id = :user')
-            ->setParameter('user', UserUtil::getVar('uid'))
-            ->andWhere('s.topic_id = :topic')
-            ->setParameter('topic', $this->_topic->gettopic_id())
-            ->setMaxResults(1);
+                ->from('Dizkus_Entity_TopicSubscriptions', 's')
+                ->where('s.user_id = :user')
+                ->setParameter('user', UserUtil::getVar('uid'))
+                ->andWhere('s.topic_id = :topic')
+                ->setParameter('topic', $this->_topic->gettopic_id())
+                ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
         return $count > 0 ? true : false;
     }

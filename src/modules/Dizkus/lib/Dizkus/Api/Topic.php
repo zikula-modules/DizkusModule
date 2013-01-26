@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,7 +14,6 @@
  */
 class Dizkus_Api_Topic extends Zikula_AbstractApi
 {
-
 
     function changeStatus($args)
     {
@@ -49,7 +49,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
     }
 
-
     /**
      * Subscribe a topic.
      *
@@ -66,7 +65,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
-    
+
         // Todo Permission check
 
         $status = $this->getSubscriptionStatus(array('user_id' => $args['user_id'], 'topic_id' => $args['topic_id']));
@@ -80,8 +79,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $this->entityManager->flush();
         }
     }
-    
-    
+
     /**
      * Unsubscribe a topic.
      *
@@ -106,7 +104,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
 
         $where['topic_id'] = $args['topic_id'];
-        
+
         $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')->findBy($where);
         if (isset($subscriptions)) {
             foreach ($subscriptions as $subscription) {
@@ -115,7 +113,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $this->entityManager->flush();
         }
     }
-    
+
     /**
      * Get topic subscription status.
      *
@@ -139,16 +137,17 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('COUNT(s)')
-           ->from('Dizkus_Entity_TopicSubscriptions', 's')
-           ->where('s.user_id = :user')
-           ->setParameter('user', $args['user_id'])
-           ->andWhere('s.topic_id = :topic')
-           ->setParameter('topic', $args['topic_id'])
-           ->setMaxResults(1);
+                ->from('Dizkus_Entity_TopicSubscriptions', 's')
+                ->where('s.user_id = :user')
+                ->setParameter('user', $args['user_id'])
+                ->andWhere('s.topic_id = :topic')
+                ->setParameter('topic', $args['topic_id'])
+                ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
 
         // Return true if the user is subscribed or false if not
-        return ($count > 0) ? true : false;;
+        return ($count > 0) ? true : false;
+        ;
     }
 
     /**
@@ -164,12 +163,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $args['uid'] = UserUtil::getVar('uid');
         }
         $subscriptions = $this->entityManager
-            ->getRepository('Dizkus_Entity_TopicSubscriptions')
-            ->findBy(array('user_id' => $args['uid']));
+                ->getRepository('Dizkus_Entity_TopicSubscriptions')
+                ->findBy(array('user_id' => $args['uid']));
 
         return $subscriptions;
     }
-
 
     /**
      * getIdByReference
@@ -187,10 +185,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
 
         return $this->entityManager->getRepository('Dizkus_Entity_Topic')
-                                   ->findOneBy(array('topic_reference' => $reference))
-                                   ->toArray();
+                        ->findOneBy(array('topic_reference' => $reference))
+                        ->toArray();
     }
-
 
     /**
      * email
@@ -214,12 +211,12 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
 
         $params = array(
-            'fromname'    => $sender_name,
+            'fromname' => $sender_name,
             'fromaddress' => $sender_email,
-            'toname'      => $args['sendto_email'],
-            'toaddress'   => $args['sendto_email'],
-            'subject'     => $args['subject'],
-            'body'        => $args['message'],
+            'toname' => $args['sendto_email'],
+            'toaddress' => $args['sendto_email'],
+            'subject' => $args['subject'],
+            'body' => $args['message'],
         );
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $params);
     }
@@ -252,10 +249,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         // Update the users's post count, this might be slow on big topics but it makes other parts of the
         // forum faster so we win out in the long run.
-
         // step #1: get all post ids and posters ids
         $postings = $this->entityManager->getRepository('Dizkus_Entity_Posts')
-            ->findBy(array('topic_id' => $topic_id));
+                ->findBy(array('topic_id' => $topic_id));
 
 
         // step #2 go through the posting array and decrement the posting counter
@@ -275,7 +271,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         // remove topic subscriptions
         $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
-            ->findBy(array('topic_id' => $topic_id));
+                ->findBy(array('topic_id' => $topic_id));
         foreach ($subscriptions as $subscription) {
             $this->entityManager->remove($subscription);
         }
@@ -298,6 +294,5 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $forum_id, 'type' => 'forum'));
         return $forum_id;
     }
-
 
 }

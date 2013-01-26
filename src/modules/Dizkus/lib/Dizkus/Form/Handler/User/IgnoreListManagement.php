@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_AbstractHandler
 {
+
     /**
      * Setup form.
      *
@@ -23,12 +25,11 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
     function initialize(Zikula_Form_View $view)
-    {   
+    {
         // prepare list    
-        $ignorelist_handling = ModUtil::getVar('Dizkus','ignorelist_handling');
+        $ignorelist_handling = ModUtil::getVar('Dizkus', 'ignorelist_handling');
         $ignorelist_options = array();
-        switch ($ignorelist_handling)
-        {
+        switch ($ignorelist_handling) {
             case 'strict':
                 $ignorelist_options[] = array('text' => $this->__('Strict'), 'value' => 'strict');
                 break;
@@ -44,8 +45,8 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
         $view->add_core_data();
 
         // assign data
-        $view->assign('ignorelist_options',    $ignorelist_options);
-        $view->assign('ignorelist_myhandling', ModUtil::apiFunc('Dizkus','user','get_settings_ignorelist',array('uid' => UserUtil::getVar('uid'))));
+        $view->assign('ignorelist_options', $ignorelist_options);
+        $view->assign('ignorelist_myhandling', ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => UserUtil::getVar('uid'))));
         return true;
     }
 
@@ -72,20 +73,21 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
             }
 
             // update user's attributes
-            $uid = UserUtil::getVar('uid'); 
+            $uid = UserUtil::getVar('uid');
             $user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false);
             $obj['uid'] = UserUtil::getVar('uid');
-            $user['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling']; 
+            $user['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling'];
 
             // store attributes 
             DBUtil::updateObject($user, 'users', '', 'uid');
 
             LogUtil::registerStatus($this->__('Done! Updated the \'Ignore list\' settings.'));
 
-            $url = ModUtil::url('Dizkus','user','prefs');
+            $url = ModUtil::url('Dizkus', 'user', 'prefs');
             return $view->redirect($url);
         }
 
         return true;
     }
+
 }

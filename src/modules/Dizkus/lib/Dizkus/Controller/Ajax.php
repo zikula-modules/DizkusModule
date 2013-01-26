@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Controller_Ajax extends Zikula_AbstractController
 {
+
     /**
      * reply
      *
@@ -23,19 +25,20 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-        
-        $topic_id         = $this->request->request->get('topic', null);
-        $message          = $this->request->request->get('message', '');
-        $title            = $this->request->request->get('title', '');;
+
+        $topic_id = $this->request->request->get('topic', null);
+        $message = $this->request->request->get('message', '');
+        $title = $this->request->request->get('title', '');
+        ;
         $attach_signature = $this->request->request->get('topic', attach_signature);
-        $subscribe_topic  = $this->request->request->get('subscribe_topic', null);
-        $preview          = $this->request->request->get('preview', 0);
-        $preview          = ($preview == '1') ? true : false;
+        $subscribe_topic = $this->request->request->get('subscribe_topic', null);
+        $preview = $this->request->request->get('preview', 0);
+        $preview = ($preview == '1') ? true : false;
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         $message = dzkstriptags($message);
-        $title   = dzkstriptags($title);
+        $title = dzkstriptags($title);
 
         // ContactList integration: Is the user ignored and allowed to write an answer to this topic?        
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
@@ -44,16 +47,16 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
         if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
             return new Zikula_Response_Ajax_Fatal(
-                array(),
-                $this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.')
+                            array(),
+                            $this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.')
             );
         }
 
         // check for maximum message size (strlen('[addsig]')=8)
         if ((strlen($message) + 8) > 65535) {
             return new Zikula_Response_Ajax_BadData(
-                array(),
-                $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
+                            array(),
+                            $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
             );
         }
 
@@ -63,31 +66,29 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             //	throw new Zikula_Exception_Fatal();
             //}
 
-            list($start, $post_id) = ModUtil::apiFunc('Dizkus', 'user', 'storereply',
-                                        array(
-                                            'topic_id'         => $topic_id,
-                                            'message'          => $message,
-                                            'attach_signature' => $attach_signature,
-                                            'subscribe_topic'  => $subscribe_topic,
-                                            'title'            => $title)
-                                        );
-            
+            list($start, $post_id) = ModUtil::apiFunc('Dizkus', 'user', 'storereply', array(
+                        'topic_id' => $topic_id,
+                        'message' => $message,
+                        'attach_signature' => $attach_signature,
+                        'subscribe_topic' => $subscribe_topic,
+                        'title' => $title)
+            );
+
             if (!isset($post_id)) {
                 return new Zikula_Response_Ajax_BadData(array());
-                $error = '<p class="z-errormsg">'.$this->__('Error! Your post contains unacceptable content and has been rejected.').'</p>';
+                $error = '<p class="z-errormsg">' . $this->__('Error! Your post contains unacceptable content and has been rejected.') . '</p>';
                 return new Zikula_Response_Ajax(array('data' => $error));
             }
 
             $topic['start'] = $start;
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-
         } else {
             // preview == true, create fake post
-            $post['post_id']         = 0;
-            $post['topic_id']        = $topic_id;
-            $post['poster_data']     = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => UserUtil::getVar('uid')));
+            $post['post_id'] = 0;
+            $post['topic_id'] = $topic_id;
+            $post['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => UserUtil::getVar('uid')));
             // create unix timestamp
-            $post['post_unixtime']   = time();
+            $post['post_unixtime'] = time();
             $post['posted_unixtime'] = $post['post_unixtime'];
 
             $post['post_title'] = $title;
@@ -98,7 +99,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             }
             // call hooks for $message_display ($message remains untouched for the textarea)
             // list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-            $post['post_textdisplay']       = dzkVarPrepHTMLDisplay($post['post_textdisplay']);
+            $post['post_textdisplay'] = dzkVarPrepHTMLDisplay($post['post_textdisplay']);
 
             $post['post_text'] = $post['post_textdisplay'];
         }
@@ -117,8 +118,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         //
         //} else {
         return new Zikula_Response_Ajax(
-            array('data' => $this->view->fetch('user/post/single.tpl'),
-            'post_id' => $post['post_id'])
+                        array('data' => $this->view->fetch('user/post/single.tpl'),
+                            'post_id' => $post['post_id'])
         );
         //}
         //---- end of MediaAttach integration ----
@@ -140,10 +141,9 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'preparereply',
-                                 array('post_id'     => $post_id,
-                                       'quote'       => true,
-                                       'reply_start' => true));
+            $post = ModUtil::apiFunc('Dizkus', 'user', 'preparereply', array('post_id' => $post_id,
+                        'quote' => true,
+                        'reply_start' => true));
             return new Zikula_Response_Ajax($post);
         }
 
@@ -164,8 +164,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
-                                 array('post_id'     => $post_id));
+            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
             if ($post['poster_data']['edit'] == true) {
                 AjaxUtil::output($post, true, false, false);
             } else {
@@ -191,8 +190,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost',
-                                 array('post_id'     => $post_id));
+            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
 
             if ($post['poster_data']['edit'] == true) {
                 //$this->view->add_core_data();
@@ -206,15 +204,15 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
                 return new Zikula_Response_Ajax(array('data' => $this->view->fetch('ajax/editpost.tpl')));
             } else {
-            	LogUtil::registerPermissionError(null, true);
-            	throw new Zikula_Exception_Forbidden();
+                LogUtil::registerPermissionError(null, true);
+                throw new Zikula_Exception_Forbidden();
             }
         }
-        
-        
+
+
         return new Zikula_Response_Ajax_BadData(
-            array(),
-            $this->__('Error! No post ID in \'Dizkus_ajax_readrawtext()\'.')
+                        array(),
+                        $this->__('Error! No post ID in \'Dizkus_ajax_readrawtext()\'.')
         );
     }
 
@@ -232,7 +230,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $post_id = $this->request->request->get('post', '', 'POST');
         $subject = $this->request->request->get('subject', '', 'POST');
         $message = $this->request->request->get('message', '', 'POST');
-        $delete  = $this->request->request->get('delete', null, 'POST');
+        $delete = $this->request->request->get('delete', null, 'POST');
         $attach_signature = $this->request->request->get('attach_signature', null, 'POST');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -247,35 +245,34 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             // check for maximum message size (strlen('[addsig]')==8)
             if ((strlen($message) + 8) > 65535) {
                 return new Zikula_Response_Ajax_BadData(
-                    array(),
-                    $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
+                                array(),
+                                $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
                 );
             }
 
             // read the original posting to get the forum id we might need later if the topic has been erased
-            $orig_post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id'     => $post_id));
+            $orig_post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
 
-            $update = ModUtil::apiFunc('Dizkus', 'user', 'updatepost',
-                         array('post_id'          => $post_id,
-                               'subject'          => $subject,
-                               'message'          => $message,
-                               'delete'           => $delete,
-                               'attach_signature' => ($attach_signature==1)));
-            
+            $update = ModUtil::apiFunc('Dizkus', 'user', 'updatepost', array('post_id' => $post_id,
+                        'subject' => $subject,
+                        'message' => $message,
+                        'delete' => $delete,
+                        'attach_signature' => ($attach_signature == 1)));
+
             if (!$update) {
                 return new Zikula_Response_Ajax_BadData(
-                    array()
+                                array()
                 );
             }
 
             if ($delete <> '1') {
-                $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id'     => $post_id));
+                $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
                 $hook = new Zikula_FilterHook(
-                    $eventname = 'dizkus.filter_hooks.message.filter', 
-                    $content = $post['post_text']
+                                $eventname = 'dizkus.filter_hooks.message.filter',
+                                $content = $post['post_text']
                 );
                 $post['post_text'] = ServiceUtil::getManager()->getService('zikula.hookmanager')
-                                                              ->notify($hook)->getData();
+                                ->notify($hook)->getData();
                 $post['action'] = 'updated';
             } else {
                 // try to read topic
@@ -286,14 +283,11 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                 if (!is_array($topic)) {
                     // topic has been deleted
                     $post = array(
-                                'action'   => 'topic_deleted',
-                                'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $orig_post['forum_id']),
-                                null,
-                                null,
-                                true)
-                            );
+                        'action' => 'topic_deleted',
+                        'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $orig_post['forum_id']), null, null, true)
+                    );
                 } else {
-                    $post = array('action'  => 'deleted');
+                    $post = array('action' => 'deleted');
                 }
             }
 
@@ -303,8 +297,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         }
 
         return new Zikula_Response_Ajax_BadData(
-            array(),
-            $this->__('Error! No post ID in \'Dizkus_ajax_updatepost()\'.')
+                        array(),
+                        $this->__('Error! No post ID in \'Dizkus_ajax_updatepost()\'.')
         );
     }
 
@@ -325,7 +319,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         // Get common parameters
         $params = array();
         $params['topic_id'] = FormUtil::getPassedValue('topic', '', 'POST');
-        $params['action']   = FormUtil::getPassedValue('action', '', 'POST');
+        $params['action'] = FormUtil::getPassedValue('action', '', 'POST');
 
         // Check if topic is is set
         if (empty($params['topic_id'])) {
@@ -359,8 +353,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         return new Zikula_Response_Ajax_Plain('successful');
     }
 
-
-
     /**
      * addremovefavorite
      *
@@ -369,19 +361,19 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
     {
 
         if ($this->getVar('forum_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
         if (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
         }
 
         $params = array(
             'forum_id' => FormUtil::getPassedValue('forum', 'POST'),
-            'action'   => FormUtil::getPassedValue('action', 'POST')
+            'action' => FormUtil::getPassedValue('action', 'POST')
         );
         if (empty($params['forum_id'])) {
-        	return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.'));
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.'));
         }
 
 
@@ -390,10 +382,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             throw new Zikula_Exception_Forbidden();
         }
 
-        /*if (!SecurityUtil::confirmAuthKey()) {
-            LogUtil::registerAuthidError();
-            return AjaxUtil::error(null, array(), true, true);
-        }*/
+        /* if (!SecurityUtil::confirmAuthKey()) {
+          LogUtil::registerAuthidError();
+          return AjaxUtil::error(null, array(), true, true);
+          } */
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -410,20 +402,19 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
     public function newtopic()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        $forum_id         = FormUtil::getPassedValue('forum', null, 'POST');
-        $message          = FormUtil::getPassedValue('message', '', 'POST');
-        $subject          = FormUtil::getPassedValue('subject', '', 'POST');
+        $forum_id = FormUtil::getPassedValue('forum', null, 'POST');
+        $message = FormUtil::getPassedValue('message', '', 'POST');
+        $subject = FormUtil::getPassedValue('subject', '', 'POST');
         $attach_signature = FormUtil::getPassedValue('attach_signature', null, 'POST');
-        $subscribe_topic  = FormUtil::getPassedValue('subscribe_topic', null, 'POST');
-        $preview          = (int)FormUtil::getPassedValue('preview', 0, 'POST');
+        $subscribe_topic = FormUtil::getPassedValue('subscribe_topic', null, 'POST');
+        $preview = (int)FormUtil::getPassedValue('preview', 0, 'POST');
 
-        $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
-                               array('forum_id' => $forum_id));
+        $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', array('forum_id' => $forum_id));
 
         $topic = array(
             'cat_id' => $cat_id,
@@ -434,16 +425,16 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             throw new Zikula_Exception_Forbidden();
         }
 
-        $preview          = ($preview == 1) ? true : false;
+        $preview = ($preview == 1) ? true : false;
         //$attach_signature = ($attach_signature=='1') ? true : false;
         //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
         $message = dzkstriptags($message);
         // check for maximum message size
-        if ((strlen($message) + 8/*strlen('[addsig]')*/) > 65535) {
+        if ((strlen($message) + 8/* strlen('[addsig]') */) > 65535) {
             return AjaxUtil::error($this->__('Error! The message is too long. The maximum length is 65,535 characters.'), array(), true, true);
-        } 
-        
+        }
+
         if (strlen($message) == 0) {
             return AjaxUtil::error($this->__('Error! You tried to post a blank message. Please go back and try again.'), array(), true, true);
         }
@@ -451,22 +442,20 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         if (strlen($subject) == 0) {
             return AjaxUtil::error($this->__('Error! The post has no subject line.'), array(), true, true);
         }
-        
+
         $this->view->add_core_data();
         $this->view->setCaching(false);
 
         if ($preview == false) {
             // store new topic
-            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic',
-                                     array('forum_id'         => $forum_id,
-                                           'subject'          => $subject,
-                                           'message'          => $message,
-                                           'attach_signature' => $attach_signature,
-                                           'subscribe_topic'  => $subscribe_topic));
+            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('forum_id' => $forum_id,
+                        'subject' => $subject,
+                        'message' => $message,
+                        'attach_signature' => $attach_signature,
+                        'subscribe_topic' => $subscribe_topic));
 
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic',
-                                  array('topic_id' => $topic_id,
-                                        'count'    => false));
+            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
+                        'count' => false));
 
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
                 $this->view->assign('topic', $topic);
@@ -477,60 +466,54 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
             // --- MediaAttach check ---
             if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
-                return new Zikula_Response_Ajax(array('topic'        => $topic,
-                                       'confirmation' => $confirmation,
-                                       'redirect'     => ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                                                  array('topic' => $topic_id),
-                                                                  null, null, true),
-                                       'uploadredirect' => urlencode(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                                                              array('topic' => $topic_id))),
-                                       'uploadobjectid' => $topic_id,
-                                       'uploadauthid' => SecurityUtil::generateCsrfToken('MediaAttach')));
-
+                return new Zikula_Response_Ajax(array('topic' => $topic,
+                            'confirmation' => $confirmation,
+                            'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true),
+                            'uploadredirect' => urlencode(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id))),
+                            'uploadobjectid' => $topic_id,
+                            'uploadauthid' => SecurityUtil::generateCsrfToken('MediaAttach')));
             } else {
-                return new Zikula_Response_Ajax(array('topic'        => $topic,
-                                       'confirmation' => $confirmation,
-                                       'redirect'     => ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                                                  array('topic' => $topic_id),
-                                                                  null, null, true)));
+                return new Zikula_Response_Ajax(array('topic' => $topic,
+                            'confirmation' => $confirmation,
+                            'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true)));
             }
         }
 
         // preview == true, create fake topic
-        $newtopic['cat_id']     = $cat_id;
-        $newtopic['forum_id']   = $forum_id;
+        $newtopic['cat_id'] = $cat_id;
+        $newtopic['forum_id'] = $forum_id;
         $newtopic['topic_unixtime'] = time();
         $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => UserUtil::getVar('uid')));
         $newtopic['subject'] = $subject;
         $newtopic['message'] = $message;
         $newtopic['message_display'] = $message; // phpbb_br2nl($message);
 
-        if (($attach_signature == 1) && (!empty($newtopic['poster_data']['signature']))){
+        if (($attach_signature == 1) && (!empty($newtopic['poster_data']['signature']))) {
             $newtopic['message_display'] .= '[addsig]';
             $newtopic['message_display'] = dzk_replacesignature($newtopic['message_display'], $newtopic['poster_data']['signature']);
         }
 
 //      list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
-        $newtopic['message_display']       = dzkVarPrepHTMLDisplay($newtopic['message_display']);
+        $newtopic['message_display'] = dzkVarPrepHTMLDisplay($newtopic['message_display']);
 
         if (UserUtil::isLoggedIn()) {
             // If it's the topic start
             if (empty($subject) && empty($message)) {
                 $newtopic['attach_signature'] = 1;
-                $newtopic['subscribe_topic']  = (ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') ? 1 : 0;
+                $newtopic['subscribe_topic'] = (ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') ? 1 : 0;
             } else {
                 $newtopic['attach_signature'] = $attach_signature;
-                $newtopic['subscribe_topic']  = $subscribe_topic;
+                $newtopic['subscribe_topic'] = $subscribe_topic;
             }
         } else {
             $newtopic['attach_signature'] = 0;
-            $newtopic['subscribe_topic']  = 0;
+            $newtopic['subscribe_topic'] = 0;
         }
 
         $this->view->assign('newtopic', $newtopic);
-        
-        return new Zikula_Response_Ajax(array('data'     => $this->view->fetch('user/topic/newpreview.tpl'),
-                                              'newtopic' => $newtopic));
+
+        return new Zikula_Response_Ajax(array('data' => $this->view->fetch('user/topic/newpreview.tpl'),
+                    'newtopic' => $newtopic));
     }
 
     /**
@@ -542,9 +525,9 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
     public function forumusers()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-    	
+
         $this->view->add_core_data();
         $this->view->setCaching(false);
         if (System::getVar('shorturls')) {
@@ -565,9 +548,9 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
     public function newposts()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-        	return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-    	
+
         $this->view->add_core_data();
         $this->view->setCaching(false);
         if (System::getVar('shorturls')) {
@@ -580,9 +563,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         System::shutDown();
     }
 
-    
-    
-     /**
+    /**
      * Performs a user search based on the user name fragment entered so far.
      *
      * Parameters passed via POST:
@@ -603,7 +584,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             $usersColumn = $tables['users_column'];
             $where = $usersColumn['uname'] . ' REGEXP \'(' . DataUtil::formatForStore($fragment) . ')\'';
             $results = UserUtil::getUsers($where);
-            
+
             $view->assign('results', $results);
         }
 
@@ -611,4 +592,5 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
         return new Zikula_Response_Ajax_Plain($output);
     }
+
 }

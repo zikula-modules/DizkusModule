@@ -4,7 +4,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
-
 /**
  * Favorites entity class.
  *
@@ -29,7 +28,6 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
     {
         return $this->post_id;
     }
-
 
     /**
      * The following are annotations which define the topic_id field.
@@ -65,8 +63,6 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
         return $this->forum_id = $forumId;
     }
 
-
-
     /**
      * The following are annotations which define the post_time field.
      * 
@@ -74,8 +70,7 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
      * @Gedmo\Timestampable(on="create")
      */
     private $post_time;
-    
-    
+
     /**
      * The following are annotations which define the poster_ip field.
      * 
@@ -83,7 +78,6 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
      */
     private $poster_ip = '';
 
-    
     /**
      * The following are annotations which define the post_msgid field.
      * 
@@ -108,7 +102,6 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
         return $this->post_text = stripslashes($text);
     }
 
-
     /**
      * The following are annotations which define the post_attach_signature field.
      *
@@ -125,8 +118,6 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
     {
         return $this->post_attach_signature = $attachSignature;
     }
-
-
 
     /**
      * The following are annotations which define the post_attach_signature field.
@@ -145,9 +136,6 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
         return $this->post_first = $first;
     }
 
-
-
-
     /**
      * The following are annotations which define the post_title field.
      * 
@@ -165,26 +153,20 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
         return $this->post_title = $title;
     }
 
-
-
-    
     public function getpost_time()
     {
         return $this->post_time;
     }
-    
+
     public function getposter_ip()
     {
         return $this->poster_ip;
     }
-    
+
     public function getpost_msgid()
     {
         return $this->post_msgid;
     }
-
-
-
 
     /**
      * @ORM\Column(type="integer"))
@@ -195,6 +177,5 @@ class Dizkus_Entity_310_Post extends Zikula_EntityAccess
     {
         return $this->poster_id;
     }
-
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -21,7 +22,6 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
      */
     private $old_topic_id;
 
-
     /**
      * Setup form.
      *
@@ -43,7 +43,6 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getTreeAsDropdownList', false));
     }
 
-
     /**
      * Handle form submission.
      *
@@ -57,7 +56,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
 
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id));
             return $view->redirect($url);
         }
 
@@ -82,7 +81,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
             ModUtil::apiFunc('Dizkus', 'user', 'movetopic', $data);
 
-            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id));
             return $view->redirect($url);
         }
 
@@ -104,11 +103,11 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
 
 
-            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $data['to_topic_id']));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
             return $view->redirect($url);
-
         }
 
         return true;
     }
+
 }

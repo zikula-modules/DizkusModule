@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,9 +8,9 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 class Dizkus_Api_Forum extends Zikula_AbstractApi
 {
+
     public function getParents($id = null)
     {
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forums');
@@ -21,16 +22,16 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
 
     private function getNode($input, $id, $level = 0)
     {
-        $pre = str_repeat("-", $level*2);
+        $pre = str_repeat("-", $level * 2);
         $output = array();
         foreach ($input as $i) {
             if ($id != $i['forum_id']) {
                 $output[] = array(
                     'value' => $i['forum_id'],
-                    'text'  => $pre.$i['forum_name']
+                    'text' => $pre . $i['forum_name']
                 );
                 if (isset($i['__children'])) {
-                    $output = array_merge($output, $this->getNode($i['__children'], $id, $level+1));
+                    $output = array_merge($output, $this->getNode($i['__children'], $id, $level + 1));
                 }
             }
         }
@@ -55,12 +56,12 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('COUNT(s.msg_id)')
-           ->from('Dizkus_Entity_ForumSubscriptions', 's')
-           ->where('s.user_id = :user')
-           ->setParameter('user', $args['user_id'])
-           ->andWhere('s.forum_id = :forum')
-           ->setParameter('forum', $args['forum_id'])
-           ->setMaxResults(1);
+                ->from('Dizkus_Entity_ForumSubscriptions', 's')
+                ->where('s.user_id = :user')
+                ->setParameter('user', $args['user_id'])
+                ->andWhere('s.forum_id = :forum')
+                ->setParameter('forum', $args['forum_id'])
+                ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return ($count > 0) ? true : false;
@@ -128,8 +129,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         }
 
         $subscription = $this->entityManager
-                             ->getRepository('Dizkus_Entity_ForumSubscriptions')
-                             ->findOneBy(array('user_id' => $args['user_id'], 'forum_id' => $args['forum_id'])
+                ->getRepository('Dizkus_Entity_ForumSubscriptions')
+                ->findOneBy(array('user_id' => $args['user_id'], 'forum_id' => $args['forum_id'])
         );
         $this->entityManager->remove($subscription);
         $this->entityManager->flush();
@@ -155,7 +156,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         return true;
     }
 
-
     /**
      * Get topic subscriptions of a user
      *
@@ -169,8 +169,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             $args['uid'] = UserUtil::getVar('uid');
         }
         $subscriptions = $this->entityManager
-                              ->getRepository('Dizkus_Entity_ForumSubscriptionJoin')
-                              ->findBy(array('user_id' => $args['uid']));
+                ->getRepository('Dizkus_Entity_ForumSubscriptionJoin')
+                ->findBy(array('user_id' => $args['uid']));
 
         return $subscriptions;
     }
@@ -222,9 +222,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         foreach ($topics as $topic) {
             ModUtil::apiFunc($this->name, 'Topic', 'delete', $topic);
         }
-
     }
-
 
     public function modify($args)
     {

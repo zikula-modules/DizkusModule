@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,13 +14,13 @@
  */
 class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
 {
+
     /**
      * forum id
      *
      * @var integer
      */
     private $_post;
-
 
     /**
      * Setup form.
@@ -43,9 +44,7 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             return LogUtil::registerError(
-                $this->__('Error! Missing post id.'),
-                null,
-                ModUtil::url('Dizkus', 'user', 'main')
+                            $this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'main')
             );
         }
 
@@ -80,9 +79,9 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
 
-        /*if ($this->isSpam($args['message'])) {
-            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
-        }*/
+        /* if ($this->isSpam($args['message'])) {
+          return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+          } */
 
 
 
@@ -114,6 +113,6 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
 
         // redirect to the new topic
         return $view->redirect($url);
-
     }
+
 }

@@ -4,7 +4,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
-
 /**
  * Topics entity class.
  *
@@ -106,13 +105,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      */
     private $sticky = false;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="topics")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
-     **/
+     * */
     private $forum;
-
 
     public function getForum()
     {
@@ -154,13 +151,10 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      */
     private $solved = false;
 
-
     public function getforum_mods()
     {
         return $this->forum_mods;
     }
-
-
 
     public function gettopic_poster()
     {
@@ -242,7 +236,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->solved = $solved;
     }
 
-
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
      */
@@ -252,7 +245,5 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     {
         return $this->posts;
     }
-
-
 
 }

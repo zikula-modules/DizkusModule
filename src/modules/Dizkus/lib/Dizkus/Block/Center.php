@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
 {
+
     /**
      * init
      *
@@ -31,13 +33,13 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
     public function info()
     {
         return array(
-            'module'         => 'Dizkus',
-            'text_type'      => $this->__('Dizkus recent'),
+            'module' => 'Dizkus',
+            'text_type' => $this->__('Dizkus recent'),
             'text_type_long' => $this->__('Dizkus recent posts'),
             'allow_multiple' => true,
-            'form_content'   => false,
-            'form_refresh'   => false,
-            'show_preview'   => true
+            'form_content' => false,
+            'form_refresh' => false,
+            'show_preview' => true
         );
     }
 
@@ -56,7 +58,7 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
 
         // check for Permission
         $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid].'::', ACCESS_READ)
+                SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid] . '::', ACCESS_READ)
         );
 
         // check if forum is turned off
@@ -83,7 +85,7 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
         }
         $params = explode(',', $vars['cb_parameters']);
 
-        if (is_array($params) &&(count($params) > 0)) {
+        if (is_array($params) && (count($params) > 0)) {
             foreach ($params as $param) {
                 $paramdata = explode('=', $param);
                 $this->view->assign(trim($paramdata[0]), trim($paramdata[1]));
@@ -105,10 +107,10 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
     public function update($blockinfo)
     {
         $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid].'::', ACCESS_ADMIN)
+                SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid] . '::', ACCESS_ADMIN)
         );
 
-        $cb_template   = $this->request->request->get('cb_template',   'centerblock/display.tpl');
+        $cb_template = $this->request->request->get('cb_template', 'centerblock/display.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
 
         $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
@@ -125,7 +127,7 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
     public function modify($blockinfo)
     {
         $this->throwForbiddenUnless(
-            SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid].'::', ACCESS_ADMIN)
+                SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid] . '::', ACCESS_ADMIN)
         );
 
         // Break out options from our content field
@@ -135,10 +137,11 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
             $vars['cb_parameters'] = 'maxposts=5';
         }
         if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
-            $vars['cb_template']   = 'centerblock/display.tpl';
+            $vars['cb_template'] = 'centerblock/display.tpl';
         }
 
         return $this->view->assign('vars', $vars)
-                          ->fetch('centerblock/config.tpl');
+                        ->fetch('centerblock/config.tpl');
     }
+
 }

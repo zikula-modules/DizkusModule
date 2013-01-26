@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Pages Team 2012
  *
@@ -12,21 +13,16 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 class Dizkus_EntityAccess_PosterData
 {
 
     private $_poster;
-
     protected $entityManager;
     protected $name;
-
 
     /**
      * construct
      */
-
-
     public function __construct($uid = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
@@ -37,13 +33,11 @@ class Dizkus_EntityAccess_PosterData
         }
         $this->_poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
 
-        if (!$this->_poster ) {
+        if (!$this->_poster) {
             $this->_poster = new Dizkus_Entity_Poster();
             $this->_poster->setuser_id($uid);
         }
     }
-
-
 
     /**
      * return topic title
@@ -71,9 +65,6 @@ class Dizkus_EntityAccess_PosterData
         $this->entityManager->flush();
     }
 
-
-
-
     /**
      * return topic as doctrine2 object
      *
@@ -84,7 +75,6 @@ class Dizkus_EntityAccess_PosterData
         return $this->_poster;
     }
 
-
     /**
      * return topic as doctrine2 object
      *
@@ -94,7 +84,6 @@ class Dizkus_EntityAccess_PosterData
     {
         return $this->_poster->toArray();
     }
-
 
     /**
      * return page as array
@@ -107,7 +96,5 @@ class Dizkus_EntityAccess_PosterData
         $this->entityManager->persist($this->_poster);
         $this->entityManager->flush();
     }
-
-
 
 }

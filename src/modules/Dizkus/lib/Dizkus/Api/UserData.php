@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -11,8 +12,8 @@
 /**
  * This class provides the userdata api functions
  */
-class Dizkus_Api_UserData extends Zikula_AbstractApi {
-
+class Dizkus_Api_UserData extends Zikula_AbstractApi
+{
 
     private $_online;
 
@@ -23,9 +24,8 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi {
      */
     private $usersarray = array();
 
-
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->_online = array();
     }
 
@@ -58,15 +58,15 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi {
         if ($userdata == false) {
             // create a dummy user basing on Anonymous
             // necessary for some socks :-)
-            $userdata  = UserUtil::getVars(1);
+            $userdata = UserUtil::getVars(1);
             $makedummy = true;
-            $userdata = array_merge($userdata,  array(
-                    'user_posts'      => 0,
-                    'user_rank'       => 0,
-                    'user_level'      => 0,
-                    'user_lastvisit'  => 0,
-                    'user_favorites'  => 0,
-                    'user_post_order' => 0)
+            $userdata = array_merge($userdata, array(
+                'user_posts' => 0,
+                'user_rank' => 0,
+                'user_level' => 0,
+                'user_lastvisit' => 0,
+                'user_favorites' => 0,
+                'user_post_order' => 0)
             );
         } else {
             // create some items that might be missing
@@ -119,19 +119,18 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi {
         if ($makedummy == true) {
             // we create a dummy user, so we need to adjust some of the information
             // gathered so far
-            $userdata['name']      = $this->__('**unknown user**');
-            $userdata['uname']     = $this->__('**unknown user**');
-            $userdata['email']     = '';
-            $userdata['femail']    = '';
-            $userdata['url']       = '';
-            $userdata['groups']    = array();
+            $userdata['name'] = $this->__('**unknown user**');
+            $userdata['uname'] = $this->__('**unknown user**');
+            $userdata['email'] = '';
+            $userdata['femail'] = '';
+            $userdata['url'] = '';
+            $userdata['groups'] = array();
         } else {
             $this->usersarray[$userid] = $userdata;
         }
 
         return $userdata;
     }
-
 
     /**
      * getUserOnlineStatus
@@ -155,9 +154,9 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi {
 
         $ztable = DBUtil::getTables();
         $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-        $where = $ztable['session_info_column']['uid']." = '".$args['uid']."'
-                  AND ".$ztable['session_info_column']['lastused']." > '".DataUtil::formatForStore($activetime)."'";
-        $sessioninfo =  DBUtil::selectObject('session_info', $where);
+        $where = $ztable['session_info_column']['uid'] . " = '" . $args['uid'] . "'
+                  AND " . $ztable['session_info_column']['lastused'] . " > '" . DataUtil::formatForStore($activetime) . "'";
+        $sessioninfo = DBUtil::selectObject('session_info', $where);
 
         $isOnline = ($sessioninfo['uid'] == $args['uid']) ? true : false;
         $this->_online[$args['uid']] = $isOnline;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,13 +8,13 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * This class provides the post api functions
  */
-class Dizkus_Api_Post extends Zikula_AbstractApi {
+class Dizkus_Api_Post extends Zikula_AbstractApi
+{
 
     /**
      * Check if this is the first post in a topic.
@@ -27,11 +28,10 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
     public function isFirst($args)
     {
         // compare the given post_id with the lowest post_id in the topic
-        $minpost = ModUtil::apiFunc('Dizkus', 'user', 'get_firstlast_post_in_topic',
-            array('topic_id' => $args['topic_id'],
-                'first'    => true,
-                'id_only'  => true
-            )
+        $minpost = ModUtil::apiFunc('Dizkus', 'user', 'get_firstlast_post_in_topic', array('topic_id' => $args['topic_id'],
+                    'first' => true,
+                    'id_only' => true
+                        )
         );
 
         return ($minpost == $args['post_id']) ? true : false;
@@ -52,28 +52,27 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
-            ->from('Dizkus_Entity_Topic', 't')
-            ->leftJoin('t.last_post', 'l')
-            ->orderBy('l.post_time', 'DESC');
+                ->from('Dizkus_Entity_Topic', 't')
+                ->leftJoin('t.last_post', 'l')
+                ->orderBy('l.post_time', 'DESC');
 
 
         // sql part per selected time frame
-        switch ($args['selorder'])
-        {
+        switch ($args['selorder']) {
             case '2' : // today
                 $qb->where('l.post_time > :wheretime')
-                   ->setParameter('wheretime', new DateTime('today'));
+                        ->setParameter('wheretime', new DateTime('today'));
                 $text = $this->__('Today');
                 break;
             case '3' : // since yesterday
                 $qb->where('l.post_time > :wheretime')
-                    ->setParameter('wheretime', new DateTime('yesterday'));
+                        ->setParameter('wheretime', new DateTime('yesterday'));
                 $text = $this->__('Yesterday');
                 break;
             case '4' : // lastweek
                 $qb->where('l.post_time > :wheretime')
-                    ->setParameter('wheretime', new DateTime('-1 week'));
-                $text= $this->__('Last week');
+                        ->setParameter('wheretime', new DateTime('-1 week'));
+                $text = $this->__('Last week');
                 break;
             case '5' : // last x hours
                 // maximum two weeks back = 2 * 24 * 7 hours
@@ -81,7 +80,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
                     $args['nohours'] = 336;
                 }
                 $qb->where('l.post_time > :wheretime')
-                    ->setParameter('wheretime', new DateTime('-'.$args['nohours'].' hours'));
+                        ->setParameter('wheretime', new DateTime('-' . $args['nohours'] . ' hours'));
                 $text = DataUtil::formatForDisplay($this->__f('Last %s hours', $args['nohours']));
                 break;
             case '6' : // last visit
@@ -98,8 +97,8 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
                 $text = $this->__('Unsolved');
                 break;
             default:   // last 24 hours
-            $qb->where('l.post_time > :wheretime')
-                ->setParameter('wheretime', new DateTime('-24 hours'));
+                $qb->where('l.post_time > :wheretime')
+                        ->setParameter('wheretime', new DateTime('-24 hours'));
                 $text = $this->__('Last 24 hours');
                 break;
         }
@@ -118,9 +117,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             $text,
             $pager
         );
-
     }
-
 
     public function search($args)
     {
@@ -146,10 +143,10 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
-            ->from('Dizkus_Entity_Topic', 't')
-            ->leftJoin('t.last_post', 'l')
-            ->leftJoin('t.posts', 'p')
-            ->orderBy('l.post_time', 'DESC');
+                ->from('Dizkus_Entity_Topic', 't')
+                ->leftJoin('t.last_post', 'l')
+                ->leftJoin('t.posts', 'p')
+                ->orderBy('l.post_time', 'DESC');
 
         if ($args['action'] == 'topics') {
             $qb->where('t.topic_poster = :uid');
@@ -182,7 +179,6 @@ class Dizkus_Api_Post extends Zikula_AbstractApi {
             $text,
             $pager
         );
-
     }
 
 }

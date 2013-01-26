@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,13 +14,13 @@
  */
 class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 {
+
     /**
      * category
      *
      * @var statement
      */
     private $category;
-
 
     /**
      * Setup form.
@@ -32,12 +33,12 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
      */
     function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN) ) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        
+
         $id = $this->request->query->get('id', null);
-        
+
         if ($id) {
             $category = $this->entityManager->find('Dizkus_Entity_Forums', $id);
             if ($category) {
@@ -58,15 +59,15 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $otherCategories = ModUtil::apiFunc($this->name, 'Category', 'getAll', $id);
         foreach ($otherCategories as $otherCategory) {
             $actions[] = array(
-                'text'  => $this->__f("Move to '%s'.", $otherCategory['cat_title']),
+                'text' => $this->__f("Move to '%s'.", $otherCategory['cat_title']),
                 'value' => $otherCategory['cat_id']
             );
         }
 
         $actions[] = array(
-                    'text'  => $this->__('Remove them.'),
-                    'value' => 'remove'
-                   );
+            'text' => $this->__('Remove them.'),
+            'value' => 'remove'
+        );
         $this->view->assign('actions', $actions);
 
         $this->view->caching = false;
@@ -85,11 +86,11 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url('Dizkus', 'admin', 'tree' );
+        $url = ModUtil::url('Dizkus', 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
-        
+
         // check for valid form and get data
         if (!$view->isValid()) {
             return false;
@@ -99,4 +100,5 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 
         return $view->redirect($url);
     }
+
 }

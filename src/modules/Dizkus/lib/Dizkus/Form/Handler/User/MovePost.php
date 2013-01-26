@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
 {
+
     /**
      * post id
      *
@@ -20,14 +22,12 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
      */
     private $post_id;
 
-
     /**
      * old post id
      *
      * @var integer
      */
     private $old_topic_id;
-
 
     /**
      * Setup form.
@@ -43,7 +43,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-    
+
         // get the input
         $id = (int)$this->request->query->get('post');
 
@@ -59,14 +59,11 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
 
         //$post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $this->post_id));
         //$this->old_topic_id = $post['topic_id'];
-    
         //if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
         //    // user is not allowed to moderate this forum
         //    return LogUtil::registerPermissionError();
         //}
-        
     }
-
 
     /**
      * Handle form submission.
@@ -79,7 +76,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->old_topic_id, 'start' => '0#pid'.$this->post_id));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => '0#pid' . $this->post_id));
             return $view->redirect($url);
         }
 
@@ -90,13 +87,14 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
         $data['old_topic_id'] = $this->old_topic_id;
-        $data['post_id']      = $this->post_id;
-    
+        $data['post_id'] = $this->post_id;
+
         $start = ModUtil::apiFunc('Dizkus', 'user', 'movepost', $data);
-        $start = $start - $start%ModUtil::getVar('Dizkus', 'posts_per_page', 15);
-        
-        
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)).'#pid'.$this->post_id;
-        return $view->redirect($url);        
+        $start = $start - $start % ModUtil::getVar('Dizkus', 'posts_per_page', 15);
+
+
+        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)) . '#pid' . $this->post_id;
+        return $view->redirect($url);
     }
+
 }

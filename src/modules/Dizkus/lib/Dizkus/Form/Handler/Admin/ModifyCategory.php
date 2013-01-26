@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,13 +14,13 @@
  */
 class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandler
 {
+
     /**
      * category
      *
      * @var statement
      */
     private $category;
-
 
     /**
      * Setup form.
@@ -32,12 +33,12 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
      */
     function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN) ) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        
+
         $id = $this->request->query->get('id', null);
-        
+
         if ($id) {
             $view->assign('templatetitle', $this->__('Modify category'));
             $category = $this->entityManager->find('Dizkus_Entity_Forums', $id);
@@ -50,7 +51,7 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
         }
 
         $this->view->assign($category->toArray());
-                
+
         $this->view->caching = false;
         $this->category = $category;
 
@@ -67,18 +68,18 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url('Dizkus', 'admin', 'tree' );
+        $url = ModUtil::url('Dizkus', 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
-        
+
         // check for valid form and get data
         if (!$view->isValid()) {
             return false;
         }
         $data = $view->getValues();
-        
-        
+
+
         $this->category->merge($data);
         $this->entityManager->persist($this->category);
         $this->entityManager->flush();
@@ -90,4 +91,5 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
 
         return $view->redirect($url);
     }
+
 }

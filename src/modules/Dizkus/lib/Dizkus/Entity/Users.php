@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -13,8 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Users extends Zikula_EntityAccess
 {
-    
-    
+
     /**
      * The following are annotations which define the uid field.
      *
@@ -23,16 +21,13 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      */
     private $uid;
 
-
-
     /**
      * The following are annotations which define the uname field.
      * 
      * @ORM\Column(type="string", length=25)
      */
     private $uname = '';
-    
-  
+
     /**
      * attributes
      * 
@@ -42,26 +37,23 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
      *                orphanRemoval=true)
      */
     private $attributes;
-    
-    
+
     public function getuid()
     {
         return $this->uid;
     }
-    
+
     public function getuname()
     {
         return $this->uname;
     }
-    
-    
+
     public function getAttributes()
     {
-        
+
         return $this->attributes;
     }
-    
-    
+
     /**
      * Construction function
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractHandler
 {
+
     /**
      * Setup form.
      *
@@ -28,7 +30,7 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
             return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar('Dizkus','signaturemanagement') == 'yes'))) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar('Dizkus', 'signaturemanagement') == 'yes'))) {
             return LogUtil::registerPermissionError();
         }
 
@@ -60,14 +62,15 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
                 return false;
             }
 
-            UserUtil::setVar('signature',$obj['signature']);
+            UserUtil::setVar('signature', $obj['signature']);
             LogUtil::registerStatus($this->__('Done! Signature has been updated.'));
 
             // redirect to user preferences page
-            $url = ModUtil::url('Dizkus','user','prefs');
+            $url = ModUtil::url('Dizkus', 'user', 'prefs');
             return $view->redirect($url);
         }
 
         return true;
     }
+
 }

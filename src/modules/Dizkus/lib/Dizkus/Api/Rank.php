@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -11,11 +12,10 @@
 /**
  * This class provides the rank api functions
  */
-class Dizkus_Api_Rank extends Zikula_AbstractApi {
-
+class Dizkus_Api_Rank extends Zikula_AbstractApi
+{
 
     private $_userRanks = array();
-
 
     /**
      * Get all ranks
@@ -28,11 +28,11 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi {
     public function getAll($args)
     {
         // read images
-        $path     = $this->getVar('url_ranks_images');
-        $handle   = opendir($path);
+        $path = $this->getVar('url_ranks_images');
+        $handle = opendir($path);
         $filelist = array();
         while ($file = readdir($handle)) {
-            if (dzk_isimagefile($path.'/'.$file)) {
+            if (dzk_isimagefile($path . '/' . $file)) {
                 $filelist[] = $file;
             }
         }
@@ -45,11 +45,10 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi {
         }
 
         $ranks = $this->entityManager->getRepository('Dizkus_Entity_Ranks')
-            ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
+                ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
 
         return array($filelist, $ranks);
     }
-
 
     /**
      * Modify a rank
@@ -87,8 +86,6 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi {
         return true;
     }
 
-
-
     /**
      * assignranksave
      *
@@ -109,8 +106,6 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi {
 
         return true;
     }
-
-
 
     /**
      * Get user rank data
@@ -142,14 +137,14 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi {
 
         // get rank by number of post
         $userRank = $this->entityManager
-            ->createQueryBuilder()
-            ->select('r')
-            ->from('Dizkus_Entity_Ranks', 'r')
-            ->where('r.rank_min <= :posts and r.rank_max >= :posts')
-            ->setParameter('posts', $args['poster']->getuser_posts())
-            ->getQuery()
-            ->setMaxResults(1)
-            ->getArrayResult();
+                ->createQueryBuilder()
+                ->select('r')
+                ->from('Dizkus_Entity_Ranks', 'r')
+                ->where('r.rank_min <= :posts and r.rank_max >= :posts')
+                ->setParameter('posts', $args['poster']->getuser_posts())
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getArrayResult();
         if (isset($userRank[0])) {
             $data = $this->addImageAndLink($userRank[0]);
         }
@@ -163,7 +158,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi {
     {
         $data['rank_link'] = (substr($data['rank_desc'], 0, 7) == 'http://') ? $data['rank_desc'] : '';
         if (!empty($data['rank_image'])) {
-            $data['rank_image']      = $this->getVar('url_ranks_images') . '/' . $data['rank_image'];
+            $data['rank_image'] = $this->getVar('url_ranks_images') . '/' . $data['rank_image'];
             $data['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($data['rank_image']) : null;
         }
         return $data;

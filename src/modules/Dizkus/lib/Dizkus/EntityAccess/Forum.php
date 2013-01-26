@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Dizkus Team 2012
  *
@@ -20,7 +21,6 @@ class Dizkus_EntityAccess_Forum
     private $_forum;
     private $_itemsPerPage;
     private $_numberOfItems;
-
     protected $entityManager;
     protected $name;
 
@@ -39,7 +39,6 @@ class Dizkus_EntityAccess_Forum
         }
     }
 
-
     /**
      * Check if forum exists
      *
@@ -50,7 +49,6 @@ class Dizkus_EntityAccess_Forum
         return $this->_forum ? true : false;
     }
 
-
     /**
      * Check if forum is category (lvl ==0)
      *
@@ -60,7 +58,6 @@ class Dizkus_EntityAccess_Forum
     {
         return $this->_forum->getLvl() == 0 ? false : true;
     }
-
 
     /**
      * return page as array
@@ -95,7 +92,6 @@ class Dizkus_EntityAccess_Forum
     {
         return $this->_forum;
     }
-
 
     public function getPermissions()
     {
@@ -144,9 +140,6 @@ class Dizkus_EntityAccess_Forum
         return array_reverse($output);
     }
 
-
-
-
     /**
      * return posts of a forum as doctrine2 object
      *
@@ -155,30 +148,28 @@ class Dizkus_EntityAccess_Forum
     public function getTopics($startNumber = 1)
     {
 
-        $this->_itemsPerPage = ModUtil::getVar($this->name,'posts_per_page');
+        $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
 
         $id = $this->_forum->getforum_id();
 
 
         $query = $this->entityManager
-            ->createQueryBuilder()
-            ->select('p')
-            ->from('Dizkus_Entity_Topics', 'p')
-            ->where('p.forum_id = :forumId')
-            ->setParameter('forumId', $id)
-            ->leftJoin('p.last_post', 'l')
-            ->orderBy('p.sticky', 'DESC')
-            ->addOrderBy('l.post_time', 'DESC')
-            ->getQuery();
+                ->createQueryBuilder()
+                ->select('p')
+                ->from('Dizkus_Entity_Topics', 'p')
+                ->where('p.forum_id = :forumId')
+                ->setParameter('forumId', $id)
+                ->leftJoin('p.last_post', 'l')
+                ->orderBy('p.sticky', 'DESC')
+                ->addOrderBy('l.post_time', 'DESC')
+                ->getQuery();
 
-        $query->setFirstResult($startNumber-1)->setMaxResults($this->_itemsPerPage);
+        $query->setFirstResult($startNumber - 1)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
 
         return $paginator;
-
     }
-
 
     /**
      * return page as array
@@ -189,12 +180,9 @@ class Dizkus_EntityAccess_Forum
     {
         return array(
             'itemsperpage' => $this->_itemsPerPage,
-            'numitems'     => $this->_numberOfItems
+            'numitems' => $this->_numberOfItems
         );
     }
-
-
-
 
     /**
      * return page as array
@@ -207,7 +195,6 @@ class Dizkus_EntityAccess_Forum
         $this->entityManager->flush();
         return true;
     }
-
 
     /**
      * return page as array
@@ -232,7 +219,6 @@ class Dizkus_EntityAccess_Forum
         $this->_forum->setlast_post($post);
         $this->entityManager->flush();
     }
-
 
     /**
      * return page as array
@@ -259,4 +245,5 @@ class Dizkus_EntityAccess_Forum
         $this->entityManager->flush();
         return true;
     }
+
 }

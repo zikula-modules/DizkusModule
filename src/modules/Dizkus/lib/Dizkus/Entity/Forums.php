@@ -4,7 +4,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * Forums entity class.
  *
@@ -37,8 +36,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_id = $forum_id;
     }
 
-
-
     /**
      * The following are annotations which define the forum_name field.
      * 
@@ -56,9 +53,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_name = $forum_name;
     }
 
-
-
-
     /**
      * The following are annotations which define the forum_desc field.
      * 
@@ -66,21 +60,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_desc = '';
 
-
     public function getforum_desc()
     {
         return $this->forum_desc;
     }
 
-
     public function setforum_desc($forum_name)
     {
         $this->forum_desc = $forum_name;
     }
-
-
-
-
 
     /**
      * The following are annotations which define the forum_topics field.
@@ -126,23 +114,16 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_posts++;
     }
 
-
-
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="forum_order", type="integer")
      */
     private $lft;
 
-
     public function getLft()
     {
         return $this->lft;
     }
-
-
-
-
 
     /**
      * @Gedmo\TreeLevel
@@ -154,8 +135,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         return $this->lvl;
     }
-
-
 
     /**
      * @Gedmo\TreeRight
@@ -179,8 +158,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->root;
     }
 
-
-
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="children")
@@ -198,7 +175,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->parent = $parent;
     }
 
-
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forums", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
@@ -209,7 +185,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         return $this->children;
     }
-
 
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
@@ -222,13 +197,10 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->last_post;
     }
 
-
     public function setlast_post($post)
     {
         return $this->last_post = $post;
     }
-
-
 
     /**
      * The following are annotations which define the forum_pop3_active field.
@@ -242,12 +214,10 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         return $this->forum_pop3_active;
     }
 
-
     public function setforum_pop3_active($pop3_active)
     {
         $this->forum_pop3_active = $pop3_active;
     }
-
 
     public function setextsource($extsource)
     {
@@ -258,8 +228,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         }
     }
 
-
-
     /**
      * The following are annotations which define the forum_pop3_server field.
      *
@@ -267,20 +235,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_pop3_server = '';
 
-
     public function getforum_pop3_server()
     {
         return $this->forum_pop3_server;
     }
 
-
     public function setforum_pop3_server($pop3_server)
     {
         $this->forum_pop3_server = $pop3_server;
     }
-
-
-
 
     /**
      * The following are annotations which define the forum_pop3_port field.
@@ -288,7 +251,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      * @ORM\Column(type="integer", length=5)
      */
     private $forum_pop3_port = 110;
-
 
     public function getforum_pop3_port()
     {
@@ -300,15 +262,12 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_pop3_port = $pop3_port;
     }
 
-
-
     /**
      * The following are annotations which define the forum_pop3_login field.
      *
      * @ORM\Column(type="string", length=60)
      */
     private $forum_pop3_login = '';
-
 
     public function getforum_pop3_login()
     {
@@ -317,10 +276,8 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
 
     public function setforum_pop3_login($pop3_login)
     {
-        $this->forum_pop3_login = $pop3_login ;
+        $this->forum_pop3_login = $pop3_login;
     }
-
-
 
     /**
      * The following are annotations which define the forum_pop3_password field.
@@ -329,19 +286,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_pop3_password = '';
 
-
     public function getforum_pop3_password()
     {
         return $this->forum_pop3_password;
     }
 
-
     public function setforum_pop3_password($pop3_password)
     {
         $this->forum_pop3_password = $pop3_password;
     }
-
-
 
     /**
      * The following are annotations which define the forum_pop3_interval field.
@@ -360,15 +313,12 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_pop3_interval = $pop3_interval;
     }
 
-
-
     /**
      * The following are annotations which define the forum_pop3_interval field.
      *
      * @ORM\Column(type="integer")
      */
     private $forum_pop3_lastconnect = 0;
-
 
     public function getforum_pop3_lastconnect()
     {
@@ -380,8 +330,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_pop3_lastconnect = $pop3_lastconnection;
     }
 
-
-
     /**
      * forum moderators
      *
@@ -391,17 +339,12 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_mods;
 
-
-
-
-
     /**
      * The following are annotations which define the forum_pop3_interval field.
      *
      * @ORM\Column(type="string", length=60)
      */
     private $forum_pop3_pnuser = '';
-
 
     public function getforum_pop3_pnuser()
     {
@@ -413,16 +356,12 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_pop3_pnuser = $pop3_pnuser;
     }
 
-
-
-
     /**
      * The following are annotations which define the forum_pop3_interval field.
      *
      * @ORM\Column(type="string", length=40)
      */
     private $forum_pop3_pnpassword = '';
-
 
     public function getforum_pop3_pnpassword()
     {
@@ -434,7 +373,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         $this->forum_pop3_pnpassword = $pop3_pnpassword;
     }
 
-
     /**
      * The following are annotations which define the forum_pop3_interval field.
      *
@@ -442,21 +380,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_pop3_matchstring = '';
 
-
     public function getforum_pop3_matchstring()
     {
         return $this->forum_pop3_matchstring;
     }
 
-
     public function setforum_pop3_matchstring($pop3_matchstring)
     {
         $this->forum_pop3_matchstring = $pop3_matchstring;
     }
-
-
-
-
 
     /**
      * The following are annotations which define the forum_moduleref field.
@@ -465,20 +397,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_moduleref = 0;
 
-
     public function getforum_moduleref()
     {
         return $this->forum_moduleref;
     }
 
-
     public function setforum_moduleref($moduleref)
     {
         $this->forum_moduleref = $moduleref;
     }
-
-
-
 
     /**
      * The following are annotations which define the forum_pntopic field.
@@ -487,24 +414,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $forum_pntopic = 0;
 
-
     public function getforum_pntopic()
     {
         return $this->forum_pntopic;
     }
 
-
     public function setforum_pntopic($pntopic)
     {
         $this->forum_pntopic = $pntopic;
     }
-
-
-
-
-
-
-
 
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Favorites", cascade={"persist"})
@@ -512,19 +430,15 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
      */
     private $favorites;
 
-
     public function getfavorites()
     {
         return $this->favorites;
     }
 
-
     public function getforum_mods()
     {
         return $this->forum_mods;
     }
-
-
 
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topic", mappedBy="forum")
@@ -535,8 +449,6 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     {
         return $this->topics;
     }
-
-
 
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
@@ -551,18 +463,17 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     public function getModeratorUsersAsArray()
     {
         $output = array();
-        foreach($this->moderatorUsers as $user) {
+        foreach ($this->moderatorUsers as $user) {
             $output[] = $user->getUser_id();
         }
 
         return $output;
     }
 
-
     public function setModeratorUsers($users)
     {
         // remove moderators
-        foreach($this->moderatorUsers as $key => $moderator) {
+        foreach ($this->moderatorUsers as $key => $moderator) {
             $i = array_search($moderator->getUser_id(), $users);
             if (!$i) {
                 $this->moderatorUsers->remove($key);
@@ -571,16 +482,13 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
             }
         }
         // add moderators
-        foreach($users as $uid) {
+        foreach ($users as $uid) {
             $newModerator = new Dizkus_Entity_Moderator_User();
             $newModerator->setUser_id($uid);
             $newModerator->setForum($this);
             $this->moderatorUsers[] = $newModerator;
         }
     }
-
-
-
 
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
@@ -595,18 +503,17 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
     public function getModeratorGroupsAsArray()
     {
         $output = array();
-        foreach($this->moderatorGroups as $moderatorGroup) {
+        foreach ($this->moderatorGroups as $moderatorGroup) {
             $output[] = $moderatorGroup->getGroup()->getGid();
         }
 
         return $output;
     }
 
-
     public function setModeratorGroups($moderatorGroups)
     {
         // remove moderators
-        foreach($this->moderatorGroups as $key => $moderatorGroup) {
+        foreach ($this->moderatorGroups as $key => $moderatorGroup) {
             $i = array_search($moderatorGroup->getGroup()->getGid(), $moderatorGroups);
             if (!$i) {
                 $this->moderatorGroups->remove($key);
@@ -615,7 +522,7 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
             }
         }
         // add moderators
-        foreach($moderatorGroups as $gid) {
+        foreach ($moderatorGroups as $gid) {
             $em = ServiceUtil::getService('doctrine.entitymanager');
             $group = $this->_topic = $em->find('Dizkus_Entity_Group', $gid);
             $newModerator = new Dizkus_Entity_Moderator_Group();
@@ -625,17 +532,11 @@ class Dizkus_Entity_Forums extends Zikula_EntityAccess
         }
     }
 
-
-
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->topics = new \Doctrine\Common\Collections\ArrayCollection();
         $this->moderatorUsers = new \Doctrine\Common\Collections\ArrayCollection();
         $this->moderatorGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-
-
-
 
 }

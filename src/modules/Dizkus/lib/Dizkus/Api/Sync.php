@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,9 +8,8 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
-class Dizkus_Api_Sync extends Zikula_AbstractApi {
-    
+class Dizkus_Api_Sync extends Zikula_AbstractApi
+{
 
     public function all($silendMode = false)
     {
@@ -18,7 +18,6 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
         $this->posters();
     }
 
-    
     /**
      * This function should receive $id, $type
      * synchronizes forums/topics/users
@@ -46,19 +45,19 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
         // count topics of a forum
         $qb = $this->entityManager->createQueryBuilder();
         $data['forum_topics'] = $qb->select('COUNT(t)')
-                                   ->from('Dizkus_Entity_Topics', 't')
-                                   ->where('t.forum_id = :id')
-                                   ->setParameter('id', $id)
-                                   ->getQuery()
-                                   ->getSingleScalarResult();
+                ->from('Dizkus_Entity_Topics', 't')
+                ->where('t.forum_id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getSingleScalarResult();
         // count posts of a forum
         $qb = $this->entityManager->createQueryBuilder();
         $data['forum_posts'] = $qb->select('COUNT(p)')
-                                  ->from('Dizkus_Entity_Posts', 'p')
-                                  ->where('p.forum_id = :id')
-                                  ->setParameter('id', $id)
-                                  ->getQuery()
-                                  ->getSingleScalarResult();
+                ->from('Dizkus_Entity_Posts', 'p')
+                ->where('p.forum_id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getSingleScalarResult();
         $args['forum']->merge($data, false);
         $this->entityManager->persist($args['forum']);
         $this->entityManager->flush();
@@ -75,7 +74,6 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
         return true;
     }
 
-
     public function topic($args)
     {
 
@@ -91,11 +89,11 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
         // count posts of a topic
         $qb = $this->entityManager->createQueryBuilder();
         $replies = $qb->select('COUNT(p)')
-                      ->from('Dizkus_Entity_Posts', 'p')
-                      ->where('p.topic_id = :id')
-                      ->setParameter('id', $id)
-                      ->getQuery()
-                      ->getSingleScalarResult();
+                ->from('Dizkus_Entity_Posts', 'p')
+                ->where('p.topic_id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getSingleScalarResult();
         $replies = (int)$replies - 1;
         $args['topic']->setTopic_replies($replies);
         $this->entityManager->flush();
@@ -103,16 +101,15 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
         return true;
     }
 
-
     public function posters()
     {
         $qb = $this->entityManager->createQueryBuilder();
         $posts = $qb->select('count(p)', 'd.user_id')
-                    ->from('Dizkus_Entity_Posts', 'p')
-                    ->leftJoin('p.poster', 'd')
-                    ->groupBy('d.user_id')
-                    ->getQuery()
-                    ->getArrayResult();
+                ->from('Dizkus_Entity_Posts', 'p')
+                ->leftJoin('p.poster', 'd')
+                ->groupBy('d.user_id')
+                ->getQuery()
+                ->getArrayResult();
 
         foreach ($posts as $post) {
             $poster = $this->entityManager->find('Dizkus_Entity_Poster', $post['user_id']);
@@ -125,7 +122,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi {
         $this->entityManager->flush();
 
 
-    
+
         return true;
     }
 

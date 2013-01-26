@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -13,8 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_UsersRanks extends Zikula_EntityAccess
 {
-    
-    
+
     /**
      * The following are annotations which define the uid field.
      *
@@ -23,8 +21,7 @@ class Dizkus_Entity_UsersRanks extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
-    
+
     /**
      * The following are annotations which define the uid field.
      *
@@ -33,17 +30,14 @@ class Dizkus_Entity_UsersRanks extends Zikula_EntityAccess
      * @ORM\JoinColumn(name="object_id", referencedColumnName="uid")
      */
     private $object_id;
-    
-    
+
     /**
      * The following are annotations which define the uname field.
      * 
      * @ORM\Column(type="string", length=80)
      */
     private $attribute_name = '';
-    
-    
-    
+
     /**
      * The following are annotations which define the uname field.
      * 
@@ -51,12 +45,9 @@ class Dizkus_Entity_UsersRanks extends Zikula_EntityAccess
      */
     private $value;
 
-    
     public function getValue()
     {
         return $this->value;
     }
-    
-   
 
 }

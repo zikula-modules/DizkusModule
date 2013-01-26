@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
 {
+
     /**
      * topic id
      *
@@ -20,15 +22,15 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
      */
     private $topic_id;
 
-     /**
-      * Setup form.
-      *
-      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
-      *
-      * @return boolean
-      *
-      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
-      */
+    /**
+     * Setup form.
+     *
+     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     *
+     * @return boolean
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     */
     function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -42,7 +44,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
 
         $view->assign($topic);
         $view->assign('emailsubject', $emailsubject);
-        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) ."\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic'=>$this->topic_id), null, null, true));
+        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
 
         return true;
     }
@@ -59,7 +61,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus','user','viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -70,11 +72,11 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
 
         ModUtil::apiFunc('Dizkus', 'user', 'emailtopic', array(
             'sendto_email' => $data['sendto_email'],
-            'message'      => $data['message'],
-            'subject'      => $data['emailsubject']
+            'message' => $data['message'],
+            'subject' => $data['emailsubject']
         ));
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
         return $view->redirect($url);
-
     }
+
 }

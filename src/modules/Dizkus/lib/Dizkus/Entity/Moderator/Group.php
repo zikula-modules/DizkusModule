@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -13,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
 {
+
     /**
      * The following are annotations which define the id field.
      *
@@ -22,13 +22,11 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
      */
     private $id;
 
-
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Group")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="gid")
      */
     private $group;
-
 
     public function getGroup()
     {
@@ -43,9 +41,8 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forums", inversedBy="moderatorGroups")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
-     **/
+     * */
     private $forum;
-
 
     public function getForum()
     {
@@ -56,4 +53,5 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
     {
         $this->forum = $forum;
     }
+
 }

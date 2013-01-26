@@ -4,7 +4,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
-
 /**
  * Favorites entity class.
  *
@@ -29,7 +28,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     {
         return $this->post_id;
     }
-
 
     /**
      * The following are annotations which define the topic_id field.
@@ -65,8 +63,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->forum_id = $forumId;
     }
 
-
-
     /**
      * The following are annotations which define the post_time field.
      * 
@@ -74,8 +70,7 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      * @Gedmo\Timestampable(on="create")
      */
     private $post_time;
-    
-    
+
     /**
      * The following are annotations which define the poster_ip field.
      * 
@@ -83,7 +78,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
      */
     private $poster_ip = '';
 
-    
     /**
      * The following are annotations which define the post_msgid field.
      * 
@@ -108,7 +102,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->post_text = stripslashes($text);
     }
 
-
     /**
      * The following are annotations which define the post_attach_signature field.
      *
@@ -125,8 +118,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
     {
         return $this->post_attach_signature = $attachSignature;
     }
-
-
 
     /**
      * The following are annotations which define the post_attach_signature field.
@@ -145,7 +136,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->post_first = $first;
     }
 
-
     /**
      * The following are annotations which define the post_title field.
      * 
@@ -163,26 +153,20 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->post_title = $title;
     }
 
-    
-
-    
     public function getpost_time()
     {
         return $this->post_time;
     }
-    
+
     public function getposter_ip()
     {
         return $this->poster_ip;
     }
-    
+
     public function getpost_msgid()
     {
         return $this->post_msgid;
     }
-
-
-
 
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"} )
@@ -200,7 +184,6 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         return $this->poster = $poster;
     }
 
-
     public function getposter_data()
     {
         return array(
@@ -213,11 +196,8 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
             'reply' => 'a',
             'user_posts' => 'a',
             'seeip' => 'a',
-
-
         );
     }
-
 
     public function __construct()
     {
@@ -227,12 +207,11 @@ class Dizkus_Entity_Posts extends Zikula_EntityAccess
         } else {
             // some enviroment for logging ;)
             if (System::serverGetVar('HTTP_X_FORWARDED_FOR')) {
-                $this->poster_ip = System::serverGetVar('REMOTE_ADDR')."/".System::serverGetVar('HTTP_X_FORWARDED_FOR');
+                $this->poster_ip = System::serverGetVar('REMOTE_ADDR') . "/" . System::serverGetVar('HTTP_X_FORWARDED_FOR');
             } else {
                 $this->poster_ip = System::serverGetVar('REMOTE_ADDR');
             }
         }
     }
-    
 
 }

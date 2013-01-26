@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Pages Team 2012
  *
@@ -12,7 +13,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
 {
 
@@ -28,12 +28,12 @@ class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
     public function getOneLevel($category = null)
     {
         $qb = $this->entityManager
-            ->createQueryBuilder()
-            ->select('f, c, l')
-            ->orderBy('f.lft')
-            ->from('Dizkus_Entity_Forums', 'f')
-            ->leftJoin('f.children', 'c')
-            ->leftJoin('c.last_post', 'l');
+                ->createQueryBuilder()
+                ->select('f, c, l')
+                ->orderBy('f.lft')
+                ->from('Dizkus_Entity_Forums', 'f')
+                ->leftJoin('f.children', 'c')
+                ->leftJoin('c.last_post', 'l');
 
         // category
         if ($category > 0) {
@@ -47,16 +47,14 @@ class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
         if (UserUtil::isLoggedIn() && $this->getVar('favorites_enabled') == 'yes') {
             if (ModUtil::apiFunc($this->name, 'Favorites', 'getStatus')) {
                 $qb->join('c.favorites', 'fa')
-                   ->andWhere('fa.user_id = :uid')
-                   ->setParameter('uid', UserUtil::getVar('uid'));
+                        ->andWhere('fa.user_id = :uid')
+                        ->setParameter('uid', UserUtil::getVar('uid'));
             }
         }
 
         $query = $qb->getQuery();
         return $query->getResult();
     }
-
-
 
     /**
      * getForumTree
@@ -71,4 +69,5 @@ class Dizkus_EntityAccess_Tree extends Zikula_AbstractBase
 
         return $repo->childrenHierarchy(null, false);
     }
+
 }

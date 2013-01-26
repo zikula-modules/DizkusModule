@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -13,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Group extends Zikula_EntityAccess
 {
+
     /**
      * The following are annotations which define the id field.
      *
@@ -27,7 +27,6 @@ class Dizkus_Entity_Group extends Zikula_EntityAccess
         return $this->gid;
     }
 
-
     /**
      * The following are annotations which define the name field.
      *
@@ -35,9 +34,9 @@ class Dizkus_Entity_Group extends Zikula_EntityAccess
      */
     private $name;
 
-
     public function getName()
     {
         return $this->name;
     }
+
 }

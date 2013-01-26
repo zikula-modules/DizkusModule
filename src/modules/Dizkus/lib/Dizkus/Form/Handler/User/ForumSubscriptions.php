@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_ForumSubscriptions extends Zikula_Form_AbstractHandler
 {
+
     /**
      * Setup form.
      *
@@ -32,7 +34,6 @@ class Dizkus_Form_Handler_User_ForumSubscriptions extends Zikula_Form_AbstractHa
         $view->assign('subscriptions', $subscriptions);
         return true;
     }
-
 
     /**
      * Handle form submission.
@@ -60,4 +61,5 @@ class Dizkus_Form_Handler_User_ForumSubscriptions extends Zikula_Form_AbstractHa
 
         return $view->redirect($url);
     }
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,13 +14,13 @@
  */
 class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
 {
+
     /**
      * forum id
      *
      * @var integer
      */
     private $_posterData;
-
 
     /**
      * Setup form.
@@ -36,7 +37,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         if (!UserUtil::isLoggedIn()) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-    
+
         // get the input
         $this->_posterData = new Dizkus_EntityAccess_PosterData(UserUtil::getVar('uid'));
 
@@ -72,7 +73,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
             $url = ModUtil::url('Dizkus', 'user', 'prefs');
             return $view->redirect($url);
         }
-    
+
         // check for valid form
         if (!$view->isValid()) {
             return false;
@@ -83,4 +84,5 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
 
         return true;
     }
+
 }

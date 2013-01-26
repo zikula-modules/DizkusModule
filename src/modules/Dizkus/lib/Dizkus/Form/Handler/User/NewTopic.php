@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,13 +14,13 @@
  */
 class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 {
+
     /**
      * forum id
      *
      * @var integer
      */
     private $_forumId;
-
 
     /**
      * Setup form.
@@ -37,12 +38,12 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-    
+
         // get the input
         $this->_forumId = (int)$this->request->query->get('forum');
 
         if (!isset($this->_forumId)) {
-            return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus','user', 'main'));
+            return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
 
         $forum = new Dizkus_EntityAccess_Forum($this->_forumId);
@@ -70,7 +71,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 
             return $view->redirect($url);
         }
-    
+
         // check for valid form
         if (!$view->isValid()) {
 
@@ -81,15 +82,15 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         $data['forum_id'] = $this->_forumId;
 
 
-        /*if ($this->isSpam($args['message'])) {
-            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
-        }*/
+        /* if ($this->isSpam($args['message'])) {
+          return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+          } */
 
 
 
         $newtopic = new Dizkus_EntityAccess_Topic();
         $newtopic->prepare($data);
-        
+
         // show preview
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
@@ -107,6 +108,6 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         // redirect to the new topic
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topicId));
         return $view->redirect($url);
-        
     }
+
 }

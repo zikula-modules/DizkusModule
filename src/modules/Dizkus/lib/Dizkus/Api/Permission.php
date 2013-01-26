@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,24 +8,21 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
-class Dizkus_Api_Permission extends Zikula_AbstractApi {
-
-
+class Dizkus_Api_Permission extends Zikula_AbstractApi
+{
 
     public function get($args)
     {
         $permissions = array();
-        $permissions['see']      = $this->canSee($args);
-        $permissions['read']     = $permissions['see']      && $this->canRead($args);
-        $permissions['comment']  = $permissions['read']     && $this->canWrite($args);
-        $permissions['moderate'] = $permissions['comment']  && $this->canModerate($args);
-        $permissions['edit']     = $permissions['moderate'];
-        $permissions['admin']    = $permissions['moderate'] && $this->canAdministrate($args);
+        $permissions['see'] = $this->canSee($args);
+        $permissions['read'] = $permissions['see'] && $this->canRead($args);
+        $permissions['comment'] = $permissions['read'] && $this->canWrite($args);
+        $permissions['moderate'] = $permissions['comment'] && $this->canModerate($args);
+        $permissions['edit'] = $permissions['moderate'];
+        $permissions['admin'] = $permissions['moderate'] && $this->canAdministrate($args);
 
         return $permissions;
     }
-
 
     /**
      * Check if a user is allowed to see category and forum.
@@ -74,7 +72,6 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi {
         return $this->checkPermission($args, ACCESS_MODERATE);
     }
 
-
     /**
      * Check if a user is allowed to administrate category and forum.
      *
@@ -116,7 +113,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi {
         }
 
         $component = 'Dizkus::';
-        $instance  = $args['cat_id'].':'.$args['forum_id'].':';
+        $instance = $args['cat_id'] . ':' . $args['forum_id'] . ':';
         $user = $args['user_id'];
 
         return SecurityUtil::checkPermission($component, $instance, $level, $user);

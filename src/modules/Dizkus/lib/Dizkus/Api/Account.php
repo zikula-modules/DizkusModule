@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -11,8 +12,9 @@
 /**
  * This class provides the account api functions
  */
-class Dizkus_Api_Account extends Zikula_AbstractApi {
-    
+class Dizkus_Api_Account extends Zikula_AbstractApi
+{
+
     /**
      * Return an array of items to show in the your account panel.
      *
@@ -25,13 +27,13 @@ class Dizkus_Api_Account extends Zikula_AbstractApi {
     {
         // the array that will hold the options
         $items = array();
-    
+
         // show link for users only
         if (!UserUtil::isLoggedIn()) {
             // not logged in
             return $items;
         }
-    
+
         $uname = (isset($args['uname'])) ? $args['uname'] : UserUtil::getVar('uname');
         // does this user exist?
         if (UserUtil::getIDFromName($uname) == false) {
@@ -39,11 +41,12 @@ class Dizkus_Api_Account extends Zikula_AbstractApi {
             return $items;
         }
 
-        $items[] = array('url'     => ModUtil::url('Dizkus', 'user', 'prefs'),
-            'title'   => $this->__('Forum'),
-            'icon'    => 'icon_forumprefs.gif');
-    
+        $items[] = array('url' => ModUtil::url('Dizkus', 'user', 'prefs'),
+            'title' => $this->__('Forum'),
+            'icon' => 'icon_forumprefs.gif');
+
         // Return the items
         return $items;
     }
+
 }

@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Favorites entity class.
  *
@@ -13,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Moderators extends Zikula_EntityAccess
 {
+
     /**
      * The following are annotations which define the id field.
      *
@@ -21,9 +21,7 @@ class Dizkus_Entity_Moderators extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
 
-    
     /**
      * The following are annotations which define the user id field.
      *
@@ -31,23 +29,21 @@ class Dizkus_Entity_Moderators extends Zikula_EntityAccess
      */
     private $user_id;
 
-
-    
     public function getForum_id()
     {
         return $this->forum_id;
     }
-    
+
     public function getUser_id()
     {
         return $this->user_id;
     }
-    
+
     public function setForum_id($forum_id)
     {
         $this->forum_id = $forum_id;
     }
-    
+
     public function setUser_id($user_id)
     {
         $this->user_id = $user_id;

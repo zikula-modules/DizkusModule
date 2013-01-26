@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -13,6 +14,7 @@
  */
 class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
 {
+
     /**
      * init
      *
@@ -31,13 +33,13 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
     public function info()
     {
         return array(
-            'module'         => 'Dizkus',
-            'text_type'      => $this->__('Dizkus statistic'),
+            'module' => 'Dizkus',
+            'text_type' => $this->__('Dizkus statistic'),
             'text_type_long' => $this->__('Dizkus Statistics Block'),
             'allow_multiple' => true,
-            'form_content'   => false,
-            'form_refresh'   => false,
-            'show_preview'   => true
+            'form_content' => false,
+            'form_refresh' => false,
+            'show_preview' => true
         );
     }
 
@@ -103,7 +105,7 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
             return false;
         }
 
-        $sb_template   = $this->request->request->get('sb_template', 'statisticsblock/display.tpl');
+        $sb_template = $this->request->request->get('sb_template', 'statisticsblock/display.tpl');
         $sb_parameters = $this->request->request->get('sb_parameters', 'maxposts=5');
 
         $blockinfo['content'] = BlockUtil::varsToContent(compact('sb_template', 'sb_parameters'));
@@ -131,12 +133,13 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
             $vars['sb_parameters'] = 'maxposts=5';
         }
         if (!isset($vars['sb_template']) || empty($vars['sb_template'])) {
-            $vars['sb_template']   = 'statisticsblock/display.tpl';
+            $vars['sb_template'] = 'statisticsblock/display.tpl';
         }
 
         //$render = Zikula_View::getInstance('Dizkus', false, null, true);
 
         return $this->view->assign('vars', $vars)
-                          ->fetch('statisticsblock/config.tpl');
+                        ->fetch('statisticsblock/config.tpl');
     }
+
 }

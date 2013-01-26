@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Pages Team 2012
  *
@@ -19,16 +20,12 @@ class Dizkus_EntityAccess_Post
 
     private $_post;
     private $_topic;
-
     protected $entityManager;
     protected $name;
-
 
     /**
      * construct
      */
-
-
     public function __construct($id = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
@@ -59,18 +56,15 @@ class Dizkus_EntityAccess_Post
         return $output;
     }
 
-
     public function getId()
     {
         return $this->_post->getPageId();
     }
 
-
     public function getTopicId()
     {
         return $this->_topic->getId();
     }
-
 
     public function isFirst()
     {
@@ -86,7 +80,6 @@ class Dizkus_EntityAccess_Post
     {
         return $this->_post;
     }
-
 
     public function prepare($data)
     {
@@ -108,7 +101,6 @@ class Dizkus_EntityAccess_Post
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }
-
 
     /**
      * return page as array
@@ -145,7 +137,6 @@ class Dizkus_EntityAccess_Post
         $this->entityManager->flush();
     }
 
-
     /**
      * return page as array
      *
@@ -162,6 +153,5 @@ class Dizkus_EntityAccess_Post
         $this->entityManager->remove($this->_post);
         $this->entityManager->flush();
     }
-
 
 }
