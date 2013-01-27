@@ -156,7 +156,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
                 $text = $this->__f("%s's topics", array($uname));
             }
         } else {
-            $qb->where('p.poster_id = :uid');
+            $qb->where('p.poster = :uid');
             if ($own) {
                 $text = $this->__('Your posts');
             } else {

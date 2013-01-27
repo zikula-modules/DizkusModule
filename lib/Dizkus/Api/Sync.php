@@ -46,7 +46,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
         $qb = $this->entityManager->createQueryBuilder();
         $data['forum_topics'] = $qb->select('COUNT(t)')
                 ->from('Dizkus_Entity_Topic', 't')
-                ->where('t.forum_id = :id')
+                ->where('t.forum = :id')
                 ->setParameter('id', $id)
                 ->getQuery()
                 ->getSingleScalarResult();
@@ -90,7 +90,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
         $qb = $this->entityManager->createQueryBuilder();
         $replies = $qb->select('COUNT(p)')
                 ->from('Dizkus_Entity_Post', 'p')
-                ->where('p.topic_id = :id')
+                ->where('p.topic = :id')
                 ->setParameter('id', $id)
                 ->getQuery()
                 ->getSingleScalarResult();

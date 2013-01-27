@@ -30,7 +30,9 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     }
 
     /**
-     * The following are annotations which define the forum_id field.
+     * forum id
+     * this should probably be changed to `forum` and be Dizkus_Entity_Forum obj
+     * one to one?
      *
      * @ORM\Column(type="integer")
      */

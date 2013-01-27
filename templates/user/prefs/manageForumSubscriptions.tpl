@@ -48,7 +48,7 @@
 
 <div class="forumbg dzk_message dzk_rounded">
     <div class="inner">
-        <strong>{gt text="No topic subscriptions found."}</strong>
+        <strong>{gt text="No forum subscriptions found."}</strong>
     </div>
 </div>
 
