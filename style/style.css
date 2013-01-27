@@ -341,6 +341,7 @@ div#editpostoptions ul li {
 }
 #dizkus dl.icon dt {
     padding-left: 45px;
+    min-height:26px;
 }
 #dizkus dl.icon dt.ctheme-topic-title {
     font-weight: normal;
@@ -363,7 +364,6 @@ div#editpostoptions ul li {
 #dizkus dl.icon dt.no-new-posts {
     background:transparent url(../images/folder.gif) no-repeat scroll 5px 50%;
     font-weight:normal;
-    min-height:26px;
     width:43%;
 }
 #dizkus dl.icon dt.ctheme-topic-title a,
