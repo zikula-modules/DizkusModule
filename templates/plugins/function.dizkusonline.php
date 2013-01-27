@@ -55,11 +55,6 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
 
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
 
-    $ztable = DBUtil::getTables();
-
-    $sessioninfocolumn = $ztable['session_info_column'];
-    $sessioninfotable = $ztable['session_info'];
-
     $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
 
     // set some defaults
@@ -77,11 +72,10 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     } else {
         $anonwhere = "AND s.uid > '0'";
     }
-    $dql = "SELECT s.uid, s.uname
+    $dql = "SELECT s.uid, u.uname
             FROM Users\Entity\UserSessionEntity s, Users\Entity\UserEntity u
             WHERE s.lastused > '$activetime'
             $anonwhere
-            AND      IF (s.uid='0','1',s.uid) = u.uid
             GROUP BY s.ipaddr, s.uid";
 
     $onlineusers = $em->createQuery($dql)->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
