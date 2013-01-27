@@ -43,7 +43,7 @@
 
                         <dd class="lastpost">
                             {if isset($forum.last_post)}
-                            {include file='user/lastPostBy.tpl' last_post=$forum.last_post}
+                            {include file='user/lastPostBy.tpl' last_post=$forum.last_post replies=-1}
                             {/if}
                         </dd>
                     </dl>
