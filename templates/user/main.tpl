@@ -14,7 +14,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_{$category.forum_name}" class="{*if $category.new_posts == true}newpostscategorylink{else}categorylink{/if*}" title="{gt text="Go to category"} '{$category.forum_name|safetext}'" href="{modurl modname='Dizkus' type=user func=main viewcat=$category.forum_id}">{$category.forum_name|safetext}</a></span>
+                            <span><a id="categorylink_{$category.forum_name}" title="{gt text="Go to category"} '{$category.forum_name|safetext}'" href="{modurl modname='Dizkus' type=user func=main viewcat=$category.forum_id}">{$category.forum_name|safetext}</a></span>
                         </dt>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
                         <dd class="posts"><span>{gt text="Posts"}</span></dd>
@@ -27,7 +27,8 @@
                 {foreach item='forum' from=$category.children}
                     <li class="row">
                         <dl class="icon">
-                            <dt {*if $forum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if*} >
+                            <dt class='{if (isset($forum.last_post) && ($forum.last_post.post_time > $last_visit_unix))}new-posts{else}no-new-posts{/if}'>
+                                [{$forum.last_post.post_time}] ** [{$last_visit_unix}]<br/>
                                 <a title="{gt text="Go to forum"} '{$forum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.forum_name|safetext}</a><br />
                                 {if $forum.forum_desc neq ''}{$forum.forum_desc|safehtml}<br />{/if}
                                 {include file='user/moderatedBy.tpl' forum=$forum}
