@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_ranks")
  */
-class Dizkus_Entity_Ranks extends Zikula_EntityAccess
+class Dizkus_Entity_Rank extends Zikula_EntityAccess
 {
 
     /**

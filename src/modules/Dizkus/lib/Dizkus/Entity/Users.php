@@ -31,8 +31,8 @@ class Dizkus_Entity_Users extends Zikula_EntityAccess
     /**
      * attributes
      * 
-     * @var Dizkus_Entity_UsersRanks
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_UsersRanks", 
+     * @var Dizkus_Entity_UserRank
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_UserRank", 
      *                mappedBy="object_id", cascade={"all"}, 
      *                orphanRemoval=true)
      */

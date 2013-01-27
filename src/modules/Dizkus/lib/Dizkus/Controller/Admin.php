@@ -232,9 +232,8 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
               $inlinecss .= '</style>' . "\n";
               PageUtil::addVar('rawtext', $inlinecss); */
 
-            $em = $this->getService('doctrine.entitymanager');
-            $query = $em->createQueryBuilder();
-            $query->select('u.uid, u.uname, a.value as rank_id')
+            $qb = $this->entityManager->createQueryBuilder();
+            $qb->select('u.uid, u.uname, a.value as rank_id')
                     ->from('Dizkus_Entity_Users', 'u')
                     ->leftJoin('u.attributes', 'a')
                     ->where("a.attribute_name = 'dizkus_user_rank'")
@@ -242,18 +241,20 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
 
 
             if (!empty($letter) and $letter != '*') {
-                $query->andWhere("u.uname LIKE :letter")
+                $qb->andWhere("u.uname LIKE :letter")
                         ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
             }
 
-            $query = $query->getQuery();
-
+            $query = $qb->getQuery();
 
             // Paginator
-            $startnum = ($page - 1) * $perpage;
-            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
-            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
-            $allusers = $paginateQuery->getArrayResult();
+            // this isn't working at the moment - Jan 26 2013
+//            $startnum = ($page - 1) * $perpage;
+//            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
+//            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
+//            $allusers = $paginateQuery->getArrayResult();
+            
+            $allusers = $query->getArrayResult();
 
 
 

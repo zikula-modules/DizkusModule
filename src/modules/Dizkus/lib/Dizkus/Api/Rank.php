@@ -14,7 +14,7 @@
  */
 class Dizkus_Api_Rank extends Zikula_AbstractApi
 {
-
+    
     private $_userRanks = array();
 
     /**
@@ -44,7 +44,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             $orderby = 'rank_title';
         }
 
-        $ranks = $this->entityManager->getRepository('Dizkus_Entity_Ranks')
+        $ranks = $this->entityManager->getRepository('Dizkus_Entity_Rank')
                 ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
 
         return array($filelist, $ranks);
@@ -67,11 +67,11 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
 
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {
-                $r = new Dizkus_Entity_Ranks();
+                $r = new Dizkus_Entity_Rank();
                 $r->merge($rank);
                 $this->entityManager->persist($r);
             } else {
-                $r = $this->entityManager->find('Dizkus_Entity_Ranks', $rankid);
+                $r = $this->entityManager->find('Dizkus_Entity_Rank', $rankid);
 
                 if ($rank['rank_delete'] == '1') {
                     $this->entityManager->remove($r);
@@ -139,7 +139,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         $userRank = $this->entityManager
                 ->createQueryBuilder()
                 ->select('r')
-                ->from('Dizkus_Entity_Ranks', 'r')
+                ->from('Dizkus_Entity_Rank', 'r')
                 ->where('r.rank_min <= :posts and r.rank_max >= :posts')
                 ->setParameter('posts', $args['poster']->getuser_posts())
                 ->getQuery()

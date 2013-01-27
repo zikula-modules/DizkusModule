@@ -144,7 +144,7 @@ class Dizkus_Entity_Poster extends Zikula_EntityAccess
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Ranks", cascade={"persist"} )
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Rank", cascade={"persist"} )
      * @ORM\JoinColumn(name="user_rank", referencedColumnName="rank_id", nullable=true)
      */
     private $user_rank;

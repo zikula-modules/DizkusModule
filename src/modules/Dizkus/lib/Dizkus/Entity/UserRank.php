@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="objectdata_attributes")
  */
-class Dizkus_Entity_UsersRanks extends Zikula_EntityAccess
+class Dizkus_Entity_UserRank extends Zikula_EntityAccess
 {
 
     /**
