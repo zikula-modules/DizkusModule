@@ -13,6 +13,7 @@
             {img modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="New posts since your last visit"}
             {gt text="No new posts since your last visit on %s" tag1=$last_visit_unix|dateformat:'datetimebrief'}
         </li>
+        <li><strong>{gt text='The time is now'} {$smarty.now|dateformat:'datetimebrief'}</strong></li>
     </ul>
     {/if}
 
