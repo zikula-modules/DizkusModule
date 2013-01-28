@@ -219,7 +219,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'topic' => $topic_id,
                 'start' => $start
             );
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $params) . '#pid' . $post_id;
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $params) . '#pid' . $post->getId();
 
             return $this->redirect($url);
         } else {
