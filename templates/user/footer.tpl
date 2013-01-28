@@ -2,7 +2,7 @@
 
 <div class="dzk_marginbottom">
     {formutil_getpassedvalue name='func' default='main' assign='func'}
-    {if ($func eq 'main' OR $func eq 'viewforum') AND isset($forum)}
+    {if ($func eq 'main' OR $func eq 'index' OR $func eq 'viewforum') AND isset($forum)}
     <h3 class="footer_title">{gt text="Posts"}</h3>
     <ul id="ctheme-legenda">
         <li>
