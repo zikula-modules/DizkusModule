@@ -58,7 +58,7 @@ class Dizkus_EntityAccess_Post
 
     public function getId()
     {
-        return $this->_post->getPageId();
+        return $this->_post->getpost_id();
     }
 
     public function getTopicId()
