@@ -143,7 +143,7 @@
                         {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' }
                         {/if}
 
-                        {datecompare date1=$forum.last_post.post_time date2=$last_unix_visit comp=">" assign='comp'}
+                        {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp="<" assign='comp'}
                         {if $comp}
                         {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
                         {else}
