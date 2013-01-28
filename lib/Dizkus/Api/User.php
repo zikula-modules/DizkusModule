@@ -218,36 +218,16 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         } elseif (substr($path, -1, 1) != '/') {
             $path .= '/';
         }
-
-        setcookie('DizkusLastVisit', time(), time() + 31536000, $path);
-
-        if (!isset($_COOKIE['DizkusLastVisitTemp'])) {
-            $temptime = isset($_COOKIE['DizkusLastVisit']) ? $_COOKIE['DizkusLastVisit'] : '';
-        } else {
-            $temptime = $_COOKIE['DizkusLastVisitTemp'];
-        }
-
-        if (empty($temptime)) {
-            // check for old Cookies
-            // TO-DO: remove this code in 3.2 or a bit later
-            if (!isset($_COOKIE['phpBBLastVisitTemp'])) {
-                $temptime = isset($_COOKIE['phpBBLastVisit']) ? $_COOKIE['phpBBLastVisit'] : '';
-            } else {
-                $temptime = $_COOKIE['phpBBLastVisitTemp'];
-            }
-        }
-
-        if (empty($temptime)) {
-            $temptime = 0;
-        }
+        
+        $time = time();
+        CookieUtil::setCookie('DizkusLastVisit', "$time", $time + 31536000, $path, null, null, false);
+        $lastVisitTemp = CookieUtil::getCookie('DizkusLastVisitTemp', false, null);
+        $temptime = empty($lastVisitTemp) ? $time : $lastVisitTemp;
 
         // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-        setcookie('DizkusLastVisitTemp', $temptime, time() + 1800, $path);
+        CookieUtil::setCookie('DizkusLastVisitTemp', "$temptime", time() + 1800, $path, null, null, false);
 
-        // set vars for all scripts
-        $last_visit = DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M:%S');
-
-        return array($last_visit, $temptime);
+        return array(DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M:%S'), $temptime);
     }
 
     // RNG
