@@ -132,9 +132,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         if (!$topic->exists()) {
             return LogUtil::registerError(
-                $this->__f(
-                        "Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topicId)
-                ), null, ModUtil::url('Dizkus', 'user', 'main')
+                            $this->__f(
+                                    "Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topicId)
+                            ), null, ModUtil::url('Dizkus', 'user', 'main')
             );
         }
 
@@ -168,7 +168,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // I cannot see how using the Form lib will work here. This method is post submission of the form...
 //        $form = FormUtil::newForm($this->name, $this);
 //        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
-
         // Permission check
         // todo check topic
         $this->throwForbiddenUnless(
@@ -455,7 +454,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (!$posterData) {
             $posterData = new Dizkus_Entity_Poster();
         }
-        $posterData->setuser_favorites(false);
+        $posterData->setUser_favorites(false);
         $this->entityManager->flush();
 
         return System::redirect($url);
@@ -476,9 +475,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
         if (!$posterData) {
             $posterData = new Dizkus_Entity_Poster();
-            $posterData->setuser_id($uid);
+            $posterData->setUser_id($uid);
         }
-        $posterData->setuser_favorites(true);
+        $posterData->setUser_favorites(true);
         $this->entityManager->persist($posterData);
         $this->entityManager->flush();
 

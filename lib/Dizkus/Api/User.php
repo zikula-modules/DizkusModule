@@ -218,7 +218,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         } elseif (substr($path, -1, 1) != '/') {
             $path .= '/';
         }
-        
+
         $time = time();
         CookieUtil::setCookie('DizkusLastVisit', "$time", $time + 31536000, $path, null, null, false);
         $lastVisitTemp = CookieUtil::getCookie('DizkusLastVisitTemp', false, null);

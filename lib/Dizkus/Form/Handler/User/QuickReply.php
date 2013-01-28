@@ -14,6 +14,7 @@
  */
 class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
 {
+
     /**
      * forum id
      *

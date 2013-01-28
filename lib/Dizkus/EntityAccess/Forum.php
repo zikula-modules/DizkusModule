@@ -150,7 +150,7 @@ class Dizkus_EntityAccess_Forum
 
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
 
-        $id = $this->_forum->getforum_id();
+        $id = $this->_forum->getForum_id();
 
 
         $query = $this->entityManager
@@ -216,7 +216,7 @@ class Dizkus_EntityAccess_Forum
 
     public function setLastPost($post)
     {
-        $this->_forum->setlast_post($post);
+        $this->_forum->setLast_post($post);
         $this->entityManager->flush();
     }
 

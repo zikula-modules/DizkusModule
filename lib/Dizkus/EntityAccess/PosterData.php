@@ -35,7 +35,7 @@ class Dizkus_EntityAccess_PosterData
 
         if (!$this->_poster) {
             $this->_poster = new Dizkus_Entity_Poster();
-            $this->_poster->setuser_id($uid);
+            $this->_poster->setUser_id($uid);
         }
     }
 
@@ -46,7 +46,7 @@ class Dizkus_EntityAccess_PosterData
      */
     public function getPostOrder()
     {
-        return $this->_poster->getuser_post_order() ? 'ASC' : 'DESC';
+        return $this->_poster->getUser_post_order() ? 'ASC' : 'DESC';
     }
 
     /**
@@ -61,7 +61,7 @@ class Dizkus_EntityAccess_PosterData
         } else {
             $order = true;
         }
-        $this->_poster->setuser_post_order($order);
+        $this->_poster->setUser_post_order($order);
         $this->entityManager->flush();
     }
 

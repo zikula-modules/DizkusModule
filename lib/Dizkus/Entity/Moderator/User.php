@@ -1,11 +1,18 @@
 <?php
 
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link https://github.com/zikula-modules/Dizkus
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Favorites entity class.
- *
- * Annotations define the entity mappings to database.
+ * Moderator_User entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_mods")
@@ -14,7 +21,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
 {
 
     /**
-     * The following are annotations which define the id field.
+     * id
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -23,7 +30,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
     private $id;
 
     /**
-     * The following are annotations which define the user id field.
+     * user_id
      *
      * @ORM\Column(type="integer")
      */
@@ -45,6 +52,11 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
      * */
     private $forum;
 
+    /**
+     * Forum
+     * 
+     * @return Dizkus_Entity_Forum
+     */
     public function getForum()
     {
         return $this->forum;

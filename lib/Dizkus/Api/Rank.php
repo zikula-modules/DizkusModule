@@ -14,7 +14,7 @@
  */
 class Dizkus_Api_Rank extends Zikula_AbstractApi
 {
-    
+
     private $_userRanks = array();
 
     /**
@@ -123,14 +123,14 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         }
 
         // user has assigned rank
-        $userRank = $args['poster']->getuser_rank();
+        $userRank = $args['poster']->getUser_rank();
         if (isset($userRank)) {
             $data = $userRank->toArray();
             return $data = $this->addImageAndLink($data);
         }
 
         // check if rank by number of posts is cached
-        $uid = $args['poster']->getuser_id();
+        $uid = $args['poster']->getUser_id();
         if (array_key_exists($uid, $this->_userRanks)) {
             return $this->_userRanks[$uid];
         }
@@ -141,7 +141,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
                 ->select('r')
                 ->from('Dizkus_Entity_Rank', 'r')
                 ->where('r.rank_min <= :posts and r.rank_max >= :posts')
-                ->setParameter('posts', $args['poster']->getuser_posts())
+                ->setParameter('posts', $args['poster']->getUser_posts())
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getArrayResult();

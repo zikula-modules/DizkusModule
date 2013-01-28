@@ -1,11 +1,18 @@
 <?php
 
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link https://github.com/zikula-modules/Dizkus
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Favorites entity class.
- *
- * Annotations define the entity mappings to database.
+ * Rank entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_ranks")
@@ -14,7 +21,7 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
 {
 
     /**
-     * The following are annotations which define the rank_id field.
+     * rank_id
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -23,113 +30,113 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     private $rank_id;
 
     /**
-     * The following are annotations which define the rank_title field.
+     * rank_title
      * 
      * @ORM\Column(type="string", length=50)
      */
     private $rank_title = '';
 
     /**
-     * The following are annotations which define the rank_desc field.
+     * rank_desc
      * 
      * @ORM\Column(type="string", length=255)
      */
     private $rank_desc = '';
 
     /**
-     * The following are annotations which define the rank_min field.
+     * rank_min
      * 
      * @ORM\Column(type="integer")
      */
     private $rank_min = 0;
 
     /**
-     * The following are annotations which define the rank_max field.
+     * rank_max
      * 
      * @ORM\Column(type="integer")
      */
     private $rank_max = 0;
 
     /**
-     * The following are annotations which define the rank_special field.
+     * rank_special
      * 
      * @ORM\Column(type="integer", length=2)
      */
     private $rank_special = 0;
 
     /**
-     * The following are annotations which define the rank_image field.
+     * rank_image
      * 
      * @ORM\Column(type="string", length=255)
      */
     private $rank_image = '';
 
-    public function getrank_id()
+    public function getRank_id()
     {
         return $this->rank_id;
     }
 
-    public function getrank_title()
+    public function getRank_title()
     {
         return $this->rank_title;
     }
 
-    public function getrank_desc()
+    public function getRank_desc()
     {
         return $this->rank_desc;
     }
 
-    public function getrank_min()
+    public function getRank_min()
     {
         return $this->rank_min;
     }
 
-    public function getrank_max()
+    public function getRank_max()
     {
         return $this->rank_max;
     }
 
-    public function getrank_special()
+    public function getRank_special()
     {
         return $this->rank_special;
     }
 
-    public function getrank_image()
+    public function getRank_image()
     {
         return $this->rank_image;
     }
 
-    public function setrank_id($rank_id)
+    public function setRank_id($rank_id)
     {
         $this->rank_id = $rank_id;
     }
 
-    public function setrank_title($rank_title)
+    public function setRank_title($rank_title)
     {
         $this->rank_title = $rank_title;
     }
 
-    public function setrank_desc($rank_desc)
+    public function setRank_desc($rank_desc)
     {
         $this->rank_desc = $rank_desc;
     }
 
-    public function setrank_min($rank_min)
+    public function setRank_min($rank_min)
     {
         $this->rank_min = $rank_min;
     }
 
-    public function setrank_max($rank_max)
+    public function setRank_max($rank_max)
     {
         $this->rank_max = $rank_max;
     }
 
-    public function setrank_special($rank_special)
+    public function setRank_special($rank_special)
     {
         $this->rank_special = $rank_special;
     }
 
-    public function setrank_image($rank_image)
+    public function setRank_image($rank_image)
     {
         $this->rank_image = $rank_image;
     }

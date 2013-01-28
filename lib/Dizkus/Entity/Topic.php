@@ -1,13 +1,20 @@
 <?php
 
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link https://github.com/zikula-modules/Dizkus
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
+
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
 /**
- * Topics entity class.
- *
- * Annotations define the entity mappings to database.
+ * Topics entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
@@ -16,7 +23,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
 {
 
     /**
-     * The following are annotations which define the topic id field.
+     * topic_id
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -24,18 +31,8 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      */
     private $topic_id;
 
-    public function gettopic_id()
-    {
-        return $this->topic_id;
-    }
-
-    public function settopic_id($id)
-    {
-        $this->topic_id = $id;
-    }
-
     /**
-     * The following are annotations which define the topic_poster field.
+     * topic_poster
      *
      * @ORM\Column(type="integer")
      * @ZK\StandardFields(type="userid", on="create")
@@ -43,14 +40,14 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $topic_poster;
 
     /**
-     * The following are annotations which define the topic_title field.
+     * topic_title
      *
      * @ORM\Column(type="string", length=255)
      */
     private $topic_title = '';
 
     /**
-     * The following are annotations which define the topic time field.
+     * topic_time
      *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
@@ -58,27 +55,86 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $topic_time;
 
     /**
-     * The following are annotations which define the topic status field.
+     * topic_status
      *
      * @ORM\Column(type="integer")
      */
     private $topic_status = 0;
 
     /**
-     * The following are annotations which define the topic views field.
+     * topic_views
      *
      * @ORM\Column(type="integer")
      */
     private $topic_views = 0;
 
     /**
-     * The following are annotations which define the topic replies field.
+     * topic_replies
      *
      * @ORM\Column(type="integer", length=10)
      */
     private $topic_replies = 0;
 
-    public function gettopic_replies()
+    /**
+     * sticky
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $sticky = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="topics")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     * */
+    private $forum;
+
+    /**
+     * topic_reference
+     *
+     * @ORM\Column(type="string", length=60)
+     */
+    private $topic_reference = '';
+
+    /**
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
+     * @ORM\JoinColumn(name="topic_last_post_id", referencedColumnName="post_id", nullable=true)
+     */
+    private $last_post;
+
+    /**
+     * solved
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $solved = false;
+
+    /**
+     * forum moderators
+     *
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderators",
+     *                mappedBy="forum_id", cascade={"all"},
+     *                orphanRemoval=false)
+     */
+    private $forum_mods;
+
+    /**
+     * posts
+     * 
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
+     */
+    private $posts;
+
+    public function getTopic_id()
+    {
+        return $this->topic_id;
+    }
+
+    public function setTopic_id($id)
+    {
+        $this->topic_id = $id;
+    }
+
+    public function getTopic_replies()
     {
         return $this->topic_replies;
     }
@@ -98,19 +154,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->topic_replies--;
     }
 
-    /**
-     * The following are annotations which define the sticky field.
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $sticky = false;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="topics")
-     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
-     * */
-    private $forum;
-
     public function getForum()
     {
         return $this->forum;
@@ -121,81 +164,52 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->forum = $forum;
     }
 
-    /**
-     * The following are annotations which define the topic reference field.
-     *
-     * @ORM\Column(type="string", length=60)
-     */
-    private $topic_reference = '';
-
-    /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
-     * @ORM\JoinColumn(name="topic_last_post_id", referencedColumnName="post_id", nullable=true)
-     */
-    private $last_post;
-
-    public function getlast_post()
+    public function getLast_post()
     {
         return $this->last_post;
     }
 
-    public function setlast_post($post)
+    public function setLast_post($post)
     {
         return $this->last_post = $post;
     }
 
-    /**
-     * The following are annotations which define the solved field.
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $solved = false;
-
-    /**
-     * forum moderators
-     *
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderators",
-     *                mappedBy="forum_id", cascade={"all"},
-     *                orphanRemoval=false)
-     */
-    private $forum_mods;
-
-    public function getforum_mods()
+    public function getForum_mods()
     {
         return $this->forum_mods;
     }
 
-    public function gettopic_poster()
+    public function getTopic_poster()
     {
         return $this->topic_poster;
     }
 
-    public function gettopic_title()
+    public function getTopic_title()
     {
         return $this->topic_title;
     }
 
-    public function gettopic_status()
+    public function getTopic_status()
     {
         return $this->topic_status;
     }
 
-    public function gettopic_time()
+    public function getTopic_time()
     {
         return $this->topic_time;
     }
 
-    public function gettopic_views()
+    public function getTopic_views()
     {
         return $this->topic_views;
     }
 
-    public function getsticky()
+    public function getSticky()
     {
         return $this->sticky;
     }
 
-    public function gettopic_reference()
+    public function getTopic_reference()
     {
         return $this->topic_reference;
     }
@@ -244,11 +258,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     {
         $this->solved = $solved;
     }
-
-    /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
-     */
-    private $posts;
 
     public function getPosts()
     {

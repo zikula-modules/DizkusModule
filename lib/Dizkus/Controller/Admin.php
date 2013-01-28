@@ -62,13 +62,12 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     {
         DoctrineHelper::updateSchema($this->entityManager, array('Dizkus_Entity_Forum'));
 
-
         // import new tree
         $order = array('cat_order' => 'ASC');
         $categories = $this->entityManager->getRepository('Dizkus_Entity_310_Category')->findBy(array(), $order);
         foreach ($categories as $category) {
             $newCatForum = new Dizkus_Entity_Forum();
-            $newCatForum->setforum_name($category->getcat_title());
+            $newCatForum->setForum_name($category->getcat_title());
             $this->entityManager->persist($newCatForum);
 
             $where = array('root' => $category->getcat_id());
@@ -79,8 +78,6 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             }
         }
         $this->entityManager->flush();
-
-
 
         // create missing poster data
         $qb = $this->entityManager->createQueryBuilder();
@@ -94,18 +91,14 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
                 $poster = $this->entityManager->getRepository('Dizkus_Entity_Poster')->find($post['poster_id']);
                 if (!$poster) {
                     $poster = new Dizkus_Entity_Poster();
-                    $poster->setuser_id($post['poster_id']);
+                    $poster->setUser_id($post['poster_id']);
                     $this->entityManager->persist($poster);
                 }
             }
         }
         $this->entityManager->flush();
 
-
-
         ModUtil::apiFunc('Dizkus', 'Sync', 'all');
-
-
 
         return ' ';
     }
@@ -253,7 +246,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
 //            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
 //            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
 //            $allusers = $paginateQuery->getArrayResult();
-            
+
             $allusers = $query->getArrayResult();
 
 
@@ -292,11 +285,11 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        
+
         $tree = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getTree();
 
         return $this->view->assign('tree', $tree)
-                ->fetch('admin/tree.tpl');
+                        ->fetch('admin/tree.tpl');
     }
 
     /**

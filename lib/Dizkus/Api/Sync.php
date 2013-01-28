@@ -115,9 +115,9 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
             $poster = $this->entityManager->find('Dizkus_Entity_Poster', $post['user_id']);
             if (!$poster) {
                 $poster = new Dizkus_Entity_Poster();
-                $poster->setuser_id($post['user_id']);
+                $poster->setUser_id($post['user_id']);
             }
-            $poster->setuser_posts($post[1]);
+            $poster->setUser_posts($post[1]);
         }
         $this->entityManager->flush();
 

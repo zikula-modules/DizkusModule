@@ -73,7 +73,7 @@ class Dizkus_EntityAccess_Topic
      */
     public function getId()
     {
-        return $this->_topic->gettopic_id();
+        return $this->_topic->getTopic_id();
     }
 
     /**
@@ -83,7 +83,7 @@ class Dizkus_EntityAccess_Topic
      */
     public function getTitle()
     {
-        return $this->_topic->gettopic_title();
+        return $this->_topic->getTopic_title();
     }
 
     /**
@@ -121,7 +121,7 @@ class Dizkus_EntityAccess_Topic
 
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
 
-        $id = $this->_topic->gettopic_id();
+        $id = $this->_topic->getTopic_id();
 
 
         $query = $this->entityManager
@@ -192,7 +192,7 @@ class Dizkus_EntityAccess_Topic
 
     public function setLastPost($lastPost)
     {
-        $this->_topic->setlast_post($lastPost);
+        $this->_topic->setLast_post($lastPost);
     }
 
     public function setTitle($title)
@@ -237,7 +237,7 @@ class Dizkus_EntityAccess_Topic
         $this->_forumId = $data['forum_id'];
         unset($data['forum_id']);
 
-        $this->_topic->setlast_post($this->_firstPost);
+        $this->_topic->setLast_post($this->_firstPost);
 
         $this->_topic->merge($data);
 
@@ -269,7 +269,7 @@ class Dizkus_EntityAccess_Topic
         $this->entityManager->flush();
 
         // write first post
-        $this->_firstPost->settopic_id($this->_topic->gettopic_id());
+        $this->_firstPost->settopic_id($this->_topic->getTopic_id());
         $this->entityManager->persist($this->_firstPost);
         $this->entityManager->flush();
 
@@ -282,13 +282,13 @@ class Dizkus_EntityAccess_Topic
         // subscribe
         if ($this->_subscribe) {
             $params = array(
-                'topic_id' => $this->_topic->gettopic_id(),
+                'topic_id' => $this->_topic->getTopic_id(),
                 'action' => 'subscribe'
             );
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
         }
 
-        return $this->_topic->gettopic_id();
+        return $this->_topic->getTopic_id();
     }
 
     /**
@@ -325,13 +325,13 @@ class Dizkus_EntityAccess_Topic
         // subscribe
         if ($this->_subscribe) {
             $params = array(
-                'topic_id' => $this->_topic->gettopic_id(),
+                'topic_id' => $this->_topic->getTopic_id(),
                 'action' => 'subscribe'
             );
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
         }
 
-        return $this->_topic->gettopic_id();
+        return $this->_topic->getTopic_id();
     }
 
     /**
@@ -435,7 +435,7 @@ class Dizkus_EntityAccess_Topic
                 ->where('s.user_id = :user')
                 ->setParameter('user', UserUtil::getVar('uid'))
                 ->andWhere('s.topic_id = :topic')
-                ->setParameter('topic', $this->_topic->gettopic_id())
+                ->setParameter('topic', $this->_topic->getTopic_id())
                 ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
         return $count > 0 ? true : false;

@@ -235,7 +235,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         if (!is_array($topic)) {
             $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy($topic);
         }
-        $topic_id = $topic->gettopic_id();
+        $topic_id = $topic->getTopic_id();
 
 
         list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
@@ -258,7 +258,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // TO-DO: for larger topics use IN(..., ..., ...) with 50 or 100 posting ids per sql
         // step #3 and delete postings
         foreach ($postings as $posting) {
-            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting->getposter_id()) - 1, $posting->getposter_id());
+            UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting->getPoster_id()) - 1, $posting->getPoster_id());
             $this->entityManager->remove($posting);
         }
 

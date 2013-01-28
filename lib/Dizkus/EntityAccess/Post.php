@@ -58,7 +58,7 @@ class Dizkus_EntityAccess_Post
 
     public function getId()
     {
-        return $this->_post->getpost_id();
+        return $this->_post->getPost_id();
     }
 
     public function getTopicId()
@@ -68,7 +68,7 @@ class Dizkus_EntityAccess_Post
 
     public function isFirst()
     {
-        return $this->_post->getpost_first();
+        return $this->_post->getPost_first();
     }
 
     /**
@@ -117,7 +117,7 @@ class Dizkus_EntityAccess_Post
         } else {
             Throw new Zikula_Exception_Fatal('Cannot create Post, no data provided.');
         }
-        
+
         // increment poster posts
         $uid = UserUtil::getVar('uid');
         $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
@@ -135,8 +135,8 @@ class Dizkus_EntityAccess_Post
         $forum = new Dizkus_EntityAccess_Forum($this->_topic->getForumId());
         $forum->incrementPostCount();
 
-        $this->_post->setposter($poster);
-        $this->_post->setforum_id($this->_topic->getForumId());
+        $this->_post->setPoster($poster);
+        $this->_post->setForum_id($this->_topic->getForumId());
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }
@@ -148,7 +148,7 @@ class Dizkus_EntityAccess_Post
      */
     public function delete()
     {
-        $this->_post->getposter()->decrementUser_posts();
+        $this->_post->getPoster()->decrementUser_posts();
         $this->_topic->decrementRepliesCount();
 
         $forum = new Dizkus_EntityAccess_Forum($this->_topic->getForumId());

@@ -1,11 +1,18 @@
 <?php
 
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ * @link https://github.com/zikula-modules/Dizkus
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
+ */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Forums entity class.
- *
- * Annotations define the entity mappings to database.
+ * Category entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forums")
@@ -14,7 +21,7 @@ class Dizkus_Entity_Category extends Zikula_EntityAccess
 {
 
     /**
-     * The following are annotations which define the forum_id field.
+     * forum_id
      *
      * @ORM\Id
      * @ORM\Column(type="integer", name="forum_id")
@@ -23,7 +30,7 @@ class Dizkus_Entity_Category extends Zikula_EntityAccess
     private $id;
 
     /**
-     * The following are annotations which define the forum_name field.
+     * forum_name
      * 
      * @ORM\Column(type="string", length=150, name="forum_name")
      */
