@@ -110,9 +110,14 @@ class Dizkus_EntityAccess_Post
     public function create($data = null)
     {
         if (!is_null($data)) {
+            $this->_topic = new Dizkus_EntityAccess_Topic($data['topic_id']);
+            $this->_post->setTopic($this->_topic->get());
+            unset($data['topic_id']);
             $this->prepare($data);
+        } else {
+            Throw new Zikula_Exception_Fatal('Cannot create Post, no data provided.');
         }
-
+        
         // increment poster posts
         $uid = UserUtil::getVar('uid');
         $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
@@ -123,7 +128,6 @@ class Dizkus_EntityAccess_Post
         $poster->incrementUser_posts();
 
         // increment topic posts
-        $this->_topic = new Dizkus_EntityAccess_Topic($data['topic_id']);
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
 

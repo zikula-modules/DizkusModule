@@ -165,10 +165,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function reply()
     {
-        $form = FormUtil::newForm($this->name, $this);
-
-        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
-
+        // I cannot see how using the Form lib will work here. This method is post submission of the form...
+//        $form = FormUtil::newForm($this->name, $this);
+//        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
 
         // Permission check
         // todo check topic
@@ -177,15 +176,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         );
 
         // get the input
-        $topic_id = (int)$this->request->request->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-        $post_id = (int)$this->request->request->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $message = $this->request->request->get('message', (isset($args['message'])) ? $args['message'] : '');
-        $attach_signature = (int)$this->request->request->get('attach_signature', (isset($args['attach_signature'])) ? $args['attach_signature'] : 0);
-        $subscribe_topic = (int)$this->request->request->get('subscribe_topic', (isset($args['subscribe_topic'])) ? $args['subscribe_topic'] : 0);
-        $preview = $this->request->request->get('preview', (isset($args['preview'])) ? $args['preview'] : '');
-        $submit = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-        $cancel = $this->request->request->get('cancel', (isset($args['cancel'])) ? $args['cancel'] : '');
-
+        $topic_id = (int)$this->request->request->get('topic', null);
+        $post_id = (int)$this->request->request->get('post', null);
+        $message = $this->request->request->get('message', '');
+        $attach_signature = (int)$this->request->request->get('attach_signature', 0);
+        $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
+        $preview = $this->request->request->get('preview', '');
+        $submit = $this->request->request->get('submit', '');
+        $cancel = $this->request->request->get('cancel', '');
 
         /**
          * if cancel is submitted move to topic-view
@@ -207,7 +205,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $preview = true;
         }
 
-        if ($submit == true && $preview == false) {
+        if ($submit && !$preview) {
 
             $data = array(
                 'topic_id' => $topic_id,
@@ -223,7 +221,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             );
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $params) . '#pid' . $post_id;
 
-            return System::redirect($url);
+            return $this->redirect($url);
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $reply = ModUtil::apiFunc('Dizkus', 'user', 'preparereply', array('topic_id' => $topic_id,
