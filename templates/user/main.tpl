@@ -27,8 +27,8 @@
                 {foreach item='forum' from=$category.children}
                     <li class="row">
                         <dl class="icon">
-                            <dt class='{if (isset($forum.last_post) && ($forum.last_post.post_time > $last_visit_unix))}new-posts{else}no-new-posts{/if}'>
-                                [{$forum.last_post.post_time}] ** [{$last_visit_unix}]<br/>
+                            {datecompare date1=$forum.last_post.post_time date2=$last_unix_visit comp=">" assign='comp'}
+                            <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
                                 <a title="{gt text="Go to forum"} '{$forum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.forum_name|safetext}</a><br />
                                 {if $forum.forum_desc neq ''}{$forum.forum_desc|safehtml}<br />{/if}
                                 {include file='user/moderatedBy.tpl' forum=$forum}

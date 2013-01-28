@@ -143,11 +143,12 @@
                         {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' }
                         {/if}
 
-                        {*if $topic.last_post.post_time->getTimestamp() > $last_visit_unix}
+                        {datecompare date1=$forum.last_post.post_time date2=$last_unix_visit comp=">" assign='comp'}
+                        {if $comp}
                         {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
                         {else}
                         {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
-                        {/if*}
+                        {/if}
                         {if $topic.topic_replies >= $modvars.Dizkus.hot_threshold}
                         {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
                         {/if}
