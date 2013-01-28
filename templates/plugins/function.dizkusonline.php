@@ -54,9 +54,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     }
 
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
-
-    $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-
+    
     // set some defaults
     $numguests = 0;
     $numusers = 0;
@@ -66,19 +64,26 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
 
     /** @var $em Doctrine\ORM\EntityManager */
     $em = $view->getContainer()->get('doctrine.entitymanager');
-
-    if (System::getVar('anonymoussessions')) {
-        $anonwhere = "AND s.uid >= '0'";
-    } else {
-        $anonwhere = "AND s.uid > '0'";
-    }
     $dql = "SELECT s.uid, u.uname
             FROM Users\Entity\UserSessionEntity s, Users\Entity\UserEntity u
-            WHERE s.lastused > '$activetime'
-            $anonwhere
+            WHERE s.lastused > :activetime
+            AND s.uid >= :usertype
+            AND s.uid = u.uid
             GROUP BY s.ipaddr, s.uid";
 
-    $onlineusers = $em->createQuery($dql)->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
+    $query = $em->createQuery($dql);
+    $activetime = new DateTime(); // maybe need to check TZ here
+    $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+    $query->setParameter('activetime', $activetime);
+    $query->setParameter('usertype', System::getVar('anonymoussessions') ? 1 : 2);
+    $onlineusers = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
+    
+//    echo "<pre>"; var_dump($onlineusers);
+//    var_dump($query->getDQL());
+//    var_dump($query->getParameters());
+//    var_dump($query->getSQL());
+//    echo "</pre>";
+
     if (is_array($onlineusers)) {
         $total = count($onlineusers);
         foreach ($onlineusers as $onlineuser) {
