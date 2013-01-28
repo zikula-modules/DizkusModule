@@ -608,7 +608,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         return $this->view->fetch('user/post/latest.tpl');
     }
 
-    public function egosearch()
+    public function myposts()
     {
         $params = array('action' => $this->request->query->get('action', 'posts'));
 
