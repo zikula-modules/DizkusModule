@@ -19,7 +19,8 @@
                     {if isset($reply.poster_data.rank)}
                     <li><strong>{gt text="Rank"}: </strong>{$reply.poster_data.rank|safetext}</li>
                     {/if}
-                    <li><strong>{gt text="Registered"}: </strong>{$reply.poster_data.user_regdate|dateformat:'datebrief'}</li>
+                    {usergetvar name='user_regdate' assign="user_regdate"}
+                    <li><strong>{gt text="Registered"}: </strong>{$user_regdate|dateformat:'datebrief'}</li>
                     {if !$reply.poster_data.online}
                     <li><strong>{gt text="Last visit"}: </strong>{$reply.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if}
