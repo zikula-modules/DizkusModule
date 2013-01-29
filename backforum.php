@@ -2,7 +2,6 @@
 /**
  * forum backend (with permission check)
  * to be placed in the Zikula root
- * @version $Id$
  * @author Andreas Krapohl, Frank Schummertz, Arjen Tebbenhof [short urls]
  * @copyright 2005 by Dizkus Team
  * @package Dizkus

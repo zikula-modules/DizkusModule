@@ -9,19 +9,9 @@
  */
 
 /**
- * Renderer plugin
- *
- * This file is a plugin for Renderer, the Zikula implementation of Smarty
- *
- * @package      Xanthia_Templating_Environment
- * @subpackage   Renderer
- * @version      $Id$
- * @author       The Zikula development team
- * @link         http://www.zikula.org  The Zikula Home Page
- * @copyright    Copyright (C) 2002 by the Zikula Development Team
- * @license      http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * Zikula_View plugin
+ * This file is a plugin for Zikula_View, the Zikula implementation of Smarty
  */
-
 
 /**
  * Smarty modifier to create a a searxhlink for a given username
