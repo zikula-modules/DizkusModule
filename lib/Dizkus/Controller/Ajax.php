@@ -141,6 +141,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
+            // note: this API function no longer exists! Jan 28 2013
             $post = ModUtil::apiFunc('Dizkus', 'user', 'preparereply', array('post_id' => $post_id,
                         'quote' => true,
                         'reply_start' => true));
