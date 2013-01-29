@@ -1,7 +1,7 @@
 {assign var='templatetitle' value=$topic.topic_title}
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
-<input id="topic_id" type="hidden" value={$topic.topic_id}>
+<input id="topic_id" name='topic' type="hidden" value={$topic.topic_id}>
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
 
 <script type="text/javascript">

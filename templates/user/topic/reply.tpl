@@ -1,9 +1,9 @@
-{gt text="Reply to" assign=templatetitle}
+{gt text="Reply to '%s'" tag1=$reply.topic.topic_title|safetext assign='templatetitle'}
 {pagesetvar name='title' value=$templatetitle}
 
 {include file='user/header.tpl'}
 
-{*modcallhooks hookobject='item' hookaction='display' hookid=$reply.topic_id implode=false*}
+{*modcallhooks hookobject='item' hookaction='display' hookid=$reply.topic.topic_id implode=false*}
 
 {if $preview|default:false}
 <div id="replypreview" style="margin:1em 0;">
@@ -18,10 +18,10 @@
 
             <form id="post" class="dzk_form" action="{modurl modname='Dizkus' type=user func=reply}" method="post" enctype="multipart/form-data">
                 <div>
-                    <input type="hidden" name="topic" value="{$reply.topic_id}" />
-                    <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
+                    <input type="hidden" name="topic" value="{$reply.topic.topic_id}" />
+                    <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
                     <fieldset>
-                        <legend class="post_header">{gt text="Reply to %s" tag1=$reply.topic_subject|safetext}</legend>
+                        <legend class="post_header">{$templatetitle}</legend>
                         <div class="post_text_wrap">
                             <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
 

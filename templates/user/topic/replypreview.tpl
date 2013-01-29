@@ -6,9 +6,9 @@
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$reply.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$reply.poster_data.uname|profilelinkbyuname}</strong>
+                    <strong>{$reply.poster_data.user_id|profilelinkbyuid}</strong>
                     <br />
-                    {useravatar uid=$reply.poster_data.uid}
+                    {useravatar uid=$reply.poster_data.user_id}
                     {if isset($reply.poster_data.rank_image) && isset($reply.poster_data.rank)}
                     <br />
                     <img class="userinforankimage" src="{$baseurl}{$reply.poster_data.rank_image}" alt="{$reply.poster_data.rank}" {$reply.poster_data.rank_image_image_attr.3} />
@@ -30,7 +30,7 @@
             <div class="postbody dzk_colpost_right">
 
                 <div class="postinfo">
-                    {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$reply.topic_id start=$topic.start}#pid{$reply.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
+                    {if isset($reply.topic)}<a class="linktopostlink tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$reply.topic.topic_id start=$reply.topic.start}#pid{$reply.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
                     <strong>{gt text="Posted"}:</strong>&nbsp;{$smarty.now|dateformat:'datetimebrief'}
                 </div>
 

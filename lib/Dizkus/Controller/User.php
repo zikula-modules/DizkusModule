@@ -170,9 +170,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 //        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
         // Permission check
         // todo check topic
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
         // get the input
         $topic_id = (int)$this->request->request->get('topic', null);
@@ -223,16 +221,19 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $this->redirect($url);
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-            $reply = ModUtil::apiFunc('Dizkus', 'user', 'preparereply', array('topic_id' => $topic_id,
-                        'post_id' => $post_id,
-                        'last_visit' => $last_visit,
-                        'reply_start' => empty($message),
-                        'attach_signature' => $attach_signature,
-                        'subscribe_topic' => $subscribe_topic));
-            if ($preview == true) {
+            $topic = new Dizkus_EntityAccess_Topic($topic_id);
+            $poster = new Dizkus_EntityAccess_PosterData();
+            $reply = array(
+                'topic_id' => $topic_id,
+                'post_id' => $post_id,
+                'attach_signature' => $attach_signature,
+                'subscribe_topic' => $subscribe_topic,
+                'topic' => $topic->toArray(),
+                'poster_data' => $poster->toArray(),
+            );
+            if ($preview) {
                 $reply['message'] = dzkVarPrepHTMLDisplay($message);
-                //list($reply['message_display']) = ModUtil::callHooks('item', 'transform', '', array($message));
-                $reply['message_display'] = nl2br($reply['message_display']);
+                $reply['message_display'] = nl2br($reply['message']);
             }
 
             $this->view->assign('reply', $reply);
