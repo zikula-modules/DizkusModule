@@ -30,14 +30,19 @@ class Dizkus_EntityAccess_Topic
     /**
      * construct
      */
-    public function __construct($id = null)
+    public function __construct($id = null, Dizkus_Entity_Topic $topic = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
 
-        if ($id > 0) {
+        if (isset($topic)) {
+            // topic has been injected
+            $this->_topic = $topic;
+        } elseif ($id > 0) {
+            // find existing topic
             $this->_topic = $this->entityManager->find('Dizkus_Entity_Topic', $id);
         } else {
+            // create new topic
             $this->_topic = new Dizkus_Entity_Topic();
         }
     }
