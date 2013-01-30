@@ -16,7 +16,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
 {
 
     /**
-     * forum id
+     * Dizkus_EntityAccess_Post
      *
      * @var integer
      */
@@ -33,8 +33,6 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
      */
     function initialize(Zikula_Form_View $view)
     {
-
-
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
@@ -44,14 +42,13 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             return LogUtil::registerError(
-                            $this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'main')
+                $this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'main')
             );
         }
 
         $this->_post = new Dizkus_EntityAccess_Post($id);
         $view->assign($this->_post->toArray());
         $view->assign('preview', false);
-
 
         return true;
     }
@@ -83,17 +80,11 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
           } */
 
-
-
-
-
         if (isset($data['delete']) && $data['delete'] === true) {
             $this->_post->delete();
             return $view->redirect($url);
         }
         unset($data['delete']);
-
-
 
         $this->_post->prepare($data);
 
