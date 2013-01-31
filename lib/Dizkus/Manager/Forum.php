@@ -172,7 +172,7 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * return page as array
+     * get the pager
      *
      * @return array
      */
@@ -185,7 +185,7 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * return page as array
+     * increase read count
      *
      * @return array
      */
@@ -197,16 +197,25 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * return page as array
+     * Increase post count
      */
     public function incrementPostCount()
     {
         $this->_forum->incrementForum_posts();
         $this->entityManager->flush();
     }
+    
+    /**
+     * decrease post count
+     */
+    public function decrementPostCount()
+    {
+        $this->_forum->decrementForum_posts();
+        $this->entityManager->flush();
+    }
 
     /**
-     * return page as array
+     * increase topic count
      */
     public function incrementTopicCount()
     {
@@ -221,7 +230,7 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * return page as array
+     * store the forum
      *
      * @param array $data Page data.
      *
@@ -235,7 +244,7 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * return page as array
+     * remove the forum
      *
      * @return boolean
      */

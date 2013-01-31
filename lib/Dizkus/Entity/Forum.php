@@ -287,6 +287,11 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     {
         $this->forum_posts++;
     }
+    
+    public function decrementForum_posts()
+    {
+        $this->forum_posts--;
+    }
 
     public function getLft()
     {
