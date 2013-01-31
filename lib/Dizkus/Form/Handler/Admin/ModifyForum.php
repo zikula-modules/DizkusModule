@@ -44,7 +44,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             $view->assign('templatetitle', $this->__('Create forum'));
         }
 
-        $forum = new Dizkus_EntityAccess_Forum($id);
+        $forum = new Dizkus_Manager_Forum($id);
 
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if (!$forum->exists()) {

@@ -47,7 +47,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         // get the input
         $id = (int)$this->request->query->get('post');
 
-        $post = new Dizkus_EntityAccess_Post($id);
+        $post = new Dizkus_Manager_Post($id);
 
         if ($post->isFirst()) {
             LogUtil::registerError('You can not move the first post of a topic!');

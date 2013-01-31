@@ -15,7 +15,7 @@
  */
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class Dizkus_EntityAccess_Topic
+class Dizkus_Manager_Topic
 {
 
     private $_topic;
@@ -279,7 +279,7 @@ class Dizkus_EntityAccess_Topic
         $this->entityManager->flush();
 
         // icrement forum post count
-        $forum = new Dizkus_EntityAccess_Forum($this->getForumId());
+        $forum = new Dizkus_Manager_Forum($this->getForumId());
         $forum->incrementPostCount();
         $forum->incrementTopicCount();
         $forum->setLastPost($this->_firstPost);
@@ -307,7 +307,7 @@ class Dizkus_EntityAccess_Topic
         $this->_firstPost->settopic($this->_topic);
 
 
-        $forum = new Dizkus_EntityAccess_Forum($this->_forumId);
+        $forum = new Dizkus_Manager_Forum($this->_forumId);
 
 
         // add topic to forum

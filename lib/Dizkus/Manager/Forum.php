@@ -15,7 +15,7 @@
  */
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class Dizkus_EntityAccess_Forum
+class Dizkus_Manager_Forum
 {
 
     private $_forum;

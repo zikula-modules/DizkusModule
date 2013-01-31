@@ -13,7 +13,7 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class Dizkus_EntityAccess_PosterData
+class Dizkus_Manager_PosterData
 {
 
     private $_poster;

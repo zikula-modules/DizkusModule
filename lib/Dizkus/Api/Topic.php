@@ -22,7 +22,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         } else if ($args['action'] == 'unsubscribe') {
             ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', array('topic_id' => $args['topic_id']));
         } else {
-            $topic = new Dizkus_EntityAccess_Topic($args['topic_id']);
+            $topic = new Dizkus_Manager_Topic($args['topic_id']);
             switch ($args['action']) {
                 case 'sticky':
                     $topic->sticky();

@@ -39,7 +39,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         }
 
         // get the input
-        $this->_posterData = new Dizkus_EntityAccess_PosterData(UserUtil::getVar('uid'));
+        $this->_posterData = new Dizkus_Manager_PosterData(UserUtil::getVar('uid'));
 
 
         $view->assign($this->_posterData->toArray());

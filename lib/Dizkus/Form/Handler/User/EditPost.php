@@ -16,7 +16,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
 {
 
     /**
-     * Dizkus_EntityAccess_Post
+     * Dizkus_Manager_Post
      *
      * @var integer
      */
@@ -46,7 +46,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
             );
         }
 
-        $this->_post = new Dizkus_EntityAccess_Post($id);
+        $this->_post = new Dizkus_Manager_Post($id);
         $view->assign($this->_post->toArray());
         $view->assign('preview', false);
 

@@ -66,7 +66,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
-        $forum = new Dizkus_EntityAccess_Forum($forumId);
+        $forum = new Dizkus_Manager_Forum($forumId);
         $this->view->assign('forum', $forum->get());
         $this->view->assign('topics', $forum->getTopics($start));
         $this->view->assign('pager', $forum->getPager());
@@ -123,7 +123,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
           }
           // end patch #3494 part 2 */
 
-        $topic = new Dizkus_EntityAccess_Topic($topicId);
+        $topic = new Dizkus_Manager_Topic($topicId);
 
         // Permission check
         //$this->throwForbiddenUnless(
@@ -209,7 +209,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'post_attach_signature' => $attach_signature
             );
 
-            $post = new Dizkus_EntityAccess_Post();
+            $post = new Dizkus_Manager_Post();
             $post->create($data);
             $params = array(
                 'topic' => $topic_id,
@@ -220,8 +220,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $this->redirect($url);
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-            $topic = new Dizkus_EntityAccess_Topic($topic_id);
-            $poster = new Dizkus_EntityAccess_PosterData();
+            $topic = new Dizkus_Manager_Topic($topic_id);
+            $poster = new Dizkus_Manager_PosterData();
             $reply = array(
                 'topic_id' => $topic_id,
                 'post_id' => $post_id,
