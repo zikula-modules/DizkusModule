@@ -121,7 +121,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * posts
      * 
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
-     * @ORM\OrderBy({"post_time" = "DESC"})
+     * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
 

@@ -123,11 +123,11 @@ class Dizkus_Manager_Topic
      */
     public function getPosts($startNumber = 1)
     {
+        // Feb 1, 2013 - the posts are part of the $_topic var - could we pull them from there?
 
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
 
         $id = $this->_topic->getTopic_id();
-
 
         $query = $this->entityManager
                 ->createQueryBuilder()
@@ -137,6 +137,7 @@ class Dizkus_Manager_Topic
                 ->setParameter('topicId', $id)
                 ->leftJoin('p.poster', 'u')
                 ->leftJoin('u.user_rank', 'r')
+                ->orderBy('p.post_time', 'ASC')
                 ->getQuery();
 
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
