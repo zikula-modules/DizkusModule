@@ -121,6 +121,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * posts
      * 
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
+     * @ORM\OrderBy({"post_time" = "DESC"})
      */
     private $posts;
 
@@ -169,7 +170,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->last_post;
     }
 
-    public function setLast_post($post)
+    public function setLast_post(Dizkus_Entity_Post $post)
     {
         return $this->last_post = $post;
     }
