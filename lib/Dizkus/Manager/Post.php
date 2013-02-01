@@ -66,6 +66,11 @@ class Dizkus_Manager_Post
         return $this->_topic->getId();
     }
 
+    /**
+     * Is the post a first post in topic?
+     * 
+     * @return boolean
+     */
     public function isFirst()
     {
         return $this->_post->getPost_first();
@@ -87,7 +92,7 @@ class Dizkus_Manager_Post
     }
 
     /**
-     * return page as array
+     * update the post
      *
      * @return boolean
      */
@@ -103,7 +108,7 @@ class Dizkus_Manager_Post
     }
 
     /**
-     * return page as array
+     * create a post from provided data
      *
      * @return boolean
      */
@@ -142,20 +147,37 @@ class Dizkus_Manager_Post
     }
 
     /**
-     * return page as array
+     * delete a post
      *
      * @return boolean
      */
     public function delete()
     {
-        $this->_post->getPoster()->decrementUser_posts();
-        $this->_topic->decrementRepliesCount();
+        // preserve post_id
+        $id = $this->_post->getPost_id() ;
+        
+        // remove the psot
+        $this->entityManager->remove($this->_post);
 
+        // decrement user posts
+        $this->_post->getPoster()->decrementUser_posts();
+
+        // decrement forum post count
         $forum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $forum->decrementPostCount();
 
-        $this->entityManager->remove($this->_post);
         $this->entityManager->flush();
+        
+        // decrement replies count
+        $this->_topic->decrementRepliesCount();
+        
+        // need to resetLastPost if post is last post in topic
+        if ($id == $this->_topic->getId()) {
+            // reset looks up last post so must be after post remove/flush
+            $this->_topic->resetLastPost();
+            // maybe there is a better way to do this other than flushing a second time.
+            $this->entityManager->flush();
+        }
     }
 
 }

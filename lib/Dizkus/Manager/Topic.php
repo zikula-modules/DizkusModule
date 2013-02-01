@@ -147,7 +147,7 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * return page as array
+     * return pager
      *
      * @return array
      */
@@ -187,7 +187,7 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * return page as array
+     * add to views count
      */
     public function incrementViewsCount()
     {
@@ -195,7 +195,7 @@ class Dizkus_Manager_Topic
         $this->entityManager->flush();
     }
 
-    public function setLastPost($lastPost)
+    public function setLastPost(Dizkus_Entity_Post $lastPost)
     {
         $this->_topic->setLast_post($lastPost);
     }
@@ -207,7 +207,7 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * return page as array
+     * add to replies count
      */
     public function incrementRepliesCount()
     {
@@ -216,7 +216,7 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * return page as array
+     * subtract from replies count
      */
     public function decrementRepliesCount()
     {
@@ -263,7 +263,7 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * return page as array
+     * persist the topic
      *
      * @return boolean
      */
@@ -297,7 +297,7 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * return page as array
+     * create topic and post
      *
      * @return boolean
      */
@@ -444,6 +444,23 @@ class Dizkus_Manager_Topic
                 ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
         return $count > 0 ? true : false;
+    }
+    
+    /**
+     * find last post by post_time and set
+     */
+    public function resetLastPost()
+    {
+        $dql = "SELECT p FROM Dizkus_Entity_Post p
+            WHERE p.topic = :topic
+            ORDER BY p.post_time DESC";
+        
+        $query = $this->entityManager->createQuery($dql);
+        $query->setParameter('topic', $this->_topic);
+        $query->setMaxResults(1);
+
+        $post = $query->getSingleResult();
+        $this->_topic->setLast_post($post);
     }
 
 }
