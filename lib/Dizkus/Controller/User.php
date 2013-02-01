@@ -194,9 +194,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $message = dzkstriptags($message);
         // check for maximum message size
         if ((strlen($message) + strlen('[addsig]')) > 65535) {
-            LogUtil::registerStatus(
-                    $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
-            );
+            LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+            // switch to preview mode
+            $preview = true;
+        }
+        if (empty($message)) {
+            LogUtil::registerStatus($this->__('Error! The message is empty. Please add some text.'));
             // switch to preview mode
             $preview = true;
         }
