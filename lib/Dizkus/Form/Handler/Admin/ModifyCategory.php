@@ -79,16 +79,11 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
         }
         $data = $view->getValues();
 
-
         $this->category->merge($data);
         $this->entityManager->persist($this->category);
         $this->entityManager->flush();
 
         // redirect to the admin subforum overview
-
-
-
-
         return $view->redirect($url);
     }
 

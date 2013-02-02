@@ -152,7 +152,6 @@ class Dizkus_Manager_Forum
 
         $id = $this->_forum->getForum_id();
 
-
         $query = $this->entityManager
                 ->createQueryBuilder()
                 ->select('p')
