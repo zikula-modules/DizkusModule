@@ -66,7 +66,10 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $t = $this->_forum->toArray();
         unset($t['parent']);
         $view->assign($t);
-        $this->view->assign('parent', $this->_forum->get()->getParent()->getForum_id());
+        $parent = $this->_forum->get()->getParent();
+        if (isset($parent)) {
+            $this->view->assign('parent', $parent->getForum_id());
+        }
 
         if ($this->_forum->get()->getforum_pop3_active()) {
             $this->view->assign('extsource', 'mail2forum');
