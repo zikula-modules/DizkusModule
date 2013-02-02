@@ -222,7 +222,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
     }
 
     /**
-     * deletet
+     * delete a topic
      *
      * This function deletes a topic given by id.
      *
@@ -251,7 +251,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // forum faster so we win out in the long run.
         // step #1: get all post ids and posters ids
         $postings = $this->entityManager->getRepository('Dizkus_Entity_Post')
-                ->findBy(array('topic_id' => $topic_id));
+                ->findBy(array('topic' => $topic_id));
 
 
         // step #2 go through the posting array and decrement the posting counter

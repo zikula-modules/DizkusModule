@@ -17,7 +17,7 @@
             </a>
         </li>
         <li>
-            <a href="{modurl modname='Dizkus' type='admin' func='modifyforum'}" title="Create a new forum" class="z-iconlink z-icon-es-new">
+            <a href="{modurl modname='Dizkus' type='admin' func='modifyForum'}" title="Create a new forum" class="z-iconlink z-icon-es-new">
                 {gt text='Create a new forum'}
             </a>
         </li>

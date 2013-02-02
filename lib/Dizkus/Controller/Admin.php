@@ -315,7 +315,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     /**
      *
      */
-    public function modifyforum()
+    public function modifyForum()
     {
         $form = FormUtil::newForm('Dizkus', $this);
 

@@ -12,6 +12,7 @@
     <div>
         <fieldset id="dzk_deletetopic">
             <legend>{gt text="Confirmation prompt"}</legend>
+            <h3>{gt text='Delete Topic'}: {$topic_title}</h3>
             <div class="z-formrow">
                 {formlabel for="sendReason" __text='Send a reason to the poster'}
                 {formcheckbox id="sendReason" value=false onclick="Zikula.checkboxswitchdisplaystate(this, 'diskus_reason_container', true);"}

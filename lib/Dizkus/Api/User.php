@@ -80,7 +80,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'topic':
                 if (!isset($cache[$type][$id])) {
-                    $cache[$type][$id] = $this->countEntity('Post', 'topic_id', $id);
+                    $cache[$type][$id] = $this->countEntity('Post', 'topic', $id);
                 }
 
                 return $cache[$type][$id];
@@ -96,7 +96,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             case 'forumtopics':
                 if (!isset($cache[$type][$id])) {
-                    $cache[$type][$id] = $this->countEntity('Topic', 'forum_id', $id);
+                    $cache[$type][$id] = $this->countEntity('Topic', 'forum', $id);
                 }
 
                 return $cache[$type][$id];
@@ -140,7 +140,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 ->from('Dizkus_Entity_' . $entityname, 'a');
         if (isset($where) && isset($parameter)) {
             $qb->andWhere('a.' . $where . ' = :parameter')
-                    ->setParameter('parameter', $parameter);
+                ->setParameter('parameter', $parameter);
         }
         return (int)$qb->getQuery()->getSingleScalarResult();
     }
