@@ -51,6 +51,9 @@
             <li><a class="dzk_arrow searchpostslink tooltips" title="{gt text="View your posts"}" href="{modurl modname="Dizkus" type="user" func="myposts"}">{gt text="View your posts"}</a></li>
             <li><a class="dzk_arrow configurelink tooltips" title="{gt text="Personal settings"}" href="{modurl modname="Dizkus" type="user" func="prefs"}">{gt text="Personal settings"}</a></li>
         {/if}
+        {checkpermissionblock component="Dizkus::" instance=".*" level="ACCESS_ADMIN"}
+            <li><a class="dzk_arrow adminlink tooltips" title="{gt text="Administrate Dizkus"}" href="{modurl modname="Dizkus" type="admin" func="main"}">{gt text="Administration"}</a></li>
+        {/checkpermissionblock}
         </ul>
     </div>
 </div>
