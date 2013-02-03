@@ -199,6 +199,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     {
         return $this->topic_time;
     }
+    
+    public function setTopic_time(DateTime $time)
+    {
+        $this->topic_time = $time;
+    }
 
     public function getTopic_views()
     {
