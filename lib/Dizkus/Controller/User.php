@@ -379,6 +379,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             switch ($mode) {
                 case 'lock':
                 case 'unlock':
+                    // TODO: get_forumid_and_categoryid_from_topicid no longer defined
                     $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
                     if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                         return LogUtil::registerPermissionError();
@@ -389,6 +390,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
                 case 'sticky':
                 case 'unsticky':
+                    // TODO: get_forumid_and_categoryid_from_topicid no longer defined
                     $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
                     if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                         return LogUtil::registerPermissionError();

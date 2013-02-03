@@ -237,7 +237,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
         $topic_id = $topic->getTopic_id();
 
-
+        // TODO: get_forumid_and_categoryid_from_topicid no longer defined
         list($forum_id, $cat_id) = ModUtil::apiFunc($this->name, 'User', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
         $params = array(
             'cat_id' => $cat_id,
