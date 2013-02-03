@@ -157,7 +157,7 @@
                     <div class="post_text_wrap">
                         <div class="post_text">
                             <div id="dizkusinformation"></div>
-                            {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
+                            {* notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message' !THIS IS WRONG - ID MUST BE POST ID! *}
                             <textarea id="message" name="message" cols="10" rows="60"></textarea>
 
                             {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
