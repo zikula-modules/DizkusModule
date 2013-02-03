@@ -86,8 +86,6 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
           } */
 
-
-
         $newtopic = new Dizkus_Manager_Topic();
         $newtopic->prepare($data);
 

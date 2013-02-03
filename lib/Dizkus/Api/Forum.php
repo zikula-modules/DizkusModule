@@ -11,6 +11,13 @@
 class Dizkus_Api_Forum extends Zikula_AbstractApi
 {
 
+    /**
+     * get tree 
+     * format as array suitable for {formdropdownlist}
+     * 
+     * @param integer $id
+     * @return array
+     */
     public function getParents($id = null)
     {
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
@@ -19,7 +26,35 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
 
         return $output;
     }
+    
+    /**
+     * Get all tree nodes that are not root categories
+     * Format as array suitable for {formdropdownlist}
+     * 
+     * @return array
+     */
+    public function getAllChildren()
+    {
+        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
+        $query = $this->entityManager
+            ->createQueryBuilder()
+            ->select('node')
+            ->from('Dizkus_Entity_Forum', 'node')
+            ->orderBy('node.root, node.lft', 'ASC')
+            ->where('node.lvl > 0')
+            ->getQuery();
+        $tree = $repo->buildTree($query->getArrayResult());
+        return $this->getNode($tree, null);
+    }
 
+    /**
+     * Format ArrayResult for usage in {formdropdownlist}
+     * 
+     * @param ArrayAccess $input
+     * @param integer $id
+     * @param integer $level
+     * @return array
+     */
     private function getNode($input, $id, $level = 0)
     {
         $pre = str_repeat("-", $level * 2);
