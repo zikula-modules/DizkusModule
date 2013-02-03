@@ -178,6 +178,11 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     {
         return $this->post_time;
     }
+    
+    public function setPost_time(DateTime $time)
+    {
+        $this->post_time = $time;
+    }
 
     public function getPoster_ip()
     {
