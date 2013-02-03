@@ -225,22 +225,30 @@ class Dizkus_Manager_Topic
         $this->entityManager->flush();
     }
 
+    /**
+     * 
+     * @param type $data['forum_id']
+     * @param type $data['message']
+     * @param type $data['post_attach_signature']
+     * @param type $data['topic_title']
+     * @param type $data['subscribe_topic']
+     */
     public function prepare($data)
     {
         // prepare first post
         $this->_firstPost = new Dizkus_Entity_Post();
-        $this->_firstPost->setforum_id($data['forum_id']);
-        $this->_firstPost->setpost_text($data['message']);
+        $this->_firstPost->setForum_id($data['forum_id']);
+        $this->_firstPost->setPost_text($data['message']);
         unset($data['message']);
-        $this->_firstPost->setpost_attach_signature($data['post_attach_signature']);
+        $this->_firstPost->setPost_attach_signature($data['post_attach_signature']);
         unset($data['post_attach_signature']);
-        $this->_firstPost->setpost_title($data['topic_title']);
-
+        $this->_firstPost->setPost_title($data['topic_title']);
+        $this->_firstPost->setTopic($this->_topic);
         $this->_subscribe = $data['subscribe_topic'];
         unset($data['subscribe_topic']);
-
-
         $this->_forumId = $data['forum_id'];
+        $forum = new Dizkus_Manager_Forum($this->_forumId);
+        $this->_topic->setForum($forum->get());
         unset($data['forum_id']);
 
         $this->_topic->setLast_post($this->_firstPost);
@@ -252,10 +260,10 @@ class Dizkus_Manager_Topic
         $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
         if (!$poster) {
             $poster = new Dizkus_Entity_Poster();
-            $poster->setuser_id($uid);
+            $poster->setUser_id($uid);
         }
         $poster->incrementUser_posts();
-        $this->_firstPost->setposter($poster);
+        $this->_firstPost->setPoster($poster);
     }
 
     public function getPreview()
@@ -270,16 +278,12 @@ class Dizkus_Manager_Topic
      */
     public function store()
     {
-        // write topic
+        // write topic & first post
         $this->entityManager->persist($this->_topic);
-        $this->entityManager->flush();
-
-        // write first post
-        $this->_firstPost->settopic_id($this->_topic->getTopic_id());
         $this->entityManager->persist($this->_firstPost);
         $this->entityManager->flush();
 
-        // icrement forum post count
+        // increment forum post count
         $forum = new Dizkus_Manager_Forum($this->getForumId());
         $forum->incrementPostCount();
         $forum->incrementTopicCount();
@@ -307,9 +311,7 @@ class Dizkus_Manager_Topic
         // add first post to topic
         $this->_firstPost->settopic($this->_topic);
 
-
         $forum = new Dizkus_Manager_Forum($this->_forumId);
-
 
         // add topic to forum
         $this->_topic->setForum($forum->get());
@@ -318,15 +320,12 @@ class Dizkus_Manager_Topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->persist($this->_firstPost);
 
-
-        // icrement forum post count
+        // increment forum post count
         $forum->incrementPostCount();
         $forum->incrementTopicCount();
         $forum->setLastPost($this->_firstPost);
 
-
         $this->entityManager->flush();
-
 
         // subscribe
         if ($this->_subscribe) {
@@ -450,7 +449,7 @@ class Dizkus_Manager_Topic
     /**
      * find last post by post_time and set
      */
-    public function resetLastPost()
+    public function resetLastPost($flush = false)
     {
         $dql = "SELECT p FROM Dizkus_Entity_Post p
             WHERE p.topic = :topic
@@ -462,6 +461,9 @@ class Dizkus_Manager_Topic
 
         $post = $query->getSingleResult();
         $this->_topic->setLast_post($post);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 
 }

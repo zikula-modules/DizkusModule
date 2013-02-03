@@ -16,11 +16,17 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 {
 
     /**
-     * old post id
+     * topic_id
      *
      * @var integer
      */
-    private $old_topic_id;
+    private $topic_id;
+    
+    /**
+     *
+     * @var type 
+     */
+    private $topic;
 
     /**
      * Setup form.
@@ -37,10 +43,11 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-
-        $this->old_topic_id = (int)$this->request->query->get('topic', null);
-        $view->assign('topic', $this->old_topic_id);
-        $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getTreeAsDropdownList', false));
+        $this->topic_id = (int)$this->request->query->get('topic', null);
+        $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
+        $this->topic = $managedTopic->get();
+        $view->assign('topic', $this->topic_id);
+        $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren'));
     }
 
     /**
@@ -53,10 +60,8 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-
-
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
             return $view->redirect($url);
         }
 
@@ -66,42 +71,38 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
-
-
+        
         if ($args['commandName'] == 'move') {
-
-            $topic = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
-            if ($data['forum_id'] == $topic['forum_id']) {
-                return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
-            }
-            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic)) {
                 return LogUtil::registerPermissionError();
             }
-            $data['topic_id'] = $this->old_topic_id;
+
+            if ($data['forum_id'] == $this->topic->getForum()->getForum_id()) {
+                return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
+            }
+            $data['topicObj'] = $this->topic;
 
             ModUtil::apiFunc('Dizkus', 'user', 'movetopic', $data);
 
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
             return $view->redirect($url);
         }
 
-
         if ($args['commandName'] == 'join') {
-            $topic = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->old_topic_id));
+            // get_forumid_and_categoryid_from_topicid is no longer defined
+            $topic = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->topic_id));
             if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
                 return LogUtil::registerPermissionError();
             }
 
-            if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->old_topic_id)) {
+            if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
                 // user wants to copy topic to itself
                 return LogUtil::registerError($this->__('Error! The original topic cannot be the same as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $f_id)));
             }
 
-            $data['from_topic_id'] = $this->old_topic_id;
+            $data['from_topic_id'] = $this->topic_id;
 
             ModUtil::apiFunc('Dizkus', 'user', 'jointopics', $data);
-
-
 
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
             return $view->redirect($url);

@@ -317,36 +317,55 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      *
      * @params $args['topic_id'] int the topics id
      * @params $args['forum_id'] int the destination forums id
-     * @params $args['shadow']   boolean true = create shadow topic
+     * @params $args['createshadowtopic']   boolean true = create shadow topic
+     * @params $args['topicObj'] Dizkus_Entity_Topic
      *
      * @returns void
      */
     public function movetopic($args)
     {
-        // get the old forum id and old post date
-        $topic = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id'])->toArray();
-
-        if ($topic['forum_id'] <> $args['forum_id']) {
-            // set new forum id
-            $newtopic['forum_id'] = $args['forum_id'];
-            DBUtil::updateObject($newtopic, 'dizkus_topics', 'topic_id=' . (int)DataUtil::formatForStore($args['topic_id']), 'topic_id');
-
-            $newpost['forum_id'] = $args['forum_id'];
-            DBUtil::updateObject($newpost, 'dizkus_posts', 'topic_id=' . (int)DataUtil::formatForStore($args['topic_id']), 'post_id');
-
-            if ($args['shadow'] == true) {
-                // user wants to have a shadow topic
-                $message = $this->__f('The original posting has been moved <a title="moved" href="%s">here</a>.', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id'])));
-                $subject = $this->__f("*** The original posting '%s' has been moved", $topic['topic_title']);
-
-                $this->storenewtopic(array('subject' => $subject,
-                    'message' => $message,
-                    'forum_id' => $topic['forum_id'],
-                    'time' => $topic['topic_time'],
-                    'no_sig' => true));
+        if (!isset($args['topicObj']) || !($args['topicObj'] instanceof Dizkus_Entity_Topic)) {
+            if (!isset($args['topic_id'])) {
+                return LogUtil::registerArgsError();
             }
-            ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $args['forum_id'], 'type' => 'forum'));
-            ModUtil::apiFunc('Dizkus', 'admin', 'sync', array('id' => $topic['forum_id'], 'type' => 'forum'));
+            $args['topicObj'] = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id']); //->toArray();
+        }
+        $managedTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
+        
+        if ($managedTopic->getForumId() <> $args['forum_id']) {
+            // set new forum
+            $oldForumId = $managedTopic->getForumId();
+            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args['forum_id']);
+            $managedTopic->get()->setForum($forum);
+
+            // update all posts with new forum
+            $posts = $this->entityManager->getRepository('Dizkus_Entity_Post')->findBy(array('topic' => $managedTopic->getId()));
+            foreach ($posts as $post) {
+                $post->setForum_id($args['forum_id']);
+            }
+
+            if ($args['createshadowtopic'] == true) {
+                // create shadow topic
+                $shadowTopic = new Dizkus_Manager_Topic();
+                $topicData = array(
+                    'topic_title' => $this->__f("*** The original posting '%s' has been moved", $managedTopic->getTitle()),
+                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="'. ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedTopic->getId())) .'">' . $this->__('here') . '</a>.',
+                    'forum_id' => $oldForumId,
+                    'topic_time' => $managedTopic->get()->getTopic_time(),
+                    'post_attach_signature' => false,
+                    'subscribe_topic' => false);
+                $shadowTopic->prepare($topicData);
+                $shadowTopic->lock();
+                $this->entityManager->persist($shadowTopic->get());
+            }
+
+            $this->entityManager->flush();
+            // re-sync all forum counts and last posts
+            $previousForumLocation = $this->entityManager->find('Dizkus_Entity_Forum', $oldForumId);
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $previousForumLocation, 'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $forum, 'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $oldForumId, 'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $forum, 'flush' => true));
         }
 
         return;
