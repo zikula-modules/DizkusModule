@@ -560,73 +560,61 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * splittopic
+     * split the topic at the provided post
      *
-     * param array $args The argument array.
+     * @params Dizkus_Manager_Post $args['post']
+     * @params Array $args['data']
      *
-     * @params $args['post'] array with posting data as returned from readpost()
-     *
-     * @deprecated since 4.0.0
-     *
-     * @return int id of the new topic
+     * @return Integer id of the new topic
      */
     public function splittopic($args)
     {
-        return ModUtil::apiFunc($this->name, 'Forum', 'unsubscribeById', $id);
+        if (!isset($args['post']) || !($args['post'] instanceof Dizkus_Manager_Post) || !isset($args['data']['newsubject'])) {
+            return LogUtil::registerArgsError();
+        }
+        $managedTopic = new Dizkus_Manager_Topic(null, $args['post']->get()->getTopic());
 
-        $post = $args['post'];
+        // create new topic
+        $newTopic = new Dizkus_Entity_Topic();
+        $newTopic->setTopic_poster($args['post']->get()->getPoster_id());
+        $newTopic->setTopic_title($args['data']['newsubject']);
+        $newTopic->setForum($managedTopic->get()->getForum());
+        $this->entityManager->persist($newTopic);
+        $this->entityManager->flush();
 
-        // before we do anything we will read the topic_last_post_id because we will need
-        // this one later (it will become the topic_last_post_id of the new thread)
-        // DBUtil:: read complete topic
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $post['topic_id']);
-
-        //  insert values into topics-table
-        $newtopic = array('topic_title' => $post['topic_subject'],
-            'topic_poster' => $post['poster_data']['uid'],
-            'forum_id' => $post['forum_id'],
-            'topic_time' => DateUtil::getDatetime('', '%Y-%m-%d %H:%M:%S'));
-        $newtopic = DBUtil::insertObject($newtopic, 'dizkus_topics', 'topic_id');
-
-        // increment topics count by 1
-        DBUtil::incrementObjectFieldById('dizkus_forums', 'forum_topics', $post['forum_id'], 'forum_id');
-
-        // now we need to change the postings:
-        // first step: count the number of posting we have to move
-        $where = 'WHERE topic_id = ' . (int)DataUtil::formatForStore($post['topic_id']) . '
-                  AND post_id >= ' . (int)DataUtil::formatForStore($post['post_id']);
-        $posts_to_move = DBUtil::selectObjectCount('dizkus_posts', $where);
-
-
-
+        // update posts
+        $dql = "SELECT p from Dizkus_Entity_Post p
+            WHERE p.topic = :topic
+            AND p.post_id >= :post
+            ORDER BY p.post_id";
+        $query = $this->entityManager->createQuery($dql)
+            ->setParameter('topic', $managedTopic->get())
+            ->setParameter('post', $args['post']->get()->getPost_id());
+        /* @var $posts Array of Dizkus_Entity_Post */
+        $posts = $query->getResult();
         // update the topic_id in the postings
-        // starting with $post['post_id'] and then all post_id's where topic_id = $post['topic_id'] and
-        // post_id > $post['post_id']
-        $updateposts = array('topic_id' => $newtopic['topic_id']);
-        $where = 'WHERE post_id >= ' . (int)DataUtil::formatForStore($post['post_id']) . '
-                  AND topic_id = ' . $post['topic_id'];
-        DBUtil::updateObject($updateposts, 'dizkus_posts', $where, 'post_id');
+        foreach($posts as $post) {
+            $post->setTopic($newTopic);
+        }
+        // must flush here so sync gets correct information
+        $this->entityManager->flush();
+        // last iteration of `$post` used below
+        
+        // update old topic
+        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedTopic->get(), 'flush' => true));
+        $oldReplyCount = $managedTopic->get()->getTopic_replies();
+        $managedTopic->get()->setTopic_replies($oldReplyCount - count($posts));
 
-        // get the new topic_last_post_id of the old topic
-        $where = 'WHERE topic_id=' . (int)DataUtil::formatForStore($post['topic_id']) . '
-                  ORDER BY post_time DESC';
-        $lastpost = DBUtil::selectObject('dizkus_posts', $where);
+        // update new topic with post data
+        $newTopic->setLast_post($post);
+        $newTopic->setTopic_replies(count($posts) - 1);
+        $newTopic->setTopic_time($post->getPost_time());
 
-        $oldtopic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $post['topic_id']);
+        // resync topic totals, etc
+        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $newTopic->getForum(), 'flush' => false));
+        $this->entityManager->flush();
 
-        // update the new topic
-        $newtopic['topic_replies'] = (int)$posts_to_move - 1;
-        $newtopic['topic_last_post_id'] = $post['topic_last_post_id'];
-        DBUtil::updateObject($newtopic, 'dizkus_topics', null, 'topic_id');
-
-
-        // update the old topic
-        $oldtopic['topic_replies'] = $oldtopic['topic_replies'] - $posts_to_move;
-        $oldtopic['topic_last_post_id'] = $lastpost['post_id'];
-        $oldtopic['topic_time'] = $lastpost['post_time'];
-        DBUtil::updateObject($oldtopic, 'dizkus_topics', null, 'topic_id');
-
-        return $newtopic['topic_id'];
+        return $newTopic->getTopic_id();
     }
 
     /**

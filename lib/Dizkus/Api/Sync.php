@@ -194,4 +194,35 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
             $this->entityManager->flush();
         }
     }
+
+    /**
+     * reset the last post in a topic due to movement
+     * @param Dizkus_Entity_Topic $args['topic']
+     * @param Boolean $args['flush']
+     * 
+     * @return void
+     */
+    public function topicLastPost($args)
+    {
+        if (!isset($args['topic']) || !($args['topic'] instanceof Dizkus_Entity_Topic)) {
+            return LogUtil::registerArgsError();
+        }
+        $flush = isset($args['flush']) ? $args['flush'] : true;
+        
+        // get the most recent post in the topic
+        $dql = "SELECT p FROM Dizkus_Entity_Post p
+            WHERE p.topic = :topic
+            ORDER BY p.post_time DESC";
+        $query = $this->entityManager->createQuery($dql);
+        $query->setParameter('topic', $args['topic']);
+        $query->setMaxResults(1);
+
+        $post = $query->getSingleResult();
+        $args['topic']->setLast_post($post);
+        $args['topic']->setTopic_time($post->getPost_time());
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
 }

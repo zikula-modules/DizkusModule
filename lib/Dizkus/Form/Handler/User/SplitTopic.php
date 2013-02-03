@@ -38,15 +38,15 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         }
 
         $postId = (int)$this->request->query->get('post');
-        $this->post = ModUtil::apiFunc('Dizkus', 'Post', 'read', $postId);
+        $this->post = new Dizkus_Manager_Post($postId);
 
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->post)) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
 
-        $this->view->assign($this->post);
-        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post['topic_subject']);
+        $this->view->assign($this->post->toArray());
+        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTopic_title());
 
         return true;
     }
@@ -72,12 +72,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        // submit is set, we split the topic now
-        $this->post['topic_subject'] = $data['newsubject'];
-
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'user', 'splittopic', array('post' => $this->post));
-
-        echo $newtopic_id;
+        $newtopic_id = ModUtil::apiFunc('Dizkus', 'user', 'splittopic', array('post' => $this->post, 'data' => $data));
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
         return $view->redirect($url);
