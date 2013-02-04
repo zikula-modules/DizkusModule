@@ -24,7 +24,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
     
     /**
      *
-     * @var type 
+     * @var Dizkus_Entity_Topic 
      */
     private $topic;
 
@@ -89,18 +89,18 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         }
 
         if ($args['commandName'] == 'join') {
-            // get_forumid_and_categoryid_from_topicid is no longer defined
-            $topic = ModUtil::apiFunc($this->name, 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $this->topic_id));
-            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic)) {
+                // TODO: also need to check Perms on destination topic here
                 return LogUtil::registerPermissionError();
             }
 
             if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
                 // user wants to copy topic to itself
-                return LogUtil::registerError($this->__('Error! The original topic cannot be the same as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $f_id)));
+                return LogUtil::registerError($this->__('Error! The original topic cannot be set as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id())));
             }
 
             $data['from_topic_id'] = $this->topic_id;
+            $data['topicObj'] = $this->topic;
 
             ModUtil::apiFunc('Dizkus', 'user', 'jointopics', $data);
 

@@ -12,6 +12,7 @@
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Topics entity class
@@ -124,6 +125,14 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
+    
+    /**
+     * Constructor
+     */
+    function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
 
     public function getTopic_id()
     {
@@ -268,6 +277,17 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     public function getPosts()
     {
         return $this->posts;
+    }
+    
+    /**
+     * remove all posts
+     */
+    public function unsetPosts() {
+        $this->posts = null;
+    }
+    
+    public function addPost(Dizkus_Entity_Post $post) {
+        $this->posts[] = $post;
     }
 
 }

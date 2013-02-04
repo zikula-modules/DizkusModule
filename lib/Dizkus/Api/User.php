@@ -1077,101 +1077,63 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * jointopics
      * joins two topics together
      *
      * @params $args['from_topic_id'] int this topic get integrated into to_topic
      * @params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
+     * @params $args['topicObj'] Dizkus_Entity_Topic
+     * 
+     * @return Integer Destination topic ID
      */
     public function jointopics($args)
     {
-        // check if from_topic exists. this function will return an error if not
-        $from_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['from_topic_id'], 'complete' => false, 'count' => false));
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $from_topic)) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
+        if (!isset($args['topicObj']) || !($args['topicObj'] instanceof Dizkus_Entity_Topic) || !isset($args['from_topic_id']) || !isset($args['to_topic_id'])) {
+            return LogUtil::registerArgsError();
+        }
+        $managedOriginTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
+        $managedDestinationTopic = new Dizkus_Manager_Topic($args['to_topic_id']);
+        
+        if ($managedDestinationTopic->get() === null) { // can't use isset() and ->get() at the same time
+            return LogUtil::registerArgsError($this->__('Destination topic does not exist.'));
         }
 
-        // check if to_topic exists. this function will return an error if not
-        $to_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $args['to_topic_id'], 'complete' => false, 'count' => false));
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $to_topic)) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
+        // move posts from Origin to Destination topic
+        $posts = $this->entityManager->getRepository('Dizkus_Entity_Post')->findBy(array('topic' => $managedOriginTopic->get()));
+        $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
+        foreach ($posts as $post) {
+            $post->setTopic($managedDestinationTopic->get());
+            $post->setForum_id($managedDestinationTopic->getForumId());
+            if ($post->getPost_time() <= $previousPostTime) {
+                $post->setPost_time($previousPostTime->modify("+1 minute"));
+            }
+            $previousPostTime = $post->getPost_time();
         }
+//        $managedOriginTopic->get()->unsetPosts(); // this didn't help
+        $managedOriginTopic->remove(); // will posts, forums, posters be removed also?
+        /*
+         * TODO: February 3, 2013: These two errors happening after the ->remove() method
+         [2013-02-03 22:19:21] logger.file.NOTICE: E_NOTICE: Undefined index: forum_id in 
+         /Applications/MAMP/htdocs/core.git/src/vendor/doctrine/orm/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php
+         line 1575 [] []
+         [2013-02-03 22:19:21] logger.file.WARNING: E_WARNING: Invalid argument supplied for foreach() in
+         /Applications/MAMP/htdocs/core.git/src/vendor/doctrine/orm/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php
+         line 1580 [] []
+         * 
+         * I think the second error may be occuring because the posts have already been changed to a diff topic
+         * maybe try unsetting the posts before? nope
+         */
+//        $this->entityManager->flush(); // remove() has a flush in it
+        $managedDestinationTopic->setLastPost($post);
+        $managedDestinationTopic->get()->setTopic_time($previousPostTime);
 
-        $ztable = DBUtil::getTables();
+        // resync destination topic and all forums
+        ModUtil::apiFunc('Dizkus', 'sync', 'topic', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => true));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true));
 
-        // join topics: update posts with from_topic['topic_id'] to contain to_topic['topic_id']
-        // and from_topic['forum_id'] to to_topic['forum_id']
-        $post_temp = array('topic_id' => $to_topic['topic_id'],
-            'forum_id' => $to_topic['forum_id']);
-        $where = 'WHERE topic_id=' . (int)DataUtil::formatForStore($from_topic['topic_id']);
-        DBUtil::updateObject($post_temp, 'dizkus_posts', $where, 'post_id');
-
-        // to_topic['topic_replies'] must be incremented by from_topic['topic_replies'] + 1 (initial
-        // posting
-        // update to_topic['topic_time'] and to_topic['topic_last_post_id']
-        // get new topic_time and topic_last_post_id
-        $where = 'WHERE topic_id=' . (int)DataUtil::formatForStore($to_topic['topic_id']) . '
-                  ORDER BY post_time DESC';
-        $res = DBUtil::selectObject('dizkus_posts', $where);
-        $new_last_post_id = $res['post_id'];
-        $new_post_time = $res['post_time'];
-
-        // update to_topic
-        $to_topic_temp = array('topic_id' => $to_topic['topic_id'],
-            'topic_replies' => $to_topic['topic_replies'] + $from_topic['topic_replies'] + 1,
-            'topic_last_post_id' => $new_last_post_id,
-            'topic_time' => $new_post_time);
-        DBUtil::updateObject($to_topic_temp, 'dizkus_topics', null, 'topic_id');
-
-        // delete from_topic from dizkus_topics
-        DBUtil::deleteObjectByID('dizkus_topics', $from_topic['topic_id'], 'topic_id');
-
-        // update forums table
-        // get topics count: decrement from_topic['forum_id']'s topic count by 1
-        DBUtil::decrementObjectFieldById('dizkus_forums', 'forum_topics', $from_topic['forum_id'], 'forum_id');
-
-        // get posts count: if both topics are in the same forum, we just have to increment
-        // the post count by 1 for the initial posting that is now part of the to_topic,
-        // if they are in different forums, we have to decrement the post count
-        // in from_topic's forum and increment it in to_topic's forum by from_topic['topic_replies'] + 1
-        // for the initial posting
-        // get last_post: if both topics are in the same forum, everything stays
-        // as-is, if not, we update both, even if it is not necessary
-
-        if ($from_topic['forum_id'] == $to_topic['forum_id']) {
-            // same forum, post count in the forum doesn't change
-        } else {
-            // different forum
-            // get last post in forums
-            $where = 'WHERE forum_id=' . (int)DataUtil::formatForStore($from_topic['forum_id']) . '
-                      ORDER BY post_time DESC';
-            $res = DBUtil::selectObject('dizkus_posts', $where);
-            $from_forum_last_post_id = $res['post_id'];
-
-            $where = 'WHERE forum_id=' . (int)DataUtil::formatForStore($to_topic['forum_id']) . '
-                      ORDER BY post_time DESC';
-            $res = DBUtil::selectObject('dizkus_posts', $where);
-            $to_forum_last_post_id = $res['post_id'];
-
-            // calculate posting count difference
-            $post_count_difference = (int)DataUtil::formatForStore($from_topic['topic_replies'] + 1);
-            // decrement from_topic's forum post_count
-            $sql = "UPDATE " . $ztable['dizkus_forums'] . "
-                    SET forum_posts = forum_posts - $post_count_difference,
-                        forum_last_post_id = '" . (int)DataUtil::formatForStore($from_forum_last_post_id) . "'
-                    WHERE forum_id='" . (int)DataUtil::formatForStore($from_topic['forum_id']) . "'";
-            DBUtil::executeSQL($sql);
-
-            // increment o_topic's forum post_count
-            $sql = "UPDATE " . $ztable['dizkus_forums'] . "
-                    SET forum_posts = forum_posts + $post_count_difference,
-                        forum_last_post_id = '" . (int)DataUtil::formatForStore($to_forum_last_post_id) . "'
-                    WHERE forum_id='" . (int)DataUtil::formatForStore($to_topic['forum_id']) . "'";
-            DBUtil::executeSQL($sql);
-        }
-        return $to_topic['topic_id'];
+        return $managedDestinationTopic->getId();
     }
 
     /**

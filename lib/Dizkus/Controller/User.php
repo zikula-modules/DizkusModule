@@ -753,55 +753,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * User interface to join a topic with another toipic
-     *
-     * @param array $args Arguments array.
-     *
-     * @return string
-     */
-    public function jointopics($args = array())
-    {
-        // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
-
-        // get the input
-        $post_id = (int)$this->request->query->get('post_id', (isset($args['post_id'])) ? $args['post_id'] : null);
-        $submit = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $to_topic_id = (int)$this->request->query->get('to_topic_id', (isset($args['to_topic_id'])) ? $args['to_topic_id'] : null);
-        $from_topic_id = (int)$this->request->query->get('from_topic_id', (isset($args['from_topic_id'])) ? $args['from_topic_id'] : null);
-
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
-        }
-
-        if (!$submit) {
-            $this->view->assign('post', $post);
-
-            return $this->view->fetch('user/topic/join.tpl');
-        } else {
-            /* if (!SecurityUtil::confirmAuthKey()) {
-              return LogUtil::registerAuthidError();
-              } */
-
-            // check if from_topic exists. this function will return an error if not
-            $from_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $from_topic_id, 'complete' => false, 'count' => false));
-            // check if to_topic exists. this function will return an error if not
-            $to_topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $to_topic_id, 'complete' => false, 'count' => false));
-            // submit is set, we split the topic now
-            //$post['new_topic'] = $totopic;
-            //$post['old_topic'] = $old_topic;
-            $res = ModUtil::apiFunc('Dizkus', 'user', 'jointopics', array('from_topic' => $from_topic, 'to_topic' => $to_topic));
-
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $res)));
-        }
-    }
-
-    /**
      * Moderate forum
      *
      * User interface for moderation of multiple topics.
