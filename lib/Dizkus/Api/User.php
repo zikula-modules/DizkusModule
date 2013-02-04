@@ -1108,21 +1108,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             }
             $previousPostTime = $post->getPost_time();
         }
-//        $managedOriginTopic->get()->unsetPosts(); // this didn't help
-        $managedOriginTopic->remove(); // will posts, forums, posters be removed also?
-        /*
-         * TODO: February 3, 2013: These two errors happening after the ->remove() method
-         [2013-02-03 22:19:21] logger.file.NOTICE: E_NOTICE: Undefined index: forum_id in 
-         /Applications/MAMP/htdocs/core.git/src/vendor/doctrine/orm/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php
-         line 1575 [] []
-         [2013-02-03 22:19:21] logger.file.WARNING: E_WARNING: Invalid argument supplied for foreach() in
-         /Applications/MAMP/htdocs/core.git/src/vendor/doctrine/orm/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php
-         line 1580 [] []
-         * 
-         * I think the second error may be occuring because the posts have already been changed to a diff topic
-         * maybe try unsetting the posts before? nope
-         */
-//        $this->entityManager->flush(); // remove() has a flush in it
+        $this->entityManager->flush();
+
+        // remove the originTopic from the DB (manual dql to avoid cascading deletion errors)
+        $dql = "DELETE Dizkus_Entity_Topic t
+            WHERE t.topic_id = :originTopic_id";
+        $this->entityManager->createQuery($dql)
+                ->setParameter('originTopic_id', $managedOriginTopic->getId())
+                ->execute();
+
         $managedDestinationTopic->setLastPost($post);
         $managedDestinationTopic->get()->setTopic_time($previousPostTime);
 
