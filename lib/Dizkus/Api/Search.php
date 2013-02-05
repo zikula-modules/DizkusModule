@@ -75,8 +75,6 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
      */
     public function search($args)
     {
-
-
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
         }
@@ -134,7 +132,6 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
             return true;
         }
 
-
         $where = '';
         switch ($args['searchwhere']) {
             case 'author':
@@ -154,9 +151,6 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
                     $where = trim(substr(trim($where), 1, -1));
                 }
         }
-
-
-
 
         ModUtil::dbInfoLoad('Search');
         $table = DBUtil::getTables();

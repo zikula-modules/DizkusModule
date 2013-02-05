@@ -56,7 +56,6 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
                 ->leftJoin('t.last_post', 'l')
                 ->orderBy('l.post_time', 'DESC');
 
-
         // sql part per selected time frame
         switch ($args['selorder']) {
             case '2' : // today
@@ -103,14 +102,12 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
                 break;
         }
 
-
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
         $pager = array(
             'numitems' => count($topics),
             'itemsperpage' => 10
         );
-
 
         return array(
             $topics,
@@ -164,15 +161,12 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
             }
         }
         $qb->setParameter('uid', $args['uid']);
-
-
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
         $pager = array(
             'numitems' => count($topics),
             'itemsperpage' => 10
         );
-
 
         return array(
             $topics,

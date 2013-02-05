@@ -670,6 +670,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      * print
      *
      * prepare print view of the selected posting or topic
+     * 
+     * Only used if Printer theme not available
      *
      * @param array $args Argument array.
      *

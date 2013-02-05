@@ -55,7 +55,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     }
 
     /**
-     * the main administration function
+     * import function?
      *
      */
     public function m()
