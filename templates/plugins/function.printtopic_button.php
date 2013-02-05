@@ -12,19 +12,19 @@
  * printtopic_button plugin
  * adds the print topic button
  *
- * @params $params['cat_id'] int category id
  * @params $params['forum_id'] int forum id
  * @params $params['topic_id'] int topic id
  */
-function smarty_function_printtopic_button($params, &$smarty)
+function smarty_function_printtopic_button($params, Zikula_View $view)
 {
     include_once 'modules/Dizkus/bootstrap.php';
+    $dom = ZLanguage::getModuleDomain('Dizkus');
     if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $params)) {
-        $themeinfo = ThemeUtil::getInfo('Printer');
-        if ($themeinfo['active']) {
-            return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
+        $themeinfo = ThemeUtil::getInfo(ThemeUtil::getIDFromName('Printer'));
+        if ($themeinfo['state'] == ThemeUtil::STATE_ACTIVE) {
+            return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
         }
-        return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic')) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic')) . '</a>';
+        return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
     }
 
     return '';
