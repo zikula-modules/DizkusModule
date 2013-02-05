@@ -154,28 +154,36 @@ class Dizkus_Manager_Post
     public function delete()
     {
         // preserve post_id
-        $id = $this->_post->getPost_id() ;
+        $id = $this->_post->getPost_id();
+        $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
+        $forum = new Dizkus_Manager_Forum($this->_topic->getForumId());
+        $forumLastPostId = $forum->get()->getLast_post()->getPost_id();
         
-        // remove the psot
+        // remove the post
         $this->entityManager->remove($this->_post);
 
         // decrement user posts
         $this->_post->getPoster()->decrementUser_posts();
 
         // decrement forum post count
-        $forum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $forum->decrementPostCount();
 
-        $this->entityManager->flush();
-        
         // decrement replies count
         $this->_topic->decrementRepliesCount();
         
-        // need to resetLastPost if post is last post in topic
-        if ($id == $this->_topic->getId()) {
-            // reset looks up last post so must be after post remove/flush
-            $this->_topic->resetLastPost();
-            // maybe there is a better way to do this other than flushing a second time.
+        $this->entityManager->flush();
+        
+        // resetLastPost in topic and forum if required
+        $flush = false;
+        if ($id == $topicLastPostId) {
+            $this->_topic->resetLastPost(false);
+            $flush = true;
+        }
+        if ($id == $forumLastPostId) {
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $forum->get(), 'flush' => false));
+            $flush = true;
+        }
+        if ($flush) {
             $this->entityManager->flush();
         }
     }

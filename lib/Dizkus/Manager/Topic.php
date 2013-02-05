@@ -461,6 +461,7 @@ class Dizkus_Manager_Topic
 
         $post = $query->getSingleResult();
         $this->_topic->setLast_post($post);
+        $this->_topic->setTopic_time($post->getPost_time());
         if ($flush) {
             $this->entityManager->flush();
         }
