@@ -183,6 +183,14 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     {
         $this->post_time = $time;
     }
+    
+    public function updatePost_time(DateTime $time=null)
+    {
+        if (!isset($time)) {
+            $time = new DateTime();
+        }
+        $this->post_time = $time;
+    }
 
     public function getPoster_ip()
     {

@@ -46,8 +46,12 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
 
         // get the input
         $id = (int)$this->request->query->get('post');
+        
+        $this->post_id = $id;
 
         $post = new Dizkus_Manager_Post($id);
+        
+        $this->old_topic_id = $post->getTopicId();
 
         if ($post->isFirst()) {
             LogUtil::registerError('You can not move the first post of a topic!');
@@ -57,8 +61,6 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
 
         return true;
 
-        //$post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $this->post_id));
-        //$this->old_topic_id = $post['topic_id'];
         //if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
         //    // user is not allowed to moderate this forum
         //    return LogUtil::registerPermissionError();
@@ -89,9 +91,8 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         $data['old_topic_id'] = $this->old_topic_id;
         $data['post_id'] = $this->post_id;
 
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'movepost', $data);
-        $start = $start - $start % ModUtil::getVar('Dizkus', 'posts_per_page', 15);
-
+        $newTopicPostCount = ModUtil::apiFunc('Dizkus', 'user', 'movepost', $data);
+        $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar('Dizkus', 'posts_per_page', 15);
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)) . '#pid' . $this->post_id;
         return $view->redirect($url);

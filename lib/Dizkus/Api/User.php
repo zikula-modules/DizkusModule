@@ -967,82 +967,39 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     /**
      * movepost
      *
-     * @params $args['post'] array with posting data as returned from readpost()
-     * @params $args['to_topic']
-     * @returns int id of the new topic
+     * @params $args['post_id']
+     * @params $args['old_topic_id']
+     * @params $args['to_topic_id']
+     * 
+     * @returns count of posts in destination topic
      */
     public function movepost($args)
     {
-        $old_topic_id = $args['old_topic_id'];
-        $to_topic_id = $args['to_topic_id'];
-        $post_id = $args['post_id'];
+        $old_topic_id = isset($args['old_topic_id']) ? $args['old_topic_id'] : null;
+        $to_topic_id = isset($args['to_topic_id']) ? $args['to_topic_id'] : null;
+        $post_id = isset($args['post_id']) ? $args['post_id'] : null;
 
-        // 1 . update topic_id, post_time in posts table
-        // for post[post_id]
-        // 2 . update topic_replies in nuke_dizkus_topics ( COUNT )
-        // for old_topic
-        // 3 . update topic_last_post_id in nuke_dizkus_topics
-        // for old_topic
-        // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
-        // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
+        if (!isset($old_topic_id) || !isset($to_topic_id) || !isset($post_id)) {
+            return LogUtil::registerArgsError();
+        }
+        
+        $managedOriginTopic = new Dizkus_Manager_Topic($old_topic_id);
+        $managedDestinationTopic = new Dizkus_Manager_Topic($to_topic_id);
+        $managedPost = new Dizkus_Manager_Post($post_id);
+        
+        $managedOriginTopic->get()->getPosts()->removeElement($managedPost->get());
+        $managedPost->get()->setTopic($managedDestinationTopic->get());
+        $managedDestinationTopic->get()->addPost($managedPost->get());
+        $managedOriginTopic->decrementRepliesCount();
+        $managedDestinationTopic->incrementRepliesCount();
+        $managedPost->get()->updatePost_time();
+        
+        $this->entityManager->flush();
 
-        $ztable = DBUtil::getTables();
+        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedOriginTopic->get(), 'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
 
-        // 1 . update topic_id in posts table
-        $sql = 'UPDATE ' . $ztable['dizkus_posts'] . '
-                SET topic_id=' . (int)DataUtil::formatForStore($to_topic_id) . '
-                WHERE post_id = ' . (int)DataUtil::formatForStore($post_id);
-
-        DBUtil::executeSQL($sql);
-
-        // for to_topic
-        // 2 . update topic_replies in dizkus_topics ( COUNT )
-        // 3 . update topic_last_post_id in dizkus_topics
-        // get the new topic_last_post_id of to_topic
-        $sql = 'SELECT post_id, post_time
-                FROM ' . $ztable['dizkus_posts'] . '
-                WHERE topic_id = ' . (int)DataUtil::formatForStore($to_topic_id) . '
-                ORDER BY post_time DESC';
-
-        $res = DBUtil::executeSQL($sql, -1, 1);
-        $colarray = array('post_id', 'post_time');
-        $result = DBUtil::marshallObjects($res, $colarray);
-        $to_last_post_id = $result[0]['post_id'];
-        $to_post_time = $result[0]['post_time'];
-
-        $sql = 'UPDATE ' . $ztable['dizkus_topics'] . '
-                SET topic_replies = topic_replies + 1,
-                    topic_last_post_id=' . (int)DataUtil::formatForStore($to_last_post_id) . ',
-                    topic_time=\'' . DataUtil::formatForStore($to_post_time) . '\'
-                WHERE topic_id=' . (int)DataUtil::formatForStore($to_topic_id);
-
-        DBUtil::executeSQL($sql);
-
-        // for old topic ($old_topic_id)
-        // 4 . update topic_replies in nuke_dizkus_topics ( COUNT )
-        // 5 . update topic_last_post_id in nuke_dizkus_topics if necessary
-        // get the new topic_last_post_id of the old topic
-        $sql = 'SELECT post_id, post_time
-                FROM ' . $ztable['dizkus_posts'] . '
-                WHERE topic_id = ' . (int)DataUtil::formatForStore($old_topic_id) . '
-                ORDER BY post_time DESC';
-
-        $res = DBUtil::executeSQL($sql, -1, 1);
-        $colarray = array('post_id', 'post_time');
-        $result = DBUtil::marshallObjects($res, $colarray);
-        $old_last_post_id = $result[0]['post_id'];
-        $old_post_time = $result[0]['post_time'];
-
-        // update
-        $sql = 'UPDATE ' . $ztable['dizkus_topics'] . '
-                SET topic_replies = topic_replies - 1,
-                    topic_last_post_id=' . (int)DataUtil::formatForStore($old_last_post_id) . ',
-                    topic_time=\'' . DataUtil::formatForStore($old_post_time) . '\'
-                WHERE topic_id=' . (int)DataUtil::formatForStore($old_topic_id);
-
-        DBUtil::executeSQL($sql);
-
-        return $this->get_last_topic_page(array('topic_id' => $old_topic_id));
+        return $managedDestinationTopic->getPostCount();
     }
 
     /**

@@ -467,4 +467,12 @@ class Dizkus_Manager_Topic
         }
     }
 
+    public function getPostCount()
+    {
+        $dql = "SELECT COUNT(p) FROM Dizkus_Entity_Post p
+            WHERE p.topic = :topic";
+        return $this->entityManager->createQuery($dql)
+                ->setParameter('topic', $this->_topic)
+                ->getSingleScalarResult();
+    }
 }
