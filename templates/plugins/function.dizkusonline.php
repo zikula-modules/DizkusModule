@@ -127,3 +127,11 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
 
     return;
 }
+
+/**
+ * sorting user lists by ['uname']
+ */
+function cmp_userorder($a, $b)
+{
+    return strcmp($a['uname'], $b['uname']);
+}

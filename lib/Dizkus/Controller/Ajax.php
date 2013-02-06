@@ -37,8 +37,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        $message = dzkstriptags($message);
-        $title = dzkstriptags($title);
+        $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
+        $title = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $title);
 
         // ContactList integration: Is the user ignored and allowed to write an answer to this topic?        
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
@@ -92,14 +92,14 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             $post['posted_unixtime'] = $post['post_unixtime'];
 
             $post['post_title'] = $title;
-            $post['post_textdisplay'] = phpbb_br2nl($message);
+            $post['post_textdisplay'] = $this->phpbb_br2nl($message);
             if ($attach_signature == 1) {
                 $post['post_textdisplay'] .= '[addsig]';
-                $post['post_textdisplay'] = dzk_replacesignature($post['post_textdisplay'], $post['poster_data']['signature']);
+                $post['post_textdisplay'] = $this->dzk_replacesignature(array('text' => $post['post_textdisplay'], 'signature' => $post['poster_data']['signature']));
             }
             // call hooks for $message_display ($message remains untouched for the textarea)
             // list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
-            $post['post_textdisplay'] = dzkVarPrepHTMLDisplay($post['post_textdisplay']);
+            $post['post_textdisplay'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $post['post_textdisplay']);
 
             $post['post_text'] = $post['post_textdisplay'];
         }
@@ -242,7 +242,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             //	throw new Zikula_Exception_Fatal();
             //}
 
-            $message = dzkstriptags($message);
+            $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
             // check for maximum message size (strlen('[addsig]')==8)
             if ((strlen($message) + 8) > 65535) {
                 return new Zikula_Response_Ajax_BadData(
@@ -430,7 +430,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         //$attach_signature = ($attach_signature=='1') ? true : false;
         //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
 
-        $message = dzkstriptags($message);
+        $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
         // check for maximum message size
         if ((strlen($message) + 8/* strlen('[addsig]') */) > 65535) {
             return AjaxUtil::error($this->__('Error! The message is too long. The maximum length is 65,535 characters.'), array(), true, true);
@@ -487,15 +487,15 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => UserUtil::getVar('uid')));
         $newtopic['subject'] = $subject;
         $newtopic['message'] = $message;
-        $newtopic['message_display'] = $message; // phpbb_br2nl($message);
+        $newtopic['message_display'] = $message; // $this->phpbb_br2nl($message);
 
         if (($attach_signature == 1) && (!empty($newtopic['poster_data']['signature']))) {
             $newtopic['message_display'] .= '[addsig]';
-            $newtopic['message_display'] = dzk_replacesignature($newtopic['message_display'], $newtopic['poster_data']['signature']);
+            $newtopic['message_display'] = $this->dzk_replacesignature(array('text' => $newtopic['message_display'], 'signature' => $newtopic['poster_data']['signature']));
         }
 
 //      list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
-        $newtopic['message_display'] = dzkVarPrepHTMLDisplay($newtopic['message_display']);
+        $newtopic['message_display'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $newtopic['message_display']);
 
         if (UserUtil::isLoggedIn()) {
             // If it's the topic start
@@ -592,6 +592,38 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $output = $view->fetch('ajax/getusers.tpl');
 
         return new Zikula_Response_Ajax_Plain($output);
+    }
+
+    /**
+     * removes instances of <br /> since sometimes they are stored in DB :(
+     */
+    public function phpbb_br2nl($str)
+    {
+        return preg_replace("=<br(>|([\s/][^>]*)>)\r?\n?=i", "\n", $str);
+    }
+    
+    /**
+     * dzk_replacesignature
+     *
+     */
+    public function dzk_replacesignature($args)
+    {
+        $text = $args['text'];
+        $signature = isset($args['signature']) ? $args['signature'] : '';
+        $removesignature = ModUtil::getVar('Dizkus', 'removesignature');
+        if ($removesignature == 'yes') {
+            $signature = '';
+        }
+
+        if (!empty($signature)){
+            $sigstart = stripslashes(ModUtil::getVar('Dizkus', 'signature_start'));
+            $sigend   = stripslashes(ModUtil::getVar('Dizkus', 'signature_end'));
+            $text = preg_replace("/\[addsig]$/", "\n\n" . $sigstart . $signature . $sigend, $text);
+        } else {
+            $text = preg_replace("/\[addsig]$/", '', $text);
+        }
+
+        return $text;
     }
 
 }

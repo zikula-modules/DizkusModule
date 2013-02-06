@@ -191,7 +191,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $preview = (empty($preview)) ? false : true;
         $submit = (empty($submit)) ? false : true;
 
-        $message = dzkstriptags($message);
+        $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
         // check for maximum message size
         if ((strlen($message) + strlen('[addsig]')) > 65535) {
             LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
@@ -234,7 +234,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'poster_data' => $poster->toArray(),
             );
             if ($preview) {
-                $reply['message'] = dzkVarPrepHTMLDisplay($message);
+                $reply['message'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
                 $reply['message_display'] = nl2br($reply['message']);
             }
 

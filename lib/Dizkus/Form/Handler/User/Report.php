@@ -76,7 +76,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
             if (strip_tags($data['comment']) <> $data['comment']) {
                 // possibly spam, stop now
                 // get the users ip address and store it in zTemp/Dizkus_spammers.txt
-                dzk_blacklist();
+                $this->dzk_blacklist();
                 // set 403 header and stop
                 header('HTTP/1.0 403 Forbidden');
                 System::shutDown();
@@ -94,6 +94,94 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'],
                     'start' => $start));
         return $view->redirect($url);
+    }
+
+    /**
+     * dzk_blacklist()
+     * blacklist the users ip address if considered a spammer
+     */
+    private function dzk_blacklist()
+    {
+        $ztemp = System::getVar('temp');
+        $blacklistfile = $ztemp . '/Dizkus_spammer.txt';
+
+        $fh = fopen($blacklistfile, 'a');
+        if ($fh) {
+            $ip = $this->dzk_getip();
+            $line = implode(',', array(strftime('%Y-%m-%d %H:%M:%S'),
+                                       $ip,
+                                       System::serverGetVar('REQUEST_METHOD'),
+                                       System::serverGetVar('REQUEST_URI'),
+                                       System::serverGetVar('SERVER_PROTOCOL'),
+                                       System::serverGetVar('HTTP_REFERRER'),
+                                       System::serverGetVar('HTTP_USER_AGENT')));
+            fwrite($fh, DataUtil::formatForStore($line) . "\n");                           
+            fclose($fh);
+        }
+
+        return;
+    }
+    /**
+     * check for valid ip address
+     * original code taken form spidertrap
+     * @author       Thomas Zeithaml <info@spider-trap.de>
+     * @copyright    (c) 2005-2006 Spider-Trap Team
+     */
+    private function dzk_validip($ip) 
+    {
+       if (!empty($ip) && ip2long($ip)!=-1) {
+           $reserved_ips = array (
+           array('0.0.0.0','2.255.255.255'),
+           array('10.0.0.0','10.255.255.255'),
+           array('127.0.0.0','127.255.255.255'),
+           array('169.254.0.0','169.254.255.255'),
+           array('172.16.0.0','172.31.255.255'),
+           array('192.0.2.0','192.0.2.255'),
+           array('192.168.0.0','192.168.255.255'),
+           array('255.255.255.0','255.255.255.255')
+           );
+
+           foreach ($reserved_ips as $r) {
+               $min = ip2long($r[0]);
+               $max = ip2long($r[1]);
+               if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max)) return false;
+           }
+           return true;
+       } else {
+           return false;
+       }
+    }
+
+    /**
+     * get the users ip address
+     * changes: replaced references to $_SERVER with System::serverGetVar()
+     * original code taken form spidertrap
+     * @author       Thomas Zeithaml <info@spider-trap.de>
+     * @copyright    (c) 2005-2006 Spider-Trap Team
+     */
+    private function dzk_getip()
+    {
+       if (dzk_validip(System::serverGetVar("HTTP_CLIENT_IP"))) {
+           return System::serverGetVar("HTTP_CLIENT_IP");
+       }
+
+       foreach (explode(',', System::serverGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
+           if (dzk_validip(trim($ip))) {
+               return $ip;
+           }
+       }
+
+       if (dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
+           return System::serverGetVar("HTTP_X_FORWARDED");
+       } elseif (dzk_validip(System::serverGetVar("HTTP_FORWARDED_FOR"))) {
+           return System::serverGetVar("HTTP_FORWARDED_FOR");
+       } elseif (dzk_validip(System::serverGetVar("HTTP_FORWARDED"))) {
+           return System::serverGetVar("HTTP_FORWARDED");
+       } elseif (dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
+           return System::serverGetVar("HTTP_X_FORWARDED");
+       } else {
+           return System::serverGetVar("REMOTE_ADDR");
+       }
     }
 
 }

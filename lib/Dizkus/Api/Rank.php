@@ -32,7 +32,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         $handle = opendir($path);
         $filelist = array();
         while ($file = readdir($handle)) {
-            if (dzk_isimagefile($path . '/' . $file)) {
+            if ($this->dzk_isimagefile($path . '/' . $file)) {
                 $filelist[] = $file;
             }
         }
@@ -162,6 +162,23 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             $data['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($data['rank_image']) : null;
         }
         return $data;
+    }
+
+    /**
+     * dzk is an image
+     * check if a filename is an image or not
+     */
+    private function dzk_isimagefile($filepath)
+    {
+        if (function_exists('getimagesize') && @getimagesize($filepath) <> false) {
+            return true;
+        }
+
+        if (preg_match('/^(.*)\.(gif|jpg|jpeg|png)/si', $filepath)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

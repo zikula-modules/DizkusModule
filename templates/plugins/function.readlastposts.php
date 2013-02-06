@@ -202,7 +202,7 @@ function smarty_function_readlastposts($params, &$smarty)
             }
             $lastpost['poster_name'] = DataUtil::formatForDisplay($user_name);
 
-            $lastpost['post_text'] = dzk_replacesignature($lastpost['post_text'], '');
+            $lastpost['post_text'] = ModUtil::func('Dizkus', 'ajax', 'dzk_replacesignature', array('text' => $lastpost['post_text']));            
             // call hooks for $message
 //            list($lastpost['post_text']) = ModUtil::callHooks('item', 'transform', '', array($lastpost['post_text']));
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text']));

@@ -726,7 +726,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
         include_once 'modules/Dizkus/lib/vendor/pop3.php';
         if ((($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time() - ($forum['pop3_interval'] * 60)) ) || ($force == true)) {
-            mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
+            $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
             // get new mails for this forum
             $pop3 = new pop3_class;
             $pop3->hostname = $forum['pop3_server'];
@@ -735,29 +735,29 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             // open connection to pop3 server
             if (($error = $pop3->Open()) == '') {
-                mailcronecho("Connected to the POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
+                $this->mailcronecho("Connected to the POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
                 // login to pop3 server
                 if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
-                    mailcronecho("User '" . $forum['pop3_login'] . "' logged into POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
+                    $this->mailcronecho("User '" . $forum['pop3_login'] . "' logged into POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
                     // check for message
                     if (($error = $pop3->Statistics($messages, $size)) == '') {
-                        mailcronecho("There are $messages messages in the mailbox, amounting to a total of $size bytes.\n", $args['debug']);
+                        $this->mailcronecho("There are $messages messages in the mailbox, amounting to a total of $size bytes.\n", $args['debug']);
                         // get message list...
                         $result = $pop3->ListMessages('', 1);
                         if (is_array($result) && count($result) > 0) {
                             // logout the currentuser
-                            mailcronecho("Logging out '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
+                            $this->mailcronecho("Logging out '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
                             UserUtil::logOut();
                             // login the correct user
                             if (UserUtil::logIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
-                                mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' successfully logged in.', $args['debug']);
+                                $this->mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' successfully logged in.', $args['debug']);
                                 if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $forum)) {
-                                    mailcronecho("Error! Insufficient permissions for " . UserUtil::getVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
+                                    $this->mailcronecho("Error! Insufficient permissions for " . UserUtil::getVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
                                     UserUtil::logOut();
-                                    mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' logged out.', $args['debug']);
+                                    $this->mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' logged out.', $args['debug']);
                                     return false;
                                 }
-                                mailcronecho("Adding new posts as user '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
+                                $this->mailcronecho("Adding new posts as user '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
                                 // .cycle through the message list
                                 for ($cnt = 1; $cnt <= count($result); $cnt++) {
                                     if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
@@ -820,7 +820,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                                                     'attach_signature' => 1,
                                                                     'subscribe_topic' => 0,
                                                                     'msgid' => $msgid));
-                                                        mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n", $args['debug']);
+                                                        $this->mailcronecho("added new post '$subject' (post=$post_id) to topic $topic_id\n", $args['debug']);
                                                     }
                                                 }
 
@@ -833,13 +833,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                                                 'attach_signature' => 1,
                                                                 'subscribe_topic' => 0,
                                                                 'msgid' => $msgid));
-                                                    mailcronecho("Added new topic '$subject' (topic ID $topic_id) to '" . $forum['forum_name'] . "' forum.\n", $args['debug']);
+                                                    $this->mailcronecho("Added new topic '$subject' (topic ID $topic_id) to '" . $forum['forum_name'] . "' forum.\n", $args['debug']);
                                                 }
                                             } else {
-                                                mailcronecho("Warning! Message subject  line '$subject' does not match requirements and will be ignored.", $args['debug']);
+                                                $this->mailcronecho("Warning! Message subject  line '$subject' does not match requirements and will be ignored.", $args['debug']);
                                             }
                                         } else {
-                                            mailcronecho("Warning! The message subject line '$subject' is a possible loop and will be ignored.", $args['debug']);
+                                            $this->mailcronecho("Warning! The message subject line '$subject' is a possible loop and will be ignored.", $args['debug']);
                                         }
                                         // mark message for deletion
                                         $pop3->DeleteMessage($cnt);
@@ -847,14 +847,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                                 }
                                 // logout the mail2forum user
                                 if (UserUtil::logOut()) {
-                                    mailcronecho('Done! User ' . $forum['pop3_pnuser'] . ' logged out.', $args['debug']);
+                                    $this->mailcronecho('Done! User ' . $forum['pop3_pnuser'] . ' logged out.', $args['debug']);
                                 }
                             } else {
-                                mailcronecho("Error! Could not log user '" . $forum['pop3_pnuser'] . "' in.\n");
+                                $this->mailcronecho("Error! Could not log user '" . $forum['pop3_pnuser'] . "' in.\n");
                             }
                             // close pop3 connection and finally delete messages
                             if ($error == '' && ($error = $pop3->Close()) == '') {
-                                mailcronecho("Disconnected from POP3 server '" . $pop3->hostname . "'.\n");
+                                $this->mailcronecho("Disconnected from POP3 server '" . $pop3->hostname . "'.\n");
                             }
                         } else {
                             $error = $result;
@@ -863,7 +863,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 }
             }
             if (!empty($error)) {
-                mailcronecho("error: ", htmlspecialchars($error) . "\n");
+                $this->mailcronecho("error: ", htmlspecialchars($error) . "\n");
             }
 
             // store the timestamp of the last connection to the database
@@ -1347,6 +1347,71 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         }
 
         return false;
+    }
+    
+    /**
+     * mailcronecho
+     */
+    private function mailcronecho($text, $debug)
+    {
+        echo $text;
+        if ($debug==true) {
+            echo '<br />';
+        }
+        flush();
+        return;
+    }
+    
+    /**
+     * dzkVarPrepHTMLDisplay
+     * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML()
+     */
+    public function dzkVarPrepHTMLDisplay($text)
+    {
+        // remove code tags
+        $codecount1 = preg_match_all("/\[code(.*)\](.*)\[\/code\]/si", $text, $codes1);
+        for ($i=0; $i < $codecount1; $i++) {
+            $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
+        }
+
+        // the real work
+        $text = nl2br(DataUtil::formatForDisplayHTML($text));
+
+        // re-insert code tags
+        for ($i = 0; $i < $codecount1; $i++) {
+            $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
+        }
+
+        return $text;
+    }
+    
+    /**
+     * dzkstriptags
+     * strip all thml tags outside of [code][/code]
+     *
+     * @params  $text     string the text
+     * @returns string    the sanitized text
+     */
+    public function dzkstriptags($text = '')
+    {
+        if (!empty($text) && (ModUtil::getVar('Dizkus', 'striptags') == 'yes')) {
+            // save code tags
+            $codecount = preg_match_all("/\[code(.*)\](.*)\[\/code\]/siU", $text, $codes);
+
+            for ($i=0; $i < $codecount; $i++) {
+                $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
+            }
+
+            // strip all html
+            $text = strip_tags($text);
+
+            // replace code tags saved before
+            for ($i = 0; $i < $codecount; $i++) {
+                $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
+            }
+        }
+
+        return $text;
     }
 
 }
