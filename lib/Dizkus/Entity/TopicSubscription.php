@@ -32,7 +32,7 @@ class Dizkus_Entity_TopicSubscription extends Zikula_EntityAccess
     /**
      * topic
      * 
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topic", cascade={"persist"} )
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topic")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      */
     private $topic;
