@@ -859,7 +859,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                             $topic_ids = array_flip($fliparray);
                         }
                         foreach ($topic_ids as $from_topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'user', 'jointopics', array('from_topic_id' => $from_topic_id,
+                            ModUtil::apiFunc('Dizkus', 'topic', 'join', array('from_topic_id' => $from_topic_id,
                                 'to_topic_id' => $jointo));
                         }
                         break;

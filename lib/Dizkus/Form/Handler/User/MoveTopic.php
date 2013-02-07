@@ -102,7 +102,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
             $data['from_topic_id'] = $this->topic_id;
             $data['topicObj'] = $this->topic;
 
-            ModUtil::apiFunc('Dizkus', 'user', 'jointopics', $data);
+            ModUtil::apiFunc('Dizkus', 'topic', 'join', $data);
 
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
             return $view->redirect($url);

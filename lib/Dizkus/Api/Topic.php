@@ -414,4 +414,58 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         return $newTopic->getTopic_id();
     }
 
+    /**
+     * joins two topics together
+     *
+     * @params $args['from_topic_id'] int this topic get integrated into to_topic
+     * @params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
+     * @params $args['topicObj'] Dizkus_Entity_Topic
+     * 
+     * @return Integer Destination topic ID
+     */
+    public function join($args)
+    {
+        if (!isset($args['topicObj']) || !($args['topicObj'] instanceof Dizkus_Entity_Topic) || !isset($args['from_topic_id']) || !isset($args['to_topic_id'])) {
+            return LogUtil::registerArgsError();
+        }
+        $managedOriginTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
+        $managedDestinationTopic = new Dizkus_Manager_Topic($args['to_topic_id']);
+        
+        if ($managedDestinationTopic->get() === null) { // can't use isset() and ->get() at the same time
+            return LogUtil::registerArgsError($this->__('Destination topic does not exist.'));
+        }
+
+        // move posts from Origin to Destination topic
+        $posts = $this->entityManager->getRepository('Dizkus_Entity_Post')->findBy(array('topic' => $managedOriginTopic->get()));
+        $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
+        foreach ($posts as $post) {
+            $post->setTopic($managedDestinationTopic->get());
+            $post->setForum_id($managedDestinationTopic->getForumId());
+            if ($post->getPost_time() <= $previousPostTime) {
+                $post->setPost_time($previousPostTime->modify("+1 minute"));
+            }
+            $previousPostTime = $post->getPost_time();
+        }
+        $this->entityManager->flush();
+
+        // remove the originTopic from the DB (manual dql to avoid cascading deletion errors)
+        $dql = "DELETE Dizkus_Entity_Topic t
+            WHERE t.topic_id = :originTopic_id";
+        $this->entityManager->createQuery($dql)
+                ->setParameter('originTopic_id', $managedOriginTopic->getId())
+                ->execute();
+
+        $managedDestinationTopic->setLastPost($post);
+        $managedDestinationTopic->get()->setTopic_time($previousPostTime);
+
+        // resync destination topic and all forums
+        ModUtil::apiFunc('Dizkus', 'sync', 'topic', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => true));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true));
+
+        return $managedDestinationTopic->getId();
+    }
+
 }
