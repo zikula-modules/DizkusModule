@@ -70,7 +70,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         $status = $this->getSubscriptionStatus(array('user_id' => $args['user_id'], 'topic_id' => $args['topic_id']));
         if (!$status) {
-            $subscription = new Dizkus_Entity_TopicSubscriptions();
+            $subscription = new Dizkus_Entity_TopicSubscription();
 
             $topic = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id']);
             $subscription->settopic($topic);
@@ -105,7 +105,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         $where['topic_id'] = $args['topic_id'];
 
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')->findBy($where);
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findBy($where);
         if (isset($subscriptions)) {
             foreach ($subscriptions as $subscription) {
                 $this->entityManager->remove($subscription);
@@ -137,7 +137,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('COUNT(s)')
-                ->from('Dizkus_Entity_TopicSubscriptions', 's')
+                ->from('Dizkus_Entity_TopicSubscription', 's')
                 ->where('s.user_id = :user')
                 ->setParameter('user', $args['user_id'])
                 ->andWhere('s.topic_id = :topic')
@@ -163,7 +163,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $args['uid'] = UserUtil::getVar('uid');
         }
         $subscriptions = $this->entityManager
-                ->getRepository('Dizkus_Entity_TopicSubscriptions')
+                ->getRepository('Dizkus_Entity_TopicSubscription')
                 ->findBy(array('user_id' => $args['uid']));
 
         return $subscriptions;
@@ -264,14 +264,14 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         $this->entityManager->remove($topic);
 
         // remove topic subscriptions
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
+        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')
                 ->findBy(array('topic_id' => $topic_id));
         foreach ($subscriptions as $subscription) {
             $this->entityManager->remove($subscription);
         }
 
         // get forum info for adjustments
-        $forum = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $forum_id);
+        $forum = $this->entityManager->find('Dizkus_Entity_TopicSubscription', $forum_id);
         // decrement forum_topics counter
         $forum['forum_topics']--;
         // decrement forum_posts counter

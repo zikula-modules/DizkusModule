@@ -436,7 +436,7 @@ class Dizkus_Manager_Topic
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('COUNT(s)')
-                ->from('Dizkus_Entity_TopicSubscriptions', 's')
+                ->from('Dizkus_Entity_TopicSubscription', 's')
                 ->where('s.user_id = :user')
                 ->setParameter('user', UserUtil::getVar('uid'))
                 ->andWhere('s.topic_id = :topic')
