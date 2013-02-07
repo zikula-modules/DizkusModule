@@ -827,7 +827,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                             return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
                         }
                         foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'user', 'movetopic', array('topic_id' => $topic_id,
+                            ModUtil::apiFunc('Dizkus', 'topic', 'move', array('topic_id' => $topic_id,
                                 'forum_id' => $moveto,
                                 'shadow' => $shadow));
                         }
