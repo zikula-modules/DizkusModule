@@ -146,57 +146,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * get_firstlast_post_in_topic
-     * gets the first or last post in a topic, false if no posts
-     *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['first']   boolean if true then get the first posting, otherwise the last
-     * @params $args['id_only'] boolean if true, only return the id, not the complete post information
-     * @returns array with post information or false or (int)id if id_only is true
-     */
-    public function get_firstlast_post_in_topic($args)
-    {
-        if (!empty($args['topic_id']) && is_numeric($args['topic_id'])) {
-            $ztable = DBUtil::getTables();
-            $option = (isset($args['first']) && $args['first'] == true) ? 'MIN' : 'MAX';
-            $post_id = DBUtil::selectFieldMax('dizkus_posts', 'post_id', $option, $ztable['dizkus_posts_column']['topic_id'] . ' = ' . (int)$args['topic_id']);
-
-            if ($post_id <> false) {
-                if (isset($args['id_only']) && $args['id_only'] == true) {
-                    return $post_id;
-                }
-                return $this->readpost(array('post_id' => $post_id));
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * get_last_post_in_forum
-     * gets the last post in a forum, false if no posts
-     *
-     * @params $args['forum_id'] int the forums id
-     * @params $args['id_only'] boolean if true, only return the id, not the complete post information
-     * @returns array with post information of false
-     */
-    public function get_last_post_in_forum($args)
-    {
-        if (!empty($args['forum_id']) && is_numeric($args['forum_id'])) {
-            $ztable = DBUtil::getTables();
-            $post_id = DBUtil::selectfieldMax('dizkus_posts', 'post_id', 'MAX', $ztable['dizkus_posts_column']['forum_id'] . ' = ' . (int)$args['forum_id']);
-
-            if (isset($args['id_only']) && $args['id_only'] == true) {
-                return $post_id;
-            }
-
-            return $this->readpost(array('post_id' => $post_id));
-        }
-
-        return false;
-    }
-
-    /**
      * setcookies
      * 
      * reads the cookie, updates it and returns the last visit date in readable (%Y-%m-%d %H:%M)
@@ -228,12 +177,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         CookieUtil::setCookie('DizkusLastVisitTemp', "$temptime", time() + 1800, $path, null, null, false);
 
         return array(DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M:%S'), $temptime);
-    }
-
-    // RNG
-    function cmp_forumtopicsort($a, $b)
-    {
-        return strcmp($a['post_time_unix'], $b['post_time_unix']) * -1;
     }
 
     /**
@@ -383,181 +326,181 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      *
      * @returns void
      */
-    public function notify_by_email($args)
-    {
-
-        $ztable = DBUtil::getTables();
-
-        setlocale(LC_TIME, System::getVar('locale'));
-        $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
-
-        // generate the mailheader info
-        $email_from = ModUtil::getVar('Dizkus', 'email_from');
-        if ($email_from == '') {
-            // nothing in forumwide-settings, use PN adminmail
-            $email_from = System::getVar('adminmail');
-        }
-
-        // normal notification
-        $sql = 'SELECT t.topic_title,
-                       t.topic_poster,
-                       t.topic_time,
-                       f.cat_id,
-                       c.cat_title,
-                       f.forum_name,
-                       f.forum_id
-                FROM  ' . $ztable['dizkus_topics'] . ' t
-                LEFT JOIN ' . $ztable['dizkus_forums'] . ' f ON t.forum_id = f.forum_id
-                LEFT JOIN ' . $ztable['dizkus_categories'] . ' c ON f.cat_id = c.cat_id
-                WHERE t.topic_id = ' . (int)DataUtil::formatForStore($args['topic_id']);
-
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('topic_title', 'topic_poster', 'topic_time', 'cat_id', 'cat_title', 'forum_name', 'forum_id');
-        $myrow = DBUtil::marshallObjects($res, $colarray);
-
-        if (!is_array($myrow)) {
-            // no results - topic does not exist
-            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
-        }
-
-        $topic_unixtime = strtotime($myrow[0]['topic_time']);
-        $DU = new DateUtil();
-        $topic_time_ml = $DU->formatDatetime($topic_unixtime, 'datetimebrief');
-
-        $poster_name = UserUtil::getVar('uname', $args['poster_id']);
-
-        $forum_id = $myrow[0]['forum_id'];
-        $forum_name = $myrow[0]['forum_name'];
-        $category_name = $myrow[0]['cat_title'];
-        $topic_subject = $myrow[0]['topic_title'];
-
-        $subject = ($args['type'] == 2) ? 'Re: ' : '';
-        $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
-
-        // we do not want to notify the sender = the recent user
-        $thisuser = UserUtil::getVar('uid');
-        // anonymous does not have uid, so we need a sql to exclude real users
-        $fs_wherenotuser = '';
-        $ts_wherenotuser = '';
-        if (!empty($thisuser)) {
-            $fs_wherenotuser = ' AND fs.user_id <> ' . DataUtil::formatForStore($thisuser);
-            $ts_wherenotuser = ' AND ts.user_id <> ' . DataUtil::formatForStore($thisuser);
-        }
-
-        //  get list of forum subscribers with non-empty emails
-        $sql = 'SELECT DISTINCT fs.user_id,
-                                c.cat_id
-                FROM ' . $ztable['dizkus_subscription'] . ' as fs,
-                     ' . $ztable['dizkus_forums'] . ' as f,
-                     ' . $ztable['dizkus_categories'] . ' as c
-                WHERE fs.forum_id=' . DataUtil::formatForStore($forum_id) . '
-                  ' . $fs_wherenotuser . '
-                  AND f.forum_id = fs.forum_id
-                  AND c.cat_id = f.cat_id';
-
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('uid', 'cat_id');
-        $result = DBUtil::marshallObjects($res, $colarray);
-
-        $recipients = array();
-        // check if list is empty - then do nothing
-        // we create an array of recipients here
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $resline) {
-                // check permissions
-                if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'] . ':' . $forum_id . ':', ACCESS_READ, $resline['uid'])) {
-                    $emailaddress = UserUtil::getVar('email', $resline['uid']);
-                    if (empty($emailaddress)) {
-                        continue;
-                    }
-                    $email['name'] = UserUtil::getVar('uname', $resline['uid']);
-                    $email['address'] = $emailaddress;
-                    $email['uid'] = $resline['uid'];
-                    $recipients[$email['name']] = $email;
-                }
-            }
-        }
-
-        //  get list of topic_subscribers with non-empty emails
-        $sql = 'SELECT DISTINCT ts.user_id,
-                                c.cat_id,
-                                f.forum_id
-                FROM ' . $ztable['dizkus_topic_subscription'] . ' as ts,
-                     ' . $ztable['dizkus_forums'] . ' as f,
-                     ' . $ztable['dizkus_categories'] . ' as c,
-                     ' . $ztable['dizkus_topics'] . ' as t
-                WHERE ts.topic_id=' . DataUtil::formatForStore($args['topic_id']) . '
-                  ' . $ts_wherenotuser . '
-                  AND t.topic_id = ts.topic_id
-                  AND f.forum_id = t.forum_id
-                  AND c.cat_id = f.cat_id';
-
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('uid', 'cat_id', 'forum_id');
-        $result = DBUtil::marshallObjects($res, $colarray);
-
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $resline) {
-                // check permissions
-                if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'] . ':' . $resline['forum_id'] . ':', ACCESS_READ, $resline['uid'])) {
-                    $emailaddress = UserUtil::getVar('email', $resline['uid']);
-                    if (empty($emailaddress)) {
-                        continue;
-                    }
-                    $email['name'] = UserUtil::getVar('uname', $resline['uid']);
-                    $email['address'] = $emailaddress;
-                    $email['uid'] = $resline['uid'];
-                    $recipients[$email['name']] = $email;
-                }
-            }
-        }
-
-        if (count($recipients) > 0) {
-            $sitename = System::getVar('sitename');
-
-            $this->view->assign('sitename', $sitename);
-            $this->view->assign('category_name', $category_name);
-            $this->view->assign('forum_name', $forum_name);
-            $this->view->assign('topic_subject', $topic_subject);
-            $this->view->assign('poster_name', $poster_name);
-            $this->view->assign('topic_time_ml', $topic_time_ml);
-            $this->view->assign('post_message', $args['post_message']);
-            $this->view->assign('topic_id', $args['topic_id']);
-            $this->view->assign('forum_id', $forum_id);
-            $this->view->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
-            $this->view->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
-            $this->view->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
-            $this->view->assign('base_url', System::getBaseUrl());
-            $message = $this->view->fetch('mail/notifyuser.txt');
-
-            foreach ($recipients as $subscriber) {
-                // integrate contactlist's ignorelist here
-                $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $subscriber['uid']));
-                if (ModUtil::available('ContactList') &&
-                        (in_array($ignorelist_setting, array('medium', 'strict'))) &&
-                        ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => UserUtil::getVar('uid')))) {
-                    $send = false;
-                } else {
-                    $send = true;
-                }
-                if ($send) {
-                    $uid = UserUtil::getVar('uid');
-                    $args = array('fromname' => $sitename,
-                        'fromaddress' => $email_from,
-                        'toname' => $subscriber['name'],
-                        'toaddress' => $subscriber['address'],
-                        'subject' => $subject,
-                        'body' => $message,
-                        'headers' => array('X-UserID: ' . md5($uid),
-                            'X-Mailer: Dizkus v' . $modinfo['version'],
-                            'X-DizkusTopicID: ' . $args['topic_id']));
-                    ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
-                }
-            }
-        }
-
-        return true;
-    }
+//    public function notify_by_email($args)
+//    {
+//
+//        $ztable = DBUtil::getTables();
+//
+//        setlocale(LC_TIME, System::getVar('locale'));
+//        $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
+//
+//        // generate the mailheader info
+//        $email_from = ModUtil::getVar('Dizkus', 'email_from');
+//        if ($email_from == '') {
+//            // nothing in forumwide-settings, use PN adminmail
+//            $email_from = System::getVar('adminmail');
+//        }
+//
+//        // normal notification
+//        $sql = 'SELECT t.topic_title,
+//                       t.topic_poster,
+//                       t.topic_time,
+//                       f.cat_id,
+//                       c.cat_title,
+//                       f.forum_name,
+//                       f.forum_id
+//                FROM  ' . $ztable['dizkus_topics'] . ' t
+//                LEFT JOIN ' . $ztable['dizkus_forums'] . ' f ON t.forum_id = f.forum_id
+//                LEFT JOIN ' . $ztable['dizkus_categories'] . ' c ON f.cat_id = c.cat_id
+//                WHERE t.topic_id = ' . (int)DataUtil::formatForStore($args['topic_id']);
+//
+//        $res = DBUtil::executeSQL($sql);
+//        $colarray = array('topic_title', 'topic_poster', 'topic_time', 'cat_id', 'cat_title', 'forum_name', 'forum_id');
+//        $myrow = DBUtil::marshallObjects($res, $colarray);
+//
+//        if (!is_array($myrow)) {
+//            // no results - topic does not exist
+//            return LogUtil::registerError($this->__('Error! The topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+//        }
+//
+//        $topic_unixtime = strtotime($myrow[0]['topic_time']);
+//        $DU = new DateUtil();
+//        $topic_time_ml = $DU->formatDatetime($topic_unixtime, 'datetimebrief');
+//
+//        $poster_name = UserUtil::getVar('uname', $args['poster_id']);
+//
+//        $forum_id = $myrow[0]['forum_id'];
+//        $forum_name = $myrow[0]['forum_name'];
+//        $category_name = $myrow[0]['cat_title'];
+//        $topic_subject = $myrow[0]['topic_title'];
+//
+//        $subject = ($args['type'] == 2) ? 'Re: ' : '';
+//        $subject .= $category_name . ' :: ' . $forum_name . ' :: ' . $topic_subject;
+//
+//        // we do not want to notify the sender = the recent user
+//        $thisuser = UserUtil::getVar('uid');
+//        // anonymous does not have uid, so we need a sql to exclude real users
+//        $fs_wherenotuser = '';
+//        $ts_wherenotuser = '';
+//        if (!empty($thisuser)) {
+//            $fs_wherenotuser = ' AND fs.user_id <> ' . DataUtil::formatForStore($thisuser);
+//            $ts_wherenotuser = ' AND ts.user_id <> ' . DataUtil::formatForStore($thisuser);
+//        }
+//
+//        //  get list of forum subscribers with non-empty emails
+//        $sql = 'SELECT DISTINCT fs.user_id,
+//                                c.cat_id
+//                FROM ' . $ztable['dizkus_subscription'] . ' as fs,
+//                     ' . $ztable['dizkus_forums'] . ' as f,
+//                     ' . $ztable['dizkus_categories'] . ' as c
+//                WHERE fs.forum_id=' . DataUtil::formatForStore($forum_id) . '
+//                  ' . $fs_wherenotuser . '
+//                  AND f.forum_id = fs.forum_id
+//                  AND c.cat_id = f.cat_id';
+//
+//        $res = DBUtil::executeSQL($sql);
+//        $colarray = array('uid', 'cat_id');
+//        $result = DBUtil::marshallObjects($res, $colarray);
+//
+//        $recipients = array();
+//        // check if list is empty - then do nothing
+//        // we create an array of recipients here
+//        if (is_array($result) && !empty($result)) {
+//            foreach ($result as $resline) {
+//                // check permissions
+//                if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'] . ':' . $forum_id . ':', ACCESS_READ, $resline['uid'])) {
+//                    $emailaddress = UserUtil::getVar('email', $resline['uid']);
+//                    if (empty($emailaddress)) {
+//                        continue;
+//                    }
+//                    $email['name'] = UserUtil::getVar('uname', $resline['uid']);
+//                    $email['address'] = $emailaddress;
+//                    $email['uid'] = $resline['uid'];
+//                    $recipients[$email['name']] = $email;
+//                }
+//            }
+//        }
+//
+//        //  get list of topic_subscribers with non-empty emails
+//        $sql = 'SELECT DISTINCT ts.user_id,
+//                                c.cat_id,
+//                                f.forum_id
+//                FROM ' . $ztable['dizkus_topic_subscription'] . ' as ts,
+//                     ' . $ztable['dizkus_forums'] . ' as f,
+//                     ' . $ztable['dizkus_categories'] . ' as c,
+//                     ' . $ztable['dizkus_topics'] . ' as t
+//                WHERE ts.topic_id=' . DataUtil::formatForStore($args['topic_id']) . '
+//                  ' . $ts_wherenotuser . '
+//                  AND t.topic_id = ts.topic_id
+//                  AND f.forum_id = t.forum_id
+//                  AND c.cat_id = f.cat_id';
+//
+//        $res = DBUtil::executeSQL($sql);
+//        $colarray = array('uid', 'cat_id', 'forum_id');
+//        $result = DBUtil::marshallObjects($res, $colarray);
+//
+//        if (is_array($result) && !empty($result)) {
+//            foreach ($result as $resline) {
+//                // check permissions
+//                if (SecurityUtil::checkPermission('Dizkus::', $resline['cat_id'] . ':' . $resline['forum_id'] . ':', ACCESS_READ, $resline['uid'])) {
+//                    $emailaddress = UserUtil::getVar('email', $resline['uid']);
+//                    if (empty($emailaddress)) {
+//                        continue;
+//                    }
+//                    $email['name'] = UserUtil::getVar('uname', $resline['uid']);
+//                    $email['address'] = $emailaddress;
+//                    $email['uid'] = $resline['uid'];
+//                    $recipients[$email['name']] = $email;
+//                }
+//            }
+//        }
+//
+//        if (count($recipients) > 0) {
+//            $sitename = System::getVar('sitename');
+//
+//            $this->view->assign('sitename', $sitename);
+//            $this->view->assign('category_name', $category_name);
+//            $this->view->assign('forum_name', $forum_name);
+//            $this->view->assign('topic_subject', $topic_subject);
+//            $this->view->assign('poster_name', $poster_name);
+//            $this->view->assign('topic_time_ml', $topic_time_ml);
+//            $this->view->assign('post_message', $args['post_message']);
+//            $this->view->assign('topic_id', $args['topic_id']);
+//            $this->view->assign('forum_id', $forum_id);
+//            $this->view->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $args['topic_id'], 'forum' => $forum_id), null, null, true));
+//            $this->view->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['topic_id']), null, null, true));
+//            $this->view->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true));
+//            $this->view->assign('base_url', System::getBaseUrl());
+//            $message = $this->view->fetch('mail/notifyuser.txt');
+//
+//            foreach ($recipients as $subscriber) {
+//                // integrate contactlist's ignorelist here
+//                $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $subscriber['uid']));
+//                if (ModUtil::available('ContactList') &&
+//                        (in_array($ignorelist_setting, array('medium', 'strict'))) &&
+//                        ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => $subscriber['uid'], 'iuid' => UserUtil::getVar('uid')))) {
+//                    $send = false;
+//                } else {
+//                    $send = true;
+//                }
+//                if ($send) {
+//                    $uid = UserUtil::getVar('uid');
+//                    $args = array('fromname' => $sitename,
+//                        'fromaddress' => $email_from,
+//                        'toname' => $subscriber['name'],
+//                        'toaddress' => $subscriber['address'],
+//                        'subject' => $subject,
+//                        'body' => $message,
+//                        'headers' => array('X-UserID: ' . md5($uid),
+//                            'X-Mailer: Dizkus v' . $modinfo['version'],
+//                            'X-DizkusTopicID: ' . $args['topic_id']));
+//                    ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
+//                }
+//            }
+//        }
+//
+//        return true;
+//    }
 
     /**
      * split the topic at the provided post
@@ -680,6 +623,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
+     * TODO: Change name to getTopicLastPage
      * get_page_from_topic_replies
      * Uses the number of topic_replies and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.
@@ -882,57 +826,58 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      * @returns array of messages from pop3 connection test
      *
      */
-    public function testpop3connection($args)
-    {
-        if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
-            return LogUtil::registerArgsError();
-        }
-
-        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('forum_id' => $args['forum_id']));
-        Loader::includeOnce('modules/Dizkus/includes/pop3.php');
-
-        $pop3 = new pop3_class;
-        $pop3->hostname = $forum['pop3_server'];
-        $pop3->port = $forum['pop3_port'];
-
-        $error = '';
-        $pop3messages = array();
-        if (($error = $pop3->Open()) == '') {
-            $pop3messages[] = "connected to the POP3 server '" . $pop3->hostname . "'";
-            if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
-                $pop3messages[] = "user '" . $forum['pop3_login'] . "' logged in";
-                if (($error = $pop3->Statistics($messages, $size)) == '') {
-                    $pop3messages[] = "There are $messages messages in the mailbox, amounting to a total of $size bytes.";
-                    $result = $pop3->ListMessages('', 1);
-                    if (is_array($result) && count($result) > 0) {
-                        for ($cnt = 1; $cnt <= count($result); $cnt++) {
-                            if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
-                                foreach ($headers as $header) {
-                                    if (strpos(strtolower($header), 'subject:') === 0) {
-                                        $subject = trim(strip_tags(substr($header, 8)));
-                                    }
-                                }
-                            }
-                        }
-                        if ($error == '' && ($error = $pop3->Close()) == '') {
-                            $pop3messages[] = "Disconnected from POP3 server '" . $pop3->hostname . "'.\n";
-                        }
-                    } else {
-                        $error = $result;
-                    }
-                }
-            }
-        }
-        if (!empty($error)) {
-            $pop3messages[] = 'error: ' . htmlspecialchars($error);
-        }
-
-        return $pop3messages;
-    }
+//    public function testpop3connection($args)
+//    {
+//        if (!isset($args['forum_id']) || !is_numeric($args['forum_id'])) {
+//            return LogUtil::registerArgsError();
+//        }
+//
+//        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('forum_id' => $args['forum_id']));
+//        Loader::includeOnce('modules/Dizkus/includes/pop3.php');
+//
+//        $pop3 = new pop3_class;
+//        $pop3->hostname = $forum['pop3_server'];
+//        $pop3->port = $forum['pop3_port'];
+//
+//        $error = '';
+//        $pop3messages = array();
+//        if (($error = $pop3->Open()) == '') {
+//            $pop3messages[] = "connected to the POP3 server '" . $pop3->hostname . "'";
+//            if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
+//                $pop3messages[] = "user '" . $forum['pop3_login'] . "' logged in";
+//                if (($error = $pop3->Statistics($messages, $size)) == '') {
+//                    $pop3messages[] = "There are $messages messages in the mailbox, amounting to a total of $size bytes.";
+//                    $result = $pop3->ListMessages('', 1);
+//                    if (is_array($result) && count($result) > 0) {
+//                        for ($cnt = 1; $cnt <= count($result); $cnt++) {
+//                            if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
+//                                foreach ($headers as $header) {
+//                                    if (strpos(strtolower($header), 'subject:') === 0) {
+//                                        $subject = trim(strip_tags(substr($header, 8)));
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        if ($error == '' && ($error = $pop3->Close()) == '') {
+//                            $pop3messages[] = "Disconnected from POP3 server '" . $pop3->hostname . "'.\n";
+//                        }
+//                    } else {
+//                        $error = $result;
+//                    }
+//                }
+//            }
+//        }
+//        if (!empty($error)) {
+//            $pop3messages[] = 'error: ' . htmlspecialchars($error);
+//        }
+//
+//        return $pop3messages;
+//    }
 
     /**
      * get_topic_by_postmsgid
      * gets a topic_id from the postings msgid
+     * used by mailcron method
      *
      * @params $args['msgid'] string the msgid
      * @returns int topic_id or false if not found
@@ -1003,6 +948,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
+     * TODO: @see get_page_from_topic_replies() which seems to return the same information
      * get_last_topic_page
      * returns the number of the last page of the topic if more than posts_per_page entries
      * eg. for use as the start parameter in urls
@@ -1210,6 +1156,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
     /**
      * insert rss
+     * @see rss2dizkus.php - only used there
      *
      * @params $args['forum']    array with forum data
      * @params $args['items']    array with feed data as returned from Feeds module
@@ -1414,12 +1361,4 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return $text;
     }
 
-}
-
-/**
- * helper function to extract forum_ids from forum array
- */
-function _get_forum_ids($f)
-{
-    return $f['forum_id'];
 }

@@ -116,7 +116,15 @@ if (!empty($forum_id)) {
     if (count($allowedforums) > 0) {
         $where = ' AND f.forum_id IN (' . DataUtil::formatForStore(implode(',', $allowedforums)) . ') ';
     }
-}    
+}
+
+/**
+ * helper function to extract forum_ids from forum array
+ */
+function _get_forum_ids($f)
+{
+    return $f['forum_id'];
+}
 
 $render->assign('forum_name', $forumname);
 $render->assign('forum_link', $link);
