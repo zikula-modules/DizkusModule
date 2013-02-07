@@ -253,7 +253,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         $postings = $this->entityManager->getRepository('Dizkus_Entity_Post')
                 ->findBy(array('topic' => $topic_id));
 
-
         // step #2 go through the posting array and decrement the posting counter
         // TO-DO: for larger topics use IN(..., ..., ...) with 50 or 100 posting ids per sql
         // step #3 and delete postings
@@ -261,13 +260,8 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             UserUtil::setVar('dizkus_user_posts', UserUtil::getVar('dizkus_user_posts', $posting->getPoster_id()) - 1, $posting->getPoster_id());
             $this->entityManager->remove($posting);
         }
-
-
         // now delete the topic itself
-
         $this->entityManager->remove($topic);
-
-
 
         // remove topic subscriptions
         $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscriptions')
@@ -277,14 +271,11 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
 
         // get forum info for adjustments
-
-
         $forum = $this->entityManager->find('Dizkus_Entity_TopicSubscriptions', $forum_id);
         // decrement forum_topics counter
         $forum['forum_topics']--;
         // decrement forum_posts counter
         $forum['forum_posts'] = $forum['forum_posts'] - count($postings);
-
 
         $this->entityManager->flush();
 
