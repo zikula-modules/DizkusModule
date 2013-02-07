@@ -91,7 +91,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         $data['old_topic_id'] = $this->old_topic_id;
         $data['post_id'] = $this->post_id;
 
-        $newTopicPostCount = ModUtil::apiFunc('Dizkus', 'user', 'movepost', $data);
+        $newTopicPostCount = ModUtil::apiFunc('Dizkus', 'post', 'move', $data);
         $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar('Dizkus', 'posts_per_page', 15);
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)) . '#pid' . $this->post_id;

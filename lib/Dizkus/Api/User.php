@@ -791,44 +791,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * movepost
-     *
-     * @params $args['post_id']
-     * @params $args['old_topic_id']
-     * @params $args['to_topic_id']
-     * 
-     * @returns count of posts in destination topic
-     */
-    public function movepost($args)
-    {
-        $old_topic_id = isset($args['old_topic_id']) ? $args['old_topic_id'] : null;
-        $to_topic_id = isset($args['to_topic_id']) ? $args['to_topic_id'] : null;
-        $post_id = isset($args['post_id']) ? $args['post_id'] : null;
-
-        if (!isset($old_topic_id) || !isset($to_topic_id) || !isset($post_id)) {
-            return LogUtil::registerArgsError();
-        }
-        
-        $managedOriginTopic = new Dizkus_Manager_Topic($old_topic_id);
-        $managedDestinationTopic = new Dizkus_Manager_Topic($to_topic_id);
-        $managedPost = new Dizkus_Manager_Post($post_id);
-        
-        $managedOriginTopic->get()->getPosts()->removeElement($managedPost->get());
-        $managedPost->get()->setTopic($managedDestinationTopic->get());
-        $managedDestinationTopic->get()->addPost($managedPost->get());
-        $managedOriginTopic->decrementRepliesCount();
-        $managedDestinationTopic->incrementRepliesCount();
-        $managedPost->get()->updatePost_time();
-        
-        $this->entityManager->flush();
-
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedOriginTopic->get(), 'flush' => false));
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
-
-        return $managedDestinationTopic->getPostCount();
-    }
-
-    /**
      * TODO: @see get_page_from_topic_replies() which seems to return the same information
      * get_last_topic_page
      * returns the number of the last page of the topic if more than posts_per_page entries
