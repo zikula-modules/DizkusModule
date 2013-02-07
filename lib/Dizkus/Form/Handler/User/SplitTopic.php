@@ -72,7 +72,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'user', 'splittopic', array('post' => $this->post, 'data' => $data));
+        $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'split', array('post' => $this->post, 'data' => $data));
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
         return $view->redirect($url);

@@ -442,64 +442,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 //    }
 
     /**
-     * split the topic at the provided post
-     *
-     * @params Dizkus_Manager_Post $args['post']
-     * @params Array $args['data']
-     *
-     * @return Integer id of the new topic
-     */
-    public function splittopic($args)
-    {
-        if (!isset($args['post']) || !($args['post'] instanceof Dizkus_Manager_Post) || !isset($args['data']['newsubject'])) {
-            return LogUtil::registerArgsError();
-        }
-        $managedTopic = new Dizkus_Manager_Topic(null, $args['post']->get()->getTopic());
-
-        // create new topic
-        $newTopic = new Dizkus_Entity_Topic();
-        $newTopic->setTopic_poster($args['post']->get()->getPoster_id());
-        $newTopic->setTopic_title($args['data']['newsubject']);
-        $newTopic->setForum($managedTopic->get()->getForum());
-        $this->entityManager->persist($newTopic);
-        $this->entityManager->flush();
-
-        // update posts
-        $dql = "SELECT p from Dizkus_Entity_Post p
-            WHERE p.topic = :topic
-            AND p.post_id >= :post
-            ORDER BY p.post_id";
-        $query = $this->entityManager->createQuery($dql)
-            ->setParameter('topic', $managedTopic->get())
-            ->setParameter('post', $args['post']->get()->getPost_id());
-        /* @var $posts Array of Dizkus_Entity_Post */
-        $posts = $query->getResult();
-        // update the topic_id in the postings
-        foreach($posts as $post) {
-            $post->setTopic($newTopic);
-        }
-        // must flush here so sync gets correct information
-        $this->entityManager->flush();
-        // last iteration of `$post` used below
-        
-        // update old topic
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedTopic->get(), 'flush' => true));
-        $oldReplyCount = $managedTopic->get()->getTopic_replies();
-        $managedTopic->get()->setTopic_replies($oldReplyCount - count($posts));
-
-        // update new topic with post data
-        $newTopic->setLast_post($post);
-        $newTopic->setTopic_replies(count($posts) - 1);
-        $newTopic->setTopic_time($post->getPost_time());
-
-        // resync topic totals, etc
-        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $newTopic->getForum(), 'flush' => false));
-        $this->entityManager->flush();
-
-        return $newTopic->getTopic_id();
-    }
-
-    /**
      * get_previous_or_next_topic_id
      * returns the next or previous topic_id in the same forum of a given topic_id
      *
