@@ -73,8 +73,8 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $subscription = new Dizkus_Entity_TopicSubscription();
 
             $topic = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id']);
-            $subscription->settopic($topic);
-            $subscription->setuser_id($args['user_id']);
+            $subscription->setTopic($topic);
+            $subscription->setUser_id($args['user_id']);
             $this->entityManager->persist($subscription);
             $this->entityManager->flush();
         }
