@@ -25,12 +25,11 @@ class Dizkus_Version extends Zikula_AbstractVersion
         $meta = array();
         $meta['displayname'] = $this->__('Dizkus forums');
         $meta['oldnames'] = array('pnForum');
-        $meta['description'] = $this->__('An integrated forum solution for Zikula which is simple to administer and use but that has an excellent feature set.');
+        $meta['description'] = $this->__('An integrated discussion forum for Zikula.');
         $meta['url'] = $this->__('forums');
-        $meta['version'] = '3.2.0';
+        $meta['version'] = '3.2.0'; // will be 4.0.0 on release
         $meta['core_min'] = '1.3.6'; // Fixed to 1.3.x range
         $meta['core_max'] = '1.3.99'; // Fixed to 1.3.x range
-        $meta['contact'] = 'http://support.zikula.de';
         $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
             'Dizkus::CreateForum' => 'CategoryID::');
         $meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
@@ -61,13 +60,16 @@ class Dizkus_Version extends Zikula_AbstractVersion
      */
     protected function setupHookBundles()
     {
+        // there will be 3 areas for subscriber hooks and one provider hook
+        // three areas: Post, Topic, Forum
+        // the Post area will have an additional filter area (Post filter)
+        // the one provider hook will be used to display a topic
 
         $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.dizkus.ui_hooks.comments', 'ui_hooks', $this->__('Dizkus Comment Hooks'));
         $bundle->addServiceHandler('display_view', 'Dizkus_HookHandlers', 'uiView', 'dizkus.hooks.comments');
         $bundle->addServiceHandler('process_edit', 'Dizkus_HookHandlers', 'processEdit', 'dizkus.hooks.comments');
         $bundle->addServiceHandler('process_delete', 'Dizkus_HookHandlers', 'processDelete', 'dizkus.hooks.comments');
         $this->registerHookProviderBundle($bundle);
-
 
         $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.editor', 'ui_hooks', $this->__('Dizkus editor'));
         $bundle->addEvent('display_view', 'dizkus.ui_hooks.editor.display_view');
