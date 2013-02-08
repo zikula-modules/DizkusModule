@@ -439,8 +439,8 @@ class Dizkus_Manager_Topic
                 ->from('Dizkus_Entity_TopicSubscription', 's')
                 ->where('s.user_id = :user')
                 ->setParameter('user', UserUtil::getVar('uid'))
-                ->andWhere('s.topic_id = :topic')
-                ->setParameter('topic', $this->_topic->getTopic_id())
+                ->andWhere('s.topic = :topic')
+                ->setParameter('topic', $this->_topic)
                 ->setMaxResults(1);
         $count = $qb->getQuery()->getSingleScalarResult();
         return $count > 0 ? true : false;
