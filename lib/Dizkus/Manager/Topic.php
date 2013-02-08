@@ -137,7 +137,7 @@ class Dizkus_Manager_Topic
                 ->setParameter('topicId', $id)
                 ->leftJoin('p.poster', 'u')
                 ->leftJoin('u.user_rank', 'r')
-                ->orderBy('p.post_time', 'ASC')
+                ->orderBy('p.post_time', 'ASC') // should be set by user preference item @see Poster
                 ->getQuery();
 
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);

@@ -40,7 +40,7 @@ class Dizkus_Manager_PosterData
     }
 
     /**
-     * return topic title
+     * post_order
      *
      * @return string
      */
@@ -50,7 +50,7 @@ class Dizkus_Manager_PosterData
     }
 
     /**
-     * return topic title
+     * set post_order
      *
      * @return string
      */
@@ -68,7 +68,7 @@ class Dizkus_Manager_PosterData
     /**
      * return topic as doctrine2 object
      *
-     * @return object
+     * @return Dizkus_Entity_Poster
      */
     public function get()
     {
@@ -76,9 +76,9 @@ class Dizkus_Manager_PosterData
     }
 
     /**
-     * return topic as doctrine2 object
+     * return topic as array
      *
-     * @return object
+     * @return array
      */
     public function toArray()
     {
@@ -86,9 +86,9 @@ class Dizkus_Manager_PosterData
     }
 
     /**
-     * return page as array
+     * persist and flush
      *
-     * @return boolean
+     * @return void
      */
     public function store($data)
     {
