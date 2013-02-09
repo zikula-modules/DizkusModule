@@ -95,8 +95,10 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
-        $data = $view->getValues();
 
+        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', $this->topic_id);
+        
+        $data = $view->getValues();
 
         // send the poster a reason why his/her post was deleted
         if ($data['sendReason'] && !empty($data['reason'])) {
@@ -111,7 +113,6 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         }
 
         // redirect to the forum of the deleted topic
-        $forum_id = ModUtil::apiFunc('Dizkus', 'Topic', 'delete', $this->topic_id);
         $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
         return $view->redirect($url);
     }

@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
+ * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_TopicRepository")
  */
 class Dizkus_Entity_Topic extends Zikula_EntityAccess
 {

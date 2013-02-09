@@ -304,7 +304,7 @@ class Dizkus_Manager_Topic
     /**
      * create topic and post
      *
-     * @return boolean
+     * @return integer topic id
      */
     public function create()
     {
@@ -333,7 +333,7 @@ class Dizkus_Manager_Topic
                 'topic_id' => $this->_topic->getTopic_id(),
                 'action' => 'subscribe'
             );
-            ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
         }
 
         return $this->_topic->getTopic_id();

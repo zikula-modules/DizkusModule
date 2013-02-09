@@ -216,7 +216,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $post->create($data);
             $params = array(
                 'topic' => $topic_id,
-                'start' => $start
+                'start' => $start // this value is undefined
             );
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $params) . '#pid' . $post->getId();
 
