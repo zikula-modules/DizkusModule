@@ -19,7 +19,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         'Dizkus_Entity_Poster',
         'Dizkus_Entity_Moderator_User',
         'Dizkus_Entity_Moderator_Group',
-        'Dizkus_Entity_ForumSubscriptions',
+        'Dizkus_Entity_ForumSubscription',
         'Dizkus_Entity_TopicSubscription',
         'Dizkus_Entity_Rank'
     );

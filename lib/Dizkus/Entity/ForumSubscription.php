@@ -12,14 +12,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Favorites entity class.
- *
- * Annotations define the entity mappings to database.
+ * ForumSubscription entity class.
  *
  * @ORM\Entity
- * @ORM\Table(name="dizkus_subscription")
+ * @ORM\Table(name="dizkus_subscription", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
-class Dizkus_Entity_ForumSubscriptionJoin extends Zikula_EntityAccess
+class Dizkus_Entity_ForumSubscription extends Zikula_EntityAccess
 {
 
     /**
@@ -32,44 +30,49 @@ class Dizkus_Entity_ForumSubscriptionJoin extends Zikula_EntityAccess
     private $msg_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", cascade={"persist"} )
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      */
     private $forum;
 
     /**
      * The following are annotations which define the user_id field.
-     *
+     * 
      * @ORM\Column(type="integer")
      */
     private $user_id = 0;
 
-    public function getmsg_id()
+    public function getMsg_id()
     {
         return $this->msg_id;
     }
 
-    public function getforum()
+    /**
+     * get forum
+     * 
+     * @return Dizkus_Entity_Forum
+     */
+    public function getForum()
     {
         return $this->forum;
     }
 
-    public function getuser_id()
+    /**
+     * set forum
+     * 
+     * @param Dizkus_Entity_Forum $forum
+     */
+    public function setForum(Dizkus_Entity_Forum $forum)
+    {
+        $this->forum = $forum;
+    }
+
+    public function getUser_id()
     {
         return $this->user_id;
     }
 
-    public function setmsg_id($id)
-    {
-        $this->msg_id = $id;
-    }
-
-    public function setforum_id($id)
-    {
-        $this->forum_id = $id;
-    }
-
-    public function setuser_id($id)
+    public function setUser_id($id)
     {
         $this->user_id = $id;
     }
