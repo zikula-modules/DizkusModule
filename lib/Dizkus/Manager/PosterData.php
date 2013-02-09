@@ -16,6 +16,10 @@
 class Dizkus_Manager_PosterData
 {
 
+    /**
+     * managed poster
+     * @var Dizkus_Entity_Poster
+     */
     private $_poster;
     protected $entityManager;
     protected $name;

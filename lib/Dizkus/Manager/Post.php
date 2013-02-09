@@ -18,7 +18,16 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class Dizkus_Manager_Post
 {
 
+    /**
+     * managed post
+     * @var Dizkus_Entity_Post
+     */
     private $_post;
+    
+    /**
+     * Post topic
+     * @var Dizkus_Manager_Topic
+     */
     private $_topic;
     protected $entityManager;
     protected $name;
@@ -137,8 +146,8 @@ class Dizkus_Manager_Post
         $this->_topic->incrementRepliesCount();
 
         // increment forum posts
-        $forum = new Dizkus_Manager_Forum($this->_topic->getForumId());
-        $forum->incrementPostCount();
+        $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
+        $managedForum->incrementPostCount();
 
         $this->_post->setPoster($poster);
         $this->_post->setForum_id($this->_topic->getForumId());
@@ -156,7 +165,7 @@ class Dizkus_Manager_Post
         // preserve post_id
         $id = $this->_post->getPost_id();
         $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
-        $forum = new Dizkus_Manager_Forum($this->_topic->getForumId());
+        $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $forumLastPostId = $forum->get()->getLast_post()->getPost_id();
         
         // remove the post
@@ -166,7 +175,7 @@ class Dizkus_Manager_Post
         $this->_post->getPoster()->decrementUser_posts();
 
         // decrement forum post count
-        $forum->decrementPostCount();
+        $managedForum->decrementPostCount();
 
         // decrement replies count
         $this->_topic->decrementRepliesCount();

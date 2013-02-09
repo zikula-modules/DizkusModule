@@ -119,8 +119,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
 
-        $forum = new Dizkus_Manager_Forum($args['forum_id']);
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum->get())) {
+        $managedForum = new Dizkus_Manager_Forum($args['forum_id']);
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
             return LogUtil::registerPermissionError();
         }
 
@@ -128,7 +128,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             // add user only if not already subscribed to the forum
             // we can use the args parameter as-is
             $forumSubscription = new Dizkus_Entity_ForumSubscription();
-            $data = array('user_id' => $args['user_id'], 'forum' => $forum->get());
+            $data = array('user_id' => $args['user_id'], 'forum' => $managedForum->get());
             $forumSubscription->merge($data);
             $this->entityManager->persist($forumSubscription);
             $this->entityManager->flush();

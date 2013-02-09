@@ -22,28 +22,28 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         } else if ($args['action'] == 'unsubscribe') {
             ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', array('topic_id' => $args['topic_id']));
         } else {
-            $topic = new Dizkus_Manager_Topic($args['topic_id']);
+            $managedTopic = new Dizkus_Manager_Topic($args['topic_id']);
             switch ($args['action']) {
                 case 'sticky':
-                    $topic->sticky();
+                    $managedTopic->sticky();
                     break;
                 case 'unsticky':
-                    $topic->unsticky();
+                    $managedTopic->unsticky();
                     break;
                 case 'lock':
-                    $topic->lock();
+                    $managedTopic->lock();
                     break;
                 case 'unlock':
-                    $topic->unlock();
+                    $managedTopic->unlock();
                     break;
                 case 'solve':
-                    $topic->solve();
+                    $managedTopic->solve();
                     break;
                 case 'unsolve':
-                    $topic->unsolve();
+                    $managedTopic->unsolve();
                     break;
                 case 'setTitle':
-                    $topic->setTitle($args['title']);
+                    $managedTopic->setTitle($args['title']);
                     break;
             }
         }
@@ -308,7 +308,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
-                $shadowTopic = new Dizkus_Manager_Topic();
+                $managedShadowTopic = new Dizkus_Manager_Topic();
                 $topicData = array(
                     'topic_title' => $this->__f("*** The original posting '%s' has been moved", $managedTopic->getTitle()),
                     'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="'. ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedTopic->getId())) .'">' . $this->__('here') . '</a>.',
@@ -316,9 +316,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
                     'topic_time' => $managedTopic->get()->getTopic_time(),
                     'post_attach_signature' => false,
                     'subscribe_topic' => false);
-                $shadowTopic->prepare($topicData);
-                $shadowTopic->lock();
-                $this->entityManager->persist($shadowTopic->get());
+                $managedShadowTopic->prepare($topicData);
+                $managedShadowTopic->lock();
+                $this->entityManager->persist($managedShadowTopic->get());
             }
 
             $this->entityManager->flush();

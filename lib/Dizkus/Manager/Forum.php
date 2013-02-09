@@ -18,6 +18,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class Dizkus_Manager_Forum
 {
 
+    /**
+     * managed forum
+     * @var Dizkus_Entity_Forum
+     */
     private $_forum;
     private $_itemsPerPage;
     private $_numberOfItems;

@@ -18,9 +18,17 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class Dizkus_Manager_Topic
 {
 
+    /**
+     * managed topic
+     * @var Dizkus_Entity_Topic
+     */
     private $_topic;
     private $_itemsPerPage;
     private $_numberOfItems;
+    /**
+     * first post in topic
+     * @var Dizkus_Entity_Post
+     */
     private $_firstPost;
     private $_subscribe = false;
     private $_forumId;
@@ -247,8 +255,8 @@ class Dizkus_Manager_Topic
         $this->_subscribe = $data['subscribe_topic'];
         unset($data['subscribe_topic']);
         $this->_forumId = $data['forum_id'];
-        $forum = new Dizkus_Manager_Forum($this->_forumId);
-        $this->_topic->setForum($forum->get());
+        $managedForum = new Dizkus_Manager_Forum($this->_forumId);
+        $this->_topic->setForum($managedForum->get());
         unset($data['forum_id']);
 
         $this->_topic->setLast_post($this->_firstPost);
@@ -284,10 +292,10 @@ class Dizkus_Manager_Topic
         $this->entityManager->flush();
 
         // increment forum post count
-        $forum = new Dizkus_Manager_Forum($this->getForumId());
-        $forum->incrementPostCount();
-        $forum->incrementTopicCount();
-        $forum->setLastPost($this->_firstPost);
+        $managedForum = new Dizkus_Manager_Forum($this->getForumId());
+        $managedForum->incrementPostCount();
+        $managedForum->incrementTopicCount();
+        $managedForum->setLastPost($this->_firstPost);
 
         // subscribe
         if ($this->_subscribe) {
@@ -311,19 +319,19 @@ class Dizkus_Manager_Topic
         // add first post to topic
         $this->_firstPost->settopic($this->_topic);
 
-        $forum = new Dizkus_Manager_Forum($this->_forumId);
+        $managedForum = new Dizkus_Manager_Forum($this->_forumId);
 
         // add topic to forum
-        $this->_topic->setForum($forum->get());
+        $this->_topic->setForum($managedForum->get());
 
         // write topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->persist($this->_firstPost);
 
         // increment forum post count
-        $forum->incrementPostCount();
-        $forum->incrementTopicCount();
-        $forum->setLastPost($this->_firstPost);
+        $managedForum->incrementPostCount();
+        $managedForum->incrementTopicCount();
+        $managedForum->setLastPost($this->_firstPost);
 
         $this->entityManager->flush();
 

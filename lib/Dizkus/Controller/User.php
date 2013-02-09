@@ -66,16 +66,16 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
-        $forum = new Dizkus_Manager_Forum($forumId);
-        $this->view->assign('forum', $forum->get());
-        $this->view->assign('topics', $forum->getTopics($start));
-        $this->view->assign('pager', $forum->getPager());
-        $this->view->assign('permissions', $forum->getPermissions());
-        $this->view->assign('breadcrumbs', $forum->getBreadcrumbs());
+        $managedForum = new Dizkus_Manager_Forum($forumId);
+        $this->view->assign('forum', $managedForum->get());
+        $this->view->assign('topics', $managedForum->getTopics($start));
+        $this->view->assign('pager', $managedForum->getPager());
+        $this->view->assign('permissions', $managedForum->getPermissions());
+        $this->view->assign('breadcrumbs', $managedForum->getBreadcrumbs());
 
         // Permission check
         $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)
+            ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())
         );
 
         $this->view->assign('hot_threshold', $this->getVar('hot_threshold'));
@@ -123,14 +123,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
           }
           // end patch #3494 part 2 */
 
-        $topic = new Dizkus_Manager_Topic($topicId);
+        $managedTopic = new Dizkus_Manager_Topic($topicId);
 
         // Permission check
         //$this->throwForbiddenUnless(
         //    ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)
         //);
 
-        if (!$topic->exists()) {
+        if (!$managedTopic->exists()) {
             return LogUtil::registerError(
                 $this->__f(
                         "Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topicId)
@@ -139,18 +139,18 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
 
         $this->view->assign('start', $start);
-        $this->view->assign('topic', $topic->get()->toArray());
-        $this->view->assign('posts', $topic->getPosts($start));
-        $this->view->assign('pager', $topic->getPager());
-        $this->view->assign('permissions', $topic->getPermissions());
-        $this->view->assign('breadcrumbs', $topic->getBreadcrumbs());
-        $this->view->assign('isSubscribed', $topic->isSubscribed());
+        $this->view->assign('topic', $managedTopic->get()->toArray());
+        $this->view->assign('posts', $managedTopic->getPosts($start));
+        $this->view->assign('pager', $managedTopic->getPager());
+        $this->view->assign('permissions', $managedTopic->getPermissions());
+        $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
+        $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
         //$this->view->assign('post_count', count($topic['posts']));
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         //$this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
 
-        $topic->incrementViewsCount();
+        $managedTopic->incrementViewsCount();
 
         return $this->view->fetch('user/topic/view.tpl');
     }
@@ -212,8 +212,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'post_attach_signature' => $attach_signature
             );
 
-            $post = new Dizkus_Manager_Post();
-            $post->create($data);
+            $managedPost = new Dizkus_Manager_Post();
+            $managedPost->create($data);
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start // this value is undefined
@@ -223,15 +223,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $this->redirect($url);
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-            $topic = new Dizkus_Manager_Topic($topic_id);
-            $poster = new Dizkus_Manager_PosterData();
+            $managedTopic = new Dizkus_Manager_Topic($topic_id);
+            $managedPoster = new Dizkus_Manager_PosterData();
             $reply = array(
                 'topic_id' => $topic_id,
                 'post_id' => $post_id,
                 'attach_signature' => $attach_signature,
                 'subscribe_topic' => $subscribe_topic,
-                'topic' => $topic->toArray(),
-                'poster_data' => $poster->toArray(),
+                'topic' => $managedTopic->toArray(),
+                'poster_data' => $managedPoster->toArray(),
             );
             if ($preview) {
                 $reply['message'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
