@@ -40,59 +40,6 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             return LogUtil::registerError($e->getMessage());
         }
 
-
-
-        /*
-          // create the hooks: create, delete, display.
-          // everything else is not needed , at least not atm.
-          //
-          // createhook
-          //
-          if (!ModUtil::registerHook('item',
-          'create',
-          'API',
-          'Dizkus',
-          'hook',
-          'createbyitem')) {
-          return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'create'));
-          }
-
-          //
-          // updatehook
-          //
-          if (!ModUtil::registerHook('item',
-          'update',
-          'API',
-          'Dizkus',
-          'hook',
-          'updatebyitem')) {
-          return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'update'));
-          }
-
-          //
-          // deletehook
-          //
-          if (!ModUtil::registerHook('item',
-          'delete',
-          'API',
-          'Dizkus',
-          'hook',
-          'deletebyitem')) {
-          return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'delete'));
-          }
-
-          //
-          // displayhook
-          //
-          if (!ModUtil::registerHook('item',
-          'display',
-          'GUI',
-          'Dizkus',
-          'hook',
-          'showdiscussionlink')) {
-          return LogUtil::registerError($this->__f('Error! Could not create %s hook.', 'display'));
-          }
-         */
         // ToDo: create FULLTEXT index
         // forum settings
         $this->setVar('posts_per_page', 15);
@@ -133,8 +80,9 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         // 3.2
 
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
+        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
-
+        // set up example forums
         $food = new Dizkus_Entity_Forum();
         $food->setforum_name('Food');
 
@@ -155,7 +103,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->entityManager->persist($vegetables);
         $this->entityManager->persist($carrots);
         $this->entityManager->flush();
-
+        // end set up example
 
         // Initialisation successful
         return true;
@@ -173,38 +121,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         try {
             DoctrineHelper::dropSchema($this->entityManager, $this->_entities);
         } catch (Exception $e) {
-            
-        }
-
-
-
-        // remove the hooks
-        //
-        // createhook
-        //
-        if (!ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'create'));
-        }
-
-        //
-        // updatehook
-        //
-        if (!ModUtil::unregisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'update'));
-        }
-
-        //
-        // deletehook
-        //
-        if (!ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'delete'));
-        }
-
-        //
-        // displayhook
-        //
-        if (!ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'display'));
+            return LogUtil::registerError($e->getMessage());
         }
 
         // remove module vars
@@ -212,6 +129,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
 
         // unregister hooks
         HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
+        HookUtil::unregisterProviderBundles($this->version->getHookProviderBundles());
 
         // Deletion successful
         return true;
