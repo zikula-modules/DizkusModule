@@ -246,7 +246,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         $posts = $topic->getPosts();
         foreach ($posts as $post) {
             $post->getPoster()->decrementUser_posts();
-            $this->entityManager->remove($post); // remove from DB
         }
 
         // decrement forum_topics counter
@@ -254,6 +253,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         
         // update the db
         $this->entityManager->flush();
+
+        // remove all posts in topic
+        $this->entityManager->getRepository('Dizkus_Entity_Topic')->manualDeletePosts($topic->getTopic_id());
 
         // remove topic subscriptions
         $this->entityManager->getRepository('Dizkus_Entity_Topic')->deleteTopicSubscriptions($topic->getTopic_id());
@@ -265,8 +267,8 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
 
         // sync the forum up with the changes
-        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum()));
-        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $topic->getForum()));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
         return $topic->getForum()->getForum_id();
     }
     

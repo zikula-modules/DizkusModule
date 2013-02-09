@@ -27,6 +27,15 @@ class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
                 ->setParameter('id', $id)
                 ->execute();
     }
+    
+    public function manualDeletePosts($id)
+    {
+        $dql = "DELETE Dizkus_Entity_Post p
+            WHERE p.topic = :topic";
+        $this->_em->createQuery($dql)
+                ->setParameter('topic', $id)
+                ->execute();        
+    }
 
     /**
      * Delete all subscriptions for a topic
