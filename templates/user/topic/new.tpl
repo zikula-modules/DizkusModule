@@ -28,7 +28,7 @@
             </p>
         {/if}
         {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
-        {* will add topic hook here too *}
+        {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_edit' id=null}
 
         <div class="dzk_subcols z-clearfix">
             <div id="newtopicoptions" class="dzk_col_left">
