@@ -74,32 +74,29 @@
         </div>
 
 
-            <div id="extsource" class="z-formrow">
-                {formlabel for="pop3_active" __text="External source"}
-                    <div class="z-formlist">
-                        {formradiobutton id="noexternal" dataField="extsource" onclick="$('mail2forumField').hide();$('rss2forumField').hide()"}
-                        {formlabel for="noexternal" __text='No external source'}
-                    </div>
-                    <div class="z-formlist">
-                        {formradiobutton id="mail2forum" dataField="extsource" onclick="$('mail2forumField').show()"}
-                        {formlabel for="mail2forum" __text='Mail2Forum'}
-                    </div>
-                    <div class="z-formlist">
-                        {modavailable modname="Feeds" assign="feeds"}
-                        {if $feeds}
-                        {formradiobutton id="rss2forum" dataField='extsource' onclick="$('rss2forumField').show()"}
-                        {formlabel for="rss2forum" __text='RSS2Forum'}
-                        {else}
-                        {formradiobutton id="rss2forum" dataField='extsource' disabled=true}
-                        {formlabel for="rss2forum" __text='RSS2Forum'}
-                        &nbsp;<span style="color: red;">{gt text="'Feeds' module is not available."}</span>
-                        {/if}
-                    </div>
-            </div>
-        </fieldset>
-
-
-
+        <div id="extsource" class="z-formrow">
+            {formlabel for="pop3_active" __text="External source"}
+                <div class="z-formlist">
+                    {formradiobutton id="noexternal" dataField="extsource" onclick="$('mail2forumField').hide();$('rss2forumField').hide()"}
+                    {formlabel for="noexternal" __text='No external source'}
+                </div>
+                <div class="z-formlist">
+                    {formradiobutton id="mail2forum" dataField="extsource" onclick="$('mail2forumField').show()"}
+                    {formlabel for="mail2forum" __text='Mail2Forum'}
+                </div>
+                <div class="z-formlist">
+                    {modavailable modname="Feeds" assign="feeds"}
+                    {if $feeds}
+                    {formradiobutton id="rss2forum" dataField='extsource' onclick="$('rss2forumField').show()"}
+                    {formlabel for="rss2forum" __text='RSS2Forum'}
+                    {else}
+                    {formradiobutton id="rss2forum" dataField='extsource' disabled=true}
+                    {formlabel for="rss2forum" __text='RSS2Forum'}
+                    &nbsp;<span style="color: red;">{gt text="'Feeds' module is not available."}</span>
+                    {/if}
+                </div>
+        </div>
+    </fieldset>
 
     {* TODO do all the control of these fieldsets with javascript onload *}
     {*<fieldset id="pnlogindata" {*if $forum.externalsource == 0*}{*style="display:none;"{*/if*}{*>
@@ -151,7 +148,6 @@
             </em>
         </div>
     </fieldset> *}
-    </div>
 
     {if $feeds}
     <fieldset id="rss2forumField" {if $extsource != 'rss2forum'}style="display:none;"{/if}>
