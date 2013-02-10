@@ -63,26 +63,35 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId()));
+        $data = $view->getValues();
+        $deleting = (isset($data['delete']) && $data['delete'] === true);
+        $fragment = $deleting ? null : 'pid' . $this->_post->getId();
+        $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
+
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
 
         // check for valid form
         if (!$view->isValid()) {
-
             return false;
         }
-
-        $data = $view->getValues();
+        // check hooked modules for validation
+        $hookarea = $deleting ? 'dizkus.ui_hooks.post.validate_delete' : 'dizkus.ui_hooks.post.validate_edit';
+        $hook = new Zikula_ValidationHook($hookarea, new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
 
         /* if ($this->isSpam($args['message'])) {
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
           } */
 
-        if (isset($data['delete']) && $data['delete'] === true) {
+        if ($deleting) {
             $this->_post->delete();
-            return $view->redirect($url);
+            $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $this->_post->getId()));
+            return $view->redirect($url->getUrl());
         }
         unset($data['delete']);
 
@@ -101,9 +110,10 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
 
         // store post
         $this->_post->update();
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $this->_post->getId(), $url));
 
         // redirect to the new topic
-        return $view->redirect($url);
+        return $view->redirect($url->getUrl());
     }
 
 }

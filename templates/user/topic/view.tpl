@@ -157,14 +157,13 @@
                     <div class="post_text_wrap">
                         <div class="post_text">
                             <div id="dizkusinformation"></div>
-                            {* notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message' !THIS IS WRONG - ID MUST BE POST ID! *}
                             <textarea id="message" name="message" cols="10" rows="60"></textarea>
 
-                            {if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if}
                             {if $modvars.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
-
+                            
+                            {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
                             <div class="dzk_subcols z-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
                                     <ul>
@@ -199,7 +198,7 @@
 
 {mediaattach_fileuploads objectid=$topic.topic_id}
 <div id="dzk_displayhooks">
-    {if isset($hooks.Ratings)}{$hooks.Ratings}{/if}
+    {* if isset($hooks.Ratings)}{$hooks.Ratings}{/if *}
 </div>
 
 {/if}

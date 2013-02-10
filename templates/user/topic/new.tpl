@@ -20,17 +20,15 @@
         </div>
 
         <br />
-        {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
         {formlabel for="message" __text="Message" class='z-hide'}
-        {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLenght="65527" mandatory=true}
-        {if isset($hooks.MediaAttach)}
-            {$hooks.MediaAttach}
-        {/if}
+        {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLength="65527" mandatory=true}
         {if $modvars.Dizkus.striptags == 'yes'}
             <p>
                 {gt text="No HTML tags allowed (except inside [code][/code] tags)"}
             </p>
         {/if}
+        {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
+        {* will add topic hook here too *}
 
         <div class="dzk_subcols z-clearfix">
             <div id="newtopicoptions" class="dzk_col_left">

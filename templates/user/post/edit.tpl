@@ -2,8 +2,6 @@
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
-{*modcallhooks hookobject='item' hookaction='display' hookid=$post.topic_id implode=false*}
-
 {if $preview}
 <div id="editpostpreview" style="margin:1em 0;">
     {include file='user/post/single.tpl'}
@@ -28,11 +26,11 @@
                         {/if*}
                         <div>
                             {formlabel for="message" __text="Message body"}<br />
-                            {notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'}
                             {formtextinput textMode="multiline" id="post_text" rows="10" cols="60"}
                             {if $modvars.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
+                            {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=$post_id}
                         </div>
 
                         <div class="dzk_subcols z-clearfix">
@@ -44,6 +42,7 @@
                                     <li>
                                         {formcheckbox id="delete"}
                                         {formlabel for="delete" __text="Delete post"}
+                                        {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_delete' id=$post_id}{* not sure about this one - hook intended more for standalone form*}
                                     </li>
                                     {/if}
                                     <li>

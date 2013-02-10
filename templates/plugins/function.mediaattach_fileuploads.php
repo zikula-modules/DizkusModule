@@ -23,10 +23,10 @@ function smarty_function_mediaattach_fileuploads($params, &$smarty)
     }
 
     $out = '';
-    if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
-        $out = ModUtil::func('MediaAttach', 'user', 'showfilelist',
-                         array('objectid' => $params['objectid']));
-    }
+//    if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
+//        $out = ModUtil::func('MediaAttach', 'user', 'showfilelist',
+//                         array('objectid' => $params['objectid']));
+//    }
 
     return $out;
 }

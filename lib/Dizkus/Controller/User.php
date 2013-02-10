@@ -203,6 +203,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             // switch to preview mode
             $preview = true;
         }
+        
+        // check hooked modules for validation
+        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.post.validate_edit', new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            LogUtil::registerStatus($this->__('Error! Hooked content does not validate.'));
+            $preview = true;
+        }
 
         if ($submit && !$preview) {
 
@@ -218,9 +226,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'topic' => $topic_id,
                 'start' => $start // this value is undefined
             );
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $params) . '#pid' . $post->getId();
+            $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
 
-            return $this->redirect($url);
+            return $this->redirect($url->getUrl());
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $managedTopic = new Dizkus_Manager_Topic($topic_id);

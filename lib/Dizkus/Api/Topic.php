@@ -263,9 +263,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // delete the topic (manual dql to avoid cascading deletion errors)
         $this->entityManager->getRepository('Dizkus_Entity_Topic')->manualDelete($topic->getTopic_id());
 
-        // Let any hooks know that we have deleted an item (topic).
-        // ModUtil::callHooks('item', 'delete', $args['topic_id'], array('module' => 'Dizkus'));
-
         // sync the forum up with the changes
         ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
         ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
