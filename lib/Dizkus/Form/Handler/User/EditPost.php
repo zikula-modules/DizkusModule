@@ -69,7 +69,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
         $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
 
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect($url);
+            return $view->redirect($url->getUrl());
         }
 
         // check for valid form
