@@ -166,7 +166,7 @@ class Dizkus_Manager_Post
         $id = $this->_post->getPost_id();
         $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
         $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
-        $forumLastPostId = $forum->get()->getLast_post()->getPost_id();
+        $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
         
         // remove the post
         $this->entityManager->remove($this->_post);
@@ -189,7 +189,7 @@ class Dizkus_Manager_Post
             $flush = true;
         }
         if ($id == $forumLastPostId) {
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $forum->get(), 'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => false));
             $flush = true;
         }
         if ($flush) {
