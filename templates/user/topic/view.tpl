@@ -196,8 +196,9 @@
     </div>
 </div>
 
-{mediaattach_fileuploads objectid=$topic.topic_id}
+{* mediaattach_fileuploads objectid=$topic.topic_id *}
 <div id="dzk_displayhooks">
+    {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_view' id=$topic.topic_id}
     {* if isset($hooks.Ratings)}{$hooks.Ratings}{/if *}
 </div>
 

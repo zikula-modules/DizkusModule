@@ -23,7 +23,8 @@
                 {gt text='Your post "%s" was deleted, because ' tag1=$topic_title assign='reason'}
                 {formtextinput id="reason" textMode="multiline" rows="3" cols="40"}
             </div>
-            
+            {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_delete' id=$post_id}
+
             <div class="z-formbuttons z-buttons">
                 {formbutton class="z-bt-ok"     commandName="save"   __text="Yes"}
                 {formbutton class="z-bt-cancel" commandName="cancel" __text="No"}

@@ -95,9 +95,15 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
+        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.topic.validate_delete', new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
 
         $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', $this->topic_id);
-        
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_delete', $this->topic_id));
+
         $data = $view->getValues();
 
         // send the poster a reason why his/her post was deleted
