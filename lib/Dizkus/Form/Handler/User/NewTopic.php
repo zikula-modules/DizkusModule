@@ -33,8 +33,6 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      */
     function initialize(Zikula_Form_View $view)
     {
-
-
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
@@ -50,7 +48,6 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         $view->assign('forum', $forum->get());
         $view->assign('breadcrumbs', $forum->getBreadcrumbs(false));
         $view->assign('preview', false);
-
 
         return true;
     }
