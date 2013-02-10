@@ -9,3 +9,9 @@ Craig's Notes
  - it may be better to enforce 'delete' cascade behavior on Topics then change
    the delete routine. This would also affect the topic join routine
  - need TaggedObjectMeta
+ - Dizkus_Form_Handler_Admin_DeleteForum doesn't delete anything
+
+Entities
+--------
+
+ - why does the Category.php entity exist?
