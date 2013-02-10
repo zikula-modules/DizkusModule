@@ -29,7 +29,7 @@ class Dizkus_Manager_Topic
      * first post in topic
      * @var Dizkus_Entity_Post
      */
-    private $_firstPost;
+    private $_firstPost = null;
     private $_subscribe = false;
     private $_forumId;
     protected $entityManager;
@@ -117,6 +117,11 @@ class Dizkus_Manager_Topic
     public function getForumId()
     {
         return $this->_topic->getForum()->getForum_id();
+    }
+    
+    public function getFirstPost()
+    {
+        return $this->_firstPost;
     }
 
     public function getPermissions()

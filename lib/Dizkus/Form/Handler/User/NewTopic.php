@@ -65,22 +65,30 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId));
-
             return $view->redirect($url);
         }
 
         // check for valid form
         if (!$view->isValid()) {
-
             return false;
+        }
+        // check hooked modules for validation for POST
+        $postHook = new Zikula_ValidationHook('dizkus.ui_hooks.post.validate_edit', new Zikula_Hook_ValidationProviders());
+        $postHookValidators = $this->notifyHooks($postHook)->getValidators();
+        if ($postHookValidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
+        // check hooked modules for validation for TOPIC
+        $topicHook = new Zikula_ValidationHook('dizkus.ui_hooks.topic.validate_edit', new Zikula_Hook_ValidationProviders());
+        $topicHookValidators = $this->notifyHooks($topicHook)->getValidators();
+        if ($topicHookValidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 
         $data = $view->getValues();
         $data['forum_id'] = $this->_forumId;
-
 
         /* if ($this->isSpam($args['message'])) {
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
@@ -102,10 +110,13 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 
         // store new topic
         $topicId = $newtopic->create();
+        $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newtopic->getId()));
+        // notify hooks for both POST and TOPIC
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $newtopic->getFirstPost()->getPost_id(), $url));
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_edit', $newtopic->getId(), $url));
 
         // redirect to the new topic
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topicId));
-        return $view->redirect($url);
+        return $view->redirect($url->getUrl());
     }
 
 }
