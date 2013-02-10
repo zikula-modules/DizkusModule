@@ -8,3 +8,4 @@ Craig's Notes
  - total posts, topics not including subforums
  - it may be better to enforce 'delete' cascade behavior on Topics then change
    the delete routine. This would also affect the topic join routine
+ - need TaggedObjectMeta
