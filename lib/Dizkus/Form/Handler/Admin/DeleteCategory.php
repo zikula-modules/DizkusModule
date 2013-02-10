@@ -18,7 +18,7 @@ class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandl
     /**
      * category
      *
-     * @var statement
+     * @var Dizkus_Entity_Forum
      */
     private $category;
 
@@ -40,7 +40,7 @@ class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandl
         $id = $this->request->query->get('id', null);
 
         if ($id) {
-            $category = $this->entityManager->find('Dizkus_Entity_Categories', $id);
+            $category = $this->entityManager->find('Dizkus_Entity_Forum', $id);
             if ($category) {
                 $this->view->assign($category->toArray());
             } else {
@@ -52,8 +52,6 @@ class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandl
 
         $forums = ModUtil::apiFunc($this->name, 'Category', 'getForums', $id);
         $this->view->assign('forums', $forums);
-
-
 
         $actions = array();
         $otherCategories = ModUtil::apiFunc($this->name, 'Category', 'getAll', $id);
@@ -95,9 +93,14 @@ class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandl
         if (!$view->isValid()) {
             return false;
         }
+        // check hooked modules for validation
+        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_delete', new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
+
         $data = $view->getValues();
-
-
 
         if (!empty($data['action'])) {
             $cat_id = $this->category->getcat_id();
@@ -112,12 +115,10 @@ class Dizkus_Form_Handler_Admin_DeleteCategory extends Zikula_Form_AbstractHandl
             }
         }
 
-
-
         $this->entityManager->remove($this->category);
         $this->entityManager->flush();
 
-
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->category->getId()));
 
         return $view->redirect($url);
     }

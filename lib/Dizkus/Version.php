@@ -89,13 +89,13 @@ class Dizkus_Version extends Zikula_AbstractVersion
 
         // Forum Subscriber Hooks
         $bundle3 = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.forum', 'ui_hooks', $this->__('Dizkus forum hook'));
-        $bundle3->addEvent('display_view', 'dizkus.ui_hooks.forum.ui_view');
-        $bundle3->addEvent('form_edit', 'dizkus.ui_hooks.forum.ui_edit');
-        $bundle3->addEvent('form_delete', 'dizkus.ui_hooks.forum.ui_delete');
-        $bundle3->addEvent('validate_edit', 'dizkus.ui_hooks.forum.validate_edit');
-        $bundle3->addEvent('validate_delete', 'dizkus.ui_hooks.forum.validate_delete');
-        $bundle3->addEvent('process_edit', 'dizkus.ui_hooks.forum.process_edit');
-        $bundle3->addEvent('process_delete', 'dizkus.ui_hooks.forum.process_delete');
+        $bundle3->addEvent('display_view', 'dizkus.ui_hooks.forum.ui_view'); // done
+        $bundle3->addEvent('form_edit', 'dizkus.ui_hooks.forum.ui_edit'); // done
+        $bundle3->addEvent('form_delete', 'dizkus.ui_hooks.forum.ui_delete'); // done
+        $bundle3->addEvent('validate_edit', 'dizkus.ui_hooks.forum.validate_edit'); // done
+        $bundle3->addEvent('validate_delete', 'dizkus.ui_hooks.forum.validate_delete'); // done
+        $bundle3->addEvent('process_edit', 'dizkus.ui_hooks.forum.process_edit'); // done
+        $bundle3->addEvent('process_delete', 'dizkus.ui_hooks.forum.process_delete'); // done
         $this->registerHookSubscriberBundle($bundle3);
 
         // Topic Provider Hooks

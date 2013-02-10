@@ -23,6 +23,8 @@
     {formtextinput textMode="hidden" id='action' value=''}
     {/if}
 
+    {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_delete' id=$forum_id}
+
     <div class="z-formbuttons z-buttons">
         {formbutton id="submit" commandName="submit" __text="Yes" class="z-bt-ok"}
         {formbutton id="restore" commandName="cancel" __text="Cancel" class="z-bt-cancel"}

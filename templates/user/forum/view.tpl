@@ -185,6 +185,10 @@
 </div>
 {/if}
 
+<div id="dzk_displayhooks">
+    {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_view' id=$forum.forum_id}
+</div>
+
 {include file='user/moderatedBy.tpl' forum=$forum}
 
 <script type="text/javascript">

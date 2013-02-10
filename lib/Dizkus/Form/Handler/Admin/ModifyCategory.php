@@ -77,11 +77,21 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
         if (!$view->isValid()) {
             return false;
         }
+        // check hooked modules for validation
+        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_edit', new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
+
         $data = $view->getValues();
 
         $this->category->merge($data);
         $this->entityManager->persist($this->category);
         $this->entityManager->flush();
+        
+        $hookUrl = new Zikula_ModUrl($this->name, 'user', 'main', ZLanguage::getLanguageCode(), array('viewcat' => $this->category->getForum_id()));
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_edit', $this->category->getForum_id(), $hookUrl));
 
         // redirect to the admin subforum overview
         return $view->redirect($url);

@@ -51,6 +51,11 @@
                     </li>
                 {/foreach}
             </ul>
+            {if $viewcat > 0}
+            <div id="dzk_displayhooks">
+                {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_view' id=$category.forum_id}
+            </div>
+            {/if}
 
         </div>
     </div>

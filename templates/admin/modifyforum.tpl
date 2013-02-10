@@ -170,7 +170,7 @@
     </fieldset>
     {/if}
 
-
+    {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_edit' id=$forum_id}
 
     <div class="z-formbuttons z-buttons">
         {formbutton id="submit" commandName="submit" __text="Save" class="z-bt-ok"}

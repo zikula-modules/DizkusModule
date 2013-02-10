@@ -10,7 +10,7 @@
     {formvalidationsummary}
 
     <div class="z-warningmsg">
-        {gt text="Are you sure want to remove the category '%s'." tag1=$cat_title}
+        {gt text="Are you sure want to remove the category '%s'." tag1=$forum_name}
     </div>
 
     {if count($forums) > 0}
@@ -21,6 +21,8 @@
     {else}
         {formtextinput textMode="hidden" id='action' value=''}
     {/if}
+
+    {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_delete' id=$forum_id}
 
     <div class="z-formbuttons z-buttons">
         {formbutton id="submit" commandName="submit" __text="Yes" class="z-bt-ok"}

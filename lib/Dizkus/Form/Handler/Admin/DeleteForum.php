@@ -18,7 +18,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
     /**
      * category
      *
-     * @var statement
+     * @var Dizkus_Entity_Forum
      */
     private $category;
 
@@ -52,8 +52,6 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 
         $forums = ModUtil::apiFunc($this->name, 'Category', 'getForums', $id);
         $this->view->assign('forums', $forums);
-
-
 
         $actions = array();
         $otherCategories = ModUtil::apiFunc($this->name, 'Category', 'getAll', $id);
@@ -95,8 +93,18 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
-        $data = $view->getValues();
+        // check hooked modules for validation
+        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_delete', new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
 
+        $data = $view->getValues();
+        
+        // TODO: shouldn't the forum be deleted here?
+
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->category->getId()));
 
         return $view->redirect($url);
     }

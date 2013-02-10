@@ -127,6 +127,13 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
+        // check hooked modules for validation
+        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_edit', new Zikula_Hook_ValidationProviders());
+        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
+
         $data = $view->getValues();
         $data['parent'] = $this->entityManager->find('Dizkus_Entity_Forum', $data['parent']);
 
@@ -147,6 +154,8 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         //$this->_forum_id = $this->_forum->getforum_id();
 
         $this->_forum->store($data);
+        $hookUrl = new Zikula_ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forum->getId()));
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_edit', $this->_forum->getId(), $hookUrl));
 
         if ($this->_action == 'e') {
             LogUtil::registerStatus($this->__('Forum successfully updated.'));
