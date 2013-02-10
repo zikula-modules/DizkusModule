@@ -90,7 +90,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $post_title = '';
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"})
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
     private $poster;
