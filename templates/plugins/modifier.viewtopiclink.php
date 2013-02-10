@@ -53,7 +53,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
     
 
     // get first post text
-    $titel = '';
+    $title = '';
     $em = ServiceUtil::getService('doctrine.entitymanager');
     $qb = $em->createQueryBuilder();
     $firstPost = $qb->select('p')
