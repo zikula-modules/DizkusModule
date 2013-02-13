@@ -13,14 +13,14 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class Dizkus_Manager_PosterData
+class Dizkus_Manager_ForumUser
 {
 
     /**
-     * managed poster
+     * managed forum user
      * @var Dizkus_Entity_ForumUser
      */
-    private $_poster;
+    private $_forumUser;
     protected $entityManager;
     protected $name;
 
@@ -35,11 +35,11 @@ class Dizkus_Manager_PosterData
         if (empty($uid)) {
             $uid = UserUtil::getVar('uid');
         }
-        $this->_poster = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        $this->_forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
 
-        if (!$this->_poster) {
-            $this->_poster = new Dizkus_Entity_ForumUser();
-            $this->_poster->setUser_id($uid);
+        if (!$this->_forumUser) {
+            $this->_forumUser = new Dizkus_Entity_ForumUser();
+            $this->_forumUser->setUser_id($uid);
         }
     }
 
@@ -50,7 +50,7 @@ class Dizkus_Manager_PosterData
      */
     public function getPostOrder()
     {
-        return $this->_poster->getUser_post_order() ? 'ASC' : 'DESC';
+        return $this->_forumUser->getUser_post_order() ? 'ASC' : 'DESC';
     }
 
     /**
@@ -65,7 +65,7 @@ class Dizkus_Manager_PosterData
         } else {
             $order = true;
         }
-        $this->_poster->setUser_post_order($order);
+        $this->_forumUser->setUser_post_order($order);
         $this->entityManager->flush();
     }
 
@@ -76,7 +76,7 @@ class Dizkus_Manager_PosterData
      */
     public function get()
     {
-        return $this->_poster;
+        return $this->_forumUser;
     }
 
     /**
@@ -86,7 +86,7 @@ class Dizkus_Manager_PosterData
      */
     public function toArray()
     {
-        return $this->_poster->toArray();
+        return $this->_forumUser->toArray();
     }
 
     /**
@@ -96,8 +96,8 @@ class Dizkus_Manager_PosterData
      */
     public function store($data)
     {
-        $this->_poster->merge($data);
-        $this->entityManager->persist($this->_poster);
+        $this->_forumUser->merge($data);
+        $this->entityManager->persist($this->_forumUser);
         $this->entityManager->flush();
     }
 
