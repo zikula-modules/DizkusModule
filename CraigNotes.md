@@ -25,6 +25,9 @@ Craig's Notes
    also in many other tables!
  - Topic entity should not contain forum_mods
  - Post entity should not contain forum_id
+ - sub forums do not show a folder icon
+ - red/grey folder icons are problematic
+ - who's online footer is not working at all.
 
 
 Entities
