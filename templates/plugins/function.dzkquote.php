@@ -28,6 +28,5 @@ function smarty_function_dzkquote($params, &$smarty)
         $user = '';
     }
 
-    // ToDo: Remove bbcode
-    return '[quote'.$user.']'.$params['text'].'[/quote]';
+    return '[quote: '.$user.']'.$params['text'].'[/quote]';
 }

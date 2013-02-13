@@ -202,19 +202,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                         // add inline editor
                         $('postingtext_' + this.post_id).insert({after: msg.data});
-
-                        if ($('bbcode_postingtext_' + this.post_id + '_edit')) {
-                            $('bbcode_postingtext_' + this.post_id + '_edit').removeClassName('hidden');
-                        }
-                        if ($$('postingtext_' + this.post_id + '_editor .bb_standardsmilies')) {
-                            $$('.bbsmile_smilies').each(function(el) {
-                                el.removeClassName('bbsmile_smilies');
-                            });
-                            if($('smiliemodal')) {
-                                new Control.Modal($('smiliemodal'), {});
-                            }
-                        }
-
                         $('postingtext_' + this.post_id + '_edit').observe('keyup', this.quickEditchanged.bind(this));
                         $('postingtext_' + this.post_id + '_save').observe('click', this.quickEditsave.bind(this));
                         $('postingtext_' + this.post_id + '_cancel').observe('click', this.quickEditcancel.bind(this));

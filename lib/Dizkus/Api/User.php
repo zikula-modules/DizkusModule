@@ -957,19 +957,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             return false;
         }
 
-        // ToDo: Remove BBCode
-        $bbcode = ModUtil::available('BBCode');
-        $boldstart = '';
-        $boldend = '';
-        $urlstart = '';
-        $urlend = '';
-        if ($bbcode == true) {
-            $boldstart = '[b]';
-            $boldend = '[/b]';
-            $urlstart = '[url]';
-            $urlend = '[/url]';
-        }
-
         foreach ($args['items'] as $item) {
             // create the reference, we need it twice
             $dateTimestamp = $item->get_date("Y-m-d H:i:s");
@@ -988,7 +975,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 $subject = $item->get_title();
 
                 // Adding little display goodies - finishing with the url of the news...
-                $message = $boldstart . $this->__('Summary') . ' :' . $boldend . "\n\n" . $item->get_description() . "\n\n" . $urlstart . $item->get_link() . $urlend . "\n\n";
+                $message = '<strong>' . $this->__('Summary') . ' :</strong>\n\n' . $item->get_description() . '\n\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\n\n';
 
                 // store message in forum
                 $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('subject' => $subject,
