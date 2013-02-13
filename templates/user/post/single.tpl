@@ -23,6 +23,8 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user_id|profilelinkbyuid}</strong>
                     <br />
+                    <p>{$post.poster.user.uname}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
+                    <p>{$post.poster.user.email}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
                     {useravatar uid=$post.poster.user_id|default:-1}
 
 
