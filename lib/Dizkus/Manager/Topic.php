@@ -270,13 +270,13 @@ class Dizkus_Manager_Topic
 
         // prepare poster data
         $uid = UserUtil::getVar('uid');
-        $poster = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
-        if (!$poster) {
-            $poster = new Dizkus_Entity_ForumUser();
-            $poster->setUser_id($uid);
+        $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        if (!$forumUser) {
+            $forumUser = new Dizkus_Entity_ForumUser();
+            $forumUser->setUser_id($uid);
         }
-        $poster->incrementUser_posts();
-        $this->_firstPost->setPoster($poster);
+        $forumUser->incrementUser_posts();
+        $this->_firstPost->setPoster($forumUser);
     }
 
     public function getPreview()

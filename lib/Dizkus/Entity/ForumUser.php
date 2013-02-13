@@ -12,7 +12,7 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Poster entity class
+ * ForumUser entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_users")

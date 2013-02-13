@@ -155,12 +155,12 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
                 ->getArrayResult();
 
         foreach ($posts as $post) {
-            $poster = $this->entityManager->find('Dizkus_Entity_ForumUser', $post['user_id']);
-            if (!$poster) {
-                $poster = new Dizkus_Entity_ForumUser();
-                $poster->setUser_id($post['user_id']);
+            $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $post['user_id']);
+            if (!$forumUser) {
+                $forumUser = new Dizkus_Entity_ForumUser();
+                $forumUser->setUser_id($post['user_id']);
             }
-            $poster->setUser_posts($post[1]);
+            $forumUser->setUser_posts($post[1]);
         }
         $this->entityManager->flush();
         return true;

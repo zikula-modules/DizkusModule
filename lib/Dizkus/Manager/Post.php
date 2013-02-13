@@ -134,12 +134,12 @@ class Dizkus_Manager_Post
 
         // increment poster posts
         $uid = UserUtil::getVar('uid');
-        $poster = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
-        if (!$poster) {
-            $poster = new Dizkus_Entity_ForumUser();
-            $poster->setuser_id($uid);
+        $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        if (!$forumUser) {
+            $forumUser = new Dizkus_Entity_ForumUser();
+            $forumUser->setuser_id($uid);
         }
-        $poster->incrementUser_posts();
+        $forumUser->incrementUser_posts();
 
         // increment topic posts
         $this->_topic->setLastPost($this->_post);
@@ -149,7 +149,7 @@ class Dizkus_Manager_Post
         $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $managedForum->incrementPostCount();
 
-        $this->_post->setPoster($poster);
+        $this->_post->setPoster($forumUser);
         $this->_post->setForum_id($this->_topic->getForumId());
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
