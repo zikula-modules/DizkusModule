@@ -20,7 +20,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
      *
      * @var integer
      */
-    private $_posterData;
+    private $_forumUser;
 
     /**
      * Setup form.
@@ -39,10 +39,10 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         }
 
         // get the input
-        $this->_posterData = new Dizkus_Manager_PosterData(UserUtil::getVar('uid'));
+        $this->_forumUser = new Dizkus_Manager_ForumUser(UserUtil::getVar('uid'));
 
 
-        $view->assign($this->_posterData->toArray());
+        $view->assign($this->_forumUser->toArray());
         $orders = array(
             0 => array(
                 'text' => 'newest submissions at top',
@@ -80,7 +80,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
-        $this->_posterData->store($data);
+        $this->_forumUser->store($data);
 
         return true;
     }

@@ -233,7 +233,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         } else {
             list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $managedTopic = new Dizkus_Manager_Topic($topic_id);
-            $managedPoster = new Dizkus_Manager_PosterData();
+            $managedPoster = new Dizkus_Manager_ForumUser();
             $reply = array(
                 'topic_id' => $topic_id,
                 'post_id' => $post_id,
