@@ -137,7 +137,8 @@ class Dizkus_Manager_Post
         $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
         if (!$forumUser) {
             $forumUser = new Dizkus_Entity_ForumUser();
-            $forumUser->setuser_id($uid);
+            $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $uid);
+            $forumUser->setUser($coreUser);
         }
         $forumUser->incrementUser_posts();
 

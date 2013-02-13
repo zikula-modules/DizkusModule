@@ -21,12 +21,15 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 {
 
     /**
-     * user_id
+     * Core user entity
+     * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/composite-primary-keys.html
+     * @see /system/Users/Entity/UserEntity.php
      *
      * @ORM\Id
-     * @ORM\Column(type="integer", unique=true)
+     * @ORM\OneToOne(targetEntity="Users\Entity\UserEntity")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
      */
-    private $user_id;
+    private $user;
 
     /**
      * user_posts
@@ -78,12 +81,25 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     public function getUser_id()
     {
-        return $this->user_id;
+        return $this->user->getUid();
     }
 
-    public function setUser_id($id)
+    /**
+     * Core User Entity
+     * @return Users\Entity\UserEntity
+     */
+    public function getUser()
     {
-        return $this->user_id = $id;
+        return $this->user;
+    }
+    
+    /**
+     * set the user
+     * @param Users\Entity\UserEntity $user
+     */
+    public function setUser(Users\Entity\UserEntity $user)
+    {
+        $this->user = $user;
     }
 
     public function getUser_posts()

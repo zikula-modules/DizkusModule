@@ -39,7 +39,8 @@ class Dizkus_Manager_ForumUser
 
         if (!$this->_forumUser) {
             $this->_forumUser = new Dizkus_Entity_ForumUser();
-            $this->_forumUser->setUser_id($uid);
+            $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $uid);
+            $this->_forumUser->setUser($coreUser);
         }
     }
 

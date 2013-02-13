@@ -91,7 +91,8 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
                 $forumUser = $this->entityManager->getRepository('Dizkus_Entity_ForumUser')->find($post['poster_id']);
                 if (!$forumUser) {
                     $forumUser = new Dizkus_Entity_ForumUser();
-                    $forumUser->setUser_id($post['poster_id']);
+                    $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $post['poster_id']);
+                    $forumUser->setUser($coreUser);
                     $this->entityManager->persist($forumUser);
                 }
             }
