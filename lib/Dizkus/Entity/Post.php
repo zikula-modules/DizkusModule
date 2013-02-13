@@ -90,7 +90,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $post_title = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Poster", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
     private $poster;
@@ -205,7 +205,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     /**
      * Get User who made post
      * 
-     * @return Dizkus_Entity_Poster
+     * @return Dizkus_Entity_ForumUser
      */
     public function getPoster()
     {
@@ -215,9 +215,9 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     /**
      * set user who made the post
      * 
-     * @param Dizkus_Entity_Poster $poster
+     * @param Dizkus_Entity_ForumUser $poster
      */
-    public function setPoster(Dizkus_Entity_Poster $poster)
+    public function setPoster(Dizkus_Entity_ForumUser $poster)
     {
         $this->poster = $poster;
     }

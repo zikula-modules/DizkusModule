@@ -28,7 +28,7 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi
             return $this->_favorites;
         }
 
-        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', UserUtil::getVar('uid'));
+        $posterData = $this->entityManager->find('Dizkus_Entity_ForumUser', UserUtil::getVar('uid'));
         if (!$posterData) {
             return false;
         }

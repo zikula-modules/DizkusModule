@@ -88,9 +88,9 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
 
         foreach ($posts as $post) {
             if ($post['poster_id'] > 0) {
-                $poster = $this->entityManager->getRepository('Dizkus_Entity_Poster')->find($post['poster_id']);
+                $poster = $this->entityManager->getRepository('Dizkus_Entity_ForumUser')->find($post['poster_id']);
                 if (!$poster) {
-                    $poster = new Dizkus_Entity_Poster();
+                    $poster = new Dizkus_Entity_ForumUser();
                     $poster->setUser_id($post['poster_id']);
                     $this->entityManager->persist($poster);
                 }

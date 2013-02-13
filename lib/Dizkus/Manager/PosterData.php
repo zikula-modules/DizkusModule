@@ -18,7 +18,7 @@ class Dizkus_Manager_PosterData
 
     /**
      * managed poster
-     * @var Dizkus_Entity_Poster
+     * @var Dizkus_Entity_ForumUser
      */
     private $_poster;
     protected $entityManager;
@@ -35,10 +35,10 @@ class Dizkus_Manager_PosterData
         if (empty($uid)) {
             $uid = UserUtil::getVar('uid');
         }
-        $this->_poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        $this->_poster = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
 
         if (!$this->_poster) {
-            $this->_poster = new Dizkus_Entity_Poster();
+            $this->_poster = new Dizkus_Entity_ForumUser();
             $this->_poster->setUser_id($uid);
         }
     }
@@ -72,7 +72,7 @@ class Dizkus_Manager_PosterData
     /**
      * return topic as doctrine2 object
      *
-     * @return Dizkus_Entity_Poster
+     * @return Dizkus_Entity_ForumUser
      */
     public function get()
     {

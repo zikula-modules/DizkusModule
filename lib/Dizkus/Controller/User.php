@@ -464,9 +464,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return System::redirect($url);
         }
         $uid = UserUtil::getVar('uid');
-        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        $posterData = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
         if (!$posterData) {
-            $posterData = new Dizkus_Entity_Poster();
+            $posterData = new Dizkus_Entity_ForumUser();
         }
         $posterData->setUser_favorites(false);
         $this->entityManager->flush();
@@ -486,9 +486,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return System::redirect($url);
         }
         $uid = UserUtil::getVar('uid');
-        $posterData = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        $posterData = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
         if (!$posterData) {
-            $posterData = new Dizkus_Entity_Poster();
+            $posterData = new Dizkus_Entity_ForumUser();
             $posterData->setUser_id($uid);
         }
         $posterData->setUser_favorites(true);

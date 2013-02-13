@@ -134,9 +134,9 @@ class Dizkus_Manager_Post
 
         // increment poster posts
         $uid = UserUtil::getVar('uid');
-        $poster = $this->entityManager->find('Dizkus_Entity_Poster', $uid);
+        $poster = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
         if (!$poster) {
-            $poster = new Dizkus_Entity_Poster();
+            $poster = new Dizkus_Entity_ForumUser();
             $poster->setuser_id($uid);
         }
         $poster->incrementUser_posts();
