@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_users")
  */
-class Dizkus_Entity_Poster extends Zikula_EntityAccess
+class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 {
 
     /**
