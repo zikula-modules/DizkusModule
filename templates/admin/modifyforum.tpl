@@ -50,19 +50,6 @@
         </div>
         {/if}
 
-        {*<div class="z-formrow">
-            {formlabel for="moduleref" __text="Hooked module"}
-            <select id="moduleref" name="moduleref" size="1">
-                {foreach item='hookmod' from=$hooked_modules}
-                    <option value="{$hookmod.id}" {if $hookmod.sel == true}selected="selected"{/if}>{$hookmod.name}</option>
-                    {foreachelse}
-                    <option value="0" selected="selected">{gt text="No hooked module found."}</option>
-                {/foreach}
-            </select>
-            <p class="z-formnote z-sub">{gt text="Notice: This is used for the comments feature. All submissions within this module will be posted within this forum. The list only includes modules for which Dizkus has been activated as a hook."}</p>
-        </div>*}
-
-
         <div id="chosenCss" class="z-formrow">
             {formlabel for="moderatorUsers" __text="Moderation (Users)"}
             {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select" selectionMode='multiple'}
