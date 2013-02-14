@@ -76,8 +76,8 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         } else {
             $this->view->assign('extsource', 'noexternal');
         }
-
-        $view->assign('moderatorUsers', $this->_forum->get()->getmoderatorUsersAsArray());
+        
+        $view->assign('moderatorUsers', $this->_forum->get()->getModeratorUsersAsIdArray());
         $view->assign('moderatorGroups', $this->_forum->get()->getModeratorGroupsAsArray());
 
         // assign all users for the moderator selection
@@ -162,30 +162,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         } else {
             LogUtil::registerStatus($this->__('Forum successfully created.'));
         }
-
-        /* if ($this->_forum) {
-          $moderators = $this->entityManager->getRepository('Dizkus_Entity_Moderators')
-          ->findBy(array('forum_id' => $this->_forum_id));
-
-          // remove deselected moderators
-          foreach ($moderators as $moderator) {
-          $key = array_search($moderator->getuser_id(), $this->_forum_mods);
-          if ($key) {
-          unset($this->_forum_mods[$key]);
-          } else {
-          $this->entityManager->remove($moderator);
-          }
-          }
-          }
-
-
-          // insert added moderators
-          foreach ($this->_forum_mods as $this->_forum_mod) {
-          $newModerator = new Dizkus_Entity_Moderators2();
-          $newModerator->setForum_id($this->_forum_id);
-          $newModerator->setUser_id($this->_forum_mod);
-          $this->entityManager->persist($newModerator);
-          } */
 
         // redirect to the admin forum overview
         return $view->redirect($url);

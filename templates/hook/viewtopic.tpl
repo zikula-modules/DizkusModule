@@ -195,11 +195,11 @@
 
 {/if}
 
-{if $topic.forum_mods|@count > 0}
+{if $topic.forum.moderatorUsers|@count > 0}
 <ul id="dzk_moderatorlist" class="linklist z-clearfix">
     <li><em>{gt text="Moderated by"}:</em></li>
-    {foreach name=moderators item=mod from=$topic.forum_mods}
-    <li>{$mod|profilelinkbyuname}{if !$smarty.foreach.moderators.last}, {/if}</li>
+    {foreach name=moderators item=moderator from=$topic.forum.moderatorUsers}
+    <li>{$moderator|profilelinkbyuname}{if !$smarty.foreach.moderators.last}, {/if}</li>
     {/foreach}
 </ul>
 {/if}

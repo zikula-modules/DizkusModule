@@ -154,15 +154,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $forum_pop3_lastconnect = 0;
 
     /**
-     * forum moderators
-     *
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderators",
-     *                mappedBy="forum_id", cascade={"all"},
-     *                orphanRemoval=false)
-     */
-    private $forum_mods;
-
-    /**
      * forum_pop3_interval
      *
      * @ORM\Column(type="string", length=60)
@@ -492,11 +483,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         return $this->favorites;
     }
 
-    public function getForum_mods()
-    {
-        return $this->forum_mods;
-    }
-
     /**
      * get forum Topics
      * 
@@ -510,18 +496,18 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get Moderators
      * 
-     * @return Dizkus_Entity_Moderator_User
+     * @return Dizkus_Entity_ForumUser collection
      */
     public function getModeratorUsers()
     {
         return $this->moderatorUsers;
     }
 
-    public function getModeratorUsersAsArray()
+    public function getModeratorUsersAsIdArray()
     {
         $output = array();
-        foreach ($this->moderatorUsers as $user) {
-            $output[] = $user->getUser_id();
+        foreach ($this->moderatorUsers as $moderatorUser) {
+            $output[] = $moderatorUser->getForumUser()->getUser_id();
         }
 
         return $output;
@@ -529,21 +515,15 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
 
     public function setModeratorUsers($users)
     {
-        // remove moderators
-        foreach ($this->moderatorUsers as $key => $moderator) {
-            $i = array_search($moderator->getUser_id(), $users);
-            if (!$i) {
-                $this->moderatorUsers->remove($key);
-            } else {
-                unset($users[$i]);
-            }
-        }
-        // add moderators
+        // clear the associated users
+        $this->moderatorUsers->clear();
+        // add users
         foreach ($users as $uid) {
-            $newModerator = new Dizkus_Entity_Moderator_User();
-            $newModerator->setUser_id($uid);
-            $newModerator->setForum($this);
-            $this->moderatorUsers[] = $newModerator;
+            $moderator = new Dizkus_Entity_Moderator_User();
+            $managedForumUser = new Dizkus_Manager_ForumUser($uid);
+            $moderator->setForumUser($managedForumUser->get());
+            $moderator->setForum($this);
+            $this->moderatorUsers->add($moderator);
         }
     }
 
