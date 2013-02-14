@@ -111,15 +111,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $solved = false;
 
     /**
-     * forum moderators
-     *
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderators",
-     *                mappedBy="forum_id", cascade={"all"},
-     *                orphanRemoval=false)
-     */
-    private $forum_mods;
-
-    /**
      * posts
      * 
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
@@ -183,11 +174,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     public function setLast_post(Dizkus_Entity_Post $post)
     {
         return $this->last_post = $post;
-    }
-
-    public function getForum_mods()
-    {
-        return $this->forum_mods;
     }
 
     public function getTopic_poster()

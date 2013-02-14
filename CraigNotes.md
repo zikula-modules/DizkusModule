@@ -23,7 +23,6 @@ Craig's Notes
    for example: `dizkus_forums` table has: forum_id, forum_name, forum_desc, etc
    these should be changed to `id`, `name`, `desc`, etc
    also in many other tables!
- - Topic entity should not contain forum_mods
  - Post entity should not contain forum_id
  - sub forums do not show a folder icon
  - red/grey folder icons are problematic
