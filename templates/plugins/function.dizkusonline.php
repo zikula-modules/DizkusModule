@@ -52,6 +52,8 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     $numusers = 0;
     $unames = array();
 
+    // TODO: this API method doesn't exist CAH Feb 14 2013
+    // probably replaced by ModeratorsApi::get()
     $moderators = ModUtil::apiFunc('Dizkus', 'user', 'get_moderators', array());
 
     /** @var $em Doctrine\ORM\EntityManager */

@@ -32,7 +32,7 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi
         $em = $this->getService('doctrine.entitymanager');
         $qb = $em->createQueryBuilder();
         $qb->select('u.uid, u.uname')
-                ->from('Dizkus_Entity_Moderators', 'm')
+                ->from('Dizkus_Entity_Moderators', 'm') // TODO: this entity has been deleted!
                 ->leftJoin('m.user_data', 'u')
                 ->where('m.user_id < 1000000');
 

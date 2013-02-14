@@ -833,6 +833,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         setlocale(LC_TIME, System::getVar('locale'));
         $modinfo = ModUtil::getInfo(ModUtil::getIDFromName(ModUtil::getName()));
 
+        // TODO: this api method doesn't exist CAH Feb 14 2013
         $mods = ModUtil::apiFunc('Dizkus', 'admin', 'readmoderators', array('forum_id' => $args['post']['forum_id']));
 
         // generate the mailheader
