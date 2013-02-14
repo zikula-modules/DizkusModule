@@ -64,7 +64,7 @@
 
 
         <div id="chosenCss" class="z-formrow">
-            {formlabel for="userModerators" __text="Moderation (Users)"}
+            {formlabel for="moderatorUsers" __text="Moderation (Users)"}
             {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select" selectionMode='multiple'}
         </div>
 
