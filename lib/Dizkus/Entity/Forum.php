@@ -537,7 +537,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         return $this->moderatorGroups;
     }
 
-    public function getModeratorGroupsAsArray()
+    public function getModeratorGroupsAsIdArray()
     {
         $output = array();
         foreach ($this->moderatorGroups as $moderatorGroup) {
@@ -547,25 +547,18 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         return $output;
     }
 
-    public function setModeratorGroups($moderatorGroups)
+    public function setModeratorGroups($gids)
     {
-        // remove moderators
-        foreach ($this->moderatorGroups as $key => $moderatorGroup) {
-            $i = array_search($moderatorGroup->getGroup()->getGid(), $moderatorGroups);
-            if (!$i) {
-                $this->moderatorGroups->remove($key);
-            } else {
-                unset($moderatorGroups[$i]);
-            }
-        }
+        // remove the associated moderators
+        $this->moderatorGroups->clear();
         // add moderators
-        foreach ($moderatorGroups as $gid) {
+        foreach ($gids as $gid) {
+            $moderatorGroup = new Dizkus_Entity_Moderator_Group();
             $em = ServiceUtil::getService('doctrine.entitymanager');
-            $group = $this->_topic = $em->find('Dizkus_Entity_Group', $gid);
-            $newModerator = new Dizkus_Entity_Moderator_Group();
-            $newModerator->setGroup($group);
-            $newModerator->setForum($this);
-            $this->moderatorGroups[] = $newModerator;
+            $group = $em->find('Groups\Entity\GroupEntity', $gid);
+            $moderatorGroup->setGroup($group);
+            $moderatorGroup->setForum($this);
+            $this->moderatorGroups->add($moderatorGroup);
         }
     }
 

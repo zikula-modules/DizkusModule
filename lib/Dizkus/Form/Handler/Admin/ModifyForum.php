@@ -78,7 +78,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
         
         $view->assign('moderatorUsers', $this->_forum->get()->getModeratorUsersAsIdArray());
-        $view->assign('moderatorGroups', $this->_forum->get()->getModeratorGroupsAsArray());
+        $view->assign('moderatorGroups', $this->_forum->get()->getModeratorGroupsAsIdArray());
 
         // assign all users for the moderator selection
         $allUsers = UserUtil::getAll();
