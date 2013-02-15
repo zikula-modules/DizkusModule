@@ -12,7 +12,7 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Favorites entity class.
+ * UserRank entity class.
  *
  * Annotations define the entity mappings to database.
  *

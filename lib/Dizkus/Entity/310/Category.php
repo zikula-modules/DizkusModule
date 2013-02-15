@@ -3,9 +3,7 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Favorites entity class.
- *
- * Annotations define the entity mappings to database.
+ * Old Category entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_categories")

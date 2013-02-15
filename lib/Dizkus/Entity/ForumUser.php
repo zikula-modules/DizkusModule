@@ -61,6 +61,8 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     /**
      * user_favorites
+     * user choice to display favorites only (true)
+     *     or all forums (false)
      *
      * @ORM\Column(type="boolean")
      */

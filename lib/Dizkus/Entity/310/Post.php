@@ -5,9 +5,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 
 /**
- * Favorites entity class.
- *
- * Annotations define the entity mappings to database.
+ * Old Post entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
