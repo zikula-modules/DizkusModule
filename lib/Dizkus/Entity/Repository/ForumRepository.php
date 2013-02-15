@@ -45,8 +45,8 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
         if (UserUtil::isLoggedIn() && ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes') {
             if (ModUtil::apiFunc('Dizkus', 'Favorites', 'getStatus')) {
                 $qb->join('c.favorites', 'fa')
-                        ->andWhere('fa.user_id = :uid')
-                        ->setParameter('uid', UserUtil::getVar('uid'));
+                    ->andWhere('fa.user_id = :uid')
+                    ->setParameter('uid', UserUtil::getVar('uid'));
             }
         }
 
