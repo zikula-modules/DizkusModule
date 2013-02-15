@@ -6,6 +6,6 @@
 {/if}
 {if count($forum.moderatorGroups) > 0},
 {foreach name='moderators' item='mod' key='modid' from=$forum.moderatorGroups}
-{$mod.group.name} (Group){if !$smarty.foreach.moderators.last}, {/if}
+{$mod.group.name} ({gt text='Group'}){if !$smarty.foreach.moderators.last}, {/if}
 {/foreach}
 {/if}
