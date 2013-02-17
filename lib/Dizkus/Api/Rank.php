@@ -98,10 +98,13 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         }
 
         if (is_array($args['setrank'])) {
-            $ranksavearray = array();
-            foreach ($args['setrank'] as $user_id => $rank_id) {
-                UserUtil::setVar('dizkus_user_rank', $rank_id, $user_id);
+            foreach ($args['setrank'] as $userId => $rankId) {
+                $rankId = ($rankId == 0) ? null : $rankId;
+                $managedForumUser = new Dizkus_Manager_ForumUser($userId);
+                $rank = $this->entityManager->find('Dizkus_Entity_Rank', $rankId);
+                $managedForumUser->get()->setRank($rank);
             }
+            $this->entityManager->flush();
         }
 
         return true;
@@ -123,7 +126,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         }
 
         // user has assigned rank
-        $userRank = $args['poster']->getUser_rank();
+        $userRank = $args['poster']->getRank();
         if (isset($userRank)) {
             $data = $userRank->toArray();
             return $data = $this->addImageAndLink($data);
