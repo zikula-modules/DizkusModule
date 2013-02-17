@@ -580,6 +580,8 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
 
         LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
 
+        // TODO: There *may* be a need to move `dizkus_user_rank` from `objectdata_attributes` to `dizkus_user` table
+        
         return true;
     }
 
