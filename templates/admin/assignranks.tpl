@@ -17,7 +17,7 @@
 
     
 
-    <form class="z-form" action="{modurl modname=Dizkus type=admin func=assignranks}" method="post">
+    <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='assignranks'}" method="post">
         <table class="z-admintable">
             <thead>
                 <tr>
@@ -31,7 +31,7 @@
                     <td>{$user.uname|profilelinkbyuname}</td>
                     <td>
                         <select name="setrank[{$user.uid}]">
-                            <option value="0" {if $user.rank_id eq 0}selected="selected"{/if}>{gt text="No rank"}</option>
+                            <option value="0" {if (($user.rank_id eq 0) || (empty($user.rank_id)))}selected="selected"{/if}>{gt text="No rank"}</option>
                             {foreach item=rank from=$ranks}
                             <option value="{$rank.rank_id}" {if $user.rank_id eq $rank.rank_id}selected="selected"{/if}>{$rank.rank_title}</option>
                             {/foreach}
@@ -49,7 +49,7 @@
         <div class="z-formbuttons z-buttons">
             <input type="hidden" name="lastletter" value="{$letter|safetext}" />
             <input type="hidden" name="page" value="{$page|safetext}" />
-            {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+            {button src="button_ok.png" set="icons/extrasmall" type='submit' value='1' __alt="Submit" __title="Submit" __text="Submit"}
         </div>
     </form>
 </div>    

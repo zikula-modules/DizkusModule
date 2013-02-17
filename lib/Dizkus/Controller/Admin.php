@@ -198,7 +198,17 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $submit = $this->request->query->get('submit');
+        $submit = $this->request->request->get('submit');
+        if (!is_null($submit)) {
+            // process form submission
+            // avoid some vars in the url of the pager
+            unset($_GET['submit']);
+            unset($_POST['submit']);
+            unset($_REQUEST['submit']);
+            $setrank = $this->request->request->get('setrank');
+            ModUtil::apiFunc('Dizkus', 'Rank', 'assign', array('setrank' => $setrank));
+        }
+
         $letter = $this->request->query->get('letter');
         $lastletter = $this->request->query->get('lastletter');
         $page = (int)$this->request->query->get('page', 1);
@@ -214,64 +224,47 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         }
         $letter = strtolower($letter);
 
-        if (is_null($submit)) {
-            list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => 1));
-            $perpage = 20;
+        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => 1));
+        $perpage = 20;
 
-            /* $inlinecss = '<style type="text/css">' ."\n";
-              $rankpath = ModUtil::getVar('Dizkus', 'url_ranks_images') .'/';
-              foreach ($ranks as $rank) {
-              $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['rank_image'].'"); }' . "\n";
-              }
-              $inlinecss .= '</style>' . "\n";
-              PageUtil::addVar('rawtext', $inlinecss); */
+        /* $inlinecss = '<style type="text/css">' ."\n";
+          $rankpath = ModUtil::getVar('Dizkus', 'url_ranks_images') .'/';
+          foreach ($ranks as $rank) {
+          $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['rank_image'].'"); }' . "\n";
+          }
+          $inlinecss .= '</style>' . "\n";
+          PageUtil::addVar('rawtext', $inlinecss); */
 
-            $qb = $this->entityManager->createQueryBuilder();
-            $qb->select('u.uid, u.uname, a.value as rank_id')
-                    ->from('Dizkus_Entity_Users', 'u')
-                    ->leftJoin('u.attributes', 'a')
-                    ->where("a.attribute_name = 'dizkus_user_rank'")
-                    ->orderBy("u.uname");
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('u.uid, u.uname, a.value as rank_id')
+                ->from('Users\Entity\UserEntity', 'u')
+                ->leftJoin('u.attributes', 'a')
+                ->orderBy("u.uname");
+        if (!empty($letter) and $letter != '*') {
+            $qb->andWhere("u.uname LIKE :letter")
+                ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
+        }
+        $query = $qb->getQuery();
 
-
-            if (!empty($letter) and $letter != '*') {
-                $qb->andWhere("u.uname LIKE :letter")
-                        ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
-            }
-
-            $query = $qb->getQuery();
-
-            // Paginator
-            // this isn't working at the moment - Jan 26 2013
+        // Paginator
+        // this isn't working at the moment - Jan 26 2013
 //            $startnum = ($page - 1) * $perpage;
 //            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
 //            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
 //            $allusers = $paginateQuery->getArrayResult();
 
-            $allusers = $query->getArrayResult();
+        $allusers = $query->getArrayResult();
 
+        $this->view->assign('ranks', $ranks);
+        $this->view->assign('rankimages', $rankimages);
+        $this->view->assign('allusers', $allusers);
+        $this->view->assign('letter', $letter);
+        $this->view->assign('page', $page);
+        $this->view->assign('perpage', $perpage);
+//            $this->view->assign('usercount', $count);
 
+        return $this->view->fetch('admin/assignranks.tpl');
 
-            $this->view->assign('ranks', $ranks);
-            $this->view->assign('rankimages', $rankimages);
-            $this->view->assign('allusers', $allusers);
-            $this->view->assign('letter', $letter);
-            $this->view->assign('page', $page);
-            $this->view->assign('perpage', $perpage);
-            $this->view->assign('usercount', $count);
-
-            return $this->view->fetch('admin/assignranks.tpl');
-        } else {
-            // avoid some vars in the url of the pager
-            unset($_GET['submit']);
-            unset($_POST['submit']);
-            unset($_REQUEST['submit']);
-            $setrank = $this->request->request->get('setrank');
-            ModUtil::apiFunc('Dizkus', 'Rank', 'assignranksave', array('setrank' => $setrank));
-        }
-
-        return System::redirect(ModUtil::url('Dizkus', 'admin', 'assignranks', array('letter' => $letter,
-                            'page' => $page)));
     }
 
     /**
