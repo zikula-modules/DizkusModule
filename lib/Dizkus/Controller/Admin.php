@@ -218,9 +218,8 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             $letter = $lastletter;
         }
 
-        // count users and forbid '*' if more than 1000 users are present
         if (empty($letter) || strlen($letter) != 1) {
-            $letter = 'a';
+            $letter = '*';
         }
         $letter = strtolower($letter);
 
@@ -236,16 +235,17 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
           PageUtil::addVar('rawtext', $inlinecss); */
 
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('u.uid, u.uname, a.value as rank_id')
-                ->from('Users\Entity\UserEntity', 'u')
-                ->leftJoin('u.attributes', 'a')
-                ->orderBy("u.uname");
+        $qb->select('cu.uid, cu.uname, r.rank_id')
+            ->from('Dizkus_Entity_ForumUser', 'u')
+            ->leftJoin('u.user', 'cu')
+            ->leftJoin('u.rank', 'r')
+            ->orderBy('cu.uname', 'ASC');
         if (!empty($letter) and $letter != '*') {
-            $qb->andWhere("u.uname LIKE :letter")
+            $qb->andWhere('cu.uname LIKE :letter')
                 ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
         }
         $query = $qb->getQuery();
-
+        
         // Paginator
         // this isn't working at the moment - Jan 26 2013
 //            $startnum = ($page - 1) * $perpage;
