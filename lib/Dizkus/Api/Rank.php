@@ -101,8 +101,12 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             foreach ($args['setrank'] as $userId => $rankId) {
                 $rankId = ($rankId == 0) ? null : $rankId;
                 $managedForumUser = new Dizkus_Manager_ForumUser($userId);
-                $rank = $this->entityManager->find('Dizkus_Entity_Rank', $rankId);
-                $managedForumUser->get()->setRank($rank);
+                if (isset($rankId)) {
+                    $rank = $this->entityManager->find('Dizkus_Entity_Rank', $rankId);
+                    $managedForumUser->get()->setRank($rank);
+                } else {
+                    $managedForumUser->get()->clearRank();
+                }
             }
             $this->entityManager->flush();
         }

@@ -175,7 +175,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     }
 
     /**
-     * User rank
+     * get User rank
      * 
      * @return Dizkus_Entity_Rank
      */
@@ -183,10 +183,22 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     {
         return $this->rank;
     }
-
+    
+    /**
+     * set the User rank
+     * @param Dizkus_Entity_Rank $rank
+     */
     public function setRank(Dizkus_Entity_Rank $rank)
     {
-        return $this->rank = $rank;
+        $this->rank = $rank;
+    }
+    
+    /**
+     * clear the User rank value
+     */
+    public function clearRank()
+    {
+        $this->rank = null;
     }
 
 }
