@@ -38,7 +38,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         }
         asort($filelist);
 
-        if ($args['ranktype'] == 0) {
+        if ($args['ranktype'] == Dizkus_Entity_Rank::TYPE_POSTCOUNT) {
             $orderby = 'rank_min';
         } else {
             $orderby = 'rank_title';

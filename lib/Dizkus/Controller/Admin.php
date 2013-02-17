@@ -166,7 +166,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         }
 
         $submit = $this->request->getPost()->filter('submit', 2);
-        $ranktype = $this->request->getGet()->filter('ranktype', 0, FILTER_SANITIZE_NUMBER_INT);
+        $ranktype = $this->request->getGet()->filter('ranktype', Dizkus_Entity_Rank::TYPE_POSTCOUNT, FILTER_SANITIZE_NUMBER_INT);
 
         if ($submit == 2) {
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
@@ -224,7 +224,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         }
         $letter = strtolower($letter);
 
-        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => 1));
+        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_HONORARY));
         $perpage = 20;
 
         /* $inlinecss = '<style type="text/css">' ."\n";

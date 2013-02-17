@@ -26,17 +26,17 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi
                 'title' => $this->__('Create, delete, edit and re-order categories and forums'),
                 'class' => 'z-icon-es-options',
             );
-            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
+            $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT)),
                 'text' => $this->__('Edit user ranks'),
                 'class' => 'z-icon-es-group',
                 'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'),
                 'links' => array(
                     array(
-                        'url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 0)),
+                        'url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT)),
                         'text' => $this->__('Edit user ranks'),
                         'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts')),
                     array(
-                        'url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => 1)),
+                        'url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => Dizkus_Entity_Rank::TYPE_HONORARY)),
                         'text' => $this->__('Edit honorary ranks'),
                         'title' => $this->__('Create, delete and edit special ranks for particular users')
                     ),
