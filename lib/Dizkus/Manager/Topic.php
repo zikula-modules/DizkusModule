@@ -149,7 +149,7 @@ class Dizkus_Manager_Topic
                 ->where('p.topic = :topicId')
                 ->setParameter('topicId', $id)
                 ->leftJoin('p.poster', 'u')
-                ->leftJoin('u.user_rank', 'r')
+                ->leftJoin('u.rank', 'r')
                 ->orderBy('p.post_time', 'ASC') // should be set by user preference item @see Poster
                 ->getQuery();
 

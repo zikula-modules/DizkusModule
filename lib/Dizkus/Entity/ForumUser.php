@@ -79,7 +79,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Rank", cascade={"persist"} )
      * @ORM\JoinColumn(name="user_rank", referencedColumnName="rank_id", nullable=true)
      */
-    private $user_rank;
+    private $rank;
 
     public function getUser_id()
     {
@@ -179,14 +179,14 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      * 
      * @return Dizkus_Entity_Rank
      */
-    public function getUser_rank()
+    public function getRank()
     {
-        return $this->user_rank;
+        return $this->rank;
     }
 
-    public function setUser_rank(Dizkus_Entity_Rank $rank)
+    public function setRank(Dizkus_Entity_Rank $rank)
     {
-        return $this->user_rank = $rank;
+        return $this->rank = $rank;
     }
 
 }
