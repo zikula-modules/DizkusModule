@@ -19,6 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dizkus_Entity_Rank extends Zikula_EntityAccess
 {
+    const TYPE_HONORARY = 1;
+    const TYPE_POSTCOUNT = 0;
 
     /**
      * rank_id
@@ -104,6 +106,19 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     public function getRank_image()
     {
         return $this->rank_image;
+    }
+    
+    /**
+     * compute and return the rank link
+     * @return string
+     */
+    public function getRank_link()
+    {
+        $link = (substr($this->rank_desc, 0, 7) == 'http://') ? $this->rank_desc : '';
+        if (!empty($this->rank_image)) {
+            $this->rank_image = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $this->rank_image;
+        }
+        return $link;
     }
 
     public function setRank_id($rank_id)
