@@ -11,7 +11,7 @@
 class Dizkus_Api_Favorites extends Zikula_AbstractApi
 {
 
-    private $_favorites;
+    private $_displayOnlyFavorites;
 
     /**
      * get_favorite_status
@@ -24,17 +24,17 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi
     public function getStatus()
     {
         // caching
-        if (isset($this->_favorites)) {
-            return $this->_favorites;
+        if (isset($this->_displayOnlyFavorites)) {
+            return $this->_displayOnlyFavorites;
         }
 
         $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', UserUtil::getVar('uid'));
         if (!$forumUser) {
             return false;
         }
-        $this->_favorites = $forumUser->getuser_favorites();
+        $this->_displayOnlyFavorites = $forumUser->getFavoriteDisplayChoice();
 
-        return $this->_favorites;
+        return $this->_displayOnlyFavorites;
     }
 
     /**

@@ -64,9 +64,9 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      * user choice to display favorites only (true)
      *     or all forums (false)
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="user_favorites", type="boolean")
      */
-    private $user_favorites = false;
+    private $displayOnlyFavorites = false;
 
     /**
      * user_post_order
@@ -111,7 +111,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     public function setUser_posts($posts)
     {
-        return $this->user_posts = $posts;
+        $this->user_posts = $posts;
     }
 
     public function incrementUser_posts()
@@ -131,7 +131,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     public function setUser_autosubscribe($autosubscribe)
     {
-        return $this->user_autosubscribe = $autosubscribe;
+        $this->user_autosubscribe = $autosubscribe;
     }
 
     public function getUser_level()
@@ -141,7 +141,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     public function setUser_level($level)
     {
-        return $this->user_level = $level;
+        $this->user_level = $level;
     }
 
     public function getUser_lastvisit()
@@ -151,17 +151,32 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     public function setUser_lastvisit($lastvisit)
     {
-        return $this->user_lastvisit = $lastvisit;
+        $this->user_lastvisit = $lastvisit;
     }
 
-    public function getUser_favorites()
+    /**
+     * get if user wants only to display favorite forums
+     * @return boolean
+     */
+    public function getFavoriteDisplayChoice()
     {
-        return $this->user_favorites;
+        return $this->displayOnlyFavorites;
     }
 
-    public function setUser_favorites($favorites)
+    /**
+     * display favorite forums only
+     */
+    public function showFavoritesOnly()
     {
-        return $this->user_favorites = $favorites;
+        $this->displayOnlyFavorites = true;
+    }
+
+    /**
+     * display all forums (not just favorites)
+     */
+    public function showAllForums()
+    {
+        $this->displayOnlyFavorites = false;
     }
 
     public function getUser_post_order()
@@ -171,7 +186,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     public function setUser_post_order($post_order)
     {
-        return $this->user_post_order = $post_order;
+        $this->user_post_order = $post_order;
     }
 
     /**
