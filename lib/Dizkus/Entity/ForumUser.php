@@ -173,7 +173,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      * get if user wants only to display favorite forums
      * @return boolean
      */
-    public function getFavoriteDisplayChoice()
+    public function getDisplayOnlyFavorites()
     {
         return $this->displayOnlyFavorites;
     }

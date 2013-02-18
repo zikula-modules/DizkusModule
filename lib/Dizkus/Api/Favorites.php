@@ -33,7 +33,7 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi
         if (!$forumUser) {
             return false;
         }
-        $this->_displayOnlyFavorites[$uid] = $forumUser->getFavoriteDisplayChoice();
+        $this->_displayOnlyFavorites[$uid] = $forumUser->getDisplayOnlyFavorites();
 
         return $this->_displayOnlyFavorites[$uid];
     }
