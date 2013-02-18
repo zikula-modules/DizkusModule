@@ -77,7 +77,7 @@
                 </li>
                 {if $modvars.Dizkus.favorites_enabled eq "yes"}
                 <li>
-                    {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum_id=$forum.forum_id assign='isFavorite'}
+                    {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
                     {if $isFavorite}
                         {modurl modname='Dizkus' type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
                         {gt text="Remove forum from favourites" assign='msg'}

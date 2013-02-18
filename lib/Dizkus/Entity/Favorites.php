@@ -14,8 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Favorites entity class.
  *
- * Annotations define the entity mappings to database.
- *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_favorites", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
@@ -23,39 +21,55 @@ class Dizkus_Entity_Favorites extends Zikula_EntityAccess
 {
 
     /**
-     * The following are annotations which define the fid field.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", unique=false)
-     */
-    private $forum_id = 0;
-
-    /**
-     * The following are annotations which define the category field.
+     * forumUser
      * 
      * @ORM\Id
-     * @ORM\Column(type="integer", unique=false)
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
-    private $user_id = 0;
+    private $forumUser;
 
-    public function getForum_id()
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorUsers")
+     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
+     * */
+    private $forum;
+
+    /**
+     * get the forum
+     * @return Dizkus_Entity_Forum
+     */
+    public function getForum()
     {
-        return $this->forum_id;
+        return $this->forum;
     }
 
-    public function getUser_id()
+    /**
+     * get the forumUser
+     * @return Dizkus_Entity_ForumUser
+     */
+    public function getForumUser()
     {
-        return $this->user_id;
+        return $this->forumUser;
     }
 
-    public function setForum_id($forum_id)
+    /**
+     * set the forum
+     * @param Dizkus_Entity_Forum $forum
+     */
+    public function setForum(Dizkus_Entity_Forum $forum)
     {
-        $this->forum_id = $forum_id;
+        $this->forum = $forum;
     }
 
-    public function setUser_id($user_id)
+    /**
+     * set the forumUser
+     * @param Dizkus_Entity_ForumUser $forumUser
+     */
+    public function setUser(Dizkus_Entity_ForumUser $forumUser)
     {
-        $this->user_id = $user_id;
+        $this->forumUser = $forumUser;
     }
 
 }

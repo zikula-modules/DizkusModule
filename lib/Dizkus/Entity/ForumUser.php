@@ -10,6 +10,7 @@
  */
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ForumUser entity class
@@ -80,6 +81,20 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_rank", referencedColumnName="rank_id", nullable=true)
      */
     private $rank;
+
+    /**
+     * Dizkus_Entity_Forum collection
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Favorites", mappedBy="user_id", indexBy="forum", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $favoriteForums;
+    
+    /**
+     * constructor
+     */
+    function __construct()
+    {
+        $this->favoriteForums = new ArrayCollection();
+    }
 
     public function getUser_id()
     {
@@ -214,6 +229,51 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     public function clearRank()
     {
         $this->rank = null;
+    }
+
+    /**
+     * get User favorite forums
+     * @return Dizkus_Entity_Forum collection
+     */
+    public function getFavoriteForums()
+    {
+        return $this->favoriteForums;
+    }
+
+    /**
+     * add a forum as favorite
+     * @param Dizkus_Entity_Forum $forum
+     */
+    public function addFavoriteForum(Dizkus_Entity_Forum $forum)
+    {
+        $this->favoriteForums->add($forum);
+    }
+
+    /**
+     * remove a forum as favorite
+     * @param Dizkus_Entity_Forum $forum
+     */
+    public function removeFavoriteForum(Dizkus_Entity_Forum $forum)
+    {
+        $this->favoriteForums->removeElement($forum);
+    }
+
+    /**
+     * clear all forum favorites
+     */
+    public function clearForumFavorites()
+    {
+        $this->favoriteForums->clear();
+    }
+
+    /**
+     * Is this a favorite forum?
+     * @param Dizkus_Entity_Forum $forum
+     * @return boolean
+     */
+    public function isFavoriteForum(Dizkus_Entity_Forum $forum)
+    {
+        return $this->favoriteForums->contains($forum);
     }
 
 }

@@ -246,11 +246,12 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         if (empty($args['forum_id'])) {
             return LogUtil::registerArgsError();
         }
+        $managedForumUser = new Dizkus_Manager_ForumUser(UserUtil::getVar('uid'));
 
         if ($args['action'] == 'addToFavorites') {
-            ModUtil::apiFunc($this->name, 'Favorites', 'add', array('forum_id' => $args['forum_id']));
+            $managedForumUser->get()->addFavoriteForum($args['forum_id']);
         } else if ($args['action'] == 'removeFromFavorites') {
-            ModUtil::apiFunc($this->name, 'Favorites', 'remove', array('forum_id' => $args['forum_id']));
+            $managedForumUser->get()->removeFavoriteForum($args['forum_id']);
         } else if ($args['action'] == 'subscribe') {
             $this->subscribe($args);
         } else if ($args['action'] == 'unsubscribe') {
