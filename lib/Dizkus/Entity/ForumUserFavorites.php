@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_favorites", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
-class Dizkus_Entity_Favorites extends Zikula_EntityAccess
+class Dizkus_Entity_ForumUserFavorites extends Zikula_EntityAccess
 {
 
     /**
@@ -35,6 +35,17 @@ class Dizkus_Entity_Favorites extends Zikula_EntityAccess
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
+
+    /**
+     * Constructor
+     * @param Dizkus_Entity_ForumUser $forumUser
+     * @param Dizkus_Entity_Forum $forum
+     */
+    function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Forum $forum)
+    {
+        $this->forumUser = $forumUser;
+        $this->forum = $forum;
+    }
 
     /**
      * get the forum
