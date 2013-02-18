@@ -18,7 +18,7 @@
         </div>
         {if $modvars.Dizkus.favorites_enabled eq 'yes'}
         <div class="z-formrow">
-            {formlabel for="user_favorites" __text="Post order"}
+            {formlabel for="user_favorites" __text="Display only favorite forums"}
             {formcheckbox id="user_favorites"}
         </div>
         {/if}
@@ -32,6 +32,5 @@
             {formbutton commandName="cancel" __text="Cancel" class="z-bt-cancel"}
         </div>
     </fieldset>
-    {/form}<br />
+    {/form}
 </div>
-
