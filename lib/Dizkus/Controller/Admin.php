@@ -197,74 +197,9 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
+        $form = FormUtil::newForm('Dizkus', $this);
 
-        $submit = $this->request->request->get('submit');
-        if (!is_null($submit)) {
-            // process form submission
-            // avoid some vars in the url of the pager
-            unset($_GET['submit']);
-            unset($_POST['submit']);
-            unset($_REQUEST['submit']);
-            $setrank = $this->request->request->get('setrank');
-            ModUtil::apiFunc('Dizkus', 'Rank', 'assign', array('setrank' => $setrank));
-        }
-
-        $letter = $this->request->query->get('letter');
-        $lastletter = $this->request->query->get('lastletter');
-        $page = (int)$this->request->query->get('page', 1);
-
-        // check for a letter parameter
-        if (!empty($lastletter)) {
-            $letter = $lastletter;
-        }
-
-        if (empty($letter) || strlen($letter) != 1) {
-            $letter = '*';
-        }
-        $letter = strtolower($letter);
-
-        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_HONORARY));
-        $perpage = 20;
-
-        /* $inlinecss = '<style type="text/css">' ."\n";
-          $rankpath = ModUtil::getVar('Dizkus', 'url_ranks_images') .'/';
-          foreach ($ranks as $rank) {
-          $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['rank_image'].'"); }' . "\n";
-          }
-          $inlinecss .= '</style>' . "\n";
-          PageUtil::addVar('rawtext', $inlinecss); */
-
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('cu.uid, cu.uname, r.rank_id')
-            ->from('Dizkus_Entity_ForumUser', 'u')
-            ->leftJoin('u.user', 'cu')
-            ->leftJoin('u.rank', 'r')
-            ->orderBy('cu.uname', 'ASC');
-        if (!empty($letter) and $letter != '*') {
-            $qb->andWhere('cu.uname LIKE :letter')
-                ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
-        }
-        $query = $qb->getQuery();
-        
-        // Paginator
-        // this isn't working at the moment - Jan 26 2013
-//            $startnum = ($page - 1) * $perpage;
-//            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
-//            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
-//            $allusers = $paginateQuery->getArrayResult();
-
-        $allusers = $query->getArrayResult();
-
-        $this->view->assign('ranks', $ranks);
-        $this->view->assign('rankimages', $rankimages);
-        $this->view->assign('allusers', $allusers);
-        $this->view->assign('letter', $letter);
-        $this->view->assign('page', $page);
-        $this->view->assign('perpage', $perpage);
-//            $this->view->assign('usercount', $count);
-
-        return $this->view->fetch('admin/assignranks.tpl');
-
+        return $form->execute('admin/assignranks.tpl', new Dizkus_Form_Handler_Admin_AssignRanks());
     }
 
     /**

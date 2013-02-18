@@ -17,7 +17,8 @@
 
     
 
-    <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='assignranks'}" method="post">
+    {form cssClass="z-form"}
+    {formvalidationsummary}
         <table class="z-admintable">
             <thead>
                 <tr>
@@ -39,7 +40,7 @@
                     </td>
                 </tr>
                 {foreachelse}
-                <tr class="z-admintableempty"><td colspan="2">{gt text="No asssigned ranks found"}</td></tr>
+                <tr class="z-admintableempty"><td colspan="2">{gt text="No users found"}</td></tr>
                 {/foreach}
             </tbody>
         </table>
@@ -49,8 +50,8 @@
         <div class="z-formbuttons z-buttons">
             <input type="hidden" name="lastletter" value="{$letter|safetext}" />
             <input type="hidden" name="page" value="{$page|safetext}" />
-            {button src="button_ok.png" set="icons/extrasmall" type='submit' value='1' __alt="Submit" __title="Submit" __text="Submit"}
+            {formbutton id="submit" commandName="submit" __text="Submit" class="z-bt-ok"}
         </div>
-    </form>
+    {/form}
 </div>    
 {adminfooter}
