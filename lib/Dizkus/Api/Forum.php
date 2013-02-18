@@ -254,7 +254,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
                 $managedForumUser->get()->addFavoriteForum($managedForum->get());
                 break;
             case 'removeFromFavorites':
-                $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorites')->findOneBy(array(
+                $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorite')->findOneBy(array(
                     'forum' => $managedForum->get(),
                     'forumUser' => $managedForumUser->get()
                 ));

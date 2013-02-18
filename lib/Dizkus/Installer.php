@@ -15,7 +15,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         'Dizkus_Entity_Forum',
         'Dizkus_Entity_Post',
         'Dizkus_Entity_Topic',
-        'Dizkus_Entity_ForumUserFavorites',
+        'Dizkus_Entity_ForumUserFavorite',
         'Dizkus_Entity_ForumUser',
         'Dizkus_Entity_Moderator_User',
         'Dizkus_Entity_Moderator_Group',

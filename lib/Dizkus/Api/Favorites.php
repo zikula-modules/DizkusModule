@@ -54,7 +54,7 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
        
-        $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorites')->findOneBy(array(
+        $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorite')->findOneBy(array(
             'forum' => $args['forum'],
             'forumUser' => $args['user_id']
         ));

@@ -84,7 +84,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     /**
      * Dizkus_Entity_Forum collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorites", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
      */
     private $favoriteForums;
     
@@ -233,7 +233,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     /**
      * get User favorite forums
-     * @return Dizkus_Entity_ForumUserFavorites collection
+     * @return Dizkus_Entity_ForumUserFavorite collection
      */
     public function getFavoriteForums()
     {
@@ -246,15 +246,15 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      */
     public function addFavoriteForum(Dizkus_Entity_Forum $forum)
     {
-        $forumUserFavorite = new Dizkus_Entity_ForumUserFavorites($this, $forum);
+        $forumUserFavorite = new Dizkus_Entity_ForumUserFavorite($this, $forum);
         $this->favoriteForums->add($forumUserFavorite);
     }
 
     /**
      * remove a forum as favorite
-     * @param Dizkus_Entity_ForumUserFavorites $forumUserFavorite
+     * @param Dizkus_Entity_ForumUserFavorite $forumUserFavorite
      */
-    public function removeFavoriteForum(Dizkus_Entity_ForumUserFavorites $forumUserFavorite)
+    public function removeFavoriteForum(Dizkus_Entity_ForumUserFavorite $forumUserFavorite)
     {
         $this->favoriteForums->removeElement($forumUserFavorite);
     }
