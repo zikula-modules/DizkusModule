@@ -189,7 +189,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $forum_pntopic = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Favorites", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Dizkus_Entity_ForumUserFavorites", cascade={"persist"})
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id", nullable=true)
      */
     private $favorites;

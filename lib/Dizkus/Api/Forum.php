@@ -247,16 +247,27 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         $managedForumUser = new Dizkus_Manager_ForumUser(UserUtil::getVar('uid'));
+        $managedForum = new Dizkus_Manager_Forum($args['forum_id']);
 
-        if ($args['action'] == 'addToFavorites') {
-            $managedForumUser->get()->addFavoriteForum($args['forum_id']);
-        } else if ($args['action'] == 'removeFromFavorites') {
-            $managedForumUser->get()->removeFavoriteForum($args['forum_id']);
-        } else if ($args['action'] == 'subscribe') {
-            $this->subscribe($args);
-        } else if ($args['action'] == 'unsubscribe') {
-            $this->unsubscribe($args);
+        switch ($args['action']) {
+            case 'addToFavorites':
+                $managedForumUser->get()->addFavoriteForum($managedForum->get());
+                break;
+            case 'removeFromFavorites':
+                $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorites')->findOneBy(array(
+                    'forum' => $managedForum->get(),
+                    'forumUser' => $managedForumUser->get()
+                ));
+                $managedForumUser->get()->removeFavoriteForum($forumUserFavorite);
+                break;
+            case 'subscribe':
+                $this->subscribe($args);
+                break;
+            case 'unsubscribe':
+                $this->unsubscribe($args);
+                break;
         }
+        $this->entityManager->flush();
 
         return true;
     }
