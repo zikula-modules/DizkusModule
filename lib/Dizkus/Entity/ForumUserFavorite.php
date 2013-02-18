@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_favorites", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
-class Dizkus_Entity_ForumUserFavorites extends Zikula_EntityAccess
+class Dizkus_Entity_ForumUserFavorite extends Zikula_EntityAccess
 {
 
     /**
