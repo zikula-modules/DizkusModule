@@ -59,7 +59,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         }
 
         $data = $view->getValues();
-
+        
         if (count($data['topicIds']) > 0) {
             foreach (array_keys($data['topicIds']) as $topicId) {
                 if ($topicId) {

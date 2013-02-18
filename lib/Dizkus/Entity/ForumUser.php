@@ -83,17 +83,24 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $rank;
 
     /**
-     * Dizkus_Entity_Forum collection
+     * Dizkus_Entity_ForumUserFavorite collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
      */
     private $favoriteForums;
     
+    /**
+     * Dizkus_Entity_TopicSubscription collection
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $topicSubscriptions;
+
     /**
      * constructor
      */
     function __construct()
     {
         $this->favoriteForums = new ArrayCollection();
+        $this->topicSubscriptions = new ArrayCollection();
     }
 
     public function getUser_id()
@@ -247,7 +254,9 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     public function addFavoriteForum(Dizkus_Entity_Forum $forum)
     {
         $forumUserFavorite = new Dizkus_Entity_ForumUserFavorite($this, $forum);
-        $this->favoriteForums->add($forumUserFavorite);
+        if (!$this->favoriteForums->contains($forumUserFavorite)) {
+            $this->favoriteForums->add($forumUserFavorite);
+        }
     }
 
     /**
@@ -267,4 +276,42 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
         $this->favoriteForums->clear();
     }
 
+    /**
+     * get User topic subscriptions
+     * @return Dizkus_Entity_TopicSubscription collection
+     */
+    public function getTopicSubscriptions()
+    {
+        return $this->topicSubscriptions;
+    }
+
+    /**
+     * add a topic subscription
+     * @param Dizkus_Entity_Topic $topic
+     */
+    public function addTopicSubscription(Dizkus_Entity_Topic $topic)
+    {
+        $topicSubscription = new Dizkus_Entity_TopicSubscription($this, $topic);
+        if (!$this->topicSubscriptions->contains($topicSubscription)) {
+            $this->topicSubscriptions->add($topicSubscription);
+        }
+    }
+
+    /**
+     * remove a topic subscription
+     * @param Dizkus_Entity_TopicSubscription $topicSubscription
+     */
+    public function removeTopicSubscription(Dizkus_Entity_TopicSubscription $topicSubscription)
+    {
+        $this->topicSubscriptions->removeElement($topicSubscription);
+    }
+
+    /**
+     * clear all topic subscriptions
+     */
+    public function clearTopicSubscriptions()
+    {
+        $this->topicSubscriptions->clear();
+    }
+    
 }

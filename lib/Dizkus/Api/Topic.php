@@ -17,12 +17,12 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
     function changeStatus($args)
     {
+        $managedTopic = new Dizkus_Manager_Topic($args['topic_id']);
         if ($args['action'] == 'subscribe') {
-            ModUtil::apiFunc($this->name, 'topic', 'subscribe', array('topic_id' => $args['topic_id']));
+            $this->subscribe(array('topic' => $managedTopic->get()));
         } else if ($args['action'] == 'unsubscribe') {
-            ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', array('topic_id' => $args['topic_id']));
+            $this->unsubscribe(array('topic' => $managedTopic->get()));
         } else {
-            $managedTopic = new Dizkus_Manager_Topic($args['topic_id']);
             switch ($args['action']) {
                 case 'sticky':
                     $managedTopic->sticky();
@@ -53,7 +53,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
      * Subscribe a topic.
      *
      * @param array $args Arguments array.
-     *        int $args['topic_id'] Topic id.
+     *        int $args['topic'] Topic
      *        int $args['user_id'] User id (optional: needs ACCESS_ADMIN).
      *
      * @return void
@@ -66,107 +66,60 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
 
-        // Todo Permission check
+        // TODO: Permission check
 
-        $status = $this->getSubscriptionStatus(array('user_id' => $args['user_id'], 'topic_id' => $args['topic_id']));
-        if (!$status) {
-            $subscription = new Dizkus_Entity_TopicSubscription();
-
-            $topic = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id']);
-            $subscription->setTopic($topic);
-            $subscription->setUser_id($args['user_id']);
-            $this->entityManager->persist($subscription);
-            $this->entityManager->flush();
-        }
+        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        $managedForumUser->get()->addTopicSubscription($args['topic']);
+        $this->entityManager->flush();
     }
 
     /**
      * Unsubscribe a topic.
      *
      * @param array $args Arguments array.
-     *        int $args['topic_id'] Topics id, if not set we unsubscribe all topics.
-     *        int $args['user_id']  Users id (needs ACCESS_ADMIN).
+     *        int $args['topic'] Topic, if not set we unsubscribe all topics.
+     *        int $args['user_id'] Users id (optional: needs ACCESS_ADMIN).
      *
      * @return void|bool
      */
     public function unsubscribe($args)
     {
-        // Todo Permission check
-
-        $where = array();
-        if (isset($args['user_id'])) {
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-                return LogUtil::registerPermissionError();
-            }
-            $where['user_id'] = $args['user_id'];
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
         } else {
-            $where['user_id'] = UserUtil::getVar('uid');
-        }
-
-        $where['topic_id'] = $args['topic_id'];
-
-        $subscriptions = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findBy($where);
-        if (isset($subscriptions)) {
-            foreach ($subscriptions as $subscription) {
-                $this->entityManager->remove($subscription);
-            }
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
-     * Get topic subscription status.
-     *
-     * @param array $args Arguments array.
-     *        int $args['user_id'] Users uid.
-     *        int $args['topic_id'] Topic id.
-     *
-     * @return bool true if the user is subscribed or false if not
-     */
-    public function getSubscriptionStatus($args)
-    {
-        // check input
-        if (empty($args['topic_id'])) {
-            return LogUtil::registerArgsError();
-        }
-        if (empty($args['user_id'])) {
             $args['user_id'] = UserUtil::getVar('uid');
         }
 
-        // doctrine query
-        $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('COUNT(s)')
-                ->from('Dizkus_Entity_TopicSubscription', 's')
-                ->where('s.user_id = :user')
-                ->setParameter('user', $args['user_id'])
-                ->andWhere('s.topic = :topic')
-                ->setParameter('topic', $args['topic_id'])
-                ->setMaxResults(1);
-        $count = $qb->getQuery()->getSingleScalarResult();
+        // TODO: Permission check
 
-        // Return true if the user is subscribed or false if not
-        return ($count > 0) ? true : false;
-        ;
+        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        if (isset($args['topic'])) {
+            $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy(array(
+                'topic' => $args['topic'],
+                'forumUser' => $managedForumUser->get()
+            ));
+            $managedForumUser->get()->removeTopicSubscription($topicSubscription);
+        } else {
+            // not used in the code...
+            $managedForumUser->get()->clearTopicSubscriptions();
+        }
+        $this->entityManager->flush();
     }
 
     /**
      * Get topic subscriptions
      *
-     * @params none
+     * @params $args['uid'] User id (optional)
      *
-     * @returns array with topic ids, may be empty
+     * @returns Dizkus_Entity_TopicSubscription collection, may be empty
      */
     public function getSubscriptions($args)
     {
         if (empty($args['uid'])) {
             $args['uid'] = UserUtil::getVar('uid');
         }
-        $subscriptions = $this->entityManager
-                ->getRepository('Dizkus_Entity_TopicSubscription')
-                ->findBy(array('user_id' => $args['uid']));
-
-        return $subscriptions;
+        $managedForumUser = new Dizkus_Manager_ForumUser($args['uid']);
+        return $managedForumUser->get()->getTopicSubscriptions();
     }
 
     /**

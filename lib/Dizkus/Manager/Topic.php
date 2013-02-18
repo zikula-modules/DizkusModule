@@ -447,17 +447,12 @@ class Dizkus_Manager_Topic
         if (!UserUtil::isLoggedIn()) {
             return false;
         }
+        $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy(array(
+            'topic' => $this->_topic,
+            'forumUser' => UserUtil::getVar('uid')
+        ));
 
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('COUNT(s)')
-                ->from('Dizkus_Entity_TopicSubscription', 's')
-                ->where('s.user_id = :user')
-                ->setParameter('user', UserUtil::getVar('uid'))
-                ->andWhere('s.topic = :topic')
-                ->setParameter('topic', $this->_topic)
-                ->setMaxResults(1);
-        $count = $qb->getQuery()->getSingleScalarResult();
-        return $count > 0 ? true : false;
+        return isset($topicSubscription);
     }
     
     /**

@@ -5,7 +5,7 @@
 jQuery(document).ready(function () {
     jQuery("#toggletopiclock").click(changeTopicStatus);
     jQuery("#toggletopicsticky").click(changeTopicStatus);
-    jQuery("#toggletopicsubscription").click(changeTopicStatus);
+//    jQuery("#toggletopicsubscription").click(changeTopicStatus);
     jQuery("#toggletopicsolve").click(changeTopicStatus);
 });
 
@@ -39,7 +39,7 @@ function changeTopicStatus(e) {
             topic: jQuery('#topic_id').val(),
             action: action
         },
-        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=changeTopicStatus",
+        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=changeTopicStatus",
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'lock') {

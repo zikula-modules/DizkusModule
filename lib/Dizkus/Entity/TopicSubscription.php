@@ -38,11 +38,32 @@ class Dizkus_Entity_TopicSubscription extends Zikula_EntityAccess
     private $topic;
 
     /**
-     * user_id
+     * forumUser
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
-    private $user_id;
+    private $forumUser;
+
+    /**
+     * constructor
+     * @param Dizkus_Entity_ForumUser $forumUser
+     * @param Dizkus_Entity_Topic $topic
+     */
+    function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Topic $topic)
+    {
+        $this->forumUser = $forumUser;
+        $this->topic = $topic;
+    }
+
+    /**
+     * get the table id
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * get topic
@@ -59,19 +80,22 @@ class Dizkus_Entity_TopicSubscription extends Zikula_EntityAccess
         return $this->topic = $topic;
     }
 
-    public function getId()
+    /**
+     * get the forumUser
+     * @return Dizkus_Entity_ForumUser
+     */
+    public function getForumUser()
     {
-        return $this->id;
+        return $this->forumUser;
     }
 
-    public function getUser_id()
+    /**
+     * set the forumUser
+     * @param Dizkus_Entity_ForumUser $forumUser
+     */
+    public function setUser(Dizkus_Entity_ForumUser $forumUser)
     {
-        return $this->user_id;
-    }
-
-    public function setUser_id($user_id)
-    {
-        $this->user_id = $user_id;
+        $this->forumUser = $forumUser;
     }
 
 }
