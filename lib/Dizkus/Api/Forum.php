@@ -78,36 +78,26 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
      * Get forum subscription status
      *
      * @param array $args The argument array.
-     *        int $args['user_id'] The users uid.
-     *        int $args['forum_id'] The forums id.
+     *        int $args['forum'] The forum
      *
      * @return boolean True if the user is subscribed or false if not
      */
     public function isSubscribed($args)
     {
-        if (empty($args['user_id'])) {
-            $args['user_id'] = UserUtil::getVar('uid');
-        }
+        $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array(
+            'forum' => $args['forum'],
+            'forumUser' => UserUtil::getVar('uid')
+        ));
 
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('COUNT(s.msg_id)')
-                ->from('Dizkus_Entity_ForumSubscription', 's')
-                ->where('s.user_id = :user')
-                ->setParameter('user', $args['user_id'])
-                ->andWhere('s.forum = :forum')
-                ->setParameter('forum', $args['forum_id'])
-                ->setMaxResults(1);
-        $count = $qb->getQuery()->getSingleScalarResult();
-
-        return ($count > 0) ? true : false;
+        return isset($forumSubscription);
     }
 
     /**
-     * subscribe
+     * subscribe a forum
      *
      * @param array $args The argument array.
-     *       int $args['forum_id'] The forums id.
-     *       int $args['user_id'] The users id (needs ACCESS_ADMIN).
+     *       int $args['forum'] The forum
+     *       int $args['user_id'] The user id (optional: needs ACCESS_ADMIN).
      *
      * @return boolean
      */
@@ -118,78 +108,64 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
-
-        $managedForum = new Dizkus_Manager_Forum($args['forum_id']);
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
-            return LogUtil::registerPermissionError();
-        }
-
-        if ($this->isSubscribed($args) == false) {
-            // add user only if not already subscribed to the forum
-            // we can use the args parameter as-is
-            $forumSubscription = new Dizkus_Entity_ForumSubscription();
-            $data = array('user_id' => $args['user_id'], 'forum' => $managedForum->get());
-            $forumSubscription->merge($data);
-            $this->entityManager->persist($forumSubscription);
-            $this->entityManager->flush();
-            return true;
-        }
-
-        return false;
+        
+        // TODO: perms check?
+        
+        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        $managedForumUser->get()->addForumSubscription($args['forum']);
+        $this->entityManager->flush();
+        return true;
     }
 
     /**
-     * unsubscribe
-     *
      * Unsubscribe a forum
      *
      * @param array $args The argument array.
-     *        int $args['forum_id'] The forums id, if empty then we unsubscribe all forums.
-     *        int $args['user_id'] The users id (needs ACCESS_ADMIN).
+     *        int $args['forum'] The forum
+     *        int $args['user_id'] The user id (optional: needs ACCESS_ADMIN).
      *
      * @return boolean
      */
     public function unsubscribe($args)
     {
-        if (isset($args['user_id'])) {
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-                return LogUtil::registerPermissionError();
-            }
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', "::", ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
 
-        if (empty($args['forum_id'])) {
+        if (empty($args['forum'])) {
             return LogUtil::registerArgsError();
         }
+        
+        // TODO: Permission check?
 
-        $subscription = $this->entityManager
-                ->getRepository('Dizkus_Entity_ForumSubscription')
-                ->findOneBy(array('user_id' => $args['user_id'], 'forum' => $args['forum_id'])
-        );
-        $this->entityManager->remove($subscription);
+        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        if (isset($args['forum'])) {
+            $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array(
+                'forum' => $args['forum'],
+                'forumUser' => $managedForumUser->get()
+            ));
+            $managedForumUser->get()->removeForumSubscription($forumSubscription);
+        }
         $this->entityManager->flush();
-
         return true;
     }
 
     /**
-     * Get topic subscriptions of a user
+     * Get forum subscriptions of a user
      *
-     * @params none
+     * @params $args['uid'] User id (optional)
      *
-     * @returns array with topic ids, may be empty
+     * @returns Dizkus_Entity_ForumSubscription collection, may be empty
      */
     public function getSubscriptions($args)
     {
         if (empty($args['uid'])) {
             $args['uid'] = UserUtil::getVar('uid');
         }
-        $subscriptions = $this->entityManager
-                ->getRepository('Dizkus_Entity_ForumSubscription')
-                ->findBy(array('user_id' => $args['uid']));
-
-        return $subscriptions;
+        $managedForumUser = new Dizkus_Manager_ForumUser($args['uid']);
+        return $managedForumUser->get()->getForumSubscriptions();
     }
 
     /**
@@ -241,6 +217,12 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
         }
     }
 
+    /**
+     * modify unser/forum association
+     * 
+     * @param integer $args['forum_id']
+     * @return boolean
+     */
     public function modify($args)
     {
         if (empty($args['forum_id'])) {
@@ -261,10 +243,10 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
                 $managedForumUser->get()->removeFavoriteForum($forumUserFavorite);
                 break;
             case 'subscribe':
-                $this->subscribe($args);
+                $this->subscribe(array('forum' => $managedForum->get()));
                 break;
             case 'unsubscribe':
-                $this->unsubscribe($args);
+                $this->unsubscribe(array('forum' => $managedForum->get()));
                 break;
         }
         $this->entityManager->flush();

@@ -5,7 +5,7 @@
 jQuery(document).ready(function () {
     // toogle forum favorite state
     jQuery("#forum-favourite").click(modifyForum);
-    jQuery("#forum-subscription").click(modifyForum);
+//    jQuery("#forum-subscription").click(modifyForum);
 });
 
 function modifyForum(e) {
@@ -31,7 +31,7 @@ function modifyForum(e) {
     jQuery.ajax({
         type: "POST",
         data: pars,
-        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=modifyForum",
+        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=modifyForum",
         success: function (result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {

@@ -65,7 +65,7 @@
 
                 {if $coredata.logged_in}
                 <li>
-                {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum_id=$forum.forum_id assign='isSubscribed'}
+                {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
                 {if !$isSubscribed}
                     {modurl modname='Dizkus' type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
                     {gt text="Subscribe to forum" assign='msg'}

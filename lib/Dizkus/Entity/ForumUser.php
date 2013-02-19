@@ -95,12 +95,19 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $topicSubscriptions;
 
     /**
+     * Dizkus_Entity_ForumSubscription collection
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $forumSubscriptions;
+
+    /**
      * constructor
      */
     function __construct()
     {
         $this->favoriteForums = new ArrayCollection();
         $this->topicSubscriptions = new ArrayCollection();
+        $this->forumSubscriptions = new ArrayCollection();
     }
 
     public function getUser_id()
@@ -312,6 +319,44 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     public function clearTopicSubscriptions()
     {
         $this->topicSubscriptions->clear();
+    }
+
+    /**
+     * get User forum subscriptions
+     * @return Dizkus_Entity_ForumSubscription collection
+     */
+    public function getForumSubscriptions()
+    {
+        return $this->forumSubscriptions;
+    }
+
+    /**
+     * add a forum subscription
+     * @param Dizkus_Entity_Forum $forum
+     */
+    public function addForumSubscription(Dizkus_Entity_Forum $forum)
+    {
+        $forumSubscription = new Dizkus_Entity_ForumSubscription($this, $forum);
+        if (!$this->forumSubscriptions->contains($forumSubscription)) {
+            $this->forumSubscriptions->add($forumSubscription);
+        }
+    }
+
+    /**
+     * remove a forum subscription
+     * @param Dizkus_Entity_ForumSubscription $forumSubscription
+     */
+    public function removeForumSubscription(Dizkus_Entity_ForumSubscription $forumSubscription)
+    {
+        $this->forumSubscriptions->removeElement($forumSubscription);
+    }
+
+    /**
+     * clear all forum subscriptions
+     */
+    public function clearForumSubscriptions()
+    {
+        $this->forumSubscriptions->clear();
     }
     
 }

@@ -36,11 +36,23 @@ class Dizkus_Entity_ForumSubscription extends Zikula_EntityAccess
     private $forum;
 
     /**
-     * The following are annotations which define the user_id field.
+     * forumUser
      * 
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
-    private $user_id = 0;
+    private $forumUser;
+
+    /**
+     * Constructor
+     * @param Dizkus_Entity_ForumUser $forumUser
+     * @param Dizkus_Entity_Forum $forum
+     */
+    function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Forum $forum)
+    {
+        $this->forumUser = $forumUser;
+        $this->forum = $forum;
+    }
 
     public function getMsg_id()
     {
@@ -67,14 +79,22 @@ class Dizkus_Entity_ForumSubscription extends Zikula_EntityAccess
         $this->forum = $forum;
     }
 
-    public function getUser_id()
+    /**
+     * get the forumUser
+     * @return Dizkus_Entity_ForumUser
+     */
+    public function getForumUser()
     {
-        return $this->user_id;
+        return $this->forumUser;
     }
 
-    public function setUser_id($id)
+    /**
+     * set the forumUser
+     * @param Dizkus_Entity_ForumUser $forumUser
+     */
+    public function setUser(Dizkus_Entity_ForumUser $forumUser)
     {
-        $this->user_id = $id;
+        $this->forumUser = $forumUser;
     }
 
 }
