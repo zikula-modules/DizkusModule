@@ -57,6 +57,7 @@ function smarty_function_readlastposts($params, &$smarty)
     } else if (!isset($favorites)) {
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
+        // TODO 'readuserforums' has been deleted! try new Dizkus_Manager_Forum($id)
         $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
         if (!is_array($userforums) || count($userforums)==0) {
             // error or user is not allowed to read any forum at all

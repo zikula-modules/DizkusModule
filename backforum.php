@@ -84,6 +84,7 @@ $where = '';
  * check for forum_id
  */
 if (!empty($forum_id)) {
+    // TODO 'readuserforums' has been deleted! try new Dizkus_Manager_Forum($id)
     $forum = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums', array('forum_id' => $forum_id));
     if (count($forum) == 0) {
         // not allowed to see forum
@@ -109,6 +110,7 @@ if (!empty($forum_id)) {
 } elseif (isset($uid) && ($uid<>false)) {
     $where = 'AND p.poster_id=' . $uid . ' ';
 } else {
+    // TODO 'readuserforums' has been deleted! try new Dizkus_Manager_Forum($id)
     $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
     // now create a very simple array of forum_ids only. we do not need
     // all the other stuff in the $userforums array entries

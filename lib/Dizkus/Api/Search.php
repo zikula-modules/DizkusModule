@@ -227,6 +227,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         }
 
         // get all forums the user is allowed to read
+        // TODO 'readuserforums' has been deleted! try new Dizkus_Manager_Forum($id)
         $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all

@@ -206,54 +206,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * readuserforums
-     * 
-     * reads all forums the recent users is allowed to see
-     *
-     * @params $args['cat_id'] int a category id (optional, if set, only reads the forums in this category)
-     * @params $args['forum_id'] int a forums id (optional, if set, only reads this category
-     * @returns array of forums, maybe empty
-     */
-    public function readuserforums($args)
-    {
-        $where = '';
-        if (isset($args['forum_id'])) {
-            $where = 'WHERE tbl.forum_id=' . DataUtil::formatForStore($args['forum_id']) . ' ';
-        } elseif (isset($args['cat_id'])) {
-            $where = 'WHERE a.cat_id=' . DataUtil::formatForStore($args['cat_id']) . ' ';
-        }
-
-        $joinInfo = array();
-        $joinInfo[] = array('join_table' => 'dizkus_categories',
-            'join_field' => 'cat_title',
-            'object_field_name' => 'cat_title',
-            'compare_field_table' => 'cat_id',
-            'compare_field_join' => 'cat_id');
-
-        $permFilter = array();
-        $permFilter[] = array('component_left' => 'Dizkus',
-            'component_middle' => '',
-            'component_right' => '',
-            'instance_left' => 'cat_id',
-            'instance_middle' => 'forum_id',
-            'instance_right' => '',
-            'level' => ACCESS_READ);
-
-        // retrieve the admin module object array
-        $forums = DBUtil::selectExpandedObjectArray('dizkus_forums', $joinInfo, $where, 'forum_id', -1, -1, 'forum_id', $permFilter);
-
-        if ($forums === false) {
-            return LogUtil::registerError($this->__('Error! The forum or topic you selected was not found. Please go back and try again.'), null, ModUtil::url('Dizkus', 'user', 'main'));
-        }
-
-        if (isset($args['forum_id']) && isset($forums[$args['forum_id']])) {
-            return $forums[$args['forum_id']];
-        }
-
-        return $forums;
-    }
-
-    /**
      * Notify by e-mail
      *
      * Sending notify e-mail to users subscribed to the topic of the forum
