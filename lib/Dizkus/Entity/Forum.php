@@ -189,7 +189,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $forum_pntopic = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_ForumUserFavorite", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id", nullable=true)
      */
     private $favorites;
@@ -214,6 +214,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      */
     public function __construct()
     {
+        $this->favorites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->topics = new \Doctrine\Common\Collections\ArrayCollection();
         $this->moderatorUsers = new \Doctrine\Common\Collections\ArrayCollection();
         $this->moderatorGroups = new \Doctrine\Common\Collections\ArrayCollection();
@@ -478,6 +479,10 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->forum_pntopic = $pntopic;
     }
 
+    /**
+     * get ForumUsers that have marked this forum as favorite
+     * @return Dizkus_Entity_ForumUserFavorites collection
+     */
     public function getFavorites()
     {
         return $this->favorites;

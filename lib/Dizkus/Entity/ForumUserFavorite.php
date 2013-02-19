@@ -31,7 +31,7 @@ class Dizkus_Entity_ForumUserFavorite extends Zikula_EntityAccess
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorUsers")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="favorites")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
