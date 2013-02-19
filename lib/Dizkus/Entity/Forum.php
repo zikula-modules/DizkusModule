@@ -214,10 +214,10 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      */
     public function __construct()
     {
-        $this->favorites = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->topics = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->moderatorUsers = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->moderatorGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->favorites = new ArrayCollection();
+        $this->topics = new ArrayCollection();
+        $this->moderatorUsers = new ArrayCollection();
+        $this->moderatorGroups = new ArrayCollection();
     }
 
     public function getForum_id()
