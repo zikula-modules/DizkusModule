@@ -63,7 +63,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         if (count($data['topicIds']) > 0) {
             foreach (array_keys($data['topicIds']) as $topicId) {
                 if ($topicId) {
-                    ModUtil::apiFunc('Dizkus', 'Topic', 'unsubscribe', array('topic_id' => $topicId));
+                    ModUtil::apiFunc('Dizkus', 'Topic', 'unsubscribe', array('topic' => $topicId));
                 }
             }
         }
