@@ -17,8 +17,6 @@ Craig's Notes
    moved to the installer?
  - There appear to be several places in the installer where Core Categories are
    to be used for some purpose. No idea what this is for...
- - seems like the subscriptions idea could be moved to one table with a flag
-   for topic/forum (t/f)
  - most of the table columns have a prefix that should be removed
    for example: `dizkus_forums` table has: forum_id, forum_name, forum_desc, etc
    these should be changed to `id`, `name`, `desc`, etc
