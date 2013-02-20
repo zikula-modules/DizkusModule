@@ -17,7 +17,7 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt><span>{gt text="Topic"}</span></dt>
+                        <dt><span>{$forum.forum_name} {gt text="Topics"}</span></dt>
                         <dd class="posts"><span>{gt text="Replies"}</span></dd>
                         <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
                         <dd class="mark"><span>{gt text="Selection"}<input type="checkbox" id="alltopic"  value="" /></span></dd>
@@ -38,7 +38,8 @@
                                 {if $topic.topic_status eq 1}
                                     {img modname='Dizkus' src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' }
                                 {/if}
-                                {if $topic.new_posts eq 1}
+                                {datecompare date1=$topic.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                                {if $comp}
                                     {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
                                     {else}
                                     {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
@@ -48,16 +49,12 @@
                                 {/if}
                                 {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name}
                                 <em class="z-sub">({$topic.topic_views} {gt text="Views"})</em>
-                                <span>{gt text="Poster: %s" tag1=$topic.uname|profilelinkbyuname}</span>
+                                <span>{gt text="Poster: %s" tag1=$topic.topic_poster|profilelinkbyuid}</span>
                                 {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                             </dt>
                             <dd class="posts">{$forum.forum_topics}</dd>
                             <dd class="lastpost">
-                            <span>
-                                {gt text="Last post by %s" tag1=$topic.last_poster|profilelinkbyuname}<br />
-                                {$topic.post_time_unix|dateformat:'datetimebrief'}
-                                <a class="tooltips" title="{gt text="View latest post"}" href="{$topic.last_post_url_anchor|safetext}">{img modname='Dizkus' src="icon_topic_latest.gif" __alt="View latest post" }</a>
-                            </span>
+                                {include file='user/lastPostBy.tpl' last_post=$topic.last_post replies=-1}
                             </dd>
                             <dd class="mark">
                                 <input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{$topic.topic_id}" />
@@ -93,8 +90,8 @@
             <label for="moveto">{gt text="Choose target forum to move topic(s) to"}</label>
             <select name="moveto" id="moveto">
                 <option value=''>&lt;&lt; {gt text="Select target forum"} &gt;&gt;</option>
-                {foreach item=singleforum from=$forums}
-                    <option value="{$singleforum.forum_id}">{$singleforum.cat_title|safetext}{gt text="&nbsp;::&nbsp;"}{$singleforum.forum_name|safetext}</option>
+                {foreach item='node' from=$forums}
+                    <option value="{$node.value}">{$node.text|safetext}</option>
                 {/foreach}
             </select>
         </div>
@@ -117,8 +114,8 @@
         </div>
     </fieldset>
     <div class="z-formbuttons z-buttons">
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
-        {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit"}
+        <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
+        {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit" value='1'}
         {button src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
     </div>
 </form>

@@ -276,5 +276,17 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     public function addPost(Dizkus_Entity_Post $post) {
         $this->posts[] = $post;
     }
+    
+    public function getTotal_posts()
+    {
+        return count($this->posts);
+    }
+    
+    public function getHot_topic()
+    {
+        $hotThreshold = ModUtil::getVar('Dizkus', 'hot_threshold');
+        $totalPosts = $this->getTotal_posts();
+        return ($totalPosts >= $hotThreshold);
+    }
 
 }

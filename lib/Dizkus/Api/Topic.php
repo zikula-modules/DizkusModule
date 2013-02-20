@@ -344,22 +344,32 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
     /**
      * joins two topics together
      *
-     * @params $args['from_topic_id'] int this topic get integrated into to_topic
-     * @params $args['to_topic_id'] int   the target topic that will contain the post from from_topic
-     * @params $args['topicObj'] Dizkus_Entity_Topic
+     * @params $args['to_topic_id'] int the target topic that will contain the post from from_topic (destination)
+     * @params $args['from_topic_id'] int this topic get integrated into to_topic (origin)
+     * @params $args['topicObj'] Dizkus_Entity_Topic The (origin) topic as object
+     *              must have *either* topicObj or from_topic_id
      * 
      * @return Integer Destination topic ID
      */
     public function join($args)
     {
-        if (!isset($args['topicObj']) || !($args['topicObj'] instanceof Dizkus_Entity_Topic) || !isset($args['from_topic_id']) || !isset($args['to_topic_id'])) {
+        if (!($args['topicObj'] instanceof Dizkus_Entity_Topic) && !isset($args['from_topic_id'])) {
+            LogUtil::registerError($this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
+            return LogUtil::registerArgsError();            
+        }
+        if (!isset($args['to_topic_id'])) {
             return LogUtil::registerArgsError();
         }
-        $managedOriginTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
+        if (isset($args['topicObj']) && isset($args['from_topic_id'])) {
+            // unset the id and use the Object
+            $args['from_topic_id'] = null;
+        }
+        $managedOriginTopic = new Dizkus_Manager_Topic($args['from_topic_id'], $args['topicObj']); // one param will be null
         $managedDestinationTopic = new Dizkus_Manager_Topic($args['to_topic_id']);
         
         if ($managedDestinationTopic->get() === null) { // can't use isset() and ->get() at the same time
-            return LogUtil::registerArgsError($this->__('Destination topic does not exist.'));
+            LogUtil::registerError($this->__('Destination topic does not exist.'));
+            return LogUtil::registerArgsError();
         }
 
         // move posts from Origin to Destination topic

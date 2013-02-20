@@ -171,6 +171,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // Permission check
         // todo check topic
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
+        $this->checkCsrfToken();
 
         // get the input
         $topic_id = (int)$this->request->request->get('topic', null);
@@ -779,59 +780,54 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function moderateForum($args = array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
-        // get the input
-        $forum_id = (int)FormUtil::getPassedValue('forum', (isset($args['forum'])) ? $args['forum'] : null, 'GETPOST');
-        $start = (int)FormUtil::getPassedValue('start', (isset($args['start'])) ? $args['start'] : 0, 'GETPOST');
-        $mode = FormUtil::getPassedValue('mode', (isset($args['mode'])) ? $args['mode'] : '', 'GETPOST');
-        $submit = FormUtil::getPassedValue('submit', (isset($args['submit'])) ? $args['submit'] : '', 'GETPOST');
-        $topic_ids = FormUtil::getPassedValue('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : array(), 'GETPOST');
-        $shadow = FormUtil::getPassedValue('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '', 'GETPOST');
-        $moveto = (int)FormUtil::getPassedValue('moveto', (isset($args['moveto'])) ? $args['moveto'] : null, 'GETPOST');
-        $jointo = (int)FormUtil::getPassedValue('jointo', (isset($args['jointo'])) ? $args['jointo'] : null, 'GETPOST');
-
-        $shadow = (empty($shadow)) ? false : true;
+        $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+        if (!isset($forum_id)) {
+            return LogUtil::registerArgsError();
+        }
+        $submit = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
 
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         // Get the Forum for Display and Permission-Check
-        $forum = ModUtil::apiFunc('Dizkus', 'user', 'readforum', array('forum_id' => $forum_id,
-                    'start' => $start,
-                    'last_visit' => $last_visit,
-                    'last_visit_unix' => $last_visit_unix));
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $forum)) {
+        $managedForum = new Dizkus_Manager_Forum($forum_id);
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedForum->get())) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
 
-
-        // Submit isn't set'
+        // Submit isn't set
         if (empty($submit)) {
             $this->view->assign('forum_id', $forum_id);
-            $this->view->assign('mode', $mode);
-            $this->view->assign('topic_ids', $topic_ids);
+            $this->view->assign('mode', '');
+            $this->view->assign('topic_ids', array());
             $this->view->assign('last_visit', $last_visit);
             $this->view->assign('last_visit_unix', $last_visit_unix);
-            $this->view->assign('forum', $forum);
+            $this->view->assign('forum', $managedForum->get());
             // For Movetopic
-            $this->view->assign('forums', ModUtil::apiFunc('Dizkus', 'user', 'readuserforums'));
+            $this->view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren'));
 
             return $this->view->fetch('user/forum/moderate.tpl');
         } else {
             // submit is set
-            //if (!SecurityUtil::confirmAuthKey()) {
-            //    return LogUtil::registerAuthidError();
-            //}*/
+            $start = (int)$this->request->request->get('start', (isset($args['start'])) ? $args['start'] : 0);
+            $mode = $this->request->request->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
+            $topic_ids = $this->request->request->get('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : array());
+            $shadow = $this->request->request->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
+            $moveto = (int)$this->request->request->get('moveto', (isset($args['moveto'])) ? $args['moveto'] : null);
+            $jointo = (int)$this->request->request->get('jointo', (isset($args['jointo'])) ? $args['jointo'] : null);
+            $jointo_select = (int)$this->request->request->get('jointo_select', (isset($args['jointo_select'])) ? $args['jointo_select'] : null);
+
+            $shadow = (empty($shadow)) ? false : true;
+            $this->checkCsrfToken();
+
             if (count($topic_ids) <> 0) {
                 switch ($mode) {
                     case 'del':
                     case 'delete':
                         foreach ($topic_ids as $topic_id) {
-                            $forum_id = ModUtil::apiFunc('Dizkus', 'user', 'deletetopic', array('topic_id' => $topic_id));
+                            $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', array('topic' => $topic_id));
                         }
                         break;
 
@@ -848,21 +844,21 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
                     case 'lock':
                     case 'unlock':
-                        foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id' => $topic_id, 'mode' => $mode));
-                        }
-                        break;
-
                     case 'sticky':
                     case 'unsticky':
                         foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id' => $topic_id, 'mode' => $mode));
+                            ModUtil::apiFunc('Dizkus', 'topic', 'changeStatus', array('topic_id' => $topic_id, 'action' => $mode));
                         }
                         break;
+                        $this->entityManager->flush();
 
                     case 'join':
-                        if (empty($jointo)) {
+                        if (empty($jointo) && empty($jointo_select)) {
                             return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
+                        }
+                        // text input overrides select box
+                        if (empty($jointo) && !empty($jointo_select)) {
+                            $jointo = $jointo_select;
                         }
                         if (in_array($jointo, $topic_ids)) {
                             // jointo, the target topic, is part of the topics to join
@@ -879,16 +875,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
                     default:
                 }
-
-                // Refresh Forum Info
-                $forum = ModUtil::apiFunc('Dizkus', 'user', 'readforum', array('forum_id' => $forum_id,
-                            'start' => $start,
-                            'last_visit' => $last_visit,
-                            'last_visit_unix' => $last_visit_unix));
             }
         }
 
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
+        return $this->redirect(ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $managedForum->getId())));
     }
 
     /**
