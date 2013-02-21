@@ -11,7 +11,7 @@
         <legend>{gt text="Move topic to another forum"}</legend>
         <p class="z-informationmsg">{gt text="When you press the 'Move' button at the bottom of this form, the topic you have selected (and all its related posts) will be <strong>moved</strong> to the forum you have selected. Note: You will only be able to move the topic to a forum for which you are moderator. An administrator is allowed to move any topic to any forum."}</p>
         <div class="z-formrow">
-            <label>{gt text="Target forum"}</label>
+            {formlabel for="forum_id" __text="Target forum"}
             {formdropdownlist id="forum_id" items=$forums}
         </div>
         <div class="z-formrow">
