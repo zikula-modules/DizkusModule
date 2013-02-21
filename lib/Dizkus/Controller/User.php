@@ -773,112 +773,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      *
      * User interface for moderation of multiple topics.
      *
-     * @param array $args The Arguments array.
-     *
      * @return string
      */
-    public function moderateForum($args = array())
+    public function moderateForum()
     {
-        // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
+        $form = FormUtil::newForm($this->name, $this);
 
-        $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-        if (!isset($forum_id)) {
-            return LogUtil::registerArgsError();
-        }
-        $submit = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-
-        // Get the Forum for Display and Permission-Check
-        $managedForum = new Dizkus_Manager_Forum($forum_id);
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedForum->get())) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
-        }
-
-        // Submit isn't set
-        if (empty($submit)) {
-            $this->view->assign('forum_id', $forum_id);
-            $this->view->assign('mode', '');
-            $this->view->assign('topic_ids', array());
-            $this->view->assign('last_visit', $last_visit);
-            $this->view->assign('last_visit_unix', $last_visit_unix);
-            $this->view->assign('forum', $managedForum->get());
-            // For Movetopic
-            $this->view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren'));
-
-            return $this->view->fetch('user/forum/moderate.tpl');
-        } else {
-            // submit is set
-            $start = (int)$this->request->request->get('start', (isset($args['start'])) ? $args['start'] : 0);
-            $mode = $this->request->request->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
-            $topic_ids = $this->request->request->get('topic_id', (isset($args['topic_id'])) ? $args['topic_id'] : array());
-            $shadow = $this->request->request->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
-            $moveto = (int)$this->request->request->get('moveto', (isset($args['moveto'])) ? $args['moveto'] : null);
-            $jointo = (int)$this->request->request->get('jointo', (isset($args['jointo'])) ? $args['jointo'] : null);
-            $jointo_select = (int)$this->request->request->get('jointo_select', (isset($args['jointo_select'])) ? $args['jointo_select'] : null);
-
-            $shadow = (empty($shadow)) ? false : true;
-            $this->checkCsrfToken();
-
-            if (count($topic_ids) <> 0) {
-                switch ($mode) {
-                    case 'del':
-                    case 'delete':
-                        foreach ($topic_ids as $topic_id) {
-                            $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', array('topic' => $topic_id));
-                        }
-                        break;
-
-                    case 'move':
-                        if (empty($moveto)) {
-                            return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
-                        }
-                        foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'topic', 'move', array('topic_id' => $topic_id,
-                                'forum_id' => $moveto,
-                                'shadow' => $shadow));
-                        }
-                        break;
-
-                    case 'lock':
-                    case 'unlock':
-                    case 'sticky':
-                    case 'unsticky':
-                        foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'topic', 'changeStatus', array('topic_id' => $topic_id, 'action' => $mode));
-                        }
-                        break;
-                        $this->entityManager->flush();
-
-                    case 'join':
-                        if (empty($jointo) && empty($jointo_select)) {
-                            return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
-                        }
-                        // text input overrides select box
-                        if (empty($jointo) && !empty($jointo_select)) {
-                            $jointo = $jointo_select;
-                        }
-                        if (in_array($jointo, $topic_ids)) {
-                            // jointo, the target topic, is part of the topics to join
-                            // we remove this to avoid a loop
-                            $fliparray = array_flip($topic_ids);
-                            unset($fliparray[$jointo]);
-                            $topic_ids = array_flip($fliparray);
-                        }
-                        foreach ($topic_ids as $from_topic_id) {
-                            ModUtil::apiFunc('Dizkus', 'topic', 'join', array('from_topic_id' => $from_topic_id,
-                                'to_topic_id' => $jointo));
-                        }
-                        break;
-
-                    default:
-                }
-            }
-        }
-
-        return $this->redirect(ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $managedForum->getId())));
+        return $form->execute('user/forum/moderate.tpl', new Dizkus_Form_Handler_User_ModerateForum());        
     }
 
     /**

@@ -6,7 +6,9 @@
 {/if*}
 
 {if $forum.topics}
-<form class="z-form" method="post" action="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">
+
+{form cssClass="z-form"}
+{formvalidationsummary}
 
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
     {dzkpager total=$forum.forum_topics}
@@ -72,53 +74,33 @@
     <div class="z-warningmsg">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>
 
     <fieldset>
-        <legend>{gt text="Moderators options"}</legend>
+        <legend>{gt text="Moderator options"}</legend>
         <div class="z-formrow">
-            <label for="mode">{gt text="Actions"}</label>
-            <select name="mode" id="mode" size="1">
-                <option value="">&lt;&lt; {gt text="Choose action"} &gt;&gt;</option>
-                <option value="sticky">{gt text="Give selected topics 'sticky' status"}</option>
-                <option value="unsticky">{gt text="Remove 'sticky' status from selected topics"}</option>
-                <option value="lock">{gt text="Lock selected topics"}</option>
-                <option value="unlock">{gt text="Open selected topics"}</option>
-                <option value="delete">{gt text="Delete selected topics"}</option>
-                <option value="move">{gt text="Move selected topics"}</option>
-                <option value="join">{gt text="Join topics"}</option>
-            </select>
+            {formlabel for="mode" __text="Actions"}
+            {formdropdownlist id="mode" items=$actions}
         </div>
         <div class="z-formrow">
-            <label for="moveto">{gt text="Choose target forum to move topic(s) to"}</label>
-            <select name="moveto" id="moveto">
-                <option value=''>&lt;&lt; {gt text="Select target forum"} &gt;&gt;</option>
-                {foreach item='node' from=$forums}
-                    <option value="{$node.value}">{$node.text|safetext}</option>
-                {/foreach}
-            </select>
+            {formlabel for="moveto" __text="Choose target forum to move topic(s) to"}
+            {formdropdownlist id="moveto" items=$forums}
         </div>
         <div class="z-formrow">
-            <label for="createshadowtopic">{gt text="Create shadow topic"}</label>
-            <input type="checkbox" name="createshadowtopic" id="createshadowtopic" value="1" />
+            {formlabel for="createshadowtopic" __text="Create shadow topic"}
+            {formcheckbox id="createshadowtopic"}
         </div>
         <div class="z-formrow">
-            <label for="jointotopic">{gt text="To join topics, select the target topic here"}</label>
+            {formlabel for="jointotopic" __text="To join topics, select the target topic here"}
             <span>
-                <select id="jointotopic" name="jointo_select" onchange="$('jointo').value=this.options[this.selectedIndex].value">
-                    <option value=''>&lt;&lt; {gt text="Choose target topic"} &gt;&gt;</option>
-                    {foreach item=topic from=$forum.topics}
-                        <option value="{$topic.topic_id}">{$topic.topic_title|safetext}</option>
-                    {/foreach}
-                </select>
-                <label for="jointo">{gt text="or target topic #"}</label>
-                <input type="text" name="jointo" id="jointo" value="" size="5" maxlength="10" />
+                {formdropdownlist id="jointotopic" items=$topicSelect}
+                {formlabel for="jointo" __text="or target topic #"}
+                {formintinput id="jointo" size="5" maxLength="10"}
             </span>
         </div>
     </fieldset>
     <div class="z-formbuttons z-buttons">
-        <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
-        {button src="button_ok.png" set="icons/extrasmall" __alt="Submit" __title="Submit" __text="Submit" value='1'}
-        {button src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel" __text="Cancel"}
+        {formbutton class="z-bt-ok" commandName="submit"  __text="Submit"}
+        {formbutton class="z-bt-cancel" commandName="cancel"   __text="Cancel"}
     </div>
-</form>
+{/form}
 
     {else}
 
