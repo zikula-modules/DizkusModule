@@ -75,7 +75,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
         foreach ($onlineusers as $onlineuser) {
             if ($onlineuser['uid'] != 0) {
                 $params['user_id'] = $onlineuser['uid'];
-                $onlineuser['admin'] = (isset($moderators[$onlineuser['uid']]) && $moderators[$onlineuser['uid']] == $onlineuser['uname']) || ModUtil::apiFunc('Dikus', 'Permission', 'canAdministrate', $params);
+                $onlineuser['admin'] = (isset($moderators['users'][$onlineuser['uid']]) && $moderators['users'][$onlineuser['uid']] == $onlineuser['uname']) || ModUtil::apiFunc('Dikus', 'Permission', 'canAdministrate', $params);
                 $unames[$onlineuser['uid']] = $onlineuser;
                 $numusers++;
             } else {
@@ -90,7 +90,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
                 $groups = ModUtil::apiFunc('Groups', 'user', 'getusergroups', array('uid' => $user['uid']));
 
                 foreach ($groups as $group) {
-                    if (isset($moderators[$group['gid'] + 1000000])) {
+                    if (isset($moderators['groups'][$group['gid']])) {
                         $user['admin'] = true;
                     } else {
                         $user['admin'] = false;

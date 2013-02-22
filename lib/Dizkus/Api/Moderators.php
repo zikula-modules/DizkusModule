@@ -25,45 +25,46 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi
      */
     public function get($args)
     {
-        return array();
-
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
         $em = $this->getService('doctrine.entitymanager');
-        $mods = array();
+        $mods = array('users' => array(), 
+            'groups' => array());
         
         // get moderator users
         $qb = $em->createQueryBuilder();
-        $qb->select('m.forumUser')
-                ->from('Dizkus_Entity_Moderator_User', 'm');;
+        $qb->select('m')
+            ->from('Dizkus_Entity_Moderator_User', 'm')
+            ->leftJoin('m.forumUser', 'u');
         if (!empty($forum_id)) {
             $qb->andWhere('m.forum = :forum')
                 ->setParameter('forum', $forum_id);
         } else {
             $qb->groupBy('m.forumUser');
         }
-        $forumUsers = $qb->getQuery()->getResult();
+        $moderatorUserCollection = $qb->getQuery()->getResult();
 
-        if (is_array($forumUsers) && !empty($forumUsers)) {
-            foreach ($forumUsers as $forumUser) {
-                $mods[$forumUser->getUser()->getUid()] = $forumUser->getUser()->getUname();
+        if (is_array($moderatorUserCollection) && !empty($moderatorUserCollection)) {
+            foreach ($moderatorUserCollection as $moderatorUser) {
+                $mods['users'][$moderatorUser->getForumUser()->getUser()->getUid()] = $moderatorUser->getForumUser()->getUser()->getUname();
             }
         }
 
         // get moderator groups
         $qb = $em->createQueryBuilder();
-        $qb->select('g.group')
-                ->from('Dizkus_Entity_Moderator_Group', 'g');;
+        $qb->select('m')
+            ->from('Dizkus_Entity_Moderator_Group', 'm')
+            ->leftJoin('m.group', 'g');
         if (!empty($forum_id)) {
-            $qb->andWhere('g.forum = :forum')
+            $qb->andWhere('m.forum = :forum')
                 ->setParameter('forum', $forum_id);
         } else {
-            $qb->groupBy('g.group');
+            $qb->groupBy('m.group');
         }
-        $coreGroups = $qb->getQuery()->getResult();
+        $moderatorGroupCollection = $qb->getQuery()->getResult();
 
-        if (is_array($coreGroups) && !empty($coreGroups)) {
-            foreach ($coreGroups as $coreGroup) {
-                $mods[$coreGroup->getGid()] = $coreGroup->getName();
+        if (is_array($moderatorGroupCollection) && !empty($moderatorGroupCollection)) {
+            foreach ($moderatorGroupCollection as $moderatorGroup) {
+                $mods['groups'][$moderatorGroup->getGroup()->getGid()] = $moderatorGroup->getGroup()->getName();
             }
         }
 
