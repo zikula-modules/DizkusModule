@@ -114,7 +114,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
           // begin patch #3494 part 2, credits to teb
           if (!empty($post_id) && is_numeric($post_id) && empty($topic_id)) {
-          $topic_id = ModUtil::apiFunc($this->name, 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+          $managedPost = new Dizkus_Manager_Post($post_id);
+          $topic_id = $managedPost->getTopicId();
           if ($topic_id <> false) {
           // redirect instad of continue, better for SEO
           return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic',
@@ -343,7 +344,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
         $shadow = (empty($shadow)) ? false : true;
         if (empty($topic_id) && !empty($post_id)) {
-            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+            $managedPost = new Dizkus_Manager_Post($post_id);
+            $topic_id = $managedPost->getTopicId();
         }
 
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
@@ -704,7 +706,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             if ($post_id <> 0) {
-                $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+                $managedPost = new Dizkus_Manager_Post($post_id);
+                $topic_id = $managedPost->getTopicId();
             }
             if (($topic_id <> 0) && ($topic_id <> false)) {
                 return $this->viewtopic(array('topic' => $topic_id, 'start' => 0));

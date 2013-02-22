@@ -726,23 +726,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * get_topicid_by_postid
-     * gets a topic_id from the post_id
-     *
-     * @params $args['post_id'] string the post_id
-     * @returns int topic_id or false if not found
-     *
-     */
-    public function get_topicid_by_postid($args)
-    {
-        if (!isset($args['post_id']) || empty($args['post_id'])) {
-            return LogUtil::registerArgsError();
-        }
-
-        return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['post_id'], 'post_id');
-    }
-
-    /**
      * TODO: @see get_page_from_topic_replies() which seems to return the same information
      * get_last_topic_page
      * returns the number of the last page of the topic if more than posts_per_page entries

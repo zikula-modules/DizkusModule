@@ -52,7 +52,8 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }
-            $this->topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_postid', array('post_id' => $post_id));
+            $managedPost = new Dizkus_Manager_Post($post_id);
+            $this->topic_id = $managedPost->getTopicId();
         }
 
         // TODO: the api method 'readtopic' has been deleted. This is left here as a reminder
