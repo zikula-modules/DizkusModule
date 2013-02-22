@@ -10,8 +10,8 @@
     <div>
         <fieldset id="dzk_notifymoderator">
             <div class="z-formrow">
-                {formlabel for="modcomment" __text="Your comment:"}
-                {formtextinput id="modcomment" textMode="multiline" rows="6" cols="60"}
+                {formlabel for="comment" __text="Your comment:"}
+                {formtextinput id="comment" textMode="multiline" rows="6" cols="60"}
             </div>
                 
         <div class="z-formbuttons z-buttons">

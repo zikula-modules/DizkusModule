@@ -53,10 +53,11 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         // get the input
         $post_id = (int)$this->request->query->get('post');
         $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
+        $managedPost = new Dizkus_Manager_Post($post_id);
 
 
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'], 'start' => '0')) . '#pid' . $post['post_id'];
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(), 'start' => '0')) . '#pid' . $managedPost->getId();
             return $view->redirect($url);
         }
 
@@ -86,12 +87,12 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
 
 
 
-        ModUtil::apiFunc('Dizkus', 'user', 'notify_moderator', array('post' => $post,
+        ModUtil::apiFunc('Dizkus', 'user', 'notify_moderator', array('post' => $managedPost->get(),
             'comment' => $data['comment']));
 
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies', array('topic_replies' => $post['topic_replies']));
+        $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post['topic_id'],
+        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(),
                     'start' => $start));
         return $view->redirect($url);
     }
