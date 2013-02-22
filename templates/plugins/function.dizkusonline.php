@@ -52,9 +52,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     $numusers = 0;
     $unames = array();
 
-    // TODO: this API method doesn't exist CAH Feb 14 2013
-    // probably replaced by ModeratorsApi::get()
-    $moderators = ModUtil::apiFunc('Dizkus', 'user', 'get_moderators', array());
+    $moderators = ModUtil::apiFunc('Dizkus', 'moderators', 'get', array());
 
     /** @var $em Doctrine\ORM\EntityManager */
     $em = $view->getContainer()->get('doctrine.entitymanager');
@@ -72,12 +70,6 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     $query->setParameter('usertype', System::getVar('anonymoussessions') ? 1 : 2);
     $onlineusers = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
     
-//    echo "<pre>"; var_dump($onlineusers);
-//    var_dump($query->getDQL());
-//    var_dump($query->getParameters());
-//    var_dump($query->getSQL());
-//    echo "</pre>";
-
     if (is_array($onlineusers)) {
         $total = count($onlineusers);
         foreach ($onlineusers as $onlineuser) {

@@ -16,62 +16,54 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi
 {
 
     /**
-     * Returns an array of all the moderators of a forum
+     * Returns an array of all the moderators of a forum (including groups)
      *
      * @param array $args Arguments array.
      *        int   $args['forum_id'] Forums id.
      *
-     * @return array containing the pn_uid as index and the users name as value
+     * @return array containing the uid/gid as index and the user/group name as value
      */
     public function get($args)
     {
         return array();
 
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
-
         $em = $this->getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('u.uid, u.uname')
-                ->from('Dizkus_Entity_Moderators', 'm') // TODO: this entity has been deleted!
-                ->leftJoin('m.user_data', 'u')
-                ->where('m.user_id < 1000000');
-
-        if (!empty($forum_id)) {
-            $qb->andWhere('m.forum_id = :forum_id')
-                    ->setParameter('forum_id', $forum_id);
-        } else {
-            $qb->groupBy('m.user_id');
-        }
-        $result = $qb->getQuery()->getArrayResult();
-
-
         $mods = array();
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $user) {
-                $mods[$user['uid']] = $user['uname'];
+        
+        // get moderator users
+        $qb = $em->createQueryBuilder();
+        $qb->select('m.forumUser')
+                ->from('Dizkus_Entity_Moderator_User', 'm');;
+        if (!empty($forum_id)) {
+            $qb->andWhere('m.forum = :forum')
+                ->setParameter('forum', $forum_id);
+        } else {
+            $qb->groupBy('m.forumUser');
+        }
+        $forumUsers = $qb->getQuery()->getResult();
+
+        if (is_array($forumUsers) && !empty($forumUsers)) {
+            foreach ($forumUsers as $forumUser) {
+                $mods[$forumUser->getUser()->getUid()] = $forumUser->getUser()->getUname();
             }
         }
 
-        $ztable = DBUtil::getTables();
+        // get moderator groups
+        $qb = $em->createQueryBuilder();
+        $qb->select('g.group')
+                ->from('Dizkus_Entity_Moderator_Group', 'g');;
         if (!empty($forum_id)) {
-            $sql = 'SELECT g.name, g.gid
-                    FROM ' . $ztable['groups'] . ' g, ' . $ztable['dizkus_forum_mods'] . " f
-                    WHERE f.forum_id = '" . DataUtil::formatForStore($forum_id) . "' AND g.gid = f.user_id-1000000
-                    AND f.user_id > 1000000";
+            $qb->andWhere('g.forum = :forum')
+                ->setParameter('forum', $forum_id);
         } else {
-            $sql = 'SELECT g.name, g.gid
-                    FROM ' . $ztable['groups'] . ' g, ' . $ztable['dizkus_forum_mods'] . ' f
-                    WHERE g.gid = f.user_id-1000000
-                    AND f.user_id > 1000000
-                    GROUP BY f.user_id';
+            $qb->groupBy('g.group');
         }
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('gname', 'gid');
-        $result = DBUtil::marshallObjects($res, $colarray);
+        $coreGroups = $qb->getQuery()->getResult();
 
-        if (is_array($result) && !empty($result)) {
-            foreach ($result as $group) {
-                $mods[$group['gid'] + 1000000] = $group['gname'];
+        if (is_array($coreGroups) && !empty($coreGroups)) {
+            foreach ($coreGroups as $coreGroup) {
+                $mods[$coreGroup->getGid()] = $coreGroup->getName();
             }
         }
 
