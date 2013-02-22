@@ -455,8 +455,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                         'attach_signature' => $attach_signature,
                         'subscribe_topic' => $subscribe_topic));
 
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
-                        'count' => false));
+            // `readtopic()` removed - when this method is refactored, the persisted topic is automatically available
 
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
                 $this->view->assign('topic', $topic);

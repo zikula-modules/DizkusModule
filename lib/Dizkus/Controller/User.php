@@ -348,8 +348,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $topic_id = $managedPost->getTopicId();
         }
 
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
-                    'count' => false));
+        $managedTopic = new Dizkus_Manager_Topic($topic_id);
 
         /* This does not work. Commenting out until we decide to fix or remove totally.
           if ($topic['access_moderate'] <> true) {
@@ -394,7 +393,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 case 'unlock':
                     // TODO: get_forumid_and_categoryid_from_topicid no longer defined
                     $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
+                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedTopic->get())) {
                         return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id' => $topic_id,
@@ -405,7 +404,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 case 'unsticky':
                     // TODO: get_forumid_and_categoryid_from_topicid no longer defined
                     $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $topic)) {
+                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedTopic->get())) {
                         return LogUtil::registerPermissionError();
                     }
                     ModUtil::apiFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id' => $topic_id,
@@ -722,11 +721,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 $this->view->assign('post', $post);
                 $output = $this->view->fetch('user/post/print.tpl');
             } elseif ($topic_id <> 0) {
-                $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
-                            'complete' => true,
-                            'count' => false));
+                $managedTopic = new Dizkus_Manager_Topic($topic_id);
 
-                $this->view->assign('topic', $topic);
+                $this->view->assign('topic', $managedTopic->toArray());
 
                 $output = $this->view->fetch('user/topic/print.tpl');
             } else {

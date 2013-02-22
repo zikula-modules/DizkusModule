@@ -44,11 +44,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference', array('reference' => '52-Kaik'));
 
         if ($topic_id <> false) {
-
             $start = 0;
-            $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopic', array('topic_id' => $topic_id,
-                        'start' => $start,
-                        'count' => true));
+            $managedTopic = new Dizkus_Manager_Topic($topic_id);
         }
 
 
@@ -56,8 +53,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $view = Zikula_View::getInstance('Dizkus', false, null, true);
 
         $view->assign('areaid', $hook->getAreaId());
-        $view->assign('topic', $topic);
-        $view->assign('post_count', count($topic['posts']));
+        $view->assign('topic', $managedTopic->get());
+        $view->assign('post_count', $managedTopic->getPostCount());
         $view->assign('last_visit', $last_visit);
         $view->assign('last_visit_unix', $last_visit_unix);
         $view->assign('modinfo', ModUtil::getInfo(ModUtil::getIdFromName($mod)));
