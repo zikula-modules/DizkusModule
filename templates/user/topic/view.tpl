@@ -150,7 +150,7 @@
                     <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
                     <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
                     <input type="hidden" id="quote" name="quote" value="" />
-                    <input type="hidden" id="authid" name="authid" value="" />
+                    <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
                     <div class="post_header">
                         <label for="message" class="quickreply_title" style="display:block;">{gt text="Quick reply"}</label>
                     </div>
