@@ -117,13 +117,22 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
-    
+
+    /**
+     * Subscriptions
+     * 
+     * Dizkus_Entity_TopicSubscription collection
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic")
+     */
+    private $subscriptions;
+
     /**
      * Constructor
      */
     function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
     public function getTopic_id()
@@ -287,6 +296,15 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $hotThreshold = ModUtil::getVar('Dizkus', 'hot_threshold');
         $totalPosts = $this->getTotal_posts();
         return ($totalPosts >= $hotThreshold);
+    }
+
+    /**
+     * get Topic Subscriptions
+     * @return Dizkus_Entity_TopicSubscription collection
+     */
+    public function getSubscriptions()
+    {
+        return $this->subscriptions;
     }
 
 }

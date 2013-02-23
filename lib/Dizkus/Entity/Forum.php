@@ -210,6 +210,14 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $moderatorGroups;
 
     /**
+     * Subscriptions
+     * 
+     * Dizkus_Entity_ForumSubscription collection
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum")
+     */
+    private $subscriptions;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -218,6 +226,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->topics = new ArrayCollection();
         $this->moderatorUsers = new ArrayCollection();
         $this->moderatorGroups = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
     public function getForum_id()
@@ -559,7 +568,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     {
         // remove the associated moderators
         $this->moderatorGroups->clear();
-        // wondering if this works as expcted here @see
+        // TODO: wondering if this works as expcted here @see
         // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/faq.html#i-call-clear-on-a-one-to-many-collection-but-the-entities-are-not-deleted
         
         // add moderators
@@ -571,6 +580,15 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
             $moderatorGroup->setForum($this);
             $this->moderatorGroups->add($moderatorGroup);
         }
+    }
+
+    /**
+     * get Forum Subscriptions
+     * @return Dizkus_Entity_ForumSubscription collection
+     */
+    public function getSubscriptions()
+    {
+        return $this->subscriptions;
     }
 
 }
