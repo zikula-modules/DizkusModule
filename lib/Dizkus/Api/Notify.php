@@ -24,7 +24,8 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
     {
         setlocale(LC_TIME, System::getVar('locale'));
         $dizkusModuleInfo = ModUtil::getInfoFromName('Dizkus');
-        $fromAddress = !empty(ModUtil::getVar('Dizkus', 'email_from')) ? ModUtil::getVar('Dizkus', 'email_from') : System::getVar('adminmail');
+        $dizkusFrom = ModUtil::getVar('Dizkus', 'email_from');
+        $fromAddress = !empty($dizkusFrom) ? $dizkusFrom : System::getVar('adminmail');
 
         /* @var $post Dizkus_Entity_Post */
         $post = $args['post'];
@@ -32,7 +33,9 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         $subject = ($post->isFirst()) ? '' : 'Re: ';
         $subject .= $post->getTopic()->getForum()->getForum_name() . ' :: ' . $post->getTopic()->getTopic_title();
 
-        $this->view->assign('sitename', System::getVar('sitename'))
+        /* @var $view Zikula_View */
+        $view = Zikula_View::getInstance($this->getName());
+        $view->assign('sitename', System::getVar('sitename'))
             ->assign('category_name', $post->getTopic()->getForum()->getParent()->getForum_name())
             ->assign('forum_name', $post->getTopic()->getForum()->getForum_name())
             ->assign('topic_subject', $post->getTopic()->getTopic_title())
@@ -45,7 +48,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             ->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post->getTopic_id()), null, null, true))
             ->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true))
             ->assign('base_url', System::getBaseUrl());
-        $message = $this->view->fetch('mail/notifyuser.txt');
+        $message = $view->fetch('mail/notifyuser.txt');
 
         $topicSubscriptions = $post->getTopic()->getSubscriptions();
         $forumSubscriptions = $post->getTopic()->getForum()->getSubscriptions();
@@ -58,12 +61,13 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             // check permissions
             /* @var $subscriber Users\Entity\UserEntity */
             $subscriber = $subscription->getForumUser()->getUser();
-            if (in_array($subscriber->getUid(), $notified) || empty($subscriber->getEmail())) continue;
+            $subscriberEmail = $subscriber->getEmail();
+            if (in_array($subscriber->getUid(), $notified) || empty($subscriberEmail)) continue;
             if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getForum_name() . ':' . $post->getTopic()->getForum()->getForum_name() . ':', ACCESS_READ, $subscriber->getUid())) {
                 $args = array('fromname' => System::getVar('sitename'),
                     'fromaddress' => $fromAddress,
                     'toname' => $subscriber->getUname(),
-                    'toaddress' => $subscriber->getEmail(),
+                    'toaddress' =>$subscriberEmail,
                     'subject' => $subject,
                     'body' => $message,
                     'headers' => array('X-UserID: ' . md5(UserUtil::getVar('uid')),
