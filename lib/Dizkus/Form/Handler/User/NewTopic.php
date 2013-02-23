@@ -112,6 +112,9 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $newtopic->getFirstPost()->getPost_id(), $url));
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_edit', $newtopic->getId(), $url));
 
+        // notify topic & forum subscribers
+        ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newtopic->getFirstPost()));
+
         // redirect to the new topic
         return $view->redirect($url->getUrl());
     }

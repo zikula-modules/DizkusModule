@@ -231,6 +231,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             );
             $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
+            
+            // notify topic & forum subscribers
+            $notified = ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
 
             return $this->redirect($url->getUrl());
         } else {

@@ -50,9 +50,8 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             ->assign('base_url', System::getBaseUrl());
         $message = $view->fetch('mail/notifyuser.txt');
 
-        $topicSubscriptions = $post->getTopic()->getSubscriptions();
-        $forumSubscriptions = $post->getTopic()->getForum()->getSubscriptions();
-        /* @var $subscriptions Doctrine\Common\Collections\ArrayCollection */
+        $topicSubscriptions = $post->getTopic()->getSubscriptions()->toArray();
+        $forumSubscriptions = $post->getTopic()->getForum()->getSubscriptions()->toArray();
         $subscriptions = array_merge($topicSubscriptions, $forumSubscriptions);
 
         // we do not want to notify the current poster
@@ -78,7 +77,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             }
         }
 
-        return true;
+        return $notified;
     }
 
 }
