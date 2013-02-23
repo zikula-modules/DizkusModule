@@ -32,8 +32,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
 
     /**
      * forum_id
-     * this should probably be changed to `forum` and be Dizkus_Entity_Forum obj
-     * one to one?
+     * this should be removed
      *
      * @ORM\Column(type="integer")
      */
