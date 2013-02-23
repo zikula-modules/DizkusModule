@@ -90,7 +90,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         ModUtil::apiFunc('Dizkus', 'user', 'notify_moderator', array('post' => $managedPost->get(),
             'comment' => $data['comment']));
 
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'get_page_from_topic_replies', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
+        $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(),
                     'start' => $start));

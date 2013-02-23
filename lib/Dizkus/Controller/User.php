@@ -225,9 +225,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             $managedPost = new Dizkus_Manager_Post();
             $managedPost->create($data);
+            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
             $params = array(
                 'topic' => $topic_id,
-                'start' => $start // this value is undefined
+                'start' => $start
             );
             $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));

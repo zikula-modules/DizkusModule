@@ -268,15 +268,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * TODO: Change name to getTopicLastPage
-     * get_page_from_topic_replies
+     * getTopicPage
      * Uses the number of topic_replies and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.
      *
      * @params $args['topic_replies'] int number of topic replies
      * @return int page number of last posting in the thread
      */
-    public function get_page_from_topic_replies($args)
+    public function getTopicPage($args)
     {
         if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0) {
             return LogUtil::registerArgsError();
@@ -538,38 +537,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * TODO: @see get_page_from_topic_replies() which seems to return the same information
-     * get_last_topic_page
-     * returns the number of the last page of the topic if more than posts_per_page entries
-     * eg. for use as the start parameter in urls
-     *
-     * @params $args['topic_id'] int the topic id
-     * @returns int the page number
-     */
-    public function get_last_topic_page($args)
-    {
-        // get some enviroment
-        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
-        $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
-
-        if (!isset($args['topic_id']) || !is_numeric($args['topic_id'])) {
-            return LogUtil::registerArgsError();
-        }
-
-        if ($post_sort_order == 'ASC') {
-            $num_postings = DBUtil::selectFieldByID('dizkus_topics', 'topic_replies', $args['topic_id'], 'topic_id');
-            // add 1 for the initial posting as we deal with the replies here
-            $num_postings++;
-            $last_page = floor($num_postings / $posts_per_page);
-        } else {
-            // DESC = latest topic is on top = page 0 anyway...
-            $last_page = 0;
-        }
-
-        return $last_page;
-    }
-
-    /**
      * notify moderators
      *
      * @params $args['post'] Dizkus_Entity_Post
@@ -645,7 +612,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             $reporting_username = $this->__('Guest');
         }
 
-        $start = $this->get_page_from_topic_replies(array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
+        $start = $this->getTopicPage(array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
         $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
         // FIXME Move this to a translatable template?
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
