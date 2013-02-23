@@ -164,6 +164,17 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
         return $this->post_first = $first;
     }
 
+    /**
+     * Is the post a first post in topic?
+     * convenience naming
+     * 
+     * @return boolean
+     */
+    public function isFirst()
+    {
+        return $this->post_first;;
+    }
+
     public function getPost_title()
     {
         return $this->post_title;

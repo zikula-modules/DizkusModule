@@ -76,16 +76,6 @@ class Dizkus_Manager_Post
     }
 
     /**
-     * Is the post a first post in topic?
-     * 
-     * @return boolean
-     */
-    public function isFirst()
-    {
-        return $this->_post->getPost_first();
-    }
-
-    /**
      * return topic as doctrine2 object
      *
      * @return object

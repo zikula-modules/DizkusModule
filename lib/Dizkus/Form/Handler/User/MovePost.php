@@ -49,13 +49,13 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         
         $this->post_id = $id;
 
-        $post = new Dizkus_Manager_Post($id);
+        $managedPost = new Dizkus_Manager_Post($id);
         
-        $this->old_topic_id = $post->getTopicId();
+        $this->old_topic_id = $managedPost->getTopicId();
 
-        if ($post->isFirst()) {
+        if ($managedPost->get()->isFirst()) {
             LogUtil::registerError('You can not move the first post of a topic!');
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $post->getTopicId()));
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $managedPost->getTopicId()));
             return System::redirect($url);
         }
 
