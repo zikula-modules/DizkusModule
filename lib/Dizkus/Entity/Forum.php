@@ -200,11 +200,13 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $topics;
 
     /**
+     * Dizkus_Entity_Moderator_User collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
      */
     private $moderatorUsers;
 
     /**
+     * Dizkus_Entity_Moderator_Group collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
      */
     private $moderatorGroups;
@@ -510,7 +512,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get Moderators
      * 
-     * @return Dizkus_Entity_ForumUser collection
+     * @return Dizkus_Entity_Moderator_User collection
      */
     public function getModeratorUsers()
     {
@@ -547,7 +549,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get forum moderator groups
      * 
-     * @return Dizkus_Entity_Moderator_Group
+     * @return Dizkus_Entity_Moderator_Group collection
      */
     public function getModeratorGroups()
     {
