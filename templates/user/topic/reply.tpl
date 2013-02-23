@@ -3,8 +3,6 @@
 
 {include file='user/header.tpl'}
 
-{*modcallhooks hookobject='item' hookaction='display' hookid=$reply.topic.topic_id implode=false*}
-
 {if $preview|default:false}
 <div id="replypreview" style="margin:1em 0;">
     {include file='user/topic/replypreview.tpl'}
