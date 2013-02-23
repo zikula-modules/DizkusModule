@@ -90,7 +90,7 @@
                 {/if}
                 {/if}
 
-                {if $permissions.moderate eq true}
+                {if $isModerator OR $permissions.moderate}
                 <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
                 {/if}
             </ul>

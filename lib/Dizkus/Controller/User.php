@@ -67,20 +67,20 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $managedForum = new Dizkus_Manager_Forum($forumId);
-        $this->view->assign('forum', $managedForum->get());
-        $this->view->assign('topics', $managedForum->getTopics($start));
-        $this->view->assign('pager', $managedForum->getPager());
-        $this->view->assign('permissions', $managedForum->getPermissions());
-        $this->view->assign('breadcrumbs', $managedForum->getBreadcrumbs());
-
         // Permission check
         $this->throwForbiddenUnless(
             ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())
         );
 
-        $this->view->assign('hot_threshold', $this->getVar('hot_threshold'));
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('forum', $managedForum->get())
+            ->assign('topics', $managedForum->getTopics($start))
+            ->assign('pager', $managedForum->getPager())
+            ->assign('permissions', $managedForum->getPermissions())
+            ->assign('isModerator', $managedForum->isModerator())
+            ->assign('breadcrumbs', $managedForum->getBreadcrumbs())
+            ->assign('hot_threshold', $this->getVar('hot_threshold'))
+            ->assign('last_visit', $last_visit)
+            ->assign('last_visit_unix', $last_visit_unix);
 
         return $this->view->fetch('user/forum/view.tpl');
     }

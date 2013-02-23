@@ -258,4 +258,33 @@ class Dizkus_Manager_Forum
         return true;
     }
 
+    /**
+     * Is the current user (provided user) a forum moderator?
+     * 
+     * @param integer $uid (optional, default: null)
+     * @return boolean
+     */
+    public function isModerator($uid = null)
+    {
+        if (!isset($uid)) {
+            $uid = UserUtil::getVar('uid');
+        }
+        $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray();
+        if (in_array($uid, $moderatorUsers)) {
+            return true;
+        }
+        $gids = $this->_forum->getModeratorGroupsAsIdArray();
+        if (empty($gids)) {
+            return false;
+        }
+
+        $dql = "SELECT m FROM Groups\Entity\GroupMembershipEntity m
+            WHERE m.uid = :uid
+            AND m.gid IN (:gids)";
+        $groupMembership = $this->entityManager->createQuery($dql)
+                ->setParameter('uid', $uid)
+                ->setParameter('gids', $gids)
+                ->getResult();
+        return (count($groupMembership) > 0) ? true : false;
+    }
 }
