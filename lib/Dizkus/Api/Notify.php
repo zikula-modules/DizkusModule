@@ -52,14 +52,14 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         /* @var $subscriptions Doctrine\Common\Collections\ArrayCollection */
         $subscriptions = array_merge($topicSubscriptions, $forumSubscriptions);
 
+        // we do not want to notify the current poster
+        $notified = array($post->getPoster_id());
         foreach ($subscriptions as $subscription) {
             // check permissions
             /* @var $subscriber Users\Entity\UserEntity */
             $subscriber = $subscription->getForumUser()->getUser();
-            // we do not want to notify the current poster
-            if ($subscriber->getUid() == $post->getPoster_id()) continue;
+            if (in_array($subscriber->getUid(), $notified) || empty($subscriber->getEmail())) continue;
             if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getForum_name() . ':' . $post->getTopic()->getForum()->getForum_name() . ':', ACCESS_READ, $subscriber->getUid())) {
-                if (empty($subscriber->getEmail())) continue;
                 $args = array('fromname' => System::getVar('sitename'),
                     'fromaddress' => $fromAddress,
                     'toname' => $subscriber->getUname(),
@@ -69,7 +69,8 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
                     'headers' => array('X-UserID: ' . md5(UserUtil::getVar('uid')),
                         'X-Mailer: Dizkus v' . $dizkusModuleInfo['version'],
                         'X-DizkusTopicID: ' . $post->getTopic_id()));
-                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);                
+                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
+                $notified[] = $subscriber->getUid();
             }
         }
 
