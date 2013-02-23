@@ -257,6 +257,7 @@ class Dizkus_Manager_Topic
         unset($data['post_attach_signature']);
         $this->_firstPost->setPost_title($data['topic_title']);
         $this->_firstPost->setTopic($this->_topic);
+        $this->_firstPost->setPost_first(true);
         $this->_subscribe = $data['subscribe_topic'];
         unset($data['subscribe_topic']);
         $this->_forumId = $data['forum_id'];
