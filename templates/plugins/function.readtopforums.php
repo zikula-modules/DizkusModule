@@ -1,4 +1,5 @@
 <?php
+
 /**
  * readtopforums
  * reads the last $maxforums forums and assign them in a
@@ -7,45 +8,34 @@
  * @params maxforums (int) number of forums to read, default = 5
  *
  */
-
-function smarty_function_readtopforums($params, &$smarty) 
+function smarty_function_readtopforums($params, Zikula_View $view)
 {
     $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
-    
-    ModUtil::dbInfoLoad('Dizkus');
-    $ztable = DBUtil::getTables();
-    $sql = "SELECT f.forum_id, 
-                   f.forum_name, 
-                   f.forum_topics, 
-                   f.forum_posts, 
-                   c.cat_title,
-                   c.cat_id
-          FROM ".$ztable['dizkus_forums']." AS f, 
-               ".$ztable['dizkus_categories']." AS c
-          WHERE f.cat_id = c.cat_id
-          ORDER BY forum_posts DESC";
 
-    $res = DBUtil::executeSQL($sql, -1, $forummax);
-    $colarray = array('forum_id', 'forum_name', 'forum_topics', 'forum_posts', 'cat_title', 'cat_id');
-    $result    = DBUtil::marshallObjects($res, $colarray);
-
-    $result_forummax = count($result);
-    if ($result_forummax <= $forummax) {
-        $forummax = $result_forummax;
-    }
+    /** @var $em Doctrine\ORM\EntityManager */
+    $em = $view->getContainer()->get('doctrine.entitymanager');
+    /* @var $qb Doctrine\ORM\QueryBuilder */
+    $qb = $em->createQueryBuilder();
+    $qb->select('f')
+            ->from('Dizkus_Entity_Forum', 'f')
+            ->orderBy('f.forum_posts', 'DESC');
+    $qb->setMaxResults($forummax);
+    $forums = $qb->getQuery()->getResult();
 
     $topforums = array();
-    if (is_array($result) && !empty($result)) {
-        foreach ($result as $topforum) {
+    if (empty($forums)) {
+        foreach ($forums as $topforum) {
             if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $topforum)) {
-                $topforum['forum_name'] = DataUtil::formatForDisplay($topforum['forum_name']);
-                $topforum['cat_title'] = DataUtil::formatForDisplay($topforum['cat_title']);
+                $topforum['forum_name'] = DataUtil::formatForDisplay($topforum->getForum_name());
+                $parent = $topforum->getParent();
+                $parentName = isset($parent) ? $parent->getForum_name() : $view->__('Root');
+                $topforum['cat_title'] = DataUtil::formatForDisplay($parentName);
                 array_push($topforums, $topforum);
             }
         }
     }
 
-    $smarty->assign('topforumscount', count($topforums));
-    $smarty->assign('topforums', $topforums);
+    $view->assign('topforumscount', count($topforums));
+    $view->assign('topforums', $topforums);
     return;
 }
