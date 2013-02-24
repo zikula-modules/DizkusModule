@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -27,15 +28,14 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $maxposts = (isset($params['maxposts']) && is_numeric($params['maxposts']) && $params['maxposts'] > 0) ? $params['maxposts'] : 5;
     // hard limit maxposts to 100 to be safe
     $maxposts = ($maxposts > 100) ? 100 : $maxposts;
-    
+
     $loggedIn = UserUtil::isLoggedIn();
     $uid = ($loggedIn == true) ? UserUtil::getVar('uid') : 1;
 
     $whereforum = array();
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
         // get the category id and check permissions
-        $params['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category',
-                               array('forum_id' => $params['forum_id']));
+        $params['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', array('forum_id' => $params['forum_id']));
         if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $params)) {
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
@@ -46,7 +46,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
         $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
-        if (!is_array($userforums) || count($userforums)==0) {
+        if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
@@ -73,12 +73,12 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $wherespecial = array(0);
     // if show_m2f is set we show contents of m2f forums where.
     // forum_pop3_active is set to 1
-    if (isset($params['show_m2f']) && $params['show_m2f']==true) {
+    if (isset($params['show_m2f']) && $params['show_m2f'] == true) {
         $wherespecial[] = 1;
     }
     // if show_rss is set we show contents of rss2f forums where.
     // forum_pop3_active is set to 2
-    if (isset($params['show_rss']) && $params['show_rss']==true) {
+    if (isset($params['show_rss']) && $params['show_rss'] == true) {
         $wherespecial[] = 2;
     }
 
@@ -86,46 +86,46 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $em = $view->getContainer()->get('doctrine.entitymanager');
     $qb = $em->createQueryBuilder();
     $qb->select(array('t', 'f', 'p', 'fu'))
-        ->from('Dizkus_Entity_Topic', 't')
-        ->innerJoin('t.forum', 'f')
-        ->innerJoin('t.last_post', 'p')
-        ->innerJoin('p.poster', 'fu');
+            ->from('Dizkus_Entity_Topic', 't')
+            ->innerJoin('t.forum', 'f')
+            ->innerJoin('t.last_post', 'p')
+            ->innerJoin('p.poster', 'fu');
     if (!empty($whereforum)) {
         $qb->andWhere('t.forum IN (:forum)')
-            ->setParameter('forum', $whereforum);
+                ->setParameter('forum', $whereforum);
     }
     if (!empty($wherefavorites)) {
         $qb->andWhere('t.forum IN (:forum)')
-            ->setParameter('forum', $wherefavorites);
+                ->setParameter('forum', $wherefavorites);
     }
     if (!empty($wherespecial)) {
         $qb->andWhere('f.forum_pop3_active IN (:special)')
-            ->setParameter('special', $wherespecial);
+                ->setParameter('special', $wherespecial);
     }
     if (!empty($params['user_id'])) {
-        $whereUserId = ($params['user_id']==-1 && $loggedIn) ? $uid : $params['user_id'];
+        $whereUserId = ($params['user_id'] == -1 && $loggedIn) ? $uid : $params['user_id'];
         $qb->andWhere('fu.uid = :id)')
-            ->setParameter('id', $whereUserId);
+                ->setParameter('id', $whereUserId);
     }
     $qb->orderBy('t.topic_time', 'DESC');
     $qb->setMaxResults($maxposts);
     $topics = $qb->getQuery()->getResult();
-    
+
     $lastposts = array();
     if (!empty($topics)) {
         $post_sort_order = ModUtil::apiFunc('Dizkus', 'user', 'get_user_post_order');
-        $posts_per_page  = ModUtil::getVar('Dizkus', 'posts_per_page');
+        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
         /* @var $topic Dizkus_Entity_Topic */
         foreach ($topics as $topic) {
             $lastpost = array();
             $lastpost['topic_title'] = DataUtil::formatforDisplay($topic->getTopic_title());
-            $lastpost['forum_name']  = DataUtil::formatforDisplay($topic->getForum()->getForum_name());
-            $lastpost['forum_id']  = DataUtil::formatforDisplay($topic->getForum()->getForum_id());
-            $lastpost['cat_title']   = DataUtil::formatforDisplay($topic->getForum()->getParent()->getForum_name());
+            $lastpost['forum_name'] = DataUtil::formatforDisplay($topic->getForum()->getForum_name());
+            $lastpost['forum_id'] = DataUtil::formatforDisplay($topic->getForum()->getForum_id());
+            $lastpost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getForum_name());
 
             $start = 0;
             if ($post_sort_order == "ASC") {
-                $start = ((ceil(($topic->getTopic_replies() + 1)  / $posts_per_page) - 1) * $posts_per_page);
+                $start = ((ceil(($topic->getTopic_replies() + 1) / $posts_per_page) - 1) * $posts_per_page);
             }
 
             if ($topic->getTopic_poster() != 1) {
@@ -141,9 +141,8 @@ function smarty_function_readlastposts($params, Zikula_View $view)
             $lastpost['post_text'] = ModUtil::func('Dizkus', 'ajax', 'dzk_replacesignature', array('text' => $topic->getLast_post()->getPost_text()));
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($lastpost['post_text']));
             $lastpost['posted_time'] = DateUtil::formatDatetime($topic->getTopic_time(), 'datetimebrief');
-            $lastpost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic',
-                                                             array('topic' => $topic->getTopic_id(),
-                                                                   'start' => $start)));
+            $lastpost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id(),
+                                'start' => $start)));
             $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $topic->getLast_post()->getPost_id();
 
             array_push($lastposts, $lastpost);
