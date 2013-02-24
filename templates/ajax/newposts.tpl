@@ -4,8 +4,8 @@
 {if $lastpostcount > 0}
 <dl>
     <dt><strong>{$lastpostcount}&nbsp;{gt text="Recent postings:"}</strong></dt>
-    {foreach item=lastpost from=$lastposts}
-    <dd>{$lastpost.posted_unixtime|dateformat:'datetimebrief'} <a href="{$lastpost.last_post_url_anchor}">{$lastpost.topic_title|truncate:42}</a> ({$lastpost.poster_name})</dd>
+    {foreach item='lastpost' from=$lastposts}
+    <dd>{$lastpost.posted_time} <a href="{$lastpost.last_post_url_anchor}">{$lastpost.topic_title|truncate:42}</a> ({$lastpost.poster_name})</dd>
     {/foreach}
 </dl>
 

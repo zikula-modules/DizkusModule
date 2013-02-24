@@ -75,6 +75,28 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     }
 
     /**
+     * Get the ids of all the forums the user is allowed to see
+     * 
+     * @param integer $parent
+     * @param integer $userId
+     * @return array
+     */
+    public function getForumIdsByPermission($parent = null, $userId = null)
+    {
+        $ids = array();
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findAll();
+        foreach ($forums as $forum) {
+            $parent = $forum->getParent();
+            $parentId = isset($parent) ? $parent->getForum_id() : null;
+            $forumId = $forum->getForum_id();
+            if (SecurityUtil::checkPermission('Dizkus::', "$parentId:$forumId:", ACCESS_READ, $userId)) {
+                $ids[] = $forumId;
+            }
+        }
+        return $ids;
+    }
+
+    /**
      * Get forum subscription status
      *
      * @param array $args The argument array.

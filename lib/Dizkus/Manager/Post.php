@@ -135,6 +135,9 @@ class Dizkus_Manager_Post
         // increment topic posts
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
+        
+        // update topic time to last post time
+        $this->_topic->get()->setTopic_time($this->_post->getPost_time());
 
         // increment forum posts
         $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());

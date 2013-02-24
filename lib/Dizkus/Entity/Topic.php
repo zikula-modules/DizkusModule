@@ -35,6 +35,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
 
     /**
      * topic_poster
+     * This should be converted to ForumUser
      *
      * @ORM\Column(type="integer")
      * @ZK\StandardFields(type="userid", on="create")
