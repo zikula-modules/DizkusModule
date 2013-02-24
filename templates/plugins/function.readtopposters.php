@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -16,31 +17,32 @@
  * @params maxposters (int) number of users to read, default = 3
  *
  */
-function smarty_function_readtopposters($params, &$smarty) 
+function smarty_function_readtopposters($params, Zikula_View $view)
 {
     $postermax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
 
-    ModUtil::dbInfoLoad('Settings');
-    $ztable = DBUtil::getTables();
-    $objcol = $ztable['objectdata_attributes_column'];
-        
-    $where = $objcol['attribute_name'] . "='dizkus_user_posts'";
-    $orderby = $objcol['value'] . ' DESC';
-    $topposters = DBUtil::selectObjectArray('objectdata_attributes', $where, $orderby, -1, $postermax);
+    /** @var $em Doctrine\ORM\EntityManager */
+    $em = $view->getContainer()->get('doctrine.entitymanager');
+    /* @var $qb Doctrine\ORM\QueryBuilder */
+    $qb = $em->createQueryBuilder();
+    $qb->select('u')
+            ->from('Dizkus_Entity_ForumUser', 'u')
+            ->orderBy('u.user_posts', 'DESC');
+    $qb->setMaxResults($postermax);
+    $forumUsers = $qb->getQuery()->getResult();
 
-    if (is_array($topposters) && !empty($topposters)) {
-        for($i=0; $i < count($topposters); $i++) {
-            $topposters[$i]['user_name'] = DataUtil::formatForDisplay(UserUtil::getVar('uname', $topposters[$i]['object_id']));
-            // for BC reasons
-            $topposters[$i]['user_posts'] = DataUtil::formatForDisplay($topposters[$i]['value']);
-            $topposters[$i]['user_id']    = DataUtil::formatForDisplay($topposters[$i]['object_id']);
+    $topposters = array();
+    if (!empty($forumUsers)) {
+        foreach ($forumUsers as $forumUser) {
+            $topposters[] = array('user_name' => DataUtil::formatForDisplay($forumUser->getUser()->getUname()),
+                // for BC reasons
+                'user_posts' => DataUtil::formatForDisplay($forumUser->getUser_posts()),
+                'user_id' => DataUtil::formatForDisplay($forumUser->getUser_id()));
         }
-    } else {
-        $toppposters = array();
     }
 
-    $smarty->assign('toppostercount', count($topposters));
-    $smarty->assign('topposters', $topposters);
+    $view->assign('toppostercount', count($topposters));
+    $view->assign('topposters', $topposters);
 
     return;
 }
