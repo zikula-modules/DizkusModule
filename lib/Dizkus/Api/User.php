@@ -561,8 +561,8 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         if (!isset($args['msgid']) || empty($args['msgid'])) {
             return LogUtil::registerArgsError();
         }
-
-        return DBUtil::selectFieldByID('dizkus_posts', 'topic_id', $args['msgid'], 'post_msgid');
+        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('post_msgid', $args['msgid']));
+        return $topic->getTopic_id();
     }
 
     /**
