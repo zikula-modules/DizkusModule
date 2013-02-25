@@ -73,13 +73,7 @@ class Dizkus_Form_Handler_User_IgnoreListManagement extends Zikula_Form_Abstract
             }
 
             // update user's attributes
-            $uid = UserUtil::getVar('uid');
-            $user = DBUtil::selectObjectByID('users', $uid, 'uid', null, null, null, false);
-            $obj['uid'] = UserUtil::getVar('uid');
-            $user['__ATTRIBUTES__']['dzk_ignorelist_myhandling'] = $obj['ignorelist_myhandling'];
-
-            // store attributes 
-            DBUtil::updateObject($user, 'users', '', 'uid');
+            UserUtil::setVar('dzk_ignorelist_myhandling', $obj['ignorelist_myhandling']);
 
             LogUtil::registerStatus($this->__('Done! Updated the \'Ignore list\' settings.'));
 
