@@ -24,9 +24,10 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi
      */
     private $usersarray = array();
 
-    public function __construct()
+    public function __construct(Zikula_ServiceManager $serviceManager)
     {
         $this->_online = array();
+        parent::__construct($serviceManager);
     }
 
     /**
@@ -151,14 +152,19 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi
         if (array_key_exists($args['uid'], $this->_online)) {
             return $this->_online[$args['uid']];
         }
-
-        $ztable = DBUtil::getTables();
-        $activetime = DateUtil::getDateTime(time() - (System::getVar('secinactivemins') * 60));
-        $where = $ztable['session_info_column']['uid'] . " = '" . $args['uid'] . "'
-                  AND " . $ztable['session_info_column']['lastused'] . " > '" . DataUtil::formatForStore($activetime) . "'";
-        $sessioninfo = DBUtil::selectObject('session_info', $where);
-
-        $isOnline = ($sessioninfo['uid'] == $args['uid']) ? true : false;
+        
+        $dql = "SELECT s.uid
+                FROM Users\Entity\UserSessionEntity s
+                WHERE s.lastused > :activetime
+                AND s.uid = :uid";
+        $query = $this->entityManager->createQuery($dql);
+        $activetime = new DateTime(); // maybe need to check TZ here
+        $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
+        $query->setParameter('activetime', $activetime);
+        $query->setParameter('uid',  $args['uid']);
+        $uid = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR);
+        
+        $isOnline = (!empty($uid)) ? true : false;
         $this->_online[$args['uid']] = $isOnline;
         return $isOnline;
     }
