@@ -578,17 +578,13 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $view = Zikula_View::getInstance($this->name);
 
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            $fragment = $this->request->getGet()->get('fragment', $this->request->getPost()->get('fragment'));
-
-            $tables = DBUtil::getTables();
-            $usersColumn = $tables['users_column'];
-            $where = $usersColumn['uname'] . ' REGEXP \'(' . DataUtil::formatForStore($fragment) . ')\'';
-            $results = UserUtil::getUsers($where);
-
-            $view->assign('results', $results);
+            $fragment = $this->request->query->get('fragment', $this->request->request->get('fragment'));
+            $users = ModUtil::apiFunc('Dizkus', 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
+            $view->assign('results', $users);
         }
 
         $output = $view->fetch('ajax/getusers.tpl');
+        // TODO: !! this isn't working I think it is because of the core changes in the Ajax Response.
 
         return new Zikula_Response_Ajax_Plain($output);
     }

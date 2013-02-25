@@ -869,5 +869,39 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
         return $text;
     }
+    
+    /**
+     * get an array of users where uname matching text fragment(s)
+     * 
+     * @param array $args['fragments']
+     * @param integer $args['limit']
+     * @return array
+     */
+    public function getUsersByFragments($args)
+    {
+        $fragments = isset($args['fragments']) ? $args['fragments'] : null;
+        $limit = isset($args['limit']) ? $args['limit'] : -1;
+        if (empty($fragments)) {
+            return array();
+        }
+        $rsm = new Doctrine\ORM\Query\ResultSetMapping;
+        $rsm->addEntityResult('Users\Entity\UserEntity', 'u');
+        $rsm->addFieldResult('u', 'uname', 'uname');
+        $rsm->addFieldResult('u', 'uid', 'uid');
+
+        $sql = "SELECT u.uid, u.uname FROM users u WHERE ";
+        $subSql = array();
+        foreach ($fragments as $fragment) {
+            $subSql[] = "u.uname REGEXP '(" . DataUtil::formatForStore($fragment) . ")'";
+        }
+        $sql .= implode(" OR ", $subSql);
+        $sql .= " ORDER BY u.uname ASC";
+        if ($limit > 0) {
+            $sql .= " LIMIT $limit";
+        }
+        $users = $this->entityManager->createNativeQuery($sql, $rsm)
+                ->getResult();
+        return $users;
+    }
 
 }
