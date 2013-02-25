@@ -56,4 +56,5 @@
     <li>{gt text="Forums" domain="module_dizkus"}: {$total_forums}</li>
     <li>{gt text="Topics" domain="module_dizkus"}: {$total_topics}</li>
     <li>{gt text="Posts" domain="module_dizkus"}: {$total_posts}</li>
+    <li>{gt text="Last User" domain="module_dizkus"}: {$last_user}</li>
 </ul>

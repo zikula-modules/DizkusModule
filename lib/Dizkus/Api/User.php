@@ -133,8 +133,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             case 'lastmember':
             case 'lastuser':
                 if (!isset($cache[$type])) {
-                    $res = DBUtil::selectObjectArray('users', null, 'uid DESC', 1, 1);
-                    $cache[$type] = $res[0]['uname'];
+                    $qb = $this->entityManager->createQueryBuilder();
+                    $qb->select('u')
+                            ->from('Dizkus_Entity_ForumUser', 'u')
+                            ->orderBy('u.user', 'DESC')
+                            ->setMaxResults(1);
+                    $user = $qb->getQuery()->getSingleResult();
+                    $cache[$type] = $user->getUser()->getUname();
                 }
 
                 return $cache[$type];
