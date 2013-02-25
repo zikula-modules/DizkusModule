@@ -206,18 +206,30 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public function get_viewip_data($args)
     {
-        $ztable = DBUtil::getTables();
-
-        $viewip['poster_ip'] = DBUtil::selectField('dizkus_posts', 'poster_ip', 'post_id=' . DataUtil::formatForStore($args['post_id']));
-        $viewip['poster_host'] = gethostbyaddr($viewip['poster_ip']);
-
-        $sql = "SELECT uid, uname, count(*) AS postcount
-                FROM " . $ztable['dizkus_posts'] . " p, " . $ztable['users'] . " u
-                WHERE poster_ip='" . DataUtil::formatForStore($viewip['poster_ip']) . "' && p.poster_id = u.uid
-                GROUP BY uid";
-        $res = DBUtil::executeSQL($sql);
-        $colarray = array('uid', 'uname', 'postcount');
-        $viewip['users'] = DBUtil::marshallObjects($res, $colarray);
+        $post = new Dizkus_Manager_Post($args['post_id']);
+        $pip = $post->get()->getPoster_ip();
+        
+        $viewip = array(
+            'poster_ip' => $pip,
+            'poster_host' => gethostbyaddr($pip),
+        );
+        unset($post);
+        
+        $dql = "SELECT p, fu, u
+            FROM Dizkus_Entity_Post p
+            JOIN p.poster fu
+            JOIN fu.user u
+            WHERE p.poster_ip = :pip
+            GROUP BY p.poster";
+        $query = $this->entityManager->createQuery($dql)
+            ->setParameter('pip', $pip);
+        $posts = $query->getResult();
+        foreach ($posts as $post) {
+            /* @var $post Dizkus_Entity_Post */
+            $viewip['users'][] = array('uid' => $post->getPoster()->getUser_id(),
+                'uname' => $post->getPoster()->getUser()->getUname(),
+                'postcount' => $post->getPoster()->getUser_posts());
+        }
 
         return $viewip;
     }
