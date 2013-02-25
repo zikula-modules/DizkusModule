@@ -58,7 +58,7 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
 
         // check for Permission
         $this->throwForbiddenUnless(
-                SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid] . '::', ACCESS_READ)
+                SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_READ)
         );
 
         // check if forum is turned off
