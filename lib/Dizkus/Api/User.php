@@ -206,14 +206,13 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public function get_viewip_data($args)
     {
-        $post = new Dizkus_Manager_Post($args['post_id']);
-        $pip = $post->get()->getPoster_ip();
+        $managedPost = new Dizkus_Manager_Post($args['post_id']);
+        $pip = $managedPost->get()->getPoster_ip();
         
         $viewip = array(
             'poster_ip' => $pip,
             'poster_host' => gethostbyaddr($pip),
         );
-        unset($post);
         
         $dql = "SELECT p, fu, u
             FROM Dizkus_Entity_Post p
@@ -484,9 +483,9 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             }
 
             // store the timestamp of the last connection to the database
-            $fobj['forum_pop3_lastconnect'] = time();
-            $fobj['forum_id'] = $forum['forum_id'];
-            DBUtil::updateObject($fobj, 'dizkus_forums', '', 'forum_id');
+            $managedForum = new Dizkus_Manager_Forum($forum['forum_id']);
+            $managedForum->get()->setForum_pop3_lastconnect(time());
+            $this->entityManager->flush();
         }
 
         return;
