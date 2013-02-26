@@ -51,25 +51,12 @@ class Dizkus_Needles_Dizkus extends Zikula_AbstractHelper
                         $id   = $temp[1];
                     }
 
-                    ModUtil::dbInfoLoad('Dizkus');
-                    $ztable = DBUtil::getTables();
-
                     switch ($type) {
                         case 'F':
-                            $sql = 'SELECT forum_name,
-                                           cat_id
-                                    FROM   ' . $ztable['dizkus_forums'] . '
-                                    WHERE  forum_id=' . (int)DataUtil::formatForStore($id);
-                            $res = DBUtil::executeSQL($sql);
-                            $colarray = array('forum_name', 'cat_id');
-                            $result    = DBUtil::marshallObjects($res, $colarray);
+                            $managedForum = new Dizkus_Manager_Forum($id);
 
-                            if (is_array($result) && !empty($result)) {
-                                $forum = array(
-                                    'cat_id' => $result[0]['cat_id'],
-                                    'forum_id' => $id
-                                );
-                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
+                            if (!empty($managedForum)) {
+                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
                                     $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id)));
                                     $title = DataUtil::formatForDisplay($result[0]['forum_name']);
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
@@ -82,19 +69,10 @@ class Dizkus_Needles_Dizkus extends Zikula_AbstractHelper
                             break;
 
                         case 'T':
-                            $sql = 'SELECT    t.topic_title,
-                                              t.forum_id,
-                                              f.cat_id 
-                                    FROM      ' . $ztable['dizkus_topics'] . ' as t
-                                    LEFT JOIN ' . $ztable['dizkus_forums'] . ' as f
-                                    ON        f.forum_id=t.forum_id
-                                    WHERE     t.topic_id=' . DataUtil::formatForStore($id);
-                            $res = DBUtil::executeSQL($sql);
-                            $colarray = array('topic_title', 'forum_id', 'cat_id');
-                            $result    = DBUtil::marshallObjects($res, $colarray);
+                            $managedTopic = new Dizkus_Manager_Topic($id);
 
-                            if (is_array($result) && !empty($result)) {
-                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $result[0])) {
+                            if (!empty($managedTopic)) {
+                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get())) {
                                     $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
                                     $title = DataUtil::formatForDisplay($result[0]['topic_title']);
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
