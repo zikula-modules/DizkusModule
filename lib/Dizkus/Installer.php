@@ -190,6 +190,11 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
                 LogUtil::registerError($e);
             }
         }
+        try {
+            DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage());
+        }
 
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
