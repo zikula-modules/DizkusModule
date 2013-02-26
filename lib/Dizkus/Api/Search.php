@@ -153,51 +153,28 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         }
 
         ModUtil::dbInfoLoad('Search');
-        $table = DBUtil::getTables();
-        $searchTable = $table['search_result'];
-        $searchColumn = $table['search_result_column'];
-
-
-        // this is a bit of a hacky way to ustilize this API for Doctrine calls.
-
-
-        LogUtil::registerError(json_encode($where));
-
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t')
                 ->from('Dizkus_Entity_Topic', 't')
                 ->leftJoin('t.posts', 'p')
                 ->add('where', $where);
-        $items = $qb->getQuery()->getResult();
-
+        $topics = $qb->getQuery()->getResult();
 
         $sessionId = session_id();
 
-
-        $insertSql =
-                "INSERT INTO $searchTable
-                ($searchColumn[title],
-                $searchColumn[text],
-                $searchColumn[extra],
-                $searchColumn[created],
-                $searchColumn[module],
-                $searchColumn[session])
-                VALUES ";
-
         // Process the result set and insert into search result table
-        foreach ($items as $obj) {
-            $posts = $obj->getPosts();
-            $sql = $insertSql . '('
-                    . '\'' . DataUtil::formatForStore($obj->getTopic_title()) . '\', '
-                    . '\'' . DataUtil::formatForStore(($posts[0]->getPost_text())) . '\', '
-                    . '\'' . DataUtil::formatForStore('abc') . '\', '
-                    . '\'' . DateUtil::formatDatetime($obj->getTopic_time()) . '\', '
-                    . '\'' . 'Dizkus' . '\', '
-                    . '\'' . DataUtil::formatForStore($sessionId) . '\')';
-            $insertResult = DBUtil::executeSQL($sql);
-            if (!$insertResult) {
-                return LogUtil::registerError($this->__('Error! Could not load any page.'));
+        foreach ($topics as $topic) {
+            $posts = $topic->getPosts();
+            $record = array(
+                'title' => $topic->getTopic_title(),
+                'text' => $posts[0]->getPost_text(),
+                'created' => $topic->getTopic_time(),
+                'module' => 'Dizkus',
+                'session' => $sessionId
+            );
+            if (!DBUtil::insertObject($record, 'search_result')) {
+                return LogUtil::registerError($this->__('Error! Could not save the search results.'));
             }
         }
 
