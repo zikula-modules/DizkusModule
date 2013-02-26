@@ -23,6 +23,7 @@
             <fieldset>
                 <label for="username">{gt text="Search for a user"}:</label>&nbsp;<input size="25" maxlength="25" type="text" id="username" value="{$username}" />
                 <div id="username_choices" class="autocomplete_user"></div>
+                {img id="ajax_indicator" style="display: none;" modname='core' set="ajax" src="indicator_circle.gif" alt=""}
             </fieldset>
         </div>
    
