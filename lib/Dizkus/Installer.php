@@ -160,73 +160,11 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
 
-
         // remove the legacy hooks
-        //
-        // createhook
-        //
-        if (!ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'create'));
-        }
-        //
-        // updatehook
-        //
-        if (!ModUtil::unregisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'update'));
-        }
-        //
-        // deletehook
-        //
-        if (!ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'delete'));
-        }
-        //
-        // displayhook
-        //
-        if (!ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink')) {
-            return LogUtil::registerError($this->__f('Error! Could not delete %s hook.', 'display'));
-        }
-
-
-
-
-        /* ModUtil::dbInfoLoad('Settings');
-          $tables = DBUtil::getTables();
-
-          $objtable   = $tables['objectdata_attributes'];
-          $objcolumn  = $tables['objectdata_attributes_column'];
-          $userstable  = $tables['dizkus_users'];
-          $userscolumn = $tables['dizkus_users_column'];
-
-          // One sql per user property to move all data from user_data table to the attributes table
-          // This is the most efficient way to do this. During a test upgrade this took less than 0.3 secs for 6700
-          // users and >15K of properties.
-          foreach ($userscolumn as $uc) {
-          if ($uc <> 'user_id') {
-          $uc = DataUtil::formatforStore($uc);
-          // Set cr_date and lu_date to now, cr_uid and lu_uid will be the uid of the user the attributes belong to
-          $timestring = date('Y-m-d H:i:s');
-          $sql = "INSERT INTO " . $objtable . " (" . $objcolumn['attribute_name'] . ",
-          " . $objcolumn['object_type'] . ",
-          " . $objcolumn['object_id'] . ",
-          " . $objcolumn['value'] . ",
-          " . $objcolumn['cr_date'] . ",
-          " . $objcolumn['cr_uid'] . ",
-          " . $objcolumn['lu_date'] . ",
-          " . $objcolumn['lu_uid'] . ")
-          SELECT 'dizkus_" . $uc . "',
-          'users',
-          " . $userscolumn['user_id'] . ",
-          " . $userscolumn[$uc] . ",
-          '" . $timestring . "',
-          " . $userscolumn['user_id'] . ",
-          '" . $timestring . "',
-          " . $userscolumn['user_id'] . "
-          FROM " . $userstable;
-          DBUtil::executeSQL($sql);
-          }
-          } */
-
+        ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem');
+        ModUtil::unregisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem');
+        ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem');
+        ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink');
 
         // remove table prefixes
         $dizkusTables = array(
@@ -253,19 +191,12 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
             }
         }
 
-        // Update poster_ip field length
-        DBUtil::changeTable('dizkus_posts');
-
-        // done - now drop the dizkus_users table
-        //DBUtil::dropTable('dizkus_users');
-
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
 
         LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
 
-        // TODO: There *may* be a need to move `dizkus_user_rank` from `objectdata_attributes` to `dizkus_user` table
         // TODO: the existing Group/Forum relations need to be migrated from the `dizkus_forum_mods` table (user_id > 1000000)
         //       to the new `dizkus_forum_mods_group` table (use normal group id, so subtract 1000000?)
         return true;
