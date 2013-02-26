@@ -234,68 +234,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * get_previous_or_next_topic_id
-     * returns the next or previous topic_id in the same forum of a given topic_id
-     *
-     * @params $args['topic_id'] int the reference topic_id
-     * @params $args['view']     string either "next" or "previous"
-     * @returns int topic_id maybe the same as the reference id if no more topics exist in the selectd direction
-     */
-    public function get_previous_or_next_topic_id($args)
-    {
-        if (!isset($args['topic_id']) || !isset($args['view'])) {
-            return LogUtil::registerArgsError();
-        }
-
-        switch ($args['view']) {
-            case 'previous':
-                $math = '<';
-                $sort = 'DESC';
-                break;
-
-            case 'next':
-                $math = '>';
-                $sort = 'ASC';
-                break;
-
-            default:
-                return LogUtil::registerArgsError();
-        }
-
-        $ztable = DBUtil::getTables();
-
-        // integrate contactlist's ignorelist here
-        $whereignorelist = '';
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => UserUtil::getVar('uid')));
-        if (($ignorelist_setting == 'strict') || ($ignorelist_setting == 'medium')) {
-            // get user's ignore list
-            $ignored_users = ModUtil::apiFunc('ContactList', 'user', 'getallignorelist', array('uid' => UserUtil::getVar('uid')));
-            $ignored_uids = array();
-            foreach ($ignored_users as $item) {
-                $ignored_uids[] = (int)$item['iuid'];
-            }
-            if (count($ignored_uids) > 0) {
-                $whereignorelist = " AND t1.topic_poster NOT IN (" . implode(',', $ignored_uids) . ")";
-            }
-        }
-
-        $sql = 'SELECT t1.topic_id
-                FROM ' . $ztable['dizkus_topics'] . ' AS t1,
-                     ' . $ztable['dizkus_topics'] . ' AS t2
-                WHERE t2.topic_id = ' . (int)DataUtil::formatForStore($args['topic_id']) . '
-                  AND t1.topic_time ' . $math . ' t2.topic_time
-                  AND t1.forum_id = t2.forum_id
-                  AND t1.sticky = 0
-                  ' . $whereignorelist . '
-                ORDER BY t1.topic_time ' . $sort;
-
-        $res = DBUtil::executeSQL($sql, -1, 1);
-        $newtopic = DBUtil::marshallObjects($res, array('topic_id'));
-
-        return isset($newtopic[0]['topic_id']) ? $newtopic[0]['topic_id'] : 0;
-    }
-
-    /**
      * getTopicPage
      * Uses the number of topic_replies and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.

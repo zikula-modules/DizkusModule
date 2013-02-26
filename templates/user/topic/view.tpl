@@ -41,9 +41,9 @@
     <div class="inner">
         <div id="dzk_javascriptareatopic">
             <ul class="dzk_topicoptions linklist z-clearfix">
-                {*if $topic.prev_topic_id and $topic.topic_id neq $topic.prev_topic_id }
-                <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
-                {/if*}
+                {if !empty($previousTopic) and $topic.topic_id neq $previousTopic}
+                <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$previousTopic}">&nbsp;</a></li>
+                {/if}
 
                 {if $permissions.comment}
                 <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum.forum_id}">{gt text="New topic"}</a></li>
@@ -80,13 +80,13 @@
                 {/if}
                 {/if}
 
-                {*if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
+                {if !empty($nextTopic) and $topic.topic_id neq $nextTopic}
                 <li>
-                    <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">
+                    <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$nextTopic}">
                         &nbsp;
                     </a>
                 </li>
-                {/if*}
+                {/if}
             </ul>
 
             {if $permissions.moderate eq 1}

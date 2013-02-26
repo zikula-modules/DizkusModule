@@ -96,33 +96,19 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     {
         // get the input
         $topicId = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-        // begin patch #3494 part 1, credits to teb
         $post_id = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        // end patch #3494 part 1
         $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
-        $view = strtolower($this->request->query->get('view', (isset($args['view'])) ? $args['view'] : ''));
 
-        /* list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
+        list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 
-          if (!empty($view) && ($view=='next' || $view=='previous')) {
-          $topic_id = ModUtil::apiFunc($this->name, 'user', 'get_previous_or_next_topic_id',
-          array('topic_id' => $topic_id,
-          'view'     => $view));
-          return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic',
-          array('topic' => $topic_id)));
-          }
-
-          // begin patch #3494 part 2, credits to teb
-          if (!empty($post_id) && is_numeric($post_id) && empty($topic_id)) {
-          $managedPost = new Dizkus_Manager_Post($post_id);
-          $topic_id = $managedPost->getTopicId();
-          if ($topic_id <> false) {
-          // redirect instad of continue, better for SEO
-          return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic',
-          array('topic' => $topic_id)));
-          }
-          }
-          // end patch #3494 part 2 */
+        if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
+            $managedPost = new Dizkus_Manager_Post($post_id);
+            $topic_id = $managedPost->getTopicId();
+            if ($topic_id <> false) {
+                // redirect instad of continue, better for SEO
+                return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id)));
+            }
+        }
 
         $managedTopic = new Dizkus_Manager_Topic($topicId);
 
@@ -147,6 +133,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('permissions', $managedTopic->getPermissions());
         $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
         $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
+        $this->view->assign('nextTopic', $managedTopic->getNext());
+        $this->view->assign('previousTopic', $managedTopic->getPrevious());
         //$this->view->assign('post_count', count($topic['posts']));
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);

@@ -485,4 +485,35 @@ class Dizkus_Manager_Topic
                 ->setParameter('topic', $this->_topic)
                 ->getSingleScalarResult();
     }
+    
+    public function getNext()
+    {
+        $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t
+            WHERE t.topic_time > :time
+            AND t.forum = :forum
+            AND t.sticky = 0
+            ORDER BY t.topic_time ASC";
+        $result = $this->entityManager->createQuery($dql)
+                ->setParameter('time', $this->_topic->getTopic_time())
+                ->setParameter('forum', $this->_topic->getForum())
+                ->setMaxResults(1)
+                ->getScalarResult();
+        return $result[0]['topic_id'];
+    }
+    
+    public function getPrevious()
+    {
+        $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t
+            WHERE t.topic_time < :time
+            AND t.forum = :forum
+            AND t.sticky = 0
+            ORDER BY t.topic_time DESC";
+        $result = $this->entityManager->createQuery($dql)
+                ->setParameter('time', $this->_topic->getTopic_time())
+                ->setParameter('forum', $this->_topic->getForum())
+                ->setMaxResults(1)
+                ->getScalarResult();
+        return $result[0]['topic_id'];
+    }
+
 }
