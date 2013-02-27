@@ -496,17 +496,7 @@ class Dizkus_Manager_Topic
      */
     public function getNext()
     {
-        $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t
-            WHERE t.topic_time > :time
-            AND t.forum = :forum
-            AND t.sticky = 0
-            ORDER BY t.topic_time ASC";
-        $result = $this->entityManager->createQuery($dql)
-                ->setParameter('time', $this->_topic->getTopic_time())
-                ->setParameter('forum', $this->_topic->getForum())
-                ->setMaxResults(1)
-                ->getScalarResult();
-        return $result[0]['topic_id'];
+        return $this->getAdjacent('>', 'ASC');
     }
 
     /**
@@ -515,11 +505,22 @@ class Dizkus_Manager_Topic
      */
     public function getPrevious()
     {
+        return $this->getAdjacent('<', 'DESC');
+    }
+
+    /**
+     * Get the adjacent topic (by time) in the same Forum
+     * @param $oper string less than or greater than operator < or >
+     * @param $dir string Sort direction ASC/DESC
+     * @return integer
+     */
+    private function getAdjacent($oper, $dir)
+    {
         $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t
-            WHERE t.topic_time < :time
+            WHERE t.topic_time $oper :time
             AND t.forum = :forum
             AND t.sticky = 0
-            ORDER BY t.topic_time DESC";
+            ORDER BY t.topic_time $dir";
         $result = $this->entityManager->createQuery($dql)
                 ->setParameter('time', $this->_topic->getTopic_time())
                 ->setParameter('forum', $this->_topic->getForum())
