@@ -91,13 +91,13 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
           } */
 
-        $newtopic = new Dizkus_Manager_Topic();
-        $newtopic->prepare($data);
+        $newManagedTopic = new Dizkus_Manager_Topic();
+        $newManagedTopic->prepare($data);
 
         // show preview
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
-            $view->assign('post', $newtopic->getPreview());
+            $view->assign('post', $newManagedTopic->getPreview());
             list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit', $lastVisit);
             $view->assign('last_visit_unix', $lastVisitUnix);
@@ -106,14 +106,14 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         }
 
         // store new topic
-        $topicId = $newtopic->create();
-        $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newtopic->getId()));
+        $topicId = $newManagedTopic->create();
+        $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newManagedTopic->getId()));
         // notify hooks for both POST and TOPIC
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $newtopic->getFirstPost()->getPost_id(), $url));
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_edit', $newtopic->getId(), $url));
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $newManagedTopic->getFirstPost()->getPost_id(), $url));
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_edit', $newManagedTopic->getId(), $url));
 
         // notify topic & forum subscribers
-        ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newtopic->getFirstPost()));
+        ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
         return $view->redirect($url->getUrl());
