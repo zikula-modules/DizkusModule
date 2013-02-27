@@ -84,9 +84,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
         } else {
             // preview == true, create fake post
+            $managedPoster = new Dizkus_Manager_ForumUser();
             $post['post_id'] = 0;
             $post['topic_id'] = $topic_id;
-            $post['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => UserUtil::getVar('uid')));
+            $post['poster_data'] = $managedPoster->toArray();
             // create unix timestamp
             $post['post_unixtime'] = time();
             $post['posted_unixtime'] = $post['post_unixtime'];
@@ -480,10 +481,11 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         }
 
         // preview == true, create fake topic
+        $managedPoster = new Dizkus_Manager_ForumUser();
         $newtopic['cat_id'] = $cat_id;
         $newtopic['forum_id'] = $forum_id;
         $newtopic['topic_unixtime'] = time();
-        $newtopic['poster_data'] = ModUtil::apiFunc('Dizkus', 'user', 'get_userdata_from_id', array('userid' => UserUtil::getVar('uid')));
+        $newtopic['poster_data'] = $managedPoster->toArray();
         $newtopic['subject'] = $subject;
         $newtopic['message'] = $message;
         $newtopic['message_display'] = $message; // $this->phpbb_br2nl($message);
