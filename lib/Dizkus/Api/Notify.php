@@ -80,4 +80,114 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         return $notified;
     }
 
+    /**
+     * notify moderators
+     *
+     * @params $args['post'] Dizkus_Entity_Post
+     * @params $args['comment'] string
+     * @returns void
+     */
+    public function notify_moderator($args)
+    {
+        setlocale(LC_TIME, System::getVar('locale'));
+
+        $mods = ModUtil::apiFunc('Dizkus', 'moderators', 'get', array('forum_id' => $args['post']->getTopic()->getForum()->getForum_id()));
+
+        // generate the mailheader
+        $email_from = ModUtil::getVar('Dizkus', 'email_from');
+        if ($email_from == '') {
+            // nothing in forumwide-settings, use adminmail
+            $email_from = System::getVar('adminmail');
+        }
+
+        $subject = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']->getTopic()->getTopic_title());
+        $sitename = System::getVar('sitename');
+
+        $recipients = array();
+        // using the uid as the key to the array avoids duplication
+        
+        // check if list is empty - then do nothing
+        // we create an array of recipients here
+        $admin_is_mod = false;
+        if (count($mods['groups']) > 0) {
+            foreach (array_keys($mods['groups']) as $gid) {
+                $group = ModUtil::apiFunc('Groups', 'user', 'get', array('gid' => $gid));
+                if ($group <> false) {
+                    foreach ($group['members'] as $gm_uid) {
+                        $mod_email = UserUtil::getVar('email', $gm_uid);
+                        $mod_uname = UserUtil::getVar('uname', $gm_uid);
+                        if (!empty($mod_email)) {
+                            $recipients[$gm_uid] = array('uname' => $mod_uname,
+                                'email' => $mod_email);
+                        }
+                        if ($gm_uid == 2) {
+                            // admin is also moderator
+                            $admin_is_mod = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (count($mods['users']) > 0) {
+            foreach ($mods['users'] as $uid => $uname) {
+                $mod_email = UserUtil::getVar('email', $uid);
+                if (!empty($mod_email)) {
+                    $recipients[$uid] = array('uname' => $uname,
+                        'email' => $mod_email);
+                }
+                if ($uid == 2) {
+                    // admin is also moderator
+                    $admin_is_mod = true;
+                }
+            }
+        }
+        // always inform the admin. he might be a moderator to so we check the
+        // admin_is_mod flag now
+        // TODO: consider reworking this to just include the Admin group?
+        // or a flag in settings: "always notify admin" t/f
+        if ($admin_is_mod == false) {
+            $recipients[2] = array('uname' => System::getVar('sitename'),
+                'email' => $email_from);
+        }
+
+        $reporting_userid = UserUtil::getVar('uid');
+        $reporting_username = UserUtil::getVar('uname');
+        if (is_null($reporting_username)) {
+            $reporting_username = $this->__('Guest');
+        }
+
+        $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
+        $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
+        // FIXME Move this to a translatable template?
+        $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
+                . $args['post']->getTopic()->getForum()->getForum_name() . ' :: ' . $args['post']->getTopic()->getTopic_title() . "\n\n"
+                . $this->__('Reporting user') . ": $reporting_username\n"
+                . $this->__('Comment') . ":\n"
+                . strip_tags($args['comment']) . " \n\n"
+                . $this->__('Post Content') . ":\n"
+                . "---------------------------------------------------------------------\n"
+                . strip_tags($args['post']->getPost_text()) . " \n"
+                . "---------------------------------------------------------------------\n\n"
+                . $this->__('Link to topic') . ": $linkToTopic\n"
+                . "\n";
+
+        $modinfo = ModUtil::getInfoFromName('Dizkus');
+
+        if (count($recipients) > 0) {
+            foreach ($recipients as $recipient) {
+                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
+                    'fromname' => $sitename,
+                    'fromaddress' => $email_from,
+                    'toname' => $recipient['uname'],
+                    'toaddress' => $recipient['email'],
+                    'subject' => $subject,
+                    'body' => $message,
+                    'headers' => array('X-UserID: ' . $reporting_userid,
+                        'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
+            }
+        }
+
+        return;
+    }
+
 }

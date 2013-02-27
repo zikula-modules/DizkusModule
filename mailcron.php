@@ -30,7 +30,7 @@ if (is_array($forums) && count($forums) > 0)
     foreach($forums as $forum)
     {
         if ($forum['externalsource'] == 1) {    // Mail
-            ModUtil::apiFunc('Dizkus', 'user', 'mailcron',
+            ModUtil::apiFunc('Dizkus', 'cron', 'mail',
                          array('forum' => $forum,
                                'debug' => $debug));
         }
