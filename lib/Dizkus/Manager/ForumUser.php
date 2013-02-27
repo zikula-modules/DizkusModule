@@ -26,6 +26,7 @@ class Dizkus_Manager_ForumUser
 
     /**
      * construct
+     * @param integer $uid user id (optional: defaults to current user)
      */
     public function __construct($uid = null)
     {
