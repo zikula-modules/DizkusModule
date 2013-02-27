@@ -477,6 +477,10 @@ class Dizkus_Manager_Topic
         }
     }
 
+    /**
+     * get the number of posts in this topic
+     * @return integer
+     */
     public function getPostCount()
     {
         $dql = "SELECT COUNT(p) FROM Dizkus_Entity_Post p
@@ -485,7 +489,11 @@ class Dizkus_Manager_Topic
                 ->setParameter('topic', $this->_topic)
                 ->getSingleScalarResult();
     }
-    
+
+    /**
+     * Get the next topic (by time) in the same Forum
+     * @return integer
+     */
     public function getNext()
     {
         $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t
@@ -500,7 +508,11 @@ class Dizkus_Manager_Topic
                 ->getScalarResult();
         return $result[0]['topic_id'];
     }
-    
+
+    /**
+     * Get the previous topic (by time) in the same Forum
+     * @return integer
+     */
     public function getPrevious()
     {
         $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t
