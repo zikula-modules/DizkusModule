@@ -613,24 +613,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * get_topicid_by_reference
-     * gets a topic reference as parameter and delivers the internal topic id
-     * used for Dizkus as comment module
-     *
-     * @params $args['reference'] string the refernce
-     */
-    public function get_topicid_by_reference($args)
-    {
-        if (!isset($args['reference']) || empty($args['reference'])) {
-            return LogUtil::registerArgsError();
-        }
-
-        $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')
-                ->findOneBy(array('topic_reference' => $args['reference']));
-        return $topic->toArray();
-    }
-
-    /**
      * insert rss
      * @see rss2dizkus.php - only used there
      *
@@ -645,7 +627,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         }
 
         foreach ($args['items'] as $item) {
-            // create the reference, we need it twice
+            // create the reference
             $dateTimestamp = $item->get_date("Y-m-d H:i:s");
             if (empty($dateTimestamp)) {
                 $reference = md5($item->get_link());
@@ -653,28 +635,33 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             } else {
                 $reference = md5($item->get_link() . '-' . $dateTimestamp);
             }
+            $topicTime = DateTime::createFromFormat("Y-m-d H:i:s", $dateTimestamp);
 
             // Checking if the forum already has that news.
-            $check = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference', array('reference' => $reference));
+            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')
+                ->findOneBy(array('topic_reference' => $reference));
 
-            if ($check == false) {
-                // Not found... we can add the news.
+            if (!isset($topic)) {
+                // Not found, add the feed item
                 $subject = $item->get_title();
 
-                // Adding little display goodies - finishing with the url of the news...
+                // create message
                 $message = '<strong>' . $this->__('Summary') . ' :</strong>\n\n' . $item->get_description() . '\n\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\n\n';
 
-                // store message in forum
-                $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('subject' => $subject,
+                // store message
+                $newManagedTopic = new Dizkus_Manager_Topic();
+                $data = array('topic_title' => $subject,
                             'message' => $message,
-                            'time' => $dateTimestamp,
+                            'topic_time' => $topicTime,
                             'forum_id' => $args['forum']['forum_id'],
-                            'attach_signature' => 0,
-                            'subscribe_topic' => 0,
-                            'reference' => $reference));
+                            'post_attach_signature' => false,
+                            'subscribe_topic' => false,
+                            'topic_reference' => $reference);
+                $newManagedTopic->prepare($data);
+                $topicId = $newManagedTopic->create();
 
-                if (!$topic_id) {
-                    // An error occured... get away before screwing more.
+                if (!$topicId) {
+                    // An error occured
                     return false;
                 }
             }

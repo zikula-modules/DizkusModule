@@ -19,6 +19,31 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 {
 
     /**
+     * Zikula_View instance
+     * @var Zikua_View
+     */
+    private $view;
+    
+    /**
+     * Zikula entity manager instance
+     * @var Doctrine\ORM\EntityManager
+     */
+    private $_em;
+
+    /**
+     * Post constructor hook.
+     *
+     * @return void
+     */
+
+    public function setup()
+    {
+        $this->view = Zikula_View::getInstance('Dizkus');
+        $this->_em = ServiceUtil::getService('doctrine.entitymanager');
+        $this->domain = ZLanguage::getModuleDomain('Dizkus');
+    }
+
+    /**
      * Display hook for view.
      *
      * Subject is the object being viewed that we're attaching to.
@@ -36,25 +61,25 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $objectid = $hook->getId();
 
         // first check if the user is allowed to do any comments for this module/objectid
+        // TODO: This securityschema doesn't exist 
         if (!SecurityUtil::checkPermission('Dizkus::', "$mod:$objectid:", ACCESS_OVERVIEW)) {
             return;
         }
 
+        $start = 0;
 
-        $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'get_topicid_by_reference', array('reference' => '52-Kaik'));
-
-        if ($topic_id <> false) {
-            $start = 0;
-            $managedTopic = new Dizkus_Manager_Topic($topic_id);
+        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')
+                ->findOneBy(array('topic_reference' => '52-Kaik'));
+        if (isset($topic)) {
+            $managedTopic = new Dizkus_Manager_Topic(null, $topic);
         }
-
 
         // create the output object
         $view = Zikula_View::getInstance('Dizkus', false, null, true);
 
         $view->assign('areaid', $hook->getAreaId());
-        $view->assign('topic', $managedTopic->get());
-        $view->assign('post_count', $managedTopic->getPostCount());
+        $view->assign('topic', $topic);
+        $view->assign('post_count', $managedTopic->getPost_count());
         $view->assign('last_visit', $last_visit);
         $view->assign('last_visit_unix', $last_visit_unix);
         $view->assign('modinfo', ModUtil::getInfo(ModUtil::getIdFromName($mod)));
@@ -86,6 +111,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
 
+        // TODO: This hook area name no longer exists
         $hook->setResponse(new Zikula_Response_DisplayHook('provider.dizkus.ui_hooks.comments', $view, DataUtil::formatForOS($templateset) . '/user/topic/view.tpl'));
     }
 
