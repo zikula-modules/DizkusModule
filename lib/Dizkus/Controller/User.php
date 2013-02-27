@@ -788,6 +788,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         return $form->execute('user/notifymod.tpl', new Dizkus_Form_Handler_User_Report());
     }
 
+    /**
+     * generate and display an RSS feed of recent topics
+     * @return string
+     */
     public function feed()
     {
         $forum_id = $this->request->query->get('forum_id', null);
