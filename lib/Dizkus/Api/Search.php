@@ -198,6 +198,11 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
      */
     private function fulltext($args)
     {
+        /*
+         * There are no simple solutions for Fulltext searching using Doctrine
+         * http://stackoverflow.com/questions/7246008/doctrine2-use-fulltext-and-myisam
+         * 
+         */
 
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
