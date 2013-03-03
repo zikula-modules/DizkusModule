@@ -709,6 +709,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $this->view->add_core_data();
             $this->view->setCaching(false);
             if ($post_id <> 0) {
+                // TODO: readpost doesn't exist
                 $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
                 $this->view->assign('post', $post);
                 $output = $this->view->fetch('user/post/print.tpl');

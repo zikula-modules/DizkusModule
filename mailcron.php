@@ -23,6 +23,7 @@ System::init();
 $debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');
 $debug = ($debug==1) ? true : false;
 
+// TODO: readforums doesn't exist
 $forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 if (is_array($forums) && count($forums) > 0)
 {

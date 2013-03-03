@@ -40,7 +40,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
         $title = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $title);
 
-        // ContactList integration: Is the user ignored and allowed to write an answer to this topic?        
+        // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
+        // TODO: readtopic doesn't exist
         $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
 
         $topic['start'] = 0;
@@ -81,6 +82,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             }
 
             $topic['start'] = $start;
+            // TODO: readpost doesn't exist
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
         } else {
             // preview == true, create fake post
@@ -166,6 +168,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
+            // TODO: readpost doesn't exist
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
             if ($post['poster_data']['edit'] == true) {
                 AjaxUtil::output($post, true, false, false);
@@ -192,6 +195,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
+            // TODO: readpost doesn't exist
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
 
             if ($post['poster_data']['edit'] == true) {
@@ -253,6 +257,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             }
 
             // read the original posting to get the forum id we might need later if the topic has been erased
+            // TODO: readpost doesn't exist
             $orig_post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
 
             $update = ModUtil::apiFunc('Dizkus', 'user', 'updatepost', array('post_id' => $post_id,
@@ -268,6 +273,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             }
 
             if ($delete <> '1') {
+                // TODO: readpost doesn't exist
                 $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
                 $hook = new Zikula_FilterHook(
                                 $eventname = 'dizkus.filter_hooks.message.filter',
@@ -280,6 +286,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                 // try to read topic
                 $topic = false;
                 if (is_array($orig_post) && !empty($orig_post['topic_id'])) {
+                    // TODO: readtopic doesn't exist
                     $topic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $orig_post['topic_id']);
                 }
                 if (!is_array($topic)) {

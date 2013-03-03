@@ -39,6 +39,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
 
         $this->topic_id = (int)$this->request->query->get('topic');
 
+        // TODO: readtopic doesn't exist
         $topic = ModUtil::apiFunc('Dizkus', 'Topic', 'read0', $this->topic_id);
         $emailsubject = $topic['topic_title'];
 

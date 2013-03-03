@@ -41,6 +41,7 @@ if (!ModUtil::available('Feeds')) {
 //
 // Getting All forums where RSS2DIZKUS is SET... this also loads modules/Dizkus/common.php
 //
+// TODO: readforums doesn't exist
 $forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
 
 if (!$forums) {
