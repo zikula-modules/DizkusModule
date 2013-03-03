@@ -52,9 +52,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
     {
         // get the input
         $post_id = (int)$this->request->query->get('post');
-        $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
         $managedPost = new Dizkus_Manager_Post($post_id);
-
 
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(), 'start' => '0')) . '#pid' . $managedPost->getId();
@@ -67,7 +65,6 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
-
 
         // some spam checks:
         // - remove html and compare with original comment
@@ -83,9 +80,6 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
                 System::shutDown();
             }
         }
-
-
-
 
         ModUtil::apiFunc('Dizkus', 'notify', 'notify_moderator', array('post' => $managedPost->get(),
             'comment' => $data['comment']));
