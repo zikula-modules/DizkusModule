@@ -29,7 +29,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $topic_id = $this->request->request->get('topic', null);
         $message = $this->request->request->get('message', '');
         $title = $this->request->request->get('title', '');
-        ;
+
         $attach_signature = $this->request->request->get('topic', attach_signature);
         $subscribe_topic = $this->request->request->get('subscribe_topic', null);
         $preview = $this->request->request->get('preview', 0);
@@ -41,11 +41,10 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $title = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $title);
 
         // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
-        // TODO: readtopic doesn't exist
-        $topic = ModUtil::apiFunc('Dizkus', 'user', 'readtopci0', $topic_id);
+        $managedTopic = new Dizkus_Manager_Topic($topic_id);
 
-        $topic['start'] = 0;
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $topic['topic_poster']));
+        $start = 0;
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $managedTopic->get()->getTopic_poster()));
         if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$topic['topic_poster'], 'iuid' => UserUtil::getVar('uid'))))) {
             return new Zikula_Response_Ajax_Fatal(
                             array(),
@@ -81,7 +80,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                 return new Zikula_Response_Ajax(array('data' => $error));
             }
 
-            $topic['start'] = $start;
             // TODO: readpost doesn't exist
             $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
         } else {
@@ -109,8 +107,9 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
         $this->view->add_core_data();
         $this->view->setCaching(false);
-        $this->view->assign('topic', $topic);
+        $this->view->assign('topic', $managedTopic->get());
         $this->view->assign('post', $post);
+        $this->view->assign('start', $start);
         $this->view->assign('preview', $preview);
 
         //---- begin of MediaAttach integration ----
