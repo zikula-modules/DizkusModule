@@ -76,9 +76,9 @@ class Dizkus_Manager_Post
     }
 
     /**
-     * return topic as doctrine2 object
+     * get the Post entity
      *
-     * @return object
+     * @return Dizkus_Entity_Post
      */
     public function get()
     {
