@@ -166,6 +166,10 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->topic_replies--;
     }
 
+    /**
+     * get Forum
+     * @return Dizkus_Entity_Forum
+     */
     public function getForum()
     {
         return $this->forum;
