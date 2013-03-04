@@ -31,12 +31,15 @@ class Dizkus_Manager_Forum
     /**
      * construct
      */
-    public function __construct($id = null)
+    public function __construct($id = null, Dizkus_Entity_Forum $forum = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
 
-        if ($id > 0) {
+        if (isset($forum)) {
+            // forum has been injected
+            $this->_forum = $forum;
+        } elseif ($id > 0) {
             $this->_forum = $this->entityManager->find('Dizkus_Entity_Forum', $id);
         } else {
             $this->_forum = new Dizkus_Entity_Forum();
