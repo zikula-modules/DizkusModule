@@ -66,22 +66,33 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             //	throw new Zikula_Exception_Fatal();
             //}
 
-            list($start, $post_id) = ModUtil::apiFunc('Dizkus', 'user', 'storereply', array(
-                        'topic_id' => $topic_id,
-                        'message' => $message,
-                        'attach_signature' => $attach_signature,
-                        'subscribe_topic' => $subscribe_topic,
-                        'title' => $title)
+            $data = array(
+                'topic_id' => $topic_id,
+                'post_text' => $message,
+                'post_attach_signature' => $attach_signature,
+                'subscribe_topic' => $subscribe_topic,
             );
 
-            if (!isset($post_id)) {
-                return new Zikula_Response_Ajax_BadData(array());
-                $error = '<p class="z-errormsg">' . $this->__('Error! Your post contains unacceptable content and has been rejected.') . '</p>';
-                return new Zikula_Response_Ajax(array('data' => $error));
-            }
+            $managedPost = new Dizkus_Manager_Post();
+            $managedPost->create($data);
+            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
+            $params = array(
+                'topic' => $topic_id,
+                'start' => $start
+            );
+            $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
+            
+            // notify topic & forum subscribers
+            $notified = ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
 
-            // TODO: readpost doesn't exist
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
+//            if (!isset($post_id)) {
+//                return new Zikula_Response_Ajax_BadData(array());
+//                $error = '<p class="z-errormsg">' . $this->__('Error! Your post contains unacceptable content and has been rejected.') . '</p>';
+//                return new Zikula_Response_Ajax(array('data' => $error));
+//            }
+
+            $post = $managedPost->get()->toArray();
         } else {
             // preview == true, create fake post
             $managedPoster = new Dizkus_Manager_ForumUser();
@@ -98,8 +109,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                 $post['post_textdisplay'] .= '[addsig]';
                 $post['post_textdisplay'] = $this->dzk_replacesignature(array('text' => $post['post_textdisplay'], 'signature' => $post['poster_data']['signature']));
             }
-            // call hooks for $message_display ($message remains untouched for the textarea)
-            // list($post['post_textdisplay']) = ModUtil::callHooks('item', 'transform', $post['post_id'], array($post['post_textdisplay']));
             $post['post_textdisplay'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $post['post_textdisplay']);
 
             $post['post_text'] = $post['post_textdisplay'];
