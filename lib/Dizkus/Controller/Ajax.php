@@ -202,20 +202,22 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         }
 
         $post_id = $this->request->request->get('post', null, 'POST');
+        $currentUserId = UserUtil::getVar('uid');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
-            // TODO: readpost doesn't exist
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-
-            if ($post['poster_data']['edit'] == true) {
+            $managedPost = new Dizkus_Manager_Post($post_id);
+            $forum = $managedPost->get()->getTopic()->getForum();
+            $managedForum = new Dizkus_Manager_Forum(null, $forum);
+            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId) 
+                    || ($managedForum->isModerator())) {
                 //$this->view->add_core_data();
                 $this->view->setCaching(false);
 
-                $this->view->assign('post', $post);
+                $this->view->assign('post', $managedPost->get());
                 // simplify our live
-                $this->view->assign('postingtextareaid', 'postingtext_' . $post['post_id'] . '_edit');
+                $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
 
                 SessionUtil::delVar('zk_ajax_call');
 
@@ -225,7 +227,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                 throw new Zikula_Exception_Forbidden();
             }
         }
-
 
         return new Zikula_Response_Ajax_BadData(
                         array(),
