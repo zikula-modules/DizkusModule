@@ -172,14 +172,17 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         }
 
         $post_id = FormUtil::getPassedValue('post', null, 'POST');
+        $currentUserId = UserUtil::getVar('uid');
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
-            // TODO: readpost doesn't exist
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-            if ($post['poster_data']['edit'] == true) {
-                AjaxUtil::output($post, true, false, false);
+            $managedPost = new Dizkus_Manager_Post($post_id);
+            $forum = $managedPost->get()->getTopic()->getForum();
+            $managedForum = new Dizkus_Manager_Forum(null, $forum);
+            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId) 
+                    || ($managedForum->isModerator())) {
+                AjaxUtil::output($managedPost->get(), true, false, false);
             } else {
                 LogUtil::registerPermissionError();
                 return AjaxUtil::error(null, array(), true, true, '400 Bad Data');
