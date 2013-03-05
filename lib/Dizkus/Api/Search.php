@@ -209,8 +209,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         }
 
         // get all forums the user is allowed to read
-        // TODO 'readuserforums' has been deleted! try new Dizkus_Manager_Forum($id)
-        $userforums = ModUtil::apiFunc('Dizkus', 'user', 'readuserforums');
+        $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             // return empty result set without even doing a db access
@@ -262,16 +261,12 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         // partial sql stored in $whereforums
         $whereforums = '';
 
-        // now create a very simple array of forum_ids only. we do not need
-        // all the other stuff in the $userforums array entries
-        $allowedforums = array_keys($userforums);
-
         if ((!is_array($args['forums']) && $args['forums'] == -1) || $args['forums'][0] == -1) {
             // search in all forums we are allowed to see
-            $whereforums = 'p.forum_id IN (' . DataUtil::formatForStore(implode($allowedforums, ',')) . ') ';
+            $whereforums = 'p.forum_id IN (' . DataUtil::formatForStore(implode($userforums, ',')) . ') ';
         } else {
             // filter out forums we are not allowed to read
-            $args['forums'] = array_intersect($allowedforums, (array)$args['forums']);
+            $args['forums'] = array_intersect($userforums, (array)$args['forums']);
 
             if (count($args['forums']) == 0) {
                 // error or user is not allowed to read any forum at all
