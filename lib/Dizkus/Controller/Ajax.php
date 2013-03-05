@@ -245,11 +245,11 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
-        $post_id = $this->request->request->get('post', '', 'POST');
-        $subject = $this->request->request->get('subject', '', 'POST');
-        $message = $this->request->request->get('message', '', 'POST');
-        $delete = $this->request->request->get('delete', null, 'POST');
-        $attach_signature = $this->request->request->get('attach_signature', null, 'POST');
+        $post_id = $this->request->request->get('post', '');
+        $subject = $this->request->request->get('subject', '');
+        $message = $this->request->request->get('message', '');
+        $delete = ($this->request->request->get('delete', 0) == '1') ? true : false;
+        $attach_signature = ($this->request->request->get('attach_signature', 0) == '1') ? true : false;
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
@@ -268,58 +268,32 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
                 );
             }
 
-            // read the original posting to get the forum id we might need later if the topic has been erased
-            // TODO: readpost doesn't exist
-            $orig_post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
+            $managedOriginalPost = new Dizkus_Manager_Post($post_id);
+            $forumId = $managedOriginalPost->get()->getTopic()->getForum()->getForum_id();
 
-            $update = ModUtil::apiFunc('Dizkus', 'user', 'updatepost', array('post_id' => $post_id,
+            if ($delete) {
+                $managedOriginalPost->delete();
+                $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $managedOriginalPost->getId()));
+                $response = array('action' => 'topic_deleted',
+                    'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forumId), null, null, true));
+            } else {
+                $data = array('post_id' => $post_id,
                         'subject' => $subject,
                         'message' => $message,
                         'delete' => $delete,
-                        'attach_signature' => ($attach_signature == 1)));
-
-            if (!$update) {
-                return new Zikula_Response_Ajax_BadData(
-                                array()
-                );
+                        'attach_signature' => $attach_signature);
+                $managedOriginalPost->update($data);
+                $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
+                $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedOriginalPost->getId(), $url));
+                $response = array('action' => 'updated');
             }
 
-            if ($delete <> '1') {
-                // TODO: readpost doesn't exist
-                $post = ModUtil::apiFunc('Dizkus', 'user', 'readpost', array('post_id' => $post_id));
-                $hook = new Zikula_FilterHook(
-                                $eventname = 'dizkus.filter_hooks.message.filter',
-                                $content = $post['post_text']
-                );
-                $post['post_text'] = ServiceUtil::getManager()->getService('zikula.hookmanager')
-                                ->notify($hook)->getData();
-                $post['action'] = 'updated';
-            } else {
-                // try to read topic
-                $topic = false;
-                if (is_array($orig_post) && !empty($orig_post['topic_id'])) {
-                    // TODO: readtopic doesn't exist
-                    $topic = ModUtil::apiFunc($this->name, 'Topic', 'read0', $orig_post['topic_id']);
-                }
-                if (!is_array($topic)) {
-                    // topic has been deleted
-                    $post = array(
-                        'action' => 'topic_deleted',
-                        'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $orig_post['forum_id']), null, null, true)
-                    );
-                } else {
-                    $post = array('action' => 'deleted');
-                }
-            }
-
-            SessionUtil::delVar('zk_ajax_call');
-
-            return new Zikula_Response_Ajax($post);
+            return new Zikula_Response_Ajax($response);
         }
 
         return new Zikula_Response_Ajax_BadData(
                         array(),
-                        $this->__('Error! No post ID in \'Dizkus_ajax_updatepost()\'.')
+                        $this->__('Error! No post_id in \'Dizkus_ajax_updatepost()\'.')
         );
     }
 
