@@ -579,7 +579,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         }
 
         $output = $view->fetch('ajax/getusers.tpl');
-        // TODO: !! this isn't working I think it is because of the core changes in the Ajax Response.
 
         return new Zikula_Response_Ajax_Plain($output);
     }
