@@ -440,6 +440,11 @@ div#editpostoptions ul li {
     height: auto;
 }
 
+#dizkus .quotepostlink:hover {
+    cursor: hand;
+    cursor: pointer;
+}
+
 /* Post body styles */
 #dizkus .forum_post {
     padding: 5px 10px;
