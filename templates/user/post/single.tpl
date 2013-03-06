@@ -69,7 +69,7 @@
                         <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}">{img modname='Dizkus' src='icon_post_pn.gif' __alt='Send a private message'}</a>
                         {/if}
                         {if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
-                        <a title="{gt text="View IP address"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=viewip post=$post.post_id topic=$topic.topic_id}">{img modname='Dizkus' src='icon_post_ip.gif' __alt='View IP address'}</a>
+                        <a title="{gt text="View IP address"}" href="{modurl modname='Dizkus' type='user' func='viewIpData' post=$post.post_id}">{img modname='Dizkus' src='icon_post_ip.gif' __alt='View IP address'}</a>
                         {/if}
                         &nbsp;
                     </li>

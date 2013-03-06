@@ -50,8 +50,8 @@
                     {/if}
                 </li>
 
-                <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
-                <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type=user func=deletetopic topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+                <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type='user' func='movetopic' topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
             </ul>
             {/if}
         </div>
@@ -89,18 +89,18 @@
                 {if $topic.access_moderate eq 1}
                 <ul class="dzk_topicoptions linklist z-clearfix">
                     {if $topic.topic_status eq 0}
-                    <li><a class="dzk_arrow locktopiclink" title="{gt text="Lock topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=lock topic=$topic.topic_id}">{gt text="Lock topic"}</a></li>
+                    <li><a class="dzk_arrow locktopiclink" title="{gt text="Lock topic"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id}">{gt text="Lock topic"}</a></li>
                     {else}
-                    <li><a class="dzk_arrow unlocktopiclink" title="{gt text="Unlock topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=unlock topic=$topic.topic_id}">{gt text="Unlock topic"}</a></li>
+                    <li><a class="dzk_arrow unlocktopiclink" title="{gt text="Unlock topic"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id}">{gt text="Unlock topic"}</a></li>
                     {/if}
 
                     {if $topic.sticky eq 0}
-                    <li><a class="dzk_arrow stickytopiclink" title="{gt text="Give this topic 'sticky' status"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=sticky topic=$topic.topic_id}">{gt text="Give this topic 'sticky' status"}</a></li>
+                    <li><a class="dzk_arrow stickytopiclink" title="{gt text="Give this topic 'sticky' status"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id}">{gt text="Give this topic 'sticky' status"}</a></li>
                     {else}
-                    <li><a class="dzk_arrow unstickytopiclink" title="{gt text="Remove 'sticky' status"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=unsticky topic=$topic.topic_id}">{gt text="Remove 'sticky' status"}</a></li>
+                    <li><a class="dzk_arrow unstickytopiclink" title="{gt text="Remove 'sticky' status"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id}">{gt text="Remove 'sticky' status"}</a></li>
                     {/if}
-                    <li><a class="dzk_arrow movetopiclink" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=topicadmin mode=move topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
-                    <li><a class="dzk_arrow deletetopiclink" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type=user func=deletetopic topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+                    <li><a class="dzk_arrow movetopiclink" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type='user' func='movetopic' topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                    <li><a class="dzk_arrow deletetopiclink" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
                 </ul>
                 {/if}
             </div>

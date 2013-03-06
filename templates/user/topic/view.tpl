@@ -113,8 +113,8 @@
                     <a id="toggletopicsticky" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
                 </li>
 
-                <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type=user func=movetopic topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
-                <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type=user func=deletetopic topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+                <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type='user' func='movetopic' topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
             </ul>
             {/if}
         </div>

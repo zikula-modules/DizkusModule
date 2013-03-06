@@ -155,6 +155,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function reply()
     {
         // I cannot see how using the Form lib will work here. This method is post submission of the form...
+        // the form would need to be instanciated in the viewtopic method
 //        $form = FormUtil::newForm($this->name, $this);
 //        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
         // Permission check
@@ -308,105 +309,16 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * topicadmin
-     *
+     * View the posters IP information
+     * 
+     * @return string
      */
-    public function topicadmin($args = array())
+    public function viewIpData()
     {
-        // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
-
-        // get the input
-        if ($this->request->isPost()) {
-            $topic_id = (int)$this->request->request->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-            $post_id = (int)$this->request->request->get('post', (isset($args['post'])) ? $args['post'] : null);
-            $forum_id = (int)$this->request->request->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-            $mode = $this->request->request->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
-            $submit = $this->request->request->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-            $shadow = $this->request->request->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
-        } else {
-            $topic_id = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
-            $post_id = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-            $forum_id = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
-            $mode = $this->request->query->get('mode', (isset($args['mode'])) ? $args['mode'] : '');
-            $submit = $this->request->query->get('submit', (isset($args['submit'])) ? $args['submit'] : '');
-            $shadow = $this->request->query->get('createshadowtopic', (isset($args['createshadowtopic'])) ? $args['createshadowtopic'] : '');
-        }
-        $shadow = (empty($shadow)) ? false : true;
-        if (empty($topic_id) && !empty($post_id)) {
-            $managedPost = new Dizkus_Manager_Post($post_id);
-            $topic_id = $managedPost->getTopicId();
-        }
-
-        $managedTopic = new Dizkus_Manager_Topic($topic_id);
-
-        /* This does not work. Commenting out until we decide to fix or remove totally.
-          if ($topic['access_moderate'] <> true) {
-          return LogUtil::registerPermissionError();
-          }
-         */
-
-        if (empty($submit)) {
-            switch ($mode) {
-                case 'lock':
-                case 'unlock':
-                    $templatename = 'user/topic/lock.tpl';
-                    break;
-
-                case 'sticky':
-                case 'unsticky':
-                    $templatename = 'user/topic/sticky.tpl';
-                    break;
-
-                case 'viewip':
-                    $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
-                    $templatename = 'user/viewip.tpl';
-                    break;
-
-                default:
-                    return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
-            }
-
-            $this->view->add_core_data();
-            $this->view->setCaching(false);
-            $this->view->assign('mode', $mode);
-            $this->view->assign('topic_id', $topic_id);
-
-            return $this->view->fetch($templatename);
-        } else { // submit is set
-            /* if (!SecurityUtil::confirmAuthKey()) {
-              return LogUtil::registerAuthidError();
-              } */
-
-            switch ($mode) {
-                case 'lock':
-                case 'unlock':
-                    // TODO: get_forumid_and_categoryid_from_topicid no longer defined
-                    $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedTopic->get())) {
-                        return LogUtil::registerPermissionError();
-                    }
-                    ModUtil::apiFunc('Dizkus', 'user', 'lockunlocktopic', array('topic_id' => $topic_id,
-                        'mode' => $mode));
-                    break;
-
-                case 'sticky':
-                case 'unsticky':
-                    // TODO: get_forumid_and_categoryid_from_topicid no longer defined
-                    $topic = ModUtil::apiFunc('Dizkus', 'user', 'get_forumid_and_categoryid_from_topicid', array('topic_id' => $topic_id));
-                    if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedTopic->get())) {
-                        return LogUtil::registerPermissionError();
-                    }
-                    ModUtil::apiFunc('Dizkus', 'user', 'stickyunstickytopic', array('topic_id' => $topic_id,
-                        'mode' => $mode));
-                    break;
-                default:
-            }
-
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
-        }
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canModerate'));
+        $post_id = (int)$this->request->query->get('post', null);
+        $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
+        return $this->view->fetch('user/viewip.tpl');
     }
 
     /**
@@ -453,22 +365,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function showAllForums()
     {
-        $url = ModUtil::url('Dizkus', 'user', 'main');
-        if (!UserUtil::isLoggedIn()) {
-            LogUtil::registerPermissionError();
-            return System::redirect($url);
-        }
-        $uid = UserUtil::getVar('uid');
-        $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
-        if (!$forumUser) {
-            $forumUser = new Dizkus_Entity_ForumUser();
-            $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $uid);
-            $forumUser->setUser($coreUser);
-        }
-        $forumUser->showAllForums();
-        $this->entityManager->flush();
-
-        return System::redirect($url);
+        return $this->changeViewSetting('all');
     }
 
     /**
@@ -476,6 +373,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      *
      */
     public function showFavorites()
+    {
+        return $this->changeViewSetting('favorites');
+    }
+
+    /**
+     * Show only favorite forums in main view instead of all forums
+     *
+     */
+    private function changeViewSetting($setting)
     {
         $url = ModUtil::url('Dizkus', 'user', 'main');
         if (!UserUtil::isLoggedIn()) {
@@ -489,7 +395,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
-        $forumUser->showFavoritesOnly();
+        $method = ($setting == 'favorites') ? 'showFavoritesOnly' : 'showAllForums';
+        $forumUser->$method();
         $this->entityManager->persist($forumUser);
         $this->entityManager->flush();
 
