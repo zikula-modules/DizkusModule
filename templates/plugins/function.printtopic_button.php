@@ -11,20 +11,19 @@
 /**
  * printtopic_button plugin
  * adds the print topic button
+ * requires the Printer theme
  *
  * @params $params['forum_id'] int forum id
  * @params $params['topic_id'] int topic id
  */
 function smarty_function_printtopic_button($params, Zikula_View $view)
 {
-    include_once 'modules/Dizkus/bootstrap.php';
     $dom = ZLanguage::getModuleDomain('Dizkus');
     if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $params)) {
         $themeinfo = ThemeUtil::getInfo(ThemeUtil::getIDFromName('Printer'));
         if ($themeinfo['state'] == ThemeUtil::STATE_ACTIVE) {
             return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
         }
-        return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'printtopic', array('topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
     }
 
     return '';
