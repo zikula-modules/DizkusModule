@@ -39,12 +39,10 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
 
         $this->topic_id = (int)$this->request->query->get('topic');
 
-        // TODO: readtopic doesn't exist
-        $topic = ModUtil::apiFunc('Dizkus', 'Topic', 'read0', $this->topic_id);
-        $emailsubject = $topic['topic_title'];
+        $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
 
-        $view->assign($topic);
-        $view->assign('emailsubject', $emailsubject);
+        $view->assign($managedTopic->get());
+        $view->assign('emailsubject', $managedTopic->get()->getTopic_title());
         $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
 
         return true;
@@ -71,7 +69,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        ModUtil::apiFunc('Dizkus', 'user', 'emailtopic', array(
+        ModUtil::apiFunc('Dizkus', 'notify', 'email', array(
             'sendto_email' => $data['sendto_email'],
             'message' => $data['message'],
             'subject' => $data['emailsubject']

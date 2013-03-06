@@ -190,4 +190,30 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         return;
     }
 
+    /**
+     * email
+     *
+     * @params $args['sendto_email'] string the recipients email address
+     * @params $args['message'] string the text
+     * @params $args['subject'] string the subject
+     * @returns bool
+     */
+    public function email($args)
+    {
+        $sender_name = UserUtil::getVar('uname');
+        $sender_email = UserUtil::getVar('email');
+        if (!UserUtil::isLoggedIn()) {
+            $sender_name = ModUtil::getVar('Users', 'anonymous');
+            $sender_email = ModUtil::getVar('Dizkus', 'email_from');
+        }
+
+        $args2 = array('fromname'    => $sender_name,
+                       'fromaddress' => $sender_email,
+                       'toname'      => $args['sendto_email'],
+                       'toaddress'   => $args['sendto_email'],
+                       'subject'     => $args['subject'],
+                       'body'        => $args['message']);
+
+        return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args2);
+    }
 }
