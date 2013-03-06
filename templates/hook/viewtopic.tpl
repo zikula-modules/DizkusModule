@@ -5,15 +5,15 @@
         <div id="dzk_javascriptareatopic" class="hidden">
             <ul class="dzk_topicoptions linklist z-clearfix">
                 {if $topic.prev_topic_id and $topic.topic_id neq $topic.prev_topic_id}
-                <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
+                <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.prev_topic_id}">&nbsp;</a></li>
                 {/if}
 
                 {if $topic.access_comment}
-                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
+                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$topic.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
                 {if $coredata.logged_in}
-                <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
+                <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                 {/if}
 
                 <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
@@ -28,7 +28,7 @@
                 </li>
                 {/if}
                 {if $topic.next_topic_id and $topic.topic_id neq $topic.next_topic_id}
-                <li><a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">&nbsp;</a></li>
+                <li><a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.next_topic_id}">&nbsp;</a></li>
                 {/if}
             </ul>
 
@@ -60,15 +60,15 @@
             <div id="dzk_nonjavascriptareatopic">
                 <ul class="dzk_topicoptions linklist z-clearfix">
                     {if $topic.topic_id neq $topic.prev_topic_id}
-                    <li><a class="dzk_arrow previoustopiclink" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.prev_topic_id}">&nbsp;</a></li>
+                    <li><a class="dzk_arrow previoustopiclink" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.prev_topic_id}">&nbsp;</a></li>
                     {/if}
 
                     {if $topic.access_comment}
-                    <li><a class="dzk_arrow newtopiclink" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
+                    <li><a class="dzk_arrow newtopiclink" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type='user' func=newtopic forum=$topic.forum_id}">{gt text="New topic"}</a></li>
                     {/if}
 
                     {if $coredata.logged_in}
-                    <li><a class="dzk_arrow mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type=user func=emailtopic topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
+                    <li><a class="dzk_arrow mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                     {/if}
 
                     <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
@@ -82,7 +82,7 @@
                     {/if}
 
                     {if $topic.topic_id neq $topic.next_topic_id}
-                    <li><a class="dzk_arrow nexttopiclink" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type=user func=viewtopic topic=$topic.next_topic_id}">&nbsp;</a></li>
+                    <li><a class="dzk_arrow nexttopiclink" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.next_topic_id}">&nbsp;</a></li>
                     {/if}
                 </ul>
 
@@ -198,7 +198,7 @@
 {if $topic.forum.moderatorUsers|@count > 0}
 <ul id="dzk_moderatorlist" class="linklist z-clearfix">
     <li><em>{gt text="Moderated by"}:</em></li>
-    {foreach name=moderators item=moderator from=$topic.forum.moderatorUsers}
+    {foreach name='moderators' item='moderator' from=$topic.forum.moderatorUsers}
     <li>{$moderator|profilelinkbyuname}{if !$smarty.foreach.moderators.last}, {/if}</li>
     {/foreach}
 </ul>

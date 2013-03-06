@@ -1,4 +1,4 @@
-{gt text="Move post from one topic to another" assign=templatetitle}
+{gt text="Move post from one topic to another" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 

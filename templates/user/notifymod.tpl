@@ -1,4 +1,4 @@
-{gt text="Notify moderator about this posting" assign=templatetitle}
+{gt text="Notify moderator about this posting" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
@@ -15,7 +15,7 @@
             </div>
                 
         <div class="z-formbuttons z-buttons">
-            {formbutton class="z-bt-ok"     commandName="send"   __text="Send"}
+            {formbutton class="z-bt-ok" commandName="send" __text="Send"}
             {formbutton class="z-bt-cancel" commandName="cancel" __text="Cancel"}
         </div>
         </fieldset>

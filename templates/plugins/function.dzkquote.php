@@ -16,7 +16,7 @@
  *
  *
  */
-function smarty_function_dzkquote($params, &$smarty)
+function smarty_function_dzkquote($params, Zikula_View $view)
 {
     if (empty($params['text'])) {
         return '';

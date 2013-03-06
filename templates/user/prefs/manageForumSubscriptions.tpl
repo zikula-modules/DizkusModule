@@ -21,7 +21,7 @@
                     <li class="row categorytitle">
                         <label for="alltopic">{gt text="Remove all forum subscriptions"}</label>&nbsp;<input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.z-form-checkbox').attr('checked', this.checked);"/>
                     </li>
-                    {foreach item=subscription from=$subscriptions}
+                    {foreach item='subscription' from=$subscriptions}
                         <li class="row">
                             <dl class="icon">
                                 <dt class='ctheme-topic-title'>

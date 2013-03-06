@@ -1,4 +1,4 @@
-{gt text="Manage your signature" assign=templatetitle}
+{gt text="Manage your signature" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 

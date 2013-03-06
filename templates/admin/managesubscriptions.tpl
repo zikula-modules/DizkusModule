@@ -73,7 +73,7 @@
             <table class="z-admintable">
                 <thead>
                     <tr>
-                        <th width=15px></th>
+                        <th style='width:15px;'></th>
                         <th>{gt text="Forum"}</th>
                     </tr>
                 </thead>

@@ -1,4 +1,4 @@
-{gt text="Latest forum posts" assign=templatetitle}
+{gt text="Latest forum posts" assign='templatetitle'}
 {pagesetvar name=title value="`$templatetitle` - `$text`"}
 
 {include file='user/header.tpl'}
@@ -10,7 +10,7 @@
     {* search menu *}
     <div class="roundedbar dzk_rounded">
         <div class="inner">
-            <form class="dzk_form" method="post" action="{modurl modname='Dizkus' type=user func=viewlatest}">
+            <form class="dzk_form" method="post" action="{modurl modname='Dizkus' type='user' func='viewlatest'}">
                 <ul class="linklist z-clearfix">
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='myposts'}">{gt text="View your posts"}</a></li>
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='myposts' action='topics'}">{gt text="View your topics"}</a></li>

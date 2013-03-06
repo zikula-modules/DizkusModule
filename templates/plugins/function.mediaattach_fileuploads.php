@@ -15,10 +15,10 @@
  * @$params['objectid'] int the topic id
  *
  */
-function smarty_function_mediaattach_fileuploads($params, &$smarty)
+function smarty_function_mediaattach_fileuploads($params, Zikula_View $view)
 {
     if (!isset($params['objectid'])) {
-        $smarty->trigger_error("Error! In 'smarty_function_mediaattach_fileuploads', the 'objectid' parameter is missing.");
+        $view->trigger_error("Error! In 'smarty_function_mediaattach_fileuploads', the 'objectid' parameter is missing.");
         return false;
     }
 

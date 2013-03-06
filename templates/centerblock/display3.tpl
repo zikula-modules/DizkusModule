@@ -12,7 +12,7 @@
         Zikula.Config.baseURL + 'ajax.php',
         {
             method: 'post',
-            parameters: 'module=Dizkus&func=newposts',
+            parameters: 'module=Dizkus&type=ajax&func=newposts',
             frequency: 60
         });
         // ]]>

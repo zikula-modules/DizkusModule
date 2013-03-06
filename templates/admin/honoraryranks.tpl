@@ -25,7 +25,7 @@
                     <div>
                         <select name="ranks[-1][rank_image]" id="newrank_image" onchange="Zikula.Dizkus.ShowNewRankImage('{$modvars.Dizkus.url_ranks_images}')">
                             {foreach name='availableranks' item='rankimage' from=$rankimages}
-                            <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign=selectedimage"}{$rankimage}{/capture}{/if}>{$rankimage}</option>
+                            <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                             {/foreach}
                         </select>
                         <img id="newimage" src="{$modvars.Dizkus.url_ranks_images}/{$selectedimage}" alt="rankimage" />
@@ -56,7 +56,7 @@
                 </tr>
             </thead>
             <tbody>
-                {foreach key=num item=rank from=$ranks}
+                {foreach key='num' item='rank' from=$ranks}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
                         <input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|safetext}" maxlength="50" size="20" />

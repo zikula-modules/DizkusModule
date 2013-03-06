@@ -13,7 +13,7 @@
  * lists all allowed html tags
  *
  */
-function smarty_function_allowedhtml($params, &$smarty) 
+function smarty_function_allowedhtml($params, Zikula_View $view) 
 {
     $out = "<br />".__('Allowed HTML:')."<br />";
     $AllowableHTML = System::getVar('AllowableHTML');

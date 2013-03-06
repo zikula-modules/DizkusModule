@@ -28,7 +28,7 @@
  * This logic is taken from phpbb.
  *
  */
-function smarty_function_dzkpager($params, &$smarty)
+function smarty_function_dzkpager($params, Zikula_View $view)
 {
     $total = $params['total'];
 

@@ -1,4 +1,4 @@
-{gt text="'Ignore list' settings" assign=templatetitle}
+{gt text="'Ignore list' settings" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 

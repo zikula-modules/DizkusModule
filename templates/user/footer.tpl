@@ -21,7 +21,7 @@
     <h3 class="footer_title">{gt text="Total"}</h3>
     <ul>
         <li>
-            <a title="{gt text="RSS"}" href="backforum.php">{img modname='Dizkus' src='icon_rss.gif' __alt='RSS'  __title="RSS"}</a>
+            <a title="{gt text="RSS"}" href="backforum.php">{img modname='Dizkus' src='icon_rss.gif' __alt='RSS' __title="RSS"}</a>
             {gt text="Total posts: %s" tag1=$numposts}
         </li>
     </ul>

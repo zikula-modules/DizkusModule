@@ -40,8 +40,8 @@
         <div class="z-formrow">
             {formlabel for="forum_info" __text="Forum Information"}
             <span id="forum_info">
-                {boardstats type='forumtopics' id=$forum_id assign=topiccount}
-                {boardstats type='forumposts' id=$forum_id assign=postcount}
+                {boardstats type='forumtopics' id=$forum_id assign='topiccount'}
+                {boardstats type='forumposts' id=$forum_id assign='postcount'}
                 <a title="{gt text='Visit this forum'}" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum_id}">
                     {$topiccount}&nbsp;{if $topiccount eq 1}{gt text="Topic"}{else}{gt text="Topics"}{/if}&nbsp;/&nbsp;
                     {$postcount}&nbsp;{if $postcount eq 1}{gt text="Post"}{else}{gt text="Posts"}{/if}

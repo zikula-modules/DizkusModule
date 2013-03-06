@@ -2,7 +2,7 @@
     <div class="dzk_handle z-clearfix">
         <div id="forumtitle_{$forum.forum_id}" style="float: left; width: 60%;">
             {if $newforum <> true}
-            <a href="{modurl modname=Dizkus type=user func=viewforum forum=$forum.forum_id}" title="{$forum.forum_name|safetext}">{$forum.forum_name|safetext}</a> (ID:{$forum.forum_id})
+            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}" title="{$forum.forum_name|safetext}">{$forum.forum_name|safetext}</a> (ID:{$forum.forum_id})
             {else}
             {$forum.forum_name} ({gt text="new forum"})
             {/if}

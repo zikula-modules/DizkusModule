@@ -13,7 +13,7 @@
  * lists all allowed html tags
  *
  */
-function smarty_function_lastTopicUrl($params, &$smarty)
+function smarty_function_lastTopicUrl($params, Zikula_View $view)
 {
     $numberOfPosts = 0;
     if (empty($params['replies']) || $params['replies'] < 0) {

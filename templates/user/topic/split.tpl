@@ -1,4 +1,4 @@
-{gt text="Split topic" assign=templatetitle}
+{gt text="Split topic" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
@@ -15,7 +15,7 @@
             </div>
         </fieldset>
         <div class="z-formbuttons z-buttons">
-            {formbutton class="z-bt-ok"     commandName="split"   __text="Split"}
+            {formbutton class="z-bt-ok" commandName="split" __text="Split"}
             {formbutton class="z-bt-cancel" commandName="cancel" __text="Cancel"}
         </div>
     </div>

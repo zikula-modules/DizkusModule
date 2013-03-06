@@ -1,4 +1,4 @@
-{gt text="Edit post" assign=templatetitle}
+{gt text="Edit post" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 

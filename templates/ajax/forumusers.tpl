@@ -8,7 +8,7 @@
 
 <ul id="dzk_onlinelist">
     {if $online.numusers > 0}
-    {foreach name=onlineusers item=user from=$online.unames}
+    {foreach name='onlineusers' item='user' from=$online.unames}
     <li>
         {if $user.admin == '1'}{$user.uname|profilelinkbyuname:"dzkadminuser"}{else}{$user.uname|profilelinkbyuname:"dzknoadminuser"}{/if}{if !$smarty.foreach.onlineusers.last}, {/if}
     </li>

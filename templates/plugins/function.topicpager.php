@@ -19,7 +19,7 @@
  * @param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
  *
  */
-function smarty_function_topicpager($params, &$smarty)
+function smarty_function_topicpager($params, Zikula_View $view)
 {
    $total             = $params['total'];
     $per_page          = ModUtil::getVar('Dizkus', 'posts_per_page');
@@ -28,7 +28,7 @@ function smarty_function_topicpager($params, &$smarty)
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $topic_id          = $params['topic_id'];
     if (empty($topic_id)) {
-		$smarty->trigger_error(__('topicpager: missing parameter topic_id'));
+		$view->trigger_error(__('topicpager: missing parameter topic_id'));
 	}
 
     $separator         = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';

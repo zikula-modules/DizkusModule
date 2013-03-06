@@ -13,14 +13,14 @@
     </div>
     <div class="z-formrow">
         <strong class="z-label">{gt text="User names of users who posted from this IP, plus post counts"}</strong>
-        {foreach item=user from=$viewip.users}
+        {foreach item='user' from=$viewip.users}
         <div class="z-formnote">{$user.uname|profilelinkbyuname}&nbsp;({gt text="%s posts" tag1=$user.postcount})</div>
         {/foreach}
     </div>
 </div>
 
 <p class="gobacklink">
-    <a class="previoustopiclink" href="{modurl modname=Dizkus type=user func=viewtopic topic=$topic_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
+    <a class="previoustopiclink" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
 </p>
 
 {include file='user/footer.tpl'}

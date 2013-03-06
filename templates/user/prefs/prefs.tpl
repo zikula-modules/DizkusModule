@@ -1,4 +1,4 @@
-{gt text="Personal settings" assign=templatetitle}
+{gt text="Personal settings" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
@@ -28,7 +28,7 @@
         </div>
 
         <div class="z-formbuttons z-buttons">
-            {formbutton commandName="save"   __text="Save"   class="z-bt-ok"}
+            {formbutton commandName="save" __text="Save" class="z-bt-ok"}
             {formbutton commandName="cancel" __text="Cancel" class="z-bt-cancel"}
         </div>
     </fieldset>

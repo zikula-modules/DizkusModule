@@ -16,11 +16,11 @@
  * @params $params['type'] string, either 'category' or 'forum'
  * @params $params['id']   int     category or forum id, depending of $type
  */ 
-function smarty_function_adminlink($params, &$smarty) 
+function smarty_function_adminlink($params, Zikula_View $view) 
 {
     if (SecurityUtil::checkPermission(0, 'Dizkus::', "::", ACCESS_ADMIN)) { 
         if (empty($params['id']) || empty($params['type'])) {
-            $smarty->trigger_error(__("Error! Missing parameter(s) for admin link."));
+            $view->trigger_error(__("Error! Missing parameter(s) for admin link."));
             return;
         }
         

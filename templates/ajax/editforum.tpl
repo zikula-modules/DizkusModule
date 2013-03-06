@@ -16,8 +16,8 @@
             <div class="z-formrow">
                 <label for="forum_info">{gt text="Forum Information"}</label>
                 <span id="forum_info">
-                    {boardstats type='forumtopics' id=$forum.forum_id assign=topiccount}
-                    {boardstats type='forumposts' id=$forum.forum_id assign=postcount}
+                    {boardstats type='forumtopics' id=$forum.forum_id assign='topiccount'}
+                    {boardstats type='forumposts' id=$forum.forum_id assign='postcount'}
                     <a title="{gt text="Visit this forum"}" href="{modurl modname='Dizkus' type='user' func='viewforum forum=$forum.forum_id}">
                         {$topiccount}&nbsp;{if $topiccount eq 1}{gt text="Topic"}{else}{gt text="Topics"}{/if}&nbsp;/&nbsp;
                         {$postcount}&nbsp;{if $postcount eq 1}{gt text="Post"}{else}{gt text="Posts"}{/if}
@@ -42,12 +42,7 @@
                 </select>
                 <p class="z-formnote z-sub">{gt text="Notice: This is used for the comments feature. All submissions within this module will be posted within this forum. The list only includes modules for which Dizkus has been activated as a hook."}</p>
             </div>
-            {*
-            <div class="z-formrow">
-                <label for="pncategory">< !--[gt text="Select category"]-- ></label>
-                < !--[$categoryselector]-- >
-            </div>
-            *}
+
             <div class="z-formrow">
                 <label for="forum_mods">{gt text="Moderation"}</label>
                 <span id="forum_mods" class="z-formnote">

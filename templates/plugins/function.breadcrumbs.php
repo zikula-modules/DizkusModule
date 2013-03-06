@@ -25,7 +25,7 @@
  * 'forumtopics' (id= forum id): total number of topics in the given forum
  * 'category' (id not important): total number of categories
  */
-function smarty_function_breadcrumbs($params, &$smarty)
+function smarty_function_breadcrumbs($params, Zikula_View $view)
 {
     return ModUtil::apiFunc('Dizkus', 'Forum', 'getBreadcrumbs', $params);
 }

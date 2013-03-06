@@ -10,7 +10,7 @@
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Dizkus {$dizkusinfo.version}</generator>
         <webMaster>{$adminmail|safetext} ({$adminmail|safetext})</webMaster>
-        {foreach item=post from=$posts}
+        {foreach item='post' from=$posts}
         <item>
             <title>{$post.topic_title|safetext}</title>
             <link>{$post.last_post_url|safetext}</link>

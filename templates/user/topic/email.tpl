@@ -1,4 +1,4 @@
-{gt text="Send as e-mail" assign=templatetitle}
+{gt text="Send as e-mail" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 

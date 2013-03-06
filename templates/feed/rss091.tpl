@@ -38,7 +38,7 @@ soon as possible!
 <description>{$sitename|safetext} - {$forum_name|safetext}</description>
 <webMaster>{$adminmail|safetext}</webMaster>
 
-{foreach item=post from=$posts}
+{foreach item='post' from=$posts}
     <item>
     <title>{$post.topic_title|safetext}</title>
     <link>{$post.last_post_url|safetext}</link>

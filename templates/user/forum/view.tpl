@@ -60,7 +60,7 @@
             <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
                 {* Moderate *}
                 {if $permissions.comment}
-                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type=user func=newtopic forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
                 {if $coredata.logged_in}
@@ -91,7 +91,7 @@
                 {/if}
 
                 {if $isModerator OR $permissions.moderate}
-                <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type=user func=moderateforum forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
+                <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
                 {/if}
             </ul>
         </div>

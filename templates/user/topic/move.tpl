@@ -1,4 +1,4 @@
-{gt text="Move or join topics" assign=templatetitle}
+{gt text="Move or join topics" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl' parent=$topic}
 

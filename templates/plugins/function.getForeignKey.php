@@ -13,7 +13,7 @@
  * lists all allowed html tags
  *
  */
-function smarty_function_getForeignKey($params, &$smarty)
+function smarty_function_getForeignKey($params, Zikula_View $view)
 {
     if (!isset($params['entity']) || !isset($params['key'])) {
         return false;
@@ -24,7 +24,7 @@ function smarty_function_getForeignKey($params, &$smarty)
         return false;
     }
     if (!empty($params['assign'])) {
-        $smarty->assign($params['assign'], $output[$params['key']]);
+        $view->assign($params['assign'], $output[$params['key']]);
 
         return;
     }

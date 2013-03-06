@@ -25,7 +25,7 @@
  * 'forumtopics' (id= forum id): total number of topics in the given forum
  * 'category' (id not important): total number of categories
  */
-function smarty_function_boardstats($params, &$smarty) 
+function smarty_function_boardstats($params, Zikula_View $view) 
 {
     $type = (!empty($params['type'])) ? $params['type'] : 'all';
     $id   = (!empty($params['id'])) ? $params['id'] : '0';
@@ -35,7 +35,7 @@ function smarty_function_boardstats($params, &$smarty)
                                 'type' => $type));
 
     if (!empty($params['assign'])) {
-        $smarty->assign($params['assign'], $count);
+        $view->assign($params['assign'], $count);
         return;
     }
 

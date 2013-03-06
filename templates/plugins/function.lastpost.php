@@ -13,7 +13,7 @@
  * lists all allowed html tags
  *
  */
-function smarty_function_lastpost($params, &$smarty) 
+function smarty_function_lastpost($params, Zikula_View $view) 
 {
     // ToDo: remove plugin
 
@@ -35,6 +35,6 @@ function smarty_function_lastpost($params, &$smarty)
             $topic =  $em->find('Dizkus_Entity_Topic', $lastpost['topic_id']);
             $lastpost['post_title'] = $topic->gettopic_title();
         }
-        $smarty->assign('lastpost', $lastpost);
+        $view->assign('lastpost', $lastpost);
     }
 }

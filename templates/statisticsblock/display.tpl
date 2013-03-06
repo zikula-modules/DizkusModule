@@ -6,9 +6,9 @@
 <strong>{$topforumscount}&nbsp;{gt text="Most-active forums" domain="module_dizkus"}:</strong>
 <br />
 <ul class="dzk_forumlist">
-    {foreach item=topforum from=$topforums}
+    {foreach item='topforum' from=$topforums}
     <li>
-        <a href="{modurl modname=Dizkus type=user func=viewforum forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.forum_name}">{$topforum.forum_name}</a>
+        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.forum_name}">{$topforum.forum_name}</a>
         ({$topforum.forum_topics}/{$topforum.forum_posts})
     </li>
     {/foreach}
@@ -41,7 +41,7 @@
 <strong>{$toppostercount} {gt text="Most-active posters" domain="module_dizkus"}:</strong>
 <br />
 <ul class="dzk_posterlist">
-    {foreach item=topposter from=$topposters}
+    {foreach item='topposter' from=$topposters}
     <li>{$topposter.user_name|profilelinkbyuname}<br />({$topposter.user_posts} {gt text="Posts" domain="module_dizkus"})</li>
     {/foreach}
 </ul>

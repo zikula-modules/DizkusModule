@@ -5,7 +5,7 @@
 
     <h2>{$topic.topic_title|safetext}</h2>
 
-    {foreach key=num item=post from=$topic.posts}
+    {foreach key='num' item='post' from=$topic.posts}
     <div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $post.poster_data.online}{$onlinestyle}{/if}>
         <div class="inner">
             <div class="dzk_subcols z-clearfix">

@@ -31,7 +31,7 @@
  * @since        10/10/2005
  *
  * @param        array       $params    All attributes passed to this function from the template
- * @param        object      &$view     Reference to the Smarty object
+ * @param        object      Zikula_View $view     Reference to the Smarty object
  *
  * @return       array
  */

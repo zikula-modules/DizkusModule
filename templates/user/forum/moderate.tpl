@@ -30,7 +30,7 @@
             <ul class="topiclist forums">
                 {assign var='stickystarted' value='0'}
                 {assign var='topicstarted'  value='0'}
-                {foreach item=topic from=$forum.topics}
+                {foreach item='topic' from=$forum.topics}
                     <li class="row">
                         <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
                             <dt class='ctheme-topic-title'>

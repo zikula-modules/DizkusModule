@@ -19,7 +19,7 @@
  * @param $params['add_prevnext'] bool add -100 -10 -1 +1 -10 +100 links if needed, default true
  *
  */
-function smarty_function_forumpager($params, &$smarty)
+function smarty_function_forumpager($params, Zikula_View $view)
 {
     $total    = $params['total'];
     $per_page = ModUtil::getVar('Dizkus', 'topics_per_page');
@@ -28,7 +28,7 @@ function smarty_function_forumpager($params, &$smarty)
     $add_prevnext = (isset($params['add_prevnext']) && !empty($params['add_prevnext'])) ? (bool)$params['add_prevnext'] : true;
     $forum_id     = $params['forum_id'];
     if (empty($forum_id)) {
-        $smarty->trigger_error("Error! Missing 'forum_id' parameter for forum pager.");
+        $view->trigger_error("Error! Missing 'forum_id' parameter for forum pager.");
     }
 
     $separator = (isset($params['separator']) && !empty($params['separator'])) ? $params['separator'] : ' - ';

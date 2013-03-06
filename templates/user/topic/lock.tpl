@@ -12,7 +12,7 @@
 
 <h2>{$templatetitle}</h2>
 <p class="z-informationmsg">{$description}</p>
-<form class="z-form" action="{modurl modname=Dizkus type=user func=topicadmin}" method="post">
+<form class="z-form" action="{modurl modname='Dizkus' type='user' func='topicadmin'}" method="post">
     <div>
         <input type="hidden" name="mode" value="{$mode}" />
         <input type="hidden" name="topic" value="{$topic_id}" />

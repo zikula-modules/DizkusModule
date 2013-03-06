@@ -1,4 +1,4 @@
-{gt text="Delete this topic" assign=templatetitle}
+{gt text="Delete this topic" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl' parent=$topic_id}
 
