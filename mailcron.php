@@ -20,20 +20,18 @@ include 'lib/ZLoader.php';
 ZLoader::register();
 System::init();
 
-$debug = FormUtil::getPassedValue('debug', 0, 'GETPOST');
+$debug = $this->request->query->get('debug', $this->request->request->get('debug', 0));
 $debug = ($debug==1) ? true : false;
 
-// TODO: readforums doesn't exist
-$forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
-if (is_array($forums) && count($forums) > 0)
-{
+// user userId = 2 (site owner) to avoid perm limits
+$forums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission', array('userId' => 2));
+if (is_array($forums) && count($forums) > 0) {
     echo count($forums) . " forums read<br />";
     foreach($forums as $forum)
     {
-        if ($forum['externalsource'] == 1) {    // Mail
-            ModUtil::apiFunc('Dizkus', 'cron', 'mail',
-                         array('forum' => $forum,
-                               'debug' => $debug));
+        if ($forum['externalsource'] == 1) {
+            // Mail
+            ModUtil::apiFunc('Dizkus', 'cron', 'mail', array('forum' => $forum, 'debug' => $debug));
         }
     }
 }

@@ -13,7 +13,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
     /**
      * cron
      *
-     * @params $args['forum'] array with forum information
+     * @params $args['forum'] integer
      * @params $args['force'] boolean if true force connection no matter of active setting or interval
      * @params $args['debug'] boolean indicates debug mode on/off
      * @returns void
@@ -25,7 +25,8 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
         }
 
         $force = (isset($args['force'])) ? (boolean)$args['force'] : false;
-        $forum = $args['forum'];
+        $managedForum = new Dizkus_Manager_Forum($args['forum']);
+        $forum = $managedForum->get();
 
         include_once 'modules/Dizkus/lib/vendor/pop3.php';
         if ((($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time() - ($forum['pop3_interval'] * 60)) ) || ($force == true)) {
