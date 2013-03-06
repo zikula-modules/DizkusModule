@@ -8,7 +8,7 @@
         <fieldset id="dzk_emailtopic">
             <legend>{$templatetitle}</legend>
             <div class="z-formrow">
-                {formlabel for="sendto_email" text="Sent to"}
+                {formlabel for="sendto_email" text="Send to"}
                 {formemailinput id="sendto_email" size="50" maxLength="50" mandatory=true}
             </div>
             <div class="z-formrow">
