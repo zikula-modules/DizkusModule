@@ -24,6 +24,9 @@ include 'lib/ZLoader.php';
 ZLoader::register();
 System::init();
 
+/* @var $em Doctrine\ORM\EntityManager */
+$em = ServiceUtil::getService('doctrine.entitymanager');
+
 //
 // Checking if RSS2Forum is enabled
 //
@@ -39,10 +42,9 @@ if (!ModUtil::available('Feeds')) {
 }
 
 //
-// Getting All forums where RSS2DIZKUS is SET... this also loads modules/Dizkus/common.php
+// Getting All forums where RSS2DIZKUS is SET...
 //
-// TODO: readforums doesn't exist
-$forums = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('permcheck' => 'nocheck'));
+$forums = $em->getRepository('Dizkus_Entity_Forum')->findBy(array('forum_pop3_active' => 2));
 
 if (!$forums) {
     return;
@@ -52,57 +54,56 @@ $loggedin = false;
 $lastuser = '';
 foreach ($forums as $forum)
 {
-    if ($forum['externalsource'] == 2) {   // RSS
+    $forum = $forum->toArray();
 
-        if ($lastuser <> $forum['pnuser']) {
-            UserUtil::logOut();
-            $loggedin = false;
-            // login the correct user
-            if (UserUtil::logIn($forum['pnuser'], base64_decode($forum['pnpassword']), false)) {
-                $lastuser = $forum['pnuser'];
-                $loggedin = true;
-            } else {
-                // unable to login
-            }
-        } else {
-            // we have been here before
+    if ($lastuser <> $forum['forum_pop3_pnuser']) {
+        UserUtil::logOut();
+        $loggedin = false;
+        // login the correct user
+        if (UserUtil::logIn($forum['forum_pop3_pnuser'], base64_decode($forum['forum_pop3_pnpassword']), false)) {
+            $lastuser = $forum['forum_pop3_pnuser'];
             $loggedin = true;
+        } else {
+            // unable to login
         }
-
-        if ($loggedin == true) {
-            $rss = ModUtil::apiFunc('Feeds', 'user', 'get', array('fid' => $forum['externalsourceurl']));
-
-            if (!$rss) {
-                // Buzz off, this feed doesn't exists
-                exit;
-            }
-
-            // Get the feed...
-            $dump = ModUtil::apiFunc('Feeds', 'user', 'getfeed', array('fid' => $rss['fid'],
-                                                                   'url' => $rss['url']));
-
-            if (!$dump) {
-                // Buzz off, this feed doesn't exists
-                exit;
-            }
-
-            // Sorting ascending to store in the right order in the forum.
-            // I tried to sort by the timestamp at first and lost my mind why it wasn't working...
-            // Finally decided that since it was working with the link, the link was good enough
-            // Change it to your liking. It probably won't work on other type of feed.
-            // Important information is in the $dump->items
-            $items = $dump['feed']->get_items();
-
-            // See the function below...
-            $insert = ModUtil::apiFunc('Dizkus', 'user', 'insertrss',
-                                   array('items' => $items,
-                                         'forum' => $forum));
-
-            if (!$insert) {
-                // Do your debug
-            }
-            // Done
-        }
-        // endif loggedin
+    } else {
+        // we have been here before
+        $loggedin = true;
     }
+
+    if ($loggedin == true) {
+        $rss = ModUtil::apiFunc('Feeds', 'user', 'get', array('fid' => $forum['forum_pop3_server']));
+
+        if (!$rss) {
+            // this feed does not exist
+            exit;
+        }
+
+        // Get the feed
+        $dump = ModUtil::apiFunc('Feeds', 'user', 'getfeed', array('fid' => $rss['fid'],
+                                                               'url' => $rss['url']));
+
+        if (!$dump) {
+            // this feed does not exist
+            exit;
+        }
+
+        // Sorting ascending to store in the right order in the forum.
+        // I tried to sort by the timestamp at first and lost my mind why it wasn't working...
+        // Finally decided that since it was working with the link, the link was good enough
+        // Change it to your liking. It probably won't work on other type of feed.
+        // Important information is in the $dump->items
+        $items = $dump['feed']->get_items();
+
+        // See the function below...
+        $insert = ModUtil::apiFunc('Dizkus', 'user', 'insertrss',
+                               array('items' => $items,
+                                     'forum' => $forum));
+
+        if (!$insert) {
+            // Do your debug
+        }
+        // Done
+    }
+    // endif loggedin
 }
