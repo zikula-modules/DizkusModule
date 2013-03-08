@@ -158,7 +158,6 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
 
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
         $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
-        // FIXME Move this to a translatable template?
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
                 . $args['post']->getTopic()->getForum()->getForum_name() . ' :: ' . $args['post']->getTopic()->getTopic_title() . "\n\n"
                 . $this->__('Reporting user') . ": $reporting_username\n"
