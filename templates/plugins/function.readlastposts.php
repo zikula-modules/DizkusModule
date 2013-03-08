@@ -129,8 +129,8 @@ function smarty_function_readlastposts($params, Zikula_View $view)
                 $start = ((ceil(($topic->getTopic_replies() + 1) / $posts_per_page) - 1) * $posts_per_page);
             }
 
-            if ($topic->getTopic_poster() != 1) {
-                $user_name = UserUtil::getVar('uname', $topic->getTopic_poster());
+            if ($topic->getTopic_poster()->getUser_id() != 1) {
+                $user_name = $topic->getTopic_poster()->getUser()->getUname();
                 if ($user_name == "") {
                     // user deleted from the db?
                     $user_name = ModUtil::getVar('Users', 'anonymous');

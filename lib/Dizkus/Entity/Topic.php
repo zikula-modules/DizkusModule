@@ -11,7 +11,6 @@
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use DoctrineExtensions\StandardFields\Mapping\Annotation as ZK;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -37,8 +36,8 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * topic_poster
      * This should be converted to ForumUser
      *
-     * @ORM\Column(type="integer")
-     * @ZK\StandardFields(type="userid", on="create")
+     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
+     * @ORM\JoinColumn(name="topic_poster", referencedColumnName="user_id")
      */
     private $topic_poster;
 
@@ -190,6 +189,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->last_post = $post;
     }
 
+    /**
+     * get the topic poster
+     * 
+     * @return Dizkus_Entity_ForumUser
+     */
     public function getTopic_poster()
     {
         return $this->topic_poster;
@@ -265,7 +269,12 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->topic_title = $title;
     }
 
-    public function setTopic_poster($poster)
+    /**
+     * set the Topic poster
+     * 
+     * @param Dizkus_Entity_ForumUser $poster
+     */
+    public function setTopic_poster(Dizkus_Entity_ForumUser $poster)
     {
         $this->topic_poster = $poster;
     }

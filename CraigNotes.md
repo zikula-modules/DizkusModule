@@ -26,7 +26,6 @@ Craig's Notes
  - in replypreview.tpl the $reply.poster_data.online var is undefined
  - when viewing preview of reply, a "1" appears at the top of the window
  - should consider marking Topic::posts as "EXTRA-LAZY"
- - Dizkus_Entity_Topic::topic_poster should be converted to ForumUser assoc entity
  - post pager is messed up - off by one
  - delete forum/category functions not functional nor available?
 

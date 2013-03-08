@@ -23,9 +23,9 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
     private $topic_id;
 
     /**
-     * topic poster uid
+     * topic poster
      *
-     * @var integer
+     * @var Dizkus_Entity_ForumUser
      */
     private $topic_poster;
 
@@ -103,9 +103,8 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
 
         // send the poster a reason why his/her post was deleted
         if ($data['sendReason'] && !empty($data['reason'])) {
-            $toaddress = UserUtil::getVar('email', $this->topic_poster);
             ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
-                'toaddress' => $toaddress,
+                'toaddress' => $this->topic_poster->getUser()->getEmail(),
                 'subject' => $this->__('Post deleted'),
                 'body' => $data['reason'],
                 'html' => true)

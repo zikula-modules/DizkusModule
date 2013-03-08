@@ -44,8 +44,8 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         $managedTopic = new Dizkus_Manager_Topic($topic_id);
 
         $start = 0;
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $managedTopic->get()->getTopic_poster()));
-        if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$managedTopic->get()->getTopic_poster(), 'iuid' => UserUtil::getVar('uid'))))) {
+        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $managedTopic->get()->getTopic_poster()->getUser_id()));
+        if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$managedTopic->get()->getTopic_poster()->getUser_id(), 'iuid' => UserUtil::getVar('uid'))))) {
             return new Zikula_Response_Ajax_Fatal(
                             array(),
                             $this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.')
