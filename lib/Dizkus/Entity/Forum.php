@@ -533,8 +533,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     {
         // clear the associated users
         $this->moderatorUsers->clear();
-        // wondering if this works as expcted here @see
-        // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/faq.html#i-call-clear-on-a-one-to-many-collection-but-the-entities-are-not-deleted
         
         // add users
         foreach ($users as $uid) {
@@ -570,8 +568,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     {
         // remove the associated moderators
         $this->moderatorGroups->clear();
-        // TODO: wondering if this works as expcted here @see
-        // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/faq.html#i-call-clear-on-a-one-to-many-collection-but-the-entities-are-not-deleted
         
         // add moderators
         foreach ($gids as $gid) {
