@@ -30,7 +30,7 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Groups\Entity\GroupEntity")
+     * @ORM\ManyToOne(targetEntity="Groups\Entity\GroupEntity", inversedBy="gid")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="gid")
      */
     private $group;
