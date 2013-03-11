@@ -190,7 +190,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
 
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum")
-     * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id", nullable=true)
      */
     private $favorites;
 
