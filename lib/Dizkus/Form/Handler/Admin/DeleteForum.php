@@ -14,13 +14,15 @@
  */
 class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 {
+    const MOVE_CHILDREN = '1';
+    const DELETE_CHILDREN = '0';
 
     /**
-     * category
+     * forum
      *
      * @var Dizkus_Entity_Forum
      */
-    private $category;
+    private $forum;
 
     /**
      * Setup form.
@@ -40,36 +42,32 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $id = $this->request->query->get('id', null);
 
         if ($id) {
-            $category = $this->entityManager->find('Dizkus_Entity_Forum', $id);
-            if ($category) {
-                $this->view->assign($category->toArray());
+            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $id);
+            if ($forum) {
+                $this->view->assign($forum->toArray());
             } else {
                 return LogUtil::registerArgsError($this->__f('Forum with id %s not found', $id));
             }
         } else {
             return LogUtil::registerArgsError();
         }
-
-        $forums = ModUtil::apiFunc($this->name, 'Category', 'getForums', $id);
-        $this->view->assign('forums', $forums);
-
-        $actions = array();
-        $otherCategories = ModUtil::apiFunc($this->name, 'Category', 'getAll', $id);
-        foreach ($otherCategories as $otherCategory) {
-            $actions[] = array(
-                'text' => $this->__f("Move to '%s'.", $otherCategory['cat_title']),
-                'value' => $otherCategory['cat_id']
-            );
-        }
-
-        $actions[] = array(
-            'text' => $this->__('Remove them.'),
-            'value' => 'remove'
+        
+        $actions = array(
+            array(
+                'text' => $this->__('Move them to a new parent forum'),
+                'value' => self::MOVE_CHILDREN),
+            array(
+                'text' => $this->__('Remove them'),
+                'value' => self::DELETE_CHILDREN)
         );
         $this->view->assign('actions', $actions);
+        $this->view->assign('action', '0');
+
+        $destinations = ModUtil::apiFunc($this->name, 'Forum', 'getParents');
+        $this->view->assign('destinations', $destinations);
 
         $this->view->caching = false;
-        $this->category = $category;
+        $this->forum = $forum;
 
         return true;
     }
@@ -102,9 +100,20 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
         
-        // TODO: shouldn't the forum be deleted here?
+        switch ($data['action']) {
+            case self::MOVE_CHILDREN:
+                $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
+                // get the child forums and move them
+                // get child topics and move them
+                break;
+            case self::DELETE_CHILDREN:
+            default:
+                $this->entityManager->remove($this->forum);
+                break;
+        }
+        $this->entityManager->flush();
 
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->category->getId()));
+        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->forum->getForum_id()));
 
         return $view->redirect($url);
     }

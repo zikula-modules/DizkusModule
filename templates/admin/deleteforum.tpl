@@ -1,7 +1,9 @@
+{pageaddvar name="javascript" value="jquery"}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Admin.DeleteForum.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="delete" size="small"}
-    <h3>{gt text="Delete category?"}</h3>
+    <h3>{gt text="Delete forum"}</h3>
 </div>
 
 <div id="dizkus_admin">
@@ -14,14 +16,15 @@
         {gt text="Are you sure want to remove the forum '%s'." tag1=$forum_name}
     </div>
 
-    {if count($forums) > 0}
     <div class="z-formrow">
-        {formlabel for="action" __text='What should happen with the sub forums and the topics:'}
+        {formlabel for="action" __text='Move or remove subforums and topics'}
         {formdropdownlist id="action" items=$actions}
     </div>
-    {else}
-    {formtextinput textMode="hidden" id='action' value=''}
-    {/if}
+
+    <div id="destinationSelector" class="z-formrow" style="display: none;">
+        {formlabel for="destination" __text='destination:'}
+        {formdropdownlist id="destination" items=$destinations}
+    </div>
 
     {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_delete' id=$forum_id}
 

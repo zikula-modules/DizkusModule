@@ -112,7 +112,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     /**
      * posts
      * 
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic", cascade={"remove"})
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
@@ -121,7 +121,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * Subscriptions
      * 
      * Dizkus_Entity_TopicSubscription collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic", cascade={"remove"})
      */
     private $subscriptions;
 

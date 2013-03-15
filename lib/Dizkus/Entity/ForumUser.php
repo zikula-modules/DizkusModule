@@ -84,19 +84,19 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     /**
      * Dizkus_Entity_ForumUserFavorite collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $favoriteForums;
     
     /**
      * Dizkus_Entity_TopicSubscription collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $topicSubscriptions;
 
     /**
      * Dizkus_Entity_ForumSubscription collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forumUser", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $forumSubscriptions;
 

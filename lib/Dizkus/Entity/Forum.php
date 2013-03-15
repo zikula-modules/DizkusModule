@@ -93,7 +93,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forum", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forum", mappedBy="parent", cascade={"remove"})
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
@@ -189,24 +189,24 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $forum_pntopic = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum", cascade={"remove"})
      */
     private $favorites;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topic", mappedBy="forum")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topic", mappedBy="forum", cascade={"remove"})
      */
     private $topics;
 
     /**
      * Dizkus_Entity_Moderator_User collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorUsers;
 
     /**
      * Dizkus_Entity_Moderator_Group collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorGroups;
 
@@ -214,7 +214,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      * Subscriptions
      * 
      * Dizkus_Entity_ForumSubscription collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum")
+     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum", cascade={"remove"})
      */
     private $subscriptions;
 

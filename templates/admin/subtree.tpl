@@ -10,6 +10,7 @@
             <a href="{modurl modname='Dizkus' type='admin' func='modifyForum' id=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='xedit.png' alt="Edit"}</a>
             <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='demo.png' alt="View"}</a>
             {/if}
+            <a href="{modurl modname='Dizkus' type='admin' func='deleteforum' id=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='14_layer_deletelayer.png' alt="Delete"}</a>
             {if !$smarty.foreach.foo.first}
                 <a href="{modurl modname='Dizkus' type='admin' func='changeForumOrder' forum=$item.forum_id action='moveUp'}">
                     {img modname='core' set='icons/extrasmall' src='up.png' __alt="Up"}
