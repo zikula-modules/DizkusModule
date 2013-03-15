@@ -3,7 +3,7 @@
  "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 
 <!--
-Possible parameters for backforum.php
+Possible parameters for feed
 
 -> cat_id    read new postings in this category only
 -> forum_id  read new postings in this forum only
@@ -23,7 +23,7 @@ Do not configure Renderer to expose template information for debugging purposes 
 you want to use templated RSS feeds! This will result in an XML error message:
 
 XML Parsing Error: xml declaration not at start of external entity
-Location: http://www.example.com/backforum.php
+Location: http://example.com/forums/feed
 Line Number 3, Column 1:<?xml version="1.0" encoding="utf-8"?>
 
 If you have to do this kind of debugging, do not forget to switch it off as

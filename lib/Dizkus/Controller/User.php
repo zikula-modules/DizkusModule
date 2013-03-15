@@ -639,11 +639,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $mainUrl = ModUtil::url($this->name, 'user', 'main');
 
         if (isset($forum_id) && !is_numeric($forum_id)) {
-            LogUtil::registerError($this->__f('Error! In \'backforum.php\', an invalid forum ID %s was encountered.', $forum_id));
+            LogUtil::registerError($this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
             return $this->redirect($mainUrl);
         }
         if (isset($cat_id) && !is_numeric($cat_id)) {
-            LogUtil::registerError($this->__f('Error! In \'backforum.php\', an invalid category ID %s was encountered.', $cat_id));
+            LogUtil::registerError($this->__f('Error! An invalid category ID %s was encountered.', $cat_id));
             return $this->redirect($mainUrl);
         }
 
