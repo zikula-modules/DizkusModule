@@ -69,7 +69,7 @@ class Dizkus_Manager_Forum
     /**
      * return page as array
      *
-     * @return mixed array or false
+     * @return array|boolean false
      */
     public function toArray()
     {
@@ -83,7 +83,7 @@ class Dizkus_Manager_Forum
     /**
      * return page as array
      *
-     * @return array
+     * @return integer
      */
     public function getId()
     {
@@ -93,7 +93,7 @@ class Dizkus_Manager_Forum
     /**
      * return forum as doctrine2 object
      *
-     * @return object
+     * @return Dizkus_Entity_Forum
      */
     public function get()
     {
@@ -110,7 +110,7 @@ class Dizkus_Manager_Forum
      *
      * @param boolean $withoutCurrent Show tree without the current item.
      *
-     * @return string
+     * @return array
      */
     public function getBreadcrumbs($withoutCurrent = true)
     {
@@ -150,7 +150,7 @@ class Dizkus_Manager_Forum
     /**
      * return posts of a forum as doctrine2 object
      *
-     * @return object
+     * @return Paginator collection of paginated topics
      */
     public function getTopics($startNumber = 1)
     {
@@ -193,7 +193,7 @@ class Dizkus_Manager_Forum
     /**
      * increase read count
      *
-     * @return array
+     * @return boolean true
      */
     public function incrementReadCount()
     {
@@ -239,8 +239,6 @@ class Dizkus_Manager_Forum
      * store the forum
      *
      * @param array $data Page data.
-     *
-     * @return boolean
      */
     public function store($data)
     {

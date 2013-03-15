@@ -228,6 +228,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->moderatorUsers = new ArrayCollection();
         $this->moderatorGroups = new ArrayCollection();
         $this->subscriptions = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getForum_id()
@@ -338,7 +339,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get Children
      * 
-     * @return Dizkus_Entity_Forum
+     * @return ArrayCollection Dizkus_Entity_Forum
      */
     public function getChildren()
     {
@@ -491,7 +492,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
 
     /**
      * get ForumUsers that have marked this forum as favorite
-     * @return Dizkus_Entity_ForumUserFavorites collection
+     * @return ArrayCollection Dizkus_Entity_ForumUserFavorites
      */
     public function getFavorites()
     {
@@ -501,7 +502,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get forum Topics
      * 
-     * @return Dizkus_Entity_Topic
+     * @return ArrayCollection Dizkus_Entity_Topic
      */
     public function getTopics()
     {
@@ -511,7 +512,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get Moderators
      * 
-     * @return Dizkus_Entity_Moderator_User collection
+     * @return ArrayCollection Dizkus_Entity_Moderator_User
      */
     public function getModeratorUsers()
     {
@@ -546,7 +547,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     /**
      * get forum moderator groups
      * 
-     * @return Dizkus_Entity_Moderator_Group collection
+     * @return ArrayCollection Dizkus_Entity_Moderator_Group
      */
     public function getModeratorGroups()
     {
@@ -581,7 +582,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
 
     /**
      * get Forum Subscriptions
-     * @return Dizkus_Entity_ForumSubscription collection
+     * @return ArrayCollection Dizkus_Entity_ForumSubscription
      */
     public function getSubscriptions()
     {
