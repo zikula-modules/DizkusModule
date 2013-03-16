@@ -113,7 +113,6 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
             foreach ($topics as $topic) {
                 $topic->setForum($managedDestinationForum->get());
                 $this->forum->getTopics()->removeElement($topic);
-                // TODO should update each post::forumId or not?
             }
             // sync last post
             ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get(), 'flush' => false));
