@@ -250,7 +250,6 @@ class Dizkus_Manager_Topic
     {
         // prepare first post
         $this->_firstPost = new Dizkus_Entity_Post();
-        $this->_firstPost->setForum_id($data['forum_id']);
         $this->_firstPost->setPost_text($data['message']);
         unset($data['message']);
         $this->_firstPost->setPost_attach_signature($data['post_attach_signature']);
