@@ -10,8 +10,7 @@
 
 // type, id, assign (optional)
 /**
- * boardstats plugin
- * reads some statistics by calling the Dizkus_userapi_boardstats() function
+ * breadcrumb plugin
  *
  * @params $params['type']   string see below
  * @params $params['id']     int    id, depending on $type
