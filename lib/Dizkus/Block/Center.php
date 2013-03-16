@@ -69,7 +69,7 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
 
 
         // return immediately if no post exist
-        if (ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('type' => 'all')) == 0) {
+        if (ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'all')) == 0) {
             return false;
         }
 

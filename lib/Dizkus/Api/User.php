@@ -46,15 +46,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * Returns the total number of posts in the whole system, a forum, or a topic
-     * Also can return the number of users on the system.
+     * Counts posts in forums, topics
+     * or counts forum users
      *
      * @params $args['id'] int the id, depends on 'type' parameter
      * @params $args['type'] string, defines the id parameter
      * @params $args['force'] boolean, default false, if true, do not use cached
      * @returns int (depending on type and id)
      */
-    public function boardstats($args)
+    public function countstats($args)
     {
         $id = isset($args['id']) ? $args['id'] : null;
         $type = isset($args['type']) ? $args['type'] : null;
@@ -156,7 +156,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 break;
 
             default:
-                return LogUtil::registerError($this->__("Error! Wrong parameters in boardstats()."), null, ModUtil::url('Dizkus', 'user', 'main'));
+                return LogUtil::registerError($this->__("Error! Wrong parameters in countstats()."), null, ModUtil::url('Dizkus', 'user', 'main'));
         }
     }
 

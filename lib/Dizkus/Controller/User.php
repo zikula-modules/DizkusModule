@@ -41,7 +41,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $level = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel($viewcat);
         $this->view->assign('tree', $level);
 
-        $numposts = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('id' => '0', 'type' => 'all'));
+        $numposts = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
 
         return $this->view->fetch('user/main.tpl');
