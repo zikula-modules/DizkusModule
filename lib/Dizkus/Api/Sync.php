@@ -147,10 +147,10 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
     public function posters()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $posts = $qb->select('count(p)', 'd.user_id')
+        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user_id')
                 ->from('Dizkus_Entity_Post', 'p')
                 ->leftJoin('p.poster', 'd')
-                ->groupBy('d.user_id')
+                ->groupBy('d.user')
                 ->getQuery()
                 ->getArrayResult();
 
