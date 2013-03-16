@@ -144,7 +144,6 @@ class Dizkus_Manager_Post
         $managedForum->incrementPostCount();
 
         $this->_post->setPoster($forumUser);
-        $this->_post->setForum_id($this->_topic->getForumId());
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }

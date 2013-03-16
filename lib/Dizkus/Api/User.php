@@ -51,12 +51,14 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      *
      * @params $args['id'] int the id, depends on 'type' parameter
      * @params $args['type'] string, defines the id parameter
+     * @params $args['force'] boolean, default false, if true, do not use cached
      * @returns int (depending on type and id)
      */
     public function boardstats($args)
     {
         $id = isset($args['id']) ? $args['id'] : null;
         $type = isset($args['type']) ? $args['type'] : null;
+        $force = isset($args['force']) ? (bool)$args['force'] : false;
 
         static $cache = array();
 
@@ -99,15 +101,23 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 break;
 
             case 'forumposts':
-                if (!isset($cache[$type][$id])) {
-                    $cache[$type][$id] = $this->countEntity('Post', 'forum_id', $id);
+                if ($force || !isset($cache[$type][$id])) {
+                    $dql = "SELECT count(p)
+                        FROM Dizkus_Entity_Post p
+                        WHERE p.topic IN (
+                            SELECT t.topic_id
+                            FROM Dizkus_Entity_Topic t
+                            WHERE t.forum = :forum)";
+                    $query = $this->entityManager->createQuery($dql)
+                        ->setParameter('forum', $id);
+                    $cache[$type][$id] = $query->getSingleScalarResult();
                 }
 
                 return $cache[$type][$id];
                 break;
 
             case 'forumtopics':
-                if (!isset($cache[$type][$id])) {
+                if ($force || !isset($cache[$type][$id])) {
                     $cache[$type][$id] = $this->countEntity('Topic', 'forum', $id);
                 }
 

@@ -31,14 +31,6 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $post_id;
 
     /**
-     * forum_id
-     * this should be removed
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $forum_id = 0;
-
-    /**
      * post_time
      * 
      * @ORM\Column(type="datetime")
@@ -121,16 +113,6 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     public function getPost_id()
     {
         return $this->post_id;
-    }
-
-    public function getForum_id()
-    {
-        return $this->forum_id;
-    }
-
-    public function setForum_id($forumId)
-    {
-        return $this->forum_id = $forumId;
     }
 
     public function getPost_text()

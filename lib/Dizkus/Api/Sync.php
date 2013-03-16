@@ -61,21 +61,10 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
         $flush = isset($args['flush']) ? $args['flush'] : true;
 
         // count topics of a forum
-        $qb = $this->entityManager->createQueryBuilder();
-        $data['forum_topics'] = $qb->select('COUNT(t)')
-                ->from('Dizkus_Entity_Topic', 't')
-                ->where('t.forum = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getSingleScalarResult();
+        $data['forum_topics'] = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('type' => 'forumtopics', 'id' => $id, 'force' => true));
         // count posts of a forum
-        $qb = $this->entityManager->createQueryBuilder();
-        $data['forum_posts'] = $qb->select('COUNT(p)')
-                ->from('Dizkus_Entity_Post', 'p')
-                ->where('p.forum_id = :id')
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getSingleScalarResult();
+        $data['forum_posts'] = ModUtil::apiFunc('Dizkus', 'user', 'boardstats', array('type' => 'forumposts', 'id' => $id, 'force' => true));
+
         $args['forum']->merge($data, false);
         $this->entityManager->persist($args['forum']);
         if ($flush) {

@@ -204,6 +204,7 @@ Class Dizkus_Installer extends Zikula_AbstractInstaller
 
         // TODO: the existing Group/Forum relations need to be migrated from the `dizkus_forum_mods` table (user_id > 1000000)
         //       to the new `dizkus_forum_mods_group` table (use normal group id, so subtract 1000000?)
+        // TODO: need to remove forum_id column from posts table
         return true;
     }
 
