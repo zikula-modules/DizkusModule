@@ -115,9 +115,8 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
                 $this->forum->getTopics()->removeElement($topic);
                 // TODO should update each post::forumId or not?
             }
-            // sync up changes
+            // sync last post
             ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get(), 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedDestinationForum->get(), 'flush' => false));
             $this->entityManager->flush();
         }
         // remove the forum
@@ -129,6 +128,9 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         // repair the tree
         $this->entityManager->getRepository('Dizkus_Entity_Forum')->recover();
         $this->entityManager->getRepository('Dizkus_Entity_Forum')->clear();
+
+        // resync all forums, topics & posters
+        ModUtil::apiFunc('Dizkus', 'sync', 'all');
 
         return $view->redirect($url);
     }
