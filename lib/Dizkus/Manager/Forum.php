@@ -288,4 +288,15 @@ class Dizkus_Manager_Forum
                 ->getResult();
         return (count($groupMembership) > 0) ? true : false;
     }
+
+    /**
+     * Is this foruma child of the provided forum?
+     * 
+     * @param Dizkus_Entity_Forum $forum
+     * @return boolean
+     */
+    public function isChildOf(Dizkus_Entity_Forum $forum)
+    {
+        return (($this->get()->getLft() > $forum->getLft()) && ($this->get()->getRgt() < $forum->getRgt()));
+    }
 }

@@ -27,4 +27,6 @@ Craig's Notes
  - should consider marking Topic::posts as "EXTRA-LAZY"
  - post pager is messed up - off by one
  - delete forum/category functions not functional nor available?
+ - restructure forum tree so that all "category" forums have the same penultimate
+   parent instead of NULL. This penultimate parents would not be displayed?
 

@@ -95,13 +95,20 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_delete', new Zikula_Hook_ValidationProviders());
         $hookvalidators = $this->notifyHooks($hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+            return LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
         }
 
         $data = $view->getValues();
         
         if ($data['action'] == self::MOVE_CHILDREN) {
             $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
+            if ($managedDestinationForum->isChildOf($this->forum)) {
+                return LogUtil::registerError($this->__('You cannot select a descendant forum as a destination.'));
+            }
+            // TODO: because of how the tree is structured - with several penultimate parent forums, this may fail
+            // The forum tree should be restructured to only have one penultimate parent - e.g. all "category"
+            // forums would have the same parent and not NULL as a parent.
+
             // get the child forums and move them
             $children = $this->forum->getChildren();
             foreach ($children as $child) {
