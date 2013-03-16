@@ -100,20 +100,35 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
         
-        switch ($data['action']) {
-            case self::MOVE_CHILDREN:
-                $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
-                // get the child forums and move them
-                // get child topics and move them
-                break;
-            case self::DELETE_CHILDREN:
-            default:
-                $this->entityManager->remove($this->forum);
-                break;
+        if ($data['action'] == self::MOVE_CHILDREN) {
+            $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
+            // get the child forums and move them
+            $children = $this->forum->getChildren();
+            foreach ($children as $child) {
+                $child->setParent($managedDestinationForum->get());
+            }
+            $this->forum->removeChildren();
+            // get child topics and move them
+            $topics = $this->forum->getTopics();
+            foreach ($topics as $topic) {
+                $topic->setForum($managedDestinationForum->get());
+                $this->forum->getTopics()->removeElement($topic);
+                // TODO should update each post::forumId or not?
+            }
+            // sync up changes
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get(), 'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedDestinationForum->get(), 'flush' => false));
+            $this->entityManager->flush();
         }
+        // remove the forum
+        $this->entityManager->remove($this->forum);
         $this->entityManager->flush();
 
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->forum->getForum_id()));
+        
+        // repair the tree
+        $this->entityManager->getRepository('Dizkus_Entity_Forum')->recover();
+        $this->entityManager->getRepository('Dizkus_Entity_Forum')->clear();
 
         return $view->redirect($url);
     }

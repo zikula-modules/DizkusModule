@@ -347,6 +347,13 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     }
 
     /**
+     * remove all the child forums
+     */
+    public function removeChildren()
+    {
+        $this->children->clear();
+    }
+    /**
      * get last post in Forum
      * 
      * @return Dizkus_Entity_Post
