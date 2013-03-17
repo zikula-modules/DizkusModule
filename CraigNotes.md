@@ -19,7 +19,6 @@ Craig's Notes
    also in many other tables!
  - red/grey folder icons are problematic
  - who's online footer is not working at all.
- - when viewing preview of reply, a "1" appears at the top of the window
  - should consider marking Topic::posts as "EXTRA-LAZY"
  - post pager is messed up - off by one
  - restructure forum tree so that all "category" forums have the same ultimate

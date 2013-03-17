@@ -195,13 +195,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             // switch to preview mode
             $preview = true;
         }
-        
         // check hooked modules for validation
-        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.post.validate_edit', new Zikula_Hook_ValidationProviders());
-        $hookvalidators = $this->notifyHooks($hook)->getValidators();
-        if ($hookvalidators->hasErrors()) {
-            LogUtil::registerStatus($this->__('Error! Hooked content does not validate.'));
-            $preview = true;
+        if ($submit) {
+            $hook = new Zikula_ValidationHook('dizkus.ui_hooks.post.validate_edit', new Zikula_Hook_ValidationProviders());
+            $hookvalidators = $this->notifyHooks($hook)->getValidators();
+            if ($hookvalidators->hasErrors()) {
+                LogUtil::registerStatus($this->__('Error! Hooked content does not validate.'));
+                $preview = true;
+            }
         }
 
         if ($submit && !$preview) {
