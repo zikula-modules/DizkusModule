@@ -234,16 +234,6 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     /**
      *
      */
-    public function deletecategory()
-    {
-        $form = FormUtil::newForm('Dizkus', $this);
-
-        return $form->execute('admin/deletecategory.tpl', new Dizkus_Form_Handler_Admin_DeleteCategory());
-    }
-
-    /**
-     *
-     */
     public function modifyForum()
     {
         $form = FormUtil::newForm('Dizkus', $this);

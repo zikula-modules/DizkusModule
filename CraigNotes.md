@@ -8,7 +8,6 @@ Craig's Notes
  - total posts, topics not including subforums
  - it may be better to enforce 'delete' cascade behavior on Topics then change
    the delete routine. This would also affect the topic join routine
- - Dizkus_Form_Handler_Admin_DeleteForum doesn't delete anything
  - Paginator - Fabian had double-entities because he was having trouble with 
    the paginator. When I eliminate the double entities, this may cause problems
    with the paginator. this needs to be solved for Topics, Posts
@@ -26,7 +25,6 @@ Craig's Notes
  - when viewing preview of reply, a "1" appears at the top of the window
  - should consider marking Topic::posts as "EXTRA-LAZY"
  - post pager is messed up - off by one
- - delete forum/category functions not functional nor available?
- - restructure forum tree so that all "category" forums have the same penultimate
-   parent instead of NULL. This penultimate parents would not be displayed?
+ - restructure forum tree so that all "category" forums have the same ultimate
+   parent instead of NULL. This ultimate parent would not be displayed?
 
