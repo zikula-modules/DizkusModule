@@ -34,7 +34,8 @@
                 {foreach item='subforum' from=$forum.children}
                 <li class="row">
                     <dl class="icon">
-                        <dt {*if $subforum.new_posts == true}class='new-posts'{else}class='no-new-posts'{/if*} >
+                        {datecompare date1=$subforum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                        <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
                             <a title="{gt text="Go to subforum"} '{$subforum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a><br />
                             {if $subforum.forum_desc neq ''}{$subforum.forum_desc|safehtml}<br />{/if}
                         </dt>
