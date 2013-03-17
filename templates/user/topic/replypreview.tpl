@@ -1,6 +1,6 @@
 {assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
 
-<div id="posting_{$reply.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $reply.poster_data.online}{$onlinestyle}{/if}>
+<div id="posting_{$reply.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {$onlinestyle}>
     <div class="inner">
 
         <div class="dzk_subcols z-clearfix">
@@ -23,9 +23,9 @@
                     {/if}
                     {usergetvar name='user_regdate' assign="user_regdate"}
                     <li><strong>{gt text="Registered"}: </strong>{$user_regdate|dateformat:'datebrief'}</li>
-                    {if !$reply.poster_data.online}
+                    {*if !$reply.poster_data.online}
                     <li><strong>{gt text="Last visit"}: </strong>{$reply.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
-                    {/if}
+                    {/if*}{*user is online!*}
                     <li><strong>{gt text="Posts"}: </strong>{$reply.poster_data.user_posts}</li>
                 </ul>
             </div>

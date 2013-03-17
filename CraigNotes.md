@@ -19,7 +19,6 @@ Craig's Notes
    also in many other tables!
  - red/grey folder icons are problematic
  - who's online footer is not working at all.
- - in replypreview.tpl the $reply.poster_data.online var is undefined
  - when viewing preview of reply, a "1" appears at the top of the window
  - should consider marking Topic::posts as "EXTRA-LAZY"
  - post pager is messed up - off by one
