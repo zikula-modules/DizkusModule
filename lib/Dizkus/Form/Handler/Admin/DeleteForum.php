@@ -133,7 +133,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         
         // repair the tree
         $this->entityManager->getRepository('Dizkus_Entity_Forum')->recover();
-        $this->entityManager->getRepository('Dizkus_Entity_Forum')->clear();
+        $this->entityManager->clear();
 
         // resync all forums, topics & posters
         ModUtil::apiFunc('Dizkus', 'sync', 'all');
