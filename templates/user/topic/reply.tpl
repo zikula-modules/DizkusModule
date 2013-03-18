@@ -25,7 +25,7 @@
 
                             <div>
                                 <label for="message">{gt text="Message body"}</label><br />
-                                {*WRONG HOOK USAGE notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'*}
+                                {* TODO WRONG HOOK USAGE notifydisplayhooks eventname='dizkus.ui_hooks.editor.display_view' id='message'*}
                                 <textarea id="message" name="message" rows="10" cols="60">{$reply.message}</textarea>
                                 {*if isset($hooks.MediaAttach)}{$hooks.MediaAttach}{/if*}
                                 {if $modvars.Dizkus.striptags == 'yes'}
