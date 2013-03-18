@@ -28,7 +28,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
         $managedForum = new Dizkus_Manager_Forum($args['forum']);
         $forum = $managedForum->get();
 
-        include_once 'modules/Dizkus/lib/vendor/pop3.php';
+        include_once 'modules/Dizkus/lib/vendor/pop3class/pop3.php';
         if ((($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time() - ($forum['pop3_interval'] * 60)) ) || ($force == true)) {
             $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
             // get new mails for this forum
@@ -206,7 +206,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
 //        }
 //
 //        $forum = ModUtil::apiFunc('Dizkus', 'admin', 'readforums', array('forum_id' => $args['forum_id']));
-//        Loader::includeOnce('modules/Dizkus/includes/pop3.php');
+//        include_once 'modules/Dizkus/lib/vendor/pop3class/pop3.php';
 //
 //        $pop3 = new pop3_class;
 //        $pop3->hostname = $forum['pop3_server'];
