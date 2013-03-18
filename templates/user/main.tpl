@@ -16,6 +16,7 @@
                         <dt>
                             <span><a id="categorylink_{$category.forum_name}" title="{gt text="Go to category"} '{$category.forum_name|safetext}'" href="{modurl modname='Dizkus' type=user func=main viewcat=$category.forum_id}">{$category.forum_name|safetext}</a></span>
                         </dt>
+                        <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
                         <dd class="posts"><span>{gt text="Posts"}</span></dd>
                         <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
@@ -34,6 +35,7 @@
                                 {include file='user/moderatedBy.tpl' forum=$forum}
                             </dt>
 
+                            <dd class="subforums">{$forum.children|count}</dd>
                             <dd class="topics">{$forum.forum_topics|safetext}</dd>
                             <dd class="posts">{$forum.forum_posts|safetext}</dd>
                             <dd class="lastpost">

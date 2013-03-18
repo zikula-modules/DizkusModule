@@ -373,17 +373,19 @@ div#editpostoptions ul li {
 }
 #dizkus dd.posts,
 #dizkus dd.topics,
+#dizkus dd.subforums,
 #dizkus dd.views {
     text-align: center;
-    width: 11%;
+    width: 8%;
 }
 #dizkus li.row dd.posts,
 #dizkus li.row dd.topics,
+#dizkus li.row dd.subforums,
 #dizkus li.row dd.views {
     line-height: 2.2em;
 }
 #dizkus dd.lastpost {
-    width: 26%;
+    width: 21%;
 }
 #dizkus dd.favorites {
     width: 23.5%;

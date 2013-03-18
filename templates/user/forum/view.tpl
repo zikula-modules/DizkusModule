@@ -23,6 +23,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt><span>{gt text='Sub Forums'}</span></dt>
+                        <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
                         <dd class="posts"><span>{gt text="Posts"}</span></dd>
                         <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
@@ -39,6 +40,7 @@
                             <a title="{gt text="Go to subforum"} '{$subforum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a><br />
                             {if $subforum.forum_desc neq ''}{$subforum.forum_desc|safehtml}<br />{/if}
                         </dt>
+                        <dd class="subforums">{$subforum.children|count}</dd>
                         <dd class="topics">{$subforum.forum_topics|safetext}</dd>
                         <dd class="posts">{$subforum.forum_posts|safetext}</dd>
 
