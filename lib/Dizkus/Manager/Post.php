@@ -140,8 +140,9 @@ class Dizkus_Manager_Post
         $this->_topic->get()->setTopic_time($this->_post->getPost_time());
 
         // increment forum posts
-        $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
+        $managedForum = new Dizkus_Manager_Forum(null, $this->_topic->get()->getForum());
         $managedForum->incrementPostCount();
+        $managedForum->setLastPost($this->_post);
 
         $this->_post->setPoster($forumUser);
         $this->entityManager->persist($this->_post);
