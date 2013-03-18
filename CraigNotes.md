@@ -20,4 +20,3 @@ Craig's Notes
  - post pager is messed up - off by one
  - restructure forum tree so that all "category" forums have the same ultimate
    parent instead of NULL. This ultimate parent would not be displayed?
- - hooks must be audited - old usage style of `id='message'` still present and must be removed
