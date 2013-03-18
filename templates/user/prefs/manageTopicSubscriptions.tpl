@@ -30,7 +30,7 @@
                                     <span>{gt text="Topic"}: {$subscription.topic.topic_title|truncate:70}</span>
                                 </dt>
                                 <dd class="lastpost">
-                                    {include file='user/lastPostBy.tpl' last_post=$subscription.topic.last_post replies=$subscription.topic.topic_replies}
+                                    {include file='user/lastPostBy.tpl' last_post=$subscription.topic.last_post}
                                 </dd>
                                 <dd class="favorites">
                                     {formcheckbox class="topic_checkbox" id=$subscription.topic.topic_id group="topicIds"}

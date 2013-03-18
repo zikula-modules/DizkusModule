@@ -44,7 +44,7 @@
 
                         <dd class="lastpost">
                             {if isset($subforum.last_post)}
-                            {include file='user/lastPostBy.tpl' last_post=$subforum.last_post replies=-1}
+                            {include file='user/lastPostBy.tpl' last_post=$subforum.last_post}
                             {/if}
                         </dd>
                     </dl>
@@ -165,7 +165,7 @@
                     <dd class="views">{$topic.topic_views}</dd>
                     <dd class="lastpost">
                         {if isset($topic.last_post)}
-                        {include file='user/lastPostBy.tpl' last_post=$topic.last_post replies=$topic.topic_replies}
+                        {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                         {/if}
                     </dd>
                 </dl>

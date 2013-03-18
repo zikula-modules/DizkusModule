@@ -56,7 +56,7 @@
                             </dt>
                             <dd class="posts">{$forum.forum_topics}</dd>
                             <dd class="lastpost">
-                                {include file='user/lastPostBy.tpl' last_post=$topic.last_post replies=-1}
+                                {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                             </dd>
                             <dd class="mark">
                                 <input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{$topic.topic_id}" />

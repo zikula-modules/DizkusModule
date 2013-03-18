@@ -34,7 +34,7 @@
                     </dt>
                     <dd class="posts">{$topic.topic_replies|safetext}</dd>
                     <dd class="lastpost">
-                    {include file='user/lastPostBy.tpl' last_post=$topic.last_post replies=$topic.topic_replies}
+                    {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                     </dd>
                 </dl>
             </li>

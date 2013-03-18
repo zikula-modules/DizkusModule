@@ -15,27 +15,11 @@
  */
 function smarty_function_lastTopicUrl($params, Zikula_View $view)
 {
-    $numberOfPosts = 0;
-    if (empty($params['replies']) || $params['replies'] < 0) {
-        $em = ServiceUtil::getService('doctrine.entitymanager');
-        $qb = $em->createQueryBuilder();
-        $qb->select('count(p)')
-            ->from('Dizkus_Entity_Post', 'p')
-            ->where('p.topic = :topicId')
-            ->setParameter('topicId', $params['topic']);
-        // only the oldiest one
-        $numberOfPosts = (int)$qb->getQuery()->getSingleScalarResult();
-    } else {
-        $numberOfPosts = $params['replies']+1;
-    }
-
-    $postPerPage = (int)ModUtil::getVar('Dizkus', 'posts_per_page');
-
+    $topic = $params['topic'];
     $params = array(
-        'topic' => $params['topic'],
-        'start' => floor($numberOfPosts/$postPerPage)*$postPerPage
+        'topic' => $topic->getTopic_id(),
+        'start' => ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('topic_replies' => $topic->getTopic_replies())),
     );
-
-    return ModUtil::url('Dizkus', 'user', 'viewtopic', $params);
-
+    $url = new \Zikula\Core\ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, $topic->getLast_post()->getPost_id());
+    return $url->getUrl();
 }
