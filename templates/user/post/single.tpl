@@ -28,18 +28,20 @@
                     {useravatar uid=$post.poster.user.uid}
 
                     {if !empty($post.poster.rank.rank_image)}
-                    <br />
-                    {if $post.poster.rank.rank_link neq ''}
-                    <a href="{$post.poster.rank.rank_link}" title="{$post.poster.rank.rank_link}">
-                    {/if}
-                    <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.rank_title}" title="{$post.poster.rank.rank_desc}" />
-                    {if $post.poster.rank.rank_link neq ''}</a>{/if}
+                        <br />
+                        {if $post.poster.rank.rank_link neq ''}
+                        <a href="{$post.poster.rank.rank_link}" title="{$post.poster.rank.rank_link}">
+                        {/if}
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.rank_title}" title="{$post.poster.rank.rank_desc}" />
+                        {if $post.poster.rank.rank_link neq ''}</a>{/if}
                     {else}
                         {getRankByPostCount posts=$post.poster.user_posts ranks=$ranks assign='posterRank'}
                         {if $posterRank.rank_link neq ''}
                         <a href="{$posterRank.rank_link}" title="{$posterRank.rank_link}">
                         {/if}
+                        {if $posterRank.rank_image neq ''}
                         <img class="userinforankimage" src="{$baseurl}{$posterRank.rank_image}" alt="{$posterRank.rank_title}" title="{$posterRank.rank_desc}" />
+                        {/if}
                         {if $posterRank.rank_link neq ''}</a>{/if}
                     {/if}
                 </div>
