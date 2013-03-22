@@ -30,7 +30,7 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Groups\Entity\GroupEntity", inversedBy="gid")
+     * @ORM\ManyToOne(targetEntity="Zikula\Module\GroupsModule\Entity\GroupEntity", inversedBy="gid")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="gid")
      */
     private $group;
@@ -43,7 +43,7 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
 
     /**
      * get Core Group
-     * @return Groups\Entity\GroupEntity
+     * @return Zikula\Module\GroupsModule\Entity\GroupEntity
      */
     public function getGroup()
     {
@@ -52,9 +52,9 @@ class Dizkus_Entity_Moderator_Group extends Zikula_EntityAccess
 
     /**
      * set group
-     * @param Groups\Entity\GroupEntity $group
+     * @param Zikula\Module\GroupsModule\Entity\GroupEntity $group
      */
-    public function setGroup(Groups\Entity\GroupEntity $group)
+    public function setGroup(Zikula\Module\GroupsModule\Entity\GroupEntity $group)
     {
         $this->group = $group;
     }

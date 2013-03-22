@@ -25,11 +25,8 @@
                     <br />
                     <p>{$post.poster.user.uname}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
                     <p>{$post.poster.user.email}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
-                    {useravatar uid=$post.poster.user_id|default:-1}
+                    {useravatar uid=$post.poster.user.uid}
 
-
-                    {* modapifunc modname='Dizkus' type='Rank' func='getData' poster=$post.poster assign='rank' *}
-                    
                     {if !empty($post.poster.rank.rank_image)}
                     <br />
                     {if $post.poster.rank.rank_link neq ''}

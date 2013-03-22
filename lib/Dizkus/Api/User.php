@@ -472,7 +472,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             return array();
         }
         $rsm = new Doctrine\ORM\Query\ResultSetMapping;
-        $rsm->addEntityResult('Users\Entity\UserEntity', 'u');
+        $rsm->addEntityResult('Zikula\Module\UsersModule\Entity\UserEntity', 'u');
         $rsm->addFieldResult('u', 'uname', 'uname');
         $rsm->addFieldResult('u', 'uid', 'uid');
 

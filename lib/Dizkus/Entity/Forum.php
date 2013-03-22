@@ -580,7 +580,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         foreach ($gids as $gid) {
             $moderatorGroup = new Dizkus_Entity_Moderator_Group();
             $em = ServiceUtil::getService('doctrine.entitymanager');
-            $group = $em->find('Groups\Entity\GroupEntity', $gid);
+            $group = $em->find('Zikula\Module\GroupsModule\Entity\GroupEntity', $gid);
             $moderatorGroup->setGroup($group);
             $moderatorGroup->setForum($this);
             $this->moderatorGroups->add($moderatorGroup);

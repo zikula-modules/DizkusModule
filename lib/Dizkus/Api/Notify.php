@@ -58,7 +58,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         $notified = array($post->getPoster_id());
         foreach ($subscriptions as $subscription) {
             // check permissions
-            /* @var $subscriber Users\Entity\UserEntity */
+            /* @var $subscriber Zikula\Module\UsersModule\Entity\UserEntity */
             $subscriber = $subscription->getForumUser()->getUser();
             $subscriberEmail = $subscriber->getEmail();
             if (in_array($subscriber->getUid(), $notified) || empty($subscriberEmail)) continue;

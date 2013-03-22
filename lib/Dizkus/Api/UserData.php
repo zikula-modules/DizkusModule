@@ -51,7 +51,7 @@ class Dizkus_Api_UserData extends Zikula_AbstractApi
         }
         
         $dql = "SELECT s.uid
-                FROM Users\Entity\UserSessionEntity s
+                FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s
                 WHERE s.lastused > :activetime
                 AND s.uid = :uid";
         $query = $this->entityManager->createQuery($dql);

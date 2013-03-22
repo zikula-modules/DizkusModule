@@ -57,7 +57,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     /** @var $em Doctrine\ORM\EntityManager */
     $em = $view->getContainer()->get('doctrine.entitymanager');
     $dql = "SELECT s.uid, u.uname
-            FROM Users\Entity\UserSessionEntity s, Users\Entity\UserEntity u
+            FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s, Zikula\Module\UsersModule\Entity\UserEntity u
             WHERE s.lastused > :activetime
             AND s.uid >= :usertype
             AND s.uid = u.uid

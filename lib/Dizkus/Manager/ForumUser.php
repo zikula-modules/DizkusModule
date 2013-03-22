@@ -40,7 +40,7 @@ class Dizkus_Manager_ForumUser
 
         if (!$this->_forumUser) {
             $this->_forumUser = new Dizkus_Entity_ForumUser();
-            $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $uid);
+            $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $uid);
             $this->_forumUser->setUser($coreUser);
         }
     }

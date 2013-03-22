@@ -393,7 +393,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
         if (!$forumUser) {
             $forumUser = new Dizkus_Entity_ForumUser();
-            $coreUser = $this->entityManager->find('Users\Entity\UserEntity', $uid);
+            $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
         $method = ($setting == 'favorites') ? 'showFavoritesOnly' : 'showAllForums';

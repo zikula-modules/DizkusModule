@@ -24,10 +24,10 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     /**
      * Core user entity
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/composite-primary-keys.html
-     * @see /system/Users/Entity/UserEntity.php
+     * @see /system/Zikula/Module/UsersModule/Entity/UserEntity.php
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Users\Entity\UserEntity")
+     * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
      */
     private $user;
@@ -117,7 +117,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     /**
      * Core User Entity
-     * @return Users\Entity\UserEntity
+     * @return Zikula\Module\UsersModule\Entity\UserEntity
      */
     public function getUser()
     {
@@ -126,9 +126,9 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     
     /**
      * set the user
-     * @param Users\Entity\UserEntity $user
+     * @param Zikula\Module\UsersModule\Entity\UserEntity $user
      */
-    public function setUser(Users\Entity\UserEntity $user)
+    public function setUser(Zikula\Module\UsersModule\Entity\UserEntity $user)
     {
         $this->user = $user;
     }
