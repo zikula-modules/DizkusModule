@@ -1,15 +1,23 @@
 {assign var='templatetitle' value=$topic.topic_title}
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
-<input id="topic_id" name='topic' type="hidden" value={$topic.topic_id}>
+<input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
 
+{pageaddvarblock}
 <script type="text/javascript">
     function quote(text) {
-        $('message').setValue($('message').getValue()+text);
-        $('message').scrollTo();
+        text = text.replace(/_____LINEFEED_DIZKUS_____/g, "\n");
+        
+        jQuery('#message').val(jQuery('#message').val() + text);
+        
+        // jQuery does not support .scrollTo() - calculate position manually.
+        jQuery('html, body').animate({
+            scrollTop: jQuery("#dzk_quickreply").offset().top
+        }, 1000);
     }
 </script>
+{/pageaddvarblock}
 
 <h2>
 <span class="editabletopicheader" id="edittopicsubjectbutton" title="">
