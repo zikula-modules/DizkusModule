@@ -317,8 +317,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewIpData()
     {
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canModerate'));
-        $post_id = (int)$this->request->query->get('post', null);
-        $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)));
+
+        $post_id = (int)$this->request->query->filter('post', 0, FILTER_VALIDATE_INT);
+        if ($post_id == 0) {
+            return LogUtil::registerArgsError();
+        }
+
+        $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)))
+            ->assign('post_id', $post_id);
         return $this->view->fetch('user/viewip.tpl');
     }
 

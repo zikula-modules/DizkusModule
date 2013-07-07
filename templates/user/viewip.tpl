@@ -20,7 +20,7 @@
 </div>
 
 <p class="gobacklink">
-    <a class="previoustopiclink" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
+    <a class="previoustopiclink" href="{modurl modname='Dizkus' type='user' func='viewtopic' post=$post_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
 </p>
 
 {include file='user/footer.tpl'}
