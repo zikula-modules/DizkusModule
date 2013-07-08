@@ -3,6 +3,15 @@
  */
 
 
+
+
+
+/**
+ * @todo All code below needs to be reviewed and either be deleted or refactored! If you refactored it, please move it ABOVE this message.
+ * - cmfcmf
+ */
+
+
 Zikula.define('Dizkus');
 
 document.observe('dom:loaded', function() {
@@ -404,60 +413,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         this.newtopicstatus = false;
     },
 
-    createQuote: function(quotelinkid) {
-        // check if the user highlighted a text portion and quote this instead of loading the
-        // posting text from the server
-        var selection, quotetext;
-        if (window.getSelection) {
-            quotetext = window.getSelection()+'';
-        } else if (document.getSelection) {
-            // opera
-            quotetext = document.getSelection()+'';
-        } else if (document.selection.createRange) {
-            // internet explorer
-            selection = document.selection.createRange();
-            if(selection) {
-                quotetext = selection.text;
-            }
-        }
-        quotetext.strip();
-        if(quotetext.length == 0) {
-            // read the messages text using ajax
-            var pars = {
-                post: quotelinkid.split('_')[1]
-            }
-            Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=preparequote",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        if(!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            return;
-                        }
-
-                        var oldvalue = $F('message');
-                        if(oldvalue.length != 0) {
-                            oldvalue += '\n';
-                        }
-
-                        var msg = req.getData();
-                        $('message').setValue(oldvalue + msg.message  + '\n').focus();
-                    }.bind(this)
-                }
-            );
-            return;
-        }
-
-        oldvalue = $F('message');
-        if(oldvalue.length != 0) {
-            oldvalue += '\n';
-        }
-        $('message').setValue(oldvalue + '[quote]' + quotetext  + '[/quote]\n').focus();
-    },
-
     createQuickReply: function(event) {
         if(this.replystatus==false) {
             if ($F('message').blank() == true){
@@ -500,9 +455,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                         // show new posting
                         $('quickreplyposting').update(msg.data).removeClassName('hidden');
-                        // add observers to quote buttons per post
-                        var quotebutton = $('posting_'+msg.post_id).down('a[id^="quotebutton"]');
-                        quotebutton.observe('click', this.createQuote.bind(this, quotebutton.id));
+                        
                         // add observers to edit buttons per post
                         var editbutton = $('posting_'+msg.post_id).down('a[id^="editbutton"]');
                         editbutton.observe('click', this.quickEdit.bind(this, editbutton.id));
