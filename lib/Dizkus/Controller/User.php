@@ -97,7 +97,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // get the input
         $topicId = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
         $post_id = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 0);
+        $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1) - 1;
 
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 

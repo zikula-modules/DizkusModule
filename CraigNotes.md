@@ -17,6 +17,5 @@ Craig's Notes
  - red/grey folder icons are problematic
  - who's online footer is not working at all.
  - should consider marking Topic::posts as "EXTRA-LAZY"
- - post pager is messed up - off by one
  - restructure forum tree so that all "category" forums have the same ultimate
    parent instead of NULL. This ultimate parent would not be displayed?
