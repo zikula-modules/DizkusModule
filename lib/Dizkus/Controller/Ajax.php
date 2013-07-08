@@ -137,32 +137,6 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
     }
 
     /**
-     * preparequote
-     *
-     * @return string
-     */
-    public function preparequote()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        $post_id = $this->request->request->get('post', null);
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-
-        if (!empty($post_id)) {
-            // note: this API function no longer exists! Jan 28 2013
-            $post = ModUtil::apiFunc('Dizkus', 'user', 'preparereply', array('post_id' => $post_id,
-                        'quote' => true,
-                        'reply_start' => true));
-            return new Zikula_Response_Ajax($post);
-        }
-
-        return new Zikula_Response_Ajax_Fatal(array(), $this->__('Error! No post ID in \'Dizkus_ajax_preparequote()\'.'));
-    }
-
-    /**
      * readpost
      */
     public function readpost()
