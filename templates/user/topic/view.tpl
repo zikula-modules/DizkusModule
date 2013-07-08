@@ -3,6 +3,7 @@
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
+{pageaddvar name='javascript' value='jquery'}
 
 {pageaddvarblock}
 <script type="text/javascript">
