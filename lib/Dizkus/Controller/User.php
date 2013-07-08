@@ -763,6 +763,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('dizkusinfo', $dzkinfo);
 
         header("Content-Type: text/xml");
-        $this->view->display($templatefile);
+        return $this->view->display($templatefile);
     }
 }
