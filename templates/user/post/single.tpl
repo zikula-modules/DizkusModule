@@ -1,5 +1,5 @@
 {assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
-{assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"}
+{assign var="onlinestyle" value="style=\"background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\""}
 
 
 {modapifunc modname='Dizkus' type='UserData' func='getUserOnlineStatus' uid=$post.poster.user_id assign='isPosterOnline'}
