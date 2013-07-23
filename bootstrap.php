@@ -8,8 +8,8 @@
  * @package Dizkus
  */
 
-$helper = ServiceUtil::getService('doctrine_extensions');
-$helper->getListener('timestampable');
+// $helper = ServiceUtil::getService('doctrine_extensions');
+// $helper->getListener('timestampable');
 
-$em = ServiceUtil::getService('doctrine.entitymanager');
-$em->getEventManager()->addEventSubscriber(new \Gedmo\Tree\TreeListener());
+// $em = ServiceUtil::getService('doctrine.entitymanager');
+// $em->getEventManager()->addEventSubscriber(new \Gedmo\Tree\TreeListener());
