@@ -208,4 +208,54 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         return true;
     }
 
+    /**
+     * import function?
+     *
+     */
+    public function m()
+    {
+        DoctrineHelper::updateSchema($this->entityManager, array('Dizkus_Entity_Forum'));
+
+        // import new tree
+        $order = array('cat_order' => 'ASC');
+        $categories = $this->entityManager->getRepository('Dizkus_Entity_310_Category')->findBy(array(), $order);
+        foreach ($categories as $category) {
+            $newCatForum = new Dizkus_Entity_Forum();
+            $newCatForum->setForum_name($category->getcat_title());
+            $this->entityManager->persist($newCatForum);
+
+            $where = array('root' => $category->getcat_id());
+            $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy($where);
+            foreach ($forums as $forum) {
+                $forum->setParent($newCatForum);
+                $this->entityManager->persist($forum);
+            }
+        }
+        $this->entityManager->flush();
+
+        // create missing poster data
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('p')
+                ->from('Dizkus_Entity_310_Post', 'p')
+                ->groupBy('p.poster_id');
+        $posts = $qb->getQuery()->getArrayResult();
+
+        foreach ($posts as $post) {
+            if ($post['poster_id'] > 0) {
+                $forumUser = $this->entityManager->getRepository('Dizkus_Entity_ForumUser')->find($post['poster_id']);
+                if (!$forumUser) {
+                    $forumUser = new Dizkus_Entity_ForumUser();
+                    $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $post['poster_id']);
+                    $forumUser->setUser($coreUser);
+                    $this->entityManager->persist($forumUser);
+                }
+            }
+        }
+        $this->entityManager->flush();
+
+        ModUtil::apiFunc('Dizkus', 'Sync', 'all');
+
+        return ' ';
+    }
+
 }
