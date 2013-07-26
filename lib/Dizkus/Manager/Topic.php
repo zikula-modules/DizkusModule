@@ -350,18 +350,6 @@ class Dizkus_Manager_Topic
     }
 
     /**
-     * remove topic
-     *
-     * @return boolean
-     */
-    public function remove()
-    {
-        $this->entityManager->remove($this->_topic);
-        $this->entityManager->flush();
-        return true;
-    }
-
-    /**
      * set topic sticky
      *
      * @return boolean

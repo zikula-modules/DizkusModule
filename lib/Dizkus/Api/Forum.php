@@ -229,20 +229,6 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     }
 
     /**
-     * delete child topics
-     *
-     * @return array
-     */
-    public function deleteChildTopics($forum)
-    {
-        $find = array('forum_id' => $forum->getforum_id());
-        $topics = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findBy($find);
-        foreach ($topics as $topic) {
-            ModUtil::apiFunc($this->name, 'Topic', 'delete', $topic);
-        }
-    }
-
-    /**
      * modify unser/forum association
      * 
      * @param integer $args['forum_id']

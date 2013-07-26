@@ -242,18 +242,6 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * remove the forum
-     *
-     * @return boolean
-     */
-    public function remove()
-    {
-        $this->entityManager->remove($this->_forum);
-        $this->entityManager->flush();
-        return true;
-    }
-
-    /**
      * Is the current user (provided user) a forum moderator?
      * 
      * @param integer $uid (optional, default: null)
