@@ -232,7 +232,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
      *
      * @return array
      */
-    public function deleteChildTopics($forum_id)
+    public function deleteChildTopics($forum)
     {
         $find = array('forum_id' => $forum->getforum_id());
         $topics = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findBy($find);
