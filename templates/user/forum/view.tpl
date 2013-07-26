@@ -58,6 +58,7 @@
     </div>
     {/if}
 
+    {if $forum.lvl > 1}
     <div class="roundedbar dzk_rounded">
         <div class="inner">
             <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
@@ -99,9 +100,11 @@
             </ul>
         </div>
     </div>
+    {/if}
 </div>
 {/if}
 
+{if $forum.lvl > 1}
 {if $topics}
 
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
@@ -186,6 +189,7 @@
 <div class="forumbg dzk_message dzk_rounded">
     <div class="inner"><strong>{gt text="There are no topics in this forum."}</strong></div>
 </div>
+{/if}
 {/if}
 
 <div id="dzk_displayhooks">
