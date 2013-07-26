@@ -24,12 +24,12 @@
 </script>
 {/browserhack}
 
-{formutil_getpassedvalue name='func' default='main' assign='func'}
+{formutil_getpassedvalue name='func' default='index' assign='func'}
 {* set the page title *}
 {if !isset($maintitle)}
 {assign var='maintitle' value=''}
 {/if}
-{if $func eq 'main'}
+{if $func eq 'index'}
 {gt text='Forum' assign='maintitle'}
 {elseif $func eq 'viewforum' AND isset($forum)}
 {*assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name*}

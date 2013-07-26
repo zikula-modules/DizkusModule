@@ -82,28 +82,34 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
+        // set up forum root
+        $forumRoot = new Dizkus_Entity_Forum();
+        $forumRoot->setForum_name(Dizkus_Entity_Forum::ROOTNAME);
+        $this->entityManager->persist($forumRoot);
+
         // set up example forums
         $food = new Dizkus_Entity_Forum();
-        $food->setforum_name('Food');
+        $food->setForum_name('Food');
+        $food->setParent($forumRoot);
+        $this->entityManager->persist($food);
 
         $fruits = new Dizkus_Entity_Forum();
-        $fruits->setforum_name('Fruits');
+        $fruits->setForum_name('Fruits');
         $fruits->setParent($food);
+        $this->entityManager->persist($fruits);
 
         $vegetables = new Dizkus_Entity_Forum();
-        $vegetables->setforum_name('Vegetables');
+        $vegetables->setForum_name('Vegetables');
         $vegetables->setParent($food);
+        $this->entityManager->persist($vegetables);
 
         $carrots = new Dizkus_Entity_Forum();
-        $carrots->setforum_name('Carrots');
+        $carrots->setForum_name('Carrots');
         $carrots->setParent($vegetables);
-
-        $this->entityManager->persist($food);
-        $this->entityManager->persist($fruits);
-        $this->entityManager->persist($vegetables);
         $this->entityManager->persist($carrots);
+
         $this->entityManager->flush();
-        // end set up example
+        // end set up
 
         // Initialisation successful
         return true;
@@ -245,6 +251,12 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
      */
     private function upgrade_to_4_0_0_migrateCategories()
     {
+        // set up forum root
+        $forumRoot = new Dizkus_Entity_Forum();
+        $forumRoot->setForum_name(Dizkus_Entity_Forum::ROOTNAME);
+        $this->entityManager->persist($forumRoot);
+        $this->entityManager->flush();
+
         $connection = $this->entityManager->getConnection();
 
         // Move old categories into new tree as Forums
@@ -254,6 +266,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             // create new category forum with old name
             $newCatForum = new Dizkus_Entity_Forum();
             $newCatForum->setForum_name($category['cat_title']);
+            $newCatForum->setParent($forumRoot);
             $this->entityManager->persist($newCatForum);
 
             // set parent of existing forums to new category forum

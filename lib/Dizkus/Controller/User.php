@@ -22,7 +22,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      *
      * @return string
      */
-    public function main($args = array())
+    public function index($args = array())
     {
         // Permission check
         $this->throwForbiddenUnless(
@@ -30,6 +30,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         );
 
         // Check if all forums or only one category should be shown
+        // @deprecated
+        // as of v4.0.0 this is not used except where $viewcat is assigned to be 0
+        // @todo remove in 4.1.0
         $viewcat = (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : 0);
         $this->view->assign('viewcat', $viewcat);
 
@@ -121,7 +124,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return LogUtil::registerError(
                 $this->__f(
                         "Error! The topic you selected (ID: %s) was not found. Please go back and try again.", array($topicId)
-                ), null, ModUtil::url('Dizkus', 'user', 'main')
+                ), null, ModUtil::url('Dizkus', 'user', 'index')
             );
         }
         list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
@@ -367,7 +370,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * Show all forums in main view instead of only favorite forums
+     * Show all forums in index view instead of only favorite forums
      *
      */
     public function showAllForums()
@@ -376,7 +379,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * Show only favorite forums in main view instead of all forums
+     * Show only favorite forums in index view instead of all forums
      *
      */
     public function showFavorites()
@@ -385,12 +388,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * Show only favorite forums in main view instead of all forums
+     * Show only favorite forums in index view instead of all forums
      *
      */
     private function changeViewSetting($setting)
     {
-        $url = ModUtil::url('Dizkus', 'user', 'main');
+        $url = ModUtil::url('Dizkus', 'user', 'index');
         if (!UserUtil::isLoggedIn()) {
             LogUtil::registerPermissionError();
             return System::redirect($url);
@@ -507,7 +510,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 ModUtil::apiFunc($this->name, 'Permission', 'canRead')
         );
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+            return System::redirect(ModUtil::url('Dizkus', 'user', 'index'));
         }
 
         // get the input
@@ -553,7 +556,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         );
 
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'main'));
+            return System::redirect(ModUtil::url('Dizkus', 'user', 'index'));
         }
 
         $params = array();
@@ -643,7 +646,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $dzkinfo = ModUtil::getInfo(ModUtil::getIdFromName('Dizkus'));
         $dzkname = $dzkinfo['displayname'];
         
-        $mainUrl = ModUtil::url($this->name, 'user', 'main');
+        $mainUrl = ModUtil::url($this->name, 'user', 'index');
 
         if (isset($forum_id) && !is_numeric($forum_id)) {
             LogUtil::registerError($this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
@@ -675,7 +678,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
          * set some defaults
          */
         // form the url
-        $link = ModUtil::url('Dizkus', 'user', 'main', array(), null, null, true);
+        $link = ModUtil::url('Dizkus', 'user', 'index', array(), null, null, true);
 
         $forumname = DataUtil::formatForDisplay($dzkname);
 

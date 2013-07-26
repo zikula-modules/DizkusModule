@@ -21,7 +21,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     public function getParents($id = null)
     {
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
-        $parents = $repo->childrenHierarchy();
+        $forumRoot = $repo->findOneBy(array('forum_name' => Dizkus_Entity_Forum::ROOTNAME));
+        $parents = $repo->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id);
 
         return $output;

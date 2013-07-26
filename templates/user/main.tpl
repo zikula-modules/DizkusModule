@@ -14,7 +14,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_{$category.forum_name}" title="{gt text="Go to category"} '{$category.forum_name|safetext}'" href="{modurl modname='Dizkus' type=user func=main viewcat=$category.forum_id}">{$category.forum_name|safetext}</a></span>
+                            <span><a id="categorylink_{$category.forum_name}" title="{gt text="Go to category"} '{$category.forum_name|safetext}'" href="{modurl modname='Dizkus' type=user func=viewforum forum=$category.forum_id}">{$category.forum_name|safetext}</a></span>
                         </dt>
                         <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>

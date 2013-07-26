@@ -37,7 +37,7 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
         if ($category > 0) {
             $qb->andWhere('f.forum_id = :category')->setParameter('category', $category);
         } else {
-            $qb->andWhere('f.lvl = 0');
+            $qb->andWhere('f.lvl = 1');
         }
 
 

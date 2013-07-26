@@ -47,6 +47,8 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
             }
         } else {
             $category = new Dizkus_Entity_Forum();
+            $forumRoot = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findOneBy(array('forum_name' => Dizkus_Entity_Forum::ROOTNAME));
+            $category->setParent($forumRoot);
             $view->assign('templatetitle', $this->__('Create category'));
         }
 
@@ -90,7 +92,7 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
         $this->entityManager->persist($this->category);
         $this->entityManager->flush();
         
-        $hookUrl = new Zikula_ModUrl($this->name, 'user', 'main', ZLanguage::getLanguageCode(), array('viewcat' => $this->category->getForum_id()));
+        $hookUrl = new Zikula_ModUrl($this->name, 'user', 'index', ZLanguage::getLanguageCode(), array('viewcat' => $this->category->getForum_id()));
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_edit', $this->category->getForum_id(), $hookUrl));
 
         // redirect to the admin subforum overview

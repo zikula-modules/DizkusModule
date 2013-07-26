@@ -42,7 +42,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             return LogUtil::registerError(
-                $this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'main')
+                $this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index')
             );
         }
 

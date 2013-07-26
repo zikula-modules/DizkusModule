@@ -41,7 +41,7 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
         $id = (int)$this->request->query->get('post');
 
         if (!isset($id)) {
-            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'main'));
+            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
         }
 
         $this->_post = new Dizkus_Manager_Post($id);

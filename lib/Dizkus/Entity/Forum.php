@@ -23,6 +23,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Dizkus_Entity_Forum extends Zikula_EntityAccess
 {
+    const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';
 
     /**
      * forum_id

@@ -121,7 +121,7 @@ class Dizkus_Manager_Forum
 
         $output = array();
         if (!$withoutCurrent) {
-            $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $this->_forum->getForum_id()));
+            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forum->getForum_id()));
             $output[] = array(
                 'url' => $url,
                 'title' => $this->_forum->getForum_name()
@@ -137,12 +137,6 @@ class Dizkus_Manager_Forum
             );
             $i = $i->getParent();
         }
-        // root
-        $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $i->getForum_id()));
-        $output[] = array(
-            'url' => $url,
-            'title' => $i->getForum_name()
-        );
 
         return array_reverse($output);
     }

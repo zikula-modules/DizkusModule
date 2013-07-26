@@ -191,12 +191,7 @@ class Dizkus_Manager_Topic
             );
             $i = $i->getParent();
         }
-        // root
-        $url = ModUtil::url($this->name, 'user', 'main', array('viewcat' => $i->getForum_id()));
-        $output[] = array(
-            'url' => $url,
-            'title' => $i->getForum_name()
-        );
+
         return array_reverse($output);
     }
 

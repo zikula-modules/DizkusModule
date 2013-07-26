@@ -156,7 +156,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 break;
 
             default:
-                return LogUtil::registerError($this->__("Error! Wrong parameters in countstats()."), null, ModUtil::url('Dizkus', 'user', 'main'));
+                return LogUtil::registerError($this->__("Error! Wrong parameters in countstats()."), null, ModUtil::url('Dizkus', 'user', 'index'));
         }
     }
 

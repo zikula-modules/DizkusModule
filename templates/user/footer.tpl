@@ -1,8 +1,8 @@
 {if $modvars.Dizkus.forum_enabled neq 'no'}
 
 <div class="dzk_marginbottom">
-    {formutil_getpassedvalue name='func' default='main' assign='func'}
-    {if ($func eq 'main' OR $func eq 'index' OR $func eq 'viewforum') AND isset($forum)}
+    {formutil_getpassedvalue name='func' default='index' assign='func'}
+    {if ($func eq 'index' OR $func eq 'viewforum') AND isset($forum)}
     <h3 class="footer_title">{gt text="Posts"}</h3>
     <ul id="ctheme-legenda">
         <li>
@@ -17,7 +17,7 @@
     </ul>
     {/if}
 
-    {if $func eq 'main' && $numposts}
+    {if $func eq 'index' && $numposts}
     <h3 class="footer_title">{gt text="Total"}</h3>
     <ul>
         <li>
