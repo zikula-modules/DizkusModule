@@ -105,9 +105,6 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
             if ($managedDestinationForum->isChildOf($this->forum)) {
                 return LogUtil::registerError($this->__('You cannot select a descendant forum as a destination.'));
             }
-            // TODO: because of how the tree is structured - with several top parent forums, this may fail
-            // The forum tree should be restructured to only have one top parent - e.g. all "category"
-            // forums would have the same parent and not NULL as a parent.
 
             // get the child forums and move them
             $children = $this->forum->getChildren();
