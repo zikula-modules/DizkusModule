@@ -159,7 +159,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
     /**
      * reset the last post in a forum due to movement
      * @param Dizkus_Entity_Forum $args['forum']
-     * @param Boolean $args['flush']
+     * @param Boolean $args['flush'] default: true
      * 
      * @return void
      */
@@ -171,15 +171,15 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
         $flush = isset($args['flush']) ? $args['flush'] : true;
         
         // get the most recent post in the forum
-        $dql = "SELECT p FROM Dizkus_Entity_Post p
-            WHERE p.forum_id = :forumid
-            ORDER BY p.post_time DESC";
+        $dql = "SELECT t FROM Dizkus_Entity_Topic t
+            WHERE t.forum = :forum
+            ORDER BY t.topic_time DESC";
         $query = $this->entityManager->createQuery($dql);
-        $query->setParameter('forumid', $args['forum']->getForum_id());
+        $query->setParameter('forum', $args['forum']);
         $query->setMaxResults(1);
 
-        $post = $query->getSingleResult();
-        $args['forum']->setLast_post($post);
+        $topic = $query->getSingleResult();
+        $args['forum']->setLast_post($topic->getLast_post());
         if ($flush) {
             $this->entityManager->flush();
         }
