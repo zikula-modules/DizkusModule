@@ -147,18 +147,30 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         switch ($oldversion) {
 
             case '3.1':
+            case '3.1.0':
                 $this->upgrade_to_4_0_0();
                 break;
         }
+
+        return true;
     }
 
     /**
      * upgrade to 4.0.0
      */
-    public function upgrade_to_4_0_0()
+    private function upgrade_to_4_0_0()
     {
-        // remove pn from images/rank folder
-        $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
+        // do a check here for tables containing the prefix and fail if existing tables cannot be found.
+        $configPrefix = $this->serviceManager['prefix'];
+        $prefix = !empty($configPrefix) ? $configPrefix . '_' : '';
+        $connection = $this->entityManager->getConnection();
+        $sql = "SELECT * FROM " . $prefix . "dizkus_categories";
+        $stmt = $connection->prepare($sql);
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage() . $this->__f("There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in \$ZConfig['System']['prefix'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)", $prefix));
+        }
 
         // remove the legacy hooks
         ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem');
@@ -166,9 +178,46 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem');
         ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink');
 
+        $this->upgrade_to_4_0_0_removeTablePrefixes($prefix);
+
+        // update dizkus_forums to prevent errors in column indexes
+        $sql = "ALTER TABLE dizkus_forums MODIFY forum_last_post_id INT DEFAULT NULL";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+        $sql = "UPDATE dizkus_forums SET forum_last_post_id = NULL WHERE forum_last_post_id = 0";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+
+        // update all the tables to 4.0.0
+        try {
+            DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage());
+        }
+        $this->upgrade_to_4_0_0_migrateCategories();
+        $this->upgrade_to_4_0_0_updatePosterData();
+        $this->upgrade_to_4_0_0_migrateModGroups();
+
+        $this->delVar('autosubscribe');
+        $this->delVar('allowgravatars');
+        $this->delVar('gravatarimage');
+        // remove pn from images/rank folder
+        $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
+
+        LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
+
+        return true;
+    }
+
+    /**
+     * remove all table prefixes
+     */
+    private function upgrade_to_4_0_0_removeTablePrefixes($prefix)
+    {
+        $connection = $this->entityManager->getConnection();
         // remove table prefixes
         $dizkusTables = array(
-            'dizkus_categories',
+            'dizkus_categories', // unused afterwards...
             'dizkus_forum_mods',
             'dizkus_forums',
             'dizkus_posts',
@@ -177,12 +226,10 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'dizkus_topics',
             'dizkus_topic_subscription',
             'dizkus_forum_favorites',
-            'dizkus_forum_users'
+            'dizkus_users'
         );
-        $prefix = $this->serviceManager['prefix'];
-        $connection = Doctrine_Manager::getInstance()->getConnection('default');
         foreach ($dizkusTables as $value) {
-            $sql = 'RENAME TABLE ' . $prefix . '_' . $value . ' TO ' . $value;
+            $sql = 'RENAME TABLE ' . $prefix . $value . ' TO ' . $value;
             $stmt = $connection->prepare($sql);
             try {
                 $stmt->execute();
@@ -190,41 +237,27 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
                 LogUtil::registerError($e);
             }
         }
-        try {
-            DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
-        } catch (Exception $e) {
-            return LogUtil::registerError($e->getMessage());
-        }
-
-        $this->delVar('autosubscribe');
-        $this->delVar('allowgravatars');
-        $this->delVar('gravatarimage');
-
-        LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
-
-        // TODO: the existing Group/Forum relations need to be migrated from the `dizkus_forum_mods` table (user_id > 1000000)
-        //       to the new `dizkus_forum_mods_group` table (use normal group id, so subtract 1000000?)
-        // TODO: need to remove forum_id column from posts table
-        return true;
     }
 
     /**
-     * import function?
+     * Migrate categories from 3.1 > 4.0.0
      *
      */
-    public function m()
+    private function upgrade_to_4_0_0_migrateCategories()
     {
-        DoctrineHelper::updateSchema($this->entityManager, array('Dizkus_Entity_Forum'));
+        $connection = $this->entityManager->getConnection();
 
-        // import new tree
-        $order = array('cat_order' => 'ASC');
-        $categories = $this->entityManager->getRepository('Dizkus_Entity_310_Category')->findBy(array(), $order);
+        // Move old categories into new tree as Forums
+        $sql = "SELECT * FROM dizkus_categories ORDER BY cat_order ASC";
+        $categories = $connection->fetchAll($sql);
         foreach ($categories as $category) {
+            // create new category forum with old name
             $newCatForum = new Dizkus_Entity_Forum();
-            $newCatForum->setForum_name($category->getcat_title());
+            $newCatForum->setForum_name($category['cat_title']);
             $this->entityManager->persist($newCatForum);
 
-            $where = array('root' => $category->getcat_id());
+            // set parent of existing forums to new category forum
+            $where = array('root' => $category['cat_id']);
             $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy($where);
             foreach ($forums as $forum) {
                 $forum->setParent($newCatForum);
@@ -233,16 +266,31 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         }
         $this->entityManager->flush();
 
-        // create missing poster data
+        // drop the old categories table
+        $sql = "DROP TABLE dizkus_categories";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+
+        return;
+    }
+
+    /**
+     * Update Poster Data from 3.1 > 4.0.0
+     *
+     */
+    private function upgrade_to_4_0_0_updatePosterData()
+    {
+        // get all the old posts
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')
-                ->from('Dizkus_Entity_310_Post', 'p')
-                ->groupBy('p.poster_id');
+                ->from('Dizkus_Entity_Post', 'p')
+                ->groupBy('p.poster');
         $posts = $qb->getQuery()->getArrayResult();
 
         foreach ($posts as $post) {
             if ($post['poster_id'] > 0) {
                 $forumUser = $this->entityManager->getRepository('Dizkus_Entity_ForumUser')->find($post['poster_id']);
+                // if a ForumUser cannot be found, create one
                 if (!$forumUser) {
                     $forumUser = new Dizkus_Entity_ForumUser();
                     $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $post['poster_id']);
@@ -255,7 +303,37 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
 
         ModUtil::apiFunc('Dizkus', 'Sync', 'all');
 
-        return ' ';
+        return;
+    }
+
+    /**
+     * Migrate the Moderator Groups out of the `dizkus_forum_mods` table and put
+     * in the new `dizkus_forum_mods_group` table
+     */
+    private function upgrade_to_4_0_0_migrateModGroups()
+    {
+        $connection = $this->entityManager->getConnection();
+        $sql = "SELECT * FROM dizkus_forum_mods WHERE user_id > 1000000";
+        $groups = $connection->fetchAll($sql);
+        foreach ($groups as $group) {
+            $groupId = $group['user_id'] - 1000000;
+            $modGroup = new Dizkus_Entity_Moderator_Group();
+            $coreGroup = $this->entityManager->find('Zikula\Module\GroupsModule\Entity\GroupEntity', $groupId);
+            if ($coreGroup) {
+                $modGroup->setGroup($coreGroup);
+                $forum = $this->entityManager->find('Dizkus_Entity_Forum', $group['forum_id']);
+                $modGroup->setForum($forum);
+                $this->entityManager->persist($modGroup);
+            }
+        }
+        $this->entityManager->flush();
+
+        // dremove old group entries
+        $sql = "DELETE FROM dizkus_forum_mods WHERE user_id > 1000000";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+
+        return;
     }
 
 }
