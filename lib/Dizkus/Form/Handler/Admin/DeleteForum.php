@@ -102,8 +102,16 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         
         if ($data['action'] == self::MOVE_CHILDREN) {
             $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
+
+            if (($managedDestinationForum->get()->getLvl() < 2) && (count($this->forum->getTopics()) > 0)) {
+                return LogUtil::registerError($this->__('You cannot move topics into this location, only forums. Delete the topics or choose a different destination.'));
+            }
+
             if ($managedDestinationForum->isChildOf($this->forum)) {
                 return LogUtil::registerError($this->__('You cannot select a descendant forum as a destination.'));
+            }
+            if ($managedDestinationForum->getId() == $this->forum->getForum_id()) {
+                return LogUtil::registerError($this->__('You cannot select the same forum as a destination.'));
             }
 
             // get the child forums and move them
@@ -112,14 +120,13 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
                 $child->setParent($managedDestinationForum->get());
             }
             $this->forum->removeChildren();
+
             // get child topics and move them
             $topics = $this->forum->getTopics();
             foreach ($topics as $topic) {
                 $topic->setForum($managedDestinationForum->get());
                 $this->forum->getTopics()->removeElement($topic);
             }
-            // sync last post
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get(), 'flush' => false));
             $this->entityManager->flush();
         }
         // remove the forum
@@ -128,6 +135,9 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->forum->getForum_id()));
         
+        // sync last post in destination
+        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get()));
+
         // repair the tree
         $this->entityManager->getRepository('Dizkus_Entity_Forum')->recover();
         $this->entityManager->clear();
