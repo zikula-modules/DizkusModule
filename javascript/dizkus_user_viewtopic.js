@@ -44,8 +44,10 @@ function changeTopicStatus(e) {
             if (result == 'successful') {
                 if (action == 'lock') {
                     i.text(unlockTopic);
+                    jQuery('#dzk_quickreply').hide("slow");
                 } else if (action == 'unlock') {
                     i.text(lockTopic);
+                    jQuery('#dzk_quickreply').show("slow");
                 } else if (action == 'sticky') {
                     i.text(unstickyTopic);
                 } else if (action == 'unsticky') {

@@ -149,9 +149,9 @@
 
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
-{if ($topic.topic_status neq 1) and ($permissions.comment eq true)}
+{if ($permissions.comment eq true)}
 <a id="reply">
-<div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded">
+<div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded"{if $topic.topic_status eq 1} style='display:none'{/if}>
     <div class="inner">
         <div class="dzk_subcols z-clearfix">
             <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
