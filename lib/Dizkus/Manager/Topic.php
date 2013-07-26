@@ -510,7 +510,11 @@ class Dizkus_Manager_Topic
                 ->setParameter('forum', $this->_topic->getForum())
                 ->setMaxResults(1)
                 ->getScalarResult();
-        return $result[0]['topic_id'];
+        if ($result) {
+            return $result[0]['topic_id'];
+        } else {
+            return '';
+        }
     }
 
 }
