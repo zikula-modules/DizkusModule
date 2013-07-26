@@ -250,12 +250,6 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args['forum_id']);
             $managedTopic->get()->setForum($forum);
 
-            // update all posts with new forum
-            $posts = $this->entityManager->getRepository('Dizkus_Entity_Post')->findBy(array('topic' => $managedTopic->getId()));
-            foreach ($posts as $post) {
-                $post->setForum_id($args['forum_id']);
-            }
-
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
                 $managedShadowTopic = new Dizkus_Manager_Topic();
