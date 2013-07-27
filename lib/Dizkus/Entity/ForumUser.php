@@ -78,7 +78,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
 
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Rank", cascade={"persist"} )
-     * @ORM\JoinColumn(name="user_rank", referencedColumnName="rank_id", nullable=true)
+     * @ORM\JoinColumn(name="rank", referencedColumnName="rank_id", nullable=true)
      */
     private $rank;
 
