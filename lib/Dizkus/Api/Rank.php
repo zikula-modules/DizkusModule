@@ -45,7 +45,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         }
 
         $ranks = $this->entityManager->getRepository('Dizkus_Entity_Rank')
-                ->findBy(array('rank_special' => $args['ranktype']), array($orderby => 'ASC'));
+                ->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
 
         return array($filelist, $ranks);
     }
@@ -63,7 +63,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         }
 
-        //rank_special, rank_id, minimumCount, maximumCount, image, rank_id
+        //type, rank_id, minimumCount, maximumCount, image, rank_id
 
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {

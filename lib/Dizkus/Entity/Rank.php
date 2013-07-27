@@ -60,11 +60,11 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     private $maximumCount = 0;
 
     /**
-     * rank_special
+     * type
      * 
      * @ORM\Column(type="integer", length=2)
      */
-    private $rank_special = 0;
+    private $type = 0;
 
     /**
      * image
@@ -98,9 +98,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         return $this->maximumCount;
     }
 
-    public function getRank_special()
+    public function getType()
     {
-        return $this->rank_special;
+        return $this->type;
     }
 
     public function getImage()
@@ -146,9 +146,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         $this->maximumCount = $maximumCount;
     }
 
-    public function setRank_special($rank_special)
+    public function setType($type)
     {
-        $this->rank_special = $rank_special;
+        $this->type = $type;
     }
 
     public function setImage($image)

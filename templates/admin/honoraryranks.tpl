@@ -13,7 +13,7 @@
     <p class="z-informationmsg">{gt text="In this page, you can create, delete and edit special honorary ranks awarded to particular users (site staff or project team members, for example). To create a new rank, simply type entries in the fields of the 'Create new rank' section and click on the 'Create honorary rank' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."}</p>
     <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='ranks' ranktype='1'}" method="post">
         <div>
-            <input type="hidden" name="ranks[-1][rank_special]" value="1" />
+            <input type="hidden" name="ranks[-1][type]" value="1" />
             <fieldset>
                 <legend>{gt text="Create new rank"}</legend>
                 <div class="z-formrow">

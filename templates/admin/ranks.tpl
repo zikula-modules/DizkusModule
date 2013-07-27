@@ -14,7 +14,7 @@
 
     <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='ranks' ranktype='0'}" method="post">
         <div>
-            <input type="hidden" name="ranks[-1][rank_special]" value="0" />
+            <input type="hidden" name="ranks[-1][type]" value="0" />
             <fieldset>
                 <legend>{gt text="Create new rank"}</legend>
                 <div class="z-formrow">

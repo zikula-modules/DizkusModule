@@ -281,6 +281,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $sqls[] = "ALTER TABLE dizkus_ranks CHANGE rank_min minimumCount INT NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_ranks CHANGE rank_max maximumCount INT NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_ranks CHANGE rank_image image VARCHAR(255) NOT NULL";
+        $sqls[] = "ALTER TABLE dizkus_ranks CHANGE rank_special type INT(2) NOT NULL DEFAULT 0";
         
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);
