@@ -49,11 +49,11 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $description = '';
 
     /**
-     * forum_topics
+     * topicCount
      *
      * @ORM\Column(type="integer")
      */
-    private $forum_topics = 0;
+    private $topicCount = 0;
 
     /**
      * The number of posts of the forum
@@ -192,24 +192,24 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->description = $description;
     }
 
-    public function getForum_topics()
+    public function getTopicCount()
     {
-        return $this->forum_topics;
+        return $this->topicCount;
     }
 
-    public function setForum_topics($topics)
+    public function setTopicCount($topics)
     {
-        $this->forum_topics = $topics;
+        $this->topicCount = $topics;
     }
 
-    public function incrementForum_topics()
+    public function incrementTopicCount()
     {
-        $this->forum_topics++;
+        $this->topicCount++;
     }
     
-    public function decrementForum_topics()
+    public function decrementTopicCount()
     {
-        $this->forum_topics--;
+        $this->topicCount--;
     }
 
     public function getForum_posts()

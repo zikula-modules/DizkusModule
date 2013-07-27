@@ -201,8 +201,8 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $post->getPoster()->decrementUser_posts();
         }
 
-        // decrement forum_topics counter
-        $topic->getForum()->decrementForum_topics();
+        // decrement topicCount
+        $topic->getForum()->decrementTopicCount();
         
         // update the db
         $this->entityManager->flush();

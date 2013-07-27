@@ -11,7 +11,7 @@
 {formvalidationsummary}
 
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
-    {dzkpager total=$forum.forum_topics}
+    {dzkpager total=$forum.topicCount}
 
     <div class="forumbg dzk_rounded">
         <div class="inner">
@@ -54,7 +54,7 @@
                                 <span>{gt text="Poster: %s" tag1=$topic.topic_poster.user.uid|profilelinkbyuid}</span>
                                 {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                             </dt>
-                            <dd class="posts">{$forum.forum_topics}</dd>
+                            <dd class="posts">{$forum.topicCount}</dd>
                             <dd class="lastpost">
                                 {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                             </dd>
@@ -69,7 +69,7 @@
         </div>
     </div>
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
-    {dzkpager total=$forum.forum_topics}
+    {dzkpager total=$forum.topicCount}
 
     <div class="z-warningmsg">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>
 

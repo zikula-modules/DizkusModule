@@ -41,7 +41,7 @@
                             {if $subforum.description neq ''}{$subforum.description|safehtml}<br />{/if}
                         </dt>
                         <dd class="subforums">{$subforum.children|count}</dd>
-                        <dd class="topics">{$subforum.forum_topics|safetext}</dd>
+                        <dd class="topics">{$subforum.topicCount|safetext}</dd>
                         <dd class="posts">{$subforum.forum_posts|safetext}</dd>
 
                         <dd class="lastpost">

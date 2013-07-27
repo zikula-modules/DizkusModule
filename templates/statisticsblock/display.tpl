@@ -9,7 +9,7 @@
     {foreach item='topforum' from=$topforums}
     <li>
         <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.forum_name}">{$topforum.forum_name}</a>
-        ({$topforum.forum_topics}/{$topforum.forum_posts})
+        ({$topforum.topicCount}/{$topforum.forum_posts})
     </li>
     {/foreach}
 </ul>

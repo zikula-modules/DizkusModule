@@ -219,7 +219,7 @@ class Dizkus_Manager_Forum
      */
     public function incrementTopicCount()
     {
-        $this->_forum->incrementForum_topics();
+        $this->_forum->incrementTopicCount();
         $this->entityManager->flush();
     }
 
