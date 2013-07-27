@@ -19,7 +19,7 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt><span>{$forum.forum_name} {gt text="Topics"}</span></dt>
+                        <dt><span>{$forum.name} {gt text="Topics"}</span></dt>
                         <dd class="posts"><span>{gt text="Replies"}</span></dd>
                         <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
                         <dd class="mark"><span>{gt text="Selection"}<input type="checkbox" id="alltopic"  value="" /></span></dd>
@@ -49,7 +49,7 @@
                                 {if $topic.hot_topic eq 1}
                                     {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
                                 {/if}
-                                {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.forum_name}
+                                {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.name}
                                 <em class="z-sub">({$topic.topic_views} {gt text="Views"})</em>
                                 <span>{gt text="Poster: %s" tag1=$topic.topic_poster.user.uid|profilelinkbyuid}</span>
                                 {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
@@ -106,7 +106,7 @@
 
 <div class="forumbg dzk_message dzk_rounded">
     <div class="inner">
-        <strong>{gt text="There are no topics in the forum '%s' to moderate." tag1=$forum.forum_name|safetext}</strong>
+        <strong>{gt text="There are no topics in the forum '%s' to moderate." tag1=$forum.name|safetext}</strong>
     </div>
 </div>
 

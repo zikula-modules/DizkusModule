@@ -7,7 +7,7 @@
 <div class="z-admin-content-pagetitle">
     {icon type="edit" size="small"}
     <h3>
-        {if $forum_name}
+        {if $name}
         {gt text="Edit forum"}
         {else}
         {gt text="New forum"}
@@ -23,8 +23,8 @@
     <fieldset>
 
         <div class="z-formrow">
-            {formlabel for="forum_name" __text='Name'}
-            {formtextinput id="forum_name" size="70" maxLength="150" mandatory=true}
+            {formlabel for="name" __text='Name'}
+            {formtextinput id="name" size="70" maxLength="150" mandatory=true}
         </div>
 
 
@@ -38,7 +38,7 @@
             {formdropdownlist id="parent" items=$parents}
         </div>
 
-        {if $forum_name}
+        {if $name}
         <div class="z-formrow">
             {formlabel for="forum_info" __text="Forum Information"}
             <span id="forum_info">

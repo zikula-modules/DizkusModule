@@ -2,7 +2,7 @@
     {if $item.lvl > 0}
     {assign var='lvl' value=$item.lvl*4-4}
     <tr class="{cycle values="z-odd,z-even"}">
-        <td>{'&nbsp;'|str_repeat:$lvl}{$item.forum_name}</td>
+        <td>{'&nbsp;'|str_repeat:$lvl}{$item.name}</td>
         <td nowrap="nowrap">
             {if $item.lvl == 0}
             <a href="{modurl modname='Dizkus' type='admin' func='modifyCategory' id=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='xedit.png' alt="Edit"}</a>

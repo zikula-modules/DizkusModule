@@ -47,7 +47,7 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
             }
         } else {
             $category = new Dizkus_Entity_Forum();
-            $forumRoot = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findOneBy(array('forum_name' => Dizkus_Entity_Forum::ROOTNAME));
+            $forumRoot = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
             $category->setParent($forumRoot);
             $view->assign('templatetitle', $this->__('Create category'));
         }

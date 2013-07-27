@@ -187,7 +187,7 @@ class Dizkus_Manager_Topic
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
             $output[] = array(
                 'url' => $url,
-                'title' => $i->getForum_name()
+                'title' => $i->getName()
             );
             $i = $i->getParent();
         }

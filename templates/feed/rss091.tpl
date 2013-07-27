@@ -33,9 +33,9 @@ soon as possible!
 
 <rss version="0.91">
 <channel>
-<title>{$sitename|safetext} - {$forum_name|safetext}</title>
+<title>{$sitename|safetext} - {$name|safetext}</title>
 <link>{$forum_link|safetext}</link>
-<description>{$sitename|safetext} - {$forum_name|safetext}</description>
+<description>{$sitename|safetext} - {$name|safetext}</description>
 <webMaster>{$adminmail|safetext}</webMaster>
 
 {foreach item='post' from=$posts}

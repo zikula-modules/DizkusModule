@@ -8,8 +8,8 @@
             {/if}
 
             <div class="z-formrow">
-                <label for="forum_name">{gt text="Forum"}</label>
-                <input type="text" id="forum_name" name="forum_name" size="70" maxlength="150" value="{$forum.forum_name|safetext}" />
+                <label for="name">{gt text="Forum"}</label>
+                <input type="text" id="name" name="name" size="70" maxlength="150" value="{$forum.name|safetext}" />
             </div>
 
             {if $newforum neq true}

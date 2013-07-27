@@ -1,4 +1,4 @@
-{assign var='templatetitle' value=$forum.forum_name}
+{assign var='templatetitle' value=$forum.name}
 {include file='user/header.tpl' parent=$forum}
 
 {if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
@@ -6,7 +6,7 @@
 <input id="forum_id" type="hidden" value={$forum.forum_id}>
 {/if}
 
-<h2>{$forum.forum_name|safetext}</h2>
+<h2>{$forum.name|safetext}</h2>
 
 {if $forum.description neq ''}
 <p class='ctheme-description'>{$forum.description|safehtml}</p>
@@ -37,7 +37,7 @@
                     <dl class="icon">
                         {datecompare date1=$subforum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                         <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
-                            <a title="{gt text="Go to subforum"} '{$subforum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a><br />
+                            <a title="{gt text="Go to subforum"} '{$subforum.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.name|safetext}</a><br />
                             {if $subforum.description neq ''}{$subforum.description|safehtml}<br />{/if}
                         </dt>
                         <dd class="subforums">{$subforum.children|count}</dd>

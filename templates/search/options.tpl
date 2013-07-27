@@ -16,7 +16,7 @@
             <select name="Dizkus_forum[]" id="Dizkus_forum" size="5" multiple="multiple">
                 <option value="-1" selected="selected">{gt text='All forums' domain="module_dizkus"}</option>
                 {foreach item='forum' from=$forums}
-                <option value="{$forum.forum_id}">{$forum.cat_title|safetext} {gt text='&nbsp;::&nbsp;'} {$forum.forum_name|safetext}</option>
+                <option value="{$forum.forum_id}">{$forum.cat_title|safetext} {gt text='&nbsp;::&nbsp;'} {$forum.name|safetext}</option>
                 {/foreach}
             </select>
         </dd>

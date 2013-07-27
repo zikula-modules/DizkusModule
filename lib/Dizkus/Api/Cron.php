@@ -31,7 +31,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
 
         include_once 'modules/Dizkus/lib/vendor/pop3class/pop3.php';
         if ((($forum->getPop3Connection()->isActive()) && ($pop3conn['last_connect'] <= time() - ($pop3conn['interval'] * 60)) ) || ($force == true)) {
-            $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
+            $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['name'] . "\n", $args['debug']);
             // get new mails for this forum
             $pop3 = new pop3_class;
             $pop3->hostname = $pop3conn['server'];
@@ -57,7 +57,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
                             if (UserUtil::logIn($pop3conn['coreUser']->getUid(), base64_decode($pop3conn['coreUser']->getPass()), false)) {
                                 $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' successfully logged in.', $args['debug']);
                                 if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $forum)) {
-                                    $this->mailcronecho("Error! Insufficient permissions for " . $pop3conn['coreUser']->getUname() . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
+                                    $this->mailcronecho("Error! Insufficient permissions for " . $pop3conn['coreUser']->getUname() . " in forum " . $forum['name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
                                     UserUtil::logOut();
                                     $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
                                     return false;
@@ -138,7 +138,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
                                                                 'attach_signature' => 1,
                                                                 'subscribe_topic' => 0,
                                                                 'msgid' => $msgid));
-                                                    $this->mailcronecho("Added new topic '$subject' (topic ID $topic_id) to '" . $forum['forum_name'] . "' forum.\n", $args['debug']);
+                                                    $this->mailcronecho("Added new topic '$subject' (topic ID $topic_id) to '" . $forum['name'] . "' forum.\n", $args['debug']);
                                                 }
                                             } else {
                                                 $this->mailcronecho("Warning! Message subject  line '$subject' does not match requirements and will be ignored.", $args['debug']);

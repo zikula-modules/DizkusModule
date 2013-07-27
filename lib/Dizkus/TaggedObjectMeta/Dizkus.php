@@ -41,7 +41,7 @@ class Dizkus_TaggedObjectMeta_Dizkus extends Tag_AbstractTaggedObjectMeta
                 $perms = $managedForum->getPermissions();
                 if ($perms['see']) {
                     $this->setObjectDate($managedForum->get()->getLast_post()->getPost_time());
-                    $this->setObjectTitle($managedForum->get()->getForum_name());
+                    $this->setObjectTitle($managedForum->get()->getName());
                 }
             }
         }

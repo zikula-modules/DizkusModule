@@ -84,27 +84,27 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
 
         // set up forum root
         $forumRoot = new Dizkus_Entity_Forum();
-        $forumRoot->setForum_name(Dizkus_Entity_Forum::ROOTNAME);
+        $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
         $this->entityManager->persist($forumRoot);
 
         // set up example forums
         $food = new Dizkus_Entity_Forum();
-        $food->setForum_name('Food');
+        $food->setName('Food');
         $food->setParent($forumRoot);
         $this->entityManager->persist($food);
 
         $fruits = new Dizkus_Entity_Forum();
-        $fruits->setForum_name('Fruits');
+        $fruits->setName('Fruits');
         $fruits->setParent($food);
         $this->entityManager->persist($fruits);
 
         $vegetables = new Dizkus_Entity_Forum();
-        $vegetables->setForum_name('Vegetables');
+        $vegetables->setName('Vegetables');
         $vegetables->setParent($food);
         $this->entityManager->persist($vegetables);
 
         $carrots = new Dizkus_Entity_Forum();
-        $carrots->setForum_name('Carrots');
+        $carrots->setName('Carrots');
         $carrots->setParent($vegetables);
         $this->entityManager->persist($carrots);
 
@@ -269,6 +269,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_topics topicCount INT NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_posts postCount INT NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_posts postCount INT NOT NULL DEFAULT 0";
+        $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_name name VARCHAR(150) NOT NULL DEFAULT ''";
         
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);
@@ -288,7 +289,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
     {
         // set up forum root
         $forumRoot = new Dizkus_Entity_Forum();
-        $forumRoot->setForum_name(Dizkus_Entity_Forum::ROOTNAME);
+        $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
         $this->entityManager->persist($forumRoot);
         $this->entityManager->flush();
 
@@ -300,7 +301,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         foreach ($categories as $category) {
             // create new category forum with old name
             $newCatForum = new Dizkus_Entity_Forum();
-            $newCatForum->setForum_name($category['cat_title']);
+            $newCatForum->setName($category['cat_title']);
             $newCatForum->setParent($forumRoot);
             $this->entityManager->persist($newCatForum);
 

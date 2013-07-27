@@ -120,9 +120,9 @@ function smarty_function_readlastposts($params, Zikula_View $view)
             $lastpost = array();
             $lastpost['topic_title'] = DataUtil::formatforDisplay($topic->getTopic_title());
             $lastpost['topic_replies'] = DataUtil::formatforDisplay($topic->getTopic_replies());
-            $lastpost['forum_name'] = DataUtil::formatforDisplay($topic->getForum()->getForum_name());
+            $lastpost['name'] = DataUtil::formatforDisplay($topic->getForum()->getName());
             $lastpost['forum_id'] = DataUtil::formatforDisplay($topic->getForum()->getForum_id());
-            $lastpost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getForum_name());
+            $lastpost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getName());
 
             $start = 0;
             if ($post_sort_order == "ASC") {

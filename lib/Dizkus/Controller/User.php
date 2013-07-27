@@ -695,7 +695,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             }
             $where = array('t.forum', (int)DataUtil::formatForStore($forum_id), '=');
             $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
-            $forumname = $managedForum->get()->getForum_name();
+            $forumname = $managedForum->get()->getName();
         } elseif (!empty($cat_id)) {
             $managedForum = new Dizkus_Manager_Forum($cat_id);
             if (!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
@@ -703,7 +703,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             }
             $where = array('t.parent', (int)DataUtil::formatForStore($cat_id), '=');
             $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('viewcat' => $cat_id), null, null, true);
-            $forumname = $managedForum->get()->getParent()->getForum_name();
+            $forumname = $managedForum->get()->getParent()->getName();
         } elseif (isset($uid) && ($uid<>false)) {
             $where = array('p.poster', ' $uid', '=');
         } else {
@@ -745,8 +745,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         {
             /* @var $topic Dizkus_Entity_Topic */
             $posts[$i]['topic_title'] = $topic->getTopic_title();
-            $posts[$i]['cat_title'] = $topic->getForum()->getParent()->getForum_name();
-            $posts[$i]['forum_name'] = $topic->getForum()->getForum_name();
+            $posts[$i]['cat_title'] = $topic->getForum()->getParent()->getName();
+            $posts[$i]['forum_name'] = $topic->getForum()->getName();
             $posts[$i]['time'] = $topic->getTopic_time();
             $posts[$i]['unixtime'] = $topic->getTopic_time()->format('U');
             $start = (int)((ceil(($topic->getTopic_replies() + 1)  / $posts_per_page) - 1) * $posts_per_page);

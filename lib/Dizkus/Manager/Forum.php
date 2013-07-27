@@ -124,7 +124,7 @@ class Dizkus_Manager_Forum
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forum->getForum_id()));
             $output[] = array(
                 'url' => $url,
-                'title' => $this->_forum->getForum_name()
+                'title' => $this->_forum->getName()
             );
         }
 
@@ -133,7 +133,7 @@ class Dizkus_Manager_Forum
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
             $output[] = array(
                 'url' => $url,
-                'title' => $i->getForum_name()
+                'title' => $i->getName()
             );
             $i = $i->getParent();
         }

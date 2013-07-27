@@ -58,7 +58,7 @@ class Dizkus_Needles_Dizkus extends Zikula_AbstractHelper
                             if (!empty($managedForum)) {
                                 if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
                                     $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id)));
-                                    $title = DataUtil::formatForDisplay($result[0]['forum_name']);
+                                    $title = DataUtil::formatForDisplay($result[0]['name']);
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                 } else {
                                     $cache[$nid] = '<em>' . $this->__f('Error! You do not have the necessary authorisation for forum ID %s.', $id) . '</em>';

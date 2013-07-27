@@ -1,7 +1,7 @@
 {include file='user/header.tpl'}
 
 {if $viewcat > 0}
-<h2>{$tree.0.forum_name|safetext}</h2>
+<h2>{$tree.0.name|safetext}</h2>
 {else}
 <h2>{gt text="Forums index page"}</h2>
 {/if}
@@ -14,7 +14,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_{$category.forum_name}" title="{gt text="Go to category"} '{$category.forum_name|safetext}'" href="{modurl modname='Dizkus' type=user func=viewforum forum=$category.forum_id}">{$category.forum_name|safetext}</a></span>
+                            <span><a id="categorylink_{$category.name}" title="{gt text="Go to category"} '{$category.name|safetext}'" href="{modurl modname='Dizkus' type=user func=viewforum forum=$category.forum_id}">{$category.name|safetext}</a></span>
                         </dt>
                         <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
@@ -30,7 +30,7 @@
                         <dl class="icon">
                             {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                             <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
-                                <a title="{gt text="Go to forum"} '{$forum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.forum_name|safetext}</a><br />
+                                <a title="{gt text="Go to forum"} '{$forum.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.name|safetext}</a><br />
                                 {if $forum.description neq ''}{$forum.description|safehtml}<br />{/if}
                                 {include file='user/moderatedBy.tpl' forum=$forum}
                             </dt>

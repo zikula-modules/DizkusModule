@@ -31,13 +31,13 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         $post = $args['post'];
 
         $subject = ($post->isFirst()) ? '' : 'Re: ';
-        $subject .= $post->getTopic()->getForum()->getForum_name() . ' :: ' . $post->getTopic()->getTopic_title();
+        $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTopic_title();
 
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
         $view->assign('sitename', System::getVar('sitename'))
-            ->assign('category_name', $post->getTopic()->getForum()->getParent()->getForum_name())
-            ->assign('forum_name', $post->getTopic()->getForum()->getForum_name())
+            ->assign('category_name', $post->getTopic()->getForum()->getParent()->getName())
+            ->assign('name', $post->getTopic()->getForum()->getName())
             ->assign('topic_subject', $post->getTopic()->getTopic_title())
             ->assign('poster_name', $post->getPoster()->getUser()->getUname())
             ->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))
@@ -62,7 +62,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             $subscriber = $subscription->getForumUser()->getUser();
             $subscriberEmail = $subscriber->getEmail();
             if (in_array($subscriber->getUid(), $notified) || empty($subscriberEmail)) continue;
-            if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getForum_name() . ':' . $post->getTopic()->getForum()->getForum_name() . ':', ACCESS_READ, $subscriber->getUid())) {
+            if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber->getUid())) {
                 $args = array('fromname' => System::getVar('sitename'),
                     'fromaddress' => $fromAddress,
                     'toname' => $subscriber->getUname(),
@@ -159,7 +159,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
         $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
-                . $args['post']->getTopic()->getForum()->getForum_name() . ' :: ' . $args['post']->getTopic()->getTopic_title() . "\n\n"
+                . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTopic_title() . "\n\n"
                 . $this->__('Reporting user') . ": $reporting_username\n"
                 . $this->__('Comment') . ":\n"
                 . strip_tags($args['comment']) . " \n\n"

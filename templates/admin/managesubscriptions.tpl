@@ -47,7 +47,7 @@
                         </td>
                         <td>
                             {$subscription.topic.topic_title}
-                            {*<a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.forum_name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>*}
+                            {*<a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>*}
                         </td>
                         <td>
                             {$subscription.topic.topic_poster.user.uid|profilelinkbyuid}
@@ -84,7 +84,7 @@
                             {formcheckbox id=$subscription.msg_id group='forumsubscriptions' cssClass="forumsubscriptions"}
                         </td>
                         <td>
-                            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.forum.forum_name}">{$subscription.forum.forum_name|safetext}</a>
+                            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.forum.name}">{$subscription.forum.name|safetext}</a>
                         </td>
                     </tr>
                     {/foreach}

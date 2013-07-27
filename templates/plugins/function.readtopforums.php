@@ -26,9 +26,9 @@ function smarty_function_readtopforums($params, Zikula_View $view)
     if (empty($forums)) {
         foreach ($forums as $topforum) {
             if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $topforum)) {
-                $topforum['forum_name'] = DataUtil::formatForDisplay($topforum->getForum_name());
+                $topforum['name'] = DataUtil::formatForDisplay($topforum->getName());
                 $parent = $topforum->getParent();
-                $parentName = isset($parent) ? $parent->getForum_name() : $view->__('Root');
+                $parentName = isset($parent) ? $parent->getName() : $view->__('Root');
                 $topforum['cat_title'] = DataUtil::formatForDisplay($parentName);
                 array_push($topforums, $topforum);
             }

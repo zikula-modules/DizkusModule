@@ -8,7 +8,7 @@
 <ul class="dzk_forumlist">
     {foreach item='topforum' from=$topforums}
     <li>
-        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.forum_name}">{$topforum.forum_name}</a>
+        <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
         ({$topforum.topicCount}/{$topforum.postCount})
     </li>
     {/foreach}
@@ -25,7 +25,7 @@
 <ul class="dzk_postlist">
     {foreach item='lastpost' from=$lastposts}
     <li>
-        <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.forum_name} :: {$lastpost.topic_title}">{$lastpost.topic_title|truncate:21}</a><br />
+        <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.name} :: {$lastpost.topic_title}">{$lastpost.topic_title|truncate:21}</a><br />
         {gt text='%s reply' plural='%s replies' tag1=$lastpost.topic_replies count=$lastpost.topic_replies domain="module_dizkus"}
         <br />
         {$lastpost.poster_name|profilelinkbyuname}<br />{$lastpost.posted_time}

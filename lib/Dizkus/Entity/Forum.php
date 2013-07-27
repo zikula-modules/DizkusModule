@@ -39,7 +39,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      * 
      * @ORM\Column(type="string", length=150)
      */
-    private $forum_name = '';
+    private $name = '';
 
     /**
      * description
@@ -172,14 +172,14 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->forum_id = $forum_id;
     }
 
-    public function getForum_name()
+    public function getName()
     {
-        return $this->forum_name;
+        return $this->name;
     }
 
-    public function setForum_name($forum_name)
+    public function setName($name)
     {
-        $this->forum_name = $forum_name;
+        $this->name = $name;
     }
 
     public function getDescription()

@@ -12,8 +12,8 @@
     <fieldset>
 
         <div class="z-formrow">
-            {formlabel for="forum_name" __text='Title'}
-            {formtextinput id="forum_name" size="30" maxLength="100" mandatory=true}
+            {formlabel for="name" __text='Title'}
+            {formtextinput id="name" size="30" maxLength="100" mandatory=true}
         </div>
     </fieldset>
 

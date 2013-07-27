@@ -32,7 +32,7 @@
 {if $func eq 'index'}
 {gt text='Forum' assign='maintitle'}
 {elseif $func eq 'viewforum' AND isset($forum)}
-{*assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.forum_name*}
+{*assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.name*}
 {elseif $func eq 'viewtopic' AND isset($topic)}
 {assign var='maintitle' value=$topic.topic_title}
 {elseif $func eq 'newtopic'}

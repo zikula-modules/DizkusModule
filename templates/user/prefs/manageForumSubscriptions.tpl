@@ -25,7 +25,7 @@
                         <li class="row">
                             <dl class="icon">
                                 <dt class='ctheme-topic-title'>
-                                    <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.forum_name|safetext}">{$subscription.forum.forum_name|safetext}</a>
+                                    <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name|safetext}">{$subscription.forum.name|safetext}</a>
                                 </dt>
                                 <dd class="lastpost">
                                     {formcheckbox class="topic_checkbox" id=$subscription.forum.forum_id group="forumIds"}

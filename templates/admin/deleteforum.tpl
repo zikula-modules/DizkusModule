@@ -13,7 +13,7 @@
 
 
     <div class="z-warningmsg">
-        {gt text="Are you sure want to remove the forum '%s'." tag1=$forum_name}
+        {gt text="Are you sure want to remove the forum '%s'." tag1=$name}
     </div>
 
     <div class="z-formrow">

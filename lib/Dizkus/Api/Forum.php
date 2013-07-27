@@ -21,7 +21,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     public function getParents($id = null)
     {
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
-        $forumRoot = $repo->findOneBy(array('forum_name' => Dizkus_Entity_Forum::ROOTNAME));
+        $forumRoot = $repo->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
         $parents = $repo->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id);
 
@@ -64,7 +64,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             if ($id != $i['forum_id']) {
                 $output[] = array(
                     'value' => $i['forum_id'],
-                    'text' => $pre . $i['forum_name']
+                    'text' => $pre . $i['name']
                 );
                 if (isset($i['__children'])) {
                     $output = array_merge($output, $this->getNode($i['__children'], $id, $level + 1));

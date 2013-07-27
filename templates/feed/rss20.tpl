@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="{charset}"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-        <title>{$sitename|safetext} - {$forum_name|safetext}</title>
+        <title>{$sitename|safetext} - {$name|safetext}</title>
         <link>{$forum_link|safetext}</link>
-        <description>{$sitename|safetext} - {$forum_name|safetext}</description>
+        <description>{$sitename|safetext} - {$name|safetext}</description>
         <language>{$current_language}</language>
         <pubDate>{$current_date}</pubDate>
         <lastBuildDate>{$current_date}</lastBuildDate>
