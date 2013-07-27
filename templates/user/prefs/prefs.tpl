@@ -13,8 +13,8 @@
 
     <fieldset>
         <div class="z-formrow">
-            {formlabel for="user_post_order" __text="Post order"}
-            {formdropdownlist id="user_post_order" items=$orders}
+            {formlabel for="postOrder" __text="Post order"}
+            {formdropdownlist id="postOrder" items=$orders}
         </div>
         {if $modvars.Dizkus.favorites_enabled eq 'yes'}
         <div class="z-formrow">

@@ -70,11 +70,11 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $displayOnlyFavorites = false;
 
     /**
-     * user_post_order
+     * postOrder
      *
      * @ORM\Column(type="boolean")
      */
-    private $user_post_order = false;
+    private $postOrder = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Rank", cascade={"persist"} )
@@ -208,14 +208,14 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
         $this->displayOnlyFavorites = false;
     }
 
-    public function getUser_post_order()
+    public function getPostOrder()
     {
-        return $this->user_post_order;
+        return $this->postOrder;
     }
 
-    public function setUser_post_order($post_order)
+    public function setPostOrder($postOrder)
     {
-        $this->user_post_order = $post_order;
+        $this->postOrder = $postOrder;
     }
 
     /**

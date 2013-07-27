@@ -46,17 +46,17 @@ class Dizkus_Manager_ForumUser
     }
 
     /**
-     * post_order
+     * postOrder
      *
      * @return string
      */
     public function getPostOrder()
     {
-        return $this->_forumUser->getUser_post_order() ? 'ASC' : 'DESC';
+        return $this->_forumUser->getPostOrder() ? 'ASC' : 'DESC';
     }
 
     /**
-     * set post_order
+     * set postOrder
      *
      * @return string
      */
@@ -67,7 +67,7 @@ class Dizkus_Manager_ForumUser
         } else {
             $order = true;
         }
-        $this->_forumUser->setUser_post_order($order);
+        $this->_forumUser->setPostOrder($order);
         $this->entityManager->flush();
     }
 
