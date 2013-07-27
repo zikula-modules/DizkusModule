@@ -46,11 +46,11 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     private $description = '';
 
     /**
-     * rank_min
+     * minimumCount
      * 
      * @ORM\Column(type="integer")
      */
-    private $rank_min = 0;
+    private $minimumCount = 0;
 
     /**
      * rank_max
@@ -88,9 +88,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         return $this->description;
     }
 
-    public function getRank_min()
+    public function getMinimumCount()
     {
-        return $this->rank_min;
+        return $this->minimumCount;
     }
 
     public function getRank_max()
@@ -136,9 +136,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         $this->description = $description;
     }
 
-    public function setRank_min($rank_min)
+    public function setMinimumCount($minimumCount)
     {
-        $this->rank_min = $rank_min;
+        $this->minimumCount = $minimumCount;
     }
 
     public function setRank_max($rank_max)

@@ -22,8 +22,8 @@
                     <input id="title" type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
                 </div>
                 <div class="z-formrow">
-                    <label for="rank_min">{gt text="Minimum number of posts"}</label>
-                    <input id="rank_min" type="text" name="ranks[-1][rank_min]" value="" maxlength="5" size="4" />
+                    <label for="minimumCount">{gt text="Minimum number of posts"}</label>
+                    <input id="minimumCount" type="text" name="ranks[-1][minimumCount]" value="" maxlength="5" size="4" />
                 </div>
                 <div class="z-formrow">
                     <label for="rank_max">{gt text="Maximum number of posts"}</label>
@@ -70,7 +70,7 @@
                 {foreach key='num' item='rank' from=$ranks}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td><input type="text" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" /></td>
-                    <td><input type="text" name="ranks[{$rank.rank_id}][rank_min]" value="{$rank.rank_min}" maxlength="5" size="4" /></td>
+                    <td><input type="text" name="ranks[{$rank.rank_id}][minimumCount]" value="{$rank.minimumCount}" maxlength="5" size="4" /></td>
                     <td><input type="text" name="ranks[{$rank.rank_id}][rank_max]" value="{$rank.rank_max}" maxlength="5" size="4" /></td>
                     <td>
                         <select name="ranks[{$rank.rank_id}][rank_image]" id="rank_image{$num}" onchange="Zikula.Dizkus.ShowRankImage({$num}, '{$modvars.Dizkus.url_ranks_images}')">
