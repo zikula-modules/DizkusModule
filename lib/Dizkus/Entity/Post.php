@@ -74,11 +74,11 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $post_first = false;
 
     /**
-     * post_title
+     * title
      * 
      * @ORM\Column(type="string", length=255)
      */
-    private $post_title = '';
+    private $title = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
@@ -156,14 +156,14 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
         return $this->post_first;;
     }
 
-    public function getPost_title()
+    public function getTitle()
     {
-        return $this->post_title;
+        return $this->title;
     }
 
-    public function setPost_title($title)
+    public function setTitle($title)
     {
-        return $this->post_title = $title;
+        return $this->title = $title;
     }
 
     public function getPost_time()

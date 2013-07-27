@@ -274,6 +274,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $sqls[] = "ALTER TABLE dizkus_users CHANGE user_lastvisit lastvisit DATETIME DEFAULT NULL";
         $sqls[] = "ALTER TABLE dizkus_users CHANGE user_post_order postOrder INT(1) NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_users CHANGE user_rank rank INT UNSIGNED NOT NULL DEFAULT 0";
+        $sqls[] = "ALTER TABLE dizkus_posts CHANGE post_title title VARCHAR(255) NOT NULL";
         
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);

@@ -298,7 +298,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         $newTopic->setTopic_title($args['data']['newsubject']);
         $newTopic->setForum($managedTopic->get()->getForum());
         $args['post']->get()->setPost_first(true);
-        $args['post']->get()->setPost_title($args['data']['newsubject']);
+        $args['post']->get()->setTitle($args['data']['newsubject']);
         $this->entityManager->persist($newTopic);
         $this->entityManager->flush();
 

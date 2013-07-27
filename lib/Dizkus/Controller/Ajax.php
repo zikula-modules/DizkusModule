@@ -103,7 +103,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             $post['post_unixtime'] = time();
             $post['posted_unixtime'] = $post['post_unixtime'];
 
-            $post['post_title'] = $title;
+            $post['title'] = $title;
             $post['post_textdisplay'] = $this->phpbb_br2nl($message);
             if ($attach_signature == 1) {
                 $post['post_textdisplay'] .= '[addsig]';
