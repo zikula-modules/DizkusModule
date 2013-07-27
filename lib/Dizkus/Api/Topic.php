@@ -198,7 +198,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         $posts = $topic->getPosts();
         foreach ($posts as $post) {
-            $post->getPoster()->decrementUser_posts();
+            $post->getPoster()->decrementPostCount();
         }
 
         // decrement topicCount

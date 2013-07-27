@@ -271,7 +271,7 @@ class Dizkus_Manager_Topic
             $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
-        $forumUser->incrementUser_posts();
+        $forumUser->incrementPostCount();
         $this->_firstPost->setPoster($forumUser);
         $this->_topic->setTopic_poster($forumUser);
     }

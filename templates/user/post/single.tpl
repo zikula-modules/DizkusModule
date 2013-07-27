@@ -35,7 +35,7 @@
                         <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.rank_title}" title="{$post.poster.rank.rank_desc}" />
                         {if $post.poster.rank.rank_link neq ''}</a>{/if}
                     {else}
-                        {getRankByPostCount posts=$post.poster.user_posts ranks=$ranks assign='posterRank'}
+                        {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
                         {if $posterRank.rank_link neq ''}
                         <a href="{$posterRank.rank_link}" title="{$posterRank.rank_link}">
                         {/if}
@@ -59,7 +59,7 @@
                     {/if}
 
 
-                    <li><strong>{gt text="Posts"}: </strong>{$post.poster.user_posts}</li>
+                    <li><strong>{gt text="Posts"}: </strong>{$post.poster.postCount}</li>
                     {if $coredata.logged_in eq true}
                     <li>
                         {* image link to profile deactivated because of a bug in the core *}

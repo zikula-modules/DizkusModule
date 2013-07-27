@@ -27,7 +27,7 @@ function smarty_function_readtopposters($params, Zikula_View $view)
     $qb = $em->createQueryBuilder();
     $qb->select('u')
             ->from('Dizkus_Entity_ForumUser', 'u')
-            ->orderBy('u.user_posts', 'DESC');
+            ->orderBy('u.postCount', 'DESC');
     $qb->setMaxResults($postermax);
     $forumUsers = $qb->getQuery()->getResult();
 
@@ -36,7 +36,7 @@ function smarty_function_readtopposters($params, Zikula_View $view)
         foreach ($forumUsers as $forumUser) {
             $topposters[] = array('user_name' => DataUtil::formatForDisplay($forumUser->getUser()->getUname()),
                 // for BC reasons
-                'user_posts' => DataUtil::formatForDisplay($forumUser->getUser_posts()),
+                'postCount' => DataUtil::formatForDisplay($forumUser->getPostCount()),
                 'user_id' => DataUtil::formatForDisplay($forumUser->getUser_id()));
         }
     }

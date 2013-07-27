@@ -270,6 +270,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_posts postCount INT NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_posts postCount INT NOT NULL DEFAULT 0";
         $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_name name VARCHAR(150) NOT NULL DEFAULT ''";
+        $sqls[] = "ALTER TABLE dizkus_users CHANGE user_posts postCount INT NOT NULL DEFAULT 0";
         
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);

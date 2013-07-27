@@ -130,7 +130,7 @@ class Dizkus_Manager_Post
             $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
-        $forumUser->incrementUser_posts();
+        $forumUser->incrementPostCount();
 
         // increment topic posts
         $this->_topic->setLastPost($this->_post);
@@ -166,7 +166,7 @@ class Dizkus_Manager_Post
         $this->entityManager->remove($this->_post);
 
         // decrement user posts
-        $this->_post->getPoster()->decrementUser_posts();
+        $this->_post->getPoster()->decrementPostCount();
 
         // decrement forum post count
         $managedForum->decrementPostCount();

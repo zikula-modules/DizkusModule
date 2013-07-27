@@ -42,7 +42,7 @@
 <br />
 <ul class="dzk_posterlist">
     {foreach item='topposter' from=$topposters}
-    <li>{$topposter.user_name|profilelinkbyuname}<br />({$topposter.user_posts} {gt text="Posts" domain="module_dizkus"})</li>
+    <li>{$topposter.user_name|profilelinkbyuname}<br />({$topposter.postCount} {gt text="Posts" domain="module_dizkus"})</li>
     {/foreach}
 </ul>
 {/if}

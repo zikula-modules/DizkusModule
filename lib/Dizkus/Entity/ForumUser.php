@@ -33,11 +33,11 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $user;
 
     /**
-     * user_posts
+     * postCount
      *
      * @ORM\Column(type="integer")
      */
-    private $user_posts = 0;
+    private $postCount = 0;
 
     /**
      * user_autosubscribe
@@ -133,24 +133,24 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
         $this->user = $user;
     }
 
-    public function getUser_posts()
+    public function getPostCount()
     {
-        return $this->user_posts;
+        return $this->postCount;
     }
 
-    public function setUser_posts($posts)
+    public function setPostCount($posts)
     {
-        $this->user_posts = $posts;
+        $this->postCount = $posts;
     }
 
-    public function incrementUser_posts()
+    public function incrementPostCount()
     {
-        $this->user_posts++;
+        $this->postCount++;
     }
 
-    public function decrementUser_posts()
+    public function decrementPostCount()
     {
-        $this->user_posts--;
+        $this->postCount--;
     }
 
     public function getUser_autosubscribe()

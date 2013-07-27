@@ -20,7 +20,7 @@
                     <li><strong>{gt text="Rank"}: </strong>{*$newtopic.poster_data.rank|safetext*}</li>
                     {/if}
                     <li><strong>{gt text="Registered"}: </strong>{*$newtopic.poster_data.user_regdate|dateformat:'datebrief'*}</li>
-                    <li><strong>{gt text="Posts"}: </strong>{*$newtopic.poster_data.user_posts*}</li>
+                    <li><strong>{gt text="Posts"}: </strong>{*$newtopic.poster_data.postCount*}</li>
                 </ul>
             </div>
 

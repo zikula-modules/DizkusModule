@@ -9,7 +9,7 @@
  */
 
 /**
- * {getRankByPostCount posts=$post.poster.user_posts ranks=$ranks assign='posterRank'}
+ * {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
  */
 function smarty_function_getRankByPostCount($params, Zikula_View $view)
 {

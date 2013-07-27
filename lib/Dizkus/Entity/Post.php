@@ -234,7 +234,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
             'moderate' => 'a',
             'edit' => 'a',
             'reply' => 'a',
-            'user_posts' => 'a',
+            'postCount' => 'a',
             'seeip' => 'a',
         );
     }

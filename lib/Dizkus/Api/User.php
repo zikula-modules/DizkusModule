@@ -237,7 +237,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
             /* @var $post Dizkus_Entity_Post */
             $viewip['users'][] = array('uid' => $post->getPoster()->getUser_id(),
                 'uname' => $post->getPoster()->getUser()->getUname(),
-                'postcount' => $post->getPoster()->getUser_posts());
+                'postcount' => $post->getPoster()->getPostCount());
         }
 
         return $viewip;

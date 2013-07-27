@@ -26,7 +26,7 @@
                     {*if !$reply.poster_data.online}
                     <li><strong>{gt text="Last visit"}: </strong>{$reply.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
                     {/if*}{*user is online!*}
-                    <li><strong>{gt text="Posts"}: </strong>{$reply.poster_data.user_posts}</li>
+                    <li><strong>{gt text="Posts"}: </strong>{$reply.poster_data.postCount}</li>
                 </ul>
             </div>
 

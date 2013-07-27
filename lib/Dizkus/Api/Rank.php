@@ -148,7 +148,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
                 ->select('r')
                 ->from('Dizkus_Entity_Rank', 'r')
                 ->where('r.rank_min <= :posts and r.rank_max >= :posts')
-                ->setParameter('posts', $args['poster']->getUser_posts())
+                ->setParameter('posts', $args['poster']->getPostCount())
                 ->getQuery()
                 ->setMaxResults(1)
                 ->getArrayResult();

@@ -152,7 +152,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
                 $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $post['user_id']);
                 $forumUser->setUser($coreUser);
             }
-            $forumUser->setUser_posts($post[1]);
+            $forumUser->setPostCount($post[1]);
         }
         $this->entityManager->flush();
         return true;
