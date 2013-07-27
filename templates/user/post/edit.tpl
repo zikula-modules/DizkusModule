@@ -38,7 +38,7 @@
                                 <ul>
                                     {if $moderate eq true}
                                     <li><strong>{gt text="Options"}</strong></li>
-                                    {if !$post_first}
+                                    {if !$isFirstPost}
                                     <li>
                                         {formcheckbox id="delete"}
                                         {formlabel for="delete" __text="Delete post"}

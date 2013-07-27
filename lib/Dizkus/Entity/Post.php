@@ -67,11 +67,11 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $post_attach_signature = false;
 
     /**
-     * post_attach_signature
+     * isFirstPost
      *
      * @ORM\Column(type="boolean")
      */
-    private $post_first = false;
+    private $isFirstPost = false;
 
     /**
      * title
@@ -135,25 +135,14 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
         return $this->post_attach_signature = $attachSignature;
     }
 
-    public function getPost_first()
+    public function getIsFirstPost()
     {
-        return $this->post_first;
+        return $this->isFirstPost;
     }
 
-    public function setPost_first($first)
+    public function setIsFirstPost($first)
     {
-        return $this->post_first = $first;
-    }
-
-    /**
-     * Is the post a first post in topic?
-     * convenience naming
-     * 
-     * @return boolean
-     */
-    public function isFirst()
-    {
-        return $this->post_first;;
+        return $this->isFirstPost = $first;
     }
 
     public function getTitle()
