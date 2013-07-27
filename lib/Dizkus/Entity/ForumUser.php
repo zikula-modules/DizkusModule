@@ -40,11 +40,11 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $postCount = 0;
 
     /**
-     * user_autosubscribe
+     * autosubscribe preference
      *
      * @ORM\Column(type="boolean")
      */
-    private $user_autosubscribe = true;
+    private $autosubscribe = true;
 
     /**
      * user_level
@@ -153,14 +153,14 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
         $this->postCount--;
     }
 
-    public function getUser_autosubscribe()
+    public function getAutosubscribe()
     {
-        return $this->user_autosubscribe;
+        return $this->autosubscribe;
     }
 
-    public function setUser_autosubscribe($autosubscribe)
+    public function setAutosubscribe($autosubscribe)
     {
-        $this->user_autosubscribe = $autosubscribe;
+        $this->autosubscribe = $autosubscribe;
     }
 
     public function getUser_level()

@@ -23,8 +23,8 @@
         </div>
         {/if}
         <div class="z-formrow">
-            {formlabel for="user_autosubscribe" __text="Autosubscribe to new topics"}
-            {formcheckbox id="user_autosubscribe"}
+            {formlabel for="autosubscribe" __text="Autosubscribe to new topics"}
+            {formcheckbox id="autosubscribe"}
         </div>
 
         <div class="z-formbuttons z-buttons">
