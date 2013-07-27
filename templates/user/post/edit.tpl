@@ -46,8 +46,8 @@
                                     </li>
                                     {/if}
                                     <li>
-                                        {formcheckbox id="post_attach_signature"}
-                                        {formlabel for="post_attach_signature" __text="Attach my signature"}
+                                        {formcheckbox id="attachSignature"}
+                                        {formlabel for="attachSignature" __text="Attach my signature"}
                                     </li>
                                     {/if}
                                 </ul>

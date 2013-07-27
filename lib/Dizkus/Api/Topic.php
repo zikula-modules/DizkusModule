@@ -258,7 +258,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
                     'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="'. ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedTopic->getId())) .'">' . $this->__('here') . '</a>.',
                     'forum_id' => $oldForumId,
                     'topic_time' => $managedTopic->get()->getTopic_time(),
-                    'post_attach_signature' => false,
+                    'attachSignature' => false,
                     'subscribe_topic' => false);
                 $managedShadowTopic->prepare($topicData);
                 $managedShadowTopic->lock();

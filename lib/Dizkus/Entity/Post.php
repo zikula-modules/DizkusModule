@@ -60,11 +60,11 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $post_text = '';
 
     /**
-     * post_attach_signature
+     * attachSignature
      *
      * @ORM\Column(type="boolean")
      */
-    private $post_attach_signature = false;
+    private $attachSignature = false;
 
     /**
      * isFirstPost
@@ -125,14 +125,14 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
         return $this->post_text = stripslashes($text);
     }
 
-    public function getPost_attach_signature()
+    public function getAttachSignature()
     {
-        return $this->post_attach_signature;
+        return $this->attachSignature;
     }
 
-    public function setPost_attach_signature($attachSignature)
+    public function setAttachSignature($attachSignature)
     {
-        return $this->post_attach_signature = $attachSignature;
+        return $this->attachSignature = $attachSignature;
     }
 
     public function getIsFirstPost()

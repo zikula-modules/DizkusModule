@@ -84,7 +84,7 @@
                 <div class="content" id="postingtext_{$post.post_id}">
                     {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
-                    {if $post.post_attach_signature}
+                    {if $post.attachSignature}
                     {usergetvar name='signature' assign="signature"}
                     {if !empty($signature)}
                         <em>

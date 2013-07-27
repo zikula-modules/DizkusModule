@@ -313,7 +313,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                             'message' => $message,
                             'topic_time' => $topicTime,
                             'forum_id' => $args['forum']['forum_id'],
-                            'post_attach_signature' => false,
+                            'attachSignature' => false,
                             'subscribe_topic' => false,
                             'topic_reference' => $reference);
                 $newManagedTopic->prepare($data);

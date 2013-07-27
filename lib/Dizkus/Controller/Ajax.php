@@ -69,7 +69,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             $data = array(
                 'topic_id' => $topic_id,
                 'post_text' => $message,
-                'post_attach_signature' => $attach_signature,
+                'attachSignature' => $attach_signature,
                 'subscribe_topic' => $subscribe_topic,
             );
 

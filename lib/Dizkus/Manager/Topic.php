@@ -237,7 +237,7 @@ class Dizkus_Manager_Topic
      * 
      * @param type $data['forum_id']
      * @param type $data['message']
-     * @param type $data['post_attach_signature']
+     * @param type $data['attachSignature']
      * @param type $data['topic_title']
      * @param type $data['subscribe_topic']
      */
@@ -247,8 +247,8 @@ class Dizkus_Manager_Topic
         $this->_firstPost = new Dizkus_Entity_Post();
         $this->_firstPost->setPost_text($data['message']);
         unset($data['message']);
-        $this->_firstPost->setPost_attach_signature($data['post_attach_signature']);
-        unset($data['post_attach_signature']);
+        $this->_firstPost->setAttachSignature($data['attachSignature']);
+        unset($data['attachSignature']);
         $this->_firstPost->setTitle($data['topic_title']);
         $this->_firstPost->setTopic($this->_topic);
         $this->_firstPost->setIsFirstPost(true);

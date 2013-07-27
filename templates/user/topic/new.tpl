@@ -36,8 +36,8 @@
                     <li><strong>{gt text="Options"}</strong></li>
                     {if $coredata.logged_in}
                     <li>
-                        {formcheckbox id="post_attach_signature" checked=1}
-                        {formlabel for="post_attach_signature" __text="Attach my signature"}
+                        {formcheckbox id="attachSignature" checked=1}
+                        {formlabel for="attachSignature" __text="Attach my signature"}
                     </li>
                     <li>
                         {formcheckbox id="subscribe_topic" checked=1}

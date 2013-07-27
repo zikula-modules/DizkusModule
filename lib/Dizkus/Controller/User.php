@@ -213,7 +213,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $data = array(
                 'topic_id' => $topic_id,
                 'post_text' => $message,
-                'post_attach_signature' => $attach_signature
+                'attachSignature' => $attach_signature
             );
 
             $managedPost = new Dizkus_Manager_Post();
