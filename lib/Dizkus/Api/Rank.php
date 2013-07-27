@@ -63,7 +63,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         }
 
-        //rank_special, rank_id, minimumCount, rank_max, rank_image, rank_id
+        //rank_special, rank_id, minimumCount, maximumCount, rank_image, rank_id
 
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {
@@ -147,7 +147,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
                 ->createQueryBuilder()
                 ->select('r')
                 ->from('Dizkus_Entity_Rank', 'r')
-                ->where('r.minimumCount <= :posts and r.rank_max >= :posts')
+                ->where('r.minimumCount <= :posts and r.maximumCount >= :posts')
                 ->setParameter('posts', $args['poster']->getPostCount())
                 ->getQuery()
                 ->setMaxResults(1)
