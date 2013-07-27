@@ -11,9 +11,9 @@
                     <strong>{$reply.poster_data.user.uname}</strong>{* TODO: this is temp to show the data is here w/o another DB call *}
                     <br />
                     {useravatar uid=$reply.poster_data.user.uid}
-                    {if isset($reply.poster_data.rank_image) && isset($reply.poster_data.rank)}
+                    {if isset($reply.poster_data.image) && isset($reply.poster_data.rank)}
                     <br />
-                    <img class="userinforankimage" src="{$baseurl}{$reply.poster_data.rank_image}" alt="{$reply.poster_data.rank}" {$reply.poster_data.rank_image_image_attr.3} />
+                    <img class="userinforankimage" src="{$baseurl}{$reply.poster_data.image}" alt="{$reply.poster_data.rank}" {$reply.poster_data.image_image_attr.3} />
                     {/if}
                 </div>
 

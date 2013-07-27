@@ -67,11 +67,11 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     private $rank_special = 0;
 
     /**
-     * rank_image
+     * image
      * 
      * @ORM\Column(type="string", length=255)
      */
-    private $rank_image = '';
+    private $image = '';
 
     public function getRank_id()
     {
@@ -103,9 +103,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         return $this->rank_special;
     }
 
-    public function getRank_image()
+    public function getImage()
     {
-        return $this->rank_image;
+        return $this->image;
     }
     
     /**
@@ -115,8 +115,8 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     public function getRank_link()
     {
         $link = (substr($this->description, 0, 7) == 'http://') ? $this->description : '';
-        if (!empty($this->rank_image)) {
-            $this->rank_image = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $this->rank_image;
+        if (!empty($this->image)) {
+            $this->image = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $this->image;
         }
         return $link;
     }
@@ -151,9 +151,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         $this->rank_special = $rank_special;
     }
 
-    public function setRank_image($rank_image)
+    public function setImage($image)
     {
-        $this->rank_image = $rank_image;
+        $this->image = $image;
     }
 
 }

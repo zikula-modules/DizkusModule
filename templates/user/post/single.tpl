@@ -27,20 +27,20 @@
                     <p>{$post.poster.user.email}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
                     {useravatar uid=$post.poster.user.uid}
 
-                    {if !empty($post.poster.rank.rank_image)}
+                    {if !empty($post.poster.rank.image)}
                         <br />
                         {if $post.poster.rank.rank_link neq ''}
                         <a href="{$post.poster.rank.rank_link}" title="{$post.poster.rank.rank_link}">
                         {/if}
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.description}" />
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.image}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.description}" />
                         {if $post.poster.rank.rank_link neq ''}</a>{/if}
                     {else}
                         {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
                         {if $posterRank.rank_link neq ''}
                         <a href="{$posterRank.rank_link}" title="{$posterRank.rank_link}">
                         {/if}
-                        {if $posterRank.rank_image neq ''}
-                        <img class="userinforankimage" src="{$baseurl}{$posterRank.rank_image}" alt="{$posterRank.title}" title="{$posterRank.description}" />
+                        {if $posterRank.image neq ''}
+                        <img class="userinforankimage" src="{$baseurl}{$posterRank.image}" alt="{$posterRank.title}" title="{$posterRank.description}" />
                         {/if}
                         {if $posterRank.rank_link neq ''}</a>{/if}
                     {/if}

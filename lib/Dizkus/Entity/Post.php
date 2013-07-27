@@ -216,7 +216,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     public function getPoster_data()
     {
         return array(
-            'rank_image' => 'a',
+            'image' => 'a',
             'rank' => 'a',
             'rank_link' => 'a',
             'description' => 'a',

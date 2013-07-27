@@ -63,7 +63,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         }
 
-        //rank_special, rank_id, minimumCount, maximumCount, rank_image, rank_id
+        //rank_special, rank_id, minimumCount, maximumCount, image, rank_id
 
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {
@@ -164,9 +164,9 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
     private function addImageAndLink($data)
     {
         $data['rank_link'] = (substr($data['description'], 0, 7) == 'http://') ? $data['description'] : '';
-        if (!empty($data['rank_image'])) {
-            $data['rank_image'] = $this->getVar('url_ranks_images') . '/' . $data['rank_image'];
-            $data['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($data['rank_image']) : null;
+        if (!empty($data['image'])) {
+            $data['image'] = $this->getVar('url_ranks_images') . '/' . $data['image'];
+            $data['image_attr'] = function_exists('getimagesize') ? @getimagesize($data['image']) : null;
         }
         return $data;
     }

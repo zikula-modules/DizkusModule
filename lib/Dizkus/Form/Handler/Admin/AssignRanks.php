@@ -59,7 +59,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
         /* $inlinecss = '<style type="text/css">' ."\n";
           $rankpath = ModUtil::getVar('Dizkus', 'url_ranks_images') .'/';
           foreach ($ranks as $rank) {
-          $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['rank_image'].'"); }' . "\n";
+          $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['image'].'"); }' . "\n";
           }
           $inlinecss .= '</style>' . "\n";
           PageUtil::addVar('rawtext', $inlinecss); */

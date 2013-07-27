@@ -14,9 +14,9 @@
                         <strong>{$post.poster_data.uname|profilelinkbyuname}</strong>
                         <br />
                         {useravatar uid=$post.poster_data.uid}
-                        {if isset($post.poster_data.rank_image) && isset($post.poster_data.rank)}
+                        {if isset($post.poster_data.image) && isset($post.poster_data.rank)}
                         <br />
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster_data.rank_image}" alt="{$post.poster_data.rank}" />
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster_data.image}" alt="{$post.poster_data.rank}" />
                         {/if}
                     </div>
 

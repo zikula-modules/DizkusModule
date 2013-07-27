@@ -9,9 +9,9 @@
                     <strong>{$newtopic.poster.poster_id|profilelinkbyuid}</strong>
                     <br />
                     {useravatar uid=$newtopic.poster.poster_i}
-                    {*if isset($newtopic.poster_data.rank_image) && isset($newtopic.poster_data.rank)}
+                    {*if isset($newtopic.poster_data.image) && isset($newtopic.poster_data.rank)}
                     <br />
-                    <img class="userinforankimage" src="{$baseurl}{$newtopic.poster_data.rank_image}" alt="{$newtopic.poster_data.rank}" />
+                    <img class="userinforankimage" src="{$baseurl}{$newtopic.poster_data.image}" alt="{$newtopic.poster_data.rank}" />
                     {/if*}
                 </div>
 
