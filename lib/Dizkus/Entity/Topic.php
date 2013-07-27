@@ -56,11 +56,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $topic_time;
 
     /**
-     * topic_status
+     * status
      *
      * @ORM\Column(type="integer")
      */
-    private $topic_status = 0;
+    private $status = 0;
 
     /**
      * topic_views
@@ -203,9 +203,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->title;
     }
 
-    public function getTopic_status()
+    public function getStatus()
     {
-        return $this->topic_status;
+        return $this->status;
     }
 
     public function getTopic_time()
@@ -240,12 +240,12 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
 
     public function lock()
     {
-        $this->topic_status = 1;
+        $this->status = 1;
     }
 
     public function unlock()
     {
-        $this->topic_status = 0;
+        $this->status = 0;
     }
 
     public function sticky()

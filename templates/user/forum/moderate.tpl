@@ -37,7 +37,7 @@
                                 {if $topic.sticky eq 1}
                                     {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
                                 {/if}
-                                {if $topic.topic_status eq 1}
+                                {if $topic.status eq 1}
                                     {img modname='Dizkus' src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' }
                                 {/if}
                                 {datecompare date1=$topic.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}

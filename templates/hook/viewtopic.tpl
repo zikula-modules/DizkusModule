@@ -35,7 +35,7 @@
             {if $topic.access_moderate eq 1}
             <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
-                    {if $topic.topic_status eq 0}
+                    {if $topic.status eq 0}
                     <a id="toggletopiclockbutton_{$topic.topic_id}_unlocked" class="dzk_arrow tooltips" title="{gt text="Lock topic"}" href="javascript:void(0);">{gt text="Lock topic"}</a>
                     {else}
                     <a id="toggletopiclockbutton_{$topic.topic_id}_locked" class="dzk_arrow tooltips" title="{gt text="Unlock topic"}" href="javascript:void(0);">{gt text="Unlock topic"}</a>
@@ -88,7 +88,7 @@
 
                 {if $topic.access_moderate eq 1}
                 <ul class="dzk_topicoptions linklist z-clearfix">
-                    {if $topic.topic_status eq 0}
+                    {if $topic.status eq 0}
                     <li><a class="dzk_arrow locktopiclink" title="{gt text="Lock topic"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id}">{gt text="Lock topic"}</a></li>
                     {else}
                     <li><a class="dzk_arrow unlocktopiclink" title="{gt text="Unlock topic"}" href="{modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id}">{gt text="Unlock topic"}</a></li>
@@ -127,7 +127,7 @@
 
 {dzkpager total=$topic.total_posts}
 
-{if ($topic.topic_status neq 1) and ($topic.access_comment eq true)}
+{if ($topic.status neq 1) and ($topic.access_comment eq true)}
 <div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded">
     <div class="inner">
         <div class="dzk_subcols z-clearfix">

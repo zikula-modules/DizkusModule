@@ -101,7 +101,7 @@
             {if $permissions.moderate eq 1}
             <ul class="dzk_topicoptions linklist z-clearfix">
                 <li>
-                    {if $topic.topic_status eq 0}
+                    {if $topic.status eq 0}
                         {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
                         {gt text="Lock topic" assign='msg'}
                     {else}
@@ -151,7 +151,7 @@
 
 {if ($permissions.comment eq true)}
 <a id="reply">
-<div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded"{if $topic.topic_status eq 1} style='display:none'{/if}>
+<div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded"{if $topic.status eq 1} style='display:none'{/if}>
     <div class="inner">
         <div class="dzk_subcols z-clearfix">
             <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">

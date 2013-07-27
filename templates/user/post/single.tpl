@@ -109,7 +109,7 @@
                         {/if}
                         {/if}
 
-                        {if isset($topic) AND $topic.topic_status neq 1}
+                        {if isset($topic) AND $topic.status neq 1}
                         {if $permissions.comment eq true}
                         <li>
                             <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>

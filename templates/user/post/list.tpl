@@ -23,7 +23,7 @@
                             {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
                         {/if}
 
-                        {if $topic.topic_status eq 1}
+                        {if $topic.status eq 1}
                             {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
                         {/if}
                         {if $topic.topic_replies >= $modvars.Dizkus.hot_threshold}

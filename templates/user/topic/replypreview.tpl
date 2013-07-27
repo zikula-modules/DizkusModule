@@ -54,7 +54,7 @@
                         {/if}
                         {/if}
 
-                        {if isset($topic) AND $topic.topic_status neq 1}
+                        {if isset($topic) AND $topic.status neq 1}
                         {if $reply.poster_data.reply eq true}
                         <li><a class="dzk_arrow quotepostlink tooltips" title="{gt text="Quote post or selection"}" href="{modurl modname='Dizkus' type='user' func='reply' post=$reply.post_id}">{gt text="Quote"}</a></li>
                         {/if}
