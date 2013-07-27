@@ -47,11 +47,11 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $autosubscribe = true;
 
     /**
-     * user_level
+     * user level
      *
      * @ORM\Column(type="integer")
      */
-    private $user_level = 1;
+    private $level = 1;
 
     /**
      * user_lastvisit
@@ -163,14 +163,14 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
         $this->autosubscribe = $autosubscribe;
     }
 
-    public function getUser_level()
+    public function getLevel()
     {
-        return $this->user_level;
+        return $this->level;
     }
 
-    public function setUser_level($level)
+    public function setLevel($level)
     {
-        $this->user_level = $level;
+        $this->level = $level;
     }
 
     public function getUser_lastvisit()
