@@ -213,6 +213,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->upgrade_to_4_0_0_updatePosterData();
         $this->upgrade_to_4_0_0_migrateModGroups();
         $this->upgrade_to_4_0_0_migratePop3Connections($pop3connections);
+        $this->upgrade_to_4_0_0_renameColumns();
 
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
