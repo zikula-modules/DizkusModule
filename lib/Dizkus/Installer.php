@@ -256,6 +256,28 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
     }
 
     /**
+     * rename some table columns
+     * This must be done before updateSchema takes place
+     */
+    private function upgrade_to_4_0_0_renameColumns()
+    {
+        $connection = $this->entityManager->getConnection();
+        $sqls = array();
+
+        // a list of column changes
+        $sqls[] = "ALTER TABLE dizkus_forums CHANGE forum_desc description TEXT DEFAULT NULL";
+        
+        foreach ($sqls as $sql) {
+            $stmt = $connection->prepare($sql);
+            try {
+                $stmt->execute();
+            } catch (Exception $e) {
+                LogUtil::registerError($e);
+            }
+        }
+    }
+
+    /**
      * Migrate categories from 3.1 > 4.0.0
      *
      */

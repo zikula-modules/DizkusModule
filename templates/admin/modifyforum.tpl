@@ -29,8 +29,8 @@
 
 
         <div class="z-formrow">
-            {formlabel for="forum_desc" __text="Description"}
-            {formtextinput id="forum_desc" textMode="multiline" rows="3" cols="40"}
+            {formlabel for="description" __text="Description"}
+            {formtextinput id="description" textMode="multiline" rows="3" cols="40"}
         </div>
 
         <div class="z-formrow">

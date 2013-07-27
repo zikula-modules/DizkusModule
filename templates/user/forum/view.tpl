@@ -8,8 +8,8 @@
 
 <h2>{$forum.forum_name|safetext}</h2>
 
-{if $forum.forum_desc neq ''}
-<p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
+{if $forum.description neq ''}
+<p class='ctheme-description'>{$forum.description|safehtml}</p>
 {/if}
 
 {if $permissions.moderate eq true or $permissions.comment eq true}
@@ -38,7 +38,7 @@
                         {datecompare date1=$subforum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                         <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
                             <a title="{gt text="Go to subforum"} '{$subforum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.forum_name|safetext}</a><br />
-                            {if $subforum.forum_desc neq ''}{$subforum.forum_desc|safehtml}<br />{/if}
+                            {if $subforum.description neq ''}{$subforum.description|safehtml}<br />{/if}
                         </dt>
                         <dd class="subforums">{$subforum.children|count}</dd>
                         <dd class="topics">{$subforum.forum_topics|safetext}</dd>

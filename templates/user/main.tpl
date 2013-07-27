@@ -31,7 +31,7 @@
                             {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                             <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
                                 <a title="{gt text="Go to forum"} '{$forum.forum_name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$forum.forum_id}">{$forum.forum_name|safetext}</a><br />
-                                {if $forum.forum_desc neq ''}{$forum.forum_desc|safehtml}<br />{/if}
+                                {if $forum.description neq ''}{$forum.description|safehtml}<br />{/if}
                                 {include file='user/moderatedBy.tpl' forum=$forum}
                             </dt>
 

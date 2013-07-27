@@ -1,8 +1,8 @@
 
 {include file='user/header.tpl' __templatetitle='Moderate'}
 
-{*if $forum.forum_desc <> ''}
-<p class='ctheme-description'>{$forum.forum_desc|safehtml}</p>
+{*if $forum.description <> ''}
+<p class='ctheme-description'>{$forum.description|safehtml}</p>
 {/if*}
 
 {if $forum.topics}

@@ -27,8 +27,8 @@
             {/if}
 
             <div class="z-formrow">
-                <label for="forum_desc">{gt text="Description"}</label>
-                <textarea id="forum_desc" name="desc" rows="10" cols="60">{$forum.forum_desc|safehtml}</textarea>
+                <label for="description">{gt text="Description"}</label>
+                <textarea id="description" name="desc" rows="10" cols="60">{$forum.description|safehtml}</textarea>
             </div>
 
             <div class="z-formrow">
